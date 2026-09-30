@@ -1,13 +1,6 @@
 name: RHS Runtime Side-Effect Audit
 
 on:
-  push:
-    branches:
-      - rebuild/rhs-licensed-exact
-    paths:
-      - "scripts/rhs-runtime-side-effect-audit.py"
-      - ".github/workflows/rhs-runtime-side-effect-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
   pull_request:
     paths:
       - "scripts/rhs-runtime-side-effect-audit.py"
