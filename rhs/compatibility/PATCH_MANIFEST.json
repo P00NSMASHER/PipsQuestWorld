@@ -5,6 +5,7 @@
     {
       "id": "sandbox-legacy-ranking-login",
       "targetPath": "ServerScriptService/CheckRankingBotLogin",
+      "expectedSourceSha256": "e6b78fae68e637b3afc9d2f3cad73a450a016ce9beb337c7ca2f596179a2456b",
       "reason": "Prevent the compatibility build from sending requests or embedded legacy credentials to the historical Cindering ranking backend.",
       "replacements": [
         {
@@ -22,6 +23,7 @@
     {
       "id": "sandbox-legacy-group-ranking",
       "targetPath": "ServerScriptService/GroupRankingManager",
+      "expectedSourceSha256": "bf6cf3399f61e4c3157c74bf10f9f25b450bab15f1c4ef59bb535bf2575f511d",
       "reason": "Keep the old ranking request fail-closed without contacting the historical Cindering backend.",
       "replacements": [
         {
@@ -39,6 +41,7 @@
     {
       "id": "sandbox-legacy-gameanalytics",
       "targetPath": "ServerScriptService/GameAnalytics",
+      "expectedSourceSha256": "f5b8d396febd1d0f1bdbf037854231e29f2d6031da9daf429bdcb8ba0dcc9185",
       "reason": "Preserve gameplay while preventing the licensed test build from transmitting telemetry with historical GameAnalytics credentials.",
       "replacements": [
         {

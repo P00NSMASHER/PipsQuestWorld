@@ -1,0 +1,15 @@
+[package]
+name = "rhs-binary-patcher"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+anyhow = "1.0"
+rbx_binary = { git = "https://github.com/rojo-rbx/rbx-dom.git", rev = "43d1f129f2eb1fd055512f039863ff35ae5a10f1" }
+rbx_dom_weak = { git = "https://github.com/rojo-rbx/rbx-dom.git", rev = "43d1f129f2eb1fd055512f039863ff35ae5a10f1" }
+rbx_types = { git = "https://github.com/rojo-rbx/rbx-dom.git", rev = "43d1f129f2eb1fd055512f039863ff35ae5a10f1" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+ustr = "1.1"
