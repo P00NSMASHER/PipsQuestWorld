@@ -11,6 +11,7 @@ on:
       - "scripts/*pips*.luau"
       - "scripts/*release-question*.luau"
       - "tests/pips*.luau"
+      - "scripts/verify-server-only-education.mjs"
       - ".github/workflows/standalone-education-content-ci.yml"
 
 permissions:
@@ -32,6 +33,26 @@ jobs:
           mkdir -p /tmp/luau
           unzip -q /tmp/luau.zip -d /tmp/luau
           chmod +x /tmp/luau/luau /tmp/luau/luau-compile
+
+      - name: Guard server-only authority and Maze World foundation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/verify-server-only-education.mjs
+          git fetch --no-tags origin rebuild/maze-world-foundation
+          git diff --exit-code origin/rebuild/maze-world-foundation -- \
+            game/maze-world.rbxl \
+            game/Place.rbxmx \
+            game/PlaceTerrain.rbxmx \
+            game/src/common/Maze.lua \
+            game/src/common/MazeGenerator.lua \
+            game/src/common/TouchItem.lua \
+            game/src/common/TagItem.lua \
+            game/src/common/thunks/startGame.lua \
+            game/src/common/thunks/startRoomGameLoop.lua \
+            game/src/common/thunks/playerFinishedRoom.lua \
+            game/src/client/Components/Room.lua \
+            game/src/client/Components/FinishScreen.lua
 
       - name: Compile standalone Pips modules
         shell: bash
