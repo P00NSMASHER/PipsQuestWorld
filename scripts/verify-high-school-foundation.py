@@ -52,13 +52,31 @@ for token in (
     'Workspace:WaitForChild("SchoolCampus")',
     'campus:WaitForChild("MainSpawn")',
     'assert(spawn:IsA("SpawnLocation")',
-    "player.RespawnLocation = spawn",
+    "player.RespawnLocation = getMainSpawn()",
     "SchoolConfig.PERIOD_SECONDS",
     'Workspace:SetAttribute("SchoolDay"',
     'Workspace:SetAttribute("SchoolPeriodIndex"',
+    "SchoolConfig.Interfaces.remoteFolder",
+    "SchoolConfig.Interfaces.stateSnapshot",
+    "SchoolConfig.Interfaces.serverEventFolder",
+    "SchoolConfig.Interfaces.sessionStarted",
+    "SchoolConfig.Interfaces.sessionEnded",
+    "SchoolConfig.Interfaces.periodChanged",
+    'Instance.new("RemoteFunction")',
+    'Instance.new("BindableEvent")',
+    "stateSnapshot.OnServerInvoke",
+    "sessionStarted:Fire(player",
+    "sessionEnded:Fire(player",
+    "periodChanged:Fire({",
+    "while now - periodStartedAt >= SchoolConfig.PERIOD_SECONDS do",
+    "periodStartedAt += SchoolConfig.PERIOD_SECONDS",
+    "publishState(os.clock())",
 ):
     if token not in runtime_text:
         raise SystemExit(f"missing runtime seam: {token}")
+
+if runtime_text.count("periodChanged:Fire({") != 1:
+    raise SystemExit("period lifecycle hook must have exactly one authoritative emission site")
 
 for racing_lookup in (
     'Workspace:FindFirstChild("SchoolCampus")',
