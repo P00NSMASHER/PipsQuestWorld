@@ -1,0 +1,117 @@
+name: RHS Luau Syntax Scan
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - "scripts/rhs-extract-luau.py"
+      - ".github/workflows/rhs-luau-syntax-scan.yml"
+      - "rhs/working/ROBLOX High School.rbxl"
+  pull_request:
+    paths:
+      - "scripts/rhs-extract-luau.py"
+      - ".github/workflows/rhs-luau-syntax-scan.yml"
+      - "rhs/working/ROBLOX High School.rbxl"
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build and extract scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+          python3 scripts/rhs-extract-luau.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --out-dir /tmp/rhs-luau \
+            --manifest /tmp/rhs-luau-manifest.json
+
+      - name: Build pinned Luau compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/luau-lang/luau.git /tmp/luau
+          git -C /tmp/luau checkout --detach b18032e8926f4d1b539c1e9374fc4e20d4b12207
+          cmake -S /tmp/luau -B /tmp/luau-build \
+            -DLUAU_BUILD_TESTS=OFF \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/luau-build --target Luau.Compile.CLI --config Release -j2
+          /tmp/luau-build/luau-compile --help >/dev/null 2>&1 || true
+
+      - name: Compile every embedded script for syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          manifest = json.loads(Path("/tmp/rhs-luau-manifest.json").read_text())
+          failures = []
+
+          for entry in manifest["scripts"]:
+              path = Path("/tmp/rhs-luau") / entry["file"]
+              proc = subprocess.run(
+                  ["/tmp/luau-build/luau-compile", str(path)],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.PIPE,
+                  text=True,
+              )
+              if proc.returncode != 0:
+                  failures.append({
+                      "path": entry["path"],
+                      "class": entry["class"],
+                      "file": entry["file"],
+                      "stderr": proc.stderr[-4000:],
+                  })
+
+          report = {
+              "schemaVersion": 1,
+              "compilerRevision": "b18032e8926f4d1b539c1e9374fc4e20d4b12207",
+              "scriptCount": len(manifest["scripts"]),
+              "syntaxFailureCount": len(failures),
+              "failures": failures,
+          }
+          Path("/tmp/rhs-luau-syntax.json").write_text(
+              json.dumps(report, indent=2) + "\n", encoding="utf-8"
+          )
+
+          print("RHS_LUAU_SCRIPT_COUNT", len(manifest["scripts"]))
+          print("RHS_LUAU_SYNTAX_FAILURES", len(failures))
+          for failure in failures[:100]:
+              print("SYNTAX_FAIL", failure["class"], failure["path"])
+              print(failure["stderr"].strip())
+
+          if failures:
+              raise SystemExit(1)
+          print("RHS_LUAU_SYNTAX_OK")
+          PY
+
+      - name: Upload syntax report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-luau-syntax
+          path: /tmp/rhs-luau-syntax.json
+          if-no-files-found: warn
+          retention-days: 30
