@@ -49,8 +49,9 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Working-copy SHA-256 after current patches: `04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4`
 - Baseline integrity guard: **PASSING**
 - Compatibility audit: **PASSING**
-- Structural parity: verifier handoff fixed; awaiting fresh CI proof
+- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 3 approved script-source changes, no unapproved hierarchy/source drift
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
+- Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
 - Roblox publication: **NOT REQUESTED / NOT PERFORMED**
