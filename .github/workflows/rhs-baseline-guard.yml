@@ -5,8 +5,8 @@ on:
     paths:
       - "rhs/**"
       - "scripts/verify-rhs-baseline.py"
+      - "scripts/verify-rhs-preflight.py"
       - ".github/workflows/rhs-baseline-guard.yml"
-      - ".github/workflows/bootstrap-rhs-licensed-baseline.yml"
       - "README.md"
       - "STATUS.md"
       - "AGENTS.md"
@@ -28,3 +28,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify immutable licensed baseline
         run: python3 scripts/verify-rhs-baseline.py
+      - name: Verify durable static preflight
+        run: python3 scripts/verify-rhs-preflight.py
