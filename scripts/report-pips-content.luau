@@ -1,4 +1,4 @@
-local bank = require('../game/src/common/PipsQuestionBank')
+local bank = require('../game/src/serverStorage/PipsQuestionBank')
 
 local issues = {}
 local ids = {}
