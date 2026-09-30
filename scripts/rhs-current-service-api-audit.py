@@ -11,7 +11,7 @@ from pathlib import Path
 SCRIPT_CLASSES = {"Script", "LocalScript", "ModuleScript"}
 
 GET_SERVICE = re.compile(
-    r'(?:local\s+)?([A-Za-z_]\w*)\s*=\s*game\s*:\s*(?:GetService|service)\s*\(\s*["\']([^"\']+)["\']\s*\)',
+    r'(?:local\s+)?([A-Za-z_]\w*)\s*=\s*game\s*:\s*(?:GetService|service)\s*\(\s*["\']([^"\']+)["\']\s*\)(?!\s*[:.])',
     re.I,
 )
 DIRECT_CALL = re.compile(
@@ -101,6 +101,13 @@ def main() -> int:
                 ambiguous.add(alias)
             else:
                 aliases[alias]=service
+        for alias in list(aliases):
+            assignment_rx = re.compile(
+                r'(?<![A-Za-z0-9_.])(?:local\s+)?' + re.escape(alias) + r'\s*='
+            )
+            if len(list(assignment_rx.finditer(source))) != 1:
+                ambiguous.add(alias)
+
         for alias in ambiguous:
             aliases.pop(alias,None)
 
@@ -149,6 +156,8 @@ def main() -> int:
             status=(
                 "missing_service"
                 if service_cls is None
+                else "unresolved_property_assignment"
+                if use["kind"] == "service_property_assignment" and member_meta is None
                 else "missing_member"
                 if member_meta is None
                 else "deprecated"
