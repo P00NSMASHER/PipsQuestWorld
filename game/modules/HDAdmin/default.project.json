@@ -1,0 +1,69 @@
+{
+  "name": "HDAdmin",
+  "tree": {
+    "$className": "DataModel",
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "HDAdmin": {
+        "$className": "Folder",
+        "Core": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Core/MainModule"
+          },
+          "Config": {
+            "$path": "Core/Config.lua"
+          }
+        },
+        "DataStore+": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Projects/DataStore+"
+          }
+        },
+        "Topbar+": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Projects/Topbar+"
+          }
+        },
+        "Zone+": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Projects/Zone+"
+          }
+        },
+        "DirectoryService": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Utility/DirectoryService"
+          }
+        },
+        "Maid": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Utility/Maid"
+          }
+        },
+        "Promise": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Utility/Promise"
+          }
+        },
+        "Signal": {
+          "$className": "Folder",
+          "MainModule": {
+            "$path": "Utility/Signal"
+          }
+        }
+      }
+    }
+  }
+}

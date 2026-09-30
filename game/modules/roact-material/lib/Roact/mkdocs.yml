@@ -1,0 +1,35 @@
+site_name: Roact Documentation
+site_url: https://roblox.github.io/roact/
+repo_name: Roblox/roact
+repo_url: https://github.com/Roblox/roact
+
+extra_css:
+  - css/component-diagram.css
+
+theme:
+  name: material
+  palette:
+    primary: 'Light Blue'
+    accent: 'Light Blue'
+
+pages:
+  - Home: index.md
+  - Guide:
+    - Installation: guide/installation.md
+    - Hello, Roact!: guide/hello-roact.md
+    - Elements: guide/elements.md
+    - Components: guide/components.md
+    - State and Lifecycle: guide/state-and-lifecycle.md
+    - Events: guide/events.md
+  - Advanced Concepts:
+    - Portals: advanced/portals.md
+    - Refs: advanced/refs.md
+    - Context: advanced/context.md
+  - API Reference: api-reference.md
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true

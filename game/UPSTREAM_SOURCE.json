@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "upstream": "MayGo/maze-world",
+  "upstreamUrl": "https://github.com/MayGo/maze-world.git",
+  "pinnedCommit": "2dba386aaa66c3351087ae5848bc5f6bf7a832b8",
+  "recursiveSubmodules": true,
+  "importedBy": "GitHub Actions",
+  "importedFileCount": 4524,
+  "omittedArtifacts": [
+    "Game.rbxlx (upstream Git LFS build artifact; expanded size exceeds GitHub normal-file limit)"
+  ],
+  "preservedMetadata": [
+    "UPSTREAM_METADATA/gitattributes.txt",
+    "UPSTREAM_METADATA/Game.rbxlx.pointer.base64"
+  ]
+}
