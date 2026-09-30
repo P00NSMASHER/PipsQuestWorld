@@ -51,5 +51,6 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Compatibility audit: **PASSING**
 - Structural parity: verifier handoff fixed; awaiting fresh CI proof
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
+- Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
 - Roblox publication: **NOT REQUESTED / NOT PERFORMED**
