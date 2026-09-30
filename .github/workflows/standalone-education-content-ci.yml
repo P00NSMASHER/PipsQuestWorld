@@ -1,0 +1,63 @@
+name: Standalone Education Content CI
+
+on:
+  push:
+    branches:
+      - rebuild/education-engine-adapter
+      - rebuild/content-qa
+    paths:
+      - "game/src/serverStorage/Pips*.lua"
+      - "scripts/*pips*.luau"
+      - "scripts/*release-question*.luau"
+      - "tests/pips*.luau"
+      - ".github/workflows/standalone-education-content-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Luau 0.740
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error             https://github.com/luau-lang/luau/releases/download/0.740/luau-ubuntu.zip             --output /tmp/luau.zip
+          echo "7d4035db01816f977f6e4c42e3d5e8ef4235d95e9afe63a3c38905b42dde60f2  /tmp/luau.zip" | sha256sum -c -
+          mkdir -p /tmp/luau
+          unzip -q /tmp/luau.zip -d /tmp/luau
+          chmod +x /tmp/luau/luau /tmp/luau/luau-compile
+
+      - name: Compile standalone Pips modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            /tmp/luau/luau-compile "$file" >/dev/null
+          done < <(find game/src/serverStorage -maxdepth 1 -type f -name 'Pips*.lua' -print0)
+
+      - name: Run standalone education tests when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f scripts/test-pips-education-engine.luau ]; then
+            /tmp/luau/luau-compile scripts/test-pips-education-engine.luau >/dev/null
+            /tmp/luau/luau scripts/test-pips-education-engine.luau
+          fi
+          if [ -f tests/pips_education_engine_smoke.luau ]; then
+            /tmp/luau/luau-compile tests/pips_education_engine_smoke.luau >/dev/null
+            /tmp/luau/luau tests/pips_education_engine_smoke.luau
+          fi
+
+      - name: Run curated content tests when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f scripts/test-release-question-bank.luau ]; then
+            /tmp/luau/luau-compile scripts/test-release-question-bank.luau >/dev/null
+            /tmp/luau/luau scripts/test-release-question-bank.luau
+          fi
