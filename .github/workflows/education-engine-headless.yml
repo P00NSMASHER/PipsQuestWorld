@@ -1,0 +1,32 @@
+name: Education Engine Headless
+
+on:
+  push:
+    branches: [feat/education-engine]
+    paths:
+      - "EXECUTIVE_PLAN.md"
+      - "docs/MAZE_LEARNING_CONTRACT.md"
+      - "game/src/server/EducationEngine.lua"
+      - "scripts/test-education-engine-policy.mjs"
+      - ".github/workflows/education-engine-headless.yml"
+  pull_request:
+    paths:
+      - "EXECUTIVE_PLAN.md"
+      - "docs/MAZE_LEARNING_CONTRACT.md"
+      - "game/src/server/EducationEngine.lua"
+      - "scripts/test-education-engine-policy.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify backend-only education contract
+        run: node scripts/test-education-engine-policy.mjs
