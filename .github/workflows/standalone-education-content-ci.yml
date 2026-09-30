@@ -8,6 +8,7 @@ on:
       - rebuild/phase1-standalone-prep
       - rebuild/learning-session-core-v2
       - rebuild/coin-learning-selector
+      - rebuild/content-quality-batch2
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
