@@ -12,6 +12,7 @@ const forbiddenNames = new Set([
   "PipsQuestionBank.lua",
   "PipsReleaseQuestionBank.lua",
   "PipsLearningSession.lua",
+  "PipsLearningCoinSelector.lua",
 ]);
 
 const leaks = [];
@@ -37,6 +38,7 @@ for (const required of [
   "PipsQuestionBank.lua",
   "PipsReleaseQuestionBank.lua",
   "PipsLearningSession.lua",
+  "PipsLearningCoinSelector.lua",
 ]) {
   if (!fs.existsSync(path.join(serverRoot, required))) {
     throw new Error("Missing server-only education file: " + required);
