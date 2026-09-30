@@ -1,0 +1,27 @@
+{
+  "name": "SchoolLifeGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "SchoolConfig": {
+        "$path": "src/ReplicatedStorage/SchoolConfig.lua"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "SchoolRuntime": {
+        "$path": "src/ServerScriptService/SchoolRuntime.server.lua"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "SchoolClient": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/SchoolClient.client.lua"
+        }
+      }
+    }
+  }
+}
