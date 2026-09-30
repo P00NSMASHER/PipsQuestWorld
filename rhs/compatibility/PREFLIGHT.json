@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-30",
+  "baseline": {
+    "bytes": 2283775,
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "immutable": true
+  },
+  "working": {
+    "sha256": "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+    "compatibilityPatchCount": 3,
+    "runtimeVerified": false,
+    "published": false
+  },
+  "staticChecks": {
+    "baselineIntegrity": "PASS",
+    "structuralParity": "PASS",
+    "compatibilityAudit": "PASS",
+    "runtimeSideEffectAudit": "PASS",
+    "startupRiskAudit": "PASS",
+    "activeDirectionGuard": "PASS",
+    "luauSyntax": {
+      "status": "PASS",
+      "compilerRevision": "b18032e8926f4d1b539c1e9374fc4e20d4b12207",
+      "embeddedScripts": 1192,
+      "syntaxFailures": 0,
+      "evidenceRunId": 36786127824
+    }
+  },
+  "dependencyProbe": {
+    "publicAvailable": [
+      "191816425"
+    ],
+    "unavailableAnonymousButFailSoft": [
+      "258548692"
+    ],
+    "unavailableAnonymousFeatureScoped": [
+      "633112728",
+      "633111804",
+      "633111180",
+      "399944445"
+    ],
+    "coreStartupBlockedByNumericRequire": false
+  },
+  "runtimeSafety": {
+    "executableLegacyHttpCallsDetectedAfterPatches": 0,
+    "purchasePromptsAreInteractionDriven": true,
+    "literalExternalPlaceTeleportsAreEventOrAdminDriven": true,
+    "datastoreHelpersUsePcall": true,
+    "datastoreRetryCap": 10,
+    "firstStudioSmokeApiAccess": "disabled"
+  },
+  "retiredPaths": {
+    "mazeImportWorkflowRemoved": true,
+    "mazeCoordinationDocsArchived": true,
+    "rhsBootstrapWriterRetired": true,
+    "historicalMazeTreePreservedForAttribution": true
+  },
+  "nextHardGate": "Roblox Studio runtime smoke: spawn -> movement/jump/camera -> HUD -> schedule/class flow"
+}
