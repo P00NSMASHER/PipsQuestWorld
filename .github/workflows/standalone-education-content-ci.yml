@@ -7,6 +7,7 @@ on:
       - rebuild/content-qa
       - rebuild/phase1-standalone-prep
       - rebuild/learning-session-core-v2
+      - rebuild/coin-learning-selector
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
@@ -86,6 +87,10 @@ jobs:
           if [ -f tests/pips_learning_session_smoke.luau ]; then
             /tmp/luau/luau-compile tests/pips_learning_session_smoke.luau >/dev/null
             /tmp/luau/luau tests/pips_learning_session_smoke.luau
+          fi
+          if [ -f tests/pips_learning_coin_selector_smoke.luau ]; then
+            /tmp/luau/luau-compile tests/pips_learning_coin_selector_smoke.luau >/dev/null
+            /tmp/luau/luau tests/pips_learning_coin_selector_smoke.luau
           fi
 
       - name: Run curated content tests when present
