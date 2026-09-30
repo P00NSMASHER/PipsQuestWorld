@@ -3,11 +3,11 @@
 STATUS: READY
 FOUNDATION_BASE: b7eb3fbe1eb65f31f36bc08a1aeda7830f736a71
 BRANCH: rebuild/education-engine-adapter
-OBJECTIVE: Standalone server-authoritative Grade-2 question engine with zero Maze World gameplay/UI ownership.
+OBJECTIVE: Standalone server-authoritative Grade-2 question engine with zero Maze World gameplay/UI ownership and no client-reachable answer authority.
 
 VERIFIED:
 - schema accepts 2-4 unique choices;
-- correctIndex remains server-side and clientView omits it;
+- engine now lives under ServerStorage; correctIndex and answer validation are not client-reachable; clientView still omits correctIndex;
 - current-material tier is exhausted before STAR fallback;
 - no repeated question inside one five-question quest;
 - maximum difficulty increase is capped at +1;
@@ -23,6 +23,7 @@ TESTS:
 
 BOUNDARIES:
 - no Maze World protected files changed;
+- no answer-key ModuleScript remains under ReplicatedStorage/common;
 - no geometry, HUD, camera, finish, reward, RemoteEvent, or world ownership;
 - no publish authority.
 
