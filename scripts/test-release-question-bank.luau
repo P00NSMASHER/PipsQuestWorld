@@ -2,19 +2,24 @@ local bank = require('../game/src/serverStorage/PipsReleaseQuestionBank')
 
 local expected = {
 	"abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1",
+	"pips-grade2-main-character-focus-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-short-vowel-identification-transfer-ev1",
-	"pips-grade2-plural-boxes-transfer-v2",
-	"abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1",
 	"pips-grade2-trinity-meaning-transfer-v2",
+	"pips-grade2-plural-boxes-transfer-v2",
+	"pips-grade2-character-motivation-reasoning-v2",
+	"abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1",
+	"pips-grade2-setting-evidence-reasoning-v2",
 	"pips-grade2-cvc-pattern-transfer-v2",
+	"pips-grade2-gifts-service-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2",
+	"pips-grade2-welcoming-love-transfer-v2",
 }
 
 local function clean(v)
 	return string.lower((v or ''):gsub('%s+', ' '))
 end
 
-assert(#bank == 7, 'reviewed release count drift')
+assert(#bank == 12, 'reviewed release count drift')
 
 local ids = {}
 local prompts = {}
@@ -62,7 +67,7 @@ for first = 1, #bank - 4 do
 		if bank[i].questionType ~= 'direct' then applied += 1 end
 	end
 	local n = 0; for _ in pairs(skills) do n += 1 end
-	assert(n >= 4 and applied >= 1, 'five-question quality mix failed')
+	assert(n >= 4 and applied >= 2, 'five-question quality mix failed')
 end
 
 print('PIPS_RELEASE_CONTENT_PASS', #bank)
