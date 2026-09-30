@@ -15,6 +15,24 @@ local GameDatastore = require(Modules.src.GameDatastore)
 local InventoryObjects = require(Modules.src.objects.InventoryObjects)
 local RoomObjects = InventoryObjects.RoomObjects
 
+local PIP_NATIVE_FINISH_REWARD_ID = '20004'
+
+local function unlockPipNativeFinishReward(player)
+	local rewardItem = InventoryObjects.PetObjects[PIP_NATIVE_FINISH_REWARD_ID]
+	if not rewardItem then
+		logger:w('Pip native finish reward item missing: ' .. PIP_NATIVE_FINISH_REWARD_ID)
+		return nil
+	end
+
+	local inventory = GameDatastore:getInventory(player)
+	if M.include(inventory, PIP_NATIVE_FINISH_REWARD_ID) then
+		return nil
+	end
+
+	GameDatastore:setInventoryItem(player, PIP_NATIVE_FINISH_REWARD_ID)
+	return rewardItem
+end
+
 local function calulatePrize(prizeCoins, playersPlaying)
 	local function isPlayerFinished(player)
 		return player.finishTime ~= nil
@@ -69,6 +87,18 @@ local function playerFinishedRoom(player, roomId)
 			)
 			Leaderboards:updateMostPlayed(player)
 			Leaderboards:updateMostPlayed(player, roomId)
+
+			local pipRewardItem = unlockPipNativeFinishReward(player)
+			if pipRewardItem then
+				store:dispatch(
+					clientSendNotification(
+						player,
+						'Pip unlocked ' .. pipRewardItem.name .. ' in your Inventory!',
+						assets.brand['logo-icon']
+					)
+				)
+			end
+
 			store:dispatch(
 				clientPipNativeFinishCelebration(player, roomId, finishTime, coins)
 			)
