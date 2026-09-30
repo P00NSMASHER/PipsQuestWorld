@@ -13,7 +13,7 @@ end
 
 local ok, err = Engine.validateBank(Bank)
 assert(ok, err)
-assert(#Bank == 7, 'curated release pool drift')
+assert(#Bank == 12, 'curated release pool drift')
 
 local history = Engine.newHistory()
 Engine.beginQuest(history)
