@@ -55,8 +55,9 @@ local function playerFinishedRoom(player, roomId)
 
 			Transporter:placePlayersToHomeSpawn({ player })
 
-			store:dispatch(addPlayerFinishToRoom(player, roomId, os.time(), coins))
-			store:dispatch(clientFinishGame(player, roomId, os.time(), coins))
+			local finishTime = os.time()
+			store:dispatch(addPlayerFinishToRoom(player, roomId, finishTime, coins))
+			store:dispatch(clientFinishGame(player, roomId, finishTime, coins))
 
 			GameDatastore:incrementCoins(player, coins)
 			store:dispatch(
@@ -69,7 +70,7 @@ local function playerFinishedRoom(player, roomId)
 			Leaderboards:updateMostPlayed(player)
 			Leaderboards:updateMostPlayed(player, roomId)
 			store:dispatch(
-				clientPipNativeFinishCelebration(player, roomId, os.time(), coins)
+				clientPipNativeFinishCelebration(player, roomId, finishTime, coins)
 			)
 		end
 	end

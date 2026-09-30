@@ -22,8 +22,9 @@ const [finishThunk, finishAction, playerReducer, finishScreen, roomLoop, pipActi
 
 const nativeSequence = [
   'Transporter:placePlayersToHomeSpawn({ player })',
-  'store:dispatch(addPlayerFinishToRoom(player, roomId, os.time(), coins))',
-  'store:dispatch(clientFinishGame(player, roomId, os.time(), coins))',
+  'local finishTime = os.time()',
+  'store:dispatch(addPlayerFinishToRoom(player, roomId, finishTime, coins))',
+  'store:dispatch(clientFinishGame(player, roomId, finishTime, coins))',
   'GameDatastore:incrementCoins(player, coins)',
   "'You won ' .. coins .. ' coins'",
   'Leaderboards:updateMostPlayed(player)',
@@ -36,9 +37,14 @@ for (const needle of nativeSequence) {
   previous = at;
 }
 const pipDispatch = finishThunk.indexOf(
-  'clientPipNativeFinishCelebration(player, roomId, os.time(), coins)'
+  'clientPipNativeFinishCelebration(player, roomId, finishTime, coins)'
 );
 assert.ok(pipDispatch > previous, 'Pip celebration must dispatch after the full native completion path');
+assert.equal(
+  (finishThunk.match(/os\.time\(\)/g) || []).length,
+  1,
+  'native finish and Pip celebration must share one authoritative finish timestamp'
+);
 
 assert.ok(finishAction.includes("type = script.Name"), 'native clientFinishGame action changed unexpectedly');
 assert.ok(playerReducer.includes("AudioPlayer.playAudio('Finish')"), 'native finish sound must remain');
