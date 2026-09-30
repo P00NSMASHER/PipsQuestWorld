@@ -33,15 +33,6 @@
       "SchoolServer": {
         "$path": "src/server"
       }
-    },
-    "StarterPlayer": {
-      "$className": "StarterPlayer",
-      "StarterPlayerScripts": {
-        "$className": "StarterPlayerScripts",
-        "SchoolClient": {
-          "$path": "src/client"
-        }
-      }
     }
   }
 }
