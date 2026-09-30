@@ -1,13 +1,6 @@
 name: RHS Startup Risk Audit
 
 on:
-  push:
-    branches:
-      - rebuild/rhs-licensed-exact
-    paths:
-      - "scripts/rhs-startup-risk-audit.py"
-      - ".github/workflows/rhs-startup-risk-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
   pull_request:
     paths:
       - "scripts/rhs-startup-risk-audit.py"
