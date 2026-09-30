@@ -12,6 +12,10 @@ on:
       - "tests/pips*.luau"
       - ".github/workflows/standalone-education-content-ci.yml"
 
+  pull_request:
+    branches:
+      - rebuild/maze-world-foundation
+
 permissions:
   contents: read
 
@@ -21,6 +25,14 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assert Maze World protected core is untouched
+        shell: bash
+        run: |
+          BASE=7ebfd2f81ddfc3d740eee1641b859f49dc087323
+          git diff --exit-code "$BASE" -- game/maze-world.rbxl game/Place.rbxmx game/PlaceTerrain.rbxmx game/src/common/Maze.lua game/src/common/MazeGenerator.lua game/src/common/TouchItem.lua game/src/common/TagItem.lua game/src/common/thunks/startGame.lua game/src/common/thunks/startRoomGameLoop.lua game/src/common/thunks/playerFinishedRoom.lua game/src/client/Components/Room.lua game/src/client/Components/FinishScreen.lua
 
       - name: Install pinned Luau 0.740
         shell: bash
