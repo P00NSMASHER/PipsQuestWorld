@@ -27,10 +27,10 @@ Config.DayPhases = {
 }
 
 Config.ClassRooms = {
-	Math = { displayName = "Math", position = Vector3.new(-56, 3, -30), accent = Color3.fromRGB(88, 142, 255) },
-	Science = { displayName = "Science", position = Vector3.new(56, 3, -30), accent = Color3.fromRGB(78, 190, 120) },
-	PE = { displayName = "P.E.", position = Vector3.new(56, 3, 34), accent = Color3.fromRGB(245, 145, 66) },
-	Art = { displayName = "Art", position = Vector3.new(-56, 3, 34), accent = Color3.fromRGB(207, 110, 228) },
+	Math = { displayName = "Math", position = Vector3.new(-56, 0, -30), accent = Color3.fromRGB(88, 142, 255) },
+	Science = { displayName = "Science", position = Vector3.new(56, 0, -30), accent = Color3.fromRGB(78, 190, 120) },
+	PE = { displayName = "P.E.", position = Vector3.new(56, 0, 34), accent = Color3.fromRGB(245, 145, 66) },
+	Art = { displayName = "Art", position = Vector3.new(-56, 0, 34), accent = Color3.fromRGB(207, 110, 228) },
 }
 
 Config.StylePresets = {
