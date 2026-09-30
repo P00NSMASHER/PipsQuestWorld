@@ -1,0 +1,236 @@
+name: RHS Archive Inspection
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/rhs-archive-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download archived Roblox High School place
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://raw.githubusercontent.com/MisoNotSoupx/Old-Roblox-Place-Archive/main/Created%20by%20Users/Cindering/ROBLOX%20High%20School.rbxl'
+          curl -L --fail --retry 3 "$URL" -o /tmp/rhs.rbxl
+          test "$(stat -c %s /tmp/rhs.rbxl)" -eq 2283775
+          echo "FILE_BYTES=$(stat -c %s /tmp/rhs.rbxl)"
+          echo "SHA256=$(sha256sum /tmp/rhs.rbxl | awk '{print $1}')"
+          echo "HEADER=$(xxd -l 32 -p /tmp/rhs.rbxl)"
+
+      - name: Build pinned Roblox binary inspector
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git             --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1             --package rbx_util             --locked
+
+      - name: Convert place to XML
+        shell: bash
+        run: |
+          set -euo pipefail
+          rbx-util convert /tmp/rhs.rbxl /tmp/rhs.rbxlx
+          echo "XML_BYTES=$(stat -c %s /tmp/rhs.rbxlx)"
+
+      - name: Inventory place contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/inspect.py <<'PY'
+          import collections
+          import re
+          import xml.etree.ElementTree as ET
+
+          path = "/tmp/rhs.rbxlx"
+          root = ET.parse(path).getroot()
+
+          items = list(root.iter("Item"))
+          class_counts = collections.Counter(i.attrib.get("class","?") for i in items)
+
+          def props(item):
+              p = item.find("Properties")
+              return list(p) if p is not None else []
+
+          def prop_text(item, name):
+              for p in props(item):
+                  if p.attrib.get("name") == name:
+                      if p.tag == "Content":
+                          child = next(iter(p), None)
+                          return (child.text or "") if child is not None else ""
+                      return p.text or ""
+              return ""
+
+          def item_name(item):
+              return prop_text(item, "Name") or "(unnamed)"
+
+          # Build parent map from XML nesting.
+          parent = {}
+          for p in items:
+              for c in p.findall("Item"):
+                  parent[id(c)] = p
+
+          top_items = [i for i in items if id(i) not in parent]
+
+          scripts = [i for i in items if i.attrib.get("class") in {"Script","LocalScript","ModuleScript"}]
+          script_sources = []
+          for i in scripts:
+              src = prop_text(i, "Source")
+              script_sources.append((i.attrib.get("class"), item_name(i), src))
+
+          content_values = []
+          for i in items:
+              for p in props(i):
+                  if p.tag == "Content":
+                      child = next(iter(p), None)
+                      if child is not None and child.text:
+                          content_values.append((p.attrib.get("name",""), child.text.strip()))
+                  elif p.attrib.get("name") in {"Texture","TextureId","SoundId","MeshId","AnimationId","LinkedSource"}:
+                      txt = (p.text or "").strip()
+                      if txt:
+                          content_values.append((p.attrib.get("name",""), txt))
+
+          asset_ids = collections.Counter()
+          external_urls = collections.Counter()
+          for _, v in content_values:
+              for m in re.finditer(r"(?:rbxassetid://|https?://(?:www\.)?roblox\.com/asset/\?id=|https?://assetdelivery\.roblox\.com/v1/asset/\?id=)(\d+)", v, re.I):
+                  asset_ids[m.group(1)] += 1
+              if re.match(r"https?://", v, re.I):
+                  external_urls[v] += 1
+
+          service_refs = collections.Counter()
+          keyword_refs = collections.Counter()
+          require_ids = collections.Counter()
+          http_urls = collections.Counter()
+          keywords = [
+              "DataStoreService","MarketplaceService","BadgeService","TeleportService",
+              "HttpService","MessagingService","InsertService","GroupService",
+              "MemoryStoreService","TextService","PolicyService","AnalyticsService",
+              "GamePass","DeveloperProduct","ProcessReceipt","PromptGamePassPurchase",
+              "PromptProductPurchase","GetAsync","SetAsync","UpdateAsync","Teleport",
+              "HttpGet","HttpPost","LoadAsset"
+          ]
+          getservice_re = re.compile(r'GetService\s*\(\s*["\']([^"\']+)["\']\s*\)')
+          require_re = re.compile(r'require\s*\(\s*(\d{4,})\s*\)')
+          url_re = re.compile(r'https?://[^"\'\s)]+')
+          for _, _, src in script_sources:
+              for m in getservice_re.finditer(src):
+                  service_refs[m.group(1)] += 1
+              for k in keywords:
+                  n = src.count(k)
+                  if n:
+                      keyword_refs[k] += n
+              for m in require_re.finditer(src):
+                  require_ids[m.group(1)] += 1
+              for m in url_re.finditer(src):
+                  http_urls[m.group(0)] += 1
+
+          remotes = [(i.attrib.get("class"), item_name(i)) for i in items if i.attrib.get("class") in {"RemoteEvent","RemoteFunction","BindableEvent","BindableFunction"}]
+          gui_classes = {"ScreenGui","Frame","TextLabel","TextButton","ImageLabel","ImageButton","ScrollingFrame","ViewportFrame"}
+          guis = [i for i in items if i.attrib.get("class") in gui_classes]
+          tools = [i for i in items if i.attrib.get("class") == "Tool"]
+          vehicles = [i for i in items if i.attrib.get("class") in {"VehicleSeat","Seat"}]
+          teams = [i for i in items if i.attrib.get("class") == "Team"]
+          sounds = [i for i in items if i.attrib.get("class") == "Sound"]
+
+          interesting_terms = [
+              "school","class","math","english","science","history","social","gym","cafeteria",
+              "lunch","locker","club","dance","prom","house","home","car","vehicle","job",
+              "teacher","student","schedule","period"
+          ]
+          interesting_names = []
+          for i in items:
+              n = item_name(i)
+              if any(t in n.lower() for t in interesting_terms):
+                  interesting_names.append((i.attrib.get("class","?"), n))
+
+          nonempty_scripts = [(c,n,s) for c,n,s in script_sources if s.strip()]
+          total_script_bytes = sum(len(s.encode("utf-8", errors="ignore")) for _,_,s in nonempty_scripts)
+
+          print("=== RHS_ARCHIVE_INVENTORY ===")
+          print("TOTAL_INSTANCES", len(items))
+          print("DISTINCT_CLASSES", len(class_counts))
+          print("TOP_LEVEL_ITEMS")
+          for i in top_items:
+              print("TOP", i.attrib.get("class","?"), repr(item_name(i)))
+
+          print("TOP_CLASSES")
+          for cls, count in class_counts.most_common(40):
+              print("CLASS", cls, count)
+
+          print("SCRIPT_SUMMARY", "total", len(scripts), "nonempty", len(nonempty_scripts), "source_bytes", total_script_bytes)
+          for c in ["Script","LocalScript","ModuleScript"]:
+              subset = [(n,s) for cls,n,s in script_sources if cls == c]
+              print("SCRIPT_CLASS", c, len(subset), "nonempty", sum(bool(s.strip()) for _,s in subset))
+
+          print("SCRIPT_NAMES")
+          for cls, name, src in nonempty_scripts[:200]:
+              print("SCRIPT", cls, repr(name), "bytes", len(src.encode("utf-8", errors="ignore")))
+
+          print("REMOTES", len(remotes))
+          for cls, name in remotes[:200]:
+              print("REMOTE", cls, repr(name))
+
+          print("GUI_INSTANCES", len(guis))
+          print("TOOLS", len(tools))
+          for i in tools[:100]:
+              print("TOOL", repr(item_name(i)))
+          print("TEAMS", len(teams))
+          for i in teams[:100]:
+              print("TEAM", repr(item_name(i)))
+          print("SEATS_AND_VEHICLESEATS", len(vehicles))
+          print("SOUNDS", len(sounds))
+
+          print("ASSET_IDS_UNIQUE", len(asset_ids), "REFERENCES", sum(asset_ids.values()))
+          for aid, count in asset_ids.most_common(100):
+              print("ASSET", aid, count)
+
+          print("EXTERNAL_CONTENT_URLS", len(external_urls))
+          for u, count in external_urls.most_common(50):
+              print("CONTENT_URL", count, u)
+
+          print("SCRIPT_SERVICE_REFERENCES")
+          for service, count in service_refs.most_common():
+              print("SERVICE_REF", service, count)
+
+          print("SCRIPT_DEPENDENCY_KEYWORDS")
+          for key, count in keyword_refs.most_common():
+              print("KEYWORD", key, count)
+
+          print("NUMERIC_REQUIRE_IDS", len(require_ids))
+          for rid, count in require_ids.most_common(100):
+              print("REQUIRE_ID", rid, count)
+
+          print("SCRIPT_HTTP_URLS", len(http_urls))
+          for u, count in http_urls.most_common(50):
+              print("HTTP_URL", count, u)
+
+          print("INTERESTING_NAMES", len(interesting_names))
+          for cls, name in interesting_names[:300]:
+              print("NAME", cls, repr(name))
+
+          # Crude feature signals from names + source, useful for deciding whether this is a full game snapshot.
+          corpus = "\n".join([n for _,n in interesting_names] + [s for _,_,s in script_sources]).lower()
+          features = {
+              "class_or_schedule_logic": any(x in corpus for x in ["schedule","period","class","bell"]),
+              "vehicles": len(vehicles) > 0 or any(x in corpus for x in ["vehicle","car"]),
+              "housing": any(x in corpus for x in ["house","home"]),
+              "jobs": "job" in corpus,
+              "clubs_or_dance": any(x in corpus for x in ["club","dance","prom"]),
+              "persistence_calls": any(x in keyword_refs for x in ["DataStoreService","GetAsync","SetAsync","UpdateAsync"]),
+              "monetization_calls": any(x in keyword_refs for x in ["MarketplaceService","GamePass","DeveloperProduct","ProcessReceipt","PromptGamePassPurchase","PromptProductPurchase"]),
+              "teleport_calls": any(x in keyword_refs for x in ["TeleportService","Teleport"]),
+              "http_calls": any(x in keyword_refs for x in ["HttpService","HttpGet","HttpPost"]),
+          }
+          print("FEATURE_SIGNALS")
+          for k,v in features.items():
+              print("FEATURE", k, str(v).lower())
+          print("=== END_RHS_ARCHIVE_INVENTORY ===")
+          PY
+          python3 /tmp/inspect.py
