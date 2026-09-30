@@ -83,6 +83,38 @@ if luau.get("embeddedScripts") != 1192:
 if luau.get("syntaxFailures") != 0:
     errors.append("preflight records Luau syntax failures")
 
+current_api = checks.get("currentApiClassAudit") or {}
+if current_api.get("status") != "PASS":
+    errors.append("preflight current API class audit is not PASS")
+if current_api.get("apiDumpCommit") != "fcd6994996bb655bef047c69f456463d94faa569":
+    errors.append("preflight current API class audit is not pinned to the accepted API dump")
+if current_api.get("classesPresent") != 121:
+    errors.append("preflight current API class count changed")
+if current_api.get("classesMissing") != 1:
+    errors.append("preflight current API missing-class count changed")
+missing_classes = current_api.get("missingClasses") or []
+if len(missing_classes) != 1 or missing_classes[0].get("class") != "RenderHooksService":
+    errors.append("preflight missing current-API class is not the known RenderHooksService singleton")
+elif (
+    missing_classes[0].get("instances") != 1
+    or missing_classes[0].get("directChildren") != 0
+    or missing_classes[0].get("descendants") != 0
+    or missing_classes[0].get("scriptReferences") != 0
+):
+    errors.append("RenderHooksService no longer matches the accepted inert singleton evidence")
+if current_api.get("allLegacyMembersPresent") is not True:
+    errors.append("preflight records one or more targeted legacy members as absent")
+
+service_api = checks.get("currentServiceApiAudit") or {}
+if service_api.get("status") != "PASS":
+    errors.append("preflight current service API audit is not PASS")
+if service_api.get("apiDumpCommit") != "fcd6994996bb655bef047c69f456463d94faa569":
+    errors.append("preflight current service API audit is not pinned to the accepted API dump")
+if service_api.get("missingServices") != 0:
+    errors.append("preflight current service API audit reports missing services")
+if service_api.get("missingMembers") != 0:
+    errors.append("preflight current service API audit reports missing service members")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
