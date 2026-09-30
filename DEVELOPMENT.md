@@ -1,50 +1,57 @@
-# Development Workflow
+# Development Workflow — School Life
 
-## Core rule
+## Current direction
 
-**Player experience is the score.**
+The maze concept is retired as the active product direction.
 
-Architecture, test count, branch activity, and code volume do not count as progress unless they improve a verified player experience or prevent regressions.
+- `game/` = frozen legacy Maze World import and provenance.
+- `school/` = active standalone school-life roleplay game.
 
-## Protected integration flow
+## Product loop
+
+spawn in town → school schedule → class activity → credits/XP → free time → home/style/vehicle/job → repeat
+
+## Integration flow
 
 `main`  
-Release-quality, QA-accepted builds only.
+Release-quality, accepted work.
 
 `develop`  
-Sole integration branch. Only the Integrator lane merges verified feature work here.
+Integration branch when used for multi-worker development.
 
-Feature branches:
-- `feat/maze-core`
-- `feat/education-engine`
-- `feat/learning-gates`
-- `feat/pip-rewards`
-- `feat/mobile-ux`
-- `qa/gameplay`
-- `content/emma-schoolwork`
+Feature branches should be scoped to one player-facing system, for example:
 
-Baseline:
-- `baseline/maze-world-pristine`
+- `feat/school-life-pivot`
+- `feat/classes`
+- `feat/housing`
+- `feat/vehicles`
+- `feat/jobs`
+- `feat/avatar-style`
+- `feat/mobile-ui`
+- `qa/school-life`
 
-## Worker rules
+## Rules
 
-1. Work only on the assigned branch.
-2. Never push directly to `main` or `develop`.
-3. Never merge your own branch.
-4. Do not rewrite unrelated systems.
-5. Preserve failures; do not weaken acceptance checks to obtain a pass.
-6. Update `HANDOFF.md` before handing work to the Integrator.
-7. Report separately:
-   - implemented
-   - actually tested
-   - not tested
-   - known failures
-8. Never call something playable/polished/ready from code inspection alone.
+1. No direct pushes to `main` or `develop`.
+2. Do not modify the legacy Maze World tree during normal School Life work.
+3. Clean-room implementation only; no proprietary code/assets/maps/UI from other Roblox experiences.
+4. Server owns progression, rewards, attendance, jobs, and answer validation.
+5. Client owns presentation and input only.
+6. Wrong class answers give feedback and permit retry; no punishment.
+7. Mobile is a first-class target.
+8. Runtime evidence is required before calling the game playable.
 
-## First milestone
+## First acceptance milestone
 
-One fun educational maze:
+A player can:
 
-spawn → meet Pip → enter maze → collect → learning gate → answer → gate opens → finish → reward → replay.
-
-No broad feature expansion until this loop is visibly good.
+1. spawn on the school campus,
+2. see the current time/period,
+3. attend the scheduled class,
+4. complete a short class activity,
+5. earn persistent credits/XP,
+6. claim a home,
+7. spawn and drive a basic vehicle,
+8. change an appearance preset,
+9. complete a simple after-school delivery job,
+10. repeat the next school day without a reset or soft-lock.

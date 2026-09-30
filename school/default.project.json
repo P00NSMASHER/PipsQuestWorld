@@ -1,0 +1,47 @@
+{
+  "name": "school-life-world",
+  "servePort": 8006,
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": true,
+        "StreamingTargetRadius": 512,
+        "Gravity": 196.2
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Brightness": 2,
+        "ClockTime": 9,
+        "GlobalShadows": true,
+        "Technology": "ShadowMap",
+        "Ambient": [0.35, 0.35, 0.4],
+        "OutdoorAmbient": [0.55, 0.55, 0.6]
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "SchoolShared": {
+        "$path": "src/shared"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "SchoolServer": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "SchoolClient": {
+          "$path": "src/client"
+        }
+      }
+    }
+  }
+}
