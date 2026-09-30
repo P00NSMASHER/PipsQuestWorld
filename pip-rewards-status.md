@@ -1,42 +1,57 @@
 # Pip Rewards Status
 
-## Current cycle
+## Current cycle — native finish receipt binding
 - Status: **READY**
-- Step 7 objective: layer one idempotent Pip celebration onto Maze World's native finish reward path.
-- Implementation commit: `36e9895efc7b90634252b609d9e0d9e95d796d49`
-- Validation: exact-head headless contract/regression checks passed at the implementation commit.
-- Runtime/visual claim: **NONE**. Roblox Studio and all GUI surfaces remained untouched.
+- Step 7 objective: bind Pip's finish celebration to the exact Maze World native completion receipt instead of sampling a second timestamp.
+- Implementation commit: `a9708add6845be96199093013e945cf09df772bc`
+- Validation: **PASS** — exact-commit, headless contract/regression verification at `a9708add6845be96199093013e945cf09df772bc`.
+- Runtime/visual claim: **NONE**. Roblox Studio and every GUI surface remained untouched.
 
 ## Plan and completion-contract inputs
-- `EXECUTIVE_PLAN.md`: not present on the Pip Rewards branch at the implementation revision.
-- Maze Core and Learning Gates currently expose lane handoffs but no implemented completion interface beyond Maze World's imported native finish path.
-- Conservative integration rule used for this cycle: consume only Maze World's existing `playerFinishedRoom` completion path; do not make Pip Rewards depend on or own Learning Gate completion.
+- `EXECUTIVE_PLAN.md`: not present on current `PipsQuestWorld` main or on `feat/pip-rewards`; no plan contents were invented.
+- Maze Core `HANDOFF.md`: still a placeholder and exposes no newer completion interface.
+- Learning Gates `HANDOFF.md`: still a placeholder and exposes no implemented finish handoff contract.
+- Exact native Maze World completion contract inspected this cycle:
+  - `game/src/common/thunks/playerFinishedRoom.lua`
+  - `game/src/common/actions/toClient/clientFinishGame.lua`
+  - `game/src/client/clientReducers/player.lua`
+  - `game/src/common/thunks/startRoomGameLoop.lua`
+- Conservative boundary remains: a Learning Gate may delay access to a finish, but after success it must return control to Maze World's original finish path. Pip Rewards never marks the room complete.
 
 ## Native event consumed
-- Authority remains `game/src/common/thunks/playerFinishedRoom.lua`.
-- Existing native sequence remains authoritative: transport home -> record finish -> dispatch `clientFinishGame` -> award prize coins -> native coin notification -> leaderboard updates.
-- Only after that sequence completes does the new `clientPipNativeFinishCelebration` action dispatch to the finishing player.
+Authority remains `playerFinishedRoom`. The authoritative sequence is still:
+
+`transport home -> record native finish -> clientFinishGame -> award prize coins -> native coin notification -> leaderboard updates -> Pip celebration`
+
+This cycle captures `finishTime = os.time()` exactly once after the native transport and reuses that same value for:
+- `addPlayerFinishToRoom`
+- `clientFinishGame`
+- `clientPipNativeFinishCelebration`
+
+That makes the Pip idempotency key refer to the same native completion receipt even if execution crosses a one-second boundary.
 
 ## Proof the original reward still fires
-Exact-head regression proof for `36e9895efc7b90634252b609d9e0d9e95d796d49` confirmed:
-- `addPlayerFinishToRoom` remains in native order.
-- `clientFinishGame` remains in native order.
-- `GameDatastore:incrementCoins(player, coins)` remains in native order.
-- the original `You won ... coins` notification remains.
-- both native leaderboard updates remain.
-- `AudioPlayer.playAudio('Finish')` remains in the existing client finish reducer.
-- `startRoomGameLoop.lua` contains no Pip ownership and was not modified.
-- test artifact: `scripts/test-pip-rewards-native-finish.mjs`.
+Exact-commit regression proof for `a9708add6845be96199093013e945cf09df772bc` confirmed:
+- native `addPlayerFinishToRoom` remains present and precedes the Pip dispatch;
+- native `clientFinishGame` remains present and precedes the Pip dispatch;
+- `GameDatastore:incrementCoins(player, coins)` remains in the native path;
+- the original `You won ... coins` notification remains;
+- both native leaderboard updates remain;
+- `AudioPlayer.playAudio('Finish')` remains in the existing client finish reducer;
+- `startRoomGameLoop.lua` contains no Pip ownership and remains untouched;
+- there is exactly one `os.time()` capture in the finish thunk, shared by native completion and Pip feedback;
+- regression artifact: `scripts/test-pip-rewards-native-finish.mjs`.
 
 ## Pip enhancement added
-- Reuses the existing native `FinishScreen`; no separate reward screen, room, chest room, finish pad, currency, replay structure, or progression loop.
-- Adds a small Pip cheer showing the same native prize coin amount.
-- Duplicate delivery is idempotent using a `roomId:finishTime` key; a repeated identical Pip finish event returns existing state.
+- The existing Pip cheer still renders inside Maze World's native `FinishScreen`; no separate reward screen, room, chest room, finish pad, currency, progression system, or replay structure exists.
+- This cycle hardens that enhancement by binding it to the native finish receipt used by Maze World itself.
+- Repeated delivery of the same `roomId:finishTime` remains idempotent.
 - No Robux, game-pass, developer-product, purchase prompt, or paid reward path was added.
 - No question content or maze geometry was changed.
 
-## Learning Gate boundary
-If a Learning Gate is placed before a finish, its successful resolution must return control to Maze World's original finish path. Pip Rewards listens only after native completion and never marks a room complete itself.
+## Files changed in the tested unit
+- `game/src/common/thunks/playerFinishedRoom.lua`
+- `scripts/test-pip-rewards-native-finish.mjs`
 
 ## Next safe objective
-A future Pip Rewards unit may reuse an existing Maze World pet/trail as a free cosmetic unlock, but only by attaching it to the same native finish/inventory flow with persistence and duplicate-award tests. No such unlock was introduced in this cycle.
+Reuse a native Maze World pet or trail as a free cosmetic unlock only after its existing inventory/persistence contract is identified precisely. Any such unit must preserve native finish authority, use an idempotent receipt, and prove duplicate completion cannot duplicate the unlock.
