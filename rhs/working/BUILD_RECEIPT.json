@@ -1,7 +1,10 @@
 {
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "converterRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1",
-  "patchManifestSha256": "db312974e51e229aebb9c6d1ede17571ea63dd3a3812a18c88ce1c644bf338c9",
+  "binaryPatcher": {
+    "engine": "rbx_binary",
+    "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
+  },
+  "patchManifestSha256": "d91b30b126a0769da83e83cb6570f208344c37db6a2f82f688e2c829cb68b0b2",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -71,5 +74,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "1e16f85f7d2290d829010e34bffbc4dfc7ce2f72060b63682f07737aeef3f0ba"
+  "workingSha256": "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4"
 }
