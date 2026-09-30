@@ -2,9 +2,6 @@ name: Active Direction Guard
 
 on:
   pull_request:
-  push:
-    branches:
-      - rebuild/rhs-licensed-exact
     paths:
       - "README.md"
       - "STATUS.md"
