@@ -1,27 +1,20 @@
-# Upstream Foundation
+# Historical Upstream Foundation
 
-Primary foundation: **MayGo/maze-world**
+The repository preserves an earlier MIT-licensed import of **MayGo/maze-world** for provenance and rollback.
 
 - Repository: https://github.com/MayGo/maze-world
 - Pinned source commit: `2dba386aaa66c3351087ae5848bc5f6bf7a832b8`
 - Pinned source tree: `7cd8a459997db5a158b3a8f7e25637fb8802a3a4`
 - Upstream default branch: `master`
 - Upstream license: MIT
-- Upstream commit date: 2024-11-25
+- Frozen imported baseline commit: `7ebfd2f81ddfc3d740eee1641b859f49dc087323`
 
-## Import rule
+## Current role
 
-The first local bootstrap must clone the upstream repository and checkout the exact pinned commit above. Do not track a moving upstream branch as the development baseline.
+Maze World is **not** the active game chassis.
 
-The pristine upstream checkout must be preserved separately from working copies.
+The historical import remains under `game/` and retains its attribution/license notices. Normal School Life development must not modify or reactivate those runtime systems.
 
-## Product direction
+The active game is the standalone `school/` project: a clean-room school-life roleplay implementation with original code, map layout, UI, names, and assets.
 
-Pip's Quest World will use Maze World as the gameplay chassis while replacing monetization and integrating:
-- Emma-focused educational question banks
-- forgiving learning gates
-- Pip companion/reward systems
-- mobile-first UI
-- child-friendly progression and cosmetics
-
-Do not remove upstream attribution/license notices from substantial reused portions.
+Broad genre mechanics such as classes, schedules, homes, vehicles, jobs, avatar expression, social spaces, currencies, and progression may be implemented independently. Proprietary code, maps, models, textures, audio, branding, or UI artwork from closed-source Roblox experiences must not be copied.

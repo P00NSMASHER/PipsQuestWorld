@@ -1,45 +1,50 @@
-# Pip's Quest World Status
+# Pip's Quest World Status — School Life
 
-This file is maintained by the **Integrator lane only**.
+## Active direction
 
-## Current foundation
+- Active gameplay project: **`school/`**
+- Maze World: **retired from the active product**
+- Legacy Maze World source: preserved under **`game/`** for provenance/rollback only
+- Active implementation branch: **`feat/school-life-pivot`**
+- Runtime/visual QA in Roblox Studio: **NOT YET PROVEN**
 
-- Repository initialized: **YES**
-- Upstream foundation: **MayGo/maze-world**
-- Pinned upstream commit: `2dba386aaa66c3351087ae5848bc5f6bf7a832b8`
-- Frozen imported baseline commit: `7ebfd2f81ddfc3d740eee1641b859f49dc087323`
-- Full upstream source imported into `game/`: **YES**
-- Imported files: **4,524**
-- Recursive submodules imported: **YES**
-- Required files verified: `LICENSE`, `README.md`, `default.project.json`, `maze-world.rbxl`, `Place.rbxmx`, `PlaceTerrain.rbxmx`, `src/`, `modules/`
-- Upstream `Game.rbxlx`: omitted from normal Git storage because its expanded Git-LFS object exceeds GitHub's 100 MiB normal-file limit; upstream pointer/LFS metadata preserved under `game/UPSTREAM_METADATA/`
-- Baseline gameplay verified in Roblox runtime: **NO — next hard gate**
-- Roblox staging target: **NOT CREATED**
+## Implemented on the school-life pivot
 
-## Development lanes
+- standalone Rojo project with no Maze World runtime dependency
+- original procedural school campus and town
+- rotating school-day clock, class periods, lunch, passing time, and after-school time
+- Math, Science, P.E., and Art class activities
+- server-only answer metadata and server-authoritative rewards
+- wrong-answer retry without exposing the correct answer
+- persistent Credits and XP through DataStore
+- claimable starter homes
+- starter car spawn/drive system
+- appearance/style presets
+- cafe delivery job
+- mobile HUD, phone/schedule panel, class modal, and notifications
 
-| Lane | Branch | Setup state | Next job |
-|---|---|---|---|
-| Pristine baseline | `baseline/maze-world-pristine` | frozen at imported baseline | never modify |
-| Integrator | `develop` | initialized | integrate only verified work |
-| Maze Core | `feat/maze-core` | initialized | prove untouched Maze World runtime |
-| Education Engine | `feat/education-engine` | initialized | build generic question contract |
-| Learning Gates | `feat/learning-gates` | initialized but blocked | wait for Maze Core + Education Engine interfaces |
-| Pip & Rewards | `feat/pip-rewards` | initialized | audit/reuse pet, inventory, trail, reward systems |
-| Mobile UX | `feat/mobile-ux` | initialized | capture stock mobile screens before changes |
-| QA | `qa/gameplay` | initialized | independently prove baseline runtime |
-| Emma Content | `content/emma-schoolwork` | initialized | prepare data-only schoolwork packs |
+## Not yet proven
 
-## Next hard gate
+- exact branch launches cleanly in Roblox Studio
+- spawn/movement and all prompts work end-to-end
+- phone-sized visual QA
+- multiplayer behavior
+- DataStore persistence under production conditions
+- vehicle handling quality
+- full-day repeat without reset or soft-lock
 
-Before feature expansion, independently prove the **untouched imported Maze World** in Roblox runtime:
+## Later feature gaps
 
-spawn → movement → jump → maze generation → start maze → collect coin/item → finish maze → begin another round.
+- Cooking, Dance, and Performance Arts
+- distinct subject-specific minigames beyond starter question activities
+- deeper avatar editor
+- furniture placement/home decorating
+- expanded vehicles, jobs, clubs, and social spaces
 
-Capture visible evidence at normal and phone-sized viewport.
+## Hard acceptance gate
 
-## First product milestone
+Do not call the school-life build playable or polished until the exact candidate is run in Roblox Studio and visibly proves:
 
-Do not broaden scope until this loop is genuinely good:
+spawn → movement → school schedule → attend current class → wrong-answer retry → correct-answer reward → Credits/XP update → claim home → spawn/drive car → change style → complete cafe shift → advance through the next school period → verify phone-sized UI.
 
-spawn → meet Pip → start one maze → collect something → encounter one learning gate → answer one Emma-style question → path opens → finish → reward chest → unlock one Pip cosmetic → replay.
+No further Maze World runtime work should be started unless the user explicitly reverses the school-life pivot.
