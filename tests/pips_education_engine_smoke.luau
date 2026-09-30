@@ -1,4 +1,4 @@
-local Engine = require('../game/src/common/PipsEducationEngine')
+local Engine = require('../game/src/serverStorage/PipsEducationEngine')
 
 local Deterministic = {}
 Deterministic.__index = Deterministic
