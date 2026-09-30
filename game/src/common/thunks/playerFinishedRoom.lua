@@ -4,6 +4,7 @@ local logger = require(Modules.src.utils.Logger)
 
 local addPlayerFinishToRoom = require(Modules.src.actions.rooms.addPlayerFinishToRoom)
 local clientFinishGame = require(Modules.src.actions.toClient.clientFinishGame)
+local clientPipNativeFinishCelebration = require(Modules.src.actions.toClient.clientPipNativeFinishCelebration)
 local clientSendNotification = require(Modules.src.actions.toClient.clientSendNotification)
 local M = require(Modules.M)
 local assets = require(Modules.src.assets)
@@ -67,6 +68,9 @@ local function playerFinishedRoom(player, roomId)
 			)
 			Leaderboards:updateMostPlayed(player)
 			Leaderboards:updateMostPlayed(player, roomId)
+			store:dispatch(
+				clientPipNativeFinishCelebration(player, roomId, os.time(), coins)
+			)
 		end
 	end
 end

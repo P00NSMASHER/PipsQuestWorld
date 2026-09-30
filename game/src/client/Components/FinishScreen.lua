@@ -42,6 +42,19 @@ function FinishScreen:render()
 
 	local title
 	local playersList
+	local pipRewardFeedback
+
+	if self.props.pipRewardMessage then
+		pipRewardFeedback = createElement(TextLabel, {
+			Text = self.props.pipRewardMessage,
+			Position = UDim2.new(0.05, 0, 1, -42),
+			Size = UDim2.new(0.9, 0, 0, 30),
+			TextSize = 20,
+			TextXAlignment = Enum.TextXAlignment.Center,
+			TextYAlignment = Enum.TextYAlignment.Center,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+		})
+	end
 
 	if noTimer then
 		title = 'You Finished'
@@ -97,6 +110,7 @@ function FinishScreen:render()
 		{
 			UICorner = createElement(UICorner),
 			PlayersList = playersList,
+			PipRewardFeedback = pipRewardFeedback,
 			Button = button,
 		}
 	)
@@ -125,6 +139,7 @@ local FinishScreenConnected = RoactRodux.connect(function(state)
 
 	return {
 		isFinishScreenOpen = state.player.isFinishScreenOpen,
+		pipRewardMessage = state.player.pipNativeFinishMessage,
 		startTime = room.startTime,
 		endTime = room.endTime,
 		playersPlaying = room.playersPlaying,

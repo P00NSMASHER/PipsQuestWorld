@@ -22,10 +22,21 @@ local function player(state, action)
 			lastFinishedRoomId = action.roomId,
 			isFinishScreenOpen = true,
 		})
+	elseif action.type == 'clientPipNativeFinishCelebration' then
+		local rewardKey = tostring(action.roomId) .. ':' .. tostring(action.finishTime)
+
+		if state.lastPipNativeFinishKey == rewardKey then
+			return state
+		end
+
+		return Dict.join(state, {
+			lastPipNativeFinishKey = rewardKey,
+			pipNativeFinishMessage = 'Pip cheers! You earned ' .. tostring(action.coins) .. ' coins.',
+		})
 	elseif action.type == 'clientStartGame' then
 		logger:d('clientStartGame:', action.playerId, LocalPlayer.UserId)
 
-		return Dict.join(state, { isPlaying = true })
+		return Dict.join(state, { isPlaying = true, pipNativeFinishMessage = None })
 	elseif action.type == 'clientSetRoom' then
 		return Dict.join(state, {
 			roomId = action.roomId,
