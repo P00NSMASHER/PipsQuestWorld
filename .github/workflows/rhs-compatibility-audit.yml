@@ -7,6 +7,10 @@ on:
       - "scripts/rhs-compatibility-audit.py"
       - ".github/workflows/rhs-compatibility-audit.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
