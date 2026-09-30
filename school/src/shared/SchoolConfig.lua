@@ -1,17 +1,29 @@
 local SchoolConfig = {}
 
-SchoolConfig.BELL_SECONDS = 150
-SchoolConfig.TRAVEL_GRACE_SECONDS = 20
+SchoolConfig.PERIOD_SECONDS = 150
+SchoolConfig.ATTENDANCE_RADIUS = 45
+SchoolConfig.TRAVEL_OFFSET = Vector3.new(0, 3, 0)
+
+SchoolConfig.Interfaces = {
+    remoteFolder = "SchoolFoundation",
+    stateSnapshot = "StateSnapshot",
+    requestTravel = "RequestTravel",
+    serverEventFolder = "SchoolFoundationEvents",
+    sessionStarted = "SessionStarted",
+    sessionEnded = "SessionEnded",
+    periodChanged = "PeriodChanged",
+    attendanceChanged = "AttendanceChanged",
+}
 
 SchoolConfig.Periods = {
-    { id = "homeroom", label = "Homeroom", subject = "Life Skills", room = "Homeroom", canQuestion = true },
-    { id = "math", label = "Math", subject = "Math", room = "Math", canQuestion = true },
-    { id = "ela", label = "English / Reading", subject = "ELA", room = "ELA", canQuestion = true },
-    { id = "science", label = "Science", subject = "Science", room = "Science", canQuestion = true },
-    { id = "lunch", label = "Lunch", subject = "Lunch", room = "Cafeteria", canQuestion = false },
-    { id = "social", label = "Social Studies", subject = "Social Studies", room = "SocialStudies", canQuestion = true },
-    { id = "pe", label = "Physical Education", subject = "Health", room = "Gym", canQuestion = true },
-    { id = "free", label = "Free Time", subject = "Free Time", room = "Courtyard", canQuestion = false },
+    { id = "homeroom", label = "Homeroom", room = "Homeroom" },
+    { id = "math", label = "Math", room = "Math" },
+    { id = "ela", label = "English / Reading", room = "ELA" },
+    { id = "science", label = "Science", room = "Science" },
+    { id = "lunch", label = "Lunch", room = "Cafeteria" },
+    { id = "social", label = "Social Studies", room = "SocialStudies" },
+    { id = "pe", label = "Physical Education", room = "Gym" },
+    { id = "free", label = "Free Time", room = "Courtyard" },
 }
 
 SchoolConfig.Rooms = {
@@ -24,12 +36,6 @@ SchoolConfig.Rooms = {
     Cafeteria = { position = Vector3.new(-48, 4, 102), displayName = "Cafeteria" },
     Gym = { position = Vector3.new(48, 4, -108), displayName = "Gym" },
     Courtyard = { position = Vector3.new(48, 3, 102), displayName = "Courtyard" },
-}
-
-SchoolConfig.Rewards = {
-    attendance = 5,
-    correct = 10,
-    completedAfterRetries = 3,
 }
 
 return SchoolConfig
