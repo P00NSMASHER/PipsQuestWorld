@@ -81,6 +81,7 @@ jobs:
               "StarterPlayer/StarterPlayerScripts/ControlScript/MasterControl/Thumbstick": [187],
               "ServerScriptService/RemoveHats/Skateboard": [316],
               "ServerScriptService/RemoveHats/SkateboardHoverboard": [404],
+              "ServerScriptService/DataStoresScript": [1273, 1285, 1295, 1305, 1315, 1325],
           }
 
           for item, path in walk(root):
