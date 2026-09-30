@@ -23,13 +23,16 @@ for path in active_docs:
         errors.append(f"{path.relative_to(ROOT)} still describes Maze World as active")
 
 workflow_dir = ROOT / ".github" / "workflows"
+allowed_write_workflows = {"build-rhs-working-copy.yml"}
 for path in workflow_dir.glob("*.yml"):
     name = path.name.lower()
     text = path.read_text(encoding="utf-8")
     if "maze" in name and "rhs" not in name:
         errors.append(f"obsolete Maze workflow remains active: {path.relative_to(ROOT)}")
-    if re.search(r"(?i)git push origin HEAD:main", text) and "rhs" not in name:
-        errors.append(f"non-RHS workflow can push directly to main: {path.relative_to(ROOT)}")
+    if re.search(r"(?i)git push origin HEAD:main", text):
+        errors.append(f"workflow can push directly to main: {path.relative_to(ROOT)}")
+    if re.search(r"(?m)^\s*contents:\s*write\s*$", text) and path.name not in allowed_write_workflows:
+        errors.append(f"unexpected contents:write workflow: {path.relative_to(ROOT)}")
 
 required = {
     "README.md": "licensed archived **ROBLOX High School**",
