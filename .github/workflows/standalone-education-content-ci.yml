@@ -5,6 +5,7 @@ on:
     branches:
       - rebuild/education-engine-adapter
       - rebuild/content-qa
+      - rebuild/phase1-standalone-prep
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
