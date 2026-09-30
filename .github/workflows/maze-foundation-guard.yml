@@ -20,11 +20,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assert Maze World foundation files are unchanged
+      - name: Assert Maze World protected files are unchanged
         shell: bash
         run: |
           BASE=7ebfd2f81ddfc3d740eee1641b859f49dc087323
-          git diff --exit-code "$BASE" --             game/maze-world.rbxl             game/Place.rbxmx             game/PlaceTerrain.rbxmx             game/src/common/Maze.lua             game/src/common/MazeGenerator.lua             game/src/common/TouchItem.lua             game/src/common/TagItem.lua             game/src/common/thunks/startGame.lua             game/src/common/thunks/startRoomGameLoop.lua             game/src/common/thunks/playerFinishedRoom.lua             game/src/client/Components/Room.lua             game/src/client/Components/FinishScreen.lua
+          git diff --exit-code "$BASE" -- \
+            game/maze-world.rbxl \
+            game/Place.rbxmx \
+            game/PlaceTerrain.rbxmx \
+            game/src/common/Maze.lua \
+            game/src/common/MazeGenerator.lua \
+            game/src/common/TouchItem.lua \
+            game/src/common/TagItem.lua \
+            game/src/common/thunks/startGame.lua \
+            game/src/common/thunks/startRoomGameLoop.lua \
+            game/src/common/thunks/playerFinishedRoom.lua \
+            game/src/client/Components/Room.lua \
+            game/src/client/Components/FinishScreen.lua
+
+      - name: Verify Maze World foundation invariants
+        run: node scripts/verify-foundation-static.mjs .
 
       - name: Assert Pips foundation remains shadow-only
         shell: bash
