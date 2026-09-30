@@ -18,6 +18,7 @@ Quality-quarantine one active checkpoint batch without adding questions or chang
 - Items replaced/added: 0.
 - STAR items promoted to active pool: 0.
 - Maze World gameplay/protected files changed: 0.
+- Answer-key banks moved to ServerStorage; no release correctIndex data remains client-reachable.
 
 ## Quarantined from active eligibility
 
@@ -46,4 +47,4 @@ Validated against the committed Education Engine contract at `ebdfbd2285984f0483
 
 ## Boundary
 
-The generated archive bank remains intact as evidence. Weak items are removed only from active eligibility. This unit performs no Phase-0 gameplay integration, adapter work, GUI/Studio interaction, publishing, or merge.
+The generated archive bank remains intact as evidence and is stored server-side. Weak items are removed only from active eligibility. This unit performs no Phase-0 gameplay integration, adapter work, GUI/Studio interaction, publishing, or merge.
