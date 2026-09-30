@@ -1,35 +1,16 @@
-# Baseline Acceptance — Pristine Maze World
+# Archived Baseline Acceptance — Maze World
 
-No feature work counts until the untouched imported base passes this checklist.
+> **ARCHIVED.** This checklist applied to the retired Maze World direction and is retained only as historical project evidence.
 
-## Runtime
+Do not use this document as the current acceptance gate.
 
-- [ ] Exact pinned upstream revision is present in `game/`
-- [ ] Roblox Studio opens the project without fatal load errors
-- [ ] Character spawns
-- [ ] WASD / thumbstick movement works
-- [ ] Jump works
-- [ ] Maze generation completes
-- [ ] A maze can be started
-- [ ] At least one collectible coin/item can be picked up
-- [ ] Finish can be reached
-- [ ] Another round can begin
-- [ ] Core UI controls respond
+The active runtime gate is:
 
-## Visual evidence
+- `docs/RHS_RUNTIME_SMOKE.md`
 
-Capture and retain:
-- [ ] spawn screen
-- [ ] lobby / maze selection
-- [ ] active maze
-- [ ] collectible pickup
-- [ ] finish / reward state
-- [ ] mobile-sized viewport
+The current active foundation and compatibility state are recorded in:
 
-## Failure rule
+- `STATUS.md`
+- `docs/RHS_LICENSED_EXACT_COPY.md`
 
-Do not fix the base before recording the defect. First prove what stock Maze World does, then create a separate repair commit.
-
-## Acceptance
-
-Baseline is accepted only when movement, maze generation, start, collectible pickup, and finish are demonstrated in Roblox runtime—not inferred from code.
+Historical Maze acceptance required spawn, movement, jump, maze generation, maze start, collectible pickup, finish, replay, core UI response, and mobile-sized visual evidence. Those requirements no longer define the active product direction.
