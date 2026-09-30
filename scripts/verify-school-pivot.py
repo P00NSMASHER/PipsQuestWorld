@@ -2,7 +2,6 @@
 from pathlib import Path
 import json
 import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHOOL = ROOT / "school"
@@ -28,8 +27,7 @@ project_text = (SCHOOL / "default.project.json").read_text().lower()
 if "maze" in project_text or "../game" in project_text:
     raise SystemExit("active school project must not depend on legacy Maze World")
 
-client_and_shared = "
-".join(
+client_and_shared = "\n".join(
     p.read_text(errors="ignore")
     for base in (SCHOOL / "src/client", SCHOOL / "src/shared")
     for p in base.rglob("*.lua")
@@ -46,8 +44,12 @@ if "choiceIndex == question.correctIndex" not in server:
 if "QuestionBank" not in server:
     raise SystemExit("server is not using the server-only question bank")
 
-school_text = "
-".join(p.read_text(errors="ignore") for p in SCHOOL.rglob("*") if p.is_file())
+school_text = "\n".join(
+    p.read_text(errors="ignore")
+    for p in SCHOOL.rglob("*")
+    if p.is_file()
+)
+
 protected_clone_terms = [
     r"Roblox\s+High\s+School\s*2",
     r"Roblox\s+High\s+School",
