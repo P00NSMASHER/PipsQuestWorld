@@ -23,6 +23,7 @@ assert(#bank == 12, 'reviewed release count drift')
 
 local ids = {}
 local prompts = {}
+local correctIndexCounts = { 0, 0, 0, 0 }
 for i, q in ipairs(bank) do
 	assert(q.id == expected[i], 'release id/order drift')
 	assert(q.photoDerived == true and q.tier == 'material')
@@ -39,6 +40,7 @@ for i, q in ipairs(bank) do
 
 	assert(type(q.options) == 'table' and #q.options >= 2 and #q.options <= 4)
 	assert(type(q.correctIndex) == 'number' and q.correctIndex >= 1 and q.correctIndex <= #q.options)
+	correctIndexCounts[q.correctIndex] += 1
 	local seen = {}
 	for _, option in ipairs(q.options) do
 		assert(type(option) == 'string' and #option > 0 and #option <= 90)
@@ -59,6 +61,11 @@ for i, q in ipairs(bank) do
 		if oi ~= q.correctIndex then assert(covered[option], 'missing distractor feedback') end
 	end
 end
+
+assert(correctIndexCounts[1] == 4, 'answer-position balance drift at choice 1')
+assert(correctIndexCounts[2] == 4, 'answer-position balance drift at choice 2')
+assert(correctIndexCounts[3] == 4, 'answer-position balance drift at choice 3')
+assert(correctIndexCounts[4] == 0, 'unexpected fourth-choice answer in current three-choice release pool')
 
 for first = 1, #bank - 4 do
 	local skills, applied = {}, 0

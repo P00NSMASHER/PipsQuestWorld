@@ -24,6 +24,35 @@ local function archiveQuestion(id)
 	return question
 end
 
+local function withOptionOrder(question, order)
+	assert(type(question) == "table", "question is required")
+	assert(type(order) == "table" and #order == #question.options, "option order must cover every choice")
+
+	local copy = {}
+	for key, value in pairs(question) do
+		copy[key] = value
+	end
+
+	local seen = {}
+	local reordered = {}
+	local correctIndex = nil
+	for targetIndex, sourceIndex in ipairs(order) do
+		assert(type(sourceIndex) == "number" and sourceIndex % 1 == 0, "option order index must be an integer")
+		assert(sourceIndex >= 1 and sourceIndex <= #question.options, "option order index out of bounds")
+		assert(not seen[sourceIndex], "option order repeats a source index")
+		seen[sourceIndex] = true
+		reordered[targetIndex] = question.options[sourceIndex]
+		if sourceIndex == question.correctIndex then
+			correctIndex = targetIndex
+		end
+	end
+
+	assert(correctIndex ~= nil, "option order lost the accepted answer")
+	copy.options = reordered
+	copy.correctIndex = correctIndex
+	return copy
+end
+
 local pluralTransfer = {
 	id = "pips-grade2-plural-boxes-transfer-v2",
 	stationId = "spelling-forge-fog-v1",
@@ -361,16 +390,28 @@ local welcomingLoveTransfer = {
 }
 
 return {
-	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1"),
-	mainCharacterTransfer,
-	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-short-vowel-identification-transfer-ev1"),
-	trinityTransfer,
-	pluralTransfer,
-	motivationReasoning,
-	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1"),
-	settingReasoning,
-	cvcTransfer,
-	giftsServiceTransfer,
-	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2"),
-	welcomingLoveTransfer,
+	withOptionOrder(
+		archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1"),
+		{ 2, 1, 3 }
+	),
+	withOptionOrder(mainCharacterTransfer, { 2, 3, 1 }),
+	withOptionOrder(
+		archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-short-vowel-identification-transfer-ev1"),
+		{ 1, 2, 3 }
+	),
+	withOptionOrder(trinityTransfer, { 2, 1, 3 }),
+	withOptionOrder(pluralTransfer, { 2, 3, 1 }),
+	withOptionOrder(motivationReasoning, { 1, 2, 3 }),
+	withOptionOrder(
+		archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1"),
+		{ 2, 1, 3 }
+	),
+	withOptionOrder(settingReasoning, { 2, 3, 1 }),
+	withOptionOrder(cvcTransfer, { 1, 2, 3 }),
+	withOptionOrder(giftsServiceTransfer, { 2, 1, 3 }),
+	withOptionOrder(
+		archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2"),
+		{ 2, 3, 1 }
+	),
+	withOptionOrder(welcomingLoveTransfer, { 1, 2, 3 }),
 }
