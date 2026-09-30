@@ -22,8 +22,14 @@ local function defaultClock()
 	return os.clock()
 end
 
-local function defaultIdFactory(playerKey, runId, serial)
-	return ('pips:%s:%s:%d'):format(runId, playerKey, serial)
+local function defaultIdFactory(_playerKey, _runId, serial)
+	local ok, httpService = pcall(function()
+		return game:GetService('HttpService')
+	end)
+	if ok and httpService then
+		return httpService:GenerateGUID(false)
+	end
+	return ('pips-session-%d'):format(serial)
 end
 
 local function countKeys(map)
