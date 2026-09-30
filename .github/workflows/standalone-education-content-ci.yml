@@ -74,6 +74,10 @@ jobs:
             /tmp/luau/luau-compile tests/pips_education_engine_smoke.luau >/dev/null
             /tmp/luau/luau tests/pips_education_engine_smoke.luau
           fi
+          if [ -f tests/pips_education_content_contract.luau ]; then
+            /tmp/luau/luau-compile tests/pips_education_content_contract.luau >/dev/null
+            /tmp/luau/luau tests/pips_education_content_contract.luau
+          fi
 
       - name: Run curated content tests when present
         shell: bash
