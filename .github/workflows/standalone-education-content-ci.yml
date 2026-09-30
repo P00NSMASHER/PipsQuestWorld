@@ -9,6 +9,7 @@ on:
       - rebuild/learning-session-core-v2
       - rebuild/coin-learning-selector
       - rebuild/content-quality-batch2
+      - rebuild/content-answer-balance
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
