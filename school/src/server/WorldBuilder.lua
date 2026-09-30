@@ -154,17 +154,17 @@ function WorldBuilder.build(config)
 		classPrompts[classId] = buildClassroom(school, config, classId)
 	end
 
-	local cafeteria = makeBuilding(world, "Cafeteria", Vector3.new(-120, 3, 95), Vector3.new(70, 34, 48), Color3.fromRGB(240, 180, 85), "CAFETERIA")
+	local cafeteria = makeBuilding(world, "Cafeteria", Vector3.new(-120, 0, 95), Vector3.new(70, 34, 48), Color3.fromRGB(240, 180, 85), "CAFETERIA")
 	for i = -2, 2 do
 		makeDesk(cafeteria, Vector3.new(-120 + i * 10, 3, 95))
 	end
 
-	local cafe = makeBuilding(world, "Cafe", Vector3.new(-150, 3, -115), Vector3.new(55, 34, 42), Color3.fromRGB(112, 78, 62), "AFTER SCHOOL CAFE")
+	local cafe = makeBuilding(world, "Cafe", Vector3.new(-150, 0, -115), Vector3.new(55, 34, 42), Color3.fromRGB(112, 78, 62), "AFTER SCHOOL CAFE")
 	local jobCounter = makePart(cafe, "JobCounter", Vector3.new(12, 5, 3), CFrame.new(-150, 3, -98), Color3.fromRGB(95, 65, 48), Enum.Material.Wood)
 	addBillboard(jobCounter, "CAFE JOB")
 	local jobPrompt = addPrompt(jobCounter, "Start Shift", "Cafe Delivery")
 
-	local styleBooth = makeBuilding(world, "StyleBooth", Vector3.new(235, 3, -60), Vector3.new(44, 28, 34), Color3.fromRGB(130, 105, 210), "STYLE STUDIO")
+	local styleBooth = makeBuilding(world, "StyleBooth", Vector3.new(235, 0, -60), Vector3.new(44, 28, 34), Color3.fromRGB(130, 105, 210), "STYLE STUDIO")
 	local stylePad = makePart(styleBooth, "StylePad", Vector3.new(8, 1, 8), CFrame.new(235, 1, -60), Color3.fromRGB(218, 184, 255), Enum.Material.Neon)
 	local stylePrompt = addPrompt(stylePad, "Change Style", "Style Studio")
 
