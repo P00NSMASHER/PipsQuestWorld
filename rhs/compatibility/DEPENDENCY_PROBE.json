@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "probedAt": "2026-09-30",
+  "workflowRunId": 36770144867,
+  "method": "anonymous assetdelivery.roblox.com/v1/asset probe plus exact call-site context",
+  "dependencies": [
+    {
+      "assetId": 633112728,
+      "httpStatus": 403,
+      "publicBytesAvailable": false,
+      "behavior": "SkateboardModule; exposes SkateboardFunctions and Functions; used for Classic, SummerSkate, and Hoverboard variants",
+      "callSites": [
+        "StarterPack/Skate/Script",
+        "ServerStorage/Skate/Script",
+        "ReplicatedStorage/Objects/gear_Summer Skate/Summer Skate/Script",
+        "ReplicatedStorage/Objects/gear_Merely's Sparkle Time Hoverboard/Merely's Sparkle Time Hoverboard/Script"
+      ],
+      "failureMode": "direct require; affected gear scripts stop if runtime require cannot resolve",
+      "priority": "runtime_probe"
+    },
+    {
+      "assetId": 633111804,
+      "httpStatus": 403,
+      "publicBytesAvailable": false,
+      "behavior": "SkateboardModule; exposes SkateboardFunctions and Functions",
+      "callSites": [
+        "ServerStorage/Hoverboard/Script",
+        "ReplicatedStorage/Objects/gear_Red Rolling \"Hoverboard\"/Red Rolling \"Hoverboard\"/Script"
+      ],
+      "failureMode": "direct require; affected hoverboard gear stops if runtime require cannot resolve",
+      "priority": "runtime_probe"
+    },
+    {
+      "assetId": 633111180,
+      "httpStatus": 403,
+      "publicBytesAvailable": false,
+      "behavior": "SkateboardModule variant",
+      "callSites": [
+        "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript"
+      ],
+      "failureMode": "direct require; NewHoverboard path stops if runtime require cannot resolve",
+      "priority": "runtime_probe"
+    },
+    {
+      "assetId": 399944445,
+      "httpStatus": 403,
+      "publicBytesAvailable": false,
+      "behavior": "SkateboardModule variant",
+      "callSites": [
+        "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript"
+      ],
+      "failureMode": "direct require; NewPinkHoverboard path stops if runtime require cannot resolve",
+      "priority": "runtime_probe"
+    },
+    {
+      "assetId": 258548692,
+      "httpStatus": 401,
+      "publicBytesAvailable": false,
+      "behavior": "Optional item data loader; expected loadExtraItemData(ReplicatedStorage.Objects)",
+      "callSites": [
+        "ServerScriptService/DataStoresScript"
+      ],
+      "failureMode": "require is inside pcall and guarded by if itemdataloader; failure is already tolerated",
+      "priority": "non_blocking_static"
+    },
+    {
+      "assetId": 191816425,
+      "httpStatus": 200,
+      "publicBytesAvailable": true,
+      "downloadedBytes": 4082882,
+      "sha256": "027889c1c2a515195fe42e0e34b74634071dc2b85c180dcd8f57f0308f2fe6a0",
+      "behavior": "shared Roblox gear module; used by Robloxian Clone and Madi's Broken Guitar",
+      "callSites": [
+        "ReplicatedStorage/Objects/gear_Robloxian Clone/Robloxian Clone/Script",
+        "ReplicatedStorage/Objects/gear_Madi's Broken Guitar/Madi's Broken Guitar/Script"
+      ],
+      "failureMode": "public asset probe succeeded",
+      "priority": "available"
+    }
+  ],
+  "conclusion": "No numeric require is proven to block core school startup. Four unresolved direct-require dependencies are isolated to skateboard/hoverboard feature paths and should be tested in Roblox runtime before replacement. The item-data-loader dependency is already fail-soft."
+}
