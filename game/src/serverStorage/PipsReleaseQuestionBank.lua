@@ -108,12 +108,54 @@ local trinityTransfer = {
 	correctIndex = 1,
 }
 
+local cvcTransfer = {
+	id = "pips-grade2-cvc-pattern-transfer-v2",
+	stationId = "spelling-forge-fog-v1",
+	subject = "Reading / ELA",
+	skill = "cvc-structure",
+	prompt = "Which word has the same consonant-vowel-consonant pattern as “sun”?",
+	explanation = "“Sun” and “map” each have one consonant, one vowel, then one consonant.",
+	provenance = "curated-equivalent-from-sanitized-schoolwork-skill",
+	sourceFact = "Sanitized schoolwork-photo skill evidence: cvc-structure; batch schoolwork-2026-09-26-001",
+	tier = "material",
+	domain = "Word knowledge and skills",
+	difficulty = 2,
+	standards = { "CCSS.RF.2.3" },
+	dok = 2,
+	cognitiveDemand = "skill-and-concept-application",
+	hint = "Break “sun” into three letters and compare the pattern in each choice.",
+	scaffold = "Look for one consonant, then one vowel, then one consonant.",
+	choiceDiagnostics = {
+		{
+			choice = "moon",
+			misconception = "double-vowel-pattern-confusion",
+			feedback = "“Moon” has two vowel letters together in the middle.",
+		},
+		{
+			choice = "star",
+			misconception = "consonant-cluster-pattern-confusion",
+			feedback = "“Star” begins with two consonants, so it does not match the C-V-C pattern.",
+		},
+	},
+	responseType = "multiple-choice",
+	signalId = "cvc-pattern",
+	questionType = "transfer",
+	coverageWeight = 5,
+	photoDerived = true,
+	options = {
+		"map",
+		"moon",
+		"star",
+	},
+	correctIndex = 1,
+}
+
 return {
 	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1"),
 	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-short-vowel-identification-transfer-ev1"),
 	pluralTransfer,
 	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1"),
 	trinityTransfer,
-	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-cvc-missing-vowel-direct-ev1"),
+	cvcTransfer,
 	archiveQuestion("abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2"),
 }
