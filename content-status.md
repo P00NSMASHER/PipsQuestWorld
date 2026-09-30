@@ -13,12 +13,17 @@ Quality-quarantine one active checkpoint batch without adding questions or chang
 ## Result
 
 - Items reviewed: 12 ABVM-derived release candidates.
-- Items retained in active pool: 7.
+- Items retained in active pool: 7 (5 archive items + 2 curated replacements).
 - Items quarantined from active pool: 5.
-- Items replaced/added: 0.
+- Items replaced with stronger skill-equivalent release items: 2.
 - STAR items promoted to active pool: 0.
 - Maze World gameplay/protected files changed: 0.
 - Answer-key banks moved to ServerStorage; no release correctIndex data remains client-reachable.
+
+## Replaced before active eligibility
+
+- Original plural -s/-es reasoning item: replaced with a sentence-level transfer item using plausible `boxes / boxs / box's` misconceptions.
+- Original Trinity direct item: replaced with a short scenario/meaning transfer item using two common conceptual misconceptions instead of caricatured distractors.
 
 ## Quarantined from active eligibility
 
@@ -44,6 +49,7 @@ Validated against the committed Education Engine contract at `ebdfbd2285984f0483
 - contiguous five-question windows with >=4 skills and >=1 application/reasoning item: 3/3 PASS
 - copyrighted story/answer-key material added: 0
 - raw student/private worksheet data added: 0
+- curated replacements preserve only sanitized skill provenance: PASS
 
 ## Boundary
 
