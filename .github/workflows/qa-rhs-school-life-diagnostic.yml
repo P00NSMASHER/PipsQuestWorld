@@ -6,6 +6,7 @@ on:
       - qa/rhs-school-life-3ffa9b75
     paths:
       - "qa/rhs-school-life-diagnostic.py"
+      - "qa/test_rhs_class_activity_contract.py"
       - ".github/workflows/qa-rhs-school-life-diagnostic.yml"
       - "rhs/working/ROBLOX High School.rbxl"
 
@@ -65,7 +66,8 @@ jobs:
           ]
           out += lines("Schedule candidates","scheduleCandidates")
           out += lines("Class-flow candidates","classFlowCandidates")
-          out += lines("Server-authoritative activity candidates","serverAuthoritativeActivityCandidates")
+          out += lines("Strict server class-activity candidates","strictServerClassActivityCandidates")
+          out += lines("Server question candidates","serverQuestionCandidates")
           out += lines("Client/replicated answer-key candidates","clientOrReplicatedAnswerKeyCandidates")
           out += lines("Server grade remote candidates","serverGradeRemoteCandidates")
           out += lines("Client grade remote candidates","clientGradeRemoteCandidates")
@@ -77,15 +79,19 @@ jobs:
           PY
           if [ -z "$(git status --porcelain -- qa/rhs-school-life-report.json qa/rhs-school-life-report.md)" ]; then
             echo "QA report unchanged"
-            exit 0
+          else
+            git config user.name "PipsQuestWorld QA"
+            git config user.email "qa@users.noreply.github.com"
+            git add qa/rhs-school-life-report.json qa/rhs-school-life-report.md
+            git commit -m "qa: persist RHS school-life diagnostic evidence"
+            git push origin HEAD:qa/rhs-school-life-3ffa9b75
           fi
-          git config user.name "PipsQuestWorld QA"
-          git config user.email "qa@users.noreply.github.com"
-          git add qa/rhs-school-life-report.json qa/rhs-school-life-report.md
-          git commit -m "qa: persist RHS school-life diagnostic evidence"
-          git push origin HEAD:qa/rhs-school-life-3ffa9b75
+
+      - name: Enforce server-authoritative class activity
+        run: python3 qa/test_rhs_class_activity_contract.py /tmp/rhs-school-life-diagnostic.json
 
       - name: Upload diagnostic
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rhs-school-life-diagnostic
