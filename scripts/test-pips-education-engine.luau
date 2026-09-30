@@ -92,6 +92,22 @@ assert(
 	"same-skill comeback was lost"
 )
 
+
+assert(Engine.scoreResolution(0, false) == 25)
+assert(Engine.scoreResolution(1, false) == 20)
+assert(Engine.scoreResolution(2, false) == 20)
+assert(Engine.scoreResolution(3, true) == 0)
+assert(Engine.scorePercent(125, 5) == 100)
+assert(Engine.scorePercent(120, 5) == 96)
+assert(Engine.gradeBand(90) == 'A')
+assert(Engine.gradeBand(80) == 'B')
+assert(Engine.gradeBand(70) == 'C')
+assert(Engine.gradeBand(69) == 'Practice')
+assert(Engine.masteryTier(5, 5) == 'Brightside Pro')
+assert(Engine.masteryTier(4, 5) == 'Quest Champ')
+assert(Engine.masteryTier(3, 5) == 'Rising Star')
+assert(Engine.masteryTier(1, 5) == 'Rookie')
+
 local view = Engine.clientView(bank[2], 2)
 assert(view.id == bank[2].id)
 assert(view.correctIndex == nil, "clientView leaked the correct answer")
@@ -118,3 +134,4 @@ print("PASS spaced comeback")
 print("PASS client answer secrecy")
 print("PASS feedback escalation")
 print("PASS independent mastery classification")
+print("PASS 25/20/0 scoring and grade bands")
