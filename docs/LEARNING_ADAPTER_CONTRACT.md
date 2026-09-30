@@ -43,6 +43,22 @@ The future world adapter must instead:
 5. disconnect its observation when the run closes;
 6. never depend on the coin still existing after the touch callback begins.
 
+## Deterministic native-coin selection
+
+The future world adapter must hand the selector normalized records only after verifying that each
+record belongs to the exact generated Maze folder for the current run.
+
+`PipsLearningCoinSelector.lua` is pure/server-only preparation. It:
+
+- accepts only normal native coin item ids `9000001`, `9000005`, or `9000008`;
+- rejects one-per-player treasure ids and unknown ids;
+- requires a stable unique candidate key;
+- sorts candidates before selection so discovery order cannot change the result;
+- derives one run-local choice deterministically from the run id;
+- never mutates the selected coin record.
+
+It does not inspect Workspace, attach touch listeners, mutate native coins, or award anything.
+
 ## Server-only learning session core
 
 `PipsLearningSession.lua` is allowed as standalone preparation because it owns no world,
