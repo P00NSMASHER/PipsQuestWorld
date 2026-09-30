@@ -28,9 +28,17 @@ Count: 8
 - `server` `Script` — `ServerScriptService/EnforcerActionsScript`
 - `server` `Script` — `ServerScriptService/Time_ScheduleScript`
 
-## Server-authoritative activity candidates
+## Strict server class-activity candidates
 Count: 0
 
+
+## Server question candidates
+Count: 4
+
+- `server` `Script` — `ServerScriptService/A_GameManagementCmdLines`
+- `server` `Script` — `ServerScriptService/AddIntroGUIScript`
+- `server` `Script` — `ServerScriptService/ItemBuyScript`
+- `server` `Script` — `ServerScriptService/GameAnalyticsManager`
 
 ## Client/replicated answer-key candidates
 Count: 0
