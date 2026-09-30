@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "scripts": {
+    "ServerScriptService/CheckRankingBotLogin": "e6b78fae68e637b3afc9d2f3cad73a450a016ce9beb337c7ca2f596179a2456b",
+    "ServerScriptService/GroupRankingManager": "bf6cf3399f61e4c3157c74bf10f9f25b450bab15f1c4ef59bb535bf2575f511d",
+    "ServerScriptService/GameAnalytics": "f5b8d396febd1d0f1bdbf037854231e29f2d6031da9daf429bdcb8ba0dcc9185",
+    "ServerScriptService/Time/ScheduleScript": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
+    "ServerStorage/Orbs/MagicOrbScript": "97f51c141575abf7665017db34901d679e405a95b3a6c3f6fca9d2fcc39c4c5a",
+    "ServerScriptService/DataStoresScript": "e31d9881b1e00e9e00378ce90cc152a468a57b4615e55f5619c0227f4ba7bfc8",
+    "ServerScriptService/CustomHouseScript_NEW": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c"
+  }
+}
