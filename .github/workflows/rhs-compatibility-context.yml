@@ -46,6 +46,7 @@ jobs:
               "gameanalytics": re.compile(r"gameanalytics", re.I),
               "points_service": re.compile(r"PointsService"),
               "gamepass_service": re.compile(r"GamePassService"),
+              "blank_lookup": re.compile(r'(?:WaitForChild|FindFirstChild)\\s*\\(\\s*["\\\']\\s+["\\\']|\\[\\s*["\\\']\\s+["\\\']\\s*\\]'),
           }
 
           def prop_text(item, name):
