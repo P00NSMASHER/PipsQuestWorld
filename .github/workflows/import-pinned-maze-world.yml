@@ -51,8 +51,16 @@ jobs:
           rm -rf game
           mkdir -p game
           rsync -a --delete --exclude='.git' --exclude='Game.rbxlx' /tmp/maze-world/ game/
-          mkdir -p game/UPSTREAM_LFS_POINTERS
-          git -C /tmp/maze-world show HEAD:Game.rbxlx > game/UPSTREAM_LFS_POINTERS/Game.rbxlx.pointer
+
+          # Preserve upstream Git/LFS metadata as plain reference files instead of
+          # activating those filters inside this repository.
+          mkdir -p game/UPSTREAM_METADATA
+          if [ -f game/.gitattributes ]; then
+            cp game/.gitattributes game/UPSTREAM_METADATA/gitattributes.txt
+            rm game/.gitattributes
+          fi
+          git -C /tmp/maze-world show HEAD:Game.rbxlx | base64 -w 0 > game/UPSTREAM_METADATA/Game.rbxlx.pointer.base64
+          printf '\n' >> game/UPSTREAM_METADATA/Game.rbxlx.pointer.base64
 
           node <<'NODE'
           const fs = require('fs');
@@ -91,7 +99,8 @@ jobs:
             recursiveSubmodules: true,
             importedBy: 'GitHub Actions',
             importedFileCount: files.length,
-            omittedArtifacts: ['Game.rbxlx (upstream Git LFS build artifact; expanded size exceeds GitHub normal-file limit)']
+            omittedArtifacts: ['Game.rbxlx (upstream Git LFS build artifact; expanded size exceeds GitHub normal-file limit)'],
+            preservedMetadata: ['UPSTREAM_METADATA/gitattributes.txt', 'UPSTREAM_METADATA/Game.rbxlx.pointer.base64']
           };
           fs.writeFileSync(path.join(root,'UPSTREAM_SOURCE.json'), JSON.stringify(receipt,null,2)+'\n');
           NODE
