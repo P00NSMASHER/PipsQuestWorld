@@ -50,7 +50,9 @@ jobs:
           set -euo pipefail
           rm -rf game
           mkdir -p game
-          rsync -a --delete --exclude='.git' /tmp/maze-world/ game/
+          rsync -a --delete --exclude='.git' --exclude='Game.rbxlx' /tmp/maze-world/ game/
+          mkdir -p game/UPSTREAM_LFS_POINTERS
+          git -C /tmp/maze-world show HEAD:Game.rbxlx > game/UPSTREAM_LFS_POINTERS/Game.rbxlx.pointer
 
           node <<'NODE'
           const fs = require('fs');
@@ -88,7 +90,8 @@ jobs:
             pinnedCommit: process.env.PINNED_COMMIT,
             recursiveSubmodules: true,
             importedBy: 'GitHub Actions',
-            importedFileCount: files.length
+            importedFileCount: files.length,
+            omittedArtifacts: ['Game.rbxlx (upstream Git LFS build artifact; expanded size exceeds GitHub normal-file limit)']
           };
           fs.writeFileSync(path.join(root,'UPSTREAM_SOURCE.json'), JSON.stringify(receipt,null,2)+'\n');
           NODE
