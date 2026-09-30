@@ -115,6 +115,33 @@ if service_api.get("missingServices") != 0:
 if service_api.get("missingMembers") != 0:
     errors.append("preflight current service API audit reports missing service members")
 
+
+api_check = checks.get("currentRobloxApi") or {}
+if api_check.get("status") != "PASS_WITH_NONBLOCKING_SERIALIZED_RESIDUE":
+    errors.append("preflight current Roblox API status is not the expected reviewed state")
+class_audit = api_check.get("classAudit") or {}
+if class_audit.get("classesPresent") != 121 or class_audit.get("classesMissing") != 1:
+    errors.append("preflight current Roblox class counts changed")
+missing = class_audit.get("missing") or []
+if len(missing) != 1:
+    errors.append("preflight current Roblox missing-class set changed")
+else:
+    residue = missing[0]
+    if residue.get("class") != "RenderHooksService":
+        errors.append("unexpected missing Roblox class in preflight")
+    if residue.get("instances") != 1 or residue.get("directChildren") != 0 or residue.get("descendants") != 0:
+        errors.append("RenderHooksService residue shape changed")
+    if residue.get("propertyNames") != ["Name"] or residue.get("scriptReferences") != 0:
+        errors.append("RenderHooksService residue is no longer inert by static evidence")
+    if residue.get("blocking") is not False:
+        errors.append("RenderHooksService residue must remain marked non-blocking until runtime evidence says otherwise")
+
+service_audit = api_check.get("serviceUseAudit") or {}
+if service_audit.get("missingServiceUses") != 0:
+    errors.append("preflight records missing Roblox service uses")
+if service_audit.get("missingMemberUses") != 0:
+    errors.append("preflight records missing Roblox service-member uses")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
