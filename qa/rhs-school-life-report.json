@@ -1,0 +1,484 @@
+{
+  "candidateSha": "3ffa9b75f18f51fc26feb0b1e3ec03862b46e5e3",
+  "classFlowCandidates": [
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 3449,
+      "path": "StarterGui/ClassNotification/LocalScript",
+      "role": "client",
+      "sample": "local closedpos = UDim2.new(-1,2,.6,-140) local peekingpos = UDim2.new(0,-42,.6,-140) local openpos = UDim2.new(0,2,.6,-140) local frame = script.Parent:WaitForChild(\"Frame\") local bar = script.Parent:WaitForChild(\"PassingTimeLeft\"):WaitForChild(\"Bar\") local p",
+      "tokens": {
+        "class_flow": 13,
+        "schedule": 13
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 1683,
+      "path": "StarterGui/LoadableGuis/ChangeSchedule/LoadScript",
+      "role": "client",
+      "sample": "local plr = game.Players.LocalPlayer local frame = script.Parent:WaitForChild(\"Frame\") local period = frame:WaitForChild(\"Period\") local module = require(game.ReplicatedStorage.Modules.InterfaceModule) local schedule = game.ReplicatedStorage.Schedule local ena",
+      "tokens": {
+        "class_flow": 10,
+        "schedule": 14
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 585,
+      "path": "StarterGui/LoadableGuis/Schedule/LoadScript",
+      "role": "client",
+      "sample": "local times = {\"7:00 - 8:20\",\"8:20 - 9:40\",\"9:40 - 11:00\",\"11:00 - 12:20\",\"12:20 - 1:40\",\"1:40 - 3:00\"} local plr = game.Players.LocalPlayer local frame = script.Parent:WaitForChild(\"Frame\") local module = require(game.ReplicatedStorage.Modules.InterfaceModule",
+      "tokens": {
+        "class_flow": 1,
+        "schedule": 4
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 450,
+      "path": "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
+      "role": "client",
+      "sample": "function setText(num) if num >= 1 and num <= 6 and num ~= 4 and num ~= 7 then script.Parent.Text = \"P\"..num..\": \".. game.ReplicatedStorage.Schedule[\"P\"..num].Value elseif num == 4 then script.Parent.Text = \"P4: Lunch\" elseif num == 7 then script.Parent.Text = ",
+      "tokens": {
+        "class_flow": 2,
+        "schedule": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 3028,
+      "path": "ServerScriptService/AddIntroGUIScript",
+      "role": "server",
+      "sample": "updatetime = {year=2017, month=3, day=19, hour=21} --print(os.time(updatetime)) starttime = 145101960 endtime = os.time(updatetime) --always change this to updatetime whenever we wanna show patch notes normalnews = [[Welcome to ROBLOX High School, the #1 rolep",
+      "tokens": {
+        "class_flow": 2,
+        "question": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 4108,
+      "path": "ServerScriptService/ClassroomZones",
+      "role": "server",
+      "sample": "if workspace:FindFirstChild(\"ClassroomZones\") then workspace.ClassroomZones.Parent = game.ReplicatedStorage end local zonesfolder = game.ReplicatedStorage.ClassroomZones local zones = {} --hold all the coordinate data for each zone --each zone is named after t",
+      "tokens": {
+        "class_flow": 7,
+        "grading": 8,
+        "schedule": 8
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 15467,
+      "path": "ServerScriptService/EnforcerActionsScript",
+      "role": "server",
+      "sample": "--detention/suspension --[[ Regular Limitations: - 5 detentions per day - 2 suspensions per day - Detentions are 2 minutes - Cannot give more than 2 detentions to a player in 1 day PLAYTIME BONUSES: 1 Day: - 6 detentions per day 3 Days: - 7 detentions per day ",
+      "tokens": {
+        "class_flow": 10,
+        "remote_server": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "pp"
+      ],
+      "len": 12630,
+      "path": "ServerScriptService/Time_ScheduleScript",
+      "role": "server",
+      "sample": "math.randomseed(tick()) --[[ppbonus = 1 pcall(function() ppbonus = game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):GetAsync(\"ppbonus\") end) if ppbonus == nil then ppbonus = 1 game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):SetAsync(\"ppbonus\",1) e",
+      "tokens": {
+        "class_flow": 30,
+        "grading": 1,
+        "persistence": 11,
+        "remote_server": 2,
+        "schedule": 40
+      }
+    }
+  ],
+  "clientGradeRemoteCandidates": [
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 2229,
+      "path": "ReplicatedStorage/Shops/Club Red/The Monster Mash/Tool/PotionScript",
+      "role": "client",
+      "sample": "-- music used under the Creative Commons licensing (by Attribution): all credit for the sample loop used goes to Mike Koenig local Tool = script.Parent; local dancer = nil enabled = true uses = 0 function onActivated() if not enabled then return end script.Par",
+      "tokens": {
+        "grading": 1,
+        "remote_client": 1
+      }
+    }
+  ],
+  "clientOrReplicatedAnswerKeyCandidates": [],
+  "datastoreOwners": {
+    "GlobalMessage": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/B_GlobalMessageScript",
+        "role": "server"
+      }
+    ],
+    "LarryDonations": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/LarryDonationsHandler",
+        "role": "server"
+      }
+    ],
+    "Playtime": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/DataStoresScript",
+        "role": "server"
+      }
+    ],
+    "Testing": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/DataStoresScript",
+        "role": "server"
+      }
+    ],
+    "bans": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/GlobalBanScript",
+        "role": "server"
+      }
+    ],
+    "grouprankdays": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/GroupRankingManager",
+        "role": "server"
+      }
+    ],
+    "loyalplayers": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/DataStoresScript",
+        "role": "server"
+      }
+    ],
+    "pp": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/Time_ScheduleScript",
+        "role": "server"
+      }
+    ],
+    "totaldonations": [
+      {
+        "class": "Script",
+        "path": "ServerScriptService/LarryDonationsHandler",
+        "role": "server"
+      }
+    ]
+  },
+  "persistenceCandidates": [
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 27508,
+      "path": "ServerScriptService/CustomHouseScript_NEW",
+      "role": "server",
+      "sample": "local gps = game:GetService(\"GamePassService\") local housepassid = game.ReplicatedStorage.GamePasses.House.Value local storage = game.ReplicatedStorage.Objects local bannedcolors = {\"Really red\",\"New Yeller\",\"Really blue\",\"Lime green\",\"Hot pink\",\"Toothpaste\",\"",
+      "tokens": {
+        "persistence": 8,
+        "remote_server": 6
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "grouprankdays"
+      ],
+      "len": 5630,
+      "path": "ServerScriptService/GroupRankingManager",
+      "role": "server",
+      "sample": "local Http = game:GetService('HttpService') local rankdata = { {RankId = 1, Playtime = 0, RankName = \"New Fan\"}, {RankId = 10, Playtime = 300, RankName = \"Cool Fan I\", RankWebId = 18224745}, {RankId = 20, Playtime = 600, RankName = \"Cool Fan II\", RankWebId = 1",
+      "tokens": {
+        "persistence": 4
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "Playtime",
+        "Testing",
+        "loyalplayers"
+      ],
+      "len": 52888,
+      "path": "ServerScriptService/DataStoresScript",
+      "role": "server",
+      "sample": "local coredatatable = { [\"cash\"] = 50, [\"options\"] = { [\"ChatColor\"] = {999,0,0}, [\"Volume\"] = {7,7,true}, --normal, club, boombox [\"LevelOfDetail\"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always) }, [\"objects\"] = {}, [\"loyaltytable\"] = ",
+      "tokens": {
+        "persistence": 26,
+        "remote_server": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 6087,
+      "path": "ServerScriptService/EnforcerViolationsTracker",
+      "role": "server",
+      "sample": "local dss = game:GetService(\"DataStoreService\") --[[ EnforcerViolations datastore contains a table with the following: { [\"Flags\"] = { {[\"PlaytimeOnFlag\"] = X} }, [\"Punishments\"] = { {[\"PunishmentTier\"] = 0/1/2/3, [\"TimePunishmentReceived\"] = os.time()} }, } -",
+      "tokens": {
+        "persistence": 5
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "bans"
+      ],
+      "len": 4555,
+      "path": "ServerScriptService/GlobalBanScript",
+      "role": "server",
+      "sample": "banstore = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\") serverbanlist = {} --[[ local tbl = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\"):GetAsync(\"IDbanlist\") for k,v in pairs(tbl) do print(k..\" : \"..math.ceil((( v - os.time() ) / 24 / ",
+      "tokens": {
+        "persistence": 12,
+        "remote_server": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 15911,
+      "path": "ServerScriptService/ItemBuyScript",
+      "role": "server",
+      "sample": "-- string.sub(str:match(\"_.+\"),2) - get item name dynamically local BadgeService = game:GetService(\"BadgeService\") local dss = game:GetService(\"DataStoreService\") local loadsuccess = game.ServerStorage.RemoteFunctions.IsDataLoadedSuccessfully local GA = requir",
+      "tokens": {
+        "persistence": 9,
+        "question": 1,
+        "remote_server": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "LarryDonations",
+        "totaldonations"
+      ],
+      "len": 4525,
+      "path": "ServerScriptService/LarryDonationsHandler",
+      "role": "server",
+      "sample": "local billboard = game.ServerStorage.ExtraBuildings:WaitForChild(\"!MaxDetail\").LarryLeaderboardPart.SurfaceGui local donationleaderboard = game:GetService(\"DataStoreService\"):GetOrderedDataStore(\"LarryDonations\") --:GetSortedAsync(false,8) local totaldonations",
+      "tokens": {
+        "persistence": 13
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "GlobalMessage"
+      ],
+      "len": 2295,
+      "path": "ServerScriptService/B_GlobalMessageScript",
+      "role": "server",
+      "sample": "--[[ local message = \" \" game:GetService(\"DataStoreService\"):GetDataStore(\"GlobalMessage\"):SetAsync( \"Message\", message) --]] game:GetService(\"DataStoreService\"):GetDataStore(\"GlobalMessage\"):OnUpdate(\"Message\",function(str) if str ~= nil and type(str) == \"str",
+      "tokens": {
+        "persistence": 19
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 7921,
+      "path": "ServerScriptService/DailyPrizeSpinManager",
+      "role": "server",
+      "sample": "local playerprizetables = {} math.randomseed(tick()) local dss = game:GetService(\"DataStoreService\") function AddItemToData(plr,id) game.ServerStorage.RemoteFunctions.AwardItem:Fire(plr,id) end function GetItems(plr,type,minprice,maxprice) --return all possibl",
+      "tokens": {
+        "persistence": 1,
+        "remote_server": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "pp"
+      ],
+      "len": 12630,
+      "path": "ServerScriptService/Time_ScheduleScript",
+      "role": "server",
+      "sample": "math.randomseed(tick()) --[[ppbonus = 1 pcall(function() ppbonus = game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):GetAsync(\"ppbonus\") end) if ppbonus == nil then ppbonus = 1 game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):SetAsync(\"ppbonus\",1) e",
+      "tokens": {
+        "class_flow": 30,
+        "grading": 1,
+        "persistence": 11,
+        "remote_server": 2,
+        "schedule": 40
+      }
+    }
+  ],
+  "scheduleCandidates": [
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 3449,
+      "path": "StarterGui/ClassNotification/LocalScript",
+      "role": "client",
+      "sample": "local closedpos = UDim2.new(-1,2,.6,-140) local peekingpos = UDim2.new(0,-42,.6,-140) local openpos = UDim2.new(0,2,.6,-140) local frame = script.Parent:WaitForChild(\"Frame\") local bar = script.Parent:WaitForChild(\"PassingTimeLeft\"):WaitForChild(\"Bar\") local p",
+      "tokens": {
+        "class_flow": 13,
+        "schedule": 13
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 1683,
+      "path": "StarterGui/LoadableGuis/ChangeSchedule/LoadScript",
+      "role": "client",
+      "sample": "local plr = game.Players.LocalPlayer local frame = script.Parent:WaitForChild(\"Frame\") local period = frame:WaitForChild(\"Period\") local module = require(game.ReplicatedStorage.Modules.InterfaceModule) local schedule = game.ReplicatedStorage.Schedule local ena",
+      "tokens": {
+        "class_flow": 10,
+        "schedule": 14
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 2287,
+      "path": "StarterGui/LoadableGuis/Game Pass Shop/Frame/SEC_GamePasses/EnforcersPowers/ButtonScript",
+      "role": "client",
+      "sample": "local regularimg = script.Parent.Image local hoverimg = script.Parent:WaitForChild(\"HoverImage\") local desc = \"Principals with this pass can give out detentions, suspend players, make overhead announcements, alter the school schedule, and prevent other players",
+      "tokens": {
+        "schedule": 1
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 585,
+      "path": "StarterGui/LoadableGuis/Schedule/LoadScript",
+      "role": "client",
+      "sample": "local times = {\"7:00 - 8:20\",\"8:20 - 9:40\",\"9:40 - 11:00\",\"11:00 - 12:20\",\"12:20 - 1:40\",\"1:40 - 3:00\"} local plr = game.Players.LocalPlayer local frame = script.Parent:WaitForChild(\"Frame\") local module = require(game.ReplicatedStorage.Modules.InterfaceModule",
+      "tokens": {
+        "class_flow": 1,
+        "schedule": 4
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 450,
+      "path": "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
+      "role": "client",
+      "sample": "function setText(num) if num >= 1 and num <= 6 and num ~= 4 and num ~= 7 then script.Parent.Text = \"P\"..num..\": \".. game.ReplicatedStorage.Schedule[\"P\"..num].Value elseif num == 4 then script.Parent.Text = \"P4: Lunch\" elseif num == 7 then script.Parent.Text = ",
+      "tokens": {
+        "class_flow": 2,
+        "schedule": 3
+      }
+    },
+    {
+      "class": "LocalScript",
+      "datastores": [],
+      "len": 176,
+      "path": "StarterGui/MainMenu/MainFrame/menu_Options/ScheduleButton/LocalScript",
+      "role": "client",
+      "sample": "script.Parent.MouseButton1Click:connect(function() game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire(\"Schedule\") script.Parent.Parent.Parent.CloseMenus:Fire() end)",
+      "tokens": {
+        "schedule": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 9889,
+      "path": "ReplicatedStorage/Objects/gear_Robloxsai Bike/Robloxsai Bike/Script",
+      "role": "replicated",
+      "sample": "--Made by Luckymaxer Tool = script.Parent Handle = Tool:WaitForChild(\"Handle\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") VehicleModule = require(Tool:WaitForChild(\"VehicleModule\")) Controls = { Forward = false, Backward = false, L",
+      "tokens": {
+        "schedule": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 4108,
+      "path": "ServerScriptService/ClassroomZones",
+      "role": "server",
+      "sample": "if workspace:FindFirstChild(\"ClassroomZones\") then workspace.ClassroomZones.Parent = game.ReplicatedStorage end local zonesfolder = game.ReplicatedStorage.ClassroomZones local zones = {} --hold all the coordinate data for each zone --each zone is named after t",
+      "tokens": {
+        "class_flow": 7,
+        "grading": 8,
+        "schedule": 8
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "pp"
+      ],
+      "len": 12630,
+      "path": "ServerScriptService/Time_ScheduleScript",
+      "role": "server",
+      "sample": "math.randomseed(tick()) --[[ppbonus = 1 pcall(function() ppbonus = game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):GetAsync(\"ppbonus\") end) if ppbonus == nil then ppbonus = 1 game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):SetAsync(\"ppbonus\",1) e",
+      "tokens": {
+        "class_flow": 30,
+        "grading": 1,
+        "persistence": 11,
+        "remote_server": 2,
+        "schedule": 40
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "scriptCount": 1192,
+  "serverAuthoritativeActivityCandidates": [
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 10210,
+      "path": "ServerScriptService/A_GameManagementCmdLines",
+      "role": "server",
+      "sample": "--add music local Prefix = \"music\" local AssetID = 188712851 local objName = \"Walk the Moon - Shut up and Dance\" local Genre = \"Rock\" local ItemCost = 40 local ItemID local Modifier = 0 local obj = Instance.new(\"IntValue\",game.ReplicatedStorage.Objects) obj.Na",
+      "tokens": {
+        "grading": 1,
+        "question": 7
+      }
+    }
+  ],
+  "serverGradeRemoteCandidates": [
+    {
+      "class": "Script",
+      "datastores": [
+        "pp"
+      ],
+      "len": 12630,
+      "path": "ServerScriptService/Time_ScheduleScript",
+      "role": "server",
+      "sample": "math.randomseed(tick()) --[[ppbonus = 1 pcall(function() ppbonus = game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):GetAsync(\"ppbonus\") end) if ppbonus == nil then ppbonus = 1 game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):SetAsync(\"ppbonus\",1) e",
+      "tokens": {
+        "class_flow": 30,
+        "grading": 1,
+        "persistence": 11,
+        "remote_server": 2,
+        "schedule": 40
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 14546,
+      "path": "ServerScriptService/DJManager",
+      "role": "server",
+      "sample": "local queue = {} local banned_userIDs = {} local check = game.ServerStorage.RemoteFunctions.GamePassCheck local djstand = workspace.DJStand --[[ Structure for a queue item: { [\"PlayerName\"] = plr.Name, [\"PlayerID\"] = plr.userId, [\"SongID\"] = sound.SoundId, [\"S",
+      "tokens": {
+        "grading": 1,
+        "remote_server": 3
+      }
+    }
+  ]
+}
