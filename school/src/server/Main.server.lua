@@ -443,7 +443,7 @@ actionEvent.OnServerEvent:Connect(function(player, action, payload)
 	else
 		classEvent:FireClient(player, {
 			result = "retry",
-			message = "Not quite. " .. pending.explanation .. " Try again.",
+			message = "Not quite. Try another choice.",
 		})
 	end
 end)
