@@ -8,6 +8,7 @@ local setRoomEndTime = require(Modules.src.actions.rooms.setRoomEndTime)
 local resetRoom = require(Modules.src.actions.rooms.resetRoom)
 local clientStartGame = require(Modules.src.actions.toClient.clientStartGame)
 local playerFinishedRoom = require(Modules.src.thunks.playerFinishedRoom)
+local LearningGate = require(Modules.src.education.LearningGate)
 
 local Transporter = require(Modules.src.Transporter)
 local M = require(Modules.M)
@@ -101,12 +102,21 @@ local function startGame(roomId)
 			local finishedPlayers = {}
 
 			TouchItem.create(finishPlaceholder, function(player)
-				--	self.api:endRoomGame(roomId)
-				if not finishedPlayers[player] then
-					logger:d('Touched Finish for player:' .. player.Name)
+				if finishedPlayers[player] then
+					return
+				end
+
+				logger:d('Touched Finish for player:' .. player.Name .. '; opening learning gate')
+
+				LearningGate:challenge(player, finishPlaceholder, function()
+					if finishedPlayers[player] then
+						return
+					end
+
+					logger:d('Learning gate cleared for player:' .. player.Name)
 					finishedPlayers[player] = true
 					store:dispatch(playerFinishedRoom(player, roomId))
-				end
+				end)
 			end)
 		else
 			logger:w('FinishPlaceholder is missing from ' .. roomId .. ' map object!')
