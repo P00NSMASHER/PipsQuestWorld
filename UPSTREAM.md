@@ -1,27 +1,22 @@
-# Upstream Foundation
+# Archived Upstream — Maze World
 
-Primary foundation: **MayGo/maze-world**
+> **ARCHIVED DIRECTION — DO NOT RESUME.** Maze World is no longer the active product foundation. The active rebuild is documented in `README.md`, `STATUS.md`, `DEVELOPMENT.md`, and `docs/RHS_LICENSED_EXACT_COPY.md`.
 
-- Repository: https://github.com/MayGo/maze-world
+This file is retained only to preserve historical attribution and provenance for the old `game/` tree.
+
+## Historical source
+
+- Repository: `MayGo/maze-world`
 - Pinned source commit: `2dba386aaa66c3351087ae5848bc5f6bf7a832b8`
 - Pinned source tree: `7cd8a459997db5a158b3a8f7e25637fb8802a3a4`
 - Upstream default branch: `master`
 - Upstream license: MIT
 - Upstream commit date: 2024-11-25
 
-## Import rule
+## Current rule
 
-The first local bootstrap must clone the upstream repository and checkout the exact pinned commit above. Do not track a moving upstream branch as the development baseline.
-
-The pristine upstream checkout must be preserved separately from working copies.
-
-## Product direction
-
-Pip's Quest World will use Maze World as the gameplay chassis while replacing monetization and integrating:
-- Emma-focused educational question banks
-- forgiving learning gates
-- Pip companion/reward systems
-- mobile-first UI
-- child-friendly progression and cosmetics
-
-Do not remove upstream attribution/license notices from substantial reused portions.
+- `game/` is archived historical material.
+- Do not use it as the active Roblox build.
+- Do not restore the old automatic Maze import workflow.
+- Do not remove its upstream attribution or license notices.
+- New runtime work belongs to the active RHS working-copy lane documented elsewhere in this repository.
