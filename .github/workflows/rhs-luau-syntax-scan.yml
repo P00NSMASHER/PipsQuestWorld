@@ -1,13 +1,6 @@
 name: RHS Luau Syntax Scan
 
 on:
-  push:
-    branches:
-      - rebuild/rhs-licensed-exact
-    paths:
-      - "scripts/rhs-extract-luau.py"
-      - ".github/workflows/rhs-luau-syntax-scan.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
   pull_request:
     paths:
       - "scripts/rhs-extract-luau.py"
