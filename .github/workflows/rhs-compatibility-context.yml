@@ -48,6 +48,10 @@ jobs:
               "gamepass_service": re.compile(r"GamePassService"),
               "blank_lookup": re.compile(r"(?:WaitForChild|FindFirstChild).*['\\\"]\\s+['\\\"]|\\[['\\\"]\\s+['\\\"]\\]"),
               "numeric_require": re.compile(r"require\s*\(\s*\d{4,}\s*\)"),
+              "teleport_side_effect": re.compile(r"TeleportService|(?:\\.|:)Teleport(?:Async|ToPlaceInstance|ToPrivateServer)?\\s*\\(", re.I),
+              "purchase_side_effect": re.compile(r"Prompt(?:Product|GamePass)Purchase\\s*\\(", re.I),
+              "badge_side_effect": re.compile(r"AwardBadge\\s*\\(", re.I),
+              "datastore_side_effect": re.compile(r"Get(?:Ordered)?DataStore\\s*\\(|(?:GetAsync|SetAsync|UpdateAsync|IncrementAsync|RemoveAsync)\\s*\\(", re.I),
           }
 
           def prop_text(item, name):
