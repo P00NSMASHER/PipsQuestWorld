@@ -35,6 +35,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          import hashlib
           import re
           import xml.etree.ElementTree as ET
 
@@ -80,7 +81,7 @@ jobs:
                   hit_lines = [i for i, line in enumerate(lines, start=1) if regex.search(line)]
                   if not hit_lines:
                       continue
-                  print(f"=== CONTEXT {category} {cls} {path} ===")
+                  source_sha = hashlib.sha256(source.encode("utf-8")).hexdigest()\n                  print(f"=== CONTEXT {category} {cls} {path} source_sha256={source_sha} ===")
                   shown = set()
                   for n in hit_lines:
                       for i in range(max(1, n-4), min(len(lines), n+4)+1):
