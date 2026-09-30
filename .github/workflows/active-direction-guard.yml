@@ -11,6 +11,10 @@ on:
       - ".github/workflows/**"
       - "scripts/verify-active-direction.py"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
