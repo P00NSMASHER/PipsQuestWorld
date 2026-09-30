@@ -45,6 +45,9 @@ jobs:
       - name: Verify native coin seam remains additive-safe
         run: node scripts/verify-native-coin-seam.mjs .
 
+      - name: Verify Phase-0 adapter boundary
+        run: node scripts/verify-phase0-adapter-boundary.mjs .
+
       - name: Assert Pips foundation remains shadow-only
         shell: bash
         run: |
