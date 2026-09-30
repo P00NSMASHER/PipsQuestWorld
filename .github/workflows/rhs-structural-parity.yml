@@ -34,7 +34,28 @@ jobs:
       - name: Build pinned binary parity tool
         run: cargo build --manifest-path tools/rhs-binary-patcher/Cargo.toml --release
 
+      - name: Extract binary patch receipt
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          build = json.loads(Path("rhs/working/BUILD_RECEIPT.json").read_text(encoding="utf-8"))
+          receipt = build.get("patchReceipt")
+          if not isinstance(receipt, dict):
+              raise SystemExit("BUILD_RECEIPT.json is missing patchReceipt")
+          Path("/tmp/rhs-patch-receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print("RHS_PATCH_RECEIPT_EXTRACTED", len(receipt.get("appliedPatches", [])))
+          PY
+
       - name: Prove exact hierarchy/name/class and script parity
         shell: bash
         run: |
-          tools/rhs-binary-patcher/target/release/rhs-binary-patcher parity             "rhs/baseline/ROBLOX High School.rbxl"             "rhs/working/ROBLOX High School.rbxl"             rhs/working/BUILD_RECEIPT.json
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher parity \
+            "rhs/baseline/ROBLOX High School.rbxl" \
+            "rhs/working/ROBLOX High School.rbxl" \
+            /tmp/rhs-patch-receipt.json
