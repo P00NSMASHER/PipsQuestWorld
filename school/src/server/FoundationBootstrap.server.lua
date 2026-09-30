@@ -14,12 +14,10 @@ local function currentPeriod()
 end
 
 local function getMainSpawn()
-    local campus = Workspace:FindFirstChild("SchoolCampus")
-    local spawn = campus and campus:FindFirstChild("MainSpawn")
-    if spawn and spawn:IsA("SpawnLocation") then
-        return spawn
-    end
-    return nil
+    local campus = Workspace:WaitForChild("SchoolCampus")
+    local spawn = campus:WaitForChild("MainSpawn")
+    assert(spawn:IsA("SpawnLocation"), "SchoolCampus.MainSpawn must be a SpawnLocation")
+    return spawn
 end
 
 local function setupPlayer(player)

@@ -49,6 +49,9 @@ for token in ('Instance.new("SpawnLocation")', 'spawn.Name = "MainSpawn"', 'room
 for token in (
     "Players.PlayerAdded:Connect(setupPlayer)",
     "Players.PlayerRemoving:Connect(removePlayer)",
+    'Workspace:WaitForChild("SchoolCampus")',
+    'campus:WaitForChild("MainSpawn")',
+    'assert(spawn:IsA("SpawnLocation")',
     "player.RespawnLocation = spawn",
     "SchoolConfig.PERIOD_SECONDS",
     'Workspace:SetAttribute("SchoolDay"',
@@ -56,6 +59,13 @@ for token in (
 ):
     if token not in runtime_text:
         raise SystemExit(f"missing runtime seam: {token}")
+
+for racing_lookup in (
+    'Workspace:FindFirstChild("SchoolCampus")',
+    'campus and campus:FindFirstChild("MainSpawn")',
+):
+    if racing_lookup in runtime_text:
+        raise SystemExit("foundation spawn lookup may race CampusBuilder startup")
 
 active = "\n".join((config_text, campus_text, runtime_text)).lower()
 for term in ("questionbank", "leaderstats", "rbxassetid://", "currentcamera", "walkspeed", "jumppower"):
