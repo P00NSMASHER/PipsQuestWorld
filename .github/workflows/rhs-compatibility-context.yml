@@ -1,0 +1,92 @@
+name: RHS Compatibility Context
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - ".github/workflows/rhs-compatibility-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify baseline
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working copy
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Print narrow compatibility context
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          script_classes = {"Script", "LocalScript", "ModuleScript"}
+          patterns = {
+              "cindering_backend": re.compile(r"cindering\.xyz", re.I),
+              "gameanalytics": re.compile(r"gameanalytics", re.I),
+              "points_service": re.compile(r"PointsService"),
+              "gamepass_service": re.compile(r"GamePassService"),
+          }
+
+          def prop_text(item, name):
+              props = item.find("Properties")
+              if props is None:
+                  return ""
+              for p in props:
+                  if p.attrib.get("name") == name:
+                      if p.tag == "Content":
+                          child = next(iter(p), None)
+                          return (child.text or "") if child is not None else ""
+                      return p.text or ""
+              return ""
+
+          def name(item):
+              return prop_text(item, "Name") or "(unnamed)"
+
+          def walk(parent, prefix=""):
+              for item in parent.findall("Item"):
+                  here = f"{prefix}/{name(item)}" if prefix else name(item)
+                  yield item, here
+                  yield from walk(item, here)
+
+          for item, path in walk(root):
+              cls = item.attrib.get("class", "")
+              if cls not in script_classes:
+                  continue
+              source = prop_text(item, "Source")
+              if not source:
+                  continue
+              lines = source.splitlines()
+              for category, regex in patterns.items():
+                  hit_lines = [i for i, line in enumerate(lines, start=1) if regex.search(line)]
+                  if not hit_lines:
+                      continue
+                  print(f"=== CONTEXT {category} {cls} {path} ===")
+                  shown = set()
+                  for n in hit_lines:
+                      for i in range(max(1, n-4), min(len(lines), n+4)+1):
+                          if i in shown:
+                              continue
+                          shown.add(i)
+                          print(f"{i:04d}: {lines[i-1]}")
+                  print("=== END_CONTEXT ===")
+          PY
