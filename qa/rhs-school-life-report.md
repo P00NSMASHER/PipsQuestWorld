@@ -29,9 +29,8 @@ Count: 8
 - `server` `Script` — `ServerScriptService/Time_ScheduleScript`
 
 ## Server-authoritative activity candidates
-Count: 1
+Count: 0
 
-- `server` `Script` — `ServerScriptService/A_GameManagementCmdLines`
 
 ## Client/replicated answer-key candidates
 Count: 0

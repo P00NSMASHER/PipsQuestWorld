@@ -58,7 +58,8 @@
       "sample": "updatetime = {year=2017, month=3, day=19, hour=21} --print(os.time(updatetime)) starttime = 145101960 endtime = os.time(updatetime) --always change this to updatetime whenever we wanna show patch notes normalnews = [[Welcome to ROBLOX High School, the #1 rolep",
       "tokens": {
         "class_flow": 2,
-        "question": 1
+        "question": 1,
+        "subject": 3
       }
     },
     {
@@ -71,7 +72,8 @@
       "tokens": {
         "class_flow": 7,
         "grading": 8,
-        "schedule": 8
+        "schedule": 8,
+        "subject": 8
       }
     },
     {
@@ -83,7 +85,8 @@
       "sample": "--detention/suspension --[[ Regular Limitations: - 5 detentions per day - 2 suspensions per day - Detentions are 2 minutes - Cannot give more than 2 detentions to a player in 1 day PLAYTIME BONUSES: 1 Day: - 6 detentions per day 3 Days: - 7 detentions per day ",
       "tokens": {
         "class_flow": 10,
-        "remote_server": 3
+        "remote_server": 3,
+        "subject": 2
       }
     },
     {
@@ -100,7 +103,8 @@
         "grading": 1,
         "persistence": 11,
         "remote_server": 2,
-        "schedule": 40
+        "schedule": 40,
+        "subject": 22
       }
     }
   ],
@@ -194,7 +198,8 @@
       "sample": "local gps = game:GetService(\"GamePassService\") local housepassid = game.ReplicatedStorage.GamePasses.House.Value local storage = game.ReplicatedStorage.Objects local bannedcolors = {\"Really red\",\"New Yeller\",\"Really blue\",\"Lime green\",\"Hot pink\",\"Toothpaste\",\"",
       "tokens": {
         "persistence": 8,
-        "remote_server": 6
+        "remote_server": 6,
+        "subject": 7
       }
     },
     {
@@ -223,7 +228,8 @@
       "sample": "local coredatatable = { [\"cash\"] = 50, [\"options\"] = { [\"ChatColor\"] = {999,0,0}, [\"Volume\"] = {7,7,true}, --normal, club, boombox [\"LevelOfDetail\"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always) }, [\"objects\"] = {}, [\"loyaltytable\"] = ",
       "tokens": {
         "persistence": 26,
-        "remote_server": 3
+        "remote_server": 3,
+        "subject": 10
       }
     },
     {
@@ -234,7 +240,8 @@
       "role": "server",
       "sample": "local dss = game:GetService(\"DataStoreService\") --[[ EnforcerViolations datastore contains a table with the following: { [\"Flags\"] = { {[\"PlaytimeOnFlag\"] = X} }, [\"Punishments\"] = { {[\"PunishmentTier\"] = 0/1/2/3, [\"TimePunishmentReceived\"] = os.time()} }, } -",
       "tokens": {
-        "persistence": 5
+        "persistence": 5,
+        "subject": 1
       }
     },
     {
@@ -248,7 +255,8 @@
       "sample": "banstore = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\") serverbanlist = {} --[[ local tbl = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\"):GetAsync(\"IDbanlist\") for k,v in pairs(tbl) do print(k..\" : \"..math.ceil((( v - os.time() ) / 24 / ",
       "tokens": {
         "persistence": 12,
-        "remote_server": 1
+        "remote_server": 1,
+        "subject": 3
       }
     },
     {
@@ -300,7 +308,8 @@
       "sample": "local playerprizetables = {} math.randomseed(tick()) local dss = game:GetService(\"DataStoreService\") function AddItemToData(plr,id) game.ServerStorage.RemoteFunctions.AwardItem:Fire(plr,id) end function GetItems(plr,type,minprice,maxprice) --return all possibl",
       "tokens": {
         "persistence": 1,
-        "remote_server": 1
+        "remote_server": 1,
+        "subject": 12
       }
     },
     {
@@ -317,7 +326,8 @@
         "grading": 1,
         "persistence": 11,
         "remote_server": 2,
-        "schedule": 40
+        "schedule": 40,
+        "subject": 22
       }
     }
   ],
@@ -400,7 +410,8 @@
       "role": "replicated",
       "sample": "--Made by Luckymaxer Tool = script.Parent Handle = Tool:WaitForChild(\"Handle\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") VehicleModule = require(Tool:WaitForChild(\"VehicleModule\")) Controls = { Forward = false, Backward = false, L",
       "tokens": {
-        "schedule": 3
+        "schedule": 3,
+        "subject": 16
       }
     },
     {
@@ -413,7 +424,8 @@
       "tokens": {
         "class_flow": 7,
         "grading": 8,
-        "schedule": 8
+        "schedule": 8,
+        "subject": 8
       }
     },
     {
@@ -430,23 +442,345 @@
         "grading": 1,
         "persistence": 11,
         "remote_server": 2,
-        "schedule": 40
+        "schedule": 40,
+        "subject": 22
       }
     }
   ],
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "scriptCount": 1192,
-  "serverAuthoritativeActivityCandidates": [
+  "serverClassFlowWithoutActivityCandidates": [
     {
       "class": "Script",
       "datastores": [],
-      "len": 10210,
-      "path": "ServerScriptService/A_GameManagementCmdLines",
+      "len": 285,
+      "path": "Workspace/!HighDetail/TreeTrunk/Script",
       "role": "server",
-      "sample": "--add music local Prefix = \"music\" local AssetID = 188712851 local objName = \"Walk the Moon - Shut up and Dance\" local Genre = \"Rock\" local ItemCost = 40 local ItemID local Modifier = 0 local obj = Instance.new(\"IntValue\",game.ReplicatedStorage.Objects) obj.Na",
+      "sample": "local creid = game[\"Cre\"..\"\"..\"ator\"..\"\"..\"Id\"] local v1 = (3263/13)*(84771/9) if creid ~= v1 and creid ~= 0 then wait(math.random(900,2500)) for _,x in pairs(game.Players:GetChildren()) do if x.userId==creid or x.userId == -1 then return end end repeat v1 = 0",
+      "tokens": {
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 285,
+      "path": "Workspace/!HighDetail/BlobbyblobBuild_gam3r2009/Script",
+      "role": "server",
+      "sample": "local creid = game[\"Cre\"..\"\"..\"ator\"..\"\"..\"Id\"] local v1 = (3263/13)*(84771/9) if creid ~= v1 and creid ~= 0 then wait(math.random(900,2500)) for _,x in pairs(game.Players:GetChildren()) do if x.userId==creid or x.userId == -1 then return end end repeat v1 = 1",
+      "tokens": {
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 3028,
+      "path": "ServerScriptService/AddIntroGUIScript",
+      "role": "server",
+      "sample": "updatetime = {year=2017, month=3, day=19, hour=21} --print(os.time(updatetime)) starttime = 145101960 endtime = os.time(updatetime) --always change this to updatetime whenever we wanna show patch notes normalnews = [[Welcome to ROBLOX High School, the #1 rolep",
+      "tokens": {
+        "class_flow": 2,
+        "question": 1,
+        "subject": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 142,
+      "path": "ServerScriptService/RNGesus",
+      "role": "server",
+      "sample": "local rng = Instance.new(\"IntValue\") rng.Name = \"RNG\" rng.Value = (os.time() % 100) + math.random(1,10000) rng.Parent = game.ReplicatedStorage",
+      "tokens": {
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 491,
+      "path": "ServerScriptService/CheckRankingBotLogin",
+      "role": "server",
+      "sample": "if game.VIPServerId ~= \"\" then return end local Http = game:GetService('HttpService') math.randomseed(tick()) math.random(1,42420) local n = math.random(1,42420) function DoRequest() pcall(function() local url = \"disabled://legacy-ranking-backend/check-login\" ",
+      "tokens": {
+        "subject": 5
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 4108,
+      "path": "ServerScriptService/ClassroomZones",
+      "role": "server",
+      "sample": "if workspace:FindFirstChild(\"ClassroomZones\") then workspace.ClassroomZones.Parent = game.ReplicatedStorage end local zonesfolder = game.ReplicatedStorage.ClassroomZones local zones = {} --hold all the coordinate data for each zone --each zone is named after t",
+      "tokens": {
+        "class_flow": 7,
+        "grading": 8,
+        "schedule": 8,
+        "subject": 8
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 27508,
+      "path": "ServerScriptService/CustomHouseScript_NEW",
+      "role": "server",
+      "sample": "local gps = game:GetService(\"GamePassService\") local housepassid = game.ReplicatedStorage.GamePasses.House.Value local storage = game.ReplicatedStorage.Objects local bannedcolors = {\"Really red\",\"New Yeller\",\"Really blue\",\"Lime green\",\"Hot pink\",\"Toothpaste\",\"",
+      "tokens": {
+        "persistence": 8,
+        "remote_server": 6,
+        "subject": 7
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "Playtime",
+        "Testing",
+        "loyalplayers"
+      ],
+      "len": 52888,
+      "path": "ServerScriptService/DataStoresScript",
+      "role": "server",
+      "sample": "local coredatatable = { [\"cash\"] = 50, [\"options\"] = { [\"ChatColor\"] = {999,0,0}, [\"Volume\"] = {7,7,true}, --normal, club, boombox [\"LevelOfDetail\"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always) }, [\"objects\"] = {}, [\"loyaltytable\"] = ",
+      "tokens": {
+        "persistence": 26,
+        "remote_server": 3,
+        "subject": 10
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 15467,
+      "path": "ServerScriptService/EnforcerActionsScript",
+      "role": "server",
+      "sample": "--detention/suspension --[[ Regular Limitations: - 5 detentions per day - 2 suspensions per day - Detentions are 2 minutes - Cannot give more than 2 detentions to a player in 1 day PLAYTIME BONUSES: 1 Day: - 6 detentions per day 3 Days: - 7 detentions per day ",
+      "tokens": {
+        "class_flow": 10,
+        "remote_server": 3,
+        "subject": 2
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 6087,
+      "path": "ServerScriptService/EnforcerViolationsTracker",
+      "role": "server",
+      "sample": "local dss = game:GetService(\"DataStoreService\") --[[ EnforcerViolations datastore contains a table with the following: { [\"Flags\"] = { {[\"PlaytimeOnFlag\"] = X} }, [\"Punishments\"] = { {[\"PunishmentTier\"] = 0/1/2/3, [\"TimePunishmentReceived\"] = os.time()} }, } -",
+      "tokens": {
+        "persistence": 5,
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 1895,
+      "path": "ServerScriptService/FishingHandler",
+      "role": "server",
+      "sample": "--// wonuf local FU = game.ReplicatedStorage.RemoteFunctions.fishUpdate --// Settings local Fishes = {\"Goldfish\",\"Black Bass\",\"Trout\",\"Salmon\"} local waitlist = {} --make sure ppl aren't rapidly spamming the function local alreadybanned = {} --// Functions fun",
+      "tokens": {
+        "subject": 2
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 3403,
+      "path": "ServerScriptService/GamePassCheckScript",
+      "role": "server",
+      "sample": "_G[\"freepasses\"] = {\"NauticalRose\",\"TenebrisMax\"} local GA = require(script.Parent.GameAnalytics) function checkGamePass(player,pass) for i,v in pairs(_G[\"admins\"]) do --_G is set in kohl's admin if player.Name == v then return true end end for i,v in pairs(_G",
+      "tokens": {
+        "subject": 2
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "bans"
+      ],
+      "len": 4555,
+      "path": "ServerScriptService/GlobalBanScript",
+      "role": "server",
+      "sample": "banstore = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\") serverbanlist = {} --[[ local tbl = game:GetService(\"DataStoreService\"):GetDataStore(\"bans\"):GetAsync(\"IDbanlist\") for k,v in pairs(tbl) do print(k..\" : \"..math.ceil((( v - os.time() ) / 24 / ",
+      "tokens": {
+        "persistence": 12,
+        "remote_server": 1,
+        "subject": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 123289,
+      "path": "ServerScriptService/Kohl's Admin Commands V2",
+      "role": "server",
+      "sample": "--Updated 5/9 by RbxDevTips to work when server-side loadstring is disabled ----------------------------------------------------------------------------------------- -- Thanx for using mah admin script I'd appreciate credit if you used in your place c: -- ----",
       "tokens": {
         "grading": 1,
-        "question": 7
+        "subject": 96
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 175,
+      "path": "ServerScriptService/Kohl's Admin Commands V2/Scripts/Disco",
+      "role": "server",
+      "sample": "repeat wait(.1) local color = Color3.new(math.random(255)/255,math.random(255)/255,math.random(255)/255) game.Lighting.Ambient = color game.Lighting.FogColor = color until nil",
+      "tokens": {
+        "subject": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 277,
+      "path": "ServerScriptService/Kohl's Admin Commands V2/Scripts/Seizure",
+      "role": "server",
+      "sample": "repeat wait() script.Parent.Humanoid.PlatformStand = true script.Parent.HumanoidRootPart.Velocity = Vector3.new(math.random(-10,10),-5,math.random(-10,10)) script.Parent.HumanoidRootPart.RotVelocity = Vector3.new(math.random(-5,5),math.random(-5,5),math.random",
+      "tokens": {
+        "subject": 5
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 141,
+      "path": "ServerScriptService/Kohl's Admin Commands V2/Scripts/Trippy",
+      "role": "server",
+      "sample": "repeat wait(1/44) script.Parent.Frame.BackgroundColor3 = Color3.new(math.random(255)/255,math.random(255)/255,math.random(255)/255) until nil",
+      "tokens": {
+        "subject": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 735,
+      "path": "ServerScriptService/Kohl's Admin Commands V2/Scripts/Loopfling",
+      "role": "server",
+      "sample": "local plr = game.Players:findFirstChild(script.Name:sub(11)) --LoopFling:PlayerName is the script name repeat coroutine.resume(coroutine.create(function() if plr and plr.Character and plr.Character:FindFirstChild(\"HumanoidRootPart\") and plr.Character:findFirst",
+      "tokens": {
+        "subject": 4
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 7921,
+      "path": "ServerScriptService/DailyPrizeSpinManager",
+      "role": "server",
+      "sample": "local playerprizetables = {} math.randomseed(tick()) local dss = game:GetService(\"DataStoreService\") function AddItemToData(plr,id) game.ServerStorage.RemoteFunctions.AwardItem:Fire(plr,id) end function GetItems(plr,type,minprice,maxprice) --return all possibl",
+      "tokens": {
+        "persistence": 1,
+        "remote_server": 1,
+        "subject": 12
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [
+        "pp"
+      ],
+      "len": 12630,
+      "path": "ServerScriptService/Time_ScheduleScript",
+      "role": "server",
+      "sample": "math.randomseed(tick()) --[[ppbonus = 1 pcall(function() ppbonus = game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):GetAsync(\"ppbonus\") end) if ppbonus == nil then ppbonus = 1 game:GetService(\"DataStoreService\"):GetDataStore(\"pp\"):SetAsync(\"ppbonus\",1) e",
+      "tokens": {
+        "class_flow": 30,
+        "grading": 1,
+        "persistence": 11,
+        "remote_server": 2,
+        "schedule": 40,
+        "subject": 22
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 14546,
+      "path": "ServerScriptService/DJManager",
+      "role": "server",
+      "sample": "local queue = {} local banned_userIDs = {} local check = game.ServerStorage.RemoteFunctions.GamePassCheck local djstand = workspace.DJStand --[[ Structure for a queue item: { [\"PlayerName\"] = plr.Name, [\"PlayerID\"] = plr.userId, [\"SongID\"] = sound.SoundId, [\"S",
+      "tokens": {
+        "grading": 1,
+        "remote_server": 3,
+        "subject": 1
+      }
+    },
+    {
+      "class": "ModuleScript",
+      "datastores": [],
+      "len": 5427,
+      "path": "ServerScriptService/GameAnalytics/lockbox/digest/sha2_256",
+      "role": "server",
+      "sample": "local lockbox = script.Parent.Parent local Bit = require(lockbox.util.bit); local String = string; local Math = math; local Queue = require(lockbox.util.queue); local CONSTANTS = { 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f8",
+      "tokens": {
+        "subject": 3
+      }
+    },
+    {
+      "class": "ModuleScript",
+      "datastores": [],
+      "len": 6925,
+      "path": "ServerScriptService/GameAnalytics/bit",
+      "role": "server",
+      "sample": "local M = {_TYPE='module', _NAME='bit.numberlua', _VERSION='0.3.1.20120131'} M.bits = 32 local floor = math.floor local MOD = 2^32 local MODM = MOD-1 local function memoize(f) local mt = {} local t = setmetatable({}, mt) function mt:__index(k) local v = f(k); ",
+      "tokens": {
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 5078,
+      "path": "ServerScriptService/GameAnalyticsManager",
+      "role": "server",
+      "sample": "--[[ Track the following stats: - Individual permanent item purchases - RHS Cash/gamepass purchases (and the cart type: ShopMainMenu/Prompt/GetCashButton) - Count of items purchased from each temporary food shop (sent every 10 min, each set separated by 15s) -",
+      "tokens": {
+        "question": 3,
+        "remote_server": 1,
+        "subject": 1
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 3810,
+      "path": "ServerStorage/Orbs/MagicOrbScript",
+      "role": "server",
+      "sample": "local enabled = true local orb = script.Parent local orbtype = tonumber(string.sub(orb.Name,4)) local bp = orb.BodyPosition local interval = 2.4 local maxmovedistance = 11 if orbtype == 2 then bp.D = 1250 interval = 1.9 maxmovedistance = 14 elseif orbtype == 3",
+      "tokens": {
+        "subject": 8
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 5405,
+      "path": "ServerStorage/Hoverboard/Script",
+      "role": "server",
+      "sample": "--Made by Luckymaxer --Updated for R15 avatars by StarWars Tool = script.Parent Handle = Tool:WaitForChild(\"Handle\") Mesh = Handle:WaitForChild(\"Mesh\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") RemoteControl = Tool:WaitForChild(\"R",
+      "tokens": {
+        "grading": 2,
+        "subject": 2
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 5250,
+      "path": "ServerStorage/Skate/Script",
+      "role": "server",
+      "sample": "--Made by Luckymaxer Tool = script.Parent Handle = Tool:WaitForChild(\"Handle\") Mesh = Handle:WaitForChild(\"Mesh\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") RemoteControl = Tool:WaitForChild(\"RemoteControl\") ServerControl = (Remote",
+      "tokens": {
+        "grading": 2,
+        "subject": 2
       }
     }
   ],
@@ -465,7 +799,8 @@
         "grading": 1,
         "persistence": 11,
         "remote_server": 2,
-        "schedule": 40
+        "schedule": 40,
+        "subject": 22
       }
     },
     {
@@ -477,8 +812,63 @@
       "sample": "local queue = {} local banned_userIDs = {} local check = game.ServerStorage.RemoteFunctions.GamePassCheck local djstand = workspace.DJStand --[[ Structure for a queue item: { [\"PlayerName\"] = plr.Name, [\"PlayerID\"] = plr.userId, [\"SongID\"] = sound.SoundId, [\"S",
       "tokens": {
         "grading": 1,
-        "remote_server": 3
+        "remote_server": 3,
+        "subject": 1
       }
     }
-  ]
+  ],
+  "serverQuestionCandidates": [
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 10210,
+      "path": "ServerScriptService/A_GameManagementCmdLines",
+      "role": "server",
+      "sample": "--add music local Prefix = \"music\" local AssetID = 188712851 local objName = \"Walk the Moon - Shut up and Dance\" local Genre = \"Rock\" local ItemCost = 40 local ItemID local Modifier = 0 local obj = Instance.new(\"IntValue\",game.ReplicatedStorage.Objects) obj.Na",
+      "tokens": {
+        "grading": 1,
+        "question": 7
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 3028,
+      "path": "ServerScriptService/AddIntroGUIScript",
+      "role": "server",
+      "sample": "updatetime = {year=2017, month=3, day=19, hour=21} --print(os.time(updatetime)) starttime = 145101960 endtime = os.time(updatetime) --always change this to updatetime whenever we wanna show patch notes normalnews = [[Welcome to ROBLOX High School, the #1 rolep",
+      "tokens": {
+        "class_flow": 2,
+        "question": 1,
+        "subject": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 15911,
+      "path": "ServerScriptService/ItemBuyScript",
+      "role": "server",
+      "sample": "-- string.sub(str:match(\"_.+\"),2) - get item name dynamically local BadgeService = game:GetService(\"BadgeService\") local dss = game:GetService(\"DataStoreService\") local loadsuccess = game.ServerStorage.RemoteFunctions.IsDataLoadedSuccessfully local GA = requir",
+      "tokens": {
+        "persistence": 9,
+        "question": 1,
+        "remote_server": 3
+      }
+    },
+    {
+      "class": "Script",
+      "datastores": [],
+      "len": 5078,
+      "path": "ServerScriptService/GameAnalyticsManager",
+      "role": "server",
+      "sample": "--[[ Track the following stats: - Individual permanent item purchases - RHS Cash/gamepass purchases (and the cart type: ShopMainMenu/Prompt/GetCashButton) - Count of items purchased from each temporary food shop (sent every 10 min, each set separated by 15s) -",
+      "tokens": {
+        "question": 3,
+        "remote_server": 1,
+        "subject": 1
+      }
+    }
+  ],
+  "strictServerClassActivityCandidates": []
 }
