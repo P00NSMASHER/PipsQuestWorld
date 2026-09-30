@@ -13,9 +13,9 @@ Quality-quarantine one active checkpoint batch without adding questions or chang
 ## Result
 
 - Items reviewed: 12 ABVM-derived release candidates.
-- Items retained in active pool: 7 (5 archive items + 2 curated replacements).
+- Items retained in active pool: 7 (4 archive items + 3 curated replacements).
 - Items quarantined from active pool: 5.
-- Items replaced with stronger skill-equivalent release items: 2.
+- Items replaced with stronger skill-equivalent release items: 3.
 - STAR items promoted to active pool: 0.
 - Maze World gameplay/protected files changed: 0.
 - Answer-key banks moved to ServerStorage; no release correctIndex data remains client-reachable.
@@ -24,6 +24,7 @@ Quality-quarantine one active checkpoint batch without adding questions or chang
 
 - Original plural -s/-es reasoning item: replaced with a sentence-level transfer item using plausible `boxes / boxs / box's` misconceptions.
 - Original Trinity direct item: replaced with a short scenario/meaning transfer item using two common conceptual misconceptions instead of caricatured distractors.
+- Original CVC missing-vowel item: replaced with a pattern-transfer item requiring C-V-C comparison instead of filling one obvious vowel.
 
 ## Quarantined from active eligibility
 
