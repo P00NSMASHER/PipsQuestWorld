@@ -6,6 +6,7 @@ local M = require(Modules.M)
 local Models = ReplicatedStorage:WaitForChild('Models')
 local recursive_backtracker = require(script.Parent.MazeBacktrace)
 local Maze = require(script.Parent.Maze)
+local PipCollectibleTheme = require(script.Parent.PipCollectibleTheme)
 
 local Prefabs = Models.Prefabs
 local Misc = Models.Misc
@@ -112,6 +113,7 @@ function AddCoinPart(pos, cframe, folder, settings)
 	local parts = Money:GetChildren()
 	local randomPart = parts[math.random(1, #parts)]
 	local newBlock = randomPart:Clone()
+	PipCollectibleTheme:apply(newBlock)
 
 	local partSize
 	if newBlock:IsA('BasePart') then
