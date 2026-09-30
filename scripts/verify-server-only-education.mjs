@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const root = process.cwd();
+const root = path.resolve(process.argv[2] || process.cwd());
 const clientRoots = [
   path.join(root, "game", "src", "common"),
   path.join(root, "game", "src", "client"),
