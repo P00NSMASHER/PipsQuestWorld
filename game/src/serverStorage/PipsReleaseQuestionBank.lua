@@ -2,7 +2,12 @@
 -- The certified archive remains unchanged; weak release candidates are replaced
 -- here with original skill-equivalent items derived from the same sanitized evidence.
 
-local archive = require(script.Parent.PipsQuestionBank)
+local archive
+if script and script.Parent then
+	archive = require(script.Parent.PipsQuestionBank)
+else
+	archive = require('./PipsQuestionBank')
+end
 
 local byId = {}
 for _, question in ipairs(archive) do
