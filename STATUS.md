@@ -43,6 +43,7 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 
 ## Runtime status
 
+- Baseline bootstrap importer: **RETIRED** after exact import; baseline verification is read-only
 - Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
 - Working copy created: **YES**
 - Compatibility patches applied: **3** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed in the working copy only
