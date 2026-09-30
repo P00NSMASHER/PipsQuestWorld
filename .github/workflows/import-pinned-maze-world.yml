@@ -123,4 +123,9 @@ jobs:
           fi
 
           git commit -m "Import pristine Maze World baseline at 2dba386"
+
+          # Main may have advanced while this long import was running.
+          # Rebase the import commit onto the latest main and push only as a fast-forward.
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
