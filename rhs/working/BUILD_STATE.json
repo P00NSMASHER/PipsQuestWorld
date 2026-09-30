@@ -1,10 +1,14 @@
 {
   "schemaVersion": 1,
-  "stage": "baseline_exact",
+  "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "modifiedFromBaseline": false,
+  "expectedWorkingSha256": "1e16f85f7d2290d829010e34bffbc4dfc7ce2f72060b63682f07737aeef3f0ba",
+  "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
-  "compatibilityRepairs": []
+  "compatibilityRepairs": [
+    "sandbox-legacy-ranking-login",
+    "sandbox-legacy-group-ranking",
+    "sandbox-legacy-gameanalytics"
+  ]
 }

@@ -1,0 +1,75 @@
+{
+  "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "converterRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1",
+  "patchManifestSha256": "db312974e51e229aebb9c6d1ede17571ea63dd3a3812a18c88ce1c644bf338c9",
+  "patchReceipt": {
+    "appliedPatches": [
+      {
+        "afterSourceSha256": "610be26d3165a13ca46e173e9cbf8a74feb21788c6b7d176287b5f332de3cb27",
+        "beforeSourceSha256": "e6b78fae68e637b3afc9d2f3cad73a450a016ce9beb337c7ca2f596179a2456b",
+        "class": "Script",
+        "id": "sandbox-legacy-ranking-login",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "b370457662273aaa4b1947ccae9020e625d3dbc1ea7cc5b02bdd1407de29d2aa",
+            "oldSha256": "a99c2712b4e53e340d952781119350f75555c72d41d685fde3e1486646ee61cd"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "17d58b6fa503fbad4636514662dfa45c8ae782144b6be1c368207c52aa15de0a",
+            "oldSha256": "7866288e66475def1b4131743cf56a96148f1fc7469325f24101c7ded136e32d"
+          }
+        ],
+        "targetPath": "ServerScriptService/CheckRankingBotLogin"
+      },
+      {
+        "afterSourceSha256": "8f353dda9cf7f02941b0efce0d21ca32e096c1807ac807635e0f6db67460b962",
+        "beforeSourceSha256": "bf6cf3399f61e4c3157c74bf10f9f25b450bab15f1c4ef59bb535bf2575f511d",
+        "class": "Script",
+        "id": "sandbox-legacy-group-ranking",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "06d7e69613fcdfd5bd85ec7f078544d3b982139ff1361329c268a689580254f4",
+            "oldSha256": "3b7adf46582b91231cfeb480632ceaa7f670d0c6fa89731e908624b05aad694e"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "17d58b6fa503fbad4636514662dfa45c8ae782144b6be1c368207c52aa15de0a",
+            "oldSha256": "7866288e66475def1b4131743cf56a96148f1fc7469325f24101c7ded136e32d"
+          }
+        ],
+        "targetPath": "ServerScriptService/GroupRankingManager"
+      },
+      {
+        "afterSourceSha256": "86fbb14435295187fb5ab0ff10ae0167ccea7169fb661b04977ec0852773f434",
+        "beforeSourceSha256": "f5b8d396febd1d0f1bdbf037854231e29f2d6031da9daf429bdcb8ba0dcc9185",
+        "class": "ModuleScript",
+        "id": "sandbox-legacy-gameanalytics",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "1d5bc2d5b69c4674526d9d4dcd8c4364af30ffd63d3e486dd28765cb79236558",
+            "oldSha256": "aa39559623e0355132e2000e227eb2dfe09eb1f2647c56f869be50a2d59f62ca"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "178dd0a23991fca5d47ce0d604c8ccdd5d96956382e2cd31758277f9b7a8fabe",
+            "oldSha256": "f90f2a3108c6bbbc1cf58b8e530b8cde47d702ef27c7bcf0ea81e83dffb92460"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "6bab91ce8751e3f43d9e655a91ce14aeed2549b98a9f391b51db986a15c52042",
+            "oldSha256": "15d238897b8237eb1a76507d629b09c9c6ae0c8d7b4e382e99fe32a6ded2b6a3"
+          }
+        ],
+        "targetPath": "ServerScriptService/GameAnalytics"
+      }
+    ],
+    "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "schemaVersion": 1
+  },
+  "schemaVersion": 1,
+  "workingSha256": "1e16f85f7d2290d829010e34bffbc4dfc7ce2f72060b63682f07737aeef3f0ba"
+}
