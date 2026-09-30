@@ -1,57 +1,52 @@
 # Grade 2 Content QA Status
 
 STATUS: READY
-BRANCH: rebuild/content-qa
-VALIDATED_INPUT_SHA: 4223c4f326468652951334158ede25d4c0bbe7c0
-FOUNDATION_HEAD_SHA: b7eb3fbe1eb65f31f36bc08a1aeda7830f736a71
-EDUCATION_SCHEMA_SHA: ebdfbd2285984f0483d04bf7824c3c2197058091
+BRANCH: rebuild/content-quality-batch2
+FOUNDATION_HEAD_SHA: a56bbe499dfc6c2c961863b648b50bdc9fec0071
+EDUCATION_ENGINE: server-only accepted contract
 
 ## Objective
 
-Quality-quarantine one active checkpoint batch without adding questions or changing Maze World gameplay. Review the current ABVM-derived release candidates for phone fit, instructional value, distractor quality, ambiguity, answer disclosure, and Education Engine contract compatibility.
+Replace the remaining five quarantined weak schoolwork-derived release candidates with original
+skill-equivalent items that require real Grade-2 application/reasoning. Do not change Maze World
+gameplay or promote STAR fallback merely to increase volume.
 
 ## Result
 
-- Items reviewed: 12 ABVM-derived release candidates.
-- Items retained in active pool: 7 (4 archive items + 3 curated replacements).
-- Items quarantined from active pool: 5.
-- Items replaced with stronger skill-equivalent release items: 3.
-- STAR items promoted to active pool: 0.
-- Maze World gameplay/protected files changed: 0.
-- Answer-key banks moved to ServerStorage; no release correctIndex data remains client-reachable.
+- Original schoolwork-derived candidates reviewed: 12.
+- Active curated release pool: 12.
+- Archive items retained directly: 4.
+- Curated skill-equivalent replacements: 8.
+- Previously quarantined weak originals still active: 0.
+- STAR items promoted into the current-material pool: 0.
+- Maze World protected/gameplay files changed: 0.
+- Answer authority remains server-only.
 
-## Replaced before active eligibility
+## Batch-2 replacements
 
-- Original plural -s/-es reasoning item: replaced with a sentence-level transfer item using plausible `boxes / boxs / box's` misconceptions.
-- Original Trinity direct item: replaced with a short scenario/meaning transfer item using two common conceptual misconceptions instead of caricatured distractors.
-- Original CVC missing-vowel item: replaced with a pattern-transfer item requiring C-V-C comparison instead of filling one obvious vowel.
+- Main character: now distinguishes the character receiving sustained narrative focus from another
+  mentioned character and from an equal-focus misconception.
+- Setting: now requires combining place, weather, and time clues instead of reciting a definition.
+- Character motivation: now requires a supported inference from action + timing with plausible
+  competing interpretations.
+- Gifts/talents: now distinguishes direct service to others from reasonable self-improvement or
+  achievement choices.
+- Welcoming/love: now distinguishes actual inclusion from merely friendly or informational actions.
 
-## Quarantined from active eligibility
+## Validation target
 
-- `abvm-b9d55008a7c4-629ea7-photo-reading-main-character-transfer-ev1`: absent/implausible distractors make main-character discrimination too easy.
-- `abvm-b9d55008a7c4-629ea7-photo-reading-setting-reasoning-ev1`: meta-definition stem plus irrelevant distractors feels like a worksheet rather than a quick setting challenge.
-- `abvm-b9d55008a7c4-629ea7-photo-reading-character-motivation-direct-ev1`: exaggerated unsupported distractors make the inference nearly automatic.
-- `abvm-b9d55008a7c4-629ea7-photo-religion-gifts-reasoning-ev1`: abstract wording and extreme wrong choices reduce meaningful reasoning.
-- `abvm-b9d55008a7c4-629ea7-photo-religion-choice-love-transfer-ev1`: caricatured wrong choices make the application trivial.
-
-## Validation
-
-Validated against the committed Education Engine contract at `ebdfbd2285984f0483d04bf7824c3c2197058091`.
-
-- stable release IDs/order: 7/7 PASS
-- required subject/skill/domain/prompt/hint/scaffold/explanation metadata: 7/7 PASS
-- difficulty and DOK bounds: 7/7 PASS
-- direct/transfer/reasoning questionType: 7/7 PASS
-- 2-4 unique options with valid accepted answer index: 7/7 PASS
-- misconception feedback coverage for active distractors: 14/14 PASS
-- duplicate active stems: 0
-- accepted-choice disclosure in prompt/hint/scaffold: 0
-- active prompt length <= 140 characters: 7/7 PASS
-- contiguous five-question windows with >=4 skills and >=1 application/reasoning item: 3/3 PASS
-- copyrighted story/answer-key material added: 0
-- raw student/private worksheet data added: 0
-- curated replacements preserve only sanitized skill provenance: PASS
+- 12/12 stable curated IDs/order.
+- 12/12 required metadata and valid 2-4 unique options.
+- 24/24 active distractors carry misconception-specific feedback.
+- 0 duplicate active stems.
+- 0 accepted-choice disclosure in prompt/hint/scaffold.
+- 12/12 prompts <= 140 characters.
+- Every contiguous five-question window must cover >=4 skills.
+- Every contiguous five-question window must contain >=2 transfer/reasoning items.
+- Full bank validates through the server Education Engine.
+- Five-question deterministic engine run remains non-repeating and includes transfer evidence.
 
 ## Boundary
 
-The generated archive bank remains intact as evidence and is stored server-side. Weak items are removed only from active eligibility. This unit performs no Phase-0 gameplay integration, adapter work, GUI/Studio interaction, publishing, or merge.
+This is content-only preparation. It adds no Maze World world hook, RemoteEvent, UI, reward,
+movement, camera, finish behavior, Roblox publication, or foreground Studio/device work.
