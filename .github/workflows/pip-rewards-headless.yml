@@ -1,0 +1,37 @@
+name: Pip Rewards Headless Contracts
+
+on:
+  push:
+    branches:
+      - feat/pip-rewards
+    paths:
+      - "game/src/**"
+      - "scripts/test-pip-rewards-*.mjs"
+      - ".github/workflows/pip-rewards-headless.yml"
+      - "pip-rewards-status.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Prove native finish authority
+        run: node scripts/test-pip-rewards-native-finish.mjs "$GITHUB_SHA"
+
+      - name: Prove native Rainbow Trail unlock
+        run: node scripts/test-pip-rewards-native-trail-unlock.mjs "$GITHUB_SHA"
+
+      - name: Prove native inventory/equip path
+        run: node scripts/test-pip-rewards-native-equip-path.mjs "$GITHUB_SHA"
