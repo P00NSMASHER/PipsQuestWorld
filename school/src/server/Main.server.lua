@@ -5,7 +5,7 @@ local RunService = game:GetService("RunService")
 
 local shared = ReplicatedStorage:WaitForChild("SchoolShared")
 local Config = require(shared:WaitForChild("Config"))
-local QuestionBank = require(shared:WaitForChild("QuestionBank"))
+local QuestionBank = require(script.Parent:WaitForChild("QuestionBank"))
 local WorldBuilder = require(script.Parent:WaitForChild("WorldBuilder"))
 
 local remotes = ReplicatedStorage:FindFirstChild("SchoolRemotes") or Instance.new("Folder")
