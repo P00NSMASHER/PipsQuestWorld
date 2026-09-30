@@ -57,6 +57,10 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Runtime side-effect preflight: **COMPLETE** — purchase prompts are player-click driven; literal old-place teleports are remote/admin driven; startup-sensitive DataStore access is guarded by `pcall`, and the shared retry helpers cap attempts at 10 rather than retrying forever
 - Startup risk audit: **COMPLETE** — 175 auto-server scripts, 464 auto-client scripts, 32 auto-running scripts containing side-effect-capable code; no new game patch was added from this audit
 - Luau syntax scan: **PASSING** — 1,192 embedded scripts compiled, 0 syntax failures, pinned Luau revision `b18032e8926f4d1b539c1e9374fc4e20d4b12207`
+- Current Roblox API class audit: **PASSING** against client tracker `0.741.19.7411056` (2026-09-29) — 121/122 serialized classes remain in the current API; the only absent class is one inert top-level `RenderHooksService` instance with no children, descendants, extra properties, or script references
+- Current Roblox service/member audit: **PASSING** — 501 explicit service API uses are current, 109 are deprecated-but-still-present, 0 referenced services are missing, and 0 explicit service members are missing
+- Targeted legacy members: **ALL PRESENT** — `PlayerHasPass`, `AwardPoints`, `AwardBadge`, `CustomizedTeleportUI`, and `GlobalDataStore.OnUpdate` are deprecated but still exposed; `InsertService.LoadAsset`, `PromptProductPurchase`, and `GetDataStore` remain current
+- Static compatibility policy: deprecated-but-present APIs and the inert `RenderHooksService` singleton are preserved until runtime evidence proves a narrow repair is required
 - Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
