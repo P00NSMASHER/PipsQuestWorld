@@ -1,5 +1,62 @@
 {
   "schemaVersion": 1,
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "patches": []
+  "patches": [
+    {
+      "id": "sandbox-legacy-ranking-login",
+      "targetPath": "ServerScriptService/CheckRankingBotLogin",
+      "reason": "Prevent the compatibility build from sending requests or embedded legacy credentials to the historical Cindering ranking backend.",
+      "replacements": [
+        {
+          "old": "local url = \"http://cindering.xyz/CheckLogin.php?key=SecretWebKey\"",
+          "new": "local url = \"disabled://legacy-ranking-backend/check-login\"",
+          "expectedCount": 1
+        },
+        {
+          "old": "Http:GetAsync(url)",
+          "new": "error(\"Legacy ranking backend disabled in compatibility build\")",
+          "expectedCount": 1
+        }
+      ]
+    },
+    {
+      "id": "sandbox-legacy-group-ranking",
+      "targetPath": "ServerScriptService/GroupRankingManager",
+      "reason": "Keep the old ranking request fail-closed without contacting the historical Cindering backend.",
+      "replacements": [
+        {
+          "old": "local url = \"http://cindering.xyz/index.php?key=SecretWebKey&userID=\"..plr.userId..\"&rank=\"..highestrankdata.RankWebId",
+          "new": "local url = \"disabled://legacy-ranking-backend/group-rank\"",
+          "expectedCount": 1
+        },
+        {
+          "old": "Http:GetAsync(url)",
+          "new": "error(\"Legacy ranking backend disabled in compatibility build\")",
+          "expectedCount": 1
+        }
+      ]
+    },
+    {
+      "id": "sandbox-legacy-gameanalytics",
+      "targetPath": "ServerScriptService/GameAnalytics",
+      "reason": "Preserve gameplay while preventing the licensed test build from transmitting telemetry with historical GameAnalytics credentials.",
+      "replacements": [
+        {
+          "old": "local baseURL = \"http://api.gameanalytics.com/v2/\"",
+          "new": "local baseURL = \"disabled://legacy-gameanalytics/\"",
+          "expectedCount": 1
+        },
+        {
+          "old": "local Response = HTTP:PostAsync(baseURL..\"init\", Data, Enum.HttpContentType.ApplicationJson, false, Headers)",
+          "new": "local Response = '{\"enabled\":false}'",
+          "expectedCount": 1
+        },
+        {
+          "old": "local s,ret = pcall(function() return HTTP:PostAsync(baseURL..\"events\", Data, Enum.HttpContentType.ApplicationJson, false, Headers) end)",
+          "new": "local s,ret = false, \"Legacy GameAnalytics backend disabled in compatibility build\"",
+          "expectedCount": 1
+        }
+      ]
+    }
+  ]
 }

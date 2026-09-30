@@ -78,16 +78,26 @@ def main() -> int:
 
     for patch in manifest.get("patches", []):
         target = patch["targetPath"]
-        expected_sha = patch["expectedSourceSha256"]
-        matches = [
+        expected_sha = patch.get("expectedSourceSha256")
+
+        path_matches = [
             (item, path, cls, src)
             for item, path, cls, src in scripts
-            if path == target and sha256_text(src) == expected_sha
+            if path == target
         ]
+        if expected_sha:
+            matches = [
+                row for row in path_matches
+                if sha256_text(row[3]) == expected_sha
+            ]
+        else:
+            matches = path_matches
+
         if len(matches) != 1:
             raise SystemExit(
-                f"patch {patch['id']}: expected exactly one target for {target} "
-                f"with source SHA {expected_sha}, found {len(matches)}"
+                f"patch {patch['id']}: expected exactly one target for {target}"
+                + (f" with source SHA {expected_sha}" if expected_sha else "")
+                + f", found {len(matches)}"
             )
 
         item, path, cls, source = matches[0]
