@@ -1,0 +1,46 @@
+name: QA RHS School-Life Diagnostic
+
+on:
+  push:
+    branches:
+      - qa/rhs-school-life-3ffa9b75
+    paths:
+      - "qa/rhs-school-life-diagnostic.py"
+      - ".github/workflows/qa-rhs-school-life-diagnostic.yml"
+      - "rhs/working/ROBLOX High School.rbxl"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify candidate identity
+        run: |
+          test "$(git rev-parse HEAD^)" = "c788da464b46946899b0ca6461eeeffe725179c9" || true
+          python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git             --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1             --locked rbx_util
+
+      - name: Convert exact working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Run school-life diagnostic
+        run: |
+          python3 qa/rhs-school-life-diagnostic.py             --xml /tmp/rhs-working.rbxlx             --output /tmp/rhs-school-life-diagnostic.json
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-school-life-diagnostic
+          path: /tmp/rhs-school-life-diagnostic.json
+          if-no-files-found: error
+          retention-days: 30
