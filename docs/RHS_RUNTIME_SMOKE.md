@@ -22,6 +22,10 @@ This is the first runtime acceptance gate for `rhs/working/ROBLOX High School.rb
 8. Capture the exact first fatal error and its script path before making any repair.
 9. Repair only reproducible blockers and regenerate the working copy from the immutable baseline + patch manifest.
 
+## Legacy persistence retry behavior
+
+With Studio API-service access disabled, old DataStore calls can fail immediately. The central persistence helpers wrap reads/writes in `pcall` and cap their retry loops at 10 attempts, with legacy delays between attempts. A DataStore-related warning or delay during this smoke is evidence to capture; it is **not** a reason to enable Studio API access against any live experience.
+
 ## Gate A — load / spawn
 
 Required evidence:
