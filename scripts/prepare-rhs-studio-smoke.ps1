@@ -6,18 +6,34 @@ $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $Working = Join-Path $RepoRoot "rhs\working\ROBLOX High School.rbxl"
-$ExpectedSha256 = "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4"
+$BuildState = Join-Path $RepoRoot "rhs\working\BUILD_STATE.json"
 
 if (-not (Test-Path -LiteralPath $Working)) {
     throw "Working RHS place not found: $Working"
 }
+if (-not (Test-Path -LiteralPath $BuildState)) {
+    throw "RHS build state not found: $BuildState"
+}
+
+$state = Get-Content -LiteralPath $BuildState -Raw | ConvertFrom-Json
+$ExpectedSha256 = [string]$state.expectedWorkingSha256
+if ([string]::IsNullOrWhiteSpace($ExpectedSha256)) {
+    throw "BUILD_STATE.json does not contain expectedWorkingSha256"
+}
+if ($state.runtimeVerified -eq $true) {
+    Write-Host "RHS_RUNTIME_STATE already marked verified; this launcher does not change verification state."
+}
+if ($state.published -eq $true) {
+    Write-Host "RHS_PUBLICATION_STATE build state says published=true; verify target before any further action."
+}
 
 $actual = (Get-FileHash -LiteralPath $Working -Algorithm SHA256).Hash.ToLowerInvariant()
-if ($actual -ne $ExpectedSha256) {
+if ($actual -ne $ExpectedSha256.ToLowerInvariant()) {
     throw "RHS working SHA-256 mismatch. Expected $ExpectedSha256, got $actual"
 }
 
 Write-Host "RHS_WORKING_IDENTITY_OK $actual"
+Write-Host "RHS_COMPATIBILITY_REPAIRS $($state.compatibilityRepairs.Count)"
 
 if (-not $LaunchStudio) {
     Write-Host "RHS_SMOKE_PREP_OK"
