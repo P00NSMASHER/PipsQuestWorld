@@ -1,0 +1,56 @@
+name: RHS Current Service API Audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/rhs-current-service-api-audit.py"
+      - ".github/workflows/rhs-current-service-api-audit.yml"
+      - "rhs/working/ROBLOX High School.rbxl"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Fetch pinned current Roblox API dump
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            "https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/fcd6994996bb655bef047c69f456463d94faa569/API-Dump.json" \
+            -o /tmp/API-Dump.json
+          python3 -c 'import json; json.load(open("/tmp/API-Dump.json", encoding="utf-8"))'
+
+      - name: Compare explicit service calls with current API
+        run: |
+          python3 scripts/rhs-current-service-api-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --api-dump /tmp/API-Dump.json \
+            --output /tmp/rhs-current-service-api.json
+
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-current-service-api
+          path: /tmp/rhs-current-service-api.json
+          if-no-files-found: error
+          retention-days: 30
