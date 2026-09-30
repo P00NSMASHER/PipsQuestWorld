@@ -116,35 +116,41 @@ statusText.TextYAlignment = Enum.TextYAlignment.Top
 local modal = Instance.new("Frame")
 modal.Name = "ClassModal"
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
-modal.Position = UDim2.fromScale(0.5, 0.55)
-modal.Size = UDim2.new(0.9, 0, 0, 390)
+modal.Position = UDim2.fromScale(0.5, 0.42)
+modal.Size = UDim2.new(0.86, 0, 0, 254)
 modal.BackgroundColor3 = Color3.fromRGB(23, 27, 40)
 modal.Visible = false
 modal.Parent = screen
 round(modal, 20)
 stroke(modal, 0.68)
 
-local modalTitle = label(modal, "CLASS", UDim2.new(1, -36, 0, 42), UDim2.fromOffset(18, 16), 23)
+local modalSize = Instance.new("UISizeConstraint")
+modalSize.MaxSize = Vector2.new(410, 254)
+modalSize.Parent = modal
+
+local modalTitle = label(modal, "CLASS", UDim2.new(1, -36, 0, 28), UDim2.fromOffset(18, 12), 19)
 modalTitle.Font = Enum.Font.GothamBold
 
-local modalPrompt = label(modal, "", UDim2.new(1, -36, 0, 82), UDim2.fromOffset(18, 64), 20)
+local modalPrompt = label(modal, "", UDim2.new(1, -36, 0, 52), UDim2.fromOffset(18, 44), 17)
 modalPrompt.TextWrapped = true
 modalPrompt.TextYAlignment = Enum.TextYAlignment.Center
 modalPrompt.TextXAlignment = Enum.TextXAlignment.Center
 
 local answersHolder = Instance.new("Frame")
 answersHolder.BackgroundTransparency = 1
-answersHolder.Size = UDim2.new(1, -36, 0, 198)
-answersHolder.Position = UDim2.fromOffset(18, 150)
+answersHolder.Size = UDim2.new(1, -36, 0, 106)
+answersHolder.Position = UDim2.fromOffset(18, 104)
 answersHolder.Parent = modal
 
-local list = Instance.new("UIListLayout")
-list.Padding = UDim.new(0, 10)
-list.FillDirection = Enum.FillDirection.Vertical
-list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-list.Parent = answersHolder
+local grid = Instance.new("UIGridLayout")
+grid.CellPadding = UDim2.fromOffset(10, 10)
+grid.CellSize = UDim2.new(0.5, -5, 0, 48)
+grid.FillDirectionMaxCells = 2
+grid.HorizontalAlignment = Enum.HorizontalAlignment.Center
+grid.SortOrder = Enum.SortOrder.LayoutOrder
+grid.Parent = answersHolder
 
-local feedback = label(modal, "", UDim2.new(1, -36, 0, 34), UDim2.fromOffset(18, 346), 15, Enum.TextXAlignment.Center)
+local feedback = label(modal, "", UDim2.new(1, -36, 0, 26), UDim2.fromOffset(18, 220), 14, Enum.TextXAlignment.Center)
 feedback.TextWrapped = true
 
 local toast = Instance.new("TextLabel")
@@ -207,8 +213,10 @@ local function openQuestion(data)
 	modal.Visible = true
 
 	for index, choice in ipairs(data.choices or {}) do
-		local answer = button(answersHolder, tostring(choice), UDim2.new(1, 0, 0, 42), UDim2.new())
+		local answer = button(answersHolder, tostring(choice), UDim2.fromOffset(0, 48), UDim2.new())
 		answer.LayoutOrder = index
+		answer.TextSize = 16
+		answer.TextWrapped = true
 		answer.Activated:Connect(function()
 			actionEvent:FireServer("SubmitAnswer", { answerIndex = index })
 		end)
