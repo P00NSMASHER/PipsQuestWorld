@@ -95,6 +95,7 @@ end
 function EducationEngine.newHistory()
 	return {
 		seenIds = {},
+		questSeenIds = {},
 		materialExhausted = false,
 		lastQuestionId = nil,
 		lastSkill = nil,
@@ -110,6 +111,7 @@ end
 function EducationEngine.beginQuest(history)
 	history.questSkillCounts = {}
 	history.questQuestionTypeCounts = {}
+	history.questSeenIds = {}
 	history.resolvedCount = 0
 	history.lastSkill = nil
 	history.lastDifficulty = nil
@@ -180,6 +182,14 @@ function EducationEngine.pickNextQuestion(bank, history, rng)
 	local pool = tierPool(bank, history)
 	assert(#pool > 0, 'question pool is empty')
 
+	history.questSeenIds = history.questSeenIds or {}
+	local freshThisQuest = filtered(pool, function(question)
+		return not history.questSeenIds[question.id]
+	end)
+	if #freshThisQuest > 0 then
+		pool = freshThisQuest
+	end
+
 	local dueComeback = history.pendingComebackSkill
 		and history.pendingComebackDueAfter
 		and history.resolvedCount >= history.pendingComebackDueAfter
@@ -235,6 +245,8 @@ function EducationEngine.pickNextQuestion(bank, history, rng)
 end
 function EducationEngine.markShown(history, question)
 	history.seenIds[question.id] = true
+	history.questSeenIds = history.questSeenIds or {}
+	history.questSeenIds[question.id] = true
 	history.lastQuestionId = question.id
 	history.lastSkill = question.skill
 	history.lastDifficulty = tonumber(question.difficulty) or history.lastDifficulty
