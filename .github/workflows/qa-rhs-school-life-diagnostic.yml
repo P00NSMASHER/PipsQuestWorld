@@ -75,7 +75,7 @@ jobs:
           out.append("")
           Path("qa/rhs-school-life-report.md").write_text("\n".join(out)+"\n")
           PY
-          if git diff --quiet -- qa/rhs-school-life-report.json qa/rhs-school-life-report.md; then
+          if [ -z "$(git status --porcelain -- qa/rhs-school-life-report.json qa/rhs-school-life-report.md)" ]; then
             echo "QA report unchanged"
             exit 0
           fi
