@@ -18,8 +18,6 @@ end
 function PipCollectibleTheme:apply(instance)
 	-- Visual-only adaptation. Do not change tags, itemId, touch listeners, values,
 	-- respawn timing, sounds, or datastore behavior from Maze World.
-	instance.Name = 'PipSpark'
-
 	for _, descendant in ipairs(instance:GetDescendants()) do
 		if descendant:IsA('BasePart') then
 			descendant.Material = Enum.Material.Neon
