@@ -14,7 +14,10 @@ VERIFIED:
 - at least one transfer/application item is forced by the final slot when available;
 - same-skill comeback remains scheduled after a miss;
 - first miss clue -> second miss support -> third miss model;
-- assisted resolutions are distinguishable from independent mastery.
+- assisted resolutions are distinguishable from independent mastery;
+- first-try = 25 points, corrected = 20, modeled = 0; percentages normalize over five questions;
+- A/B/C/Practice grade bands are available as evidence metadata;
+- mastery titles use independent-correct count only, so supported answers cannot inflate mastery.
 
 TESTS:
 - PipsEducationEngine.lua Luau compile PASS.
