@@ -10,7 +10,7 @@ on:
       - "rhs/working/ROBLOX High School.rbxl"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   diagnose:
@@ -19,23 +19,71 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify candidate identity
-        run: |
-          test "$(git rev-parse HEAD^)" = "c788da464b46946899b0ca6461eeeffe725179c9" || true
-          python3 scripts/verify-rhs-baseline.py
+      - name: Verify exact RHS working candidate
+        run: python3 scripts/verify-rhs-baseline.py
 
       - name: Build pinned Roblox converter
         shell: bash
         run: |
           set -euo pipefail
-          cargo install --git https://github.com/rojo-rbx/rbx-dom.git             --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1             --locked rbx_util
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
 
       - name: Convert exact working build
         run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
 
       - name: Run school-life diagnostic
         run: |
-          python3 qa/rhs-school-life-diagnostic.py             --xml /tmp/rhs-working.rbxlx             --output /tmp/rhs-school-life-diagnostic.json
+          python3 qa/rhs-school-life-diagnostic.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-school-life-diagnostic.json
+
+      - name: Persist GitHub-visible QA evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/rhs-school-life-diagnostic.json qa/rhs-school-life-report.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("qa/rhs-school-life-report.json")
+          d=json.loads(p.read_text())
+          def lines(title,key,limit=20):
+              rows=d.get(key,[])
+              out=[f"## {title}", f"Count: {len(rows)}", ""]
+              for r in rows[:limit]:
+                  out.append(f"- `{r.get('role','?')}` `{r.get('class','?')}` — `{r.get('path','?')}`")
+              out.append("")
+              return out
+          out=[
+            "# RHS School-Life QA Diagnostic",
+            "",
+            f"Candidate SHA: `{d['candidateSha']}`",
+            f"Script count: {d['scriptCount']}",
+            "",
+          ]
+          out += lines("Schedule candidates","scheduleCandidates")
+          out += lines("Class-flow candidates","classFlowCandidates")
+          out += lines("Server-authoritative activity candidates","serverAuthoritativeActivityCandidates")
+          out += lines("Client/replicated answer-key candidates","clientOrReplicatedAnswerKeyCandidates")
+          out += lines("Server grade remote candidates","serverGradeRemoteCandidates")
+          out += lines("Client grade remote candidates","clientGradeRemoteCandidates")
+          out += ["## DataStore owners", f"Keys: {len(d.get('datastoreOwners',{}))}", ""]
+          for key,owners in sorted(d.get("datastoreOwners",{}).items()):
+              out.append(f"- `{key}` — " + ", ".join(f"`{o['path']}`" for o in owners[:8]))
+          out.append("")
+          Path("qa/rhs-school-life-report.md").write_text("\n".join(out)+"\n")
+          PY
+          if git diff --quiet -- qa/rhs-school-life-report.json qa/rhs-school-life-report.md; then
+            echo "QA report unchanged"
+            exit 0
+          fi
+          git config user.name "PipsQuestWorld QA"
+          git config user.email "qa@users.noreply.github.com"
+          git add qa/rhs-school-life-report.json qa/rhs-school-life-report.md
+          git commit -m "qa: persist RHS school-life diagnostic evidence"
+          git push origin HEAD:qa/rhs-school-life-3ffa9b75
 
       - name: Upload diagnostic
         uses: actions/upload-artifact@v4
