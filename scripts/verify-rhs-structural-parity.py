@@ -5,10 +5,16 @@ import argparse
 import collections
 import hashlib
 import json
+import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 SCRIPT_CLASSES = {"Script", "LocalScript", "ModuleScript"}
+
+BLANK_LOOKUP_PATTERNS = [
+    re.compile(r'(?:WaitForChild|FindFirstChild)\s*\(\s*["\']\s+["\']'),
+    re.compile(r'\[\s*["\']\s+["\']\s*\]'),
+]
 
 def prop_text(item, name: str) -> str:
     props = item.find("Properties")
@@ -23,12 +29,18 @@ def prop_text(item, name: str) -> str:
         return prop.text or ""
     return ""
 
-def item_name(item) -> str:
-    return prop_text(item, "Name") or "(unnamed)"
+def raw_item_name(item) -> str:
+    return prop_text(item, "Name")
+
+def canonical_item_name(item) -> str:
+    raw = raw_item_name(item)
+    if raw.strip() == "":
+        return "(blank)"
+    return raw
 
 def walk(parent, prefix: str = ""):
     for item in parent.findall("Item"):
-        name = item_name(item)
+        name = canonical_item_name(item)
         here = f"{prefix}/{name}" if prefix else name
         yield item, here
         yield from walk(item, here)
@@ -41,16 +53,32 @@ def inventory(xml_path: str):
     hierarchy = collections.Counter()
     classes = collections.Counter()
     scripts = {}
+    blank_name_forms = collections.Counter()
+    blank_lookup_hits = []
 
     for item, path in walk(root):
         cls = item.attrib.get("class", "")
         hierarchy[(path, cls)] += 1
         classes[cls] += 1
 
+        raw_name = raw_item_name(item)
+        if raw_name.strip() == "":
+            if raw_name == "":
+                blank_name_forms["empty"] += 1
+            else:
+                blank_name_forms["whitespace_only"] += 1
+
         if cls in SCRIPT_CLASSES:
-            scripts.setdefault((path, cls), []).append(
-                source_sha(prop_text(item, "Source"))
-            )
+            source = prop_text(item, "Source")
+            scripts.setdefault((path, cls), []).append(source_sha(source))
+            for regex in BLANK_LOOKUP_PATTERNS:
+                for line_no, line in enumerate(source.splitlines(), start=1):
+                    if regex.search(line):
+                        blank_lookup_hits.append({
+                            "path": path,
+                            "class": cls,
+                            "line": line_no,
+                        })
 
     for values in scripts.values():
         values.sort()
@@ -60,6 +88,8 @@ def inventory(xml_path: str):
         "hierarchy": hierarchy,
         "classes": classes,
         "scripts": scripts,
+        "blankNameForms": blank_name_forms,
+        "blankLookupHits": blank_lookup_hits,
     }
 
 def main() -> int:
@@ -87,8 +117,28 @@ def main() -> int:
         missing = baseline["hierarchy"] - working["hierarchy"]
         extra = working["hierarchy"] - baseline["hierarchy"]
         raise SystemExit(
-            f"hierarchy drift: missing={list(missing.items())[:20]} "
+            f"canonical hierarchy drift: missing={list(missing.items())[:20]} "
             f"extra={list(extra.items())[:20]}"
+        )
+
+    baseline_blank_total = sum(baseline["blankNameForms"].values())
+    working_blank_total = sum(working["blankNameForms"].values())
+    if baseline_blank_total != working_blank_total:
+        raise SystemExit(
+            f"blank-name instance count drift: {baseline_blank_total} != {working_blank_total}"
+        )
+
+    if baseline["blankNameForms"] != working["blankNameForms"]:
+        if baseline["blankLookupHits"]:
+            raise SystemExit(
+                "converter normalized blank/whitespace-only instance names but baseline scripts "
+                f"contain explicit whitespace-name lookups: {baseline['blankLookupHits'][:20]}"
+            )
+        print(
+            "RHS_ALLOWED_SERIALIZER_NORMALIZATION blank_names",
+            dict(baseline["blankNameForms"]),
+            "->",
+            dict(working["blankNameForms"]),
         )
 
     patched = {}
