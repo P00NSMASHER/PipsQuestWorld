@@ -10,6 +10,7 @@ on:
       - rebuild/coin-learning-selector
       - rebuild/content-quality-batch2
       - rebuild/content-answer-balance
+      - rebuild/rotation-matrix-qa
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
@@ -85,6 +86,10 @@ jobs:
           if [ -f tests/pips_education_content_contract.luau ]; then
             /tmp/luau/luau-compile tests/pips_education_content_contract.luau >/dev/null
             /tmp/luau/luau tests/pips_education_content_contract.luau
+          fi
+          if [ -f tests/pips_release_rotation_matrix.luau ]; then
+            /tmp/luau/luau-compile tests/pips_release_rotation_matrix.luau >/dev/null
+            /tmp/luau/luau tests/pips_release_rotation_matrix.luau
           fi
           if [ -f tests/pips_learning_session_smoke.luau ]; then
             /tmp/luau/luau-compile tests/pips_learning_session_smoke.luau >/dev/null
