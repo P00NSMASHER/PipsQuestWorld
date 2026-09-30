@@ -1,0 +1,53 @@
+name: Maze Chassis Rebase CI
+
+on:
+  push:
+    branches:
+      - rebase/maze-world-chassis
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maze-chassis-rebase-ci
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rojo
+        run: |
+          curl -L --fail --silent --show-error \
+            https://github.com/rojo-rbx/rojo/releases/download/v7.7.0/rojo-7.7.0-linux-x86_64.zip \
+            -o rojo.zip
+          unzip -q rojo.zip
+          chmod +x rojo
+          ./rojo --version
+
+      - name: Build Maze World chassis
+        run: |
+          mkdir -p dist
+          ./rojo build game/default.project.json -o dist/pips-maze-chassis.rbxlx
+          test -s dist/pips-maze-chassis.rbxlx
+
+      - name: Verify rebase markers
+        run: |
+          grep -q 'PipsLearningGate' dist/pips-maze-chassis.rbxlx
+          grep -q 'LearningGate' dist/pips-maze-chassis.rbxlx
+          grep -q 'EducationEngine' dist/pips-maze-chassis.rbxlx
+          grep -q 'QuestionBank' dist/pips-maze-chassis.rbxlx
+          grep -q 'Touched Finish for player' dist/pips-maze-chassis.rbxlx
+          grep -q 'Learning gate cleared for player' dist/pips-maze-chassis.rbxlx
+
+      - name: Upload chassis build
+        uses: actions/upload-artifact@v4
+        with:
+          name: pips-maze-chassis
+          path: dist/pips-maze-chassis.rbxlx
+          if-no-files-found: error
+          retention-days: 7
