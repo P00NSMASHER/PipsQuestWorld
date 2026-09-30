@@ -1,76 +1,94 @@
-# PipsQuestWorld Integration State
+# Pip High Integration State
 
 STATUS: BLOCKED
-CANONICAL_BRANCH: rebuild/maze-world-foundation
-CANONICAL_SHA: 8acc2b34b6fcce94b81c3b3729249b6d6cc90450
-PRISTINE_BASELINE_SHA: 7ebfd2f81ddfc3d740eee1641b859f49dc087323
+CANONICAL_PRODUCT: original feature-equivalent Roblox high-school life game
+CANONICAL_BRANCH: rebuild/high-school-foundation
+CANONICAL_SHA: 87658f31ebf2a78f922cbcb47a1948e0538384a6
 ELIGIBLE_FINGERPRINT: eligible-ready=[]
 INTEGRATED_PRODUCER_SHAS: none
 FINAL_INTEGRATOR_SHA: none
 
 ## Cloud-first review
 
-Current canonical foundation head: `8acc2b34b6fcce94b81c3b3729249b6d6cc90450`.
+The Maze World / PipsQuest release path is retired. GitHub/cloud review only; no Remote Desktop or PAAM-L044 access was used.
 
-Exact current producer heads reviewed:
-- rebuild/rotation-matrix-qa `0ef7f29500537f81cc75526ad593bfcd301db765` — already ancestor of canonical foundation.
-- rebuild/content-answer-balance `df4ee9e49b9dabb3ec8b08c84fc3a92605791789` — already ancestor.
-- rebuild/content-quality-batch2 `cc0fe847007fc5a8867bf244256e11766513cd45` — already ancestor.
-- rebuild/coin-learning-selector `bd8bc414c79174997dfeabe3d980a1e82f7d3ce2` — already ancestor.
-- rebuild/learning-session-core-v2 `f7a97acd996768615df0e0c70281fb4d006d13fd` — already ancestor.
-- rebuild/phase1-standalone-prep `776ed371d03aa9ec78d6d2dfb083aedf76ec9d67` — already ancestor.
-- rebuild/content-qa `aa67c1e0f7b5b103b387eaf2e7d21796a50c891b` — stale divergent fork; not eligible.
-- rebuild/education-engine-adapter `47be5ae08f7cbb6b4c70254c2a57595d9bb56ebd` — stale divergent CI-only fork; not eligible.
-- rebuild/learning-adapter-contract `254379eb4910967b20c938cf6d5e6545bc0aebb6` — divergent contract-only fork; live seam remains deferred.
-- rebuild/learning-coin-selector `daa3738a2863392ecb1fe7d47cc737f491c92f1f` — divergent older selector fork; not eligible.
+Canonical foundation:
+- rebuild/high-school-foundation `87658f31ebf2a78f922cbcb47a1948e0538384a6`
+- active project: `school/default.project.json`
+- active source root: `school/`
+- active mapped gameplay is foundation-only: SchoolConfig, CampusBuilder, FoundationBootstrap
+- legacy Maze World under `game/` is frozen historical material and is not an eligible source
 
-Open PRs #8, #11, and #12 are draft school-life pivots on legacy/noncanonical branches and are rejected from the Maze World release path.
+Current relevant producer heads reviewed:
+- pivot/school-life-foundation `aee67f5c83dc3e765758e2b73d190f446cfc38c6`
+- feat/school-life-pivot `883fa92583e58791443798330d8b61d22807df62`
+- fix/school-life-answer-leak `145d91c25cf39f108f271e43c9359862900be7e3`
+- fix/school-life-mobile-class-modal `a45a47b9b6c5cd01e3514f764bb7afde87f45330`
+- qa/gameplay `63782d52e0515cce9aeaabea8b8406b05cf24134` — stale Maze-era QA evidence
+- coordination/contract-guardian `e751135bce4afc6bc80d8aa23b55a1e4f58c3421` — stale Maze-era contract evidence
+- coordination/high-school-contract-guardian has no current high-school review commit
 
-## Protected Maze World verdict
+Open PR review:
+- PR #16 “Rebuild from licensed exact ROBLOX High School baseline” is REJECTED from the canonical path. It intentionally imports an exact historical implementation and is incompatible with the current original-code / original-presentation rule.
 
-Exact compare from pristine baseline `7ebfd2f81ddfc3d740eee1641b859f49dc087323` to current canonical head modifies no protected Maze World gameplay file. The diff is additive Pips education/content/session/selector/verification material plus workflow/docs.
+## Rights / provenance verdict
 
-Source/static preservation therefore remains PASS for native opening/waiting/start flow, MazeGenerator, room lifecycle, movement/camera assumptions, CoinBrick/itemId/value/onePerPlayer semantics, playerFinishedRoom finish authority, native reward/finish UI/cooldown/replay, and Place/models/terrain.
+Canonical foundation: PASS for current active mapped foundation scope.
 
-This is static evidence only; it is not fresh target-device runtime acceptance.
+Evidence:
+- README and DEVELOPMENT explicitly require original code, layouts, UI, names, and assets (or clearly licensed material).
+- docs/PIP_HIGH_PIVOT.md explicitly forbids importing, scraping, decompiling, tracing, or reconstructing another Roblox game's protected implementation.
+- active foundation code is procedural first-party Lua and contains no mapped third-party asset IDs.
+- `scripts/verify-high-school-foundation.py` rejects `rbxassetid://` in the active foundation and keeps QuestionBank / leaderstats / client UI out of the foundation project.
 
-## Exact-head GitHub verification
+`UPSTREAM.md` still names Maze World as the primary foundation. That receipt is stale under the current product law and is not consumed as canonical evidence.
 
-Maze World Foundation Guard run `36759395095` executed on exact SHA `8acc2b34b6fcce94b81c3b3729249b6d6cc90450` and completed SUCCESS.
+## Dependency / authority review
 
-Passing steps:
-- Assert Maze World protected files are unchanged.
-- Verify Maze World foundation invariants.
-- Verify native coin seam remains additive-safe.
-- Verify Phase-0 adapter boundary.
-- Assert Pips foundation remains shadow-only.
+Required dependency order:
+Foundation -> Class Loop/Education -> Progression/Persistence -> Mobile UX -> optional Social/Customization/Vehicles/Housing -> Contract Guardian -> QA -> Integration.
 
-Key outputs:
-- foundation verifier: PASS; 147 first-party Lua files, 38 model files, 14 required foundation files, 0 legacy custom-world markers.
-- native coin seam: PASS; 1 native CoinBrick handler, 0 competing Pips handlers.
-- Phase-0 adapter boundary: PASS; 7 Pips files, 0 live gameplay adapters, 0 client Pips files, shadowOnly=true.
+Foundation is the only currently eligible canonical layer.
 
-No combined integration test was run because there is no eligible integration batch.
+The existing inactive `school/src/server/SchoolLoop.server.lua` on the foundation branch is NOT eligible to activate as-is because it owns a second independent school clock (`periodIndex`, `periodStartedAt`, bell loop) while `FoundationBootstrap.server.lua` already owns the authoritative period clock.
 
-## Local-only release gate
+The school-life producer family is also NOT eligible to merge directly:
+- `fix/school-life-answer-leak` / `feat/school-life-pivot` create their own world/config/runtime authority.
+- their server runtime owns a separate `phaseIndex` / `phaseStartedAt` clock and its own progression/persistence model.
+- direct integration would create duplicate school clocks, duplicate progression authority, and competing campus/runtime semantics.
 
-LOCAL_ONLY_REQUIRED: fresh target-device Maze World gameplay acceptance on the actual product path.
+Owner for the semantic conflict: Class Loop / Education producer.
 
-Exact required evidence:
-- join/wait/start flow;
-- procedural maze generation;
-- movement and camera feel;
-- native coin pickup;
-- finish/reward/replay;
-- phone layout/performance;
-- no fatal runtime/bootstrap defect.
+Required producer contract before the next integration attempt:
+1. Layer onto `FoundationBootstrap` as the single school-clock authority.
+2. Consume authoritative period/day state instead of starting another clock.
+3. Keep correct answers server-only; no client answer key.
+4. Add class/education behavior without replacing CampusBuilder or creating a second world authority.
+5. Keep progression hooks additive; persistence remains a later layer.
+6. Commit one exact READY SHA with deterministic static/headless tests.
 
-Reason: these behaviors cannot be truthfully certified from repository/static evidence alone.
+Mobile UX `a45a47b9b6c5cd01e3514f764bb7afde87f45330` is DEFERRED because its base is the parallel school-life architecture and Progression/Persistence has not yet been integrated onto the canonical foundation.
 
-Per background-only policy, this local-only work is deferred and must be batched into one justified non-interactive/headless session. The laptop must not be polled.
+## Contract / QA
 
-Until target-device acceptance exists, do not integrate a live learning hook, RemoteEvent, question UI, Pip reward hook, mobile gameplay UI, package, or publish.
+No current Contract Guardian PASS exists for canonical SHA `87658f31ebf2a78f922cbcb47a1948e0538384a6` plus a compatible Class Loop/Education producer SHA.
+
+No current QA PASS exists for that same exact candidate.
+
+Existing Contract Guardian and QA receipts are Maze-era/stale and must not be consumed.
+
+## Verification
+
+No combined integration head was created, so the deterministic combined test was not rerun.
+
+The canonical branch contains `.github/workflows/school-pivot-ci.yml`, but the available exact-head GitHub commit status for `87658f31ebf2a78f922cbcb47a1948e0538384a6` currently exposes no completed PR-triggered run. Do not claim CI green for this exact head without a matching run.
+
+LOCAL_ONLY_REQUIRED: none at this stage. The current blocker is fully established by GitHub/source evidence. Studio/device work is deferred until a cloud-eligible candidate reaches the runtime gate.
 
 ## Result
 
-BLOCKED. No eligible producer SHA advances the authorized live release path. No merge to main. No Roblox publication.
+BLOCKED.
+
+Reason: no committed READY Class Loop/Education unit layers onto the single canonical foundation clock without introducing parallel runtime/progression authority, and there is no exact-head Contract Guardian PASS or QA PASS.
+
+No merge to main. No Roblox publication. No spend. No desktop access.
