@@ -5,6 +5,7 @@ on:
     branches:
       - rebuild/education-engine-adapter
       - rebuild/content-qa
+      - qa/maze-standalone-contract
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
@@ -72,4 +73,8 @@ jobs:
           if [ -f scripts/test-release-question-bank.luau ]; then
             /tmp/luau/luau-compile scripts/test-release-question-bank.luau >/dev/null
             /tmp/luau/luau scripts/test-release-question-bank.luau
+          fi
+          if [ -f scripts/test-release-question-engine-contract.luau ]; then
+            /tmp/luau/luau-compile scripts/test-release-question-engine-contract.luau >/dev/null
+            /tmp/luau/luau scripts/test-release-question-engine-contract.luau
           fi
