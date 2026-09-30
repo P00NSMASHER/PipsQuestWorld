@@ -23,6 +23,7 @@ PATTERNS = {
     "group_service": re.compile(r"GroupService"),
     "numeric_require": re.compile(r"require\s*\(\s*(\d{4,})\s*\)"),
     "insecure_http": re.compile(r"http://", re.I),
+    "http_service_call": re.compile(r"(?:\bHttp\b|\bHTTP\b)\s*:\s*(?:GetAsync|PostAsync|RequestAsync)\s*\(|game\s*:\s*(?:HttpGet|HttpPost)\s*\(", re.I),
     "legacy_character_fetch": re.compile(r"CharacterFetch\.ashx", re.I),
     "process_receipt": re.compile(r"ProcessReceipt"),
     "purchase_prompt": re.compile(r"Prompt(?:Product|GamePass)Purchase"),
