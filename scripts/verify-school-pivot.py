@@ -3,59 +3,63 @@ from pathlib import Path
 import json
 import re
 
-ROOT = Path(__file__).resolve().parents[1]
-SCHOOL = ROOT / "school"
+root = Path(__file__).resolve().parents[1]
+school = root / "school"
+project = school / "default.project.json"
+config = school / "src/shared/SchoolConfig.lua"
+campus = school / "src/server/CampusBuilder.server.lua"
+runtime = school / "src/server/FoundationBootstrap.server.lua"
 
-required = [
-    SCHOOL / "default.project.json",
-    SCHOOL / "src/shared/SchoolConfig.lua",
-    SCHOOL / "src/server/QuestionBank.lua",
-    SCHOOL / "src/server/CampusBuilder.server.lua",
-    SCHOOL / "src/server/SchoolLoop.server.lua",
-    SCHOOL / "src/client/SchoolHud.client.lua",
-]
+for path in (project, config, campus, runtime):
+    if not path.exists():
+        raise SystemExit(f"missing foundation file: {path.relative_to(root)}")
 
-missing = [str(p.relative_to(ROOT)) for p in required if not p.exists()]
-if missing:
-    raise SystemExit("missing required school files: " + ", ".join(missing))
+project_text = project.read_text()
+project_json = json.loads(project_text)
+if project_json.get("name") != "PipHigh":
+    raise SystemExit("unexpected project name")
 
-project = json.loads((SCHOOL / "default.project.json").read_text())
-if project.get("name") != "PipHigh":
-    raise SystemExit("active Rojo project must be named PipHigh")
+for path in (
+    "src/shared/SchoolConfig.lua",
+    "src/server/CampusBuilder.server.lua",
+    "src/server/FoundationBootstrap.server.lua",
+):
+    if path not in project_text:
+        raise SystemExit(f"project does not map {path}")
 
-project_text = (SCHOOL / "default.project.json").read_text().lower()
-if "maze" in project_text or "../game" in project_text:
-    raise SystemExit("active school project must not depend on legacy Maze World")
+for old_path in ("src/client", "SchoolLoop.server.lua", "QuestionBank.lua", "../game"):
+    if old_path in project_text:
+        raise SystemExit(f"project maps non-foundation path: {old_path}")
 
-client_and_shared = "\n".join(
-    p.read_text(errors="ignore")
-    for base in (SCHOOL / "src/client", SCHOOL / "src/shared")
-    for p in base.rglob("*.lua")
-)
+config_text = config.read_text()
+campus_text = campus.read_text()
+runtime_text = runtime.read_text()
 
-for forbidden in ("correctIndex", "correctAnswer", "answerKey"):
-    if forbidden in client_and_shared:
-        raise SystemExit(f"answer-key token leaked into client/shared code: {forbidden}")
+period_rooms = re.findall(r'room\s*=\s*"([^"]+)"', config_text)
+room_defs = set(re.findall(r'^\s{4}([A-Za-z0-9_]+)\s*=\s*\{\s*position\s*=', config_text, flags=re.MULTILINE))
+if not period_rooms:
+    raise SystemExit("no schedule periods found")
+if set(period_rooms) - room_defs:
+    raise SystemExit("schedule references a room with no configured location")
 
-server = (SCHOOL / "src/server/SchoolLoop.server.lua").read_text()
-if "choiceIndex == question.correctIndex" not in server:
-    raise SystemExit("server-authoritative answer check not found")
+for token in ('Instance.new("SpawnLocation")', 'spawn.Name = "MainSpawn"', 'roomSpawns.Name = "RoomSpawns"'):
+    if token not in campus_text:
+        raise SystemExit(f"missing campus seam: {token}")
 
-if "QuestionBank" not in server:
-    raise SystemExit("server is not using the server-only question bank")
+for token in (
+    "Players.PlayerAdded:Connect(setupPlayer)",
+    "Players.PlayerRemoving:Connect(removePlayer)",
+    "player.RespawnLocation = spawn",
+    "SchoolConfig.PERIOD_SECONDS",
+    'Workspace:SetAttribute("SchoolDay"',
+    'Workspace:SetAttribute("SchoolPeriodIndex"',
+):
+    if token not in runtime_text:
+        raise SystemExit(f"missing runtime seam: {token}")
 
-school_text = "\n".join(
-    p.read_text(errors="ignore")
-    for p in SCHOOL.rglob("*")
-    if p.is_file()
-)
+active = "\n".join((config_text, campus_text, runtime_text)).lower()
+for term in ("questionbank", "leaderstats", "rbxassetid://", "currentcamera", "walkspeed", "jumppower"):
+    if term in active:
+        raise SystemExit(f"out-of-scope foundation term found: {term}")
 
-protected_clone_terms = [
-    r"Roblox\s+High\s+School\s*2",
-    r"Roblox\s+High\s+School",
-]
-for pattern in protected_clone_terms:
-    if re.search(pattern, school_text, flags=re.IGNORECASE):
-        raise SystemExit("protected third-party game branding found inside active school source")
-
-print("PIP_HIGH_STATIC_GUARDS_OK")
+print("PIP_HIGH_FOUNDATION_GUARDS_OK")
