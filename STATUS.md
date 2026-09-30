@@ -1,45 +1,36 @@
-# Pip's Quest World Status
+# Pip High Status
 
-This file is maintained by the **Integrator lane only**.
+Updated: 2026-09-30
 
-## Current foundation
+## Direction
 
-- Repository initialized: **YES**
-- Upstream foundation: **MayGo/maze-world**
-- Pinned upstream commit: `2dba386aaa66c3351087ae5848bc5f6bf7a832b8`
-- Frozen imported baseline commit: `7ebfd2f81ddfc3d740eee1641b859f49dc087323`
-- Full upstream source imported into `game/`: **YES**
-- Imported files: **4,524**
-- Recursive submodules imported: **YES**
-- Required files verified: `LICENSE`, `README.md`, `default.project.json`, `maze-world.rbxl`, `Place.rbxmx`, `PlaceTerrain.rbxmx`, `src/`, `modules/`
-- Upstream `Game.rbxlx`: omitted from normal Git storage because its expanded Git-LFS object exceeds GitHub's 100 MiB normal-file limit; upstream pointer/LFS metadata preserved under `game/UPSTREAM_METADATA/`
-- Baseline gameplay verified in Roblox runtime: **NO — next hard gate**
-- Roblox staging target: **NOT CREATED**
+- Maze World product direction: **ABANDONED**
+- Active product: **Pip High**
+- Active source root: `school/`
+- Legacy Maze World import: preserved under `game/` as historical/reference material only
+- Third-party high-school game code/assets/maps: **NOT USED**
+- Roblox publication: **NOT REQUESTED / NOT PERFORMED**
 
-## Development lanes
+## Implemented in the pivot branch
 
-| Lane | Branch | Setup state | Next job |
-|---|---|---|---|
-| Pristine baseline | `baseline/maze-world-pristine` | frozen at imported baseline | never modify |
-| Integrator | `develop` | initialized | integrate only verified work |
-| Maze Core | `feat/maze-core` | initialized | prove untouched Maze World runtime |
-| Education Engine | `feat/education-engine` | initialized | build generic question contract |
-| Learning Gates | `feat/learning-gates` | initialized but blocked | wait for Maze Core + Education Engine interfaces |
-| Pip & Rewards | `feat/pip-rewards` | initialized | audit/reuse pet, inventory, trail, reward systems |
-| Mobile UX | `feat/mobile-ux` | initialized | capture stock mobile screens before changes |
-| QA | `qa/gameplay` | initialized | independently prove baseline runtime |
-| Emma Content | `content/emma-schoolwork` | initialized | prepare data-only schoolwork packs |
+- Original Rojo project for the new school game
+- Procedurally generated campus shell and room layout
+- Homeroom, Math, ELA, Science, Lunch, Social Studies, PE, and Free Time periods
+- Server-controlled bell schedule
+- Mobile HUD showing current/next class and points
+- Server-authoritative travel-to-class requests
+- Server-only question bank and answer validation
+- Forgiving retry flow and point rewards
+- Static CI guard that rejects client/shared answer keys and Maze World references in the active school project
 
-## Next hard gate
+## Not yet runtime-proven
 
-Before feature expansion, independently prove the **untouched imported Maze World** in Roblox runtime:
+The branch has not been opened in Roblox Studio and visually accepted yet. Runtime claims must wait for a background-safe or user-approved Studio verification session.
 
-spawn → movement → jump → maze generation → start maze → collect coin/item → finish maze → begin another round.
+## Next player-facing milestones
 
-Capture visible evidence at normal and phone-sized viewport.
-
-## First product milestone
-
-Do not broaden scope until this loop is genuinely good:
-
-spawn → meet Pip → start one maze → collect something → encounter one learning gate → answer one Emma-style question → path opens → finish → reward chest → unlock one Pip cosmetic → replay.
+1. Runtime smoke: spawn -> move -> use HUD -> travel to class -> answer question -> earn points.
+2. Replace blockout campus with an original polished school campus.
+3. Add avatar/social interactions, lockers, clubs, cafeteria interactions, gym activities, and free-time activities.
+4. Add persistent progression and cosmetics.
+5. Expand the question rotation with the user's schoolwork-derived content while keeping answers server-only.
