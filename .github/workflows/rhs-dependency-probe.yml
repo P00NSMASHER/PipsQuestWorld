@@ -1,0 +1,43 @@
+name: RHS Dependency Probe
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - ".github/workflows/rhs-dependency-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe numeric require assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          ids=(633112728 633111804 191816425 258548692 633111180 399944445)
+
+          for id in "${ids[@]}"; do
+            out="/tmp/asset-${id}"
+            headers="/tmp/headers-${id}"
+            code="$(curl -sS -L --max-redirs 5 --connect-timeout 10 --max-time 30 \
+              -D "$headers" -o "$out" -w '%{http_code}' \
+              "https://assetdelivery.roblox.com/v1/asset/?id=${id}" || true)"
+            bytes=0
+            sha=""
+            header=""
+            if [ -f "$out" ]; then
+              bytes="$(stat -c %s "$out")"
+              sha="$(sha256sum "$out" | awk '{print $1}')"
+              header="$(xxd -l 24 -p "$out" | tr -d '\n')"
+            fi
+            ctype="$(grep -i '^content-type:' "$headers" | tail -1 | tr -d '\r' | cut -d' ' -f2- || true)"
+            printf 'REQUIRE_ASSET id=%s http=%s bytes=%s content_type=%s sha256=%s header=%s\n' \
+              "$id" "$code" "$bytes" "$ctype" "$sha" "$header"
+          done
