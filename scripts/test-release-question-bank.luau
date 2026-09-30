@@ -3,9 +3,9 @@ local bank = require('../game/src/serverStorage/PipsReleaseQuestionBank')
 local expected = {
 	"abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1",
 	"abvm-b9d55008a7c4-629ea7-photo-short-vowel-identification-transfer-ev1",
-	"abvm-b9d55008a7c4-629ea7-photo-plural-s-es-reasoning-ev1",
+	"pips-grade2-plural-boxes-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1",
-	"abvm-b9d55008a7c4-629ea7-photo-religion-trinity-direct-ev1",
+	"pips-grade2-trinity-meaning-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-cvc-missing-vowel-direct-ev1",
 	"abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2",
 }
