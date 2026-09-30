@@ -46,11 +46,18 @@ if (Test-Path $GameDir) {
 New-Item -ItemType Directory -Force -Path $GameDir | Out-Null
 
 Write-Host "Copying complete working tree into game/..."
-robocopy $Scratch $GameDir /E /XD .git /XF .git Game.rbxlx /NFL /NDL /NJH /NJS /NP | Out-Null
+robocopy $Scratch $GameDir /E /XD .git /XF .git Game.rbxlx .gitattributes /NFL /NDL /NJH /NJS /NP | Out-Null
 $Code = $LASTEXITCODE
 if ($Code -ge 8) {
     throw "robocopy failed with code $Code"
 }
+
+$MetadataDir = Join-Path $GameDir "UPSTREAM_METADATA"
+New-Item -ItemType Directory -Force -Path $MetadataDir | Out-Null
+Copy-Item (Join-Path $Scratch ".gitattributes") (Join-Path $MetadataDir "gitattributes.txt") -Force
+$Pointer = git -C $Scratch show HEAD:Game.rbxlx
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes(($Pointer -join "`n"))) |
+    Set-Content (Join-Path $MetadataDir "Game.rbxlx.pointer.base64") -Encoding Ascii
 
 $Receipt = [ordered]@{
     upstream = "MayGo/maze-world"
@@ -60,6 +67,7 @@ $Receipt = [ordered]@{
     recursiveSubmodules = $true
     importMethod = "git clone --recursive + detached checkout + working-tree copy"
     omittedArtifacts = @("Game.rbxlx (upstream Git LFS build artifact; expanded file exceeds GitHub normal-file limit)")
+    preservedMetadata = @("UPSTREAM_METADATA/gitattributes.txt", "UPSTREAM_METADATA/Game.rbxlx.pointer.base64")
 }
 $Receipt | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $GameDir "UPSTREAM_SOURCE.json") -Encoding UTF8
 
