@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "stage": "baseline_exact",
+  "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "expectedWorkingSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "modifiedFromBaseline": false,
+  "runtimeVerified": false,
+  "published": false,
+  "compatibilityRepairs": []
+}

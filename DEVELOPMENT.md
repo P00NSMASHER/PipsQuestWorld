@@ -1,50 +1,37 @@
-# Development Workflow
+# Development Workflow — Licensed RHS Rebuild
 
-## Core rule
+## Goal
 
-**Player experience is the score.**
+Restore the licensed archived ROBLOX High School build to faithful working behavior on current Roblox, then add educational systems without replacing the original game loop.
 
-Architecture, test count, branch activity, and code volume do not count as progress unless they improve a verified player experience or prevent regressions.
+## Immutable baseline
 
-## Protected integration flow
+`rhs/baseline/ROBLOX High School.rbxl`
 
-`main`  
-Release-quality, QA-accepted builds only.
+This file is evidence. Its hash and size are fixed in `rhs/BASELINE.json`. Any baseline mutation is a hard failure.
 
-`develop`  
-Sole integration branch. Only the Integrator lane merges verified feature work here.
+## Working copy
 
-Feature branches:
-- `feat/maze-core`
-- `feat/education-engine`
-- `feat/learning-gates`
-- `feat/pip-rewards`
-- `feat/mobile-ux`
-- `qa/gameplay`
-- `content/emma-schoolwork`
+`rhs/working/ROBLOX High School.rbxl`
 
-Baseline:
-- `baseline/maze-world-pristine`
+The working copy begins byte-for-byte identical to the baseline. Compatibility changes must be deterministic and documented.
 
-## Worker rules
+## Repair order
 
-1. Work only on the assigned branch.
-2. Never push directly to `main` or `develop`.
-3. Never merge your own branch.
-4. Do not rewrite unrelated systems.
-5. Preserve failures; do not weaken acceptance checks to obtain a pass.
-6. Update `HANDOFF.md` before handing work to the Integrator.
-7. Report separately:
-   - implemented
-   - actually tested
-   - not tested
-   - known failures
-8. Never call something playable/polished/ready from code inspection alone.
+1. Prove exact import identity.
+2. Headlessly inventory assets, scripts, services, remotes, and external dependencies.
+3. Build a compatibility matrix for removed/deprecated Roblox APIs and dead external services.
+4. Repair startup blockers first.
+5. Prove spawn, movement, camera, HUD, and core interactions.
+6. Prove school schedule/classes.
+7. Prove vehicles.
+8. Prove housing/furniture.
+9. Prove clubs/social systems and tools.
+10. Prove persistence using a safe project-specific test namespace.
+11. Only after core parity is proven, add the educational question layer as an additive system.
 
-## First milestone
+## Integrity
 
-One fun educational maze:
+Each repaired build must retain a receipt linking it back to the immutable baseline and listing all deliberate behavioral deviations.
 
-spawn → meet Pip → enter maze → collect → learning gate → answer → gate opens → finish → reward → replay.
-
-No broad feature expansion until this loop is visibly good.
+No direct pushes to `main`. No Roblox publication without explicit user instruction.

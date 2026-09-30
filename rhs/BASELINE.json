@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "product": "ROBLOX High School",
+  "rightsBasis": {
+    "status": "USER_ASSERTED_LICENSE_COVERS_EXACT_CODE_BUILD",
+    "assertedAt": "2026-09-30",
+    "note": "The public archive is a technical source location, not the project's license grant."
+  },
+  "source": {
+    "repository": "MisoNotSoupx/Old-Roblox-Place-Archive",
+    "commit": "b817aef0eaf77d3382acacdc8f22537e54c76822",
+    "path": "Created by Users/Cindering/ROBLOX High School.rbxl",
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "rawUrl": "https://raw.githubusercontent.com/MisoNotSoupx/Old-Roblox-Place-Archive/b817aef0eaf77d3382acacdc8f22537e54c76822/Created%20by%20Users/Cindering/ROBLOX%20High%20School.rbxl"
+  },
+  "identity": {
+    "bytes": 2283775,
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "binaryHeaderHex": "3c726f626c6f782189ff0d0a1a0a"
+  }
+}

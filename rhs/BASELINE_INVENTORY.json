@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "inspectedAt": "2026-09-30",
+  "sourceSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "counts": {
+    "instances": 41257,
+    "distinctClasses": 122,
+    "scripts": 1192,
+    "serverScripts": 400,
+    "localScripts": 731,
+    "moduleScripts": 61,
+    "scriptSourceBytes": 2196914,
+    "remoteAndBindableObjects": 278,
+    "guiInstances": 1835,
+    "tools": 93,
+    "teams": 8,
+    "seatsAndVehicleSeats": 346,
+    "sounds": 205,
+    "uniqueRobloxAssetIds": 869,
+    "assetReferences": 4248,
+    "numericRequireIds": 6,
+    "scriptHttpUrls": 50
+  },
+  "featureSignals": {
+    "classAndScheduleLogic": true,
+    "vehicles": true,
+    "housing": true,
+    "jobs": true,
+    "clubsAndDance": true,
+    "persistenceCalls": true,
+    "monetizationCalls": true,
+    "teleportCalls": true,
+    "httpCalls": true
+  },
+  "knownExternalDependencies": [
+    "cindering.xyz legacy endpoints",
+    "GameAnalytics legacy API",
+    "DataStoreService",
+    "MarketplaceService / legacy GamePassService",
+    "BadgeService",
+    "TeleportService",
+    "InsertService",
+    "numeric require(assetId) modules",
+    "externally hosted Roblox assets"
+  ]
+}
