@@ -1,0 +1,56 @@
+name: RHS Structural Parity
+
+on:
+  pull_request:
+    paths:
+      - "rhs/working/**"
+      - "rhs/baseline/**"
+      - "scripts/verify-rhs-structural-parity.py"
+      - ".github/workflows/rhs-structural-parity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  structural-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify recorded binary identities
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Restore pinned converter cache
+        id: converter-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/rbx-util
+            ~/.cargo/git
+            ~/.cargo/registry
+          key: rhs-rbx-util-${{ runner.os }}-43d1f129f2eb1fd055512f039863ff35ae5a10f1
+
+      - name: Build pinned converter
+        if: steps.converter-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert baseline and working places
+        shell: bash
+        run: |
+          set -euo pipefail
+          rbx-util convert "rhs/baseline/ROBLOX High School.rbxl" /tmp/rhs-baseline.rbxlx
+          rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Prove hierarchy and script parity
+        shell: bash
+        run: |
+          python3 scripts/verify-rhs-structural-parity.py \
+            --baseline-xml /tmp/rhs-baseline.rbxlx \
+            --working-xml /tmp/rhs-working.rbxlx \
+            --build-receipt rhs/working/BUILD_RECEIPT.json
