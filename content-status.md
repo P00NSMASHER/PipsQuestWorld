@@ -50,3 +50,18 @@ gameplay or promote STAR fallback merely to increase volume.
 
 This is content-only preparation. It adds no Maze World world hook, RemoteEvent, UI, reward,
 movement, camera, finish behavior, Roblox publication, or foreground Studio/device work.
+
+
+## Batch-3 answer-position correction
+
+A release-quality defect was found after the semantic QA pass: all 12 active questions placed the
+accepted answer in choice 1. That creates a learnable answer-position shortcut unrelated to the
+intended Grade-2 skill.
+
+The release layer now reorders choices deterministically without mutating the certified archive or
+changing the accepted answer text. The 12-item pool is balanced exactly 4/4/4 across answer
+positions 1/2/3, with no fourth-choice item in the current three-choice pool.
+
+Validation now fails if this balance drifts. Distractor diagnostics remain keyed to choice text, so
+misconception feedback is preserved after reordering. Maze World gameplay/protected files remain
+unchanged.
