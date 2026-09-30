@@ -25,6 +25,51 @@
       "embeddedScripts": 1192,
       "syntaxFailures": 0,
       "evidenceRunId": 36786127824
+    },
+    "currentApiClassAudit": {
+      "status": "PASS",
+      "apiDumpRepository": "MaximumADHD/Roblox-Client-Tracker",
+      "apiDumpCommit": "fcd6994996bb655bef047c69f456463d94faa569",
+      "robloxVersion": "0.741.19.7411056",
+      "evidenceRunId": 36787463199,
+      "classesPresent": 121,
+      "classesMissing": 1,
+      "missingClasses": [
+        {
+          "class": "RenderHooksService",
+          "instances": 1,
+          "directChildren": 0,
+          "descendants": 0,
+          "properties": [
+            "Name"
+          ],
+          "scriptReferences": 0
+        }
+      ],
+      "legacyMembersChecked": 8,
+      "allLegacyMembersPresent": true,
+      "deprecatedLegacyMembers": [
+        "GamePassService.PlayerHasPass",
+        "PointsService.AwardPoints",
+        "BadgeService.AwardBadge",
+        "TeleportService.CustomizedTeleportUI",
+        "GlobalDataStore.OnUpdate"
+      ],
+      "currentLegacyMembers": [
+        "InsertService.LoadAsset",
+        "MarketplaceService.PromptProductPurchase",
+        "DataStoreService.GetDataStore"
+      ]
+    },
+    "currentServiceApiAudit": {
+      "status": "PASS",
+      "apiDumpCommit": "fcd6994996bb655bef047c69f456463d94faa569",
+      "evidenceRunId": 36787463200,
+      "explicitUsesCurrent": 501,
+      "explicitUsesDeprecated": 109,
+      "missingServices": 0,
+      "missingMembers": 0,
+      "policy": "Deprecated-but-present members are not compatibility-patched without runtime evidence."
     }
   },
   "dependencyProbe": {
