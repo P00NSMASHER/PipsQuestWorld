@@ -56,6 +56,8 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
 - Runtime side-effect preflight: **COMPLETE** — purchase prompts are player-click driven; literal old-place teleports are remote/admin driven; startup-sensitive DataStore access is guarded by `pcall`, and the shared retry helpers cap attempts at 10 rather than retrying forever
 - Startup risk audit: **COMPLETE** — 175 auto-server scripts, 464 auto-client scripts, 32 auto-running scripts containing side-effect-capable code; no new game patch was added from this audit
+- Luau syntax scan: **PASSING** — 1,192 embedded scripts compiled, 0 syntax failures, pinned Luau revision `b18032e8926f4d1b539c1e9374fc4e20d4b12207`
+- Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
 - Roblox publication: **NOT REQUESTED / NOT PERFORMED**
