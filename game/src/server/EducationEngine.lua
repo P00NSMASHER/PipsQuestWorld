@@ -216,15 +216,36 @@ local function comebackFor(question)
     }
 end
 
+local function failOpen(reason)
+    return {
+        correct = false,
+        complete = true,
+        nextAction = "return-to-maze",
+        reason = reason,
+        evidence = evidence(false),
+    }
+end
+
 function EducationEngine.submitAnswer(state, choiceIndex)
-    assert(type(state) == "table" and type(state.question) == "table", "invalid encounter state")
-    assert(state.completed ~= true, "encounter already completed")
+    if type(state) ~= "table" or type(state.question) ~= "table" then
+        return failOpen("invalid-encounter-state")
+    end
+    if state.completed == true then
+        return failOpen("encounter-already-completed")
+    end
 
     local question = state.question
-    assert(type(choiceIndex) == "number" and choiceIndex >= 1 and choiceIndex <= #question.options, "invalid choice")
+    local numericChoice = tonumber(choiceIndex)
+    if numericChoice == nil
+        or numericChoice % 1 ~= 0
+        or numericChoice < 1
+        or numericChoice > #question.options then
+        state.completed = true
+        return failOpen("invalid-choice")
+    end
 
-    local choice = question.options[choiceIndex]
-    local correct = choiceIndex == question.correctIndex
+    local choice = question.options[numericChoice]
+    local correct = numericChoice == question.correctIndex
 
     if correct then
         local independent = state.misses == 0

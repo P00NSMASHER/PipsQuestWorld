@@ -42,6 +42,9 @@ The presentation never includes `correctIndex`, modeled answer, explanation, rub
 - Any correct response after a miss is supported evidence: `independent=false`, `masteryEligible=false`.
 - Any modeled outcome is `independent=false`, `masteryEligible=false`.
 - Any non-independent resolution requests a same-skill comeback after at least two other encounters (`afterEncounters=2`).
+- Malformed or out-of-range choices fail open: complete the encounter, return control to Maze World, emit no mastery-eligible evidence, and return `reason="invalid-choice"` instead of throwing.
+- Re-submission after an encounter is already complete also fails open with `reason="encounter-already-completed"`; it must not create a second mastery event.
+- Invalid encounter state returns `reason="invalid-encounter-state"` and `nextAction="return-to-maze"` so the education seam cannot soft-lock Maze World.
 
 ## Question-bank compatibility
 

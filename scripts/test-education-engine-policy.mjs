@@ -23,6 +23,9 @@ for (const token of [
   'afterEncounters = 2',
   '"answer-leaked-in-prompt"',
   'question.id ~= context.lastQuestionId',
+  'reason = "invalid-encounter-state"',
+  'reason = "encounter-already-completed"',
+  'reason = "invalid-choice"',
 ]) requireText(lua, token, "engine policy");
 
 for (const forbidden of ["Instance.new", "game.Workspace", "ScreenGui", "RewardChest", "MiniMaze"]) {
@@ -33,6 +36,10 @@ const publicQuestionBody = lua.match(/local function publicQuestion\(question\)(
 assert.ok(publicQuestionBody, "publicQuestion function must exist");
 assert.equal(publicQuestionBody[1].includes("correctIndex"), false, "client presentation must not expose correctIndex");
 assert.equal(publicQuestionBody[1].includes("explanation"), false, "client presentation must not expose explanation/model");
+
+const submitAnswerBody = lua.match(/function EducationEngine\.submitAnswer\(state, choiceIndex\)([\s\S]*?)\nend\n\nreturn EducationEngine/);
+assert.ok(submitAnswerBody, "submitAnswer function must exist");
+assert.equal(submitAnswerBody[1].includes("assert("), false, "submitAnswer must fail open instead of throwing on client/input faults");
 
 requireText(contract, "exactly one brief encounter", "contract");
 requireText(contract, "no-nonrepeat-question", "contract");
@@ -97,10 +104,18 @@ assert.equal(selectQuestion(fixture, { currentMaterialSkills:["add"], independen
 assert.equal(selectQuestion(fixture, { currentMaterialSkills:["add","vocab"], independentOpportunitiesBySkill:{add:5,vocab:0} }).id, "vocab-material", "under-practiced current skill should win skill balancing");
 assert.equal(selectQuestion(fixture, { currentMaterialSkills:["not-present"], dueComebackSkills:["add"], independentOpportunitiesBySkill:{add:4,vocab:0} }).id, "math-transfer", "due material comeback should beat lower-count material skill while fallback stays behind material");
 
-function gradeSequence(correctIndex, choices) {
+function failOpenModel(reason) {
+  return {kind:"fail-open", reason, independent:false, masteryEligible:false, complete:true, nextAction:"return-to-maze"};
+}
+
+function gradeSequence(correctIndex, choices, optionCount = 3) {
   let misses = 0, completed = false;
   return choices.map(choiceIndex => {
-    assert.equal(completed, false, "cannot grade completed encounter");
+    if (completed) return failOpenModel("encounter-already-completed");
+    if (!Number.isInteger(choiceIndex) || choiceIndex < 1 || choiceIndex > optionCount) {
+      completed = true;
+      return failOpenModel("invalid-choice");
+    }
     if (choiceIndex === correctIndex) {
       completed = true;
       return {kind:"correct", independent:misses===0, masteryEligible:misses===0, complete:true};
@@ -123,5 +138,12 @@ assert.deepEqual(gradeSequence(1, [2,3,2]), [
   {kind:"support", independent:false, masteryEligible:false, complete:false},
   {kind:"modeled", independent:false, masteryEligible:false, complete:true, comebackAfter:2},
 ]);
+assert.deepEqual(gradeSequence(1, [0]), [
+  {kind:"fail-open", reason:"invalid-choice", independent:false, masteryEligible:false, complete:true, nextAction:"return-to-maze"},
+], "malformed choice must fail open without mastery evidence");
+assert.deepEqual(gradeSequence(1, [1,1]), [
+  {kind:"correct", independent:true, masteryEligible:true, complete:true},
+  {kind:"fail-open", reason:"encounter-already-completed", independent:false, masteryEligible:false, complete:true, nextAction:"return-to-maze"},
+], "duplicate submission must not throw or create a second mastery event");
 
-console.log("EDUCATION_ENGINE_POLICY_OK one-question=true current-material-first=true nonrepeat=true transfer=true support-evidence=true comeback=2");
+console.log("EDUCATION_ENGINE_POLICY_OK one-question=true current-material-first=true nonrepeat=true transfer=true support-evidence=true comeback=2 fail-open=true duplicate-safe=true");
