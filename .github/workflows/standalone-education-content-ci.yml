@@ -6,6 +6,7 @@ on:
       - rebuild/education-engine-adapter
       - rebuild/content-qa
       - rebuild/phase1-standalone-prep
+      - rebuild/learning-session-core-v2
     paths:
       - "game/src/serverStorage/Pips*.lua"
       - "scripts/*pips*.luau"
@@ -13,6 +14,10 @@ on:
       - "tests/pips*.luau"
       - "scripts/verify-server-only-education.mjs"
       - ".github/workflows/standalone-education-content-ci.yml"
+
+  pull_request:
+    branches:
+      - rebuild/maze-world-foundation
 
 permissions:
   contents: read
@@ -77,6 +82,10 @@ jobs:
           if [ -f tests/pips_education_content_contract.luau ]; then
             /tmp/luau/luau-compile tests/pips_education_content_contract.luau >/dev/null
             /tmp/luau/luau tests/pips_education_content_contract.luau
+          fi
+          if [ -f tests/pips_learning_session_smoke.luau ]; then
+            /tmp/luau/luau-compile tests/pips_learning_session_smoke.luau >/dev/null
+            /tmp/luau/luau tests/pips_learning_session_smoke.luau
           fi
 
       - name: Run curated content tests when present
