@@ -53,5 +53,8 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
+- Runtime side-effect preflight: **COMPLETE** — purchase prompts are player-click driven; literal old-place teleports are remote/admin driven; startup-sensitive DataStore access is guarded by `pcall`, and the shared retry helpers cap attempts at 10 rather than retrying forever
+- Startup risk audit: **COMPLETE** — 175 auto-server scripts, 464 auto-client scripts, 32 auto-running scripts containing side-effect-capable code; no new game patch was added from this audit
+- Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
 - Roblox publication: **NOT REQUESTED / NOT PERFORMED**
