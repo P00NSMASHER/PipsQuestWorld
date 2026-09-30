@@ -25,13 +25,22 @@
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "Shared": {
-        "$path": "src/shared"
+        "$className": "Folder",
+        "SchoolConfig": {
+          "$path": "src/shared/SchoolConfig.lua"
+        }
       }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "SchoolServer": {
-        "$path": "src/server"
+      "SchoolFoundation": {
+        "$className": "Folder",
+        "CampusBuilder": {
+          "$path": "src/server/CampusBuilder.server.lua"
+        },
+        "FoundationBootstrap": {
+          "$path": "src/server/FoundationBootstrap.server.lua"
+        }
       }
     }
   }
