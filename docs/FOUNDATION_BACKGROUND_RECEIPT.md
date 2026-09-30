@@ -1,38 +1,71 @@
 # Maze World Foundation — Background Certification Receipt
 
-Tested source SHA: `ac6161bd8e9780cb32d4f6cecb290ac1a247ab88`  
-Pristine baseline: `7ebfd2f81ddfc3d740eee1641b859f49dc087323`  
+Canonical source SHA: `a5631eea0d514f7383921d7e664a9aaeb6715c37`  
+Pristine behavioral baseline: `7ebfd2f81ddfc3d740eee1641b859f49dc087323`  
+Canonical branch: `rebuild/maze-world-foundation`  
 Execution mode: background/headless only on PAAM-L044.
 
-## Results
+## Current exact-head results
 
-- Foundation Guard GitHub Actions: **PASS**.
-- Protected Maze World core diff vs pristine baseline: **PASS / byte-identical**.
-- First-party Luau syntax: **142 files compiled, 0 failures**.
+- Maze World Foundation Guard GitHub Actions run `36750232847`: **PASS**.
+- Protected Maze World gameplay files vs pristine baseline: **unchanged / PASS**.
+- Foundation static verifier: **PASS**.
+- First-party Luau syntax: **147 files, 0 failures**.
 - Required foundation assets: **14/14 present**.
-- Maze World model files observed: **38**.
+- Maze World model files: **38**.
 - Legacy custom-world markers in first-party source: **0**.
-- Pips integration mode: **shadow only**; gameplay mutation flags false.
-- Rojo build: **PASS**, output size **109,665,484 bytes**.
-- Built artifact structural prefix SHA-256: `0cbbbe53349afa6dbfac38e1a126bdf383ab08c754a318f1f9f97297ac2887d6`.
-- SharedStrings section: **2,934,809 bytes / 145 entries**.
+- Server-only education authority boundary: **PASS**.
+- Native coin seam guard: **PASS**.
+- Native CoinBrick handlers observed: **1 authoritative handler**.
+- Pips competing CoinBrick handlers: **0**.
+- Education Engine smoke: **PASS**.
+- Education + content contract: **PASS — 12 active material items / 3 direct / 125 max points**.
+- LearningSession lifecycle smoke: **PASS**.
+- Deterministic learning coin selector smoke: **PASS**.
+- Release content QA: **PASS — 12 current-material items**.
 
-## Build determinism note
+## Build evidence
 
-Two consecutive Rojo builds from the same exact source produced the same byte length,
-the same SharedStrings offset/count/size, and the same structural-prefix SHA-256,
-but different raw SHA-256 values inside the serialized SharedStrings payload.
+The current game tree is unchanged between `a912b379bd1d99df43413bd83063132f51155587`
+and `a5631eea0d514f7383921d7e664a9aaeb6715c37`; the only intervening change is the
+location-safe verifier script `scripts/verify-server-only-education.mjs`.
 
-Therefore raw `.rbxlx` SHA-256 is **not** used as the sole reproducibility identity.
-Canonical identity is the exact Git source SHA + protected-file diff + structural build
-fingerprint + successful build result. This avoids treating serializer-level
-SharedStrings variation as source drift.
+The same game tree completed a headless Rojo build successfully on PAAM-L044.
 
-## Remaining Phase 0 blocker
+## Architecture boundaries
 
-Fresh interactive target-device gameplay acceptance is still not produced because the
-standing background-only rule forbids foreground Roblox Studio/device interaction.
-No educational gate, Pip reward replacement, custom corridor, custom persistent HUD,
-or custom chest has been approved for integration.
+Current canonical preparation includes only:
 
-Verdict: **BACKGROUND FOUNDATION CERT PASS**.
+- server-only Education Engine;
+- server-only curated/full question banks;
+- server-only LearningSession core;
+- deterministic server-only native normal-coin selector;
+- native coin seam/static regression guards;
+- shadow-only telemetry/observation;
+- documentation and CI.
+
+It does **not** authorize or implement:
+
+- a replacement maze/corridor;
+- a finish interception;
+- a replacement chest/reward loop;
+- a persistent Pips HUD;
+- a live learning coin touch hook;
+- question UI/RemoteEvents;
+- Pip reward integration;
+- Roblox publication.
+
+## Canonical branch authority
+
+`rebase/maze-world-chassis`, old `feat/*` Pips branches, and v132 custom-world
+code are quarantined legacy evidence and are not eligible integration bases or sources.
+
+See `docs/CANONICAL_BRANCH_AUTHORITY.md`.
+
+## Remaining Phase-0 gate
+
+Fresh target-device Maze World gameplay acceptance remains required before the first
+live learning seam is authorized. The standing background-only rule prevents producing
+new foreground Roblox Studio/device evidence from PAAM-L044.
+
+Verdict: **BACKGROUND FOUNDATION GREEN; RUNTIME/TARGET-DEVICE ACCEPTANCE DEFERRED**.
