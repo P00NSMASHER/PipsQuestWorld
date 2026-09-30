@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - develop
+      - rebuild/maze-world-foundation
 
 permissions:
   contents: read
@@ -40,6 +41,9 @@ jobs:
 
       - name: Verify Maze World foundation invariants
         run: node scripts/verify-foundation-static.mjs .
+
+      - name: Verify native coin seam remains additive-safe
+        run: node scripts/verify-native-coin-seam.mjs .
 
       - name: Assert Pips foundation remains shadow-only
         shell: bash
