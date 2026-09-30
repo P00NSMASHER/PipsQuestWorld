@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cargo install --git https://github.com/rojo-rbx/rbx-dom.git             --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1             --package rbx_util             --locked
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 --locked rbx_util
 
       - name: Convert place to XML
         shell: bash
