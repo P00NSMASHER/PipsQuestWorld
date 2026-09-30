@@ -46,7 +46,7 @@ if (Test-Path $GameDir) {
 New-Item -ItemType Directory -Force -Path $GameDir | Out-Null
 
 Write-Host "Copying complete working tree into game/..."
-robocopy $Scratch $GameDir /E /XD .git /XF .git /NFL /NDL /NJH /NJS /NP | Out-Null
+robocopy $Scratch $GameDir /E /XD .git /XF .git Game.rbxlx /NFL /NDL /NJH /NJS /NP | Out-Null
 $Code = $LASTEXITCODE
 if ($Code -ge 8) {
     throw "robocopy failed with code $Code"
@@ -59,6 +59,7 @@ $Receipt = [ordered]@{
     importedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
     recursiveSubmodules = $true
     importMethod = "git clone --recursive + detached checkout + working-tree copy"
+    omittedArtifacts = @("Game.rbxlx (upstream Git LFS build artifact; expanded file exceeds GitHub normal-file limit)")
 }
 $Receipt | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $GameDir "UPSTREAM_SOURCE.json") -Encoding UTF8
 
