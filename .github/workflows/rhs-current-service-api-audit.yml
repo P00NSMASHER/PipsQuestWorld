@@ -7,6 +7,10 @@ on:
       - ".github/workflows/rhs-current-service-api-audit.yml"
       - "rhs/working/ROBLOX High School.rbxl"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
