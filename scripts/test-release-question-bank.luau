@@ -6,7 +6,7 @@ local expected = {
 	"pips-grade2-plural-boxes-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-reading-genre-direct-ev1",
 	"pips-grade2-trinity-meaning-transfer-v2",
-	"abvm-b9d55008a7c4-629ea7-photo-cvc-missing-vowel-direct-ev1",
+	"pips-grade2-cvc-pattern-transfer-v2",
 	"abvm-b9d55008a7c4-629ea7-photo-spelling-short-vowel-transfer-ev2",
 }
 
