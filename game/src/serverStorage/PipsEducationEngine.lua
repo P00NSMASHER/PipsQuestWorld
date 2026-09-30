@@ -4,6 +4,8 @@ EducationEngine.QUEST_LENGTH = 5
 EducationEngine.MIN_OPTIONS = 2
 EducationEngine.MAX_OPTIONS = 4
 EducationEngine.MAX_DIFFICULTY_JUMP = 1
+EducationEngine.FIRST_TRY_POINTS = 25
+EducationEngine.CORRECTED_POINTS = 20
 
 local function isNonEmptyString(value)
 	return type(value) == 'string' and value:match('%S') ~= nil
@@ -277,6 +279,49 @@ function EducationEngine.isCorrect(question, selection)
 end
 function EducationEngine.isIndependent(misses)
 	return (tonumber(misses) or 0) == 0
+end
+
+function EducationEngine.scoreResolution(misses, modeled)
+	local missCount = math.max(0, tonumber(misses) or 0)
+	if modeled or missCount >= 3 then
+		return 0
+	end
+	if missCount == 0 then
+		return EducationEngine.FIRST_TRY_POINTS
+	end
+	return EducationEngine.CORRECTED_POINTS
+end
+
+function EducationEngine.scorePercent(points, questionCount)
+	local count = math.max(1, tonumber(questionCount) or EducationEngine.QUEST_LENGTH)
+	local maximum = EducationEngine.FIRST_TRY_POINTS * count
+	local earned = math.clamp(tonumber(points) or 0, 0, maximum)
+	return math.floor((earned / maximum) * 100 + 0.5)
+end
+
+function EducationEngine.gradeBand(percent)
+	local value = math.clamp(tonumber(percent) or 0, 0, 100)
+	if value >= 90 then
+		return 'A'
+	elseif value >= 80 then
+		return 'B'
+	elseif value >= 70 then
+		return 'C'
+	end
+	return 'Practice'
+end
+
+function EducationEngine.masteryTier(independentCorrect, questionCount)
+	local total = math.max(1, tonumber(questionCount) or EducationEngine.QUEST_LENGTH)
+	local independent = math.clamp(tonumber(independentCorrect) or 0, 0, total)
+	if independent == total then
+		return 'Brightside Pro'
+	elseif independent >= total - 1 then
+		return 'Quest Champ'
+	elseif independent >= math.ceil(total * 0.4) then
+		return 'Rising Star'
+	end
+	return 'Rookie'
 end
 
 function EducationEngine.getHint(question)
