@@ -226,6 +226,15 @@ function EducationEngine.pickNextQuestion(bank, history, rng)
 		end)
 	end
 
+	-- Use an unvisited skill before repeating one whenever the current
+	-- difficulty/tier pool contains a viable alternative. This keeps a short
+	-- five-question quest broad enough to sample actual skill variety instead
+	-- of bouncing between two or three familiar skills.
+	pool = prefer(pool, function(question)
+		local count = history.questSkillCounts[question.skill] or 0
+		return count == 0
+	end)
+
 	pool = prefer(pool, function(question)
 		local count = history.questSkillCounts[question.skill] or 0
 		return count < 2
