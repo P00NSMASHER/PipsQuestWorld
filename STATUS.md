@@ -43,8 +43,13 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 
 ## Runtime status
 
-- Exact baseline imported: pending bootstrap workflow
-- Working copy created: pending bootstrap workflow
-- Byte-for-byte equality guard: configured
+- Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
+- Working copy created: **YES**
+- Compatibility patches applied: **3** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed in the working copy only
+- Working-copy SHA-256 after current patches: `04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4`
+- Baseline integrity guard: **PASSING**
+- Compatibility audit: **PASSING**
+- Structural parity: verifier handoff fixed; awaiting fresh CI proof
+- Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
 - Roblox publication: **NOT REQUESTED / NOT PERFORMED**
