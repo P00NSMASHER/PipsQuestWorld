@@ -1,0 +1,201 @@
+name: RHS Static Preflight
+
+on:
+  pull_request:
+
+concurrency:
+  group: rhs-static-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify active direction
+        run: python3 scripts/verify-active-direction.py
+
+      - name: Verify immutable baseline and durable preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify-rhs-baseline.py
+          python3 scripts/verify-rhs-preflight.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build once
+        shell: bash
+        run: |
+          set -euo pipefail
+          rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Run compatibility audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/rhs-compatibility-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-compatibility-report.json
+          python3 scripts/rhs-runtime-side-effect-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-runtime-side-effects.json
+          python3 scripts/rhs-startup-risk-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-startup-risk.json
+
+      - name: Fetch pinned current Roblox API dump
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            "https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/fcd6994996bb655bef047c69f456463d94faa569/API-Dump.json" \
+            -o /tmp/API-Dump.json
+          python3 -c 'import json; json.load(open("/tmp/API-Dump.json", encoding="utf-8"))'
+
+      - name: Run current Roblox API audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/rhs-current-api-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --api-dump /tmp/API-Dump.json \
+            --output /tmp/rhs-current-api-classes.json
+          python3 scripts/rhs-current-service-api-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --api-dump /tmp/API-Dump.json \
+            --output /tmp/rhs-current-service-api.json
+
+      - name: Build pinned binary parity tool
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path tools/rhs-binary-patcher/Cargo.toml --release
+
+      - name: Extract approved patch receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          build = json.loads(Path("rhs/working/BUILD_RECEIPT.json").read_text(encoding="utf-8"))
+          receipt = build.get("patchReceipt")
+          if not isinstance(receipt, dict):
+              raise SystemExit("BUILD_RECEIPT.json is missing patchReceipt")
+          Path("/tmp/rhs-patch-receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print("RHS_PATCH_RECEIPT_EXTRACTED", len(receipt.get("appliedPatches", [])))
+          PY
+
+      - name: Prove structural parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher check \
+            "rhs/working/ROBLOX High School.rbxl"
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher parity \
+            "rhs/baseline/ROBLOX High School.rbxl" \
+            "rhs/working/ROBLOX High School.rbxl" \
+            /tmp/rhs-patch-receipt.json
+
+      - name: Extract embedded Luau
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/rhs-extract-luau.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --out-dir /tmp/rhs-luau \
+            --manifest /tmp/rhs-luau-manifest.json
+
+      - name: Build pinned Luau compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/luau-lang/luau.git /tmp/luau
+          git -C /tmp/luau checkout --detach b18032e8926f4d1b539c1e9374fc4e20d4b12207
+          cmake -S /tmp/luau -B /tmp/luau-build \
+            -DLUAU_BUILD_TESTS=OFF \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/luau-build --target Luau.Compile.CLI --config Release -j2
+
+      - name: Compile every embedded script for syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          manifest = json.loads(Path("/tmp/rhs-luau-manifest.json").read_text())
+          failures = []
+
+          for entry in manifest["scripts"]:
+              path = Path("/tmp/rhs-luau") / entry["file"]
+              proc = subprocess.run(
+                  ["/tmp/luau-build/luau-compile", str(path)],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.PIPE,
+                  text=True,
+              )
+              if proc.returncode != 0:
+                  failures.append({
+                      "path": entry["path"],
+                      "class": entry["class"],
+                      "file": entry["file"],
+                      "stderr": proc.stderr[-4000:],
+                  })
+
+          report = {
+              "schemaVersion": 1,
+              "compilerRevision": "b18032e8926f4d1b539c1e9374fc4e20d4b12207",
+              "scriptCount": len(manifest["scripts"]),
+              "syntaxFailureCount": len(failures),
+              "failures": failures,
+          }
+          Path("/tmp/rhs-luau-syntax.json").write_text(
+              json.dumps(report, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          print("RHS_LUAU_SCRIPT_COUNT", len(manifest["scripts"]))
+          print("RHS_LUAU_SYNTAX_FAILURES", len(failures))
+          for failure in failures[:100]:
+              print("SYNTAX_FAIL", failure["class"], failure["path"])
+              print(failure["stderr"].strip())
+
+          if failures:
+              raise SystemExit(1)
+          print("RHS_LUAU_SYNTAX_OK")
+          PY
+
+      - name: Upload static preflight reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-static-preflight-reports
+          path: |
+            /tmp/rhs-compatibility-report.json
+            /tmp/rhs-runtime-side-effects.json
+            /tmp/rhs-startup-risk.json
+            /tmp/rhs-current-api-classes.json
+            /tmp/rhs-current-service-api.json
+            /tmp/rhs-luau-manifest.json
+            /tmp/rhs-luau-syntax.json
+          if-no-files-found: warn
+          retention-days: 30
