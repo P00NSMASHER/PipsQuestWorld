@@ -1,4 +1,4 @@
-local bank = require('../game/src/common/PipsReleaseQuestionBank')
+local bank = require('../game/src/serverStorage/PipsReleaseQuestionBank')
 
 local expected = {
 	"abvm-b9d55008a7c4-629ea7-photo-vocabulary-definition-direct-ev1",
