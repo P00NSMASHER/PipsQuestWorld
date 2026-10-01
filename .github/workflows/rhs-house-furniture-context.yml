@@ -91,6 +91,12 @@ jobs:
                   house_remote_names.add(m.group(1))
                   starts.append((i,m.group(1),m.group(2)))
 
+          print("=== LOAD_HOUSE_EXACT_CONTEXT ===")
+          for n in range(160, 369):
+              if n <= len(lines):
+                  print(f"{n:04d}: {lines[n-1]}")
+          print("=== END_LOAD_HOUSE_EXACT_CONTEXT ===")
+
           print("=== CUSTOM_HOUSE_HANDLER_INDEX ===")
           print("SOURCE_SHA256",server_sha)
           for line,name,kind in starts:
