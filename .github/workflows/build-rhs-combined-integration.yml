@@ -1,0 +1,145 @@
+name: Build RHS Combined Integration
+
+on:
+  push:
+    branches:
+      - integration/rhs-class-remote-combined-v1
+    paths:
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "tools/rhs-binary-patcher/**"
+      - ".github/workflows/build-rhs-combined-integration.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-rhs-combined-integration
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: integration/rhs-class-remote-combined-v1
+
+      - name: Check whether patches exist
+        id: manifest
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          data = json.load(open("rhs/compatibility/PATCH_MANIFEST.json", "r", encoding="utf-8"))
+          value = "true" if data.get("patches") else "false"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"has_patches={value}\n")
+          print("HAS_PATCHES", value)
+          PY
+
+      - name: Verify immutable baseline
+        if: steps.manifest.outputs.has_patches == 'true'
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Cache binary patcher build
+        if: steps.manifest.outputs.has_patches == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/git
+            ~/.cargo/registry
+            tools/rhs-binary-patcher/target
+          key: rhs-binary-patcher-${{ runner.os }}-${{ hashFiles('tools/rhs-binary-patcher/Cargo.toml') }}
+
+      - name: Build pinned binary-native patcher
+        if: steps.manifest.outputs.has_patches == 'true'
+        run: cargo build --manifest-path tools/rhs-binary-patcher/Cargo.toml --release
+
+      - name: Rebuild working place directly from immutable binary
+        if: steps.manifest.outputs.has_patches == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher patch             "rhs/baseline/ROBLOX High School.rbxl"             rhs/compatibility/PATCH_MANIFEST.json             "rhs/working/ROBLOX High School.rbxl"             /tmp/rhs-patch-receipt.json
+
+      - name: Record working build identity
+        if: steps.manifest.outputs.has_patches == 'true'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          root = Path(".")
+          working = root / "rhs/working/ROBLOX High School.rbxl"
+          manifest = json.loads((root / "rhs/compatibility/PATCH_MANIFEST.json").read_text())
+          patch_receipt = json.loads(Path("/tmp/rhs-patch-receipt.json").read_text())
+
+          h = hashlib.sha256()
+          with working.open("rb") as f:
+              for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                  h.update(chunk)
+          working_sha = h.hexdigest()
+
+          manifest_sha = hashlib.sha256(
+              (root / "rhs/compatibility/PATCH_MANIFEST.json").read_bytes()
+          ).hexdigest()
+
+          state = {
+              "schemaVersion": 1,
+              "stage": "compatibility_repair",
+              "baselineSha256": manifest["baselineSha256"],
+              "expectedWorkingSha256": working_sha,
+              "modifiedFromBaseline": True,
+              "runtimeVerified": False,
+              "published": False,
+              "compatibilityRepairs": [p["id"] for p in manifest["patches"]],
+          }
+          (root / "rhs/working/BUILD_STATE.json").write_text(
+              json.dumps(state, indent=2) + "\n", encoding="utf-8"
+          )
+
+          receipt = {
+              "schemaVersion": 1,
+              "baselineSha256": manifest["baselineSha256"],
+              "workingSha256": working_sha,
+              "patchManifestSha256": manifest_sha,
+              "binaryPatcher": {
+                  "engine": "rbx_binary",
+                  "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
+              },
+              "patchReceipt": patch_receipt,
+          }
+          (root / "rhs/working/BUILD_RECEIPT.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print("WORKING_SHA256", working_sha)
+          PY
+
+      - name: Binary parse and exact semantic parity check
+        if: steps.manifest.outputs.has_patches == 'true'
+        shell: bash
+        run: |
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher check             "rhs/working/ROBLOX High School.rbxl"
+          tools/rhs-binary-patcher/target/release/rhs-binary-patcher parity             "rhs/baseline/ROBLOX High School.rbxl"             "rhs/working/ROBLOX High School.rbxl"             /tmp/rhs-patch-receipt.json
+          python3 scripts/verify-rhs-baseline.py
+
+      - name: Commit rebuilt working copy
+        if: steps.manifest.outputs.has_patches == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "RHS Compatibility Build Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "rhs/working/ROBLOX High School.rbxl" rhs/working/BUILD_STATE.json rhs/working/BUILD_RECEIPT.json
+
+          if git diff --cached --quiet; then
+            echo "No working-copy changes."
+            exit 0
+          fi
+
+          git commit -m "Rebuild RHS working copy with binary-native patcher"
+          git push origin HEAD:integration/rhs-class-remote-combined-v1
