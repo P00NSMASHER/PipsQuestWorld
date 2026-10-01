@@ -1,6 +1,8 @@
 local Ledger = {}
 Ledger.__index = Ledger
 
+local SCHEMA_VERSION = 1
+
 local function validRecord(r)
     if type(r) ~= "table" then return false, "INVALID_RECORD" end
     if type(r.completionId) ~= "string" or r.completionId == "" then return false, "INVALID_COMPLETION_ID" end
@@ -104,11 +106,13 @@ function Ledger:save()
         table.insert(records, copy(record))
     end
     table.sort(records, function(a, b) return a.completionId < b.completionId end)
-    return { schemaVersion = 1, completions = records }
+    return { schemaVersion = SCHEMA_VERSION, completions = records }
 end
 
 function Ledger.restore(snapshot)
-    if type(snapshot) ~= "table" or snapshot.schemaVersion ~= 1 or type(snapshot.completions) ~= "table" then
+    if type(snapshot) ~= "table"
+        or snapshot.schemaVersion ~= SCHEMA_VERSION
+        or type(snapshot.completions) ~= "table" then
         return nil, "INVALID_SNAPSHOT"
     end
 
@@ -127,10 +131,15 @@ function Ledger.restore(snapshot)
     if count ~= maxIndex then return nil, "INVALID_SNAPSHOT" end
 
     for _, record in ipairs(snapshot.completions) do
+        local valid, recordError = validRecord(record)
+        if not valid then
+            return nil, recordError
+        end
         if seen[record.completionId] then
             return nil, "DUPLICATE_COMPLETION_IN_SNAPSHOT"
         end
         seen[record.completionId] = true
+
         local receipt = ledger:apply(record)
         if receipt.status ~= "applied" then
             return nil, receipt.error or "SNAPSHOT_REPLAY_FAILED"
@@ -138,6 +147,18 @@ function Ledger.restore(snapshot)
     end
 
     return ledger
+end
+
+function Ledger.restoreOrDefault(snapshot)
+    if snapshot == nil then
+        return Ledger.new(), "default"
+    end
+
+    local ledger, err = Ledger.restore(snapshot)
+    if not ledger then
+        return nil, err
+    end
+    return ledger, "restored"
 end
 
 return Ledger

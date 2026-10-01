@@ -88,4 +88,41 @@ local sparse, sparseError = Ledger.restore(sparseSnapshot)
 eq(sparse, nil, "sparse snapshot ledger")
 eq(sparseError, "INVALID_SNAPSHOT", "sparse snapshot error")
 
+local malformedRow, malformedRowError = Ledger.restore({
+    schemaVersion = 1,
+    completions = { "not-a-record" },
+})
+eq(malformedRow, nil, "malformed row ledger")
+eq(malformedRowError, "INVALID_RECORD", "malformed row error")
+
+local missingId, missingIdError = Ledger.restore({
+    schemaVersion = 1,
+    completions = {
+        {
+            playerId = 101,
+            classId = "math",
+            score = 10,
+            completedAt = "2026-10-01T15:00:00Z",
+        },
+    },
+})
+eq(missingId, nil, "missing completion id ledger")
+eq(missingIdError, "INVALID_COMPLETION_ID", "missing completion id error")
+
+local fresh, freshSource = Ledger.restoreOrDefault(nil)
+eq(freshSource, "default", "default state source")
+eq(fresh:getPlayerState(101).totalScore, 0, "default score")
+eq(fresh:getPlayerState(101).completionCount, 0, "default completion count")
+
+local restoredAgain, restoredSource = Ledger.restoreOrDefault(snapshot)
+eq(restoredSource, "restored", "restored state source")
+deepEqual(restoredAgain:getPlayerState(101), ledger:getPlayerState(101), "restoreOrDefault restored state")
+
+local invalidDefault, invalidDefaultError = Ledger.restoreOrDefault({
+    schemaVersion = 1,
+    completions = { false },
+})
+eq(invalidDefault, nil, "invalid persisted state must not default")
+eq(invalidDefaultError, "INVALID_RECORD", "invalid persisted state error")
+
 print("HIGH_SCHOOL_PROGRESSION_RESTORE_PASS")
