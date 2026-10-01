@@ -167,11 +167,11 @@
       "id": "harden-economy-purchase-remotes",
       "targetPath": "ServerScriptService/ItemBuyScript",
       "expectedSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
-      "reason": "Fail closed on malformed temporary-shop identifiers; execute permanent/loyalty mutations synchronously; and serialize permanent/loyalty purchase helpers per player across every caller so duplicate submissions cannot pass pre-mutation checks concurrently.",
+      "reason": "Fail closed on malformed purchase/redemption inputs; require temporary-shop purchases to originate within 32 studs of the exact serialized DIALOG_* anchor for that shop; execute permanent/loyalty mutations synchronously; and serialize permanent/loyalty purchase helpers per player across every caller.",
       "replacements": [
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
-          "new": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tif type(shopname) ~= \"string\" or type(itemname) ~= \"string\" then\n\t\treturn false,\"Invalid purchase request.\"\n\tend\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
+          "new": "local temporaryShopDialogAnchors = {\n\t[\"Chef Umbra's\"] = {\"DIALOG_Umbra\"},\n\t[\"Club Red\"] = {\"DIALOG_Dexter\"},\n\t[\"School Cafeteria\"] = {\"DIALOG_Rude Lunch Lady\",\"DIALOG_Chill Lunch Lady\",\"DIALOG_Noob Lunch Lady\"},\n\t[\"Snack Shack\"] = {\"DIALOG_Wendy\"},\n\t[\"Sunblox Cafe\"] = {\"DIALOG_Alyssa\"},\n}\n\nlocal function canAccessTemporaryShop(plr,shopname)\n\tlocal anchorNames = temporaryShopDialogAnchors[shopname]\n\tlocal character = plr and plr.Character\n\tlocal root = character and (character:FindFirstChild(\"HumanoidRootPart\") or character:FindFirstChild(\"Torso\"))\n\tif not anchorNames or not root or not root:IsA(\"BasePart\") then\n\t\treturn false\n\tend\n\tfor _,anchorName in pairs(anchorNames) do\n\t\tlocal anchor = workspace:FindFirstChild(anchorName)\n\t\tif anchor and anchor:IsA(\"BasePart\") and (root.Position - anchor.Position).Magnitude <= 32 then\n\t\t\treturn true\n\t\tend\n\tend\n\treturn false\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tif type(shopname) ~= \"string\" or type(itemname) ~= \"string\" then\n\t\treturn false,\"Invalid purchase request.\"\n\tend\n\tif not canAccessTemporaryShop(plr,shopname) then\n\t\treturn false,\"Please move closer to the shopkeeper.\"\n\tend\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
           "expectedCount": 1
         },
         {
@@ -202,6 +202,11 @@
         {
           "old": "end\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
           "new": "end\n\nlocal loyaltyPurchaseBusy = {}\nfunction PurchaseLoyaltyItem(plr,itemid)\n\tif loyaltyPurchaseBusy[plr] then\n\t\treturn false,\"Please wait for your current purchase to finish.\"\n\tend\n\tloyaltyPurchaseBusy[plr] = true\n\tlocal ok,result,reason = pcall(PurchaseLoyaltyItemUnlocked,plr,itemid)\n\tloyaltyPurchaseBusy[plr] = nil\n\tif not ok then\n\t\treturn false,\"Your purchase could not be completed. Please try again.\"\n\tend\n\treturn result,reason\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tcode = string.lower(code)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tif type(code) ~= \"string\" or #code > 64 then\n\t\treturn false\n\tend\n\tcode = string.lower(code)",
           "expectedCount": 1
         }
       ]
