@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T21:50:16Z",
+  "updatedAt": "2026-10-01T23:57:12Z",
   "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
@@ -8,9 +8,9 @@
   "currentPlayableStage": "Runtime-playable evidence remains validated through spawn -> authoritative school clock/period. Canonical exact-head deterministic integration is now green through attend class -> server-authoritative activity -> exactly-once durable progression -> free roam -> save/rejoin restore; post-integration smoke/runtime playability remains to be asserted.",
   "runtimeValidatedThrough": "spawn -> authoritative school clock/period",
   "headlessExactHeadValidatedThrough": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 6,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 7,
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
+  "unintegratedProductCandidateCount": 2,
   "wipSlots": {
     "base": {
       "branch": "rebuild/high-school-foundation",
@@ -50,7 +50,41 @@
       ]
     },
     "upstream": null,
-    "downstream": null
+    "downstream": {
+      "branch": "release/pip-high-demo-ui-20261001",
+      "sha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "pr": 32,
+      "baseBranch": "rebuild/high-school-foundation",
+      "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "canonicalSourceRoot": "school/**",
+      "role": "thin playable client adapter consuming existing canonical Foundation/ClassEducation interfaces",
+      "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME",
+      "exactHeadCi": [
+        {
+          "runId": 36942707607,
+          "workflow": "High School Foundation Static Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36942707587,
+          "workflow": "High School Class Education Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36942707624,
+          "workflow": "High School Progression Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        }
+      ],
+      "changedFiles": [
+        "school/default.project.json",
+        "school/src/client/CanonicalSchoolClient.client.lua",
+        "scripts/verify-school-pivot.py"
+      ]
+    }
   },
   "validatedProducerEvidence": {
     "classEducation": {
@@ -71,16 +105,19 @@
   },
   "currentBlockers": [
     {
-      "id": "POST_INTEGRATION_SMOKE_REQUIRED",
-      "owner": "Roblox High School Integration Smoke",
-      "exitCriterion": "Read canonical rebuild/high-school-foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27, verify the exact SHA has no newer commit, reuse the green exact-head Foundation/Class/Progression evidence when unchanged, run only any smoke-owned deterministic checks not already covered, and publish an exact-SHA smoke PASS receipt without product-code churn."
+      "id": "RUNTIME_PLAYABILITY_LOCAL_ONLY_IN_PROGRESS",
+      "owner": "Roblox High School Integration Director",
+      "status": "LOCAL_ONLY_REQUIRED_LEASE_HELD",
+      "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "candidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "pr": 32,
+      "exitCriterion": "Using the already-held ONLINE_LAPTOP lease, validate in Roblox Studio without publishing: spawn, authoritative period, attend one class, complete one server-authoritative activity, receive exactly one durable progression result, return to free roam, rejoin, and observe restored committed progression. Release the lease immediately with the exact outcome/evidence."
     },
     {
-      "id": "RUNTIME_PLAYABILITY_LOCAL_ONLY",
+      "id": "POST_INTEGRATION_SMOKE_RECEIPT_STALE",
       "owner": "Roblox High School Integration Smoke",
-      "status": "LOCAL_ONLY_REQUIRED",
-      "exitCriterion": "When an authorized local/background Roblox Studio path is available, verify the canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 slice in-session: spawn, observe authoritative period, attend one class, complete one server-authoritative activity, receive one durable progression result, return to free roam, rejoin, and observe restored committed progression. Do not publish Roblox.",
-      "leaseRequirement": "Before any local call, atomically claim ONLINE_LAPTOP in coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json for canonical SHA 4ed8d001a86e979ed31cbeb69b9ae95d52832b27; release immediately after the bounded runtime check."
+      "status": "WAITING_DEPENDENCY",
+      "exitCriterion": "After the active runtime lease resolves and the canonical head/candidate decision is known, refresh smoke evidence against that exact head only. Do not create product code or broad-test an obsolete SHA."
     }
   ],
   "resolvedThisCycle": [
@@ -130,9 +167,17 @@
       20,
       31
     ],
-    "openCount": 0
+    "openCount": 1,
+    "open": [
+      {
+        "number": 32,
+        "branch": "release/pip-high-demo-ui-20261001",
+        "sha": "48b5eaf7756bea214477771413872dab26f67fdd",
+        "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME"
+      }
+    ]
   },
-  "nextMilestone": "Integration Smoke first refreshes its stale receipt against canonical Foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27. For the remaining runtime-only assertion, it must atomically claim ONLINE_LAPTOP through coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json; all other workers may use the same lease only for their own genuine LOCAL_ONLY_REQUIRED checks.",
+  "nextMilestone": "Integration Director finishes the already-leased local runtime validation of exact-green PR #32 candidate 48b5eaf7756bea214477771413872dab26f67fdd against canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Other workers must not acquire the laptop or create competing product candidates while the lease is active; they may do only cheap cloud-safe delta checks or WAITING_* work.",
   "localMachineCoordination": {
     "resource": "ONLINE_LAPTOP",
     "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
@@ -143,9 +188,14 @@
     "maxConcurrentUsers": 1,
     "defaultMaxLeaseMinutes": 20,
     "routineWorkUsesLaptop": false,
-    "currentLeaseStatus": "FREE",
+    "currentLeaseStatus": "HELD",
     "currentCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "connectorFallback": "If the local connector is unavailable after a lease claim, release immediately and report LOCAL_CONNECTOR_UNAVAILABLE."
+    "connectorFallback": "If the local connector is unavailable after a lease claim, release immediately and report LOCAL_CONNECTOR_UNAVAILABLE.",
+    "currentHolderLane": "Roblox High School Integration Director",
+    "currentLeasePurpose": "LOCAL_ONLY_REQUIRED runtime validation of canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 with exact-green UI candidate 48b5eaf7756bea214477771413872dab26f67fdd; diagnose DataStore/persistence gate before authorized publication",
+    "currentLeaseCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "currentLeaseCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+    "currentLeaseExpiresAt": "2026-10-02T00:10:00Z"
   },
   "staleReceipts": {
     "qaContract": "STALE: receipt still references pre-integration Foundation/Class heads",
