@@ -18,6 +18,19 @@ def classify_status(status: int | None, error: str | None, body: bytes) -> str:
             try:
                 payload=json.loads(body.decode("utf-8","replace"))
                 if isinstance(payload,dict) and payload.get("errors"):
+                    errors=payload.get("errors") or []
+                    first=errors[0] if errors and isinstance(errors[0],dict) else {}
+                    code=first.get("code")
+                    try:
+                        code=int(code)
+                    except (TypeError,ValueError):
+                        code=None
+                    if code == 401:
+                        return "auth_required"
+                    if code == 403:
+                        return "forbidden_anonymous"
+                    if code == 404:
+                        return "not_found"
                     return "api_error_payload"
             except Exception:
                 pass
