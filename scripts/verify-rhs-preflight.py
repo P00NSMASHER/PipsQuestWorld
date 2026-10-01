@@ -182,6 +182,46 @@ if economy_hardening.get("deterministicReplacementCount") != 7:
 if economy_hardening.get("runtimeVerified") is not False:
     errors.append("economy hardening must remain runtime-unverified until Studio proof")
 
+board_hardening = checks.get("boardServerControlHardening") or {}
+if board_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight board ServerControl hardening status is not PASS_BUILD_PARITY")
+if board_hardening.get("candidateSha256") != working_sha:
+    errors.append("preflight board ServerControl candidate SHA does not match BUILD_STATE")
+expected_board_ids = [
+    "harden-new-hoverboard-servercontrol",
+    "harden-new-pink-hoverboard-servercontrol",
+]
+if board_hardening.get("repairIds") != expected_board_ids:
+    errors.append("preflight board ServerControl repair IDs changed")
+board_targets = board_hardening.get("targets") or []
+expected_board_targets = {
+    "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript": (
+        "b9a7f405762500390245532775ca008e9c06a562b1e3b60fbde0c3c89302aa57",
+        "c700bd7ae5b11820f7790e7fb19a2c783c869e7d4aecca7a26716fbb0ac9d315",
+    ),
+    "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript": (
+        "8c5f284e9e85726271d9f70e2acc53412dd15317b4449e124ff9b948f0db9fa7",
+        "b77ac4bbf12ad9944cc7337035394a2d6cf6efbac59eae57ffab468abf922314",
+    ),
+}
+if len(board_targets) != 2:
+    errors.append("preflight board ServerControl target count changed")
+else:
+    for target in board_targets:
+        path = target.get("path")
+        expected = expected_board_targets.get(path)
+        if expected is None:
+            errors.append("unexpected board ServerControl target: " + str(path))
+            continue
+        if target.get("baselineSourceSha256") != expected[0]:
+            errors.append("board ServerControl baseline source hash changed: " + path)
+        if target.get("patchedSourceSha256") != expected[1]:
+            errors.append("board ServerControl patched source hash changed: " + path)
+if board_hardening.get("standaloneContractRunId") != 36899662215:
+    errors.append("preflight board ServerControl contract evidence changed")
+if board_hardening.get("runtimeVerified") is not False:
+    errors.append("board ServerControl hardening must remain runtime-unverified until Studio proof")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
