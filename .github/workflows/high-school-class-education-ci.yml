@@ -1,0 +1,37 @@
+name: High School Class Education Guards
+
+on:
+  push:
+    branches:
+      - "rebuild/high-school-class-education-*"
+    paths:
+      - "school/**"
+      - "scripts/verify-school-pivot.py"
+      - "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
+      - ".github/workflows/high-school-class-education-ci.yml"
+  pull_request:
+    paths:
+      - "school/**"
+      - "scripts/verify-school-pivot.py"
+      - "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
+      - ".github/workflows/high-school-class-education-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-class-education:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Preserve canonical Foundation invariants
+        run: python3 scripts/verify-school-pivot.py
+      - name: Run Education Engine deterministic tests
+        run: lua5.4 school/tests/education_engine_spec.lua
+      - name: Run Class Education deterministic tests
+        run: lua5.4 school/tests/class_education_spec.lua

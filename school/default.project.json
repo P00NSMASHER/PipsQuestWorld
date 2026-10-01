@@ -40,6 +40,18 @@
         },
         "FoundationBootstrap": {
           "$path": "src/server/FoundationBootstrap.server.lua"
+        },
+        "EducationEngine": {
+          "$path": "src/server/EducationEngine.lua"
+        },
+        "ClassSessionController": {
+          "$path": "src/server/ClassSessionController.lua"
+        },
+        "ClassActivityCatalog": {
+          "$path": "src/server/ClassActivityCatalog.lua"
+        },
+        "ClassEducation": {
+          "$path": "src/server/ClassEducation.server.lua"
         }
       }
     }
