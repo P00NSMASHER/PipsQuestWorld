@@ -28,13 +28,16 @@ These are **not compatibility defects by themselves**.
 
 ## Already-approved deviations
 
-The current working build intentionally changes only three script sources:
+The current exact-restoration working build intentionally changes four script sources:
 
 1. historical Cindering ranking-login outbound request;
 2. historical Cindering group-ranking outbound request;
-3. historical GameAnalytics outbound telemetry.
+3. historical GameAnalytics outbound telemetry;
+4. `ServerScriptService/CarSpawnScript` remote ownership validation for lock, driver-lock, and removal requests.
 
-Those changes exist to prevent obsolete external-network behavior during restoration work, not because the Roblox APIs themselves are deprecated.
+The first three changes prevent obsolete external-network behavior during restoration work. The fourth is a security hardening change that requires client-supplied car instances to equal the exact server-tracked `Workspace` vehicle for the requesting player. None of these changes exist merely because an API is deprecated.
+
+Educational/class-activity additions live on separate candidate branches/PRs and are not part of this exact-restoration four-patch receipt until explicitly integrated.
 
 ## Runtime-first repair order
 
