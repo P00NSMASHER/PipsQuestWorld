@@ -1,54 +1,69 @@
 {
-  "schemaVersion": 1,
-  "cycle": "2026-10-01T14:13Z-devex-unblock",
+  "schemaVersion": 2,
+  "cycle": "2026-10-01T16:02Z",
   "lane": "Roblox High School DevEx",
-  "result": "PARTIAL_PASS",
+  "result": "PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
   "localOnlyRequired": false,
-  "fixed": [
-    {
-      "defect": "CANONICAL_FOUNDATION_EXACT_HEAD_CI_MISSING",
-      "rootCause": ".github/workflows/school-pivot-ci.yml push trigger covered main only and push paths omitted the workflow file",
-      "repairCommit": "f763b243f4ec22951f432e66f807f187c960583f",
-      "canonicalBranch": "rebuild/high-school-foundation",
-      "verificationRun": 36874068766,
-      "verificationUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/36874068766",
-      "verificationConclusion": "success"
-    },
-    {
-      "defect": "HIGH_SCHOOL_SWARM_PROTOCOL_MISSING",
-      "repairCommit": "c77276228bef114d7cd2ad0f817887cde03edd60",
-      "path": "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md",
-      "verification": "created on coordination/high-school-control-tower"
-    },
-    {
-      "defect": "STALE_FOUNDATION_SELECTOR",
-      "repairCommit": "22060c12610ae43ddf71998198abb5dbe2e1f789",
-      "path": "coordination/high-school-foundation-status.json",
-      "verification": "binds rebuild/high-school-foundation@f763b243f4ec22951f432e66f807f187c960583f to successful exact-head run 36874068766"
-    },
-    {
-      "defect": "CONTRADICTORY_NONCANONICAL_RHS_PULL_REQUESTS",
-      "verification": "PRs #16, #17 and #18 closed without merge; branches/evidence retained for audit only"
-    },
-    {
-      "defect": "CONTROL_TOWER_MISSING_STATE_BOOTSTRAP_PATH",
-      "verification": "Control Tower prompt now explicitly reconstructs missing/stale shared state from live GitHub evidence and consumes this DevEx receipt; schedule and enablement unchanged"
-    }
-  ],
-  "remainingBlockers": [
-    {
-      "defect": "HIGH_SCHOOL_SWARM_STATE_MISSING",
-      "owner": "Roblox High School Control Tower",
-      "reason": "HIGH_SCHOOL_SWARM_STATE.json is authoritative and DevEx is explicitly not allowed to write it",
-      "exitCriterion": "Control Tower reconstructs and writes coordination/HIGH_SCHOOL_SWARM_STATE.json from live GitHub heads/PRs/CI, then downstream lanes consume one exact canonical lineage"
-    }
-  ],
-  "closedNonCanonicalPRs": [16, 17, 18],
-  "taskPolicyRisk": {
-    "observation": "A product producer may be unavailable by task enablement; DevEx did not alter enablement because task schedule/enablement changes are forbidden in this lane.",
-    "control": "Control Tower must not assign unavailable producers as ACTIVE and must record a concrete owner/exit criterion if that condition becomes the release blocker."
+  "defect": {
+    "id": "DEVEX_RECEIPT_STALE_AFTER_STATE_BOOTSTRAP_AND_CLASS_EDUCATION_ADVANCE",
+    "rootCause": "The DevEx receipt still claimed HIGH_SCHOOL_SWARM_STATE.json was missing after Control Tower created it, and it did not expose the live canonical Class/Education descendant and exact-head CI evidence.",
+    "materialImpact": "Control Tower/support lanes could consume stale blocker/evidence context and keep CLASS_EDUCATION_CANONICAL_LINEAGE_NOT_ESTABLISHED active after a candidate existed."
   },
+  "before": {
+    "devExReceiptBlobSha": "e0173bbb5982196a141431f0ff0028aaf612a0a9",
+    "sharedStateBlobSha": "69d3987281db6303228bb93a0cf024b5919f6e71",
+    "sharedStateFoundationSha": "f763b243f4ec22951f432e66f807f187c960583f",
+    "sharedStateClassEducationStatus": "ACTIVE_WITHOUT_CANONICAL_BRANCH"
+  },
+  "afterEvidence": {
+    "foundation": {
+      "branch": "rebuild/high-school-foundation",
+      "sha": "f763b243f4ec22951f432e66f807f187c960583f",
+      "workflow": ".github/workflows/school-pivot-ci.yml",
+      "runId": 36874068766,
+      "conclusion": "success",
+      "canonicalSourcePath": "school/**",
+      "highschoolPathPresent": false
+    },
+    "classEducation": {
+      "branch": "rebuild/high-school-class-education-v1",
+      "sha": "e707d42df39104627162f85fa0093824dfeddd53",
+      "relationToFoundation": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "mergeBaseSha": "f763b243f4ec22951f432e66f807f187c960583f"
+      },
+      "workflow": ".github/workflows/high-school-class-education-ci.yml",
+      "runId": 36876877908,
+      "jobId": 110418452794,
+      "conclusion": "success",
+      "verifiedSteps": [
+        "Preserve canonical Foundation invariants",
+        "Run Education Engine deterministic tests",
+        "Run Class Education deterministic tests"
+      ],
+      "handoff": "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
+    }
+  },
+  "filesChanged": [
+    "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json"
+  ],
+  "verification": {
+    "status": "PASS",
+    "exactProducerSha": "e707d42df39104627162f85fa0093824dfeddd53",
+    "workflowRun": 36876877908,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/36876877908",
+    "job": "deterministic-class-education",
+    "jobId": 110418452794
+  },
+  "foundationCiSpecialDuty": {
+    "status": "PASS_FOR_CURRENT_CANONICAL_LAYOUT",
+    "reason": "The live canonical project is mapped under school/**, not highschool/**. school/** changes on rebuild/high-school-foundation already trigger exact-head CI, and run 36874068766 is green. Adding a speculative highschool/** path now would advance Foundation solely for unused-path coverage and unnecessarily invalidate the current Class/Education lineage, so no workflow churn was made."
+  },
+  "expectedBenefit": "Removes stale DevEx blocker data and gives Control Tower one GitHub-visible exact-SHA handoff showing that the current Class/Education candidate is a clean descendant of Foundation with green deterministic CI.",
+  "rollbackCriterion": "Revert/supersede this receipt if rebuild/high-school-class-education-v1 moves from e707d42df39104627162f85fa0093824dfeddd53, if run 36876877908 is invalidated, or if Control Tower changes canonical direction.",
   "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "bootstrap HIGH_SCHOOL_SWARM_STATE.json using the restored protocol and current live GitHub heads/CI; then recalculate the one CURRENT_RELEASE_BLOCKER without retired Maze/Pips/Brookhaven/RHS-exact lineage"
+  "nextExitCriterion": "Refresh HIGH_SCHOOL_SWARM_STATE.json from live evidence and evaluate e707d42df39104627162f85fa0093824dfeddd53 against the Class/Education semantic exit criterion; advance or assign one concrete blocker."
 }
