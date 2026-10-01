@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-09-30",
+  "recordedAt": "2026-10-01",
   "baseline": {
     "bytes": 2283775,
     "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "immutable": true
   },
   "working": {
-    "sha256": "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
-    "compatibilityPatchCount": 3,
+    "sha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d",
+    "compatibilityPatchCount": 4,
     "runtimeVerified": false,
     "published": false
   },
@@ -114,6 +114,30 @@
         "missingMemberUses": 0,
         "evidenceRunId": 36787463200
       }
+    },
+    "schoolLoopAudit": {
+      "status": "PASS",
+      "evidenceRunId": 36869658818,
+      "requiredChecks": 12,
+      "requiredPresent": 12,
+      "requiredMissing": 0,
+      "sourceSignals": {
+        "classesAttendedScripts": 3,
+        "badgeAfterTenClassesScripts": 1,
+        "classRemoteFireScripts": 3,
+        "periodOrScheduleScripts": 56
+      },
+      "scope": "Static structural proof only; runtime Gate B remains required."
+    },
+    "remoteHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "repairId": "harden-car-instance-remotes",
+      "baselineScript": "ServerScriptService/CarSpawnScript",
+      "baselineSourceSha256": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b",
+      "patchedSourceSha256": "15f5bb7a96189bd2699727de6cccfd08aad12f2f0ea6664c7f0b2757d70033b6",
+      "intendedReplacementCount": 3,
+      "buildRunId": 36869792626,
+      "rationale": "Car lock, driver-lock, and removal remotes now require the exact server-tracked Workspace car for the requesting player."
     }
   },
   "dependencyProbe": {
