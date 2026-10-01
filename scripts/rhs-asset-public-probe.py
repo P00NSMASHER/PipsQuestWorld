@@ -38,41 +38,70 @@ def classify_status(status: int | None, error: str | None, body: bytes) -> str:
             return "timeout"
     return "network_error"
 
-def probe(asset_id: str, timeout: float) -> dict:
-    req=urllib.request.Request(
-        URL.format(asset_id=asset_id),
-        headers={
-            "User-Agent":"PipsQuestWorld-RHS-Compatibility-Audit/2.0",
-            "Accept":"application/json,*/*",
-        },
-        method="GET",
-    )
+def probe(asset_id: str, timeout: float, min_interval: float, max_retries: int) -> dict:
     status=None
     final_url=None
     content_type=None
     content_length=None
     body=b""
     error=None
+    retry_count=0
     started=time.monotonic()
-    try:
-        with urllib.request.urlopen(req,timeout=timeout) as resp:
-            status=getattr(resp,"status",None)
-            final_url=resp.geturl()
-            content_type=resp.headers.get("Content-Type")
-            content_length=resp.headers.get("Content-Length")
-            body=resp.read(4096)
-    except urllib.error.HTTPError as exc:
-        status=exc.code
-        final_url=exc.geturl()
-        content_type=exc.headers.get("Content-Type") if exc.headers else None
-        content_length=exc.headers.get("Content-Length") if exc.headers else None
+
+    for attempt in range(max_retries + 1):
+        if min_interval > 0:
+            time.sleep(min_interval)
+
+        req=urllib.request.Request(
+            URL.format(asset_id=asset_id),
+            headers={
+                "User-Agent":"PipsQuestWorld-RHS-Compatibility-Audit/2.1",
+                "Accept":"application/json,*/*",
+            },
+            method="GET",
+        )
+
+        status=None
+        final_url=None
+        content_type=None
+        content_length=None
+        body=b""
+        error=None
+        retry_after=None
+
         try:
-            body=exc.read(4096)
-        except Exception:
-            pass
-        error=str(exc)
-    except (urllib.error.URLError,socket.timeout,TimeoutError,OSError) as exc:
-        error=str(exc)
+            with urllib.request.urlopen(req,timeout=timeout) as resp:
+                status=getattr(resp,"status",None)
+                final_url=resp.geturl()
+                content_type=resp.headers.get("Content-Type")
+                content_length=resp.headers.get("Content-Length")
+                retry_after=resp.headers.get("Retry-After")
+                body=resp.read(4096)
+        except urllib.error.HTTPError as exc:
+            status=exc.code
+            final_url=exc.geturl()
+            content_type=exc.headers.get("Content-Type") if exc.headers else None
+            content_length=exc.headers.get("Content-Length") if exc.headers else None
+            retry_after=exc.headers.get("Retry-After") if exc.headers else None
+            try:
+                body=exc.read(4096)
+            except Exception:
+                pass
+            error=str(exc)
+        except (urllib.error.URLError,socket.timeout,TimeoutError,OSError) as exc:
+            error=str(exc)
+
+        if status != 429 or attempt >= max_retries:
+            break
+
+        retry_count += 1
+        try:
+            retry_after_seconds=float(retry_after) if retry_after is not None else 0.0
+        except (TypeError,ValueError):
+            retry_after_seconds=0.0
+        backoff=max(retry_after_seconds,min(8.0,1.0*(2**attempt)))
+        time.sleep(backoff)
+
     elapsed_ms=round((time.monotonic()-started)*1000)
 
     locations=0
@@ -109,6 +138,7 @@ def probe(asset_id: str, timeout: float) -> dict:
         "responseErrors":response_errors,
         "bodyPrefix":body[:256].decode("utf-8","replace"),
         "elapsedMs":elapsed_ms,
+        "retryCount":retry_count,
         "error":error,
     }
 
@@ -116,8 +146,10 @@ def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--map",required=True)
     ap.add_argument("--output",required=True)
-    ap.add_argument("--workers",type=int,default=4)
+    ap.add_argument("--workers",type=int,default=1)
     ap.add_argument("--timeout",type=float,default=8.0)
+    ap.add_argument("--min-interval",type=float,default=0.25)
+    ap.add_argument("--max-retries",type=int,default=4)
     args=ap.parse_args()
 
     asset_map=json.loads(Path(args.map).read_text(encoding="utf-8"))
@@ -126,7 +158,16 @@ def main() -> int:
 
     results=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1,args.workers)) as pool:
-        futures={pool.submit(probe,asset_id,args.timeout):asset_id for asset_id in ids}
+        futures={
+            pool.submit(
+                probe,
+                asset_id,
+                args.timeout,
+                args.min_interval,
+                args.max_retries,
+            ):asset_id
+            for asset_id in ids
+        }
         for future in concurrent.futures.as_completed(futures):
             asset_id=futures[future]
             try:
@@ -144,6 +185,7 @@ def main() -> int:
                     "responseErrors":[],
                     "bodyPrefix":"",
                     "elapsedMs":None,
+                    "retryCount":0,
                     "error":repr(exc),
                 }
             result["referenceCount"]=refs[asset_id]["referenceCount"]
@@ -183,6 +225,8 @@ def main() -> int:
             "apiGeneration":"v2-current",
             "workers":args.workers,
             "timeoutSeconds":args.timeout,
+            "minIntervalSeconds":args.min_interval,
+            "maxRetriesOn429":args.max_retries,
             "maxResponseBytes":4096,
         },
         "summary":{
@@ -192,6 +236,10 @@ def main() -> int:
                 k:dict(sorted(v.items())) for k,v in sorted(priority_summary.items())
             },
             "nonPublicAnonymous":len(unresolved),
+            "rateLimitedAfterRetries":sum(
+                1 for result in results if result["classification"] == "rate_limited"
+            ),
+            "total429Retries":sum(int(result.get("retryCount",0)) for result in results),
         },
         "results":results,
         "unresolvedPriorityOrder":unresolved,
