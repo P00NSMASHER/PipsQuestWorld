@@ -14,9 +14,11 @@ on:
   push:
     branches:
       - main
+      - rebuild/high-school-foundation
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"
+      - ".github/workflows/school-pivot-ci.yml"
 
 permissions:
   contents: read
