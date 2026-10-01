@@ -1,6 +1,6 @@
 # Pip's Quest World Status
 
-Updated: 2026-09-30
+Updated: 2026-10-01
 
 ## Product direction
 
@@ -46,11 +46,11 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Baseline bootstrap importer: **RETIRED** after exact import; baseline verification is read-only
 - Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
 - Working copy created: **YES**
-- Compatibility patches applied: **8** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed; car instance remotes require the server-tracked vehicle; apartment rental validates the nearby Workspace apartment; outfit save/wear remotes validate canonical fields/throttle/slots; house/furniture remotes require exact server-owned identity; economy purchases reject malformed temporary-shop identifiers and serialize permanent/loyalty mutations
-- Working-copy SHA-256 after current patches: `bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf`
+- Compatibility patches applied: **10** — legacy ranking/GameAnalytics traffic is sandboxed; car, apartment, outfit, house/furniture, and economy remotes are server-hardened; the two live NewHoverboard `ServerControl` handlers now require exact player ownership and typed keypress payloads
+- Working-copy SHA-256 after current patches: `c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e`
 - Baseline integrity guard: **PASSING**
 - Compatibility audit: **PASSING**
-- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 8 approved script-source changes, no unapproved hierarchy/source drift
+- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 10 approved script-source changes, no unapproved hierarchy/source drift
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
@@ -67,6 +67,7 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Core remote hardening candidate: **BUILD + STRUCTURAL PARITY PASS** — apartment purchase validates direct Workspace ownership/schema and 30-stud proximity using current `Vector3.Magnitude`; outfit save/wear validates canonical fields, one in-flight request, slots 1–24, and hat-load failure; dedicated PR contract remains green
 - House/furniture remote hardening: **BUILD + CONTRACT PASS** — lock/restriction/whitelist calls require the exact server-owned house/apartment; get/sell/remove are furniture-only; painting requires a direct owned-house target with `BrickColor`; furniture movement requires the player’s edit mode, owned `furni_*` model, typed CFrame/rotation, and a floor in that same house; reload placement is derived from the server-owned `HousePlacement` marker. Contract run: `36895670608`
 - Economy purchase hardening: **BUILD + PARITY PASS** — malformed temporary-shop identifiers fail closed; permanent and loyalty purchase mutations complete before success is returned; both helpers are serialized per player across callers. Temporary-shop proximity remains a documented follow-up because the archive does not expose a complete stable shop-name-to-Workspace-NPC mapping for all five temporary shops.
+- Hoverboard ServerControl hardening: **BUILD + CONTRACT PASS** — only the two live NewHoverboard/NewPinkHoverboard handlers were changed; `Equipped` requires the invoking player's own Character, `Unequipped` is owner-only, and `KeyPress` requires the established owner with an `Enum.KeyCode` + boolean payload. Empty legacy board handlers remain untouched. Standalone contract run: `36899662215`
 - Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
