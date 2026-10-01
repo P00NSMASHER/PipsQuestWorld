@@ -156,6 +156,19 @@ jobs:
                           print("---")
           print("=== END_SHOP_ACCESS_CONTEXT ===")
 
+          print("=== SHOPKEEPER_INSTANCE_CONTEXT ===")
+          shopkeepers={"Rude Lunch Lady","Chill Lunch Lady","Noob Lunch Lady","Dexter","Umbra","Wendy","Alyssa"}
+          for item,path in walk(root):
+              if item_name(item) not in shopkeepers:
+                  continue
+              print("SHOPKEEPER",item.attrib.get("class",""),path)
+              children=[]
+              for child in item.findall("Item"):
+                  children.append((child.attrib.get("class",""),item_name(child)))
+              for cls,nm in children[:80]:
+                  print("CHILD",cls,nm)
+          print("=== END_SHOPKEEPER_INSTANCE_CONTEXT ===")
+
           print("=== ECONOMY_REMOTE_REFS ===")
           for item,path in walk(root):
               cls=item.attrib.get("class","")
