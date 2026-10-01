@@ -111,6 +111,23 @@ jobs:
               print("=== END_TARGET ===")
           print("=== END_BOARD_SERVERCONTROL_TARGETS ===")
 
+          print("=== BOARD_EXACT_CLIENT_PROTOCOL ===")
+          exact_clients=[
+              "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/Skateboard",
+              "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/Skateboard",
+          ]
+          for path in exact_clients:
+              rec=scripts.get(path)
+              if not rec:
+                  print("MISSING_CLIENT",path)
+                  continue
+              cls,src=rec
+              print("CLIENT",cls,path,"source_sha256="+hashlib.sha256(src.encode()).hexdigest())
+              for i,line in enumerate(src.splitlines(),1):
+                  print(f"{i:04d}: {line}")
+              print("=== END_CLIENT ===")
+          print("=== END_BOARD_EXACT_CLIENT_PROTOCOL ===")
+
           print("=== BOARD_SERVERCONTROL_CLIENT_CALLS ===")
           for path,(cls,src) in scripts.items():
               if "InvokeServer" not in src or "ServerControl" not in src:
