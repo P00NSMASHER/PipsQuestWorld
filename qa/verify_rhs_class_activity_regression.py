@@ -19,9 +19,13 @@ def main() -> int:
         errors.append("QA report working SHA does not match BUILD_STATE")
 
     strict = report.get("strictServerClassActivityCandidates") or []
-    if not strict:
+    strict_paths = [
+        item.get("path") if isinstance(item, dict) else item
+        for item in strict
+    ]
+    if not strict_paths:
         errors.append("QA detector still finds zero strict server-authoritative class activities")
-    if "ServerScriptService/Time_ScheduleScript" not in strict:
+    if "ServerScriptService/Time_ScheduleScript" not in strict_paths:
         errors.append("QA detector does not identify Time_ScheduleScript as a strict server class activity")
 
     if report.get("clientOrReplicatedAnswerKeyCandidates"):
@@ -35,8 +39,8 @@ def main() -> int:
 
     print("RHS_CLASS_ACTIVITY_QA_REGRESSION_PASS")
     print("WORKING_SHA256", state.get("expectedWorkingSha256"))
-    print("STRICT_SERVER_CLASS_ACTIVITY_CANDIDATES", len(strict))
-    for path in strict:
+    print("STRICT_SERVER_CLASS_ACTIVITY_CANDIDATES", len(strict_paths))
+    for path in strict_paths:
         print("STRICT_ACTIVITY", path)
     return 0
 
