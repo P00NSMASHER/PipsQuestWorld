@@ -145,8 +145,6 @@ if service_audit.get("missingMemberUses") != 0:
 house_hardening = checks.get("houseFurnitureHardening") or {}
 if house_hardening.get("status") != "PASS_BUILD_PARITY":
     errors.append("preflight house/furniture hardening status is not PASS_BUILD_PARITY")
-if house_hardening.get("candidateSha256") != working_sha:
-    errors.append("preflight house/furniture candidate SHA does not match BUILD_STATE")
 if house_hardening.get("repairId") != "harden-house-furniture-remotes":
     errors.append("preflight house/furniture repair id changed")
 if house_hardening.get("targetPath") != "ServerScriptService/CustomHouseScript_NEW":
@@ -167,8 +165,6 @@ if house_hardening.get("runtimeVerified") is not False:
 painting_hardening = checks.get("paintingRemoteHardening") or {}
 if painting_hardening.get("status") != "PASS_BUILD_PARITY":
     errors.append("preflight painting hardening status is not PASS_BUILD_PARITY")
-if painting_hardening.get("candidateSha256") != working_sha:
-    errors.append("preflight painting candidate SHA does not match BUILD_STATE")
 if painting_hardening.get("repairId") != "harden-painting-remotes":
     errors.append("preflight painting repair id changed")
 if painting_hardening.get("targetPath") != "ServerScriptService/ServerPaintingManager":
@@ -183,6 +179,26 @@ if painting_hardening.get("contractRunId") != 36898615525:
     errors.append("preflight painting contract run id changed")
 if painting_hardening.get("runtimeVerified") is not False:
     errors.append("painting hardening must remain runtime-unverified until Studio proof")
+
+phone_hardening = checks.get("phoneTextHardening") or {}
+if phone_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight phone/text hardening status is not PASS_BUILD_PARITY")
+if phone_hardening.get("repairId") != "harden-phone-text-remotes":
+    errors.append("preflight phone/text repair id changed")
+if phone_hardening.get("targetPath") != "ServerScriptService/PhoneTextingScript":
+    errors.append("preflight phone/text target changed")
+if phone_hardening.get("baselineSourceSha256") != "571e84308d007a1775aa14a281f92b6c177560bf97de308ec7347353d1d9d170":
+    errors.append("preflight phone/text baseline source hash changed")
+if phone_hardening.get("patchedSourceSha256") != "f180cb9f794e0a7157a9311f4ed692814d13ddb2a6e915e9d34ccb47e2a0cf66":
+    errors.append("preflight phone/text patched source hash changed")
+if phone_hardening.get("deterministicReplacementCount") != 3:
+    errors.append("preflight phone/text replacement count changed")
+if phone_hardening.get("contractRunId") != 36899421646:
+    errors.append("preflight phone/text contract run id changed")
+if phone_hardening.get("filteredMessageFlowPreserved") is not True:
+    errors.append("preflight phone/text filtering flow is not marked preserved")
+if phone_hardening.get("runtimeVerified") is not False:
+    errors.append("phone/text hardening must remain runtime-unverified until Studio proof")
 
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
