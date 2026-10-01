@@ -8,6 +8,8 @@ import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from lua_source_utils import mask_lua_comments
+
 SCRIPT_CLASSES={"Script","ModuleScript"}
 REMOTE_CLASSES={"RemoteEvent","RemoteFunction"}
 
@@ -102,13 +104,14 @@ def main():
         source=prop_text(item,"Source")
         if not source:
             continue
+        scan_source=mask_lua_comments(source)
 
         for handler_kind,rx in HANDLER_PATTERNS:
-            for m in rx.finditer(source):
-                ln=line_no(source,m.start())
+            for m in rx.finditer(scan_source):
+                ln=line_no(scan_source,m.start())
                 args_list=[a.strip() for a in m.group("args").split(",") if a.strip()]
                 player_arg=args_list[0] if args_list else None
-                window=context_window(source,ln,100)
+                window=context_window(scan_source,ln,100)
                 danger=signals(window,DANGEROUS)
                 validation=signals(window,VALIDATION)
                 rate=signals(window,RATE)
