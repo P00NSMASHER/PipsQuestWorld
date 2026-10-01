@@ -82,6 +82,55 @@ local catalog = {
     },
 }
 
+local function assertCatalogRejected(candidate, expectedFragment)
+    local ok, err = pcall(function()
+        EducationEngine.new(candidate)
+    end)
+    assertEqual(ok, false, "malformed catalog was accepted")
+    if not string.find(tostring(err), expectedFragment, 1, true) then
+        fail("malformed catalog error missing expected fragment: " .. expectedFragment .. " in " .. tostring(err))
+    end
+end
+
+assertCatalogRejected({
+    {
+        id = "blank-prompt",
+        subject = "Math",
+        difficulty = 1,
+        prompt = "   ",
+        choices = { "A", "B" },
+        correctIndex = 1,
+        hint = "Hint",
+        explanation = "Explanation",
+    },
+}, "activity.prompt must be a non-blank string")
+
+assertCatalogRejected({
+    {
+        id = "duplicate-choices",
+        subject = "Math",
+        difficulty = 1,
+        prompt = "Pick one.",
+        choices = { "Same", "  same  " },
+        correctIndex = 1,
+        hint = "Hint",
+        explanation = "Explanation",
+    },
+}, "activity choices must be unique after normalization")
+
+assertCatalogRejected({
+    {
+        id = "blank-hint",
+        subject = "Math",
+        difficulty = 1,
+        prompt = "Pick one.",
+        choices = { "A", "B" },
+        correctIndex = 1,
+        hint = "\t  ",
+        explanation = "Explanation",
+    },
+}, "activity.hint must be a non-blank string")
+
 local engine = EducationEngine.new(catalog, {
     maxAttempts = 2,
     maxDifficultyJump = 1,

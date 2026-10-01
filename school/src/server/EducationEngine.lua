@@ -25,6 +25,10 @@ local function isInteger(value)
     return type(value) == "number" and value == math.floor(value)
 end
 
+local function isNonBlankString(value)
+    return type(value) == "string" and string.find(value, "%S") ~= nil
+end
+
 local function normalizePrompt(prompt)
     local compact = string.gsub(prompt, "%s+", " ")
     compact = string.gsub(compact, "^%s+", "")
@@ -34,34 +38,38 @@ end
 
 local function assertActivity(activity, ids, prompts)
     assert(type(activity) == "table", "activity must be a table")
-    assert(type(activity.id) == "string" and activity.id ~= "", "activity.id must be a non-empty string")
+    assert(isNonBlankString(activity.id), "activity.id must be a non-blank string")
     assert(not ids[activity.id], "duplicate activity id: " .. activity.id)
     ids[activity.id] = true
 
-    assert(type(activity.subject) == "string" and activity.subject ~= "", "activity.subject must be a non-empty string")
+    assert(isNonBlankString(activity.subject), "activity.subject must be a non-blank string")
     assert(isInteger(activity.difficulty) and activity.difficulty >= 1 and activity.difficulty <= 5, "activity.difficulty must be an integer from 1 to 5")
-    assert(type(activity.prompt) == "string" and activity.prompt ~= "", "activity.prompt must be a non-empty string")
+    assert(isNonBlankString(activity.prompt), "activity.prompt must be a non-blank string")
 
     local promptKey = normalizePrompt(activity.prompt)
     assert(not prompts[promptKey], "duplicate activity prompt: " .. activity.id)
     prompts[promptKey] = true
 
     assert(type(activity.choices) == "table" and #activity.choices >= 2, "activity.choices must contain at least two choices")
+    local choiceKeys = {}
     for index, choice in ipairs(activity.choices) do
-        assert(type(choice) == "string" and choice ~= "", "choice " .. tostring(index) .. " must be a non-empty string")
+        assert(isNonBlankString(choice), "choice " .. tostring(index) .. " must be a non-blank string")
+        local choiceKey = normalizePrompt(choice)
+        assert(not choiceKeys[choiceKey], "activity choices must be unique after normalization: " .. activity.id)
+        choiceKeys[choiceKey] = true
     end
 
     assert(isInteger(activity.correctIndex), "activity.correctIndex must be an integer")
     assert(activity.correctIndex >= 1 and activity.correctIndex <= #activity.choices, "activity.correctIndex must point to a choice")
-    assert(type(activity.hint) == "string" and activity.hint ~= "", "activity.hint must be a non-empty string")
-    assert(type(activity.explanation) == "string" and activity.explanation ~= "", "activity.explanation must be a non-empty string")
+    assert(isNonBlankString(activity.hint), "activity.hint must be a non-blank string")
+    assert(isNonBlankString(activity.explanation), "activity.explanation must be a non-blank string")
 
     if activity.misconceptions ~= nil then
         assert(type(activity.misconceptions) == "table", "activity.misconceptions must be a table when provided")
         for key, message in pairs(activity.misconceptions) do
             assert(isInteger(key) and key >= 1 and key <= #activity.choices, "misconception keys must be valid choice indexes")
             assert(key ~= activity.correctIndex, "correct choice must not carry misconception feedback")
-            assert(type(message) == "string" and message ~= "", "misconception feedback must be a non-empty string")
+            assert(isNonBlankString(message), "misconception feedback must be a non-blank string")
         end
     end
 end
