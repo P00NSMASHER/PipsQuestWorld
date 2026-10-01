@@ -180,6 +180,29 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-phone-text-remotes",
+      "targetPath": "ServerScriptService/PhoneTextingScript",
+      "expectedSourceSha256": "571e84308d007a1775aa14a281f92b6c177560bf97de308ec7347353d1d9d170",
+      "reason": "Preserve the existing Roblox privacy and per-recipient text filtering while enforcing the client UI's 160-character limit on the server, validating Player targets and texting state, bounding message request frequency, and rejecting malformed block-toggle targets.",
+      "replacements": [
+        {
+          "old": "local chat = game:GetService(\"Chat\")",
+          "new": "local chat = game:GetService(\"Chat\")\nlocal textrequesttime = {}\n\ngame.Players.PlayerRemoving:connect(function(plr)\n\ttextrequesttime[plr] = nil\nend)",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.SendTextMessage.OnServerInvoke = function(plr,targetplr,thread,input)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.SendTextMessage.OnServerInvoke = function(plr,targetplr,thread,input)\n\tif typeof(targetplr) ~= \"Instance\" or not targetplr:IsA(\"Player\") or targetplr.Parent ~= game.Players or targetplr == plr then\n\t\treturn false,\"Error: Player not found\"\n\tend\n\tif type(input) ~= \"string\" or #input < 1 or #input > 160 then\n\t\treturn false,\"Error: Invalid message\"\n\tend\n\tlocal textingdata = plr:FindFirstChild(\"textingdata\")\n\tif not textingdata or not textingdata:FindFirstChild(\"messages\") or not textingdata:FindFirstChild(\"blocklist\") then\n\t\treturn false,\"Error: Messaging not ready\"\n\tend\n\tlocal now = tick()\n\tlocal lastrequest = textrequesttime[plr]\n\tif lastrequest and now - lastrequest < .25 then\n\t\treturn false,\"Error: Please wait\"\n\tend\n\ttextrequesttime[plr] = now",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.ToggleBlockedPhoneContact.OnServerInvoke = function(plr,targetplr)\n\tlocal blocklist = plr.textingdata.blocklist",
+          "new": "game.ReplicatedStorage.RemoteFunctions.ToggleBlockedPhoneContact.OnServerInvoke = function(plr,targetplr)\n\tif typeof(targetplr) ~= \"Instance\" or not targetplr:IsA(\"Player\") or targetplr.Parent ~= game.Players or targetplr == plr then\n\t\treturn false\n\tend\n\tlocal textingdata = plr:FindFirstChild(\"textingdata\")\n\tlocal blocklist = textingdata and textingdata:FindFirstChild(\"blocklist\")\n\tif not blocklist then\n\t\treturn false\n\tend",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
