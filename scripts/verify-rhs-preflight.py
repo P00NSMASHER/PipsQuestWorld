@@ -142,6 +142,28 @@ if service_audit.get("missingServiceUses") != 0:
 if service_audit.get("missingMemberUses") != 0:
     errors.append("preflight records missing Roblox service-member uses")
 
+house_hardening = checks.get("houseFurnitureHardening") or {}
+if house_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight house/furniture hardening status is not PASS_BUILD_PARITY")
+if house_hardening.get("candidateSha256") != working_sha:
+    errors.append("preflight house/furniture candidate SHA does not match BUILD_STATE")
+if house_hardening.get("repairId") != "harden-house-furniture-remotes":
+    errors.append("preflight house/furniture repair id changed")
+if house_hardening.get("targetPath") != "ServerScriptService/CustomHouseScript_NEW":
+    errors.append("preflight house/furniture target changed")
+if house_hardening.get("baselineSourceSha256") != "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c":
+    errors.append("preflight house/furniture baseline source hash changed")
+if house_hardening.get("patchedSourceSha256") != "66f73eeb7972411c905289b02cc9052f004251d277870323dfe46cb4f946d016":
+    errors.append("preflight house/furniture patched source hash changed")
+if house_hardening.get("deterministicReplacementCount") != 8:
+    errors.append("preflight house/furniture replacement count changed")
+if house_hardening.get("handlerCount") != 11:
+    errors.append("preflight house/furniture handler count changed")
+if house_hardening.get("contractRunId") != 36895670608:
+    errors.append("preflight house/furniture contract run id changed")
+if house_hardening.get("runtimeVerified") is not False:
+    errors.append("house/furniture hardening must remain runtime-unverified until Studio proof")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
