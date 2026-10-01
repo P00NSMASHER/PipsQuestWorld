@@ -15,7 +15,7 @@ This producer adds one server-authoritative class activity seam without creating
 - `GetClassState`: discovery only. Returns the current Foundation period/room, whether the period is academic, whether the player is in attendance radius, active safe activity state, and ephemeral completion count.
 - `EnterClass`: server re-reads Foundation schedule and validates player location before opening exactly one activity.
 - `SubmitAnswer`: server validates the current class key, room presence, submission id, and answer. Duplicate submissions are idempotent; late submissions are rejected.
-- `LeaveClass`: closes the ephemeral class session immediately and returns the player to free-roam state.
+- `LeaveClass`: closes the ephemeral class session immediately and returns the player to free-roam state. An incomplete class may be entered again during the same Foundation period; a fresh server session is created without fabricating completion.
 
 The server-only `EducationEngine` holds answer keys and supports one hint/retry. After the maximum attempts, it returns the explanation and resolves the activity so a wrong answer cannot soft-lock movement or class exit.
 

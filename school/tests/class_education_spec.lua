@@ -77,6 +77,15 @@ assertEqual(left.returnToFreeRoam, true, "period exit did not return to free roa
 assertEqual(controller:getPlayerSnapshot("player-1").active, nil, "period exit left class active")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "period exit fabricated completion")
 
+local scienceReentry, scienceReentryStatus = controller:enter("player-1", "1:4:science", "Science", 1)
+assertEqual(scienceReentryStatus, "entered", "incomplete class could not be re-entered")
+assertEqual(scienceReentry.accepted, true, "re-entry after free-roam exit was rejected")
+assertEqual(scienceReentry.activity.id, science.activity.id, "re-entry did not restore the deterministic class activity")
+local leftAgain, leftAgainStatus = controller:leave("player-1", "requested")
+assertEqual(leftAgainStatus, "left", "re-entered class could not return to free roam")
+assertEqual(leftAgain.returnToFreeRoam, true, "re-entered class exit did not return to free roam")
+assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "re-entry fabricated completion")
+
 local ela = assert(controller:enter("player-2", "1:3:ela", "ELA", 1))
 local firstWrong = assert(controller:submit("player-2", "1:3:ela", ela.activity.id, "p2-1", 2))
 assertEqual(firstWrong.completed, false, "first wrong attempt should not soft-lock or finish")

@@ -28,6 +28,7 @@ local function stateFor(self, playerKey)
             completed = {},
             completionCount = 0,
             receipts = {},
+            nextSessionOrdinal = 0,
         }
         self._players[playerKey] = state
     end
@@ -88,7 +89,11 @@ function ClassSessionController:enter(playerKey, classKey, subject, initialDiffi
         }, "rejected"
     end
 
-    local sessionId = playerKey .. "|" .. classKey
+    -- A player may leave an incomplete class and re-enter while the same
+    -- Foundation period is still active. Closed engine sessions are immutable,
+    -- so every fresh class entry needs its own deterministic attempt id.
+    state.nextSessionOrdinal = state.nextSessionOrdinal + 1
+    local sessionId = playerKey .. "|" .. classKey .. "|" .. tostring(state.nextSessionOrdinal)
     self._engine:beginSession(sessionId, subject, initialDifficulty)
     local activity, activityStatus = self._engine:nextActivity(sessionId)
     if not activity then
