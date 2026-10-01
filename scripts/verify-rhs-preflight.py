@@ -200,6 +200,26 @@ if phone_hardening.get("filteredMessageFlowPreserved") is not True:
 if phone_hardening.get("runtimeVerified") is not False:
     errors.append("phone/text hardening must remain runtime-unverified until Studio proof")
 
+economy_hardening = checks.get("economyRemoteHardening") or {}
+if economy_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight economy hardening status is not PASS_BUILD_PARITY")
+if economy_hardening.get("repairId") != "harden-economy-remote-inputs":
+    errors.append("preflight economy repair id changed")
+if economy_hardening.get("targetPath") != "ServerScriptService/ItemBuyScript":
+    errors.append("preflight economy target changed")
+if economy_hardening.get("baselineSourceSha256") != "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf":
+    errors.append("preflight economy baseline source hash changed")
+if economy_hardening.get("patchedSourceSha256") != "876d7ae8f1fa746780e81e1457c8c7870d4092d532edb3bd94588c4316fa7169":
+    errors.append("preflight economy patched source hash changed")
+if economy_hardening.get("deterministicReplacementCount") != 7:
+    errors.append("preflight economy replacement count changed")
+if economy_hardening.get("contractRunId") != 36901054838:
+    errors.append("preflight economy contract run id changed")
+if economy_hardening.get("serverPricingPreserved") is not True:
+    errors.append("preflight economy server pricing is not marked preserved")
+if economy_hardening.get("runtimeVerified") is not False:
+    errors.append("economy hardening must remain runtime-unverified until Studio proof")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
