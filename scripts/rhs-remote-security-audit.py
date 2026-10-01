@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -118,6 +119,7 @@ def main():
 
                 rec={
                     "scriptPath":path,
+                    "sourceSha256":hashlib.sha256(source.encode("utf-8")).hexdigest(),
                     "scriptClass":cls,
                     "handlerType":handler_type,
                     "line":line,
@@ -167,6 +169,7 @@ def main():
             rec["scriptClass"],
             rec["scriptPath"],
             "line="+str(rec["line"]),
+            "source_sha256="+rec["sourceSha256"],
             "params="+json.dumps(rec["parameters"],separators=(",",":")),
             "validation="+json.dumps(sorted(rec["validationSignals"]),separators=(",",":")),
             "throttle="+json.dumps(sorted(rec["throttleSignals"]),separators=(",",":")),
