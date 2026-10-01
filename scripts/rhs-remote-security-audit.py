@@ -78,6 +78,7 @@ def main():
     args=ap.parse_args()
 
     root=ET.parse(args.xml).getroot()
+    build_state=json.loads(Path("rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))
     handlers=[]
     summary=collections.Counter()
 
@@ -153,7 +154,7 @@ def main():
     report={
         "schemaVersion":1,
         "scope":"Heuristic static inventory. A flag is not proof of exploitability; handlers require manual/runtime review before changes.",
-        "workingBuildSha256":"04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+        "workingBuildSha256":build_state["expectedWorkingSha256"],
         "summary":dict(sorted(summary.items())),
         "handlers":handlers,
     }
