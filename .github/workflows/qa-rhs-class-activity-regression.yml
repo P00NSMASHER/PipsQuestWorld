@@ -36,8 +36,7 @@ jobs:
         run: |
           python3 qa/rhs-school-life-diagnostic.py \
             --xml /tmp/rhs-qa.rbxlx \
-            --output /tmp/rhs-school-life-report.json \
-            --markdown /tmp/rhs-school-life-report.md
+            --output /tmp/rhs-school-life-report.json
 
       - name: Require original blocker to be closed
         run: |
@@ -57,7 +56,6 @@ jobs:
           name: rhs-class-activity-qa-regression
           path: |
             /tmp/rhs-school-life-report.json
-            /tmp/rhs-school-life-report.md
             /tmp/rhs-class-activity-contract.json
           if-no-files-found: warn
           retention-days: 30
