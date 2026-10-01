@@ -46,11 +46,11 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Baseline bootstrap importer: **RETIRED** after exact import; baseline verification is read-only
 - Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
 - Working copy created: **YES**
-- Compatibility patches applied: **4** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed; car lock/driver-lock/removal remotes now require the exact server-tracked Workspace car for the requesting player
-- Working-copy SHA-256 after current patches: `fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d`
+- Compatibility patches applied: **6** — three legacy backend/telemetry sandboxes, car-instance remote ownership hardening, server-authoritative Math class activity, and additive client class-activity UI
+- Working-copy SHA-256 after current patches: `ce87a6f86fc662f6ea3f1cd077371c57e9e2ccfda130a31365c3dc91ba071731`
 - Baseline integrity guard: **PASSING**
 - Compatibility audit: **PASSING**
-- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 4 approved script-source changes, no unapproved hierarchy/source drift
+- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 6 approved script-source changes, no unapproved hierarchy/source drift
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
@@ -64,6 +64,7 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Static compatibility policy: deprecated-but-present APIs and the inert `RenderHooksService` singleton are preserved until runtime evidence proves a narrow repair is required
 - School-loop structural audit: **PASSING** — 12/12 required markers present (schedule, classroom zones, class notification/teleport remotes, Math/English/Science/History, cafeteria, lockers); runtime Gate B is still required
 - Car remote ownership hardening: **PASSING BUILD PARITY** — 3 client-triggered car handlers now validate against the exact server-tracked `Workspace` car before mutation
+- Class activity remote hardening: **PASSING** — new submission IDs are throttled to 0.25s/player; exact duplicate IDs replay before throttle; per-cycle attempt/completion/receipt state is reset; throttle state is removed on player exit; arbitrary post-completion IDs cannot grow the receipt table; schedule/subject/zone authority remains server-side
 - Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
