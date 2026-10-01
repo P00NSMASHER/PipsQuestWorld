@@ -7,58 +7,101 @@
 - Never weaken tests, fabricate evidence, broaden credentials/authority, or import retired/noncanonical product code merely to move faster.
 
 ## Canonical product direction
-The canonical product is the original feature-equivalent Roblox high-school rebuild using original code and original/properly licensed assets. Retired Maze/Pips, Brookhaven projection, and licensed-exact RHS branches are noncanonical unless the Control Tower explicitly changes direction.
+The canonical product is the original feature-equivalent Roblox high-school rebuild using original code and original/properly licensed assets.
+Retired Maze/Pips, Brookhaven projection, and licensed-exact RHS branches are noncanonical unless the user explicitly changes direction.
 
-## Throughput mode
-- Maximize useful parallel output. There is NO producer WIP cap and no ACTIVE-only gate for work that stays inside a lane's exclusive ownership.
-- Every enabled producer should keep building independent, contract-safe work every run until its owned release surface is complete.
-- A producer may make multiple coherent tested commits in one run when time/tool budget permits. Do not stop after one slice if another independent owned slice is ready.
-- Upstream dependencies gate only the adapter/binding that truly consumes the upstream contract. They do NOT block standalone engines, deterministic tests, content packs, validators, persistence cores, mobile components, or other work that can be built without guessing the upstream interface.
-- When an upstream contract is unavailable, build the largest useful isolated component that does not invent that contract, then continue with another independent owned item.
-- NOOP is reserved for genuinely complete work, unchanged support evidence, or a real tool/safety blocker. Do not NOOP merely because another lane is incomplete.
-- Status-only commits are forbidden.
+## Primary optimization target
+Optimize for **validated playable progress on the canonical game**, not commit count, receipt count, branch count, or hourly activity.
+
+Current vertical-slice KPI:
+`spawn -> authoritative school clock/period -> arrive/attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores committed result`.
+
+Work that cannot plausibly advance, validate, or unblock that slice is lower priority until the slice passes end-to-end.
+
+## Integration-critical WIP cap
+At most THREE unintegrated product candidates may consume product-code effort at once:
+1. the canonical base/integration candidate;
+2. ONE current upstream producer candidate on the critical path;
+3. ONE downstream speculative candidate that is isolated behind a stable internal interface.
+
+All other lanes remain enabled but must restrict themselves to cheap delta inspection, deterministic tests/harnesses, content/provenance prep, or `WAITING_UNCHANGED/WAITING_DEPENDENCY`. They must not accumulate additional unintegrated product code merely because their hourly task fired.
+
+The Control Tower owns slot assignment. A candidate loses its slot when superseded, stale, noncanonical, or integrated.
+
+## Canonical source root
+`school/**` is the canonical runtime/test source root for the current high-school rebuild.
+Do not create a second runtime tree under `highschool/**`.
+Existing speculative work under `highschool/**` is reference/prep only until intentionally rehomed into `school/**` on a fresh canonical descendant with unchanged semantics and exact-head tests.
+No integration candidate may map both roots into the runtime.
 
 ## Shared state
-- `coordination/HIGH_SCHOOL_SWARM_STATE.json` on `coordination/high-school-control-tower` tracks canonical lineage, exact SHAs, current release blocker, stage readiness, rights status, and next integration milestone.
+- `coordination/HIGH_SCHOOL_SWARM_STATE.json` on `coordination/high-school-control-tower` tracks canonical lineage, exact SHAs, current blocker, WIP slots, rights status, and next integration milestone.
 - Roblox High School Control Tower is the sole writer of shared state.
-- Shared state coordinates lineage and readiness; it MUST NOT be used to idle otherwise-independent producers.
-- If state is missing/stale/contradictory, support lanes repair/report the evidence path and producers continue only work that is safely isolated by their file ownership and does not depend on the disputed value.
+- Live GitHub branch heads + exact-head CI are source of truth. Coordination receipts are caches/evidence, never authority over a newer live head.
+- Any receipt whose recorded branch SHA no longer equals the live branch head is automatically STALE and must not authorize downstream consumption.
 - Support lanes write their own exact-SHA receipts; they never rewrite shared state.
 
 ## Parallel ownership
 - Foundation owns only project mapping, campus/location registry, authoritative school clock/day/period state, Foundation state seam, and foundation tests/provenance.
-- Class & Education owns only standalone education/session logic plus the class adapter once Foundation contracts are available.
-- Content QA owns only original/sanitized content and content validators.
-- Progression & Mobile owns only progression/persistence and mobile/read-only presentation; it may build isolated cores before upstream binding is available.
+- Class & Education owns standalone education/session logic plus the class adapter once Foundation contracts are available.
+- Content QA owns original/sanitized content and content validators.
+- Progression & Mobile owns progression/persistence and mobile/read-only presentation.
 - QA/Contract owns validation and QA-owned harnesses, not producer semantics.
 - Integration owns the canonical integration candidate and mechanical conflict resolution only.
 - Smoke owns post-integration headless verification only.
 - Release/Package owns deterministic packaging/readiness only.
 - DevEx owns CI/automation/evidence infrastructure only.
-- Do not create duplicate school clocks/day loops, class authorities, answer/grade authorities, progression authorities, persistence writers, or overlapping product-file ownership.
+- Never create duplicate school clocks/day loops, class authorities, answer/grade authorities, progression authorities, persistence writers, or overlapping product-file ownership.
 
-## Interface gates, not work gates
-Foundation -> Class adapter -> Progression binding -> Integration -> Release remains the semantic dependency order.
-That order restricts only the dependent binding. It does not serialize independent implementation or tests.
-Content, standalone Education Core, isolated progression/persistence core, mobile components against read-only local models, QA harnesses, DevEx, and provenance work should proceed in parallel.
+## Interface gates
+Semantic order is:
+Foundation -> Class/Education -> Progression/Persistence -> Integration -> Smoke -> Release.
+
+Independent tests/content/harnesses may proceed in parallel, but **product-code accumulation is governed by the WIP cap**.
+A downstream lane may prepare only against a stable internal interface while upstream semantics are unsettled; it may not guess upstream behavior or expand scope.
+
+## Unchanged-fingerprint rule
+When a lane's relevant exact-SHA fingerprint is unchanged:
+- perform at most TWO cheap GitHub/cloud reads needed to confirm that fact;
+- run ZERO broad tests;
+- create ZERO branches;
+- make ZERO commits;
+- write ZERO status-only receipts/comments;
+- report `WAITING_UNCHANGED` with the exact unblock condition.
+
+Do not invent validator work or speculative refactors merely to avoid idleness. A scheduled run is not itself a reason to create work.
 
 ## Evidence and CI
-- Every producer commit should carry deterministic tests/checks appropriate to the changed surface.
-- All actionable receipts identify branch, exact commit SHA, evidence fingerprint, checks/results, and remaining integration requirements.
-- CI must run on live canonical producer heads without requiring a merge merely to obtain evidence.
-- Reuse exact-head PASS evidence when unchanged, but do not let receipt-writing block product work.
-- QA should evaluate every changed independent surface in a run, not stop after the first unrelated blocker.
-- Integration may maintain a continuously updated candidate from producer heads that pass their own deterministic checks and contract checks; release readiness remains fail-closed.
-- Smoke should report all independently reproducible blockers discovered in one pass rather than stopping after the first when continued checks are safe.
-- Packaging may be exercised early on non-release candidates to detect deterministic packaging defects; only the final READY verdict requires all release gates.
+- Every product commit must have deterministic checks appropriate to the changed surface.
+- Exact-head green CI is mandatory before a downstream lane consumes a producer head.
+- Any new commit invalidates prior exact-head certification for downstream consumption until the new head is green.
+- Receipts identify branch, exact SHA, evidence fingerprint, checks/results, and remaining integration requirements.
+- Reuse exact-head PASS evidence when unchanged.
+- Receipt writing must never consume a run that still has eligible critical-path product work.
+- Prefer narrow PRs containing one externally observable behavior or one contract repair. Large multi-feature PRs should be split before integration when practical.
+
+## Noncanonical quarantine
+- Retired Maze/Pips, Brookhaven, licensed-exact RHS, and superseded experimental branches may be inspected as historical evidence only.
+- Open PRs on those lines must not receive new hardening, CI repair, integration, or feature work.
+- They should be closed/quarantined once identified unless the user explicitly restores that direction.
+- No automation may infer that an open noncanonical PR is unfinished canonical work.
 
 ## Rights/provenance
 - Original or properly licensed assets/code only.
 - Rights/provenance remains explicit and tied to exact candidate lineage.
-- Retired/noncanonical branches may be inspected as evidence but never silently become canonical product code.
+- Noncanonical branches may be inspected as evidence but never silently become canonical product code.
 
 ## Failure discipline
 - Fix reproducible root causes instead of disabling lanes or weakening tests.
 - Preserve legitimate concurrent work; do not overwrite another lane's branch/files.
-- If a tool write fails, try another GitHub-native supported write path when available before declaring blocked.
+- If a tool write fails, use the documented canonical GitHub write path before declaring `WRITE_PATH_BLOCKED`.
 - Runtime/device assertions that cannot be obtained cloud-side remain `LOCAL_ONLY_REQUIRED`; never guess them.
+
+## Anti-waste control check
+Each Control Tower cycle records:
+- canonical playable vertical-slice stage reached;
+- count of unintegrated product candidates;
+- count of open noncanonical PRs;
+- hours/cycles since the last end-to-end playable advancement.
+
+If commits/PRs/receipts rise while playable-stage progress does not, reduce product WIP rather than creating more parallel implementation.
