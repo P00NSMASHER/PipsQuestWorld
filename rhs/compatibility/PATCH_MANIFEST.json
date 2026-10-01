@@ -205,6 +205,32 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-new-hoverboard-servercontrol",
+      "targetPath": "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript",
+      "expectedSourceSha256": "b9a7f405762500390245532775ca008e9c06a562b1e3b60fbde0c3c89302aa57",
+      "reason": "Require the invoking player to own the equipped Character before accepting hoverboard control, restrict later calls to that owner, and fail closed on malformed KeyPress payloads.",
+      "replacements": [
+        {
+          "old": "ServerControl.OnServerInvoke = (function(player, Mode, Value)\n\tif Mode == \"Equipped\" then\n\t\tEquipped(Value)\n\telseif Mode == \"Unequipped\" then\n\t\tUnequipped()\n\telseif Mode == \"KeyPress\" then\n\t\tlocal Key = Value.Key\n\t\tlocal Down = Value.Down\n\t\tSkateboardFunctions.KeyPress(Key, Down)\n\tend\nend)",
+          "new": "ServerControl.OnServerInvoke = (function(player, Mode, Value)\n\tif Mode == \"Equipped\" then\n\t\tif typeof(Value) ~= \"Instance\" or not Value:IsA(\"Model\") or Players:GetPlayerFromCharacter(Value) ~= player then\n\t\t\treturn\n\t\tend\n\t\tEquipped(Value)\n\telseif Mode == \"Unequipped\" then\n\t\tif player ~= Player then\n\t\t\treturn\n\t\tend\n\t\tUnequipped()\n\telseif Mode == \"KeyPress\" then\n\t\tif player ~= Player or type(Value) ~= \"table\" or typeof(Value.Key) ~= \"EnumItem\" or Value.Key.EnumType ~= Enum.KeyCode or type(Value.Down) ~= \"boolean\" then\n\t\t\treturn\n\t\tend\n\t\tlocal Key = Value.Key\n\t\tlocal Down = Value.Down\n\t\tSkateboardFunctions.KeyPress(Key, Down)\n\tend\nend)",
+          "expectedCount": 1
+        }
+      ]
+    },
+    {
+      "id": "harden-new-pink-hoverboard-servercontrol",
+      "targetPath": "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript",
+      "expectedSourceSha256": "8c5f284e9e85726271d9f70e2acc53412dd15317b4449e124ff9b948f0db9fa7",
+      "reason": "Require the invoking player to own the equipped Character before accepting pink-hoverboard control, restrict later calls to that owner, and fail closed on malformed KeyPress payloads.",
+      "replacements": [
+        {
+          "old": "ServerControl.OnServerInvoke = (function(player, Mode, Value)\n\tif Mode == \"Equipped\" then\n\t\tEquipped(Value)\n\telseif Mode == \"Unequipped\" then\n\t\tUnequipped()\n\telseif Mode == \"KeyPress\" then\n\t\tlocal Key = Value.Key\n\t\tlocal Down = Value.Down\n\t\tSkateboardFunctions.KeyPress(Key, Down)\n\tend\nend)",
+          "new": "ServerControl.OnServerInvoke = (function(player, Mode, Value)\n\tif Mode == \"Equipped\" then\n\t\tif typeof(Value) ~= \"Instance\" or not Value:IsA(\"Model\") or Players:GetPlayerFromCharacter(Value) ~= player then\n\t\t\treturn\n\t\tend\n\t\tEquipped(Value)\n\telseif Mode == \"Unequipped\" then\n\t\tif player ~= Player then\n\t\t\treturn\n\t\tend\n\t\tUnequipped()\n\telseif Mode == \"KeyPress\" then\n\t\tif player ~= Player or type(Value) ~= \"table\" or typeof(Value.Key) ~= \"EnumItem\" or Value.Key.EnumType ~= Enum.KeyCode or type(Value.Down) ~= \"boolean\" then\n\t\t\treturn\n\t\tend\n\t\tlocal Key = Value.Key\n\t\tlocal Down = Value.Down\n\t\tSkateboardFunctions.KeyPress(Key, Down)\n\tend\nend)",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
