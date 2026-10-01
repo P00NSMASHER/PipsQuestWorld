@@ -162,6 +162,29 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-economy-purchase-remotes",
+      "targetPath": "ServerScriptService/ItemBuyScript",
+      "expectedSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
+      "reason": "Fail closed on malformed temporary-shop identifiers and make permanent/loyalty purchase mutations complete synchronously before a successful RemoteFunction response, eliminating the explicit background-coroutine double-submit window.",
+      "replacements": [
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tif type(shopname) ~= \"string\" or type(itemname) ~= \"string\" then\n\t\treturn false,\"Invalid purchase request.\"\n\tend\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
+          "expectedCount": 1
+        },
+        {
+          "old": "coroutine.resume(coroutine.create(processPermanentItemPurchase), plr,price,itemid,item)",
+          "new": "processPermanentItemPurchase(plr,price,itemid,item)",
+          "expectedCount": 1
+        },
+        {
+          "old": "coroutine.resume(coroutine.create(processLoyaltyItemPurchase), plr,price,itemid)",
+          "new": "processLoyaltyItemPurchase(plr,price,itemid)",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
