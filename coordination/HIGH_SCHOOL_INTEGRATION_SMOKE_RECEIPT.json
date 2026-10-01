@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Integration Smoke",
+  "recordedAt": "2026-10-01T14:56:23Z",
+  "action": "NOOP",
+  "result": "BLOCKED",
+  "evidenceFingerprint": "sha256:3e8a9b56650a551cb0fe56a93549eda1ae194a8aee4aacaeba3082452cc1df47",
+  "integrationSha": null,
+  "reason": "Latest Integration Director receipt is BLOCKED, has no FINAL_INTEGRATOR_SHA, and is stale/SHA-mismatched against the current shared state.",
+  "checks": {
+    "integrationReceiptPresent": "PASS",
+    "integrationReceiptReady": "BLOCKED",
+    "canonicalShaMatch": "BLOCKED",
+    "postIntegrationSmoke": "NOT_RUN"
+  },
+  "blockerOwner": "Roblox High School Class & Education",
+  "exitCriterion": "From rebuild/high-school-foundation@f763b243f4ec22951f432e66f807f187c960583f, produce one tested Class/Education candidate that consumes Foundation schedule/location/read-only state without creating a second clock/world authority; includes server-authoritative answer validation, deterministic class entry/exit and exactly-once completion; and has exact-head GitHub CI PASS plus an exact-SHA lane receipt.",
+  "localOnlyRequired": null,
+  "evidence": {
+    "sharedStateBranch": "coordination/high-school-control-tower",
+    "sharedStateHead": "61002e64cc5d3e3563c35dcf23d19ee96d0d452c",
+    "sharedStateBlob": "69d3987281db6303228bb93a0cf024b5919f6e71",
+    "currentFoundationSha": "f763b243f4ec22951f432e66f807f187c960583f",
+    "integrationReceiptBranch": "coordination/integration-state",
+    "integrationReceiptHead": "384c8914a434ff6880b904517f038670a478e1bc",
+    "integrationReceiptBlob": "a7657c5237e9dc046a8222bfbab79d2b98429a2d",
+    "integrationReceiptCanonicalSha": "87658f31ebf2a78f922cbcb47a1948e0538384a6"
+  },
+  "sourceEdited": false,
+  "sharedStateEdited": false,
+  "published": false
+}
