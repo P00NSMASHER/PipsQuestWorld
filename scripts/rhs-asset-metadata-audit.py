@@ -221,7 +221,7 @@ def main() -> int:
             "name=" + json.dumps(meta.get("name"), ensure_ascii=False),
             "assetTypeId=" + json.dumps(meta.get("assetTypeId"), ensure_ascii=False),
             "creator=" + json.dumps(creator.get("name"), ensure_ascii=False),
-            "creatorId=" + json.dumps(creator.get("id"), ensure_ascii=False),
+            "creatorId=" + json.dumps(creator.get("userId") or creator.get("groupId"), ensure_ascii=False),
         )
     print("=== END_RHS_ASSET_METADATA_AUDIT ===")
     return 0
