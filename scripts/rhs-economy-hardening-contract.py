@@ -9,12 +9,22 @@ from pathlib import Path
 
 TARGET = "ServerScriptService/ItemBuyScript"
 BASELINE_SOURCE_SHA = "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf"
-EXPECTED_SOURCE_SHA = "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a"
-EXPECTED_WORKING_SHA = "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf"
+EXPECTED_SOURCE_SHA = "402c6ea746d485c4b27cd251757448accb287383270269358207e48a37f959ee"
+EXPECTED_WORKING_SHA = "2246eb8e92906e68322f76a26f69821e456e206e466dc1e15358bb3b5bfd4b59"
 PATCH_ID = "harden-economy-purchase-remotes"
 
 REQUIRED = [
     'if type(shopname) ~= "string" or type(itemname) ~= "string" then',
+    'local temporaryShopDialogAnchors = {',
+    '["Chef Umbra\\'s"] = {"DIALOG_Umbra"}',
+    '["Club Red"] = {"DIALOG_Dexter"}',
+    '["School Cafeteria"] = {"DIALOG_Rude Lunch Lady","DIALOG_Chill Lunch Lady","DIALOG_Noob Lunch Lady"}',
+    '["Snack Shack"] = {"DIALOG_Wendy"}',
+    '["Sunblox Cafe"] = {"DIALOG_Alyssa"}',
+    'local function canAccessTemporaryShop(plr,shopname)',
+    '(root.Position - anchor.Position).Magnitude <= 32',
+    'if not canAccessTemporaryShop(plr,shopname) then',
+    'if type(code) ~= "string" or #code > 64 then',
     'processPermanentItemPurchase(plr,price,itemid,item)',
     'processLoyaltyItemPurchase(plr,price,itemid)',
     'function PurchasePermanentItemUnlocked(plr,itemid)',
@@ -101,8 +111,8 @@ def main() -> int:
             errors.append("economy patch target changed")
         if p.get("expectedSourceSha256") != BASELINE_SOURCE_SHA:
             errors.append("economy baseline source SHA changed")
-        if len(p.get("replacements") or []) != 7:
-            errors.append(f"expected 7 deterministic economy replacements, found {len(p.get('replacements') or [])}")
+        if len(p.get("replacements") or []) != 8:
+            errors.append(f"expected 8 deterministic economy replacements, found {len(p.get('replacements') or [])}")
 
     state=json.loads(Path(args.build_state).read_text(encoding="utf-8"))
     repair_ids=[p.get("id") for p in manifest.get("patches",[])]
@@ -123,7 +133,7 @@ def main() -> int:
 
     print("RHS_ECONOMY_HARDENING_CONTRACT_OK")
     print("TARGET_SOURCE_SHA256",source_sha)
-    print("DETERMINISTIC_REPLACEMENTS",7)
+    print("DETERMINISTIC_REPLACEMENTS",8)
     print("WORKING_SHA256",state["expectedWorkingSha256"])
     print("RUNTIME_VERIFIED",str(state["runtimeVerified"]).lower())
     print("PUBLISHED",str(state["published"]).lower())
