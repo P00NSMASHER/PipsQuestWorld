@@ -21,8 +21,9 @@ WAIT_LITERAL=re.compile(
 REPEAT_WAIT_UNTIL=re.compile(r'repeat\s+(?:wait|task\.wait)\s*\([^)]*\)\s+until\s+(.+)',re.I)
 WHILE_WAIT=re.compile(r'while\s+(?:true|wait\s*\([^)]*\)|task\.wait\s*\([^)]*\))\s+do',re.I)
 REPEAT_LINE=re.compile(r'^\s*repeat\s*(?:--.*)?$',re.I)
-UNTIL_LINE=re.compile(r'^\\s*until\\s+(.+)$',re.I)
+UNTIL_LINE=re.compile(r'^\s*until\s+(.+)$',re.I)
 BOUNDED_HINT=re.compile(
+    r'counter|tries|attempt|timeout|deadline|elapsed|tick\s*\(|time\s*\(|os\.(?:clock|time)|#'
     r'|\b[A-Za-z_]\w*\s*(?:>=|>)\s*\d+',
     re.I,
 )
