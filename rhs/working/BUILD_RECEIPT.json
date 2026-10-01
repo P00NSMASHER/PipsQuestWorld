@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "b1abf1654be23a01d4460f1d6b24da954809989558f6fb379e9b59090cb7cda8",
+  "patchManifestSha256": "68ea94d3b518ade8ebcf8d6e863d0f703c787b18fa0a2731227c09e089272c25",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -120,11 +120,54 @@
           }
         ],
         "targetPath": "StarterGui/ClassNotification/LocalScript"
+      },
+      {
+        "afterSourceSha256": "e2f37f551a573bf45aaeeb45bbd4828e1b5030938293d63a62f659de2e87e4c4",
+        "beforeSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
+        "class": "Script",
+        "id": "harden-apartment-purchase-remote",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "1132a4c6b0817bbf2362abc73ac79dd4d44da2a586ca731eddd9f1f59f952222",
+            "oldSha256": "c04d4b16f84ca2e85b4ccefcd3eef3b8b922e00863a27ff88438cad75006bc05"
+          }
+        ],
+        "targetPath": "ServerScriptService/ApartmentPurchaseScript"
+      },
+      {
+        "afterSourceSha256": "8c969ee2db4c1050e28c8644515dc83cf9e11ecdb9ce5a95a5ccfb14d4c4ce58",
+        "beforeSourceSha256": "20fcbcce2207ca02ffc3aa4e126176059fbc58999dde7cb13e7fcde5d856c73d",
+        "class": "Script",
+        "id": "harden-outfit-remote-inputs",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "281dd6e00f8362a799f570182c79a3502d027c105fe1222fb8b6233f03c6f706",
+            "oldSha256": "cb84c368f4a82479ae27eb011b20428cae4bf9bf7a5e92cd38a48b79eda401c5"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "7f25c7fc568448266c477d1afce73d89c23051bb1f838670b418b409347aac9d",
+            "oldSha256": "0ce4617c1f0ebf72576250448e5e612aed457721d9a2e76b59a1ca69df10e4de"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "1c0e939bed4c0952ef6ff894ad4b6f5fd616b0576ed0dab9bd605c4a6f5cfdab",
+            "oldSha256": "dd04334d15d441441af8327a002fd16c62fc7d77bb5aaa14ef93cb67ba92ab25"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "8c057dfecf4848c917f0f796ee8c7a3c8eb3455fe01c79caf4e482766238b92b",
+            "oldSha256": "5bac27aa8257a302a78eac5a11159518d84466398a5f884ebb548d763dab1736"
+          }
+        ],
+        "targetPath": "ServerScriptService/OutfitHandler"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "ce87a6f86fc662f6ea3f1cd077371c57e9e2ccfda130a31365c3dc91ba071731"
+  "workingSha256": "d4044c2992d9d72b32f2a9afa8ad9656b5eb39c5c7b4f07d59d641aa7565ad35"
 }
