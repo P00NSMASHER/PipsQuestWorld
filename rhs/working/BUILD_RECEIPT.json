@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "8a14ac143be9691d979da4e76defb1ca9ba7ddd81eca978a8a5003464b0333ff",
+  "patchManifestSha256": "b70ca7ec7f4d1ebeaf92e14618919a53f1735729d5e7e77702b536bba0e58bb2",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -174,11 +174,35 @@
           }
         ],
         "targetPath": "ServerScriptService/CustomHouseScript_NEW"
+      },
+      {
+        "afterSourceSha256": "36f1910ab0a7e9d8797d76cf988982eabaece234fbf75a2fcff92468fe28d8cb",
+        "beforeSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
+        "class": "Script",
+        "id": "harden-economy-purchase-remotes",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "dab5108a78eaac0ba76bf240705911d3d02b355e709ff1472f434511c055beec",
+            "oldSha256": "2eb1cc16c21b09825cb6c1c9ffd21edd111afad05a87bbfe8da0f4005d1cac3d"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "04ab3b182c14704a6277914b392e3d1a584e048f51a787ca5e1677270dce3441",
+            "oldSha256": "d251b9d95b33b5c262fee93decc24e1297c0ba491d29a585a8c77d4b587a1648"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "b243d3be80113b24cc9e321486a8719c6b8a7c458eb0c5d73a39d82c3152d693",
+            "oldSha256": "f9aae00dd8afc2556696e70913aeb55ed9a5d67cf1a8ea86de29f0bf28abcea9"
+          }
+        ],
+        "targetPath": "ServerScriptService/ItemBuyScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f"
+  "workingSha256": "ee429e7fabe1ca6c12d708a81d060405421b02025c6dc70029da2f5572e700ce"
 }
