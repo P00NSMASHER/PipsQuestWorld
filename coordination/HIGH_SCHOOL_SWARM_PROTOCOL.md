@@ -112,3 +112,16 @@ If commits/PRs/receipts rise while playable-stage progress does not, reduce prod
 - A blocker, completion, unchanged fingerprint, WIP cap, or WAITING_* state is never permission to disable a task.
 - Control Tower coordinates through GitHub-visible shared state/objectives, not by mutating scheduled-task definitions.
 - If a task-state contradiction is observed, record it as an automation defect for the user/DevEx; do not self-repair it through task mutation.
+
+
+## Shared online-laptop lease
+- The connected local machine is a scarce shared resource named `ONLINE_LAPTOP`. All canonical high-school workers may use it only for a check that is genuinely `LOCAL_ONLY_REQUIRED`; GitHub/cloud remains mandatory for routine repository work, source edits, CI, coordination, logs, artifacts, and ordinary tests.
+- Local-machine access is serialized through `coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json` on `coordination/high-school-control-tower`. No worker may begin a local-machine call unless it holds the lease for its exact lane/purpose/canonical SHA.
+- Claim uses GitHub contents-API compare-and-swap semantics: read the lease, require `status=FREE` (or an expired lease confirmed unchanged by one reread), then update using the exact current blob SHA. A stale-SHA write means another worker won; reread and do not use the laptop.
+- At most ONE worker may hold the lease. A lease must include lane, purpose, canonical SHA, claimed-at UTC, expiry UTC, and interaction mode. Keep leases short and bounded; default maximum is 20 minutes.
+- Lease holders must use the laptop only for their declared local-only purpose and preserve lane ownership. They must not spend money, publish Roblox, broaden credentials/authority, weaken tests, perform routine GitHub work locally, or touch another lane's product files.
+- Background/headless operation is preferred. Visible GUI interaction is allowed only when the declared local-only check itself requires Roblox Studio or another local GUI and the user has authorized local-machine use.
+- On completion, failure, or abandonment, release the lease immediately with a concise outcome and exact evidence pointer. A worker that cannot access the connected local tool must release the lease and report `LOCAL_CONNECTOR_UNAVAILABLE`; it must not hold the resource while blocked.
+- Other workers seeing an active, unexpired lease must continue cloud-safe work within the WIP rules or report `WAITING_LOCAL_MACHINE_LEASE`; they must not start a competing local session.
+- A worker may reclaim an expired lease only after one confirming reread shows the same holder/claim and the current UTC time is later than `expiresAt`. Record `reclaimedExpiredLease=true` in the new claim.
+- Control Tower records whether the laptop is currently verified online, but online status alone never authorizes local work. The combination of `LOCAL_ONLY_REQUIRED` + exact canonical SHA + acquired lease is required.
