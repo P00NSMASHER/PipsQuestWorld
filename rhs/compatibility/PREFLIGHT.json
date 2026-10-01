@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
-    "compatibilityPatchCount": 8,
+    "sha256": "c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e",
+    "compatibilityPatchCount": 10,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -19,7 +19,9 @@
       "harden-apartment-purchase-remote",
       "harden-outfit-remote-inputs",
       "harden-house-furniture-remotes",
-      "harden-economy-purchase-remotes"
+      "harden-economy-purchase-remotes",
+      "harden-new-hoverboard-servercontrol",
+      "harden-new-pink-hoverboard-servercontrol"
     ]
   },
   "staticChecks": {
@@ -159,7 +161,7 @@
     },
     "coreRemoteHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
+      "candidateSha256": "c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e",
       "repairs": [
         {
           "id": "harden-apartment-purchase-remote",
@@ -187,7 +189,7 @@
     },
     "houseFurnitureHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
+      "candidateSha256": "c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e",
       "repairId": "harden-house-furniture-remotes",
       "targetPath": "ServerScriptService/CustomHouseScript_NEW",
       "baselineSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
@@ -206,7 +208,7 @@
     },
     "economyPurchaseHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
+      "candidateSha256": "c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e",
       "repairId": "harden-economy-purchase-remotes",
       "targetPath": "ServerScriptService/ItemBuyScript",
       "baselineSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
@@ -221,6 +223,35 @@
         "Loyalty purchase helper is serialized per player and clears its lock on both success and failure."
       ],
       "knownFollowUp": "Client closes temporary shops beyond 32 studs, but the serialized world does not expose a complete stable shop-name-to-Workspace-NPC mapping. No brittle server proximity table was invented.",
+      "runtimeVerified": false
+    },
+    "boardServerControlHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "c96d6b9feba135d3367d11d33d72e841cdad666492d8314b6ef41f486cf72b3e",
+      "repairIds": [
+        "harden-new-hoverboard-servercontrol",
+        "harden-new-pink-hoverboard-servercontrol"
+      ],
+      "targets": [
+        {
+          "path": "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript",
+          "baselineSourceSha256": "b9a7f405762500390245532775ca008e9c06a562b1e3b60fbde0c3c89302aa57",
+          "patchedSourceSha256": "c700bd7ae5b11820f7790e7fb19a2c783c869e7d4aecca7a26716fbb0ac9d315"
+        },
+        {
+          "path": "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript",
+          "baselineSourceSha256": "8c5f284e9e85726271d9f70e2acc53412dd15317b4449e124ff9b948f0db9fa7",
+          "patchedSourceSha256": "b77ac4bbf12ad9944cc7337035394a2d6cf6efbac59eae57ffab468abf922314"
+        }
+      ],
+      "standaloneContractRunId": 36899662215,
+      "contractWorkflow": "RHS Board ServerControl Hardening Contract",
+      "policies": [
+        "Equipped accepts only a Character Model that belongs to the invoking player.",
+        "Unequipped accepts only the player who established ownership during Equipped.",
+        "KeyPress accepts only the established owner with a table containing Enum.KeyCode Key and boolean Down.",
+        "Empty legacy Skate/Hoverboard ServerControl handlers remain untouched."
+      ],
       "runtimeVerified": false
     }
   },
