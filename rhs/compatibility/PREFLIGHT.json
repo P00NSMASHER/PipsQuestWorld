@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa",
-    "compatibilityPatchCount": 9,
+    "sha256": "efc78ac4b50583010ed3072ab089723b414ba0b240afd6df145515c186a3e2e2",
+    "compatibilityPatchCount": 10,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -20,7 +20,8 @@
       "harden-outfit-remote-inputs",
       "harden-house-furniture-remotes",
       "harden-painting-remotes",
-      "harden-phone-text-remotes"
+      "harden-phone-text-remotes",
+      "harden-economy-remote-inputs"
     ]
   },
   "staticChecks": {
@@ -242,6 +243,26 @@
         "Block/unblock target must be a current Player, cannot be self, and requires a server-owned blocklist."
       ],
       "filteredMessageFlowPreserved": true,
+      "runtimeVerified": false
+    },
+    "economyRemoteHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "efc78ac4b50583010ed3072ab089723b414ba0b240afd6df145515c186a3e2e2",
+      "repairId": "harden-economy-remote-inputs",
+      "targetPath": "ServerScriptService/ItemBuyScript",
+      "baselineSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
+      "patchedSourceSha256": "876d7ae8f1fa746780e81e1457c8c7870d4092d532edb3bd94588c4316fa7169",
+      "deterministicReplacementCount": 7,
+      "contractWorkflow": "RHS Economy Remote Hardening Contract",
+      "contractRunId": 36901054838,
+      "policies": [
+        "Temporary purchases require string shop/item identifiers, a bounded server request cadence, and a server-known item with ItemCost plus Tool.",
+        "Permanent and loyalty item IDs must be positive integers and are request-rate bounded before server-owned item/price checks.",
+        "Twitter-code redemption accepts only 1–64 character strings and is request-rate bounded.",
+        "Special-guitar claims are rate bounded and use the existing synchronous AwardItemAsync server function before success notification.",
+        "Server-owned ItemCost and LPCost values remain the only purchase price sources."
+      ],
+      "serverPricingPreserved": true,
       "runtimeVerified": false
     }
   },
