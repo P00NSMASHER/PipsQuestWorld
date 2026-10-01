@@ -8,6 +8,7 @@
     "ServerScriptService/Time/ScheduleScript": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
     "ServerStorage/Orbs/MagicOrbScript": "97f51c141575abf7665017db34901d679e405a95b3a6c3f6fca9d2fcc39c4c5a",
     "ServerScriptService/DataStoresScript": "e31d9881b1e00e9e00378ce90cc152a468a57b4615e55f5619c0227f4ba7bfc8",
-    "ServerScriptService/CustomHouseScript_NEW": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c"
+    "ServerScriptService/CustomHouseScript_NEW": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+    "ServerScriptService/CarSpawnScript": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b"
   }
 }
