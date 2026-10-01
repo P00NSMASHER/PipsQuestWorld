@@ -10,7 +10,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-# Isolated audit branch marker: keep this head stable long enough for the rate-controlled full scan.\nURL = "https://assetdelivery.roblox.com/v2/assetId/{asset_id}"
+# Isolated audit branch marker: keep this head stable long enough for the rate-controlled full scan.
+URL = "https://assetdelivery.roblox.com/v2/assetId/{asset_id}"
 
 def classify_status(status: int | None, error: str | None, body: bytes) -> str:
     if status in (200, 206):
