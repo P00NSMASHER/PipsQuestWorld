@@ -204,9 +204,27 @@ def main() -> int:
             bucket=priority_summary.setdefault(priority,{})
             bucket[cls]=bucket.get(cls,0)+1
 
+    terminal_non_public_classes={
+        "auth_required",
+        "forbidden_anonymous",
+        "not_found",
+        "api_error_payload",
+        "other_http",
+    }
+    transient_classes={
+        "rate_limited",
+        "timeout",
+        "network_error",
+        "probe_exception",
+    }
+
     unresolved=[
         r for r in results
-        if r["classification"] != "public_anonymous"
+        if r["classification"] in terminal_non_public_classes
+    ]
+    indeterminate=[
+        r for r in results
+        if r["classification"] in transient_classes
     ]
     unresolved.sort(key=lambda r:(
         0 if "startup_surface" in r["priorities"] else
@@ -236,6 +254,7 @@ def main() -> int:
                 k:dict(sorted(v.items())) for k,v in sorted(priority_summary.items())
             },
             "nonPublicAnonymous":len(unresolved),
+            "indeterminate":len(indeterminate),
             "rateLimitedAfterRetries":sum(
                 1 for result in results if result["classification"] == "rate_limited"
             ),
@@ -243,6 +262,16 @@ def main() -> int:
         },
         "results":results,
         "unresolvedPriorityOrder":unresolved,
+        "indeterminatePriorityOrder":sorted(
+            indeterminate,
+            key=lambda r:(
+                0 if "startup_surface" in r["priorities"] else
+                1 if "player_backpack" in r["priorities"] else
+                2 if "runtime_storage" in r["priorities"] else 3,
+                -r["referenceCount"],
+                int(r["assetId"]),
+            ),
+        ),
     }
     Path(args.output).write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 
@@ -254,6 +283,7 @@ def main() -> int:
     for priority,bucket in sorted(priority_summary.items()):
         print("PRIORITY",priority,json.dumps(bucket,sort_keys=True,separators=(",",":")))
     print("NON_PUBLIC_ANONYMOUS",len(unresolved))
+    print("INDETERMINATE",len(indeterminate))
     for r in unresolved[:100]:
         print(
             "UNRESOLVED",
