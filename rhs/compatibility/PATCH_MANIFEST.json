@@ -109,8 +109,8 @@
           "expectedCount": 1
         },
         {
-          "old": "\t\t\t\t\tlocal obj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
-          "new": "\t\t\t\t\tlocal obj\n\t\t\t\t\tlocal loaded = pcall(function()\n\t\t\t\t\t\tobj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\tend)\n\t\t\t\t\tif not loaded or not obj then\n\t\t\t\t\t\tstatuses[i] = \"invalid\"\n\t\t\t\t\t\treturn false,statuses\n\t\t\t\t\tend\n\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
+          "old": "\t\t\t\t\t\tlocal obj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
+          "new": "\t\t\t\t\t\tlocal obj\n\t\t\t\t\t\tlocal loaded = pcall(function()\n\t\t\t\t\t\t\tobj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\t\tend)\n\t\t\t\t\t\tif not loaded or not obj then\n\t\t\t\t\t\t\tstatuses[i] = \"invalid\"\n\t\t\t\t\t\t\treturn false,statuses\n\t\t\t\t\t\tend\n\t\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
           "expectedCount": 1
         }
       ]
