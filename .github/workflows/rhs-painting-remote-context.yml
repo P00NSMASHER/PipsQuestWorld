@@ -83,6 +83,16 @@ jobs:
           if not found:
               raise SystemExit("missing ServerPaintingManager")
 
+          print("=== ART_PAINTING_MODULE ===")
+          for item,path in walk(root):
+              if path == "ReplicatedStorage/Modules/ArtPainting":
+                  source=prop_text(item,"Source")
+                  print("SOURCE_SHA256",hashlib.sha256(source.encode()).hexdigest())
+                  for i,line in enumerate(source.splitlines(),1):
+                      print(f"{i:04d}: {line}")
+                  break
+          print("=== END_ART_PAINTING_MODULE ===")
+
           print("=== PAINTING_REMOTE_REFS ===")
           for item,path in walk(root):
               cls=item.attrib.get("class","")
