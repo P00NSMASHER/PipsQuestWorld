@@ -101,7 +101,7 @@ def main():
 
     report={
       "schemaVersion":2,
-      "candidateSha":"3ffa9b75f18f51fc26feb0b1e3ec03862b46e5e3",
+      "candidateWorkingSha256":json.loads((Path(__file__).resolve().parents[1]/"rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))["expectedWorkingSha256"],
       "scriptCount":len(scripts),
       "scheduleCandidates":schedule,
       "classFlowCandidates":classflow,
@@ -117,7 +117,7 @@ def main():
     Path(args.output).write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 
     print("=== RHS_SCHOOL_LIFE_QA_DIAGNOSTIC ===")
-    print("CANDIDATE",report["candidateSha"])
+    print("CANDIDATE_WORKING_SHA256",report["candidateWorkingSha256"])
     print("SCRIPTS",len(scripts))
     print("SCHEDULE_CANDIDATES",len(schedule))
     print("CLASS_FLOW_CANDIDATES",len(classflow))
