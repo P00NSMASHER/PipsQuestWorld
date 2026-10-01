@@ -1,0 +1,50 @@
+name: RHS House Furniture Hardening Contract
+
+on:
+  push:
+    branches:
+      - hardening/rhs-house-furniture-trust-v2
+    paths:
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "scripts/rhs-house-furniture-hardening-contract.py"
+      - ".github/workflows/rhs-house-furniture-hardening-contract.yml"
+  pull_request:
+    paths:
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "scripts/rhs-house-furniture-hardening-contract.py"
+      - ".github/workflows/rhs-house-furniture-hardening-contract.yml"
+
+concurrency:
+  group: rhs-house-furniture-hardening-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify immutable baseline
+        run: python3 scripts/verify-rhs-baseline.py
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+      - name: Convert reviewed working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+      - name: Enforce house/furniture hardening contract
+        run: |
+          python3 scripts/rhs-house-furniture-hardening-contract.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --manifest rhs/compatibility/PATCH_MANIFEST.json \
+            --build-state rhs/working/BUILD_STATE.json
