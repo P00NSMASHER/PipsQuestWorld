@@ -66,6 +66,15 @@
           "$path": "src/server/ClassEducation.server.lua"
         }
       }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "CanonicalSchoolClient": {
+          "$path": "src/client/CanonicalSchoolClient.client.lua"
+        }
+      }
     }
   }
 }
