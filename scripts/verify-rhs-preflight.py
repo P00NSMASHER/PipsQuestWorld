@@ -164,6 +164,24 @@ if house_hardening.get("contractRunId") != 36895670608:
 if house_hardening.get("runtimeVerified") is not False:
     errors.append("house/furniture hardening must remain runtime-unverified until Studio proof")
 
+economy_hardening = checks.get("economyPurchaseHardening") or {}
+if economy_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight economy hardening status is not PASS_BUILD_PARITY")
+if economy_hardening.get("candidateSha256") != working_sha:
+    errors.append("preflight economy candidate SHA does not match BUILD_STATE")
+if economy_hardening.get("repairId") != "harden-economy-purchase-remotes":
+    errors.append("preflight economy repair id changed")
+if economy_hardening.get("targetPath") != "ServerScriptService/ItemBuyScript":
+    errors.append("preflight economy target changed")
+if economy_hardening.get("baselineSourceSha256") != "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf":
+    errors.append("preflight economy baseline source hash changed")
+if economy_hardening.get("patchedSourceSha256") != "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a":
+    errors.append("preflight economy patched source hash changed")
+if economy_hardening.get("deterministicReplacementCount") != 7:
+    errors.append("preflight economy replacement count changed")
+if economy_hardening.get("runtimeVerified") is not False:
+    errors.append("economy hardening must remain runtime-unverified until Studio proof")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
