@@ -48,8 +48,10 @@ jobs:
           python3 scripts/rhs-asset-public-probe.py \
             --map /tmp/rhs-asset-reference-map.json \
             --output /tmp/rhs-asset-public-probe.json \
-            --workers 4 \
-            --timeout 8
+            --workers 1 \
+            --timeout 8 \
+            --min-interval 0.25 \
+            --max-retries 4
 
       - name: Rank unresolved asset impact
         run: |
