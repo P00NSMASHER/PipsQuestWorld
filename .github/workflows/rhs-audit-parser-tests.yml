@@ -1,0 +1,37 @@
+name: RHS Audit Parser Unit Tests
+
+on:
+  push:
+    branches:
+      - hardening/rhs-economy-trust-v3
+    paths:
+      - "scripts/lua_source_utils.py"
+      - "scripts/test-lua-source-utils.py"
+      - "scripts/rhs-remote-security-audit.py"
+      - "scripts/rhs-remote-trust-audit.py"
+      - ".github/workflows/rhs-audit-parser-tests.yml"
+  pull_request:
+    paths:
+      - "scripts/lua_source_utils.py"
+      - "scripts/test-lua-source-utils.py"
+      - "scripts/rhs-remote-security-audit.py"
+      - "scripts/rhs-remote-trust-audit.py"
+      - ".github/workflows/rhs-audit-parser-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Lua comment masking
+        run: python3 scripts/test-lua-source-utils.py
+      - name: Compile audit scripts
+        run: |
+          python3 -m py_compile \
+            scripts/lua_source_utils.py \
+            scripts/rhs-remote-security-audit.py \
+            scripts/rhs-remote-trust-audit.py
