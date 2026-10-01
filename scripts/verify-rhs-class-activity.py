@@ -189,8 +189,16 @@ def main() -> int:
 
     prior_pos = server.find("local prior = classActivityReceipts[playerKey][submissionId]")
     prior_return_pos = server.find("sendClassActivityResult(plr,prior)")
+    throttle_pos = server.find("local lastSubmission = classActivityLastSubmission[plr.userId]")
+    zone_pos = server.find('local zoneCheck = game.ServerStorage.RemoteFunctions:FindFirstChild("PlayerIsInZone")')
     if prior_pos < 0 or prior_return_pos < prior_pos:
         errors.append("idempotent submission receipt replay is missing")
+    if throttle_pos < 0:
+        errors.append("class activity per-player throttle is missing")
+    elif prior_return_pos > throttle_pos:
+        errors.append("duplicate receipt replay must occur before throttling new submissions")
+    if zone_pos < 0 or throttle_pos > zone_pos:
+        errors.append("new submissions must be throttled before zone validation work")
 
     if not generic_candidates:
         errors.append("no generic strict server class-activity candidate detected")
@@ -233,6 +241,12 @@ def main() -> int:
                 completed_branch is not None
                 and 'classActivityReceipts[playerKey][submissionId] = response' not in completed_branch.group(1)
             ),
+            "duplicateReplayBeforeThrottle": (
+                prior_return_pos >= 0 and throttle_pos >= 0 and prior_return_pos < throttle_pos
+            ),
+            "throttleBeforeZoneCheck": (
+                throttle_pos >= 0 and zone_pos >= 0 and throttle_pos < zone_pos
+            ),
         },
         "contractErrors": errors,
     }
@@ -252,6 +266,8 @@ def main() -> int:
     print("ACTIVITY_CYCLE_STATE_RESET", str(report["abuseResistance"]["cycleStateReset"]).lower())
     print("ACTIVITY_THROTTLE_CLEANUP", str(report["abuseResistance"]["playerThrottleCleanup"]).lower())
     print("POST_COMPLETION_RECEIPT_GROWTH_BLOCKED", str(report["abuseResistance"]["postCompletionReceiptGrowthBlocked"]).lower())
+    print("DUPLICATE_REPLAY_BEFORE_THROTTLE", str(report["abuseResistance"]["duplicateReplayBeforeThrottle"]).lower())
+    print("THROTTLE_BEFORE_ZONE_CHECK", str(report["abuseResistance"]["throttleBeforeZoneCheck"]).lower())
     print("CLIENT_ANSWER_KEY_CANDIDATES", len(client_secret_hits))
     for path in sorted(client_secret_hits)[:30]:
         print("CLIENT_ANSWER_KEY", path)
