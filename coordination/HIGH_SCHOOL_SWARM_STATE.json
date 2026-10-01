@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-01T14:12:00Z",
+  "canonicalProduct": "original feature-equivalent Roblox high-school life game using original or properly licensed code/assets only",
+  "currentReleaseBlocker": {
+    "id": "CLASS_EDUCATION_CANONICAL_LINEAGE_NOT_ESTABLISHED",
+    "owner": "Roblox High School Class & Education",
+    "status": "ACTIVE",
+    "reason": "Foundation is exact-head green. The existing education-engine candidate is not descended from the current canonical Foundation head, so Class/Education must establish one fresh canonical descendant before downstream work.",
+    "exitCriterion": "From rebuild/high-school-foundation@f763b243f4ec22951f432e66f807f187c960583f, produce one tested Class/Education candidate that consumes Foundation schedule/location/read-only state without creating a second clock/world authority; includes server-authoritative answer validation, deterministic class entry/exit and exactly-once completion; and has exact-head GitHub CI PASS plus an exact-SHA lane receipt."
+  },
+  "canonicalLineage": {
+    "foundation": {
+      "branch": "rebuild/high-school-foundation",
+      "sha": "f763b243f4ec22951f432e66f807f187c960583f",
+      "status": "PASS",
+      "ci": {
+        "workflow": ".github/workflows/school-pivot-ci.yml",
+        "runId": 36874068766,
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/36874068766"
+      },
+      "rightsVerdict": "PASS_REPOSITORY_DECLARATION"
+    },
+    "classEducation": {
+      "status": "ACTIVE",
+      "requiredBaseSha": "f763b243f4ec22951f432e66f807f187c960583f",
+      "canonicalBranch": null,
+      "staleCandidateEvidence": {
+        "branch": "rebuild/high-school-education-engine-v1",
+        "sha": "fbf1b3892feaff6a0b86ebb395160f1bbdcafe6d",
+        "relationToFoundation": "DIVERGED_AHEAD_1_BEHIND_2",
+        "mergeBaseSha": "e48a46bb1309b099170fba4fc33ca54d527558fc",
+        "use": "reference/salvage only; do not certify as canonical until re-derived on the current Foundation head"
+      }
+    },
+    "progressionMobile": {
+      "status": "DEFERRED"
+    },
+    "qaContract": {
+      "status": "DEFERRED"
+    },
+    "integration": {
+      "status": "DEFERRED"
+    },
+    "smoke": {
+      "status": "DEFERRED"
+    },
+    "releasePackage": {
+      "status": "DEFERRED"
+    }
+  },
+  "activeProducers": [
+    "Roblox High School Class & Education"
+  ],
+  "supportLanes": [
+    "Roblox High School DevEx",
+    "Roblox High School Content QA"
+  ],
+  "deferredLanes": [
+    "Roblox High School Progression & Mobile",
+    "Roblox High School QA & Contract",
+    "Roblox High School Integration Director",
+    "Roblox High School Integration Smoke",
+    "Roblox High School Release & Package Gate"
+  ],
+  "taskStateNotes": {
+    "foundationTaskEnabled": false,
+    "foundationTaskAssignment": "NOT_ACTIVE",
+    "rationale": "Foundation criteria are PASS, so the disabled Foundation task is not assigned as ACTIVE and no schedule/enablement change is required."
+  },
+  "rights": {
+    "status": "PASS_FOR_CANONICAL_FOUNDATION",
+    "policy": "Original or properly licensed assets/code only. Maze/Pips, Brookhaven runtime projection, ripped/proprietary assets, and licensed-exact RHS branches are noncanonical.",
+    "foundationEvidence": [
+      "school/default.project.json maps only SchoolConfig.lua, CampusBuilder.server.lua, and FoundationBootstrap.server.lua",
+      "no mapped binary/non-code asset path",
+      "foundation guard rejects external rbxassetid:// use in active foundation code"
+    ]
+  },
+  "nonCanonicalEvidence": [
+    "retired Maze/Pips branches and runtime surfaces",
+    "Brookhaven runtime-projection branches/bindings",
+    "rebuild/rhs-licensed-exact and related PRs 16-18",
+    "rebuild/high-school-education-engine-v1@fbf1b3892feaff6a0b86ebb395160f1bbdcafe6d until re-derived on current Foundation"
+  ],
+  "evidence": {
+    "protocolBranch": "coordination/high-school-control-tower",
+    "protocolFile": "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md",
+    "devExReceipt": "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json",
+    "foundationReceipt": "coordination/high-school-foundation-status.json",
+    "foundationExactHeadCiRun": 36874068766,
+    "foundationExactHeadCiConclusion": "success"
+  },
+  "nextMeasurableMilestone": {
+    "owner": "Roblox High School Class & Education",
+    "action": "Create/advance one canonical Class/Education branch from exact Foundation SHA f763b243f4ec22951f432e66f807f187c960583f and leave deterministic exact-head CI evidence.",
+    "downstreamBlockedUntilPass": true
+  }
+}
