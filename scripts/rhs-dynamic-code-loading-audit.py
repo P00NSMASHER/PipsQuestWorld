@@ -197,6 +197,26 @@ def main():
                     print("HIGH_CONTEXT",rec["scriptPath"],signal,"line="+str(snippet["line"]))
                     for row in snippet["lines"]:
                         print(f'{row["line"]:04d}: {row["text"]}')
+    # Targeted legacy-admin context for deciding whether loadstring paths are reachable.
+    for rec in records:
+        if rec["scriptPath"] != "ServerScriptService/Kohl's Admin Commands V2":
+            continue
+        print("=== RHS_KOHLS_ADMIN_REACHABILITY_CONTEXT ===")
+        target_lines = [(1,140),(330,380),(430,530),(1370,1440),(2550,2625)]
+        # Re-read the source for this exact script.
+        target_source = None
+        for item,path in walk(root):
+            if path == rec["scriptPath"]:
+                target_source = prop_text(item,"Source")
+                break
+        if target_source:
+            src_lines=target_source.splitlines()
+            for start,end in target_lines:
+                print("ADMIN_RANGE",start,end)
+                for i in range(start,min(end,len(src_lines))+1):
+                    print(f"{i:04d}: {src_lines[i-1]}")
+        print("=== END_RHS_KOHLS_ADMIN_REACHABILITY_CONTEXT ===")
+        break
     print("=== END_RHS_DYNAMIC_CODE_LOADING_AUDIT ===")
 
 if __name__=="__main__":
