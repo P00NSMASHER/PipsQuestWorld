@@ -55,6 +55,9 @@ jobs:
           python3 scripts/rhs-startup-risk-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --output /tmp/rhs-startup-risk.json
+          python3 scripts/rhs-asset-reference-map.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-asset-reference-map.json
           python3 scripts/rhs-avatar-mobile-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --output /tmp/rhs-avatar-mobile.json
@@ -213,6 +216,7 @@ jobs:
             /tmp/rhs-compatibility-report.json
             /tmp/rhs-runtime-side-effects.json
             /tmp/rhs-startup-risk.json
+            /tmp/rhs-asset-reference-map.json
             /tmp/rhs-avatar-mobile.json
             /tmp/rhs-remote-security.json
             /tmp/rhs-remote-trust.json
