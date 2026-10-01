@@ -123,6 +123,32 @@ def main() -> int:
     if re.search(r'classActivityCurrentPeriod\s*=\s*[1-6]\b', server):
         errors.append("class activity hard-codes a period instead of following the scheduled subject")
 
+    abuse_resistance_required = [
+        'local classActivityLastSubmission = {}',
+        'local classActivityThrottleSeconds = .25',
+        'local lastSubmission = classActivityLastSubmission[plr.userId]',
+        'now - lastSubmission < classActivityThrottleSeconds',
+        'classActivityLastSubmission[plr.userId] = now',
+        'classActivityAttempts = {}',
+        'classActivityCompleted = {}',
+        'classActivityReceipts = {}',
+        'game.Players.PlayerRemoving:connect(function(plr)',
+        'classActivityLastSubmission[plr.userId] = nil',
+    ]
+    for token in abuse_resistance_required:
+        if token not in server:
+            errors.append(f"server class-activity abuse resistance missing token: {token}")
+
+    completed_branch = re.search(
+        r'if classActivityCompleted\[playerKey\] then(.*?)\n\tend\n\n\tlocal attempts',
+        server,
+        re.DOTALL,
+    )
+    if not completed_branch:
+        errors.append("completed class-activity branch not found")
+    elif 'classActivityReceipts[playerKey][submissionId] = response' in completed_branch.group(1):
+        errors.append("completed class activity allocates receipts for arbitrary new submission ids")
+
     client_required = [
         'local function showClassActivity(payload)',
         'local function showClassActivityResult(payload)',
@@ -195,6 +221,19 @@ def main() -> int:
             "submissionRevalidatesSubject": 'schedule:FindFirstChild("P"..classActivityCurrentPeriod)' in server,
             "submissionRequiresSubjectZone": 'zoneCheck:Invoke(plr,classActivityQuestion.subject)' in server,
         },
+        "abuseResistance": {
+            "perPlayerThrottleSeconds": 0.25 if 'local classActivityThrottleSeconds = .25' in server else None,
+            "cycleStateReset": all(token in server for token in (
+                'classActivityAttempts = {}',
+                'classActivityCompleted = {}',
+                'classActivityReceipts = {}',
+            )),
+            "playerThrottleCleanup": 'classActivityLastSubmission[plr.userId] = nil' in server,
+            "postCompletionReceiptGrowthBlocked": (
+                completed_branch is not None
+                and 'classActivityReceipts[playerKey][submissionId] = response' not in completed_branch.group(1)
+            ),
+        },
         "contractErrors": errors,
     }
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -209,6 +248,10 @@ def main() -> int:
     print("SUBMISSION_PERIOD_REVALIDATED", str(report["scheduleBinding"]["submissionRevalidatesPeriod"]).lower())
     print("SUBMISSION_SUBJECT_REVALIDATED", str(report["scheduleBinding"]["submissionRevalidatesSubject"]).lower())
     print("SUBMISSION_ZONE_REVALIDATED", str(report["scheduleBinding"]["submissionRequiresSubjectZone"]).lower())
+    print("ACTIVITY_THROTTLE_SECONDS", report["abuseResistance"]["perPlayerThrottleSeconds"])
+    print("ACTIVITY_CYCLE_STATE_RESET", str(report["abuseResistance"]["cycleStateReset"]).lower())
+    print("ACTIVITY_THROTTLE_CLEANUP", str(report["abuseResistance"]["playerThrottleCleanup"]).lower())
+    print("POST_COMPLETION_RECEIPT_GROWTH_BLOCKED", str(report["abuseResistance"]["postCompletionReceiptGrowthBlocked"]).lower())
     print("CLIENT_ANSWER_KEY_CANDIDATES", len(client_secret_hits))
     for path in sorted(client_secret_hits)[:30]:
         print("CLIENT_ANSWER_KEY", path)
