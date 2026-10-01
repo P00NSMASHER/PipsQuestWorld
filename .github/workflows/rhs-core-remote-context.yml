@@ -67,7 +67,23 @@ jobs:
                   yield from walk(item, path)
 
           found = set()
+          apartment_instances = []
+          apartment_purchase_refs = []
+          outfit_refs = []
+
           for item, path in walk(root):
+              item_class = item.attrib.get("class", "")
+              item_nm = item_name(item)
+              if item_nm == "Apartment" or "Apartment" in path:
+                  apartment_instances.append((item_class, path))
+
+              if item_class in {"Script", "LocalScript", "ModuleScript"}:
+                  source = prop_text(item, "Source")
+                  if "ApartmentPurchase" in source:
+                      apartment_purchase_refs.append((item_class, path, source))
+                  if "WearOutfit" in source or "SaveOutfit" in source:
+                      outfit_refs.append((item_class, path, source))
+
               if path not in targets:
                   continue
               source = prop_text(item, "Source")
@@ -83,6 +99,27 @@ jobs:
                       print(f"{i:04d}: {lines[i-1]}")
               print("=== END_CORE_REMOTE_SCRIPT ===")
               found.add(path)
+
+          print("=== APARTMENT_INSTANCE_PATHS ===")
+          for cls, path in apartment_instances[:300]:
+              print("APARTMENT_INSTANCE", cls, path)
+          print("APARTMENT_INSTANCE_COUNT", len(apartment_instances))
+          print("=== END_APARTMENT_INSTANCE_PATHS ===")
+
+          def print_ref_block(label, refs, needle):
+              print(f"=== {label} ===")
+              for cls, path, source in refs:
+                  print(f"REF_SCRIPT {cls} {path}")
+                  lines = source.splitlines()
+                  for idx, line in enumerate(lines, 1):
+                      if needle in line:
+                          for n in range(max(1, idx - 10), min(len(lines), idx + 12) + 1):
+                              print(f"{n:04d}: {lines[n-1]}")
+                          print("---")
+              print(f"=== END_{label} ===")
+
+          print_ref_block("APARTMENT_PURCHASE_REFS", apartment_purchase_refs, "ApartmentPurchase")
+          print_ref_block("OUTFIT_REMOTE_REFS", outfit_refs, "WearOutfit")
 
           missing = sorted(set(targets) - found)
           if missing:
