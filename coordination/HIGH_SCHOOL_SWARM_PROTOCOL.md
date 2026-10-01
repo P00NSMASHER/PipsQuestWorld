@@ -1,46 +1,64 @@
 # High School Swarm Protocol
 
 ## Resource path
-- GitHub/cloud first.
-- Never use Remote Desktop Commander or PAAM-L044 for routine repository/status/coordination reads, branches/PRs, CI/artifacts, static/headless tests, or ordinary source work.
-- Local-only evidence must be recorded as `LOCAL_ONLY_REQUIRED` with the exact check and reason. Do not poll the machine.
-- Any local-only work must remain background/headless. Never foreground Roblox Studio or another GUI.
-- Never spend money, publish Roblox, weaken tests/gates, broaden credentials/authority, or change task schedules/enablement.
+- GitHub/cloud first for repository reads/writes, branches/PRs, CI/artifacts, static/headless tests, coordination, and ordinary source work.
+- Local-only evidence is exceptional: record `LOCAL_ONLY_REQUIRED` with the exact check and reason, batch it, and keep it background/headless.
+- Never spend money or publish Roblox without an explicit separate user instruction.
+- Never weaken tests, fabricate evidence, broaden credentials/authority, or import retired/noncanonical product code merely to move faster.
 
 ## Canonical product direction
-The canonical product is the original, feature-equivalent Roblox high-school rebuild using original code and original/properly licensed assets. Retired Maze/Pips, Brookhaven projection, and licensed-exact RHS branches are noncanonical unless the Control Tower explicitly changes direction in shared state.
+The canonical product is the original feature-equivalent Roblox high-school rebuild using original code and original/properly licensed assets. Retired Maze/Pips, Brookhaven projection, and licensed-exact RHS branches are noncanonical unless the Control Tower explicitly changes direction.
 
-## Shared state authority
-- `coordination/HIGH_SCHOOL_SWARM_STATE.json` on `coordination/high-school-control-tower` is authoritative for CURRENT_RELEASE_BLOCKER, canonical branches/exact SHAs, ACTIVE producers, support lanes, deferred lanes, rights status, and the next measurable milestone.
-- Roblox High School Control Tower is the sole writer of the shared state.
-- Every other lane must read protocol + shared state first and fail closed/NOOP if shared state is absent, stale, contradictory, or SHA-mismatched.
-- Support lanes write their own receipts; they never rewrite shared state.
-- Bootstrap rule for the Control Tower: if this protocol exists but shared state is absent, the Control Tower must reconstruct and write shared state from live GitHub heads/PRs/CI before downstream producer work is activated.
+## Throughput mode
+- Maximize useful parallel output. There is NO producer WIP cap and no ACTIVE-only gate for work that stays inside a lane's exclusive ownership.
+- Every enabled producer should keep building independent, contract-safe work every run until its owned release surface is complete.
+- A producer may make multiple coherent tested commits in one run when time/tool budget permits. Do not stop after one slice if another independent owned slice is ready.
+- Upstream dependencies gate only the adapter/binding that truly consumes the upstream contract. They do NOT block standalone engines, deterministic tests, content packs, validators, persistence cores, mobile components, or other work that can be built without guessing the upstream interface.
+- When an upstream contract is unavailable, build the largest useful isolated component that does not invent that contract, then continue with another independent owned item.
+- NOOP is reserved for genuinely complete work, unchanged support evidence, or a real tool/safety blocker. Do not NOOP merely because another lane is incomplete.
+- Status-only commits are forbidden.
 
-## Dependency order
-Foundation -> Class/Education -> Progression/Mobile -> QA/Contract -> Integration -> Smoke -> Release/Package.
-Content QA is schema-aware support and must not invent upstream contracts.
+## Shared state
+- `coordination/HIGH_SCHOOL_SWARM_STATE.json` on `coordination/high-school-control-tower` tracks canonical lineage, exact SHAs, current release blocker, stage readiness, rights status, and next integration milestone.
+- Roblox High School Control Tower is the sole writer of shared state.
+- Shared state coordinates lineage and readiness; it MUST NOT be used to idle otherwise-independent producers.
+- If state is missing/stale/contradictory, support lanes repair/report the evidence path and producers continue only work that is safely isolated by their file ownership and does not depend on the disputed value.
+- Support lanes write their own exact-SHA receipts; they never rewrite shared state.
 
-## Evidence contract
-- All actionable receipts identify branch, exact commit SHA, evidence fingerprint, commands/checks, result, and one blocker owner with one measurable exit criterion when blocked.
-- Reuse exact-head PASS evidence when the fingerprint is unchanged.
-- Never accept stale receipts merely because they are green.
-- Integration/release evidence must resolve to one consistent canonical lineage.
-- CI/evidence plumbing must be GitHub-visible and obtainable without PAAM-L044 unless the evidence is inherently runtime/device-only.
+## Parallel ownership
+- Foundation owns only project mapping, campus/location registry, authoritative school clock/day/period state, Foundation state seam, and foundation tests/provenance.
+- Class & Education owns only standalone education/session logic plus the class adapter once Foundation contracts are available.
+- Content QA owns only original/sanitized content and content validators.
+- Progression & Mobile owns only progression/persistence and mobile/read-only presentation; it may build isolated cores before upstream binding is available.
+- QA/Contract owns validation and QA-owned harnesses, not producer semantics.
+- Integration owns the canonical integration candidate and mechanical conflict resolution only.
+- Smoke owns post-integration headless verification only.
+- Release/Package owns deterministic packaging/readiness only.
+- DevEx owns CI/automation/evidence infrastructure only.
+- Do not create duplicate school clocks/day loops, class authorities, answer/grade authorities, progression authorities, persistence writers, or overlapping product-file ownership.
 
-## Ownership and duplicate-work prevention
-- Each product surface has one owner at a time.
-- Do not create duplicate school clocks/day loops, class authorities, answer/grade authorities, progression authorities, persistence writers, or integration candidates.
-- Downstream lanes do not implement around an upstream blocker.
-- Semantic conflicts return to exactly one producer owner; integration resolves only mechanical conflicts with unambiguous intent.
+## Interface gates, not work gates
+Foundation -> Class adapter -> Progression binding -> Integration -> Release remains the semantic dependency order.
+That order restricts only the dependent binding. It does not serialize independent implementation or tests.
+Content, standalone Education Core, isolated progression/persistence core, mobile components against read-only local models, QA harnesses, DevEx, and provenance work should proceed in parallel.
+
+## Evidence and CI
+- Every producer commit should carry deterministic tests/checks appropriate to the changed surface.
+- All actionable receipts identify branch, exact commit SHA, evidence fingerprint, checks/results, and remaining integration requirements.
+- CI must run on live canonical producer heads without requiring a merge merely to obtain evidence.
+- Reuse exact-head PASS evidence when unchanged, but do not let receipt-writing block product work.
+- QA should evaluate every changed independent surface in a run, not stop after the first unrelated blocker.
+- Integration may maintain a continuously updated candidate from producer heads that pass their own deterministic checks and contract checks; release readiness remains fail-closed.
+- Smoke should report all independently reproducible blockers discovered in one pass rather than stopping after the first when continued checks are safe.
+- Packaging may be exercised early on non-release candidates to detect deterministic packaging defects; only the final READY verdict requires all release gates.
 
 ## Rights/provenance
 - Original or properly licensed assets/code only.
-- Rights/provenance must be explicit and tied to the exact candidate lineage.
-- Retired/noncanonical branches may be inspected as evidence but must not silently become canonical product code.
+- Rights/provenance remains explicit and tied to exact candidate lineage.
+- Retired/noncanonical branches may be inspected as evidence but never silently become canonical product code.
 
 ## Failure discipline
-- Fix reproducible root causes rather than disabling lanes or weakening tests.
-- Status-only churn is forbidden.
-- A lane with no eligible changed work returns NOOP and remains enabled.
-- Runtime/device assertions that cannot be obtained cloud-side are `LOCAL_ONLY_REQUIRED`, never guessed or fabricated.
+- Fix reproducible root causes instead of disabling lanes or weakening tests.
+- Preserve legitimate concurrent work; do not overwrite another lane's branch/files.
+- If a tool write fails, try another GitHub-native supported write path when available before declaring blocked.
+- Runtime/device assertions that cannot be obtained cloud-side remain `LOCAL_ONLY_REQUIRED`; never guess them.
