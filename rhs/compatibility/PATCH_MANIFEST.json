@@ -119,7 +119,7 @@
       "id": "harden-house-furniture-remotes",
       "targetPath": "ServerScriptService/CustomHouseScript_NEW",
       "expectedSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
-      "reason": "Replace fuzzy client-supplied home ownership checks with exact server-tracked house/apartment identity; require painting targets to be direct children of the requesting player's custom house; constrain furniture movement to owned furniture during edit mode; and derive house reload placement from the server-owned HousePlacement marker rather than the client-supplied lot.",
+      "reason": "Harden the CustomHouse server boundary: exact server-owned house/apartment identity for lock/restriction actions; typed whitelist input; furniture-only get/sell/remove; direct server-owned custom-house painting targets; owned furniture movement only while server edit mode is active with CFrame/rotation validation and floor containment; and server-derived reload placement.",
       "replacements": [
         {
           "old": "if home.Name:match(plr.Name) then",
@@ -128,17 +128,37 @@
         },
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\\n\\tif item.Parent.Name == \"!home_\"..plr.Name then",
-          "new": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\\n\\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\\n\\tif house and item and item.Parent == house then",
+          "new": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\\n\\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\\n\\tif house and typeof(item) == \"Instance\" and item.Parent == house and typeof(color) == \"BrickColor\" then",
           "expectedCount": 1
         },
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition.OnServerEvent:connect(function(plr,selectedmodel,newcframe,newrotval)\n\tif selectedmodel then\n\t\tlocal pp = selectedmodel.PrimaryPart\n\t\tlocal ray = Ray.new(newcframe.p, ((newcframe.p + Vector3.new(0,-15,0)) - newcframe.p).unit*10)\n\t\tlocal ignoredparts = {}\n\t\tfor i,v in pairs(selectedmodel.Parent:GetChildren()) do\n\t\t\tif v:IsA(\"Model\") then\n\t\t\t\ttable.insert(ignoredparts,v)\n\t\t\tend\n\t\tend\n\t\tlocal findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)\n\t\tif findpart == nil or not findpart.Name:match(\"Floor\") then --put it back in orig pos for the client\n\t\t\tselectedmodel:SetPrimaryPartCFrame(pp.CFrame)\n\t\t\tselectedmodel.RotValue.Value = selectedmodel.RotValue.Value\n\t\t\tgame.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,\"An error occurred while trying to position this piece of furniture. Please try again.\")\n\t\telse --apply the new position and rotation\n\t\t\tselectedmodel:SetPrimaryPartCFrame(newcframe)\n\t\t\tselectedmodel.RotValue.Value = newrotval\n\t\tend\n\tend\nend)",
-          "new": "game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition.OnServerEvent:connect(function(plr,selectedmodel,newcframe,newrotval)\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tlocal floor = house and house:FindFirstChild(\"Floor\")\n\tlocal editing = floor and floor:FindFirstChild(\"Editing\")\n\tlocal pp = selectedmodel and selectedmodel:IsA(\"Model\") and selectedmodel.PrimaryPart\n\tlocal rotvalue = selectedmodel and selectedmodel:IsA(\"Model\") and selectedmodel:FindFirstChild(\"RotValue\")\n\tlocal validrequest = house\n\t\tand floor\n\t\tand editing\n\t\tand editing.Value == true\n\t\tand selectedmodel\n\t\tand selectedmodel:IsA(\"Model\")\n\t\tand selectedmodel.Parent == house\n\t\tand string.sub(selectedmodel.Name,1,6) == \"furni_\"\n\t\tand pp\n\t\tand pp:IsA(\"BasePart\")\n\t\tand rotvalue\n\t\tand (rotvalue:IsA(\"IntValue\") or rotvalue:IsA(\"NumberValue\"))\n\t\tand typeof(newcframe) == \"CFrame\"\n\t\tand type(newrotval) == \"number\"\n\tif validrequest then\n\t\tlocal ray = Ray.new(newcframe.p, ((newcframe.p + Vector3.new(0,-15,0)) - newcframe.p).unit*10)\n\t\tlocal ignoredparts = {}\n\t\tfor i,v in pairs(house:GetChildren()) do\n\t\t\tif v:IsA(\"Model\") then\n\t\t\t\ttable.insert(ignoredparts,v)\n\t\t\tend\n\t\tend\n\t\tlocal findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)\n\t\tif findpart == nil or findpart.Parent ~= house or not findpart.Name:match(\"Floor\") then --put it back in orig pos for the client\n\t\t\tselectedmodel:SetPrimaryPartCFrame(pp.CFrame)\n\t\t\trotvalue.Value = rotvalue.Value\n\t\t\tgame.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,\"An error occurred while trying to position this piece of furniture. Please try again.\")\n\t\telse --apply the new position and rotation\n\t\t\tselectedmodel:SetPrimaryPartCFrame(newcframe)\n\t\t\trotvalue.Value = newrotval\n\t\tend\n\tend\nend)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition.OnServerEvent:connect(function(plr,selectedmodel,newcframe,newrotval)\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tlocal floor = house and house:FindFirstChild(\"Floor\")\n\tlocal editing = floor and floor:FindFirstChild(\"Editing\")\n\tlocal ismodel = typeof(selectedmodel) == \"Instance\" and selectedmodel:IsA(\"Model\")\n\tlocal pp = ismodel and selectedmodel.PrimaryPart\n\tlocal rotvalue = ismodel and selectedmodel:FindFirstChild(\"RotValue\")\n\tlocal validrequest = house\n\t\tand floor\n\t\tand editing\n\t\tand editing.Value == true\n\t\tand ismodel\n\t\tand selectedmodel.Parent == house\n\t\tand string.sub(selectedmodel.Name,1,6) == \"furni_\"\n\t\tand pp\n\t\tand pp:IsA(\"BasePart\")\n\t\tand rotvalue\n\t\tand (rotvalue:IsA(\"IntValue\") or rotvalue:IsA(\"NumberValue\"))\n\t\tand typeof(newcframe) == \"CFrame\"\n\t\tand type(newrotval) == \"number\"\n\tif validrequest then\n\t\tlocal ray = Ray.new(newcframe.p, ((newcframe.p + Vector3.new(0,-15,0)) - newcframe.p).unit*10)\n\t\tlocal ignoredparts = {}\n\t\tfor i,v in pairs(house:GetChildren()) do\n\t\t\tif v:IsA(\"Model\") then\n\t\t\t\ttable.insert(ignoredparts,v)\n\t\t\tend\n\t\tend\n\t\tlocal findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)\n\t\tif findpart == nil or findpart.Parent ~= house or not findpart.Name:match(\"Floor\") then --put it back in orig pos for the client\n\t\t\tselectedmodel:SetPrimaryPartCFrame(pp.CFrame)\n\t\t\trotvalue.Value = rotvalue.Value\n\t\t\tgame.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,\"An error occurred while trying to position this piece of furniture. Please try again.\")\n\t\telse --apply the new position and rotation\n\t\t\tselectedmodel:SetPrimaryPartCFrame(newcframe)\n\t\t\trotvalue.Value = newrotval\n\t\tend\n\tend\nend)",
           "expectedCount": 1
         },
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.ReloadHouse.OnServerInvoke = function(plr,placement)\n\tlocal request = loadHouse(plr,placement)\n\treturn request\nend",
           "new": "game.ReplicatedStorage.RemoteFunctions.ReloadHouse.OnServerInvoke = function(plr,placement)\n\tlocal currenthouse = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tlocal placementmarker = currenthouse and currenthouse:FindFirstChild(\"HousePlacement\")\n\tif not placementmarker or not placementmarker:IsA(\"IntValue\") then\n\t\treturn false\n\tend\n\tlocal request = loadHouse(plr,placementmarker.Value)\n\treturn request\nend",
+          "expectedCount": 1
+        },
+        {
+          "old": "local restrict = home.Restrictions\n\t\tlocal targetplr",
+          "new": "local restrict = home.Restrictions\n\t\tif type(targetname) ~= \"string\" then\n\t\t\treturn false,\"Invalid player\"\n\t\tend\n\t\tlocal targetplr",
+          "expectedCount": 1
+        },
+        {
+          "old": "function RemoveFurnitureItem(plr,model) --referenced later down\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tlocal stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)\n\tif house and stats and model.Parent == house then",
+          "new": "function RemoveFurnitureItem(plr,model) --referenced later down\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tlocal stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)\n\tif house and stats and typeof(model) == \"Instance\" and model:IsA(\"Model\") and model.Parent == house and string.sub(model.Name,1,6) == \"furni_\" then",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.GetFurniture.OnServerInvoke = function(plr,objname)\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.GetFurniture.OnServerInvoke = function(plr,objname)\n\tif type(objname) ~= \"string\" or string.sub(objname,1,6) ~= \"furni_\" then\n\t\treturn false,\"Invalid furniture\"\n\tend\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.SellFurniture.OnServerInvoke = function(plr,objname)\n\tlocal stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.SellFurniture.OnServerInvoke = function(plr,objname)\n\tif type(objname) ~= \"string\" or string.sub(objname,1,6) ~= \"furni_\" then\n\t\treturn false\n\tend\n\tlocal stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
           "expectedCount": 1
         }
       ]
