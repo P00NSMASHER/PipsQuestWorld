@@ -7,15 +7,17 @@
     "immutable": true
   },
   "working": {
-    "sha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d",
-    "compatibilityPatchCount": 4,
+    "sha256": "af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde",
+    "compatibilityPatchCount": 6,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
       "sandbox-legacy-ranking-login",
       "sandbox-legacy-group-ranking",
       "sandbox-legacy-gameanalytics",
-      "harden-car-instance-remotes"
+      "harden-car-instance-remotes",
+      "harden-apartment-purchase-remote",
+      "harden-outfit-remote-inputs"
     ]
   },
   "staticChecks": {
@@ -152,6 +154,27 @@
       "patchedSourceSha256": "15f5bb7a96189bd2699727de6cccfd08aad12f2f0ea6664c7f0b2757d70033b6",
       "replacementCount": 3,
       "policy": "Client-supplied car instances must equal the server-tracked Workspace vehicle for the requesting player."
+    },
+    "coreRemoteHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde",
+      "repairs": [
+        {
+          "id": "harden-apartment-purchase-remote",
+          "targetPath": "ServerScriptService/ApartmentPurchaseScript",
+          "baselineSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
+          "patchedSourceSha256": "fbff925e1f3c535393f1941be33d750ef3672a8571035fb15a5073b81ec3278a",
+          "policy": "Rental requests must target a direct Workspace Apartment with the expected BuyDoor/LockButton structure and a requesting-player root within 30 studs of its BuyDoor."
+        },
+        {
+          "id": "harden-outfit-remote-inputs",
+          "targetPath": "ServerScriptService/OutfitHandler",
+          "baselineSourceSha256": "20fcbcce2207ca02ffc3aa4e126176059fbc58999dde7cb13e7fcde5d856c73d",
+          "patchedSourceSha256": "8c969ee2db4c1050e28c8644515dc83cf9e11ecdb9ce5a95a5ccfb14d4c4ce58",
+          "policy": "Only the 11 canonical outfit fields are accepted; one request per player may be in flight; save slots are bounded 1-24; hat LoadAsset failure returns false instead of throwing."
+        }
+      ],
+      "contractWorkflow": "RHS Core Remote Hardening Contract"
     }
   },
   "dependencyProbe": {
