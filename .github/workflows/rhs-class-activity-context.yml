@@ -1,0 +1,137 @@
+name: RHS Class Activity Context
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-class-activity-v1
+    paths:
+      - ".github/workflows/rhs-class-activity-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify candidate
+        run: |
+          python3 scripts/verify-rhs-baseline.py
+          python3 scripts/verify-rhs-preflight.py
+
+      - name: Build pinned converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Extract class-flow source and remotes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import re
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          root = ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          script_classes = {"Script", "LocalScript", "ModuleScript"}
+          remote_classes = {"RemoteEvent", "RemoteFunction", "BindableEvent", "BindableFunction"}
+
+          def prop_text(item, name):
+              props = item.find("Properties")
+              if props is None:
+                  return ""
+              for p in props:
+                  if p.attrib.get("name") != name:
+                      continue
+                  if p.tag == "Content":
+                      child = next(iter(p), None)
+                      return (child.text or "") if child is not None else ""
+                  return p.text or ""
+              return ""
+
+          def item_name(item):
+              return prop_text(item, "Name") or "(unnamed)"
+
+          def walk(parent, prefix=""):
+              for item in parent.findall("Item"):
+                  name = item_name(item).replace("/", "_")
+                  here = f"{prefix}/{name}" if prefix else name
+                  yield item, here
+                  yield from walk(item, here)
+
+          targets = []
+          remotes = []
+          for item, path in walk(root):
+              cls = item.attrib.get("class", "")
+              name = item_name(item)
+              low_path = path.lower()
+              low_name = name.lower()
+
+              if cls in script_classes:
+                  if (
+                      path in {
+                          "ServerScriptService/ClassroomZones",
+                          "ServerScriptService/Time_ScheduleScript",
+                          "StarterGui/ClassNotification/LocalScript",
+                          "StarterGui/LoadableGuis/Schedule/LoadScript",
+                          "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
+                      }
+                      or "classroomzones" in low_path
+                      or "time_schedulescript" in low_path
+                  ):
+                      targets.append((item, path, cls))
+
+              if cls in remote_classes and re.search(
+                  r"class|school|period|schedule|question|answer|grade|point|notification|award|activity",
+                  low_name,
+              ):
+                  remotes.append((path, cls, name))
+
+          out = []
+          out.append("=== RHS_CLASS_ACTIVITY_CONTEXT ===")
+          out.append("WORKING_SHA256 fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d")
+          out.append("TARGETS " + str(len(targets)))
+          for item, path, cls in sorted(targets, key=lambda x: x[1]):
+              source = prop_text(item, "Source")
+              out.append(
+                  f"=== SOURCE {cls} {path} sha256={hashlib.sha256(source.encode('utf-8')).hexdigest()} lines={len(source.splitlines())} ==="
+              )
+              for i, line in enumerate(source.splitlines(), 1):
+                  out.append(f"{i:04d}: {line}")
+              out.append("=== END_SOURCE ===")
+
+          out.append("CLASS_RELATED_REMOTES " + str(len(remotes)))
+          for path, cls, name in sorted(remotes):
+              out.append(f"REMOTE {cls} {path}")
+
+          # Also list generic remote containers to reveal reusable existing seams.
+          out.append("=== REMOTE_CONTAINERS ===")
+          for item, path in walk(root):
+              if item.attrib.get("class", "") not in remote_classes:
+                  continue
+              if path.startswith(("ReplicatedStorage/", "ServerStorage/")):
+                  out.append(f"REMOTE_ALL {item.attrib.get('class')} {path}")
+          out.append("=== END_RHS_CLASS_ACTIVITY_CONTEXT ===")
+
+          text = "\n".join(out) + "\n"
+          Path("/tmp/rhs-class-activity-context.txt").write_text(text, encoding="utf-8")
+          print(text)
+          PY
+
+      - name: Upload context
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-class-activity-context
+          path: /tmp/rhs-class-activity-context.txt
+          if-no-files-found: error
+          retention-days: 14
