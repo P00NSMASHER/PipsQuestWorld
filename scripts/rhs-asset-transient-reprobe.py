@@ -124,6 +124,19 @@ def main():
         })
 
     counts=Counter(r.get("classification") for r in data.get("results",[]))
+    priority_counts={}
+    for row in data.get("results",[]):
+        for priority in row.get("priorities") or {}:
+            bucket=priority_counts.setdefault(priority,Counter())
+            bucket[row.get("classification")] += 1
+
+    terminal={
+        "auth_required","forbidden_anonymous","not_found","api_error_payload","other_http",
+    }
+    transient={"rate_limited","timeout","network_error","probe_exception"}
+    non_public=sum(1 for r in data.get("results",[]) if r.get("classification") in terminal)
+    indeterminate=sum(1 for r in data.get("results",[]) if r.get("classification") in transient)
+
     data["transientReprobe"]={
         "targetCount":len(targets),
         "intervalSeconds":args.interval,
@@ -134,9 +147,13 @@ def main():
     data["summary"]={
         **(data.get("summary") or {}),
         "classificationCounts":dict(sorted(counts.items())),
-        "indeterminate":sum(1 for r in data.get("results",[]) if r.get("classification") in {
-            "rate_limited","timeout","network_error","probe_exception"
-        }),
+        "classificationCountsByPriority":{
+            key:dict(sorted(value.items()))
+            for key,value in sorted(priority_counts.items())
+        },
+        "nonPublicAnonymous":non_public,
+        "indeterminate":indeterminate,
+        "rateLimitedAfterRetries":counts.get("rate_limited",0),
     }
     Path(args.output).write_text(json.dumps(data,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 
