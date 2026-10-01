@@ -46,11 +46,11 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Baseline bootstrap importer: **RETIRED** after exact import; baseline verification is read-only
 - Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
 - Working copy created: **YES**
-- Compatibility patches applied: **9** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed; car/apartment/outfit/house/furniture/painting server boundaries are hardened; phone/text remotes now validate current Player targets, enforce 1–160 characters and sender state, rate-limit new messages, and preserve Roblox privacy/filtering
-- Working-copy SHA-256 after current patches: `5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa`
+- Compatibility patches applied: **10** — legacy backend/telemetry calls are sandboxed; car/apartment/outfit/house/furniture/painting/phone server boundaries are hardened; economy remotes now validate client identifiers, rate-bound purchase/redemption requests, validate temporary-shop schema, and keep server-owned prices authoritative
+- Working-copy SHA-256 after current patches: `efc78ac4b50583010ed3072ab089723b414ba0b240afd6df145515c186a3e2e2`
 - Baseline integrity guard: **PASSING**
 - Compatibility audit: **PASSING**
-- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 9 approved script-source changes, no unapproved hierarchy/source drift
+- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 10 approved script-source changes, no unapproved hierarchy/source drift
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
@@ -68,6 +68,7 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - House/furniture remote hardening: **BUILD + CONTRACT PASS** — lock/restriction/whitelist calls require the exact server-owned house/apartment; get/sell/remove are furniture-only; painting requires a direct owned-house target with `BrickColor`; furniture movement requires the player’s edit mode, owned `furni_*` model, typed CFrame/rotation, and a floor in that same house; reload placement is derived from the server-owned `HousePlacement` marker. Contract run: `36895670608`
 - Art painting remote hardening: **BUILD + CONTRACT PASS** — `PlacePaintRequest` accepts only server-known canvases while the player is in the Art zone; position/mode/color inputs are type/whitelist checked; `GetPaintbrush` rejects malformed state and cannot grant a brush outside the Art zone. Contract run: `36898615525`
 - Phone/text remote hardening: **BUILD + CONTRACT PASS** — current-Player target/self checks, server-enforced 1–160 character messages, sender texting-state validation, 0.25-second request throttle, and validated block/unblock targets; existing Roblox chat-permission and per-recipient filtering calls remain intact. Contract run: `36899421646`
+- Economy remote hardening: **BUILD + CONTRACT PASS** — temporary/permanent/loyalty/redemption inputs are server-validated and rate-bounded, temporary items require server-known price/tool schema, special-guitar claims use synchronous server award validation, and `ItemCost`/`LPCost` remain server-owned price sources. Contract run: `36901054838`
 - Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
