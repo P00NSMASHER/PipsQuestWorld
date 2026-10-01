@@ -1,9 +1,10 @@
-name: Pip High Static Guards
+name: High School Static Guards
 
 on:
   pull_request:
     paths:
       - "school/**"
+      - "highschool/**"
       - "scripts/verify-school-pivot.py"
       - ".github/workflows/school-pivot-ci.yml"
       - "README.md"
@@ -14,9 +15,10 @@ on:
   push:
     branches:
       - main
-      - rebuild/high-school-foundation
+      - "rebuild/high-school-*"
     paths:
       - "school/**"
+      - "highschool/**"
       - "scripts/verify-school-pivot.py"
       - ".github/workflows/school-pivot-ci.yml"
 
@@ -26,8 +28,28 @@ permissions:
 jobs:
   static-guards:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Verify active school project invariants
+      - name: Verify canonical Foundation invariants
         run: python3 scripts/verify-school-pivot.py
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Run deterministic highschool Lua specs when present
+        shell: bash
+        run: |
+          if [ ! -d highschool/tests ]; then
+            echo "No highschool/tests directory on this head"
+            exit 0
+          fi
+          mapfile -t specs < <(find highschool/tests -type f -name '*_spec.lua' | sort)
+          if [ "${#specs[@]}" -eq 0 ]; then
+            echo "No highschool Lua specs on this head"
+            exit 0
+          fi
+          for spec in "${specs[@]}"; do
+            echo "==> $spec"
+            lua5.4 "$spec"
+          done
