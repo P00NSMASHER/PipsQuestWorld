@@ -46,7 +46,7 @@ It must **not** replace:
 - pure engine staged: yes;
 - deterministic tests: yes;
 - injected into RHS binary: **no**;
-- runtime adapter: **no**;
+- runtime adapter: **no** — PR #19's minimal class activity is intentionally separate from this reusable engine;
 - Roblox Studio proof: **no**.
 
-No injection should occur until PR #16's runtime Gates A/B pass.
+The reusable engine remains staged only. PR #19 now supplies the minimal RHS-native class-activity seam and is headlessly green, but broader engine integration must still wait for Roblox Studio runtime Gates A/B.
