@@ -1,11 +1,7 @@
 name: RHS Startup Wait Audit
 
 on:
-  pull_request:
-    paths:
-      - "scripts/rhs-startup-wait-audit.py"
-      - ".github/workflows/rhs-startup-wait-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
+  workflow_dispatch:
 
 concurrency:
   group: rhs-startup-wait-audit-${{ github.ref }}

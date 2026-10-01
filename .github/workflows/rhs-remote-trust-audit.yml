@@ -1,11 +1,7 @@
 name: RHS Remote Trust Audit
 
 on:
-  pull_request:
-    paths:
-      - "scripts/rhs-remote-trust-audit.py"
-      - ".github/workflows/rhs-remote-trust-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

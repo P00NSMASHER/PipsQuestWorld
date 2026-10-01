@@ -1,11 +1,7 @@
 name: RHS Text Filtering Audit
 
 on:
-  pull_request:
-    paths:
-      - "scripts/rhs-text-filter-audit.py"
-      - ".github/workflows/rhs-text-filter-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

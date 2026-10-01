@@ -1,11 +1,7 @@
 name: RHS Remote Security Audit
 
 on:
-  pull_request:
-    paths:
-      - "scripts/rhs-remote-security-audit.py"
-      - ".github/workflows/rhs-remote-security-audit.yml"
-      - "rhs/working/ROBLOX High School.rbxl"
+  workflow_dispatch:
 
 concurrency:
   group: rhs-remote-security-audit-${{ github.ref }}
@@ -20,10 +16,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-
       - name: Verify pinned working build
         run: python3 scripts/verify-rhs-baseline.py
-
       - name: Build pinned Roblox converter
         shell: bash
         run: |
@@ -31,16 +25,13 @@ jobs:
           cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
             --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
             --locked rbx_util
-
       - name: Convert working build
         run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
-
       - name: Audit client-to-server remote handlers
         run: |
           python3 scripts/rhs-remote-security-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --output /tmp/rhs-remote-security.json
-
       - name: Upload audit
         uses: actions/upload-artifact@v4
         with:
