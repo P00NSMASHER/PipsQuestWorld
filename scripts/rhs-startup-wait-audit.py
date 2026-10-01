@@ -12,12 +12,21 @@ SCRIPT_CLASSES={"Script","LocalScript","ModuleScript"}
 AUTO_SERVER_ROOTS={"ServerScriptService","Workspace"}
 AUTO_CLIENT_ROOTS={"StarterGui","StarterPlayer","ReplicatedFirst"}
 
-WAIT_FOR_CHILD=re.compile(r'WaitForChild\s*\(([^\n)]*)\)',re.I)
+WAIT_FOR_CHILD=re.compile(r'WaitForChild\\s*\\(([^\\n)]*)\\)',re.I)
+WAIT_LITERAL=re.compile(
+    r'(?P<receiver>(?:game(?::(?:GetService|service)\\s*\\(\\s*["\\\'][^"\\\']+["\\\']\\s*\\)|(?:\\.[A-Za-z_]\\w*)+)|workspace|script(?:\\.Parent)*|[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*))'
+    r'\\s*:\\s*WaitForChild\\s*\\(\\s*["\\\'](?P<name>[^"\\\']+)["\\\'](?P<rest>[^)]*)\\)',
+    re.I,
+)
 REPEAT_WAIT_UNTIL=re.compile(r'repeat\s+(?:wait|task\.wait)\s*\([^)]*\)\s+until\s+(.+)',re.I)
 WHILE_WAIT=re.compile(r'while\s+(?:true|wait\s*\([^)]*\)|task\.wait\s*\([^)]*\))\s+do',re.I)
 REPEAT_LINE=re.compile(r'^\s*repeat\s*(?:--.*)?$',re.I)
 UNTIL_LINE=re.compile(r'^\s*until\s+(.+)$',re.I)
-BOUNDED_HINT=re.compile(r'counter|tries|attempt|timeout|deadline|elapsed|tick\s*\(|time\s*\(|os\.(?:clock|time)|#',re.I)
+BOUNDED_HINT=re.compile(
+    r'counter|tries|attempt|timeout|deadline|elapsed|tick\s*\(|time\s*\(|os\.(?:clock|time)|#'
+    r'|\b[A-Za-z_]\w*\s*(?:>=|>)\s*\d+',
+    re.I,
+)
 
 def prop_text(item,name):
     props=item.find("Properties")
@@ -58,6 +67,44 @@ def indent_width(line):
     prefix=line[:len(line)-len(line.lstrip())]
     return prefix.count("\t")*4 + prefix.count(" ")
 
+def resolve_receiver(script_path, receiver, known_paths):
+    receiver=re.sub(r"\s+","",receiver)
+
+    if receiver=="script":
+        return script_path
+    if receiver.startswith("script.Parent"):
+        path=script_path
+        suffix=receiver[len("script"):]
+        parent_count=suffix.count(".Parent")
+        for _ in range(parent_count):
+            if "/" not in path:
+                return None
+            path=path.rsplit("/",1)[0]
+        return path
+
+    if receiver in {"workspace","game.Workspace"}:
+        return "Workspace"
+
+    m=re.fullmatch(r'game:(?:GetService|service)\(["\']([^"\']+)["\']\)(.*)',receiver,re.I)
+    if m:
+        service=m.group(1)
+        suffix=m.group(2)
+        if suffix:
+            if not re.fullmatch(r'(?:\.[A-Za-z_]\w*)+',suffix):
+                return None
+            parts=[service]+[p for p in suffix.split(".") if p]
+            candidate="/".join(parts)
+        else:
+            candidate=service
+        return candidate if candidate in known_paths or any(p.startswith(candidate+"/") for p in known_paths) else None
+
+    m=re.fullmatch(r'game\.([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)',receiver,re.I)
+    if m:
+        candidate=m.group(1).replace(".","/")
+        return candidate if candidate in known_paths or any(p.startswith(candidate+"/") for p in known_paths) else None
+
+    return None
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--xml",required=True)
@@ -65,10 +112,12 @@ def main():
     args=ap.parse_args()
 
     root=ET.parse(args.xml).getroot()
+    walked=list(walk(root))
+    known_paths={path for _,path in walked}
     findings=[]
     summary=collections.Counter()
 
-    for item,path in walk(root):
+    for item,path in walked:
         cls=item.attrib.get("class","")
         if cls not in SCRIPT_CLASSES:
             continue
@@ -79,23 +128,71 @@ def main():
         lines=source.splitlines()
 
         for i,line in enumerate(lines,1):
-            for m in WAIT_FOR_CHILD.finditer(line):
-                args_text=m.group(1)
-                # WaitForChild(name, timeout): comma means timeout/extra argument exists.
-                bounded="," in args_text
-                if not bounded:
+            literal_matches=list(WAIT_LITERAL.finditer(line))
+            literal_spans=[m.span() for m in literal_matches]
+
+            for m in literal_matches:
+                rest=m.group("rest")
+                bounded="," in rest
+                if bounded:
+                    summary["boundedWaitForChild"]+=1
+                    continue
+
+                receiver=m.group("receiver")
+                child=m.group("name").replace("/","_")
+                receiver_path=resolve_receiver(path,receiver,known_paths)
+                target_path=(receiver_path+"/"+child) if receiver_path else None
+
+                if target_path and target_path in known_paths:
+                    resolution="serialized_present"
+                    severity="verified"
+                    summary["serializedPresentWaitForChild"]+=1
+                elif receiver_path and receiver_path in known_paths:
+                    resolution="serialized_parent_missing_child"
                     severity="high" if lane in {"auto_server","auto_client"} and indent_width(line)<=4 else "review"
-                    findings.append({
-                        "type":"unbounded_WaitForChild",
-                        "severity":severity,
-                        "lane":lane,
-                        "scriptPath":path,
-                        "scriptClass":cls,
-                        "line":i,
-                        "text":line.strip()[:500],
-                    })
-                    summary["unboundedWaitForChild"]+=1
-                    summary["severity_"+severity]+=1
+                    summary["serializedMissingWaitForChild"]+=1
+                else:
+                    resolution="dynamic_or_unresolved_receiver"
+                    severity="review"
+                    summary["dynamicOrUnresolvedWaitForChild"]+=1
+
+                findings.append({
+                    "type":"unbounded_WaitForChild",
+                    "severity":severity,
+                    "resolution":resolution,
+                    "receiver":receiver,
+                    "targetName":m.group("name"),
+                    "targetPath":target_path,
+                    "lane":lane,
+                    "scriptPath":path,
+                    "scriptClass":cls,
+                    "line":i,
+                    "text":line.strip()[:500],
+                })
+                summary["unboundedWaitForChild"]+=1
+                summary["severity_"+severity]+=1
+
+            # Non-literal / complex WaitForChild calls cannot be proven missing statically.
+            for m in WAIT_FOR_CHILD.finditer(line):
+                if any(a <= m.start() and m.end() <= b for a,b in literal_spans):
+                    continue
+                args_text=m.group(1)
+                if "," in args_text:
+                    summary["boundedWaitForChild"]+=1
+                    continue
+                findings.append({
+                    "type":"unbounded_WaitForChild",
+                    "severity":"review",
+                    "resolution":"nonliteral_or_complex",
+                    "lane":lane,
+                    "scriptPath":path,
+                    "scriptClass":cls,
+                    "line":i,
+                    "text":line.strip()[:500],
+                })
+                summary["unboundedWaitForChild"]+=1
+                summary["nonliteralOrComplexWaitForChild"]+=1
+                summary["severity_review"]+=1
 
             m=REPEAT_WAIT_UNTIL.search(line)
             if m:
@@ -164,7 +261,7 @@ def main():
         dedupe[(f["scriptPath"],f["line"],f["type"])]=f
     findings=list(dedupe.values())
     findings.sort(key=lambda f:(
-        0 if f["severity"]=="high" else 1,
+        {"high":0,"review":1,"verified":2}.get(f["severity"],3),
         0 if f["lane"] in {"auto_server","auto_client"} else 1,
         f["scriptPath"],f["line"],f["type"]
     ))
@@ -172,11 +269,20 @@ def main():
     summary["findings"]=len(findings)
     summary["autoStartFindings"]=sum(1 for f in findings if f["lane"] in {"auto_server","auto_client"})
     summary["highAttention"]=sum(1 for f in findings if f["severity"]=="high")
+    summary["verifiedSerializedWaits"]=sum(
+        1 for f in findings
+        if f.get("resolution")=="serialized_present"
+    )
+
+    repo_root=Path(__file__).resolve().parents[1]
+    build_state=json.loads(
+        (repo_root/"rhs/working/BUILD_STATE.json").read_text(encoding="utf-8")
+    )
 
     report={
-        "schemaVersion":1,
+        "schemaVersion":2,
         "scope":"Static triage of waits that can stall an individual startup script. Findings require runtime/context review; not every unbounded wait is a defect.",
-        "workingBuildSha256":"04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+        "workingBuildSha256":build_state["expectedWorkingSha256"],
         "summary":dict(sorted(summary.items())),
         "findings":findings,
     }
@@ -185,7 +291,7 @@ def main():
     print("=== RHS_STARTUP_WAIT_AUDIT ===")
     for k,v in sorted(summary.items()):
         print("SUMMARY",k,v)
-    for f in findings[:200]:
+    for f in [x for x in findings if x["severity"]!="verified"][:200]:
         print(
             "WAIT_RISK",
             f["severity"],
