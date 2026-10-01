@@ -100,6 +100,10 @@ jobs:
             --xml /tmp/rhs-working.rbxlx \
             --api-dump /tmp/API-Dump.json \
             --output /tmp/rhs-current-service-api.json
+          python3 scripts/rhs-current-property-api-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --api-dump /tmp/API-Dump.json \
+            --output /tmp/rhs-current-property-api.json
 
       - name: Build pinned binary parity tool
         shell: bash
@@ -225,6 +229,7 @@ jobs:
             /tmp/rhs-school-loop.json
             /tmp/rhs-current-api-classes.json
             /tmp/rhs-current-service-api.json
+            /tmp/rhs-current-property-api.json
             /tmp/rhs-luau-manifest.json
             /tmp/rhs-luau-syntax.json
           if-no-files-found: warn
