@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "a5a6a925a14c1ce01e1e7325be15eb7ad2640f5b0bcdbc87dce1dcd628b510a8",
+  "patchManifestSha256": "1e218bb5ce67c15544a7444efaf3e253e438f973c2961127caa0e8fa9367f499",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -84,14 +84,14 @@
         "targetPath": "ServerScriptService/CarSpawnScript"
       },
       {
-        "afterSourceSha256": "fbff925e1f3c535393f1941be33d750ef3672a8571035fb15a5073b81ec3278a",
+        "afterSourceSha256": "e2f37f551a573bf45aaeeb45bbd4828e1b5030938293d63a62f659de2e87e4c4",
         "beforeSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
         "class": "Script",
         "id": "harden-apartment-purchase-remote",
         "replacements": [
           {
             "expectedCount": 1,
-            "newSha256": "9cca011af036abe50aa73e2a36c2c00adcfad515c7007fa008285742cdde266c",
+            "newSha256": "1132a4c6b0817bbf2362abc73ac79dd4d44da2a586ca731eddd9f1f59f952222",
             "oldSha256": "c04d4b16f84ca2e85b4ccefcd3eef3b8b922e00863a27ff88438cad75006bc05"
           }
         ],
@@ -131,5 +131,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde"
+  "workingSha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40"
 }
