@@ -1,0 +1,37 @@
+name: RHS Education Adapter
+
+on:
+  push:
+    branches:
+      - "rebuild/rhs-education-adapter-*"
+    paths:
+      - "rhs/education/**"
+      - "docs/RHS_EDUCATION_ADAPTER.md"
+      - "scripts/verify-rhs-education-adapter.py"
+      - ".github/workflows/rhs-education-adapter.yml"
+  pull_request:
+    paths:
+      - "rhs/education/**"
+      - "docs/RHS_EDUCATION_ADAPTER.md"
+      - "scripts/verify-rhs-education-adapter.py"
+      - ".github/workflows/rhs-education-adapter.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact RHS baseline remains unchanged
+        run: python3 scripts/verify-rhs-baseline.py
+      - name: Preserve adapter scope
+        run: python3 scripts/verify-rhs-education-adapter.py
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Run deterministic education engine tests
+        run: lua5.4 rhs/education/tests/education_engine_spec.lua
