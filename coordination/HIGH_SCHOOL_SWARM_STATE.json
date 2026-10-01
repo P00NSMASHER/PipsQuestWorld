@@ -1,75 +1,101 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T21:12:48Z",
+  "updatedAt": "2026-10-01T21:50:16Z",
   "protocolCommit": "859152fba4c3c5c10c48b7dbe7fb88f674a003a4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
   "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "currentPlayableStage": "spawn -> authoritative school clock/period",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 5,
+  "currentPlayableStage": "Runtime-playable evidence remains validated through spawn -> authoritative school clock/period. Canonical exact-head deterministic integration is now green through attend class -> server-authoritative activity -> exactly-once durable progression -> free roam -> save/rejoin restore; post-integration smoke/runtime playability remains to be asserted.",
+  "runtimeValidatedThrough": "spawn -> authoritative school clock/period",
+  "headlessExactHeadValidatedThrough": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
+  "cyclesSinceLastEndToEndPlayableAdvancement": 6,
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 2,
+  "unintegratedProductCandidateCount": 1,
   "wipSlots": {
     "base": {
       "branch": "rebuild/high-school-foundation",
-      "sha": "c4cca89d9f8c7684a5df15c4143ea237672e5ef4",
-      "status": "PASS",
-      "exactHeadCiRunId": 36904566927
-    },
-    "upstream": {
-      "branch": "rebuild/high-school-class-education-reentry",
-      "sha": "5e7665702f0d680da3e205b5b7009e84f84f7617",
-      "status": "PASS_EXACT_HEAD_READY",
-      "owner": "Roblox High School Class & Education",
-      "requiredBaseSha": "c4cca89d9f8c7684a5df15c4143ea237672e5ef4",
-      "lineage": "ahead_1_behind_0",
+      "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "status": "PASS_EXACT_HEAD_INTEGRATED",
       "exactHeadCi": [
         {
-          "runId": 36927085654,
-          "workflow": "High School Class Education Guards",
+          "runId": 36931270884,
+          "workflow": "High School Foundation Static Guards",
           "event": "push",
           "conclusion": "success"
         },
         {
-          "runId": 36927091511,
+          "runId": 36931127438,
+          "workflow": "High School Foundation Static Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36931127433,
           "workflow": "High School Class Education Guards",
           "event": "pull_request",
           "conclusion": "success"
         },
         {
-          "runId": 36927091472,
-          "workflow": "High School Foundation Static Guards",
+          "runId": 36931127442,
+          "workflow": "High School Progression Guards",
           "event": "pull_request",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36931123042,
+          "workflow": "High School Progression Guards",
+          "event": "push",
           "conclusion": "success"
         }
       ]
     },
+    "upstream": null,
     "downstream": null
   },
   "validatedProducerEvidence": {
-    "classEducation": "Fresh replay on current Foundation validates class attendance/session lifecycle and server-authoritative activity semantics, but does not advance the canonical playable-stage KPI until downstream progression and integration complete."
+    "classEducation": {
+      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "result": "PASS",
+      "details": "Canonical school/** head preserves deterministic class entry/exit, server-authoritative activity validation, stale replay rejection, and exactly-once class completion."
+    },
+    "progressionPersistence": {
+      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "result": "PASS",
+      "details": "Versioned compare-and-swap persistence preserves concurrent completions, suppresses duplicate completion replay, restores committed progression after reopen/rejoin, and fails closed on persistence errors."
+    },
+    "integration": {
+      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "result": "PASS_HEADLESS_EXACT_HEAD",
+      "details": "Class completion is wired through the durable progression gate. Persistence failure withholds free roam; the same authoritative submission can retry; durable commit releases free roam; replay remains exactly once."
+    }
   },
   "currentBlockers": [
     {
-      "id": "PROGRESSION_CANONICAL_REHOME_REQUIRED",
-      "owner": "Roblox High School Progression & Mobile",
-      "exitCriterion": "Create at most one downstream candidate descended from rebuild/high-school-class-education-reentry@5e7665702f0d680da3e205b5b7009e84f84f7617, rehome eligible progression/persistence semantics into school/** only, map no highschool/** runtime path, and obtain exact-head deterministic CI PASS."
+      "id": "POST_INTEGRATION_SMOKE_REQUIRED",
+      "owner": "Roblox High School Integration Smoke",
+      "exitCriterion": "Read canonical rebuild/high-school-foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27, verify the exact SHA has no newer commit, reuse the green exact-head Foundation/Class/Progression evidence when unchanged, run only any smoke-owned deterministic checks not already covered, and publish an exact-SHA smoke PASS receipt without product-code churn."
     },
     {
-      "id": "PROGRESSION_CANONICAL_EXACTLY_ONCE_RESTORE",
-      "owner": "Roblox High School Progression & Mobile",
-      "exitCriterion": "On the canonical school/** descendant, prove exactly-once completion under duplicate/concurrent submission, return to free roam, and save/rejoin restoration of the committed result before Integration consumes it."
+      "id": "RUNTIME_PLAYABILITY_LOCAL_ONLY",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "LOCAL_ONLY_REQUIRED",
+      "exitCriterion": "When an authorized local/background Roblox Studio path is available, verify the canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 slice in-session: spawn, observe authoritative period, attend one class, complete one server-authoritative activity, receive one durable progression result, return to free roam, rejoin, and observe restored committed progression. Do not publish Roblox."
     }
   ],
   "resolvedThisCycle": [
     {
-      "id": "CLASS_EDUCATION_STALE_REPLAY_AFTER_LEAVE",
-      "resolution": "Replayed unchanged Class/Education product semantics onto current Foundation exact head while preserving Foundation school/** CI scope.",
-      "sha": "5e7665702f0d680da3e205b5b7009e84f84f7617"
+      "id": "PROGRESSION_CANONICAL_REHOME_REQUIRED",
+      "resolution": "Canonical progression/persistence was implemented under school/** only on a descendant of the exact-green Class/Education head; no highschool/** runtime path was mapped.",
+      "sha": "ba4d2b2ee7df3e2486ebdc54f2a3a0978c069c50"
     },
     {
-      "id": "CLASS_EDUCATION_STALE_BASE",
-      "resolution": "New Class/Education head is one commit ahead and zero behind Foundation c4cca89d9f8c7684a5df15c4143ea237672e5ef4 with exact-head CI PASS."
+      "id": "PROGRESSION_CANONICAL_EXACTLY_ONCE_RESTORE",
+      "resolution": "Exact-head tests prove duplicate suppression, concurrent-writer preservation, failed-save rollback, save/rejoin restoration, and free-roam gating on durable commit.",
+      "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27"
+    },
+    {
+      "id": "CANONICAL_VERTICAL_SLICE_INTEGRATION",
+      "resolution": "Foundation was fast-forwarded without creating a new merge SHA to the already-certified integrated head 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Canonical PRs #20 and #31 are merged/closed and no open PR remains."
     }
   ],
   "unchangedFingerprintRule": {
@@ -98,5 +124,12 @@
     ],
     "workAllowed": false
   },
-  "nextMilestone": "Progression & Mobile may consume the stable Class/Education interface only by creating one school/** descendant candidate from 5e7665702f0d680da3e205b5b7009e84f84f7617; exact-head progression/persistence PASS is required before Integration."
+  "canonicalPullRequests": {
+    "integratedOrClosed": [
+      20,
+      31
+    ],
+    "openCount": 0
+  },
+  "nextMilestone": "Integration Smoke consumes canonical Foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27. If exact SHA is unchanged, reuse exact-head CI and avoid product-code churn; only remaining playability assertion is smoke/local runtime evidence."
 }
