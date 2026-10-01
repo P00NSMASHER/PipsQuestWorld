@@ -119,17 +119,36 @@ def probe(asset_id: str, timeout: float, retries: int, interval: float) -> dict:
 
     payload = last.get("payload") or {}
     if last["classification"] == "metadata_public":
+        asset = payload.get("asset") if isinstance(payload.get("asset"), dict) else {}
+        creator = payload.get("creator") if isinstance(payload.get("creator"), dict) else {}
+        product = (
+            payload.get("creatorStoreProduct")
+            if isinstance(payload.get("creatorStoreProduct"), dict)
+            else {}
+        )
         last["metadata"] = {
-            "name": None,
-            "assetType": None,
-            "creator": None,
-            "description": None,
-            "moderationStatus": None,
-            "isPublicDomain": None,
+            "name": asset.get("name") or asset.get("title"),
+            "title": asset.get("title"),
+            "assetTypeId": asset.get("assetTypeId"),
+            "audioType": asset.get("audioType"),
+            "durationSeconds": asset.get("durationSeconds"),
+            "artist": asset.get("artist"),
+            "description": asset.get("description"),
+            "createTime": asset.get("createTime"),
+            "updateTime": asset.get("updateTime"),
+            "creator": {
+                "resource": creator.get("creator"),
+                "userId": creator.get("userId"),
+                "groupId": creator.get("groupId"),
+                "name": creator.get("name"),
+                "verified": creator.get("verified"),
+            },
+            "creatorStore": {
+                "purchasable": product.get("purchasable"),
+                "purchasePrice": product.get("purchasePrice"),
+            },
         }
-        # Preserve the small public response temporarily so the exact response
-        # schema can be reviewed before field extraction is treated as evidence.
-        last["publicMetadataPayload"] = payload
+        last["publicMetadataPayload"] = None
     else:
         last["metadata"] = None
         last["publicMetadataPayload"] = None
@@ -200,7 +219,7 @@ def main() -> int:
             "rank=" + str(result["impactRank"]),
             "category=" + str(result["category"]),
             "name=" + json.dumps(meta.get("name"), ensure_ascii=False),
-            "assetType=" + json.dumps(meta.get("assetType"), ensure_ascii=False),
+            "assetTypeId=" + json.dumps(meta.get("assetTypeId"), ensure_ascii=False),
             "creator=" + json.dumps(creator.get("name"), ensure_ascii=False),
             "creatorId=" + json.dumps(creator.get("id"), ensure_ascii=False),
         )
