@@ -150,7 +150,7 @@ def main():
     report={
         "schemaVersion":1,
         "scope":"Static school-loop acceptance preflight only; runtime Gates A/B remain required.",
-        "workingBuildSha256":"04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+        "workingBuildSha256":json.loads((Path(__file__).resolve().parents[1]/"rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))["expectedWorkingSha256"],
         "summary":{
             "requiredChecks":sum(1 for r in results.values() if r["required"]),
             "requiredPresent":sum(1 for r in results.values() if r["required"] and r["present"]),
