@@ -33,11 +33,25 @@ jobs:
           python3 scripts/rhs-core-remote-hardening-contract.py \
             --xml /tmp/rhs-working.rbxlx \
             --output /tmp/rhs-core-remote-hardening.json
+      - name: Re-run remote security audit on candidate
+        run: |
+          python3 scripts/rhs-remote-security-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-remote-security.json \
+            --fail-on-high
+      - name: Re-run remote trust audit on candidate
+        run: |
+          python3 scripts/rhs-remote-trust-audit.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-remote-trust.json
       - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rhs-core-remote-hardening
-          path: /tmp/rhs-core-remote-hardening.json
+          path: |
+            /tmp/rhs-core-remote-hardening.json
+            /tmp/rhs-remote-security.json
+            /tmp/rhs-remote-trust.json
           if-no-files-found: warn
           retention-days: 30
