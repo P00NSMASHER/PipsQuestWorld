@@ -10,10 +10,17 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-URL = "https://assetdelivery.roblox.com/v1/asset/?id={asset_id}"
+URL = "https://assetdelivery.roblox.com/v2/assetId/{asset_id}"
 
-def classify_status(status: int | None, error: str | None) -> str:
+def classify_status(status: int | None, error: str | None, body: bytes) -> str:
     if status in (200, 206):
+        if body:
+            try:
+                payload=json.loads(body.decode("utf-8","replace"))
+                if isinstance(payload,dict) and payload.get("errors"):
+                    return "api_error_payload"
+            except Exception:
+                pass
         return "public_anonymous"
     if status == 401:
         return "auth_required"
@@ -35,9 +42,8 @@ def probe(asset_id: str, timeout: float) -> dict:
     req=urllib.request.Request(
         URL.format(asset_id=asset_id),
         headers={
-            "User-Agent":"PipsQuestWorld-RHS-Compatibility-Audit/1.0",
-            "Range":"bytes=0-63",
-            "Accept":"*/*",
+            "User-Agent":"PipsQuestWorld-RHS-Compatibility-Audit/2.0",
+            "Accept":"application/json,*/*",
         },
         method="GET",
     )
@@ -45,7 +51,7 @@ def probe(asset_id: str, timeout: float) -> dict:
     final_url=None
     content_type=None
     content_length=None
-    first_bytes=""
+    body=b""
     error=None
     started=time.monotonic()
     try:
@@ -54,28 +60,54 @@ def probe(asset_id: str, timeout: float) -> dict:
             final_url=resp.geturl()
             content_type=resp.headers.get("Content-Type")
             content_length=resp.headers.get("Content-Length")
-            first_bytes=resp.read(64).hex()
+            body=resp.read(4096)
     except urllib.error.HTTPError as exc:
         status=exc.code
         final_url=exc.geturl()
         content_type=exc.headers.get("Content-Type") if exc.headers else None
         content_length=exc.headers.get("Content-Length") if exc.headers else None
         try:
-            first_bytes=exc.read(64).hex()
+            body=exc.read(4096)
         except Exception:
             pass
         error=str(exc)
     except (urllib.error.URLError,socket.timeout,TimeoutError,OSError) as exc:
         error=str(exc)
     elapsed_ms=round((time.monotonic()-started)*1000)
+
+    locations=0
+    response_errors=[]
+    if body:
+        try:
+            payload=json.loads(body.decode("utf-8","replace"))
+            if isinstance(payload,dict):
+                raw_locations=payload.get("locations")
+                if isinstance(raw_locations,list):
+                    locations=len(raw_locations)
+                raw_errors=payload.get("errors")
+                if isinstance(raw_errors,list):
+                    response_errors=[
+                        {
+                            "code": e.get("code"),
+                            "message": e.get("message"),
+                        }
+                        for e in raw_errors[:10]
+                        if isinstance(e,dict)
+                    ]
+        except Exception:
+            pass
+
     return {
         "assetId":asset_id,
-        "classification":classify_status(status,error),
+        "classification":classify_status(status,error,body),
         "httpStatus":status,
         "finalUrl":final_url,
         "contentType":content_type,
         "contentLengthHeader":content_length,
-        "firstBytesHex":first_bytes,
+        "responseBytesRead":len(body),
+        "locationsReturned":locations,
+        "responseErrors":response_errors,
+        "bodyPrefix":body[:256].decode("utf-8","replace"),
         "elapsedMs":elapsed_ms,
         "error":error,
     }
@@ -107,7 +139,10 @@ def main() -> int:
                     "finalUrl":None,
                     "contentType":None,
                     "contentLengthHeader":None,
-                    "firstBytesHex":"",
+                    "responseBytesRead":0,
+                    "locationsReturned":0,
+                    "responseErrors":[],
+                    "bodyPrefix":"",
                     "elapsedMs":None,
                     "error":repr(exc),
                 }
@@ -140,14 +175,15 @@ def main() -> int:
     ))
 
     report={
-        "schemaVersion":1,
-        "scope":"Anonymous public asset-delivery probe only. A non-200 result does not prove the asset fails inside an authorized Roblox experience.",
+        "schemaVersion":2,
+        "scope":"Anonymous probe against Roblox's current documented asset-delivery v2 endpoint. A non-200 result still does not prove authorized in-experience loading will fail.",
         "workingBuildSha256":asset_map["workingBuildSha256"],
         "probe":{
-            "endpoint":"https://assetdelivery.roblox.com/v1/asset/?id=<assetId>",
+            "endpoint":"https://assetdelivery.roblox.com/v2/assetId/<assetId>",
+            "apiGeneration":"v2-current",
             "workers":args.workers,
             "timeoutSeconds":args.timeout,
-            "range":"bytes=0-63",
+            "maxResponseBytes":4096,
         },
         "summary":{
             "probed":len(results),
@@ -163,6 +199,7 @@ def main() -> int:
     Path(args.output).write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 
     print("=== RHS_ASSET_PUBLIC_PROBE ===")
+    print("ENDPOINT_V2",URL.format(asset_id="<assetId>"))
     print("PROBED",len(results))
     for k,v in sorted(classes.items()):
         print("CLASSIFICATION",k,v)
@@ -175,6 +212,7 @@ def main() -> int:
             r["assetId"],
             r["classification"],
             "http="+str(r["httpStatus"]),
+            "locations="+str(r["locationsReturned"]),
             "refs="+str(r["referenceCount"]),
             "priorities="+json.dumps(r["priorities"],sort_keys=True,separators=(",",":")),
         )
