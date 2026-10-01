@@ -1,69 +1,86 @@
 {
-  "schemaVersion": 2,
-  "cycle": "2026-10-01T16:02Z",
+  "schemaVersion": 3,
+  "cycle": "2026-10-01T18:04Z",
   "lane": "Roblox High School DevEx",
-  "result": "PASS",
+  "result": "PASS_WITH_BLOCKED_SECONDARY_REPAIR",
   "resourcePath": "GITHUB_CLOUD_ONLY",
   "localOnlyRequired": false,
-  "defect": {
-    "id": "DEVEX_RECEIPT_STALE_AFTER_STATE_BOOTSTRAP_AND_CLASS_EDUCATION_ADVANCE",
-    "rootCause": "The DevEx receipt still claimed HIGH_SCHOOL_SWARM_STATE.json was missing after Control Tower created it, and it did not expose the live canonical Class/Education descendant and exact-head CI evidence.",
-    "materialImpact": "Control Tower/support lanes could consume stale blocker/evidence context and keep CLASS_EDUCATION_CANONICAL_LINEAGE_NOT_ESTABLISHED active after a candidate existed."
-  },
-  "before": {
-    "devExReceiptBlobSha": "e0173bbb5982196a141431f0ff0028aaf612a0a9",
-    "sharedStateBlobSha": "69d3987281db6303228bb93a0cf024b5919f6e71",
-    "sharedStateFoundationSha": "f763b243f4ec22951f432e66f807f187c960583f",
-    "sharedStateClassEducationStatus": "ACTIVE_WITHOUT_CANONICAL_BRANCH"
-  },
-  "afterEvidence": {
-    "foundation": {
-      "branch": "rebuild/high-school-foundation",
-      "sha": "f763b243f4ec22951f432e66f807f187c960583f",
-      "workflow": ".github/workflows/school-pivot-ci.yml",
-      "runId": 36874068766,
-      "conclusion": "success",
-      "canonicalSourcePath": "school/**",
-      "highschoolPathPresent": false
+  "canonicalSourceRoot": "school/**",
+  "fixedDefect": {
+    "id": "DEVEX_RECEIPT_SHA_DRIFT",
+    "rootCause": "The DevEx receipt still described Foundation f763b243f4ec22951f432e66f807f187c960583f and Class/Education e707d42df39104627162f85fa0093824dfeddd53 after both live canonical WIP branches advanced.",
+    "materialImpact": "A support consumer could treat stale exact-head evidence as current and miss that the shared state is also behind live branch heads.",
+    "filesChanged": [
+      "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json"
+    ],
+    "before": {
+      "receiptBlobSha": "90f21c37026958fa801190c3aea0001552a439bc",
+      "foundationSha": "f763b243f4ec22951f432e66f807f187c960583f",
+      "classEducationSha": "e707d42df39104627162f85fa0093824dfeddd53"
     },
-    "classEducation": {
-      "branch": "rebuild/high-school-class-education-v1",
-      "sha": "e707d42df39104627162f85fa0093824dfeddd53",
-      "relationToFoundation": {
-        "status": "ahead",
-        "aheadBy": 1,
-        "behindBy": 0,
-        "mergeBaseSha": "f763b243f4ec22951f432e66f807f187c960583f"
+    "after": {
+      "foundation": {
+        "branch": "rebuild/high-school-foundation",
+        "sha": "3119da7406043f8e49e40cc82b57ab91cbec998d",
+        "exactHeadRunId": 36896780349,
+        "conclusion": "success"
       },
-      "workflow": ".github/workflows/high-school-class-education-ci.yml",
-      "runId": 36876877908,
-      "jobId": 110418452794,
-      "conclusion": "success",
-      "verifiedSteps": [
-        "Preserve canonical Foundation invariants",
-        "Run Education Engine deterministic tests",
-        "Run Class Education deterministic tests"
-      ],
-      "handoff": "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
-    }
+      "classEducation": {
+        "branch": "rebuild/high-school-class-education-reentry",
+        "sha": "5b8a82593beeffb02a58b0cebcdecd7de5ae4e4d",
+        "exactHeadRunIds": [36900266119, 36900266231],
+        "conclusion": "success",
+        "semanticFix": "reject stale replay after class exit"
+      },
+      "progressionMobile": {
+        "branch": "rebuild/high-school-progression-mobile-v1",
+        "sha": "1a253371d5cc3015ce3da5a957118b4525cf1f63",
+        "exactHeadRunId": 36896855121,
+        "conclusion": "success",
+        "canonicalConsumption": "BLOCKED_PARALLEL_HIGHSCHOOL_ROOT"
+      }
+    },
+    "verification": {
+      "method": "live Git refs plus GitHub Actions exact head_sha queries",
+      "result": "PASS"
+    },
+    "expectedBenefit": "Prevents stale DevEx evidence from authorizing or blocking downstream work at obsolete SHAs and gives Control Tower the live heads needed to refresh authoritative shared state.",
+    "rollbackCriterion": "Supersede this receipt when any recorded live branch head changes or canonical source root changes.",
+    "nextOwner": "Roblox High School Control Tower"
   },
-  "filesChanged": [
-    "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json"
-  ],
-  "verification": {
-    "status": "PASS",
-    "exactProducerSha": "e707d42df39104627162f85fa0093824dfeddd53",
-    "workflowRun": 36876877908,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/36876877908",
-    "job": "deterministic-class-education",
-    "jobId": 110418452794
+  "secondaryDefect": {
+    "id": "CANONICAL_CI_TESTS_NONCANONICAL_HIGHSCHOOL_ROOT",
+    "status": "WRITE_PATH_BLOCKED",
+    "reproduced": true,
+    "beforeFoundationSha": "3119da7406043f8e49e40cc82b57ab91cbec998d",
+    "evidence": [
+      ".github/workflows/school-pivot-ci.yml watches highschool/** even though protocol canonicalSourceRoot is school/**",
+      "the workflow installs Lua 5.4 and runs highschool/tests specs on canonical Foundation CI",
+      "push trigger wildcard rebuild/high-school-* causes canonical static guards to run on speculative highschool-root producer pushes",
+      "Foundation run 36896780349 and Progression run 36896855121 are direct examples of this added CI path"
+    ],
+    "measurableWaste": "At least two observed Actions runs were created by the highschool-path CI broadening, and canonical Foundation runs now install Lua solely to scan a noncanonical source tree.",
+    "intendedRepair": {
+      "path": ".github/workflows/school-pivot-ci.yml",
+      "delta": "Remove highschool/** paths, restore push branches to main + rebuild/high-school-foundation, remove highschool Lua-spec installation/execution, retain school/** and verify-school-pivot.py guards.",
+      "expectedAfter": "Only canonical school/** changes and the canonical Foundation branch consume the shared static-guard workflow; producer-specific workflows own their exact-head tests."
+    },
+    "writeAttempts": [
+      "GitHub contents API update_file",
+      "GitHub Git-data create_blob/create_tree/create_commit/update_ref"
+    ],
+    "writeResult": "BLOCKED_BY_CONNECTOR_SAFETY",
+    "rollbackCriterion": "If canonical source root intentionally returns to highschool/**, do not apply this repair.",
+    "nextOwner": "DevEx on next run if workflow-file GitHub write is permitted; otherwise Control Tower should treat highschool-root CI as non-authoritative waste."
   },
-  "foundationCiSpecialDuty": {
-    "status": "PASS_FOR_CURRENT_CANONICAL_LAYOUT",
-    "reason": "The live canonical project is mapped under school/**, not highschool/**. school/** changes on rebuild/high-school-foundation already trigger exact-head CI, and run 36874068766 is green. Adding a speculative highschool/** path now would advance Foundation solely for unused-path coverage and unnecessarily invalidate the current Class/Education lineage, so no workflow churn was made."
-  },
-  "expectedBenefit": "Removes stale DevEx blocker data and gives Control Tower one GitHub-visible exact-SHA handoff showing that the current Class/Education candidate is a clean descendant of Foundation with green deterministic CI.",
-  "rollbackCriterion": "Revert/supersede this receipt if rebuild/high-school-class-education-v1 moves from e707d42df39104627162f85fa0093824dfeddd53, if run 36876877908 is invalidated, or if Control Tower changes canonical direction.",
-  "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "Refresh HIGH_SCHOOL_SWARM_STATE.json from live evidence and evaluate e707d42df39104627162f85fa0093824dfeddd53 against the Class/Education semantic exit criterion; advance or assign one concrete blocker."
+  "sharedStateDrift": {
+    "status": "STALE",
+    "stateFoundationSha": "f763b243f4ec22951f432e66f807f187c960583f",
+    "liveFoundationSha": "3119da7406043f8e49e40cc82b57ab91cbec998d",
+    "stateClassEducationSha": "5031708afe609e8c7ba6b33496b39869792c2b09",
+    "liveClassEducationSha": "5b8a82593beeffb02a58b0cebcdecd7de5ae4e4d",
+    "stateProgressionSha": "2da9d6b17f9cd2b108948c5d5a462e05088ded54",
+    "liveProgressionSha": "1a253371d5cc3015ce3da5a957118b4525cf1f63",
+    "writer": "Roblox High School Control Tower"
+  }
 }
