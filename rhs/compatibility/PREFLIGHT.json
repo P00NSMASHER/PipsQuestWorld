@@ -156,13 +156,19 @@
       "policy": "Client-supplied car instances must equal the server-tracked Workspace vehicle for the requesting player."
     },
     "classActivityContract": {
-      "status": "PENDING_REVALIDATION",
-      "evidenceRunId": null,
+      "status": "PASS",
+      "evidenceRunId": 36885944756,
+      "staticPreflightRunId": 36885944835,
+      "candidateSha256": "ce87a6f86fc662f6ea3f1cd077371c57e9e2ccfda130a31365c3dc91ba071731",
       "serverOwner": "ServerScriptService/Time/ScheduleScript",
       "clientView": "StarterGui/ClassNotification/LocalScript",
       "answerKeyClientVisible": false,
       "idempotentCompletion": true,
       "dynamicScheduleBinding": true,
+      "lunchExcluded": true,
+      "submissionRevalidatesPeriod": true,
+      "submissionRevalidatesSubject": true,
+      "submissionRequiresSubjectZone": true,
       "abuseResistance": {
         "perPlayerThrottleSeconds": 0.25,
         "cycleStateReset": true,
@@ -171,8 +177,9 @@
         "duplicateReplayBeforeThrottle": true,
         "throttleBeforeZoneCheck": true
       },
+      "genericRemoteAuditDisposition": "delegated handler remains medium in shallow generic window scan; dedicated contract proves throttle/bounds in delegated function",
       "runtimeVerified": false,
-      "scope": "Candidate changed; dedicated contract and full static preflight must rerun before PASS is recorded."
+      "scope": "Static contract and full consolidated preflight PASS; Roblox Studio runtime Gates A/B remain required."
     }
   },
   "dependencyProbe": {
