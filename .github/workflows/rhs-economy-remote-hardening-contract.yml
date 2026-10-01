@@ -1,0 +1,58 @@
+name: RHS Economy Remote Hardening Contract
+
+on:
+  push:
+    branches:
+      - hardening/rhs-economy-remote-trust-v5
+    paths:
+      - "scripts/rhs-economy-remote-hardening-contract.py"
+      - ".github/workflows/rhs-economy-remote-hardening-contract.yml"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+  pull_request:
+    paths:
+      - "scripts/rhs-economy-remote-hardening-contract.py"
+      - ".github/workflows/rhs-economy-remote-hardening-contract.yml"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify immutable baseline
+        run: python3 scripts/verify-rhs-baseline.py
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+      - name: Convert working candidate
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+      - name: Verify economy server trust contract
+        run: |
+          python3 scripts/rhs-economy-remote-hardening-contract.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --manifest rhs/compatibility/PATCH_MANIFEST.json \
+            --build-state rhs/working/BUILD_STATE.json \
+            --output /tmp/rhs-economy-remote-hardening.json
+      - name: Upload contract report
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-economy-remote-hardening
+          path: /tmp/rhs-economy-remote-hardening.json
+          if-no-files-found: error
+          retention-days: 30
