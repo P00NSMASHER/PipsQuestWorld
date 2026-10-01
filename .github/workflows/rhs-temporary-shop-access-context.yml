@@ -125,6 +125,47 @@ jobs:
                       print("CHILD",child.attrib.get("class",""),item_name(child))
           print("=== END_SHOP_RELATED_WORKSPACE_METADATA ===")
 
+          print("=== SHOP_ZONE_AND_DIALOG_ANCHORS ===")
+          anchor_name_tokens=("dialog","npc","shop","cafeter","club","snack","cafe","umbra","wendy","alyssa","dexter","lunch")
+          for item,path in walk(root):
+              if not path.startswith("Workspace/"):
+                  continue
+              name=item_name(item)
+              children=[item_name(child) for child in item.findall("Item")]
+              interesting_children=[nm for nm in children if any(tok in nm.lower() for tok in anchor_name_tokens)]
+              if interesting_children or any(tok in name.lower() for tok in anchor_name_tokens):
+                  cls=item.attrib.get("class","")
+                  # Keep this focused on potential spatial/interaction anchors.
+                  if cls in {"Model","Part","MeshPart","Folder","StringValue","ObjectValue","Vector3Value","CFrameValue"} or interesting_children:
+                      print("ANCHOR",cls,path,"name="+name)
+                      for nm in interesting_children[:40]:
+                          print("ANCHOR_CHILD",nm)
+
+          print("=== POSITION_IS_INSIDE_AREA_MODULE ===")
+          for item,path in walk(root):
+              if path=="ReplicatedStorage/Modules/PositionIsInsideArea":
+                  source=prop_text(item,"Source")
+                  print("MODULE_CLASS",item.attrib.get("class",""))
+                  for n,line in enumerate(source.splitlines(),1):
+                      print(f"{n:04d}: {line}")
+                  break
+
+          print("=== AREA_NAME_REFS ===")
+          area_rx=re.compile(r'PositionIsInsideArea\\s*\\)?\\s*\\([^\\n]*["\\\']([^"\\\']+)["\\\']')
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if cls not in script_classes:
+                  continue
+              source=prop_text(item,"Source")
+              if "PositionIsInsideArea" not in source:
+                  continue
+              print("AREA_REF_SCRIPT",cls,path)
+              for n,line in enumerate(source.splitlines(),1):
+                  if "PositionIsInsideArea" in line:
+                      print(f"{n:04d}: {line}")
+          print("=== END_AREA_NAME_REFS ===")
+          print("=== END_SHOP_ZONE_AND_DIALOG_ANCHORS ===")
+
           print("=== SHOP_REMOTE_INVENTORY ===")
           for item,path in walk(root):
               cls=item.attrib.get("class","")
