@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "b70ca7ec7f4d1ebeaf92e14618919a53f1735729d5e7e77702b536bba0e58bb2",
+  "patchManifestSha256": "4c2a119b6c7773767bff7547fe6687f1fa517386bd48a0a22d5f7da911760555",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -176,7 +176,7 @@
         "targetPath": "ServerScriptService/CustomHouseScript_NEW"
       },
       {
-        "afterSourceSha256": "36f1910ab0a7e9d8797d76cf988982eabaece234fbf75a2fcff92468fe28d8cb",
+        "afterSourceSha256": "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a",
         "beforeSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
         "class": "Script",
         "id": "harden-economy-purchase-remotes",
@@ -195,6 +195,26 @@
             "expectedCount": 1,
             "newSha256": "b243d3be80113b24cc9e321486a8719c6b8a7c458eb0c5d73a39d82c3152d693",
             "oldSha256": "f9aae00dd8afc2556696e70913aeb55ed9a5d67cf1a8ea86de29f0bf28abcea9"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "0a147886c7ec7b11de9f4db6a72918f693a2fe0bf30704d703ad15818aca94b1",
+            "oldSha256": "8132c1244090d6a60d8324c72988ee9ea826d215e0d193b78f80c0ec6b46ed23"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "83e4f21895aea48ca762c1502927b27d6ed501433037fdaa14746d2fafe5d2af",
+            "oldSha256": "df854d674b9732fdbe9e734344a60836c53677cdc11c90fbc579a910ca68b162"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "ae678f946bc154beb53c0a467dc2de11a98ccc2a5e289f2bf645fa425f4d83e7",
+            "oldSha256": "1498c871be6b57721a1ed97cc8a82264d2f204c0c7ebd1abbe8a47f9b1997c41"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "d35eafddd9d5416f5b31f9d7e93c5b6525c36a0c53e9093174b0a3dc5940a3bb",
+            "oldSha256": "32dd08a7ac2fa927e8f04c82c4daacd7f660ac3ecc80fd13c288c3bd9ac64532"
           }
         ],
         "targetPath": "ServerScriptService/ItemBuyScript"
@@ -204,5 +224,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "ee429e7fabe1ca6c12d708a81d060405421b02025c6dc70029da2f5572e700ce"
+  "workingSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf"
 }

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "ee429e7fabe1ca6c12d708a81d060405421b02025c6dc70029da2f5572e700ce",
+  "expectedWorkingSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
   "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
