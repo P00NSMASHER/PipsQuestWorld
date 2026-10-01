@@ -49,9 +49,15 @@ jobs:
           python3 scripts/rhs-asset-probe-reclassify.py \
             --input /tmp/rhs-asset-survivability/rhs-asset-public-probe.json \
             --output /tmp/rhs-asset-public-probe-corrected.json
+          python3 scripts/rhs-asset-transient-reprobe.py \
+            --input /tmp/rhs-asset-public-probe-corrected.json \
+            --output /tmp/rhs-asset-public-probe-resolved.json \
+            --timeout 10 \
+            --retries 5 \
+            --interval 1.0
           python3 scripts/rhs-asset-impact-report.py \
             --map /tmp/rhs-asset-survivability/rhs-asset-reference-map.json \
-            --probe /tmp/rhs-asset-public-probe-corrected.json \
+            --probe /tmp/rhs-asset-public-probe-resolved.json \
             --output /tmp/rhs-asset-impact-corrected.json \
             --top 100
 
@@ -72,6 +78,7 @@ jobs:
           path: |
             /tmp/rhs-asset-metadata.json
             /tmp/rhs-asset-public-probe-corrected.json
+            /tmp/rhs-asset-public-probe-resolved.json
             /tmp/rhs-asset-impact-corrected.json
           if-no-files-found: error
           retention-days: 30
