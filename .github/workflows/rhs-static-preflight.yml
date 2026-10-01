@@ -60,7 +60,8 @@ jobs:
             --output /tmp/rhs-avatar-mobile.json
           python3 scripts/rhs-remote-security-audit.py \
             --xml /tmp/rhs-working.rbxlx \
-            --output /tmp/rhs-remote-security.json
+            --output /tmp/rhs-remote-security.json \
+            --fail-on-high
           python3 scripts/rhs-remote-trust-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --output /tmp/rhs-remote-trust.json
