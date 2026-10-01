@@ -123,6 +123,11 @@ def main() -> int:
     if secret_rx.search(client):
         errors.append("client class activity leaks an answer-key identifier")
 
+    plr_decl = client.find("local plr = game.Players.LocalPlayer")
+    activity_fn = client.find("local function showClassActivity(payload)")
+    if plr_decl < 0 or activity_fn < 0 or plr_decl > activity_fn:
+        errors.append("client activity closures are not bound to the local player declaration")
+
     public_fn = re.search(
         r"local function classActivityPublicPayload\(\)(.*?)\nend",
         server,
