@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40",
+  "expectedWorkingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
   "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
@@ -12,6 +12,7 @@
     "sandbox-legacy-gameanalytics",
     "harden-car-instance-remotes",
     "harden-apartment-purchase-remote",
-    "harden-outfit-remote-inputs"
+    "harden-outfit-remote-inputs",
+    "harden-house-furniture-remotes"
   ]
 }

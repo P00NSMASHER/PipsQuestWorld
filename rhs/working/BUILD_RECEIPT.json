@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "1e218bb5ce67c15544a7444efaf3e253e438f973c2961127caa0e8fa9367f499",
+  "patchManifestSha256": "8a14ac143be9691d979da4e76defb1ca9ba7ddd81eca978a8a5003464b0333ff",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -125,11 +125,60 @@
           }
         ],
         "targetPath": "ServerScriptService/OutfitHandler"
+      },
+      {
+        "afterSourceSha256": "66f73eeb7972411c905289b02cc9052f004251d277870323dfe46cb4f946d016",
+        "beforeSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+        "class": "Script",
+        "id": "harden-house-furniture-remotes",
+        "replacements": [
+          {
+            "expectedCount": 3,
+            "newSha256": "eed665d9611504f425218f83f0811a8d7a9e8451737b7f189f36ee57ff5b0d9c",
+            "oldSha256": "5851f10714c1262f60c833f531ef376fab3bcf9914aa3df58cbea9b6128d538a"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "ea9c33efadc3f00364503b32766bdeb2bfd55237e10fbaa62204a2dcd1d40e83",
+            "oldSha256": "a5b4484e9b13da0fdd4523c1af651a9713bcb7a8262a320bc6b8fe0127907aca"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "d1f105c8b594cf3f18ed694b77525e3e4c110c1ae823e14f78e9b76918c597ad",
+            "oldSha256": "45d0829e86097216de20e49209a568e979c933f8eecb2fb51dc45677fa12f93e"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "43a8c6bae8e7b058558da8524ef8ea68ce5b92264e2f7890ef8c99e8d5fde483",
+            "oldSha256": "d8dd697bb99616a888e459752b918ccfb39a5c7395f6157cc634527a9cfcca5e"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "160714b5e48e067283fb820f5720157745a5272b39038697311dc26aade4a19f",
+            "oldSha256": "2639ca3dcfaa0fae94eb64eb3980174113b694f4c8431b610effdc62a14ba791"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "88820bf64e6a40669f49702f4f761f7e6a42795af652ccad01ccae5b4c835f85",
+            "oldSha256": "87879a5df2e2be2423a793d58cc13a6d084f2b3c4856cffd5f08e20875991149"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "efa3e6fb0c6c6e768015a633dd079bfe9ab64aad9056f1d57a83aed1c0e311cb",
+            "oldSha256": "57ae899e9b1432d8497b74e1b94d73abf0dcdea561fd57d1fdd2940be4c3fb72"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "8f5e31e5cedd46e1554e5bd6eb6c9556b639c9d3cc9e9b9364121454bdf904a9",
+            "oldSha256": "63ef0b9b0c3ea254d801022e272d48eef1400f227b478a25ab30a753c3da1359"
+          }
+        ],
+        "targetPath": "ServerScriptService/CustomHouseScript_NEW"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40"
+  "workingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f"
 }
