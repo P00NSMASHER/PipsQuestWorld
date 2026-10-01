@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "8adc41c58fa3120825cbac65fb24fe05d8b01d24bacd591e2fd6deac736fca05",
+  "patchManifestSha256": "c406ff791e60fdd75b84278d498a7d18a6bc780378511ac4eb7214c01ba060a3",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -103,15 +103,15 @@
         "targetPath": "ServerScriptService/Time/ScheduleScript"
       },
       {
-        "afterSourceSha256": "ea97fe18435dc16ad57ed5330a9659ed072b8d3b66cb303f419cc297c816298e",
+        "afterSourceSha256": "82d68172af8013dcd5e97d49699b775c42292e3389a5f9744b5ec269cc76f348",
         "beforeSourceSha256": "3fdbffe2104934b695385c6148d1d7e5e73a69f23d69ac439ec4533cfa67519c",
         "class": "LocalScript",
         "id": "add-client-class-activity-ui",
         "replacements": [
           {
             "expectedCount": 1,
-            "newSha256": "57b5abd69d1e60629907d315de5e4a018369b09d489c4da79f5f7a9135373819",
-            "oldSha256": "65b1bd3846a9b977b5b9d421c9f6815517cf4d754778eb9f6386cd38828a752f"
+            "newSha256": "c5f310395ebf67522f41d659fd0b93a60ef5e62008a4e43da4e1eb13d42e53df",
+            "oldSha256": "f23cee55c3c7a2d64384f36400f70a4c33ef477f607f6b8fdf930957503657a7"
           },
           {
             "expectedCount": 1,
@@ -126,5 +126,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "52cc83659fbf318cbd2532280d6620b416916ebf3af61d932e2a5c742a7aa659"
+  "workingSha256": "56ae598a44ee072b0e66b75677bbe6c080c4e42f8854426e754a140a71988855"
 }
