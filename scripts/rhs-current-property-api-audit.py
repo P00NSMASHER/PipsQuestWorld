@@ -130,32 +130,37 @@ def main() -> int:
             if len(rec["paths"]) < 40:
                 rec["paths"].append(path)
 
-            if status == "missing_property" and not rec["scriptReferences"]:
-                escaped = re.escape(name)
-                if re.fullmatch(r"[A-Za-z_]\w*", name):
-                    access_rx = re.compile(
-                        r"(?:\.\s*" + escaped + r"\b|\[\s*[\"']" + escaped + r"[\"']\s*\])"
-                    )
-                else:
-                    access_rx = re.compile(
-                        r"\[\s*[\"']" + escaped + r"[\"']\s*\]"
-                    )
-                refs = []
-                for script_path, script_class, source in script_sources:
-                    lines = source.splitlines()
-                    for line_no, line in enumerate(lines, 1):
-                        if access_rx.search(line):
-                            refs.append({
-                                "scriptPath": script_path,
-                                "scriptClass": script_class,
-                                "line": line_no,
-                                "text": line.strip()[:500],
-                            })
-                            if len(refs) >= 80:
-                                break
-                    if len(refs) >= 80:
-                        break
-                rec["scriptReferences"] = refs
+    # Build one script-property reference index for every missing serialized
+    # property instead of rescanning all 1,192 scripts once per property.
+    missing_property_names = {
+        rec["property"]
+        for rec in by_key.values()
+        if rec["status"] == "missing_property"
+    }
+    reference_index = collections.defaultdict(list)
+    dot_access_rx = re.compile(r"\.\s*([A-Za-z_]\w*)\b")
+    bracket_access_rx = re.compile(r"\[\s*([\"'])(.*?)\1\s*\]")
+
+    for script_path, script_class, source in script_sources:
+        for line_no, line in enumerate(source.splitlines(), 1):
+            candidates = set(dot_access_rx.findall(line))
+            candidates.update(match.group(2) for match in bracket_access_rx.finditer(line))
+            for candidate in candidates:
+                if candidate not in missing_property_names:
+                    continue
+                bucket = reference_index[candidate]
+                if len(bucket) >= 80:
+                    continue
+                bucket.append({
+                    "scriptPath": script_path,
+                    "scriptClass": script_class,
+                    "line": line_no,
+                    "text": line.strip()[:500],
+                })
+
+    for rec in by_key.values():
+        if rec["status"] == "missing_property":
+            rec["scriptReferences"] = list(reference_index.get(rec["property"], []))
 
     findings = []
     for rec in by_key.values():
