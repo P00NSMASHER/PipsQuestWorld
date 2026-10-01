@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
-    "compatibilityPatchCount": 7,
+    "sha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
+    "compatibilityPatchCount": 8,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -18,7 +18,8 @@
       "harden-car-instance-remotes",
       "harden-apartment-purchase-remote",
       "harden-outfit-remote-inputs",
-      "harden-house-furniture-remotes"
+      "harden-house-furniture-remotes",
+      "harden-economy-purchase-remotes"
     ]
   },
   "staticChecks": {
@@ -158,7 +159,7 @@
     },
     "coreRemoteHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
       "repairs": [
         {
           "id": "harden-apartment-purchase-remote",
@@ -186,7 +187,7 @@
     },
     "houseFurnitureHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
       "repairId": "harden-house-furniture-remotes",
       "targetPath": "ServerScriptService/CustomHouseScript_NEW",
       "baselineSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
@@ -201,6 +202,25 @@
         "Furniture movement requires server edit mode, typed CFrame/rotation input, direct owned furniture, and a floor belonging to the requesting player's house.",
         "ReloadHouse ignores the client lot number and derives placement from the current server-owned HousePlacement marker."
       ],
+      "runtimeVerified": false
+    },
+    "economyPurchaseHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf",
+      "repairId": "harden-economy-purchase-remotes",
+      "targetPath": "ServerScriptService/ItemBuyScript",
+      "baselineSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
+      "patchedSourceSha256": "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a",
+      "deterministicReplacementCount": 7,
+      "contractWorkflow": "RHS Economy Hardening Contract",
+      "policies": [
+        "Temporary shop purchases reject non-string shop/item identifiers before object lookup.",
+        "Permanent purchase mutations execute synchronously before a success response.",
+        "Loyalty purchase mutations execute synchronously before a success response.",
+        "Permanent purchase helper is serialized per player across all callers.",
+        "Loyalty purchase helper is serialized per player and clears its lock on both success and failure."
+      ],
+      "knownFollowUp": "Client closes temporary shops beyond 32 studs, but the serialized world does not expose a complete stable shop-name-to-Workspace-NPC mapping. No brittle server proximity table was invented.",
       "runtimeVerified": false
     }
   },
