@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T17:12:00Z",
+  "updatedAt": "2026-10-01T17:13:10Z",
   "protocolCommit": "9a8ae5aeee18fb657d4c9133d71abe53bebdb3d9",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
@@ -57,7 +57,8 @@
       19,
       21,
       23,
-      24
+      24,
+      25
     ],
     "workAllowed": false
   },
