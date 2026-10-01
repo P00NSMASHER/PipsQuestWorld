@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "updatedAt": "2026-10-01T21:50:16Z",
-  "protocolCommit": "859152fba4c3c5c10c48b7dbe7fb88f674a003a4",
+  "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
   "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
@@ -79,7 +79,8 @@
       "id": "RUNTIME_PLAYABILITY_LOCAL_ONLY",
       "owner": "Roblox High School Integration Smoke",
       "status": "LOCAL_ONLY_REQUIRED",
-      "exitCriterion": "When an authorized local/background Roblox Studio path is available, verify the canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 slice in-session: spawn, observe authoritative period, attend one class, complete one server-authoritative activity, receive one durable progression result, return to free roam, rejoin, and observe restored committed progression. Do not publish Roblox."
+      "exitCriterion": "When an authorized local/background Roblox Studio path is available, verify the canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 slice in-session: spawn, observe authoritative period, attend one class, complete one server-authoritative activity, receive one durable progression result, return to free roam, rejoin, and observe restored committed progression. Do not publish Roblox.",
+      "leaseRequirement": "Before any local call, atomically claim ONLINE_LAPTOP in coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json for canonical SHA 4ed8d001a86e979ed31cbeb69b9ae95d52832b27; release immediately after the bounded runtime check."
     }
   ],
   "resolvedThisCycle": [
@@ -131,5 +132,23 @@
     ],
     "openCount": 0
   },
-  "nextMilestone": "Integration Smoke consumes canonical Foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27. If exact SHA is unchanged, reuse exact-head CI and avoid product-code churn; only remaining playability assertion is smoke/local runtime evidence."
+  "nextMilestone": "Integration Smoke first refreshes its stale receipt against canonical Foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27. For the remaining runtime-only assertion, it must atomically claim ONLINE_LAPTOP through coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json; all other workers may use the same lease only for their own genuine LOCAL_ONLY_REQUIRED checks.",
+  "localMachineCoordination": {
+    "resource": "ONLINE_LAPTOP",
+    "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
+    "availability": "ONLINE_VERIFIED",
+    "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
+    "claimPolicy": "LOCAL_ONLY_REQUIRED + exact canonical SHA + atomic GitHub lease claim",
+    "eligibleWorkers": "ALL_CANONICAL_HIGH_SCHOOL_LANES",
+    "maxConcurrentUsers": 1,
+    "defaultMaxLeaseMinutes": 20,
+    "routineWorkUsesLaptop": false,
+    "currentLeaseStatus": "FREE",
+    "currentCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "connectorFallback": "If the local connector is unavailable after a lease claim, release immediately and report LOCAL_CONNECTOR_UNAVAILABLE."
+  },
+  "staleReceipts": {
+    "qaContract": "STALE: receipt still references pre-integration Foundation/Class heads",
+    "integrationSmoke": "STALE: receipt predates integrated canonical head and must be regenerated against current exact SHA"
+  }
 }
