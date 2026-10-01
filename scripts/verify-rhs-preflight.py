@@ -142,6 +142,39 @@ if service_audit.get("missingServiceUses") != 0:
 if service_audit.get("missingMemberUses") != 0:
     errors.append("preflight records missing Roblox service-member uses")
 
+class_activity = checks.get("classActivityContract") or {}
+if class_activity.get("status") != "PASS":
+    errors.append("preflight class activity contract is not PASS")
+if class_activity.get("candidateSha256") != working_sha:
+    errors.append("preflight class activity evidence is for a different working binary")
+if class_activity.get("answerKeyClientVisible") is not False:
+    errors.append("preflight class activity exposes an answer key to the client")
+if class_activity.get("idempotentCompletion") is not True:
+    errors.append("preflight class activity does not prove idempotent completion")
+if class_activity.get("dynamicScheduleBinding") is not True:
+    errors.append("preflight class activity is not dynamically bound to the RHS schedule")
+if class_activity.get("lunchExcluded") is not True:
+    errors.append("preflight class activity does not exclude lunch")
+if class_activity.get("submissionRevalidatesPeriod") is not True:
+    errors.append("preflight class activity does not revalidate the active period")
+if class_activity.get("submissionRevalidatesSubject") is not True:
+    errors.append("preflight class activity does not revalidate the scheduled subject")
+if class_activity.get("submissionRequiresSubjectZone") is not True:
+    errors.append("preflight class activity does not require the subject classroom zone")
+
+abuse = class_activity.get("abuseResistance") or {}
+if abuse.get("perPlayerThrottleSeconds") != 0.25:
+    errors.append("preflight class activity throttle changed from the reviewed 0.25 seconds")
+for key in (
+    "cycleStateReset",
+    "playerThrottleCleanup",
+    "postCompletionReceiptGrowthBlocked",
+    "duplicateReplayBeforeThrottle",
+    "throttleBeforeZoneCheck",
+):
+    if abuse.get(key) is not True:
+        errors.append(f"preflight class activity abuse-resistance check is not true: {key}")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
