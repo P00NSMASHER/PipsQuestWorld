@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED",
+  "baseSha": "de78600f9053a28de92d6cd03d4aa1c541b804bb",
+  "headSha": "de78600f9053a28de92d6cd03d4aa1c541b804bb",
+  "canonicalBranch": "rebuild/high-school-foundation-v1",
+  "rightsProvenanceVerdict": "ACTIVE_RUNTIME_ORIGINAL_CODE_AND_GENERATED_PRIMITIVES_ONLY",
+  "ciRunIdentity": null,
+  "exitCriteria": {
+    "eligibleBase": "PASS",
+    "originalSchoolTownSpawnFreeRoam": "BLOCKED",
+    "authoritativeSchoolClock": "PASS",
+    "originalRoomLocationRegistry": "PASS",
+    "readOnlyClassEducationInterfaces": "BLOCKED",
+    "deterministicHeadlessTests": "PASS",
+    "assetProvenanceManifest": "BLOCKED",
+    "exactHeadGitHubCI": "BLOCKED"
+  }
+}
