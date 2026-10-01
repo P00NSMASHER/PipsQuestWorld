@@ -1,0 +1,62 @@
+name: RHS Asset Survivability
+
+on:
+  pull_request:
+    paths:
+      - "scripts/rhs-asset-reference-map.py"
+      - "scripts/rhs-asset-public-probe.py"
+      - ".github/workflows/rhs-asset-survivability.yml"
+      - "rhs/working/ROBLOX High School.rbxl"
+
+concurrency:
+  group: rhs-asset-survivability-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Map external content references
+        run: |
+          python3 scripts/rhs-asset-reference-map.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-asset-reference-map.json
+
+      - name: Probe anonymous public asset delivery
+        run: |
+          python3 scripts/rhs-asset-public-probe.py \
+            --map /tmp/rhs-asset-reference-map.json \
+            --output /tmp/rhs-asset-public-probe.json \
+            --workers 4 \
+            --timeout 8
+
+      - name: Upload asset survivability evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-asset-survivability
+          path: |
+            /tmp/rhs-asset-reference-map.json
+            /tmp/rhs-asset-public-probe.json
+          if-no-files-found: warn
+          retention-days: 30
