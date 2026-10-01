@@ -7,7 +7,7 @@
     "immutable": true
   },
   "working": {
-    "sha256": "1b748d9847dfbccc986da9457f937eb9202faa5b0d3f193cd1843d2f2f714903",
+    "sha256": "ce87a6f86fc662f6ea3f1cd077371c57e9e2ccfda130a31365c3dc91ba071731",
     "compatibilityPatchCount": 6,
     "runtimeVerified": false,
     "published": false,
@@ -156,14 +156,23 @@
       "policy": "Client-supplied car instances must equal the server-tracked Workspace vehicle for the requesting player."
     },
     "classActivityContract": {
-      "status": "PASS",
-      "evidenceRunId": 36877835101,
+      "status": "PENDING_REVALIDATION",
+      "evidenceRunId": null,
       "serverOwner": "ServerScriptService/Time/ScheduleScript",
       "clientView": "StarterGui/ClassNotification/LocalScript",
       "answerKeyClientVisible": false,
       "idempotentCompletion": true,
+      "dynamicScheduleBinding": true,
+      "abuseResistance": {
+        "perPlayerThrottleSeconds": 0.25,
+        "cycleStateReset": true,
+        "playerThrottleCleanup": true,
+        "postCompletionReceiptGrowthBlocked": true,
+        "duplicateReplayBeforeThrottle": true,
+        "throttleBeforeZoneCheck": true
+      },
       "runtimeVerified": false,
-      "scope": "Static contract only; Roblox Studio runtime Gates A/B remain required."
+      "scope": "Candidate changed; dedicated contract and full static preflight must rerun before PASS is recorded."
     }
   },
   "dependencyProbe": {
