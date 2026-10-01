@@ -151,7 +151,6 @@ jobs:
                   break
 
           print("=== AREA_NAME_REFS ===")
-          area_rx=re.compile(r'PositionIsInsideArea\\s*\\)?\\s*\\([^\\n]*["\\\']([^"\\\']+)["\\\']')
           for item,path in walk(root):
               cls=item.attrib.get("class","")
               if cls not in script_classes:
