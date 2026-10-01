@@ -114,8 +114,26 @@ def main():
             attention="low"
 
         details={}
+        contexts={}
+        source_lines=source.splitlines()
         for name,found in hits.items():
-            details[name]=[line_no(source,m.start()) for m in found[:80]]
+            detail_lines=[line_no(source,m.start()) for m in found[:80]]
+            details[name]=detail_lines
+            if name in {"loadstring","new_script_instance","source_assignment","insert_load_asset","numeric_require"}:
+                snippets=[]
+                for ln in detail_lines[:20]:
+                    start=max(1,ln-4)
+                    end=min(len(source_lines),ln+5)
+                    snippets.append({
+                        "line":ln,
+                        "startLine":start,
+                        "endLine":end,
+                        "lines":[
+                            {"line":i,"text":source_lines[i-1][:800]}
+                            for i in range(start,end+1)
+                        ],
+                    })
+                contexts[name]=snippets
             summary[name]+=len(found)
             if name=="numeric_require":
                 for m in found:
@@ -129,6 +147,7 @@ def main():
             "attention":attention,
             "highReasons":high_reasons,
             "signals":details,
+            "contexts":contexts,
         }
         records.append(rec)
         summary["scriptsWithSignals"]+=1
@@ -172,6 +191,12 @@ def main():
             "signals="+json.dumps({k:len(v) for k,v in rec["signals"].items()},sort_keys=True,separators=(",",":")),
             "reasons="+json.dumps(rec["highReasons"],separators=(",",":")),
         )
+        if rec["attention"]=="high":
+            for signal,snippets in rec.get("contexts",{}).items():
+                for snippet in snippets:
+                    print("HIGH_CONTEXT",rec["scriptPath"],signal,"line="+str(snippet["line"]))
+                    for row in snippet["lines"]:
+                        print(f'{row["line"]:04d}: {row["text"]}')
     print("=== END_RHS_DYNAMIC_CODE_LOADING_AUDIT ===")
 
 if __name__=="__main__":
