@@ -41,11 +41,24 @@ jobs:
           mkdir -p /tmp/rhs-asset-survivability
           unzip -q /tmp/rhs-asset-survivability.zip -d /tmp/rhs-asset-survivability
           test -f /tmp/rhs-asset-survivability/rhs-asset-impact-report.json
+          test -f /tmp/rhs-asset-survivability/rhs-asset-public-probe.json
+          test -f /tmp/rhs-asset-survivability/rhs-asset-reference-map.json
+
+      - name: Correct saved permission classifications without re-probing
+        run: |
+          python3 scripts/rhs-asset-probe-reclassify.py \
+            --input /tmp/rhs-asset-survivability/rhs-asset-public-probe.json \
+            --output /tmp/rhs-asset-public-probe-corrected.json
+          python3 scripts/rhs-asset-impact-report.py \
+            --map /tmp/rhs-asset-survivability/rhs-asset-reference-map.json \
+            --probe /tmp/rhs-asset-public-probe-corrected.json \
+            --output /tmp/rhs-asset-impact-corrected.json \
+            --top 100
 
       - name: Identify top unresolved assets through public Roblox metadata
         run: |
           python3 scripts/rhs-asset-metadata-audit.py \
-            --impact /tmp/rhs-asset-survivability/rhs-asset-impact-report.json \
+            --impact /tmp/rhs-asset-impact-corrected.json \
             --output /tmp/rhs-asset-metadata.json \
             --top 100 \
             --timeout 10 \
@@ -56,6 +69,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rhs-asset-metadata
-          path: /tmp/rhs-asset-metadata.json
+          path: |
+            /tmp/rhs-asset-metadata.json
+            /tmp/rhs-asset-public-probe-corrected.json
+            /tmp/rhs-asset-impact-corrected.json
           if-no-files-found: error
           retention-days: 30
