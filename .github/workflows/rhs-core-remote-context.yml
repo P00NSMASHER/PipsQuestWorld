@@ -42,6 +42,7 @@ jobs:
           targets = {
               "ServerScriptService/ApartmentPurchaseScript": [1, 3],
               "ServerScriptService/OutfitHandler": [1, 40, 80, 120, 160, 200, 230, 243, 260, 274, 300],
+              "ServerScriptService/DataStoresScript": [1310, 1320, 1330, 1340],
           }
 
           def prop_text(item, name):
@@ -71,12 +72,18 @@ jobs:
           apartment_purchase_refs = []
           outfit_refs = []
           selected_apartment_refs = []
+          outfit_input_instances = []
 
           for item, path in walk(root):
               item_class = item.attrib.get("class", "")
               item_nm = item_name(item)
               if item_nm == "Apartment" or "Apartment" in path:
                   apartment_instances.append((item_class, path))
+              if (
+                  "StarterGui/LoadableGuis/Outfits" in path
+                  and "/Inputs/" in path
+              ):
+                  outfit_input_instances.append((item_class, path, item_nm))
 
               if item_class in {"Script", "LocalScript", "ModuleScript"}:
                   source = prop_text(item, "Source")
@@ -120,6 +127,12 @@ jobs:
                               print(f"{n:04d}: {lines[n-1]}")
                           print("---")
               print(f"=== END_{label} ===")
+
+          print("=== OUTFIT_INPUT_INSTANCE_PATHS ===")
+          for cls, path, nm in outfit_input_instances[:500]:
+              print("OUTFIT_INPUT_INSTANCE", cls, path, "name=" + nm)
+          print("OUTFIT_INPUT_INSTANCE_COUNT", len(outfit_input_instances))
+          print("=== END_OUTFIT_INPUT_INSTANCE_PATHS ===")
 
           print_ref_block("APARTMENT_PURCHASE_REFS", apartment_purchase_refs, "ApartmentPurchase")
           print_ref_block("SELECTED_APARTMENT_REFS", selected_apartment_refs, "SelectedApartment")
