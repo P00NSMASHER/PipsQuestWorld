@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
-    "compatibilityPatchCount": 7,
+    "sha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
+    "compatibilityPatchCount": 8,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -18,7 +18,8 @@
       "harden-car-instance-remotes",
       "harden-apartment-purchase-remote",
       "harden-outfit-remote-inputs",
-      "harden-house-furniture-remotes"
+      "harden-house-furniture-remotes",
+      "harden-painting-remotes"
     ]
   },
   "staticChecks": {
@@ -158,7 +159,7 @@
     },
     "coreRemoteHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+      "candidateSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
       "repairs": [
         {
           "id": "harden-apartment-purchase-remote",
@@ -186,7 +187,7 @@
     },
     "houseFurnitureHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+      "candidateSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
       "repairId": "harden-house-furniture-remotes",
       "targetPath": "ServerScriptService/CustomHouseScript_NEW",
       "baselineSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
@@ -200,6 +201,24 @@
         "Get, sell, remove, paint, and move paths accept only validated player-owned house/furniture inputs.",
         "Furniture movement requires server edit mode, typed CFrame/rotation input, direct owned furniture, and a floor belonging to the requesting player's house.",
         "ReloadHouse ignores the client lot number and derives placement from the current server-owned HousePlacement marker."
+      ],
+      "runtimeVerified": false
+    },
+    "paintingRemoteHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
+      "repairId": "harden-painting-remotes",
+      "targetPath": "ServerScriptService/ServerPaintingManager",
+      "baselineSourceSha256": "c1b792c89d3fafd78772b81a2427d1fa283098f23537c75672d0423de9f4e72f",
+      "patchedSourceSha256": "e8025fce0fa0951ba373c72f58bf37bf96e2bd6b71cd7ada1faaf6083dd25a13",
+      "deterministicReplacementCount": 2,
+      "contractWorkflow": "RHS Painting Remote Hardening Contract",
+      "contractRunId": 36898615525,
+      "policies": [
+        "PlacePaintRequest accepts only server-known canvases with a real CanvasOwner ObjectValue.",
+        "Painting is accepted only while the requesting player is in the server-defined Art zone.",
+        "Position must be Vector3; mode must be Paint or Erase; Paint requires BrickColor.",
+        "GetPaintbrush rejects malformed state values and will not grant a brush outside the Art zone."
       ],
       "runtimeVerified": false
     }
