@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "d91b30b126a0769da83e83cb6570f208344c37db6a2f82f688e2c829cb68b0b2",
+  "patchManifestSha256": "e5cfdf7548ef83f50852a211d9523448c464454f8089f9475cbe2a72533892d1",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -68,11 +68,25 @@
           }
         ],
         "targetPath": "ServerScriptService/GameAnalytics"
+      },
+      {
+        "afterSourceSha256": "15f5bb7a96189bd2699727de6cccfd08aad12f2f0ea6664c7f0b2757d70033b6",
+        "beforeSourceSha256": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b",
+        "class": "Script",
+        "id": "harden-car-instance-remotes",
+        "replacements": [
+          {
+            "expectedCount": 3,
+            "newSha256": "93a61a8599567d78239412e3e628d72c9992fc4e2228958d5146a6c28985c12f",
+            "oldSha256": "4a32df7f230f0e54313d1f0278d1f093bac30a173395d9168fd2a5e47182152a"
+          }
+        ],
+        "targetPath": "ServerScriptService/CarSpawnScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4"
+  "workingSha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d"
 }
