@@ -1,0 +1,90 @@
+name: RHS Core Remote Context
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - ".github/workflows/rhs-core-remote-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Print core remote contexts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          targets = {
+              "ServerScriptService/ApartmentPurchaseScript": [1, 3],
+              "ServerScriptService/OutfitHandler": [230, 243, 260, 274, 300],
+          }
+
+          def prop_text(item, name):
+              props = item.find("Properties")
+              if props is None:
+                  return ""
+              for p in props:
+                  if p.attrib.get("name") == name:
+                      if p.tag == "Content":
+                          child = next(iter(p), None)
+                          return (child.text or "") if child is not None else ""
+                      return p.text or ""
+              return ""
+
+          def item_name(item):
+              return prop_text(item, "Name") or "(unnamed)"
+
+          def walk(parent, prefix=""):
+              for item in parent.findall("Item"):
+                  name = item_name(item).replace("/", "_")
+                  path = f"{prefix}/{name}" if prefix else name
+                  yield item, path
+                  yield from walk(item, path)
+
+          found = set()
+          for item, path in walk(root):
+              if path not in targets:
+                  continue
+              source = prop_text(item, "Source")
+              lines = source.splitlines()
+              sha = hashlib.sha256(source.encode("utf-8")).hexdigest()
+              print(f"=== CORE_REMOTE_SCRIPT {path} class={item.attrib.get('class')} source_sha256={sha} lines={len(lines)} ===")
+              shown = set()
+              for center in targets[path]:
+                  for i in range(max(1, center - 70), min(len(lines), center + 90) + 1):
+                      if i in shown:
+                          continue
+                      shown.add(i)
+                      print(f"{i:04d}: {lines[i-1]}")
+              print("=== END_CORE_REMOTE_SCRIPT ===")
+              found.add(path)
+
+          missing = sorted(set(targets) - found)
+          if missing:
+              raise SystemExit("missing target scripts: " + ", ".join(missing))
+          PY
