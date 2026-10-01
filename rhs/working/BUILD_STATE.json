@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+  "expectedWorkingSha256": "da450d6eebd7cb7c0f1a2b7482c9442419037307b8fbfb304ee776418a5a8018",
   "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
@@ -13,6 +13,8 @@
     "harden-car-instance-remotes",
     "harden-apartment-purchase-remote",
     "harden-outfit-remote-inputs",
-    "harden-house-furniture-remotes"
+    "harden-house-furniture-remotes",
+    "harden-new-hoverboard-servercontrol",
+    "harden-new-pink-hoverboard-servercontrol"
   ]
 }

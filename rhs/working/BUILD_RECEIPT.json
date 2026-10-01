@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "8a14ac143be9691d979da4e76defb1ca9ba7ddd81eca978a8a5003464b0333ff",
+  "patchManifestSha256": "b8081979918bf9b251801647499c690db20912c0da2b522bec801cd74a474f5a",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -174,11 +174,39 @@
           }
         ],
         "targetPath": "ServerScriptService/CustomHouseScript_NEW"
+      },
+      {
+        "afterSourceSha256": "c700bd7ae5b11820f7790e7fb19a2c783c869e7d4aecca7a26716fbb0ac9d315",
+        "beforeSourceSha256": "b9a7f405762500390245532775ca008e9c06a562b1e3b60fbde0c3c89302aa57",
+        "class": "Script",
+        "id": "harden-new-hoverboard-servercontrol",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "f07e7194ab5e146efa57d96cdd477fcd6effd0adf5a182c90bb0bd1ca393a457",
+            "oldSha256": "946243b531428c14cccc9db815a33fb98510d08f40a6392d4733903df642a8bf"
+          }
+        ],
+        "targetPath": "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript"
+      },
+      {
+        "afterSourceSha256": "b77ac4bbf12ad9944cc7337035394a2d6cf6efbac59eae57ffab468abf922314",
+        "beforeSourceSha256": "8c5f284e9e85726271d9f70e2acc53412dd15317b4449e124ff9b948f0db9fa7",
+        "class": "Script",
+        "id": "harden-new-pink-hoverboard-servercontrol",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "f07e7194ab5e146efa57d96cdd477fcd6effd0adf5a182c90bb0bd1ca393a457",
+            "oldSha256": "946243b531428c14cccc9db815a33fb98510d08f40a6392d4733903df642a8bf"
+          }
+        ],
+        "targetPath": "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f"
+  "workingSha256": "da450d6eebd7cb7c0f1a2b7482c9442419037307b8fbfb304ee776418a5a8018"
 }
