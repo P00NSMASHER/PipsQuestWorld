@@ -67,6 +67,14 @@ jobs:
                   yield from walk(item,path)
 
           for item,path in walk(root):
+              if path == item_target:
+                  source=prop_text(item,"Source")
+                  print("=== ITEM_BUY_FULL_SCRIPT ===")
+                  print("SOURCE_SHA256",hashlib.sha256(source.encode()).hexdigest())
+                  for i,line in enumerate(source.splitlines(),1):
+                      print(f"{i:04d}: {line}")
+                  print("=== END_ITEM_BUY_FULL_SCRIPT ===")
+
               if path in full_targets:
                   source=prop_text(item,"Source")
                   print(f"=== ECONOMY_FULL_SCRIPT {path} ===")
