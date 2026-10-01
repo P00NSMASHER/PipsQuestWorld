@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T17:13:10Z",
-  "protocolCommit": "9a8ae5aeee18fb657d4c9133d71abe53bebdb3d9",
+  "updatedAt": "2026-10-01T17:14:30Z",
+  "protocolCommit": "859152fba4c3c5c10c48b7dbe7fb88f674a003a4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
   "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
