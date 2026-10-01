@@ -60,6 +60,8 @@ def main() -> int:
     ap.add_argument("--xml", required=True)
     ap.add_argument("--api-dump", required=True)
     ap.add_argument("--output", required=True)
+    ap.add_argument("--allow-inert-missing-class", action="append", default=[])
+    ap.add_argument("--fail-on-unexpected-missing", action="store_true")
     args = ap.parse_args()
 
     root = ET.parse(args.xml).getroot()
@@ -165,9 +167,33 @@ def main() -> int:
                 break
         member_audit.append(rec)
 
+    allowed_inert=set(args.allow_inert_missing_class or [])
+    unexpected_missing=[]
+    non_inert_allowed=[]
+    for rec in missing:
+        if rec["class"] not in allowed_inert:
+            unexpected_missing.append(rec["class"])
+            continue
+        details=rec.get("instanceDetails") or []
+        inert=(
+            not rec.get("scriptReferences")
+            and len(details)==rec.get("instances",0)
+            and all(
+                d.get("directChildren")==0
+                and d.get("descendantItems")==0
+                and d.get("propertyNames")==["Name"]
+                for d in details
+            )
+        )
+        if not inert:
+            non_inert_allowed.append(rec["class"])
+
+    repo_root=Path(__file__).resolve().parents[1]
+    build_state=json.loads((repo_root/"rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))
+
     report = {
-        "schemaVersion": 2,
-        "workingBuildSha256": "04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+        "schemaVersion": 3,
+        "workingBuildSha256": build_state["expectedWorkingSha256"],
         "apiDump": {
             "repository": "MaximumADHD/Roblox-Client-Tracker",
             "commit": "fcd6994996bb655bef047c69f456463d94faa569",
@@ -188,6 +214,8 @@ def main() -> int:
         "deprecatedClasses": deprecated,
         "notCreatableClasses": not_creatable,
         "legacyMemberAudit": member_audit,
+        "unexpectedMissingClasses": unexpected_missing,
+        "nonInertAllowedMissingClasses": non_inert_allowed,
     }
 
     Path(args.output).write_text(
@@ -230,6 +258,11 @@ def main() -> int:
     for rec in deprecated:
         print("DEPRECATED_CLASS", rec["class"], rec["instances"])
     print("=== END_RHS_CURRENT_API_CLASS_AUDIT ===")
+    if args.fail_on_unexpected_missing and (unexpected_missing or non_inert_allowed):
+        raise SystemExit(
+            "CURRENT_API_UNEXPECTED_MISSING "
+            + ",".join(unexpected_missing + non_inert_allowed)
+        )
     return 0
 
 if __name__ == "__main__":

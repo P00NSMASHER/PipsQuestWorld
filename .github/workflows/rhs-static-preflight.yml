@@ -95,11 +95,14 @@ jobs:
           python3 scripts/rhs-current-api-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --api-dump /tmp/API-Dump.json \
-            --output /tmp/rhs-current-api-classes.json
+            --output /tmp/rhs-current-api-classes.json \
+            --allow-inert-missing-class RenderHooksService \
+            --fail-on-unexpected-missing
           python3 scripts/rhs-current-service-api-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --api-dump /tmp/API-Dump.json \
-            --output /tmp/rhs-current-service-api.json
+            --output /tmp/rhs-current-service-api.json \
+            --fail-on-missing
           python3 scripts/rhs-current-property-api-audit.py \
             --xml /tmp/rhs-working.rbxlx \
             --api-dump /tmp/API-Dump.json \

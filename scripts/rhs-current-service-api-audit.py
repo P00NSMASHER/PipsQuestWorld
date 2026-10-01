@@ -77,6 +77,7 @@ def main() -> int:
     ap.add_argument("--xml", required=True)
     ap.add_argument("--api-dump", required=True)
     ap.add_argument("--output", required=True)
+    ap.add_argument("--fail-on-missing", action="store_true")
     args=ap.parse_args()
 
     api=json.loads(Path(args.api_dump).read_text(encoding="utf-8"))
@@ -175,9 +176,12 @@ def main() -> int:
                 "security":(member_meta or {}).get("Security"),
             })
 
+    repo_root=Path(__file__).resolve().parents[1]
+    build_state=json.loads((repo_root/"rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))
+
     report={
-        "schemaVersion":1,
-        "workingBuildSha256":"04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4",
+        "schemaVersion":2,
+        "workingBuildSha256":build_state["expectedWorkingSha256"],
         "apiDump":{
             "repository":"MaximumADHD/Roblox-Client-Tracker",
             "commit":"fcd6994996bb655bef047c69f456463d94faa569",
@@ -209,6 +213,10 @@ def main() -> int:
             "line="+str(r["line"]),
         )
     print("=== END_RHS_CURRENT_SERVICE_API_AUDIT ===")
+    if args.fail_on_missing:
+        missing_total=summary.get("missing_service",0)+summary.get("missing_member",0)
+        if missing_total:
+            raise SystemExit(f"CURRENT_SERVICE_API_MISSING {missing_total}")
     return 0
 
 if __name__=="__main__":
