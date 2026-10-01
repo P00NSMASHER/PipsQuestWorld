@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "resource": "ONLINE_LAPTOP",
+  "availability": "ONLINE_VERIFIED",
+  "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
+  "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+  "lease": {
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "interactionMode": null,
+    "claimedAt": null,
+    "expiresAt": null,
+    "reclaimedExpiredLease": false
+  },
+  "lastOutcome": null,
+  "policy": {
+    "claimMethod": "GITHUB_CONTENTS_CAS",
+    "maxMinutes": 20,
+    "localUseRequires": [
+      "LOCAL_ONLY_REQUIRED",
+      "exact canonical SHA",
+      "successful lease claim"
+    ],
+    "routineRepositoryWorkAllowed": false,
+    "concurrentLocalUsersAllowed": false,
+    "publishRobloxAllowed": false,
+    "spendMoneyAllowed": false
+  }
+}
