@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/rhs-asset-reference-map.py"
       - "scripts/rhs-asset-public-probe.py"
+      - "scripts/rhs-asset-impact-report.py"
       - ".github/workflows/rhs-asset-survivability.yml"
       - "rhs/working/ROBLOX High School.rbxl"
 
@@ -50,6 +51,14 @@ jobs:
             --workers 4 \
             --timeout 8
 
+      - name: Rank unresolved asset impact
+        run: |
+          python3 scripts/rhs-asset-impact-report.py \
+            --map /tmp/rhs-asset-reference-map.json \
+            --probe /tmp/rhs-asset-public-probe.json \
+            --output /tmp/rhs-asset-impact-report.json \
+            --top 100
+
       - name: Upload asset survivability evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,5 +67,6 @@ jobs:
           path: |
             /tmp/rhs-asset-reference-map.json
             /tmp/rhs-asset-public-probe.json
+            /tmp/rhs-asset-impact-report.json
           if-no-files-found: warn
           retention-days: 30
