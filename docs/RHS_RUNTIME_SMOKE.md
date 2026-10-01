@@ -5,10 +5,11 @@ This is the first runtime acceptance gate for `rhs/working/ROBLOX High School.rb
 ## Candidate identity
 
 - Immutable baseline SHA-256: `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
-- Current working SHA-256: `04efd02d60dbf2388c230402888a21f0f3240efdf1b8971abcb0bc582b4ad8c4`
-- Approved compatibility changes: 3
+- Current working SHA-256: `fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d`
+- Approved compatibility changes: 4
 - Runtime verified: no
 - Published: no
+- Car remote ownership hardening: lock, driver-lock, and removal handlers require the exact server-tracked `Workspace` vehicle for the requesting player
 
 ## Test-safety rules
 
