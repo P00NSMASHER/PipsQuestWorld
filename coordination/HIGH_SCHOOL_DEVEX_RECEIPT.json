@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "cycle": "2026-10-01T14:10Z-devex-unblock",
+  "cycle": "2026-10-01T14:13Z-devex-unblock",
   "lane": "Roblox High School DevEx",
   "result": "PARTIAL_PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
@@ -25,7 +25,15 @@
       "defect": "STALE_FOUNDATION_SELECTOR",
       "repairCommit": "22060c12610ae43ddf71998198abb5dbe2e1f789",
       "path": "coordination/high-school-foundation-status.json",
-      "verification": "now binds rebuild/high-school-foundation@f763b243f4ec22951f432e66f807f187c960583f to successful exact-head run 36874068766"
+      "verification": "binds rebuild/high-school-foundation@f763b243f4ec22951f432e66f807f187c960583f to successful exact-head run 36874068766"
+    },
+    {
+      "defect": "CONTRADICTORY_NONCANONICAL_RHS_PULL_REQUESTS",
+      "verification": "PRs #16, #17 and #18 closed without merge; branches/evidence retained for audit only"
+    },
+    {
+      "defect": "CONTROL_TOWER_MISSING_STATE_BOOTSTRAP_PATH",
+      "verification": "Control Tower prompt now explicitly reconstructs missing/stale shared state from live GitHub evidence and consumes this DevEx receipt; schedule and enablement unchanged"
     }
   ],
   "remainingBlockers": [
@@ -33,32 +41,14 @@
       "defect": "HIGH_SCHOOL_SWARM_STATE_MISSING",
       "owner": "Roblox High School Control Tower",
       "reason": "HIGH_SCHOOL_SWARM_STATE.json is authoritative and DevEx is explicitly not allowed to write it",
-      "exitCriterion": "Control Tower reconstructs and writes coordination/HIGH_SCHOOL_SWARM_STATE.json from live GitHub evidence, then downstream lanes consume one exact canonical lineage"
-    },
-    {
-      "defect": "FOUNDATION_AUTOMATION_DISABLED_WHILE_FOUNDATION_MAY_STILL_BE_REQUIRED",
-      "owner": "Control Tower / user task-policy boundary",
-      "reason": "DevEx hard rule forbids changing task schedules or enablement",
-      "exitCriterion": "Control Tower shared state must not assign a disabled producer as ACTIVE; any enablement change requires explicit user-authorized task action"
+      "exitCriterion": "Control Tower reconstructs and writes coordination/HIGH_SCHOOL_SWARM_STATE.json from live GitHub heads/PRs/CI, then downstream lanes consume one exact canonical lineage"
     }
   ],
-  "nonCanonicalOpenPRs": [
-    {
-      "pr": 16,
-      "direction": "licensed-exact RHS",
-      "canonical": false
-    },
-    {
-      "pr": 17,
-      "direction": "licensed-exact RHS education",
-      "canonical": false
-    },
-    {
-      "pr": 18,
-      "direction": "licensed-exact RHS asset audit",
-      "canonical": false
-    }
-  ],
+  "closedNonCanonicalPRs": [16, 17, 18],
+  "taskPolicyRisk": {
+    "observation": "A product producer may be unavailable by task enablement; DevEx did not alter enablement because task schedule/enablement changes are forbidden in this lane.",
+    "control": "Control Tower must not assign unavailable producers as ACTIVE and must record a concrete owner/exit criterion if that condition becomes the release blocker."
+  },
   "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "bootstrap HIGH_SCHOOL_SWARM_STATE.json using the restored protocol and current live GitHub heads/CI; do not reactivate retired Maze/Pips/Brookhaven/RHS-exact lineage as canonical"
+  "nextExitCriterion": "bootstrap HIGH_SCHOOL_SWARM_STATE.json using the restored protocol and current live GitHub heads/CI; then recalculate the one CURRENT_RELEASE_BLOCKER without retired Maze/Pips/Brookhaven/RHS-exact lineage"
 }
