@@ -180,7 +180,7 @@ def main():
         )
     print("=== END_RHS_REMOTE_SECURITY_AUDIT ===")
     if args.fail_on_high and summary.get("severity_high",0) > 0:
-        raise SystemExit(f"RHS remote security audit found {summary[\"severity_high\"]} severity-high handler(s)")
+        raise SystemExit(f"RHS remote security audit found {summary['severity_high']} severity-high handler(s)")
 
 if __name__=="__main__":
     main()
