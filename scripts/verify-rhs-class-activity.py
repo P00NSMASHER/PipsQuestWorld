@@ -108,6 +108,21 @@ def main() -> int:
         if token not in server:
             errors.append(f"server class-activity contract missing token: {token}")
 
+    schedule_binding_required = [
+        'if type(periodNumber) ~= "number" or periodNumber < 1 or periodNumber > 6 or periodNumber == 4 then',
+        'local slot = schedule:FindFirstChild("P"..periodNumber)',
+        'if not slot or slot.Value ~= classActivityQuestion.subject then',
+        'local slot = schedule:FindFirstChild("P"..classActivityCurrentPeriod)',
+        'if not classActivityCurrentPeriod or period.Value ~= classActivityCurrentPeriod then',
+        'zoneCheck:Invoke(plr,classActivityQuestion.subject)',
+    ]
+    for token in schedule_binding_required:
+        if token not in server:
+            errors.append(f"server class-activity schedule/zone binding missing token: {token}")
+
+    if re.search(r'classActivityCurrentPeriod\s*=\s*[1-6]\b', server):
+        errors.append("class activity hard-codes a period instead of following the scheduled subject")
+
     client_required = [
         'local function showClassActivity(payload)',
         'local function showClassActivityResult(payload)',
@@ -172,6 +187,14 @@ def main() -> int:
         "clientOrReplicatedAnswerKeyCandidates": sorted(client_secret_hits),
         "serverOwner": server_path,
         "clientView": client_path,
+        "scheduleBinding": {
+            "subject": "Math",
+            "dynamicPeriodLookup": 'schedule:FindFirstChild("P"..periodNumber)' in server,
+            "lunchExcluded": 'periodNumber == 4' in server,
+            "submissionRevalidatesPeriod": 'period.Value ~= classActivityCurrentPeriod' in server,
+            "submissionRevalidatesSubject": 'schedule:FindFirstChild("P"..classActivityCurrentPeriod)' in server,
+            "submissionRequiresSubjectZone": 'zoneCheck:Invoke(plr,classActivityQuestion.subject)' in server,
+        },
         "contractErrors": errors,
     }
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -181,6 +204,11 @@ def main() -> int:
     print("STRICT_SERVER_CLASS_ACTIVITY_CANDIDATES", len(generic_candidates))
     for path in sorted(generic_candidates)[:30]:
         print("STRICT_CLASS_ACTIVITY", path)
+    print("SCHEDULE_BINDING_DYNAMIC", str(report["scheduleBinding"]["dynamicPeriodLookup"]).lower())
+    print("SCHEDULE_LUNCH_EXCLUDED", str(report["scheduleBinding"]["lunchExcluded"]).lower())
+    print("SUBMISSION_PERIOD_REVALIDATED", str(report["scheduleBinding"]["submissionRevalidatesPeriod"]).lower())
+    print("SUBMISSION_SUBJECT_REVALIDATED", str(report["scheduleBinding"]["submissionRevalidatesSubject"]).lower())
+    print("SUBMISSION_ZONE_REVALIDATED", str(report["scheduleBinding"]["submissionRequiresSubjectZone"]).lower())
     print("CLIENT_ANSWER_KEY_CANDIDATES", len(client_secret_hits))
     for path in sorted(client_secret_hits)[:30]:
         print("CLIENT_ANSWER_KEY", path)
