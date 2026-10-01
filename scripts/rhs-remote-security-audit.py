@@ -9,6 +9,8 @@ import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from lua_source_utils import mask_lua_comments
+
 SCRIPT_CLASSES={"Script","ModuleScript","LocalScript"}
 HANDLER_PATTERNS=[
     ("OnServerEvent", re.compile(r'\.OnServerEvent\s*:\s*(?:connect|Connect)\s*\(\s*function\s*\(([^)]*)\)', re.I)),
@@ -90,16 +92,18 @@ def main():
         source=prop_text(item,"Source")
         if not source:
             continue
+        scan_source=mask_lua_comments(source)
         src_lines=source.splitlines()
+        scan_lines=scan_source.splitlines()
 
         for handler_type,rx in HANDLER_PATTERNS:
-            for m in rx.finditer(source):
-                line=source.count("\n",0,m.start())+1
+            for m in rx.finditer(scan_source):
+                line=scan_source.count("\n",0,m.start())+1
                 args_text=m.group(1).strip()
                 params=[p.strip() for p in args_text.split(",") if p.strip()]
                 start=max(1,line)
                 end=min(len(src_lines),line+args.window_lines-1)
-                window="\n".join(src_lines[start-1:end])
+                window="\n".join(scan_lines[start-1:end])
 
                 validation=lines_with_hits(window,VALIDATION_PATTERNS)
                 throttle=lines_with_hits(window,THROTTLE_PATTERNS)
