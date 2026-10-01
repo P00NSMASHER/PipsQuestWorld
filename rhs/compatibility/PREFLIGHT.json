@@ -10,7 +10,13 @@
     "sha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d",
     "compatibilityPatchCount": 4,
     "runtimeVerified": false,
-    "published": false
+    "published": false,
+    "compatibilityRepairs": [
+      "sandbox-legacy-ranking-login",
+      "sandbox-legacy-group-ranking",
+      "sandbox-legacy-gameanalytics",
+      "harden-car-instance-remotes"
+    ]
   },
   "staticChecks": {
     "baselineIntegrity": "PASS",
@@ -138,6 +144,14 @@
       "intendedReplacementCount": 3,
       "buildRunId": 36869792626,
       "rationale": "Car lock, driver-lock, and removal remotes now require the exact server-tracked Workspace car for the requesting player."
+    },
+    "carRemoteHardening": {
+      "status": "PASS",
+      "targetPath": "ServerScriptService/CarSpawnScript",
+      "baselineSourceSha256": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b",
+      "patchedSourceSha256": "15f5bb7a96189bd2699727de6cccfd08aad12f2f0ea6664c7f0b2757d70033b6",
+      "replacementCount": 3,
+      "policy": "Client-supplied car instances must equal the server-tracked Workspace vehicle for the requesting player."
     }
   },
   "dependencyProbe": {
