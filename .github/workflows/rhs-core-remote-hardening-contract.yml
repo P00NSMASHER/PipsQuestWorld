@@ -1,0 +1,43 @@
+name: RHS Core Remote Hardening Contract
+
+on:
+  pull_request:
+    paths:
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "rhs/working/**"
+      - "scripts/rhs-core-remote-hardening-contract.py"
+      - ".github/workflows/rhs-core-remote-hardening-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+      - name: Verify remote hardening contract
+        run: |
+          python3 scripts/rhs-core-remote-hardening-contract.py \
+            --xml /tmp/rhs-working.rbxlx \
+            --output /tmp/rhs-core-remote-hardening.json
+      - name: Upload contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-core-remote-hardening
+          path: /tmp/rhs-core-remote-hardening.json
+          if-no-files-found: warn
+          retention-days: 30
