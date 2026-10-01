@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40",
-    "compatibilityPatchCount": 6,
+    "sha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+    "compatibilityPatchCount": 7,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -17,7 +17,8 @@
       "sandbox-legacy-gameanalytics",
       "harden-car-instance-remotes",
       "harden-apartment-purchase-remote",
-      "harden-outfit-remote-inputs"
+      "harden-outfit-remote-inputs",
+      "harden-house-furniture-remotes"
     ]
   },
   "staticChecks": {
@@ -157,7 +158,7 @@
     },
     "coreRemoteHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40",
+      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
       "repairs": [
         {
           "id": "harden-apartment-purchase-remote",
@@ -172,9 +173,35 @@
           "baselineSourceSha256": "20fcbcce2207ca02ffc3aa4e126176059fbc58999dde7cb13e7fcde5d856c73d",
           "patchedSourceSha256": "8c969ee2db4c1050e28c8644515dc83cf9e11ecdb9ce5a95a5ccfb14d4c4ce58",
           "policy": "Only the 11 canonical outfit fields are accepted; one request per player may be in flight; save slots are bounded 1-24; hat LoadAsset failure returns false instead of throwing."
+        },
+        {
+          "id": "harden-house-furniture-remotes",
+          "targetPath": "ServerScriptService/CustomHouseScript_NEW",
+          "baselineSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+          "patchedSourceSha256": "66f73eeb7972411c905289b02cc9052f004251d277870323dfe46cb4f946d016",
+          "policy": "Exact server-owned home identity, furniture-only object mutation, edit-mode/type validation for movement, and server-derived reload placement."
         }
       ],
       "contractWorkflow": "RHS Core Remote Hardening Contract"
+    },
+    "houseFurnitureHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f",
+      "repairId": "harden-house-furniture-remotes",
+      "targetPath": "ServerScriptService/CustomHouseScript_NEW",
+      "baselineSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+      "patchedSourceSha256": "66f73eeb7972411c905289b02cc9052f004251d277870323dfe46cb4f946d016",
+      "deterministicReplacementCount": 8,
+      "handlerCount": 11,
+      "contractWorkflow": "RHS House Furniture Hardening Contract",
+      "contractRunId": 36895670608,
+      "policies": [
+        "Lock, restriction, and whitelist mutations require the exact server-owned custom house or apartment instance.",
+        "Get, sell, remove, paint, and move paths accept only validated player-owned house/furniture inputs.",
+        "Furniture movement requires server edit mode, typed CFrame/rotation input, direct owned furniture, and a floor belonging to the requesting player's house.",
+        "ReloadHouse ignores the client lot number and derives placement from the current server-owned HousePlacement marker."
+      ],
+      "runtimeVerified": false
     }
   },
   "dependencyProbe": {
