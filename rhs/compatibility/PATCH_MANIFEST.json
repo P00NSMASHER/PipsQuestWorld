@@ -68,8 +68,8 @@
       "reason": "Require the exact server-tracked Workspace car for the requesting player before honoring the client-triggered removal event.",
       "replacements": [
         {
-          "old": "game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar.OnServerEvent:connect(function(plr,car)\\n\\tif car and car.Name == \\\"vehicle_\\\"..plr.Name then\\n\\t\\tcar:Destroy()\\n\\tend\\nend)",
-          "new": "game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar.OnServerEvent:connect(function(plr,car)\\n\\tlocal ownedcar = workspace:FindFirstChild(\\\"vehicle_\\\"..plr.Name)\\n\\tif car and car == ownedcar then\\n\\t\\tcar:Destroy()\\n\\tend\\nend)",
+          "old": "if car and car.Name == \"vehicle_\"..plr.Name then",
+          "new": "if car and car == workspace:FindFirstChild(\"vehicle_\"..plr.Name) then",
           "expectedCount": 1
         }
       ]
