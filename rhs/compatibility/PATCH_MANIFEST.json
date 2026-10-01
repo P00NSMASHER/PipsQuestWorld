@@ -87,7 +87,7 @@
         },
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.ClassTeleport.OnServerEvent:connect( function(plr,classname)",
-          "new": "game.ReplicatedStorage.RemoteFunctions.ClassTeleport.OnServerEvent:connect( function(plr,classname,activityId,submissionId,choiceIndex)\\n\\tif classname == \"__RHS_CLASS_ACTIVITY__\" then\\n\\t\\thandleClassActivitySubmission(plr,activityId,submissionId,choiceIndex)\\n\\t\\treturn\\n\\tend",
+          "new": "game.ReplicatedStorage.RemoteFunctions.ClassTeleport.OnServerEvent:connect( function(plr,classname,activityId,submissionId,choiceIndex)\n\tif classname == \"__RHS_CLASS_ACTIVITY__\" then\n\t\thandleClassActivitySubmission(plr,activityId,submissionId,choiceIndex)\n\t\treturn\n\tend",
           "expectedCount": 1
         }
       ]
