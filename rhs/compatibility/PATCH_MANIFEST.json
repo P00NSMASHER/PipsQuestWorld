@@ -127,8 +127,8 @@
           "expectedCount": 3
         },
         {
-          "old": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\\n\\tif item.Parent.Name == \"!home_\"..plr.Name then",
-          "new": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\\n\\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\\n\\tif house and typeof(item) == \"Instance\" and item.Parent == house and typeof(color) == \"BrickColor\" then",
+          "old": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\n\tif item.Parent.Name == \"!home_\"..plr.Name then",
+          "new": "game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)\n\tlocal house = workspace:FindFirstChild(\"!home_\"..plr.Name)\n\tif house and typeof(item) == \"Instance\" and item.Parent == house and typeof(color) == \"BrickColor\" then",
           "expectedCount": 1
         },
         {
