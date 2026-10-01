@@ -205,8 +205,8 @@
           "expectedCount": 1
         },
         {
-          "old": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tcode = string.lower(code)",
-          "new": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tif type(code) ~= \"string\" or #code > 64 then\n\t\treturn false\n\tend\n\tcode = string.lower(code)",
+          "old": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tlocal data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tif type(code) ~= \"string\" or #code > 64 then\n\t\treturn false\n\tend\n\tlocal data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
           "expectedCount": 1
         }
       ]
