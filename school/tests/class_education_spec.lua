@@ -15,6 +15,11 @@ end
 local engine = EducationEngine.new(catalog, { maxAttempts = 2, maxDifficultyJump = 1 })
 local controller = ClassSessionController.new(engine)
 
+local malformed, malformedStatus = controller:submit("player-malformed", "", "", "", 1)
+assertEqual(malformedStatus, "rejected", "malformed submission status")
+assertEqual(malformed.accepted, false, "malformed submission accepted")
+assertEqual(malformed.code, "invalid_submission", "malformed submission code")
+
 local entered, enteredStatus = controller:enter("player-1", "1:2:math", "Math", 1)
 assertEqual(enteredStatus, "entered", "class entry status")
 assertEqual(entered.accepted, true, "class entry rejected")
@@ -40,6 +45,14 @@ local wrongReplay, wrongReplayStatus = controller:submit(
 assertEqual(wrongReplayStatus, "duplicate", "duplicate wrong submission not detected")
 assertEqual(wrongReplay.duplicate, true, "duplicate marker missing")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 0, "duplicate changed completion count")
+
+local conflictingReplay, conflictingReplayStatus = controller:submit(
+    "player-1", "1:2:math", entered.activity.id, "submission-1", 2
+)
+assertEqual(conflictingReplayStatus, "duplicate", "conflicting replay status")
+assertEqual(conflictingReplay.accepted, false, "conflicting replay was accepted")
+assertEqual(conflictingReplay.code, "idempotency_conflict", "conflicting replay code")
+assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 0, "conflicting replay changed completion count")
 
 local corrected, correctedStatus = controller:submit(
     "player-1", "1:2:math", entered.activity.id, "submission-2", 2
@@ -71,6 +84,10 @@ assertEqual(reenter.code, "already_completed", "completed class re-entry code")
 
 local science = assert(controller:enter("player-1", "1:4:science", "Science", 1))
 assertEqual(science.accepted, true, "second class entry failed")
+local scienceWrong = assert(controller:submit(
+    "player-1", "1:4:science", science.activity.id, "science-before-leave", 2
+))
+assertEqual(scienceWrong.completed, false, "science wrong answer should remain recoverable")
 local left, leftStatus = controller:leave("player-1", "period_changed")
 assertEqual(leftStatus, "left", "period exit status")
 assertEqual(left.returnToFreeRoam, true, "period exit did not return to free roam")
@@ -81,6 +98,13 @@ local scienceReentry, scienceReentryStatus = controller:enter("player-1", "1:4:s
 assertEqual(scienceReentryStatus, "entered", "incomplete class could not be re-entered")
 assertEqual(scienceReentry.accepted, true, "re-entry after free-roam exit was rejected")
 assertEqual(scienceReentry.activity.id, science.activity.id, "re-entry did not restore the deterministic class activity")
+local staleReplay, staleReplayStatus = controller:submit(
+    "player-1", "1:4:science", scienceReentry.activity.id, "science-before-leave", 2
+)
+assertEqual(staleReplayStatus, "duplicate", "cross-session stale submission status")
+assertEqual(staleReplay.accepted, false, "cross-session stale submission was accepted")
+assertEqual(staleReplay.code, "idempotency_conflict", "cross-session stale submission code")
+assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "stale submission changed completion count")
 local leftAgain, leftAgainStatus = controller:leave("player-1", "requested")
 assertEqual(leftAgainStatus, "left", "re-entered class could not return to free roam")
 assertEqual(leftAgain.returnToFreeRoam, true, "re-entered class exit did not return to free roam")

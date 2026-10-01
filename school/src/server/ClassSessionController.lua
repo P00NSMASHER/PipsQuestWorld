@@ -123,14 +123,23 @@ end
 
 function ClassSessionController:submit(playerKey, classKey, activityId, submissionId, choiceIndex)
     assertKey(playerKey, "playerKey")
-    assertKey(classKey, "classKey")
-    assertKey(activityId, "activityId")
-    assertKey(submissionId, "submissionId")
+    if type(classKey) ~= "string" or classKey == ""
+        or type(activityId) ~= "string" or activityId == ""
+        or type(submissionId) ~= "string" or submissionId == "" then
+        return {
+            accepted = false,
+            code = "invalid_submission",
+        }, "rejected"
+    end
 
     local state = stateFor(self, playerKey)
     local previous = state.receipts[submissionId]
     if previous then
-        if previous.classKey ~= classKey or previous.activityId ~= activityId then
+        local crossedSession = state.active ~= nil and previous.sessionId ~= state.active.sessionId
+        if previous.classKey ~= classKey
+            or previous.activityId ~= activityId
+            or previous.choiceIndex ~= choiceIndex
+            or crossedSession then
             return {
                 accepted = false,
                 code = "idempotency_conflict",
@@ -190,6 +199,8 @@ function ClassSessionController:submit(playerKey, classKey, activityId, submissi
         state.receipts[submissionId] = {
             classKey = classKey,
             activityId = activityId,
+            sessionId = active.sessionId,
+            choiceIndex = choiceIndex,
             response = clone(response),
         }
     end

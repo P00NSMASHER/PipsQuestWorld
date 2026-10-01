@@ -233,10 +233,11 @@ function EducationEngine:submit(sessionId, activityId, submissionId, choiceIndex
 
     local receipt = session.receipts[submissionId]
     if receipt then
-        if receipt.activityId ~= activityId then
+        if receipt.activityId ~= activityId or receipt.choiceIndex ~= choiceIndex then
             return {
                 accepted = false,
                 code = "idempotency_conflict",
+                duplicate = true,
             }, "duplicate"
         end
         return copyResponse(receipt.response), "duplicate"
@@ -311,6 +312,7 @@ function EducationEngine:submit(sessionId, activityId, submissionId, choiceIndex
 
     session.receipts[submissionId] = {
         activityId = activityId,
+        choiceIndex = choiceIndex,
         response = copyResponse(response),
     }
 

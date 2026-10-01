@@ -118,6 +118,13 @@ local afterDuplicateWrong = engine:getSessionSnapshot("retry-session")
 assertEqual(afterDuplicateWrong.activeAttempts, 1, "duplicate submission incremented attempts")
 assertEqual(afterDuplicateWrong.completedCount, 0, "duplicate submission changed history")
 
+local conflictingWrong, conflictingWrongStatus = engine:submit("retry-session", publicActivity.id, "submission-1", 2)
+assertEqual(conflictingWrongStatus, "duplicate", "conflicting idempotency status")
+assertEqual(conflictingWrong.accepted, false, "conflicting idempotency payload was accepted")
+assertEqual(conflictingWrong.code, "idempotency_conflict", "conflicting idempotency code")
+assertEqual(conflictingWrong.duplicate, true, "conflicting idempotency duplicate marker")
+assertEqual(engine:getSessionSnapshot("retry-session").activeAttempts, 1, "conflicting duplicate incremented attempts")
+
 local supportedCorrect, supportedStatus = engine:submit("retry-session", publicActivity.id, "submission-2", 2)
 assertEqual(supportedStatus, "accepted", "supported correct status")
 assertEqual(supportedCorrect.correct, true, "correct answer rejected")
