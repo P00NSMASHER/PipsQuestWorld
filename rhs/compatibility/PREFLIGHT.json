@@ -7,8 +7,8 @@
     "immutable": true
   },
   "working": {
-    "sha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
-    "compatibilityPatchCount": 8,
+    "sha256": "5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa",
+    "compatibilityPatchCount": 9,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
@@ -19,7 +19,8 @@
       "harden-apartment-purchase-remote",
       "harden-outfit-remote-inputs",
       "harden-house-furniture-remotes",
-      "harden-painting-remotes"
+      "harden-painting-remotes",
+      "harden-phone-text-remotes"
     ]
   },
   "staticChecks": {
@@ -220,6 +221,27 @@
         "Position must be Vector3; mode must be Paint or Erase; Paint requires BrickColor.",
         "GetPaintbrush rejects malformed state values and will not grant a brush outside the Art zone."
       ],
+      "runtimeVerified": false
+    },
+    "phoneTextHardening": {
+      "status": "PASS_BUILD_PARITY",
+      "candidateSha256": "5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa",
+      "repairId": "harden-phone-text-remotes",
+      "targetPath": "ServerScriptService/PhoneTextingScript",
+      "baselineSourceSha256": "571e84308d007a1775aa14a281f92b6c177560bf97de308ec7347353d1d9d170",
+      "patchedSourceSha256": "f180cb9f794e0a7157a9311f4ed692814d13ddb2a6e915e9d34ccb47e2a0cf66",
+      "deterministicReplacementCount": 3,
+      "contractWorkflow": "RHS Phone Text Hardening Contract",
+      "contractRunId": 36899421646,
+      "policies": [
+        "Existing Roblox CanUserChatAsync, CanUsersChatAsync, and per-recipient FilterStringAsync flow remains intact and fail-closed.",
+        "Message target must be a current Player in Players and cannot be the sender.",
+        "Message input is server-enforced as a string from 1 through 160 characters.",
+        "Sender textingdata/messages/blocklist state must exist before processing.",
+        "New message requests are bounded by a per-player 0.25-second server throttle.",
+        "Block/unblock target must be a current Player, cannot be self, and requires a server-owned blocklist."
+      ],
+      "filteredMessageFlowPreserved": true,
       "runtimeVerified": false
     }
   },
