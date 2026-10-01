@@ -1,9 +1,17 @@
 name: RHS Class Activity Contract
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - rebuild/rhs-class-activity-v1
+    paths:
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "scripts/verify-rhs-class-activity.py"
+      - ".github/workflows/rhs-class-activity-contract.yml"
+  pull_request:
     paths:
       - "rhs/working/ROBLOX High School.rbxl"
       - "rhs/working/BUILD_STATE.json"
