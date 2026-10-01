@@ -1,0 +1,86 @@
+name: RHS Class Activity Context
+
+on:
+  push:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - ".github/workflows/rhs-class-activity-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify working candidate
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Print school activity context
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import xml.etree.ElementTree as ET
+
+          root=ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          targets={
+            "ServerScriptService/Time_ScheduleScript",
+            "ServerScriptService/ClassroomZones",
+            "StarterGui/ClassNotification/LocalScript",
+            "StarterGui/ClassNotification/Frame/TeleportButton/LocalScript",
+            "StarterGui/LoadableGuis/Schedule/LoadScript",
+            "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
+          }
+
+          def prop_text(item,name):
+              props=item.find("Properties")
+              if props is None: return ""
+              for p in props:
+                  if p.attrib.get("name")!=name: continue
+                  if p.tag=="Content":
+                      c=next(iter(p),None); return (c.text or "") if c is not None else ""
+                  return p.text or ""
+              return ""
+
+          def name(item): return prop_text(item,"Name") or "(unnamed)"
+          def walk(parent,prefix=""):
+              for item in parent.findall("Item"):
+                  nm=name(item).replace("/","_")
+                  path=f"{prefix}/{nm}" if prefix else nm
+                  yield item,path
+                  yield from walk(item,path)
+
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if path in targets and cls in {"Script","LocalScript","ModuleScript"}:
+                  src=prop_text(item,"Source")
+                  print(f"=== SOURCE {cls} {path} sha256={hashlib.sha256(src.encode()).hexdigest()} ===")
+                  for i,line in enumerate(src.splitlines(),1):
+                      print(f"{i:04d}: {line}")
+                  print("=== END_SOURCE ===")
+
+          print("=== SCHOOL_REMOTES ===")
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if path.startswith("ReplicatedStorage/RemoteFunctions/") and cls in {"RemoteEvent","RemoteFunction","BindableEvent","BindableFunction"}:
+                  nm=name(item)
+                  if any(token.lower() in nm.lower() for token in ["class","schedule","grade","point","question","answer","notify","notification"]):
+                      print("REMOTE",cls,path)
+          print("=== END_SCHOOL_REMOTES ===")
+          PY
