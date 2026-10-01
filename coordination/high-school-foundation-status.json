@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-30T20:08:49-04:00",
+  "candidateBranch": "rebuild/high-school-foundation",
+  "headSha": "de78600f9053a28de92d6cd03d4aa1c541b804bb",
+  "priorPromptSha": "e48a46bb1309b099170fba4fc33ca54d527558fc",
+  "priorPromptShaState": "STALE_ANCESTOR_ONE_COMMIT_BEHIND",
+  "criteriaVerdict": "BLOCKED",
+  "blocker": "EXACT_HEAD_CI_MISSING",
+  "ci": {
+    "workflow": ".github/workflows/school-pivot-ci.yml",
+    "exactHeadRun": null,
+    "exactHeadStatuses": [],
+    "reason": "workflow pull_request trigger has no open PR for this branch and push trigger is restricted to main"
+  },
+  "rights": {
+    "verdict": "PASS_REPOSITORY_DECLARATION",
+    "basis": [
+      "STATUS.md states third-party high-school game code/assets/maps are NOT USED",
+      "school/default.project.json maps only original school Lua sources and no binary/non-code asset path",
+      "foundation guard rejects rbxassetid:// in active foundation code"
+    ]
+  },
+  "automationRepair": {
+    "intendedPatch": "Add push trigger for rebuild/high-school-foundation and include workflow-path changes so canonical heads can self-certify exact-head CI.",
+    "cloudWriteState": "BLOCKED_BY_GITHUB_WORKFLOW_WRITE_SAFETY",
+    "localOnlyRequired": false,
+    "localReason": null
+  }
+}
