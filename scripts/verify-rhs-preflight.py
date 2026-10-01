@@ -164,6 +164,26 @@ if house_hardening.get("contractRunId") != 36895670608:
 if house_hardening.get("runtimeVerified") is not False:
     errors.append("house/furniture hardening must remain runtime-unverified until Studio proof")
 
+painting_hardening = checks.get("paintingRemoteHardening") or {}
+if painting_hardening.get("status") != "PASS_BUILD_PARITY":
+    errors.append("preflight painting hardening status is not PASS_BUILD_PARITY")
+if painting_hardening.get("candidateSha256") != working_sha:
+    errors.append("preflight painting candidate SHA does not match BUILD_STATE")
+if painting_hardening.get("repairId") != "harden-painting-remotes":
+    errors.append("preflight painting repair id changed")
+if painting_hardening.get("targetPath") != "ServerScriptService/ServerPaintingManager":
+    errors.append("preflight painting target changed")
+if painting_hardening.get("baselineSourceSha256") != "c1b792c89d3fafd78772b81a2427d1fa283098f23537c75672d0423de9f4e72f":
+    errors.append("preflight painting baseline source hash changed")
+if painting_hardening.get("patchedSourceSha256") != "e8025fce0fa0951ba373c72f58bf37bf96e2bd6b71cd7ada1faaf6083dd25a13":
+    errors.append("preflight painting patched source hash changed")
+if painting_hardening.get("deterministicReplacementCount") != 2:
+    errors.append("preflight painting replacement count changed")
+if painting_hardening.get("contractRunId") != 36898615525:
+    errors.append("preflight painting contract run id changed")
+if painting_hardening.get("runtimeVerified") is not False:
+    errors.append("painting hardening must remain runtime-unverified until Studio proof")
+
 if errors:
     print("RHS_PREFLIGHT_STALE_OR_INVALID")
     for error in errors:
