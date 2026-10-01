@@ -1,0 +1,93 @@
+name: RHS Review Remote Context
+
+on:
+  push:
+    branches:
+      - audit/rhs-review-remotes-v1
+    paths:
+      - ".github/workflows/rhs-review-remote-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify pinned working build
+        run: python3 scripts/verify-rhs-baseline.py
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+      - name: Print review remote contexts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import xml.etree.ElementTree as ET
+
+          targets = {
+              "ReplicatedStorage/Objects/gear_Grapple Hookshot/Grapple Hookshot/GrappleScript": [1, 240, 260, 273, 278, 290],
+              "Workspace/Basketball/CannonScript": [1, 21, 40, 70],
+          }
+          needles = {
+              "ReplicatedStorage/Objects/gear_Grapple Hookshot/Grapple Hookshot/GrappleScript": [
+                  "MousePositionEvent", "KeyDownEvent", "OnServerEvent", "Equipped", "Unequipped"
+              ],
+              "Workspace/Basketball/CannonScript": [
+                  "OnServerEvent", "direction", "Fire", "ball", "Basketball"
+              ],
+          }
+
+          def prop_text(item,name):
+              props=item.find("Properties")
+              if props is None: return ""
+              for p in props:
+                  if p.attrib.get("name")==name:
+                      if p.tag=="Content":
+                          child=next(iter(p),None)
+                          return (child.text or "") if child is not None else ""
+                      return p.text or ""
+              return ""
+
+          def item_name(item): return prop_text(item,"Name") or "(unnamed)"
+
+          def walk(parent,prefix=""):
+              for item in parent.findall("Item"):
+                  name=item_name(item).replace("/","_")
+                  path=f"{prefix}/{name}" if prefix else name
+                  yield item,path
+                  yield from walk(item,path)
+
+          found=set()
+          for item,path in walk(ET.parse("/tmp/rhs-working.rbxlx").getroot()):
+              if path not in targets: continue
+              source=prop_text(item,"Source")
+              lines=source.splitlines()
+              sha=hashlib.sha256(source.encode()).hexdigest()
+              print(f"=== REVIEW_REMOTE_SCRIPT {path} class={item.attrib.get('class')} sha={sha} lines={len(lines)} ===")
+              shown=set()
+              centers=list(targets[path])
+              for needle in needles[path]:
+                  for idx,line in enumerate(lines,1):
+                      if needle.lower() in line.lower():
+                          centers.append(idx)
+              for center in centers:
+                  for n in range(max(1,center-25), min(len(lines),center+35)+1):
+                      if n in shown: continue
+                      shown.add(n)
+                      print(f"{n:04d}: {lines[n-1]}")
+              print("=== END_REVIEW_REMOTE_SCRIPT ===")
+              found.add(path)
+          missing=sorted(set(targets)-found)
+          if missing:
+              raise SystemExit("missing review remote scripts: "+", ".join(missing))
+          PY
