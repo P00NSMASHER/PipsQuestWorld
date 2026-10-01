@@ -3,9 +3,11 @@ name: RHS Class Activity Context
 on:
   push:
     branches:
+      - rebuild/rhs-licensed-exact
       - rebuild/rhs-class-activity-v1
     paths:
       - ".github/workflows/rhs-class-activity-context.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -38,11 +40,13 @@ jobs:
         run: |
           python3 - <<'PY'
           import hashlib
+          import json
           import re
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
           root = ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          state = json.loads(Path("rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))
           script_classes = {"Script", "LocalScript", "ModuleScript"}
           remote_classes = {"RemoteEvent", "RemoteFunction", "BindableEvent", "BindableFunction"}
 
@@ -104,7 +108,7 @@ jobs:
 
           out = []
           out.append("=== RHS_CLASS_ACTIVITY_CONTEXT ===")
-          out.append("WORKING_SHA256 fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d")
+          out.append("WORKING_SHA256 " + state["expectedWorkingSha256"])
           out.append("TARGETS " + str(len(targets)))
           for item, path, cls in sorted(targets, key=lambda x: x[1]):
               source = prop_text(item, "Source")
@@ -116,16 +120,15 @@ jobs:
               out.append("=== END_SOURCE ===")
 
           out.append("CLASS_RELATED_REMOTES " + str(len(remotes)))
-          for path, cls, name in sorted(remotes):
-              out.append(f"REMOTE {cls} {path}")
+          for remote_path, cls, _name in sorted(remotes):
+              out.append(f"REMOTE {cls} {remote_path}")
 
-          # Also list generic remote containers to reveal reusable existing seams.
           out.append("=== REMOTE_CONTAINERS ===")
-          for item, path in walk(root):
+          for item, remote_path in walk(root):
               if item.attrib.get("class", "") not in remote_classes:
                   continue
-              if path.startswith(("ReplicatedStorage/", "ServerStorage/")):
-                  out.append(f"REMOTE_ALL {item.attrib.get('class')} {path}")
+              if remote_path.startswith(("ReplicatedStorage/", "ServerStorage/")):
+                  out.append(f"REMOTE_ALL {item.attrib.get('class')} {remote_path}")
           out.append("=== END_RHS_CLASS_ACTIVITY_CONTEXT ===")
 
           text = "\n".join(out) + "\n"
