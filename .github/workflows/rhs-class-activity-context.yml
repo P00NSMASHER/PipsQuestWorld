@@ -4,8 +4,10 @@ on:
   push:
     branches:
       - rebuild/rhs-licensed-exact
+      - rebuild/rhs-class-activity-v1
     paths:
       - ".github/workflows/rhs-class-activity-context.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,10 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify working candidate
-        run: python3 scripts/verify-rhs-baseline.py
+      - name: Verify candidate
+        run: |
+          python3 scripts/verify-rhs-baseline.py
+          python3 scripts/verify-rhs-preflight.py
 
-      - name: Build pinned Roblox converter
+      - name: Build pinned converter
         shell: bash
         run: |
           set -euo pipefail
@@ -31,56 +35,111 @@ jobs:
       - name: Convert working build
         run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
 
-      - name: Print school activity context
+      - name: Extract class-flow source and remotes
         shell: bash
         run: |
           python3 - <<'PY'
           import hashlib
+          import json
+          import re
           import xml.etree.ElementTree as ET
+          from pathlib import Path
 
-          root=ET.parse("/tmp/rhs-working.rbxlx").getroot()
-          targets={
-            "ServerScriptService/Time_ScheduleScript",
-            "ServerScriptService/ClassroomZones",
-            "StarterGui/ClassNotification/LocalScript",
-            "StarterGui/ClassNotification/Frame/TeleportButton/LocalScript",
-            "StarterGui/LoadableGuis/Schedule/LoadScript",
-            "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
-          }
+          root = ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          state = json.loads(Path("rhs/working/BUILD_STATE.json").read_text(encoding="utf-8"))
+          script_classes = {"Script", "LocalScript", "ModuleScript"}
+          remote_classes = {"RemoteEvent", "RemoteFunction", "BindableEvent", "BindableFunction"}
 
-          def prop_text(item,name):
-              props=item.find("Properties")
-              if props is None: return ""
+          def prop_text(item, name):
+              props = item.find("Properties")
+              if props is None:
+                  return ""
               for p in props:
-                  if p.attrib.get("name")!=name: continue
-                  if p.tag=="Content":
-                      c=next(iter(p),None); return (c.text or "") if c is not None else ""
+                  if p.attrib.get("name") != name:
+                      continue
+                  if p.tag == "Content":
+                      child = next(iter(p), None)
+                      return (child.text or "") if child is not None else ""
                   return p.text or ""
               return ""
 
-          def name(item): return prop_text(item,"Name") or "(unnamed)"
-          def walk(parent,prefix=""):
+          def item_name(item):
+              return prop_text(item, "Name") or "(unnamed)"
+
+          def walk(parent, prefix=""):
               for item in parent.findall("Item"):
-                  nm=name(item).replace("/","_")
-                  path=f"{prefix}/{nm}" if prefix else nm
-                  yield item,path
-                  yield from walk(item,path)
+                  name = item_name(item).replace("/", "_")
+                  here = f"{prefix}/{name}" if prefix else name
+                  yield item, here
+                  yield from walk(item, here)
 
-          for item,path in walk(root):
-              cls=item.attrib.get("class","")
-              if path in targets and cls in {"Script","LocalScript","ModuleScript"}:
-                  src=prop_text(item,"Source")
-                  print(f"=== SOURCE {cls} {path} sha256={hashlib.sha256(src.encode()).hexdigest()} ===")
-                  for i,line in enumerate(src.splitlines(),1):
-                      print(f"{i:04d}: {line}")
-                  print("=== END_SOURCE ===")
+          targets = []
+          remotes = []
+          for item, path in walk(root):
+              cls = item.attrib.get("class", "")
+              name = item_name(item)
+              low_path = path.lower()
+              low_name = name.lower()
 
-          print("=== SCHOOL_REMOTES ===")
-          for item,path in walk(root):
-              cls=item.attrib.get("class","")
-              if path.startswith("ReplicatedStorage/RemoteFunctions/") and cls in {"RemoteEvent","RemoteFunction","BindableEvent","BindableFunction"}:
-                  nm=name(item)
-                  if any(token.lower() in nm.lower() for token in ["class","schedule","grade","point","question","answer","notify","notification"]):
-                      print("REMOTE",cls,path)
-          print("=== END_SCHOOL_REMOTES ===")
+              if cls in script_classes:
+                  source = prop_text(item, "Source")
+                  if (
+                      path in {
+                          "ServerScriptService/ClassroomZones",
+                          "ServerScriptService/Time_ScheduleScript",
+                          "StarterGui/ClassNotification/LocalScript",
+                          "StarterGui/LoadableGuis/Schedule/LoadScript",
+                          "StarterGui/MainMenu/MainFrame/ClockFrame/ClassLabel/LocalScript",
+                      }
+                      or "classroomzones" in low_path
+                      or "time_schedulescript" in low_path
+                      or path.startswith("StarterGui/ClassNotification/")
+                      or "ClassTeleport" in source
+                      or "ScheduledTeleport" in source
+                      or "NotificationForClient.OnClientEvent" in source
+                  ):
+                      targets.append((item, path, cls))
+
+              if cls in remote_classes and re.search(
+                  r"class|school|period|schedule|question|answer|grade|point|notification|award|activity",
+                  low_name,
+              ):
+                  remotes.append((path, cls, name))
+
+          out = []
+          out.append("=== RHS_CLASS_ACTIVITY_CONTEXT ===")
+          out.append("WORKING_SHA256 " + state["expectedWorkingSha256"])
+          out.append("TARGETS " + str(len(targets)))
+          for item, path, cls in sorted(targets, key=lambda x: x[1]):
+              source = prop_text(item, "Source")
+              out.append(
+                  f"=== SOURCE {cls} {path} sha256={hashlib.sha256(source.encode('utf-8')).hexdigest()} lines={len(source.splitlines())} ==="
+              )
+              for i, line in enumerate(source.splitlines(), 1):
+                  out.append(f"{i:04d}: {line}")
+              out.append("=== END_SOURCE ===")
+
+          out.append("CLASS_RELATED_REMOTES " + str(len(remotes)))
+          for remote_path, cls, _name in sorted(remotes):
+              out.append(f"REMOTE {cls} {remote_path}")
+
+          out.append("=== REMOTE_CONTAINERS ===")
+          for item, remote_path in walk(root):
+              if item.attrib.get("class", "") not in remote_classes:
+                  continue
+              if remote_path.startswith(("ReplicatedStorage/", "ServerStorage/")):
+                  out.append(f"REMOTE_ALL {item.attrib.get('class')} {remote_path}")
+          out.append("=== END_RHS_CLASS_ACTIVITY_CONTEXT ===")
+
+          text = "\n".join(out) + "\n"
+          Path("/tmp/rhs-class-activity-context.txt").write_text(text, encoding="utf-8")
+          print(text)
           PY
+
+      - name: Upload context
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-class-activity-context
+          path: /tmp/rhs-class-activity-context.txt
+          if-no-files-found: error
+          retention-days: 14
