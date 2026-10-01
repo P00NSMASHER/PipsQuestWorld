@@ -30,23 +30,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import os, urllib.request
-          url = "https://api.github.com/repos/P00NSMASHER/PipsQuestWorld/actions/artifacts/11168394358/zip"
-          req = urllib.request.Request(
-              url,
-              headers={
-                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
-                  "Accept": "application/vnd.github+json",
-                  "X-GitHub-Api-Version": "2022-11-28",
-                  "User-Agent": "PipsQuestWorld-RHS-Asset-Metadata-Audit/1.0",
-              },
-          )
-          with urllib.request.urlopen(req, timeout=30) as resp:
-              data = resp.read()
-          open("/tmp/rhs-asset-survivability.zip", "wb").write(data)
-          print("ARTIFACT_BYTES", len(data))
-          PY
+          curl -L --fail --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "User-Agent: PipsQuestWorld-RHS-Asset-Metadata-Audit/1.0" \
+            "https://api.github.com/repos/P00NSMASHER/PipsQuestWorld/actions/artifacts/11168394358/zip" \
+            -o /tmp/rhs-asset-survivability.zip
+          echo "ARTIFACT_BYTES $(stat -c %s /tmp/rhs-asset-survivability.zip)"
           mkdir -p /tmp/rhs-asset-survivability
           unzip -q /tmp/rhs-asset-survivability.zip -d /tmp/rhs-asset-survivability
           test -f /tmp/rhs-asset-survivability/rhs-asset-impact-report.json
