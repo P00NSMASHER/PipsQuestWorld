@@ -109,6 +109,47 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-apartment-purchase-remote",
+      "targetPath": "ServerScriptService/ApartmentPurchaseScript",
+      "expectedSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
+      "reason": "Require apartment rental requests to target a real vacant Workspace apartment near the requesting player's character before charging cash or mutating the apartment model.",
+      "replacements": [
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.ApartmentPurchase.OnServerInvoke = function(plr,apartment)\n\tif apartment and apartment.Name == \"Apartment\" and not game.Workspace:FindFirstChild(\"apartment_\"..plr.Name) then",
+          "new": "game.ReplicatedStorage.RemoteFunctions.ApartmentPurchase.OnServerInvoke = function(plr,apartment)\n\tlocal character = plr and plr.Character\n\tlocal root = character and (character:FindFirstChild(\"HumanoidRootPart\") or character:FindFirstChild(\"Torso\"))\n\tlocal buyDoor = apartment and apartment:FindFirstChild(\"BuyDoor\")\n\tlocal validApartment = apartment\n\t\tand apartment:IsA(\"Model\")\n\t\tand apartment.Parent == game.Workspace\n\t\tand apartment.Name == \"Apartment\"\n\t\tand buyDoor\n\t\tand buyDoor:IsA(\"BasePart\")\n\t\tand apartment:FindFirstChild(\"Lock Button\")\n\t\tand apartment[\"Lock Button\"]:FindFirstChild(\"LockButton\")\n\t\tand root\n\t\tand root:IsA(\"BasePart\")\n\t\tand (root.Position - buyDoor.Position).Magnitude <= 30\n\tif validApartment and not game.Workspace:FindFirstChild(\"apartment_\"..plr.Name) then",
+          "expectedCount": 1
+        }
+      ]
+    },
+    {
+      "id": "harden-outfit-remote-inputs",
+      "targetPath": "ServerScriptService/OutfitHandler",
+      "expectedSourceSha256": "20fcbcce2207ca02ffc3aa4e126176059fbc58999dde7cb13e7fcde5d856c73d",
+      "reason": "Make outfit save/wear remotes fail closed on malformed or extra client fields, enforce one in-flight request per player, and handle unavailable hat assets without throwing from the server remote.",
+      "replacements": [
+        {
+          "old": "\tif count > 1 then return false end",
+          "new": "\tif count > 0 then return false end",
+          "expectedCount": 1
+        },
+        {
+          "old": "function checkOutfit(plr,inputs,wearonly) --don't check outfit name if wearonly == true\n\tlocal statuses = {}",
+          "new": "local allowedOutfitInputs = {\n\tOutfitName = true,\n\tHat1 = true,\n\tHat2 = true,\n\tHat3 = true,\n\tShirt = true,\n\tPants = true,\n\tFace = true,\n\tPackage = true,\n\tRPName = true,\n\tRPDesc = true,\n\tRemoveShirt = true,\n}\n\nfunction checkOutfit(plr,inputs,wearonly) --don't check outfit name if wearonly == true\n\tlocal statuses = {}\n\tif type(inputs) ~= \"table\" then\n\t\tstatuses[\"__request\"] = \"invalid\"\n\t\treturn statuses\n\tend\n\tfor key,value in pairs(inputs) do\n\t\tif allowedOutfitInputs[key] ~= true then\n\t\t\tstatuses[\"__request\"] = \"invalid\"\n\t\t\treturn statuses\n\t\tend\n\t\tif (key == \"OutfitName\" or key == \"RPName\" or key == \"RPDesc\") and value ~= nil and type(value) ~= \"string\" then\n\t\t\tstatuses[key] = \"invalid\"\n\t\t\treturn statuses\n\t\tend\n\t\tif key == \"RemoveShirt\" and value ~= nil and type(value) ~= \"boolean\" then\n\t\t\tstatuses[key] = \"invalid\"\n\t\t\treturn statuses\n\t\tend\n\t\tif key ~= \"OutfitName\" and key ~= \"RPName\" and key ~= \"RPDesc\" and key ~= \"RemoveShirt\" and value ~= nil and type(value) ~= \"string\" and type(value) ~= \"number\" then\n\t\t\tstatuses[key] = \"invalid\"\n\t\t\treturn statuses\n\t\tend\n\tend",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.SaveOutfit.OnServerInvoke = function(plr,inputs,slot)\n\tif canHandlePlayer(plr) then",
+          "new": "game.ReplicatedStorage.RemoteFunctions.SaveOutfit.OnServerInvoke = function(plr,inputs,slot)\n\tlocal slotNumber = tonumber(slot)\n\tif not slotNumber or slotNumber ~= math.floor(slotNumber) or slotNumber < 1 or slotNumber > 24 then return false end\n\tslot = tostring(slotNumber)\n\tif canHandlePlayer(plr) then",
+          "expectedCount": 1
+        },
+        {
+          "old": "\t\t\t\t\t\tlocal obj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
+          "new": "\t\t\t\t\t\tlocal obj\n\t\t\t\t\t\tlocal loaded = pcall(function()\n\t\t\t\t\t\t\tobj = game:GetService(\"InsertService\"):LoadAsset(v)\n\t\t\t\t\t\tend)\n\t\t\t\t\t\tif not loaded or not obj then\n\t\t\t\t\t\t\tstatuses[i] = \"invalid\"\n\t\t\t\t\t\t\treturn false,statuses\n\t\t\t\t\t\tend\n\t\t\t\t\t\tfor _,hat in pairs(obj:GetChildren()) do",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
