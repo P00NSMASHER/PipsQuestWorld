@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "8a14ac143be9691d979da4e76defb1ca9ba7ddd81eca978a8a5003464b0333ff",
+  "patchManifestSha256": "dda913815392360c94e18bc8f3a3a4b1aa57ede31af967b27e88ad3479fd757c",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -174,11 +174,30 @@
           }
         ],
         "targetPath": "ServerScriptService/CustomHouseScript_NEW"
+      },
+      {
+        "afterSourceSha256": "e8025fce0fa0951ba373c72f58bf37bf96e2bd6b71cd7ada1faaf6083dd25a13",
+        "beforeSourceSha256": "c1b792c89d3fafd78772b81a2427d1fa283098f23537c75672d0423de9f4e72f",
+        "class": "Script",
+        "id": "harden-painting-remotes",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "f2ede5f59abb514479f29353bbca541b5997982a1a9bf4d459971876cc2750d3",
+            "oldSha256": "f8595f9f929922db9b8c9b390eaca402c616e9a6c46a4564ca67688054f7e1c5"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "ccf331f3fbe8f2c71328690adac467bc4c15ca7c4d67df6fadf23e3e74eb6d9c",
+            "oldSha256": "2ea32df4d2f4e70a006cfbfdba815d1ec593879dd35ce4ad5fc9e2f6bd86df95"
+          }
+        ],
+        "targetPath": "ServerScriptService/ServerPaintingManager"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f"
+  "workingSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308"
 }
