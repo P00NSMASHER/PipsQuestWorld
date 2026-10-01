@@ -1,0 +1,63 @@
+name: RHS Class Activity QA Regression
+
+on:
+  push:
+    branches:
+      - qa/rhs-class-activity-1b748d98
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify exact candidate identity
+        run: |
+          python3 scripts/verify-rhs-baseline.py
+          python3 scripts/verify-rhs-preflight.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working candidate
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-qa.rbxlx
+
+      - name: Re-run original school-life detector
+        run: |
+          python3 qa/rhs-school-life-diagnostic.py \
+            --xml /tmp/rhs-qa.rbxlx \
+            --output /tmp/rhs-school-life-report.json \
+            --markdown /tmp/rhs-school-life-report.md
+
+      - name: Require original blocker to be closed
+        run: |
+          python3 qa/verify_rhs_class_activity_regression.py \
+            --report /tmp/rhs-school-life-report.json
+
+      - name: Enforce exact class activity contract
+        run: |
+          python3 scripts/verify-rhs-class-activity.py \
+            --xml /tmp/rhs-qa.rbxlx \
+            --output /tmp/rhs-class-activity-contract.json
+
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-class-activity-qa-regression
+          path: |
+            /tmp/rhs-school-life-report.json
+            /tmp/rhs-school-life-report.md
+            /tmp/rhs-class-activity-contract.json
+          if-no-files-found: warn
+          retention-days: 30
