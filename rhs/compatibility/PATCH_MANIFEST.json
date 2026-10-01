@@ -60,6 +60,19 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-car-remove-remote",
+      "targetPath": "ServerScriptService/CarSpawnScript",
+      "expectedSourceSha256": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b",
+      "reason": "Require the exact server-tracked Workspace car for the requesting player before honoring the client-triggered removal event.",
+      "replacements": [
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar.OnServerEvent:connect(function(plr,car)\\n\\tif car and car.Name == \\\"vehicle_\\\"..plr.Name then\\n\\t\\tcar:Destroy()\\n\\tend\\nend)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar.OnServerEvent:connect(function(plr,car)\\n\\tlocal ownedcar = workspace:FindFirstChild(\\\"vehicle_\\\"..plr.Name)\\n\\tif car and car == ownedcar then\\n\\t\\tcar:Destroy()\\n\\tend\\nend)",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
