@@ -162,6 +162,24 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-painting-remotes",
+      "targetPath": "ServerScriptService/ServerPaintingManager",
+      "expectedSourceSha256": "c1b792c89d3fafd78772b81a2427d1fa283098f23537c75672d0423de9f4e72f",
+      "reason": "Keep art-room painting server-authoritative: accept only canvases from the server-built canvas inventory, only Vector3 positions and Paint/Erase modes, require BrickColor for painting, require the requesting player to be in the Art zone, and reject malformed paintbrush state requests.",
+      "replacements": [
+        {
+          "old": "module.SetCanvases()\n\ngame.ReplicatedStorage.RemoteFunctions.PlacePaintRequest.OnServerInvoke = function(plr, canvas, position, mode, brickcolor)\n\treturn module.PlacePaint(plr, canvas, position, mode, brickcolor)\nend",
+          "new": "module.SetCanvases()\n\nlocal function isKnownCanvas(canvas)\n\tif typeof(canvas) ~= \"Instance\" then\n\t\treturn false\n\tend\n\tfor _,knowncanvas in pairs(module.canvases) do\n\t\tif knowncanvas == canvas then\n\t\t\tlocal owner = canvas:FindFirstChild(\"CanvasOwner\")\n\t\t\treturn owner ~= nil and owner:IsA(\"ObjectValue\")\n\t\tend\n\tend\n\treturn false\nend\n\nlocal function playerIsInArtZone(plr)\n\treturn game.ServerStorage.RemoteFunctions.PlayerIsInZone:Invoke(plr, \"Art\") == true\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PlacePaintRequest.OnServerInvoke = function(plr, canvas, position, mode, brickcolor)\n\tif not playerIsInArtZone(plr) then\n\t\treturn false\n\tend\n\tif not isKnownCanvas(canvas) or typeof(position) ~= \"Vector3\" then\n\t\treturn false\n\tend\n\tif mode ~= \"Paint\" and mode ~= \"Erase\" then\n\t\treturn false\n\tend\n\tif mode == \"Paint\" and typeof(brickcolor) ~= \"BrickColor\" then\n\t\treturn false\n\tend\n\treturn module.PlacePaint(plr, canvas, position, mode, brickcolor)\nend",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.GetPaintbrush.OnServerEvent:connect(function(plr, bool)\n\tif plr.userId < 0 and game.PlaceId == 9689581 then",
+          "new": "game.ReplicatedStorage.RemoteFunctions.GetPaintbrush.OnServerEvent:connect(function(plr, bool)\n\tif type(bool) ~= \"boolean\" then\n\t\treturn\n\tend\n\tif bool == true and not playerIsInArtZone(plr) then\n\t\treturn\n\tend\n\tif plr.userId < 0 and game.PlaceId == 9689581 then",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
