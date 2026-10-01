@@ -71,7 +71,7 @@ def main() -> int:
         'apartment["Lock Button"]:FindFirstChild("LockButton")',
         'character:FindFirstChild("HumanoidRootPart")',
         'character:FindFirstChild("Torso")',
-        "(root.Position - buyDoor.Position).magnitude <= 30",
+        "(root.Position - buyDoor.Position).Magnitude <= 30",
     ]
     for token in apartment_required:
         require(apartment,token,"ApartmentPurchaseScript",failures)
