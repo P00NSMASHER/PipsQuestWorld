@@ -38,6 +38,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import hashlib
+          import json
           import re
           import xml.etree.ElementTree as ET
 
@@ -81,6 +82,27 @@ jobs:
 
           if not server_source:
               raise SystemExit("missing CustomHouseScript_NEW")
+
+          manifest=json.load(open("rhs/compatibility/PATCH_MANIFEST.json","r",encoding="utf-8"))
+          simulated=server_source
+          print("=== CUSTOM_HOUSE_PATCH_DRYCHECK ===")
+          for p in manifest.get("patches",[]):
+              if p.get("targetPath") != server_target:
+                  continue
+              print("PATCH_ID",p.get("id"))
+              print("EXPECTED_SOURCE_SHA256",p.get("expectedSourceSha256"))
+              print("ACTUAL_SOURCE_SHA256",hashlib.sha256(simulated.encode()).hexdigest())
+              for idx,repl in enumerate(p.get("replacements",[]),1):
+                  actual=simulated.count(repl["old"])
+                  expected=repl["expectedCount"]
+                  print("REPLACEMENT",idx,"ACTUAL",actual,"EXPECTED",expected)
+                  if actual != expected:
+                      print("MISMATCH_REPLACEMENT",idx)
+                      print("OLD_REPR",repr(repl["old"][:500]))
+                      raise SystemExit(1)
+                  simulated=simulated.replace(repl["old"],repl["new"])
+          print("FINAL_SOURCE_SHA256",hashlib.sha256(simulated.encode()).hexdigest())
+          print("=== END_CUSTOM_HOUSE_PATCH_DRYCHECK ===")
 
           lines=server_source.splitlines()
           handler_rx=re.compile(r"RemoteFunctions\.([A-Za-z0-9_ ]+)\.(OnServerEvent|OnServerInvoke)")
