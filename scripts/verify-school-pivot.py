@@ -9,8 +9,9 @@ project = school / "default.project.json"
 config = school / "src/shared/SchoolConfig.lua"
 campus = school / "src/server/CampusBuilder.server.lua"
 runtime = school / "src/server/FoundationBootstrap.server.lua"
+provenance = school / "PROVENANCE.md"
 
-for path in (project, config, campus, runtime):
+for path in (project, config, campus, runtime, provenance):
     if not path.exists():
         raise SystemExit(f"missing foundation file: {path.relative_to(root)}")
 
@@ -19,13 +20,32 @@ project_json = json.loads(project_text)
 if project_json.get("name") != "PipHigh":
     raise SystemExit("unexpected project name")
 
-for path in (
+def mapped_paths(node):
+    found = []
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key == "$path":
+                found.append(value)
+            else:
+                found.extend(mapped_paths(value))
+    elif isinstance(node, list):
+        for value in node:
+            found.extend(mapped_paths(value))
+    return found
+
+expected_paths = {
     "src/shared/SchoolConfig.lua",
     "src/server/CampusBuilder.server.lua",
     "src/server/FoundationBootstrap.server.lua",
-):
-    if path not in project_text:
-        raise SystemExit(f"project does not map {path}")
+}
+actual_paths = set(mapped_paths(project_json))
+if actual_paths != expected_paths:
+    raise SystemExit(
+        "active project path set drifted: "
+        f"expected={sorted(expected_paths)} actual={sorted(actual_paths)}"
+    )
+if any(not path.endswith(".lua") for path in actual_paths):
+    raise SystemExit("active project maps a non-code asset")
 
 for old_path in ("src/client", "SchoolLoop.server.lua", "QuestionBank.lua", "../game"):
     if old_path in project_text:
@@ -34,6 +54,7 @@ for old_path in ("src/client", "SchoolLoop.server.lua", "QuestionBank.lua", "../
 config_text = config.read_text()
 campus_text = campus.read_text()
 runtime_text = runtime.read_text()
+provenance_text = provenance.read_text()
 
 period_rooms = re.findall(r'room\s*=\s*"([^"]+)"', config_text)
 room_defs = set(re.findall(r'^\s{4}([A-Za-z0-9_]+)\s*=\s*\{\s*position\s*=', config_text, flags=re.MULTILINE))
@@ -85,9 +106,30 @@ for racing_lookup in (
     if racing_lookup in runtime_text:
         raise SystemExit("foundation spawn lookup may race CampusBuilder startup")
 
-active = "\n".join((config_text, campus_text, runtime_text)).lower()
-for term in ("questionbank", "leaderstats", "rbxassetid://", "currentcamera", "walkspeed", "jumppower"):
+active = "\n".join((project_text, config_text, campus_text, runtime_text)).lower()
+for term in (
+    "questionbank",
+    "leaderstats",
+    "rbxassetid://",
+    "http://",
+    "https://",
+    "brookhaven",
+    "bhw_",
+    "pipsquest",
+    "currentcamera",
+    "walkspeed",
+    "jumppower",
+):
     if term in active:
         raise SystemExit(f"out-of-scope foundation term found: {term}")
+
+for required in (
+    "External non-code assets: **NONE**",
+    "src/shared/SchoolConfig.lua",
+    "src/server/CampusBuilder.server.lua",
+    "src/server/FoundationBootstrap.server.lua",
+):
+    if required not in provenance_text:
+        raise SystemExit(f"provenance manifest missing declaration: {required}")
 
 print("PIP_HIGH_FOUNDATION_GUARDS_OK")
