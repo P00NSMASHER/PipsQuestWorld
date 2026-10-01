@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "4c2a119b6c7773767bff7547fe6687f1fa517386bd48a0a22d5f7da911760555",
+  "patchManifestSha256": "be51aaa0c76bdc01cec693c6ee5e5e27f4eee892985e3dd77740044dd457378c",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -176,14 +176,14 @@
         "targetPath": "ServerScriptService/CustomHouseScript_NEW"
       },
       {
-        "afterSourceSha256": "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a",
+        "afterSourceSha256": "402c6ea746d485c4b27cd251757448accb287383270269358207e48a37f959ee",
         "beforeSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
         "class": "Script",
         "id": "harden-economy-purchase-remotes",
         "replacements": [
           {
             "expectedCount": 1,
-            "newSha256": "dab5108a78eaac0ba76bf240705911d3d02b355e709ff1472f434511c055beec",
+            "newSha256": "3651b930b21fb59cd394eac087a67442a34eb908324a947206c4604aa09cf091",
             "oldSha256": "2eb1cc16c21b09825cb6c1c9ffd21edd111afad05a87bbfe8da0f4005d1cac3d"
           },
           {
@@ -215,6 +215,11 @@
             "expectedCount": 1,
             "newSha256": "d35eafddd9d5416f5b31f9d7e93c5b6525c36a0c53e9093174b0a3dc5940a3bb",
             "oldSha256": "32dd08a7ac2fa927e8f04c82c4daacd7f660ac3ecc80fd13c288c3bd9ac64532"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "1fc57696cd6e95c8be0087edf31a362234b01759994859949f2f7c01deee5925",
+            "oldSha256": "a4011f772f906791281e9ea81eebc71834a3292f2c67d2132f5b7f329508cea0"
           }
         ],
         "targetPath": "ServerScriptService/ItemBuyScript"
@@ -224,5 +229,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf"
+  "workingSha256": "2246eb8e92906e68322f76a26f69821e456e206e466dc1e15358bb3b5bfd4b59"
 }
