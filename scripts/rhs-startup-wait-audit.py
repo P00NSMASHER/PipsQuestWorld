@@ -12,10 +12,10 @@ SCRIPT_CLASSES={"Script","LocalScript","ModuleScript"}
 AUTO_SERVER_ROOTS={"ServerScriptService","Workspace"}
 AUTO_CLIENT_ROOTS={"StarterGui","StarterPlayer","ReplicatedFirst"}
 
-WAIT_FOR_CHILD=re.compile(r'WaitForChild\\s*\\(([^\\n)]*)\\)',re.I)
+WAIT_FOR_CHILD=re.compile(r'WaitForChild\s*\(([^\n)]*)\)',re.I)
 WAIT_LITERAL=re.compile(
-    r'(?P<receiver>(?:game(?::(?:GetService|service)\\s*\\(\\s*["\\\'][^"\\\']+["\\\']\\s*\\)|(?:\\.[A-Za-z_]\\w*)+)|workspace|script(?:\\.Parent)*|[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*))'
-    r'\\s*:\\s*WaitForChild\\s*\\(\\s*["\\\'](?P<name>[^"\\\']+)["\\\'](?P<rest>[^)]*)\\)',
+    r'(?P<receiver>(?:game(?::(?:GetService|service)\s*\(\s*["\'][^"\']+["\']\s*\)|(?:\.[A-Za-z_]\w*)+)|workspace|script(?:\.Parent)*|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*))'
+    r'\s*:\s*WaitForChild\s*\(\s*["\'](?P<name>[^"\']+)["\'](?P<rest>[^)]*)\)',
     re.I,
 )
 REPEAT_WAIT_UNTIL=re.compile(r'repeat\s+(?:wait|task\.wait)\s*\([^)]*\)\s+until\s+(.+)',re.I)
