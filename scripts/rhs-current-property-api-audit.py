@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -63,12 +64,21 @@ def main() -> int:
     api = json.loads(Path(args.api_dump).read_text(encoding="utf-8"))
     classes, properties_for = build_indexes(api)
     root = ET.parse(args.xml).getroot()
+    walked = list(walk(root))
+    script_sources = []
+    for script_item, script_path in walked:
+        script_class = script_item.attrib.get("class", "")
+        if script_class not in {"Script", "LocalScript", "ModuleScript"}:
+            continue
+        source = prop_text(script_item, "Source")
+        if source:
+            script_sources.append((script_path, script_class, source))
 
     summary = collections.Counter()
     by_key = {}
     class_missing = collections.Counter()
 
-    for item, path in walk(root):
+    for item, path in walked:
         class_name = item.attrib.get("class", "")
         if not class_name:
             continue
@@ -113,16 +123,50 @@ def main() -> int:
                 "serialization": serialization,
                 "paths": [],
                 "xmlTags": collections.Counter(),
+                "scriptReferences": [],
             })
             rec["instances"] += 1
             rec["xmlTags"][prop.tag] += 1
             if len(rec["paths"]) < 40:
                 rec["paths"].append(path)
 
+            if status == "missing_property" and not rec["scriptReferences"]:
+                escaped = re.escape(name)
+                if re.fullmatch(r"[A-Za-z_]\w*", name):
+                    access_rx = re.compile(
+                        r"(?:\.\s*" + escaped + r"\b|\[\s*[\"']" + escaped + r"[\"']\s*\])"
+                    )
+                else:
+                    access_rx = re.compile(
+                        r"\[\s*[\"']" + escaped + r"[\"']\s*\]"
+                    )
+                refs = []
+                for script_path, script_class, source in script_sources:
+                    lines = source.splitlines()
+                    for line_no, line in enumerate(lines, 1):
+                        if access_rx.search(line):
+                            refs.append({
+                                "scriptPath": script_path,
+                                "scriptClass": script_class,
+                                "line": line_no,
+                                "text": line.strip()[:500],
+                            })
+                            if len(refs) >= 80:
+                                break
+                    if len(refs) >= 80:
+                        break
+                rec["scriptReferences"] = refs
+
     findings = []
     for rec in by_key.values():
         rec = dict(rec)
         rec["xmlTags"] = dict(sorted(rec["xmlTags"].items()))
+        rec["scriptReferenceCount"] = len(rec.get("scriptReferences") or [])
+        if rec["status"] == "missing_property":
+            if rec["scriptReferenceCount"] > 0:
+                summary["missing_property_script_referenced"] += rec["instances"]
+            else:
+                summary["missing_property_serializer_only"] += rec["instances"]
         findings.append(rec)
 
     priority = {
@@ -157,6 +201,10 @@ def main() -> int:
             r for r in findings
             if r["status"] in {"missing_property", "current_but_not_loadable", "deprecated_property"}
         ],
+        "scriptReferencedMissingProperties": [
+            r for r in findings
+            if r["status"] == "missing_property" and r.get("scriptReferenceCount", 0) > 0
+        ],
     }
 
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -175,6 +223,7 @@ def main() -> int:
             "instances=" + str(rec["instances"]),
             "tags=" + ",".join(rec["tags"]),
             "xml_tags=" + json.dumps(rec["xmlTags"], separators=(",", ":")),
+            "script_refs=" + str(rec.get("scriptReferenceCount", 0)),
         )
     print("=== END_RHS_CURRENT_PROPERTY_API_AUDIT ===")
     return 0
