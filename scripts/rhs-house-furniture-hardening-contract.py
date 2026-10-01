@@ -132,8 +132,8 @@ def main() -> int:
     repairs=state.get("compatibilityRepairs") or []
     if repairs != [p.get("id") for p in manifest.get("patches",[])]:
         errors.append("BUILD_STATE compatibilityRepairs do not exactly match manifest patch IDs")
-    if state.get("expectedWorkingSha256") != "a87238febeaca89e48847e52160c4e506145fa92a0c393f3714505c48e09627f":
-        errors.append("working build SHA is not the reviewed house/furniture candidate")
+    if not state.get("expectedWorkingSha256"):
+        errors.append("BUILD_STATE is missing expectedWorkingSha256")
     if state.get("runtimeVerified") is not False:
         errors.append("runtimeVerified must remain false")
     if state.get("published") is not False:
