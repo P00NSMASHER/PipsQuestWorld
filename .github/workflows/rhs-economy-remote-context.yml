@@ -113,6 +113,49 @@ jobs:
                       print(f"{n:04d}: {lines[n-1]}")
               print("=== END_ECONOMY_SCRIPT ===")
 
+          print("=== SHOP_ACCESS_CONTEXT ===")
+          shop_gui_path="StarterGui/LoadableGuis/ShopGui/LoadScript"
+          for item,path in walk(root):
+              if path==shop_gui_path:
+                  source=prop_text(item,"Source")
+                  for n,line in enumerate(source.splitlines(),1):
+                      if n<=120:
+                          print(f"SHOP_GUI {n:04d}: {line}")
+                  break
+
+          shop_names=[]
+          for item,path in walk(root):
+              if path=="ReplicatedStorage/Shops":
+                  for child in item.findall("Item"):
+                      shop_names.append(item_name(child))
+                  break
+          print("SHOP_NAMES",",".join(sorted(shop_names)))
+
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if cls not in script_classes:
+                  continue
+              source=prop_text(item,"Source")
+              if not source:
+                  continue
+              if "ShopGui" in source and ("OpenGui" in source or "SelectedShop" in source or ".Shop" in source or "shop" in source.lower()):
+                  hits=[]
+                  for i,line in enumerate(source.splitlines(),1):
+                      if "ShopGui" in line or "SelectedShop" in line or "OpenGui" in line:
+                          hits.append(i)
+                  if hits:
+                      print("SHOP_REF_SCRIPT",cls,path)
+                      src_lines=source.splitlines()
+                      shown=set()
+                      for center in hits[:20]:
+                          for n in range(max(1,center-12),min(len(src_lines),center+18)+1):
+                              if n in shown:
+                                  continue
+                              shown.add(n)
+                              print(f"{n:04d}: {src_lines[n-1]}")
+                          print("---")
+          print("=== END_SHOP_ACCESS_CONTEXT ===")
+
           print("=== ECONOMY_REMOTE_REFS ===")
           for item,path in walk(root):
               cls=item.attrib.get("class","")
