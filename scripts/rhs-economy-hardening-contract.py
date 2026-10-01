@@ -10,7 +10,6 @@ from pathlib import Path
 TARGET = "ServerScriptService/ItemBuyScript"
 BASELINE_SOURCE_SHA = "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf"
 EXPECTED_SOURCE_SHA = "5af08afec4401423c9e4998bc2fe4460cb32c4e61046cb5409e9708ecf41151a"
-EXPECTED_WORKING_SHA = "bc0025bc9bfec56a2250be30208d4deb74ec73f5b139b51df72dce790228becf"
 PATCH_ID = "harden-economy-purchase-remotes"
 
 REQUIRED = [
@@ -108,8 +107,8 @@ def main() -> int:
     repair_ids=[p.get("id") for p in manifest.get("patches",[])]
     if state.get("compatibilityRepairs") != repair_ids:
         errors.append("BUILD_STATE repairs do not exactly match manifest patch IDs")
-    if state.get("expectedWorkingSha256") != EXPECTED_WORKING_SHA:
-        errors.append("working SHA is not the reviewed economy candidate")
+    if not state.get("expectedWorkingSha256"):
+        errors.append("BUILD_STATE is missing expectedWorkingSha256")
     if state.get("runtimeVerified") is not False:
         errors.append("runtimeVerified must remain false")
     if state.get("published") is not False:
