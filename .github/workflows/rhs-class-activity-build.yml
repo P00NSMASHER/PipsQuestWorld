@@ -127,4 +127,6 @@ jobs:
             exit 0
           fi
           git commit -m "Rebuild RHS working copy with class activity patches"
+          git fetch origin rebuild/rhs-class-activity-v1
+          git rebase origin/rebuild/rhs-class-activity-v1
           git push origin HEAD:rebuild/rhs-class-activity-v1
