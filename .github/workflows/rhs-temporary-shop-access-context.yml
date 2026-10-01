@@ -1,0 +1,137 @@
+name: RHS Temporary Shop Access Context
+
+on:
+  push:
+    branches:
+      - hardening/rhs-temporary-shop-access-v4
+    paths:
+      - ".github/workflows/rhs-temporary-shop-access-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify immutable baseline
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Trace shop/dialog world authority
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import xml.etree.ElementTree as ET
+
+          root=ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          script_classes={"Script","LocalScript","ModuleScript"}
+          needles=[
+              "DialogChoiceSelected",
+              "WaitToLoadGui",
+              "RequestToLoadGui",
+              "ShopGui",
+              "School Cafeteria",
+              "Club Red",
+              "Chef Umbra's",
+              "Snack Shack",
+              "Sunblox Cafe",
+          ]
+
+          def prop_text(item,name):
+              props=item.find("Properties")
+              if props is None:
+                  return ""
+              for p in props:
+                  if p.attrib.get("name")!=name:
+                      continue
+                  if p.tag=="Content":
+                      child=next(iter(p),None)
+                      return (child.text or "") if child is not None else ""
+                  return p.text or ""
+              return ""
+
+          def item_name(item):
+              return prop_text(item,"Name") or "(unnamed)"
+
+          def walk(parent,prefix=""):
+              for item in parent.findall("Item"):
+                  nm=item_name(item).replace("/","_")
+                  path=f"{prefix}/{nm}" if prefix else nm
+                  yield item,path
+                  yield from walk(item,path)
+
+          print("=== SHOP_DIALOG_SCRIPT_REFS ===")
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if cls not in script_classes:
+                  continue
+              source=prop_text(item,"Source")
+              if not source:
+                  continue
+              hits=[n for n in needles if n in source]
+              if not hits:
+                  continue
+              print("SCRIPT",cls,path,"hits="+",".join(hits))
+              lines=source.splitlines()
+              shown=set()
+              for idx,line in enumerate(lines,1):
+                  if any(n in line for n in hits):
+                      for ln in range(max(1,idx-12),min(len(lines),idx+20)+1):
+                          if ln in shown:
+                              continue
+                          shown.add(ln)
+                          print(f"{ln:04d}: {lines[ln-1]}")
+                      print("---")
+          print("=== END_SHOP_DIALOG_SCRIPT_REFS ===")
+
+          print("=== SHOP_RELATED_WORKSPACE_METADATA ===")
+          shop_tokens={"School Cafeteria","Club Red","Chef Umbra's","Snack Shack","Sunblox Cafe"}
+          dialog_tokens={"Rude Lunch Lady","Chill Lunch Lady","Noob Lunch Lady","Dexter","Umbra","Wendy","Alyssa"}
+          for item,path in walk(root):
+              if not path.startswith("Workspace/"):
+                  continue
+              vals=[]
+              props=item.find("Properties")
+              if props is not None:
+                  for p in props:
+                      if p.tag=="Content":
+                          child=next(iter(p),None)
+                          txt=(child.text or "") if child is not None else ""
+                      else:
+                          txt=p.text or ""
+                      if txt in shop_tokens or txt in dialog_tokens:
+                          vals.append((p.attrib.get("name",""),txt))
+              name=item_name(item)
+              if name in shop_tokens or name in dialog_tokens or vals:
+                  print("ITEM",item.attrib.get("class",""),path,"name="+name)
+                  for key,val in vals:
+                      print("PROPERTY",key,val)
+                  for child in item.findall("Item"):
+                      print("CHILD",child.attrib.get("class",""),item_name(child))
+          print("=== END_SHOP_RELATED_WORKSPACE_METADATA ===")
+
+          print("=== SHOP_REMOTE_INVENTORY ===")
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if cls not in {"RemoteEvent","RemoteFunction","BindableEvent","BindableFunction"}:
+                  continue
+              nm=item_name(item)
+              if any(token in nm.lower() for token in ("dialog","shop","gui","purchase","item")):
+                  print("REMOTE",cls,path)
+          print("=== END_SHOP_REMOTE_INVENTORY ===")
+          PY
