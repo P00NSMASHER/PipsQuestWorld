@@ -62,15 +62,15 @@
       ]
     },
     {
-      "id": "harden-car-remove-remote",
+      "id": "harden-car-instance-remotes",
       "targetPath": "ServerScriptService/CarSpawnScript",
       "expectedSourceSha256": "bc28a94b87e6cf97cca61f292e0a1c7340904034ed66a4be5c0e26896313f51b",
-      "reason": "Require the exact server-tracked Workspace car for the requesting player before honoring the client-triggered removal event.",
+      "reason": "Require the exact server-tracked Workspace car for the requesting player before honoring client-triggered car lock, driver-lock, or removal events.",
       "replacements": [
         {
           "old": "if car and car.Name == \"vehicle_\"..plr.Name then",
           "new": "if car and car == workspace:FindFirstChild(\"vehicle_\"..plr.Name) then",
-          "expectedCount": 1
+          "expectedCount": 3
         }
       ]
     }
