@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "c406ff791e60fdd75b84278d498a7d18a6bc780378511ac4eb7214c01ba060a3",
+  "patchManifestSha256": "ebd1e9de4e46450052a2bb4ed6aef67c8e27759388e90bc6ab35285a0234adeb",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -84,7 +84,7 @@
         "targetPath": "ServerScriptService/CarSpawnScript"
       },
       {
-        "afterSourceSha256": "553c598e9983fe3458736c4464adb7b64fcb4fc8f09b22cd4ebc3e623cca667f",
+        "afterSourceSha256": "51f9e245a8b6aa9ce03824e0d1ef856ae8b5ac77173f550fbe3fa56ac7ca7714",
         "beforeSourceSha256": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
         "class": "Script",
         "id": "add-server-authoritative-class-activity",
@@ -96,7 +96,7 @@
           },
           {
             "expectedCount": 1,
-            "newSha256": "5e57f66f1a9f82da18dd4b9ec7e9c1b69340b6b584d6f50270c018d2f1463242",
+            "newSha256": "77309e6d9919c2acd26a3fbfbf9b57a665614403d52b6f36228f0c48bfe345a2",
             "oldSha256": "596287b0bb7688a40b57592bcc951c8a3f0f7c2892fe4cd3954f2a04df847553"
           }
         ],
@@ -126,5 +126,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "56ae598a44ee072b0e66b75677bbe6c080c4e42f8854426e754a140a71988855"
+  "workingSha256": "1b748d9847dfbccc986da9457f937eb9202faa5b0d3f193cd1843d2f2f714903"
 }
