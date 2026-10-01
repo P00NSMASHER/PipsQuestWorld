@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School QA & Contract",
+  "result": "NOOP",
+  "evidenceFingerprint": "sha256:6e8d6c2cbd4974ac10a3767b943d243c6f8b14f01bcda56e1a1fdcb81f96ecfa",
+  "foundation": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "f763b243f4ec22951f432e66f807f187c960583f",
+    "exactHead": "IDENTICAL",
+    "ciRunId": 36874068766,
+    "ci": "success",
+    "rights": "PASS_REPOSITORY_DECLARATION"
+  },
+  "classEducation": {
+    "status": "ACTIVE",
+    "canonicalBranch": null,
+    "requiredBaseSha": "f763b243f4ec22951f432e66f807f187c960583f"
+  },
+  "progressionMobile": {
+    "status": "DEFERRED",
+    "sha": null
+  },
+  "qaContract": "DEFERRED",
+  "owner": "Roblox High School Class & Education",
+  "exitCriterion": "Create one tested exact-head Class/Education descendant of f763b243f4ec22951f432e66f807f187c960583f with server-authoritative answers, deterministic entry/exit, exactly-once completion, and green GitHub CI plus exact-SHA lane receipt.",
+  "localOnlyRequired": null
+}
