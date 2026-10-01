@@ -1,0 +1,39 @@
+name: High School Progression Guards
+
+on:
+  push:
+    branches:
+      - "rebuild/high-school-progression-*"
+    paths:
+      - "school/**"
+      - "scripts/verify-school-pivot.py"
+      - ".github/workflows/high-school-progression-ci.yml"
+  pull_request:
+    paths:
+      - "school/**"
+      - "scripts/verify-school-pivot.py"
+      - ".github/workflows/high-school-progression-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-progression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Preserve canonical Foundation invariants
+        run: python3 scripts/verify-school-pivot.py
+      - name: Preserve Class Education contract
+        run: |
+          lua5.4 school/tests/education_engine_spec.lua
+          lua5.4 school/tests/class_education_spec.lua
+      - name: Run progression repository concurrency and restore tests
+        run: lua5.4 school/tests/progression_repository_spec.lua
+      - name: Run class-to-progression binding test
+        run: lua5.4 school/tests/progression_binding_spec.lua

@@ -52,6 +52,15 @@
         },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
+        },
+        "ProgressionRepository": {
+          "$path": "src/server/ProgressionRepository.lua"
+        },
+        "ProgressionBinding": {
+          "$path": "src/server/ProgressionBinding.lua"
+        },
+        "ProgressionDataStore": {
+          "$path": "src/server/ProgressionDataStore.lua"
         }
       }
     }
