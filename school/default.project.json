@@ -40,6 +40,9 @@
         },
         "FoundationBootstrap": {
           "$path": "src/server/FoundationBootstrap.server.lua"
+        },
+        "EducationEngine": {
+          "$path": "src/server/EducationEngine.lua"
         }
       }
     }

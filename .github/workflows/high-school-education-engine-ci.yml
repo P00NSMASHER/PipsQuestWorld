@@ -1,0 +1,41 @@
+name: High School Education Engine Guards
+
+on:
+  push:
+    branches:
+      - "rebuild/high-school-education-engine-*"
+    paths:
+      - "school/src/server/EducationEngine.lua"
+      - "school/tests/education_engine_spec.lua"
+      - "school/default.project.json"
+      - "scripts/verify-education-engine-scope.py"
+      - "docs/HIGH_SCHOOL_EDUCATION_ENGINE_API.md"
+      - ".github/workflows/high-school-education-engine-ci.yml"
+  pull_request:
+    paths:
+      - "school/src/server/EducationEngine.lua"
+      - "school/tests/education_engine_spec.lua"
+      - "school/default.project.json"
+      - "scripts/verify-education-engine-scope.py"
+      - "docs/HIGH_SCHOOL_EDUCATION_ENGINE_API.md"
+      - ".github/workflows/high-school-education-engine-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Preserve high-school foundation boundaries
+        run: python3 scripts/verify-school-pivot.py
+      - name: Verify education engine scope
+        run: python3 scripts/verify-education-engine-scope.py
+      - name: Run deterministic engine tests
+        run: lua5.4 school/tests/education_engine_spec.lua
