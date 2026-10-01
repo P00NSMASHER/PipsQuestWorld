@@ -1,7 +1,9 @@
 --!strict
--- Server adapter for one concise class activity at a time.
--- Foundation owns schedule/world state. This script only reads those seams.
+-- Server adapter for the canonical class -> durable progression vertical slice.
+-- Foundation owns schedule/world state; Class/Education owns class semantics;
+-- Progression owns durable progression. This file only wires those authorities.
 
+local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -11,13 +13,27 @@ local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChi
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local EducationEngine = require(schoolFoundation:WaitForChild("EducationEngine"))
 local ClassSessionController = require(schoolFoundation:WaitForChild("ClassSessionController"))
+local ClassProgressionCoordinator = require(schoolFoundation:WaitForChild("ClassProgressionCoordinator"))
+local ProgressionRepository = require(schoolFoundation:WaitForChild("ProgressionRepository"))
+local ProgressionBinding = require(schoolFoundation:WaitForChild("ProgressionBinding"))
+local ProgressionDataStore = require(schoolFoundation:WaitForChild("ProgressionDataStore"))
 local catalog = require(schoolFoundation:WaitForChild("ClassActivityCatalog"))
 
 local engine = EducationEngine.new(catalog, {
     maxAttempts = 2,
     maxDifficultyJump = 1,
 })
-local controller = ClassSessionController.new(engine)
+local classController = ClassSessionController.new(engine)
+local progressionStore = ProgressionDataStore.new(
+    DataStoreService:GetDataStore("PipHighProgressionV1")
+)
+local coordinator = ClassProgressionCoordinator.new(classController, function(playerId)
+    local repository, openError = ProgressionRepository.open(progressionStore, playerId)
+    if not repository then
+        return nil, openError
+    end
+    return ProgressionBinding.new(repository)
+end)
 
 local subjectByPeriodId = {
     math = "Math",
@@ -115,14 +131,16 @@ end
 
 local function safeDiscovery(player)
     local schedule = readSchedule()
+    local snapshot = coordinator:getPlayerSnapshot(playerKey(player))
     if not schedule then
         return {
             available = false,
             code = "foundation_state_unavailable",
+            progressionPending = snapshot.progressionPending,
+            pendingClassKey = snapshot.pendingClassKey,
         }
     end
 
-    local snapshot = controller:getPlayerSnapshot(playerKey(player))
     return {
         available = true,
         schoolDay = schedule.schoolDay,
@@ -133,9 +151,13 @@ local function safeDiscovery(player)
         roomDisplayName = schedule.roomDisplayName,
         classKey = schedule.classKey,
         academic = schedule.subject ~= nil,
-        canEnter = schedule.subject ~= nil and isAtCurrentRoom(player, schedule),
+        canEnter = not snapshot.progressionPending
+            and schedule.subject ~= nil
+            and isAtCurrentRoom(player, schedule),
         active = snapshot.active,
         completionCount = snapshot.completionCount,
+        progressionPending = snapshot.progressionPending,
+        pendingClassKey = snapshot.pendingClassKey,
     }
 end
 
@@ -144,6 +166,16 @@ getClassState.OnServerInvoke = function(player)
 end
 
 enterClass.OnServerInvoke = function(player)
+    local pending = coordinator:getPending(playerKey(player))
+    if pending then
+        return {
+            accepted = false,
+            code = "progression_pending",
+            classKey = pending.classKey,
+            returnToFreeRoam = false,
+        }
+    end
+
     local schedule = readSchedule()
     if not schedule then
         return {
@@ -167,7 +199,7 @@ enterClass.OnServerInvoke = function(player)
         }
     end
 
-    local response = controller:enter(
+    local response = coordinator:enter(
         playerKey(player),
         schedule.classKey,
         schedule.subject,
@@ -189,27 +221,41 @@ submitAnswer.OnServerInvoke = function(player, classKey, activityId, submissionI
         }
     end
 
-    local schedule = readSchedule()
-    if not schedule or schedule.classKey ~= classKey then
-        controller:leave(playerKey(player), "period_changed")
-        return {
-            accepted = false,
-            code = "late_submission",
-            returnToFreeRoam = true,
-        }
+    local key = playerKey(player)
+    local pending = coordinator:getPending(key)
+    if pending then
+        if pending.classKey ~= classKey or pending.submissionId ~= submissionId then
+            return {
+                accepted = false,
+                code = "progression_pending",
+                classKey = pending.classKey,
+                returnToFreeRoam = false,
+            }
+        end
+    else
+        local schedule = readSchedule()
+        if not schedule or schedule.classKey ~= classKey then
+            coordinator:leave(key, "period_changed")
+            return {
+                accepted = false,
+                code = "late_submission",
+                returnToFreeRoam = true,
+            }
+        end
+
+        if not isAtCurrentRoom(player, schedule) then
+            coordinator:leave(key, "left_classroom")
+            return {
+                accepted = false,
+                code = "left_classroom",
+                returnToFreeRoam = true,
+            }
+        end
     end
 
-    if not isAtCurrentRoom(player, schedule) then
-        controller:leave(playerKey(player), "left_classroom")
-        return {
-            accepted = false,
-            code = "left_classroom",
-            returnToFreeRoam = true,
-        }
-    end
-
-    return controller:submit(
-        playerKey(player),
+    return coordinator:submit(
+        player.UserId,
+        key,
         classKey,
         activityId,
         submissionId,
@@ -218,15 +264,15 @@ submitAnswer.OnServerInvoke = function(player, classKey, activityId, submissionI
 end
 
 leaveClass.OnServerInvoke = function(player)
-    return controller:leave(playerKey(player), "requested")
+    return coordinator:leave(playerKey(player), "requested")
 end
 
 periodChanged.Event:Connect(function()
     for _, player in ipairs(Players:GetPlayers()) do
-        controller:leave(playerKey(player), "period_changed")
+        coordinator:leave(playerKey(player), "period_changed")
     end
 end)
 
 sessionEnded.Event:Connect(function(player)
-    controller:leave(playerKey(player), "session_ended")
+    coordinator:leave(playerKey(player), "session_ended")
 end)

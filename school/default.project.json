@@ -50,8 +50,8 @@
         "ClassActivityCatalog": {
           "$path": "src/server/ClassActivityCatalog.lua"
         },
-        "ClassEducation": {
-          "$path": "src/server/ClassEducation.server.lua"
+        "ClassProgressionCoordinator": {
+          "$path": "src/server/ClassProgressionCoordinator.lua"
         },
         "ProgressionRepository": {
           "$path": "src/server/ProgressionRepository.lua"
@@ -61,6 +61,9 @@
         },
         "ProgressionDataStore": {
           "$path": "src/server/ProgressionDataStore.lua"
+        },
+        "ClassEducation": {
+          "$path": "src/server/ClassEducation.server.lua"
         }
       }
     }

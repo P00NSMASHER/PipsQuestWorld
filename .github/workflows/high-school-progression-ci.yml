@@ -37,3 +37,5 @@ jobs:
         run: lua5.4 school/tests/progression_repository_spec.lua
       - name: Run class-to-progression binding test
         run: lua5.4 school/tests/progression_binding_spec.lua
+      - name: Run durable vertical-slice integration gate
+        run: lua5.4 school/tests/class_progression_integration_spec.lua
