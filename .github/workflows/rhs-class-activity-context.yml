@@ -78,6 +78,7 @@ jobs:
               low_name = name.lower()
 
               if cls in script_classes:
+                  source = prop_text(item, "Source")
                   if (
                       path in {
                           "ServerScriptService/ClassroomZones",
@@ -88,6 +89,10 @@ jobs:
                       }
                       or "classroomzones" in low_path
                       or "time_schedulescript" in low_path
+                      or path.startswith("StarterGui/ClassNotification/")
+                      or "ClassTeleport" in source
+                      or "ScheduledTeleport" in source
+                      or "NotificationForClient.OnClientEvent" in source
                   ):
                       targets.append((item, path, cls))
 
