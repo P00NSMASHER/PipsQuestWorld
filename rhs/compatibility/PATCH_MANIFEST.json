@@ -76,7 +76,7 @@
     },
     {
       "id": "add-server-authoritative-class-activity",
-      "targetPath": "ServerScriptService/Time_ScheduleScript",
+      "targetPath": "ServerScriptService/Time/ScheduleScript",
       "expectedSourceSha256": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
       "reason": "Attach one minimal Math activity to the existing RHS period/class flow while keeping the answer key, zone validation, attempts, idempotent completion, and class-points authority on the server.",
       "replacements": [
