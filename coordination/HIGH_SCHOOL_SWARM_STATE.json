@@ -1,45 +1,75 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T17:14:30Z",
+  "updatedAt": "2026-10-01T21:12:48Z",
   "protocolCommit": "859152fba4c3c5c10c48b7dbe7fb88f674a003a4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
   "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
+  "currentPlayableStage": "spawn -> authoritative school clock/period",
+  "cyclesSinceLastEndToEndPlayableAdvancement": 5,
   "wipCap": 3,
+  "unintegratedProductCandidateCount": 2,
   "wipSlots": {
     "base": {
       "branch": "rebuild/high-school-foundation",
-      "sha": "f763b243f4ec22951f432e66f807f187c960583f",
-      "status": "PASS"
+      "sha": "c4cca89d9f8c7684a5df15c4143ea237672e5ef4",
+      "status": "PASS",
+      "exactHeadCiRunId": 36904566927
     },
     "upstream": {
       "branch": "rebuild/high-school-class-education-reentry",
-      "sha": "5031708afe609e8c7ba6b33496b39869792c2b09",
-      "status": "BLOCKED",
-      "owner": "Roblox High School Class & Education"
+      "sha": "5e7665702f0d680da3e205b5b7009e84f84f7617",
+      "status": "PASS_EXACT_HEAD_READY",
+      "owner": "Roblox High School Class & Education",
+      "requiredBaseSha": "c4cca89d9f8c7684a5df15c4143ea237672e5ef4",
+      "lineage": "ahead_1_behind_0",
+      "exactHeadCi": [
+        {
+          "runId": 36927085654,
+          "workflow": "High School Class Education Guards",
+          "event": "push",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36927091511,
+          "workflow": "High School Class Education Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36927091472,
+          "workflow": "High School Foundation Static Guards",
+          "event": "pull_request",
+          "conclusion": "success"
+        }
+      ]
     },
-    "downstream": {
-      "branch": "rebuild/high-school-progression-mobile-v1",
-      "sha": "2da9d6b17f9cd2b108948c5d5a462e05088ded54",
-      "status": "SPECULATIVE_BLOCKED",
-      "owner": "Roblox High School Progression & Mobile"
-    }
+    "downstream": null
+  },
+  "validatedProducerEvidence": {
+    "classEducation": "Fresh replay on current Foundation validates class attendance/session lifecycle and server-authoritative activity semantics, but does not advance the canonical playable-stage KPI until downstream progression and integration complete."
   },
   "currentBlockers": [
     {
+      "id": "PROGRESSION_CANONICAL_REHOME_REQUIRED",
+      "owner": "Roblox High School Progression & Mobile",
+      "exitCriterion": "Create at most one downstream candidate descended from rebuild/high-school-class-education-reentry@5e7665702f0d680da3e205b5b7009e84f84f7617, rehome eligible progression/persistence semantics into school/** only, map no highschool/** runtime path, and obtain exact-head deterministic CI PASS."
+    },
+    {
+      "id": "PROGRESSION_CANONICAL_EXACTLY_ONCE_RESTORE",
+      "owner": "Roblox High School Progression & Mobile",
+      "exitCriterion": "On the canonical school/** descendant, prove exactly-once completion under duplicate/concurrent submission, return to free roam, and save/rejoin restoration of the committed result before Integration consumes it."
+    }
+  ],
+  "resolvedThisCycle": [
+    {
       "id": "CLASS_EDUCATION_STALE_REPLAY_AFTER_LEAVE",
-      "owner": "Roblox High School Class & Education",
-      "exitCriterion": "Old accepted submissions after class closure must fail closed with no completion/progression change and exact-head regression CI PASS."
+      "resolution": "Replayed unchanged Class/Education product semantics onto current Foundation exact head while preserving Foundation school/** CI scope.",
+      "sha": "5e7665702f0d680da3e205b5b7009e84f84f7617"
     },
     {
-      "id": "PROGRESSION_TWO_WRITER_STALE_SAVE",
-      "owner": "Roblox High School Progression & Mobile",
-      "exitCriterion": "Concurrent writers must preserve both successful completions or reject a stale writer before success; save/rejoin must restore the committed set."
-    },
-    {
-      "id": "PARALLEL_SOURCE_ROOT",
-      "owner": "Roblox High School Progression & Mobile",
-      "exitCriterion": "Eligible product code is rehomed from highschool/** into school/** with no dual runtime mapping and exact-head tests."
+      "id": "CLASS_EDUCATION_STALE_BASE",
+      "resolution": "New Class/Education head is one commit ahead and zero behind Foundation c4cca89d9f8c7684a5df15c4143ea237672e5ef4 with exact-head CI PASS."
     }
   ],
   "unchangedFingerprintRule": {
@@ -56,11 +86,17 @@
     "closedPrs": [
       19,
       21,
+      22,
       23,
       24,
-      25
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
     ],
     "workAllowed": false
   },
-  "nextMilestone": "Fix the Class/Education stale-replay blocker, obtain exact-head PASS, then assemble the smallest vertical-slice integration candidate before adding feature breadth."
+  "nextMilestone": "Progression & Mobile may consume the stable Class/Education interface only by creating one school/** descendant candidate from 5e7665702f0d680da3e205b5b7009e84f84f7617; exact-head progression/persistence PASS is required before Integration."
 }
