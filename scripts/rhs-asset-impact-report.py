@@ -66,7 +66,23 @@ def main() -> int:
     map_by_id = {a["assetId"]: a for a in asset_map["assets"]}
     probe_by_id = {a["assetId"]: a for a in probe["results"]}
 
+    terminal_non_public_classes = {
+        "auth_required",
+        "forbidden_anonymous",
+        "not_found",
+        "api_error_payload",
+        "other_http",
+    }
+    transient_classes = {
+        "rate_limited",
+        "timeout",
+        "network_error",
+        "probe_exception",
+        "not_probed",
+    }
+
     rows = []
+    indeterminate = []
     for asset_id, mapped in map_by_id.items():
         pr = probe_by_id.get(asset_id) or {}
         classification = pr.get("classification", "not_probed")
@@ -85,7 +101,7 @@ def main() -> int:
                 "value": ref.get("value"),
             })
 
-        rows.append({
+        row = {
             "assetId": asset_id,
             "classification": classification,
             "httpStatus": pr.get("httpStatus"),
@@ -96,9 +112,18 @@ def main() -> int:
             "propertyNames": mapped.get("propertyNames", {}),
             "classes": mapped.get("classes", {}),
             "sampleReferences": sample_refs,
-        })
+        }
+
+        if classification in transient_classes:
+            indeterminate.append(row)
+            continue
+        if classification not in terminal_non_public_classes:
+            indeterminate.append(row)
+            continue
+        rows.append(row)
 
     rows.sort(key=lambda r: (-r["impactScore"], -r["referenceCount"], int(r["assetId"])))
+    indeterminate.sort(key=lambda r: (-r["impactScore"], -r["referenceCount"], int(r["assetId"])))
 
     by_category = {}
     by_classification = {}
@@ -112,6 +137,11 @@ def main() -> int:
 
     startup = [r for r in rows if "startup_surface" in r["priorities"]]
     startup_refs = sum(int(r["priorities"].get("startup_surface", 0)) for r in startup)
+    indeterminate_startup = [r for r in indeterminate if "startup_surface" in r["priorities"]]
+    indeterminate_startup_refs = sum(
+        int(r["priorities"].get("startup_surface", 0))
+        for r in indeterminate_startup
+    )
 
     report = {
         "schemaVersion": 1,
@@ -121,6 +151,9 @@ def main() -> int:
             "nonPublicAnonymousAssetIds": len(rows),
             "nonPublicAnonymousStartupAssetIds": len(startup),
             "nonPublicAnonymousStartupReferences": startup_refs,
+            "indeterminateAssetIds": len(indeterminate),
+            "indeterminateStartupAssetIds": len(indeterminate_startup),
+            "indeterminateStartupReferences": indeterminate_startup_refs,
             "countsByCategory": dict(sorted(by_category.items())),
             "countsByClassification": dict(sorted(by_classification.items())),
             "countsByPriorityAndCategory": {
@@ -128,6 +161,7 @@ def main() -> int:
             },
         },
         "priorityOrder": rows[: max(1, args.top)],
+        "indeterminatePriorityOrder": indeterminate[: max(1, args.top)],
     }
 
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -136,6 +170,9 @@ def main() -> int:
     print("NON_PUBLIC_ASSETS", len(rows))
     print("STARTUP_ASSETS", len(startup))
     print("STARTUP_REFERENCES", startup_refs)
+    print("INDETERMINATE_ASSETS", len(indeterminate))
+    print("INDETERMINATE_STARTUP_ASSETS", len(indeterminate_startup))
+    print("INDETERMINATE_STARTUP_REFERENCES", indeterminate_startup_refs)
     for category, count in sorted(by_category.items()):
         print("CATEGORY", category, count)
     for row in rows[: min(args.top, 100)]:
