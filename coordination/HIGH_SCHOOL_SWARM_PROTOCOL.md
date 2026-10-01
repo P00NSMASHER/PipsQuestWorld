@@ -105,3 +105,10 @@ Each Control Tower cycle records:
 - hours/cycles since the last end-to-end playable advancement.
 
 If commits/PRs/receipts rise while playable-stage progress does not, reduce product WIP rather than creating more parallel implementation.
+
+## Automation immutability
+- Scheduled Roblox workers MUST NOT call task/automation management actions to enable, disable, pause, delete, rename, reschedule, or rewrite any Roblox automation, including themselves.
+- Only an explicit user instruction in chat may change a Roblox task definition or enabled/schedule state.
+- A blocker, completion, unchanged fingerprint, WIP cap, or WAITING_* state is never permission to disable a task.
+- Control Tower coordinates through GitHub-visible shared state/objectives, not by mutating scheduled-task definitions.
+- If a task-state contradiction is observed, record it as an automation defect for the user/DevEx; do not self-repair it through task mutation.
