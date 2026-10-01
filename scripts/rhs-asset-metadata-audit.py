@@ -120,17 +120,20 @@ def probe(asset_id: str, timeout: float, retries: int, interval: float) -> dict:
     payload = last.get("payload") or {}
     if last["classification"] == "metadata_public":
         last["metadata"] = {
-            "name": find_first(payload, {"name", "Name", "displayName", "DisplayName"}),
-            "assetType": find_first(payload, {"assetType", "AssetType", "typeId", "assetTypeId"}),
-            "creator": compact_creator(payload),
-            "description": find_first(payload, {"description", "Description"}),
-            "moderationStatus": find_first(payload, {"moderationStatus", "ModerationStatus", "status"}),
-            "isPublicDomain": find_first(payload, {"isPublicDomain", "IsPublicDomain", "publicDomain"}),
+            "name": None,
+            "assetType": None,
+            "creator": None,
+            "description": None,
+            "moderationStatus": None,
+            "isPublicDomain": None,
         }
+        # Preserve the small public response temporarily so the exact response
+        # schema can be reviewed before field extraction is treated as evidence.
+        last["publicMetadataPayload"] = payload
     else:
         last["metadata"] = None
+        last["publicMetadataPayload"] = None
 
-    # Keep evidence compact; raw payload can be re-probed if needed.
     last.pop("payload", None)
     return last
 
