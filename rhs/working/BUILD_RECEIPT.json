@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "dda913815392360c94e18bc8f3a3a4b1aa57ede31af967b27e88ad3479fd757c",
+  "patchManifestSha256": "d36aaf400d73e3c6b8ea8330aa600397cab2369732e58acdb3178e129a5b87df",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -193,11 +193,35 @@
           }
         ],
         "targetPath": "ServerScriptService/ServerPaintingManager"
+      },
+      {
+        "afterSourceSha256": "f180cb9f794e0a7157a9311f4ed692814d13ddb2a6e915e9d34ccb47e2a0cf66",
+        "beforeSourceSha256": "571e84308d007a1775aa14a281f92b6c177560bf97de308ec7347353d1d9d170",
+        "class": "Script",
+        "id": "harden-phone-text-remotes",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "b3bac837250e490d97de1abc77270014098d01dfb195af5fa3108bbaa10098b5",
+            "oldSha256": "a106bb0777b0ddb5a155c94ae8e9b9e8739b3056654ff5042d08fb231760aabb"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "071666a05cd3be9cf9ee0ab51fbb26fcf84da8a75c1280065eb3471503e34197",
+            "oldSha256": "c1746af67bab75045820d9b5b255faca29106aac040d06e1757a425444008af4"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "d2c01e8888586aac1b23bb41632f72ffddb85ac075d9937ee01289579511fdc6",
+            "oldSha256": "4f749fd17f70a1b6e2940171dc17457a2de03a3f3bfb3b3d59f996cd60c73d1c"
+          }
+        ],
+        "targetPath": "ServerScriptService/PhoneTextingScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308"
+  "workingSha256": "5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa"
 }

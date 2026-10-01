@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "189bac98d4d55d8617a5eab91a33be94c15e7a7a86b861027c8f2b3ef01a5308",
+  "expectedWorkingSha256": "5e3afa9cfa9b3dca0902ccff3c2add24c43263daae9a016d5f3e2f8e4b296caa",
   "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
@@ -14,6 +14,7 @@
     "harden-apartment-purchase-remote",
     "harden-outfit-remote-inputs",
     "harden-house-furniture-remotes",
-    "harden-painting-remotes"
+    "harden-painting-remotes",
+    "harden-phone-text-remotes"
   ]
 }
