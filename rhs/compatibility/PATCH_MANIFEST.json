@@ -203,6 +203,49 @@
           "expectedCount": 1
         }
       ]
+    },
+    {
+      "id": "harden-economy-remote-inputs",
+      "targetPath": "ServerScriptService/ItemBuyScript",
+      "expectedSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
+      "reason": "Keep item pricing/eligibility server-owned while rejecting malformed client identifiers, bounding purchase/redemption request frequency, validating temporary-shop item schema, and making the special-guitar award wait for the existing server award function instead of fire-and-forget.",
+      "replacements": [
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
+          "new": "local economyrequesttime = {}\n\nlocal function allowEconomyRequest(plr,key,interval)\n\tlocal now = tick()\n\tlocal requests = economyrequesttime[plr]\n\tif not requests then\n\t\trequests = {}\n\t\teconomyrequesttime[plr] = requests\n\tend\n\tlocal lastrequest = requests[key]\n\tif lastrequest and now - lastrequest < interval then\n\t\treturn false\n\tend\n\trequests[key] = now\n\treturn true\nend\n\ngame.Players.PlayerRemoving:connect(function(plr)\n\teconomyrequesttime[plr] = nil\nend)\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tif type(shopname) ~= \"string\" or type(itemname) ~= \"string\" then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"temporary\",.25) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
+          "expectedCount": 1
+        },
+        {
+          "old": "\t\tlocal item = shop:FindFirstChild(itemname)\n\t\tif item then\n\t\t\tlocal price = item.ItemCost.Value",
+          "new": "\t\tlocal item = shop:FindFirstChild(itemname)\n\t\tif item and item:FindFirstChild(\"ItemCost\") and item:FindFirstChild(\"Tool\") and item.Tool:IsA(\"Tool\") then\n\t\t\tlocal price = item.ItemCost.Value",
+          "expectedCount": 1
+        },
+        {
+          "old": "function PurchasePermanentItem(plr,itemid)\n\tlocal item",
+          "new": "function PurchasePermanentItem(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"permanent\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "expectedCount": 1
+        },
+        {
+          "old": "function PurchaseLoyaltyItem(plr,itemid)\n\tlocal item",
+          "new": "function PurchaseLoyaltyItem(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"loyalty\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.ClaimSpecialGuitar.OnServerEvent:connect(function(plr,pid)\n\tif pid ~= plr.userId then return end",
+          "new": "game.ReplicatedStorage.RemoteFunctions.ClaimSpecialGuitar.OnServerEvent:connect(function(plr,pid)\n\tif pid ~= plr.userId then return end\n\tif not allowEconomyRequest(plr,\"special-guitar\",10) then return end",
+          "expectedCount": 1
+        },
+        {
+          "old": "\t\tif not data.Objects:FindFirstChild(\"332\") then --ID of guitar\n\t\t\tgame.ServerStorage.RemoteFunctions.AwardItem:Fire(plr, 332)\n\t\t\twait(9)",
+          "new": "\t\tif not data.Objects:FindFirstChild(\"332\") then --ID of guitar\n\t\t\tif game.ServerStorage.RemoteFunctions.AwardItemAsync:Invoke(plr, 332) ~= true then\n\t\t\t\treturn\n\t\t\tend\n\t\t\twait(9)",
+          "expectedCount": 1
+        },
+        {
+          "old": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tlocal data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
+          "new": "game.ReplicatedStorage.RemoteFunctions.RedeemTwitterCode.OnServerInvoke = function(plr,code)\n\tif type(code) ~= \"string\" or #code < 1 or #code > 64 then\n\t\treturn false,\"Error: Invalid code\"\n\tend\n\tif not allowEconomyRequest(plr,\"twitter-code\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
