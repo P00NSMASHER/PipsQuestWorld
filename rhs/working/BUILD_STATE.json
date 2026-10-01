@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "compatibility_repair",
   "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
-  "expectedWorkingSha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d",
+  "expectedWorkingSha256": "52cc83659fbf318cbd2532280d6620b416916ebf3af61d932e2a5c742a7aa659",
   "modifiedFromBaseline": true,
   "runtimeVerified": false,
   "published": false,
@@ -10,6 +10,8 @@
     "sandbox-legacy-ranking-login",
     "sandbox-legacy-group-ranking",
     "sandbox-legacy-gameanalytics",
-    "harden-car-instance-remotes"
+    "harden-car-instance-remotes",
+    "add-server-authoritative-class-activity",
+    "add-client-class-activity-ui"
   ]
 }

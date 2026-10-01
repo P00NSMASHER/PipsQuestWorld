@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "e5cfdf7548ef83f50852a211d9523448c464454f8089f9475cbe2a72533892d1",
+  "patchManifestSha256": "8adc41c58fa3120825cbac65fb24fe05d8b01d24bacd591e2fd6deac736fca05",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -82,11 +82,49 @@
           }
         ],
         "targetPath": "ServerScriptService/CarSpawnScript"
+      },
+      {
+        "afterSourceSha256": "553c598e9983fe3458736c4464adb7b64fcb4fc8f09b22cd4ebc3e623cca667f",
+        "beforeSourceSha256": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
+        "class": "Script",
+        "id": "add-server-authoritative-class-activity",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "ca238d97bed407e3ae893170b627f103093f8174182cf49e88e1e7877a46bff4",
+            "oldSha256": "2a19407a60ea33ad597409a385b73f2c8092881faf2a0811434e1967b6217cb4"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "5e57f66f1a9f82da18dd4b9ec7e9c1b69340b6b584d6f50270c018d2f1463242",
+            "oldSha256": "596287b0bb7688a40b57592bcc951c8a3f0f7c2892fe4cd3954f2a04df847553"
+          }
+        ],
+        "targetPath": "ServerScriptService/Time/ScheduleScript"
+      },
+      {
+        "afterSourceSha256": "ea97fe18435dc16ad57ed5330a9659ed072b8d3b66cb303f419cc297c816298e",
+        "beforeSourceSha256": "3fdbffe2104934b695385c6148d1d7e5e73a69f23d69ac439ec4533cfa67519c",
+        "class": "LocalScript",
+        "id": "add-client-class-activity-ui",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "57b5abd69d1e60629907d315de5e4a018369b09d489c4da79f5f7a9135373819",
+            "oldSha256": "65b1bd3846a9b977b5b9d421c9f6815517cf4d754778eb9f6386cd38828a752f"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "6b89f01742195e39f36dacc1f2b1d9e1708c391d90a5546819dfb68a4d68a763",
+            "oldSha256": "10c68ce64704419fbfe6c0003c7f2c097a34213caeb0333a1802c0db958ae8b5"
+          }
+        ],
+        "targetPath": "StarterGui/ClassNotification/LocalScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d"
+  "workingSha256": "52cc83659fbf318cbd2532280d6620b416916ebf3af61d932e2a5c742a7aa659"
 }
