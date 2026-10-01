@@ -7,7 +7,7 @@
     "immutable": true
   },
   "working": {
-    "sha256": "af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde",
+    "sha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40",
     "compatibilityPatchCount": 6,
     "runtimeVerified": false,
     "published": false,
@@ -157,14 +157,14 @@
     },
     "coreRemoteHardening": {
       "status": "PASS_BUILD_PARITY",
-      "candidateSha256": "af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde",
+      "candidateSha256": "085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40",
       "repairs": [
         {
           "id": "harden-apartment-purchase-remote",
           "targetPath": "ServerScriptService/ApartmentPurchaseScript",
           "baselineSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
-          "patchedSourceSha256": "fbff925e1f3c535393f1941be33d750ef3672a8571035fb15a5073b81ec3278a",
-          "policy": "Rental requests must target a direct Workspace Apartment with the expected BuyDoor/LockButton structure and a requesting-player root within 30 studs of its BuyDoor."
+          "patchedSourceSha256": "e2f37f551a573bf45aaeeb45bbd4828e1b5030938293d63a62f659de2e87e4c4",
+          "policy": "Rental requests must target a direct Workspace Apartment with the expected BuyDoor/LockButton structure and a requesting-player root within 30 studs of its BuyDoor, using current Vector3.Magnitude."
         },
         {
           "id": "harden-outfit-remote-inputs",
