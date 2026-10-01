@@ -22,7 +22,7 @@ VALIDATION_PATTERNS={
     "string_validation": re.compile(r'\b(?:match|find)\s*\(|:match\s*\(|:find\s*\(',re.I),
     "player_state": re.compile(r'PlayerData|IsDataLoadedSuccessfully|loadsuccess|safetoload',re.I),
     "authorization": re.compile(r'IsAdmin|GetRankInGroup|GetRoleInGroup|PlayerHasPass|GamePassCheck|UserId|userId|\.Team\b|TeamColor',re.I),
-    "object_existence": re.compile(r'FindFirstChild|WaitForChild',re.I),
+    "object_existence": re.compile(r'FindFirstChild|WaitForChild',re.I),\n    "server_owned_instance": re.compile(r'workspace\\s*[:.]\\s*FindFirstChild\\s*\\([^)]*plr\\.Name|car\\s*==\\s*workspace\\s*[:.]\\s*FindFirstChild',re.I),
 }
 THROTTLE_PATTERNS={
     "cooldown": re.compile(r'cooldown|debounce|throttl',re.I),
