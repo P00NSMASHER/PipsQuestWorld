@@ -167,7 +167,7 @@
       "id": "harden-economy-purchase-remotes",
       "targetPath": "ServerScriptService/ItemBuyScript",
       "expectedSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
-      "reason": "Fail closed on malformed temporary-shop identifiers and make permanent/loyalty purchase mutations complete synchronously before a successful RemoteFunction response, eliminating the explicit background-coroutine double-submit window.",
+      "reason": "Fail closed on malformed temporary-shop identifiers; execute permanent/loyalty mutations synchronously; and serialize permanent/loyalty purchase helpers per player across every caller so duplicate submissions cannot pass pre-mutation checks concurrently.",
       "replacements": [
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
@@ -182,6 +182,26 @@
         {
           "old": "coroutine.resume(coroutine.create(processLoyaltyItemPurchase), plr,price,itemid)",
           "new": "processLoyaltyItemPurchase(plr,price,itemid)",
+          "expectedCount": 1
+        },
+        {
+          "old": "function PurchasePermanentItem(plr,itemid)",
+          "new": "function PurchasePermanentItemUnlocked(plr,itemid)",
+          "expectedCount": 1
+        },
+        {
+          "old": "end\n\ngame.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchasePermanentItem(plr,itemid)\nend",
+          "new": "end\n\nlocal permanentPurchaseBusy = {}\nfunction PurchasePermanentItem(plr,itemid)\n\tif permanentPurchaseBusy[plr] then\n\t\treturn false,\"Please wait for your current purchase to finish.\"\n\tend\n\tpermanentPurchaseBusy[plr] = true\n\tlocal ok,result,reason = pcall(PurchasePermanentItemUnlocked,plr,itemid)\n\tpermanentPurchaseBusy[plr] = nil\n\tif not ok then\n\t\treturn false,\"Your purchase could not be completed. Please try again.\"\n\tend\n\treturn result,reason\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchasePermanentItem(plr,itemid)\nend",
+          "expectedCount": 1
+        },
+        {
+          "old": "function PurchaseLoyaltyItem(plr,itemid)",
+          "new": "function PurchaseLoyaltyItemUnlocked(plr,itemid)",
+          "expectedCount": 1
+        },
+        {
+          "old": "end\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
+          "new": "end\n\nlocal loyaltyPurchaseBusy = {}\nfunction PurchaseLoyaltyItem(plr,itemid)\n\tif loyaltyPurchaseBusy[plr] then\n\t\treturn false,\"Please wait for your current purchase to finish.\"\n\tend\n\tloyaltyPurchaseBusy[plr] = true\n\tlocal ok,result,reason = pcall(PurchaseLoyaltyItemUnlocked,plr,itemid)\n\tloyaltyPurchaseBusy[plr] = nil\n\tif not ok then\n\t\treturn false,\"Your purchase could not be completed. Please try again.\"\n\tend\n\treturn result,reason\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
           "expectedCount": 1
         }
       ]
