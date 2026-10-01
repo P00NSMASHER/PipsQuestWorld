@@ -1,0 +1,132 @@
+name: RHS Board ServerControl Context
+
+on:
+  push:
+    branches:
+      - hardening/rhs-board-servercontrol-v3
+    paths:
+      - ".github/workflows/rhs-board-servercontrol-context.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify reviewed parent candidate
+        run: |
+          python3 scripts/verify-rhs-baseline.py
+          python3 scripts/verify-rhs-preflight.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working build
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-working.rbxlx
+
+      - name: Print board ServerControl contexts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import re
+          import xml.etree.ElementTree as ET
+
+          root=ET.parse("/tmp/rhs-working.rbxlx").getroot()
+          script_classes={"Script","LocalScript","ModuleScript"}
+
+          targets=[
+              "StarterPack/Skate/Script",
+              "ServerStorage/Skate/Script",
+              "ServerStorage/Hoverboard/Script",
+              "ReplicatedStorage/Objects/gear_Merely's Sparkle Time Hoverboard/Merely's Sparkle Time Hoverboard/Script",
+              "ReplicatedStorage/Objects/gear_Red Rolling \"Hoverboard\"/Red Rolling \"Hoverboard\"/Script",
+              "ReplicatedStorage/Objects/gear_Summer Skate/Summer Skate/Script",
+              "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript",
+              "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript",
+          ]
+
+          def prop_text(item,name):
+              props=item.find("Properties")
+              if props is None:
+                  return ""
+              for p in props:
+                  if p.attrib.get("name") != name:
+                      continue
+                  if p.tag=="Content":
+                      child=next(iter(p),None)
+                      return (child.text or "") if child is not None else ""
+                  return p.text or ""
+              return ""
+
+          def item_name(item):
+              return prop_text(item,"Name") or "(unnamed)"
+
+          def walk(parent,prefix=""):
+              for item in parent.findall("Item"):
+                  name=item_name(item).replace("/","_")
+                  path=f"{prefix}/{name}" if prefix else name
+                  yield item,path
+                  yield from walk(item,path)
+
+          scripts={}
+          for item,path in walk(root):
+              cls=item.attrib.get("class","")
+              if cls in script_classes:
+                  src=prop_text(item,"Source")
+                  if src:
+                      scripts[path]=(cls,src)
+
+          print("=== BOARD_SERVERCONTROL_TARGETS ===")
+          for target in targets:
+              rec=scripts.get(target)
+              if not rec:
+                  print("MISSING_TARGET",target)
+                  continue
+              cls,src=rec
+              lines=src.splitlines()
+              sha=hashlib.sha256(src.encode()).hexdigest()
+              print("TARGET",cls,target,"source_sha256="+sha,"lines="+str(len(lines)))
+              handler_hits=[i for i,line in enumerate(lines,1) if "OnServerInvoke" in line and "ServerControl" in line]
+              require_hits=[(i,line.strip()) for i,line in enumerate(lines,1) if re.search(r"require\s*\(\s*\d{4,}\s*\)",line)]
+              print("HANDLER_LINES",",".join(map(str,handler_hits)))
+              for i,line in require_hits:
+                  print("NUMERIC_REQUIRE",i,line)
+              shown=set()
+              for center in handler_hits:
+                  for n in range(max(1,center-28),min(len(lines),center+115)+1):
+                      if n in shown:
+                          continue
+                      shown.add(n)
+                      print(f"{n:04d}: {lines[n-1]}")
+              print("=== END_TARGET ===")
+          print("=== END_BOARD_SERVERCONTROL_TARGETS ===")
+
+          print("=== BOARD_SERVERCONTROL_CLIENT_CALLS ===")
+          for path,(cls,src) in scripts.items():
+              if "InvokeServer" not in src or "ServerControl" not in src:
+                  continue
+              lines=src.splitlines()
+              hits=[i for i,line in enumerate(lines,1) if "ServerControl" in line and "InvokeServer" in line]
+              if not hits:
+                  continue
+              print("CALLER",cls,path,"source_sha256="+hashlib.sha256(src.encode()).hexdigest())
+              shown=set()
+              for center in hits:
+                  for n in range(max(1,center-18),min(len(lines),center+24)+1):
+                      if n in shown:
+                          continue
+                      shown.add(n)
+                      print(f"{n:04d}: {lines[n-1]}")
+              print("=== END_CALLER ===")
+          print("=== END_BOARD_SERVERCONTROL_CLIENT_CALLS ===")
+          PY
