@@ -47,10 +47,10 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Exact baseline imported: **YES** — immutable baseline matches SHA-256 `d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360`
 - Working copy created: **YES**
 - Compatibility patches applied: **6** — legacy Cindering ranking login, group-ranking HTTP, and GameAnalytics outbound telemetry are sandboxed; car instance remotes require the server-tracked vehicle; apartment rental validates the nearby Workspace apartment; outfit save/wear remotes validate canonical fields, throttle per player, bound save slots, and fail closed on hat-load errors
-- Working-copy SHA-256 after current patches: `af730f2988d5684af96c55e02362e3de9523e124b7fbaaa53cd22a7bbe980fde`
+- Working-copy SHA-256 after current patches: `085403cafa278103f31bbdd02194cba5fcc1e3ffc7af56491f13da645a6d0c40`
 - Baseline integrity guard: **PASSING**
 - Compatibility audit: **PASSING**
-- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 4 approved script-source changes, no unapproved hierarchy/source drift
+- Structural parity: **PASSING** — 41,258 instances, 1,062 unique script paths, exactly 6 approved script-source changes, no unapproved hierarchy/source drift
 - Current Roblox documentation still exposes `GamePassService` and `PointsService` as deprecated services, so they are not being rewritten solely because they are deprecated
 - Executable legacy HTTP calls: **0 detected** after the three sandbox patches; remaining `http://` matches are non-`HttpService` strings such as asset/documentation URLs
 - Numeric module dependency probe: **COMPLETE** — 191816425 resolves publicly; 258548692 is unavailable anonymously but already fail-soft; four unavailable-anonymous modules are isolated to skateboard/hoverboard paths and require runtime proof before any replacement
@@ -64,7 +64,7 @@ The archived build is substantial but not yet proven runtime-compatible in 2026.
 - Static compatibility policy: deprecated-but-present APIs and the inert `RenderHooksService` singleton are preserved until runtime evidence proves a narrow repair is required
 - School-loop structural audit: **PASSING** — 12/12 required markers present (schedule, classroom zones, class notification/teleport remotes, Math/English/Science/History, cafeteria, lockers); runtime Gate B is still required
 - Car remote ownership hardening: **PASSING BUILD PARITY** — 3 client-triggered car handlers now validate against the exact server-tracked `Workspace` car before mutation
-- Core remote hardening candidate: **BUILD + STRUCTURAL PARITY PASS** — apartment purchase trust boundary and outfit remote input/throttle/load guards are encoded as deterministic baseline patches; dedicated PR contract must remain green
+- Core remote hardening candidate: **BUILD + STRUCTURAL PARITY PASS** — apartment purchase validates direct Workspace ownership/schema and 30-stud proximity using current `Vector3.Magnitude`; outfit save/wear validates canonical fields, one in-flight request, slots 1–24, and hat-load failure; dedicated PR contract must remain green
 - Static preflight evidence: `rhs/compatibility/PREFLIGHT.json`
 - Static preflight verdict: **READY FOR LOCAL STUDIO SMOKE** with Studio API-service access disabled; runtime behavior is still unproven
 - Roblox Studio runtime proof: **NOT YET PERFORMED**
