@@ -1,55 +1,59 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 2,
+  "unintegratedProductCandidateCount": 0,
+  "currentParityMilestone": "WORLD_TOWN_SHELL_INTEGRATED_WAITING_SMOKE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
-      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
+      "status": "PASS_EXACT_HEAD_CI_PENDING_SMOKE"
     },
     "upstream": null,
     "downstream": {
       "lane": "Roblox High School Progression & Mobile",
-      "objective": "LEGACY_PARITY_STAGE_1B_HUD_MOBILE_PRESENTATION",
+      "objective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
       "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
-      "stableInterfacesOnly": [
-        "SchoolFoundation state snapshot",
-        "ClassEducation read state",
-        "Progression read state"
-      ],
+      "baseSha": "50288ecf33dec647424f6bf173071a8982041b41",
       "allowedRoot": "school/**",
-      "forbiddenOverlap": [
-        "campus semantics",
-        "school clock authority",
-        "class/grading authority",
-        "progression write semantics",
-        "persistence writers"
+      "stableInterfacesOnly": [
+        "ClassEducation completion identifiers",
+        "ProgressionRepository durable player state",
+        "read-only progression snapshot"
       ],
-      "status": "READY_BEHIND_STABLE_INTERFACE"
+      "ownership": [
+        "single server-authoritative money balance",
+        "idempotent transaction ledger",
+        "durable ownership/unlock contract",
+        "read-only economy snapshot"
+      ],
+      "forbiddenOverlap": [
+        "world geometry",
+        "job interaction mechanics",
+        "vehicle lifecycle/physics",
+        "housing placement",
+        "shop/catalog presentation",
+        "school clock authority",
+        "class/grading authority"
+      ],
+      "status": "READY_BEHIND_STABLE_INTERFACE_PENDING_WORLD_SMOKE"
     }
   },
   "supportLaneAssignments": {
-    "Foundation": "Stage 1A integrated at e2cfbf6; no parallel product expansion until Stage 1B integrates unless a reproducible Foundation defect blocks the canonical slice.",
-    "Class & Education": "Stage 2 parity test/content prep only until Stage 1B is integrated and smoke-certified.",
-    "Content QA": "Maintain one shared Legacy parity/reference checklist and approved asset/provenance mapping; no runtime fork.",
-    "QA/Contract": "Add deterministic contracts/harnesses for the active Stage 1B presentation slice only; no producer semantics.",
-    "Integration": "WAITING_DEPENDENCY for the Stage 1B producer candidate, then consume it into the same school/** lineage.",
-    "Integration Smoke": "WAITING_DEPENDENCY for the next integrated canonical exact head.",
-    "Release/Package": "WAITING_DEPENDENCY until the requested parity milestone is smoke-certified; never publish.",
-    "DevEx": "CI/evidence infrastructure only."
+    "Foundation": "WAITING_DEPENDENCY until canonical 50288ecf world/town shell is exact-head smoke-certified; do not open another overlapping world branch.",
+    "Class & Education": "Prepare Stage-2 school/class-feel tests or isolated content contracts only; no overlapping runtime candidate while world smoke is pending.",
+    "Content QA": "Prepare original class/minigame content prerequisites only; no runtime fork.",
+    "Progression & Mobile": "May prepare one isolated economy/ownership contract behind current stable interfaces; it must not bind job/vehicle/housing mechanics until canonical world smoke passes.",
+    "Pip High Free Roam": "WAITING_DEPENDENCY for exact-green economy contract plus canonical world/town smoke PASS.",
+    "QA/Contract": "Validate canonical 50288ecf world/town invariants and any isolated economy contract candidate without implementing producer semantics.",
+    "Integration": "No new product integration until exact-green candidate exists; preserve WIP cap.",
+    "Integration Smoke": "Certify canonical 50288ecf exact head, including navigation/location seams and baseline vertical-slice regression.",
+    "Release/Package": "WAITING_DEPENDENCY until canonical 50288ecf is smoke-certified; never publish automatically."
   },
   "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
-  "cyclesSinceLastEndToEndPlayableAdvancement": 2,
-  "lastValidatedParityAdvancement": {
-    "sha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
-    "stage": "LEGACY_PARITY_STAGE_1A_CAMPUS_EXTERIOR_INTEGRATED",
-    "smokeReceiptCommit": "037de41bb78dbd2480ba74f2e86df655a8ccfdfc"
-  },
-  "successMetric": "Validated player-facing Legacy parity advancement on the canonical school/** lineage.",
+  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
+  "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
     "broadTests": 0,
