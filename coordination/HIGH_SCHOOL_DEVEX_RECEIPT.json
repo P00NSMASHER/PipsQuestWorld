@@ -1,33 +1,35 @@
 {
-  "schemaVersion": 6,
-  "cycle": "2026-10-02T01:08Z",
+  "schemaVersion": 7,
+  "cycle": "2026-10-02T01:59Z",
   "lane": "Roblox High School DevEx",
   "result": "PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
   "canonicalSourceRoot": "school/**",
   "fixedDefect": {
-    "id": "DEVEX_RECEIPT_SHA_DRIFT_AFTER_PR32_ADVANCE",
-    "beforeReceiptBlobSha": "e9328855787512293f16e798aad8db83696355c9",
-    "beforeRecordedCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
-    "sharedStateRecordedCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-    "liveCandidateBranch": "release/pip-high-demo-ui-20261001",
-    "liveCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "id": "DEVEX_RECEIPT_STALE_AFTER_PR32_MERGE",
+    "beforeReceiptBlobSha": "541e56ae4c95d96044034b255211247c795a7ed9",
+    "beforeRecordedCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
     "pullRequest": 32,
-    "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "livePullRequestState": "CLOSED_MERGED",
+    "livePullRequestHeadSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "mergeCommitSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
     "exactHeadCi": [
-      {"runId":36948771699,"workflow":"High School Foundation Static Guards","conclusion":"success"},
+      {"runId":36948771684,"workflow":"High School Progression Guards","conclusion":"success"},
       {"runId":36948771689,"workflow":"High School Class Education Guards","conclusion":"success"},
-      {"runId":36948771684,"workflow":"High School Progression Guards","conclusion":"success"}
+      {"runId":36948771699,"workflow":"High School Foundation Static Guards","conclusion":"success"}
     ],
-    "measurableWasteRemoved": "Stops support lanes from consuming two superseded PR #32 SHAs and rerunning validation against non-live heads.",
-    "rollbackCriterion": "Rollback only if PR #32 closes, its head changes from e69d6ddf8e1e3875ea9947b919cae2f256a449a3, the canonical base changes, or cited exact-head CI is invalidated."
+    "measurableWasteRemoved": "Stops support lanes from treating merged PR #32 as an active WIP candidate and rerunning work against a closed PR.",
+    "deterministicVerification": "GitHub reports PR #32 closed+merged with merge commit 506f19551b7f0b1d3edf753bd17ac366367efc32 and all three cited exact-head checks green.",
+    "rollbackCriterion": "Rollback only if GitHub reports PR #32 was not merged or the accepted integration lineage changes."
   },
   "externalDrift": {
     "sharedState": {
       "owner": "Roblox High School Control Tower",
       "status": "STALE",
       "recordedCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-      "liveCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
+      "recordedPullRequest": 32,
+      "livePullRequestState": "CLOSED_MERGED",
+      "liveMergeCommitSha": "506f19551b7f0b1d3edf753bd17ac366367efc32"
     },
     "qaReceipt": {
       "owner": "Roblox High School QA & Contract",
@@ -36,5 +38,5 @@
     }
   },
   "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "Refresh shared state to live PR #32 head e69d6ddf8e1e3875ea9947b919cae2f256a449a3 without changing producer semantics."
+  "nextExitCriterion": "Refresh shared state from merged PR #32 lineage and remove the obsolete open-candidate slot without changing producer semantics."
 }
