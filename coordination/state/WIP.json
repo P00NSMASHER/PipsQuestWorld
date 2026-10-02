@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "wipCap": 3,
+  "unintegratedProductCandidateCount": 1,
+  "slots": {
+    "base": {
+      "canonicalRef": "coordination/state/CANONICAL.json",
+      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
+    },
+    "upstream": null,
+    "downstream": null
+  },
+  "openCanonicalPrCount": 0,
+  "openNoncanonicalPrCount": 0,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 2,
+  "unchangedFingerprintRule": {
+    "maxCheapReads": 2,
+    "broadTests": 0,
+    "branches": 0,
+    "commits": 0,
+    "statusWrites": 0,
+    "result": "WAITING_UNCHANGED"
+  }
+}
