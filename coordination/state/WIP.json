@@ -3,7 +3,7 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_ASSIGNED",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_AWAITING_EXACT_HEAD_CI",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -30,7 +30,9 @@
         "housing/property authority",
         "avatar/customization/shopping authority"
       ],
-      "status": "ASSIGNED_READY"
+      "status": "AWAITING_EXACT_HEAD_CI",
+      "pr": 85,
+      "headSha": "75d3115b258549cbac59aca427134bf36388a3ae"
     },
     "downstream": null
   },
@@ -91,7 +93,7 @@
   "nextHandoff": {
     "from": "Pip High Free Roam",
     "to": "Roblox High School QA & Contract",
-    "condition": "Exact-head deterministic CI PASS on rebuild/high-school-vehicles-92691e0-v1 descended from canonical 92691e009869ee9cd5d9306786502b157a5b6c84."
+    "condition": "All required exact-head CI PASS PR #85@75d3115b258549cbac59aca427134bf36388a3ae."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -161,7 +163,7 @@
     "Pip High Free Roam": {
       "mode": "PRODUCE",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "Implement one working vehicle lifecycle: spawn one authorized/original vehicle at the canonical AutoShop/road seam, enter, drive with Roblox-native desktop/mobile controls, exit, enforce one active vehicle per player, despawn/re-spawn safely, and clean up on leave.",
+      "objective": "PR #85@75d3115b258549cbac59aca427134bf36388a3ae is the sole active vehicle candidate. Make no new product changes unless exact-head CI exposes a concrete defect.",
       "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
       "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
       "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
@@ -172,7 +174,7 @@
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
       "objective": "Wait for exact-head vehicle candidate; then validate lifecycle, authority boundaries, exploit resistance, mobile controls, provenance, and cleanup.",
       "owned": "QA harnesses/contracts only",
-      "dependency": "Free Roam exact-head candidate",
+      "dependency": "Wait for all required exact-head guards to PASS PR #85@75d3115b258549cbac59aca427134bf36388a3ae.",
       "exit": "Exact candidate PASS or one reproducible defect with one owner/exit criterion.",
       "handoff": "Integration"
     },
