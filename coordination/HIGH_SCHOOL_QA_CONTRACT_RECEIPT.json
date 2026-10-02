@@ -1,81 +1,70 @@
 {
-  "schemaVersion": 1,
-  "lane": "Roblox High School QA & Contract",
+  "schemaVersion": 2,
+  "lane": "Pip High QA & Architecture Contract",
+  "updatedAt": "2026-10-02T08:55:00Z",
   "result": "BLOCKED",
-  "evidenceFingerprint": "sha256:84bcc4ff236df416a6d2b57074818b6fbeeeed12efa93f65829504a4f9eb2109",
-  "inputs": {
-    "protocolBlob": "1001a11aab2f17bf285b5c972327abb6117e8963",
-    "sharedStateBlob": "69d3987281db6303228bb93a0cf024b5919f6e71",
-    "foundationReceiptBlob": "a098697eefe4794ae7a3f78e017effe6148c83c9",
-    "educationReceipt": "PR#20",
-    "contentReceipt": "ABSENT_CURRENT_HIGH_SCHOOL",
-    "progressionState": "DEFERRED"
+  "evidenceFingerprint": "sha256:5e6ca793e973dfaef7b6a1851b9641af2505448d71731c995573b6f5395dfa68",
+  "authoritativeInputs": {
+    "protocolBlob": "737ad8e3c2dcfde01fd3620b06e3b5da5e70d536",
+    "stateManifestBlob": "50b2d38a96c24f65b55974264d2ab673a1ecaf5f",
+    "wipBlob": "15c8cf3771cb553ae8c4a081cb55e26013d4a3fb",
+    "canonicalBlob": "fc27b7142196afb9253b6d95e0f2bf355e03c541",
+    "blockersBlob": "66a08fb3dc2cb32f326d5a87ec998124b358abfa",
+    "playableBlob": "7a619b5eda191e9028356b462bcd96f8d9ab97d9"
   },
-  "foundation": {
-    "branch": "rebuild/high-school-foundation",
-    "sha": "f763b243f4ec22951f432e66f807f187c960583f",
-    "result": "PASS_REUSED",
-    "ciRunId": 36874068766,
-    "rights": "PASS_REPOSITORY_DECLARATION",
-    "checks": [
-      "single Foundation clock/day authority unchanged",
-      "school location/project isolation unchanged",
-      "no new asset provenance surface"
-    ]
-  },
-  "classEducation": {
-    "branch": "rebuild/high-school-class-education-reentry",
-    "sha": "54eefef45503b841a08272bb649883f492b70bbc",
-    "requiredBaseSha": "f763b243f4ec22951f432e66f807f187c960583f",
-    "lineage": "ahead_2_behind_0",
-    "result": "PASS_INDEPENDENT_SLICE",
-    "ci": [
+  "assignedSlice": {
+    "objective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
+    "owner": "Roblox High School Progression & Mobile",
+    "pr": 47,
+    "branch": "rebuild/high-school-progression-economy-v1",
+    "sha": "74fba1b3066e232cbddd7d09b5dd75554a0c6803",
+    "baseSha": "50288ecf33dec647424f6bf173071a8982041b41",
+    "changedSincePriorQa": false,
+    "exactHeadCi": [
       {
-        "runId": 36885060655,
-        "workflow": "High School Class Education Guards",
-        "event": "push",
+        "runId": 36982753041,
+        "workflow": "High School Foundation Static Guards",
         "conclusion": "success"
       },
       {
-        "runId": 36885226467,
-        "workflow": "High School Class Education Guards",
-        "event": "pull_request",
+        "runId": 36982753055,
+        "workflow": "High School Progression Guards",
         "conclusion": "success"
       },
       {
-        "runId": 36885226962,
-        "workflow": "Pip High Static Guards",
-        "event": "pull_request",
+        "runId": 36982753118,
+        "workflow": "High School Class Education Guards",
         "conclusion": "success"
       }
-    ],
-    "checks": [
-      "server-safe activity view omits correctIndex and misconception map",
-      "duplicate submissions are idempotent",
-      "late submissions are rejected",
-      "incomplete class re-entry uses a fresh deterministic server session",
-      "exactly-once class completion receipt preserved",
-      "Foundation period/location state is read-only to this lane",
-      "no second clock/world/progression/persistence authority",
-      "no cross-owner Progression/Mobile imports",
-      "changed files are Lua/tests/docs/workflow only; no asset provenance expansion"
     ]
   },
-  "content": {
-    "result": "NOOP",
-    "reason": "No current high-school Content receipt or changed standalone Content candidate was found; the new ClassActivityCatalog schema is covered by the passing Class/Education slice and remains server-only."
+  "reusedPassEvidence": {
+    "foundation": "PASS_REUSED: single canonical school/** world/clock/location authority at 50288ecf",
+    "classEducation": "PASS_REUSED: server-authoritative class/session seams unchanged by PR #47",
+    "provenance": "PASS_REUSED: candidate changes only canonical school/** Lua/tests/workflow surfaces; no retired runtime or new asset provenance surface",
+    "testIntegrity": "PASS_REUSED: exact-head Foundation/Class-Education/Progression guard workflows remain green"
   },
-  "progressionMobile": {
-    "result": "DEFERRED",
-    "reason": "Authoritative shared state still marks Progression/Mobile DEFERRED; PR #22 is SAFE_PREP/UNBOUND and is not promoted by this lane."
+  "blocker": {
+    "id": "ECONOMY_OPERATION_ORDER_REJOIN",
+    "owner": "Roblox High School Progression & Mobile",
+    "reason": "Economy persistence reorders durable operations lexically by operationId while snapshot validation replays that sorted order with a nonnegative running-balance invariant. A valid durable credit recorded before a later debit can be persisted debit-first and then rejected on rejoin.",
+    "exitCriterion": "Exact-head deterministic coverage proves a durable +100 credit under a lexically-later operationId followed by a durable -40 debit under a lexically-earlier operationId reopens successfully at balance 60, while duplicate-ID, conflicting-ID, ownership, CAS-retry, exactly-once, and save/rejoin behavior remain green.",
+    "priorQaHarness": "qa/economy-order-persistence-74fba1b@d2f1d2df56382ac656a712426f1c2f582892d45a"
   },
-  "firstBlocker": {
-    "id": "SHARED_STATE_NOT_ADOPTED_CLASS_EDUCATION_PASS",
+  "coordinationDrift": {
     "owner": "Roblox High School Control Tower",
-    "reason": "The exact-head Class/Education slice is independently green, but authoritative shared state still has canonicalBranch=null and status=ACTIVE, so downstream activation would violate the shared-state authority contract.",
-    "exitCriterion": "Update coordination/HIGH_SCHOOL_SWARM_STATE.json to adopt rebuild/high-school-class-education-reentry@54eefef45503b841a08272bb649883f492b70bbc as Class/Education PASS using exact-head CI evidence, then explicitly mark the next downstream lane eligible."
+    "defect": "WIP inventory is stale: coordination/state/WIP.json says openCanonicalPrCount=0 and unintegratedProductCandidateCount=0 while live GitHub has canonical PR #47 and separate canonical PR #48 open.",
+    "exitCriterion": "Reconcile WIP counts to live GitHub and explicitly classify PR #48 as assigned, staged, superseded, or quarantined so it cannot be consumed implicitly.",
+    "pr48": {
+      "branch": "rebuild/high-school-progression-mobile-stage1b-v2",
+      "sha": "dcbeca0624724e8ef1a866e921d1463f9821eeb5",
+      "qaDisposition": "NOT_EVALUATED_THIS_CYCLE_NOT_ASSIGNED_SLICE"
+    }
   },
-  "downstreamEligibleNow": null,
-  "nextEligibleAfterBlocker": "Roblox High School Progression & Mobile",
+  "integrationEligibility": {
+    "pr47": "BLOCKED",
+    "reason": "ECONOMY_OPERATION_ORDER_REJOIN",
+    "nextEligibleAction": "Producer fixes the economy operation-order/rejoin defect on an exact canonical descendant and obtains exact-head green regression evidence."
+  },
   "localOnlyRequired": null
 }
