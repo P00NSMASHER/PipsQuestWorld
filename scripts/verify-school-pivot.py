@@ -44,7 +44,10 @@ for old_path in ("src/client/SchoolHud.client.lua", "SchoolLoop.server.lua", "Qu
     if any(old_path in path for path in mapped_paths):
         raise SystemExit(f"project maps retired runtime path: {old_path}")
 
-allowed_client_paths = {\n    "src/client/CanonicalSchoolClient.client.lua",\n    "src/client/VehicleClient.client.lua",\n}
+allowed_client_paths = {
+    "src/client/CanonicalSchoolClient.client.lua",
+    "src/client/VehicleClient.client.lua",
+}
 client_paths = {path for path in mapped_paths if path.startswith("src/client/")}
 unexpected_client_paths = client_paths - allowed_client_paths
 if unexpected_client_paths:
