@@ -1,38 +1,20 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 3,
+  "unintegratedProductCandidateCount": 2,
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
+      "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
       "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
-    "upstream": {
-      "lane": "Roblox High School Foundation",
-      "objective": "LEGACY_PARITY_STAGE_1A_CAMPUS_SPAWN_LOCATION_NAVIGATION",
-      "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-      "allowedRoot": "school/**",
-      "ownership": [
-        "campus geometry",
-        "spawn flow",
-        "location registry",
-        "Foundation navigation contracts"
-      ],
-      "forbiddenOverlap": [
-        "HUD presentation",
-        "class/grading authority",
-        "progression authority",
-        "persistence writers"
-      ],
-      "status": "READY_TO_PRODUCE"
-    },
+    "upstream": null,
     "downstream": {
       "lane": "Roblox High School Progression & Mobile",
       "objective": "LEGACY_PARITY_STAGE_1B_HUD_MOBILE_PRESENTATION",
       "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+      "baseSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
       "stableInterfacesOnly": [
         "SchoolFoundation state snapshot",
         "ClassEducation read state",
@@ -50,17 +32,23 @@
     }
   },
   "supportLaneAssignments": {
-    "Class & Education": "Stage 2 parity test/content prep only until Stage 1 is integrated and smoke-certified.",
+    "Foundation": "Stage 1A integrated at e2cfbf6; no parallel product expansion until Stage 1B integrates unless a reproducible Foundation defect blocks the canonical slice.",
+    "Class & Education": "Stage 2 parity test/content prep only until Stage 1B is integrated and smoke-certified.",
     "Content QA": "Maintain one shared Legacy parity/reference checklist and approved asset/provenance mapping; no runtime fork.",
-    "QA/Contract": "Add deterministic contracts/harnesses for Stage 1 producer outputs only; no producer semantics.",
-    "Integration": "Consume only the two active Stage 1 producer candidates into the same school/** lineage, one gate at a time.",
-    "Integration Smoke": "Certify each new canonical exact head after integration.",
+    "QA/Contract": "Add deterministic contracts/harnesses for the active Stage 1B presentation slice only; no producer semantics.",
+    "Integration": "WAITING_DEPENDENCY for the Stage 1B producer candidate, then consume it into the same school/** lineage.",
+    "Integration Smoke": "WAITING_DEPENDENCY for the next integrated canonical exact head.",
     "Release/Package": "WAITING_DEPENDENCY until the requested parity milestone is smoke-certified; never publish.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 2,
+  "lastValidatedParityAdvancement": {
+    "sha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
+    "stage": "LEGACY_PARITY_STAGE_1A_CAMPUS_EXTERIOR_INTEGRATED",
+    "smokeReceiptCommit": "037de41bb78dbd2480ba74f2e86df655a8ccfdfc"
+  },
   "successMetric": "Validated player-facing Legacy parity advancement on the canonical school/** lineage.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
