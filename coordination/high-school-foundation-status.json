@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-02T14:58:00Z",
+  "updatedAt": "2026-10-02T15:01:00Z",
   "scope": "Foundation world/campus parity candidate; lane evidence only; not canonical or release authority",
   "canonicalBase": {
     "branch": "rebuild/high-school-foundation",
@@ -8,9 +8,9 @@
   },
   "candidate": {
     "branch": "parity/foundation-west-athletics-92691e0",
-    "headSha": "8ea3bf194852261b9c6f47bbb66e65c96b1fbc9d",
+    "headSha": "51e3ffccf73ccd3ef3880c4d0bfe648670a21807",
     "pullRequest": 77,
-    "behavior": "West athletics district connected to the existing campus with canonical locations for Athletics Entrance, Football Field, Soccer Field, and Outdoor Pool.",
+    "behavior": "West athletics district connected to the existing campus with canonical Athletics Entrance, Football Field, Soccer Field, and Outdoor Pool landmarks; pool deck leaves an open basin and cosmetic lane markers are non-collidable.",
     "changedFiles": [
       "school/default.project.json",
       "school/src/server/AthleticsDistrict.server.lua",
@@ -24,21 +24,21 @@
     "athleticsStaticGuard": {
       "result": "PASS",
       "checks": 32,
-      "exactHeadSha": "8ea3bf194852261b9c6f47bbb66e65c96b1fbc9d"
+      "exactHeadSha": "51e3ffccf73ccd3ef3880c4d0bfe648670a21807"
     },
     "exactHeadCi": [
       {
-        "runId": 37023314039,
+        "runId": 37023769204,
         "workflow": "High School Foundation Static Guards",
         "conclusion": "success"
       },
       {
-        "runId": 37023313867,
+        "runId": 37023770199,
         "workflow": "High School Class Education Guards",
         "conclusion": "success"
       },
       {
-        "runId": 37023314145,
+        "runId": 37023769725,
         "workflow": "High School Progression Guards",
         "conclusion": "success"
       }
@@ -62,7 +62,7 @@
   },
   "runtimeValidation": {
     "state": "LOCAL_ONLY_REQUIRED_BEFORE_CLAIMING_VISUAL_REFERENCE_PARITY",
-    "exactCheck": "Render candidate 8ea3bf194852261b9c6f47bbb66e65c96b1fbc9d against canonical Pip High target placeId 87245440673982 / universeId 10768955678 and verify west athletics campus connectivity, scale, football/soccer/pool placement, clipping, lighting, and authorized reference parity.",
+    "exactCheck": "Render candidate 51e3ffccf73ccd3ef3880c4d0bfe648670a21807 against canonical Pip High target placeId 87245440673982 / universeId 10768955678 and verify west athletics campus connectivity, scale, football/soccer/pool placement, clipping, lighting, pool walkability, and authorized reference parity.",
     "reason": "Static/headless evidence proves mapping and ownership invariants but cannot prove the final rendered world matches the authorized live reference.",
     "publicationRequired": false,
     "target": {
@@ -82,7 +82,7 @@
       "Roblox High School QA & Contract",
       "Roblox High School Integration Director"
     ],
-    "condition": "Consume PR #77 only at exact head 8ea3bf194852261b9c6f47bbb66e65c96b1fbc9d while CI runs 37023314039, 37023313867, and 37023314145 remain successful."
+    "condition": "Consume PR #77 only at exact head 51e3ffccf73ccd3ef3880c4d0bfe648670a21807 while CI runs 37023769204, 37023770199, and 37023769725 remain successful."
   },
   "authority": {
     "sharedStateWriter": "Roblox High School Control Tower",
@@ -92,7 +92,8 @@
     "result": "PASS_MAP_LANDMARK_SET",
     "notes": [
       "Public Legacy top-down map shows the west athletics cluster with football field, soccer pitch, and swimming pool.",
-      "Candidate uses that landmark trio; indoor basketball remains part of the existing school gym rather than a duplicate outdoor court.",
+      "Candidate uses that landmark trio while retaining indoor basketball in the existing school gym.",
+      "Pool deck is modeled as perimeter strips around the water opening rather than a solid slab.",
       "Final rendered geometric/reference parity remains runtime-visible evidence, not a headless claim."
     ]
   }
