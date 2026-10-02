@@ -78,6 +78,12 @@
         },
         "EconomyRepository": {
           "$path": "src/server/EconomyRepository.lua"
+        },
+        "CafeJobController": {
+          "$path": "src/server/CafeJobController.lua"
+        },
+        "CafeJob": {
+          "$path": "src/server/CafeJob.server.lua"
         }
       }
     },
