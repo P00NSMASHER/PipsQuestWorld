@@ -8,6 +8,13 @@ on:
       - "rhs/compatibility/PATCH_MANIFEST.json"
       - "tools/rhs-binary-patcher/**"
       - ".github/workflows/build-rhs-exact-restored.yml"
+  pull_request:
+    branches:
+      - rebuild/rhs-licensed-exact
+    paths:
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "tools/rhs-binary-patcher/**"
+      - ".github/workflows/build-rhs-exact-restored.yml"
 
 permissions:
   contents: write
