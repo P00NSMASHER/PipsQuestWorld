@@ -1,44 +1,45 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T15:53:00Z",
+  "recordedAt": "2026-10-02T17:44:00Z",
   "result": "WAITING_LOCAL_ONLY_REQUIRED",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
   "sourceRoot": "school/**",
-  "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
+  "milestone": "VEHICLE_LIFECYCLE_V2_WITH_GROUNDED_SPAWN_AND_RELIABLE_CONTROLS",
   "eligibility": "QA_AND_INTEGRATION_EXACT_SHA_PASS",
   "prerequisiteReceipts": {
     "qa": {
       "result": "PASS_EXACT_HEAD",
-      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     "integration": {
       "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     }
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37029958854,
+      "runId": 37042669829,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37029958840,
+      "runId": 37042669707,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37029958834,
+      "runId": 37042669710,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "vehicleInputStep": "success"
     }
   ],
   "cloudChecks": {
@@ -47,25 +48,26 @@
     "vehicleLifecyclePureState": "PASS_EXACT_HEAD_PROGRESS_GUARD",
     "oneActiveVehiclePerPlayer": "PASS_DETERMINISTIC",
     "staleTokenDespawnProtection": "PASS_DETERMINISTIC",
-    "repeatedDespawnIdempotency": "PASS_DETERMINISTIC",
     "ownerOnlySeatEnforcement": "PASS_STATIC",
-    "autoShopSpawnSeam": "PASS_EXACT_HEAD",
-    "autoShopSpawnGrounding": "PASS_EXACT_HEAD_FOUNDATION_REPAIR",
-    "serverBoundedMovementAuthority": "PASS_STATIC",
+    "groundedAutoShopSpawn": "PASS_EXACT_HEAD",
+    "ownerOnlyControlIntent": "PASS_STATIC",
+    "finiteClampedControls": "PASS_DETERMINISTIC",
+    "staleInputTimeout": "PASS_STATIC",
+    "serverOnlyMovementAuthority": "PASS_STATIC",
+    "keyboardTouchBindings": "PASS_STATIC",
     "playerLeaveCleanup": "PASS_STATIC",
-    "canonicalClientOnly": "PASS",
-    "provenanceOriginality": "PASS_PRIMITIVE_GEOMETRY_NO_ASSET_IDS",
+    "provenanceOriginality": "PASS_NO_NEW_ASSET_IDS",
     "retiredRuntimeIsolation": "PASS",
     "duplicateAuthorityExclusion": "PASS"
   },
   "localOnlyRequired": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "check": "Roblox runtime: approach Auto Shop; spawn grounded starter sedan; owner auto-seat; forward/reverse; steer; exit; re-enter; despawn/re-spawn; reject non-owner seat; player-leave cleanup; baseline school/class/cafe invariants.",
-      "reason": "Cloud/headless checks cannot establish Roblox VehicleSeat input and moving-model occupant behavior. Cloud Luau testing would require an unauthorized place upload/publication; local-machine polling is disallowed by the active directive."
+      "check": "Roblox runtime: grounded starter sedan spawn; owner auto-seat; keyboard and touch forward/reverse/steer; release inputs neutralizes motion; exit/re-enter; despawn/re-spawn; reject non-owner seat; player-leave cleanup; baseline school/class/cafe invariants.",
+      "reason": "Cloud/headless checks cannot establish actual Roblox seated input delivery/moving-model occupant behavior. Current directive forbids laptop polling, and no Roblox publish is authorized."
     }
   ],
   "blocker": {
@@ -75,7 +77,7 @@
   },
   "releasePackageEligible": false,
   "nextOwner": "Roblox High School Integration Smoke",
-  "exactExitCriterion": "Runtime PASS must identify exact SHA e929354087d3dbf6931496e310b8f899cd0d299f and private target universe 10768955678 / place 87245440673982; then hand this unchanged SHA to Release/Package.",
+  "exactExitCriterion": "Runtime PASS must identify exact SHA 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then hand unchanged SHA to Release/Package.",
   "sourceEdited": false,
   "published": false,
   "moneySpent": false,
