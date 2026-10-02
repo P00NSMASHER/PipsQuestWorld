@@ -55,6 +55,7 @@ end
 
 local remoteFolder = getOrCreateFolder(ReplicatedStorage, SchoolConfig.Interfaces.remoteFolder)
 local stateSnapshot = getOrCreateRemoteFunction(remoteFolder, SchoolConfig.Interfaces.stateSnapshot)
+local requestTravel = getOrCreateRemoteFunction(remoteFolder, SchoolConfig.Interfaces.requestTravel)
 
 local serverEventFolder = getOrCreateFolder(ServerScriptService, SchoolConfig.Interfaces.serverEventFolder)
 local sessionStarted = getOrCreateBindableEvent(serverEventFolder, SchoolConfig.Interfaces.sessionStarted)
@@ -114,6 +115,16 @@ local function getMainSpawn()
     return spawn
 end
 
+local function getCurrentRoomSpawn()
+    local campus = Workspace:WaitForChild("SchoolCampus")
+    local roomSpawns = campus:WaitForChild("RoomSpawns")
+    local roomSpawn = roomSpawns:FindFirstChild(currentPeriod().room)
+    if not roomSpawn or not roomSpawn:IsA("BasePart") then
+        return nil
+    end
+    return roomSpawn
+end
+
 local function setupPlayer(player)
     if sessions[player] then
         return
@@ -139,6 +150,27 @@ end
 
 stateSnapshot.OnServerInvoke = function()
     return snapshot(os.clock())
+end
+
+requestTravel.OnServerInvoke = function(player)
+    local roomSpawn = getCurrentRoomSpawn()
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+
+    if not roomSpawn or not root or not root:IsA("BasePart") then
+        return {
+            accepted = false,
+            code = "travel_unavailable",
+        }
+    end
+
+    character:PivotTo(roomSpawn.CFrame + SchoolConfig.TRAVEL_OFFSET)
+    local period = currentPeriod()
+    return {
+        accepted = true,
+        periodId = period.id,
+        room = period.room,
+    }
 end
 
 publishState(os.clock())

@@ -62,8 +62,20 @@
         "ProgressionDataStore": {
           "$path": "src/server/ProgressionDataStore.lua"
         },
+        "ProgressionStudioStore": {
+          "$path": "src/server/ProgressionStudioStore.lua"
+        },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
+        }
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "CanonicalSchoolClient": {
+          "$path": "src/client/CanonicalSchoolClient.client.lua"
         }
       }
     }
