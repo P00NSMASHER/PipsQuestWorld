@@ -1,93 +1,39 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-02T00:36:00Z",
+  "updatedAt": "2026-10-02T02:00:36Z",
   "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
   "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "currentPlayableStage": "Runtime-playable evidence remains validated through spawn -> authoritative school clock/period. Canonical exact-head deterministic integration is now green through attend class -> server-authoritative activity -> exactly-once durable progression -> free roam -> save/rejoin restore; post-integration smoke/runtime playability remains to be asserted.",
-  "runtimeValidatedThrough": "spawn -> authoritative school clock/period",
-  "headlessExactHeadValidatedThrough": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 8,
+  "currentPlayableStage": "PR #32 is merged into canonical rebuild/high-school-foundation@506f19551b7f0b1d3edf753bd17ac366367efc32. The merge tree is byte-identical to runtime-validated candidate e69d6ddf8e1e3875ea9947b919cae2f256a449a3. Runtime evidence on that identical tree demonstrates authoritative period, class attendance, server-authoritative activity, one durable 25-point progression commit, free-roam return, server-authoritative restored progression, and client restoration. Canonical merge-head certification is still incomplete because only the Foundation workflow has run green on the merge SHA; Class/Education and Progression exact-head CI plus post-integration smoke are still required.",
+  "runtimeValidatedThrough": "content-identical candidate tree: spawn -> authoritative clock/period -> class travel/attendance -> server-authoritative activity -> exactly-once normal-path progression -> free roam -> restored progression snapshot/client reload",
+  "headlessExactHeadValidatedThrough": "pre-merge candidate e69d6dd: full deterministic vertical slice; canonical merge 506f1955: Foundation exact-head guard only until Class/Education and Progression are rerun on the merge SHA",
+  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 2,
+  "unintegratedProductCandidateCount": 1,
   "wipSlots": {
     "base": {
       "branch": "rebuild/high-school-foundation",
-      "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "status": "PASS_EXACT_HEAD_INTEGRATED",
+      "sha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+      "status": "MERGED_CANONICAL_PENDING_FULL_EXACT_HEAD_RECERTIFICATION",
       "exactHeadCi": [
         {
-          "runId": 36931270884,
+          "runId": 36949894768,
           "workflow": "High School Foundation Static Guards",
           "event": "push",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36931127438,
-          "workflow": "High School Foundation Static Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36931127433,
-          "workflow": "High School Class Education Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36931127442,
-          "workflow": "High School Progression Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36931123042,
-          "workflow": "High School Progression Guards",
-          "event": "push",
-          "conclusion": "success"
-        }
-      ]
-    },
-    "upstream": null,
-    "downstream": {
-      "branch": "release/pip-high-demo-ui-20261001",
-      "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-      "pr": 32,
-      "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "canonicalSourceRoot": "school/**",
-      "role": "thin playable client adapter consuming existing canonical Foundation/ClassEducation interfaces",
-      "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME_WITH_KNOWN_RUNTIME_GAPS",
-      "exactHeadCi": [
-        {
-          "runId": 36946375640,
-          "workflow": "High School Foundation Static Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36946375647,
-          "workflow": "High School Class Education Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36946375661,
-          "workflow": "High School Progression Guards",
-          "event": "pull_request",
           "conclusion": "success"
         }
       ],
-      "changedFiles": [
-        "school/default.project.json",
-        "school/src/client/CanonicalSchoolClient.client.lua",
-        "school/src/server/ClassEducation.server.lua",
-        "school/src/server/ProgressionStudioStore.lua",
-        "school/tests/progression_repository_spec.lua",
-        "scripts/verify-school-pivot.py"
-      ]
-    }
+      "missingExactHeadCi": [
+        "High School Class Education Guards",
+        "High School Progression Guards",
+        "Post-integration smoke"
+      ],
+      "contentTree": "2af1f7627ecfc4340336e7d087701c7c3bbf8000",
+      "contentEquivalentRuntimeValidatedCandidate": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
+    },
+    "upstream": null,
+    "downstream": null
   },
   "validatedProducerEvidence": {
     "classEducation": {
@@ -101,56 +47,47 @@
       "details": "Versioned compare-and-swap persistence preserves concurrent completions, suppresses duplicate completion replay, restores committed progression after reopen/rejoin, and fails closed on persistence errors."
     },
     "integration": {
-      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "result": "PASS_HEADLESS_EXACT_HEAD",
-      "details": "Class completion is wired through the durable progression gate. Persistence failure withholds free roam; the same authoritative submission can retry; durable commit releases free roam; replay remains exactly once."
+      "integratedSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+      "result": "PASS_RUNTIME_AND_EXACT_HEAD_CANDIDATE_PRE_MERGE",
+      "details": "Integration receipt records canonical runtime evidence through authoritative class/activity, one durable 25-point commit, free-roam return, read-only restored progression snapshot, and client restoration. The candidate tree is identical to merge head 506f1955, but exact-head certification must still be rerun on the merge SHA."
     }
   },
   "currentBlockers": [
     {
-      "id": "RUNTIME_PLAYABILITY_LOCAL_ONLY_IN_PROGRESS",
-      "owner": "Roblox High School Integration Director",
-      "status": "LOCAL_ONLY_REQUIRED_LEASE_HELD",
-      "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-      "pr": 32,
-      "exitCriterion": "Using the held ONLINE_LAPTOP lease, validate exact-green PR #32 head 258a434abce303acc2afa901e269ff0d19ff9d55 in Roblox Studio without publishing. The unpublished-Studio persistence adapter may be used only for local runtime diagnostics and must not be counted as production cross-server persistence."
+      "id": "POST_MERGE_EXACT_HEAD_CI_COVERAGE",
+      "owner": "Roblox High School DevEx",
+      "status": "BLOCKING_DOWNSTREAM_CERTIFICATION",
+      "canonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+      "exitCriterion": "Obtain green exact-head Class/Education and Progression deterministic CI on canonical merge SHA 506f19551b7f0b1d3edf753bd17ac366367efc32 without changing product semantics. If current workflows do not run on canonical pushes, repair CI trigger coverage in the DevEx lane without weakening tests."
     },
     {
-      "id": "POST_INTEGRATION_SMOKE_RECEIPT_STALE",
+      "id": "POST_INTEGRATION_SMOKE_EXACT_HEAD",
       "owner": "Roblox High School Integration Smoke",
-      "status": "WAITING_DEPENDENCY",
-      "exitCriterion": "After the active runtime lease resolves and the canonical head/candidate decision is known, refresh smoke evidence against that exact head only. Do not create product code or broad-test an obsolete SHA."
-    },
-    {
-      "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
-      "owner": "Roblox High School Integration Director",
-      "status": "WAITING_ACTIVE_RUNTIME_LEASE_RESULT",
-      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-      "exitCriterion": "After the current exact-head runtime lease resolves, repair the playable client so progression_commit_failed retries reuse the original authoritative submissionId instead of generating a new ID; exact-head CI must pass on the repaired head."
-    },
-    {
-      "id": "PLAYABLE_REJOIN_OBSERVABILITY",
-      "owner": "Roblox High School Integration Director",
-      "status": "WAITING_ACTIVE_RUNTIME_LEASE_RESULT",
-      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-      "exitCriterion": "After the current exact-head runtime lease resolves, provide a read-only server-authoritative persisted progression snapshot or equivalent observable restore path so the playable save/rejoin KPI can be demonstrated without treating Studio memory fallback as production persistence."
+      "status": "WAITING_EXACT_HEAD_CI",
+      "canonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+      "exitCriterion": "After the merge SHA has complete exact-head producer CI, run bounded smoke against 506f19551b7f0b1d3edf753bd17ac366367efc32 only and publish an exact-SHA smoke receipt. Reuse content-equivalent runtime evidence but do not substitute it for exact-head certification."
     }
   ],
   "resolvedThisCycle": [
     {
-      "id": "PROGRESSION_CANONICAL_REHOME_REQUIRED",
-      "resolution": "Canonical progression/persistence was implemented under school/** only on a descendant of the exact-green Class/Education head; no highschool/** runtime path was mapped.",
-      "sha": "ba4d2b2ee7df3e2486ebdc54f2a3a0978c069c50"
+      "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
+      "resolution": "Repaired on candidate e69d6dd; client retains the original submission ID for progression retry and exact-head candidate CI passed.",
+      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
     },
     {
-      "id": "PROGRESSION_CANONICAL_EXACTLY_ONCE_RESTORE",
-      "resolution": "Exact-head tests prove duplicate suppression, concurrent-writer preservation, failed-save rollback, save/rejoin restoration, and free-roam gating on durable commit.",
-      "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27"
+      "id": "PLAYABLE_REJOIN_OBSERVABILITY",
+      "resolution": "Repaired on candidate e69d6dd; GetProgressionState exposes a server-authoritative read-only snapshot and runtime client reload restored 25 points.",
+      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
     },
     {
-      "id": "CANONICAL_VERTICAL_SLICE_INTEGRATION",
-      "resolution": "Foundation was fast-forwarded without creating a new merge SHA to the already-certified integrated head 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Canonical PRs #20 and #31 are merged/closed and no open PR remains."
+      "id": "RUNTIME_VERTICAL_SLICE_ADVANCEMENT",
+      "resolution": "Integration Director observed authoritative period, travel/attendance, server activity, exactly-once normal-path progression, free roam, and restored progression on candidate e69d6dd.",
+      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
+    },
+    {
+      "id": "PR32_CANONICAL_INTEGRATION",
+      "resolution": "PR #32 merged into rebuild/high-school-foundation as 506f19551b7f0b1d3edf753bd17ac366367efc32. Merge tree exactly equals candidate e69d6dd tree.",
+      "sha": "506f19551b7f0b1d3edf753bd17ac366367efc32"
     }
   ],
   "unchangedFingerprintRule": {
@@ -164,37 +101,28 @@
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale.",
   "noncanonical": {
     "openPrCount": 0,
-    "closedPrs": [
-      19,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
-      29,
-      30
-    ],
-    "workAllowed": false
+    "workAllowed": false,
+    "canonicalOnlyRoot": "school/**",
+    "retiredHistoricalOnly": [
+      "Maze/PipsQuest",
+      "StarBlox/Brookhaven runtime projection",
+      "RHS-exact/licensed-exact",
+      "game/**",
+      "old feat/*",
+      "retired Maze/Pips worktrees/branches",
+      "Roblox places titled StarBlox"
+    ]
   },
   "canonicalPullRequests": {
     "integratedOrClosed": [
       20,
-      31
+      31,
+      32
     ],
-    "openCount": 1,
-    "open": [
-      {
-        "number": 32,
-        "branch": "release/pip-high-demo-ui-20261001",
-        "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-        "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME_WITH_KNOWN_RUNTIME_GAPS"
-      }
-    ]
+    "openCount": 0,
+    "open": []
   },
-  "nextMilestone": "Do not mutate PR #32 while the Integration Director holds the ONLINE_LAPTOP lease for exact head 258a434abce303acc2afa901e269ff0d19ff9d55. After the lease result, either accept its runtime evidence only for the paths actually demonstrated or repair the two recorded candidate gaps (stable submission-id retry and observable persisted restore), obtain fresh exact-head CI, then rerun the bounded local validation.",
+  "nextMilestone": "DevEx must establish missing Class/Education and Progression exact-head CI on canonical merge 506f19551b7f0b1d3edf753bd17ac366367efc32. After those are green, Integration Smoke runs the bounded exact-head smoke. No new product candidate is authorized.",
   "localMachineCoordination": {
     "resource": "ONLINE_LAPTOP",
     "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
@@ -205,19 +133,20 @@
     "maxConcurrentUsers": 1,
     "defaultMaxLeaseMinutes": 20,
     "routineWorkUsesLaptop": false,
-    "currentLeaseStatus": "HELD",
-    "currentCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "currentLeaseStatus": "FREE",
+    "currentCanonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
     "connectorFallback": "If the local connector is unavailable after a lease claim, release immediately and report LOCAL_CONNECTOR_UNAVAILABLE.",
-    "currentHolderLane": "Roblox High School Integration Director",
-    "currentLeasePurpose": "LOCAL_ONLY_REQUIRED runtime validation of canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 with exact-green UI candidate 48b5eaf7756bea214477771413872dab26f67fdd; diagnose DataStore/persistence gate before authorized publication",
-    "currentLeaseCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "currentLeaseCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-    "currentLeaseExpiresAt": "2026-10-02T00:10:00Z"
+    "currentHolderLane": null,
+    "currentLeasePurpose": null,
+    "currentLeaseCanonicalSha": null,
+    "currentLeaseCandidateSha": null,
+    "currentLeaseExpiresAt": null,
+    "retiredProductLeasePolicy": "REJECT"
   },
   "staleReceipts": {
-    "qaContract": "STALE: receipt still references pre-integration Foundation/Class heads.",
-    "integrationSmoke": "STALE: receipt predates integrated canonical head and must be regenerated after the active runtime candidate decision.",
-    "devex": "STALE: DevEx receipt still points to PR #32 head 48b5eaf7756bea214477771413872dab26f67fdd; live exact-green candidate is 258a434abce303acc2afa901e269ff0d19ff9d55."
+    "qaContract": "STALE: receipt references pre-integration Foundation/Class heads.",
+    "integration": "STALE_FOR_AUTHORIZATION: receipt is exact for pre-merge candidate e69d6dd and remains useful evidence, but canonical head is now merge SHA 506f1955.",
+    "devex": "STALE_AFTER_MERGE: receipt predates canonical merge 506f1955 and points to the former PR #32 candidate."
   },
   "candidateExactHeadReview": {
     "pr": 32,
@@ -238,5 +167,12 @@
       }
     ],
     "prCommentId": 5943363418
+  },
+  "contentEquivalence": {
+    "candidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "mergeSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+    "treeSha": "2af1f7627ecfc4340336e7d087701c7c3bbf8000",
+    "identicalTree": true,
+    "note": "Content equivalence preserves runtime evidence relevance but does not waive the exact-head CI rule."
   }
 }
