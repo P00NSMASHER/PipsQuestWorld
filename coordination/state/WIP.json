@@ -3,15 +3,28 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATED_AWAITING_EXACT_HEAD_CI",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATED_SMOKE_READY",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
       "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "status": "INTEGRATED_AWAITING_EXACT_HEAD_CI"
+      "status": "EXACT_HEAD_CI_GREEN_PENDING_SMOKE_CERTIFICATION"
     },
-    "upstream": null,
-    "downstream": null
+    "upstream": {
+      "lane": "Pip High Free Roam",
+      "objective": "VEHICLE_LIFECYCLE_V1",
+      "branch": "rebuild/high-school-vehicles-92691e0-v1",
+      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+      "integratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "pr": 85,
+      "status": "MERGED_QA_PASS_EXACT_HEAD_CI_GREEN"
+    },
+    "downstream": {
+      "lane": "Roblox High School Integration Smoke",
+      "objective": "VEHICLE_LIFECYCLE_V1",
+      "exactSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "status": "READY"
+    }
   },
   "priorityBacklog": [
     {
@@ -68,9 +81,9 @@
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Roblox High School Control Tower",
-    "to": "Roblox High School Integration Smoke",
-    "condition": "All three post-merge exact-head guards PASS rebuild/high-school-foundation@deadcf9e402cb18ea78667926663b8ebdede044f."
+    "from": "Roblox High School Integration Smoke",
+    "to": "Pip High Release & Package Gate",
+    "condition": "Smoke certifies exact canonical SHA deadcf9e402cb18ea78667926663b8ebdede044f with the cited push guards green; any truly runtime/device-only check is explicitly recorded LOCAL_ONLY_REQUIRED rather than inferred."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -139,8 +152,8 @@
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "PR #85@8f7293f1021a4bae7e2d12b07e489e10b9135c3f is exact-head green. Hold product changes while QA validates this exact candidate.",
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "objective": "Vehicle lifecycle V1 is merged. Hold product changes during exact-SHA smoke certification.",
       "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
       "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
       "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
@@ -148,9 +161,9 @@
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "candidateSha": "8f7293f1021a4bae7e2d12b07e489e10b9135c3f",
-      "objective": "QA PASS is recorded for PR #85@3ad2121779af85f5e93457df7bf7d2b3365db8f4; hold until a changed candidate exists.",
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+      "objective": "QA PASS is recorded for exact producer SHA 3ad2121779af85f5e93457df7bf7d2b3365db8f4.",
       "owned": "QA harnesses/contracts/receipt only",
       "dependency": "PR #85 exact-head CI PASS runs 37027751477, 37027751963, 37027752230",
       "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
@@ -159,29 +172,28 @@
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "objective": "PR #85 merged as deadcf9e402cb18ea78667926663b8ebdede044f. Wait for post-merge exact-head guards.",
+      "objective": "Mechanical integration is complete and exact-head push CI is green.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS receipt + exact-head CI runs 37028006287/37028005768/37028005242",
-      "exit": "PR #85 merged without head/base drift and new canonical exact SHA identified.",
+      "dependency": "none",
+      "exit": "Changed candidate only",
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "VALIDATE",
       "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Wait for all three post-merge exact-head guards on deadcf9e before smoke.",
+      "objective": "Certify the changed integrated vehicle SHA: source-root/build isolation, baseline invariants, one-active lifecycle, owner-only control, AutoShop seam, cleanup/despawn/re-spawn, and exact-head CI. Record actual Roblox runtime/device-only driving feel as LOCAL_ONLY_REQUIRED if cloud evidence cannot establish it.",
       "owned": "post-integration certification only",
-      "dependency": "Foundation + Class/Education + Progression push guards PASS exact canonical deadcf9e402cb18ea78667926663b8ebdede044f",
-      "exit": "All required exact-head guards green; then run vehicle + baseline Smoke on this exact SHA.",
+      "dependency": "Integration receipt + push CI runs 37028471690/37028471816/37028471760",
+      "exit": "PASS receipt on exact SHA or one exact blocker; runtime/device-only checks are recorded explicitly without laptop polling.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "Current 92691e0 package checkpoint is complete; wait for changed smoke-certified vehicle SHA and never publish without separate authorization.",
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "objective": "Wait for Integration Smoke receipt on changed vehicle SHA; do not publish Roblox.",
       "owned": "deterministic package checkpoint only",
-      "dependency": "Smoke PASS on changed exact SHA",
-      "exit": "Package changed exact SHA once, record artifact identity/provenance, then return control to Control Tower.",
+      "dependency": "Smoke result on exact SHA deadcf9e402cb18ea78667926663b8ebdede044f",
+      "exit": "Consume changed smoke-certified SHA only when exact evidence aligns.",
       "handoff": "Control Tower"
     }
   }

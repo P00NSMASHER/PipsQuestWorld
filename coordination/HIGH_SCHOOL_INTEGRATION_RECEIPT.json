@@ -1,67 +1,80 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "lane": "Roblox High School Integration Director",
+  "recordedAt": "2026-10-02T15:40:00Z",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-  "parentCertifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
-  "integratedRepairPr": 64,
-  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1_WITH_ECONOMY_REJOIN_ORDER_REPAIR",
-  "deltaFromParent": {
-    "changedFiles": [
-      "school/src/server/EconomyRepository.lua",
-      "school/tests/economy_repository_spec.lua"
-    ],
-    "featureBreadthAdded": false,
-    "note": "Focused persistence repair only: preserve durable operation commit order so valid credit-then-debit history reopens without lexical operationId reordering."
+  "priorCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "canonicalBaseBeforeVehicleIntegrationSha": "fced53b1ab7521006bc193cb9a7b01c5ee57da47",
+  "candidate": {
+    "pr": 85,
+    "branch": "rebuild/high-school-vehicles-92691e0-v1",
+    "qaApprovedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4"
   },
-  "authorityChecks": {
-    "singleSchoolClockPreserved": true,
-    "singleEconomyProgressionPersistenceAuthorityPreserved": true,
-    "classAuthorityUnchanged": true,
-    "cafeJobAuthorityUnchanged": true,
-    "worldGeneratorAuthorityUnchanged": true,
-    "retiredRuntimeConsumed": false
-  },
-  "deterministicIntegratedHeadEvidence": {
-    "foundationExactHeadCi": {
-      "runId": 37010609435,
+  "integrationSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+  "milestone": "VEHICLE_LIFECYCLE_V1",
+  "exactHeadCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37028471690,
       "event": "push",
-      "conclusion": "success"
+      "conclusion": "success",
+      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
     },
-    "classEducationExactHeadCi": {
-      "runId": 37010609322,
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37028471816,
       "event": "push",
-      "conclusion": "success"
+      "conclusion": "success",
+      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
     },
-    "progressionExactHeadCi": {
-      "runId": 37010609413,
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37028471760,
       "event": "push",
-      "conclusion": "success"
-    },
-    "persistenceRepairCoverage": [
-      "operationId remains idempotency/conflict key",
-      "durable operation commit order preserved",
-      "credit z:funding +100 then debit a:purchase -40 reopens at balance 60",
-      "cafe-job controller deterministic tests remain included",
-      "economy save/rejoin path remains deterministic"
-    ]
-  },
+      "conclusion": "success",
+      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+    }
+  ],
   "prerequisiteQa": {
     "result": "PASS_EXACT_HEAD",
-    "exactSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+    "exactSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
+  },
+  "integratedVehicleSurface": {
+    "foundationSpawnSeam": "SchoolConfig.WorldSpawnSeams.AutoShopRoad",
+    "oneActiveVehiclePerPlayer": true,
+    "ownerOnlySeatControl": true,
+    "serverAuthoritativeMovement": true,
+    "despawnRespawnLifecycle": true,
+    "playerLeaveCleanup": true,
+    "canonicalClientOnly": true,
+    "primitiveOriginalGeometryNoAssetIds": true
+  },
+  "authorityChecks": {
+    "worldAuthorityDuplicated": false,
+    "economyProgressionPersistenceAuthorityDuplicated": false,
+    "classAuthorityDuplicated": false,
+    "retiredRuntimeConsumed": false,
+    "phase2SchoolworkAdded": false
+  },
+  "privateRobloxTarget": {
+    "universeId": "10768955678",
+    "placeId": "87245440673982",
+    "evidenceSource": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json from prior certified checkpoint",
+    "publishedThisIntegration": false
   },
   "scope": {
-    "runtimeTestRoot": "school/**",
     "robloxPublished": false,
     "moneySpent": false,
+    "credentialsBroadened": false,
     "taskScheduleOrEnablementChanged": false
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-    "instruction": "Smoke the focused persistence repair on exact canonical SHA 92691e0; reuse unchanged cafe-job/baseline evidence and verify rejoin-order persistence coverage remains green."
+    "exactSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+    "instruction": "Smoke only this changed integrated school/** SHA. Preserve the same private-server target. Record LOCAL_ONLY_REQUIRED for any actual Roblox runtime/device check that cloud evidence cannot establish; do not poll the laptop."
   }
 }
