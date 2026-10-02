@@ -99,9 +99,6 @@
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
           "$path": "src/client/CanonicalSchoolClient.client.lua"
-        },
-        "VehicleClient": {
-          "$path": "src/client/VehicleClient.client.lua"
         }
       }
     }
