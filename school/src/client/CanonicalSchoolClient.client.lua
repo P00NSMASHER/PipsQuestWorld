@@ -2,6 +2,9 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 local ContextActionService = game:GetService("ContextActionService")
+local UserInputService = game:GetService("UserInputService")
+
+local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
 
 local player = Players.LocalPlayer
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
@@ -15,9 +18,16 @@ local submitAnswer = classRoot:WaitForChild("SubmitAnswer")
 local leaveClass = classRoot:WaitForChild("LeaveClass")
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "PipHighCanonicalUI"
+gui.Name = "RobloxHighSchoolLegacyUI"
 gui.ResetOnSpawn = false
+gui.DisplayOrder = 10
 gui.Parent = player:WaitForChild("PlayerGui")
+
+local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
+local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
+local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
+local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
+local bottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
@@ -25,78 +35,95 @@ local function round(target, px)
     corner.Parent = target
 end
 
+local function outline(target, thickness)
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = thickness or 1
+    stroke.Color = LEGACY_BLUE
+    stroke.Parent = target
+    return stroke
+end
+
 local card = Instance.new("Frame")
-card.Position = UDim2.new(0, 12, 0, 12)
-card.Size = UDim2.new(0, 312, 0, 162)
-card.BackgroundColor3 = Color3.fromRGB(24, 29, 42)
-card.BackgroundTransparency = 0.06
+card.Name = "LegacySchoolMenu"
+card.AnchorPoint = Vector2.new(0, 1)
+card.Position = UDim2.new(0, 12, 1, -bottomMargin)
+card.Size = UDim2.new(0, 236, 0, 184)
+card.BackgroundColor3 = LEGACY_PANEL
+card.BackgroundTransparency = 0.02
 card.Parent = gui
-round(card, 16)
+round(card, 2)
+outline(card, 2)
 
 local title = Instance.new("TextLabel")
-title.BackgroundTransparency = 1
-title.Position = UDim2.new(0, 14, 0, 10)
-title.Size = UDim2.new(1, -28, 0, 22)
-title.Font = Enum.Font.GothamBold
-title.Text = "PIP HIGH"
-title.TextColor3 = Color3.new(1, 1, 1)
-title.TextSize = 17
-title.TextXAlignment = Enum.TextXAlignment.Left
+title.BackgroundTransparency = 0
+title.BackgroundColor3 = LEGACY_BLUE
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Size = UDim2.new(1, 0, 0, 28)
+title.Font = Enum.Font.ArialBold
+title.Text = "Menu"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 15
+title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
 pointsLabel.BackgroundTransparency = 1
-pointsLabel.Position = UDim2.new(1, -100, 0, 10)
-pointsLabel.Size = UDim2.new(0, 86, 0, 22)
-pointsLabel.Font = Enum.Font.GothamMedium
-pointsLabel.Text = "0 PTS"
-pointsLabel.TextColor3 = Color3.fromRGB(190, 202, 225)
+pointsLabel.Position = UDim2.new(0, 10, 0, 121)
+pointsLabel.Size = UDim2.new(1, -20, 0, 20)
+pointsLabel.Font = Enum.Font.ArialBold
+pointsLabel.Text = "Points: 0"
+pointsLabel.TextColor3 = LEGACY_BLUE_DARK
 pointsLabel.TextSize = 13
-pointsLabel.TextXAlignment = Enum.TextXAlignment.Right
+pointsLabel.TextXAlignment = Enum.TextXAlignment.Left
 pointsLabel.Parent = card
 
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
-periodLabel.Position = UDim2.new(0, 14, 0, 36)
-periodLabel.Size = UDim2.new(1, -28, 0, 42)
-periodLabel.Font = Enum.Font.GothamBold
+periodLabel.Position = UDim2.new(0, 10, 0, 35)
+periodLabel.Size = UDim2.new(1, -20, 0, 43)
+periodLabel.Font = Enum.Font.ArialBold
 periodLabel.Text = "Loading school day..."
-periodLabel.TextColor3 = Color3.new(1, 1, 1)
-periodLabel.TextSize = 19
+periodLabel.TextColor3 = LEGACY_BLUE_DARK
+periodLabel.TextSize = 15
 periodLabel.TextWrapped = true
 periodLabel.TextXAlignment = Enum.TextXAlignment.Left
+periodLabel.TextYAlignment = Enum.TextYAlignment.Top
 periodLabel.Parent = card
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.BackgroundTransparency = 1
-statusLabel.Position = UDim2.new(0, 14, 0, 78)
-statusLabel.Size = UDim2.new(1, -28, 0, 26)
-statusLabel.Font = Enum.Font.Gotham
+statusLabel.Position = UDim2.new(0, 10, 0, 78)
+statusLabel.Size = UDim2.new(1, -20, 0, 40)
+statusLabel.Font = Enum.Font.Arial
 statusLabel.Text = "Connecting..."
-statusLabel.TextColor3 = Color3.fromRGB(190, 202, 225)
+statusLabel.TextColor3 = Color3.fromRGB(31, 72, 102)
 statusLabel.TextSize = 13
+statusLabel.TextWrapped = true
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.TextYAlignment = Enum.TextYAlignment.Top
 statusLabel.Parent = card
 
 local action = Instance.new("TextButton")
-action.Position = UDim2.new(0, 14, 1, -48)
-action.Size = UDim2.new(1, -28, 0, 38)
-action.BackgroundColor3 = Color3.fromRGB(73, 122, 210)
-action.Font = Enum.Font.GothamBold
+action.Position = UDim2.new(0, 8, 1, -50)
+action.Size = UDim2.new(1, -16, 0, 44)
+action.BackgroundColor3 = LEGACY_BUTTON
+action.Font = Enum.Font.ArialBold
 action.Text = "CHECKING CLASS..."
-action.TextColor3 = Color3.new(1, 1, 1)
+action.TextColor3 = LEGACY_BLUE_DARK
 action.TextSize = 13
 action.Parent = card
-round(action, 11)
+round(action, 2)
+outline(action, 1)
 
 local modal = Instance.new("Frame")
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
 modal.Position = UDim2.fromScale(0.5, 0.55)
 modal.Size = UDim2.new(0.9, 0, 0, 390)
-modal.BackgroundColor3 = Color3.fromRGB(20, 24, 36)
+modal.BackgroundColor3 = LEGACY_PANEL
 modal.Visible = false
 modal.Parent = gui
-round(modal, 18)
+round(modal, 2)
+outline(modal, 2)
 local constraint = Instance.new("UISizeConstraint")
 constraint.MinSize = Vector2.new(300, 360)
 constraint.MaxSize = Vector2.new(540, 430)
@@ -106,9 +133,9 @@ local question = Instance.new("TextLabel")
 question.BackgroundTransparency = 1
 question.Position = UDim2.new(0, 18, 0, 16)
 question.Size = UDim2.new(1, -36, 0, 92)
-question.Font = Enum.Font.GothamBold
+question.Font = Enum.Font.ArialBold
 question.Text = ""
-question.TextColor3 = Color3.new(1, 1, 1)
+question.TextColor3 = LEGACY_BLUE_DARK
 question.TextSize = 19
 question.TextWrapped = true
 question.TextYAlignment = Enum.TextYAlignment.Top
@@ -128,9 +155,9 @@ local feedback = Instance.new("TextLabel")
 feedback.BackgroundTransparency = 1
 feedback.Position = UDim2.new(0, 18, 1, -50)
 feedback.Size = UDim2.new(1, -36, 0, 38)
-feedback.Font = Enum.Font.GothamMedium
+feedback.Font = Enum.Font.Arial
 feedback.Text = ""
-feedback.TextColor3 = Color3.fromRGB(215, 222, 237)
+feedback.TextColor3 = Color3.fromRGB(31, 72, 102)
 feedback.TextSize = 13
 feedback.TextWrapped = true
 feedback.Parent = modal
@@ -142,10 +169,30 @@ local busy = false
 local points = 0
 local pendingProgression = nil
 
+local WEEKDAYS = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" }
+
+local function formatLegacyClock(state)
+    local schoolDay = tonumber(state.schoolDay) or 1
+    local periodIndex = tonumber(state.periodIndex) or 1
+    local secondsRemaining = tonumber(state.secondsRemaining) or SchoolConfig.PERIOD_SECONDS
+    local elapsedInPeriod = math.max(0, SchoolConfig.PERIOD_SECONDS - secondsRemaining)
+    local elapsedDay = ((periodIndex - 1) * SchoolConfig.PERIOD_SECONDS) + elapsedInPeriod
+    local totalDay = math.max(1, #SchoolConfig.Periods * SchoolConfig.PERIOD_SECONDS)
+    local minutesFromSeven = math.floor((elapsedDay / totalDay) * (8 * 60))
+    local absoluteMinutes = (7 * 60) + minutesFromSeven
+    local hour24 = math.floor(absoluteMinutes / 60) % 24
+    local minute = absoluteMinutes % 60
+    local suffix = hour24 >= 12 and "PM" or "AM"
+    local hour12 = hour24 % 12
+    if hour12 == 0 then hour12 = 12 end
+    local weekday = WEEKDAYS[((schoolDay - 1) % #WEEKDAYS) + 1]
+    return string.format("%d:%02d %s", hour12, minute, suffix), weekday
+end
+
 local function setPoints(value)
     if type(value) ~= "number" then return end
     points = value
-    pointsLabel.Text = tostring(points) .. " PTS"
+    pointsLabel.Text = "Points: " .. tostring(points)
 end
 
 local function refreshProgression()
@@ -182,14 +229,15 @@ local function showActivity(response)
     for index, choiceText in ipairs(activeActivity.choices or {}) do
         local button = Instance.new("TextButton")
         button.Size = UDim2.new(1, 0, 0, 48)
-        button.BackgroundColor3 = Color3.fromRGB(48, 58, 79)
-        button.Font = Enum.Font.GothamMedium
+        button.BackgroundColor3 = LEGACY_BUTTON
+        button.Font = Enum.Font.ArialBold
         button.Text = tostring(index) .. ".  " .. tostring(choiceText)
-        button.TextColor3 = Color3.new(1, 1, 1)
+        button.TextColor3 = LEGACY_BLUE_DARK
         button.TextSize = 15
         button.TextWrapped = true
         button.Parent = choices
-        round(button, 10)
+        round(button, 2)
+        outline(button, 1)
 
         button.Activated:Connect(function()
             if busy or not activeActivity or not activeClassKey then return end
@@ -314,13 +362,12 @@ task.spawn(function()
         end)
 
         if okState and type(state) == "table" then
-            local mins = math.floor((state.secondsRemaining or 0) / 60)
-            local secs = (state.secondsRemaining or 0) % 60
+            local timeText, weekday = formatLegacyClock(state)
             periodLabel.Text = string.format(
-                "%s  %d:%02d",
-                tostring(state.periodLabel),
-                mins,
-                secs
+                "%s  %s\n%s",
+                timeText,
+                weekday,
+                tostring(state.periodLabel)
             )
         end
 
