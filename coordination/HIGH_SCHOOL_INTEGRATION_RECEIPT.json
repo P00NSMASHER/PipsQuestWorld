@@ -1,61 +1,37 @@
 {
   "schemaVersion": 1,
   "lane": "Roblox High School Integration Director",
-  "result": "PASS_INTEGRATED_HANDOFF_SMOKE",
+  "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+  "integrationSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+  "parentIntegratedRuntimeSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
   "integratedPr": 32,
-  "integratedCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
   "verticalSliceTarget": "spawn -> clock/period -> one class -> one activity -> exactly-once progression -> free roam -> persistence",
+  "deltaFromParent": {
+    "productRuntimeChanged": false,
+    "changedFiles": [
+      ".github/workflows/high-school-class-education-ci.yml",
+      ".github/workflows/high-school-progression-ci.yml",
+      ".github/workflows/school-pivot-ci.yml"
+    ],
+    "note": "Trigger coverage only; no school/** runtime/test file changed."
+  },
+  "exactHeadCi": [
+    {"runId":36958964104,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
+    {"runId":36958964064,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
+    {"runId":36958964091,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
+  ],
   "scope": {
     "runtimeTestRoot": "school/**",
-    "supportVerifier": "scripts/verify-school-pivot.py",
     "retiredRuntimeConsumed": false,
     "robloxPublished": false,
     "moneySpent": false,
     "taskScheduleOrEnablementChanged": false
   },
-  "resolvedCandidateGaps": [
-    {
-      "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
-      "evidence": "CanonicalSchoolClient.client.lua retains pendingProgression.submissionId and reuses it when progression_commit_failed is retried with the same answer."
-    },
-    {
-      "id": "PLAYABLE_REJOIN_OBSERVABILITY",
-      "evidence": "ClassEducation.server.lua exposes read-only GetProgressionState backed by ProgressionRepository; the canonical client refreshes the server-authoritative restored totalPoints state."
-    }
-  ],
-  "candidateExactHeadCi": [
-    {
-      "runId": 36948771699,
-      "workflow": "High School Foundation Static Guards",
-      "conclusion": "success",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    },
-    {
-      "runId": 36948771689,
-      "workflow": "High School Class Education Guards",
-      "conclusion": "success",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    },
-    {
-      "runId": 36948771684,
-      "workflow": "High School Progression Guards",
-      "conclusion": "success",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    }
-  ],
-  "integratedHeadCi": {
-    "runId": 36949894768,
-    "workflow": "High School Foundation Static Guards",
-    "event": "push",
-    "sha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-    "conclusion": "success"
-  },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Validate only canonical integration SHA 506f19551b7f0b1d3edf753bd17ac366367efc32. Do not consume retired Maze/Pips/StarBlox/RHS-exact code. Run bounded smoke for the playable vertical slice and report any semantic defect to exactly one producer owner."
+    "instruction": "Smoke only canonical SHA b44cff4c64843001b178a6f6bd4aacabecfee30c. Reuse content-equivalent runtime evidence where valid, but certify this exact SHA. Never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
   }
 }
