@@ -57,7 +57,7 @@ local floorColor = Color3.fromRGB(203, 210, 220)
 local accentA = Color3.fromRGB(92, 132, 204)
 local accentB = Color3.fromRGB(126, 92, 181)
 
-makePart("CampusGround", Vector3.new(520, 2, 600), CFrame.new(0, -1, 85), Color3.fromRGB(117, 163, 102), Enum.Material.Grass)
+makePart("CampusGround", Vector3.new(720, 2, 820), CFrame.new(0, -1, 185), Color3.fromRGB(117, 163, 102), Enum.Material.Grass)
 makePart("SchoolFloor", Vector3.new(190, 1, 245), CFrame.new(0, 0, 0), floorColor, Enum.Material.Concrete)
 
 makePart("NorthWall", Vector3.new(190, 18, 2), CFrame.new(0, 9, -122), wallColor, Enum.Material.Brick)
@@ -285,6 +285,59 @@ end
 
 makePart("CampusRoad", Vector3.new(430, 0.4, 38), CFrame.new(0, 0.45, 300), Color3.fromRGB(54, 57, 62), Enum.Material.Asphalt)
 makePart("RoadCenterLine", Vector3.new(420, 0.08, 0.35), CFrame.new(0, 0.7, 300), Color3.fromRGB(245, 205, 69), Enum.Material.SmoothPlastic)
+
+-- Original town shell provides stable destinations for jobs, vehicles, housing, and shopping.
+makePart("TownConnectorRoad", Vector3.new(38, 0.4, 250), CFrame.new(0, 0.45, 410), Color3.fromRGB(54, 57, 62), Enum.Material.Asphalt)
+makePart("TownConnectorLine", Vector3.new(0.35, 0.08, 240), CFrame.new(0, 0.7, 410), Color3.fromRGB(245, 205, 69), Enum.Material.SmoothPlastic)
+makePart("TownMainStreet", Vector3.new(430, 0.4, 38), CFrame.new(0, 0.45, 390), Color3.fromRGB(54, 57, 62), Enum.Material.Asphalt)
+makePart("TownMainStreetLine", Vector3.new(420, 0.08, 0.35), CFrame.new(0, 0.7, 390), Color3.fromRGB(245, 205, 69), Enum.Material.SmoothPlastic)
+makePart("TownNorthWalk", Vector3.new(430, 0.25, 10), CFrame.new(0, 0.72, 365), Color3.fromRGB(198, 201, 204), Enum.Material.Concrete)
+makePart("TownSouthWalk", Vector3.new(430, 0.25, 10), CFrame.new(0, 0.72, 415), Color3.fromRGB(198, 201, 204), Enum.Material.Concrete)
+
+local function buildStorefront(key, width, depth, height, color)
+    local location = SchoolConfig.WorldLocations[key]
+    local center = location.position
+    makePart(key .. "Floor", Vector3.new(width, 0.5, depth), CFrame.new(center.X, 0.6, center.Z), Color3.fromRGB(211, 214, 218), Enum.Material.Concrete)
+    makePart(key .. "Back", Vector3.new(width, height, 1), CFrame.new(center.X, height / 2, center.Z + depth / 2), color, Enum.Material.Brick)
+    makePart(key .. "Left", Vector3.new(1, height, depth), CFrame.new(center.X - width / 2, height / 2, center.Z), color, Enum.Material.Brick)
+    makePart(key .. "Right", Vector3.new(1, height, depth), CFrame.new(center.X + width / 2, height / 2, center.Z), color, Enum.Material.Brick)
+    makePart(key .. "Roof", Vector3.new(width + 2, 1, depth + 2), CFrame.new(center.X, height, center.Z), Color3.fromRGB(55, 59, 67), Enum.Material.Metal)
+    local window = makePart(key .. "Window", Vector3.new(width - 8, 8, 0.45), CFrame.new(center.X, 7, center.Z - depth / 2 + 0.4), glassColor, Enum.Material.Glass)
+    window.Transparency = 0.3
+    window.CanCollide = false
+    local door = makePart(key .. "Door", Vector3.new(6, 9, 0.5), CFrame.new(center.X, 5, center.Z - depth / 2 + 0.25), glassColor, Enum.Material.Glass)
+    door.Transparency = 0.24
+    door.CanCollide = false
+    makeLabel(location.displayName, CFrame.new(center.X, height - 3, center.Z - depth / 2 - 0.35))
+end
+
+buildStorefront("Cafe", 58, 42, 22, Color3.fromRGB(173, 112, 78))
+buildStorefront("StyleShop", 58, 42, 22, Color3.fromRGB(126, 100, 168))
+buildStorefront("AutoShop", 66, 48, 24, Color3.fromRGB(82, 112, 145))
+buildStorefront("Market", 64, 46, 23, Color3.fromRGB(116, 145, 99))
+
+local park = SchoolConfig.WorldLocations.TownPark.position
+makePart("TownParkPad", Vector3.new(98, 0.35, 70), CFrame.new(park.X, 0.55, park.Z), Color3.fromRGB(143, 177, 126), Enum.Material.Grass)
+makePart("TownParkPathA", Vector3.new(86, 0.2, 8), CFrame.new(park.X, 0.75, park.Z), Color3.fromRGB(205, 202, 190), Enum.Material.Concrete)
+makePart("TownParkPathB", Vector3.new(8, 0.2, 58), CFrame.new(park.X, 0.75, park.Z), Color3.fromRGB(205, 202, 190), Enum.Material.Concrete)
+makePart("TownParkFountainBase", Vector3.new(18, 2, 18), CFrame.new(park.X, 1.5, park.Z), Color3.fromRGB(150, 155, 164), Enum.Material.Slate)
+local fountain = makePart("TownParkWater", Vector3.new(14, 0.5, 14), CFrame.new(park.X, 2.7, park.Z), Color3.fromRGB(86, 167, 211), Enum.Material.Glass)
+fountain.Transparency = 0.2
+
+local neighborhood = SchoolConfig.WorldLocations.Neighborhood.position
+makePart("NeighborhoodRoad", Vector3.new(360, 0.4, 30), CFrame.new(neighborhood.X, 0.45, neighborhood.Z), Color3.fromRGB(58, 61, 66), Enum.Material.Asphalt)
+for index, x in ipairs({-180, -120, -60, 60, 120, 180}) do
+    local houseColor = (index % 2 == 0) and Color3.fromRGB(191, 177, 155) or Color3.fromRGB(176, 190, 199)
+    makePart("HouseBody", Vector3.new(44, 18, 32), CFrame.new(x, 9, neighborhood.Z + 34), houseColor, Enum.Material.Brick)
+    makePart("HouseRoof", Vector3.new(48, 3, 36), CFrame.new(x, 19.5, neighborhood.Z + 34), Color3.fromRGB(76, 72, 71), Enum.Material.Slate)
+    local houseDoor = makePart("HouseDoor", Vector3.new(6, 10, 0.5), CFrame.new(x, 5, neighborhood.Z + 17.75), Color3.fromRGB(94, 70, 54), Enum.Material.Wood)
+    houseDoor.CanCollide = false
+    for _, wx in ipairs({-12, 12}) do
+        local window = makePart("HouseWindow", Vector3.new(8, 7, 0.4), CFrame.new(x + wx, 10, neighborhood.Z + 17.7), glassColor, Enum.Material.Glass)
+        window.Transparency = 0.25
+        window.CanCollide = false
+    end
+end
 
 local function buildCampusTree(x, z)
     makePart("TreeTrunk", Vector3.new(2.4, 10, 2.4), CFrame.new(x, 5, z), Color3.fromRGB(103, 76, 55), Enum.Material.Wood)
