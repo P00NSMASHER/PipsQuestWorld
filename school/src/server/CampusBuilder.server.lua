@@ -380,7 +380,7 @@ for index, plot in ipairs(SchoolConfig.HousingPlots) do
     local houseDoor = makePart(
         "HouseDoor",
         Vector3.new(6, 10, 0.5),
-        CFrame.new(plot.doorPosition.X, plot.doorPosition.Y + 2, plot.doorPosition.Z + 0.25),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 4.35, houseOrigin.Z - 16.25),
         Color3.fromRGB(94, 70, 54),
         Enum.Material.Wood,
         plotFolder
@@ -391,7 +391,7 @@ for index, plot in ipairs(SchoolConfig.HousingPlots) do
         local window = makePart(
             "HouseWindow",
             Vector3.new(8, 7, 0.4),
-            CFrame.new(houseOrigin.X + wx, houseOrigin.Y + 9.35, plot.doorPosition.Z + 0.2),
+            CFrame.new(houseOrigin.X + wx, houseOrigin.Y + 9.35, houseOrigin.Z - 16.3),
             glassColor,
             Enum.Material.Glass,
             plotFolder
