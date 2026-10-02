@@ -209,9 +209,9 @@ if economy_hardening.get("targetPath") != "ServerScriptService/ItemBuyScript":
     errors.append("preflight economy target changed")
 if economy_hardening.get("baselineSourceSha256") != "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf":
     errors.append("preflight economy baseline source hash changed")
-if economy_hardening.get("patchedSourceSha256") != "876d7ae8f1fa746780e81e1457c8c7870d4092d532edb3bd94588c4316fa7169":
+if economy_hardening.get("patchedSourceSha256") != "5a1818e154b76f7465c6a3d4f32c1a6d0a6e455095b9b654a238ce8823a3c0bc":
     errors.append("preflight economy patched source hash changed")
-if economy_hardening.get("deterministicReplacementCount") != 7:
+if economy_hardening.get("deterministicReplacementCount") != 11:
     errors.append("preflight economy replacement count changed")
 if economy_hardening.get("contractRunId") != 36901054838:
     errors.append("preflight economy contract run id changed")
