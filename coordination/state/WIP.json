@@ -1,16 +1,37 @@
 {
-  "schemaVersion": 8,
+  "schemaVersion": 9,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "CAFE_JOB_PERSISTENCE_REJOIN_REPAIR_SMOKE_CERTIFIED_RELEASE_PACKAGE_ELIGIBLE",
+  "unintegratedProductCandidateCount": 1,
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_ASSIGNED",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
       "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
-    "upstream": null,
+    "upstream": {
+      "lane": "Pip High Free Roam",
+      "objective": "VEHICLE_LIFECYCLE_V1",
+      "baseBranch": "rebuild/high-school-foundation",
+      "baseSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "branch": "rebuild/high-school-vehicles-92691e0-v1",
+      "allowedRoot": "school/**",
+      "ownership": [
+        "vehicle spawn/despawn lifecycle",
+        "vehicle enter/exit and drive controls",
+        "one-active-vehicle-per-player enforcement",
+        "vehicle cleanup on leave"
+      ],
+      "forbiddenOverlap": [
+        "school clock/location/world authority",
+        "progression/economy/persistence authority",
+        "class/session authority",
+        "housing/property authority",
+        "avatar/customization/shopping authority"
+      ],
+      "status": "ASSIGNED_READY"
+    },
     "downstream": null
   },
   "priorityBacklog": [
@@ -32,7 +53,7 @@
     {
       "priority": 4,
       "milestone": "VEHICLES",
-      "status": "NEXT_PRIORITY_UNASSIGNED"
+      "status": "ACTIVE"
     },
     {
       "priority": 5,
@@ -68,9 +89,9 @@
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Roblox High School Integration Smoke",
-    "to": "Pip High Release & Package Gate",
-    "condition": "QA, Integration, Smoke, and all three exact-head guards PASS the same live canonical SHA 92691e009869ee9cd5d9306786502b157a5b6c84."
+    "from": "Pip High Free Roam",
+    "to": "Roblox High School QA & Contract",
+    "condition": "Exact-head deterministic CI PASS on rebuild/high-school-vehicles-92691e0-v1 descended from canonical 92691e009869ee9cd5d9306786502b157a5b6c84."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -99,5 +120,88 @@
       "K-8 educational expansion",
       "unrelated original feature breadth"
     ]
+  },
+  "runDirectives": {
+    "Foundation": {
+      "mode": "SUPPORT",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Verify existing road/AutoShop/spawn-location seams needed by VEHICLE_LIFECYCLE_V1; add only deterministic Foundation-owned tests/contracts if a concrete gap exists.",
+      "owned": "school Foundation world/location/spawn contracts only",
+      "dependency": "canonical SchoolConfig/CampusBuilder road and AutoShop locations",
+      "exit": "Vehicle producer can consume one stable spawn/road contract without world-authority duplication.",
+      "handoff": "Pip High Free Roam"
+    },
+    "Class & Education": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "No class product work during vehicle slice; perform one freshness read only.",
+      "owned": "class/session/activity authority",
+      "dependency": "vehicle slice does not require class changes",
+      "exit": "Control Tower assigns a class-owned regression or later parity slice.",
+      "handoff": "Control Tower"
+    },
+    "Content QA": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "No new content needed for initial vehicle lifecycle; freshness/provenance read only.",
+      "owned": "authorized fixtures/assets/provenance",
+      "dependency": "vehicle candidate must use original/properly licensed primitive or existing authorized assets",
+      "exit": "Producer requests a concrete asset/provenance fixture.",
+      "handoff": "QA/Contract"
+    },
+    "Progression & Mobile": {
+      "mode": "SUPPORT",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Verify existing EconomyRepository ownership contract safely supports vehicle category; add only deterministic contract tests if a concrete gap is reproduced.",
+      "owned": "durable progression/economy/ownership/mobile read-only contracts",
+      "dependency": "canonical EconomyRepository ownership API",
+      "exit": "Vehicle producer has a stable read/write ownership contract without a second ledger or persistence writer.",
+      "handoff": "Pip High Free Roam"
+    },
+    "Pip High Free Roam": {
+      "mode": "PRODUCE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Implement one working vehicle lifecycle: spawn one authorized/original vehicle at the canonical AutoShop/road seam, enter, drive with Roblox-native desktop/mobile controls, exit, enforce one active vehicle per player, despawn/re-spawn safely, and clean up on leave.",
+      "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
+      "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
+      "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
+      "handoff": "QA/Contract"
+    },
+    "QA/Contract": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Wait for exact-head vehicle candidate; then validate lifecycle, authority boundaries, exploit resistance, mobile controls, provenance, and cleanup.",
+      "owned": "QA harnesses/contracts only",
+      "dependency": "Free Roam exact-head candidate",
+      "exit": "Exact candidate PASS or one reproducible defect with one owner/exit criterion.",
+      "handoff": "Integration"
+    },
+    "Integration": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Wait for QA-approved exact-green vehicle candidate.",
+      "owned": "mechanical integration only",
+      "dependency": "QA PASS on exact vehicle head",
+      "exit": "Merge exact approved vehicle head and produce integrated exact SHA.",
+      "handoff": "Integration Smoke"
+    },
+    "Integration Smoke": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Wait for changed integrated vehicle SHA.",
+      "owned": "post-integration certification only",
+      "dependency": "Integration exact SHA",
+      "exit": "Vehicle spawn/drive/exit/despawn plus baseline invariants smoke PASS on exact integrated SHA.",
+      "handoff": "Release/Package"
+    },
+    "Release/Package": {
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "objective": "Current 92691e0 package checkpoint is complete; wait for changed smoke-certified vehicle SHA and never publish without separate authorization.",
+      "owned": "deterministic package checkpoint only",
+      "dependency": "Smoke PASS on changed exact SHA",
+      "exit": "Package changed exact SHA once, record artifact identity/provenance, then return control to Control Tower.",
+      "handoff": "Control Tower"
+    }
   }
 }
