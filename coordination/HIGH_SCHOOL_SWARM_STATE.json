@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-02T02:00:36Z",
+  "updatedAt": "2026-10-02T02:58:00Z",
   "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
@@ -8,7 +8,7 @@
   "currentPlayableStage": "PR #32 is merged into canonical rebuild/high-school-foundation@506f19551b7f0b1d3edf753bd17ac366367efc32. The merge tree is byte-identical to runtime-validated candidate e69d6ddf8e1e3875ea9947b919cae2f256a449a3. Runtime evidence on that identical tree demonstrates authoritative period, class attendance, server-authoritative activity, one durable 25-point progression commit, free-roam return, server-authoritative restored progression, and client restoration. Canonical merge-head certification is still incomplete because only the Foundation workflow has run green on the merge SHA; Class/Education and Progression exact-head CI plus post-integration smoke are still required.",
   "runtimeValidatedThrough": "content-identical candidate tree: spawn -> authoritative clock/period -> class travel/attendance -> server-authoritative activity -> exactly-once normal-path progression -> free roam -> restored progression snapshot/client reload",
   "headlessExactHeadValidatedThrough": "pre-merge candidate e69d6dd: full deterministic vertical slice; canonical merge 506f1955: Foundation exact-head guard only until Class/Education and Progression are rerun on the merge SHA",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 1,
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
   "wipSlots": {
@@ -56,9 +56,21 @@
     {
       "id": "POST_MERGE_EXACT_HEAD_CI_COVERAGE",
       "owner": "Roblox High School DevEx",
-      "status": "BLOCKING_DOWNSTREAM_CERTIFICATION",
+      "status": "BLOCKING_DOWNSTREAM_CERTIFICATION_WRITE_PATH_RESTRICTED",
       "canonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-      "exitCriterion": "Obtain green exact-head Class/Education and Progression deterministic CI on canonical merge SHA 506f19551b7f0b1d3edf753bd17ac366367efc32 without changing product semantics. If current workflows do not run on canonical pushes, repair CI trigger coverage in the DevEx lane without weakening tests."
+      "exitCriterion": "A writer permitted to modify GitHub workflow files applies the narrow trigger-only DevEx patch, then canonical rebuild/high-school-foundation receives green Foundation, Class/Education, and Progression exact-head CI on one live SHA. Only then may Integration Smoke certify that SHA.",
+      "diagnosis": [
+        "Canonical merge 506f19551b7f0b1d3edf753bd17ac366367efc32 has only Foundation push CI.",
+        "Class/Education push filter matches only rebuild/high-school-class-education-*.",
+        "Progression push filter matches only rebuild/high-school-progression-*.",
+        "Creating exact-SHA alias branches did not trigger the path-filtered workflows.",
+        "The connected GitHub contents writer is blocked from modifying .github/workflows/* in this run, so trigger coverage cannot be repaired through the available safe write path."
+      ],
+      "requiredPatch": [
+        ".github/workflows/high-school-class-education-ci.yml: add rebuild/high-school-foundation to on.push.branches.",
+        ".github/workflows/high-school-progression-ci.yml: add rebuild/high-school-foundation to on.push.branches.",
+        "Ensure a canonical push that changes either CI workflow also runs Foundation/Class/Progression guards; do not weaken any existing test step."
+      ]
     },
     {
       "id": "POST_INTEGRATION_SMOKE_EXACT_HEAD",
@@ -122,10 +134,10 @@
     "openCount": 0,
     "open": []
   },
-  "nextMilestone": "DevEx must establish missing Class/Education and Progression exact-head CI on canonical merge 506f19551b7f0b1d3edf753bd17ac366367efc32. After those are green, Integration Smoke runs the bounded exact-head smoke. No new product candidate is authorized.",
+  "nextMilestone": "DevEx applies the trigger-only GitHub Actions coverage repair for canonical rebuild/high-school-foundation without touching school/** product semantics. Then require all three deterministic guards green on the same live canonical SHA before post-integration smoke. No new product candidate is authorized.",
   "localMachineCoordination": {
     "resource": "ONLINE_LAPTOP",
-    "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
+    "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
     "availability": "ONLINE_VERIFIED",
     "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
     "claimPolicy": "LOCAL_ONLY_REQUIRED + exact canonical SHA + atomic GitHub lease claim",
@@ -174,5 +186,8 @@
     "treeSha": "2af1f7627ecfc4340336e7d087701c7c3bbf8000",
     "identicalTree": true,
     "note": "Content equivalence preserves runtime evidence relevance but does not waive the exact-head CI rule."
+  },
+  "staleCoordinationArtifacts": {
+    "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json": "STALE_SUPERSEDED_BY_V2; do not authorize local work from this file."
   }
 }
