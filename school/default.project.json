@@ -78,6 +78,12 @@
         },
         "EconomyRepository": {
           "$path": "src/server/EconomyRepository.lua"
+        },
+        "CafeJobController": {
+          "$path": "src/server/CafeJobController.lua"
+        },
+        "CafeJob": {
+          "$path": "src/server/CafeJob.server.lua"
         }
       }
     },
@@ -87,6 +93,9 @@
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
           "$path": "src/client/CanonicalSchoolClient.client.lua"
+        },
+        "CafeJobClient": {
+          "$path": "src/client/CafeJobClient.client.lua"
         }
       }
     }
