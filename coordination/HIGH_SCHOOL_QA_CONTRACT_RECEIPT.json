@@ -1,77 +1,61 @@
 {
-  "schemaVersion": 12,
+  "schemaVersion": 13,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T15:53:00Z",
-  "result": "PASS_EXACT_HEAD",
-  "certifiedSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-  "sourceRoot": "school/**",
-  "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
-  "evidenceChain": {
-    "vehicleProducer": {
-      "pr": 85,
-      "validatedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4"
-    },
-    "firstIntegrationSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-    "foundationRepair": {
-      "pr": 92,
-      "validatedSha": "ca84d70f22a091034c8054d511e78472cb856ffa"
-    },
-    "finalCanonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
-  },
-  "exactIntegrationRebind": {
-    "repairHeadToCanonicalCompare": "AHEAD_BY_1_MERGE_COMMIT_FILES_EMPTY",
-    "repairHeadRootTree": "df4b5d641db29b2299d4b071bc21cbd0afae7a80",
-    "canonicalRootTree": "df4b5d641db29b2299d4b071bc21cbd0afae7a80",
-    "repairHeadSchoolTree": "0214cfbea3ae36abf28fcea867ed3a1a4aac47de",
-    "canonicalSchoolTree": "0214cfbea3ae36abf28fcea867ed3a1a4aac47de",
-    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
+  "updatedAt": "2026-10-02T17:30:00Z",
+  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "canonicalBaseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "candidate": {
+    "pr": 103,
+    "branch": "rebuild/high-school-vehicle-controls-e929354-v1",
+    "sha": "e83a22d0696966595feb41971844a021f637abe7",
+    "milestone": "VEHICLE_INPUT_RELIABILITY_V2"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37029958854,
-      "event": "push",
+      "runId": 37042177160,
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "e83a22d0696966595feb41971844a021f637abe7"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37029958840,
-      "event": "push",
+      "runId": 37042177307,
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "e83a22d0696966595feb41971844a021f637abe7"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37029958834,
-      "event": "push",
+      "runId": 37042177326,
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "e83a22d0696966595feb41971844a021f637abe7",
+      "vehicleInputStep": "success"
     }
   ],
   "validation": {
-    "oneActiveVehiclePerPlayer": "PASS_DETERMINISTIC",
-    "staleTokenDespawnProtection": "PASS_DETERMINISTIC",
-    "repeatedDespawnIdempotency": "PASS_DETERMINISTIC",
-    "ownerOnlySeatControl": "PASS_STATIC",
-    "autoShopSpawnSeamAuthority": "PASS_FOUNDATION_CONTRACT",
-    "autoShopSpawnGrounding": "PASS_REPAIR_PR92_TOWNMAINSTREET_SURFACE_CONTRACT",
-    "playerLeaveCleanup": "PASS_STATIC",
-    "serverAuthoritativeMovement": "PASS_STATIC_BOUNDED_INPUT",
-    "canonicalClientAuthority": "PASS_SINGLE_CLIENT",
-    "duplicateWorldAuthority": "PASS_NONE",
-    "duplicateEconomyProgressionPersistenceAuthority": "PASS_NONE",
-    "duplicateClassAuthority": "PASS_NONE",
-    "provenanceOriginality": "PASS_PRIMITIVE_ORIGINAL_GEOMETRY_NO_ASSET_IDS",
-    "retiredRuntimeCoupling": "PASS_NONE",
-    "phase2SchoolworkDrift": "PASS_NONE",
-    "testWeakening": "PASS_NONE"
+    "changedPathsWithinAuthorizedSlice": true,
+    "directVehicleSeatThrottleSteerSamplingRemoved": true,
+    "ownerOnlySeatedControlGate": true,
+    "lifecycleTokenGatePreserved": true,
+    "finiteAndClampedInput": true,
+    "staleInputTimeout": true,
+    "serverOnlyPositionYawAuthority": true,
+    "clientTransformTrust": false,
+    "keyboardAndTouchControlBinding": true,
+    "vehicleLifecycleRegressionGuard": true,
+    "foundationAuthorityDuplicated": false,
+    "classAuthorityDuplicated": false,
+    "progressionEconomyPersistenceAuthorityDuplicated": false,
+    "externalAssetIdsAdded": false,
+    "retiredRuntimeCoupling": false,
+    "phase2SchoolworkDrift": false,
+    "testWeakening": false
   },
   "integrationEligibility": "PASS",
   "blocker": null,
-  "runtimeSmokeRequirement": "Actual Roblox VehicleSeat/moving-model behavior remains Integration Smoke-owned LOCAL_ONLY_REQUIRED on exact canonical e929354087d3dbf6931496e310b8f899cd0d299f.",
+  "localOnlyRequired": "After integration, actual Roblox runtime vehicle spawn/seat/drive/steer/exit/re-enter remains Smoke-owned on the same private target.",
   "handoff": {
-    "owner": "Roblox High School Integration Smoke",
-    "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+    "owner": "Roblox High School Integration Director",
+    "exactSha": "e83a22d0696966595feb41971844a021f637abe7",
+    "pr": 103
   }
 }
