@@ -84,6 +84,12 @@
         },
         "CafeJob": {
           "$path": "src/server/CafeJob.server.lua"
+        },
+        "VehicleLifecycle": {
+          "$path": "src/server/VehicleLifecycle.lua"
+        },
+        "VehicleService": {
+          "$path": "src/server/VehicleService.server.lua"
         }
       }
     },
