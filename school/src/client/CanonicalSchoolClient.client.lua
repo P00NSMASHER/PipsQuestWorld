@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local ContextActionService = game:GetService("ContextActionService")
 
 local player = Players.LocalPlayer
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
@@ -571,6 +572,7 @@ local vehicleRoot = root:WaitForChild("FreeRoam"):WaitForChild("Vehicles")
 local getVehicleState = vehicleRoot:WaitForChild("GetState")
 local spawnVehicle = vehicleRoot:WaitForChild("Spawn")
 local despawnVehicle = vehicleRoot:WaitForChild("Despawn")
+local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 
 local vehicleCard = Instance.new("Frame")
 vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
@@ -621,6 +623,126 @@ local latestVehicleState = nil
 local vehicleBusy = false
 local vehicleMessageUntil = 0
 
+local VEHICLE_FORWARD = "PipHighVehicleForward"
+local VEHICLE_REVERSE = "PipHighVehicleReverse"
+local VEHICLE_LEFT = "PipHighVehicleLeft"
+local VEHICLE_RIGHT = "PipHighVehicleRight"
+local vehicleControlsBound = false
+local vehicleControlState = {
+    forward = false,
+    reverse = false,
+    left = false,
+    right = false,
+}
+
+local function currentVehicleControls()
+    local throttle = (vehicleControlState.forward and 1 or 0)
+        - (vehicleControlState.reverse and 1 or 0)
+    local steer = (vehicleControlState.right and 1 or 0)
+        - (vehicleControlState.left and 1 or 0)
+    return throttle, steer
+end
+
+local function sendVehicleControls()
+    if not vehicleControlsBound then
+        return
+    end
+    local throttle, steer = currentVehicleControls()
+    setVehicleControls:FireServer(throttle, steer)
+end
+
+local function vehicleControlHandler(key)
+    return function(_, inputState)
+        if not vehicleControlsBound then
+            return Enum.ContextActionResult.Pass
+        end
+
+        if inputState == Enum.UserInputState.Begin then
+            vehicleControlState[key] = true
+        elseif inputState == Enum.UserInputState.End
+            or inputState == Enum.UserInputState.Cancel then
+            vehicleControlState[key] = false
+        else
+            return Enum.ContextActionResult.Sink
+        end
+
+        sendVehicleControls()
+        return Enum.ContextActionResult.Sink
+    end
+end
+
+local function resetVehicleControlState()
+    vehicleControlState.forward = false
+    vehicleControlState.reverse = false
+    vehicleControlState.left = false
+    vehicleControlState.right = false
+end
+
+local function bindVehicleControls()
+    if vehicleControlsBound then
+        return
+    end
+
+    resetVehicleControlState()
+    vehicleControlsBound = true
+
+    ContextActionService:BindAction(
+        VEHICLE_FORWARD,
+        vehicleControlHandler("forward"),
+        true,
+        Enum.KeyCode.W,
+        Enum.KeyCode.Up
+    )
+    ContextActionService:BindAction(
+        VEHICLE_REVERSE,
+        vehicleControlHandler("reverse"),
+        true,
+        Enum.KeyCode.S,
+        Enum.KeyCode.Down
+    )
+    ContextActionService:BindAction(
+        VEHICLE_LEFT,
+        vehicleControlHandler("left"),
+        true,
+        Enum.KeyCode.A,
+        Enum.KeyCode.Left
+    )
+    ContextActionService:BindAction(
+        VEHICLE_RIGHT,
+        vehicleControlHandler("right"),
+        true,
+        Enum.KeyCode.D,
+        Enum.KeyCode.Right
+    )
+
+    ContextActionService:SetTitle(VEHICLE_FORWARD, "FWD")
+    ContextActionService:SetTitle(VEHICLE_REVERSE, "REV")
+    ContextActionService:SetTitle(VEHICLE_LEFT, "LEFT")
+    ContextActionService:SetTitle(VEHICLE_RIGHT, "RIGHT")
+
+    ContextActionService:SetPosition(VEHICLE_FORWARD, UDim2.new(0, 80, 1, -190))
+    ContextActionService:SetPosition(VEHICLE_REVERSE, UDim2.new(0, 80, 1, -70))
+    ContextActionService:SetPosition(VEHICLE_LEFT, UDim2.new(0, 20, 1, -130))
+    ContextActionService:SetPosition(VEHICLE_RIGHT, UDim2.new(0, 140, 1, -130))
+
+    sendVehicleControls()
+end
+
+local function unbindVehicleControls()
+    if not vehicleControlsBound then
+        return
+    end
+
+    resetVehicleControlState()
+    setVehicleControls:FireServer(0, 0)
+    vehicleControlsBound = false
+
+    ContextActionService:UnbindAction(VEHICLE_FORWARD)
+    ContextActionService:UnbindAction(VEHICLE_REVERSE)
+    ContextActionService:UnbindAction(VEHICLE_LEFT)
+    ContextActionService:UnbindAction(VEHICLE_RIGHT)
+end
+
 local function setVehicleMessage(text)
     vehicleStatus.Text = text
     vehicleMessageUntil = os.clock() + 2.6
@@ -634,12 +756,18 @@ local function applyVehicleState(state)
     latestVehicleState = state
     vehicleCard.Visible = state.active == true or state.atAutoShop == true
 
+    if state.driving == true then
+        bindVehicleControls()
+    else
+        unbindVehicleControls()
+    end
+
     if state.active == true then
         vehicleTitle.Text = "STARTER CAR"
         vehicleAction.Text = "DESPAWN VEHICLE"
         if os.clock() >= vehicleMessageUntil then
             if state.driving == true then
-                vehicleStatus.Text = "Drive with the seat controls. Jump to exit."
+                vehicleStatus.Text = "Drive with the controls. Jump to exit."
             else
                 vehicleStatus.Text = "Walk to the driver seat to continue driving."
             end
@@ -703,7 +831,7 @@ vehicleAction.Activated:Connect(function()
             setVehicleMessage("That vehicle action is not available right now.")
         end
     elseif response.code == "vehicle_spawned" then
-        setVehicleMessage("Starter car ready. Use the seat controls to drive.")
+        setVehicleMessage("Starter car ready. Use the driving controls.")
     elseif response.code == "vehicle_despawned"
         or response.code == "vehicle_already_despawned" then
         setVehicleMessage("Vehicle returned.")
@@ -720,5 +848,15 @@ task.spawn(function()
     while gui.Parent do
         refreshVehicle()
         task.wait(0.75)
+    end
+    unbindVehicleControls()
+end)
+
+task.spawn(function()
+    while gui.Parent do
+        if vehicleControlsBound then
+            sendVehicleControls()
+        end
+        task.wait(0.12)
     end
 end)
