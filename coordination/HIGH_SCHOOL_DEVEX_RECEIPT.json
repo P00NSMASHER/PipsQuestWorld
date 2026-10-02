@@ -1,53 +1,48 @@
 {
-  "schemaVersion": 8,
-  "cycle": "2026-10-02T05:06Z",
+  "schemaVersion": 9,
+  "cycle": "2026-10-02T07:01Z",
   "lane": "Roblox High School DevEx",
   "result": "PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
   "canonicalSourceRoot": "school/**",
   "fixedDefect": {
-    "id": "DEVEX_RECEIPT_STALE_AFTER_CANONICAL_CI_REPAIR",
-    "beforeReceiptBlobSha": "a354ad9b787435d1e40cdfdfc001672045cb2172",
-    "beforeRecordedCanonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-    "afterCanonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+    "id": "DEVEX_RECEIPT_ROUTING_DRIFT_AFTER_CONTROL_TOWER_REFRESH",
+    "beforeReceiptBlobSha": "73eeb97e667f4b4eb9040aab820eabb8b02f57e0",
+    "beforeRecordedSharedStateBlobSha": "9a6ec0982f34931137b834fedb4b06af0a924c92",
+    "beforeRecordedSharedStateStatus": "STALE",
+    "afterSharedStateBlobSha": "9171e810a4ba5945084aeb1afd4ed59f994a1d26",
     "canonicalBranch": "rebuild/high-school-foundation",
-    "canonicalDelta": {
-      "status": "ahead",
-      "aheadBy": 1,
-      "behindBy": 0,
-      "changedFiles": [
-        ".github/workflows/high-school-class-education-ci.yml",
-        ".github/workflows/high-school-progression-ci.yml",
-        ".github/workflows/school-pivot-ci.yml"
-      ],
-      "schoolProductFilesChanged": 0
-    },
+    "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+    "sharedStateStatus": "CURRENT",
+    "integrationSmokeStatus": "CURRENT_EXACT_HEAD_PASS",
+    "integrationSmokeReceiptCommit": "0bbb39823b22056a50507cff8e35c7c5f22f237f",
     "exactHeadCi": [
-      {"runId": 36958964104, "workflow": "High School Foundation Static Guards", "event": "push", "conclusion": "success"},
-      {"runId": 36958964064, "workflow": "High School Class Education Guards", "event": "push", "conclusion": "success"},
-      {"runId": 36958964091, "workflow": "High School Progression Guards", "event": "push", "conclusion": "success"}
+      {"runId":36958964104,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
+      {"runId":36958964064,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
+      {"runId":36958964091,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
     ],
-    "measurableWasteRemoved": "Stops support lanes from repeating the already-resolved post-merge exact-head CI coverage diagnosis, creating alias branches, or rerunning stale-SHA certification work against 506f19551b7f0b1d3edf753bd17ac366367efc32.",
-    "deterministicVerification": "GitHub live branch head is b44cff4c64843001b178a6f6bd4aacabecfee30c; all three canonical guard workflows completed successfully on that exact SHA. Compare 506f1955...b44cff4 reports one commit ahead, zero behind, and only the three GitHub workflow files changed; no school/** product file changed.",
-    "rollbackCriterion": "Rollback this receipt only if rebuild/high-school-foundation no longer resolves to b44cff4c64843001b178a6f6bd4aacabecfee30c or GitHub invalidates one of the three cited exact-head successful runs."
+    "measurableWasteRemoved": "Stops DevEx and downstream readers from routing already-completed canonical adoption and exact-head smoke work back to Control Tower or Integration Smoke after shared state was refreshed and smoke was certified.",
+    "deterministicVerification": "Live GitHub branch rebuild/high-school-foundation resolves to b44cff4c64843001b178a6f6bd4aacabecfee30c. GitHub Actions runs 36958964104, 36958964064, and 36958964091 are completed successfully on that exact SHA. Shared state blob 9171e810a4ba5945084aeb1afd4ed59f994a1d26 records the same canonical SHA and exact-head smoke receipt commit 0bbb39823b22056a50507cff8e35c7c5f22f237f.",
+    "rollbackCriterion": "Rollback this receipt if the live canonical branch stops resolving to b44cff4c64843001b178a6f6bd4aacabecfee30c, any cited exact-head CI run is invalidated, or shared state no longer records exact-head smoke certification for that SHA."
   },
   "externalDrift": {
     "sharedState": {
-      "owner": "Roblox High School Control Tower",
-      "status": "STALE",
-      "stateBlobSha": "9a6ec0982f34931137b834fedb4b06af0a924c92",
-      "recordedCanonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-      "liveCanonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-      "requiredAction": "Adopt b44cff4c64843001b178a6f6bd4aacabecfee30c, clear POST_MERGE_EXACT_HEAD_CI_COVERAGE, and release exact-head post-integration smoke without changing producer semantics."
+      "owner":"Roblox High School Control Tower",
+      "status":"CURRENT",
+      "stateBlobSha":"9171e810a4ba5945084aeb1afd4ed59f994a1d26",
+      "recordedCanonicalSha":"b44cff4c64843001b178a6f6bd4aacabecfee30c",
+      "liveCanonicalSha":"b44cff4c64843001b178a6f6bd4aacabecfee30c",
+      "requiredAction":null
     },
     "qaReceipt": {
-      "owner": "Roblox High School QA & Contract",
-      "status": "STALE",
-      "receiptBlobSha": "fece0f43174599364e2658d50fe034eaf62a1a15",
-      "reason": "Receipt still references pre-integration Foundation/Class candidates and must not authorize current downstream work."
+      "owner":"Roblox High School QA & Contract",
+      "status":"STALE",
+      "branch":"qa/high-school-contract-exact-head-20261001",
+      "receiptBlobSha":"fece0f43174599364e2658d50fe034eaf62a1a15",
+      "reason":"Receipt still references pre-integration Foundation/Class candidates and must not authorize current downstream work."
     }
   },
-  "retiredRuntimePolicy": "Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, game/**, old feat/* and parallel highschool/** runtime work remain retired/quarantined historical only. No retired runtime was opened, tested, repaired, packaged, published, or assigned work.",
-  "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "Refresh shared state to canonical b44cff4c64843001b178a6f6bd4aacabecfee30c using the three green exact-head runs, then allow Integration Smoke to certify that exact SHA. No new product candidate is authorized."
+  "retiredRuntimePolicy":"Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, game/**, old feat/* and parallel highschool/** runtime work remain retired/quarantined historical only. No retired runtime was opened, tested, repaired, packaged, published, or assigned work.",
+  "nextOwner":"Roblox High School Release/Package",
+  "nextExitCriterion":"Release/Package may consume canonical b44cff4c64843001b178a6f6bd4aacabecfee30c for deterministic packaging/readiness only. Do not publish Roblox without explicit user instruction. QA receipt remains stale and QA-owned; no DevEx repair is authorized for it."
 }
