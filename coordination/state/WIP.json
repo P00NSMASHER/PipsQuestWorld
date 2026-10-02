@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
@@ -20,10 +20,11 @@
       "status": "CI_RUNNING"
     },
     "downstream": {
-      "lane": "Pip High QA & Architecture Contract",
-      "objective": "VALIDATE_LEGACY_HUD_PRESENTATION_PARITY_V1",
+      "lane": "Roblox High School Integration Director",
+      "objective": "INTEGRATE_LEGACY_HUD_PRESENTATION_PARITY_V1",
       "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "status": "WAIT_PIPELINE_CI"
+      "pr": 107,
+      "status": "INTEGRATE"
     }
   },
   "priorityBacklog": [
@@ -145,11 +146,11 @@
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "objective": "Legacy HUD presentation candidate PR #107 is produced; wait only for exact-head Foundation/Class/Progression CI. Do not make additional product edits unless CI or QA returns a concrete defect.",
+      "objective": "Legacy HUD candidate PR #107 is exact-head green and QA-approved; freeze presentation semantics during Integration.",
       "owned": "mobile/read-only presentation and HUD client styling only",
-      "dependency": "PR #107 exact head dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "exit": "All three exact-head guards pass, then hand unchanged candidate to QA/Contract; otherwise repair only the failing presentation/test defect.",
-      "handoff": "QA/Contract"
+      "dependency": "QA PASS exact dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "exit": "Integration returns one concrete defect or lands the exact candidate.",
+      "handoff": "Integration"
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
@@ -164,20 +165,22 @@
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "objective": "Wait for exact-head CI on PR #107, then validate the Legacy HUD/client presentation diff and unchanged class/cafe/vehicle interaction seams.",
+      "objective": "QA PASS recorded for exact PR #107 head; wait for changed candidate or Integration-returned defect.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Foundation/Class/Progression exact-head PASS on dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "exit": "PASS exact candidate and hand to Integration, or one reproducible defect returned to Progression & Mobile.",
+      "dependency": "candidate unchanged at dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "exit": "Changed candidate or returned defect only.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "INTEGRATE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Wait for QA PASS on PR #107; do not merge presentation candidate early.",
+      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "base": "rebuild/high-school-foundation@68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Mechanically integrate PR #107 exact head dc50e04 Legacy HUD presentation repair without changing producer semantics.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "exit": "Changed exact-green candidate only.",
-      "handoff": "Integration Smoke"
+      "dependency": "QA PASS + Foundation 37066163165 / Class 37066163133 / Progression 37066163142 exact-head PASS; HUD contract step PASS",
+      "exit": "Merge only exact PR #107 head/base, then verify new canonical SHA and all post-merge push guards before assigning further product work.",
+      "handoff": "Control Tower"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
