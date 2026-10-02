@@ -355,3 +355,207 @@ task.spawn(function()
         task.wait(0.75)
     end
 end)
+
+
+-- Assigned Free-Roam slice: original Corner Cafe job UX.
+-- This remains presentation-only; the server owns proximity, task state, and wage authority.
+
+local cafeJobRoot = root:WaitForChild("FreeRoam"):WaitForChild("CafeJob")
+local getCafeJobState = cafeJobRoot:WaitForChild("GetState")
+local startCafeShift = cafeJobRoot:WaitForChild("StartShift")
+local completeCafeTask = cafeJobRoot:WaitForChild("CompleteTask")
+local leaveCafeShift = cafeJobRoot:WaitForChild("LeaveShift")
+
+local cafeCard = Instance.new("Frame")
+cafeCard.AnchorPoint = Vector2.new(1, 1)
+cafeCard.Position = UDim2.new(1, -14, 1, -18)
+cafeCard.Size = UDim2.new(0, 300, 0, 168)
+cafeCard.BackgroundColor3 = Color3.fromRGB(247, 241, 228)
+cafeCard.BackgroundTransparency = 0.03
+cafeCard.Visible = false
+cafeCard.Parent = gui
+round(cafeCard, 16)
+
+local cafeSizeConstraint = Instance.new("UISizeConstraint")
+cafeSizeConstraint.MinSize = Vector2.new(270, 160)
+cafeSizeConstraint.MaxSize = Vector2.new(330, 180)
+cafeSizeConstraint.Parent = cafeCard
+
+local cafeTitle = Instance.new("TextLabel")
+cafeTitle.BackgroundTransparency = 1
+cafeTitle.Position = UDim2.new(0, 14, 0, 10)
+cafeTitle.Size = UDim2.new(1, -104, 0, 24)
+cafeTitle.Font = Enum.Font.GothamBold
+cafeTitle.Text = "CORNER CAFE"
+cafeTitle.TextColor3 = Color3.fromRGB(58, 47, 38)
+cafeTitle.TextSize = 17
+cafeTitle.TextXAlignment = Enum.TextXAlignment.Left
+cafeTitle.Parent = cafeCard
+
+local cafeStatus = Instance.new("TextLabel")
+cafeStatus.BackgroundTransparency = 1
+cafeStatus.Position = UDim2.new(0, 14, 0, 39)
+cafeStatus.Size = UDim2.new(1, -28, 0, 44)
+cafeStatus.Font = Enum.Font.Gotham
+cafeStatus.Text = "Start a short cafe shift and serve one order."
+cafeStatus.TextColor3 = Color3.fromRGB(92, 78, 65)
+cafeStatus.TextSize = 13
+cafeStatus.TextWrapped = true
+cafeStatus.TextXAlignment = Enum.TextXAlignment.Left
+cafeStatus.TextYAlignment = Enum.TextYAlignment.Top
+cafeStatus.Parent = cafeCard
+
+local cafeAction = Instance.new("TextButton")
+cafeAction.Position = UDim2.new(0, 14, 1, -58)
+cafeAction.Size = UDim2.new(1, -28, 0, 44)
+cafeAction.BackgroundColor3 = Color3.fromRGB(124, 83, 54)
+cafeAction.Font = Enum.Font.GothamBold
+cafeAction.Text = "START SHIFT"
+cafeAction.TextColor3 = Color3.new(1, 1, 1)
+cafeAction.TextSize = 14
+cafeAction.Parent = cafeCard
+round(cafeAction, 11)
+
+local cafeLeave = Instance.new("TextButton")
+cafeLeave.AnchorPoint = Vector2.new(1, 0)
+cafeLeave.Position = UDim2.new(1, -12, 0, 8)
+cafeLeave.Size = UDim2.new(0, 82, 0, 30)
+cafeLeave.BackgroundTransparency = 1
+cafeLeave.Font = Enum.Font.GothamMedium
+cafeLeave.Text = "LEAVE JOB"
+cafeLeave.TextColor3 = Color3.fromRGB(117, 98, 82)
+cafeLeave.TextSize = 11
+cafeLeave.Visible = false
+cafeLeave.Parent = cafeCard
+
+local latestCafeJob = nil
+local cafeBusy = false
+local cafeMessageUntil = 0
+
+local function setCafeMessage(text)
+    cafeStatus.Text = text
+    cafeMessageUntil = os.clock() + 2.8
+end
+
+local function applyCafeState(state)
+    if type(state) ~= "table" then
+        return
+    end
+
+    latestCafeJob = state
+    local active = state.active == true
+    local atCafe = state.atCafe == true
+    cafeCard.Visible = active or atCafe
+    cafeLeave.Visible = active
+
+    if active then
+        cafeAction.Text = "SERVE ORDER  •  +$" .. tostring(state.wage or 25)
+        if os.clock() >= cafeMessageUntil then
+            cafeStatus.Text = "Shift active. Serve the waiting order to finish this cafe shift."
+        end
+    else
+        cafeAction.Text = "START SHIFT  •  +$" .. tostring(state.wage or 25)
+        if os.clock() >= cafeMessageUntil then
+            cafeStatus.Text = "Start a short cafe shift and serve one order."
+        end
+    end
+end
+
+local function refreshCafeJob()
+    local ok, response = pcall(function()
+        return getCafeJobState:InvokeServer()
+    end)
+    if ok and type(response) == "table" then
+        applyCafeState(response)
+    elseif latestCafeJob ~= nil and latestCafeJob.active == true then
+        cafeCard.Visible = true
+        cafeStatus.Text = "Cafe job service is unavailable."
+    end
+end
+
+cafeAction.Activated:Connect(function()
+    if cafeBusy then
+        return
+    end
+
+    cafeBusy = true
+    cafeAction.AutoButtonColor = false
+    cafeAction.Text = "WORKING..."
+
+    local ok, response
+    if latestCafeJob and latestCafeJob.active == true then
+        ok, response = pcall(function()
+            return completeCafeTask:InvokeServer(
+                latestCafeJob.shiftId,
+                latestCafeJob.taskId
+            )
+        end)
+    else
+        ok, response = pcall(function()
+            return startCafeShift:InvokeServer()
+        end)
+    end
+
+    cafeBusy = false
+    cafeAction.AutoButtonColor = true
+
+    if not ok or type(response) ~= "table" then
+        setCafeMessage("Could not update the cafe job. Try again.")
+        refreshCafeJob()
+        return
+    end
+
+    if response.accepted ~= true then
+        if response.code == "not_at_cafe" then
+            setCafeMessage("Move closer to the cafe counter first.")
+        elseif response.code == "economy_unavailable"
+            or response.code == "wage_commit_failed" then
+            setCafeMessage("Your wage could not be saved yet. Try the same task again.")
+        else
+            setCafeMessage("That cafe action is not available right now.")
+        end
+        refreshCafeJob()
+        return
+    end
+
+    if response.returnToFreeRoam == true then
+        local balance = response.economyState and response.economyState.balance
+        local balanceText = type(balance) == "number"
+            and ("  •  Balance $" .. tostring(balance))
+            or ""
+        setCafeMessage(
+            "Shift complete! +$" .. tostring(response.wage or 25) .. balanceText
+        )
+    elseif response.code == "shift_started"
+        or response.code == "shift_already_active" then
+        setCafeMessage("Shift started. Serve the waiting order.")
+    end
+
+    refreshCafeJob()
+end)
+
+cafeLeave.Activated:Connect(function()
+    if cafeBusy then
+        return
+    end
+
+    cafeBusy = true
+    local ok, response = pcall(function()
+        return leaveCafeShift:InvokeServer()
+    end)
+    cafeBusy = false
+
+    if ok and type(response) == "table" and response.accepted == true then
+        setCafeMessage("Shift ended. Back to free roam.")
+    else
+        setCafeMessage("Could not leave the shift yet.")
+    end
+    refreshCafeJob()
+end)
+
+task.spawn(function()
+    while gui.Parent do
+        refreshCafeJob()
+        task.wait(0.75)
+    end
+end)
