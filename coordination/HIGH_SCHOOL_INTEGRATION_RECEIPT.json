@@ -1,85 +1,76 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Integration Director",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-  "recordedAt": "2026-10-02T01:06:35Z",
-  "canonical": {
-    "branch": "rebuild/high-school-foundation",
-    "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "sourceRoot": "school/**"
+  "canonicalProduct": "Pip High",
+  "canonicalSourceRoot": "school/**",
+  "canonicalBranch": "rebuild/high-school-foundation",
+  "integrationSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "parentIntegratedRuntimeSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "integratedPr": 56,
+  "milestone": "PROGRESSION_JOBS_ECONOMY_CAFE_JOB_ASSIGNED",
+  "eligibility": {
+    "currentBlockersEmpty": true,
+    "wipAssignedLane": "Pip High Free Roam",
+    "wipObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "assignedCandidatePr": 56,
+    "staleLegacyQaReceiptRejected": true,
+    "note": "The legacy QA receipt on Control Tower records an obsolete SHA and is not authority over the newer live WIP assignment, merged candidate, or exact-head CI."
   },
-  "candidate": {
-    "branch": "release/pip-high-demo-ui-20261001",
-    "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-    "pr": 32,
-    "mergeable": true,
-    "localArtifact": "PipHighRuntime-e69d.rbxlx",
-    "localArtifactSha256": "4473FC7DDD77AC0E1BF2C5A4652BD959A53255D14EC9EA75BE5AC89F1725E414"
+  "deltaFromParent": {
+    "status": "ahead",
+    "changedFiles": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CafeJob.server.lua",
+      "school/src/server/CafeJobController.lua",
+      "school/tests/cafe_job_controller_spec.lua",
+      "school/tests/economy_repository_spec.lua"
+    ],
+    "note": "Assigned cafe-job slice only: Foundation cafe location -> shift start -> one deterministic serve_order task -> idempotent wage through existing EconomyRepository -> return to free roam."
   },
-  "exactHeadCi": [
-    {
-      "runId": 36948771684,
-      "workflow": "High School Progression Guards",
+  "authorityChecks": {
+    "singleSchoolClockPreserved": true,
+    "singleEconomyProgressionPersistenceAuthorityPreserved": true,
+    "classAuthorityUnchanged": true,
+    "worldGeneratorAuthorityUnchanged": true,
+    "vehicleAuthorityNotAdded": true,
+    "housingAuthorityNotAdded": true,
+    "retiredRuntimeConsumed": false
+  },
+  "deterministicIntegratedHeadEvidence": {
+    "foundationExactHeadCi": {
+      "runId": 37006496757,
+      "event": "push",
       "conclusion": "success"
     },
-    {
-      "runId": 36948771689,
-      "workflow": "High School Class Education Guards",
+    "classEducationExactHeadCi": {
+      "runId": 37006496676,
+      "event": "push",
       "conclusion": "success"
     },
-    {
-      "runId": 36948771699,
-      "workflow": "High School Foundation Static Guards",
+    "progressionExactHeadCi": {
+      "runId": 37006496664,
+      "event": "push",
       "conclusion": "success"
-    }
-  ],
-  "runtimeEvidence": {
-    "device": "PAAM-L044",
-    "studioFile": "PipHighRuntime-e69d.rbxlx",
-    "studioCommandLineExactArtifactConfirmed": true,
-    "retiredRuntimeUsed": false,
+    },
+    "cafeJobCoverage": [
+      "proximity-gated shift start",
+      "deterministic serve_order task",
+      "idempotent job:cafe:<shiftId> wage",
+      "duplicate completion/replay no-double-pay",
+      "failed wage commit retains active shift for retry",
+      "return to free roam"
+    ]
+  },
+  "scope": {
+    "runtimeTestRoot": "school/**",
     "robloxPublished": false,
     "moneySpent": false,
-    "observed": [
-      "StateSnapshot returned school day 1, Math period, authoritative remaining time.",
-      "GetClassState returned canonical Math class 1:2:math with progressionPending=false.",
-      "RequestTravel returned accepted=true for Math.",
-      "EnterClass returned server-authoritative activity math-linear-1 with choices and no answer key in the client payload.",
-      "SubmitAnswer with submissionId e69d-runtime-math-1 completed the class, committed progression revision 1, awarded exactly 25 points, and returned returnToFreeRoam=true.",
-      "GetProgressionState reopened authoritative progression and returned revision 1, completionCount 1, totalPoints 25.",
-      "Reloading CanonicalSchoolClient reconstructed the UI with 25 PTS from the server-authoritative progression snapshot."
-    ],
-    "studioLogWindowUtc": {
-      "start": "2026-10-02T01:03:15Z",
-      "end": "2026-10-02T01:06:35Z"
-    }
-  },
-  "repairedGaps": {
-    "CLIENT_PROGRESS_RETRY_ID_STABILITY": {
-      "status": "REPAIRED_EXACT_HEAD",
-      "evidence": "CanonicalSchoolClient retains pendingProgression and reuses pendingProgression.submissionId for the same class/activity/choice after progression_commit_failed; exact-head CI is green.",
-      "runtimeFailureInjectionPerformed": false,
-      "note": "The normal exact-head runtime slice was rerun after the repair; persistence failure was not artificially injected into the integration runtime."
-    },
-    "PLAYABLE_REJOIN_OBSERVABILITY": {
-      "status": "REPAIRED_AND_RUNTIME_OBSERVED",
-      "evidence": "GetProgressionState returns a fresh server-authoritative repository snapshot, and a client reload restored the UI to 25 PTS from that snapshot.",
-      "productionCrossServerDataStoreClaimed": false,
-      "note": "Unpublished Studio uses the local StudioMemory adapter only for diagnostics; production remains DataStore-backed."
-    }
-  },
-  "verticalSlice": {
-    "spawnClockPeriod": "PASS_REUSED_RUNTIME",
-    "attendClass": "PASS_RUNTIME",
-    "serverAuthoritativeActivity": "PASS_RUNTIME",
-    "exactlyOnceProgression": "PASS_RUNTIME_NORMAL_PATH",
-    "freeRoam": "PASS_RUNTIME",
-    "saveRejoinRestore": "PASS_OBSERVABLE_RESTORE_PATH_PLUS_HEADLESS_PERSISTENCE",
-    "overall": "PASS_FOR_POST_INTEGRATION_SMOKE"
+    "taskScheduleOrEnablementChanged": false
   },
   "handoff": {
-    "owner": "Roblox High School Integration Smoke",
-    "exactSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-    "instruction": "Run bounded post-integration smoke against this exact head only. If the head changes, treat this receipt as stale and wait for fresh exact-head CI/evidence."
+    "nextOwner": "Roblox High School Integration Smoke",
+    "instruction": "Smoke only canonical SHA 2ab1584ee34e711828768cd999c86feba9202984. Re-run/consume exact-head smoke evidence for the cafe-job milestone before Control Tower advances the next parity slice. Any newer canonical commit invalidates this handoff until re-certified."
   }
 }
