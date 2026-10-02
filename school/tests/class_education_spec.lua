@@ -134,3 +134,5 @@ assertEqual(secondWrong.classCompleted, true, "supported recovery did not close 
 assertEqual(secondWrong.returnToFreeRoam, true, "supported recovery did not return to free roam")
 
 print("CLASS_EDUCATION_DETERMINISTIC_TESTS_OK")
+
+assert(loadfile("school/tests/qa_class_completion_rejoin_spec.lua"))()
