@@ -117,7 +117,7 @@ If commits/PRs/receipts rise while playable-stage progress does not, reduce prod
 
 ## Shared online-laptop lease
 - The connected local machine is a scarce shared resource named `ONLINE_LAPTOP`. All canonical high-school workers may use it only for a check that is genuinely `LOCAL_ONLY_REQUIRED`; GitHub/cloud remains mandatory for routine repository work, source edits, CI, coordination, logs, artifacts, and ordinary tests.
-- Local-machine access is serialized through `coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json` on `coordination/high-school-control-tower`. No worker may begin a local-machine call unless it holds the lease for its exact lane/purpose/canonical SHA.
+- Local-machine access is serialized through `coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json` on `coordination/high-school-control-tower`. No worker may begin a local-machine call unless it holds the lease for its exact lane/purpose/canonical SHA.
 - Claim uses GitHub contents-API compare-and-swap semantics: read the lease, require `status=FREE` (or an expired lease confirmed unchanged by one reread), then update using the exact current blob SHA. A stale-SHA write means another worker won; reread and do not use the laptop.
 - At most ONE worker may hold the lease. A lease must include lane, purpose, canonical SHA, claimed-at UTC, expiry UTC, and interaction mode. Keep leases short and bounded; default maximum is 20 minutes.
 - Lease holders must use the laptop only for their declared local-only purpose and preserve lane ownership. They must not spend money, publish Roblox, broaden credentials/authority, weaken tests, perform routine GitHub work locally, or touch another lane's product files.
