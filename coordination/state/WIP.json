@@ -3,7 +3,7 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "SCHOOL_CLASS_FEEL_SLICE_ASSIGNED",
+  "currentParityMilestone": "SCHOOL_CLASS_FEEL_CANDIDATE_AWAITING_EXACT_HEAD_CI",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -32,7 +32,10 @@
         "avatar/customization/shopping authority",
         "global HUD/mobile redesign"
       ],
-      "status": "ASSIGNED_READY"
+      "status": "AWAITING_EXACT_HEAD_CI",
+      "pr": 55,
+      "headBranch": "rebuild/high-school-class-feel-completion-v1",
+      "headSha": "ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7"
     },
     "downstream": null
   },
@@ -80,12 +83,12 @@
   ],
   "supportLaneAssignments": {
     "Foundation": "WAITING_DEPENDENCY; current certified campus/world work remains canonical. Do not open overlapping world-authority product work while School/Class Feel is active.",
-    "Class & Education": "ASSIGNED SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1. Build exactly one narrow school/** slice that makes class completion feel like a real class result using existing class authority; do not create another clock, progression writer, persistence writer, economy authority, or content pipeline.",
+    "Class & Education": "PR #55 is the sole active School/Class Feel product candidate at ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7. Make no further product changes unless exact-head CI exposes a defect.",
     "Content QA": "Support original-content validation only if requested by the active Class/Education slice; do not open a competing product branch.",
     "Progression & Mobile": "WAITING_PRIORITY. PR #48 is stale-base presentation work and must not be integrated or expanded while School/Class Feel is active.",
     "Pip High Free Roam": "WAITING_PRIORITY. The cafe-job loop is deferred until School/Class Feel is integrated or concretely blocked.",
-    "QA/Contract": "Validate the active Class/Education candidate at its exact head, including duplicate/replay and exactly-once completion behavior, without implementing producer semantics.",
-    "Integration": "Consume only one exact-green Class/Education candidate descended from canonical 7e69301; preserve WIP cap and reject stale-base/noncanonical branches.",
+    "QA/Contract": "WAITING_EXACT_HEAD_CI for PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7; validate only that exact head after all required guards are green.",
+    "Integration": "WAITING_EXACT_HEAD_CI for PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7. Consume no stale receipt or alternate Class/Education branch.",
     "Integration Smoke": "Re-certify the resulting canonical exact head after Class/Education integration before priority advances.",
     "Release/Package": "WAITING_DEPENDENCY; package/readiness only after the active parity milestone is integrated and smoke-certified; never publish automatically.",
     "DevEx": "CI/evidence infrastructure only."
@@ -93,9 +96,9 @@
   "nextHandoff": {
     "from": "Roblox High School Class & Education",
     "to": "Roblox High School QA & Contract",
-    "condition": "One exact-head green SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1 candidate on school/** descended from 7e69301b253d88a7ed779556387b6f9011022976."
+    "condition": "All required exact-head GitHub guards pass on PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7."
   },
-  "openCanonicalPrCount": 1,
+  "openCanonicalPrCount": 2,
   "openNoncanonicalPrCount": 1,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
