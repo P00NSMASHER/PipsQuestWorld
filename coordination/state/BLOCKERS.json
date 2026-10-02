@@ -1,17 +1,17 @@
 {
-  "schemaVersion": 12,
+  "schemaVersion": 13,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+  "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
   "currentBlockers": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "exactSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "Vehicle input reliability repair is integrated and all canonical push guards pass. Remaining evidence is actual Roblox seated keyboard/touch driving, moving-model occupant behavior, exit/re-enter, non-owner rejection and cleanup on the authorized runtime target; current directive forbids laptop polling and no Roblox publish is authorized.",
-      "exitCriterion": "On exact 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6, validate grounded spawn -> owner auto-seat -> keyboard/touch forward/reverse/steer -> release controls neutralizes input -> exit/re-enter -> despawn/re-spawn, non-owner rejection, player-leave cleanup, and baseline school/class/cafe invariants."
+      "reason": "Cloud/deterministic checks pass on the current canonical head including the Legacy HUD contract. Remaining evidence is actual Roblox seated vehicle behavior plus confirmation that touch/Legacy HUD controls coexist correctly on the authorized private target; laptop polling is not authorized and Roblox publishing is not authorized.",
+      "exitCriterion": "On exact f9564e344ba0a3de96beeec919b230ebe501a1f4, validate grounded spawn -> owner auto-seat -> keyboard/touch forward/reverse/steer -> release neutralizes input -> exit/re-enter -> despawn/re-spawn, non-owner rejection, cleanup, and no HUD obstruction/regression in school/class/cafe behavior."
     }
   ],
   "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED",

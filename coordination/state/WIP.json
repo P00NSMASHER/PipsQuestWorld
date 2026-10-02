@@ -1,30 +1,27 @@
 {
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "LEGACY_HUD_PRESENTATION_PARITY_V1",
+  "unintegratedProductCandidateCount": 0,
+  "currentParityMilestone": "HOUSING_PLOT_SEAMS_V1",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE"
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "status": "PASS_EXACT_HEAD_CI_WITH_LOCAL_RUNTIME_GATE"
     },
     "upstream": {
-      "lane": "Roblox High School Progression & Mobile",
-      "objective": "LEGACY_HUD_PRESENTATION_PARITY_V1",
-      "baseSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "branch": "rebuild/high-school-legacy-hud-68c4b3f-v1",
-      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "pr": 107,
-      "status": "CI_RUNNING"
+      "lane": "Roblox High School Foundation",
+      "objective": "HOUSING_PLOT_SEAMS_V1",
+      "baseSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "branch": "rebuild/high-school-housing-plots-f9564e-v1",
+      "status": "AUTHORIZED_NOT_CREATED"
     },
     "downstream": {
-      "lane": "Roblox High School Integration Director",
-      "objective": "INTEGRATE_LEGACY_HUD_PRESENTATION_PARITY_V1",
-      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "pr": 107,
-      "status": "INTEGRATE"
+      "lane": "Pip High Free Roam",
+      "objective": "HOUSING_PROPERTY_V1",
+      "dependency": "Foundation HousingPlots seam integrated",
+      "status": "WAIT_PIPELINE"
     }
   },
   "priorityBacklog": [
@@ -70,11 +67,11 @@
     }
   ],
   "supportLaneAssignments": {
-    "Foundation": "Support exact authorized Roblox High School clone world/clock/location/spawn parity on the current canonical target; do not pivot to second-grade schoolwork.",
+    "Foundation": "Create the stable residential plot/location/spawn contract for Legacy housing from exact f9564e; no housing ownership/edit semantics.",
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
     "Progression & Mobile": "Current owner of Legacy HUD/mobile presentation parity candidate PR #107 on exact canonical base 68c4b3f. No economy/persistence semantics changed.",
-    "Pip High Free Roam": "Vehicle lifecycle, grounded AutoShop spawn, and reliable owner-only keyboard/touch controls are integrated at exact canonical 68c4b3f. Wait for runtime Smoke + Release/Package; housing/property is next. Phase-2 schoolwork remains deferred.",
+    "Pip High Free Roam": "Wait for Foundation HousingPlots seam, then own house claim/teleport/lock/edit mechanics; do not invent world coordinates.",
     "QA/Contract": "Wait for all exact-head guards on PR #107, then validate presentation-only diff plus preservation of class/cafe/vehicle interaction calls.",
     "Integration": "Wait for exact-SHA QA PASS on PR #107; mechanical integration only.",
     "Integration Smoke": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED on canonical 68c4b3f and must not be confused with PR #107's cloud presentation validation.",
@@ -86,7 +83,7 @@
     "to": "Pip High Release & Package Gate",
     "condition": "Runtime PASS must identify exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then package unchanged SHA and return to Control Tower for HOUSING_PROPERTY."
   },
-  "openCanonicalPrCount": 1,
+  "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
@@ -116,17 +113,19 @@
   },
   "runDirectives": {
     "Foundation": {
-      "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Vehicle world/spawn seams are integrated and exact-head green; perform only a freshness read while runtime Smoke is local-only.",
-      "owned": "Foundation world/clock/location/spawn contracts only",
-      "dependency": "canonical 68c4b3f; no Foundation defect open",
-      "exit": "Changed canonical or Smoke-returned Foundation defect.",
-      "handoff": "Control Tower"
+      "mode": "SUPPORT",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "base": "rebuild/high-school-foundation@f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "branch": "rebuild/high-school-housing-plots-f9564e-v1",
+      "objective": "Add a stable Foundation-owned HousingPlots registry and matching neighborhood lot pads/house spawn anchors for six residential lots, replacing hard-coded decorative-house coordinates with the shared contract.",
+      "owned": "SchoolConfig world/location/spawn contracts and CampusBuilder neighborhood geometry only",
+      "dependency": "Current canonical Neighborhood location and existing NeighborhoodRoad; Legacy reference requires houses to appear in the residential area and be addressable by the House menu.",
+      "exit": "Deterministic Foundation contract proves six unique plot IDs/anchors, CampusBuilder consumes only that registry, exact-head guards pass, and no housing ownership/editor semantics are introduced.",
+      "handoff": "QA/Contract"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "objective": "Vehicle controls do not change class/session authority; perform only a freshness read.",
       "owned": "class/session/activity authority",
       "dependency": "canonical 68c4b3f exact-head Class guard PASS",
@@ -135,7 +134,7 @@
     },
     "Content QA": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "objective": "No new asset IDs/content entered with reliable controls; perform only provenance freshness read.",
       "owned": "authorized fixtures/assets/provenance",
       "dependency": "PR #103 changed code/tests/workflow only",
@@ -144,7 +143,7 @@
     },
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
       "objective": "Legacy HUD candidate PR #107 is exact-head green and QA-approved; freeze presentation semantics during Integration.",
       "owned": "mobile/read-only presentation and HUD client styling only",
@@ -154,50 +153,47 @@
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Reliable vehicle controls are integrated at 68c4b3f. Hold product changes until runtime Smoke resolves; housing/property is reserved next after package checkpoint.",
-      "owned": "jobs/vehicles/housing/customization/social Free Roam semantics",
-      "dependency": "PR #103 merged and exact-head push CI green",
-      "exit": "Smoke PASS + Release/Package checkpoint, or one reproducible vehicle defect returned with exact exit criterion.",
-      "handoff": "Control Tower"
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Wait for integrated Foundation HousingPlots seam; do not create duplicate plot coordinates or ownership state.",
+      "owned": "housing/property mechanics only after seam integration",
+      "dependency": "Foundation HOUSING_PLOT_SEAMS_V1 exact-green + integrated",
+      "exit": "Control Tower issues PRODUCE on a fresh current-base Free Roam branch.",
+      "handoff": "QA/Contract"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "objective": "QA PASS recorded for exact PR #107 head; wait for changed candidate or Integration-returned defect.",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Wait for exact Foundation housing-plot candidate; then validate world authority uniqueness and plot contract.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "candidate unchanged at dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "exit": "Changed candidate or returned defect only.",
+      "dependency": "Foundation exact-head candidate",
+      "exit": "PASS exact candidate or one defect returned to Foundation.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "INTEGRATE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "base": "rebuild/high-school-foundation@68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Mechanically integrate PR #107 exact head dc50e04 Legacy HUD presentation repair without changing producer semantics.",
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Wait for QA PASS on the housing plot seam candidate.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS + Foundation 37066163165 / Class 37066163133 / Progression 37066163142 exact-head PASS; HUD contract step PASS",
-      "exit": "Merge only exact PR #107 head/base, then verify new canonical SHA and all post-merge push guards before assigning further product work.",
+      "dependency": "QA PASS exact candidate",
+      "exit": "Changed exact-green candidate only.",
       "handoff": "Control Tower"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Cloud/deterministic checks are complete on exact 68c4b3f; remaining keyboard/touch VehicleSeat/moving-model runtime certification is LOCAL_ONLY_REQUIRED. Do not poll laptop, create branches, rerun broad tests, or publish.",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED on f9564e; do not poll laptop or publish. Housing plot support is cloud-safe and independent.",
       "owned": "post-integration runtime certification only",
-      "dependency": "QA/Integration exact 68c4b3f + push CI 37042669829/37042669707/37042669710; unblock only with authorized runtime evidence for universe 10768955678/place 87245440673982",
-      "exit": "When authorized runtime evidence is available, switch to SMOKE on exact 68c4b3f; PASS hands unchanged SHA to Release/Package, defect returns to exactly one owner.",
+      "dependency": "Authorized runtime evidence for universe 10768955678/place 87245440673982",
+      "exit": "When authorized, run exact f9564e vehicle/HUD coexistence smoke; otherwise stay quiet.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Wait for runtime Smoke PASS on exact 68c4b3f; do not publish Roblox.",
+      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Wait for runtime Smoke checkpoint or a later exact smoke-certified canonical head; never publish.",
       "owned": "deterministic package checkpoint only",
-      "dependency": "Smoke PASS on exact 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "exit": "Consume only the exact smoke-certified SHA with QA/Integration/CI/provenance aligned.",
+      "dependency": "Smoke PASS exact current canonical",
+      "exit": "Package only exact smoke-certified SHA.",
       "handoff": "Control Tower"
     }
   }

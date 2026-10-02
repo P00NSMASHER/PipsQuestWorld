@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T21:12:00Z",
-  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "updatedAt": "2026-10-02T21:20:00Z",
+  "result": "PASS_EXACT_HEAD",
   "canonicalBaseSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
   "candidate": {
     "pr": 107,
@@ -13,21 +13,24 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37066163165,
+      "runId": 37066394079,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d"
+      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37066163133,
+      "runId": 37066394156,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d"
+      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37066163142,
+      "runId": 37066393974,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "legacyHudStep": "success"
     }
   ],
@@ -50,8 +53,15 @@
   "integrationEligibility": "PASS",
   "blocker": null,
   "handoff": {
-    "owner": "Roblox High School Integration Director",
-    "exactSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-    "pr": 107
+    "owner": "Roblox High School Control Tower",
+    "exactSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4"
+  },
+  "certifiedSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+  "exactIntegrationRebind": {
+    "candidateRootTree": "f32f073a3bffdf319b0b73bbf8ebe1ea48e63496",
+    "canonicalRootTree": "f32f073a3bffdf319b0b73bbf8ebe1ea48e63496",
+    "candidateSchoolTree": "74431c8d3ae75a4751bdaec867d664eeec626082",
+    "canonicalSchoolTree": "74431c8d3ae75a4751bdaec867d664eeec626082",
+    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
   }
 }
