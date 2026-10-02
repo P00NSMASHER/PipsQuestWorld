@@ -1,11 +1,16 @@
 {
   "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
-  "currentBlockers": [],
-  "gateStatus": "CLEARED_FOR_ASSIGNED_FREE_ROAM_SLICE",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-  "exactUnblockCondition": "CLEARED. Canonical 99e12750b8b87812f3363e3691c12fb8797669bd has all three exact-head guards green and Integration Smoke PASS at receipt commit 456974b44548d814bccfc95f48a67f0291971a99. Free Roam may proceed only with the assigned cafe-job slice on this exact certified lineage or a newer Control-Tower-certified successor.",
-  "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
+  "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "currentBlockers": [
+    {
+      "id": "ECONOMY_OPERATION_ORDER_REJOIN",
+      "owner": "Roblox High School Progression & Mobile",
+      "evidence": "Canonical EconomyRepository sorts stored operations by operationId, but reopen validation replays the stored order and requires a nonnegative running balance.",
+      "exitCriterion": "Preserve commit order and pass a deterministic funding-then-debit reopen regression plus the existing progression/economy/cafe-job guards on an exact canonical descendant."
+    }
+  ],
+  "gateStatus": "REPAIR_REQUIRED_BEFORE_SMOKE",
+  "nextProducer": "Roblox High School Progression & Mobile",
+  "nextObjective": "ECONOMY_OPERATION_ORDER_REJOIN_REPAIR"
 }
