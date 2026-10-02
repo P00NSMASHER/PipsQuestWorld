@@ -3,27 +3,28 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_RUNTIME_SMOKE",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_GROUNDED_RUNTIME_SMOKE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE"
     },
     "upstream": {
       "lane": "Pip High Free Roam",
       "objective": "VEHICLE_LIFECYCLE_V1",
-      "branch": "rebuild/high-school-vehicles-92691e0-v1",
-      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "integratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "pr": 85,
-      "status": "MERGED_QA_PASS_EXACT_HEAD_CI_GREEN"
+      "producerSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+      "firstIntegratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "groundingRepairPr": 92,
+      "groundingRepairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
+      "integratedSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "status": "MERGED_QA_INTEGRATION_EXACT_HEAD_CI_GREEN"
     },
     "downstream": {
       "lane": "Roblox High School Integration Smoke",
-      "objective": "VEHICLE_LIFECYCLE_V1",
-      "exactSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "status": "READY"
+      "objective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "status": "LOCAL_ONLY_REQUIRED"
     }
   },
   "priorityBacklog": [
@@ -45,7 +46,7 @@
     {
       "priority": 4,
       "milestone": "VEHICLES",
-      "status": "ACTIVE"
+      "status": "ACTIVE_RUNTIME_SMOKE"
     },
     {
       "priority": 5,
@@ -83,7 +84,7 @@
   "nextHandoff": {
     "from": "Roblox High School Integration Smoke",
     "to": "Pip High Release & Package Gate",
-    "condition": "Resolve VEHICLE_RUNTIME_DRIVE_SMOKE on exact canonical deadcf9e402cb18ea78667926663b8ebdede044f. PASS hands exact SHA to Package; defect returns to exactly one owner."
+    "condition": "Runtime PASS must identify exact repaired canonical e929354087d3dbf6931496e310b8f899cd0d299f and the same private target. Do not infer runtime behavior from cloud CI."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -116,8 +117,8 @@
   "runDirectives": {
     "Foundation": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Foundation AutoShopRoad spawn seam is integrated and exact-head green. Perform one freshness read only while vehicle runtime Smoke owns the pipeline.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Grounding repair PR #92 is integrated at e929354 and exact-head green; wait while runtime Smoke owns the pipeline.",
       "owned": "school Foundation world/location/spawn contracts only",
       "dependency": "canonical SchoolConfig/CampusBuilder road and AutoShop locations",
       "exit": "Vehicle producer can consume one stable spawn/road contract without world-authority duplication.",
@@ -125,7 +126,7 @@
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "objective": "Vehicle V1 does not change class/session authority; perform one freshness read only while runtime Smoke owns the pipeline.",
       "owned": "class/session/activity authority",
       "dependency": "vehicle slice does not require class changes",
@@ -134,7 +135,7 @@
     },
     "Content QA": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "objective": "Vehicle V1 uses original primitive geometry and no external asset IDs; perform one provenance freshness read only while runtime Smoke owns the pipeline.",
       "owned": "authorized fixtures/assets/provenance",
       "dependency": "vehicle candidate must use original/properly licensed primitive or existing authorized assets",
@@ -143,7 +144,7 @@
     },
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "objective": "Vehicle V1 adds no economy/persistence mutation. Existing authority is preserved; perform one freshness read only while runtime Smoke owns the pipeline.",
       "owned": "durable progression/economy/ownership/mobile read-only contracts",
       "dependency": "canonical EconomyRepository ownership API",
@@ -152,8 +153,8 @@
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Vehicle V1 is integrated at deadcf9e. Hold all product changes until exact-SHA runtime Smoke resolves.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Vehicle lifecycle V1 plus grounded AutoShop spawn repair are integrated at e929354. Hold product changes until runtime Smoke resolves.",
       "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
       "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
       "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
@@ -161,9 +162,9 @@
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "objective": "QA PASS already recorded for the integrated vehicle tree; wait for changed candidate or Smoke defect.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "candidateSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "QA PASS is rebound to exact repaired canonical e929354 using identical repair-head/canonical tree identity and exact-head push CI.",
       "owned": "QA harnesses/contracts/receipt only",
       "dependency": "PR #85 exact-head CI PASS runs 37027751477, 37027751963, 37027752230",
       "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
@@ -171,8 +172,8 @@
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Vehicle V1 integration and post-merge exact-head CI are complete; wait for Smoke result.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Vehicle V1 and grounding repair are mechanically integrated at e929354 with exact-head push CI green.",
       "owned": "mechanical integration only",
       "dependency": "none",
       "exit": "Changed candidate only",
@@ -180,20 +181,20 @@
     },
     "Integration Smoke": {
       "mode": "SMOKE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Validate exact integrated vehicle runtime: approach Auto Shop, spawn starter sedan, auto-seat owner, drive forward/reverse and steer with native controls, exit, re-enter, despawn/re-spawn, reject a non-owner seat, and verify player-leave cleanup while baseline school/class/cafe invariants remain intact.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Validate exact repaired vehicle runtime on the same private target: grounded spawn, owner auto-seat, forward/reverse, steer, exit/re-enter, despawn/re-spawn, non-owner rejection, player-leave cleanup, and baseline school/class/cafe invariants.",
       "owned": "post-integration runtime certification only",
-      "dependency": "Exact-head push CI PASS runs 37028471690/37028471816/37028471760",
-      "exit": "Runtime PASS for the exact SHA or one reproducible vehicle defect with one owner/exit criterion.",
+      "dependency": "QA/Integration exact e929354 + push CI runs 37029958854/37029958840/37029958834",
+      "exit": "Runtime PASS on exact e929354 or one reproducible defect with one owner/exit criterion.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Wait for Integration Smoke receipt on changed vehicle SHA; do not publish Roblox.",
+      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Wait for runtime Smoke PASS on exact repaired vehicle SHA; do not publish Roblox.",
       "owned": "deterministic package checkpoint only",
-      "dependency": "Smoke result on exact SHA deadcf9e402cb18ea78667926663b8ebdede044f",
-      "exit": "Consume changed smoke-certified SHA only when exact evidence aligns.",
+      "dependency": "Smoke PASS on exact e929354087d3dbf6931496e310b8f899cd0d299f",
+      "exit": "Consume only the exact smoke-certified SHA with QA/Integration/CI/provenance aligned.",
       "handoff": "Control Tower"
     }
   }
