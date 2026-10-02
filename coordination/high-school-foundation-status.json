@@ -1,38 +1,99 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2026-10-01T14:09:12Z",
-  "scope": "foundation automation/evidence gate only; not overall release readiness",
-  "candidateBranch": "rebuild/high-school-foundation",
-  "headSha": "f763b243f4ec22951f432e66f807f187c960583f",
-  "priorPromptSha": "e48a46bb1309b099170fba4fc33ca54d527558fc",
-  "priorPromptShaState": "STALE_ANCESTOR",
-  "criteriaVerdict": "PASS",
-  "blocker": null,
-  "ci": {
-    "workflow": ".github/workflows/school-pivot-ci.yml",
-    "exactHeadRun": 36874068766,
-    "exactHeadEvent": "push",
-    "exactHeadConclusion": "success",
-    "exactHeadUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/36874068766",
-    "repairCommit": "f763b243f4ec22951f432e66f807f187c960583f",
-    "repair": "push trigger now covers rebuild/high-school-foundation and workflow-path changes"
+  "schemaVersion": 2,
+  "updatedAt": "2026-10-02T14:53:00Z",
+  "scope": "Foundation world/campus parity candidate; lane evidence only; not canonical or release authority",
+  "canonicalBase": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "rights": {
-    "verdict": "PASS_REPOSITORY_DECLARATION",
-    "basis": [
-      "STATUS.md states third-party high-school game code/assets/maps are NOT USED",
-      "school/default.project.json maps only original school Lua sources and no binary/non-code asset path",
-      "foundation guard rejects rbxassetid:// in active foundation code"
+  "candidate": {
+    "branch": "parity/foundation-west-athletics-92691e0",
+    "headSha": "a32b4fa67ce6781b8c0c4b63288c1e5a434cbd90",
+    "pullRequest": 77,
+    "behavior": "West athletics district connected to the existing campus with canonical locations for Athletics Entrance, Football Field, Basketball Court, and Outdoor Pool.",
+    "changedFiles": [
+      "school/default.project.json",
+      "school/src/server/AthleticsDistrict.server.lua",
+      "school/src/shared/SchoolConfig.lua",
+      "school/tests/foundation_athletics_district_static_spec.py"
+    ],
+    "sourceRoot": "school/**",
+    "status": "READY_FOR_QA_INTEGRATION_HEADLESS"
+  },
+  "deterministicEvidence": {
+    "athleticsStaticGuard": {
+      "result": "PASS",
+      "checks": 32,
+      "exactHeadSha": "a32b4fa67ce6781b8c0c4b63288c1e5a434cbd90"
+    },
+    "exactHeadCi": [
+      {
+        "runId": 37022915863,
+        "workflow": "High School Foundation Static Guards",
+        "conclusion": "success"
+      },
+      {
+        "runId": 37022915690,
+        "workflow": "High School Class Education Guards",
+        "conclusion": "success"
+      },
+      {
+        "runId": 37022915482,
+        "workflow": "High School Progression Guards",
+        "conclusion": "success"
+      }
     ]
   },
-  "automationRepair": {
-    "cloudWriteState": "PASS",
-    "localOnlyRequired": false,
-    "localReason": null
+  "ownership": {
+    "foundationOnly": true,
+    "preservesSingleClockAuthority": true,
+    "preservesSingleLocationRegistry": true,
+    "addsClassSemantics": false,
+    "addsProgressionEconomyPersistence": false,
+    "addsVehiclesHousingCustomizationSocialMobile": false
+  },
+  "provenance": {
+    "verdict": "PASS_NO_NEW_EXTERNAL_ASSETS",
+    "basis": [
+      "Candidate uses procedural Roblox primitives/materials only.",
+      "No rbxassetid:// or external non-code asset mapping is introduced.",
+      "All changed runtime/test files remain under school/**."
+    ]
+  },
+  "runtimeValidation": {
+    "state": "LOCAL_ONLY_REQUIRED_BEFORE_CLAIMING_VISUAL_REFERENCE_PARITY",
+    "exactCheck": "Render candidate a32b4fa67ce6781b8c0c4b63288c1e5a434cbd90 against canonical Pip High target placeId 87245440673982 / universeId 10768955678 and verify west athletics campus connectivity, scale, field/court/pool placement, clipping, lighting, and authorized reference parity.",
+    "reason": "Static/headless evidence proves mapping and ownership invariants but cannot prove the final rendered world matches the authorized live reference.",
+    "publicationRequired": false,
+    "target": {
+      "product": "Pip High",
+      "placeId": "87245440673982",
+      "universeId": "10768955678"
+    },
+    "leaseAtHandoff": {
+      "status": "CLAIMED_BY_OTHER_LANE",
+      "holderLane": "Roblox High School Release/Package",
+      "action": "NO_LOCAL_ACCESS_ATTEMPTED"
+    }
+  },
+  "blocker": null,
+  "handoff": {
+    "to": [
+      "Roblox High School QA & Contract",
+      "Roblox High School Integration Director"
+    ],
+    "condition": "Consume PR #77 only at exact head a32b4fa67ce6781b8c0c4b63288c1e5a434cbd90 while CI runs 37022915863, 37022915690, and 37022915482 remain successful."
   },
   "authority": {
-    "authoritativeSharedState": "coordination/HIGH_SCHOOL_SWARM_STATE.json",
     "sharedStateWriter": "Roblox High School Control Tower",
     "thisFileIsAuthoritative": false
+  },
+  "referenceAlignment": {
+    "result": "IMPROVED_PUBLICLY_OBSERVABLE_LANDMARK_MATCH",
+    "notes": [
+      "Basketball Court replaces the unsupported soccer-field draft.",
+      "Public Legacy references identify basketball as a school-campus activity and football as a major field landmark.",
+      "Final rendered geometric/reference parity remains runtime-visible evidence, not a headless claim."
+    ]
   }
 }
