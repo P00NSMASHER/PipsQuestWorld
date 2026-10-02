@@ -147,4 +147,4 @@ eq(failed.durable, false, "save failure durable")
 eq(failed.error, "SAVE_FAILED:injected", "save failure error")
 eq(afterRace:getState().balance, 20, "failed save mutated local balance")
 
-print("HIGH_SCHOOL_ECONOMY_REPOSITORY_PASS")
+dofile("school/tests/cafe_job_controller_spec.lua")\n\nprint("HIGH_SCHOOL_ECONOMY_REPOSITORY_PASS")
