@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
@@ -25,68 +26,82 @@ local function round(target, px)
 end
 
 local card = Instance.new("Frame")
-card.Position = UDim2.new(0, 12, 0, 12)
-card.Size = UDim2.new(0, 312, 0, 162)
-card.BackgroundColor3 = Color3.fromRGB(24, 29, 42)
-card.BackgroundTransparency = 0.06
+card.AnchorPoint = Vector2.new(0, 1)
+local bottomMargin = UserInputService.TouchEnabled and 112 or 12
+card.Position = UDim2.new(0, 12, 1, -bottomMargin)
+card.Size = UDim2.new(0, 236, 0, 184)
+card.BackgroundColor3 = Color3.fromRGB(193, 220, 238)
+card.BackgroundTransparency = 0.02
 card.Parent = gui
-round(card, 16)
+round(card, 2)
+
+local cardStroke = Instance.new("UIStroke")
+cardStroke.Thickness = 2
+cardStroke.Color = Color3.fromRGB(48, 104, 148)
+cardStroke.Parent = card
 
 local title = Instance.new("TextLabel")
-title.BackgroundTransparency = 1
-title.Position = UDim2.new(0, 14, 0, 10)
-title.Size = UDim2.new(1, -28, 0, 22)
-title.Font = Enum.Font.GothamBold
-title.Text = "PIP HIGH"
-title.TextColor3 = Color3.new(1, 1, 1)
-title.TextSize = 17
-title.TextXAlignment = Enum.TextXAlignment.Left
+title.BackgroundTransparency = 0
+title.BackgroundColor3 = Color3.fromRGB(48, 104, 148)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Size = UDim2.new(1, 0, 0, 28)
+title.Font = Enum.Font.ArialBold
+title.Text = "PIP HIGH  •  SCHEDULE"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 15
+title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
 pointsLabel.BackgroundTransparency = 1
-pointsLabel.Position = UDim2.new(1, -100, 0, 10)
-pointsLabel.Size = UDim2.new(0, 86, 0, 22)
-pointsLabel.Font = Enum.Font.GothamMedium
+pointsLabel.Position = UDim2.new(0, 10, 0, 121)
+pointsLabel.Size = UDim2.new(1, -20, 0, 20)
+pointsLabel.Font = Enum.Font.ArialBold
 pointsLabel.Text = "0 PTS"
-pointsLabel.TextColor3 = Color3.fromRGB(190, 202, 225)
+pointsLabel.TextColor3 = Color3.fromRGB(22, 73, 112)
 pointsLabel.TextSize = 13
-pointsLabel.TextXAlignment = Enum.TextXAlignment.Right
+pointsLabel.TextXAlignment = Enum.TextXAlignment.Left
 pointsLabel.Parent = card
 
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
-periodLabel.Position = UDim2.new(0, 14, 0, 36)
-periodLabel.Size = UDim2.new(1, -28, 0, 42)
-periodLabel.Font = Enum.Font.GothamBold
+periodLabel.Position = UDim2.new(0, 10, 0, 36)
+periodLabel.Size = UDim2.new(1, -20, 0, 38)
+periodLabel.Font = Enum.Font.ArialBold
 periodLabel.Text = "Loading school day..."
-periodLabel.TextColor3 = Color3.new(1, 1, 1)
-periodLabel.TextSize = 19
+periodLabel.TextColor3 = Color3.fromRGB(22, 73, 112)
+periodLabel.TextSize = 17
 periodLabel.TextWrapped = true
 periodLabel.TextXAlignment = Enum.TextXAlignment.Left
 periodLabel.Parent = card
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.BackgroundTransparency = 1
-statusLabel.Position = UDim2.new(0, 14, 0, 78)
-statusLabel.Size = UDim2.new(1, -28, 0, 26)
-statusLabel.Font = Enum.Font.Gotham
+statusLabel.Position = UDim2.new(0, 10, 0, 76)
+statusLabel.Size = UDim2.new(1, -20, 0, 42)
+statusLabel.Font = Enum.Font.Arial
 statusLabel.Text = "Connecting..."
-statusLabel.TextColor3 = Color3.fromRGB(190, 202, 225)
+statusLabel.TextColor3 = Color3.fromRGB(31, 72, 102)
 statusLabel.TextSize = 13
+statusLabel.TextWrapped = true
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Parent = card
 
 local action = Instance.new("TextButton")
-action.Position = UDim2.new(0, 14, 1, -48)
-action.Size = UDim2.new(1, -28, 0, 38)
-action.BackgroundColor3 = Color3.fromRGB(73, 122, 210)
-action.Font = Enum.Font.GothamBold
+action.Position = UDim2.new(0, 8, 1, -50)
+action.Size = UDim2.new(1, -16, 0, 44)
+action.BackgroundColor3 = Color3.fromRGB(235, 245, 250)
+action.Font = Enum.Font.ArialBold
 action.Text = "CHECKING CLASS..."
-action.TextColor3 = Color3.new(1, 1, 1)
+action.TextColor3 = Color3.fromRGB(22, 73, 112)
 action.TextSize = 13
 action.Parent = card
-round(action, 11)
+round(action, 2)
+
+local actionStroke = Instance.new("UIStroke")
+actionStroke.Thickness = 1
+actionStroke.Color = Color3.fromRGB(48, 104, 148)
+actionStroke.Parent = action
 
 local modal = Instance.new("Frame")
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
