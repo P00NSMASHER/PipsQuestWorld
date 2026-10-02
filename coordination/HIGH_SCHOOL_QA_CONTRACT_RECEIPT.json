@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T17:30:00Z",
-  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "updatedAt": "2026-10-02T17:44:00Z",
+  "result": "PASS_EXACT_HEAD",
   "canonicalBaseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "candidate": {
     "pr": 103,
@@ -13,21 +13,24 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37042177160,
+      "runId": 37042669829,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "e83a22d0696966595feb41971844a021f637abe7"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37042177307,
+      "runId": 37042669707,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "e83a22d0696966595feb41971844a021f637abe7"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37042177326,
+      "runId": 37042669710,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "e83a22d0696966595feb41971844a021f637abe7",
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "vehicleInputStep": "success"
     }
   ],
@@ -52,10 +55,17 @@
   },
   "integrationEligibility": "PASS",
   "blocker": null,
-  "localOnlyRequired": "After integration, actual Roblox runtime vehicle spawn/seat/drive/steer/exit/re-enter remains Smoke-owned on the same private target.",
+  "localOnlyRequired": "Actual Roblox seated keyboard/touch driving and moving-model behavior remains Integration Smoke-owned LOCAL_ONLY_REQUIRED on exact canonical 68c4b3f.",
   "handoff": {
-    "owner": "Roblox High School Integration Director",
-    "exactSha": "e83a22d0696966595feb41971844a021f637abe7",
-    "pr": 103
+    "owner": "Roblox High School Integration Smoke",
+    "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
+  },
+  "certifiedSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+  "exactIntegrationRebind": {
+    "candidateRootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
+    "canonicalRootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
+    "candidateSchoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6",
+    "canonicalSchoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6",
+    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
   }
 }
