@@ -3,113 +3,54 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "PROGRESSION_JOBS_ECONOMY_CAFE_JOB_ASSIGNED",
+  "currentParityMilestone": "PROGRESSION_JOBS_ECONOMY_REPAIR_OPERATION_ORDER",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
-      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
+      "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+      "status": "PASS_EXACT_HEAD_CI_REPAIR_REQUIRED_BEFORE_SMOKE"
     },
-    "upstream": null,
-    "downstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "upstream": {
+      "lane": "Roblox High School Progression & Mobile",
+      "objective": "ECONOMY_OPERATION_ORDER_REJOIN_REPAIR",
       "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+      "baseSha": "2ab1584ee34e711828768cd999c86feba9202984",
       "allowedRoot": "school/**",
       "status": "ASSIGNED_READY",
-      "existingCandidate": {
-        "pr": 56,
-        "branch": "rebuild/high-school-free-roam-cafe-job-v1",
-        "sha": "9b9c6f79ac6c479992a3293526eb7829b95ee5a4",
-        "mergeRefTestedAgainstCanonical": "99e12750b8b87812f3363e3691c12fb8797669bd",
-        "mergeRefCi": "PASS_ALL_THREE_GUARDS",
-        "lineageNote": "Before any further producer edits, refresh/rebase onto the exact certified canonical SHA or rebuild the same bounded slice from that SHA."
-      },
-      "stableInterfacesOnly": [
-        "SchoolConfig.WorldLocations cafe location",
-        "EconomyRepository server-authoritative balance/transaction/ownership APIs",
-        "read-only progression/economy snapshots"
-      ],
-      "ownership": [
-        "cafe job interaction state",
-        "job start/active/complete lifecycle",
-        "job-task interaction validation",
-        "job-facing client UX for this slice"
-      ],
-      "forbiddenOverlap": [
-        "world geometry or world generator authority",
-        "second money ledger or persistence writer",
-        "vehicle lifecycle or physics",
-        "housing placement or property lifecycle",
-        "avatar/outfit/customization or shopping flows",
-        "school clock authority",
-        "class or grading authority"
-      ]
-    }
+      "ownership": ["EconomyRepository durable operation ordering", "economy persistence regression coverage"]
+    },
+    "downstream": null
   },
   "priorityBacklog": [
-    {
-      "priority": 1,
-      "milestone": "WORLD_CAMPUS_TOWN_DEPTH",
-      "status": "INTEGRATED_TO_CURRENT_CERTIFIED_LINE"
-    },
-    {
-      "priority": 2,
-      "milestone": "SCHOOL_CLASS_FEEL",
-      "status": "INTEGRATED_SMOKE_CERTIFIED"
-    },
-    {
-      "priority": 3,
-      "milestone": "PROGRESSION_JOBS_ECONOMY",
-      "status": "ACTIVE_ASSIGNED_CAFE_JOB"
-    },
-    {
-      "priority": 4,
-      "milestone": "VEHICLES",
-      "status": "WAITING_PRIORITY"
-    },
-    {
-      "priority": 5,
-      "milestone": "HOUSING_PROPERTY",
-      "status": "WAITING_PRIORITY"
-    },
-    {
-      "priority": 6,
-      "milestone": "AVATAR_CUSTOMIZATION_SHOPPING",
-      "status": "WAITING_PRIORITY"
-    },
-    {
-      "priority": 7,
-      "milestone": "SOCIAL_FREE_ROAM_POLISH",
-      "status": "WAITING_PRIORITY"
-    },
-    {
-      "priority": 8,
-      "milestone": "MOBILE_PRESENTATION_POLISH",
-      "status": "WAITING_PRIORITY"
-    }
+    {"priority": 1, "milestone": "WORLD_CAMPUS_TOWN_DEPTH", "status": "INTEGRATED_TO_CURRENT_CERTIFIED_LINE"},
+    {"priority": 2, "milestone": "SCHOOL_CLASS_FEEL", "status": "INTEGRATED_SMOKE_CERTIFIED"},
+    {"priority": 3, "milestone": "PROGRESSION_JOBS_ECONOMY", "status": "ACTIVE_REPAIR_REQUIRED_BEFORE_SMOKE"},
+    {"priority": 4, "milestone": "VEHICLES", "status": "WAITING_PRIORITY"},
+    {"priority": 5, "milestone": "HOUSING_PROPERTY", "status": "WAITING_PRIORITY"},
+    {"priority": 6, "milestone": "AVATAR_CUSTOMIZATION_SHOPPING", "status": "WAITING_PRIORITY"},
+    {"priority": 7, "milestone": "SOCIAL_FREE_ROAM_POLISH", "status": "WAITING_PRIORITY"},
+    {"priority": 8, "milestone": "MOBILE_PRESENTATION_POLISH", "status": "WAITING_PRIORITY"}
   ],
   "supportLaneAssignments": {
-    "Foundation": "WAITING_DEPENDENCY; consume no new world-authority work while the assigned cafe-job slice is active.",
-    "Class & Education": "Support stable class/read interfaces only; canonical class-feel is smoke-certified at 99e12750 and must not be overlapped.",
-    "Content QA": "Prepare original cafe-job prompt/content fixtures only if requested; no competing runtime branch.",
-    "Progression & Mobile": "Support the existing EconomyRepository API contract only; do not create job interaction authority. PR #48 remains stale-base presentation work and must not be integrated implicitly.",
-    "Pip High Free Roam": "ASSIGNED_READY PARITY_STAGE_3B_CAFE_JOB_LOOP_V1. Implement exactly one original cafe job loop under school/** on canonical 99e12750: start shift at the Foundation cafe location, complete one deterministic interaction task, award one idempotent wage through the existing EconomyRepository API, and return to free roam. Do not add another ledger, persistence writer, world generator, vehicle, housing, customization, school-clock, class, or grading authority.",
-    "QA/Contract": "Validate the exact-head cafe-job candidate, including duplicate completion/replay and no-double-pay behavior, without implementing producer semantics.",
-    "Integration": "Consume only an exact-green cafe-job candidate descended from canonical 99e12750 or a newer certified successor; preserve the WIP cap and reject stale-base product candidates.",
-    "Integration Smoke": "Re-certify the resulting canonical exact head after cafe-job integration before the next Free-Roam slice.",
-    "Release/Package": "WAITING_DEPENDENCY until the cafe-job milestone is integrated and smoke-certified; never publish automatically.",
+    "Foundation": "Invariant support only.",
+    "Class & Education": "Stable contract support only.",
+    "Content QA": "Content and provenance support only.",
+    "Progression & Mobile": "ASSIGNED_READY for the narrow EconomyRepository ordering repair and regression on canonical 2ab1584.",
+    "Pip High Free Roam": "Cafe job is integrated; no further product edits until the economy repair is integrated and smoke-certified.",
+    "QA/Contract": "Validate the live repair candidate and the operation-order rejoin regression.",
+    "Integration": "Integrate only the exact-green Progression repair descendant of canonical 2ab1584.",
+    "Integration Smoke": "Smoke the repaired canonical exact head after Integration.",
+    "Release/Package": "Wait for repaired exact-head smoke certification; do not publish.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Pip High Free Roam",
-    "to": "QA/Contract then Integration",
-    "condition": "Exact-head cafe-job candidate on certified canonical lineage with deterministic duplicate/replay/no-double-pay coverage and all required guards green."
+    "from": "Roblox High School Progression & Mobile",
+    "to": "QA/Contract then Integration then Integration Smoke",
+    "condition": "Exact-head repair descendant of canonical 2ab1584 with regression coverage and required guards green."
   },
-  "openCanonicalPrCount": 1,
-  "openNoncanonicalPrCount": 2,
-  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
+  "openCanonicalPrCount": 0,
+  "openNoncanonicalPrCount": 3,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 1,
   "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
