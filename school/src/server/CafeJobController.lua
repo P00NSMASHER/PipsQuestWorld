@@ -112,12 +112,22 @@ local function committed(receipt)
 end
 
 function CafeJobController:_recordWage(playerId, operation)
-    local repository, openError = self._repositoryFactory(playerId)
+    local opened, repository, openError = pcall(self._repositoryFactory, playerId)
+    if not opened then
+        return nil, "repository_factory_failed"
+    end
     if repository == nil or type(repository.record) ~= "function" then
         return nil, tostring(openError or "repository_unavailable")
     end
 
-    local receipt = repository:record(copyOperation(operation))
+    local recorded, receipt = pcall(
+        repository.record,
+        repository,
+        copyOperation(operation)
+    )
+    if not recorded then
+        return nil, "repository_record_failed"
+    end
     if not committed(receipt) then
         return receipt, nil
     end
