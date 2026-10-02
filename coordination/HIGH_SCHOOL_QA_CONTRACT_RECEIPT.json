@@ -1,71 +1,57 @@
 {
-  "schemaVersion": 14,
+  "schemaVersion": 15,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T17:44:00Z",
-  "result": "PASS_EXACT_HEAD",
-  "canonicalBaseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "updatedAt": "2026-10-02T21:12:00Z",
+  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "canonicalBaseSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
   "candidate": {
-    "pr": 103,
-    "branch": "rebuild/high-school-vehicle-controls-e929354-v1",
-    "sha": "e83a22d0696966595feb41971844a021f637abe7",
-    "milestone": "VEHICLE_INPUT_RELIABILITY_V2"
+    "pr": 107,
+    "branch": "rebuild/high-school-legacy-hud-68c4b3f-v1",
+    "sha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+    "milestone": "LEGACY_HUD_PRESENTATION_PARITY_V1"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37042669829,
-      "event": "push",
+      "runId": 37066163165,
       "conclusion": "success",
-      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
+      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37042669707,
-      "event": "push",
+      "runId": 37066163133,
       "conclusion": "success",
-      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
+      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37042669710,
-      "event": "push",
+      "runId": 37066163142,
       "conclusion": "success",
-      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "vehicleInputStep": "success"
+      "headSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "legacyHudStep": "success"
     }
   ],
   "validation": {
-    "changedPathsWithinAuthorizedSlice": true,
-    "directVehicleSeatThrottleSteerSamplingRemoved": true,
-    "ownerOnlySeatedControlGate": true,
-    "lifecycleTokenGatePreserved": true,
-    "finiteAndClampedInput": true,
-    "staleInputTimeout": true,
-    "serverOnlyPositionYawAuthority": true,
+    "presentationOnlyDiff": true,
+    "serverAuthorityChanged": false,
+    "classCallsPreserved": true,
+    "cafeCallsPreserved": true,
+    "vehicleCallsPreserved": true,
     "clientTransformTrust": false,
-    "keyboardAndTouchControlBinding": true,
-    "vehicleLifecycleRegressionGuard": true,
-    "foundationAuthorityDuplicated": false,
-    "classAuthorityDuplicated": false,
-    "progressionEconomyPersistenceAuthorityDuplicated": false,
+    "legacyBottomLeftHud": true,
+    "touchSafeBottomMargin": true,
+    "legacyBlueWhitePalette": true,
+    "legacyTypography": true,
+    "modernPipHighTitleRemoved": true,
     "externalAssetIdsAdded": false,
-    "retiredRuntimeCoupling": false,
     "phase2SchoolworkDrift": false,
     "testWeakening": false
   },
   "integrationEligibility": "PASS",
   "blocker": null,
-  "localOnlyRequired": "Actual Roblox seated keyboard/touch driving and moving-model behavior remains Integration Smoke-owned LOCAL_ONLY_REQUIRED on exact canonical 68c4b3f.",
   "handoff": {
-    "owner": "Roblox High School Integration Smoke",
-    "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
-  },
-  "certifiedSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-  "exactIntegrationRebind": {
-    "candidateRootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
-    "canonicalRootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
-    "candidateSchoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6",
-    "canonicalSchoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6",
-    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
+    "owner": "Roblox High School Integration Director",
+    "exactSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+    "pr": 107
   }
 }
