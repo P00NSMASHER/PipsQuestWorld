@@ -69,6 +69,7 @@ if "src/client/CanonicalSchoolClient.client.lua" in client_paths:
             raise SystemExit(f"canonical client owns forbidden authority: {forbidden}")
     for required in (
         'WaitForChild("StateSnapshot")',
+        'WaitForChild("RequestTravel")',
         'WaitForChild("GetClassState")',
         'WaitForChild("EnterClass")',
         'WaitForChild("SubmitAnswer")',
@@ -105,6 +106,10 @@ for token in (
     'Workspace:SetAttribute("SchoolPeriodIndex"',
     "SchoolConfig.Interfaces.remoteFolder",
     "SchoolConfig.Interfaces.stateSnapshot",
+    "SchoolConfig.Interfaces.requestTravel",
+    "requestTravel.OnServerInvoke",
+    'campus:WaitForChild("RoomSpawns")',
+    "character:PivotTo(roomSpawn.CFrame + SchoolConfig.TRAVEL_OFFSET)",
     "SchoolConfig.Interfaces.serverEventFolder",
     "SchoolConfig.Interfaces.sessionStarted",
     "SchoolConfig.Interfaces.sessionEnded",

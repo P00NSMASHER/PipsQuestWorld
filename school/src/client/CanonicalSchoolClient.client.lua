@@ -5,6 +5,7 @@ local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
 local stateSnapshot = root:WaitForChild("StateSnapshot")
+local requestTravel = root:WaitForChild("RequestTravel")
 local classRoot = root:WaitForChild("ClassEducation")
 local getClassState = classRoot:WaitForChild("GetClassState")
 local enterClass = classRoot:WaitForChild("EnterClass")
@@ -207,7 +208,22 @@ action.Activated:Connect(function()
         return
     end
 
-    if latestClassState.canEnter ~= true then return end
+    if latestClassState.canEnter ~= true then
+        if latestClassState.academic then
+            busy = true
+            local ok, response = pcall(function()
+                return requestTravel:InvokeServer()
+            end)
+            busy = false
+
+            if ok and type(response) == "table" and response.accepted then
+                statusLabel.Text = "Heading to " .. tostring(latestClassState.roomDisplayName or "class") .. "..."
+            else
+                statusLabel.Text = "Could not travel to class."
+            end
+        end
+        return
+    end
 
     busy = true
     local ok, response = pcall(function()
@@ -262,9 +278,9 @@ task.spawn(function()
                 action.Text = "START CLASS"
                 action.Active = true
             elseif classState.academic then
-                statusLabel.Text = "Walk to " .. tostring(classState.roomDisplayName) .. " to attend."
+                statusLabel.Text = "Go to " .. tostring(classState.roomDisplayName) .. " to attend."
                 action.Text = "GO TO " .. string.upper(tostring(classState.roomDisplayName))
-                action.Active = false
+                action.Active = true
             else
                 statusLabel.Text = "Free-roam period • Points: " .. tostring(points)
                 action.Text = "FREE ROAM"
