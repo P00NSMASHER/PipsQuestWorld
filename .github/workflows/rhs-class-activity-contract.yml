@@ -1,0 +1,63 @@
+name: RHS Class Activity Contract
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - integration/rhs-exact-restored-v1
+    paths:
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "scripts/verify-rhs-class-activity.py"
+      - ".github/workflows/rhs-class-activity-contract.yml"
+  pull_request:
+    paths:
+      - "rhs/working/ROBLOX High School.rbxl"
+      - "rhs/working/BUILD_STATE.json"
+      - "rhs/compatibility/PATCH_MANIFEST.json"
+      - "scripts/verify-rhs-class-activity.py"
+      - ".github/workflows/rhs-class-activity-contract.yml"
+
+concurrency:
+  group: rhs-class-activity-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify candidate identity
+        run: python3 scripts/verify-rhs-baseline.py
+
+      - name: Build pinned Roblox converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install --git https://github.com/rojo-rbx/rbx-dom.git \
+            --rev 43d1f129f2eb1fd055512f039863ff35ae5a10f1 \
+            --locked rbx_util
+
+      - name: Convert working candidate
+        run: rbx-util convert "rhs/working/ROBLOX High School.rbxl" /tmp/rhs-class-activity.rbxlx
+
+      - name: Enforce server-authoritative class activity
+        run: |
+          python3 scripts/verify-rhs-class-activity.py \
+            --xml /tmp/rhs-class-activity.rbxlx \
+            --output /tmp/rhs-class-activity-contract.json
+
+      - name: Upload contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhs-class-activity-contract
+          path: /tmp/rhs-class-activity-contract.json
+          if-no-files-found: warn
+          retention-days: 30
