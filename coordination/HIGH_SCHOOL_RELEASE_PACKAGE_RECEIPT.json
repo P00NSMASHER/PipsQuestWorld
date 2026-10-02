@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "lane": "Pip High Release & Package Gate",
+  "result": "PASS_PACKAGE_CHECKPOINT",
+  "canonicalProduct": "Pip High",
+  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "sourceRoot": "school/**",
+  "artifact": {
+    "artifactId": "pip-high-school-92691e0-source-tree-86243dd1",
+    "type": "GIT_TREE_SOURCE_CHECKPOINT",
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+    "sourceRoot": "school/**",
+    "schoolTreeSha1": "86243dd137ced3c73ba5d4bb0b4b4285dfbb1edc",
+    "fileCount": 29,
+    "sourceBytes": 198851,
+    "sortedBlobManifestSha256": "c39a993aa7cf752479b43c2346d253875b36933af27e675e5640b8a04eff4521",
+    "manifestAlgorithm": "Sort all blob entries under school/** by path; hash UTF-8 lines path<TAB>mode<TAB>gitBlobSha<TAB>size<LF> with SHA-256.",
+    "locator": "https://github.com/P00NSMASHER/PipsQuestWorld/tree/92691e009869ee9cd5d9306786502b157a5b6c84/school",
+    "reuseRule": "Reuse this artifact identity while canonical SHA, school tree SHA, and gate evidence remain unchanged."
+  },
+  "exactHeadEvidence": {
+    "qa": {
+      "result": "PASS_EXACT_HEAD",
+      "sha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+    },
+    "integration": {
+      "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
+      "sha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+    },
+    "smoke": {
+      "result": "PASS",
+      "sha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+    },
+    "ci": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37010609435,
+        "conclusion": "success",
+        "headSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37010609322,
+        "conclusion": "success",
+        "headSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37010609413,
+        "conclusion": "success",
+        "headSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+      }
+    ]
+  },
+  "provenanceRights": {
+    "result": "PASS_REUSED_NO_NEW_ASSET_SURFACE",
+    "evidence": "QA exact-head receipt reports provenanceOriginality PASS_NO_NEW_ASSET_SURFACE for the 92691e0 delta; canonical scope keeps verified-rights/provenance mandatory."
+  },
+  "privateRobloxTarget": {
+    "universeId": "10768955678",
+    "placeId": "87245440673982",
+    "priorPublishedSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+    "priorPublishEvidence": "Roblox Studio title became 'Pip High - Roblox Studio'; Studio log recorded placeId 87245440673982 and universeId 10768955678.",
+    "thisCheckpointPublished": false,
+    "publishAuthorizationThisRun": false
+  },
+  "parityCheckpoint": {
+    "productComplete": false,
+    "spawnWorldMapLocations": "INTEGRATED_SMOKE_CERTIFIED",
+    "schoolClockSchedule": "INTEGRATED_SMOKE_CERTIFIED",
+    "classes": "INTEGRATED_SMOKE_CERTIFIED",
+    "progressionEconomy": "INTEGRATED_SMOKE_CERTIFIED_WITH_REJOIN_REPAIR",
+    "jobs": "PARTIAL_CAFE_JOB_SLICE_CERTIFIED",
+    "vehicles": "NOT_INTEGRATED_NEXT_LARGEST_BACKLOG_GAP",
+    "housingProperty": "NOT_INTEGRATED",
+    "avatarCustomizationShopping": "NOT_INTEGRATED",
+    "socialFreeRoam": "PARTIAL_CAFE_FREE_ROAM_SLICE_CERTIFIED",
+    "animations": "NOT_SEPARATELY_CERTIFIED",
+    "mobileControlsPresentation": "MINIMUM_PRESENT_REUSED_NOT_FULL_PARITY",
+    "persistenceRejoin": "INTEGRATED_SMOKE_CERTIFIED",
+    "lightingPresentation": "PROJECT_BASELINE_PRESENT_NOT_FULL_PARITY_CERTIFIED",
+    "hudMenuBehavior": "PARTIAL_PRESENT_NOT_FULL_PARITY_CERTIFIED"
+  },
+  "publication": {
+    "robloxPublished": false,
+    "reason": "No separate Roblox publication authorization in this run. Package checkpoint only."
+  },
+  "nextHandoff": {
+    "to": "Roblox High School Control Tower",
+    "action": "Immediately assign the next largest exact-clone parity gap on the same school/** lineage and same recorded private Roblox target.",
+    "recommendedNextGap": "VEHICLES",
+    "phase2Schoolwork": "DEFERRED_PHASE_2"
+  }
+}
