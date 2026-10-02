@@ -1,88 +1,86 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T09:13:00Z",
-  "result": "BLOCKED_EXECUTABLE_CANONICAL_REGRESSION",
-  "evidenceFingerprint": "sha256:295703f2c2f872ef43948f201cfc9b0fb02f134adbca5da2f046514320fa334f",
+  "updatedAt": "2026-10-02T09:45:00Z",
+  "result": "BLOCKED_EXECUTABLE_CLASS_FEEL_REJOIN_REGRESSION",
   "authoritativeInputs": {
-    "protocolBlob": "737ad8e3c2dcfde01fd3620b06e3b5da5e70d536",
-    "stateManifestBlob": "50b2d38a96c24f65b55974264d2ab673a1ecaf5f",
-    "wipBlob": "e1c1e96397aca4c756e1d147b2f29652696319f2",
-    "canonicalBlob": "4fbd8482b178b88354d354b897f6ff1439c342f7",
-    "blockersBlob": "437087b40cb205f91100d6c16e0b2a9dbc2b7d1e",
-    "playableBlob": "e159f584dce2419d18fe04c1a3a7c78e2ab7b20e"
+    "blockersBlob": "bda19343ef32c036872b3741fe7d6bfa29c207a7",
+    "wipBlob": "c595e14ef9c12e15bfee9f9b35c1405a8c1c7c60",
+    "canonicalBlob": "082f384a38888a1f79636ab03f6a8ba57b8d5e8a",
+    "playableBlob": "e159f584dce2419d18fe04c1a3a7c78e2ab7b20e",
+    "blockersAtRead": [],
+    "currentMilestone": "SCHOOL_CLASS_FEEL_INTEGRATED_AWAITING_EXACT_HEAD_SMOKE"
   },
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "7e69301b253d88a7ed779556387b6f9011022976",
-    "economyBlob": "fd482c51f64bac1fdcca702935f10cd1e0437186",
-    "economyTestBlob": "6f7d3c4eb03fcaa83837c86772c3c7f0e8c9b286",
-    "controlTowerStatus": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
-  },
-  "qaHarness": {
-    "pr": 54,
-    "branch": "qa/economy-order-guard-7e69301",
-    "sha": "0dcb0867335b6d607cebd59660d4f087fcc2e18a",
-    "baseSha": "7e69301b253d88a7ed779556387b6f9011022976",
-    "changes": [
-      "school/tests/qa_economy_order_persistence_spec.lua",
-      ".github/workflows/high-school-progression-ci.yml"
-    ],
-    "producerSemanticsChanged": false
-  },
-  "executableEvidence": {
-    "foundationRun": {
-      "runId": 36988357319,
-      "workflow": "High School Foundation Static Guards",
-      "conclusion": "success"
-    },
-    "classEducationRun": {
-      "runId": 36988357331,
-      "workflow": "High School Class Education Guards",
-      "conclusion": "success"
-    },
-    "progressionRun": {
-      "runId": 36988357239,
-      "workflow": "High School Progression Guards",
-      "conclusion": "failure",
-      "jobId": 110778478559,
-      "passingSteps": [
-        "Preserve canonical Foundation invariants",
-        "Preserve Class Education contract",
-        "Run progression repository concurrency and restore tests",
-        "Run economy ledger and ownership tests"
-      ],
-      "failingStep": "Run QA economy operation-order rejoin regression",
-      "downstreamStepsSkipped": [
-        "Run class-to-progression binding test",
-        "Run durable vertical-slice integration gate"
+    "sha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+    "schoolTreeSha": "a49646f05a989d2025a96cf9de56d08df1a3b27a",
+    "controlTowerStatus": "INTEGRATED_AWAITING_EXACT_HEAD_SMOKE",
+    "preMergeCandidate": {
+      "pr": 55,
+      "sha": "ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7",
+      "schoolTreeSha": "a49646f05a989d2025a96cf9de56d08df1a3b27a",
+      "exactHeadCi": [
+        {
+          "runId": 36988574374,
+          "workflow": "High School Foundation Static Guards",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36988574366,
+          "workflow": "High School Class Education Guards",
+          "conclusion": "success"
+        },
+        {
+          "runId": 36988574389,
+          "workflow": "High School Progression Guards",
+          "conclusion": "success"
+        }
       ]
     }
   },
-  "reproducedCanonicalDefect": {
-    "id": "ECONOMY_OPERATION_ORDER_REJOIN",
-    "owner": "Roblox High School Progression & Mobile",
-    "reason": "EconomyRepository persists operations sorted lexically by operationId, but validateSnapshot replays that stored order and rejects any transient negative running balance. A valid credit committed before a later debit can therefore become debit-first on disk and make the durable snapshot unreopenable.",
-    "exitCriterion": "On a canonical descendant, the QA regression in PR #54 must pass for a durable +100 credit with a lexically-later operationId followed by a durable -40 debit with a lexically-earlier operationId, reopening at balance 60. Existing economy ledger/ownership, duplicate-ID, conflict-ID, CAS retry, ownership, insufficient-funds, exactly-once durability, and save/rejoin tests must remain green.",
+  "reusedPassEvidence": {
+    "foundationAuthority": "PASS_REUSED_IDENTICAL_SCHOOL_TREE: PR #55 did not alter Foundation clock/location/world authority and the canonical school/** tree is byte-identical to the exact-green pre-merge candidate.",
+    "contentLeakageAndSessionBasics": "PASS_REUSED_IDENTICAL_SCHOOL_TREE: existing Class/Education deterministic suite still prints CLASS_EDUCATION_DETERMINISTIC_TESTS_OK before the new QA harness executes; answer keys remain server-only and in-session replay/late-submission/idempotency checks remain green.",
+    "progressionExactlyOnce": "PASS_REUSED_IDENTICAL_SCHOOL_TREE: pre-merge Progression guard was green and PR #55 did not change ProgressionRepository/ProgressionBinding semantics.",
+    "provenance": "PASS_REUSED: PR #55 changed only five school/** Lua/test files; no assets, retired runtime, game/**, Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact, or old feat/* coupling was introduced.",
+    "testWeakening": "PASS: PR #55 added assertions to class_education_spec.lua and removed no tests."
+  },
+  "qaHarness": {
+    "branch": "rebuild/high-school-class-education-qa-rejoin",
+    "sha": "c554bae8937bc68574f09bb1b2f4dde0b7489b8d",
+    "baseCanonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+    "producerSemanticsChanged": false,
+    "changedQaFiles": [
+      "school/tests/qa_class_completion_rejoin_spec.lua",
+      "school/tests/class_education_spec.lua",
+      "school/tests/QA_CLASS_COMPLETION_REJOIN_CONTRACT.md"
+    ],
+    "run": {
+      "runId": 36991417267,
+      "jobId": 110788262912,
+      "workflow": "High School Class Education Guards",
+      "conclusion": "failure",
+      "passingBeforeRegression": [
+        "Preserve canonical Foundation invariants",
+        "Run Education Engine deterministic tests",
+        "existing class_education_spec assertions through CLASS_EDUCATION_DETERMINISTIC_TESTS_OK"
+      ],
+      "failingAssertion": "qa_class_completion_rejoin_spec.lua:67 expected re-entry status 'rejected' after durable completion and server/controller reconstruction, got 'entered'"
+    }
+  },
+  "reproducedDefect": {
+    "id": "CLASS_COMPLETION_NOT_RESTORED_AFTER_SERVER_REJOIN",
+    "producerOwner": "Roblox High School Class & Education",
+    "reason": "The current School/Class Feel gate uses ephemeral ClassSessionController.completed state. After a new server/controller is constructed, durable ProgressionRepository still contains the class completion but Class/Education no longer knows the current class was completed and accepts re-entry. This breaks the current slice's 'class complete -> free roam until next bell' behavior across rejoin and can drive a duplicate/conflicting progression attempt.",
+    "exactExitCriterion": "On a canonical descendant of 99e12750, after class 1:2:math is durably completed and Class/Education ephemeral state is reconstructed while the same Foundation classKey remains current, server-authoritative class entry must be rejected as already completed, returnToFreeRoam must remain true, durable progression completionCount must remain 1, and no progressionPending state may be created. Existing Foundation, EducationEngine, Class/Education leakage/idempotency/late-submission tests and Progression exactly-once/save-rejoin tests must remain green.",
     "integrationEligibility": "BLOCKED"
   },
-  "downstreamContainment": {
-    "assignedSlice": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-    "freeRoamBranch": "rebuild/high-school-free-roam-cafe-job-v1",
-    "freeRoamBranchSha": "7e69301b253d88a7ed779556387b6f9011022976",
-    "relationToCanonical": "IDENTICAL_AHEAD_0_BEHIND_0",
-    "productChangesLanded": false,
-    "disposition": "BLOCK_FREE_ROAM_INTEGRATION_UNTIL_ECONOMY_REPAIRED_AND_RECERTIFIED"
-  },
-  "coordinationDrift": {
-    "owner": "Roblox High School Control Tower",
-    "defect": "BLOCKERS/PLAYABLE still mark canonical economy dependency cleared and Free Roam assigned even though exact QA run 36988357239 reproducibly fails the economy rejoin contract.",
-    "exitCriterion": "Gate Free Roam on the economy repair, update blocker/WIP shards, and re-certify the repaired canonical exact head before allowing cafe-job wage integration."
-  },
-  "staleCandidate": {
-    "pr": 48,
-    "sha": "dcbeca0624724e8ef1a866e921d1463f9821eeb5",
-    "disposition": "NOT_EVALUATED; Control Tower marks STALE_BASE_OPEN_DO_NOT_INTEGRATE_WITHOUT_REBASE"
+  "integrationDisposition": {
+    "exactCandidate": "rebuild/high-school-foundation@99e12750b8b87812f3363e3691c12fb8797669bd",
+    "status": "BLOCKED_FOR_ADVANCEMENT",
+    "reason": "Current canonical class-feel milestone has a reproducible cross-rejoin authority defect. Exact-head smoke alone must not advance priority until the owner repair passes the QA harness and the repaired canonical head is re-certified.",
+    "nonCurrentPr56": "NOT_VALIDATED: PR #56 is based on stale 7e69301 and WIP marks Free Roam WAITING_PRIORITY."
   },
   "localOnlyRequired": null
 }
