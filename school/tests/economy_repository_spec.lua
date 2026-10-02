@@ -147,6 +147,22 @@ eq(failed.durable, false, "save failure durable")
 eq(failed.error, "SAVE_FAILED:injected", "save failure error")
 eq(afterRace:getState().balance, 20, "failed save mutated local balance")
 
+-- operationId is an idempotency key, not a chronological ordering key.
+-- A valid credit committed before a later debit must reopen in commit order
+-- even when the debit's ID sorts lexically before the credit's ID.
+local orderingStore = newStore(nil)
+local orderingRepo = assert(Repository.open(orderingStore, 101))
+local funding = orderingRepo:record(operation("z:funding", 100, "qa:operation-order"))
+eq(funding.status, "applied", "ordering funding status")
+eq(funding.state.balance, 100, "ordering funding balance")
+local debit = orderingRepo:record(operation("a:purchase", -40, "qa:operation-order"))
+eq(debit.status, "applied", "ordering debit status")
+eq(debit.state.balance, 60, "ordering debit balance")
+local orderingReopened, orderingError = Repository.open(orderingStore, 101)
+assert(orderingReopened, "operation-order history failed to reopen: " .. tostring(orderingError))
+eq(orderingReopened:getState().balance, 60, "operation-order rejoin balance")
+eq(orderingReopened:getState().operationCount, 2, "operation-order rejoin operation count")
+
 dofile("school/tests/cafe_job_controller_spec.lua")
 
 print("HIGH_SCHOOL_ECONOMY_REPOSITORY_PASS")
