@@ -80,8 +80,11 @@ for _, direction in ipairs({-1, 1}) do
     part("SoccerGoalTop", Vector3.new(0.6, 0.6, 16), CFrame.new(x, 8.4, soccer.Z), white, Enum.Material.Metal)
 end
 
--- Outdoor pool/deck landmark.
-part("PoolDeck", Vector3.new(90, 0.5, 126), CFrame.new(pool.X, 0.58, pool.Z), concrete, Enum.Material.Concrete)
+-- Outdoor pool/deck landmark. Keep the water opening clear instead of laying a solid slab under it.
+part("PoolDeckNorth", Vector3.new(90, 0.5, 14), CFrame.new(pool.X, 0.58, pool.Z - 56), concrete, Enum.Material.Concrete)
+part("PoolDeckSouth", Vector3.new(90, 0.5, 14), CFrame.new(pool.X, 0.58, pool.Z + 56), concrete, Enum.Material.Concrete)
+part("PoolDeckWest", Vector3.new(16, 0.5, 98), CFrame.new(pool.X - 37, 0.58, pool.Z), concrete, Enum.Material.Concrete)
+part("PoolDeckEast", Vector3.new(16, 0.5, 98), CFrame.new(pool.X + 37, 0.58, pool.Z), concrete, Enum.Material.Concrete)
 local water = part("PoolWater", Vector3.new(58, 1.1, 98), CFrame.new(pool.X, 0.28, pool.Z), Color3.fromRGB(69, 157, 211), Enum.Material.Glass)
 water.Transparency = 0.18
 water.CanCollide = false
