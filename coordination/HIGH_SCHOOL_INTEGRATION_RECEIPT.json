@@ -5,23 +5,21 @@
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-  "parentIntegratedRuntimeSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-  "integratedPr": 32,
+  "integrationSha": "1841b1b4623f54701308107f0ba4bf8ad8c909bd",
+  "parentIntegratedRuntimeSha": "b91b212964acbce5b0f9923d919a88999711805e",
+  "integratedPr": 35,
   "verticalSliceTarget": "spawn -> clock/period -> one class -> one activity -> exactly-once progression -> free roam -> persistence",
   "deltaFromParent": {
-    "productRuntimeChanged": false,
+    "productRuntimeChanged": true,
     "changedFiles": [
-      ".github/workflows/high-school-class-education-ci.yml",
-      ".github/workflows/high-school-progression-ci.yml",
-      ".github/workflows/school-pivot-ci.yml"
+      "school/src/server/CampusBuilder.server.lua"
     ],
-    "note": "Trigger coverage only; no school/** runtime/test file changed."
+    "note": "PR #35 adds canonical Pip High room-specific detail only inside school/**. No retired runtime source was consumed."
   },
   "exactHeadCi": [
-    {"runId":36958964104,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
-    {"runId":36958964064,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
-    {"runId":36958964091,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
+    {"runId":36980828438,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
+    {"runId":36980828413,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
+    {"runId":36980828335,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
   ],
   "scope": {
     "runtimeTestRoot": "school/**",
@@ -32,6 +30,6 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Smoke only canonical SHA b44cff4c64843001b178a6f6bd4aacabecfee30c. Reuse content-equivalent runtime evidence where valid, but certify this exact SHA. Never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
+    "instruction": "Smoke only canonical SHA 1841b1b4623f54701308107f0ba4bf8ad8c909bd. Its exact-head Foundation, Class/Education, and Progression push guards are green. Never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
   }
 }
