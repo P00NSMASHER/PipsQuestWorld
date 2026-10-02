@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 8,
+  "schemaVersion": 9,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "High functional parity with publicly observable high-school-life behavior, rebuilt progressively with original code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "CAFE_JOB_PLUS_ECONOMY_REJOIN_REPAIR_HEADLESS_SMOKE_CERTIFIED",
-  "currentPlayableEvidence": "Canonical Pip High 92691e009869ee9cd5d9306786502b157a5b6c84 is exact-head headless smoke-certified. It carries forward the cafe-job milestone from 2ab1584 and adds focused PR #64 persistence repair: durable economy operations remain in commit order, so a +100 credit followed by a -40 debit reopens at balance 60 even when operation IDs sort oppositely. Foundation, Class/Education, and Progression guards plus QA, Integration, and Smoke all PASS this exact SHA.",
+  "currentPlayableStage": "CAFE_JOB_PLUS_ECONOMY_REJOIN_REPAIR_SMOKE_CERTIFIED__VEHICLE_HEAD_AWAITING_RUNTIME_SMOKE",
+  "currentPlayableEvidence": "Latest fully runtime/headless certified playable checkpoint remains 92691e009869ee9cd5d9306786502b157a5b6c84 for the cafe/economy/rejoin slice. Current canonical e929354087d3dbf6931496e310b8f899cd0d299f additionally contains VEHICLE_LIFECYCLE_V1 plus the grounded AutoShop spawn repair; QA, Integration, and all three exact-head push guards pass on e929354, but actual Roblox VehicleSeat/moving-model behavior is still awaiting LOCAL_ONLY_REQUIRED runtime Smoke and must not be represented as certified playable yet.",
   "runtimeValidatedThrough": "baseline spawn -> clock/period -> class/activity -> exactly-once progression -> free roam -> restored progression remains certified from unchanged lineage; exact-head persistence coverage now additionally proves economy credit/debit operation order survives reopen/rejoin",
-  "headlessExactHeadValidatedThrough": "92691e0: Foundation + Class/Education + Progression + QA + Integration + post-integration Smoke exact-head PASS",
+  "headlessExactHeadValidatedThrough": "e929354: Foundation + Class/Education + Progression push guards PASS; QA PASS_EXACT_HEAD; Integration PASS_EXACT_HEAD_HANDOFF_SMOKE. Vehicle runtime behavior remains uncertified until exact-SHA Roblox Smoke passes.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,6 +16,18 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Release/Package may build the deterministic school/** artifact for canonical 92691e0. The next product priority is vehicles only after a new Control Tower WIP assignment.",
-  "publishingRule": "No Roblox publish without an explicit separate user instruction."
+  "nextMilestone": "Resolve VEHICLE_RUNTIME_DRIVE_SMOKE on exact canonical e929354087d3dbf6931496e310b8f899cd0d299f and the same private target. PASS hands that unchanged SHA to Release/Package as a checkpoint; Control Tower then assigns HOUSING_PROPERTY as the next producer slice. A reproducible vehicle defect returns only to its owning lane with an exact exit criterion.",
+  "publishingRule": "No Roblox publish without an explicit separate user instruction.",
+  "activeCanonicalHead": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
+    "headlessStatus": "QA_INTEGRATION_EXACT_HEAD_CI_PASS",
+    "runtimeStatus": "WAITING_LOCAL_ONLY_REQUIRED"
+  },
+  "privateRobloxTarget": {
+    "universeId": "10768955678",
+    "placeId": "87245440673982",
+    "publishAuthorized": false
+  }
 }
