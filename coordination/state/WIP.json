@@ -2,41 +2,15 @@
   "schemaVersion": 4,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "SCHOOL_CLASS_FEEL_CANDIDATE_AWAITING_EXACT_HEAD_CI",
+  "unintegratedProductCandidateCount": 0,
+  "currentParityMilestone": "SCHOOL_CLASS_FEEL_INTEGRATED_AWAITING_EXACT_HEAD_SMOKE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "7e69301b253d88a7ed779556387b6f9011022976",
-      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
+      "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+      "status": "INTEGRATED_AWAITING_EXACT_HEAD_SMOKE"
     },
-    "upstream": {
-      "lane": "Roblox High School Class & Education",
-      "objective": "SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1",
-      "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "7e69301b253d88a7ed779556387b6f9011022976",
-      "allowedRoot": "school/**",
-      "ownership": [
-        "class-session completion-result semantics",
-        "class-specific completion feedback and summary",
-        "deterministic Class/Education tests for this slice"
-      ],
-      "forbiddenOverlap": [
-        "school clock/day/period authority",
-        "world geometry or town ownership",
-        "progression or persistence authority",
-        "economy or ownership ledger",
-        "job interaction authority",
-        "vehicle authority",
-        "housing/property authority",
-        "avatar/customization/shopping authority",
-        "global HUD/mobile redesign"
-      ],
-      "status": "AWAITING_EXACT_HEAD_CI",
-      "pr": 55,
-      "headBranch": "rebuild/high-school-class-feel-completion-v1",
-      "headSha": "ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7"
-    },
+    "upstream": null,
     "downstream": null
   },
   "priorityBacklog": [
@@ -48,7 +22,7 @@
     {
       "priority": 2,
       "milestone": "SCHOOL_CLASS_FEEL",
-      "status": "ACTIVE"
+      "status": "INTEGRATED_AWAITING_SMOKE"
     },
     {
       "priority": 3,
@@ -82,23 +56,23 @@
     }
   ],
   "supportLaneAssignments": {
-    "Foundation": "WAITING_DEPENDENCY; current certified campus/world work remains canonical. Do not open overlapping world-authority product work while School/Class Feel is active.",
-    "Class & Education": "PR #55 is the sole active School/Class Feel product candidate at ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7. Make no further product changes unless exact-head CI exposes a defect.",
+    "Foundation": "WAITING_DEPENDENCY; do not open new world-authority product work while canonical 99e12750 awaits exact-head smoke.",
+    "Class & Education": "PR #55 is integrated as canonical 99e12750b8b87812f3363e3691c12fb8797669bd. WAITING_EXACT_HEAD_SMOKE; create no additional class product candidate.",
     "Content QA": "Support original-content validation only if requested by the active Class/Education slice; do not open a competing product branch.",
-    "Progression & Mobile": "WAITING_PRIORITY. PR #48 is stale-base presentation work and must not be integrated or expanded while School/Class Feel is active.",
-    "Pip High Free Roam": "WAITING_PRIORITY. The cafe-job loop is deferred until School/Class Feel is integrated or concretely blocked.",
-    "QA/Contract": "WAITING_EXACT_HEAD_CI for PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7; validate only that exact head after all required guards are green.",
-    "Integration": "WAITING_EXACT_HEAD_CI for PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7. Consume no stale receipt or alternate Class/Education branch.",
-    "Integration Smoke": "Re-certify the resulting canonical exact head after Class/Education integration before priority advances.",
+    "Progression & Mobile": "WAITING_PRIORITY. PR #48 remains stale-base presentation work and must not be integrated or expanded.",
+    "Pip High Free Roam": "WAITING_PRIORITY. Do not resume cafe/job work until 99e12750 is exact-head smoke-certified and Control Tower explicitly advances priority.",
+    "QA/Contract": "PR #55 exact head ba9f5d25 passed all three required guards before merge. No new QA product semantics; await canonical exact-head smoke.",
+    "Integration": "PR #55 merged to canonical 99e12750b8b87812f3363e3691c12fb8797669bd. WAITING_EXACT_HEAD_SMOKE.",
+    "Integration Smoke": "ACTIVE: certify canonical rebuild/high-school-foundation@99e12750b8b87812f3363e3691c12fb8797669bd at exact head. Any SHA mismatch invalidates the handoff.",
     "Release/Package": "WAITING_DEPENDENCY; package/readiness only after the active parity milestone is integrated and smoke-certified; never publish automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Roblox High School Class & Education",
-    "to": "Roblox High School QA & Contract",
-    "condition": "All required exact-head GitHub guards pass on PR #55@ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7."
+    "from": "Roblox High School Integration Smoke",
+    "to": "Roblox High School Control Tower",
+    "condition": "Exact-head smoke PASS on rebuild/high-school-foundation@99e12750b8b87812f3363e3691c12fb8797669bd with required canonical guards green."
   },
-  "openCanonicalPrCount": 2,
+  "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 1,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
