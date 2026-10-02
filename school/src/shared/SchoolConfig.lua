@@ -80,7 +80,7 @@ for index, x in ipairs(housingPlotXs) do
         displayName = "House " .. tostring(index),
         lotCenter = Vector3.new(x, 0.65, houseZ),
         houseOrigin = Vector3.new(x, 0.65, houseZ),
-        doorPosition = Vector3.new(x, 3, houseZ - 18),
+        doorPosition = Vector3.new(x, 3, houseZ - 21),
         teleportPosition = Vector3.new(x, 3, houseZ - 24),
         drivewayPosition = Vector3.new(x, 0.76, neighborhoodPosition.Z + 17),
         headingDegrees = 180,
