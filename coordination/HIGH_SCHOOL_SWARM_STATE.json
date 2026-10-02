@@ -1,184 +1,36 @@
 {
-  "schemaVersion": 2,
-  "updatedAt": "2026-10-02T06:55:00Z",
-  "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
-  "optimizationTarget": "validated playable vertical-slice progress",
-  "canonicalSourceRoot": "school/**",
-  "verticalSlice": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "currentPlayableStage": "Canonical Pip High is live at rebuild/high-school-foundation@b44cff4c64843001b178a6f6bd4aacabecfee30c. This head changes only CI workflow files from runtime-validated merge 506f19551b7f0b1d3edf753bd17ac366367efc32; school/** product semantics are unchanged. Foundation, Class/Education, and Progression exact-head push CI are all green on b44cff4, and Integration Smoke is now exact-head certified PASS.",
-  "runtimeValidatedThrough": "content-identical candidate tree: spawn -> authoritative clock/period -> class travel/attendance -> server-authoritative activity -> exactly-once normal-path progression -> free roam -> restored progression snapshot/client reload",
-  "headlessExactHeadValidatedThrough": "canonical b44cff4: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 2,
-  "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
-  "wipSlots": {
-    "base": {
-      "branch": "rebuild/high-school-foundation",
-      "sha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
-      "exactHeadCi": [
-        {
-          "runId": 36958964104,
-          "workflow": "High School Foundation Static Guards",
-          "event": "push",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36958964064,
-          "workflow": "High School Class Education Guards",
-          "event": "push",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36958964091,
-          "workflow": "High School Progression Guards",
-          "event": "push",
-          "conclusion": "success"
-        }
-      ],
-      "integrationSmokeReceiptCommit": "0bbb39823b22056a50507cff8e35c7c5f22f237f"
-    },
-    "upstream": null,
-    "downstream": null
-  },
-  "validatedProducerEvidence": {
-    "classEducation": {
-      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "result": "PASS",
-      "details": "Canonical school/** head preserves deterministic class entry/exit, server-authoritative activity validation, stale replay rejection, and exactly-once class completion."
-    },
-    "progressionPersistence": {
-      "integratedSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "result": "PASS",
-      "details": "Versioned compare-and-swap persistence preserves concurrent completions, suppresses duplicate completion replay, restores committed progression after reopen/rejoin, and fails closed on persistence errors."
-    },
-    "integration": {
-      "integratedSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-      "result": "PASS_RUNTIME_AND_EXACT_HEAD_CANDIDATE_PRE_MERGE",
-      "details": "Integration receipt records canonical runtime evidence through authoritative class/activity, one durable 25-point commit, free-roam return, read-only restored progression snapshot, and client restoration. The candidate tree is identical to merge head 506f1955, but exact-head certification must still be rerun on the merge SHA."
-    }
-  },
-  "currentBlockers": [],
-  "resolvedThisCycle": [
-    {
-      "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
-      "resolution": "Repaired on candidate e69d6dd; client retains the original submission ID for progression retry and exact-head candidate CI passed.",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    },
-    {
-      "id": "PLAYABLE_REJOIN_OBSERVABILITY",
-      "resolution": "Repaired on candidate e69d6dd; GetProgressionState exposes a server-authoritative read-only snapshot and runtime client reload restored 25 points.",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    },
-    {
-      "id": "RUNTIME_VERTICAL_SLICE_ADVANCEMENT",
-      "resolution": "Integration Director observed authoritative period, travel/attendance, server activity, exactly-once normal-path progression, free roam, and restored progression on candidate e69d6dd.",
-      "sha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
-    },
-    {
-      "id": "PR32_CANONICAL_INTEGRATION",
-      "resolution": "PR #32 merged into rebuild/high-school-foundation as 506f19551b7f0b1d3edf753bd17ac366367efc32. Merge tree exactly equals candidate e69d6dd tree.",
-      "sha": "506f19551b7f0b1d3edf753bd17ac366367efc32"
-    },
-    {
-      "id": "POST_MERGE_EXACT_HEAD_CI_COVERAGE",
-      "resolution": "Canonical b44cff4 received green Foundation, Class/Education, and Progression push CI on the same exact live SHA.",
-      "sha": "b44cff4c64843001b178a6f6bd4aacabecfee30c"
-    },
-    {
-      "id": "POST_INTEGRATION_SMOKE_EXACT_HEAD",
-      "resolution": "Integration Smoke receipt was replaced through the normal GitHub contents writer and now certifies b44cff4 exact-head PASS using live CI plus unchanged school/** runtime semantics.",
-      "sha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-      "receiptCommit": "0bbb39823b22056a50507cff8e35c7c5f22f237f"
-    }
+  "schemaVersion": 3,
+  "stateModel": "SHARDED_COORDINATION",
+  "owner": "Roblox High School Control Tower",
+  "writePolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
+  "readOrder": [
+    "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md",
+    "coordination/HIGH_SCHOOL_CANONICAL_SCOPE_OVERRIDE.md",
+    "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
+    "coordination/HIGH_SCHOOL_SWARM_STATE.json",
+    "coordination/state/CANONICAL.json",
+    "coordination/state/WIP.json",
+    "coordination/state/PLAYABLE.json",
+    "coordination/state/BLOCKERS.json",
+    "newest lane receipts",
+    "live GitHub heads/PRs/CI"
   ],
-  "unchangedFingerprintRule": {
-    "maxCheapReads": 2,
-    "broadTests": 0,
-    "branches": 0,
-    "commits": 0,
-    "statusWrites": 0,
-    "result": "WAITING_UNCHANGED"
+  "authoritativeShards": {
+    "canonical": "coordination/state/CANONICAL.json",
+    "wip": "coordination/state/WIP.json",
+    "playable": "coordination/state/PLAYABLE.json",
+    "blockers": "coordination/state/BLOCKERS.json",
+    "localMachineLease": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json"
   },
-  "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale.",
-  "noncanonical": {
-    "openPrCount": 0,
-    "workAllowed": false,
-    "canonicalOnlyRoot": "school/**",
-    "retiredHistoricalOnly": [
-      "Maze/PipsQuest",
-      "StarBlox/Brookhaven runtime projection",
-      "RHS-exact/licensed-exact",
-      "game/**",
-      "old feat/*",
-      "retired Maze/Pips worktrees/branches",
-      "Roblox places titled StarBlox"
-    ]
+  "receiptRule": "Lane receipts are exact-SHA evidence caches and never outrank a newer live branch head.",
+  "mutationRule": "Change only the smallest owning shard. Do not expand this manifest back into a monolithic mutable state payload.",
+  "legacySnapshot": {
+    "branch": "coordination/high-school-control-tower",
+    "commit": "a43a05386185f0fcf1992bcd67b73d91e9beb29f",
+    "priorStateBlobSha": "9171e810a4ba5945084aeb1afd4ed59f994a1d26",
+    "note": "Historical full state remains in Git history; do not copy it into routine writes."
   },
-  "canonicalPullRequests": {
-    "integratedOrClosed": [
-      20,
-      31,
-      32
-    ],
-    "openCount": 0,
-    "open": []
-  },
-  "nextMilestone": "Canonical Pip High b44cff4c64843001b178a6f6bd4aacabecfee30c is exact-head smoke certified. Release/Package may consume this exact SHA for deterministic packaging/readiness only. Do not publish Roblox without explicit user instruction; retired Maze/Pips/StarBlox/RHS-exact runtimes remain quarantined.",
-  "localMachineCoordination": {
-    "resource": "ONLINE_LAPTOP",
-    "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
-    "availability": "OFFLINE_OBSERVED",
-    "availabilityVerifiedAt": "2026-10-02T06:02:00Z",
-    "claimPolicy": "LOCAL_ONLY_REQUIRED + exact canonical SHA + atomic GitHub lease claim",
-    "eligibleWorkers": "ALL_CANONICAL_HIGH_SCHOOL_LANES",
-    "maxConcurrentUsers": 1,
-    "defaultMaxLeaseMinutes": 20,
-    "routineWorkUsesLaptop": false,
-    "currentLeaseStatus": "FREE",
-    "currentCanonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "connectorFallback": "If the local connector is unavailable after a lease claim, release immediately and report LOCAL_CONNECTOR_UNAVAILABLE.",
-    "currentHolderLane": null,
-    "currentLeasePurpose": null,
-    "currentLeaseCanonicalSha": null,
-    "currentLeaseCandidateSha": null,
-    "currentLeaseExpiresAt": null,
-    "retiredProductLeasePolicy": "REJECT"
-  },
-  "staleReceipts": {
-    "qaContract": "STALE: receipt references pre-integration Foundation/Class heads.",
-    "integration": "STALE_FOR_AUTHORIZATION: receipt is exact for pre-merge candidate e69d6dd and remains useful evidence, but canonical head is now merge SHA 506f1955.",
-    "devex": "STALE_AFTER_MERGE: receipt predates canonical merge 506f1955 and points to the former PR #32 candidate.",
-    "integrationSmoke": "CURRENT: exact-head smoke receipt commit 0bbb39823b22056a50507cff8e35c7c5f22f237f certifies b44cff4c64843001b178a6f6bd4aacabecfee30c."
-  },
-  "candidateExactHeadReview": {
-    "pr": 32,
-    "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-    "result": "PASS_CI_WITH_RUNTIME_RISKS",
-    "findings": [
-      {
-        "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
-        "severity": "BLOCKS_FAILURE_RECOVERY_PATH",
-        "evidence": "CanonicalSchoolClient.client.lua creates a fresh submissionId inside every choice-button activation, but pending progression retries require the exact original submissionId. After progression_commit_failed, a second tap therefore receives progression_pending instead of retrying the durable commit.",
-        "exitCriterion": "Retain and reuse the original submissionId while a completed class is progression-pending; clear it only after durable applied/duplicate progression or explicit terminal reset. Add deterministic regression coverage."
-      },
-      {
-        "id": "PLAYABLE_REJOIN_OBSERVABILITY",
-        "severity": "BLOCKS_FULL_PLAYABLE_KPI_CLAIM",
-        "evidence": "Client points initialize to 0 and update only from submit responses containing progressionState; GetClassState exposes ephemeral class completion state, not persisted progression. A rejoined player cannot directly observe that the prior committed result was restored.",
-        "exitCriterion": "Expose a read-only persisted progression snapshot (or equivalent server-authoritative restored result) to the playable client and demonstrate it after rejoin. Studio-memory fallback must not be represented as production cross-server persistence."
-      }
-    ],
-    "prCommentId": 5943363418
-  },
-  "contentEquivalence": {
-    "candidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-    "mergeSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-    "treeSha": "2af1f7627ecfc4340336e7d087701c7c3bbf8000",
-    "identicalTree": true,
-    "note": "Content equivalence preserves runtime evidence relevance but does not waive the exact-head CI rule."
-  },
-  "staleCoordinationArtifacts": {
-    "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json": "STALE_SUPERSEDED_BY_V2; do not authorize local work from this file."
-  }
+  "canonicalSourceRoot": "school/**",
+  "retiredRuntimePolicy": "Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, game/**, old feat/*, retired Maze/Pips worktrees/branches, and Roblox places titled StarBlox are historical only.",
+  "automationImmutability": "No worker may mutate any Roblox task definition, schedule, or enablement without explicit user instruction."
 }
