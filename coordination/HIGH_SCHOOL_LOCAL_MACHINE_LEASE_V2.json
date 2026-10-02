@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "resource": "ONLINE_LAPTOP",
+  "availability": "ONLINE_VERIFIED",
+  "canonicalSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
+  "canonicalRoot": "school/**",
+  "lease": {
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "candidateSha": null,
+    "interactionMode": null,
+    "claimedAt": null,
+    "expiresAt": null,
+    "reclaimedExpiredLease": false
+  },
+  "lastOutcome": {
+    "lane": "Roblox High School Integration Director",
+    "completedAt": "2026-10-02T01:06:35Z",
+    "candidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
+    "evidencePointer": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
+  },
+  "policy": {
+    "claimMethod": "GITHUB_CONTENTS_CAS",
+    "maxMinutes": 20,
+    "routineRepositoryWorkAllowed": false,
+    "concurrentLocalUsersAllowed": false,
+    "robloxPublishAllowed": false,
+    "spendMoneyAllowed": false,
+    "canonicalScopeOnly": true
+  }
+}
