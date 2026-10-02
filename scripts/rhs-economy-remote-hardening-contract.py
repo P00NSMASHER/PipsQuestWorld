@@ -9,6 +9,7 @@ from pathlib import Path
 
 TARGET="ServerScriptService/ItemBuyScript"
 BASELINE_SHA="c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf"
+EXPECTED_SHA="5a1818e154b76f7465c6a3d4f32c1a6d0a6e455095b9b654a238ce8823a3c0bc"
 REQUIRED=[
     "local economyrequesttime = {}",
     "local function allowEconomyRequest(plr,key,interval)",
@@ -87,6 +88,8 @@ def main():
         source=""
 
     sha=hashlib.sha256(source.encode()).hexdigest()
+    if sha != EXPECTED_SHA:
+        errors.append(f"patched source SHA changed: {sha}")
 
     for token in REQUIRED:
         if token not in source:
