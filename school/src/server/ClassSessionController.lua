@@ -60,6 +60,13 @@ function ClassSessionController:getPlayerSnapshot(playerKey)
     }
 end
 
+function ClassSessionController:isCompleted(playerKey, classKey)
+    assertKey(playerKey, "playerKey")
+    assertKey(classKey, "classKey")
+    local state = stateFor(self, playerKey)
+    return state.completed[classKey] == true
+end
+
 function ClassSessionController:enter(playerKey, classKey, subject, initialDifficulty)
     assertKey(playerKey, "playerKey")
     assertKey(classKey, "classKey")
