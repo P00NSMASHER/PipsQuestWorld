@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "8ab0f9e195ea444df0398ef5cdf9724adb7d4ea4b52aca0abf36af34b3dc0e91",
+  "patchManifestSha256": "55f37e9e8785e7520a737a2c7a9dae7605d6695b5300cd819b1ec4acd897adb6",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -261,11 +261,77 @@
           }
         ],
         "targetPath": "ServerScriptService/ItemBuyScript"
+      },
+      {
+        "afterSourceSha256": "4b445f6ade7a2d9f99b2602f5b9655ead70feeca7040c65eb5f00d5e8d6c0b5e",
+        "beforeSourceSha256": "b1db38e6fdc0ac70c6a6f6360d019bd024ecd15cfa7b6dca7800140d241e5a66",
+        "class": "Script",
+        "id": "add-server-authoritative-class-activity",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "79cb3de122d9d43003932093fd9a5f1ac53a4967e3b32929be86af5060ff5410",
+            "oldSha256": "2a19407a60ea33ad597409a385b73f2c8092881faf2a0811434e1967b6217cb4"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "77309e6d9919c2acd26a3fbfbf9b57a665614403d52b6f36228f0c48bfe345a2",
+            "oldSha256": "596287b0bb7688a40b57592bcc951c8a3f0f7c2892fe4cd3954f2a04df847553"
+          }
+        ],
+        "targetPath": "ServerScriptService/Time/ScheduleScript"
+      },
+      {
+        "afterSourceSha256": "82d68172af8013dcd5e97d49699b775c42292e3389a5f9744b5ec269cc76f348",
+        "beforeSourceSha256": "3fdbffe2104934b695385c6148d1d7e5e73a69f23d69ac439ec4533cfa67519c",
+        "class": "LocalScript",
+        "id": "add-client-class-activity-ui",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "c5f310395ebf67522f41d659fd0b93a60ef5e62008a4e43da4e1eb13d42e53df",
+            "oldSha256": "f23cee55c3c7a2d64384f36400f70a4c33ef477f607f6b8fdf930957503657a7"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "6b89f01742195e39f36dacc1f2b1d9e1708c391d90a5546819dfb68a4d68a763",
+            "oldSha256": "10c68ce64704419fbfe6c0003c7f2c097a34213caeb0333a1802c0db958ae8b5"
+          }
+        ],
+        "targetPath": "StarterGui/ClassNotification/LocalScript"
+      },
+      {
+        "afterSourceSha256": "c700bd7ae5b11820f7790e7fb19a2c783c869e7d4aecca7a26716fbb0ac9d315",
+        "beforeSourceSha256": "b9a7f405762500390245532775ca008e9c06a562b1e3b60fbde0c3c89302aa57",
+        "class": "Script",
+        "id": "harden-new-hoverboard-servercontrol",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "f07e7194ab5e146efa57d96cdd477fcd6effd0adf5a182c90bb0bd1ca393a457",
+            "oldSha256": "946243b531428c14cccc9db815a33fb98510d08f40a6392d4733903df642a8bf"
+          }
+        ],
+        "targetPath": "ServerScriptService/RemoveHats/NewHoverboard/SkateboardPlatform/ServerScript"
+      },
+      {
+        "afterSourceSha256": "b77ac4bbf12ad9944cc7337035394a2d6cf6efbac59eae57ffab468abf922314",
+        "beforeSourceSha256": "8c5f284e9e85726271d9f70e2acc53412dd15317b4449e124ff9b948f0db9fa7",
+        "class": "Script",
+        "id": "harden-new-pink-hoverboard-servercontrol",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "f07e7194ab5e146efa57d96cdd477fcd6effd0adf5a182c90bb0bd1ca393a457",
+            "oldSha256": "946243b531428c14cccc9db815a33fb98510d08f40a6392d4733903df642a8bf"
+          }
+        ],
+        "targetPath": "ServerScriptService/RemoveHats/NewPinkHoverboard/SkateboardPlatform/ServerScript"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "efc78ac4b50583010ed3072ab089723b414ba0b240afd6df145515c186a3e2e2"
+  "workingSha256": "269e09c91734125660dbef04dbc03bbb237f16acd794dde134dae8d57eed74aa"
 }
