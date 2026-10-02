@@ -1,95 +1,90 @@
 {
-  "schemaVersion": 4,
-  "cycle": "2026-10-01T22:06Z",
+  "schemaVersion": 5,
+  "cycle": "2026-10-02T00:01Z",
   "lane": "Roblox High School DevEx",
   "result": "PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
   "localOnlyRequired": false,
   "canonicalSourceRoot": "school/**",
   "fixedDefect": {
-    "id": "DEVEX_RECEIPT_SHA_DRIFT_AFTER_CANONICAL_INTEGRATION",
-    "rootCause": "The DevEx receipt still described Foundation c4cca89d9f8c7684a5df15c4143ea237672e5ef4 plus stale pre-integration Class/Progression heads after the canonical Foundation branch advanced to the already integrated exact-green vertical-slice head.",
-    "materialImpact": "DevEx/Control-Tower consumers could waste cycles re-diagnosing already-resolved CI/source-root drift, treat obsolete producer SHAs as live, or attempt duplicate remediation on superseded candidates.",
+    "id": "DEVEX_RECEIPT_MISROUTED_AFTER_LIVE_UI_CANDIDATE",
+    "rootCause": "The DevEx receipt still claimed zero open canonical PRs and routed next ownership directly to Integration Smoke after a new canonical UI candidate had become live under PR #32. Shared state and live GitHub now identify Integration Director as the current blocker owner for local-only runtime validation of that exact-green candidate.",
+    "materialImpact": "Support consumers could waste cycles smoking the obsolete base-only state, miss the live PR #32 candidate, or duplicate stale base validation before the current runtime decision resolves.",
     "filesChanged": [
       "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json"
     ],
     "before": {
-      "receiptBlobSha": "276e181c731f641a2f28f6bb88c57aa97e28cc80",
-      "recordedFoundationSha": "c4cca89d9f8c7684a5df15c4143ea237672e5ef4",
-      "recordedClassEducationSha": "5b8a82593beeffb02a58b0cebcdecd7de5ae4e4d",
-      "recordedProgressionSha": "1a253371d5cc3015ce3da5a957118b4525cf1f63"
+      "receiptBlobSha": "6f1f43a98faa5148e4d62018eb254ba61735a132",
+      "recordedCanonicalBaseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "recordedOpenCanonicalPrCount": 0,
+      "recordedNextOwner": "Roblox High School Integration Smoke",
+      "recordedNextExitCriterion": "Smoke canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27."
     },
     "after": {
-      "canonicalBranch": "rebuild/high-school-foundation",
-      "canonicalHeadSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "branchComparison": {
-        "base": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-        "head": "rebuild/high-school-foundation",
-        "status": "identical",
-        "aheadBy": 0,
-        "behindBy": 0
-      },
-      "exactHeadCi": [
+      "canonicalBaseBranch": "rebuild/high-school-foundation",
+      "canonicalBaseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+      "liveCandidateBranch": "release/pip-high-demo-ui-20261001",
+      "liveCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "pullRequest": 32,
+      "openCanonicalPrCount": 1,
+      "candidateExactHeadCi": [
         {
-          "runId": 36931270884,
-          "workflow": "High School Foundation Static Guards",
-          "event": "push",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36931127438,
+          "runId": 36942707607,
           "workflow": "High School Foundation Static Guards",
           "event": "pull_request",
           "conclusion": "success"
         },
         {
-          "runId": 36931127433,
+          "runId": 36942707587,
           "workflow": "High School Class Education Guards",
           "event": "pull_request",
           "conclusion": "success"
         },
         {
-          "runId": 36931127442,
+          "runId": 36942707624,
           "workflow": "High School Progression Guards",
           "event": "pull_request",
           "conclusion": "success"
-        },
-        {
-          "runId": 36931123042,
-          "workflow": "High School Progression Guards",
-          "event": "push",
-          "conclusion": "success"
         }
       ],
-      "integratedEvidence": {
-        "classEducation": "PASS",
-        "progressionPersistence": "PASS",
-        "integration": "PASS_HEADLESS_EXACT_HEAD"
-      }
+      "baseExactHeadCi": {
+        "runId": 36931270884,
+        "workflow": "High School Foundation Static Guards",
+        "event": "push",
+        "conclusion": "success"
+      },
+      "currentBlockerOwner": "Roblox High School Integration Director",
+      "currentBlocker": "RUNTIME_PLAYABILITY_LOCAL_ONLY_IN_PROGRESS",
+      "smokeStatus": "WAITING_DEPENDENCY"
     },
     "deterministicVerification": {
-      "sharedStateBlobSha": "b3113076fe3ad3ba412cdac6dae489fdb6d86b4f",
-      "liveBranchComparisonStatus": "identical",
-      "liveFoundationExactHeadRunId": 36931270884,
-      "liveFoundationExactHeadConclusion": "success",
-      "openCanonicalPrCount": 0,
-      "openNoncanonicalPrCount": 0
+      "liveOpenPr": 32,
+      "liveOpenPrTitle": "Add playable canonical class UI for Pip High demo",
+      "liveCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "liveCandidateGreenRunIds": [
+        36942707607,
+        36942707587,
+        36942707624
+      ],
+      "sharedStateUpdatedAt": "2026-10-01T23:57:12Z",
+      "sharedStateCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "sharedStateCurrentOwner": "Roblox High School Integration Director"
     },
     "measurableWasteRemoved": [
-      "Eliminates stale DevEx guidance that pointed at three superseded producer SHAs.",
-      "Prevents duplicate CI/source-root remediation against an already-integrated exact-green canonical head.",
-      "Aligns DevEx evidence with the one live canonical branch and its exact-head CI so downstream support lanes can skip obsolete candidate checks."
+      "Removes the false zero-open-PR signal from DevEx evidence.",
+      "Prevents Integration Smoke from being treated as immediately actionable while the live exact-green PR #32 runtime decision is still unresolved.",
+      "Prevents repeated base-only validation from obscuring the current candidate SHA 48b5eaf7756bea214477771413872dab26f67fdd."
     ],
-    "expectedBenefit": "Support lanes can consume the current integrated exact-green canonical head directly instead of re-reading or repairing superseded Foundation/Class/Progression candidates.",
-    "rollbackCriterion": "Rollback only if rebuild/high-school-foundation no longer resolves to 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 or the cited exact-head CI evidence is invalidated/revoked."
+    "expectedBenefit": "Support lanes can wait on the one live runtime decision instead of rechecking superseded base-only smoke work or missing the canonical UI candidate.",
+    "rollbackCriterion": "Revert this routing only if PR #32 closes, its head SHA changes from 48b5eaf7756bea214477771413872dab26f67fdd, shared state selects another canonical candidate, or the cited exact-head CI is invalidated."
   },
   "observedExternalReceiptDrift": {
     "owner": "Roblox High School QA & Contract",
     "qaReceiptBlobSha": "fece0f43174599364e2658d50fe034eaf62a1a15",
     "status": "STALE",
-    "reason": "QA receipt still references Foundation f763b243f4ec22951f432e66f807f187c960583f and pre-integration Class/Education evidence, while live canonical head is 4ed8d001a86e979ed31cbeb69b9ae95d52832b27.",
+    "reason": "QA receipt still references pre-integration Foundation/Class heads and does not describe canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 plus live UI candidate 48b5eaf7756bea214477771413872dab26f67fdd.",
     "devexAction": "No write performed outside DevEx ownership."
   },
-  "nextOwner": "Roblox High School Integration Smoke",
-  "nextExitCriterion": "Consume canonical rebuild/high-school-foundation@4ed8d001a86e979ed31cbeb69b9ae95d52832b27 and reuse exact-head green evidence; run only smoke-owned checks not already covered."
+  "nextOwner": "Roblox High School Integration Director",
+  "nextExitCriterion": "Resolve the already-coordinated LOCAL_ONLY_REQUIRED runtime validation for PR #32 candidate 48b5eaf7756bea214477771413872dab26f67fdd against canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Integration Smoke remains waiting until that exact candidate decision is known."
 }
