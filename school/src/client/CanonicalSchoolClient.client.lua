@@ -563,3 +563,162 @@ task.spawn(function()
         task.wait(0.75)
     end
 end)
+
+
+-- Assigned Free-Roam vehicle slice. The server owns spawn placement,
+-- active vehicle identity, seat authorization, and movement authority.
+local vehicleRoot = root:WaitForChild("FreeRoam"):WaitForChild("Vehicles")
+local getVehicleState = vehicleRoot:WaitForChild("GetState")
+local spawnVehicle = vehicleRoot:WaitForChild("Spawn")
+local despawnVehicle = vehicleRoot:WaitForChild("Despawn")
+
+local vehicleCard = Instance.new("Frame")
+vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
+vehicleCard.Position = UDim2.new(0.5, 0, 1, -18)
+vehicleCard.Size = UDim2.new(0, 310, 0, 138)
+vehicleCard.BackgroundColor3 = Color3.fromRGB(31, 38, 51)
+vehicleCard.BackgroundTransparency = 0.05
+vehicleCard.Visible = false
+vehicleCard.Parent = gui
+round(vehicleCard, 16)
+
+local vehicleTitle = Instance.new("TextLabel")
+vehicleTitle.BackgroundTransparency = 1
+vehicleTitle.Position = UDim2.new(0, 14, 0, 10)
+vehicleTitle.Size = UDim2.new(1, -28, 0, 24)
+vehicleTitle.Font = Enum.Font.GothamBold
+vehicleTitle.Text = "AUTO SHOP"
+vehicleTitle.TextColor3 = Color3.new(1, 1, 1)
+vehicleTitle.TextSize = 17
+vehicleTitle.TextXAlignment = Enum.TextXAlignment.Left
+vehicleTitle.Parent = vehicleCard
+
+local vehicleStatus = Instance.new("TextLabel")
+vehicleStatus.BackgroundTransparency = 1
+vehicleStatus.Position = UDim2.new(0, 14, 0, 39)
+vehicleStatus.Size = UDim2.new(1, -28, 0, 38)
+vehicleStatus.Font = Enum.Font.Gotham
+vehicleStatus.Text = "Spawn the starter car."
+vehicleStatus.TextColor3 = Color3.fromRGB(196, 205, 222)
+vehicleStatus.TextSize = 13
+vehicleStatus.TextWrapped = true
+vehicleStatus.TextXAlignment = Enum.TextXAlignment.Left
+vehicleStatus.TextYAlignment = Enum.TextYAlignment.Top
+vehicleStatus.Parent = vehicleCard
+
+local vehicleAction = Instance.new("TextButton")
+vehicleAction.Position = UDim2.new(0, 14, 1, -52)
+vehicleAction.Size = UDim2.new(1, -28, 0, 42)
+vehicleAction.BackgroundColor3 = Color3.fromRGB(70, 124, 198)
+vehicleAction.Font = Enum.Font.GothamBold
+vehicleAction.Text = "SPAWN STARTER CAR"
+vehicleAction.TextColor3 = Color3.new(1, 1, 1)
+vehicleAction.TextSize = 14
+vehicleAction.Parent = vehicleCard
+round(vehicleAction, 11)
+
+local latestVehicleState = nil
+local vehicleBusy = false
+local vehicleMessageUntil = 0
+
+local function setVehicleMessage(text)
+    vehicleStatus.Text = text
+    vehicleMessageUntil = os.clock() + 2.6
+end
+
+local function applyVehicleState(state)
+    if type(state) ~= "table" then
+        return
+    end
+
+    latestVehicleState = state
+    vehicleCard.Visible = state.active == true or state.atAutoShop == true
+
+    if state.active == true then
+        vehicleTitle.Text = "STARTER CAR"
+        vehicleAction.Text = "DESPAWN VEHICLE"
+        if os.clock() >= vehicleMessageUntil then
+            if state.driving == true then
+                vehicleStatus.Text = "Drive with the seat controls. Jump to exit."
+            else
+                vehicleStatus.Text = "Walk to the driver seat to continue driving."
+            end
+        end
+    else
+        vehicleTitle.Text = tostring(state.autoShopDisplayName or "AUTO SHOP"):upper()
+        vehicleAction.Text = "SPAWN STARTER CAR"
+        if os.clock() >= vehicleMessageUntil then
+            vehicleStatus.Text = "Spawn the starter car and drive around town."
+        end
+    end
+end
+
+local function refreshVehicle()
+    local ok, state = pcall(function()
+        return getVehicleState:InvokeServer()
+    end)
+    if ok and type(state) == "table" then
+        applyVehicleState(state)
+    elseif latestVehicleState and latestVehicleState.active == true then
+        vehicleCard.Visible = true
+        vehicleStatus.Text = "Vehicle service unavailable."
+    end
+end
+
+vehicleAction.Activated:Connect(function()
+    if vehicleBusy then
+        return
+    end
+
+    vehicleBusy = true
+    vehicleAction.Active = false
+    vehicleAction.Text = "WORKING..."
+
+    local ok, response
+    if latestVehicleState and latestVehicleState.active == true then
+        ok, response = pcall(function()
+            return despawnVehicle:InvokeServer()
+        end)
+    else
+        ok, response = pcall(function()
+            return spawnVehicle:InvokeServer()
+        end)
+    end
+
+    vehicleBusy = false
+    vehicleAction.Active = true
+
+    if not ok or type(response) ~= "table" then
+        setVehicleMessage("Vehicle service unavailable. Try again.")
+        refreshVehicle()
+        return
+    end
+
+    if response.accepted ~= true then
+        if response.code == "not_at_auto_shop" then
+            setVehicleMessage("Move closer to the Auto Shop first.")
+        elseif response.code == "vehicle_already_active" then
+            setVehicleMessage("You already have an active vehicle.")
+        else
+            setVehicleMessage("That vehicle action is not available right now.")
+        end
+    elseif response.code == "vehicle_spawned" then
+        setVehicleMessage("Starter car ready. Use the seat controls to drive.")
+    elseif response.code == "vehicle_despawned"
+        or response.code == "vehicle_already_despawned" then
+        setVehicleMessage("Vehicle returned.")
+    end
+
+    if response.state then
+        applyVehicleState(response.state)
+    else
+        refreshVehicle()
+    end
+end)
+
+task.spawn(function()
+    while gui.Parent do
+        refreshVehicle()
+        task.wait(0.75)
+    end
+end)
