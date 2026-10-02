@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "resource": "ONLINE_LAPTOP",
   "availability": "UNKNOWN_NOT_POLLED_CURRENT_RUN",
-  "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
   "canonicalRoot": "school/**",
   "lease": {
     "status": "FREE",
@@ -34,5 +34,5 @@
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
   },
-  "availabilityNote": "The prior ONLINE_UNRESPONSIVE observation is historical only. Current run intentionally did not poll the laptop. Any future LOCAL_ONLY_REQUIRED use must first have user-authorized local access and acquire this FREE lease against exact canonical e929354087d3dbf6931496e310b8f899cd0d299f."
+  "availabilityNote": "Current run intentionally did not poll the laptop. Any future LOCAL_ONLY_REQUIRED vehicle smoke must have user-authorized local access and acquire this FREE lease against exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6."
 }
