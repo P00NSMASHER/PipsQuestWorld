@@ -1,42 +1,76 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Integration Director",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
-  "parentIntegratedRuntimeSha": "1841b1b4623f54701308107f0ba4bf8ad8c909bd",
-  "integratedPr": 37,
-  "verticalSliceTarget": "spawn -> clock/period -> one class -> one activity -> exactly-once progression -> free roam -> persistence",
+  "integrationSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "parentIntegratedRuntimeSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "integratedPr": 56,
+  "milestone": "PROGRESSION_JOBS_ECONOMY_CAFE_JOB_ASSIGNED",
+  "eligibility": {
+    "currentBlockersEmpty": true,
+    "wipAssignedLane": "Pip High Free Roam",
+    "wipObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "assignedCandidatePr": 56,
+    "staleLegacyQaReceiptRejected": true,
+    "note": "The legacy QA receipt on Control Tower records an obsolete SHA and is not authority over the newer live WIP assignment, merged candidate, or exact-head CI."
+  },
   "deltaFromParent": {
-    "productRuntimeChanged": true,
+    "status": "ahead",
     "changedFiles": [
-      "school/src/server/CampusBuilder.server.lua"
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CafeJob.server.lua",
+      "school/src/server/CafeJobController.lua",
+      "school/tests/cafe_job_controller_spec.lua",
+      "school/tests/economy_repository_spec.lua"
     ],
-    "note": "PR #37 adds the canonical Pip High campus exterior and entrance inside school/** only. No retired runtime source was consumed."
+    "note": "Assigned cafe-job slice only: Foundation cafe location -> shift start -> one deterministic serve_order task -> idempotent wage through existing EconomyRepository -> return to free roam."
   },
-  "deltaFromLastSmokeCertified": {
-    "baseSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "changedFiles": [
-      "school/src/server/CampusBuilder.server.lua"
-    ],
-    "coreLoopAuthorityFilesChanged": false
+  "authorityChecks": {
+    "singleSchoolClockPreserved": true,
+    "singleEconomyProgressionPersistenceAuthorityPreserved": true,
+    "classAuthorityUnchanged": true,
+    "worldGeneratorAuthorityUnchanged": true,
+    "vehicleAuthorityNotAdded": true,
+    "housingAuthorityNotAdded": true,
+    "retiredRuntimeConsumed": false
   },
-  "exactHeadCi": [
-    {"runId":36981455038,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
-    {"runId":36981455048,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
-    {"runId":36981454975,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
-  ],
+  "deterministicIntegratedHeadEvidence": {
+    "foundationExactHeadCi": {
+      "runId": 37006496757,
+      "event": "push",
+      "conclusion": "success"
+    },
+    "classEducationExactHeadCi": {
+      "runId": 37006496676,
+      "event": "push",
+      "conclusion": "success"
+    },
+    "progressionExactHeadCi": {
+      "runId": 37006496664,
+      "event": "push",
+      "conclusion": "success"
+    },
+    "cafeJobCoverage": [
+      "proximity-gated shift start",
+      "deterministic serve_order task",
+      "idempotent job:cafe:<shiftId> wage",
+      "duplicate completion/replay no-double-pay",
+      "failed wage commit retains active shift for retry",
+      "return to free roam"
+    ]
+  },
   "scope": {
     "runtimeTestRoot": "school/**",
-    "retiredRuntimeConsumed": false,
     "robloxPublished": false,
     "moneySpent": false,
     "taskScheduleOrEnablementChanged": false
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Smoke only canonical SHA e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b. Exact-head Foundation, Class/Education, and Progression push guards are green. The cumulative delta from last smoke-certified b44cff4 changes only school/src/server/CampusBuilder.server.lua; never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
+    "instruction": "Smoke only canonical SHA 2ab1584ee34e711828768cd999c86feba9202984. Re-run/consume exact-head smoke evidence for the cafe-job milestone before Control Tower advances the next parity slice. Any newer canonical commit invalidates this handoff until re-certified."
   }
 }
