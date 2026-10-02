@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "resource": "ONLINE_LAPTOP",
-  "availability": "ONLINE_UNRESPONSIVE",
-  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "availability": "UNKNOWN_NOT_POLLED_CURRENT_RUN",
+  "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "canonicalRoot": "school/**",
   "lease": {
     "status": "FREE",
@@ -33,5 +33,6 @@
     "robloxPublishAllowed": false,
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
-  }
+  },
+  "availabilityNote": "The prior ONLINE_UNRESPONSIVE observation is historical only. Current run intentionally did not poll the laptop. Any future LOCAL_ONLY_REQUIRED use must first have user-authorized local access and acquire this FREE lease against exact canonical e929354087d3dbf6931496e310b8f899cd0d299f."
 }

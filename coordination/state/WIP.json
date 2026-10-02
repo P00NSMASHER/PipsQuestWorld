@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
@@ -77,7 +77,7 @@
     "Pip High Free Roam": "Vehicle lifecycle plus grounded AutoShop spawn are integrated at e929354. Wait for Integration Smoke on that exact SHA; after Smoke PASS and the Release/Package checkpoint, housing/property is the next producer slice. Do not pivot to second-grade schoolwork.",
     "QA/Contract": "Validate exact authorized Roblox High School clone parity and architecture contracts on the current target; reject second-grade-schoolwork drift during Phase 1.",
     "Integration": "Integrate only exact-green candidates that advance the current authorized Roblox High School clone on the same canonical private-server target.",
-    "Integration Smoke": "Smoke exact-clone behavior on the same canonical private-server target; never treat second-grade schoolwork as clone progress.",
+    "Integration Smoke": "Cloud/deterministic vehicle evidence is complete on exact e929354. Current remaining check is LOCAL_ONLY_REQUIRED; do not poll the laptop or publish Roblox. Stay quiet until authorized exact-SHA runtime evidence is available, then resume Smoke and hand PASS unchanged to Release/Package.",
     "Release/Package": "Package the exact canonical Roblox High School clone SHA as a checkpoint; after packaging, return to Control Tower for the next clone-parity gap. Never pivot to second-grade schoolwork automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
@@ -180,12 +180,12 @@
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
-      "mode": "SMOKE",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Validate exact repaired vehicle runtime on the same private target: grounded spawn, owner auto-seat, forward/reverse, steer, exit/re-enter, despawn/re-spawn, non-owner rejection, player-leave cleanup, and baseline school/class/cafe invariants.",
+      "objective": "Cloud/deterministic vehicle certification is exhausted on exact e929354. Because the remaining VehicleSeat/moving-model check is LOCAL_ONLY_REQUIRED and laptop polling is not authorized in the current directive, perform only the minimum freshness read and preserve the blocker; do not create branches, rerun broad tests, poll the laptop, or publish.",
       "owned": "post-integration runtime certification only",
-      "dependency": "QA/Integration exact e929354 + push CI runs 37029958854/37029958840/37029958834",
-      "exit": "Runtime PASS on exact e929354 or one reproducible defect with one owner/exit criterion.",
+      "dependency": "QA/Integration exact e929354 + push CI runs 37029958854/37029958840/37029958834; unblock only when authorized runtime evidence for universe 10768955678 / place 87245440673982 is available.",
+      "exit": "When authorized runtime evidence is available, Control Tower changes this lane to SMOKE on exact e929354; PASS hands unchanged SHA to Release/Package, while one reproducible defect returns to exactly one owning lane.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
