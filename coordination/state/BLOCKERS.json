@@ -1,14 +1,17 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+  "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "currentBlockers": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "reason": "Headless CI proves lifecycle/contracts but cannot establish Roblox VehicleSeat input, moving-model occupant behavior, or actual private-server drive/exit/re-enter feel.",
-      "exitCriterion": "On exact canonical deadcf9e402cb18ea78667926663b8ebdede044f, validate spawn -> owner auto-seat -> forward/reverse -> steer -> exit -> re-enter -> despawn/re-spawn plus non-owner seat rejection and player-leave cleanup; preserve baseline school/class/cafe behavior."
+      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "universeId": "10768955678",
+      "placeId": "87245440673982",
+      "reason": "All cloud/deterministic checks pass and the floating-spawn defect is repaired. Remaining evidence is actual Roblox VehicleSeat input/moving-model occupant behavior on the authorized private target; local-machine polling is disallowed and Roblox cloud execution would require unauthorized place upload/publication.",
+      "exitCriterion": "On exact e929354087d3dbf6931496e310b8f899cd0d299f and universe 10768955678/place 87245440673982, validate grounded spawn -> owner auto-seat -> forward/reverse -> steer -> exit/re-enter -> despawn/re-spawn, non-owner seat rejection, player-leave cleanup, and baseline school/class/cafe invariants."
     }
   ],
   "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED",
