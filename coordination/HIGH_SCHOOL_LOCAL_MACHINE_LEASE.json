@@ -5,28 +5,26 @@
   "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
   "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
   "lease": {
-    "status": "HELD",
-    "holderLane": "Roblox High School Integration Director",
-    "purpose": "LOCAL_ONLY_REQUIRED Roblox Studio validation of exact-green PR #32 candidate 258a434abce303acc2afa901e269ff0d19ff9d55 against canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27; verify unpublished-Studio fallback, playable class/activity/progression/free-roam flow, and diagnose remaining rejoin evidence without publishing.",
-    "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-    "interactionMode": "VISIBLE_GUI_ALLOWED_FOR_ROBLOX_STUDIO_RUNTIME",
-    "claimedAt": "2026-10-02T00:25:03Z",
-    "expiresAt": "2026-10-02T00:45:03Z",
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "candidateSha": null,
+    "interactionMode": null,
+    "claimedAt": null,
+    "expiresAt": null,
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
     "lane": "Roblox High School Integration Director",
-    "completedAt": "2026-10-02T00:12:00Z",
+    "completedAt": "2026-10-02T00:44:02Z",
     "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "candidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
-    "result": "BLOCKED_LOCAL_UNPUBLISHED_DATASTORE",
+    "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+    "result": "INVALIDATED_BY_NEW_EXACT_HEAD",
     "evidence": [
-      "Studio opened only the canonical high-school local build; retired Maze placeId 17602626136 was closed.",
-      "Spawn and canonical school map rendered in Play Solo.",
-      "Server error: You must publish this place to the web to access DataStore at ServerScriptService.SchoolFoundation.ClassEducation line 28.",
-      "Because ClassEducation aborted before remote creation, CanonicalSchoolClient line 8 waited indefinitely for ReplicatedStorage.SchoolFoundation.ClassEducation.",
-      "No Roblox publish occurred and no product source was changed."
+      "Local 258a runtime cleared the unpublished DataStore crash and rendered the canonical PIP HIGH UI.",
+      "Authoritative schedule advanced naturally and server attendance reached START CLASS in English / Reading.",
+      "Before completion, the live candidate advanced to 7d5d2d91bc7529bb7f5478244cd095dabca81a23, so remaining 258a runtime evidence is stale."
     ]
   },
   "policy": {
