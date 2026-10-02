@@ -5,21 +5,28 @@
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "1841b1b4623f54701308107f0ba4bf8ad8c909bd",
-  "parentIntegratedRuntimeSha": "b91b212964acbce5b0f9923d919a88999711805e",
-  "integratedPr": 35,
+  "integrationSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
+  "parentIntegratedRuntimeSha": "1841b1b4623f54701308107f0ba4bf8ad8c909bd",
+  "integratedPr": 37,
   "verticalSliceTarget": "spawn -> clock/period -> one class -> one activity -> exactly-once progression -> free roam -> persistence",
   "deltaFromParent": {
     "productRuntimeChanged": true,
     "changedFiles": [
       "school/src/server/CampusBuilder.server.lua"
     ],
-    "note": "PR #35 adds canonical Pip High room-specific detail only inside school/**. No retired runtime source was consumed."
+    "note": "PR #37 adds the canonical Pip High campus exterior and entrance inside school/** only. No retired runtime source was consumed."
+  },
+  "deltaFromLastSmokeCertified": {
+    "baseSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+    "changedFiles": [
+      "school/src/server/CampusBuilder.server.lua"
+    ],
+    "coreLoopAuthorityFilesChanged": false
   },
   "exactHeadCi": [
-    {"runId":36980828438,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
-    {"runId":36980828413,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
-    {"runId":36980828335,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
+    {"runId":36981455038,"workflow":"High School Foundation Static Guards","event":"push","conclusion":"success"},
+    {"runId":36981455048,"workflow":"High School Class Education Guards","event":"push","conclusion":"success"},
+    {"runId":36981454975,"workflow":"High School Progression Guards","event":"push","conclusion":"success"}
   ],
   "scope": {
     "runtimeTestRoot": "school/**",
@@ -30,6 +37,6 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Smoke only canonical SHA 1841b1b4623f54701308107f0ba4bf8ad8c909bd. Its exact-head Foundation, Class/Education, and Progression push guards are green. Never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
+    "instruction": "Smoke only canonical SHA e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b. Exact-head Foundation, Class/Education, and Progression push guards are green. The cumulative delta from last smoke-certified b44cff4 changes only school/src/server/CampusBuilder.server.lua; never consume retired Maze/Pips/StarBlox/Brookhaven/RHS-exact runtime code."
   }
 }
