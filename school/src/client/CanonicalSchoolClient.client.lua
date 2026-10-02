@@ -88,6 +88,12 @@ local function polishButton(button, baseColor, hoverColor)
     end
 end
 
+local function setButtonState(button, enabled)
+    button.Active = enabled
+    button.TextTransparency = enabled and 0 or 0.26
+    button.BackgroundTransparency = enabled and 0 or 0.16
+end
+
 local scheduleBottomMargin = UserInputService.TouchEnabled and 122 or 18
 
 local card = Instance.new("Frame")
@@ -194,6 +200,7 @@ action.Parent = card
 round(action, 10)
 addStroke(action, palette.navyDark, 1, 0.18)
 polishButton(action, palette.navy, palette.navySoft)
+setButtonState(action, false)
 
 local modalBackdrop = Instance.new("Frame")
 modalBackdrop.Position = UDim2.fromScale(0, 0)
@@ -281,6 +288,18 @@ feedback.TextXAlignment = Enum.TextXAlignment.Left
 feedback.TextYAlignment = Enum.TextYAlignment.Center
 feedback.Parent = modal
 
+local feedbackColors = {
+    neutral = palette.muted,
+    success = Color3.fromRGB(42, 126, 83),
+    warning = Color3.fromRGB(166, 103, 34),
+    error = Color3.fromRGB(177, 67, 67),
+}
+
+local function setFeedback(text, tone)
+    feedback.Text = tostring(text or "")
+    feedback.TextColor3 = feedbackColors[tone] or feedbackColors.neutral
+end
+
 local function setModalVisible(visible)
     modalBackdrop.Visible = visible
     modal.Visible = visible
@@ -327,7 +346,7 @@ local function showActivity(response)
     if not activeActivity then return end
 
     modalTitle.Text = string.upper(tostring(activeActivity.subject or "Class")) .. " ACTIVITY"\n    question.Text = tostring(activeActivity.prompt)
-    feedback.Text = ""
+    setFeedback("", "neutral")
     clearChoices()
 
     for index, choiceText in ipairs(activeActivity.choices or {}) do
@@ -357,7 +376,7 @@ local function showActivity(response)
                 if pendingProgression.classKey ~= activeClassKey
                     or pendingProgression.activityId ~= activeActivity.id
                     or pendingProgression.choiceIndex ~= index then
-                    feedback.Text = "Retry the same answer to finish saving progress."
+                    setFeedback("Retry the same answer to finish saving progress.", "warning")
                     return
                 end
                 submissionId = pendingProgression.submissionId
@@ -372,7 +391,7 @@ local function showActivity(response)
             busy = false
 
             if not ok or type(result) ~= "table" then
-                feedback.Text = "Could not submit that answer. Try again."
+                setFeedback("Could not submit that answer. Try again.", "error")
                 return
             end
 
@@ -383,7 +402,7 @@ local function showActivity(response)
                     choiceIndex = index,
                     submissionId = submissionId,
                 }
-                feedback.Text = "Progress save failed. Tap this same answer again to retry safely."
+                setFeedback("Progress save failed. Tap this same answer again to retry safely.", "warning")
                 return
             end
 
@@ -393,21 +412,21 @@ local function showActivity(response)
             end
 
             if result.classCompleted or result.completionAlreadyRecorded or result.progressionCommitted then
-                feedback.Text = "Class complete! Progress saved. Points: " .. tostring(points)
+                setFeedback("Class complete! Progress saved. Points: " .. tostring(points), "success")
                 activeActivity = nil
                 task.delay(1.4, function()
                     setModalVisible(false)
                 end)
             elseif result.completed then
-                feedback.Text = tostring(result.explanation or result.feedback or "Activity complete.")
+                setFeedback(result.explanation or result.feedback or "Activity complete.", "success")
                 activeActivity = nil
                 task.delay(1.6, function()
                     setModalVisible(false)
                 end)
             elseif result.accepted == false then
-                feedback.Text = tostring(result.message or result.code or "That action was not accepted.")
+                setFeedback(result.message or result.code or "That action was not accepted.", "error")
             else
-                feedback.Text = tostring(result.feedback or result.hint or "Try again.")
+                setFeedback(result.feedback or result.hint or "Try again.", "neutral")
             end
         end)
     end
@@ -488,31 +507,31 @@ task.spawn(function()
             if classState.progressionPending then
                 statusLabel.Text = "Saving class progress..."
                 action.Text = "SAVING..."
-                action.Active = false
+                setButtonState(action, false)
             elseif classState.completedCurrentClass then
                 statusLabel.Text = "Class complete • Free roam until the next bell."
                 action.Text = "CLASS COMPLETE"
-                action.Active = false
+                setButtonState(action, false)
             elseif classState.active then
                 statusLabel.Text = "Class active • " .. tostring(classState.roomDisplayName or "Classroom")
                 action.Text = "LEAVE CLASS"
-                action.Active = true
+                setButtonState(action, true)
             elseif classState.academic and classState.canEnter then
                 statusLabel.Text = "You are at " .. tostring(classState.roomDisplayName)
                 action.Text = "START CLASS"
-                action.Active = true
+                setButtonState(action, true)
             elseif classState.academic then
                 statusLabel.Text = "Go to " .. tostring(classState.roomDisplayName) .. " to attend."
                 action.Text = "GO TO " .. string.upper(tostring(classState.roomDisplayName))
-                action.Active = true
+                setButtonState(action, true)
             else
                 statusLabel.Text = "Free-roam period • Points: " .. tostring(points)
                 action.Text = "FREE ROAM"
-                action.Active = false
+                setButtonState(action, false)
             end
         else
             statusLabel.Text = "Waiting for school services..."
-            action.Active = false
+            setButtonState(action, false)
         end
 
         task.wait(0.75)
