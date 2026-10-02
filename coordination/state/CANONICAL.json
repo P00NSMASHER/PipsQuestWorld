@@ -3,36 +3,38 @@
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "sha": "2ab1584ee34e711828768cd999c86feba9202984",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
+  "status": "PASS_EXACT_HEAD_CI_REPAIR_REQUIRED_BEFORE_SMOKE",
   "preMergeCandidate": {
-    "pr": 55,
-    "branch": "rebuild/high-school-class-feel-completion-v1",
-    "sha": "ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7"
+    "pr": 56,
+    "branch": "rebuild/high-school-free-roam-cafe-job-v1",
+    "sha": "9b9c6f79ac6c479992a3293526eb7829b95ee5a4",
+    "mergeCommitSha": "2ab1584ee34e711828768cd999c86feba9202984"
   },
   "exactHeadCi": [
     {
-      "runId": 36988705511,
+      "runId": 37006496757,
       "workflow": "High School Foundation Static Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36988705638,
+      "runId": 37006496676,
       "workflow": "High School Class Education Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36988705665,
+      "runId": 37006496664,
       "workflow": "High School Progression Guards",
       "conclusion": "success"
     }
   ],
   "integrationSmoke": {
-    "branch": "coordination/high-school-integration-smoke-99e12750-cert",
-    "commit": "456974b44548d814bccfc95f48a67f0291971a99",
-    "result": "PASS",
+    "branch": "coordination/high-school-integration-smoke",
+    "commit": "10701d36ecfd86c81ddfd0d12fc059e5c4b1f659",
+    "result": "STALE_FOR_CURRENT_CANONICAL",
     "certifiedSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+    "requiredSha": "2ab1584ee34e711828768cd999c86feba9202984",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
