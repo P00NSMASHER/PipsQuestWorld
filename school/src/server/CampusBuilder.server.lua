@@ -326,17 +326,97 @@ fountain.Transparency = 0.2
 
 local neighborhood = SchoolConfig.WorldLocations.Neighborhood.position
 makePart("NeighborhoodRoad", Vector3.new(360, 0.4, 30), CFrame.new(neighborhood.X, 0.45, neighborhood.Z), Color3.fromRGB(58, 61, 66), Enum.Material.Asphalt)
-for index, x in ipairs({-180, -120, -60, 60, 120, 180}) do
-    local houseColor = (index % 2 == 0) and Color3.fromRGB(191, 177, 155) or Color3.fromRGB(176, 190, 199)
-    makePart("HouseBody", Vector3.new(44, 18, 32), CFrame.new(x, 9, neighborhood.Z + 34), houseColor, Enum.Material.Brick)
-    makePart("HouseRoof", Vector3.new(48, 3, 36), CFrame.new(x, 19.5, neighborhood.Z + 34), Color3.fromRGB(76, 72, 71), Enum.Material.Slate)
-    local houseDoor = makePart("HouseDoor", Vector3.new(6, 10, 0.5), CFrame.new(x, 5, neighborhood.Z + 17.75), Color3.fromRGB(94, 70, 54), Enum.Material.Wood)
+
+local housingPlotsFolder = Instance.new("Folder")
+housingPlotsFolder.Name = "HousingPlots"
+housingPlotsFolder.Parent = campus
+
+for index, plot in ipairs(SchoolConfig.HousingPlots) do
+    local plotFolder = Instance.new("Folder")
+    plotFolder.Name = plot.id
+    plotFolder:SetAttribute("PlotId", plot.id)
+    plotFolder:SetAttribute("PlotIndex", index)
+    plotFolder.Parent = housingPlotsFolder
+
+    makePart(
+        "LotPad",
+        Vector3.new(52, 0.25, 44),
+        CFrame.new(plot.lotCenter),
+        Color3.fromRGB(132, 165, 116),
+        Enum.Material.Grass,
+        plotFolder
+    )
+    makePart(
+        "Driveway",
+        Vector3.new(12, 0.18, 12),
+        CFrame.new(plot.drivewayPosition),
+        Color3.fromRGB(157, 160, 164),
+        Enum.Material.Concrete,
+        plotFolder
+    )
+
+    local houseColor = (index % 2 == 0)
+        and Color3.fromRGB(191, 177, 155)
+        or Color3.fromRGB(176, 190, 199)
+    local houseOrigin = plot.houseOrigin
+
+    makePart(
+        "HouseBody",
+        Vector3.new(44, 18, 32),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 8.35, houseOrigin.Z),
+        houseColor,
+        Enum.Material.Brick,
+        plotFolder
+    )
+    makePart(
+        "HouseRoof",
+        Vector3.new(48, 3, 36),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 18.85, houseOrigin.Z),
+        Color3.fromRGB(76, 72, 71),
+        Enum.Material.Slate,
+        plotFolder
+    )
+
+    local houseDoor = makePart(
+        "HouseDoor",
+        Vector3.new(6, 10, 0.5),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 4.35, houseOrigin.Z - 16.25),
+        Color3.fromRGB(94, 70, 54),
+        Enum.Material.Wood,
+        plotFolder
+    )
     houseDoor.CanCollide = false
-    for _, wx in ipairs({-12, 12}) do
-        local window = makePart("HouseWindow", Vector3.new(8, 7, 0.4), CFrame.new(x + wx, 10, neighborhood.Z + 17.7), glassColor, Enum.Material.Glass)
+
+    for _, wx in ipairs({ -12, 12 }) do
+        local window = makePart(
+            "HouseWindow",
+            Vector3.new(8, 7, 0.4),
+            CFrame.new(houseOrigin.X + wx, houseOrigin.Y + 9.35, houseOrigin.Z - 16.3),
+            glassColor,
+            Enum.Material.Glass,
+            plotFolder
+        )
         window.Transparency = 0.25
         window.CanCollide = false
     end
+
+    local function makeAnchor(name, position)
+        local anchor = makePart(
+            name,
+            Vector3.new(2, 1, 2),
+            CFrame.new(position) * CFrame.Angles(0, math.rad(plot.headingDegrees), 0),
+            Color3.fromRGB(255, 255, 255),
+            Enum.Material.SmoothPlastic,
+            plotFolder
+        )
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        return anchor
+    end
+
+    makeAnchor("HouseOrigin", plot.houseOrigin)
+    makeAnchor("DoorAnchor", plot.doorPosition)
+    makeAnchor("TeleportAnchor", plot.teleportPosition)
 end
 
 local function buildCampusTree(x, z)

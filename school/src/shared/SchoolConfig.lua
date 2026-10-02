@@ -66,4 +66,27 @@ SchoolConfig.WorldSpawnSeams = {
     },
 }
 
+-- Foundation owns residential plot placement only. Free Roam consumes these
+-- stable seams for claim/teleport/edit behavior without inventing coordinates.
+local neighborhoodPosition = SchoolConfig.WorldLocations.Neighborhood.position
+local housingPlotXs = { -180, -120, -60, 60, 120, 180 }
+
+SchoolConfig.HousingPlots = {}
+for index, x in ipairs(housingPlotXs) do
+    local plotId = string.format("plot-%02d", index)
+    local houseZ = neighborhoodPosition.Z + 34
+    SchoolConfig.HousingPlots[index] = {
+        id = plotId,
+        displayName = "House " .. tostring(index),
+        lotCenter = Vector3.new(x, 0.65, houseZ),
+        houseOrigin = Vector3.new(x, 0.65, houseZ),
+        doorPosition = Vector3.new(x, 3, houseZ - 21),
+        teleportPosition = Vector3.new(x, 3, houseZ - 24),
+        drivewayPosition = Vector3.new(x, 0.76, neighborhoodPosition.Z + 17),
+        headingDegrees = 180,
+        roadPart = "NeighborhoodRoad",
+        anchorLocation = "Neighborhood",
+    }
+end
+
 return SchoolConfig
