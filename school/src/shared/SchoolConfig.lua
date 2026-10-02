@@ -44,9 +44,16 @@ SchoolConfig.WorldLocations = {
     Cafe = { position = Vector3.new(-165, 3, 360), displayName = "Corner Cafe" },
     StyleShop = { position = Vector3.new(-65, 3, 360), displayName = "Style Shop" },
     AutoShop = { position = Vector3.new(70, 3, 360), displayName = "Auto Shop" },
+    AutoShopVehicleSpawn = { position = Vector3.new(120, 3, 350), displayName = "Auto Shop Vehicle Spawn" },
+    AutoShopRoadEntry = { position = Vector3.new(120, 3, 390), displayName = "Auto Shop Road Entry" },
     Market = { position = Vector3.new(170, 3, 360), displayName = "Market" },
     Neighborhood = { position = Vector3.new(0, 3, 505), displayName = "Neighborhood" },
     TownPark = { position = Vector3.new(0, 3, 455), displayName = "Town Park" },
+}
+
+SchoolConfig.VehicleWorld = {
+    spawnLocation = "AutoShopVehicleSpawn",
+    roadEntryLocation = "AutoShopRoadEntry",
 }
 
 return SchoolConfig
