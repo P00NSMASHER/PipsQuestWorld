@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+  "currentBlockers": [],
+  "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
+}
