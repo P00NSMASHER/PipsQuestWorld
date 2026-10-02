@@ -5,7 +5,7 @@
   "branch": "rebuild/high-school-foundation",
   "sha": "50288ecf33dec647424f6bf173071a8982041b41",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_CI_PENDING_SMOKE",
+  "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
   "exactHeadCi": [
     {
       "runId": 36982108237,
@@ -24,8 +24,10 @@
     }
   ],
   "integrationSmoke": {
-    "result": "WAITING_EXACT_HEAD",
-    "requiredSha": "50288ecf33dec647424f6bf173071a8982041b41"
+    "branch": "coordination/high-school-integration-smoke",
+    "commit": "f19f00992d37cc0fb12377581fc7695c4d2e701a",
+    "result": "PASS",
+    "certifiedSha": "50288ecf33dec647424f6bf173071a8982041b41"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
 }

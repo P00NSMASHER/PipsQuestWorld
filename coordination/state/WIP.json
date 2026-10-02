@@ -3,11 +3,11 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "WORLD_TOWN_SHELL_INTEGRATED_WAITING_SMOKE",
+  "currentParityMilestone": "WORLD_TOWN_SHELL_SMOKE_CERTIFIED",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "status": "PASS_EXACT_HEAD_CI_PENDING_SMOKE"
+      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
     "upstream": null,
     "downstream": {
@@ -36,19 +36,20 @@
         "school clock authority",
         "class/grading authority"
       ],
-      "status": "READY_BEHIND_STABLE_INTERFACE_PENDING_WORLD_SMOKE"
+      "status": "READY_BEHIND_STABLE_INTERFACE"
     }
   },
   "supportLaneAssignments": {
-    "Foundation": "WAITING_DEPENDENCY until canonical 50288ecf world/town shell is exact-head smoke-certified; do not open another overlapping world branch.",
-    "Class & Education": "Prepare Stage-2 school/class-feel tests or isolated content contracts only; no overlapping runtime candidate while world smoke is pending.",
+    "Foundation": "WAITING_DEPENDENCY; canonical world/town shell is smoke-certified at 50288ecf. Do not open another overlapping world branch.",
+    "Class & Education": "Prepare Stage-2 school/class-feel tests or isolated content contracts only; no overlapping runtime candidate while the economy contract slot is active.",
     "Content QA": "Prepare original class/minigame content prerequisites only; no runtime fork.",
-    "Progression & Mobile": "May prepare one isolated economy/ownership contract behind current stable interfaces; it must not bind job/vehicle/housing mechanics until canonical world smoke passes.",
-    "Pip High Free Roam": "WAITING_DEPENDENCY for exact-green economy contract plus canonical world/town smoke PASS.",
-    "QA/Contract": "Validate canonical 50288ecf world/town invariants and any isolated economy contract candidate without implementing producer semantics.",
-    "Integration": "No new product integration until exact-green candidate exists; preserve WIP cap.",
-    "Integration Smoke": "Certify canonical 50288ecf exact head, including navigation/location seams and baseline vertical-slice regression.",
-    "Release/Package": "WAITING_DEPENDENCY until canonical 50288ecf is smoke-certified; never publish automatically."
+    "Progression & Mobile": "May produce one isolated economy/ownership contract candidate behind current stable interfaces; do not bind job/vehicle/housing mechanics.",
+    "Pip High Free Roam": "WAITING_DEPENDENCY for an exact-green economy contract candidate.",
+    "QA/Contract": "Validate the smoke-certified 50288ecf world/town invariants and any isolated economy contract candidate without implementing producer semantics.",
+    "Integration": "Consume only the next exact-green economy contract candidate; preserve the WIP cap.",
+    "Integration Smoke": "Re-certify any newer canonical exact head after integration.",
+    "Release/Package": "WAITING_DEPENDENCY until the requested parity milestone is smoke-certified; never publish automatically.",
+    "DevEx": "CI/evidence infrastructure only."
   },
   "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
