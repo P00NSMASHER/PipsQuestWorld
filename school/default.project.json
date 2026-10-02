@@ -38,6 +38,9 @@
         "CampusBuilder": {
           "$path": "src/server/CampusBuilder.server.lua"
         },
+        "WorldDensity": {
+          "$path": "src/server/WorldDensity.server.lua"
+        },
         "FoundationBootstrap": {
           "$path": "src/server/FoundationBootstrap.server.lua"
         },
