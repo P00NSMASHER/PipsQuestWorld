@@ -1,8 +1,16 @@
 {
-  "schemaVersion": 10,
+  "schemaVersion": 11,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "currentBlockers": [
+    {
+      "id": "VEHICLE_INPUT_RELIABILITY",
+      "owner": "Pip High Free Roam",
+      "type": "CLOUD_FIXABLE_PRODUCT_DEFECT",
+      "exactBaseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "reason": "Current server-authoritative movement samples VehicleSeat.ThrottleFloat/SteerFloat directly. Roblox currently has a documented intermittent VehicleSeat input failure where seated players can remain at zero controls, making the pending runtime smoke flaky and potentially nonfunctional.",
+      "exitCriterion": "On a fresh Free Roam branch from exact e929354, replace VehicleSeat control sampling with bounded owner-only client control input; clamp and validate server-side, time out stale input, preserve server-authoritative movement, add deterministic tests, and obtain exact-head CI before QA/Integration."
+    },
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
@@ -10,12 +18,13 @@
       "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "All cloud/deterministic checks pass and the floating-spawn defect is repaired. Remaining evidence is actual Roblox VehicleSeat input/moving-model occupant behavior on the authorized private target; local-machine polling is disallowed and Roblox cloud execution would require unauthorized place upload/publication.",
-      "exitCriterion": "On exact e929354087d3dbf6931496e310b8f899cd0d299f and universe 10768955678/place 87245440673982, validate grounded spawn -> owner auto-seat -> forward/reverse -> steer -> exit/re-enter -> despawn/re-spawn, non-owner seat rejection, player-leave cleanup, and baseline school/class/cafe invariants."
+      "state": "WAITING_FOR_PRODUCER_REPAIR",
+      "reason": "Runtime certification remains required, but it must run only after the vehicle input reliability repair is integrated. Do not smoke the superseded control path.",
+      "exitCriterion": "After repaired candidate passes QA/Integration and lands on a new exact canonical SHA, validate grounded spawn -> owner auto-seat -> forward/reverse -> steer -> exit/re-enter -> despawn/re-spawn, non-owner rejection, cleanup, and baseline invariants on the same private target."
     }
   ],
-  "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED",
-  "nextProducer": "Roblox High School Integration Smoke",
-  "nextObjective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+  "gateStatus": "PRODUCER_REPAIR_REQUIRED",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "VEHICLE_INPUT_RELIABILITY_V2",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }

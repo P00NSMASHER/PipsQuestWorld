@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 10,
+  "schemaVersion": 11,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_GROUNDED_RUNTIME_SMOKE",
+  "unintegratedProductCandidateCount": 1,
+  "currentParityMilestone": "VEHICLE_INPUT_RELIABILITY_REPAIR",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -12,19 +12,24 @@
     },
     "upstream": {
       "lane": "Pip High Free Roam",
-      "objective": "VEHICLE_LIFECYCLE_V1",
-      "producerSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "firstIntegratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "groundingRepairPr": 92,
-      "groundingRepairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
-      "integratedSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "status": "MERGED_QA_INTEGRATION_EXACT_HEAD_CI_GREEN"
+      "objective": "VEHICLE_INPUT_RELIABILITY_V2",
+      "baseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "branch": "rebuild/high-school-vehicle-controls-e929354-v1",
+      "status": "AUTHORIZED_NOT_CREATED",
+      "ownedPaths": [
+        "school/src/client/CanonicalSchoolClient.client.lua",
+        "school/src/server/VehicleService.server.lua",
+        "school/src/server/VehicleInput.lua",
+        "school/tests/vehicle_input_spec.lua",
+        "school/default.project.json",
+        ".github/workflows/high-school-progression-ci.yml"
+      ]
     },
     "downstream": {
       "lane": "Roblox High School Integration Smoke",
       "objective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "status": "LOCAL_ONLY_REQUIRED"
+      "status": "WAIT_PIPELINE_PRODUCER_REPAIR"
     }
   },
   "priorityBacklog": [
@@ -74,10 +79,10 @@
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
     "Progression & Mobile": "Maintain the single canonical progression/economy/persistence/mobile contract for exact Roblox High School clone parity; second-grade schoolwork is DEFERRED_PHASE_2.",
-    "Pip High Free Roam": "Vehicle lifecycle plus grounded AutoShop spawn are integrated at e929354. Wait for Integration Smoke on that exact SHA; after Smoke PASS and the Release/Package checkpoint, housing/property is the next producer slice. Do not pivot to second-grade schoolwork.",
+    "Pip High Free Roam": "Active producer for VEHICLE_INPUT_RELIABILITY_V2 on exact base e929354 using branch rebuild/high-school-vehicle-controls-e929354-v1. Preserve all other authorities and Phase-2 deferral.",
     "QA/Contract": "Validate exact authorized Roblox High School clone parity and architecture contracts on the current target; reject second-grade-schoolwork drift during Phase 1.",
     "Integration": "Integrate only exact-green candidates that advance the current authorized Roblox High School clone on the same canonical private-server target.",
-    "Integration Smoke": "Cloud/deterministic vehicle evidence is complete on exact e929354. Current remaining check is LOCAL_ONLY_REQUIRED; do not poll the laptop or publish Roblox. Stay quiet until authorized exact-SHA runtime evidence is available, then resume Smoke and hand PASS unchanged to Release/Package.",
+    "Integration Smoke": "WAIT_PIPELINE until the input-reliability repair is integrated; do not poll the laptop or smoke superseded e929 vehicle input behavior.",
     "Release/Package": "Package the exact canonical Roblox High School clone SHA as a checkpoint; after packaging, return to Control Tower for the next clone-parity gap. Never pivot to second-grade schoolwork automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
@@ -152,22 +157,24 @@
       "handoff": "Pip High Free Roam"
     },
     "Pip High Free Roam": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "PRODUCE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Vehicle lifecycle V1 plus grounded AutoShop spawn repair are integrated at e929354. Hold product changes until exact-SHA runtime Smoke resolves; housing/property is reserved as the next producer slice only after Smoke PASS and Release/Package checkpoint.",
-      "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
-      "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
-      "exit": "Runtime Smoke PASS on exact e929354 followed by Release/Package checkpoint, or one reproducible vehicle defect explicitly returned to Free Roam with an exact exit criterion.",
-      "handoff": "Control Tower"
+      "base": "rebuild/high-school-foundation@e929354087d3dbf6931496e310b8f899cd0d299f",
+      "branch": "rebuild/high-school-vehicle-controls-e929354-v1",
+      "objective": "Replace the current dependency on VehicleSeat throttle/steer sampling with an explicit bounded owner-only client control stream while preserving server-authoritative vehicle movement and the existing lifecycle/spawn/despawn semantics.",
+      "owned": "Free Roam vehicle input/movement seams only: canonical client vehicle controls, VehicleService adapter, one pure input-normalization module/test, project mapping, and the narrow vehicle CI hook.",
+      "dependency": "Consume the integrated VEHICLE_LIFECYCLE_V1 + grounded AutoShop spawn at exact canonical e929354. Do not change Foundation world authority, Progression/Economy, Class, persistence, or Roblox target.",
+      "exit": "Exact branch head has deterministic input validation tests + canonical guard CI green; server clamps/validates controls, accepts them only from the active vehicle owner while seated, times out stale input, and never trusts client position/velocity. Hand exact-green SHA to QA/Contract.",
+      "handoff": "QA/Contract"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "candidateSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "QA PASS is rebound to exact repaired canonical e929354 using identical repair-head/canonical tree identity and exact-head push CI.",
+      "objective": "Wait for the exact VEHICLE_INPUT_RELIABILITY_V2 Free Roam candidate; then validate only that changed candidate plus existing vehicle/lifecycle/authority contracts.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Exact repaired canonical e929354 plus push CI PASS runs 37029958854, 37029958840, 37029958834 and the PR #85/#92 evidence chain.",
-      "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
+      "dependency": "Free Roam exact-head candidate on rebuild/high-school-vehicle-controls-e929354-v1 with deterministic tests and exact-head CI.",
+      "exit": "PASS exact changed candidate or one reproducible defect returned to Free Roam with a measurable exit criterion.",
       "handoff": "Integration"
     },
     "Integration": {
@@ -182,9 +189,9 @@
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Cloud/deterministic vehicle certification is exhausted on exact e929354. Because the remaining VehicleSeat/moving-model check is LOCAL_ONLY_REQUIRED and laptop polling is not authorized in the current directive, perform only the minimum freshness read and preserve the blocker; do not create branches, rerun broad tests, poll the laptop, or publish.",
+      "objective": "Do not repeat runtime Smoke on superseded vehicle input behavior. Wait for Free Roam repair -> QA -> Integration to produce a new exact canonical SHA, then resume Smoke only on that changed integrated head.",
       "owned": "post-integration runtime certification only",
-      "dependency": "QA/Integration exact e929354 + push CI runs 37029958854/37029958840/37029958834; unblock only when authorized runtime evidence for universe 10768955678 / place 87245440673982 is available.",
+      "dependency": "Changed canonical vehicle-control head after Free Roam candidate passes QA and Integration.",
       "exit": "When authorized runtime evidence is available, Control Tower changes this lane to SMOKE on exact e929354; PASS hands unchanged SHA to Release/Package, while one reproducible defect returns to exactly one owning lane.",
       "handoff": "Release/Package"
     },
