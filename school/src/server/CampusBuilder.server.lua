@@ -209,6 +209,54 @@ for roomName, room in pairs(SchoolConfig.Rooms) do
     end
 end
 
+-- Room-specific dressing keeps each class visually distinct while reusing the canonical room registry.
+local science = SchoolConfig.Rooms.Science.position
+for row = -1, 1 do
+    for col = -1, 1 do
+        local x = science.X + col * 16
+        local z = science.Z + row * 10
+        makePart("LabTable", Vector3.new(11, 3, 4.5), CFrame.new(x, 2, z), Color3.fromRGB(120, 132, 145), Enum.Material.Metal)
+        makePart("LabTop", Vector3.new(11.5, 0.45, 5), CFrame.new(x, 3.7, z), Color3.fromRGB(224, 228, 232), Enum.Material.SmoothPlastic)
+    end
+end
+makePart("ScienceStorage", Vector3.new(18, 8, 3), CFrame.new(science.X + 16, 4.5, science.Z - 17), Color3.fromRGB(85, 104, 118), Enum.Material.Metal)
+
+local mathRoom = SchoolConfig.Rooms.Math.position
+for offset = -1, 1 do
+    makePart("MathBoardPanel", Vector3.new(9, 6, 0.35), CFrame.new(mathRoom.X + offset * 10, 8, mathRoom.Z - 20.55), Color3.fromRGB(36, 50, 70), Enum.Material.SmoothPlastic)
+end
+
+local elaRoom = SchoolConfig.Rooms.ELA.position
+for offset = -2, 2 do
+    makePart("ELAReadingShelf", Vector3.new(3, 8, 8), CFrame.new(elaRoom.X + offset * 9, 4.5, elaRoom.Z - 15), Color3.fromRGB(103, 73, 50), Enum.Material.Wood)
+end
+makePart("ELAReadingTable", Vector3.new(13, 2.5, 7), CFrame.new(elaRoom.X, 1.8, elaRoom.Z + 10), Color3.fromRGB(149, 109, 75), Enum.Material.Wood)
+
+local social = SchoolConfig.Rooms.SocialStudies.position
+makePart("SocialDisplayWall", Vector3.new(32, 7, 0.45), CFrame.new(social.X, 8, social.Z - 20.5), Color3.fromRGB(116, 91, 67), Enum.Material.Wood)
+for offset = -1, 1 do
+    makePart("SocialDisplayPanel", Vector3.new(8, 5, 0.2), CFrame.new(social.X + offset * 10, 8, social.Z - 20.15), Color3.fromRGB(210, 205, 186), Enum.Material.SmoothPlastic)
+end
+
+local library = SchoolConfig.Rooms.Library.position
+makePart("LibraryReadingTableA", Vector3.new(16, 2.5, 7), CFrame.new(library.X - 11, 1.8, library.Z + 8), Color3.fromRGB(140, 102, 70), Enum.Material.Wood)
+makePart("LibraryReadingTableB", Vector3.new(16, 2.5, 7), CFrame.new(library.X + 11, 1.8, library.Z + 8), Color3.fromRGB(140, 102, 70), Enum.Material.Wood)
+makePart("LibraryCheckout", Vector3.new(18, 4, 5), CFrame.new(library.X, 2.5, library.Z + 15), Color3.fromRGB(93, 70, 54), Enum.Material.Wood)
+
+local cafeteria = SchoolConfig.Rooms.Cafeteria.position
+makePart("ServingCounter", Vector3.new(44, 4, 5), CFrame.new(cafeteria.X, 2.5, cafeteria.Z - 15), Color3.fromRGB(151, 159, 166), Enum.Material.Metal)
+makePart("ServingCounterTop", Vector3.new(45, 0.5, 6), CFrame.new(cafeteria.X, 4.7, cafeteria.Z - 15), Color3.fromRGB(225, 228, 232), Enum.Material.SmoothPlastic)
+
+local gym = SchoolConfig.Rooms.Gym.position
+makePart("CenterCircle", Vector3.new(18, 0.12, 18), CFrame.new(gym.X, 0.95, gym.Z), Color3.fromRGB(235, 235, 235), Enum.Material.SmoothPlastic)
+for _, direction in ipairs({-1, 1}) do
+    local z = gym.Z + direction * 19
+    makePart("Backboard", Vector3.new(12, 7, 0.6), CFrame.new(gym.X, 10, z), Color3.fromRGB(245, 245, 245), Enum.Material.SmoothPlastic)
+    local rim = makePart("BasketRim", Vector3.new(4, 0.4, 4), CFrame.new(gym.X, 7.2, z - direction * 1.4), Color3.fromRGB(220, 95, 55), Enum.Material.Metal)
+    rim.Shape = Enum.PartType.Cylinder
+    rim.CFrame = rim.CFrame * CFrame.Angles(0, 0, math.rad(90))
+end
+
 local spawn = Instance.new("SpawnLocation")
 spawn.Name = "MainSpawn"
 spawn.Size = Vector3.new(10, 1, 10)
