@@ -56,4 +56,13 @@ SchoolConfig.VehicleWorld = {
     roadEntryLocation = "AutoShopRoadEntry",
 }
 
+-- Foundation-owned vehicle spawn registry. Free Roam may consume these
+-- transforms but must not invent or accept client-authored world transforms.
+SchoolConfig.VehicleSpawns = {
+    AutoShop = {
+        cframe = CFrame.new(70, 3.5, 330) * CFrame.Angles(0, math.rad(180), 0),
+        displayName = "Auto Shop Vehicle Spawn",
+    },
+}
+
 return SchoolConfig
