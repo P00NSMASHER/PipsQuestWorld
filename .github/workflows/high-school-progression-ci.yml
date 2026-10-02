@@ -3,6 +3,7 @@ name: High School Progression Guards
 on:
   push:
     branches:
+      - "rebuild/high-school-foundation"
       - "rebuild/high-school-progression-*"
     paths:
       - "school/**"

@@ -7,6 +7,8 @@ on:
       - "scripts/verify-school-pivot.py"
       - "scripts/verify-foundation-ci-scope.py"
       - ".github/workflows/school-pivot-ci.yml"
+      - ".github/workflows/high-school-class-education-ci.yml"
+      - ".github/workflows/high-school-progression-ci.yml"
       - "README.md"
       - "STATUS.md"
       - "DEVELOPMENT.md"
@@ -21,6 +23,8 @@ on:
       - "scripts/verify-school-pivot.py"
       - "scripts/verify-foundation-ci-scope.py"
       - ".github/workflows/school-pivot-ci.yml"
+      - ".github/workflows/high-school-class-education-ci.yml"
+      - ".github/workflows/high-school-progression-ci.yml"
 
 permissions:
   contents: read
