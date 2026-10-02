@@ -21,6 +21,36 @@ Exact catalog/model names, prices, performance values, visuals, sounds, entitlem
 - Free Roam may consume those authorities but must not replace them.
 - The canonical economy unlock category for this slice is `vehicle`.
 
+## Exact current canonical bindings
+
+These bindings are verified on canonical `92691e009869ee9cd5d9306786502b157a5b6c84` and must be refreshed if Control Tower advances canonical before Vehicles is assigned.
+
+- Roblox private target from the Release/Package receipt:
+  - universe: `10768955678`;
+  - place: `87245440673982`.
+- Existing canonical remote root: `SchoolConfig.Interfaces.remoteFolder == "SchoolFoundation"`.
+- Existing dealership/world anchor: `SchoolConfig.WorldLocations.AutoShop`.
+- Existing world physics baseline: Workspace gravity `196.2`; vehicle code must not create a second global physics authority.
+- Existing EconomyRepository purchase operation shape:
+  - `operationId: string`;
+  - `playerId: positive integer`;
+  - `delta: integer`;
+  - `reason: non-empty string`;
+  - `unlock = { category = "vehicle", itemId = <vehicleId> }`.
+- Existing EconomyRepository read snapshot exposes `playerId`, `revision`, `balance`, `operationCount`, and sorted `ownership`.
+- EconomyRepository already enforces durable replay/idempotency, operation-id conflict rejection, insufficient-funds rejection, already-owned rejection, CAS retry, and reopen/rejoin validation. The vehicle slice must consume those semantics rather than wrapping them in a second ledger.
+
+### Current Foundation dependency gap
+
+Canonical currently exposes the Auto Shop itself, but it does **not** expose a Foundation-owned vehicle spawn location or vehicle-spawn registry.
+
+Therefore the first assigned vehicle runtime candidate must not silently invent a world-space spawn point or derive one from an arbitrary client transform. Before a vehicle is spawned, one of these must be true:
+
+1. Foundation exposes an explicit stable vehicle spawn location/registry on the same canonical lineage; or
+2. Control Tower explicitly assigns/approves an equivalent Foundation support contract for the vehicle slice.
+
+A fixed offset privately chosen by Free Roam from `WorldLocations.AutoShop` is not sufficient evidence of Foundation world authority. Until an authorized spawn location exists, purchase/ownership contract work may be tested headlessly, but runtime vehicle spawning remains incomplete.
+
 ## Single vehicle authority
 
 The vehicle slice must introduce exactly one server-authoritative vehicle lifecycle owner.
