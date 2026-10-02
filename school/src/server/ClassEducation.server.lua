@@ -146,7 +146,8 @@ end
 
 local function safeDiscovery(player)
     local schedule = readSchedule()
-    local snapshot = coordinator:getPlayerSnapshot(playerKey(player))
+    local key = playerKey(player)
+    local snapshot = coordinator:getPlayerSnapshot(key)
     if not schedule then
         return {
             available = false,
@@ -155,6 +156,9 @@ local function safeDiscovery(player)
             pendingClassKey = snapshot.pendingClassKey,
         }
     end
+
+    local completedCurrentClass = schedule.subject ~= nil
+        and coordinator:isClassCompleted(key, schedule.classKey)
 
     return {
         available = true,
@@ -168,8 +172,10 @@ local function safeDiscovery(player)
         academic = schedule.subject ~= nil,
         canEnter = not snapshot.progressionPending
             and schedule.subject ~= nil
+            and not completedCurrentClass
             and isAtCurrentRoom(player, schedule),
         active = snapshot.active,
+        completedCurrentClass = completedCurrentClass,
         completionCount = snapshot.completionCount,
         progressionPending = snapshot.progressionPending,
         pendingClassKey = snapshot.pendingClassKey,
