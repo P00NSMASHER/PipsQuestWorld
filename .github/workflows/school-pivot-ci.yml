@@ -6,6 +6,7 @@ on:
       - "school/**"
       - "scripts/verify-school-pivot.py"
       - "scripts/verify-foundation-ci-scope.py"
+      - "scripts/qa_verify_project_mappings.py"
       - ".github/workflows/school-pivot-ci.yml"
       - ".github/workflows/high-school-class-education-ci.yml"
       - ".github/workflows/high-school-progression-ci.yml"
@@ -22,6 +23,7 @@ on:
       - "school/**"
       - "scripts/verify-school-pivot.py"
       - "scripts/verify-foundation-ci-scope.py"
+      - "scripts/qa_verify_project_mappings.py"
       - ".github/workflows/school-pivot-ci.yml"
       - ".github/workflows/high-school-class-education-ci.yml"
       - ".github/workflows/high-school-progression-ci.yml"
@@ -37,5 +39,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify canonical Foundation invariants
         run: python3 scripts/verify-school-pivot.py
+      - name: Verify all project mappings resolve
+        run: python3 scripts/qa_verify_project_mappings.py
       - name: Verify Foundation CI source-root isolation
         run: python3 scripts/verify-foundation-ci-scope.py
