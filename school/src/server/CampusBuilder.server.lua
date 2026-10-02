@@ -316,6 +316,28 @@ buildStorefront("StyleShop", 58, 42, 22, Color3.fromRGB(126, 100, 168))
 buildStorefront("AutoShop", 66, 48, 24, Color3.fromRGB(82, 112, 145))
 buildStorefront("Market", 64, 46, 23, Color3.fromRGB(116, 145, 99))
 
+-- Foundation-owned world seam for the vehicle lifecycle lane.
+-- Free Roam owns vehicle creation/physics; Foundation owns only the stable place to spawn it.
+local vehicleWorld = SchoolConfig.VehicleWorld
+local vehicleSpawn = SchoolConfig.WorldLocations[vehicleWorld.spawnLocation].position
+local vehicleRoadEntry = SchoolConfig.WorldLocations[vehicleWorld.roadEntryLocation].position
+assert(vehicleSpawn and vehicleRoadEntry, "vehicle world contract locations must exist")
+
+makePart(
+    "AutoShopVehicleSpawnPad",
+    Vector3.new(24, 0.25, 16),
+    CFrame.new(vehicleSpawn.X, 0.73, vehicleSpawn.Z),
+    Color3.fromRGB(89, 94, 101),
+    Enum.Material.Asphalt
+)
+makePart(
+    "AutoShopVehicleSpawnMark",
+    Vector3.new(0.35, 0.08, 12),
+    CFrame.new(vehicleSpawn.X, 0.9, vehicleSpawn.Z),
+    Color3.fromRGB(235, 235, 230),
+    Enum.Material.SmoothPlastic
+)
+
 local park = SchoolConfig.WorldLocations.TownPark.position
 makePart("TownParkPad", Vector3.new(98, 0.35, 70), CFrame.new(park.X, 0.55, park.Z), Color3.fromRGB(143, 177, 126), Enum.Material.Grass)
 makePart("TownParkPathA", Vector3.new(86, 0.2, 8), CFrame.new(park.X, 0.75, park.Z), Color3.fromRGB(205, 202, 190), Enum.Material.Concrete)
