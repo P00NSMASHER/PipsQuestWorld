@@ -89,7 +89,8 @@ local water = part("PoolWater", Vector3.new(58, 1.1, 98), CFrame.new(pool.X, 0.2
 water.Transparency = 0.18
 water.CanCollide = false
 for lane = -2, 2 do
-    part("PoolLaneLine", Vector3.new(0.22, 0.08, 92), CFrame.new(pool.X + lane * 9, 0.93, pool.Z), white, Enum.Material.SmoothPlastic)
+    local laneLine = part("PoolLaneLine", Vector3.new(0.22, 0.08, 92), CFrame.new(pool.X + lane * 9, 0.93, pool.Z), white, Enum.Material.SmoothPlastic)
+    laneLine.CanCollide = false
 end
 
 -- Night-readable stadium landmarks.
