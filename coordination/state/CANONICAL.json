@@ -1,33 +1,33 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "50288ecf33dec647424f6bf173071a8982041b41",
+  "sha": "7e69301b253d88a7ed779556387b6f9011022976",
   "sourceRoot": "school/**",
   "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
   "exactHeadCi": [
     {
-      "runId": 36982108237,
+      "runId": 36987267442,
       "workflow": "High School Foundation Static Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36982108122,
+      "runId": 36987267478,
       "workflow": "High School Class Education Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36982108197,
+      "runId": 36987267574,
       "workflow": "High School Progression Guards",
       "conclusion": "success"
     }
   ],
   "integrationSmoke": {
     "branch": "coordination/high-school-integration-smoke",
-    "commit": "f19f00992d37cc0fb12377581fc7695c4d2e701a",
+    "commit": "65929ae3971fb81525767408af9693f5ce331d44",
     "result": "PASS",
-    "certifiedSha": "50288ecf33dec647424f6bf173071a8982041b41"
+    "certifiedSha": "7e69301b253d88a7ed779556387b6f9011022976"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
 }
