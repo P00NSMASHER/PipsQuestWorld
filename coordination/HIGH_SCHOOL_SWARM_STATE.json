@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-02T00:31:16Z",
+  "updatedAt": "2026-10-02T00:36:00Z",
   "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
@@ -8,7 +8,7 @@
   "currentPlayableStage": "Runtime-playable evidence remains validated through spawn -> authoritative school clock/period. Canonical exact-head deterministic integration is now green through attend class -> server-authoritative activity -> exactly-once durable progression -> free roam -> save/rejoin restore; post-integration smoke/runtime playability remains to be asserted.",
   "runtimeValidatedThrough": "spawn -> authoritative school clock/period",
   "headlessExactHeadValidatedThrough": "spawn -> clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression -> free roam -> save/rejoin restore",
-  "cyclesSinceLastEndToEndPlayableAdvancement": 7,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 8,
   "wipCap": 3,
   "unintegratedProductCandidateCount": 2,
   "wipSlots": {
@@ -58,7 +58,7 @@
       "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
       "canonicalSourceRoot": "school/**",
       "role": "thin playable client adapter consuming existing canonical Foundation/ClassEducation interfaces",
-      "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME",
+      "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME_WITH_KNOWN_RUNTIME_GAPS",
       "exactHeadCi": [
         {
           "runId": 36946375640,
@@ -121,6 +121,20 @@
       "owner": "Roblox High School Integration Smoke",
       "status": "WAITING_DEPENDENCY",
       "exitCriterion": "After the active runtime lease resolves and the canonical head/candidate decision is known, refresh smoke evidence against that exact head only. Do not create product code or broad-test an obsolete SHA."
+    },
+    {
+      "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
+      "owner": "Roblox High School Integration Director",
+      "status": "WAITING_ACTIVE_RUNTIME_LEASE_RESULT",
+      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+      "exitCriterion": "After the current exact-head runtime lease resolves, repair the playable client so progression_commit_failed retries reuse the original authoritative submissionId instead of generating a new ID; exact-head CI must pass on the repaired head."
+    },
+    {
+      "id": "PLAYABLE_REJOIN_OBSERVABILITY",
+      "owner": "Roblox High School Integration Director",
+      "status": "WAITING_ACTIVE_RUNTIME_LEASE_RESULT",
+      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+      "exitCriterion": "After the current exact-head runtime lease resolves, provide a read-only server-authoritative persisted progression snapshot or equivalent observable restore path so the playable save/rejoin KPI can be demonstrated without treating Studio memory fallback as production persistence."
     }
   ],
   "resolvedThisCycle": [
@@ -176,11 +190,11 @@
         "number": 32,
         "branch": "release/pip-high-demo-ui-20261001",
         "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
-        "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME"
+        "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME_WITH_KNOWN_RUNTIME_GAPS"
       }
     ]
   },
-  "nextMilestone": "Integration Director validates exact-green PR #32 head 258a434abce303acc2afa901e269ff0d19ff9d55 locally. Confirm unpublished Studio no longer crashes on DataStore, then exercise spawn/period/class/server-authoritative activity/exactly-once progression/free-roam; keep production save/rejoin evidence separate from the Studio-only memory fallback.",
+  "nextMilestone": "Do not mutate PR #32 while the Integration Director holds the ONLINE_LAPTOP lease for exact head 258a434abce303acc2afa901e269ff0d19ff9d55. After the lease result, either accept its runtime evidence only for the paths actually demonstrated or repair the two recorded candidate gaps (stable submission-id retry and observable persisted restore), obtain fresh exact-head CI, then rerun the bounded local validation.",
   "localMachineCoordination": {
     "resource": "ONLINE_LAPTOP",
     "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
@@ -201,7 +215,28 @@
     "currentLeaseExpiresAt": "2026-10-02T00:10:00Z"
   },
   "staleReceipts": {
-    "qaContract": "STALE: receipt still references pre-integration Foundation/Class heads",
-    "integrationSmoke": "STALE: receipt predates integrated canonical head and must be regenerated against current exact SHA"
+    "qaContract": "STALE: receipt still references pre-integration Foundation/Class heads.",
+    "integrationSmoke": "STALE: receipt predates integrated canonical head and must be regenerated after the active runtime candidate decision.",
+    "devex": "STALE: DevEx receipt still points to PR #32 head 48b5eaf7756bea214477771413872dab26f67fdd; live exact-green candidate is 258a434abce303acc2afa901e269ff0d19ff9d55."
+  },
+  "candidateExactHeadReview": {
+    "pr": 32,
+    "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+    "result": "PASS_CI_WITH_RUNTIME_RISKS",
+    "findings": [
+      {
+        "id": "CLIENT_PROGRESS_RETRY_ID_STABILITY",
+        "severity": "BLOCKS_FAILURE_RECOVERY_PATH",
+        "evidence": "CanonicalSchoolClient.client.lua creates a fresh submissionId inside every choice-button activation, but pending progression retries require the exact original submissionId. After progression_commit_failed, a second tap therefore receives progression_pending instead of retrying the durable commit.",
+        "exitCriterion": "Retain and reuse the original submissionId while a completed class is progression-pending; clear it only after durable applied/duplicate progression or explicit terminal reset. Add deterministic regression coverage."
+      },
+      {
+        "id": "PLAYABLE_REJOIN_OBSERVABILITY",
+        "severity": "BLOCKS_FULL_PLAYABLE_KPI_CLAIM",
+        "evidence": "Client points initialize to 0 and update only from submit responses containing progressionState; GetClassState exposes ephemeral class completion state, not persisted progression. A rejoined player cannot directly observe that the prior committed result was restored.",
+        "exitCriterion": "Expose a read-only persisted progression snapshot (or equivalent server-authoritative restored result) to the playable client and demonstrate it after rejoin. Studio-memory fallback must not be represented as production cross-server persistence."
+      }
+    ],
+    "prCommentId": 5943363418
   }
 }
