@@ -1,11 +1,21 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "currentBlockers": [],
+  "clearedBlockers": [
+    {
+      "id": "ECONOMY_OPERATION_ORDER_REJOIN",
+      "owner": "Roblox High School Progression & Mobile",
+      "clearedByPr": 64,
+      "clearedAtCanonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "exactHeadProgressionRun": 37010609413,
+      "smokeReceiptCommit": "329c8e40f775391245a5911f2ac52206bcfe0fce"
+    }
+  ],
   "gateStatus": "CLEARED_FOR_RELEASE_PACKAGE",
   "nextProducer": "Pip High Release & Package Gate",
-  "nextObjective": "PACKAGE_CANONICAL_2AB1584",
-  "exactUnblockCondition": "CLEARED. QA/Contract PASS, Integration PASS, Integration Smoke PASS, and all three exact-head guards identify canonical 2ab1584ee34e711828768cd999c86feba9202984. Release/Package may build one deterministic school/**-only artifact for this exact SHA and must not publish without separate explicit user instruction.",
+  "nextObjective": "PACKAGE_CANONICAL_92691E",
+  "exactUnblockCondition": "CLEARED. QA/Contract PASS, Integration PASS, Integration Smoke PASS, and all three exact-head guards identify canonical 92691e009869ee9cd5d9306786502b157a5b6c84. Release/Package may build one deterministic school/**-only artifact for this exact SHA and must not publish without separate explicit user instruction.",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
