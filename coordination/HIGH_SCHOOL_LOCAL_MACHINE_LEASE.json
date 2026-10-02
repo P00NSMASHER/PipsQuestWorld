@@ -5,30 +5,23 @@
   "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
   "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
   "lease": {
-    "status": "HELD",
-    "holderLane": "Roblox High School Integration Director",
-    "purpose": "LOCAL_ONLY_REQUIRED runtime validation of PR #32 exact head e69d6ddf8e1e3875ea9947b919cae2f256a449a3 after retry-id and restored-progression observability repair; wait for exact-head green CI, then validate playable slice and production-persistence readiness.",
-    "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "candidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-    "interactionMode": "VISIBLE_GUI_ALLOWED_FOR_ROBLOX_STUDIO_RUNTIME",
-    "claimedAt": "2026-10-02T01:00:19Z",
-    "expiresAt": "2026-10-02T01:20:19Z",
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "candidateSha": null,
+    "interactionMode": null,
+    "claimedAt": null,
+    "expiresAt": null,
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
     "lane": "Roblox High School Integration Director",
-    "completedAt": "2026-10-02T01:00:19Z",
+    "completedAt": "2026-10-02T01:06:35Z",
     "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "candidateSha": "7d5d2d91bc7529bb7f5478244cd095dabca81a23",
-    "result": "RUNTIME_VERTICAL_SLICE_PASS_WITH_TWO_REPAIRED_GAPS",
-    "evidence": [
-      "Client RequestTravel invoked the server-authorized current-class travel seam successfully.",
-      "GetClassState exposed ELA class 1:3:ela with canEnter=true.",
-      "EnterClass returned original server-authoritative activity ela-main-idea-1 with no answer key in the client payload.",
-      "SubmitAnswer completed the class, committed progression revision 1 for 25 points, and returned to free roam.",
-      "The same completed-class submission did not add progression again.",
-      "Two source gaps were identified and repaired on successor head e69d6dd: stable progression retry submission IDs and read-only restored progression observability."
-    ]
+    "candidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
+    "evidencePointer": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json@2734ef4a62818e908d33ca24c094cc5fde16cf72"
   },
   "policy": {
     "claimMethod": "GITHUB_CONTENTS_CAS",
