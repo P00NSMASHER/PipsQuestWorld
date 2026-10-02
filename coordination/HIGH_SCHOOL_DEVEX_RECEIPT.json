@@ -1,90 +1,40 @@
 {
-  "schemaVersion": 5,
-  "cycle": "2026-10-02T00:01Z",
+  "schemaVersion": 6,
+  "cycle": "2026-10-02T01:08Z",
   "lane": "Roblox High School DevEx",
   "result": "PASS",
   "resourcePath": "GITHUB_CLOUD_ONLY",
-  "localOnlyRequired": false,
   "canonicalSourceRoot": "school/**",
   "fixedDefect": {
-    "id": "DEVEX_RECEIPT_MISROUTED_AFTER_LIVE_UI_CANDIDATE",
-    "rootCause": "The DevEx receipt still claimed zero open canonical PRs and routed next ownership directly to Integration Smoke after a new canonical UI candidate had become live under PR #32. Shared state and live GitHub now identify Integration Director as the current blocker owner for local-only runtime validation of that exact-green candidate.",
-    "materialImpact": "Support consumers could waste cycles smoking the obsolete base-only state, miss the live PR #32 candidate, or duplicate stale base validation before the current runtime decision resolves.",
-    "filesChanged": [
-      "coordination/HIGH_SCHOOL_DEVEX_RECEIPT.json"
+    "id": "DEVEX_RECEIPT_SHA_DRIFT_AFTER_PR32_ADVANCE",
+    "beforeReceiptBlobSha": "e9328855787512293f16e798aad8db83696355c9",
+    "beforeRecordedCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+    "sharedStateRecordedCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+    "liveCandidateBranch": "release/pip-high-demo-ui-20261001",
+    "liveCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
+    "pullRequest": 32,
+    "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "exactHeadCi": [
+      {"runId":36948771699,"workflow":"High School Foundation Static Guards","conclusion":"success"},
+      {"runId":36948771689,"workflow":"High School Class Education Guards","conclusion":"success"},
+      {"runId":36948771684,"workflow":"High School Progression Guards","conclusion":"success"}
     ],
-    "before": {
-      "receiptBlobSha": "6f1f43a98faa5148e4d62018eb254ba61735a132",
-      "recordedCanonicalBaseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "recordedOpenCanonicalPrCount": 0,
-      "recordedNextOwner": "Roblox High School Integration Smoke",
-      "recordedNextExitCriterion": "Smoke canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27."
-    },
-    "after": {
-      "canonicalBaseBranch": "rebuild/high-school-foundation",
-      "canonicalBaseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "liveCandidateBranch": "release/pip-high-demo-ui-20261001",
-      "liveCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
-      "pullRequest": 32,
-      "openCanonicalPrCount": 1,
-      "candidateExactHeadCi": [
-        {
-          "runId": 36942707607,
-          "workflow": "High School Foundation Static Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36942707587,
-          "workflow": "High School Class Education Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        },
-        {
-          "runId": 36942707624,
-          "workflow": "High School Progression Guards",
-          "event": "pull_request",
-          "conclusion": "success"
-        }
-      ],
-      "baseExactHeadCi": {
-        "runId": 36931270884,
-        "workflow": "High School Foundation Static Guards",
-        "event": "push",
-        "conclusion": "success"
-      },
-      "currentBlockerOwner": "Roblox High School Integration Director",
-      "currentBlocker": "RUNTIME_PLAYABILITY_LOCAL_ONLY_IN_PROGRESS",
-      "smokeStatus": "WAITING_DEPENDENCY"
-    },
-    "deterministicVerification": {
-      "liveOpenPr": 32,
-      "liveOpenPrTitle": "Add playable canonical class UI for Pip High demo",
-      "liveCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
-      "liveCandidateGreenRunIds": [
-        36942707607,
-        36942707587,
-        36942707624
-      ],
-      "sharedStateUpdatedAt": "2026-10-01T23:57:12Z",
-      "sharedStateCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
-      "sharedStateCurrentOwner": "Roblox High School Integration Director"
-    },
-    "measurableWasteRemoved": [
-      "Removes the false zero-open-PR signal from DevEx evidence.",
-      "Prevents Integration Smoke from being treated as immediately actionable while the live exact-green PR #32 runtime decision is still unresolved.",
-      "Prevents repeated base-only validation from obscuring the current candidate SHA 48b5eaf7756bea214477771413872dab26f67fdd."
-    ],
-    "expectedBenefit": "Support lanes can wait on the one live runtime decision instead of rechecking superseded base-only smoke work or missing the canonical UI candidate.",
-    "rollbackCriterion": "Revert this routing only if PR #32 closes, its head SHA changes from 48b5eaf7756bea214477771413872dab26f67fdd, shared state selects another canonical candidate, or the cited exact-head CI is invalidated."
+    "measurableWasteRemoved": "Stops support lanes from consuming two superseded PR #32 SHAs and rerunning validation against non-live heads.",
+    "rollbackCriterion": "Rollback only if PR #32 closes, its head changes from e69d6ddf8e1e3875ea9947b919cae2f256a449a3, the canonical base changes, or cited exact-head CI is invalidated."
   },
-  "observedExternalReceiptDrift": {
-    "owner": "Roblox High School QA & Contract",
-    "qaReceiptBlobSha": "fece0f43174599364e2658d50fe034eaf62a1a15",
-    "status": "STALE",
-    "reason": "QA receipt still references pre-integration Foundation/Class heads and does not describe canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 plus live UI candidate 48b5eaf7756bea214477771413872dab26f67fdd.",
-    "devexAction": "No write performed outside DevEx ownership."
+  "externalDrift": {
+    "sharedState": {
+      "owner": "Roblox High School Control Tower",
+      "status": "STALE",
+      "recordedCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
+      "liveCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3"
+    },
+    "qaReceipt": {
+      "owner": "Roblox High School QA & Contract",
+      "status": "STALE",
+      "receiptBlobSha": "fece0f43174599364e2658d50fe034eaf62a1a15"
+    }
   },
-  "nextOwner": "Roblox High School Integration Director",
-  "nextExitCriterion": "Resolve the already-coordinated LOCAL_ONLY_REQUIRED runtime validation for PR #32 candidate 48b5eaf7756bea214477771413872dab26f67fdd against canonical base 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Integration Smoke remains waiting until that exact candidate decision is known."
+  "nextOwner": "Roblox High School Control Tower",
+  "nextExitCriterion": "Refresh shared state to live PR #32 head e69d6ddf8e1e3875ea9947b919cae2f256a449a3 without changing producer semantics."
 }
