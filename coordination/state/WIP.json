@@ -3,7 +3,7 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_AWAITING_EXACT_HEAD_CI",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_QA_VALIDATION",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -30,9 +30,26 @@
         "housing/property authority",
         "avatar/customization/shopping authority"
       ],
-      "status": "AWAITING_EXACT_HEAD_CI",
+      "status": "EXACT_HEAD_CI_GREEN_QA_READY",
       "pr": 85,
-      "headSha": "75d3115b258549cbac59aca427134bf36388a3ae"
+      "headSha": "8f7293f1021a4bae7e2d12b07e489e10b9135c3f",
+      "exactHeadCi": [
+        {
+          "runId": 37027751477,
+          "workflow": "High School Foundation Static Guards",
+          "conclusion": "success"
+        },
+        {
+          "runId": 37027751963,
+          "workflow": "High School Class Education Guards",
+          "conclusion": "success"
+        },
+        {
+          "runId": 37027752230,
+          "workflow": "High School Progression Guards",
+          "conclusion": "success"
+        }
+      ]
     },
     "downstream": null
   },
@@ -91,9 +108,9 @@
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Pip High Free Roam",
-    "to": "Roblox High School QA & Contract",
-    "condition": "All required exact-head CI PASS PR #85@75d3115b258549cbac59aca427134bf36388a3ae."
+    "from": "Roblox High School QA & Contract",
+    "to": "Roblox High School Integration Director",
+    "condition": "QA PASS identifies exact candidate 8f7293f1021a4bae7e2d12b07e489e10b9135c3f with the cited exact-head guards green."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -161,21 +178,22 @@
       "handoff": "Pip High Free Roam"
     },
     "Pip High Free Roam": {
-      "mode": "PRODUCE",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "PR #85@75d3115b258549cbac59aca427134bf36388a3ae is the sole active vehicle candidate. Make no new product changes unless exact-head CI exposes a concrete defect.",
+      "objective": "PR #85@8f7293f1021a4bae7e2d12b07e489e10b9135c3f is exact-head green. Hold product changes while QA validates this exact candidate.",
       "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
       "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
       "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
       "handoff": "QA/Contract"
     },
     "QA/Contract": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "VALIDATE",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "Wait for exact-head vehicle candidate; then validate lifecycle, authority boundaries, exploit resistance, mobile controls, provenance, and cleanup.",
-      "owned": "QA harnesses/contracts only",
-      "dependency": "Wait for all required exact-head guards to PASS PR #85@75d3115b258549cbac59aca427134bf36388a3ae.",
-      "exit": "Exact candidate PASS or one reproducible defect with one owner/exit criterion.",
+      "candidateSha": "8f7293f1021a4bae7e2d12b07e489e10b9135c3f",
+      "objective": "Validate PR #85 vehicle lifecycle: one active vehicle/player, owner-only control, AutoShop spawn seam, safe despawn/re-spawn/player-leave cleanup, server-authoritative movement inputs, mobile VehicleSeat/client seams, provenance/original primitive assets, and no duplicate world/economy/persistence/class authority.",
+      "owned": "QA harnesses/contracts/receipt only",
+      "dependency": "PR #85 exact-head CI PASS runs 37027751477, 37027751963, 37027752230",
+      "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
       "handoff": "Integration"
     },
     "Integration": {
