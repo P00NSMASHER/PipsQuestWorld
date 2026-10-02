@@ -97,4 +97,6 @@ local rejoined = assert(Repository.open(store, 101))
 eq(rejoined:getState().completionCount, 1, "rejoin lost committed completion")
 eq(rejoined:getState().totalPoints, 25, "rejoin lost committed points")
 
-dofile("school/tests/mobile_presentation_spec.lua")\n\nprint("HIGH_SCHOOL_CLASS_PROGRESSION_INTEGRATION_PASS")
+dofile("school/tests/mobile_presentation_spec.lua")
+
+print("HIGH_SCHOOL_CLASS_PROGRESSION_INTEGRATION_PASS")
