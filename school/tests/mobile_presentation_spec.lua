@@ -22,6 +22,8 @@ contains("setModalVisible(true)", "modal show contract")
 contains('title.Text = "PIP HIGH"', "canonical school label")
 contains('cafeTitle.Text = "CORNER CAFE"', "cafe label")
 contains("polishButton(action, palette.navy, palette.navySoft)", "schedule interaction polish")
+contains("setButtonState(action, false)", "schedule disabled-state polish")
+contains("setFeedback(", "class feedback tone helper")
 contains("polishButton(cafeAction, palette.cafe, palette.cafeHover)", "cafe interaction polish")
 
 assert(not source:find("correctIndex", 1, true), "client presentation must not expose answer authority")
