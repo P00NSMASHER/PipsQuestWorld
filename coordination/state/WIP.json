@@ -3,12 +3,12 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATED_SMOKE_READY",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_RUNTIME_SMOKE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
       "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "status": "EXACT_HEAD_CI_GREEN_PENDING_SMOKE_CERTIFICATION"
+      "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE"
     },
     "upstream": {
       "lane": "Pip High Free Roam",
@@ -83,7 +83,7 @@
   "nextHandoff": {
     "from": "Roblox High School Integration Smoke",
     "to": "Pip High Release & Package Gate",
-    "condition": "Smoke certifies exact canonical SHA deadcf9e402cb18ea78667926663b8ebdede044f with the cited push guards green; any truly runtime/device-only check is explicitly recorded LOCAL_ONLY_REQUIRED rather than inferred."
+    "condition": "Runtime Smoke PASS on exact canonical deadcf9e402cb18ea78667926663b8ebdede044f; do not infer runtime behavior from static CI."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -179,12 +179,12 @@
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
-      "mode": "VALIDATE",
+      "mode": "SMOKE",
       "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-      "objective": "Certify the changed integrated vehicle SHA: source-root/build isolation, baseline invariants, one-active lifecycle, owner-only control, AutoShop seam, cleanup/despawn/re-spawn, and exact-head CI. Record actual Roblox runtime/device-only driving feel as LOCAL_ONLY_REQUIRED if cloud evidence cannot establish it.",
-      "owned": "post-integration certification only",
-      "dependency": "Integration receipt + push CI runs 37028471690/37028471816/37028471760",
-      "exit": "PASS receipt on exact SHA or one exact blocker; runtime/device-only checks are recorded explicitly without laptop polling.",
+      "objective": "Validate exact integrated vehicle runtime: approach Auto Shop, spawn starter sedan, auto-seat owner, drive forward/reverse and steer with native controls, exit, re-enter, despawn/re-spawn, reject a non-owner seat, and verify player-leave cleanup while baseline school/class/cafe invariants remain intact.",
+      "owned": "post-integration runtime certification only",
+      "dependency": "Exact-head push CI PASS runs 37028471690/37028471816/37028471760",
+      "exit": "Runtime PASS for the exact SHA or one reproducible vehicle defect with one owner/exit criterion.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
