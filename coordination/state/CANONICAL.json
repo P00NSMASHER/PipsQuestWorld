@@ -3,49 +3,32 @@
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "sha": "deadcf9e402cb18ea78667926663b8ebdede044f",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
-  "parentCertifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "status": "INTEGRATED_AWAITING_EXACT_HEAD_CI",
+  "parentCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "repair": {
     "pr": 64,
     "branch": "fix/economy-operation-order-rejoin-2ab1584",
     "sha": "03ea7f172d8bc898b687644f416803851220437f",
     "scope": "economy durable operation ordering/rejoin"
   },
-  "exactHeadCi": [
-    {
-      "runId": 37010609435,
-      "workflow": "High School Foundation Static Guards",
-      "conclusion": "success"
-    },
-    {
-      "runId": 37010609322,
-      "workflow": "High School Class Education Guards",
-      "conclusion": "success"
-    },
-    {
-      "runId": 37010609413,
-      "workflow": "High School Progression Guards",
-      "conclusion": "success"
-    }
-  ],
+  "exactHeadCi": [],
   "qaContract": {
-    "result": "PASS_EXACT_HEAD",
-    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+    "result": "PASS_EXACT_HEAD_CANDIDATE",
+    "certifiedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "integration": {
-    "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
+    "result": "MERGED_AWAITING_EXACT_HEAD_CI",
+    "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "mergedPr": 85,
+    "integratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
   },
   "integrationSmoke": {
-    "branch": "coordination/smoke-economy-rejoin-92691e0",
-    "commit": "2ae5bf97ea21688ed1915f26e49533849ce999c7",
-    "result": "PASS",
-    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
+    "result": "STALE_AFTER_CANONICAL_ADVANCE",
+    "previousCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+    "pendingSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
 }
