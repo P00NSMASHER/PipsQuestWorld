@@ -24,7 +24,6 @@ local townCenter = assert(SchoolConfig.WorldLocations.TownCenter, "TownCenter lo
 eq(seam.anchorLocation, "AutoShop", "anchor location")
 eq(seam.roadPart, "TownMainStreet", "road part")
 eq(seam.position.X, autoShop.position.X, "spawn X follows AutoShop")
-eq(seam.position.Y, townCenter.position.Y, "spawn Y follows canonical town seam")
 eq(seam.position.Z, townCenter.position.Z, "spawn Z follows TownCenter road axis")
 eq(seam.headingDegrees, 90, "road heading")
 
@@ -34,5 +33,12 @@ campusFile:close()
 
 assert(campusSource:find('makePart%("TownMainStreet"', 1), "CampusBuilder must provide TownMainStreet")
 assert(campusSource:find('buildStorefront%("AutoShop"', 1), "CampusBuilder must provide AutoShop")
+
+local roadSizeY, roadCenterY = campusSource:match(
+    'makePart%("TownMainStreet",%s*Vector3%.new%([^,]+,%s*([%-%d%.]+),%s*[^%)]+%),%s*CFrame%.new%([^,]+,%s*([%-%d%.]+),'
+)
+assert(roadSizeY and roadCenterY, "cannot parse TownMainStreet vertical geometry")
+local roadSurfaceY = tonumber(roadCenterY) + (tonumber(roadSizeY) / 2)
+eq(seam.position.Y, roadSurfaceY, "spawn Y follows TownMainStreet top surface")
 
 print("FOUNDATION_WORLD_CONTRACT_OK")
