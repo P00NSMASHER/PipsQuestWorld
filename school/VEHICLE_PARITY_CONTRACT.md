@@ -40,6 +40,10 @@ These bindings are verified on canonical `92691e009869ee9cd5d9306786502b157a5b6c
 - Existing EconomyRepository read snapshot exposes `playerId`, `revision`, `balance`, `operationCount`, and sorted `ownership`.
 - EconomyRepository already enforces durable replay/idempotency, operation-id conflict rejection, insufficient-funds rejection, already-owned rejection, CAS retry, and reopen/rejoin validation. The vehicle slice must consume those semantics rather than wrapping them in a second ledger.
 
+### Current authority inventory
+
+Canonical `school/default.project.json` currently maps the café Free-Roam authority but maps no vehicle controller, vehicle runtime adapter, vehicle catalog, or vehicle client authority. The assigned Vehicles slice can therefore introduce one vehicle authority cleanly, provided it remains singular.
+
 ### Current Foundation dependency gap
 
 Canonical currently exposes the Auto Shop itself, but it does **not** expose a Foundation-owned vehicle spawn location or vehicle-spawn registry.
@@ -77,9 +81,21 @@ It must not own:
 - shop/catalog provenance;
 - unrelated social systems.
 
+## Suggested Control Tower slicing
+
+This is a support recommendation, not an active assignment. To preserve the one-observable-behavior rule, Vehicles should advance in bounded slices rather than as one oversized candidate:
+
+1. **VEHICLE_4A_FOUNDATION_SPAWN_SEAM** — Foundation exposes the authorized stable vehicle spawn location/registry; no vehicle runtime.
+2. **VEHICLE_4B_OWNERSHIP_SPAWN_LIFECYCLE** — one authorized reference vehicle can be purchased/recognized as owned and spawned/despawned exactly once; no broad handling/catalog expansion.
+3. **VEHICLE_4C_DRIVE_SEAT_LIFECYCLE** — the same vehicle gains driver/passenger entry, exit, acceleration, steering, brake/reverse, reset and one-active-vehicle enforcement using authorized handling data.
+4. **VEHICLE_4D_MOBILE_PRESENTATION** — touch controls, vehicle selector/spawn/despawn UX and HUD coexistence reach the authorized mobile reference.
+5. **VEHICLE_4E_CATALOG_PARITY** — expand only after the first vehicle loop is exact-green and smoke-certified.
+
+Every slice must stay on the same private target and exact certified canonical lineage, with QA/Integration/Smoke between product increments when Control Tower requires it.
+
 ## Required observable loop
 
-The first vehicle implementation is not complete until one authorized reference vehicle can complete this deterministic player-visible loop:
+The vehicle milestone is not complete until at least one authorized reference vehicle can complete this deterministic player-visible loop:
 
 1. Player enters the authorized vehicle selection/purchase flow.
 2. Server exposes the exact authorized vehicle entry from a server-trusted catalog.
