@@ -18,8 +18,16 @@
         "ClockTime": 10.5,
         "GlobalShadows": true,
         "Technology": "ShadowMap",
-        "Ambient": [0.55, 0.55, 0.55],
-        "OutdoorAmbient": [0.6, 0.6, 0.6]
+        "Ambient": [
+          0.55,
+          0.55,
+          0.55
+        ],
+        "OutdoorAmbient": [
+          0.6,
+          0.6,
+          0.6
+        ]
       }
     },
     "ReplicatedStorage": {
@@ -67,6 +75,9 @@
         },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
+        },
+        "EconomyRepository": {
+          "$path": "src/server/EconomyRepository.lua"
         }
       }
     },
