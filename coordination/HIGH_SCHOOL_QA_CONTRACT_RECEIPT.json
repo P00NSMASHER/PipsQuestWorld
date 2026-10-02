@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T09:08:00Z",
-  "result": "BLOCKED_POST_MERGE_CANONICAL_REGRESSION",
-  "evidenceFingerprint": "sha256:90daf09d0901dec31dbc181feb7d91af36469ca1b76338830a4f3078823d841b",
+  "updatedAt": "2026-10-02T09:13:00Z",
+  "result": "BLOCKED_EXECUTABLE_CANONICAL_REGRESSION",
+  "evidenceFingerprint": "sha256:295703f2c2f872ef43948f201cfc9b0fb02f134adbca5da2f046514320fa334f",
   "authoritativeInputs": {
     "protocolBlob": "737ad8e3c2dcfde01fd3620b06e3b5da5e70d536",
     "stateManifestBlob": "50b2d38a96c24f65b55974264d2ab673a1ecaf5f",
@@ -15,61 +15,74 @@
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7e69301b253d88a7ed779556387b6f9011022976",
-    "statusInControlTower": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
-    "exactHeadCi": [
-      {
-        "runId": 36987267442,
-        "workflow": "High School Foundation Static Guards",
-        "conclusion": "success"
-      },
-      {
-        "runId": 36987267478,
-        "workflow": "High School Class Education Guards",
-        "conclusion": "success"
-      },
-      {
-        "runId": 36987267574,
-        "workflow": "High School Progression Guards",
-        "conclusion": "success"
-      }
-    ]
+    "economyBlob": "fd482c51f64bac1fdcca702935f10cd1e0437186",
+    "economyTestBlob": "6f7d3c4eb03fcaa83837c86772c3c7f0e8c9b286",
+    "controlTowerStatus": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
   },
-  "reusedPassEvidence": {
-    "foundation": "PASS_REUSED: canonical school/** world/clock/location authority unchanged by economy merge",
-    "classEducation": "PASS_REUSED: server-authoritative class/session contracts unchanged by economy merge",
-    "provenance": "PASS_REUSED: economy delta is original canonical school/** Lua/tests/workflow only; no retired runtime coupling detected",
-    "noDuplicateAuthorities": "PASS_REUSED outside economy persistence; no second clock/class/world/economy writer introduced by inspected delta"
+  "qaHarness": {
+    "pr": 54,
+    "branch": "qa/economy-order-guard-7e69301",
+    "sha": "0dcb0867335b6d607cebd59660d4f087fcc2e18a",
+    "baseSha": "7e69301b253d88a7ed779556387b6f9011022976",
+    "changes": [
+      "school/tests/qa_economy_order_persistence_spec.lua",
+      ".github/workflows/high-school-progression-ci.yml"
+    ],
+    "producerSemanticsChanged": false
+  },
+  "executableEvidence": {
+    "foundationRun": {
+      "runId": 36988357319,
+      "workflow": "High School Foundation Static Guards",
+      "conclusion": "success"
+    },
+    "classEducationRun": {
+      "runId": 36988357331,
+      "workflow": "High School Class Education Guards",
+      "conclusion": "success"
+    },
+    "progressionRun": {
+      "runId": 36988357239,
+      "workflow": "High School Progression Guards",
+      "conclusion": "failure",
+      "jobId": 110778478559,
+      "passingSteps": [
+        "Preserve canonical Foundation invariants",
+        "Preserve Class Education contract",
+        "Run progression repository concurrency and restore tests",
+        "Run economy ledger and ownership tests"
+      ],
+      "failingStep": "Run QA economy operation-order rejoin regression",
+      "downstreamStepsSkipped": [
+        "Run class-to-progression binding test",
+        "Run durable vertical-slice integration gate"
+      ]
+    }
   },
   "reproducedCanonicalDefect": {
     "id": "ECONOMY_OPERATION_ORDER_REJOIN",
     "owner": "Roblox High School Progression & Mobile",
-    "canonicalEconomyBlob": "fd482c51f64bac1fdcca702935f10cd1e0437186",
-    "canonicalTestBlob": "6f7d3c4eb03fcaa83837c86772c3c7f0e8c9b286",
-    "reason": "Canonical EconomyRepository still appends an operation and then sorts snapshot.operations lexically by operationId. validateSnapshot later replays that sorted list and rejects any transient negative running balance. Therefore a legitimate durable credit recorded before a later debit can be persisted debit-first solely because its operationId sorts later, causing Repository.open/reload to reject the stored snapshot with INVALID_BALANCE_HISTORY.",
-    "directStaticEvidence": [
-      "apply(): table.insert(candidate.operations, copyOperation(operation))",
-      "apply(): table.sort(candidate.operations, function(a, b) return a.operationId < b.operationId end)",
-      "validateSnapshot(): expectedBalance accumulates snapshot.operations in stored order and rejects expectedBalance < 0 with INVALID_BALANCE_HISTORY",
-      "current economy_repository_spec.lua does not cover a credit whose operationId sorts after a later debit"
-    ],
-    "exitCriterion": "On an exact canonical descendant, deterministic coverage must prove a durable +100 credit under a lexically-later operationId followed by a durable -40 debit under a lexically-earlier operationId reopens successfully at balance 60. Duplicate-ID, conflicting-ID, ownership, CAS retry, exactly-once durability, insufficient-funds behavior, and save/rejoin must remain green.",
-    "priorQaHarness": "qa/economy-order-persistence-74fba1b@d2f1d2df56382ac656a712426f1c2f582892d45a"
+    "reason": "EconomyRepository persists operations sorted lexically by operationId, but validateSnapshot replays that stored order and rejects any transient negative running balance. A valid credit committed before a later debit can therefore become debit-first on disk and make the durable snapshot unreopenable.",
+    "exitCriterion": "On a canonical descendant, the QA regression in PR #54 must pass for a durable +100 credit with a lexically-later operationId followed by a durable -40 debit with a lexically-earlier operationId, reopening at balance 60. Existing economy ledger/ownership, duplicate-ID, conflict-ID, CAS retry, ownership, insufficient-funds, exactly-once durability, and save/rejoin tests must remain green.",
+    "integrationEligibility": "BLOCKED"
   },
-  "downstreamImpact": {
-    "controlTowerFreeRoamAssignment": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-    "freeRoamIntegrationEligibility": "BLOCKED_BY_BROKEN_CANONICAL_ECONOMY_DEPENDENCY",
-    "reason": "The assigned cafe job is required to award an idempotent wage through EconomyRepository. Building downstream wage semantics on a canonical repository that can make valid durable histories unreopenable increases integration risk.",
-    "nextEligibleAction": "Repair and exact-head validate the canonical EconomyRepository contract first; then re-certify canonical integration/smoke before consuming it in Free Roam."
+  "downstreamContainment": {
+    "assignedSlice": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "freeRoamBranch": "rebuild/high-school-free-roam-cafe-job-v1",
+    "freeRoamBranchSha": "7e69301b253d88a7ed779556387b6f9011022976",
+    "relationToCanonical": "IDENTICAL_AHEAD_0_BEHIND_0",
+    "productChangesLanded": false,
+    "disposition": "BLOCK_FREE_ROAM_INTEGRATION_UNTIL_ECONOMY_REPAIRED_AND_RECERTIFIED"
   },
   "coordinationDrift": {
     "owner": "Roblox High School Control Tower",
-    "defect": "Control Tower marks canonical 7e69301 smoke-certified with currentBlockers=[] and has already assigned Free Roam, but focused QA reproduces an economy persistence contract violation on that exact canonical source.",
-    "exitCriterion": "Update the blocker/WIP shards so Free Roam does not consume EconomyRepository as a cleared dependency until the economy regression is repaired and the repaired exact canonical head is green."
+    "defect": "BLOCKERS/PLAYABLE still mark canonical economy dependency cleared and Free Roam assigned even though exact QA run 36988357239 reproducibly fails the economy rejoin contract.",
+    "exitCriterion": "Gate Free Roam on the economy repair, update blocker/WIP shards, and re-certify the repaired canonical exact head before allowing cafe-job wage integration."
   },
-  "pr48": {
-    "branch": "rebuild/high-school-progression-mobile-stage1b-v2",
+  "staleCandidate": {
+    "pr": 48,
     "sha": "dcbeca0624724e8ef1a866e921d1463f9821eeb5",
-    "disposition": "NOT_EVALUATED_THIS_BLOCK; Control Tower already marks it STALE_BASE_OPEN_DO_NOT_INTEGRATE_WITHOUT_REBASE"
+    "disposition": "NOT_EVALUATED; Control Tower marks STALE_BASE_OPEN_DO_NOT_INTEGRATE_WITHOUT_REBASE"
   },
   "localOnlyRequired": null
 }
