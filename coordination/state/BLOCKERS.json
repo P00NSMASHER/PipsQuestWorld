@@ -1,8 +1,10 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
+  "canonicalSha": "50288ecf33dec647424f6bf173071a8982041b41",
   "currentBlockers": [],
-  "exactUnblockCondition": "Stage 1B Progression & Mobile producer opens an exact-head tested school/** candidate based on e2cfbf6 or a newer certified canonical successor.",
+  "nextProducer": "Roblox High School Progression & Mobile",
+  "nextObjective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
+  "exactUnblockCondition": "Progression & Mobile opens one exact-head tested school/** economy/ownership contract candidate based on 50288ecf or a newer smoke-certified canonical successor.",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
