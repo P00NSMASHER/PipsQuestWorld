@@ -7,6 +7,7 @@
 - Never weaken tests, fabricate evidence, broaden credentials/authority, or import retired/noncanonical product code merely to move faster.
 
 ## Canonical product direction
+- Current user-specified canonical scope is recorded in `coordination/HIGH_SCHOOL_CANONICAL_SCOPE_OVERRIDE.md`; when older scope wording conflicts, that override governs.
 The canonical product is the original feature-equivalent Roblox high-school rebuild using original code and original/properly licensed assets.
 Retired Maze/Pips, Brookhaven projection, and licensed-exact RHS branches are noncanonical unless the user explicitly changes direction.
 
