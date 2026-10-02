@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+  "sha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "sourceRoot": "school/**",
   "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE",
   "parentCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
@@ -15,39 +15,50 @@
   },
   "exactHeadCi": [
     {
-      "runId": 37028471690,
+      "runId": 37029958854,
       "workflow": "High School Foundation Static Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 37028471816,
+      "runId": 37029958840,
       "workflow": "High School Class Education Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 37028471760,
+      "runId": 37029958834,
       "workflow": "High School Progression Guards",
       "event": "push",
       "conclusion": "success"
     }
   ],
   "qaContract": {
-    "result": "PASS_EXACT_HEAD_CANDIDATE",
-    "certifiedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "result": "PASS_EXACT_HEAD",
+    "certifiedSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
     "mergedPr": 85,
-    "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-    "certifiedSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+    "repairPr": 92,
+    "certifiedSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
   },
   "integrationSmoke": {
     "result": "WAITING_LOCAL_ONLY_REQUIRED",
-    "pendingSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-    "requiredCheck": "Roblox runtime vehicle spawn -> auto-seat -> throttle/steer movement -> exit/re-enter -> despawn/cleanup."
+    "pendingSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "requiredCheck": "Roblox runtime grounded vehicle spawn -> owner auto-seat -> forward/reverse -> steer -> exit/re-enter -> despawn/re-spawn; non-owner seat rejection; player-leave cleanup; baseline school/class/cafe invariants.",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
   },
-  "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
+  "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale.",
+  "vehicleIntegration": {
+    "producerPr": 85,
+    "producerQaSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "firstIntegrationSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+    "groundingRepairPr": 92,
+    "groundingRepairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
+    "currentSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "schoolTree": "0214cfbea3ae36abf28fcea867ed3a1a4aac47de"
+  }
 }
