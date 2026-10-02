@@ -1,29 +1,21 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "High functional parity with publicly observable high-school-life behavior, rebuilt progressively with original code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "SCHOOL_CLASS_FEEL_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
-  "currentPlayableEvidence": "Canonical Pip High 99e12750b8b87812f3363e3691c12fb8797669bd is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA, and Integration Smoke receipt 456974b44548d814bccfc95f48a67f0291971a99 certifies class entry/activity/completion, progression persistence/exactly-once behavior, free-roam recovery, provenance/runtime isolation, and unchanged mobile basics.",
-  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> class completion remains in free roam until next bell -> restored progression snapshot/client reload",
-  "headlessExactHeadValidatedThrough": "99e12750: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
+  "currentPlayableStage": "CAFE_JOB_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
+  "currentPlayableEvidence": "Canonical Pip High 2ab1584ee34e711828768cd999c86feba9202984 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA. QA, Integration, and Smoke receipts all identify the same exact SHA. The integrated cafe-job slice preserves the baseline loop and adds proximity-gated shift start, one deterministic serve_order task, idempotent EconomyRepository wage/no-double-pay behavior, failed-wage retry, bounded cafe mobile presentation, and return to free roam.",
+  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> free-roam return -> restored progression snapshot/client reload; cafe-job milestone additionally validated headlessly for idempotent durable wage and free-roam return",
+  "headlessExactHeadValidatedThrough": "2ab1584: Foundation + Class/Education + Progression + QA + Integration + post-integration Smoke exact-head PASS",
   "economyRuntimeValidatedInStudio": false,
-  "progressiveParityStage": {
+  "cafeJobRuntimeValidatedInStudio": false,
+  "completedParityStage": {
     "id": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
     "name": "Cafe job interaction loop",
-    "activeProducer": "Pip High Free Roam owns exactly one original cafe-job interaction slice on canonical 99e12750b8b87812f3363e3691c12fb8797669bd.",
-    "externallyObservableBehavior": "Player starts a cafe shift at the Foundation cafe location, performs one deterministic job interaction, completes the shift task once, receives one server-authoritative idempotent wage through EconomyRepository, and returns to free roam with the updated read-only economy snapshot.",
-    "exitCriteria": [
-      "Producer descends from canonical 99e12750b8b87812f3363e3691c12fb8797669bd or a newer Control-Tower-certified successor.",
-      "Only school/** canonical runtime/test files are changed by the producer.",
-      "Foundation WorldLocations remains the location authority; no second world registry or generator is introduced.",
-      "EconomyRepository remains the only money/ownership write authority; duplicate completion or replay cannot double-pay.",
-      "No vehicle, housing, customization/shop, school-clock, class/grading, or duplicate persistence semantics are introduced.",
-      "Job start, task interaction, completion, cancel/leave, and replay behavior have deterministic exact-head tests.",
-      "Integration consumes only the exact-green candidate into one canonical descendant.",
-      "Integration Smoke certifies the resulting exact canonical head before another Free-Roam slice begins."
-    ]
+    "result": "PASS_INTEGRATED_SMOKE_CERTIFIED",
+    "externallyObservableBehavior": "Player starts a cafe shift at the Foundation cafe location, performs one deterministic serve_order interaction, receives one server-authoritative idempotent wage through EconomyRepository, and returns to free roam.",
+    "evidenceSha": "2ab1584ee34e711828768cd999c86feba9202984"
   },
-  "nextMilestone": "Refresh the cafe-job producer onto exact certified canonical 99e12750, preserve the already-green merge-ref behavior, then hand the exact-green candidate to QA/Integration.",
+  "nextMilestone": "Release/Package may build the deterministic school/** artifact for canonical 2ab1584. The next product priority is vehicles only after a new Control Tower WIP assignment.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction."
 }

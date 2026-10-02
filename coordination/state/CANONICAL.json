@@ -1,38 +1,48 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "sha": "2ab1584ee34e711828768cd999c86feba9202984",
   "sourceRoot": "school/**",
   "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
   "preMergeCandidate": {
-    "pr": 55,
-    "branch": "rebuild/high-school-class-feel-completion-v1",
-    "sha": "ba9f5d25e5f4efd4ff384ac715e9ad3305d6add7"
+    "pr": 56,
+    "branch": "rebuild/high-school-free-roam-cafe-job-v1",
+    "sha": "9b9c6f79ac6c479992a3293526eb7829b95ee5a4"
   },
   "exactHeadCi": [
     {
-      "runId": 36988705511,
+      "runId": 37006496757,
       "workflow": "High School Foundation Static Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36988705638,
+      "runId": 37006496676,
       "workflow": "High School Class Education Guards",
       "conclusion": "success"
     },
     {
-      "runId": 36988705665,
+      "runId": 37006496664,
       "workflow": "High School Progression Guards",
       "conclusion": "success"
     }
   ],
+  "qaContract": {
+    "result": "PASS_EXACT_HEAD",
+    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
+  },
+  "integration": {
+    "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
+    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
+  },
   "integrationSmoke": {
-    "branch": "coordination/high-school-integration-smoke-99e12750-cert",
-    "commit": "456974b44548d814bccfc95f48a67f0291971a99",
+    "branch": "coordination/smoke-cafe-job-2ab1584-cert",
+    "commit": "e067818490c1a03162f0b882ac4e98f8b8376bd6",
     "result": "PASS",
-    "certifiedSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
