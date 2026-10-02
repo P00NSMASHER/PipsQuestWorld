@@ -1,7 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+  "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
   "currentBlockers": [],
+  "exactUnblockCondition": "Stage 1B Progression & Mobile producer opens an exact-head tested school/** candidate based on e2cfbf6 or a newer certified canonical successor.",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
