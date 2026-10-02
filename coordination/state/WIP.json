@@ -1,13 +1,13 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "CAFE_JOB_SMOKE_CERTIFIED_RELEASE_PACKAGE_ELIGIBLE",
+  "currentParityMilestone": "CAFE_JOB_PERSISTENCE_REJOIN_REPAIR_SMOKE_CERTIFIED_RELEASE_PACKAGE_ELIGIBLE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
       "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
     "upstream": null,
@@ -27,7 +27,7 @@
     {
       "priority": 3,
       "milestone": "PROGRESSION_JOBS_ECONOMY",
-      "status": "CAFE_JOB_INTEGRATED_SMOKE_CERTIFIED"
+      "status": "CAFE_JOB_PLUS_REJOIN_REPAIR_INTEGRATED_SMOKE_CERTIFIED"
     },
     {
       "priority": 4,
@@ -57,20 +57,20 @@
   ],
   "supportLaneAssignments": {
     "Foundation": "Support current canonical invariants only until Control Tower assigns the next world slice.",
-    "Class & Education": "Support stable class/read interfaces only; class-feel remains certified on canonical 2ab1584.",
+    "Class & Education": "Support stable class/read interfaces only; unchanged class behavior remains certified on canonical 92691e0.",
     "Content QA": "Support original content/provenance fixtures only when requested; no competing runtime branch.",
-    "Progression & Mobile": "Support the existing EconomyRepository and persistence contracts; do not create vehicle/job interaction authority.",
-    "Pip High Free Roam": "Cafe-job slice is integrated and smoke-certified at 2ab1584. Do not start vehicles/housing/customization until Control Tower assigns the next slice.",
-    "QA/Contract": "Exact-head cafe-job integration is PASS at 2ab1584; reuse until the canonical head changes.",
-    "Integration": "Exact-head cafe-job integration is PASS at 2ab1584; wait for the next assigned exact-green producer candidate.",
-    "Integration Smoke": "Exact-head Smoke PASS at 2ab1584; reuse until canonical changes.",
-    "Release/Package": "ELIGIBLE: package canonical 2ab1584 exactly once from school/** only; never publish automatically.",
+    "Progression & Mobile": "Economy rejoin-order repair is integrated and smoke-certified at 92691e0; reuse its persistence contract until canonical changes.",
+    "Pip High Free Roam": "Cafe-job slice remains integrated and certified on 92691e0. Do not start vehicles/housing/customization until Control Tower assigns the next slice.",
+    "QA/Contract": "Exact-head PASS at 92691e0; reuse until canonical changes.",
+    "Integration": "Exact-head PASS at 92691e0; wait for next assigned exact-green producer candidate.",
+    "Integration Smoke": "Exact-head PASS at 92691e0; reuse until canonical changes.",
+    "Release/Package": "ELIGIBLE: package canonical 92691e0 exactly once from school/** only; never publish automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
     "from": "Roblox High School Integration Smoke",
     "to": "Pip High Release & Package Gate",
-    "condition": "QA, Integration, Smoke, and all three exact-head guards PASS the same canonical SHA 2ab1584ee34e711828768cd999c86feba9202984."
+    "condition": "QA, Integration, Smoke, and all three exact-head guards PASS the same live canonical SHA 92691e009869ee9cd5d9306786502b157a5b6c84."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
