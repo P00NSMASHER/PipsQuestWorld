@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 0,
@@ -56,15 +56,15 @@
     }
   ],
   "supportLaneAssignments": {
-    "Foundation": "Support current canonical invariants only until Control Tower assigns the next world slice.",
-    "Class & Education": "Support stable class/read interfaces only; unchanged class behavior remains certified on canonical 92691e0.",
-    "Content QA": "Support original content/provenance fixtures only when requested; no competing runtime branch.",
-    "Progression & Mobile": "Economy rejoin-order repair is integrated and smoke-certified at 92691e0; reuse its persistence contract until canonical changes.",
-    "Pip High Free Roam": "Cafe-job slice remains integrated and certified on 92691e0. Do not start vehicles/housing/customization until Control Tower assigns the next slice.",
-    "QA/Contract": "Exact-head PASS at 92691e0; reuse until canonical changes.",
-    "Integration": "Exact-head PASS at 92691e0; wait for next assigned exact-green producer candidate.",
-    "Integration Smoke": "Exact-head PASS at 92691e0; reuse until canonical changes.",
-    "Release/Package": "ELIGIBLE: package canonical 92691e0 exactly once from school/** only; never publish automatically.",
+    "Foundation": "Support exact authorized Roblox High School clone world/clock/location/spawn parity on the current canonical target; do not pivot to second-grade schoolwork.",
+    "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
+    "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
+    "Progression & Mobile": "Maintain the single canonical progression/economy/persistence/mobile contract for exact Roblox High School clone parity; second-grade schoolwork is DEFERRED_PHASE_2.",
+    "Pip High Free Roam": "Cafe-job slice remains certified at 92691e0. Await Control Tower's next exact-clone parity assignment; vehicles are next priority. Do not pivot to housing/customization early or to second-grade schoolwork.",
+    "QA/Contract": "Validate exact authorized Roblox High School clone parity and architecture contracts on the current target; reject second-grade-schoolwork drift during Phase 1.",
+    "Integration": "Integrate only exact-green candidates that advance the current authorized Roblox High School clone on the same canonical private-server target.",
+    "Integration Smoke": "Smoke exact-clone behavior on the same canonical private-server target; never treat second-grade schoolwork as clone progress.",
+    "Release/Package": "Package the exact canonical Roblox High School clone SHA as a checkpoint; after packaging, return to Control Tower for the next clone-parity gap. Never pivot to second-grade schoolwork automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
@@ -75,7 +75,7 @@
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
-  "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
+  "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
     "broadTests": 0,
@@ -83,5 +83,21 @@
     "commits": 0,
     "statusWrites": 0,
     "result": "WAITING_UNCHANGED"
+  },
+  "programDirective": {
+    "phase1": "EXACT_LIVE_ROBLOX_HIGH_SCHOOL_CLONE",
+    "phase1Status": "ACTIVE_USER_PRIORITY",
+    "target": "The currently live private-server Roblox High School clone on the canonical school/** lineage; resolve the exact universe/place only from current Release/Package/publish receipts and never switch targets by inference.",
+    "objective": "Complete the authorized Roblox High School clone first: behavior, world/layout, spawn, HUD/menu/icon interactions, clock/schedule, classes, jobs, vehicles, housing/property, avatar/outfit/customization, shopping, social/free-roam, animations, mobile controls, persistence/rejoin, lighting and presentation.",
+    "rightsBoundary": "Use exact reference source/assets/content only where the user's rights/licenses are verified; provenance remains mandatory.",
+    "phase2": "SECOND_GRADE_SCHOOLWORK",
+    "phase2Status": "DEFERRED_UNTIL_USER_EXPLICITLY_ADVANCES_PHASE",
+    "forbiddenPhase1Drift": [
+      "second-grade schoolwork",
+      "Emma-specific schoolwork",
+      "STAR-style practice",
+      "K-8 educational expansion",
+      "unrelated original feature breadth"
+    ]
   }
 }
