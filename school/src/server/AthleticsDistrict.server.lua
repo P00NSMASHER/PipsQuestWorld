@@ -37,7 +37,7 @@ local dark = Color3.fromRGB(58, 61, 66)
 local metal = Color3.fromRGB(88, 96, 107)
 local concrete = Color3.fromRGB(198, 201, 204)
 local football = loc("FootballField")
-local basketball = loc("BasketballCourt")
+local soccer = loc("SoccerField")
 local pool = loc("OutdoorPool")
 local entrance = loc("AthleticsEntrance")
 
@@ -67,22 +67,17 @@ for row = 0, 4 do
     part("FootballBleacher", Vector3.new(70, 1.1, 4), CFrame.new(football.X + 77, 1.4 + row * 1.15, football.Z - 14 + row * 4), Color3.fromRGB(145, 151, 160), Enum.Material.Metal)
 end
 
--- Outdoor basketball court: a documented Legacy campus activity landmark.
-part("BasketballCourt", Vector3.new(92, 0.4, 54), CFrame.new(basketball.X, 0.62, basketball.Z), Color3.fromRGB(86, 111, 145), Enum.Material.SmoothPlastic)
-part("BasketballCenterLine", Vector3.new(0.35, 0.08, 50), CFrame.new(basketball.X, 0.9, basketball.Z), white, Enum.Material.SmoothPlastic)
-for _, z in ipairs({-25, 25}) do
-    part("BasketballSideline", Vector3.new(88, 0.08, 0.35), CFrame.new(basketball.X, 0.9, basketball.Z + z), white, Enum.Material.SmoothPlastic)
-end
-for _, x in ipairs({-44, 44}) do
-    part("BasketballBaseline", Vector3.new(0.35, 0.08, 50), CFrame.new(basketball.X + x, 0.9, basketball.Z), white, Enum.Material.SmoothPlastic)
+-- Soccer pitch in the west athletics cluster, matching the approved Legacy map landmark.
+part("SoccerTurf", Vector3.new(104, 0.4, 68), CFrame.new(soccer.X, 0.62, soccer.Z), Color3.fromRGB(78, 139, 76), Enum.Material.Grass)
+part("SoccerMidfield", Vector3.new(0.35, 0.08, 62), CFrame.new(soccer.X, 0.9, soccer.Z), white, Enum.Material.SmoothPlastic)
+for _, z in ipairs({-31, 31}) do
+    part("SoccerTouchline", Vector3.new(98, 0.08, 0.35), CFrame.new(soccer.X, 0.9, soccer.Z + z), white, Enum.Material.SmoothPlastic)
 end
 for _, direction in ipairs({-1, 1}) do
-    local x = basketball.X + direction * 39
-    part("BasketballPost", Vector3.new(0.8, 10, 0.8), CFrame.new(x, 5.6, basketball.Z), metal, Enum.Material.Metal)
-    part("BasketballBackboard", Vector3.new(0.7, 7, 11), CFrame.new(x - direction * 1.7, 9.2, basketball.Z), white, Enum.Material.SmoothPlastic)
-    local rim = part("BasketballRim", Vector3.new(0.5, 4, 4), CFrame.new(x - direction * 3.3, 7.4, basketball.Z), Color3.fromRGB(221, 103, 55), Enum.Material.Metal)
-    rim.Shape = Enum.PartType.Cylinder
-    rim.CFrame = rim.CFrame * CFrame.Angles(math.rad(90), 0, 0)
+    local x = soccer.X + direction * 51
+    part("SoccerGoalLeft", Vector3.new(0.6, 8, 0.6), CFrame.new(x, 4.7, soccer.Z - 8), white, Enum.Material.Metal)
+    part("SoccerGoalRight", Vector3.new(0.6, 8, 0.6), CFrame.new(x, 4.7, soccer.Z + 8), white, Enum.Material.Metal)
+    part("SoccerGoalTop", Vector3.new(0.6, 0.6, 16), CFrame.new(x, 8.4, soccer.Z), white, Enum.Material.Metal)
 end
 
 -- Outdoor pool/deck landmark.
