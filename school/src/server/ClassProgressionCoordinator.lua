@@ -47,6 +47,10 @@ function Coordinator:getPlayerSnapshot(playerKey)
     return snapshot
 end
 
+function Coordinator:isClassCompleted(playerKey, classKey)
+    return self._classController:isCompleted(playerKey, classKey)
+end
+
 function Coordinator:enter(playerKey, classKey, subject, initialDifficulty)
     local pending = self._pending[playerKey]
     if pending then

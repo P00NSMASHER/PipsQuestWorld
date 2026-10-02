@@ -25,6 +25,7 @@ assertEqual(enteredStatus, "entered", "class entry status")
 assertEqual(entered.accepted, true, "class entry rejected")
 assertEqual(entered.activity.id, "math-linear-1", "wrong deterministic activity")
 assertEqual(entered.activity.correctIndex, nil, "answer key leaked")
+assertEqual(controller:isCompleted("player-1", "1:2:math"), false, "new class incorrectly marked complete")
 
 local enteredAgain, enteredAgainStatus = controller:enter("player-1", "1:2:math", "Math", 1)
 assertEqual(enteredAgainStatus, "active", "repeat entry must be idempotent")
@@ -63,6 +64,7 @@ assertEqual(corrected.classCompleted, true, "class completion not emitted")
 assertEqual(corrected.returnToFreeRoam, true, "completion did not return to free roam")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "completion not recorded exactly once")
 assertEqual(controller:getPlayerSnapshot("player-1").active, nil, "active class survived completion")
+assertEqual(controller:isCompleted("player-1", "1:2:math"), true, "completed class was not discoverable")
 
 local completionReplay, completionReplayStatus = controller:submit(
     "player-1", "1:2:math", entered.activity.id, "submission-2", 2
@@ -93,6 +95,7 @@ assertEqual(leftStatus, "left", "period exit status")
 assertEqual(left.returnToFreeRoam, true, "period exit did not return to free roam")
 assertEqual(controller:getPlayerSnapshot("player-1").active, nil, "period exit left class active")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "period exit fabricated completion")
+assertEqual(controller:isCompleted("player-1", "1:4:science"), false, "incomplete class was marked complete")
 
 local staleAfterLeave, staleAfterLeaveStatus = controller:submit(
     "player-1", "1:4:science", science.activity.id, "science-before-leave", 2

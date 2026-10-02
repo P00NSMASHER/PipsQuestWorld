@@ -330,6 +330,10 @@ task.spawn(function()
                 statusLabel.Text = "Saving class progress..."
                 action.Text = "SAVING..."
                 action.Active = false
+            elseif classState.completedCurrentClass then
+                statusLabel.Text = "Class complete • Free roam until the next bell."
+                action.Text = "CLASS COMPLETE"
+                action.Active = false
             elseif classState.active then
                 statusLabel.Text = "Class active • " .. tostring(classState.roomDisplayName or "Classroom")
                 action.Text = "LEAVE CLASS"
