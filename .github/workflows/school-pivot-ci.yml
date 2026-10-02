@@ -35,7 +35,15 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
       - name: Verify canonical Foundation invariants
         run: python3 scripts/verify-school-pivot.py
       - name: Verify Foundation CI source-root isolation
         run: python3 scripts/verify-foundation-ci-scope.py
+      - name: Run Foundation world contracts
+        run: lua5.4 school/tests/foundation_world_contract_spec.lua
+      - name: Run housing plot contracts
+        run: lua5.4 school/tests/housing_plot_contract_spec.lua
