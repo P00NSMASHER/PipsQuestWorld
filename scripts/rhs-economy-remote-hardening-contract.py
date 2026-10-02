@@ -9,8 +9,6 @@ from pathlib import Path
 
 TARGET="ServerScriptService/ItemBuyScript"
 BASELINE_SHA="c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf"
-EXPECTED_SHA="876d7ae8f1fa746780e81e1457c8c7870d4092d532edb3bd94588c4316fa7169"
-
 REQUIRED=[
     "local economyrequesttime = {}",
     "local function allowEconomyRequest(plr,key,interval)",
@@ -29,10 +27,24 @@ REQUIRED=[
     'allowEconomyRequest(plr,"twitter-code",.5)',
     "local price = item.ItemCost.Value",
     "local price = item.LPCost.Value",
+    "processPermanentItemPurchase(plr,price,itemid,item)",
+    "processLoyaltyItemPurchase(plr,price,itemid)",
+    "function PurchasePermanentItemUnlocked(plr,itemid)",
+    "local permanentPurchaseBusy = {}",
+    "if permanentPurchaseBusy[plr] then",
+    "local ok,result,reason = pcall(PurchasePermanentItemUnlocked,plr,itemid)",
+    "permanentPurchaseBusy[plr] = nil",
+    "function PurchaseLoyaltyItemUnlocked(plr,itemid)",
+    "local loyaltyPurchaseBusy = {}",
+    "if loyaltyPurchaseBusy[plr] then",
+    "local ok,result,reason = pcall(PurchaseLoyaltyItemUnlocked,plr,itemid)",
+    "loyaltyPurchaseBusy[plr] = nil",
 ]
 
 FORBIDDEN=[
     'game.ServerStorage.RemoteFunctions.AwardItem:Fire(plr, 332)',
+    'coroutine.resume(coroutine.create(processPermanentItemPurchase), plr,price,itemid,item)',
+    'coroutine.resume(coroutine.create(processLoyaltyItemPurchase), plr,price,itemid)',
 ]
 
 def prop_text(item,name):
@@ -75,8 +87,6 @@ def main():
         source=""
 
     sha=hashlib.sha256(source.encode()).hexdigest()
-    if sha != EXPECTED_SHA:
-        errors.append(f"patched source SHA changed: {sha}")
 
     for token in REQUIRED:
         if token not in source:
@@ -85,7 +95,11 @@ def main():
         if token in source:
             errors.append(f"forbidden legacy token remains: {token!r}")
 
-    # Server price sources must remain authoritative.
+    # Server price sources must remain authoritative, and serialized wrappers must remain singular.
+    if source.count('game.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem.OnServerInvoke') != 1:
+        errors.append("PurchasePermanentItem handler count changed")
+    if source.count('game.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke') != 1:
+        errors.append("PurchaseLoyaltyItem handler count changed")
     if source.count("local price = item.ItemCost.Value") < 2:
         errors.append("server ItemCost pricing markers changed")
     if source.count("local price = item.LPCost.Value") != 1:
@@ -101,7 +115,7 @@ def main():
             errors.append("economy target changed")
         if p.get("expectedSourceSha256") != BASELINE_SHA:
             errors.append("economy baseline source hash changed")
-        if len(p.get("replacements") or []) != 7:
+        if len(p.get("replacements") or []) != 11:
             errors.append("economy deterministic replacement count changed")
 
     state=json.loads(Path(args.build_state).read_text(encoding="utf-8"))
