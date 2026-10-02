@@ -3,7 +3,7 @@
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_QA_VALIDATION",
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATION_READY",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -30,22 +30,22 @@
         "housing/property authority",
         "avatar/customization/shopping authority"
       ],
-      "status": "EXACT_HEAD_CI_GREEN_QA_READY",
+      "status": "QA_PASS_INTEGRATION_READY",
       "pr": 85,
-      "headSha": "8f7293f1021a4bae7e2d12b07e489e10b9135c3f",
+      "headSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
       "exactHeadCi": [
         {
-          "runId": 37027751477,
+          "runId": 37028006287,
           "workflow": "High School Foundation Static Guards",
           "conclusion": "success"
         },
         {
-          "runId": 37027751963,
+          "runId": 37028005768,
           "workflow": "High School Class Education Guards",
           "conclusion": "success"
         },
         {
-          "runId": 37027752230,
+          "runId": 37028005242,
           "workflow": "High School Progression Guards",
           "conclusion": "success"
         }
@@ -108,9 +108,9 @@
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Roblox High School QA & Contract",
-    "to": "Roblox High School Integration Director",
-    "condition": "QA PASS identifies exact candidate 8f7293f1021a4bae7e2d12b07e489e10b9135c3f with the cited exact-head guards green."
+    "from": "Roblox High School Integration Director",
+    "to": "Roblox High School Integration Smoke",
+    "condition": "PR #85 exact head 3ad2121779af85f5e93457df7bf7d2b3365db8f4 merges into unchanged canonical base 92691e009869ee9cd5d9306786502b157a5b6c84 and the resulting exact canonical SHA is identified."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -187,22 +187,23 @@
       "handoff": "QA/Contract"
     },
     "QA/Contract": {
-      "mode": "VALIDATE",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
       "candidateSha": "8f7293f1021a4bae7e2d12b07e489e10b9135c3f",
-      "objective": "Validate PR #85 vehicle lifecycle: one active vehicle/player, owner-only control, AutoShop spawn seam, safe despawn/re-spawn/player-leave cleanup, server-authoritative movement inputs, mobile VehicleSeat/client seams, provenance/original primitive assets, and no duplicate world/economy/persistence/class authority.",
+      "objective": "QA PASS is recorded for PR #85@3ad2121779af85f5e93457df7bf7d2b3365db8f4; hold until a changed candidate exists.",
       "owned": "QA harnesses/contracts/receipt only",
       "dependency": "PR #85 exact-head CI PASS runs 37027751477, 37027751963, 37027752230",
       "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "INTEGRATE",
       "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "Wait for QA-approved exact-green vehicle candidate.",
+      "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+      "objective": "Mechanically integrate QA-approved PR #85 vehicle lifecycle into rebuild/high-school-foundation with expected exact head; do not change producer semantics.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS on exact vehicle head",
-      "exit": "Merge exact approved vehicle head and produce integrated exact SHA.",
+      "dependency": "QA PASS receipt + exact-head CI runs 37028006287/37028005768/37028005242",
+      "exit": "PR #85 merged without head/base drift and new canonical exact SHA identified.",
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
