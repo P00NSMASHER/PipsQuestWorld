@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "55f37e9e8785e7520a737a2c7a9dae7605d6695b5300cd819b1ec4acd897adb6",
+  "patchManifestSha256": "9e01cb2dba24791209c0f40bcfaa78863dd9613720d6728903801a0043bd2021",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -219,7 +219,7 @@
         "targetPath": "ServerScriptService/PhoneTextingScript"
       },
       {
-        "afterSourceSha256": "876d7ae8f1fa746780e81e1457c8c7870d4092d532edb3bd94588c4316fa7169",
+        "afterSourceSha256": "5a1818e154b76f7465c6a3d4f32c1a6d0a6e455095b9b654a238ce8823a3c0bc",
         "beforeSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
         "class": "Script",
         "id": "harden-economy-remote-inputs",
@@ -236,13 +236,33 @@
           },
           {
             "expectedCount": 1,
-            "newSha256": "ee0ce5e4b4c85db1a99c213ff6a87fe360d317bfcdc492c835b6b56b167ba9bc",
+            "newSha256": "2a1f1e5316132ddf780779575ccbd30effdf25ea0a7fc6390e5e06caf9797315",
             "oldSha256": "0331c9ece9317394e609da1bb6e85e5094c0e1a89faa8608ccd5ffaf6ab1ba11"
           },
           {
             "expectedCount": 1,
-            "newSha256": "34ffc2ffea1bfc463bbe7fb83bc84a505acb8533c78c0146b10f811c2139c5b5",
+            "newSha256": "04ab3b182c14704a6277914b392e3d1a584e048f51a787ca5e1677270dce3441",
+            "oldSha256": "d251b9d95b33b5c262fee93decc24e1297c0ba491d29a585a8c77d4b587a1648"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "83e4f21895aea48ca762c1502927b27d6ed501433037fdaa14746d2fafe5d2af",
+            "oldSha256": "df854d674b9732fdbe9e734344a60836c53677cdc11c90fbc579a910ca68b162"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "e64c654f2f858a4ebf3b1f8472664dea419697e15bf1c36979f20094c7e239cf",
             "oldSha256": "20af2bd31c9daec82b5fc1e2f062b20f060de815b402a88352b8e3cbad325f81"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "b243d3be80113b24cc9e321486a8719c6b8a7c458eb0c5d73a39d82c3152d693",
+            "oldSha256": "f9aae00dd8afc2556696e70913aeb55ed9a5d67cf1a8ea86de29f0bf28abcea9"
+          },
+          {
+            "expectedCount": 1,
+            "newSha256": "d35eafddd9d5416f5b31f9d7e93c5b6525c36a0c53e9093174b0a3dc5940a3bb",
+            "oldSha256": "32dd08a7ac2fa927e8f04c82c4daacd7f660ac3ecc80fd13c288c3bd9ac64532"
           },
           {
             "expectedCount": 1,
@@ -333,5 +353,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "269e09c91734125660dbef04dbc03bbb237f16acd794dde134dae8d57eed74aa"
+  "workingSha256": "b99c120960b1d8c01df26de793fa0a03d075f8e1313ac25facbd5d00ddbd89ef"
 }
