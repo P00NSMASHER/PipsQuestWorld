@@ -44,10 +44,7 @@ for old_path in ("src/client/SchoolHud.client.lua", "SchoolLoop.server.lua", "Qu
     if any(old_path in path for path in mapped_paths):
         raise SystemExit(f"project maps retired runtime path: {old_path}")
 
-allowed_client_paths = {
-    "src/client/CanonicalSchoolClient.client.lua",
-    "src/client/VehicleClient.client.lua",
-}
+allowed_client_paths = {"src/client/CanonicalSchoolClient.client.lua"}
 client_paths = {path for path in mapped_paths if path.startswith("src/client/")}
 unexpected_client_paths = client_paths - allowed_client_paths
 if unexpected_client_paths:
@@ -87,24 +84,6 @@ if "src/client/CanonicalSchoolClient.client.lua" in client_paths:
     ):
         if required not in client_text:
             raise SystemExit(f"canonical client missing server-authoritative seam: {required}")
-
-if "src/client/VehicleClient.client.lua" in client_paths:
-    vehicle_client = school / "src/client/VehicleClient.client.lua"
-    if not vehicle_client.exists():
-        raise SystemExit("vehicle client mapping has no source file")
-    vehicle_client_text = vehicle_client.read_text()
-    for forbidden in ("DataStoreService", "UpdateAsync", "SetAsync", "correctIndex", "correctChoiceId"):
-        if forbidden in vehicle_client_text:
-            raise SystemExit(f"vehicle client owns forbidden authority: {forbidden}")
-    for required in (
-        'WaitForChild("Vehicles")',
-        'WaitForChild("GetState")',
-        'WaitForChild("Spawn")',
-        'WaitForChild("Despawn")',
-        "InvokeServer",
-    ):
-        if required not in vehicle_client_text:
-            raise SystemExit(f"vehicle client missing server-authoritative seam: {required}")
 
 config_text = config.read_text()
 campus_text = campus.read_text()
