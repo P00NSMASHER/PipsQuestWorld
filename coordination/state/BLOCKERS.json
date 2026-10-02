@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
   "currentBlockers": [],
-  "gateStatus": "WAITING_EXACT_HEAD_SMOKE",
-  "nextProducer": "Roblox High School Integration Smoke",
-  "nextObjective": "CERTIFY_SCHOOL_CLASS_FEEL_CANONICAL_99E12750",
-  "exactUnblockCondition": "Run bounded exact-head smoke against rebuild/high-school-foundation@99e12750b8b87812f3363e3691c12fb8797669bd. Advance priority only if that exact SHA has the required canonical guards green and smoke passes; any newer head invalidates the handoff.",
+  "gateStatus": "CLEARED_FOR_ASSIGNED_FREE_ROAM_SLICE",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+  "exactUnblockCondition": "CLEARED. Canonical 99e12750b8b87812f3363e3691c12fb8797669bd has all three exact-head guards green and Integration Smoke PASS at receipt commit 456974b44548d814bccfc95f48a67f0291971a99. Free Roam may proceed only with the assigned cafe-job slice on this exact certified lineage or a newer Control-Tower-certified successor.",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
