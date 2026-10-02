@@ -57,11 +57,13 @@ local floorColor = Color3.fromRGB(203, 210, 220)
 local accentA = Color3.fromRGB(92, 132, 204)
 local accentB = Color3.fromRGB(126, 92, 181)
 
-makePart("CampusGround", Vector3.new(260, 2, 300), CFrame.new(0, -1, 0), Color3.fromRGB(117, 163, 102), Enum.Material.Grass)
+makePart("CampusGround", Vector3.new(520, 2, 600), CFrame.new(0, -1, 85), Color3.fromRGB(117, 163, 102), Enum.Material.Grass)
 makePart("SchoolFloor", Vector3.new(190, 1, 245), CFrame.new(0, 0, 0), floorColor, Enum.Material.Concrete)
 
 makePart("NorthWall", Vector3.new(190, 18, 2), CFrame.new(0, 9, -122), wallColor, Enum.Material.Brick)
-makePart("SouthWall", Vector3.new(190, 18, 2), CFrame.new(0, 9, 122), wallColor, Enum.Material.Brick)
+makePart("SouthWallLeft", Vector3.new(80, 18, 2), CFrame.new(-55, 9, 122), wallColor, Enum.Material.Brick)
+makePart("SouthWallRight", Vector3.new(80, 18, 2), CFrame.new(55, 9, 122), wallColor, Enum.Material.Brick)
+makePart("SouthWallHeader", Vector3.new(30, 5, 2), CFrame.new(0, 15.5, 122), wallColor, Enum.Material.Brick)
 makePart("WestWall", Vector3.new(2, 18, 245), CFrame.new(-95, 9, 0), wallColor, Enum.Material.Brick)
 makePart("EastWall", Vector3.new(2, 18, 245), CFrame.new(95, 9, 0), wallColor, Enum.Material.Brick)
 
@@ -256,6 +258,60 @@ for _, direction in ipairs({-1, 1}) do
     rim.Shape = Enum.PartType.Cylinder
     rim.CFrame = rim.CFrame * CFrame.Angles(0, 0, math.rad(90))
 end
+
+-- Original campus exterior: a readable entrance, drop-off, parking, and street edge.
+makePart("FrontPlaza", Vector3.new(116, 0.45, 34), CFrame.new(0, 0.7, 140), Color3.fromRGB(196, 199, 202), Enum.Material.Concrete)
+makePart("EntryWalk", Vector3.new(18, 0.3, 82), CFrame.new(0, 0.75, 171), Color3.fromRGB(204, 207, 211), Enum.Material.Concrete)
+makePart("EntryCanopy", Vector3.new(38, 1.2, 14), CFrame.new(0, 13.5, 129), trimColor, Enum.Material.Metal)
+for _, x in ipairs({-9, 9}) do
+    makePart("CanopyPost", Vector3.new(1.2, 13, 1.2), CFrame.new(x, 6.7, 134), trimColor, Enum.Material.Metal)
+end
+
+for _, x in ipairs({-8, 0, 8}) do
+    local door = makePart("FrontGlassDoor", Vector3.new(7, 11, 0.45), CFrame.new(x, 6, 121.6), glassColor, Enum.Material.Glass)
+    door.Transparency = 0.38
+    door.CanCollide = false
+end
+
+makePart("DropOffLane", Vector3.new(210, 0.35, 32), CFrame.new(0, 0.55, 169), Color3.fromRGB(63, 66, 72), Enum.Material.Asphalt)
+makePart("DropOffStripe", Vector3.new(204, 0.08, 0.35), CFrame.new(0, 0.78, 158), Color3.fromRGB(244, 205, 72), Enum.Material.SmoothPlastic)
+
+makePart("ParkingLot", Vector3.new(230, 0.35, 104), CFrame.new(0, 0.52, 228), Color3.fromRGB(67, 70, 75), Enum.Material.Asphalt)
+for col = -5, 5 do
+    local x = col * 18
+    makePart("ParkingStripeNorth", Vector3.new(0.3, 0.08, 33), CFrame.new(x, 0.75, 205), Color3.fromRGB(235, 235, 230), Enum.Material.SmoothPlastic)
+    makePart("ParkingStripeSouth", Vector3.new(0.3, 0.08, 33), CFrame.new(x, 0.75, 251), Color3.fromRGB(235, 235, 230), Enum.Material.SmoothPlastic)
+end
+
+makePart("CampusRoad", Vector3.new(430, 0.4, 38), CFrame.new(0, 0.45, 300), Color3.fromRGB(54, 57, 62), Enum.Material.Asphalt)
+makePart("RoadCenterLine", Vector3.new(420, 0.08, 0.35), CFrame.new(0, 0.7, 300), Color3.fromRGB(245, 205, 69), Enum.Material.SmoothPlastic)
+
+local function buildCampusTree(x, z)
+    makePart("TreeTrunk", Vector3.new(2.4, 10, 2.4), CFrame.new(x, 5, z), Color3.fromRGB(103, 76, 55), Enum.Material.Wood)
+    local crown = makePart("TreeCrown", Vector3.new(12, 12, 12), CFrame.new(x, 13, z), Color3.fromRGB(74, 137, 77), Enum.Material.Grass)
+    crown.Shape = Enum.PartType.Ball
+end
+
+for _, position in ipairs({
+    Vector3.new(-78, 0, 145),
+    Vector3.new(78, 0, 145),
+    Vector3.new(-122, 0, 184),
+    Vector3.new(122, 0, 184),
+    Vector3.new(-138, 0, 278),
+    Vector3.new(138, 0, 278),
+}) do
+    buildCampusTree(position.X, position.Z)
+end
+
+for _, x in ipairs({-92, 92}) do
+    for _, z in ipairs({163, 214, 265}) do
+        makePart("LampPost", Vector3.new(0.8, 14, 0.8), CFrame.new(x, 7, z), Color3.fromRGB(48, 53, 61), Enum.Material.Metal)
+        local lamp = makePart("LampHead", Vector3.new(4, 1, 2), CFrame.new(x, 14, z), Color3.fromRGB(235, 238, 220), Enum.Material.Neon)
+        lamp.CanCollide = false
+    end
+end
+
+makeLabel("PIP HIGH", CFrame.new(0, 11, 123.2) * CFrame.Angles(0, math.rad(180), 0))
 
 local spawn = Instance.new("SpawnLocation")
 spawn.Name = "MainSpawn"
