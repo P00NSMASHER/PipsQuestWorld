@@ -1,10 +1,11 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "50288ecf33dec647424f6bf173071a8982041b41",
+  "canonicalSha": "7e69301b253d88a7ed779556387b6f9011022976",
   "currentBlockers": [],
-  "nextProducer": "Roblox High School Progression & Mobile",
-  "nextObjective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
-  "exactUnblockCondition": "Progression & Mobile opens one exact-head tested school/** economy/ownership contract candidate based on 50288ecf or a newer smoke-certified canonical successor.",
+  "gateStatus": "CLEARED_FOR_ASSIGNED_FREE_ROAM_SLICE",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+  "exactUnblockCondition": "CLEARED. Free Roam may open exactly one exact-head tested school/** candidate based on 7e69301b253d88a7ed779556387b6f9011022976 (or a newer Control-Tower-certified successor) implementing only the assigned cafe-job loop and consuming Foundation WorldLocations plus the existing EconomyRepository API.",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
