@@ -1,60 +1,84 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "WORLD_TOWN_SHELL_SMOKE_CERTIFIED",
+  "unintegratedProductCandidateCount": 1,
+  "currentParityMilestone": "PARITY_STAGE_2_SCHOOL_CLASS_FEEL",
+  "priorityBacklog": [
+    {"priority": 1, "slice": "world/campus/town depth", "status": "INTEGRATED_SMOKE_CERTIFIED"},
+    {"priority": 2, "slice": "school/class feel", "status": "ACTIVE_CRITICAL_PATH"},
+    {"priority": 3, "slice": "progression + jobs/economy contract", "status": "DOWNSTREAM_SPECULATIVE_BLOCKED_QA"},
+    {"priority": 4, "slice": "vehicles", "status": "WAITING"},
+    {"priority": 5, "slice": "housing/property", "status": "WAITING"},
+    {"priority": 6, "slice": "avatar/customization/shopping", "status": "WAITING"},
+    {"priority": 7, "slice": "social/free-roam polish", "status": "WAITING"},
+    {"priority": 8, "slice": "mobile/presentation polish", "status": "WAITING"}
+  ],
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
       "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
-    "upstream": null,
-    "downstream": {
-      "lane": "Roblox High School Progression & Mobile",
-      "objective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
+    "upstream": {
+      "lane": "Roblox High School Class & Education",
+      "objective": "PARITY_STAGE_2_SCHOOL_CLASS_FEEL",
       "baseBranch": "rebuild/high-school-foundation",
       "baseSha": "50288ecf33dec647424f6bf173071a8982041b41",
       "allowedRoot": "school/**",
-      "stableInterfacesOnly": [
-        "ClassEducation completion identifiers",
-        "ProgressionRepository durable player state",
-        "read-only progression snapshot"
-      ],
       "ownership": [
-        "single server-authoritative money balance",
-        "idempotent transaction ledger",
-        "durable ownership/unlock contract",
-        "read-only economy snapshot"
+        "class entry/exit and attendance consumption of Foundation period state",
+        "original subject activities",
+        "server-authoritative grading/class completion",
+        "class feedback and school-day feel"
       ],
       "forbiddenOverlap": [
-        "world geometry",
-        "job interaction mechanics",
-        "vehicle lifecycle/physics",
-        "housing placement",
-        "shop/catalog presentation",
-        "school clock authority",
-        "class/grading authority"
+        "school clock/day authority",
+        "world geometry/location ownership",
+        "progression/economy authority",
+        "persistence writer",
+        "vehicle authority",
+        "housing authority"
       ],
-      "status": "READY_BEHIND_STABLE_INTERFACE"
+      "status": "READY_TO_PRODUCE_ONE_BOUNDED_CANDIDATE"
+    },
+    "downstream": {
+      "lane": "Roblox High School Progression & Mobile",
+      "objective": "PARITY_STAGE_3A_ECONOMY_CONTRACT_REPAIR",
+      "candidatePr": 47,
+      "candidateBranch": "rebuild/high-school-progression-economy-v1",
+      "candidateSha": "74fba1b3066e232cbddd7d09b5dd75554a0c6803",
+      "baseSha": "50288ecf33dec647424f6bf173071a8982041b41",
+      "allowedRoot": "school/**",
+      "status": "BLOCKED_QA_FIX_REQUIRED",
+      "blocker": "ECONOMY_OPERATION_ORDER_REJOIN"
     }
   },
+  "supersededStagedCandidates": [
+    {
+      "pr": 48,
+      "branch": "rebuild/high-school-progression-mobile-stage1b-v2",
+      "sha": "dcbeca0624724e8ef1a866e921d1463f9821eeb5",
+      "status": "STAGED_NOT_AUTHORIZED",
+      "reason": "Mobile/presentation is priority 8 and cannot consume an active WIP slot while priorities 2 and 3 are active.",
+      "mutationRule": "Do not modify, merge, or consume this candidate unless Control Tower explicitly reassigns it after higher-priority slices advance."
+    }
+  ],
   "supportLaneAssignments": {
-    "Foundation": "WAITING_DEPENDENCY; canonical world/town shell is smoke-certified at 50288ecf. Do not open another overlapping world branch.",
-    "Class & Education": "Prepare Stage-2 school/class-feel tests or isolated content contracts only; no overlapping runtime candidate while the economy contract slot is active.",
-    "Content QA": "Prepare original class/minigame content prerequisites only; no runtime fork.",
-    "Progression & Mobile": "May produce one isolated economy/ownership contract candidate behind current stable interfaces; do not bind job/vehicle/housing mechanics.",
-    "Pip High Free Roam": "WAITING_DEPENDENCY for an exact-green economy contract candidate.",
-    "QA/Contract": "Validate the smoke-certified 50288ecf world/town invariants and any isolated economy contract candidate without implementing producer semantics.",
-    "Integration": "Consume only the next exact-green economy contract candidate; preserve the WIP cap.",
-    "Integration Smoke": "Re-certify any newer canonical exact head after integration.",
-    "Release/Package": "WAITING_DEPENDENCY until the requested parity milestone is smoke-certified; never publish automatically.",
+    "Foundation": "WAITING_DEPENDENCY; world/campus/town depth is integrated and smoke-certified at 50288ecf. Do not open overlapping world work.",
+    "Class & Education": "CURRENT_CRITICAL_PATH. Produce exactly one bounded school/** candidate for school/class feel from canonical 50288ecf.",
+    "Content QA": "Prepare original/sanitized subject-activity content and validators for the active Class & Education slice only; no runtime fork.",
+    "Progression & Mobile": "DOWNSTREAM_SPECULATIVE only. Fix ECONOMY_OPERATION_ORDER_REJOIN on PR #47 without adding jobs/vehicles/housing/shop presentation; do not work on staged PR #48.",
+    "Pip High Free Roam": "WAITING_DEPENDENCY for school/class feel integration and economy contract readiness.",
+    "QA/Contract": "Validate the active Class & Education candidate and preserve the existing economy blocker evidence; do not implement producer semantics.",
+    "Integration": "Next product integration target is the exact-green Class & Education candidate. Economy remains downstream until the class slice integrates.",
+    "Integration Smoke": "Re-certify each newer canonical exact head after integration.",
+    "Release/Package": "WAITING_DEPENDENCY; never publish automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
-  "openCanonicalPrCount": 0,
+  "openCanonicalPrCount": 2,
   "openNoncanonicalPrCount": 0,
-  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
-  "successMetric": "Validated player-facing high-school-life parity advancement on the canonical school/** lineage.",
+  "cyclesSinceLastEndToEndPlayableAdvancement": 1,
+  "successMetric": "Validated playable advancement of the high-fidelity Pip High school-life experience on canonical school/** only.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
     "broadTests": 0,
