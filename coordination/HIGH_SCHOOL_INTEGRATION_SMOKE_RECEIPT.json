@@ -1,86 +1,51 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T09:01:00Z",
-  "action": "EXACT_HEAD_SMOKE_CERTIFICATION",
+  "recordedAt": "2026-10-02T11:49:13Z",
   "result": "PASS",
-  "scope": "POST_INTEGRATION_SMOKE_EXACT_HEAD_ONLY",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "7e69301b253d88a7ed779556387b6f9011022976",
-  "canonicalSourceRoot": "school/**",
+  "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "sourceRoot": "school/**",
+  "milestone": "SCHOOL_CLASS_FEEL",
+  "eligibility": "LIVE_STATE_ELIGIBLE_BLOCKERS_EMPTY",
   "checks": {
-    "liveCanonicalHeadMatch": "PASS",
-    "foundationExactHeadCI": "PASS",
-    "classEducationExactHeadCI": "PASS",
-    "progressionExactHeadCI": "PASS",
-    "canonicalProductRuntimeIsolation": "PASS",
-    "schoolRuntimeTreeChangedSincePriorSmoke": "YES_ECONOMY_CONTRACT_ONLY",
-    "schoolPeriodSemanticsChanged": "NO",
-    "schoolRoomSemanticsChanged": "NO",
-    "classProgressionPersistenceAuthorityChanged": "NO",
-    "postIntegrationSmoke": "PASS_HEADLESS_EXACT_HEAD"
+    "buildLoadSpawnClock": "PASS_REUSED_UNCHANGED",
+    "classEntryActivityCompletion": "PASS_EXACT_HEAD",
+    "progressionPersistenceExactlyOnce": "PASS_EXACT_HEAD",
+    "freeRoamRecovery": "PASS_EXACT_HEAD",
+    "mobileBasics": "PASS_REUSED_LAYOUT_UNCHANGED",
+    "provenanceAndRuntimeIsolation": "PASS"
   },
   "exactHeadCi": [
     {
-      "runId": 36987267442,
-      "workflow": "High School Foundation Static Guards",
-      "event": "push",
+      "runId": 36988705511,
+      "jobId": 110779596523,
       "conclusion": "success"
     },
     {
-      "runId": 36987267478,
-      "workflow": "High School Class Education Guards",
-      "event": "push",
+      "runId": 36988705638,
+      "jobId": 110779597090,
       "conclusion": "success"
     },
     {
-      "runId": 36987267574,
-      "workflow": "High School Progression Guards",
-      "event": "push",
+      "runId": 36988705665,
+      "jobId": 110779597288,
       "conclusion": "success"
     }
   ],
-  "deltaFromPriorSmokeCertified": {
-    "priorSmokeCertifiedSha": "50288ecf33dec647424f6bf173071a8982041b41",
-    "aheadBy": 5,
-    "changedFiles": [
-      ".github/workflows/high-school-progression-ci.yml",
-      "school/default.project.json",
-      "school/src/server/EconomyRepository.lua",
-      "school/tests/economy_repository_spec.lua"
-    ],
-    "runtimeChange": "EconomyRepository plus Rojo mapping only; workflow change is CI-only.",
-    "schoolClockChanged": false,
-    "classOrGradingAuthorityChanged": false,
-    "worldGeneratorChanged": false,
-    "retiredRuntimeConsumed": false
-  },
-  "playableEvidence": {
-    "status": "REUSED_PRIOR_CORE_LOOP_RUNTIME_EVIDENCE_WITH_EXACT_HEAD_ECONOMY_CONTRACT_VALIDATION",
-    "demonstratedPreviouslyAndNotTouchedByThisDelta": [
-      "authoritative school period",
-      "class attendance",
-      "server-authoritative activity",
-      "one durable progression commit",
-      "free-roam return",
-      "server-authoritative restored progression",
-      "client restoration"
-    ],
-    "newHeadlessEvidence": [
-      "Foundation invariants pass at exact canonical head",
-      "Class/Education guards pass at exact canonical head",
-      "Progression guards pass at exact canonical head",
-      "server-authoritative economy/ownership contract has deterministic exact-head coverage",
-      "no job, vehicle, housing, shop presentation, school clock, class/grading, or world-generator authority was introduced"
-    ],
-    "productionCrossServerSaveRejoin": "NOT_CLAIMED_WITHOUT_AUTHORIZED_PUBLISH",
-    "economyRuntimeValidatedInStudio": false
-  },
+  "priorSmokeSha": "7e69301b253d88a7ed779556387b6f9011022976",
+  "changedFiles": [
+    "school/src/client/CanonicalSchoolClient.client.lua",
+    "school/src/server/ClassEducation.server.lua",
+    "school/src/server/ClassProgressionCoordinator.lua",
+    "school/src/server/ClassSessionController.lua",
+    "school/tests/class_education_spec.lua"
+  ],
+  "localOnlyRequired": [],
   "blocker": null,
-  "nextOwner": "Roblox High School Control Tower",
-  "nextExitCriterion": "Consume this receipt only while live canonical remains exactly 7e69301b253d88a7ed779556387b6f9011022976 with the cited exact-head guards green. Control Tower may assign one bounded Pip High Free Roam parity slice under school/** using the Foundation WorldLocations registry and Progression/Economy APIs. Any newer canonical commit invalidates this certification until re-certified.",
+  "nextOwner": "Roblox High School Release & Package Gate",
+  "exactExitCriterion": "Consume only while canonical remains 99e12750b8b87812f3363e3691c12fb8797669bd with cited guards green.",
   "sourceEdited": false,
-  "sharedStateEdited": false,
   "published": false,
-  "taskScheduleOrEnablementChanged": false
+  "taskStateChanged": false
 }
