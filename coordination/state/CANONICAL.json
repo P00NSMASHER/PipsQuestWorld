@@ -1,48 +1,61 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "sha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "sourceRoot": "school/**",
   "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
-  "preMergeCandidate": {
-    "pr": 56,
-    "branch": "rebuild/high-school-free-roam-cafe-job-v1",
-    "sha": "9b9c6f79ac6c479992a3293526eb7829b95ee5a4"
-  },
+  "recentIntegrations": [
+    {
+      "pr": 56,
+      "branch": "rebuild/high-school-free-roam-cafe-job-v1",
+      "producerSha": "9b9c6f79ac6c479992a3293526eb7829b95ee5a4",
+      "mergeCommitSha": "2ab1584ee34e711828768cd999c86feba9202984",
+      "result": "CAFE_JOB_INTEGRATED"
+    },
+    {
+      "pr": 64,
+      "branch": "fix/economy-operation-order-rejoin-2ab1584",
+      "producerSha": "03ea7f172d8bc898b687644f416803851220437f",
+      "mergeCommitSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "result": "ECONOMY_OPERATION_ORDER_REJOIN_FIXED"
+    }
+  ],
   "exactHeadCi": [
     {
-      "runId": 37006496757,
+      "runId": 37010609435,
       "workflow": "High School Foundation Static Guards",
       "conclusion": "success"
     },
     {
-      "runId": 37006496676,
+      "runId": 37010609322,
       "workflow": "High School Class Education Guards",
       "conclusion": "success"
     },
     {
-      "runId": 37006496664,
+      "runId": 37010609413,
       "workflow": "High School Progression Guards",
       "conclusion": "success"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+    "receiptBranch": "qa/economy-order-rejoin-92691e0-receipt",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+    "receiptBranch": "coordination/integration-economy-rejoin-92691e0",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
   },
   "integrationSmoke": {
-    "branch": "coordination/smoke-cafe-job-2ab1584-cert",
-    "commit": "e067818490c1a03162f0b882ac4e98f8b8376bd6",
+    "branch": "coordination/smoke-economy-fix-92691e-cert",
+    "commit": "329c8e40f775391245a5911f2ac52206bcfe0fce",
     "result": "PASS",
-    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "certifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
