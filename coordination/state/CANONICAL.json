@@ -5,7 +5,7 @@
   "branch": "rebuild/high-school-foundation",
   "sha": "deadcf9e402cb18ea78667926663b8ebdede044f",
   "sourceRoot": "school/**",
-  "status": "INTEGRATED_AWAITING_EXACT_HEAD_CI",
+  "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE",
   "parentCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "repair": {
     "pr": 64,
@@ -13,22 +13,41 @@
     "sha": "03ea7f172d8bc898b687644f416803851220437f",
     "scope": "economy durable operation ordering/rejoin"
   },
-  "exactHeadCi": [],
+  "exactHeadCi": [
+    {
+      "runId": 37028471690,
+      "workflow": "High School Foundation Static Guards",
+      "event": "push",
+      "conclusion": "success"
+    },
+    {
+      "runId": 37028471816,
+      "workflow": "High School Class Education Guards",
+      "event": "push",
+      "conclusion": "success"
+    },
+    {
+      "runId": 37028471760,
+      "workflow": "High School Progression Guards",
+      "event": "push",
+      "conclusion": "success"
+    }
+  ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD_CANDIDATE",
     "certifiedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "integration": {
-    "result": "MERGED_AWAITING_EXACT_HEAD_CI",
-    "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
     "mergedPr": 85,
-    "integratedSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+    "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "certifiedSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
   },
   "integrationSmoke": {
-    "result": "STALE_AFTER_CANONICAL_ADVANCE",
-    "previousCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-    "pendingSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+    "result": "WAITING_LOCAL_ONLY_REQUIRED",
+    "pendingSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+    "requiredCheck": "Roblox runtime vehicle spawn -> auto-seat -> throttle/steer movement -> exit/re-enter -> despawn/cleanup."
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale."
 }
