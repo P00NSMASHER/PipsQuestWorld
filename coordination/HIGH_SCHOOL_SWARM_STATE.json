@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-01T23:57:12Z",
+  "updatedAt": "2026-10-02T00:31:16Z",
   "protocolCommit": "1c1ee94f26f19e0d71ffc724d7f46c70837a03b4",
   "optimizationTarget": "validated playable vertical-slice progress",
   "canonicalSourceRoot": "school/**",
@@ -52,7 +52,7 @@
     "upstream": null,
     "downstream": {
       "branch": "release/pip-high-demo-ui-20261001",
-      "sha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
       "pr": 32,
       "baseBranch": "rebuild/high-school-foundation",
       "baseSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
@@ -61,19 +61,19 @@
       "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME",
       "exactHeadCi": [
         {
-          "runId": 36942707607,
+          "runId": 36946375640,
           "workflow": "High School Foundation Static Guards",
           "event": "pull_request",
           "conclusion": "success"
         },
         {
-          "runId": 36942707587,
+          "runId": 36946375647,
           "workflow": "High School Class Education Guards",
           "event": "pull_request",
           "conclusion": "success"
         },
         {
-          "runId": 36942707624,
+          "runId": 36946375661,
           "workflow": "High School Progression Guards",
           "event": "pull_request",
           "conclusion": "success"
@@ -82,6 +82,9 @@
       "changedFiles": [
         "school/default.project.json",
         "school/src/client/CanonicalSchoolClient.client.lua",
+        "school/src/server/ClassEducation.server.lua",
+        "school/src/server/ProgressionStudioStore.lua",
+        "school/tests/progression_repository_spec.lua",
         "scripts/verify-school-pivot.py"
       ]
     }
@@ -109,9 +112,9 @@
       "owner": "Roblox High School Integration Director",
       "status": "LOCAL_ONLY_REQUIRED_LEASE_HELD",
       "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-      "candidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+      "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
       "pr": 32,
-      "exitCriterion": "Using the already-held ONLINE_LAPTOP lease, validate in Roblox Studio without publishing: spawn, authoritative period, attend one class, complete one server-authoritative activity, receive exactly one durable progression result, return to free roam, rejoin, and observe restored committed progression. Release the lease immediately with the exact outcome/evidence."
+      "exitCriterion": "Using the held ONLINE_LAPTOP lease, validate exact-green PR #32 head 258a434abce303acc2afa901e269ff0d19ff9d55 in Roblox Studio without publishing. The unpublished-Studio persistence adapter may be used only for local runtime diagnostics and must not be counted as production cross-server persistence."
     },
     {
       "id": "POST_INTEGRATION_SMOKE_RECEIPT_STALE",
@@ -172,12 +175,12 @@
       {
         "number": 32,
         "branch": "release/pip-high-demo-ui-20261001",
-        "sha": "48b5eaf7756bea214477771413872dab26f67fdd",
+        "sha": "258a434abce303acc2afa901e269ff0d19ff9d55",
         "status": "PASS_EXACT_HEAD_PENDING_LOCAL_RUNTIME"
       }
     ]
   },
-  "nextMilestone": "Integration Director finishes the already-leased local runtime validation of exact-green PR #32 candidate 48b5eaf7756bea214477771413872dab26f67fdd against canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27. Other workers must not acquire the laptop or create competing product candidates while the lease is active; they may do only cheap cloud-safe delta checks or WAITING_* work.",
+  "nextMilestone": "Integration Director validates exact-green PR #32 head 258a434abce303acc2afa901e269ff0d19ff9d55 locally. Confirm unpublished Studio no longer crashes on DataStore, then exercise spawn/period/class/server-authoritative activity/exactly-once progression/free-roam; keep production save/rejoin evidence separate from the Studio-only memory fallback.",
   "localMachineCoordination": {
     "resource": "ONLINE_LAPTOP",
     "leaseFile": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE.json",
@@ -194,7 +197,7 @@
     "currentHolderLane": "Roblox High School Integration Director",
     "currentLeasePurpose": "LOCAL_ONLY_REQUIRED runtime validation of canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27 with exact-green UI candidate 48b5eaf7756bea214477771413872dab26f67fdd; diagnose DataStore/persistence gate before authorized publication",
     "currentLeaseCanonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "currentLeaseCandidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+    "currentLeaseCandidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
     "currentLeaseExpiresAt": "2026-10-02T00:10:00Z"
   },
   "staleReceipts": {
