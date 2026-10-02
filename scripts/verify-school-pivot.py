@@ -9,8 +9,9 @@ project = school / "default.project.json"
 config = school / "src/shared/SchoolConfig.lua"
 campus = school / "src/server/CampusBuilder.server.lua"
 runtime = school / "src/server/FoundationBootstrap.server.lua"
+class_education = school / "src/server/ClassEducation.server.lua"
 
-for path in (project, config, campus, runtime):
+for path in (project, config, campus, runtime, class_education):
     if not path.exists():
         raise SystemExit(f"missing foundation file: {path.relative_to(root)}")
 
@@ -71,10 +72,15 @@ if "src/client/CanonicalSchoolClient.client.lua" in client_paths:
         'WaitForChild("StateSnapshot")',
         'WaitForChild("RequestTravel")',
         'WaitForChild("GetClassState")',
+        'WaitForChild("GetProgressionState")',
         'WaitForChild("EnterClass")',
         'WaitForChild("SubmitAnswer")',
         'WaitForChild("LeaveClass")',
         "InvokeServer",
+        "getProgressionState:InvokeServer()",
+        'result.code == "progression_commit_failed"',
+        "submissionId = pendingProgression.submissionId",
+        "setPoints(result.progressionState.totalPoints)",
     ):
         if required not in client_text:
             raise SystemExit(f"canonical client missing server-authoritative seam: {required}")
@@ -82,6 +88,16 @@ if "src/client/CanonicalSchoolClient.client.lua" in client_paths:
 config_text = config.read_text()
 campus_text = campus.read_text()
 runtime_text = runtime.read_text()
+class_education_text = class_education.read_text()
+
+for required in (
+    'getOrCreateRemoteFunction(classRemoteFolder, "GetProgressionState")',
+    "getProgressionState.OnServerInvoke",
+    "ProgressionRepository.open(progressionStore, player.UserId)",
+    "state = repository:getState()",
+):
+    if required not in class_education_text:
+        raise SystemExit(f"class/progression read seam missing: {required}")
 
 period_rooms = re.findall(r'room\s*=\s*"([^"]+)"', config_text)
 room_defs = set(re.findall(r'^\s{4}([A-Za-z0-9_]+)\s*=\s*\{\s*position\s*=', config_text, flags=re.MULTILINE))

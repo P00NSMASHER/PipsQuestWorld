@@ -83,6 +83,7 @@ end
 local remoteRoot = ReplicatedStorage:WaitForChild(SchoolConfig.Interfaces.remoteFolder)
 local classRemoteFolder = getOrCreateFolder(remoteRoot, "ClassEducation")
 local getClassState = getOrCreateRemoteFunction(classRemoteFolder, "GetClassState")
+local getProgressionState = getOrCreateRemoteFunction(classRemoteFolder, "GetProgressionState")
 local enterClass = getOrCreateRemoteFunction(classRemoteFolder, "EnterClass")
 local submitAnswer = getOrCreateRemoteFunction(classRemoteFolder, "SubmitAnswer")
 local leaveClass = getOrCreateRemoteFunction(classRemoteFolder, "LeaveClass")
@@ -177,6 +178,22 @@ end
 
 getClassState.OnServerInvoke = function(player)
     return safeDiscovery(player)
+end
+
+getProgressionState.OnServerInvoke = function(player)
+    local repository, readError = ProgressionRepository.open(progressionStore, player.UserId)
+    if not repository then
+        return {
+            available = false,
+            code = "progression_state_unavailable",
+            error = tostring(readError or "unknown"),
+        }
+    end
+
+    return {
+        available = true,
+        state = repository:getState(),
+    }
 end
 
 enterClass.OnServerInvoke = function(player)

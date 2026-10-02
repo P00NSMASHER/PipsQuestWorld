@@ -8,6 +8,7 @@ local stateSnapshot = root:WaitForChild("StateSnapshot")
 local requestTravel = root:WaitForChild("RequestTravel")
 local classRoot = root:WaitForChild("ClassEducation")
 local getClassState = classRoot:WaitForChild("GetClassState")
+local getProgressionState = classRoot:WaitForChild("GetProgressionState")
 local enterClass = classRoot:WaitForChild("EnterClass")
 local submitAnswer = classRoot:WaitForChild("SubmitAnswer")
 local leaveClass = classRoot:WaitForChild("LeaveClass")
@@ -41,6 +42,18 @@ title.TextColor3 = Color3.new(1, 1, 1)
 title.TextSize = 17
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = card
+
+local pointsLabel = Instance.new("TextLabel")
+pointsLabel.BackgroundTransparency = 1
+pointsLabel.Position = UDim2.new(1, -100, 0, 10)
+pointsLabel.Size = UDim2.new(0, 86, 0, 22)
+pointsLabel.Font = Enum.Font.GothamMedium
+pointsLabel.Text = "0 PTS"
+pointsLabel.TextColor3 = Color3.fromRGB(190, 202, 225)
+pointsLabel.TextSize = 13
+pointsLabel.TextXAlignment = Enum.TextXAlignment.Right
+pointsLabel.Parent = card
+
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
 periodLabel.Position = UDim2.new(0, 14, 0, 36)
@@ -126,6 +139,27 @@ local activeClassKey = nil
 local activeActivity = nil
 local busy = false
 local points = 0
+local pendingProgression = nil
+
+local function setPoints(value)
+    if type(value) ~= "number" then return end
+    points = value
+    pointsLabel.Text = tostring(points) .. " PTS"
+end
+
+local function refreshProgression()
+    local ok, response = pcall(function()
+        return getProgressionState:InvokeServer()
+    end)
+    if ok and type(response) == "table"
+        and response.available == true
+        and type(response.state) == "table" then
+        setPoints(response.state.totalPoints)
+    end
+end
+
+task.spawn(refreshProgression)
+
 local function clearChoices()
     for _, child in ipairs(choices:GetChildren()) do
         if child:IsA("TextButton") then
@@ -137,6 +171,7 @@ end
 local function showActivity(response)
     activeClassKey = response.classKey or (latestClassState and latestClassState.classKey)
     activeActivity = response.activity
+    pendingProgression = nil
     if not activeActivity then return end
 
     question.Text = tostring(activeActivity.subject or "Class") .. "\n" .. tostring(activeActivity.prompt)
@@ -157,8 +192,21 @@ local function showActivity(response)
 
         button.Activated:Connect(function()
             if busy or not activeActivity or not activeClassKey then return end
+
+            local submissionId
+            if pendingProgression then
+                if pendingProgression.classKey ~= activeClassKey
+                    or pendingProgression.activityId ~= activeActivity.id
+                    or pendingProgression.choiceIndex ~= index then
+                    feedback.Text = "Retry the same answer to finish saving progress."
+                    return
+                end
+                submissionId = pendingProgression.submissionId
+            else
+                submissionId = HttpService:GenerateGUID(false)
+            end
+
             busy = true
-            local submissionId = HttpService:GenerateGUID(false)
             local ok, result = pcall(function()
                 return submitAnswer:InvokeServer(activeClassKey, activeActivity.id, submissionId, index)
             end)
@@ -168,8 +216,21 @@ local function showActivity(response)
                 feedback.Text = "Could not submit that answer. Try again."
                 return
             end
+
+            if result.code == "progression_commit_failed" then
+                pendingProgression = {
+                    classKey = activeClassKey,
+                    activityId = activeActivity.id,
+                    choiceIndex = index,
+                    submissionId = submissionId,
+                }
+                feedback.Text = "Progress save failed. Tap this same answer again to retry safely."
+                return
+            end
+
+            pendingProgression = nil
             if result.progressionState and result.progressionState.totalPoints then
-                points = result.progressionState.totalPoints
+                setPoints(result.progressionState.totalPoints)
             end
 
             if result.classCompleted or result.completionAlreadyRecorded or result.progressionCommitted then
