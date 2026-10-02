@@ -49,4 +49,20 @@ SchoolConfig.WorldLocations = {
     TownPark = { position = Vector3.new(0, 3, 455), displayName = "Town Park" },
 }
 
+
+-- Stable Foundation-owned world seam for vehicle producers.
+-- Position is derived from the authoritative AutoShop X coordinate and TownCenter road Z/Y
+-- so vehicle code does not duplicate storefront or road geometry.
+local autoShopPosition = SchoolConfig.WorldLocations.AutoShop.position
+local townCenterPosition = SchoolConfig.WorldLocations.TownCenter.position
+
+SchoolConfig.WorldSpawnSeams = {
+    AutoShopRoad = {
+        position = Vector3.new(autoShopPosition.X, townCenterPosition.Y, townCenterPosition.Z),
+        headingDegrees = 90,
+        anchorLocation = "AutoShop",
+        roadPart = "TownMainStreet",
+    },
+}
+
 return SchoolConfig
