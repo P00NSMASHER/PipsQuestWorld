@@ -1,21 +1,21 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "High functional parity with publicly observable high-school-life behavior, rebuilt progressively with original code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "CAFE_JOB_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
-  "currentPlayableEvidence": "Canonical Pip High 2ab1584ee34e711828768cd999c86feba9202984 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA. QA, Integration, and Smoke receipts all identify the same exact SHA. The integrated cafe-job slice preserves the baseline loop and adds proximity-gated shift start, one deterministic serve_order task, idempotent EconomyRepository wage/no-double-pay behavior, failed-wage retry, bounded cafe mobile presentation, and return to free roam.",
-  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> free-roam return -> restored progression snapshot/client reload; cafe-job milestone additionally validated headlessly for idempotent durable wage and free-roam return",
-  "headlessExactHeadValidatedThrough": "2ab1584: Foundation + Class/Education + Progression + QA + Integration + post-integration Smoke exact-head PASS",
+  "currentPlayableStage": "CAFE_JOB_INTEGRATED_ECONOMY_REPAIR_HEADLESS_SMOKE_CERTIFIED",
+  "currentPlayableEvidence": "Canonical Pip High 92691e009869ee9cd5d9306786502b157a5b6c84 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA; QA, Integration, and Smoke receipts also bind to 92691e. The cafe-job slice remains intact and the economy persistence repair now preserves durable commit order so valid credit-then-debit histories reopen correctly.",
+  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> free-roam return -> restored progression snapshot/client reload; cafe-job milestone additionally validated headlessly for idempotent wage/no-double-pay, failed-wage retry, return to free roam, and durable economy rejoin ordering",
+  "headlessExactHeadValidatedThrough": "92691e: Foundation + Class/Education + Progression + QA + Integration + post-integration Smoke exact-head PASS",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
     "id": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
     "name": "Cafe job interaction loop",
-    "result": "PASS_INTEGRATED_SMOKE_CERTIFIED",
+    "result": "PASS_INTEGRATED_SMOKE_CERTIFIED_WITH_ECONOMY_REJOIN_REPAIR",
     "externallyObservableBehavior": "Player starts a cafe shift at the Foundation cafe location, performs one deterministic serve_order interaction, receives one server-authoritative idempotent wage through EconomyRepository, and returns to free roam.",
-    "evidenceSha": "2ab1584ee34e711828768cd999c86feba9202984"
+    "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Release/Package may build the deterministic school/** artifact for canonical 2ab1584. The next product priority is vehicles only after a new Control Tower WIP assignment.",
+  "nextMilestone": "Release/Package may build the deterministic school/** artifact for canonical 92691e. The next product priority is vehicles only after a new Control Tower WIP assignment.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction."
 }
