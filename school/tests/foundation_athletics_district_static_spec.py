@@ -53,6 +53,8 @@ for token in (
 
 if 'part("PoolDeck",' in district:
     raise SystemExit("pool deck must not be a solid slab under the water opening")
+if 'laneLine.CanCollide = false' not in district:
+    raise SystemExit("pool lane markings must remain cosmetic/non-collidable")
 
 for forbidden in (
     "DataStoreService",
