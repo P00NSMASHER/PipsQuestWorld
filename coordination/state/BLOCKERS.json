@@ -1,16 +1,25 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "currentBlockers": [
+    {
+      "id": "INTEGRATION_SMOKE_RECERTIFICATION",
+      "owner": "Roblox High School Integration Smoke",
+      "evidence": "Cafe job is integrated and ECONOMY_OPERATION_ORDER_REJOIN is fixed on canonical 92691e. All three exact-head push guards are green, but the newest durable smoke receipt still certifies older canonical 99e12750.",
+      "exitCriterion": "Run the bounded headless integration smoke against exact canonical 92691e, reuse unchanged Foundation/Class evidence, verify cafe-job duplicate/replay/no-double-pay plus economy funding-then-debit rejoin behavior, and write a PASS receipt bound to 92691e."
+    }
+  ],
+  "clearedBlockers": [
     {
       "id": "ECONOMY_OPERATION_ORDER_REJOIN",
       "owner": "Roblox High School Progression & Mobile",
-      "evidence": "Canonical EconomyRepository sorts stored operations by operationId, but reopen validation replays the stored order and requires a nonnegative running balance.",
-      "exitCriterion": "Preserve commit order and pass a deterministic funding-then-debit reopen regression plus the existing progression/economy/cafe-job guards on an exact canonical descendant."
+      "clearedByPr": 64,
+      "clearedAtCanonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "exactHeadProgressionRun": 37010609413
     }
   ],
-  "gateStatus": "REPAIR_REQUIRED_BEFORE_SMOKE",
-  "nextProducer": "Roblox High School Progression & Mobile",
-  "nextObjective": "ECONOMY_OPERATION_ORDER_REJOIN_REPAIR"
+  "gateStatus": "EXACT_HEAD_CI_GREEN_SMOKE_PENDING",
+  "nextProducer": "Roblox High School Integration Smoke",
+  "nextObjective": "RECERTIFY_CAFE_JOB_AND_ECONOMY_FIX_92691"
 }
