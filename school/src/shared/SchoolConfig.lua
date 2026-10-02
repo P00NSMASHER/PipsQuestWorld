@@ -38,4 +38,15 @@ SchoolConfig.Rooms = {
     Courtyard = { position = Vector3.new(48, 3, 102), displayName = "Courtyard" },
 }
 
+SchoolConfig.WorldLocations = {
+    SchoolEntrance = { position = Vector3.new(0, 3, 142), displayName = "Pip High" },
+    TownCenter = { position = Vector3.new(0, 3, 390), displayName = "Town Center" },
+    Cafe = { position = Vector3.new(-165, 3, 360), displayName = "Corner Cafe" },
+    StyleShop = { position = Vector3.new(-65, 3, 360), displayName = "Style Shop" },
+    AutoShop = { position = Vector3.new(70, 3, 360), displayName = "Auto Shop" },
+    Market = { position = Vector3.new(170, 3, 360), displayName = "Market" },
+    Neighborhood = { position = Vector3.new(0, 3, 505), displayName = "Neighborhood" },
+    TownPark = { position = Vector3.new(0, 3, 455), displayName = "Town Park" },
+}
+
 return SchoolConfig
