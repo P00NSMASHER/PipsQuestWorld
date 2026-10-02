@@ -242,8 +242,10 @@ local function apply(snapshot, operation)
 
     local candidate = cloneSnapshot(snapshot)
     candidate.balance = nextBalance
+    -- Preserve durable commit order. operationId is an idempotency key, not
+    -- transaction chronology; reordering by ID can turn a valid credit-then-debit
+    -- history into debit-first history and make the persisted snapshot unreopenable.
     table.insert(candidate.operations, copyOperation(operation))
-    table.sort(candidate.operations, function(a, b) return a.operationId < b.operationId end)
 
     if operation.unlock ~= nil then
         table.insert(candidate.ownership, copyUnlock(operation.unlock))
