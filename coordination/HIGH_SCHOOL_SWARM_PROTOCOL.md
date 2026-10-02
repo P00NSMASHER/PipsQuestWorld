@@ -42,6 +42,15 @@ No integration candidate may map both roots into the runtime.
 - Any receipt whose recorded branch SHA no longer equals the live branch head is automatically STALE and must not authorize downstream consumption.
 - Support lanes write their own exact-SHA receipts; they never rewrite shared state.
 
+## Worker-wide GitHub write safety and sharded state
+- Every canonical high-school lane MUST read and follow `coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md` before making a GitHub mutation.
+- `coordination/HIGH_SCHOOL_SWARM_STATE.json` is a small manifest/index. Mutable canonical/WIP/playable/blocker state is owned by the files under `coordination/state/**`; the live local-machine lease remains `coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json`.
+- Update only the smallest owning state shard. Do not rewrite protocol/rule documents or a monolithic state body merely to advance a SHA, counter, lease status, blocker, or playable-stage pointer.
+- Durable source/coordination changes are branch/PR-first from the exact current base SHA and must preserve normal repository protections.
+- If the platform rejects a mutation before GitHub accepts it with a safety-check message, classify it as `CONNECTOR_SAFETY_DENIAL`. Do not retry the same payload, do not replay the same full content through blob/tree/commit/ref, and do not use the local laptop as a write workaround.
+- Preserve the exact base SHA, target path, intended minimal diff, and unblock condition. Make no status-only commit/comment solely to record the denial.
+- Real GitHub failures retain their real class (permission, stale SHA/conflict, validation, rate limit, ruleset/branch protection, CI, etc.); do not mislabel them as safety denials.
+
 ## Parallel ownership
 - Foundation owns only project mapping, campus/location registry, authoritative school clock/day/period state, Foundation state seam, and foundation tests/provenance.
 - Class & Education owns standalone education/session logic plus the class adapter once Foundation contracts are available.
