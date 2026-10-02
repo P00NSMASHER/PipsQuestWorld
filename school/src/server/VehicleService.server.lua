@@ -11,10 +11,12 @@ local Workspace = game:GetService("Workspace")
 local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local VehicleLifecycle = require(schoolFoundation:WaitForChild("VehicleLifecycle"))
+local VehicleInput = require(schoolFoundation:WaitForChild("VehicleInput"))
 
 local SPAWN_RADIUS = 72
 local VEHICLE_SPEED = 42
 local TURN_RATE = math.rad(95)
+local CONTROL_TIMEOUT = 0.35
 local VEHICLE_ID = "starter-sedan"
 
 local function getOrCreateFolder(parent, name)
@@ -41,12 +43,25 @@ local function getOrCreateRemoteFunction(parent, name)
     return remote
 end
 
+local function getOrCreateRemoteEvent(parent, name)
+    local existing = parent:FindFirstChild(name)
+    if existing then
+        assert(existing:IsA("RemoteEvent"), name .. " must be a RemoteEvent")
+        return existing
+    end
+    local remote = Instance.new("RemoteEvent")
+    remote.Name = name
+    remote.Parent = parent
+    return remote
+end
+
 local remoteRoot = ReplicatedStorage:WaitForChild(SchoolConfig.Interfaces.remoteFolder)
 local freeRoamRoot = getOrCreateFolder(remoteRoot, "FreeRoam")
 local vehicleRoot = getOrCreateFolder(freeRoamRoot, "Vehicles")
 local getStateRemote = getOrCreateRemoteFunction(vehicleRoot, "GetState")
 local spawnRemote = getOrCreateRemoteFunction(vehicleRoot, "Spawn")
 local despawnRemote = getOrCreateRemoteFunction(vehicleRoot, "Despawn")
+local controlsRemote = getOrCreateRemoteEvent(vehicleRoot, "SetControls")
 
 local vehicleFolder = getOrCreateFolder(Workspace, "PipHighVehicles")
 local lifecycle = VehicleLifecycle.new()
@@ -186,6 +201,24 @@ local function destroyRuntime(playerId)
     runtimeByPlayerId[playerId] = nil
 end
 
+local function isOwnerSeated(player, runtime)
+    if not runtime or not runtime.seat then
+        return false
+    end
+    local occupant = runtime.seat.Occupant
+    return occupant ~= nil
+        and Players:GetPlayerFromCharacter(occupant.Parent) == player
+end
+
+local function clearControls(runtime)
+    if not runtime then
+        return
+    end
+    runtime.throttle = 0
+    runtime.steer = 0
+    runtime.lastControlAt = 0
+end
+
 local function publicState(player)
     local state = lifecycle:get(playerKey(player))
     local runtime = runtimeByPlayerId[player.UserId]
@@ -195,9 +228,7 @@ local function publicState(player)
         token = state and state.token or nil,
         atAutoShop = isAtAutoShop(player),
         autoShopDisplayName = autoShop.displayName,
-        driving = runtime ~= nil
-            and runtime.seat ~= nil
-            and runtime.seat.Occupant ~= nil,
+        driving = isOwnerSeated(player, runtime),
     }
 end
 
@@ -240,15 +271,21 @@ spawnRemote.OnServerInvoke = function(player)
         token = reservation.state.token,
         position = spawnPosition,
         yaw = spawnYaw,
+        throttle = 0,
+        steer = 0,
+        lastControlAt = 0,
     }
 
     seat:GetPropertyChangedSignal("Occupant"):Connect(function()
+        local runtime = runtimeByPlayerId[player.UserId]
         local occupant = seat.Occupant
         if not occupant then
+            clearControls(runtime)
             return
         end
         local occupantPlayer = Players:GetPlayerFromCharacter(occupant.Parent)
         if occupantPlayer ~= player then
+            clearControls(runtime)
             occupant.Sit = false
         end
     end)
@@ -285,6 +322,30 @@ getStateRemote.OnServerInvoke = function(player)
     return publicState(player)
 end
 
+controlsRemote.OnServerEvent:Connect(function(player, throttle, steer)
+    local runtime = runtimeByPlayerId[player.UserId]
+    if not runtime or not isOwnerSeated(player, runtime) then
+        clearControls(runtime)
+        return
+    end
+
+    local active = lifecycle:get(playerKey(player))
+    if not active or active.token ~= runtime.token then
+        clearControls(runtime)
+        return
+    end
+
+    local controls = VehicleInput.normalize(throttle, steer)
+    if not controls then
+        clearControls(runtime)
+        return
+    end
+
+    runtime.throttle = controls.throttle
+    runtime.steer = controls.steer
+    runtime.lastControlAt = os.clock()
+end)
+
 Players.PlayerRemoving:Connect(function(player)
     local current = lifecycle:get(playerKey(player))
     lifecycle:despawn(playerKey(player), current and current.token or nil)
@@ -313,8 +374,16 @@ RunService.Heartbeat:Connect(function(dt)
             continue
         end
 
-        local throttle = seat.ThrottleFloat
-        local steer = seat.SteerFloat
+        local throttle = runtime.throttle or 0
+        local steer = runtime.steer or 0
+        if runtime.lastControlAt == 0
+            or os.clock() - runtime.lastControlAt > CONTROL_TIMEOUT then
+            throttle = 0
+            steer = 0
+            runtime.throttle = 0
+            runtime.steer = 0
+        end
+
         if math.abs(steer) > 0.01 then
             local turnScale = math.abs(throttle) > 0.01 and 1 or 0.45
             runtime.yaw -= steer * TURN_RATE * boundedDt * turnScale
