@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "e5cfdf7548ef83f50852a211d9523448c464454f8089f9475cbe2a72533892d1",
+  "patchManifestSha256": "ea2744dbd28824fcd1696e30073e25f897050d8262959d6da6eceab5846cf3ef",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -82,11 +82,39 @@
           }
         ],
         "targetPath": "ServerScriptService/CarSpawnScript"
+      },
+      {
+        "afterSourceSha256": "b210141ea6566f6ce545348fe1d35e823349c6b3bc483ceb07c8c00d7dcb23f6",
+        "beforeSourceSha256": "34f02eccaa6cab7236fbd33c561db2614c830de9930369a81157db481ae06dad",
+        "class": "LocalScript",
+        "id": "compat-modern-touch-control-startup",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "2484ea6037d89cb1f6647ce4a4674e9d705cc1c12e235b50c5acb3ee97f8c958",
+            "oldSha256": "769b4c2046d27769430daadb2b2f15afc6651aef6e2cfd12a0284bd0a037659f"
+          }
+        ],
+        "targetPath": "StarterPlayer/StarterPlayerScripts/ControlScript"
+      },
+      {
+        "afterSourceSha256": "fe35854ab2247d9554bf4927999a829b5e63a874c716713d74b951876010c662",
+        "beforeSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+        "class": "Script",
+        "id": "compat-house-load-preload-timeout",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "ab46b5b88cb15220aa3f37b57f606a371c673f274284c5858b47d15f0c7b0af2",
+            "oldSha256": "22f89585110033617c2ef39c01b1643e40d564521b22216fc2c85cac41ea9dab"
+          }
+        ],
+        "targetPath": "ServerScriptService/CustomHouseScript_NEW"
       }
     ],
     "baselineSha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d"
+  "workingSha256": "83df781ddf608f59933ca480e73092d495148ab45b42e78b1f3e0ddc10532054"
 }
