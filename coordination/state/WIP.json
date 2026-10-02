@@ -2,55 +2,15 @@
   "schemaVersion": 9,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATION_READY",
+  "unintegratedProductCandidateCount": 0,
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V1_INTEGRATED_AWAITING_EXACT_HEAD_CI",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "status": "INTEGRATED_AWAITING_EXACT_HEAD_CI"
     },
-    "upstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "VEHICLE_LIFECYCLE_V1",
-      "baseBranch": "rebuild/high-school-foundation",
-      "baseSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "branch": "rebuild/high-school-vehicles-92691e0-v1",
-      "allowedRoot": "school/**",
-      "ownership": [
-        "vehicle spawn/despawn lifecycle",
-        "vehicle enter/exit and drive controls",
-        "one-active-vehicle-per-player enforcement",
-        "vehicle cleanup on leave"
-      ],
-      "forbiddenOverlap": [
-        "school clock/location/world authority",
-        "progression/economy/persistence authority",
-        "class/session authority",
-        "housing/property authority",
-        "avatar/customization/shopping authority"
-      ],
-      "status": "QA_PASS_INTEGRATION_READY",
-      "pr": 85,
-      "headSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "exactHeadCi": [
-        {
-          "runId": 37028006287,
-          "workflow": "High School Foundation Static Guards",
-          "conclusion": "success"
-        },
-        {
-          "runId": 37028005768,
-          "workflow": "High School Class Education Guards",
-          "conclusion": "success"
-        },
-        {
-          "runId": 37028005242,
-          "workflow": "High School Progression Guards",
-          "conclusion": "success"
-        }
-      ]
-    },
+    "upstream": null,
     "downstream": null
   },
   "priorityBacklog": [
@@ -108,9 +68,9 @@
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
-    "from": "Roblox High School Integration Director",
+    "from": "Roblox High School Control Tower",
     "to": "Roblox High School Integration Smoke",
-    "condition": "PR #85 exact head 3ad2121779af85f5e93457df7bf7d2b3365db8f4 merges into unchanged canonical base 92691e009869ee9cd5d9306786502b157a5b6c84 and the resulting exact canonical SHA is identified."
+    "condition": "All three post-merge exact-head guards PASS rebuild/high-school-foundation@deadcf9e402cb18ea78667926663b8ebdede044f."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 2,
@@ -197,10 +157,10 @@
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "INTEGRATE",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
       "candidateSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-      "objective": "Mechanically integrate QA-approved PR #85 vehicle lifecycle into rebuild/high-school-foundation with expected exact head; do not change producer semantics.",
+      "objective": "PR #85 merged as deadcf9e402cb18ea78667926663b8ebdede044f. Wait for post-merge exact-head guards.",
       "owned": "mechanical integration only",
       "dependency": "QA PASS receipt + exact-head CI runs 37028006287/37028005768/37028005242",
       "exit": "PR #85 merged without head/base drift and new canonical exact SHA identified.",
@@ -208,11 +168,11 @@
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-      "objective": "Wait for changed integrated vehicle SHA.",
+      "canonicalSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+      "objective": "Wait for all three post-merge exact-head guards on deadcf9e before smoke.",
       "owned": "post-integration certification only",
-      "dependency": "Integration exact SHA",
-      "exit": "Vehicle spawn/drive/exit/despawn plus baseline invariants smoke PASS on exact integrated SHA.",
+      "dependency": "Foundation + Class/Education + Progression push guards PASS exact canonical deadcf9e402cb18ea78667926663b8ebdede044f",
+      "exit": "All required exact-head guards green; then run vehicle + baseline Smoke on this exact SHA.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
