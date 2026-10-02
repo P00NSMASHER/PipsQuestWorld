@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 12,
+  "schemaVersion": 13,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
@@ -20,10 +20,11 @@
       "status": "READY_QA_EXACT_HEAD_CI_GREEN"
     },
     "downstream": {
-      "lane": "Pip High QA & Architecture Contract",
-      "objective": "VALIDATE_VEHICLE_INPUT_RELIABILITY_V2",
+      "lane": "Roblox High School Integration Director",
+      "objective": "INTEGRATE_VEHICLE_INPUT_RELIABILITY_V2",
       "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "status": "VALIDATE"
+      "pr": 103,
+      "status": "INTEGRATE"
     }
   },
   "priorityBacklog": [
@@ -161,29 +162,30 @@
       "handoff": "QA/Contract"
     },
     "QA/Contract": {
-      "mode": "VALIDATE",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "base": "rebuild/high-school-foundation@e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Validate PR #103 vehicle control reliability repair: owner-only seated input, finite/clamped throttle/steer, stale-input timeout, server-only movement authority, existing lifecycle/spawn/despawn behavior, unique authorities, provenance, and baseline canonical guards.",
-      "owned": "QA harnesses/contracts/receipt only; no producer semantics",
-      "dependency": "PR #103 exact-head CI PASS: Foundation 37042177160, Class 37042177307, Progression 37042177326",
-      "exit": "PASS exact e83a22d0696966595feb41971844a021f637abe7 and hand to Integration, or return one reproducible defect to Free Roam.",
+      "objective": "QA PASS recorded for PR #103 exact head e83a22d. Wait for Integration unless the candidate changes.",
+      "owned": "QA harnesses/contracts/receipt only",
+      "dependency": "Exact candidate unchanged at e83a22d0696966595feb41971844a021f637abe7",
+      "exit": "Changed candidate or Integration-returned defect only.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "INTEGRATE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Wait for QA PASS on exact PR #103 head e83a22d; do not merge before QA exact-SHA evidence.",
-      "owned": "mechanical integration only",
-      "dependency": "QA PASS exact e83a22d0696966595feb41971844a021f637abe7",
-      "exit": "Changed candidate only",
+      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
+      "base": "rebuild/high-school-foundation@e929354087d3dbf6931496e310b8f899cd0d299f",
+      "objective": "Mechanically integrate PR #103 exact head e83a22d vehicle input reliability repair without changing producer semantics.",
+      "owned": "Mechanical integration only; no semantic edits",
+      "dependency": "QA PASS exact e83a22d + exact-head CI PASS Foundation 37042177160 / Class 37042177307 / Progression 37042177326",
+      "exit": "Merge PR #103 only if head/base remain exact and mergeable, then verify new canonical SHA and all canonical push guards before handing to Smoke.",
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Wait for QA + Integration of PR #103; do not smoke superseded e929 vehicle control behavior.",
+      "objective": "Wait for PR #103 mechanical integration and exact-head canonical push guards; then consume only the resulting changed canonical SHA.",
       "owned": "post-integration runtime certification only",
       "dependency": "Changed canonical vehicle-control head after Free Roam candidate passes QA and Integration.",
       "exit": "When authorized runtime evidence is available, Control Tower changes this lane to SMOKE on exact e929354; PASS hands unchanged SHA to Release/Package, while one reproducible defect returns to exactly one owning lane.",
