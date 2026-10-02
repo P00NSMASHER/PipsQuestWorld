@@ -94,8 +94,8 @@
       "reason": "Do not block every player's house forever when one or more archived furniture assets cannot be preloaded in modern Roblox. Allow the base house to load after a short bounded wait while the legacy preload continues in the background.",
       "replacements": [
         {
-          "old": "if objectsready == false then\\n\\t\\t\\trepeat wait(math.random()) until objectsready == true\\n\\t\\tend",
-          "new": "if objectsready == false then\\n\\t\\t\\tlocal preloadWaitStarted = tick()\\n\\t\\t\\trepeat wait(.25) until objectsready == true or tick() - preloadWaitStarted >= 6\\n\\t\\tend",
+          "old": "if objectsready == false then\n\t\t\trepeat wait(math.random()) until objectsready == true\n\t\tend",
+          "new": "if objectsready == false then\n\t\t\tlocal preloadWaitStarted = tick()\n\t\t\trepeat wait(.25) until objectsready == true or tick() - preloadWaitStarted >= 6\n\t\tend",
           "expectedCount": 1
         }
       ]
