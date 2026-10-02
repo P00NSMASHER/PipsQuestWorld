@@ -73,6 +73,32 @@
           "expectedCount": 3
         }
       ]
+    },
+    {
+      "id": "compat-modern-touch-control-startup",
+      "targetPath": "StarterPlayer/StarterPlayerScripts/ControlScript",
+      "expectedSourceSha256": "34f02eccaa6cab7236fbd33c561db2614c830de9930369a81157db481ae06dad",
+      "reason": "Prevent the archived touch ControlScript from waiting forever for an optional legacy click-to-move fail-state BindableEvent before it creates the thumbstick and jump controls on modern Roblox mobile clients.",
+      "replacements": [
+        {
+          "old": "BindableEvent_OnFailStateChanged = script.Parent:WaitForChild('OnClickToMoveFailStateChange')",
+          "new": "BindableEvent_OnFailStateChanged = script.Parent:FindFirstChild('OnClickToMoveFailStateChange')",
+          "expectedCount": 1
+        }
+      ]
+    },
+    {
+      "id": "compat-house-load-preload-timeout",
+      "targetPath": "ServerScriptService/CustomHouseScript_NEW",
+      "expectedSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+      "reason": "Do not block every player's house forever when one or more archived furniture assets cannot be preloaded in modern Roblox. Allow the base house to load after a short bounded wait while the legacy preload continues in the background.",
+      "replacements": [
+        {
+          "old": "if objectsready == false then\\n\\t\\t\\trepeat wait(math.random()) until objectsready == true\\n\\t\\tend",
+          "new": "if objectsready == false then\\n\\t\\t\\tlocal preloadWaitStarted = tick()\\n\\t\\t\\trepeat wait(.25) until objectsready == true or tick() - preloadWaitStarted >= 6\\n\\t\\tend",
+          "expectedCount": 1
+        }
+      ]
     }
   ]
 }
