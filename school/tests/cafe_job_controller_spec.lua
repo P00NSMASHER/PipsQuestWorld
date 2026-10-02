@@ -10,6 +10,8 @@ local function newEconomy()
     local stateByPlayer = {}
     local calls = 0
     local failNext = false
+    local throwFactoryNext = false
+    local throwRecordNext = false
 
     local function repositoryFor(playerId)
         stateByPlayer[playerId] = stateByPlayer[playerId] or {
@@ -22,6 +24,10 @@ local function newEconomy()
         return {
             record = function(_, operation)
                 calls = calls + 1
+                if throwRecordNext then
+                    throwRecordNext = false
+                    error("injected record exception")
+                end
                 if failNext then
                     failNext = false
                     return {
@@ -74,10 +80,20 @@ local function newEconomy()
 
     return {
         repositoryFactory = function(playerId)
+            if throwFactoryNext then
+                throwFactoryNext = false
+                error("injected factory exception")
+            end
             return repositoryFor(playerId), nil
         end,
         setFailNext = function()
             failNext = true
+        end,
+        setThrowFactoryNext = function()
+            throwFactoryNext = true
+        end,
+        setThrowRecordNext = function()
+            throwRecordNext = true
         end,
         balance = function(playerId)
             local state = stateByPlayer[playerId]
@@ -93,7 +109,7 @@ local function newEconomy()
     }
 end
 
-local ids = { "shift-a", "shift-b", "shift-c" }
+local ids = { "shift-a", "shift-b", "shift-c", "shift-d", "shift-e" }
 local nextId = 0
 local economy = newEconomy()
 local controller = Controller.new({
@@ -168,6 +184,36 @@ eq(economy.saves(101), 2, "retry saves")
 
 local third = controller:startShift(101, true)
 eq(third.shiftId, "shift-c", "third shift id")
+economy.setThrowFactoryNext()
+local factoryFailed = controller:completeTask(101, "shift-c", "serve_order", true)
+eq(factoryFailed.accepted, false, "factory exception accepted")
+eq(factoryFailed.code, "economy_unavailable", "factory exception code")
+eq(factoryFailed.error, "repository_factory_failed", "factory exception classification")
+eq(controller:getState(101).active, true, "factory exception lost active shift")
+eq(economy.balance(101), 50, "factory exception changed balance")
+
+local factoryRetried = controller:completeTask(101, "shift-c", "serve_order", true)
+eq(factoryRetried.accepted, true, "factory retry accepted")
+eq(factoryRetried.code, "shift_completed", "factory retry code")
+eq(factoryRetried.economyState.balance, 75, "factory retry balance")
+
+local fourth = controller:startShift(101, true)
+eq(fourth.shiftId, "shift-d", "fourth shift id")
+economy.setThrowRecordNext()
+local recordFailed = controller:completeTask(101, "shift-d", "serve_order", true)
+eq(recordFailed.accepted, false, "record exception accepted")
+eq(recordFailed.code, "economy_unavailable", "record exception code")
+eq(recordFailed.error, "repository_record_failed", "record exception classification")
+eq(controller:getState(101).active, true, "record exception lost active shift")
+eq(economy.balance(101), 75, "record exception changed balance")
+
+local recordRetried = controller:completeTask(101, "shift-d", "serve_order", true)
+eq(recordRetried.accepted, true, "record retry accepted")
+eq(recordRetried.code, "shift_completed", "record retry code")
+eq(recordRetried.economyState.balance, 100, "record retry balance")
+
+local fifth = controller:startShift(101, true)
+eq(fifth.shiftId, "shift-e", "fifth shift id")
 local left = controller:leaveShift(101)
 eq(left.accepted, true, "leave accepted")
 eq(left.code, "shift_left", "leave code")
