@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T05:26:00Z",
+  "recordedAt": "2026-10-02T08:04:00Z",
   "action": "EXACT_HEAD_SMOKE_CERTIFICATION",
   "result": "PASS",
   "scope": "POST_INTEGRATION_SMOKE_EXACT_HEAD_ONLY",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+  "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
   "canonicalSourceRoot": "school/**",
   "checks": {
     "liveCanonicalHeadMatch": "PASS",
@@ -14,43 +14,43 @@
     "classEducationExactHeadCI": "PASS",
     "progressionExactHeadCI": "PASS",
     "canonicalSourceRootIsolation": "PASS",
-    "schoolRuntimeTreeChangedSinceValidatedMerge": "NO",
-    "postIntegrationSmoke": "PASS_REUSED_EXACT_HEAD_EVIDENCE"
+    "schoolRuntimeTreeChangedSincePriorSmoke": "YES_CAMPUS_BUILDER_ONLY",
+    "coreLoopAuthorityFilesChanged": "NO",
+    "postIntegrationSmoke": "PASS_HEADLESS_EXACT_HEAD"
   },
   "exactHeadCi": [
     {
-      "runId": 36958964104,
+      "runId": 36981455038,
       "workflow": "High School Foundation Static Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 36958964064,
+      "runId": 36981455048,
       "workflow": "High School Class Education Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 36958964091,
+      "runId": 36981454975,
       "workflow": "High School Progression Guards",
       "event": "push",
       "conclusion": "success"
     }
   ],
-  "contentEquivalence": {
-    "priorCanonicalMergeSha": "506f19551b7f0b1d3edf753bd17ac366367efc32",
-    "runtimeValidatedCandidateSha": "e69d6ddf8e1e3875ea9947b919cae2f256a449a3",
-    "changeFromPriorCanonicalMerge": "CI_WORKFLOWS_ONLY",
+  "deltaFromPriorSmokeCertified": {
+    "priorSmokeCertifiedSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
+    "aheadBy": 6,
     "changedFiles": [
-      ".github/workflows/high-school-class-education-ci.yml",
-      ".github/workflows/high-school-progression-ci.yml",
-      ".github/workflows/school-pivot-ci.yml"
+      "school/src/server/CampusBuilder.server.lua"
     ],
-    "schoolRuntimeSemanticsChanged": false
+    "changes": 158,
+    "coreLoopAuthorityFilesChanged": false,
+    "retiredRuntimeConsumed": false
   },
   "playableEvidence": {
-    "status": "REUSED_CONTENT_EQUIVALENT_RUNTIME_EVIDENCE",
-    "demonstrated": [
+    "status": "REUSED_PRIOR_CORE_LOOP_RUNTIME_EVIDENCE_WITH_EXACT_HEAD_STATIC_DELTA_VALIDATION",
+    "demonstratedPreviouslyAndNotTouchedByThisDelta": [
       "authoritative school period",
       "class attendance",
       "server-authoritative activity",
@@ -59,12 +59,21 @@
       "server-authoritative restored progression",
       "client restoration"
     ],
-    "productionCrossServerSaveRejoin": "NOT_CLAIMED_WITHOUT_AUTHORIZED_PUBLISH"
+    "newHeadlessEvidence": [
+      "Foundation invariants pass at exact canonical head",
+      "Foundation source-root isolation passes at exact canonical head",
+      "Class/Education guards pass at exact canonical head",
+      "Progression guards pass at exact canonical head",
+      "cumulative delta from prior smoke-certified head is confined to school/src/server/CampusBuilder.server.lua"
+    ],
+    "productionCrossServerSaveRejoin": "NOT_CLAIMED_WITHOUT_AUTHORIZED_PUBLISH",
+    "newCampusVisualsRuntimeValidatedInStudio": false
   },
   "blocker": null,
   "nextOwner": "Roblox High School Release/Package",
-  "nextExitCriterion": "Treat b44cff4c64843001b178a6f6bd4aacabecfee30c as the exact-head smoke-certified canonical Pip High source. Do not publish Roblox without explicit user instruction.",
+  "nextExitCriterion": "Treat e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b as the exact-head headless smoke-certified canonical Pip High source. Any newer canonical commit invalidates this certification until its exact-head guards are green and Smoke certifies that newer SHA. Do not publish Roblox without explicit user instruction.",
   "sourceEdited": false,
   "sharedStateEdited": false,
-  "published": false
+  "published": false,
+  "taskScheduleOrEnablementChanged": false
 }
