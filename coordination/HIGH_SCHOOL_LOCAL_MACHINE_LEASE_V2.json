@@ -5,23 +5,25 @@
   "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
   "canonicalRoot": "school/**",
   "lease": {
-    "status": "HELD",
-    "holderLane": "Roblox High School Release/Package",
-    "purpose": "One-time user-authorized publication of exact canonical Pip High b44cff4c64843001b178a6f6bd4aacabecfee30c only; never open or consume retired Maze/Pips/StarBlox/RHS-exact runtime",
-    "canonicalSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "candidateSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "interactionMode": "LOCAL_ONLY_REQUIRED_ROBLOX_STUDIO_PUBLISH",
-    "userAuthorizedPublish": true,
-    "claimedAt": "2026-10-02T07:03:00Z",
-    "expiresAt": "2026-10-02T07:23:00Z",
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "candidateSha": null,
+    "interactionMode": null,
+    "userAuthorizedPublish": null,
+    "claimedAt": null,
+    "expiresAt": null,
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
     "lane": "Roblox High School Release/Package",
-    "completedAt": "2026-10-02T06:02:00Z",
+    "completedAt": "2026-10-02T07:17:00Z",
     "candidateSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "result": "LOCAL_CONNECTOR_UNAVAILABLE",
-    "evidencePointer": "Desktop Commander device PAAM-L044 reported Offline; no Pip High universe/place exists in canonical coordination evidence, and retired StarBlox target was not used."
+    "result": "PUBLISHED_PRIVATE_NEW_EXPERIENCE",
+    "evidencePointer": "Roblox Studio title became 'Pip High - Roblox Studio'; Studio log recorded placeId 87245440673982 and universeId 10768955678.",
+    "placeId": "87245440673982",
+    "universeId": "10768955678"
   },
   "policy": {
     "claimMethod": "GITHUB_CONTENTS_CAS",
