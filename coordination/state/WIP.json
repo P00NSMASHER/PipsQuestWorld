@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 14,
+  "schemaVersion": 15,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 0,
-  "currentParityMilestone": "VEHICLE_LIFECYCLE_V2_RELIABLE_CONTROLS_RUNTIME_SMOKE",
+  "unintegratedProductCandidateCount": 1,
+  "currentParityMilestone": "LEGACY_HUD_PRESENTATION_PARITY_V1",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
@@ -11,18 +11,19 @@
       "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE"
     },
     "upstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "VEHICLE_INPUT_RELIABILITY_V2",
-      "producerPr": 103,
-      "producerSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "integratedSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "status": "MERGED_QA_INTEGRATION_EXACT_HEAD_CI_GREEN"
+      "lane": "Roblox High School Progression & Mobile",
+      "objective": "LEGACY_HUD_PRESENTATION_PARITY_V1",
+      "baseSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "branch": "rebuild/high-school-legacy-hud-68c4b3f-v1",
+      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "pr": 107,
+      "status": "CI_RUNNING"
     },
     "downstream": {
-      "lane": "Roblox High School Integration Smoke",
-      "objective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "status": "LOCAL_ONLY_REQUIRED"
+      "lane": "Pip High QA & Architecture Contract",
+      "objective": "VALIDATE_LEGACY_HUD_PRESENTATION_PARITY_V1",
+      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "status": "WAIT_PIPELINE_CI"
     }
   },
   "priorityBacklog": [
@@ -71,11 +72,11 @@
     "Foundation": "Support exact authorized Roblox High School clone world/clock/location/spawn parity on the current canonical target; do not pivot to second-grade schoolwork.",
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
-    "Progression & Mobile": "Maintain the single canonical progression/economy/persistence/mobile contract for exact Roblox High School clone parity; second-grade schoolwork is DEFERRED_PHASE_2.",
+    "Progression & Mobile": "Current owner of Legacy HUD/mobile presentation parity candidate PR #107 on exact canonical base 68c4b3f. No economy/persistence semantics changed.",
     "Pip High Free Roam": "Vehicle lifecycle, grounded AutoShop spawn, and reliable owner-only keyboard/touch controls are integrated at exact canonical 68c4b3f. Wait for runtime Smoke + Release/Package; housing/property is next. Phase-2 schoolwork remains deferred.",
-    "QA/Contract": "QA is rebound to exact canonical 68c4b3f with identical candidate/canonical tree and all three canonical push guards green. Wait for changed candidate or Smoke-returned defect.",
-    "Integration": "PR #103 is mechanically integrated at exact canonical 68c4b3f with post-merge push guards green. Wait for changed candidate.",
-    "Integration Smoke": "Cloud/deterministic vehicle evidence is complete on exact 68c4b3f. Remaining drive/seat/touch-control evidence is LOCAL_ONLY_REQUIRED; do not poll the laptop or publish. Resume Smoke only when authorized runtime evidence is available.",
+    "QA/Contract": "Wait for all exact-head guards on PR #107, then validate presentation-only diff plus preservation of class/cafe/vehicle interaction calls.",
+    "Integration": "Wait for exact-SHA QA PASS on PR #107; mechanical integration only.",
+    "Integration Smoke": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED on canonical 68c4b3f and must not be confused with PR #107's cloud presentation validation.",
     "Release/Package": "Package the exact canonical Roblox High School clone SHA as a checkpoint; after packaging, return to Control Tower for the next clone-parity gap. Never pivot to second-grade schoolwork automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
@@ -84,7 +85,7 @@
     "to": "Pip High Release & Package Gate",
     "condition": "Runtime PASS must identify exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then package unchanged SHA and return to Control Tower for HOUSING_PROPERTY."
   },
-  "openCanonicalPrCount": 0,
+  "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
@@ -143,11 +144,12 @@
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "Vehicle control repair leaves progression/economy/persistence authority unchanged; perform only freshness read.",
-      "owned": "durable progression/economy/ownership/mobile read-only contracts",
-      "dependency": "canonical 68c4b3f Progression guard PASS including vehicle input test",
-      "exit": "Changed ownership/economy contract or assigned mobile slice.",
-      "handoff": "Control Tower"
+      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "objective": "Legacy HUD presentation candidate PR #107 is produced; wait only for exact-head Foundation/Class/Progression CI. Do not make additional product edits unless CI or QA returns a concrete defect.",
+      "owned": "mobile/read-only presentation and HUD client styling only",
+      "dependency": "PR #107 exact head dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "exit": "All three exact-head guards pass, then hand unchanged candidate to QA/Contract; otherwise repair only the failing presentation/test defect.",
+      "handoff": "QA/Contract"
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
@@ -161,18 +163,19 @@
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "QA PASS is rebound to exact canonical 68c4b3f via identical tree and canonical push guards.",
+      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "objective": "Wait for exact-head CI on PR #107, then validate the Legacy HUD/client presentation diff and unchanged class/cafe/vehicle interaction seams.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "candidate tree == canonical tree 9148fc95; push CI green",
-      "exit": "Changed candidate/canonical or Smoke-returned defect.",
+      "dependency": "Foundation/Class/Progression exact-head PASS on dc50e04872d44541024fbd62cd845569fa7dce2d",
+      "exit": "PASS exact candidate and hand to Integration, or one reproducible defect returned to Progression & Mobile.",
       "handoff": "Integration"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-      "objective": "PR #103 integration complete; exact canonical 68c4b3f has all three push guards green.",
+      "objective": "Wait for QA PASS on PR #107; do not merge presentation candidate early.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS + merged PR #103 + exact-head push CI",
+      "dependency": "QA PASS exact dc50e04872d44541024fbd62cd845569fa7dce2d",
       "exit": "Changed exact-green candidate only.",
       "handoff": "Integration Smoke"
     },
