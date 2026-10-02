@@ -1,81 +1,68 @@
 {
-  "schemaVersion": 1,
-  "lane": "Roblox High School QA & Contract",
-  "result": "BLOCKED",
-  "evidenceFingerprint": "sha256:84bcc4ff236df416a6d2b57074818b6fbeeeed12efa93f65829504a4f9eb2109",
-  "inputs": {
-    "protocolBlob": "1001a11aab2f17bf285b5c972327abb6117e8963",
-    "sharedStateBlob": "69d3987281db6303228bb93a0cf024b5919f6e71",
-    "foundationReceiptBlob": "a098697eefe4794ae7a3f78e017effe6148c83c9",
-    "educationReceipt": "PR#20",
-    "contentReceipt": "ABSENT_CURRENT_HIGH_SCHOOL",
-    "progressionState": "DEFERRED"
-  },
-  "foundation": {
+  "schemaVersion": 7,
+  "lane": "Pip High QA & Architecture Contract",
+  "updatedAt": "2026-10-02T12:44:00Z",
+  "result": "BLOCKED_FOR_INTEGRATION",
+  "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "f763b243f4ec22951f432e66f807f187c960583f",
-    "result": "PASS_REUSED",
-    "ciRunId": 36874068766,
-    "rights": "PASS_REPOSITORY_DECLARATION",
-    "checks": [
-      "single Foundation clock/day authority unchanged",
-      "school location/project isolation unchanged",
-      "no new asset provenance surface"
-    ]
-  },
-  "classEducation": {
-    "branch": "rebuild/high-school-class-education-reentry",
-    "sha": "54eefef45503b841a08272bb649883f492b70bbc",
-    "requiredBaseSha": "f763b243f4ec22951f432e66f807f187c960583f",
-    "lineage": "ahead_2_behind_0",
-    "result": "PASS_INDEPENDENT_SLICE",
-    "ci": [
+    "sha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+    "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED",
+    "reusedExactHeadPass": [
       {
-        "runId": 36885060655,
-        "workflow": "High School Class Education Guards",
-        "event": "push",
-        "conclusion": "success"
+        "workflow": "High School Foundation Static Guards",
+        "runId": 36988705511
       },
       {
-        "runId": 36885226467,
         "workflow": "High School Class Education Guards",
-        "event": "pull_request",
-        "conclusion": "success"
+        "runId": 36988705638
       },
       {
-        "runId": 36885226962,
-        "workflow": "Pip High Static Guards",
-        "event": "pull_request",
-        "conclusion": "success"
+        "workflow": "High School Progression Guards",
+        "runId": 36988705665
       }
-    ],
-    "checks": [
-      "server-safe activity view omits correctIndex and misconception map",
-      "duplicate submissions are idempotent",
-      "late submissions are rejected",
-      "incomplete class re-entry uses a fresh deterministic server session",
-      "exactly-once class completion receipt preserved",
-      "Foundation period/location state is read-only to this lane",
-      "no second clock/world/progression/persistence authority",
-      "no cross-owner Progression/Mobile imports",
-      "changed files are Lua/tests/docs/workflow only; no asset provenance expansion"
     ]
   },
-  "content": {
-    "result": "NOOP",
-    "reason": "No current high-school Content receipt or changed standalone Content candidate was found; the new ClassActivityCatalog schema is covered by the passing Class/Education slice and remains server-only."
+  "assignment": {
+    "slice": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "producer": "Pip High Free Roam",
+    "blockersAtRunStart": [],
+    "qaSupportEligible": true
   },
-  "progressionMobile": {
-    "result": "DEFERRED",
-    "reason": "Authoritative shared state still marks Progression/Mobile DEFERRED; PR #22 is SAFE_PREP/UNBOUND and is not promoted by this lane."
+  "exactCandidate": {
+    "branch": "rebuild/high-school-free-roam-cafe-job-v1-refresh",
+    "sha": "c635ca9df6575421c501679925ead3a08b95c2a3",
+    "lineage": "ahead_1_behind_0_from_canonical_99e12750",
+    "exactHeadCi": "ABSENT",
+    "changedFiles": [
+      "school/default.project.json"
+    ]
   },
-  "firstBlocker": {
-    "id": "SHARED_STATE_NOT_ADOPTED_CLASS_EDUCATION_PASS",
-    "owner": "Roblox High School Control Tower",
-    "reason": "The exact-head Class/Education slice is independently green, but authoritative shared state still has canonicalBranch=null and status=ACTIVE, so downstream activation would violate the shared-state authority contract.",
-    "exitCriterion": "Update coordination/HIGH_SCHOOL_SWARM_STATE.json to adopt rebuild/high-school-class-education-reentry@54eefef45503b841a08272bb649883f492b70bbc as Class/Education PASS using exact-head CI evidence, then explicitly mark the next downstream lane eligible."
+  "validation": {
+    "preservedAuthorities": "PASS_REUSED_FOR_UNCHANGED_SURFACES",
+    "provenanceOriginality": "PASS_REUSED_FOR_UNCHANGED_SURFACES",
+    "retiredRuntimeCoupling": "NONE_INTRODUCED_BY_EXACT_DIFF",
+    "testWeakening": "NONE_INTRODUCED_BY_EXACT_DIFF",
+    "duplicateAuthorities": "NONE_INTRODUCED_BY_EXACT_DIFF",
+    "buildStaticInvariant": "FAIL"
   },
-  "downstreamEligibleNow": null,
-  "nextEligibleAfterBlocker": "Roblox High School Progression & Mobile",
+  "defect": {
+    "id": "CAFE_REFRESH_INCOMPLETE_SOURCE_TRANSFER",
+    "owner": "Pip High Free Roam",
+    "evidence": [
+      "Exact refresh candidate maps src/server/CafeJobController.lua and src/server/CafeJob.server.lua in school/default.project.json.",
+      "Those mapped files do not exist at exact candidate c635ca9df6575421c501679925ead3a08b95c2a3.",
+      "The candidate also lacks the prior cafe-job client delta and deterministic cafe_job_controller_spec.lua coverage.",
+      "No exact-head workflow runs exist for c635ca9df6575421c501679925ead3a08b95c2a3."
+    ],
+    "exitCriterion": "Produce one refreshed cafe-job candidate descended from canonical 99e12750b8b87812f3363e3691c12fb8797669bd that carries the bounded cafe-job runtime/client/test delta, has every school/default.project.json $path target present under school/**, preserves Foundation/Education/Economy authority boundaries, proves duplicate completion/replay/no-double-pay and failed-save retry behavior deterministically, and passes all required exact-head guards."
+  },
+  "qaHarness": {
+    "branch": "qa/cafe-job-project-mapping-c635ca9",
+    "sha": "86c46829787c7424e0b557768960641ab77737e9",
+    "scope": "QA-only project-mapping existence validator plus CI wiring",
+    "producerSemanticsChanged": false,
+    "prStatus": "NOT_OPENED_CONNECTOR_SAFETY_DENIAL"
+  },
+  "integrationEligibility": "BLOCKED",
   "localOnlyRequired": null
 }
