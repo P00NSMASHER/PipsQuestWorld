@@ -9,7 +9,10 @@
       "type": "CLOUD_FIXABLE_PRODUCT_DEFECT",
       "exactBaseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "reason": "Current server-authoritative movement samples VehicleSeat.ThrottleFloat/SteerFloat directly. Roblox currently has a documented intermittent VehicleSeat input failure where seated players can remain at zero controls, making the pending runtime smoke flaky and potentially nonfunctional.",
-      "exitCriterion": "On a fresh Free Roam branch from exact e929354, replace VehicleSeat control sampling with bounded owner-only client control input; clamp and validate server-side, time out stale input, preserve server-authoritative movement, add deterministic tests, and obtain exact-head CI before QA/Integration."
+      "exitCriterion": "On a fresh Free Roam branch from exact e929354, replace VehicleSeat control sampling with bounded owner-only client control input; clamp and validate server-side, time out stale input, preserve server-authoritative movement, add deterministic tests, and obtain exact-head CI before QA/Integration.",
+      "state": "QA_PASS_WAITING_INTEGRATION",
+      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
+      "pr": 103
     },
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
@@ -23,8 +26,8 @@
       "exitCriterion": "After repaired candidate passes QA/Integration and lands on a new exact canonical SHA, validate grounded spawn -> owner auto-seat -> forward/reverse -> steer -> exit/re-enter -> despawn/re-spawn, non-owner rejection, cleanup, and baseline invariants on the same private target."
     }
   ],
-  "gateStatus": "PRODUCER_REPAIR_REQUIRED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "VEHICLE_INPUT_RELIABILITY_V2",
+  "gateStatus": "READY_FOR_INTEGRATION",
+  "nextProducer": "Roblox High School Integration Director",
+  "nextObjective": "INTEGRATE_VEHICLE_INPUT_RELIABILITY_V2",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
