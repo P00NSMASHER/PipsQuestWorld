@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 11,
+  "schemaVersion": 12,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "CAFE_JOB_PLUS_ECONOMY_REJOIN_REPAIR_SMOKE_CERTIFIED__VEHICLE_V2_HEAD_AWAITING_RUNTIME_SMOKE",
-  "currentPlayableEvidence": "Latest fully headless smoke-certified playable checkpoint remains 92691e009869ee9cd5d9306786502b157a5b6c84 for cafe/economy/rejoin. Current canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 additionally contains vehicle lifecycle, grounded AutoShop spawn, and reliable owner-only keyboard/touch control intent with server-authoritative movement; QA, Integration, and all three canonical push guards pass, but actual Roblox drive behavior remains LOCAL_ONLY_REQUIRED and is not yet represented as runtime-certified.",
+  "currentPlayableStage": "LEGACY_HUD_INTEGRATED__VEHICLE_RUNTIME_SMOKE_PENDING",
+  "currentPlayableEvidence": "Canonical f9564e344ba0a3de96beeec919b230ebe501a1f4 integrates the Legacy blue/white bottom-left school HUD, touch-safe positioning, Legacy-styled cafe/vehicle panels, and scaled school clock/day presentation. Foundation, Class/Education, Progression, QA and Integration are exact-head green. Actual Roblox vehicle + touch coexistence remains LOCAL_ONLY_REQUIRED.",
   "runtimeValidatedThrough": "No new Studio/runtime claim is added by 68c4b3f. Previously certified baseline behavior remains inherited from unchanged lineage; vehicle runtime remains explicitly LOCAL_ONLY_REQUIRED.",
-  "headlessExactHeadValidatedThrough": "68c4b3f: Foundation 37042669829 + Class/Education 37042669707 + Progression 37042669710 push guards PASS; Progression includes the new vehicle input validation step; QA candidate tree equals canonical tree; Integration PASS.",
+  "headlessExactHeadValidatedThrough": "f9564e: Foundation 37066394079 + Class/Education 37066394156 + Progression 37066393974 push guards PASS; Legacy HUD contract PASS; candidate/canonical trees identical.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Resolve VEHICLE_RUNTIME_DRIVE_SMOKE on exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and the same private target. PASS hands unchanged SHA to Release/Package; Control Tower then assigns HOUSING_PROPERTY.",
+  "nextMilestone": "Prepare Foundation-owned housing plot seams on f9564e while runtime vehicle Smoke remains isolated; then Free Roam consumes those seams for Legacy-style house ownership/teleport/edit flow.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-    "milestone": "VEHICLE_LIFECYCLE_V2_WITH_GROUNDED_SPAWN_AND_RELIABLE_CONTROLS",
+    "sha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+    "milestone": "LEGACY_HUD_PRESENTATION_PARITY_V1",
     "headlessStatus": "QA_INTEGRATION_EXACT_HEAD_CI_PASS",
-    "runtimeStatus": "WAITING_LOCAL_ONLY_REQUIRED"
+    "runtimeStatus": "VEHICLE_SMOKE_LOCAL_ONLY_REQUIRED"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
