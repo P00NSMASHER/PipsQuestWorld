@@ -1,20 +1,20 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "High functional parity with publicly observable high-school-life behavior, rebuilt progressively with original code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "ECONOMY_CONTRACT_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
-  "currentPlayableEvidence": "Canonical Pip High 7e69301b253d88a7ed779556387b6f9011022976 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA. The delta from prior smoke-certified 50288ecf is limited to the server-authoritative economy/ownership contract, its Rojo mapping/tests, and CI-only workflow wiring; school clock, class/grading, world generation, and prior progression authority are unchanged.",
-  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> free-roam return -> restored progression snapshot/client reload",
-  "headlessExactHeadValidatedThrough": "7e69301: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
+  "currentPlayableStage": "SCHOOL_CLASS_FEEL_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
+  "currentPlayableEvidence": "Canonical Pip High 99e12750b8b87812f3363e3691c12fb8797669bd is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA, and Integration Smoke receipt 456974b44548d814bccfc95f48a67f0291971a99 certifies class entry/activity/completion, progression persistence/exactly-once behavior, free-roam recovery, provenance/runtime isolation, and unchanged mobile basics.",
+  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> class completion remains in free roam until next bell -> restored progression snapshot/client reload",
+  "headlessExactHeadValidatedThrough": "99e12750: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
   "economyRuntimeValidatedInStudio": false,
   "progressiveParityStage": {
     "id": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
     "name": "Cafe job interaction loop",
-    "activeProducer": "Pip High Free Roam owns exactly one original cafe-job interaction slice on canonical 7e69301.",
+    "activeProducer": "Pip High Free Roam owns exactly one original cafe-job interaction slice on canonical 99e12750b8b87812f3363e3691c12fb8797669bd.",
     "externallyObservableBehavior": "Player starts a cafe shift at the Foundation cafe location, performs one deterministic job interaction, completes the shift task once, receives one server-authoritative idempotent wage through EconomyRepository, and returns to free roam with the updated read-only economy snapshot.",
     "exitCriteria": [
-      "Producer descends from canonical 7e69301b253d88a7ed779556387b6f9011022976 or a newer Control-Tower-certified successor.",
+      "Producer descends from canonical 99e12750b8b87812f3363e3691c12fb8797669bd or a newer Control-Tower-certified successor.",
       "Only school/** canonical runtime/test files are changed by the producer.",
       "Foundation WorldLocations remains the location authority; no second world registry or generator is introduced.",
       "EconomyRepository remains the only money/ownership write authority; duplicate completion or replay cannot double-pay.",
@@ -24,6 +24,6 @@
       "Integration Smoke certifies the resulting exact canonical head before another Free-Roam slice begins."
     ]
   },
-  "nextMilestone": "Produce, exact-head test, integrate, and smoke-certify one original cafe-job loop before assigning vehicles, housing/property, customization/shopping, or broader social/free-roam systems.",
+  "nextMilestone": "Refresh the cafe-job producer onto exact certified canonical 99e12750, preserve the already-green merge-ref behavior, then hand the exact-green candidate to QA/Integration.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction."
 }
