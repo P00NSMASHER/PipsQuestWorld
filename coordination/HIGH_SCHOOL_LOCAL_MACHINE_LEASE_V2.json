@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "resource": "ONLINE_LAPTOP",
-  "availability": "ONLINE_UNRESPONSIVE",
+  "availability": "UNKNOWN_NOT_POLLED_CURRENT_RUN",
   "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "canonicalRoot": "school/**",
   "lease": {
@@ -34,5 +34,5 @@
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
   },
-  "availabilityNote": "Availability is preserved from the last observed local-connector result; this coordination refresh does not poll the laptop. Any future LOCAL_ONLY_REQUIRED use must acquire this free lease against the current canonical SHA before local access."
+  "availabilityNote": "The prior ONLINE_UNRESPONSIVE observation is historical only. Current run intentionally did not poll the laptop. Any future LOCAL_ONLY_REQUIRED use must first have user-authorized local access and acquire this FREE lease against exact canonical e929354087d3dbf6931496e310b8f899cd0d299f."
 }
