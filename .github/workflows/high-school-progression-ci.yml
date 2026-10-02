@@ -5,6 +5,7 @@ on:
     branches:
       - "rebuild/high-school-foundation"
       - "rebuild/high-school-progression-*"
+      - "rebuild/high-school-vehicle-*"
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"
@@ -40,6 +41,8 @@ jobs:
         run: lua5.4 school/tests/economy_repository_spec.lua
       - name: Run vehicle lifecycle tests
         run: lua5.4 school/tests/vehicle_lifecycle_spec.lua
+      - name: Run vehicle input validation tests
+        run: lua5.4 school/tests/vehicle_input_spec.lua
       - name: Run class-to-progression binding test
         run: lua5.4 school/tests/progression_binding_spec.lua
       - name: Run durable vertical-slice integration gate

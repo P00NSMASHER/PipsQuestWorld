@@ -90,6 +90,9 @@
         },
         "VehicleService": {
           "$path": "src/server/VehicleService.server.lua"
+        },
+        "VehicleInput": {
+          "$path": "src/server/VehicleInput.lua"
         }
       }
     },
