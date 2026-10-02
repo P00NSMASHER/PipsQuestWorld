@@ -84,6 +84,9 @@
         },
         "CafeJob": {
           "$path": "src/server/CafeJob.server.lua"
+        },
+        "AthleticsDistrict": {
+          "$path": "src/server/AthleticsDistrict.server.lua"
         }
       }
     },
