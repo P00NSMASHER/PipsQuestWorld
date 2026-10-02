@@ -146,10 +146,10 @@ end
 
 -- Front entrance / parking / road / town.
 part("FrontPlaza", Vector3.new(120, 1, 42), CFrame.new(0, 0.5, 145), Color3.fromRGB(187, 191, 196), Enum.Material.Concrete)
-part("ParkingLot", Vector3.new(180, 1, 86), CFrame.new(0, 0.25, 208), Color3.fromRGB(54, 58, 64), Enum.Material.Asphalt)
+part("ParkingLot", Vector3.new(180, 1, 86), CFrame.new(0, 0.25, 208), Color3.fromRGB(54, 58, 64), Enum.Material.Pavement)
 part("TownGround", Vector3.new(340, 1, 270), CFrame.new(0, -0.25, 345), Color3.fromRGB(106, 151, 91), Enum.Material.Grass)
-part("MainRoad", Vector3.new(54, 0.5, 250), CFrame.new(0, 0.15, 330), Color3.fromRGB(47, 50, 56), Enum.Material.Asphalt)
-part("CrossRoad", Vector3.new(300, 0.5, 46), CFrame.new(0, 0.15, 310), Color3.fromRGB(47, 50, 56), Enum.Material.Asphalt)
+part("MainRoad", Vector3.new(54, 0.5, 250), CFrame.new(0, 0.15, 330), Color3.fromRGB(47, 50, 56), Enum.Material.Pavement)
+part("CrossRoad", Vector3.new(300, 0.5, 46), CFrame.new(0, 0.15, 310), Color3.fromRGB(47, 50, 56), Enum.Material.Pavement)
 part("RoadStripeA", Vector3.new(1, 0.15, 250), CFrame.new(-2, 0.5, 330), Color3.fromRGB(245, 206, 72), Enum.Material.SmoothPlastic)
 part("RoadStripeB", Vector3.new(1, 0.15, 250), CFrame.new(2, 0.5, 330), Color3.fromRGB(245, 206, 72), Enum.Material.SmoothPlastic)
 
