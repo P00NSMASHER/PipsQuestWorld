@@ -47,6 +47,10 @@ SchoolConfig.WorldLocations = {
     Market = { position = Vector3.new(170, 3, 360), displayName = "Market" },
     Neighborhood = { position = Vector3.new(0, 3, 505), displayName = "Neighborhood" },
     TownPark = { position = Vector3.new(0, 3, 455), displayName = "Town Park" },
+    AthleticsEntrance = { position = Vector3.new(-112, 3, 70), displayName = "Athletics Entrance" },
+    FootballField = { position = Vector3.new(-245, 3, -55), displayName = "Football Field" },
+    SoccerField = { position = Vector3.new(-245, 3, 105), displayName = "Soccer Field" },
+    OutdoorPool = { position = Vector3.new(-165, 3, 220), displayName = "Outdoor Pool" },
 }
 
 return SchoolConfig
