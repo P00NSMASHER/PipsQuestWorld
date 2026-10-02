@@ -419,14 +419,16 @@ local completeCafeTask = cafeJobRoot:WaitForChild("CompleteTask")
 local leaveCafeShift = cafeJobRoot:WaitForChild("LeaveShift")
 
 local cafeCard = Instance.new("Frame")
+cafeCard.Name = "LegacyCafePanel"
 cafeCard.AnchorPoint = Vector2.new(1, 1)
-cafeCard.Position = UDim2.new(1, -14, 1, -18)
-cafeCard.Size = UDim2.new(0, 300, 0, 168)
-cafeCard.BackgroundColor3 = Color3.fromRGB(247, 241, 228)
-cafeCard.BackgroundTransparency = 0.03
+cafeCard.Position = UDim2.new(1, -12, 1, -bottomMargin)
+cafeCard.Size = UDim2.new(0, 260, 0, 150)
+cafeCard.BackgroundColor3 = LEGACY_PANEL
+cafeCard.BackgroundTransparency = 0.02
 cafeCard.Visible = false
 cafeCard.Parent = gui
-round(cafeCard, 16)
+round(cafeCard, 2)
+outline(cafeCard, 2)
 
 local cafeSizeConstraint = Instance.new("UISizeConstraint")
 cafeSizeConstraint.MinSize = Vector2.new(270, 160)
@@ -434,23 +436,24 @@ cafeSizeConstraint.MaxSize = Vector2.new(330, 180)
 cafeSizeConstraint.Parent = cafeCard
 
 local cafeTitle = Instance.new("TextLabel")
-cafeTitle.BackgroundTransparency = 1
-cafeTitle.Position = UDim2.new(0, 14, 0, 10)
-cafeTitle.Size = UDim2.new(1, -104, 0, 24)
-cafeTitle.Font = Enum.Font.GothamBold
-cafeTitle.Text = "CORNER CAFE"
-cafeTitle.TextColor3 = Color3.fromRGB(58, 47, 38)
-cafeTitle.TextSize = 17
-cafeTitle.TextXAlignment = Enum.TextXAlignment.Left
+cafeTitle.BackgroundTransparency = 0
+cafeTitle.BackgroundColor3 = LEGACY_BLUE
+cafeTitle.Position = UDim2.new(0, 0, 0, 0)
+cafeTitle.Size = UDim2.new(1, 0, 0, 26)
+cafeTitle.Font = Enum.Font.ArialBold
+cafeTitle.Text = "Corner Cafe"
+cafeTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+cafeTitle.TextSize = 14
+cafeTitle.TextXAlignment = Enum.TextXAlignment.Center
 cafeTitle.Parent = cafeCard
 
 local cafeStatus = Instance.new("TextLabel")
 cafeStatus.BackgroundTransparency = 1
-cafeStatus.Position = UDim2.new(0, 14, 0, 39)
-cafeStatus.Size = UDim2.new(1, -28, 0, 44)
-cafeStatus.Font = Enum.Font.Gotham
+cafeStatus.Position = UDim2.new(0, 10, 0, 34)
+cafeStatus.Size = UDim2.new(1, -20, 0, 48)
+cafeStatus.Font = Enum.Font.Arial
 cafeStatus.Text = "Start a short cafe shift and serve one order."
-cafeStatus.TextColor3 = Color3.fromRGB(92, 78, 65)
+cafeStatus.TextColor3 = LEGACY_BLUE_DARK
 cafeStatus.TextSize = 13
 cafeStatus.TextWrapped = true
 cafeStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -458,24 +461,25 @@ cafeStatus.TextYAlignment = Enum.TextYAlignment.Top
 cafeStatus.Parent = cafeCard
 
 local cafeAction = Instance.new("TextButton")
-cafeAction.Position = UDim2.new(0, 14, 1, -58)
-cafeAction.Size = UDim2.new(1, -28, 0, 44)
-cafeAction.BackgroundColor3 = Color3.fromRGB(124, 83, 54)
-cafeAction.Font = Enum.Font.GothamBold
+cafeAction.Position = UDim2.new(0, 8, 1, -48)
+cafeAction.Size = UDim2.new(1, -16, 0, 40)
+cafeAction.BackgroundColor3 = LEGACY_BUTTON
+cafeAction.Font = Enum.Font.ArialBold
 cafeAction.Text = "START SHIFT"
-cafeAction.TextColor3 = Color3.new(1, 1, 1)
+cafeAction.TextColor3 = LEGACY_BLUE_DARK
 cafeAction.TextSize = 14
 cafeAction.Parent = cafeCard
-round(cafeAction, 11)
+round(cafeAction, 2)
+outline(cafeAction, 1)
 
 local cafeLeave = Instance.new("TextButton")
 cafeLeave.AnchorPoint = Vector2.new(1, 0)
-cafeLeave.Position = UDim2.new(1, -12, 0, 8)
+cafeLeave.Position = UDim2.new(1, -8, 0, 28)
 cafeLeave.Size = UDim2.new(0, 82, 0, 30)
 cafeLeave.BackgroundTransparency = 1
-cafeLeave.Font = Enum.Font.GothamMedium
+cafeLeave.Font = Enum.Font.Arial
 cafeLeave.Text = "LEAVE JOB"
-cafeLeave.TextColor3 = Color3.fromRGB(117, 98, 82)
+cafeLeave.TextColor3 = LEGACY_BLUE_DARK
 cafeLeave.TextSize = 11
 cafeLeave.Visible = false
 cafeLeave.Parent = cafeCard
@@ -622,33 +626,36 @@ local despawnVehicle = vehicleRoot:WaitForChild("Despawn")
 local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 
 local vehicleCard = Instance.new("Frame")
+vehicleCard.Name = "LegacyVehiclePanel"
 vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
-vehicleCard.Position = UDim2.new(0.5, 0, 1, -18)
-vehicleCard.Size = UDim2.new(0, 310, 0, 138)
-vehicleCard.BackgroundColor3 = Color3.fromRGB(31, 38, 51)
-vehicleCard.BackgroundTransparency = 0.05
+vehicleCard.Position = UDim2.new(0.5, 0, 1, -bottomMargin)
+vehicleCard.Size = UDim2.new(0, 260, 0, 132)
+vehicleCard.BackgroundColor3 = LEGACY_PANEL
+vehicleCard.BackgroundTransparency = 0.02
 vehicleCard.Visible = false
 vehicleCard.Parent = gui
-round(vehicleCard, 16)
+round(vehicleCard, 2)
+outline(vehicleCard, 2)
 
 local vehicleTitle = Instance.new("TextLabel")
-vehicleTitle.BackgroundTransparency = 1
-vehicleTitle.Position = UDim2.new(0, 14, 0, 10)
-vehicleTitle.Size = UDim2.new(1, -28, 0, 24)
-vehicleTitle.Font = Enum.Font.GothamBold
-vehicleTitle.Text = "AUTO SHOP"
-vehicleTitle.TextColor3 = Color3.new(1, 1, 1)
-vehicleTitle.TextSize = 17
-vehicleTitle.TextXAlignment = Enum.TextXAlignment.Left
+vehicleTitle.BackgroundTransparency = 0
+vehicleTitle.BackgroundColor3 = LEGACY_BLUE
+vehicleTitle.Position = UDim2.new(0, 0, 0, 0)
+vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
+vehicleTitle.Font = Enum.Font.ArialBold
+vehicleTitle.Text = "Auto Shop"
+vehicleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+vehicleTitle.TextSize = 14
+vehicleTitle.TextXAlignment = Enum.TextXAlignment.Center
 vehicleTitle.Parent = vehicleCard
 
 local vehicleStatus = Instance.new("TextLabel")
 vehicleStatus.BackgroundTransparency = 1
-vehicleStatus.Position = UDim2.new(0, 14, 0, 39)
-vehicleStatus.Size = UDim2.new(1, -28, 0, 38)
-vehicleStatus.Font = Enum.Font.Gotham
+vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
+vehicleStatus.Size = UDim2.new(1, -20, 0, 38)
+vehicleStatus.Font = Enum.Font.Arial
 vehicleStatus.Text = "Spawn the starter car."
-vehicleStatus.TextColor3 = Color3.fromRGB(196, 205, 222)
+vehicleStatus.TextColor3 = LEGACY_BLUE_DARK
 vehicleStatus.TextSize = 13
 vehicleStatus.TextWrapped = true
 vehicleStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -656,15 +663,16 @@ vehicleStatus.TextYAlignment = Enum.TextYAlignment.Top
 vehicleStatus.Parent = vehicleCard
 
 local vehicleAction = Instance.new("TextButton")
-vehicleAction.Position = UDim2.new(0, 14, 1, -52)
-vehicleAction.Size = UDim2.new(1, -28, 0, 42)
-vehicleAction.BackgroundColor3 = Color3.fromRGB(70, 124, 198)
-vehicleAction.Font = Enum.Font.GothamBold
+vehicleAction.Position = UDim2.new(0, 8, 1, -46)
+vehicleAction.Size = UDim2.new(1, -16, 0, 38)
+vehicleAction.BackgroundColor3 = LEGACY_BUTTON
+vehicleAction.Font = Enum.Font.ArialBold
 vehicleAction.Text = "SPAWN STARTER CAR"
-vehicleAction.TextColor3 = Color3.new(1, 1, 1)
+vehicleAction.TextColor3 = LEGACY_BLUE_DARK
 vehicleAction.TextSize = 14
 vehicleAction.Parent = vehicleCard
-round(vehicleAction, 11)
+round(vehicleAction, 2)
+outline(vehicleAction, 1)
 
 local latestVehicleState = nil
 local vehicleBusy = false
