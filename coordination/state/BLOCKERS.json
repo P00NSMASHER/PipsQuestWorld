@@ -1,11 +1,7 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
   "currentBlockers": [],
-  "gateStatus": "WAITING_EXACT_HEAD_SMOKE",
-  "nextProducer": "Roblox High School Integration Smoke",
-  "nextObjective": "CERTIFY_SCHOOL_CLASS_FEEL_CANONICAL_99E12750",
-  "exactUnblockCondition": "Run bounded exact-head smoke against rebuild/high-school-foundation@99e12750b8b87812f3363e3691c12fb8797669bd. Advance priority only if that exact SHA has the required canonical guards green and smoke passes; any newer head invalidates the handoff.",
-  "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
+  "gateStatus": "CLEAR"
 }
