@@ -265,7 +265,7 @@ choices.Size = UDim2.new(1, -36, 0, 208)
 choices.Parent = modal
 
 local layout = Instance.new("UIListLayout")
-layout.Padding = UDim.new(0, 9)
+layout.Padding = UDim.new(0, 8)
 layout.Parent = choices
 
 local feedback = Instance.new("TextLabel")
@@ -332,7 +332,7 @@ local function showActivity(response)
 
     for index, choiceText in ipairs(activeActivity.choices or {}) do
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 46)
+        button.Size = UDim2.new(1, 0, 0, 45)
         button.Font = Enum.Font.GothamMedium
         button.Text = tostring(index) .. ".  " .. tostring(choiceText)
         button.TextColor3 = palette.text
