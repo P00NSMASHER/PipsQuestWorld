@@ -1,76 +1,83 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 9,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T13:11:00Z",
-  "result": "PASS",
+  "recordedAt": "2026-10-02T15:53:00Z",
+  "result": "WAITING_LOCAL_ONLY_REQUIRED",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
   "sourceRoot": "school/**",
-  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1_WITH_ECONOMY_REJOIN_ORDER_REPAIR",
+  "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
   "eligibility": "QA_AND_INTEGRATION_EXACT_SHA_PASS",
   "prerequisiteReceipts": {
     "qa": {
       "result": "PASS_EXACT_HEAD",
-      "exactSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     },
     "integration": {
       "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-      "exactSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     }
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37010609435,
-      "conclusion": "success"
+      "runId": 37029958854,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37010609322,
-      "conclusion": "success"
+      "runId": 37029958840,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37010609413,
-      "conclusion": "success"
+      "runId": 37029958834,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     }
   ],
-  "checks": {
-    "parentCafeJobSmoke": "PASS_REUSED_EXACT_SHA_2AB1584",
+  "cloudChecks": {
     "buildLoadSourceRootIsolation": "PASS_EXACT_HEAD",
-    "baselineSpawnClockClassFreeRoam": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_GUARDS",
-    "classExactlyOnceProgression": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_GUARDS",
-    "progressionSaveRejoin": "PASS_EXACT_HEAD_PERSISTENCE_REPAIR",
-    "economyOperationCommitOrder": "PASS_EXACT_HEAD_REGRESSION",
-    "economyCreditThenDebitRejoin": "PASS_BALANCE_60_OPERATION_COUNT_2",
-    "cafeJobIdempotentWageNoDoublePay": "PASS_EXACT_HEAD_PROGRESS_GUARD",
-    "cafeJobFailedWageRetry": "PASS_EXACT_HEAD_PROGRESS_GUARD",
-    "cafeJobReturnToFreeRoam": "PASS_EXACT_HEAD_PROGRESS_GUARD",
-    "worldTownNavigation": "PASS_REUSED_UNCHANGED",
-    "mobilePresentationMinimum": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
-    "provenanceOriginality": "PASS_NO_NEW_ASSET_SURFACE",
+    "baselineSpawnClockClassCafe": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_GUARDS",
+    "vehicleLifecyclePureState": "PASS_EXACT_HEAD_PROGRESS_GUARD",
+    "oneActiveVehiclePerPlayer": "PASS_DETERMINISTIC",
+    "staleTokenDespawnProtection": "PASS_DETERMINISTIC",
+    "repeatedDespawnIdempotency": "PASS_DETERMINISTIC",
+    "ownerOnlySeatEnforcement": "PASS_STATIC",
+    "autoShopSpawnSeam": "PASS_EXACT_HEAD",
+    "autoShopSpawnGrounding": "PASS_EXACT_HEAD_FOUNDATION_REPAIR",
+    "serverBoundedMovementAuthority": "PASS_STATIC",
+    "playerLeaveCleanup": "PASS_STATIC",
+    "canonicalClientOnly": "PASS",
+    "provenanceOriginality": "PASS_PRIMITIVE_GEOMETRY_NO_ASSET_IDS",
     "retiredRuntimeIsolation": "PASS",
     "duplicateAuthorityExclusion": "PASS"
   },
-  "milestoneSurfaces": {
-    "worldTownNavigation": "PRESENT_PASS_REUSED",
-    "jobsEconomy": "PRESENT_PASS_EXACT_HEAD_WITH_REJOIN_REPAIR",
-    "vehicles": "NOT_INTEGRATED",
-    "housingProperty": "NOT_INTEGRATED",
-    "customizationShopping": "NOT_INTEGRATED",
-    "socialFreeRoam": "CAFE_SLICE_PRESENT_PASS_REUSED_AND_GUARDED",
-    "mobilePresentation": "PRESENT_PASS_REUSED_UNCHANGED"
-  },
-  "priorSmokeSha": "2ab1584ee34e711828768cd999c86feba9202984",
-  "changedFiles": [
-    "school/src/server/EconomyRepository.lua",
-    "school/tests/economy_repository_spec.lua"
+  "localOnlyRequired": [
+    {
+      "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+      "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "universeId": "10768955678",
+      "placeId": "87245440673982",
+      "check": "Roblox runtime: approach Auto Shop; spawn grounded starter sedan; owner auto-seat; forward/reverse; steer; exit; re-enter; despawn/re-spawn; reject non-owner seat; player-leave cleanup; baseline school/class/cafe invariants.",
+      "reason": "Cloud/headless checks cannot establish Roblox VehicleSeat input and moving-model occupant behavior. Cloud Luau testing would require an unauthorized place upload/publication; local-machine polling is disallowed by the active directive."
+    }
   ],
-  "localOnlyRequired": [],
-  "blocker": null,
-  "nextOwner": "Pip High Release & Package Gate",
-  "exactExitCriterion": "Consume only while live canonical remains 92691e009869ee9cd5d9306786502b157a5b6c84 with QA, Integration, and cited guards green.",
+  "blocker": {
+    "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+    "type": "LOCAL_ONLY_REQUIRED",
+    "owner": "Roblox High School Integration Smoke"
+  },
+  "releasePackageEligible": false,
+  "nextOwner": "Roblox High School Integration Smoke",
+  "exactExitCriterion": "Runtime PASS must identify exact SHA e929354087d3dbf6931496e310b8f899cd0d299f and private target universe 10768955678 / place 87245440673982; then hand this unchanged SHA to Release/Package.",
   "sourceEdited": false,
   "published": false,
+  "moneySpent": false,
   "taskStateChanged": false
 }

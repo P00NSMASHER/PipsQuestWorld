@@ -1,69 +1,85 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "lane": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-02T15:40:00Z",
+  "recordedAt": "2026-10-02T15:53:00Z",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
   "priorCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-  "canonicalBaseBeforeVehicleIntegrationSha": "fced53b1ab7521006bc193cb9a7b01c5ee57da47",
-  "candidate": {
-    "pr": 85,
-    "branch": "rebuild/high-school-vehicles-92691e0-v1",
-    "qaApprovedSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4"
+  "vehicleIntegration": {
+    "producerPr": 85,
+    "qaApprovedProducerSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "firstMergeSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
   },
-  "integrationSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-  "milestone": "VEHICLE_LIFECYCLE_V1",
+  "smokeFoundRepair": {
+    "foundationPr": 92,
+    "repairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
+    "repair": "Ground AutoShopRoad spawn seam to TownMainStreet top surface",
+    "repairExactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37028847547,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37028848366,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37028848444,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "integrationSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37028471690,
+      "runId": 37029958854,
       "event": "push",
       "conclusion": "success",
-      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37028471816,
+      "runId": 37029958840,
       "event": "push",
       "conclusion": "success",
-      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37028471760,
+      "runId": 37029958834,
       "event": "push",
       "conclusion": "success",
-      "headSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
     }
   ],
   "prerequisiteQa": {
     "result": "PASS_EXACT_HEAD",
-    "exactSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
+    "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
-  "integratedVehicleSurface": {
-    "foundationSpawnSeam": "SchoolConfig.WorldSpawnSeams.AutoShopRoad",
-    "oneActiveVehiclePerPlayer": true,
-    "ownerOnlySeatControl": true,
-    "serverAuthoritativeMovement": true,
-    "despawnRespawnLifecycle": true,
-    "playerLeaveCleanup": true,
-    "canonicalClientOnly": true,
-    "primitiveOriginalGeometryNoAssetIds": true
+  "treeIdentity": {
+    "rootTree": "df4b5d641db29b2299d4b071bc21cbd0afae7a80",
+    "schoolTree": "0214cfbea3ae36abf28fcea867ed3a1a4aac47de"
   },
   "authorityChecks": {
-    "worldAuthorityDuplicated": false,
-    "economyProgressionPersistenceAuthorityDuplicated": false,
-    "classAuthorityDuplicated": false,
+    "singleWorldAuthorityPreserved": true,
+    "singleEconomyProgressionPersistenceAuthorityPreserved": true,
+    "classAuthorityUnchanged": true,
+    "vehicleAuthoritySingle": true,
     "retiredRuntimeConsumed": false,
     "phase2SchoolworkAdded": false
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
     "placeId": "87245440673982",
-    "evidenceSource": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json from prior certified checkpoint",
+    "evidenceSource": "prior Release/Package target receipt",
     "publishedThisIntegration": false
   },
   "scope": {
@@ -74,7 +90,7 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "deadcf9e402cb18ea78667926663b8ebdede044f",
-    "instruction": "Smoke only this changed integrated school/** SHA. Preserve the same private-server target. Record LOCAL_ONLY_REQUIRED for any actual Roblox runtime/device check that cloud evidence cannot establish; do not poll the laptop."
+    "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "instruction": "Runtime-smoke only this repaired exact SHA on the same private target. Do not publish. Record LOCAL_ONLY_REQUIRED if local runtime remains unavailable."
   }
 }
