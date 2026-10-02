@@ -7,9 +7,9 @@
   "lease": {
     "status": "HELD",
     "holderLane": "Roblox High School Integration Director",
-    "purpose": "LOCAL_ONLY_REQUIRED Roblox Studio validation of exact-green PR #32 candidate 48b5eaf7756bea214477771413872dab26f67fdd against canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27; diagnose and, if safely possible without publishing, clear the unpublished DataStore runtime blocker",
+    "purpose": "LOCAL_ONLY_REQUIRED Roblox Studio validation of exact-green PR #32 candidate 258a434abce303acc2afa901e269ff0d19ff9d55 against canonical 4ed8d001a86e979ed31cbeb69b9ae95d52832b27; verify unpublished-Studio fallback, playable class/activity/progression/free-roam flow, and diagnose remaining rejoin evidence without publishing.",
     "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
-    "candidateSha": "48b5eaf7756bea214477771413872dab26f67fdd",
+    "candidateSha": "258a434abce303acc2afa901e269ff0d19ff9d55",
     "interactionMode": "VISIBLE_GUI_ALLOWED_FOR_ROBLOX_STUDIO_RUNTIME",
     "claimedAt": "2026-10-02T00:25:03Z",
     "expiresAt": "2026-10-02T00:45:03Z",
