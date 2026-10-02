@@ -1,60 +1,99 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "ECONOMY_CONTRACT_SMOKE_CERTIFIED_FREE_ROAM_SLICE_ASSIGNED",
+  "currentParityMilestone": "SCHOOL_CLASS_FEEL_SLICE_ASSIGNED",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
+      "canonicalSha": "7e69301b253d88a7ed779556387b6f9011022976",
       "status": "PASS_EXACT_HEAD_SMOKE_CERTIFIED"
     },
     "upstream": {
-      "pr": 48,
-      "lane": "Roblox High School Progression & Mobile",
-      "objective": "LEGACY_PARITY_STAGE_1B_HUD_MOBILE",
-      "status": "STALE_BASE_OPEN_DO_NOT_INTEGRATE_WITHOUT_REBASE"
-    },
-    "downstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+      "lane": "Roblox High School Class & Education",
+      "objective": "SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1",
       "baseBranch": "rebuild/high-school-foundation",
       "baseSha": "7e69301b253d88a7ed779556387b6f9011022976",
       "allowedRoot": "school/**",
-      "stableInterfacesOnly": [
-        "SchoolConfig.WorldLocations cafe location",
-        "EconomyRepository server-authoritative balance/transaction/ownership APIs",
-        "read-only progression/economy snapshots"
-      ],
       "ownership": [
-        "cafe job interaction state",
-        "job start/active/complete lifecycle",
-        "job-task interaction validation",
-        "job-facing client UX for this slice"
+        "class-session completion-result semantics",
+        "class-specific completion feedback and summary",
+        "deterministic Class/Education tests for this slice"
       ],
       "forbiddenOverlap": [
-        "world geometry or world generator authority",
-        "second money ledger or persistence writer",
-        "vehicle lifecycle or physics",
-        "housing placement or property lifecycle",
-        "avatar/outfit/customization or shopping flows",
-        "school clock authority",
-        "class or grading authority"
+        "school clock/day/period authority",
+        "world geometry or town ownership",
+        "progression or persistence authority",
+        "economy or ownership ledger",
+        "job interaction authority",
+        "vehicle authority",
+        "housing/property authority",
+        "avatar/customization/shopping authority",
+        "global HUD/mobile redesign"
       ],
       "status": "ASSIGNED_READY"
-    }
+    },
+    "downstream": null
   },
+  "priorityBacklog": [
+    {
+      "priority": 1,
+      "milestone": "WORLD_CAMPUS_TOWN_DEPTH",
+      "status": "INTEGRATED_TO_CURRENT_CERTIFIED_LINE"
+    },
+    {
+      "priority": 2,
+      "milestone": "SCHOOL_CLASS_FEEL",
+      "status": "ACTIVE"
+    },
+    {
+      "priority": 3,
+      "milestone": "PROGRESSION_JOBS_ECONOMY",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 4,
+      "milestone": "VEHICLES",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 5,
+      "milestone": "HOUSING_PROPERTY",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 6,
+      "milestone": "AVATAR_CUSTOMIZATION_SHOPPING",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 7,
+      "milestone": "SOCIAL_FREE_ROAM_POLISH",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 8,
+      "milestone": "MOBILE_PRESENTATION_POLISH",
+      "status": "WAITING_PRIORITY"
+    }
+  ],
   "supportLaneAssignments": {
-    "Foundation": "WAITING_DEPENDENCY; consume no new world-authority work while the assigned cafe-job slice is active.",
-    "Class & Education": "Support stable class/read interfaces only; do not overlap the cafe-job runtime candidate.",
-    "Content QA": "Prepare original cafe-job prompt/content fixtures only; no competing runtime branch.",
-    "Progression & Mobile": "Economy/ownership contract is integrated and smoke-certified at 7e69301. Support its API contract; do not create job interaction authority.",
-    "Pip High Free Roam": "ASSIGNED PARITY_STAGE_3B_CAFE_JOB_LOOP_V1. Implement exactly one original cafe job loop under school/**: start shift at the Foundation cafe location, complete one deterministic interaction task, award one idempotent wage through the existing EconomyRepository API, and return to free roam. Do not add another ledger, persistence writer, world generator, vehicle, housing, customization, school-clock, class, or grading authority.",
-    "QA/Contract": "Validate the Free-Roam cafe-job candidate at its exact head, including duplicate completion/replay and no-double-pay behavior, without implementing producer semantics.",
-    "Integration": "Consume only an exact-green cafe-job candidate descended from canonical 7e69301; preserve the WIP cap and reject stale-base product candidates.",
-    "Integration Smoke": "Re-certify the resulting canonical exact head after cafe-job integration before the next Free-Roam slice.",
-    "Release/Package": "WAITING_DEPENDENCY until the assigned cafe-job milestone is integrated and smoke-certified; never publish automatically.",
+    "Foundation": "WAITING_DEPENDENCY; current certified campus/world work remains canonical. Do not open overlapping world-authority product work while School/Class Feel is active.",
+    "Class & Education": "ASSIGNED SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1. Build exactly one narrow school/** slice that makes class completion feel like a real class result using existing class authority; do not create another clock, progression writer, persistence writer, economy authority, or content pipeline.",
+    "Content QA": "Support original-content validation only if requested by the active Class/Education slice; do not open a competing product branch.",
+    "Progression & Mobile": "WAITING_PRIORITY. PR #48 is stale-base presentation work and must not be integrated or expanded while School/Class Feel is active.",
+    "Pip High Free Roam": "WAITING_PRIORITY. The cafe-job loop is deferred until School/Class Feel is integrated or concretely blocked.",
+    "QA/Contract": "Validate the active Class/Education candidate at its exact head, including duplicate/replay and exactly-once completion behavior, without implementing producer semantics.",
+    "Integration": "Consume only one exact-green Class/Education candidate descended from canonical 7e69301; preserve WIP cap and reject stale-base/noncanonical branches.",
+    "Integration Smoke": "Re-certify the resulting canonical exact head after Class/Education integration before priority advances.",
+    "Release/Package": "WAITING_DEPENDENCY; package/readiness only after the active parity milestone is integrated and smoke-certified; never publish automatically.",
     "DevEx": "CI/evidence infrastructure only."
+  },
+  "nextHandoff": {
+    "from": "Roblox High School Class & Education",
+    "to": "Roblox High School QA & Contract",
+    "condition": "One exact-head green SCHOOL_CLASS_FEEL_COMPLETION_SUMMARY_V1 candidate on school/** descended from 7e69301b253d88a7ed779556387b6f9011022976."
   },
   "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 1,
