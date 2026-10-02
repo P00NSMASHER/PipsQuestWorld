@@ -49,7 +49,7 @@ SchoolConfig.WorldLocations = {
     TownPark = { position = Vector3.new(0, 3, 455), displayName = "Town Park" },
     AthleticsEntrance = { position = Vector3.new(-112, 3, 70), displayName = "Athletics Entrance" },
     FootballField = { position = Vector3.new(-245, 3, -55), displayName = "Football Field" },
-    BasketballCourt = { position = Vector3.new(-245, 3, 105), displayName = "Basketball Court" },
+    SoccerField = { position = Vector3.new(-245, 3, 105), displayName = "Soccer Field" },
     OutdoorPool = { position = Vector3.new(-165, 3, 220), displayName = "Outdoor Pool" },
 }
 
