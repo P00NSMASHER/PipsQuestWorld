@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Integration Director",
+  "result": "BLOCKED",
+  "recordedAt": "2026-10-02T00:12:00Z",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "sourceRoot": "school/**"
+  },
+  "candidate": {
+    "branch": "release/pip-high-demo-ui-20261001",
+    "sha": "48b5eaf7756bea214477771413872dab26f67fdd",
+    "pr": 32,
+    "localArtifactSha256": "0F5667EC1905F52EE2022F6A3E35CC3D929FC3189A14DEE0227603C8A70EEED2"
+  },
+  "runtimeEvidence": {
+    "device": "PAAM-L044",
+    "studioFile": "PipHighRuntimeFresh.rbxlx",
+    "retiredMazePlaceUsed": false,
+    "spawnRendered": true,
+    "schoolMapRendered": true,
+    "classUiOperational": false,
+    "exactFailure": "You must publish this place to the web to access DataStore.",
+    "failureLocation": "ServerScriptService.SchoolFoundation.ClassEducation line 28",
+    "downstreamSymptom": "CanonicalSchoolClient line 8 waits indefinitely for ReplicatedStorage.SchoolFoundation.ClassEducation because the server adapter aborts before creating the class remotes.",
+    "productSourceChanged": false,
+    "robloxPublished": false
+  },
+  "blocker": {
+    "id": "LOCAL_UNPUBLISHED_DATASTORE_PREVENTS_CLASS_RUNTIME",
+    "owner": "Roblox High School Control Tower",
+    "exitCriterion": "Designate a non-retired high-school-only published runtime target for this exact candidate, or assign an approved Studio-safe persistence validation harness that preserves production persistence semantics. Then rerun spawn -> period -> class -> activity -> exactly-once progression -> free roam -> rejoin restore on the exact candidate. Never use placeId 17602626136 / universeId 6027194615."
+  },
+  "mazeQuarantine": {
+    "retiredPlaceId": 17602626136,
+    "retiredUniverseId": 6027194615,
+    "verdict": "STALE_NONCANONICAL",
+    "activeWorkerUseAllowed": false
+  }
+}
