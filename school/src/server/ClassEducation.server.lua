@@ -3,9 +3,9 @@
 -- Foundation owns schedule/world state; Class/Education owns class semantics;
 -- Progression owns durable progression. This file only wires those authorities.
 
-local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local Workspace = game:GetService("Workspace")
 
@@ -19,14 +19,28 @@ local ProgressionBinding = require(schoolFoundation:WaitForChild("ProgressionBin
 local ProgressionDataStore = require(schoolFoundation:WaitForChild("ProgressionDataStore"))
 local catalog = require(schoolFoundation:WaitForChild("ClassActivityCatalog"))
 
+local function createProgressionStore()
+    if RunService:IsStudio() and game.GameId == 0 then
+        local ProgressionStudioStore = require(
+            schoolFoundation:WaitForChild("ProgressionStudioStore")
+        )
+        Workspace:SetAttribute("ProgressionPersistenceMode", "StudioMemoryUnpublished")
+        return ProgressionStudioStore.new()
+    end
+
+    local DataStoreService = game:GetService("DataStoreService")
+    Workspace:SetAttribute("ProgressionPersistenceMode", "DataStore")
+    return ProgressionDataStore.new(
+        DataStoreService:GetDataStore("PipHighProgressionV1")
+    )
+end
+
 local engine = EducationEngine.new(catalog, {
     maxAttempts = 2,
     maxDifficultyJump = 1,
 })
 local classController = ClassSessionController.new(engine)
-local progressionStore = ProgressionDataStore.new(
-    DataStoreService:GetDataStore("PipHighProgressionV1")
-)
+local progressionStore = createProgressionStore()
 local coordinator = ClassProgressionCoordinator.new(classController, function(playerId)
     local repository, openError = ProgressionRepository.open(progressionStore, playerId)
     if not repository then

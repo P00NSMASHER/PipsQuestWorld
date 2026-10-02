@@ -62,6 +62,9 @@
         "ProgressionDataStore": {
           "$path": "src/server/ProgressionDataStore.lua"
         },
+        "ProgressionStudioStore": {
+          "$path": "src/server/ProgressionStudioStore.lua"
+        },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
         }

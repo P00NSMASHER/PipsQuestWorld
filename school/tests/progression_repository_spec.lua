@@ -1,4 +1,5 @@
 local Repository = assert(loadfile("school/src/server/ProgressionRepository.lua"))()
+local StudioStore = assert(loadfile("school/src/server/ProgressionStudioStore.lua"))()
 
 local function eq(actual, expected, label)
     if actual ~= expected then
@@ -108,5 +109,32 @@ eq(failed.status, "rejected", "save failure status")
 eq(failed.durable, false, "save failure durable")
 eq(failed.error, "SAVE_FAILED:injected", "save failure error")
 eq(afterRace:getState().completionCount, 3, "failed save mutated local state")
+
+local studioBacking = {}
+local studioStore = StudioStore.new(studioBacking)
+local studioRepo = assert(Repository.open(studioStore, 101))
+local studioApplied = studioRepo:record(completion("studio:math", 25))
+eq(studioApplied.status, "applied", "studio store apply")
+eq(studioApplied.durable, true, "studio store durable")
+eq(studioApplied.revision, 1, "studio store revision")
+
+local studioReopened = assert(Repository.open(StudioStore.new(studioBacking), 101))
+eq(studioReopened:getState().completionCount, 1, "studio reopen completion count")
+eq(studioReopened:getState().totalPoints, 25, "studio reopen points")
+
+local staleStudioStore = StudioStore.new(studioBacking)
+local _, staleVersion = staleStudioStore:read(101)
+eq(staleVersion, 1, "studio read revision")
+local staleSave, _, staleError = staleStudioStore:compareAndSwap(
+    101,
+    0,
+    {
+        schemaVersion = 2,
+        revision = 1,
+        completions = {},
+    }
+)
+eq(staleSave, false, "studio stale write accepted")
+eq(staleError, "conflict", "studio stale write error")
 
 print("HIGH_SCHOOL_PROGRESSION_REPOSITORY_PASS")
