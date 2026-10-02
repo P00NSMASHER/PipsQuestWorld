@@ -68,6 +68,56 @@ makePart("EastWall", Vector3.new(2, 18, 245), CFrame.new(95, 9, 0), wallColor, E
 makePart("CentralHall", Vector3.new(34, 0.4, 218), CFrame.new(0, 0.7, 0), Color3.fromRGB(238, 225, 190), Enum.Material.WoodPlanks)
 makePart("CrossHall", Vector3.new(170, 0.4, 26), CFrame.new(0, 0.7, 72), Color3.fromRGB(238, 225, 190), Enum.Material.WoodPlanks)
 
+-- Give the school a readable high-school interior spine instead of an empty prototype corridor.
+local trimColor = Color3.fromRGB(44, 62, 92)
+local metalColor = Color3.fromRGB(74, 92, 120)
+local glassColor = Color3.fromRGB(184, 218, 232)
+
+makePart("FrontLobbyFloor", Vector3.new(54, 0.45, 32), CFrame.new(0, 0.75, 101), Color3.fromRGB(225, 229, 234), Enum.Material.Marble)
+makePart("FrontDesk", Vector3.new(22, 4, 5), CFrame.new(-19, 2.5, 96), Color3.fromRGB(123, 88, 61), Enum.Material.Wood)
+makePart("FrontDeskTop", Vector3.new(23, 0.5, 6), CFrame.new(-19, 4.7, 96), Color3.fromRGB(61, 68, 82), Enum.Material.SmoothPlastic)
+makePart("EntryMat", Vector3.new(16, 0.12, 8), CFrame.new(0, 1.05, 111), trimColor, Enum.Material.Fabric)
+
+local trophyGlass = makePart("TrophyCaseGlass", Vector3.new(24, 8, 1), CFrame.new(32, 5, 84), glassColor, Enum.Material.Glass)
+trophyGlass.Transparency = 0.35
+trophyGlass.CanCollide = false
+makePart("TrophyCaseBase", Vector3.new(25, 1, 2.4), CFrame.new(32, 1.5, 84), trimColor, Enum.Material.SmoothPlastic)
+makePart("TrophyCaseTop", Vector3.new(25, 0.8, 2.4), CFrame.new(32, 9.2, 84), trimColor, Enum.Material.SmoothPlastic)
+
+local function buildLockerBank(sideX, startZ, count)
+    for index = 0, count - 1 do
+        local z = startZ + index * 4
+        local locker = makePart(
+            "Locker",
+            Vector3.new(1.2, 7, 3.4),
+            CFrame.new(sideX, 4, z),
+            metalColor,
+            Enum.Material.Metal
+        )
+        local vent = makePart(
+            "LockerVent",
+            Vector3.new(0.12, 0.18, 1.4),
+            CFrame.new(sideX + ((sideX < 0) and 0.66 or -0.66), 5.2, z),
+            Color3.fromRGB(32, 39, 52),
+            Enum.Material.Metal
+        )
+        vent.CanCollide = false
+    end
+end
+
+buildLockerBank(-15.9, -92, 33)
+buildLockerBank(15.9, -92, 33)
+
+for _, z in ipairs({-70, -22, 28, 64}) do
+    makePart("HallBench", Vector3.new(8, 1.2, 2.4), CFrame.new(-9.5, 1.5, z), Color3.fromRGB(137, 96, 62), Enum.Material.Wood)
+    makePart("HallBenchLegA", Vector3.new(0.7, 1.4, 2), CFrame.new(-12.5, 0.9, z), Color3.fromRGB(54, 57, 64), Enum.Material.Metal)
+    makePart("HallBenchLegB", Vector3.new(0.7, 1.4, 2), CFrame.new(-6.5, 0.9, z), Color3.fromRGB(54, 57, 64), Enum.Material.Metal)
+end
+
+for _, z in ipairs({-104, -55, -6, 43, 92}) do
+    makePart("HallCeilingBeam", Vector3.new(34, 0.7, 1.2), CFrame.new(0, 13.8, z), trimColor, Enum.Material.SmoothPlastic)
+end
+
 local function buildClassroom(roomName, center, accent)
     local roomFolder = Instance.new("Folder")
     roomFolder.Name = roomName
