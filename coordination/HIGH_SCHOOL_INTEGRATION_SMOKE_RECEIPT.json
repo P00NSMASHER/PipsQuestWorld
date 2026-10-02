@@ -1,82 +1,63 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T13:06:00Z",
+  "recordedAt": "2026-10-02T13:10:00Z",
   "result": "PASS",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "canonicalSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
   "sourceRoot": "school/**",
-  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-  "eligibility": "QA_AND_INTEGRATION_EXACT_SHA_PASS",
-  "prerequisiteReceipts": {
-    "qa": {
-      "result": "PASS_EXACT_HEAD",
-      "exactSha": "2ab1584ee34e711828768cd999c86feba9202984"
-    },
-    "integration": {
-      "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-      "exactSha": "2ab1584ee34e711828768cd999c86feba9202984"
-    }
+  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1_ECONOMY_REJOIN_REPAIR",
+  "eligibility": "PRIOR_SMOKE_REUSED_FOR_UNCHANGED_SURFACES_PLUS_EXACT_HEAD_REPAIR_CI",
+  "priorSmoke": {
+    "branch": "coordination/smoke-cafe-job-2ab1584-cert",
+    "certifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+    "result": "PASS"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37006496757,
-      "jobId": 110835900649,
+      "runId": 37010609435,
+      "jobId": 110849166482,
       "conclusion": "success"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37006496676,
-      "jobId": 110835900509,
+      "runId": 37010609322,
+      "jobId": 110849166250,
       "conclusion": "success"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37006496664,
-      "jobId": 110835901919,
+      "runId": 37010609413,
+      "jobId": 110849166810,
       "conclusion": "success"
     }
   ],
+  "changedFiles": [
+    "school/src/server/EconomyRepository.lua",
+    "school/tests/economy_repository_spec.lua"
+  ],
   "checks": {
     "buildLoadSourceRootIsolation": "PASS_EXACT_HEAD",
-    "baselineSpawnClockPeriod": "PASS_REUSED_UNCHANGED_CERTIFIED_LINEAGE",
-    "baselineClassActivityCompletion": "PASS_EXACT_HEAD_GUARD_PLUS_REUSED_RUNTIME",
-    "baselineExactlyOnceProgressionPersistence": "PASS_EXACT_HEAD_GUARD_PLUS_REUSED_SAVE_REJOIN",
-    "baselineFreeRoamRecovery": "PASS_REUSED_UNCHANGED",
-    "worldTownNavigation": "PASS_REUSED_PRIOR_SMOKE_CERTIFIED_UNCHANGED",
-    "jobsEconomyCafeShiftStart": "PASS_EXACT_HEAD_DETERMINISTIC",
-    "jobsEconomyDeterministicTask": "PASS_EXACT_HEAD_DETERMINISTIC",
-    "jobsEconomyIdempotentWageNoDoublePay": "PASS_EXACT_HEAD_DETERMINISTIC",
-    "jobsEconomyFailedDurableCommitRetry": "PASS_EXACT_HEAD_DETERMINISTIC",
-    "jobsEconomyReturnToFreeRoam": "PASS_EXACT_HEAD_DETERMINISTIC",
-    "mobilePresentationMinimum": "PASS_STATIC_CONDITIONAL_BOTTOM_RIGHT_300x168_BOUNDED_CARD",
-    "provenanceOriginality": "PASS_NO_NEW_EXTERNAL_ASSET_SURFACE",
+    "baselineSpawnClockPeriod": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "baselineClassActivityCompletion": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_CLASS_GUARD",
+    "baselineExactlyOnceProgressionPersistence": "PASS_EXACT_HEAD",
+    "baselineFreeRoamRecovery": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "jobsEconomyCafeShiftStart": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "jobsEconomyDeterministicTask": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "jobsEconomyIdempotentWageNoDoublePay": "PASS_REUSED_UNCHANGED_CAFE_TEST_IN_EXACT_HEAD_PROGRESSION_GUARD",
+    "jobsEconomyFailedDurableCommitRetry": "PASS_REUSED_UNCHANGED_CAFE_TEST_IN_EXACT_HEAD_PROGRESSION_GUARD",
+    "jobsEconomyReturnToFreeRoam": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "economyOperationOrderRejoin": "PASS_EXACT_HEAD_DETERMINISTIC_FUNDING_THEN_DEBIT_REOPEN_AT_60",
+    "mobilePresentationMinimum": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "provenanceOriginality": "PASS_NO_NEW_ASSET_OR_RETIRED_RUNTIME_SURFACE",
     "retiredRuntimeIsolation": "PASS",
     "duplicateAuthorityExclusion": "PASS"
   },
-  "milestoneSurfaces": {
-    "worldTownNavigation": "PRESENT_PASS_REUSED",
-    "jobsEconomy": "PRESENT_PASS_EXACT_HEAD",
-    "vehicles": "NOT_INTEGRATED",
-    "housingProperty": "NOT_INTEGRATED",
-    "customizationShopping": "NOT_INTEGRATED",
-    "socialFreeRoam": "CAFE_SLICE_PRESENT_PASS_EXACT_HEAD",
-    "mobilePresentation": "CAFE_CARD_PRESENT_PASS_STATIC_MINIMUM"
-  },
-  "priorSmokeSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
-  "changedFiles": [
-    "school/default.project.json",
-    "school/src/client/CanonicalSchoolClient.client.lua",
-    "school/src/server/CafeJob.server.lua",
-    "school/src/server/CafeJobController.lua",
-    "school/tests/cafe_job_controller_spec.lua",
-    "school/tests/economy_repository_spec.lua"
-  ],
   "localOnlyRequired": [],
   "blocker": null,
   "nextOwner": "Pip High Release & Package Gate",
-  "exactExitCriterion": "Consume only while canonical remains 2ab1584ee34e711828768cd999c86feba9202984 with QA, Integration, and cited guards green.",
+  "exactExitCriterion": "Consume only while canonical remains 92691e009869ee9cd5d9306786502b157a5b6c84 with cited exact-head guards green.",
   "sourceEdited": false,
   "published": false,
   "taskStateChanged": false
