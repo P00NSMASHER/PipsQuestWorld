@@ -208,7 +208,7 @@
       "id": "harden-economy-remote-inputs",
       "targetPath": "ServerScriptService/ItemBuyScript",
       "expectedSourceSha256": "c92d824aea342350a940a14c74d151accca9bb0058932fc7df55b9b8557fbddf",
-      "reason": "Keep item pricing/eligibility server-owned while rejecting malformed client identifiers, bounding purchase/redemption request frequency, validating temporary-shop item schema, and making the special-guitar award wait for the existing server award function instead of fire-and-forget.",
+      "reason": "Preserve server-owned pricing while combining malformed-input rejection, request throttling, synchronous purchase helpers, and per-player permanent/loyalty serialization so concurrent duplicate submissions cannot pass pre-mutation checks.",
       "replacements": [
         {
           "old": "game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem.OnServerInvoke = function(plr,shopname,itemname)\n\tlocal shop = game.ReplicatedStorage.Shops:FindFirstChild(shopname)",
@@ -222,12 +222,32 @@
         },
         {
           "old": "function PurchasePermanentItem(plr,itemid)\n\tlocal item",
-          "new": "function PurchasePermanentItem(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"permanent\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "new": "function PurchasePermanentItemUnlocked(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"permanent\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "expectedCount": 1
+        },
+        {
+          "old": "coroutine.resume(coroutine.create(processPermanentItemPurchase), plr,price,itemid,item)",
+          "new": "processPermanentItemPurchase(plr,price,itemid,item)",
+          "expectedCount": 1
+        },
+        {
+          "old": "end\n\ngame.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchasePermanentItem(plr,itemid)\nend",
+          "new": "end\n\nlocal permanentPurchaseBusy = {}\nfunction PurchasePermanentItem(plr,itemid)\n\tif permanentPurchaseBusy[plr] then\n\t\treturn false,\"Please wait for your current purchase to finish.\"\n\tend\n\tpermanentPurchaseBusy[plr] = true\n\tlocal ok,result,reason = pcall(PurchasePermanentItemUnlocked,plr,itemid)\n\tpermanentPurchaseBusy[plr] = nil\n\tif not ok then\n\t\treturn false,\"Your purchase could not be completed. Please try again.\"\n\tend\n\treturn result,reason\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchasePermanentItem(plr,itemid)\nend",
           "expectedCount": 1
         },
         {
           "old": "function PurchaseLoyaltyItem(plr,itemid)\n\tlocal item",
-          "new": "function PurchaseLoyaltyItem(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"loyalty\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "new": "function PurchaseLoyaltyItemUnlocked(plr,itemid)\n\tif type(itemid) ~= \"number\" or itemid <= 0 or itemid ~= math.floor(itemid) then\n\t\treturn false,\"Invalid item\"\n\tend\n\tif not allowEconomyRequest(plr,\"loyalty\",.5) then\n\t\treturn false,\"Please wait\"\n\tend\n\tlocal item",
+          "expectedCount": 1
+        },
+        {
+          "old": "coroutine.resume(coroutine.create(processLoyaltyItemPurchase), plr,price,itemid)",
+          "new": "processLoyaltyItemPurchase(plr,price,itemid)",
+          "expectedCount": 1
+        },
+        {
+          "old": "end\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
+          "new": "end\n\nlocal loyaltyPurchaseBusy = {}\nfunction PurchaseLoyaltyItem(plr,itemid)\n\tif loyaltyPurchaseBusy[plr] then\n\t\treturn false,\"Please wait for your current purchase to finish.\"\n\tend\n\tloyaltyPurchaseBusy[plr] = true\n\tlocal ok,result,reason = pcall(PurchaseLoyaltyItemUnlocked,plr,itemid)\n\tloyaltyPurchaseBusy[plr] = nil\n\tif not ok then\n\t\treturn false,\"Your purchase could not be completed. Please try again.\"\n\tend\n\treturn result,reason\nend\n\ngame.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem.OnServerInvoke = function(plr,itemid)\n\treturn PurchaseLoyaltyItem(plr,itemid)\nend",
           "expectedCount": 1
         },
         {
