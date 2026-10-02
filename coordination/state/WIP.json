@@ -1,30 +1,28 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "VEHICLE_INPUT_RELIABILITY_REPAIR",
+  "unintegratedProductCandidateCount": 0,
+  "currentParityMilestone": "VEHICLE_LIFECYCLE_V2_RELIABLE_CONTROLS_RUNTIME_SMOKE",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "status": "PASS_EXACT_HEAD_CI_AWAITING_RUNTIME_SMOKE"
     },
     "upstream": {
       "lane": "Pip High Free Roam",
       "objective": "VEHICLE_INPUT_RELIABILITY_V2",
-      "baseSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "branch": "rebuild/high-school-vehicle-controls-e929354-v1",
-      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "pr": 103,
-      "status": "READY_QA_EXACT_HEAD_CI_GREEN"
+      "producerPr": 103,
+      "producerSha": "e83a22d0696966595feb41971844a021f637abe7",
+      "integratedSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "status": "MERGED_QA_INTEGRATION_EXACT_HEAD_CI_GREEN"
     },
     "downstream": {
-      "lane": "Roblox High School Integration Director",
-      "objective": "INTEGRATE_VEHICLE_INPUT_RELIABILITY_V2",
-      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "pr": 103,
-      "status": "INTEGRATE"
+      "lane": "Roblox High School Integration Smoke",
+      "objective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "status": "LOCAL_ONLY_REQUIRED"
     }
   },
   "priorityBacklog": [
@@ -74,19 +72,19 @@
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
     "Progression & Mobile": "Maintain the single canonical progression/economy/persistence/mobile contract for exact Roblox High School clone parity; second-grade schoolwork is DEFERRED_PHASE_2.",
-    "Pip High Free Roam": "Active producer for VEHICLE_INPUT_RELIABILITY_V2 on exact base e929354 using branch rebuild/high-school-vehicle-controls-e929354-v1. Preserve all other authorities and Phase-2 deferral.",
-    "QA/Contract": "Validate exact authorized Roblox High School clone parity and architecture contracts on the current target; reject second-grade-schoolwork drift during Phase 1.",
-    "Integration": "Integrate only exact-green candidates that advance the current authorized Roblox High School clone on the same canonical private-server target.",
-    "Integration Smoke": "WAIT_PIPELINE until the input-reliability repair is integrated; do not poll the laptop or smoke superseded e929 vehicle input behavior.",
+    "Pip High Free Roam": "Vehicle lifecycle, grounded AutoShop spawn, and reliable owner-only keyboard/touch controls are integrated at exact canonical 68c4b3f. Wait for runtime Smoke + Release/Package; housing/property is next. Phase-2 schoolwork remains deferred.",
+    "QA/Contract": "QA is rebound to exact canonical 68c4b3f with identical candidate/canonical tree and all three canonical push guards green. Wait for changed candidate or Smoke-returned defect.",
+    "Integration": "PR #103 is mechanically integrated at exact canonical 68c4b3f with post-merge push guards green. Wait for changed candidate.",
+    "Integration Smoke": "Cloud/deterministic vehicle evidence is complete on exact 68c4b3f. Remaining drive/seat/touch-control evidence is LOCAL_ONLY_REQUIRED; do not poll the laptop or publish. Resume Smoke only when authorized runtime evidence is available.",
     "Release/Package": "Package the exact canonical Roblox High School clone SHA as a checkpoint; after packaging, return to Control Tower for the next clone-parity gap. Never pivot to second-grade schoolwork automatically.",
     "DevEx": "CI/evidence infrastructure only."
   },
   "nextHandoff": {
     "from": "Roblox High School Integration Smoke",
     "to": "Pip High Release & Package Gate",
-    "condition": "Runtime PASS must identify exact repaired canonical e929354087d3dbf6931496e310b8f899cd0d299f and the same private target. Do not infer runtime behavior from cloud CI."
+    "condition": "Runtime PASS must identify exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then package unchanged SHA and return to Control Tower for HOUSING_PROPERTY."
   },
-  "openCanonicalPrCount": 1,
+  "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
@@ -117,86 +115,82 @@
   "runDirectives": {
     "Foundation": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Grounding repair PR #92 is integrated at e929354 and exact-head green; wait while runtime Smoke owns the pipeline.",
-      "owned": "school Foundation world/location/spawn contracts only",
-      "dependency": "canonical SchoolConfig/CampusBuilder road and AutoShop locations",
-      "exit": "Vehicle producer can consume one stable spawn/road contract without world-authority duplication.",
-      "handoff": "Pip High Free Roam"
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Vehicle world/spawn seams are integrated and exact-head green; perform only a freshness read while runtime Smoke is local-only.",
+      "owned": "Foundation world/clock/location/spawn contracts only",
+      "dependency": "canonical 68c4b3f; no Foundation defect open",
+      "exit": "Changed canonical or Smoke-returned Foundation defect.",
+      "handoff": "Control Tower"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Vehicle V1 does not change class/session authority; perform one freshness read only while runtime Smoke owns the pipeline.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Vehicle controls do not change class/session authority; perform only a freshness read.",
       "owned": "class/session/activity authority",
-      "dependency": "vehicle slice does not require class changes",
-      "exit": "Control Tower assigns a class-owned regression or later parity slice.",
+      "dependency": "canonical 68c4b3f exact-head Class guard PASS",
+      "exit": "Changed canonical or class-owned regression.",
       "handoff": "Control Tower"
     },
     "Content QA": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Vehicle V1 uses original primitive geometry and no external asset IDs; perform one provenance freshness read only while runtime Smoke owns the pipeline.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "No new asset IDs/content entered with reliable controls; perform only provenance freshness read.",
       "owned": "authorized fixtures/assets/provenance",
-      "dependency": "vehicle candidate must use original/properly licensed primitive or existing authorized assets",
-      "exit": "Producer requests a concrete asset/provenance fixture.",
+      "dependency": "PR #103 changed code/tests/workflow only",
+      "exit": "New asset/provenance request or changed candidate.",
       "handoff": "QA/Contract"
     },
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Vehicle V1 adds no economy/persistence mutation. Existing authority is preserved; perform one freshness read only while runtime Smoke owns the pipeline.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Vehicle control repair leaves progression/economy/persistence authority unchanged; perform only freshness read.",
       "owned": "durable progression/economy/ownership/mobile read-only contracts",
-      "dependency": "canonical EconomyRepository ownership API",
-      "exit": "Vehicle producer has a stable read/write ownership contract without a second ledger or persistence writer.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "canonical 68c4b3f Progression guard PASS including vehicle input test",
+      "exit": "Changed ownership/economy contract or assigned mobile slice.",
+      "handoff": "Control Tower"
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "objective": "Vehicle input reliability candidate PR #103 is exact-head green. Freeze producer semantics while QA validates this exact SHA.",
-      "owned": "Free Roam vehicle input/movement seams only",
-      "dependency": "PR #103 exact head e83a22d with Foundation/Class/Progression guard PASS",
-      "exit": "QA returns exact-SHA PASS or one reproducible defect with a measurable repair criterion.",
-      "handoff": "QA/Contract"
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Reliable vehicle controls are integrated at 68c4b3f. Hold product changes until runtime Smoke resolves; housing/property is reserved next after package checkpoint.",
+      "owned": "jobs/vehicles/housing/customization/social Free Roam semantics",
+      "dependency": "PR #103 merged and exact-head push CI green",
+      "exit": "Smoke PASS + Release/Package checkpoint, or one reproducible vehicle defect returned with exact exit criterion.",
+      "handoff": "Control Tower"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "objective": "QA PASS recorded for PR #103 exact head e83a22d. Wait for Integration unless the candidate changes.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "QA PASS is rebound to exact canonical 68c4b3f via identical tree and canonical push guards.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Exact candidate unchanged at e83a22d0696966595feb41971844a021f637abe7",
-      "exit": "Changed candidate or Integration-returned defect only.",
+      "dependency": "candidate tree == canonical tree 9148fc95; push CI green",
+      "exit": "Changed candidate/canonical or Smoke-returned defect.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "INTEGRATE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "candidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-      "base": "rebuild/high-school-foundation@e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Mechanically integrate PR #103 exact head e83a22d vehicle input reliability repair without changing producer semantics.",
-      "owned": "Mechanical integration only; no semantic edits",
-      "dependency": "QA PASS exact e83a22d + exact-head CI PASS Foundation 37042177160 / Class 37042177307 / Progression 37042177326",
-      "exit": "Merge PR #103 only if head/base remain exact and mergeable, then verify new canonical SHA and all canonical push guards before handing to Smoke.",
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "PR #103 integration complete; exact canonical 68c4b3f has all three push guards green.",
+      "owned": "mechanical integration only",
+      "dependency": "QA PASS + merged PR #103 + exact-head push CI",
+      "exit": "Changed exact-green candidate only.",
       "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Wait for PR #103 mechanical integration and exact-head canonical push guards; then consume only the resulting changed canonical SHA.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Cloud/deterministic checks are complete on exact 68c4b3f; remaining keyboard/touch VehicleSeat/moving-model runtime certification is LOCAL_ONLY_REQUIRED. Do not poll laptop, create branches, rerun broad tests, or publish.",
       "owned": "post-integration runtime certification only",
-      "dependency": "Changed canonical vehicle-control head after Free Roam candidate passes QA and Integration.",
-      "exit": "When authorized runtime evidence is available, Control Tower changes this lane to SMOKE on exact e929354; PASS hands unchanged SHA to Release/Package, while one reproducible defect returns to exactly one owning lane.",
+      "dependency": "QA/Integration exact 68c4b3f + push CI 37042669829/37042669707/37042669710; unblock only with authorized runtime evidence for universe 10768955678/place 87245440673982",
+      "exit": "When authorized runtime evidence is available, switch to SMOKE on exact 68c4b3f; PASS hands unchanged SHA to Release/Package, defect returns to exactly one owner.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Wait for runtime Smoke PASS on exact repaired vehicle SHA; do not publish Roblox.",
+      "canonicalSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "objective": "Wait for runtime Smoke PASS on exact 68c4b3f; do not publish Roblox.",
       "owned": "deterministic package checkpoint only",
-      "dependency": "Smoke PASS on exact e929354087d3dbf6931496e310b8f899cd0d299f",
+      "dependency": "Smoke PASS on exact 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
       "exit": "Consume only the exact smoke-certified SHA with QA/Integration/CI/provenance aligned.",
       "handoff": "Control Tower"
     }
