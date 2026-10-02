@@ -1,0 +1,6 @@
+PACKAGE_CHECKPOINT_COMPLETE
+canonicalSha=92691e009869ee9cd5d9306786502b157a5b6c84
+artifact=pip-high-school-92691e0-source-tree-86243dd1
+nextProducer=Roblox High School Control Tower
+nextObjective=VEHICLES
+published=false
