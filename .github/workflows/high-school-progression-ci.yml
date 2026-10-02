@@ -36,6 +36,8 @@ jobs:
           lua5.4 school/tests/class_education_spec.lua
       - name: Run progression repository concurrency and restore tests
         run: lua5.4 school/tests/progression_repository_spec.lua
+      - name: Run economy ledger and ownership tests
+        run: lua5.4 school/tests/economy_repository_spec.lua
       - name: Run class-to-progression binding test
         run: lua5.4 school/tests/progression_binding_spec.lua
       - name: Run durable vertical-slice integration gate
