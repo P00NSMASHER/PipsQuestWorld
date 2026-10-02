@@ -53,7 +53,12 @@ local lifecycle = VehicleLifecycle.new()
 local runtimeByPlayerId = {}
 
 local autoShop = assert(SchoolConfig.WorldLocations.AutoShop, "AutoShop location is required")
-local spawnPosition = autoShop.position + Vector3.new(0, 2.2, 28)
+local vehicleSpawn = assert(
+    SchoolConfig.WorldSpawnSeams and SchoolConfig.WorldSpawnSeams.AutoShopRoad,
+    "Foundation AutoShopRoad vehicle spawn seam is required"
+)
+local spawnPosition = vehicleSpawn.position + Vector3.new(0, 2.2, 0)
+local spawnYaw = math.rad(vehicleSpawn.headingDegrees or 0)
 
 local function playerKey(player)
     return tostring(player.UserId)
@@ -93,7 +98,7 @@ local function buildVehicle(player, token)
     model:SetAttribute("VehicleId", VEHICLE_ID)
     model:SetAttribute("VehicleToken", token)
 
-    local baseCFrame = CFrame.new(spawnPosition)
+    local baseCFrame = CFrame.new(spawnPosition) * CFrame.Angles(0, spawnYaw, 0)
     local body = addPart(
         model,
         "Body",
@@ -234,7 +239,7 @@ spawnRemote.OnServerInvoke = function(player)
         seat = seat,
         token = reservation.state.token,
         position = spawnPosition,
-        yaw = 0,
+        yaw = spawnYaw,
     }
 
     seat:GetPropertyChangedSignal("Occupant"):Connect(function()
