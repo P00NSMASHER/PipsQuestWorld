@@ -1,9 +1,26 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
+  "parityTarget": "Exact player-facing parity with the original/Legacy Roblox High School baseline, rebuilt progressively inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "Canonical Pip High b44cff4 is exact-head certified: Foundation, Class/Education, Progression, and Integration Smoke PASS. school/** product semantics are unchanged from the runtime-validated merge lineage.",
+  "currentPlayableStage": "CORE_LOOP_CERTIFIED",
+  "currentPlayableEvidence": "Canonical Pip High b44cff4 is exact-head certified: Foundation, Class/Education, Progression, and Integration Smoke PASS. school/** product semantics are unchanged from the runtime-validated merge lineage.",
   "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable 25-point progression commit -> free-roam return -> restored progression snapshot/client reload",
   "headlessExactHeadValidatedThrough": "b44cff4: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
-  "nextMilestone": "Release/Package may consume b44cff4 for deterministic packaging/readiness only. No Roblox publish without an explicit separate user instruction."
+  "progressiveParityStage": {
+    "id": "LEGACY_PARITY_STAGE_1",
+    "name": "Campus + presentation parity",
+    "upstream": "Foundation builds campus/spawn/location/navigation parity.",
+    "downstream": "Progression & Mobile builds HUD/mobile presentation parity behind stable read interfaces.",
+    "exitCriteria": [
+      "Both producers descend from canonical b44cff4 or its certified successor.",
+      "No runtime root other than school/** is mapped or modified.",
+      "No duplicate school clock, class authority, progression authority, or persistence writer is introduced.",
+      "Each producer has deterministic lane checks on its exact head.",
+      "Integration consumes the producer candidates into one canonical descendant.",
+      "Integration Smoke certifies the resulting exact canonical head."
+    ]
+  },
+  "nextMilestone": "Complete and integrate Legacy parity Stage 1A + 1B, then exact-head smoke-certify the new canonical school/** head before Class & Education begins Stage 2 product expansion.",
+  "publishingRule": "No Roblox publish without an explicit separate user instruction."
 }
