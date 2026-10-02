@@ -5,14 +5,14 @@
   "availabilityVerifiedAt": "2026-10-01T23:49:05Z",
   "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
   "lease": {
-    "status": "FREE",
-    "holderLane": null,
-    "purpose": null,
-    "canonicalSha": null,
-    "candidateSha": null,
-    "interactionMode": null,
-    "claimedAt": null,
-    "expiresAt": null,
+    "status": "HELD",
+    "holderLane": "Roblox High School Integration Director",
+    "purpose": "LOCAL_ONLY_REQUIRED runtime validation of exact-green PR #32 head 7d5d2d91bc7529bb7f5478244cd095dabca81a23; verify server-authorized current-class travel and, after cloud repair of remaining retry/restore gaps, complete the bounded playable slice without publishing.",
+    "canonicalSha": "4ed8d001a86e979ed31cbeb69b9ae95d52832b27",
+    "candidateSha": "7d5d2d91bc7529bb7f5478244cd095dabca81a23",
+    "interactionMode": "VISIBLE_GUI_ALLOWED_FOR_ROBLOX_STUDIO_RUNTIME",
+    "claimedAt": "2026-10-02T00:44:02Z",
+    "expiresAt": "2026-10-02T01:04:02Z",
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
