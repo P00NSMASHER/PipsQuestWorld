@@ -1,67 +1,56 @@
 {
-  "schemaVersion": 8,
+  "schemaVersion": 9,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T13:00:00Z",
+  "updatedAt": "2026-10-02T13:10:00Z",
   "result": "PASS_EXACT_HEAD",
-  "integrationSha": "2ab1584ee34e711828768cd999c86feba9202984",
-  "canonicalParentSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
-  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-  "scope": {
-    "runtimeTestRoot": "school/**",
-    "retiredRuntimeConsumed": false,
-    "productSourceEditedByQa": false
-  },
+  "integrationSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "parentCertifiedSha": "2ab1584ee34e711828768cd999c86feba9202984",
+  "milestone": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1_WITH_ECONOMY_REJOIN_ORDER_REPAIR",
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37006496757,
+      "runId": 37010609435,
       "conclusion": "success"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37006496676,
+      "runId": 37010609322,
       "conclusion": "success"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37006496664,
+      "runId": 37010609413,
       "conclusion": "success"
     }
   ],
-  "changedFiles": [
-    "school/default.project.json",
-    "school/src/client/CanonicalSchoolClient.client.lua",
-    "school/src/server/CafeJob.server.lua",
-    "school/src/server/CafeJobController.lua",
-    "school/tests/cafe_job_controller_spec.lua",
-    "school/tests/economy_repository_spec.lua"
-  ],
+  "delta": {
+    "mergedPr": 64,
+    "changedFiles": [
+      "school/src/server/EconomyRepository.lua",
+      "school/tests/economy_repository_spec.lua"
+    ],
+    "sourceRoot": "school/**",
+    "featureBreadthAdded": false
+  },
   "validation": {
-    "canonicalLineage": "PASS_MERGED_PR_56",
-    "projectMappingAndSourceIsolation": "PASS_FOUNDATION_GUARD",
-    "singleFoundationClockAndLocationAuthority": "PASS",
+    "parentCafeJobQa": "PASS_REUSED_EXACT_SHA_2AB1584",
     "singleEconomyProgressionPersistenceAuthority": "PASS",
-    "classAuthorityUnchanged": "PASS",
-    "jobLifecycleAuthority": "PASS_FREE_ROAM_ONLY",
-    "duplicateCompletionReplayNoDoublePay": "PASS_DETERMINISTIC",
-    "failedWageCommitRetry": "PASS_DETERMINISTIC",
-    "returnToFreeRoam": "PASS_DETERMINISTIC",
-    "baselineSpawnClockClassProgressionPersistence": "PASS_REUSED_UNCHANGED_EXACT_HEAD_GUARDS",
-    "mobileObstructionMinimum": "PASS_STATIC_BOUNDED_CONDITIONAL_300x168_CARD",
-    "provenanceOriginality": "PASS_NO_NEW_EXTERNAL_ASSET_SURFACE",
+    "operationIdRemainsIdempotencyConflictKey": "PASS",
+    "durableCommitOrderPreserved": "PASS_EXACT_HEAD_REGRESSION",
+    "creditThenDebitRejoinBalance60": "PASS_EXACT_HEAD_REGRESSION",
+    "cafeJobNoDoublePayCoverage": "PASS_EXACT_HEAD_PROGRESS_GUARD",
+    "failedWageRetryCoverage": "PASS_EXACT_HEAD_PROGRESS_GUARD",
+    "baselineVerticalSlice": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_GUARDS",
+    "mobilePresentation": "PASS_REUSED_UNCHANGED_FROM_2AB1584",
+    "provenanceOriginality": "PASS_NO_NEW_ASSET_SURFACE",
     "retiredRuntimeCoupling": "PASS_NONE",
     "testWeakening": "PASS_NONE"
-  },
-  "priorDefect": {
-    "id": "CAFE_REFRESH_INCOMPLETE_SOURCE_TRANSFER",
-    "status": "SUPERSEDED_RESOLVED",
-    "evidence": "Merged PR #56 contains the complete bounded runtime/client/test delta; exact integration head 2ab1584 passes all three required guards."
   },
   "integrationEligibility": "PASS",
   "blocker": null,
   "localOnlyRequired": null,
   "handoff": {
     "owner": "Roblox High School Integration Director / Smoke",
-    "exactSha": "2ab1584ee34e711828768cd999c86feba9202984"
+    "exactSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   }
 }
