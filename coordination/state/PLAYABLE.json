@@ -1,27 +1,29 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "owner": "Roblox High School Control Tower",
-  "parityTarget": "Exact player-facing parity with the original/Legacy Roblox High School baseline, rebuilt progressively inside school/** on the certified Pip High lineage.",
+  "parityTarget": "High functional parity with publicly observable high-school-life behavior, rebuilt progressively with original code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "WORLD_TOWN_SHELL_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
-  "currentPlayableEvidence": "Canonical Pip High 50288ecf33dec647424f6bf173071a8982041b41 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards all pass on that exact SHA. The delta from the prior smoke-certified head is confined to campus/town geometry plus additive WorldLocations; period, room, class, progression, and persistence semantics are unchanged.",
-  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable 25-point progression commit -> free-roam return -> restored progression snapshot/client reload",
-  "headlessExactHeadValidatedThrough": "50288ecf: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
-  "newWorldVisualsRuntimeValidatedInStudio": false,
+  "currentPlayableStage": "ECONOMY_CONTRACT_INTEGRATED_HEADLESS_SMOKE_CERTIFIED",
+  "currentPlayableEvidence": "Canonical Pip High 7e69301b253d88a7ed779556387b6f9011022976 is exact-head headless smoke-certified. Foundation, Class/Education, and Progression guards pass on that exact SHA. The delta from prior smoke-certified 50288ecf is limited to the server-authoritative economy/ownership contract, its Rojo mapping/tests, and CI-only workflow wiring; school clock, class/grading, world generation, and prior progression authority are unchanged.",
+  "runtimeValidatedThrough": "authoritative period -> class attendance -> server-authoritative activity -> one durable progression commit -> free-roam return -> restored progression snapshot/client reload",
+  "headlessExactHeadValidatedThrough": "7e69301: Foundation + Class/Education + Progression + post-integration smoke exact-head PASS",
+  "economyRuntimeValidatedInStudio": false,
   "progressiveParityStage": {
-    "id": "PARITY_STAGE_3A_ECONOMY_CONTRACT_PREP",
-    "name": "Economy + ownership contract",
-    "activeProducer": "Progression & Mobile may produce one isolated server-authoritative economy/ownership contract behind stable existing interfaces.",
+    "id": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
+    "name": "Cafe job interaction loop",
+    "activeProducer": "Pip High Free Roam owns exactly one original cafe-job interaction slice on canonical 7e69301.",
+    "externallyObservableBehavior": "Player starts a cafe shift at the Foundation cafe location, performs one deterministic job interaction, completes the shift task once, receives one server-authoritative idempotent wage through EconomyRepository, and returns to free roam with the updated read-only economy snapshot.",
     "exitCriteria": [
-      "Producer descends from canonical 50288ecf or a newer smoke-certified canonical successor.",
-      "Only school/** canonical runtime/test files are changed.",
-      "Money balance and ownership writes are server-authoritative and idempotent.",
-      "No job, vehicle, housing, shop presentation, school clock, class/grading, or duplicate persistence semantics are introduced.",
-      "The producer exact head has deterministic lane checks.",
-      "Integration consumes only that candidate into one canonical descendant.",
-      "Integration Smoke certifies the resulting exact canonical head before further product expansion."
+      "Producer descends from canonical 7e69301b253d88a7ed779556387b6f9011022976 or a newer Control-Tower-certified successor.",
+      "Only school/** canonical runtime/test files are changed by the producer.",
+      "Foundation WorldLocations remains the location authority; no second world registry or generator is introduced.",
+      "EconomyRepository remains the only money/ownership write authority; duplicate completion or replay cannot double-pay.",
+      "No vehicle, housing, customization/shop, school-clock, class/grading, or duplicate persistence semantics are introduced.",
+      "Job start, task interaction, completion, cancel/leave, and replay behavior have deterministic exact-head tests.",
+      "Integration consumes only the exact-green candidate into one canonical descendant.",
+      "Integration Smoke certifies the resulting exact canonical head before another Free-Roam slice begins."
     ]
   },
-  "nextMilestone": "Produce one exact-head tested school/** economy/ownership contract candidate from 50288ecf, integrate it through the normal canonical path, then smoke-certify the resulting exact head before Free Roam binds job/vehicle/housing mechanics.",
+  "nextMilestone": "Produce, exact-head test, integrate, and smoke-certify one original cafe-job loop before assigning vehicles, housing/property, customization/shopping, or broader social/free-roam systems.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction."
 }
