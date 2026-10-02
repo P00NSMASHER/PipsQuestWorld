@@ -23,7 +23,7 @@ if mapping != {"$path": "src/server/AthleticsDistrict.server.lua"}:
 required_locations = {
     "AthleticsEntrance": "Athletics Entrance",
     "FootballField": "Football Field",
-    "BasketballCourt": "Basketball Court",
+    "SoccerField": "Soccer Field",
     "OutdoorPool": "Outdoor Pool",
 }
 for key, label in required_locations.items():
@@ -40,7 +40,7 @@ for token in (
     '"AthleticsWalk"',
     '"AthleticsDrive"',
     '"FootballTurf"',
-    '"BasketballCourt"',
+    '"SoccerTurf"',
     '"PoolDeck"',
     '"PoolWater"',
     '"AthleticsLightPole"',
