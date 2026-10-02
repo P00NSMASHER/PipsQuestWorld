@@ -1,44 +1,50 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-02T15:01:00Z",
-  "scope": "Foundation world/campus parity candidate; lane evidence only; not canonical or release authority",
+  "updatedAt": "2026-10-02T15:45:00Z",
+  "scope": "Foundation world/spawn regression repair; lane evidence only; not shared-state authority",
   "canonicalBase": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "92691e009869ee9cd5d9306786502b157a5b6c84"
+    "sha": "deadcf9e402cb18ea78667926663b8ebdede044f",
+    "milestone": "VEHICLE_LIFECYCLE_V1_INTEGRATED"
   },
   "candidate": {
-    "branch": "parity/foundation-west-athletics-92691e0",
-    "headSha": "51e3ffccf73ccd3ef3880c4d0bfe648670a21807",
-    "pullRequest": 77,
-    "behavior": "West athletics district connected to the existing campus with canonical Athletics Entrance, Football Field, Soccer Field, and Outdoor Pool landmarks; pool deck leaves an open basin and cosmetic lane markers are non-collidable.",
+    "branch": "fix/foundation-vehicle-road-surface-deadcf9",
+    "headSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
+    "pullRequest": 92,
+    "behavior": "Ground the canonical AutoShopRoad vehicle spawn seam on TownMainStreet's actual top surface.",
     "changedFiles": [
-      "school/default.project.json",
-      "school/src/server/AthleticsDistrict.server.lua",
       "school/src/shared/SchoolConfig.lua",
-      "school/tests/foundation_athletics_district_static_spec.py"
+      "school/tests/foundation_world_contract_spec.lua"
     ],
     "sourceRoot": "school/**",
     "status": "READY_FOR_QA_INTEGRATION_HEADLESS"
   },
+  "reproducedDefect": {
+    "oldSeamY": 3,
+    "townMainStreetCenterY": 0.45,
+    "townMainStreetThickness": 0.4,
+    "townMainStreetTopY": 0.65,
+    "vehicleServiceModelOffsetY": 2.2,
+    "oldWheelBottomApproxY": 2.95,
+    "oldFloatAboveRoadApproxStuds": 2.3,
+    "correctedWheelBottomApproxY": 0.6,
+    "result": "FOUNDATION_WORLD_SEAM_HEIGHT_BUG_REPRODUCED_AND_FIXED"
+  },
   "deterministicEvidence": {
-    "athleticsStaticGuard": {
-      "result": "PASS",
-      "checks": 32,
-      "exactHeadSha": "51e3ffccf73ccd3ef3880c4d0bfe648670a21807"
-    },
+    "focusedHeadless": "PASS",
     "exactHeadCi": [
       {
-        "runId": 37023769204,
+        "runId": 37028847547,
         "workflow": "High School Foundation Static Guards",
         "conclusion": "success"
       },
       {
-        "runId": 37023770199,
+        "runId": 37028848366,
         "workflow": "High School Class Education Guards",
         "conclusion": "success"
       },
       {
-        "runId": 37023769725,
+        "runId": 37028848444,
         "workflow": "High School Progression Guards",
         "conclusion": "success"
       }
@@ -48,33 +54,14 @@
     "foundationOnly": true,
     "preservesSingleClockAuthority": true,
     "preservesSingleLocationRegistry": true,
-    "addsClassSemantics": false,
-    "addsProgressionEconomyPersistence": false,
-    "addsVehiclesHousingCustomizationSocialMobile": false
+    "changesVehicleLifecyclePhysicsClient": false,
+    "changesProgressionEconomyPersistence": false,
+    "changesClassSemantics": false
   },
-  "provenance": {
-    "verdict": "PASS_NO_NEW_EXTERNAL_ASSETS",
-    "basis": [
-      "Candidate uses procedural Roblox primitives/materials only.",
-      "No rbxassetid:// or external non-code asset mapping is introduced.",
-      "All changed runtime/test files remain under school/**."
-    ]
-  },
-  "runtimeValidation": {
-    "state": "LOCAL_ONLY_REQUIRED_BEFORE_CLAIMING_VISUAL_REFERENCE_PARITY",
-    "exactCheck": "Render candidate 51e3ffccf73ccd3ef3880c4d0bfe648670a21807 against canonical Pip High target placeId 87245440673982 / universeId 10768955678 and verify west athletics campus connectivity, scale, football/soccer/pool placement, clipping, lighting, pool walkability, and authorized reference parity.",
-    "reason": "Static/headless evidence proves mapping and ownership invariants but cannot prove the final rendered world matches the authorized live reference.",
-    "publicationRequired": false,
-    "target": {
-      "product": "Pip High",
-      "placeId": "87245440673982",
-      "universeId": "10768955678"
-    },
-    "leaseAtHandoff": {
-      "status": "CLAIMED_BY_OTHER_LANE",
-      "holderLane": "Roblox High School Release/Package",
-      "action": "NO_LOCAL_ACCESS_ATTEMPTED"
-    }
+  "runtimeTarget": {
+    "product": "Pip High",
+    "placeId": "87245440673982",
+    "universeId": "10768955678"
   },
   "blocker": null,
   "handoff": {
@@ -82,19 +69,10 @@
       "Roblox High School QA & Contract",
       "Roblox High School Integration Director"
     ],
-    "condition": "Consume PR #77 only at exact head 51e3ffccf73ccd3ef3880c4d0bfe648670a21807 while CI runs 37023769204, 37023770199, and 37023769725 remain successful."
+    "condition": "Consume PR #92 only at exact head ca84d70f22a091034c8054d511e78472cb856ffa while cited exact-head checks remain green; land before runtime vehicle smoke to avoid certifying the known floating-spawn defect."
   },
   "authority": {
     "sharedStateWriter": "Roblox High School Control Tower",
     "thisFileIsAuthoritative": false
-  },
-  "referenceAlignment": {
-    "result": "PASS_MAP_LANDMARK_SET",
-    "notes": [
-      "Public Legacy top-down map shows the west athletics cluster with football field, soccer pitch, and swimming pool.",
-      "Candidate uses that landmark trio while retaining indoor basketball in the existing school gym.",
-      "Pool deck is modeled as perimeter strips around the water opening rather than a solid slab.",
-      "Final rendered geometric/reference parity remains runtime-visible evidence, not a headless claim."
-    ]
   }
 }
