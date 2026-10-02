@@ -41,12 +41,18 @@ for token in (
     '"AthleticsDrive"',
     '"FootballTurf"',
     '"SoccerTurf"',
-    '"PoolDeck"',
+    '"PoolDeckNorth"',
+    '"PoolDeckSouth"',
+    '"PoolDeckWest"',
+    '"PoolDeckEast"',
     '"PoolWater"',
     '"AthleticsLightPole"',
 ):
     if token not in district:
         raise SystemExit(f"missing athletics world behavior: {token}")
+
+if 'part("PoolDeck",' in district:
+    raise SystemExit("pool deck must not be a solid slab under the water opening")
 
 for forbidden in (
     "DataStoreService",
