@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 17,
+  "schemaVersion": 18,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
-  "unintegratedProductCandidateCount": 0,
+  "unintegratedProductCandidateCount": 1,
   "currentParityMilestone": "HOUSING_PLOT_SEAMS_V1",
   "slots": {
     "base": {
@@ -15,13 +15,16 @@
       "objective": "HOUSING_PLOT_SEAMS_V1",
       "baseSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
       "branch": "rebuild/high-school-housing-plots-f9564e-v1",
-      "status": "AUTHORIZED_NOT_CREATED"
+      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "pr": 111,
+      "status": "QA_PASS_EXACT_HEAD_CI_GREEN"
     },
     "downstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "HOUSING_PROPERTY_V1",
-      "dependency": "Foundation HousingPlots seam integrated",
-      "status": "WAIT_PIPELINE"
+      "lane": "Roblox High School Integration Director",
+      "objective": "INTEGRATE_HOUSING_PLOT_SEAMS_V1",
+      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "pr": 111,
+      "status": "INTEGRATE"
     }
   },
   "priorityBacklog": [
@@ -83,7 +86,7 @@
     "to": "Pip High Release & Package Gate",
     "condition": "Runtime PASS must identify exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then package unchanged SHA and return to Control Tower for HOUSING_PROPERTY."
   },
-  "openCanonicalPrCount": 0,
+  "openCanonicalPrCount": 1,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
@@ -113,15 +116,14 @@
   },
   "runDirectives": {
     "Foundation": {
-      "mode": "SUPPORT",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "base": "rebuild/high-school-foundation@f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "branch": "rebuild/high-school-housing-plots-f9564e-v1",
-      "objective": "Add a stable Foundation-owned HousingPlots registry and matching neighborhood lot pads/house spawn anchors for six residential lots, replacing hard-coded decorative-house coordinates with the shared contract.",
-      "owned": "SchoolConfig world/location/spawn contracts and CampusBuilder neighborhood geometry only",
-      "dependency": "Current canonical Neighborhood location and existing NeighborhoodRoad; Legacy reference requires houses to appear in the residential area and be addressable by the House menu.",
-      "exit": "Deterministic Foundation contract proves six unique plot IDs/anchors, CampusBuilder consumes only that registry, exact-head guards pass, and no housing ownership/editor semantics are introduced.",
-      "handoff": "QA/Contract"
+      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "objective": "Housing plot seam candidate PR #111 is exact-head green and QA-approved; freeze Foundation semantics during Integration.",
+      "owned": "world/location/spawn contracts and neighborhood geometry only",
+      "dependency": "QA PASS exact 6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "exit": "Integration lands exact candidate or returns one concrete Foundation defect.",
+      "handoff": "Integration"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
@@ -163,19 +165,22 @@
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Wait for exact Foundation housing-plot candidate; then validate world authority uniqueness and plot contract.",
+      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "objective": "QA PASS recorded for exact PR #111 head; wait for changed candidate or Integration-returned defect.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Foundation exact-head candidate",
-      "exit": "PASS exact candidate or one defect returned to Foundation.",
+      "dependency": "candidate unchanged at 6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "exit": "Changed candidate or returned defect only.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "INTEGRATE",
       "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Wait for QA PASS on the housing plot seam candidate.",
+      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+      "base": "rebuild/high-school-foundation@f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "objective": "Mechanically integrate PR #111 exact head housing plot seams without changing producer semantics.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact candidate",
-      "exit": "Changed exact-green candidate only.",
+      "dependency": "QA PASS + Foundation 37067068773 / Class 37067068780 / Progression 37067068863 exact-head PASS; housing plot contract step PASS",
+      "exit": "Merge only exact PR #111 head/base, verify post-merge canonical push guards, then return to Control Tower so Free Roam can consume HousingPlots.",
       "handoff": "Control Tower"
     },
     "Integration Smoke": {
