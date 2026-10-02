@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T08:04:00Z",
+  "recordedAt": "2026-10-02T08:06:10Z",
   "action": "EXACT_HEAD_SMOKE_CERTIFICATION",
   "result": "PASS",
   "scope": "POST_INTEGRATION_SMOKE_EXACT_HEAD_ONLY",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
+  "canonicalSha": "50288ecf33dec647424f6bf173071a8982041b41",
   "canonicalSourceRoot": "school/**",
   "checks": {
     "liveCanonicalHeadMatch": "PASS",
@@ -14,37 +14,39 @@
     "classEducationExactHeadCI": "PASS",
     "progressionExactHeadCI": "PASS",
     "canonicalSourceRootIsolation": "PASS",
-    "schoolRuntimeTreeChangedSincePriorSmoke": "YES_CAMPUS_BUILDER_ONLY",
-    "coreLoopAuthorityFilesChanged": "NO",
+    "schoolRuntimeTreeChangedSincePriorSmoke": "YES_WORLD_SHELL_ONLY",
+    "periodScheduleChanged": "NO",
+    "coreClassProgressionPersistenceAuthorityChanged": "NO",
     "postIntegrationSmoke": "PASS_HEADLESS_EXACT_HEAD"
   },
   "exactHeadCi": [
     {
-      "runId": 36981455038,
+      "runId": 36982108237,
       "workflow": "High School Foundation Static Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 36981455048,
+      "runId": 36982108122,
       "workflow": "High School Class Education Guards",
       "event": "push",
       "conclusion": "success"
     },
     {
-      "runId": 36981454975,
+      "runId": 36982108197,
       "workflow": "High School Progression Guards",
       "event": "push",
       "conclusion": "success"
     }
   ],
   "deltaFromPriorSmokeCertified": {
-    "priorSmokeCertifiedSha": "b44cff4c64843001b178a6f6bd4aacabecfee30c",
-    "aheadBy": 6,
+    "priorSmokeCertifiedSha": "e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b",
+    "aheadBy": 3,
     "changedFiles": [
-      "school/src/server/CampusBuilder.server.lua"
+      "school/src/server/CampusBuilder.server.lua",
+      "school/src/shared/SchoolConfig.lua"
     ],
-    "changes": 158,
+    "schoolConfigChange": "WorldLocations only; SchoolConfig.Periods unchanged",
     "coreLoopAuthorityFilesChanged": false,
     "retiredRuntimeConsumed": false
   },
@@ -64,14 +66,14 @@
       "Foundation source-root isolation passes at exact canonical head",
       "Class/Education guards pass at exact canonical head",
       "Progression guards pass at exact canonical head",
-      "cumulative delta from prior smoke-certified head is confined to school/src/server/CampusBuilder.server.lua"
+      "town-shell delta is confined to CampusBuilder and WorldLocations"
     ],
     "productionCrossServerSaveRejoin": "NOT_CLAIMED_WITHOUT_AUTHORIZED_PUBLISH",
-    "newCampusVisualsRuntimeValidatedInStudio": false
+    "newTownVisualsRuntimeValidatedInStudio": false
   },
   "blocker": null,
-  "nextOwner": "Roblox High School Release/Package",
-  "nextExitCriterion": "Treat e2cfbf6ea8cd94a3dfe238194c5d5a6ebb9e869b as the exact-head headless smoke-certified canonical Pip High source. Any newer canonical commit invalidates this certification until its exact-head guards are green and Smoke certifies that newer SHA. Do not publish Roblox without explicit user instruction.",
+  "nextOwner": "Roblox High School Progression & Mobile",
+  "nextExitCriterion": "Treat 50288ecf33dec647424f6bf173071a8982041b41 as the exact-head headless smoke-certified canonical Pip High source. Stage 1B must be based on this exact SHA or a newer smoke-certified successor. Do not publish Roblox without explicit user instruction.",
   "sourceEdited": false,
   "sharedStateEdited": false,
   "published": false,
