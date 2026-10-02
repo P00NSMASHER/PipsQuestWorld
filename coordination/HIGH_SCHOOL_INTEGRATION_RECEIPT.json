@@ -1,85 +1,64 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "lane": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-02T15:53:00Z",
+  "recordedAt": "2026-10-02T17:44:00Z",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "priorCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
-  "vehicleIntegration": {
-    "producerPr": 85,
-    "qaApprovedProducerSha": "3ad2121779af85f5e93457df7bf7d2b3365db8f4",
-    "firstMergeSha": "deadcf9e402cb18ea78667926663b8ebdede044f"
+  "priorCanonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+  "vehicleControlRepair": {
+    "pr": 103,
+    "qaApprovedCandidateSha": "e83a22d0696966595feb41971844a021f637abe7",
+    "integrationSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+    "behavior": "Owner-only bounded keyboard/touch control intent with server-authoritative movement and stale-input timeout"
   },
-  "smokeFoundRepair": {
-    "foundationPr": 92,
-    "repairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
-    "repair": "Ground AutoShopRoad spawn seam to TownMainStreet top surface",
-    "repairExactHeadCi": [
-      {
-        "workflow": "High School Foundation Static Guards",
-        "runId": 37028847547,
-        "conclusion": "success"
-      },
-      {
-        "workflow": "High School Class Education Guards",
-        "runId": 37028848366,
-        "conclusion": "success"
-      },
-      {
-        "workflow": "High School Progression Guards",
-        "runId": 37028848444,
-        "conclusion": "success"
-      }
-    ]
-  },
-  "integrationSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-  "milestone": "VEHICLE_LIFECYCLE_V1_WITH_GROUNDED_AUTOSHOP_SPAWN",
+  "milestone": "VEHICLE_LIFECYCLE_V2_WITH_GROUNDED_SPAWN_AND_RELIABLE_CONTROLS",
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37029958854,
+      "runId": 37042669829,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37029958840,
+      "runId": 37042669707,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37029958834,
+      "runId": 37042669710,
       "event": "push",
       "conclusion": "success",
-      "headSha": "e929354087d3dbf6931496e310b8f899cd0d299f"
+      "headSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+      "vehicleInputStep": "success"
     }
   ],
   "prerequisiteQa": {
     "result": "PASS_EXACT_HEAD",
-    "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
+    "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "treeIdentity": {
-    "rootTree": "df4b5d641db29b2299d4b071bc21cbd0afae7a80",
-    "schoolTree": "0214cfbea3ae36abf28fcea867ed3a1a4aac47de"
+    "rootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
+    "schoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6"
   },
   "authorityChecks": {
     "singleWorldAuthorityPreserved": true,
     "singleEconomyProgressionPersistenceAuthorityPreserved": true,
     "classAuthorityUnchanged": true,
     "vehicleAuthoritySingle": true,
+    "clientTransformTrust": false,
     "retiredRuntimeConsumed": false,
     "phase2SchoolworkAdded": false
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
     "placeId": "87245440673982",
-    "evidenceSource": "prior Release/Package target receipt",
     "publishedThisIntegration": false
   },
   "scope": {
@@ -90,7 +69,7 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-    "instruction": "Runtime-smoke only this repaired exact SHA on the same private target. Do not publish. Record LOCAL_ONLY_REQUIRED if local runtime remains unavailable."
+    "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
+    "instruction": "Runtime-smoke only exact 68c4b3f on the same private target when authorized runtime evidence is available. Do not publish or poll the laptop under the current directive."
   }
 }
