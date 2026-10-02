@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 11,
+  "schemaVersion": 12,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T21:20:00Z",
+  "recordedAt": "2026-10-02T21:36:00Z",
   "result": "WAITING_LOCAL_ONLY_REQUIRED",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+  "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
   "sourceRoot": "school/**",
-  "milestone": "LEGACY_HUD_PRESENTATION_PARITY_V1_PLUS_VEHICLE_V2",
+  "milestone": "HOUSING_PLOT_SEAMS_V1_PLUS_VEHICLE_RUNTIME_GATE",
   "eligibility": "QA_AND_INTEGRATION_EXACT_SHA_PASS",
   "prerequisiteReceipts": {
     "qa": {
@@ -21,25 +21,25 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37066394079,
+      "runId": 37067265741,
       "event": "push",
       "conclusion": "success",
-      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4"
+      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "housingPlotStep": "success"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37066394156,
+      "runId": 37067265753,
       "event": "push",
       "conclusion": "success",
-      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4"
+      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37066393974,
+      "runId": 37067265684,
       "event": "push",
       "conclusion": "success",
-      "headSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "legacyHudStep": "success"
+      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
     }
   ],
   "cloudChecks": {
@@ -63,11 +63,11 @@
   "localOnlyRequired": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-      "exactSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "exactSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "check": "Roblox runtime: vehicle spawn/seat/drive/steer/exit/re-enter/despawn plus touch control coexistence with the new Legacy HUD/cafe/vehicle panels and baseline school/class/cafe invariants.",
-      "reason": "Cloud tests cannot establish actual Roblox seat/touch/GUI interaction. Current directive forbids laptop polling and no publish is authorized."
+      "check": "Roblox runtime vehicle drive/touch/HUD coexistence plus baseline school/class/cafe behavior.",
+      "reason": "Cloud checks cannot establish actual Roblox seat/touch/GUI runtime interaction; current directive forbids laptop polling and no publish is authorized."
     }
   ],
   "blocker": {
@@ -77,7 +77,7 @@
   },
   "releasePackageEligible": false,
   "nextOwner": "Roblox High School Integration Smoke",
-  "exactExitCriterion": "Runtime PASS must identify exact f9564e344ba0a3de96beeec919b230ebe501a1f4 and private target universe 10768955678/place 87245440673982.",
+  "exactExitCriterion": "Runtime PASS must identify exact current canonical and private target 10768955678/87245440673982.",
   "sourceEdited": false,
   "published": false,
   "moneySpent": false,

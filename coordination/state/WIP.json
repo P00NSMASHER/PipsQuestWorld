@@ -1,30 +1,27 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "HOUSING_PLOT_SEAMS_V1",
+  "currentParityMilestone": "HOUSING_PROPERTY_V1",
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
       "status": "PASS_EXACT_HEAD_CI_WITH_LOCAL_RUNTIME_GATE"
     },
     "upstream": {
-      "lane": "Roblox High School Foundation",
-      "objective": "HOUSING_PLOT_SEAMS_V1",
-      "baseSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "branch": "rebuild/high-school-housing-plots-f9564e-v1",
-      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "pr": 111,
-      "status": "QA_PASS_EXACT_HEAD_CI_GREEN"
+      "lane": "Pip High Free Roam",
+      "objective": "HOUSING_PROPERTY_V1",
+      "baseSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "branch": "rebuild/high-school-housing-property-477fa61-v1",
+      "status": "AUTHORIZED_NOT_CREATED"
     },
     "downstream": {
-      "lane": "Roblox High School Integration Director",
-      "objective": "INTEGRATE_HOUSING_PLOT_SEAMS_V1",
-      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "pr": 111,
-      "status": "INTEGRATE"
+      "lane": "Pip High QA & Architecture Contract",
+      "objective": "VALIDATE_HOUSING_PROPERTY_V1",
+      "dependency": "Free Roam exact-head candidate",
+      "status": "WAIT_PIPELINE"
     }
   },
   "priorityBacklog": [
@@ -70,11 +67,11 @@
     }
   ],
   "supportLaneAssignments": {
-    "Foundation": "Create the stable residential plot/location/spawn contract for Legacy housing from exact f9564e; no housing ownership/edit semantics.",
+    "Foundation": "HousingPlots seam is integrated at 477fa61; wait unless Free Roam returns a concrete world-anchor defect.",
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
-    "Progression & Mobile": "Current owner of Legacy HUD/mobile presentation parity candidate PR #107 on exact canonical base 68c4b3f. No economy/persistence semantics changed.",
-    "Pip High Free Roam": "Wait for Foundation HousingPlots seam, then own house claim/teleport/lock/edit mechanics; do not invent world coordinates.",
+    "Progression & Mobile": "EconomyRepository remains the single durable money/ownership authority. Free Roam may consume it for the Legacy $50 house unlock; do not create a second ledger.",
+    "Pip High Free Roam": "Active producer for Legacy housing property V1 on exact base 477fa61 using only integrated HousingPlots and the existing EconomyRepository ownership contract.",
     "QA/Contract": "Wait for all exact-head guards on PR #107, then validate presentation-only diff plus preservation of class/cafe/vehicle interaction calls.",
     "Integration": "Wait for exact-SHA QA PASS on PR #107; mechanical integration only.",
     "Integration Smoke": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED on canonical 68c4b3f and must not be confused with PR #107's cloud presentation validation.",
@@ -86,7 +83,7 @@
     "to": "Pip High Release & Package Gate",
     "condition": "Runtime PASS must identify exact canonical 68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6 and private target universe 10768955678/place 87245440673982; then package unchanged SHA and return to Control Tower for HOUSING_PROPERTY."
   },
-  "openCanonicalPrCount": 1,
+  "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
@@ -117,13 +114,12 @@
   "runDirectives": {
     "Foundation": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "objective": "Housing plot seam candidate PR #111 is exact-head green and QA-approved; freeze Foundation semantics during Integration.",
-      "owned": "world/location/spawn contracts and neighborhood geometry only",
-      "dependency": "QA PASS exact 6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "exit": "Integration lands exact candidate or returns one concrete Foundation defect.",
-      "handoff": "Integration"
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Housing plot world seam is integrated and exact-head green; wait for a concrete returned world-anchor defect.",
+      "owned": "world/location/spawn contracts only",
+      "dependency": "canonical HousingPlots at 477fa61",
+      "exit": "Free Roam/QA returns a reproducible anchor defect or next Foundation parity slice.",
+      "handoff": "Control Tower"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
@@ -144,61 +140,60 @@
       "handoff": "QA/Contract"
     },
     "Progression & Mobile": {
-      "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "objective": "Legacy HUD candidate PR #107 is exact-head green and QA-approved; freeze presentation semantics during Integration.",
-      "owned": "mobile/read-only presentation and HUD client styling only",
-      "dependency": "QA PASS exact dc50e04872d44541024fbd62cd845569fa7dce2d",
-      "exit": "Integration returns one concrete defect or lands the exact candidate.",
-      "handoff": "Integration"
+      "mode": "SUPPORT",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "base": "rebuild/high-school-foundation@477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Validate/clarify the existing EconomyRepository ownership contract needed by the $50 Legacy house purchase; no new ledger or product feature unless Free Roam finds a concrete contract gap.",
+      "owned": "durable economy/ownership contract only",
+      "dependency": "EconomyRepository record operation with unlock category/itemId and durable balance semantics",
+      "exit": "Free Roam can purchase one permanent house through existing authority without duplicate persistence; otherwise return one exact contract gap.",
+      "handoff": "Pip High Free Roam"
     },
     "Pip High Free Roam": {
-      "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Wait for integrated Foundation HousingPlots seam; do not create duplicate plot coordinates or ownership state.",
-      "owned": "housing/property mechanics only after seam integration",
-      "dependency": "Foundation HOUSING_PLOT_SEAMS_V1 exact-green + integrated",
-      "exit": "Control Tower issues PRODUCE on a fresh current-base Free Roam branch.",
+      "mode": "PRODUCE",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "base": "rebuild/high-school-foundation@477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "branch": "rebuild/high-school-housing-property-477fa61-v1",
+      "objective": "Implement Legacy housing property V1: purchase one permanent starter house for $50 through EconomyRepository ownership, assign one free HousingPlots plot per active owner, expose House menu state, server-authoritative Teleport to House, owner-only Edit House mode entry, visible claimed/unclaimed plot state, and release plot occupancy on leave without deleting durable ownership.",
+      "owned": "housing/property lifecycle, plot occupancy, house-facing UI/interaction semantics under school/** only",
+      "dependency": "Foundation SchoolConfig.HousingPlots + Workspace SchoolCampus.HousingPlots; existing EconomyRepository/ProgressionDataStore/StudioStore ownership contract",
+      "exit": "Deterministic tests cover one-house-per-player, unique plot allocation, idempotent purchase/ownership, insufficient funds, plot release/reclaim, owner-only teleport/edit; exact-head CI green and no duplicate world/economy/persistence/class authority.",
       "handoff": "QA/Contract"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "objective": "QA PASS recorded for exact PR #111 head; wait for changed candidate or Integration-returned defect.",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Wait for exact Housing Property V1 candidate; then validate lifecycle, central ownership/economy use, authority uniqueness, and Legacy House menu behavior.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "candidate unchanged at 6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "exit": "Changed candidate or returned defect only.",
+      "dependency": "Free Roam exact-head candidate",
+      "exit": "PASS exact candidate or one reproducible defect returned to its one owner.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "INTEGRATE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-      "base": "rebuild/high-school-foundation@f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Mechanically integrate PR #111 exact head housing plot seams without changing producer semantics.",
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Wait for QA PASS on Housing Property V1.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS + Foundation 37067068773 / Class 37067068780 / Progression 37067068863 exact-head PASS; housing plot contract step PASS",
-      "exit": "Merge only exact PR #111 head/base, verify post-merge canonical push guards, then return to Control Tower so Free Roam can consume HousingPlots.",
+      "dependency": "QA PASS exact candidate",
+      "exit": "Changed exact-green candidate only.",
       "handoff": "Control Tower"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED on f9564e; do not poll laptop or publish. Housing plot support is cloud-safe and independent.",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Vehicle runtime Smoke remains LOCAL_ONLY_REQUIRED; do not poll laptop or publish while cloud-safe housing work advances.",
       "owned": "post-integration runtime certification only",
-      "dependency": "Authorized runtime evidence for universe 10768955678/place 87245440673982",
-      "exit": "When authorized, run exact f9564e vehicle/HUD coexistence smoke; otherwise stay quiet.",
+      "dependency": "Authorized runtime evidence for target 10768955678/87245440673982",
+      "exit": "When authorized, smoke exact current canonical runtime; otherwise stay quiet.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-      "objective": "Wait for runtime Smoke checkpoint or a later exact smoke-certified canonical head; never publish.",
+      "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "objective": "Wait for an exact smoke-certified checkpoint; do not publish.",
       "owned": "deterministic package checkpoint only",
       "dependency": "Smoke PASS exact current canonical",
-      "exit": "Package only exact smoke-certified SHA.",
+      "exit": "Package exact smoke-certified SHA only.",
       "handoff": "Control Tower"
     }
   }

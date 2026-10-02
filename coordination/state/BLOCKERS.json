@@ -1,21 +1,21 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+  "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
   "currentBlockers": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+      "exactSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "Cloud/deterministic checks pass on the current canonical head including the Legacy HUD contract. Remaining evidence is actual Roblox seated vehicle behavior plus confirmation that touch/Legacy HUD controls coexist correctly on the authorized private target; laptop polling is not authorized and Roblox publishing is not authorized.",
-      "exitCriterion": "On exact f9564e344ba0a3de96beeec919b230ebe501a1f4, validate grounded spawn -> owner auto-seat -> keyboard/touch forward/reverse/steer -> release neutralizes input -> exit/re-enter -> despawn/re-spawn, non-owner rejection, cleanup, and no HUD obstruction/regression in school/class/cafe behavior."
+      "reason": "Cloud/deterministic checks pass on current canonical including housing plot seams. Remaining runtime evidence is vehicle seat/touch/HUD coexistence on the authorized private target; laptop polling and Roblox publish are not authorized.",
+      "exitCriterion": "On exact 477fa61c15f7fefe7e70d6e7b5ddd03f78c21773, validate vehicle spawn/drive/exit/re-enter/despawn, non-owner rejection, cleanup, HUD coexistence, and baseline school/class/cafe behavior."
     }
   ],
-  "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED",
-  "nextProducer": "Roblox High School Integration Smoke",
-  "nextObjective": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+  "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED_WITH_CLOUD_PRODUCT_WORK",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "HOUSING_PROPERTY_V1",
   "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
 }
