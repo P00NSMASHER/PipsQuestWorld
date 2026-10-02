@@ -74,7 +74,7 @@
     "Class & Education": "Support exact authorized Roblox High School class/session/activity parity on the current canonical target; second-grade schoolwork is DEFERRED_PHASE_2.",
     "Content QA": "Support authorized Roblox High School clone-parity content/assets/fixtures/provenance only; second-grade/Emma/STAR-style schoolwork is DEFERRED_PHASE_2.",
     "Progression & Mobile": "Maintain the single canonical progression/economy/persistence/mobile contract for exact Roblox High School clone parity; second-grade schoolwork is DEFERRED_PHASE_2.",
-    "Pip High Free Roam": "Cafe-job slice remains certified at 92691e0. Await Control Tower's next exact-clone parity assignment; vehicles are next priority. Do not pivot to housing/customization early or to second-grade schoolwork.",
+    "Pip High Free Roam": "Vehicle lifecycle plus grounded AutoShop spawn are integrated at e929354. Wait for Integration Smoke on that exact SHA; after Smoke PASS and the Release/Package checkpoint, housing/property is the next producer slice. Do not pivot to second-grade schoolwork.",
     "QA/Contract": "Validate exact authorized Roblox High School clone parity and architecture contracts on the current target; reject second-grade-schoolwork drift during Phase 1.",
     "Integration": "Integrate only exact-green candidates that advance the current authorized Roblox High School clone on the same canonical private-server target.",
     "Integration Smoke": "Smoke exact-clone behavior on the same canonical private-server target; never treat second-grade schoolwork as clone progress.",
@@ -86,8 +86,8 @@
     "to": "Pip High Release & Package Gate",
     "condition": "Runtime PASS must identify exact repaired canonical e929354087d3dbf6931496e310b8f899cd0d299f and the same private target. Do not infer runtime behavior from cloud CI."
   },
-  "openCanonicalPrCount": 1,
-  "openNoncanonicalPrCount": 2,
+  "openCanonicalPrCount": 0,
+  "openNoncanonicalPrCount": 0,
   "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
   "unchangedFingerprintRule": {
@@ -154,11 +154,11 @@
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
-      "objective": "Vehicle lifecycle V1 plus grounded AutoShop spawn repair are integrated at e929354. Hold product changes until runtime Smoke resolves.",
+      "objective": "Vehicle lifecycle V1 plus grounded AutoShop spawn repair are integrated at e929354. Hold product changes until exact-SHA runtime Smoke resolves; housing/property is reserved as the next producer slice only after Smoke PASS and Release/Package checkpoint.",
       "owned": "vehicle lifecycle/physics and vehicle-facing interaction UX under school/**",
       "dependency": "Foundation road/location seams and existing Progression/Economy ownership contract read-only/authoritative API",
-      "exit": "Exact-head deterministic CI green on rebuild/high-school-vehicles-92691e0-v1 with no duplicate world/economy/persistence/class authority.",
-      "handoff": "QA/Contract"
+      "exit": "Runtime Smoke PASS on exact e929354 followed by Release/Package checkpoint, or one reproducible vehicle defect explicitly returned to Free Roam with an exact exit criterion.",
+      "handoff": "Control Tower"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
@@ -166,7 +166,7 @@
       "candidateSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "objective": "QA PASS is rebound to exact repaired canonical e929354 using identical repair-head/canonical tree identity and exact-head push CI.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "PR #85 exact-head CI PASS runs 37027751477, 37027751963, 37027752230",
+      "dependency": "Exact repaired canonical e929354 plus push CI PASS runs 37029958854, 37029958840, 37029958834 and the PR #85/#92 evidence chain.",
       "exit": "QA PASS exact SHA or one reproducible defect with exactly one producer owner and exit criterion.",
       "handoff": "Integration"
     },
@@ -175,7 +175,7 @@
       "canonicalSha": "e929354087d3dbf6931496e310b8f899cd0d299f",
       "objective": "Vehicle V1 and grounding repair are mechanically integrated at e929354 with exact-head push CI green.",
       "owned": "mechanical integration only",
-      "dependency": "none",
+      "dependency": "QA PASS_EXACT_HEAD on e929354 and completed vehicle/grounding integration evidence (PR #85 and PR #92).",
       "exit": "Changed candidate only",
       "handoff": "Integration Smoke"
     },
