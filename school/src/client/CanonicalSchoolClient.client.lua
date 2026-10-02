@@ -345,7 +345,8 @@ local function showActivity(response)
     pendingProgression = nil
     if not activeActivity then return end
 
-    modalTitle.Text = string.upper(tostring(activeActivity.subject or "Class")) .. " ACTIVITY"\n    question.Text = tostring(activeActivity.prompt)
+    modalTitle.Text = string.upper(tostring(activeActivity.subject or "Class")) .. " ACTIVITY"
+    question.Text = tostring(activeActivity.prompt)
     setFeedback("", "neutral")
     clearChoices()
 
