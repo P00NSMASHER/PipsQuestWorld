@@ -31,6 +31,32 @@ local enteredAgain, enteredAgainStatus = controller:enter("player-1", "1:2:math"
 assertEqual(enteredAgainStatus, "active", "repeat entry must be idempotent")
 assertEqual(enteredAgain.activity.id, entered.activity.id, "repeat entry changed activity")
 
+-- Cross-entry lifecycle: a different class cannot replace the active class,
+-- and rejecting it must not soft-lock the player from entering it after exit.
+local crossEntered, crossEnteredStatus = controller:enter("player-cross-entry", "1:2:math", "Math", 1)
+assertEqual(crossEnteredStatus, "entered", "cross-entry setup failed")
+local crossBlocked, crossBlockedStatus = controller:enter(
+    "player-cross-entry", "1:4:science", "Science", 1
+)
+assertEqual(crossBlockedStatus, "rejected", "second simultaneous class was not rejected")
+assertEqual(crossBlocked.accepted, false, "second simultaneous class was accepted")
+assertEqual(crossBlocked.code, "another_class_active", "wrong simultaneous-class rejection code")
+local crossSnapshot = controller:getPlayerSnapshot("player-cross-entry")
+assertEqual(crossSnapshot.active.classKey, "1:2:math", "rejected cross-entry replaced the active class")
+assertEqual(crossSnapshot.active.activity.id, crossEntered.activity.id, "rejected cross-entry changed the activity")
+local crossLeft, crossLeftStatus = controller:leave("player-cross-entry", "requested")
+assertEqual(crossLeftStatus, "left", "cross-entry setup could not return to free roam")
+assertEqual(crossLeft.returnToFreeRoam, true, "cross-entry exit did not restore free roam")
+local crossReentry, crossReentryStatus = controller:enter(
+    "player-cross-entry", "1:4:science", "Science", 1
+)
+assertEqual(crossReentryStatus, "entered", "rejected cross-entry poisoned later class entry")
+assertEqual(crossReentry.accepted, true, "later class entry remained blocked")
+assertEqual(crossReentry.classKey, "1:4:science", "later class entry selected the wrong class")
+local crossCleanup, crossCleanupStatus = controller:leave("player-cross-entry", "requested")
+assertEqual(crossCleanupStatus, "left", "cross-entry cleanup failed")
+assertEqual(crossCleanup.returnToFreeRoam, true, "cross-entry cleanup did not restore free roam")
+
 local wrong, wrongStatus = controller:submit(
     "player-1", "1:2:math", entered.activity.id, "submission-1", 1
 )
