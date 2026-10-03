@@ -1,51 +1,115 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T11:49:13Z",
-  "result": "PASS",
+  "recordedAt": "2026-10-03T16:41:00Z",
+  "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
+  "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
   "sourceRoot": "school/**",
-  "milestone": "SCHOOL_CLASS_FEEL",
-  "eligibility": "LIVE_STATE_ELIGIBLE_BLOCKERS_EMPTY",
-  "checks": {
-    "buildLoadSpawnClock": "PASS_REUSED_UNCHANGED",
-    "classEntryActivityCompletion": "PASS_EXACT_HEAD",
-    "progressionPersistenceExactlyOnce": "PASS_EXACT_HEAD",
-    "freeRoamRecovery": "PASS_EXACT_HEAD",
-    "mobileBasics": "PASS_REUSED_LAYOUT_UNCHANGED",
-    "provenanceAndRuntimeIsolation": "PASS"
+  "milestone": "AVATAR_CUSTOMIZATION_SHOPPING_V1_ENTRY_SLICE",
+  "eligibility": {
+    "userDirectedExactCanonical": true,
+    "mergedPr": 154,
+    "producerSha": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
+    "qaPassCommentId": 5970805607,
+    "mergeSha": "c4df87d34022854b15b6416538756399ab020891"
   },
   "exactHeadCi": [
     {
-      "runId": 36988705511,
-      "jobId": 110779596523,
-      "conclusion": "success"
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37136942081,
+      "jobId": 111243281938,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "c4df87d34022854b15b6416538756399ab020891"
     },
     {
-      "runId": 36988705638,
-      "jobId": 110779597090,
-      "conclusion": "success"
+      "workflow": "High School Class Education Guards",
+      "runId": 37136942094,
+      "jobId": 111243282248,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "c4df87d34022854b15b6416538756399ab020891"
     },
     {
-      "runId": 36988705665,
-      "jobId": 110779597288,
-      "conclusion": "success"
+      "workflow": "High School Progression Guards",
+      "runId": 37136942133,
+      "jobId": 111243282184,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "c4df87d34022854b15b6416538756399ab020891"
     }
   ],
-  "priorSmokeSha": "7e69301b253d88a7ed779556387b6f9011022976",
-  "changedFiles": [
-    "school/src/client/CanonicalSchoolClient.client.lua",
-    "school/src/server/ClassEducation.server.lua",
-    "school/src/server/ClassProgressionCoordinator.lua",
-    "school/src/server/ClassSessionController.lua",
-    "school/tests/class_education_spec.lua"
+  "baselineReuse": {
+    "smokeCertifiedProductSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "intermediateBaseSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "proof": "00df979...48bbdb9 changes only binary-reference workflow/policy/extractor files and zero school/** files.",
+    "preservedSeams": [
+      "spawn/world/navigation",
+      "authoritative school clock/schedule",
+      "class flow",
+      "exactly-once progression/economy",
+      "free-roam recovery",
+      "persistence/rejoin",
+      "vehicle/housing authority boundaries"
+    ]
+  },
+  "changedSurface": {
+    "files": [
+      "school/default.project.json",
+      "school/src/client/AvatarCustomization.client.lua",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/shared/LegacyOutfitEntry.lua",
+      "school/tests/avatar_customization_entry_spec.lua",
+      "school/tests/avatar_customization_runtime_mount_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua"
+    ],
+    "runtimeMapped": [
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/shared/LegacyOutfitEntry.lua"
+    ],
+    "deliberatelyUnmappedDuplicate": "school/src/client/AvatarCustomization.client.lua"
+  },
+  "checks": {
+    "deterministicBuildLoadSeam": "PASS_EXACT_HEAD_PROJECT_MAPPING",
+    "canonicalClientSingleMount": "PASS_EXACT_HEAD",
+    "deviceGuiIdentityContract": "PASS_STATIC_Outfits_OutfitsMobile_OutfitsConsole",
+    "customOutfitsEntryOpenCloseContract": "PASS_STATIC",
+    "outfitHierarchyAndLabels": "PASS_QA_PROVENANCE_BOUND",
+    "savedOutfitSlotCount12": "PASS_EXACT_HEAD",
+    "referenceExactLayoutClaim": "NOT_CLAIMED__ReferenceExactLayout_FALSE",
+    "duplicateRuntimeAuthority": "PASS_NONE_INTRODUCED",
+    "clientPersistenceEconomyAuthority": "PASS_NONE_INTRODUCED",
+    "phase2Schoolwork": "DEFERRED_PHASE_2_NO_CHANGE",
+    "provenance": "PASS_VERIFIED_REFERENCE_EXTRACTION_AND_QA_BINDING",
+    "baselineVerticalSlice": "PASS_REUSED_UNCHANGED_WITH_EXACT_HEAD_REGRESSION_GUARDS"
+  },
+  "referenceEvidence": {
+    "extractionRun": 37117831711,
+    "extractionJob": 111187960403,
+    "artifactId": 11271783526,
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "qaEvidence": "PR #154 comment 5970805607 consuming Content-QA PR #150/pinned binary reference"
+  },
+  "localOnlyRequired": [
+    {
+      "id": "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE",
+      "exactSha": "c4df87d34022854b15b6416538756399ab020891",
+      "universeId": "10768955678",
+      "placeId": "87245440673982",
+      "status": "DEFERRED_NONBLOCKING_FOR_CLOUD_SAFE_PACKAGE",
+      "purpose": "On the canonical private-server target only, verify rendered PlayerGui identity on touch/desktop/gamepad, Custom Outfits activation/open-close, 12-slot visible presentation, and no obstruction/conflict with existing HUD, House, and vehicle mobile controls."
+    }
   ],
-  "localOnlyRequired": [],
   "blocker": null,
   "nextOwner": "Roblox High School Release & Package Gate",
-  "exactExitCriterion": "Consume only while canonical remains 99e12750b8b87812f3363e3691c12fb8797669bd with cited guards green.",
+  "handoff": {
+    "exactSha": "c4df87d34022854b15b6416538756399ab020891",
+    "instruction": "Consume this exact Smoke PASS for deterministic Release/Package only while live canonical remains c4df87d34022854b15b6416538756399ab020891 and the cited canonical push guards remain green. Preserve LOCAL_ONLY_REQUIRED rendered/touch checks; do not publish Roblox automatically."
+  },
   "sourceEdited": false,
   "published": false,
+  "moneySpent": false,
   "taskStateChanged": false
 }
