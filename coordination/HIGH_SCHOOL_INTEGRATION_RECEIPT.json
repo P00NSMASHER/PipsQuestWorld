@@ -12,5 +12,9 @@
     "count": 3,
     "cap": 3
   },
-  "qaGateStatus": "PENDING_PASS_EXACT_HEAD"
+  "ciGateStatus": "PASS_EXACT_HEAD",
+  "qaGateStatus": "BLOCKED_BY_QA_DEFECT_EVIDENCE",
+  "qaPrepCommit": "546a774d46daba47603e6087e269fd17d56b84f0",
+  "qaDefect": "Shopping callback confirmation is discarded; runtime lacks exact confirmed-success gate and targeted player notification delivery.",
+  "ownerExitCriterion": "Producer must move PR #165 to a changed head that captures controller:confirmPurchase, gates confirmation.code == purchase_confirmed, consumes confirmation.successText, and targets the purchasing player with FireClient; then Foundation/Class/Progression must PASS on that exact changed head and QA must issue PASS_EXACT_HEAD for that same head with canonical base unchanged or cleanly rebased."
 }
