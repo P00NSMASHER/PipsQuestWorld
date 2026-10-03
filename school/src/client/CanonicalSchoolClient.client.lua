@@ -7,9 +7,11 @@ local UserInputService = game:GetService("UserInputService")
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
+local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
 
 local player = Players.LocalPlayer
 LegacyOutfitEntry(player, UserInputService)
+local shoppingBoundary = LegacyShoppingBoundary()
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
 local stateSnapshot = root:WaitForChild("StateSnapshot")
 local requestTravel = root:WaitForChild("RequestTravel")
