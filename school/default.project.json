@@ -102,6 +102,9 @@
         },
         "HousingLayoutRepository": {
           "$path": "src/server/HousingLayoutRepository.lua"
+        },
+        "HousingEditorController": {
+          "$path": "src/server/HousingEditorController.lua"
         }
       }
     },
