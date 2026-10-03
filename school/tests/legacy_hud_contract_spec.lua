@@ -33,4 +33,6 @@ has('spawnVehicle:InvokeServer()', "vehicle interaction preserved")
 lacks('title.Text = "PIP HIGH"', "modern Pip High title")
 lacks('card.Position = UDim2.new(0, 12, 0, 12)', "top-left modern card position")
 
+dofile("school/tests/avatar_customization_entry_spec.lua")
+
 print("HIGH_SCHOOL_LEGACY_HUD_CONTRACT_PASS")
