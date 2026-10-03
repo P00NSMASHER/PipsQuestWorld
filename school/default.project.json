@@ -76,6 +76,15 @@
         "ProgressionStudioStore": {
           "$path": "src/server/ProgressionStudioStore.lua"
         },
+        "ProgressionPersistence": {
+          "$path": "src/server/ProgressionPersistence.lua"
+        },
+        "OutfitOperationsController": {
+          "$path": "src/server/OutfitOperationsController.lua"
+        },
+        "OutfitOperations": {
+          "$path": "src/server/OutfitOperations.server.lua"
+        },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
         },
