@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-import argparse, hashlib, json, struct, urllib.request
+import argparse, hashlib, json, re, struct, urllib.request
 from pathlib import Path
 
 RBXL_SIG = bytes.fromhex('3c726f626c6f782189ff0d0a1a0a')
 PRINTABLE = set(range(0x20, 0x7f)) | {9, 10, 13}
+MAX_TEXT_FILE_BYTES = 700_000
+MAX_RUN_BYTES = 120_000
 
 
 def git_blob_sha(data: bytes) -> str:
-    prefix = f'blob {len(data)}\0'.encode('ascii')
-    return hashlib.sha1(prefix + data).hexdigest()
+    return hashlib.sha1(f'blob {len(data)}\0'.encode('ascii') + data).hexdigest()
 
 
 def download(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={'User-Agent': 'PipsQuestWorld-binary-reference-extractor/1'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'PipsQuestWorld-binary-reference-extractor/2'})
     with urllib.request.urlopen(req, timeout=120) as response:
         return response.read()
 
@@ -20,27 +21,26 @@ def download(url: str) -> bytes:
 def lz4_block_decompress(src: bytes, expected_size: int) -> bytes:
     i = 0
     out = bytearray()
-    n = len(src)
-    while i < n:
+    while i < len(src):
         token = src[i]
         i += 1
         literal_len = token >> 4
         if literal_len == 15:
             while True:
-                if i >= n:
+                if i >= len(src):
                     raise ValueError('truncated LZ4 literal length')
                 b = src[i]
                 i += 1
                 literal_len += b
                 if b != 255:
                     break
-        if i + literal_len > n:
+        if i + literal_len > len(src):
             raise ValueError('truncated LZ4 literals')
         out.extend(src[i:i + literal_len])
         i += literal_len
-        if i >= n:
+        if i >= len(src):
             break
-        if i + 2 > n:
+        if i + 2 > len(src):
             raise ValueError('truncated LZ4 match offset')
         offset = src[i] | (src[i + 1] << 8)
         i += 2
@@ -49,7 +49,7 @@ def lz4_block_decompress(src: bytes, expected_size: int) -> bytes:
         match_len = token & 0x0F
         if match_len == 15:
             while True:
-                if i >= n:
+                if i >= len(src):
                     raise ValueError('truncated LZ4 match length')
                 b = src[i]
                 i += 1
@@ -94,13 +94,8 @@ def parse_chunks(data: bytes):
         pos += payload_len
         payload = lz4_block_decompress(stored, uncompressed_len) if compressed_len else stored
         name = 'END' if sig == b'END\x00' else sig.decode('ascii', 'replace')
-        chunks.append({
-            'index': idx,
-            'signature': name,
-            'compressedLength': compressed_len,
-            'uncompressedLength': uncompressed_len,
-            'payload': payload,
-        })
+        chunks.append({'index': idx, 'signature': name, 'compressedLength': compressed_len,
+                       'uncompressedLength': uncompressed_len, 'payload': payload})
         idx += 1
         if sig == b'END\x00':
             break
@@ -123,11 +118,29 @@ def printable_runs(payload: bytes, min_len: int = 4):
         yield start, payload[start:].decode('utf-8', 'replace')
 
 
-def normalized_fragments(text: str):
-    for line in text.splitlines() or [text]:
-        line = line.strip('\x00')
-        if line.strip():
-            yield line
+def slug(text: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+    return s or 'term'
+
+
+def capped_write(path: Path, records, max_bytes=MAX_TEXT_FILE_BYTES):
+    used = 0
+    count = 0
+    truncated = False
+    with path.open('w', encoding='utf-8') as f:
+        for record in records:
+            data = record.encode('utf-8', 'replace')
+            if used + len(data) > max_bytes:
+                truncated = True
+                break
+            f.write(record)
+            used += len(data)
+            count += 1
+        if truncated:
+            marker = f'\n--- TRUNCATED at {used} bytes; refine the keyword to narrow evidence ---\n'
+            f.write(marker)
+            used += len(marker.encode('utf-8'))
+    return {'recordsWritten': count, 'bytesWritten': used, 'truncated': truncated}
 
 
 def write_request(req, root: Path):
@@ -135,7 +148,8 @@ def write_request(req, root: Path):
     url = req['source_url']
     expected_git = req.get('expected_git_blob_sha', '').lower()
     expected_sha256 = req.get('expected_sha256', '').lower()
-    keywords = [k.lower() for k in req.get('keywords', []) if k]
+    keywords = list(dict.fromkeys(k for k in req.get('keywords', []) if k))
+    keyword_lowers = {k: k.lower() for k in keywords}
     data = download(url)
     actual_git = git_blob_sha(data)
     actual_sha256 = hashlib.sha256(data).hexdigest()
@@ -146,36 +160,68 @@ def write_request(req, root: Path):
 
     header, chunks = parse_chunks(data)
     out_dir = root / rid
-    out_dir.mkdir(parents=True, exist_ok=True)
+    keyword_dir = out_dir / 'keywords'
+    run_dir = out_dir / 'runs'
+    keyword_dir.mkdir(parents=True, exist_ok=True)
+    run_dir.mkdir(parents=True, exist_ok=True)
+
     inventory = []
-    all_runs = []
-    hit_records = []
+    printable_run_count = 0
+    matched_run_count = 0
+    fragments = {k: [] for k in keywords}
+    runs = {k: [] for k in keywords}
+    matched_counts = {k: 0 for k in keywords}
+    fragment_seen = {k: set() for k in keywords}
+    run_seen = {k: set() for k in keywords}
+
     for chunk in chunks:
         payload = chunk.pop('payload')
         inventory.append({**chunk, 'payloadSha256': hashlib.sha256(payload).hexdigest()})
         for off, text in printable_runs(payload):
-            all_runs.append((chunk['index'], chunk['signature'], off, text))
+            printable_run_count += 1
             lower = text.lower()
-            matched = sorted({k for k in keywords if k in lower})
-            if matched:
-                fragments = []
-                for line in normalized_fragments(text):
-                    ll = line.lower()
-                    line_matches = [k for k in matched if k in ll]
-                    if line_matches:
-                        fragments.append({'keywords': line_matches, 'text': line[:4000]})
-                if not fragments:
-                    fragments.append({'keywords': matched, 'text': text[:4000]})
-                hit_records.append({
-                    'chunkIndex': chunk['index'],
-                    'chunkSignature': chunk['signature'],
-                    'offset': off,
-                    'keywords': matched,
-                    'fragments': fragments[:200],
-                })
+            matched = [k for k in keywords if keyword_lowers[k] in lower]
+            if not matched:
+                continue
+            matched_run_count += 1
+            for k in matched:
+                matched_counts[k] += 1
+                for line in text.splitlines() or [text]:
+                    if keyword_lowers[k] in line.lower():
+                        clean = line.strip('\x00')
+                        if clean and clean not in fragment_seen[k]:
+                            fragment_seen[k].add(clean)
+                            fragments[k].append(
+                                f'chunk={chunk["index"]} type={chunk["signature"]} offset={off} | {clean[:4000]}\n'
+                            )
+                run_key = hashlib.sha256(text.encode('utf-8', 'replace')).hexdigest()
+                if run_key not in run_seen[k]:
+                    run_seen[k].add(run_key)
+                    clipped = text
+                    encoded = clipped.encode('utf-8', 'replace')
+                    if len(encoded) > MAX_RUN_BYTES:
+                        clipped = encoded[:MAX_RUN_BYTES].decode('utf-8', 'replace') + '\n--- RUN CLIPPED ---\n'
+                    runs[k].append(
+                        f'=== chunk={chunk["index"]} type={chunk["signature"]} offset={off} runSha256={run_key} ===\n{clipped}\n'
+                    )
+
+    keyword_index = {}
+    for k in keywords:
+        name = slug(k)
+        frag_meta = capped_write(keyword_dir / f'{name}.txt', fragments[k])
+        run_meta = capped_write(run_dir / f'{name}.txt', runs[k])
+        keyword_index[k] = {
+            'matchedRunCount': matched_counts[k],
+            'uniqueFragmentCount': len(fragments[k]),
+            'uniqueFullRunCount': len(runs[k]),
+            'fragmentFile': f'keywords/{name}.txt',
+            'runFile': f'runs/{name}.txt',
+            'fragmentFileStatus': frag_meta,
+            'runFileStatus': run_meta,
+        }
 
     manifest = {
-        'schemaVersion': 1,
+        'schemaVersion': 2,
         'id': rid,
         'sourceUrl': url,
         'sizeBytes': len(data),
@@ -183,30 +229,17 @@ def write_request(req, root: Path):
         'sha256': actual_sha256,
         'expectedGitBlobSha': expected_git or None,
         'expectedSha256': expected_sha256 or None,
-        'hashesVerified': (not expected_git or actual_git == expected_git) and (not expected_sha256 or actual_sha256 == expected_sha256),
+        'hashesVerified': True,
         'header': header,
         'chunkCount': len(chunks),
-        'printableRunCount': len(all_runs),
-        'hitRecordCount': len(hit_records),
-        'keywords': req.get('keywords', []),
+        'printableRunCount': printable_run_count,
+        'matchedRunCount': matched_run_count,
+        'keywords': keywords,
     }
     (out_dir / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     (out_dir / 'chunks.json').write_text(json.dumps(inventory, indent=2) + '\n', encoding='utf-8')
-    with (out_dir / 'strings.txt').open('w', encoding='utf-8') as f:
-        for idx, sig, off, text in all_runs:
-            f.write(f'--- chunk={idx} type={sig} offset={off} chars={len(text)} ---\n')
-            f.write(text)
-            if not text.endswith('\n'):
-                f.write('\n')
-    with (out_dir / 'hits.json').open('w', encoding='utf-8') as f:
-        json.dump(hit_records, f, indent=2)
-        f.write('\n')
-    with (out_dir / 'hits.txt').open('w', encoding='utf-8') as f:
-        for rec in hit_records:
-            f.write(f"### chunk={rec['chunkIndex']} type={rec['chunkSignature']} offset={rec['offset']} keywords={','.join(rec['keywords'])}\n")
-            for frag in rec['fragments']:
-                f.write(f"[{','.join(frag['keywords'])}] {frag['text']}\n")
-    return manifest
+    (out_dir / 'keyword-index.json').write_text(json.dumps(keyword_index, indent=2) + '\n', encoding='utf-8')
+    return manifest, keyword_index
 
 
 def main():
@@ -219,13 +252,15 @@ def main():
     root.mkdir(parents=True, exist_ok=True)
     manifests = []
     for req in request_doc.get('requests', []):
-        m = write_request(req, root)
-        manifests.append(m)
+        manifest, keyword_index = write_request(req, root)
+        manifests.append(manifest)
         print('BINARY_REFERENCE_EXTRACT_PASS', json.dumps({
-            'id': m['id'], 'gitBlobSha': m['gitBlobSha'], 'sha256': m['sha256'],
-            'chunks': m['chunkCount'], 'runs': m['printableRunCount'], 'hits': m['hitRecordCount']
+            'id': manifest['id'], 'gitBlobSha': manifest['gitBlobSha'], 'sha256': manifest['sha256'],
+            'chunks': manifest['chunkCount'], 'runs': manifest['printableRunCount'],
+            'matchedRuns': manifest['matchedRunCount'],
+            'keywordMatches': {k: v['matchedRunCount'] for k, v in keyword_index.items() if v['matchedRunCount']}
         }, sort_keys=True))
-    (root / 'index.json').write_text(json.dumps({'schemaVersion': 1, 'requests': manifests}, indent=2) + '\n', encoding='utf-8')
+    (root / 'index.json').write_text(json.dumps({'schemaVersion': 2, 'requests': manifests}, indent=2) + '\n', encoding='utf-8')
 
 
 if __name__ == '__main__':
