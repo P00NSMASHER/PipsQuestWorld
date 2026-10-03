@@ -147,6 +147,80 @@ eq(failed.durable, false, "save failure durable")
 eq(failed.error, "SAVE_FAILED:injected", "save failure error")
 eq(afterRace:getState().balance, 20, "failed save mutated local balance")
 
+-- The Legacy starter-house purchase must use the same durable economy authority.
+-- Pin the exact $50 debit + ownership unlock contract that Free Roam consumes.
+local houseStore = newStore(nil)
+local houseRepo = assert(Repository.open(houseStore, 101))
+local houseFunding = houseRepo:record(operation("qa:housing:funding", 75, "qa:housing"))
+eq(houseFunding.status, "applied", "house funding status")
+eq(houseFunding.durable, true, "house funding durable")
+eq(houseFunding.state.balance, 75, "house funding balance")
+
+local housePurchase = operation(
+    "housing:starter-house:v1",
+    -50,
+    "housing:purchase",
+    { category = "house", itemId = "starter-house" }
+)
+local houseBought = houseRepo:record(housePurchase)
+eq(houseBought.status, "applied", "house purchase status")
+eq(houseBought.durable, true, "house purchase durable")
+eq(houseBought.state.balance, 25, "house purchase balance")
+eq(#houseBought.state.ownership, 1, "house purchase ownership count")
+eq(houseBought.state.ownership[1].category, "house", "house purchase ownership category")
+eq(houseBought.state.ownership[1].itemId, "starter-house", "house purchase ownership item")
+
+local houseReplay = houseRepo:record(housePurchase)
+eq(houseReplay.status, "duplicate", "house replay status")
+eq(houseReplay.durable, true, "house replay durable")
+eq(houseReplay.state.balance, 25, "house replay charged twice")
+eq(houseStore.saves, 2, "house replay persisted twice")
+
+local houseRepurchase = houseRepo:record(operation(
+    "housing:starter-house:v1:repurchase",
+    -50,
+    "housing:purchase",
+    { category = "house", itemId = "starter-house" }
+))
+eq(houseRepurchase.status, "rejected", "house repurchase status")
+eq(houseRepurchase.error, "ALREADY_OWNED", "house repurchase error")
+eq(houseRepo:getState().balance, 25, "house repurchase changed balance")
+
+local wrongPlayerHouse = {
+    operationId = "housing:starter-house:v1:wrong-player",
+    playerId = 202,
+    delta = -50,
+    reason = "housing:purchase",
+    unlock = { category = "house", itemId = "starter-house" },
+}
+local wrongPlayerReceipt = houseRepo:record(wrongPlayerHouse)
+eq(wrongPlayerReceipt.status, "rejected", "house wrong-player status")
+eq(wrongPlayerReceipt.error, "PLAYER_SCOPE_MISMATCH", "house wrong-player error")
+eq(houseRepo:getState().balance, 25, "house wrong-player changed balance")
+
+local houseReopened = assert(Repository.open(houseStore, 101))
+eq(houseReopened:getState().balance, 25, "house rejoin balance")
+eq(houseReopened:getState().operationCount, 2, "house rejoin operation count")
+eq(#houseReopened:getState().ownership, 1, "house rejoin ownership count")
+eq(houseReopened:getState().ownership[1].category, "house", "house rejoin ownership category")
+eq(houseReopened:getState().ownership[1].itemId, "starter-house", "house rejoin ownership item")
+
+local failedHouseStore = newStore(nil)
+local failedHouseRepo = assert(Repository.open(failedHouseStore, 101))
+eq(failedHouseRepo:record(operation("qa:housing:failure-funding", 75, "qa:housing")).status, "applied", "failed-house funding status")
+failedHouseStore.failSave = true
+local failedHousePurchase = failedHouseRepo:record(operation(
+    "housing:starter-house:v1",
+    -50,
+    "housing:purchase",
+    { category = "house", itemId = "starter-house" }
+))
+eq(failedHousePurchase.status, "rejected", "failed house purchase status")
+eq(failedHousePurchase.durable, false, "failed house purchase durable")
+eq(failedHousePurchase.error, "SAVE_FAILED:injected", "failed house purchase error")
+eq(failedHouseRepo:getState().balance, 75, "failed house purchase changed balance")
+eq(#failedHouseRepo:getState().ownership, 0, "failed house purchase leaked ownership")
+
 -- operationId is an idempotency key, not a chronological ordering key.
 -- A valid credit committed before a later debit must reopen in commit order
 -- even when the debit's ID sorts lexically before the credit's ID.
