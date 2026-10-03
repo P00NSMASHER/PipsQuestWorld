@@ -1,63 +1,71 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 15,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-02T21:36:00Z",
-  "result": "PASS_EXACT_HEAD",
-  "canonicalBaseSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
+  "updatedAt": "2026-10-03T01:35:00Z",
+  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "canonicalBaseSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
   "candidate": {
-    "pr": 111,
-    "branch": "rebuild/high-school-housing-plots-f9564e-v1",
-    "sha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-    "milestone": "HOUSING_PLOT_SEAMS_V1"
+    "pr": 115,
+    "branch": "rebuild/high-school-housing-property-477fa61-v1",
+    "sha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+    "milestone": "HOUSING_PROPERTY_V1"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37067265741,
-      "event": "push",
+      "runId": 37086196551,
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "housingPlotStep": "success"
+      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37067265753,
-      "event": "push",
+      "runId": 37086196591,
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37067265684,
-      "event": "push",
+      "runId": 37086196550,
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "housingLifecycleStep": "success",
+      "housingUiRuntimeWiringStep": "success"
     }
   ],
   "validation": {
-    "changedPathsWithinFoundationOwnership": true,
-    "sixUniqueHousingPlots": true,
-    "campusBuilderConsumesHousingPlots": true,
-    "stableHouseDoorTeleportAnchors": true,
-    "hardCodedHouseCoordinateLoopRemoved": true,
-    "classAuthorityDuplicated": false,
-    "progressionEconomyPersistenceAuthorityDuplicated": false,
-    "housingOwnershipSemanticsAdded": false,
+    "canonicalRuntimeMapping": true,
+    "singleActiveCanonicalClient": true,
+    "houseButtonLowerLeft": true,
+    "permanentHousePrice50": true,
+    "teleportToHouseAction": true,
+    "editSaveHouseAction": true,
+    "houseColorControls": true,
+    "fiveHousingRemotesWired": true,
+    "centralEconomyRepositoryAuthority": true,
+    "durableHouseOwnership": true,
+    "uniqueActivePlotAuthority": true,
+    "plotReleaseOnLeave": true,
+    "durableOwnershipPreservedOnLeave": true,
+    "ownerOnlyEditGate": true,
+    "serverAuthoritativeTeleport": true,
+    "duplicateWorldAuthority": false,
+    "duplicateEconomyPersistenceAuthority": false,
+    "duplicateClassAuthority": false,
+    "retiredRuntimeCoupling": false,
     "phase2SchoolworkDrift": false,
+    "externalAssetIdsAdded": false,
     "testWeakening": false
+  },
+  "knownRemainingParity": {
+    "housingFurnitureEditor": "NOT_YET_IMPLEMENTED",
+    "durableHouseCustomizationBeyondOwnership": "NOT_YET_IMPLEMENTED",
+    "classification": "NEXT_HOUSING_PARITY_SLICE_NOT_A_V1_INTEGRATION_BLOCKER"
   },
   "integrationEligibility": "PASS",
   "blocker": null,
   "handoff": {
-    "owner": "Roblox High School Control Tower",
-    "exactSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
-  },
-  "certifiedSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-  "exactIntegrationRebind": {
-    "candidateRootTree": "81989074747c43c911c5c043b83ce6b6c50ecf0c",
-    "canonicalRootTree": "81989074747c43c911c5c043b83ce6b6c50ecf0c",
-    "candidateSchoolTree": "c2b5ab1dec90b2df576d83a16d77c5621c406f38",
-    "canonicalSchoolTree": "c2b5ab1dec90b2df576d83a16d77c5621c406f38",
-    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
+    "owner": "Roblox High School Integration Director",
+    "exactSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+    "pr": 115
   }
 }
