@@ -1,18 +1,18 @@
 {
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "currentBlockers": [],
-  "gateStatus": "CLOUD_PRODUCT_WORK_UNBLOCKED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "HOUSING_EDITOR_V2_QA_REMEDIATION",
+  "gateStatus": "CLEARED_FOR_EXACT_HEAD_SMOKE",
+  "nextProducer": "Roblox High School Integration Smoke",
+  "nextObjective": "SMOKE_HOUSING_EDITOR_V2_00DF979",
   "deferredRuntimeEvidence": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
       "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "status": "STALE_SHA_EVIDENCE_TRACKED_ONLY",
+      "status": "DEFERRED_NONBLOCKING",
       "universeId": "10768955678",
       "placeId": "87245440673982",
       "reason": "Older-sha vehicle/HUD/House runtime evidence remains uncollected, but it does not block cloud-safe Housing Editor work on live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb."
