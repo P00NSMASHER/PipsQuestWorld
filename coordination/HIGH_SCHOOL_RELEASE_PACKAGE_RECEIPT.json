@@ -1,58 +1,92 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Release & Package Gate",
-  "recordedAt": "2026-10-03T10:54:00Z",
+  "recordedAt": "2026-10-03T16:47:00Z",
   "result": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
   "sourceRoot": "school/**",
-  "milestone": "HOUSING_EDITOR_V2",
+  "milestone": "AVATAR_CUSTOMIZATION_SHOPPING_V1_ENTRY_SLICE",
   "artifact": {
-    "name": "pip-high-school-00df979-source-tree-dea093c1",
+    "name": "pip-high-school-c4df87d-source-tree-d77bf9e4",
     "type": "deterministic_git_source_tree_checkpoint",
-    "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
-    "rootCommitTreeSha": "eefd1f5f46b5a50c5994d51127675f39c9bbe783",
-    "canonicalCommitSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "gitTreeSha": "d77bf9e48c0992241e6b71ba753ed8caef962907",
+    "rootCommitTreeSha": "39d07b10467595c26f93b6117122d68c14ff18f8",
+    "canonicalCommitSha": "c4df87d34022854b15b6416538756399ab020891",
+    "recursiveEntryCount": 56,
+    "recursiveTreeTruncated": false,
     "reproducibilityRule": "Artifact identity is canonical commit plus exact school/** Git tree SHA; rebuild only if either changes."
+  },
+  "requiredFileVerification": {
+    "projectFile": {
+      "path": "school/default.project.json",
+      "blobSha": "4dfedd2f567367fd9ddff1edce0e48aae632c3fa",
+      "legacyOutfitMapping": "src/shared/LegacyOutfitEntry.lua",
+      "status": "PASS"
+    },
+    "runtimeSource": {
+      "path": "school/src/shared/LegacyOutfitEntry.lua",
+      "blobSha": "08bbffed9440d6ccc20eab92719a218cc35645ce",
+      "status": "PASS_INCLUDED"
+    },
+    "canonicalClient": {
+      "path": "school/src/client/CanonicalSchoolClient.client.lua",
+      "blobSha": "108770adeac23852907e6d088d870ebbac46f1dc",
+      "status": "PASS_REQUIRES_AND_MOUNTS_LEGACY_OUTFIT_ENTRY"
+    }
   },
   "prerequisiteEvidence": {
     "qa": {
       "result": "PASS_EXACT_HEAD",
-      "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-      "source": "PR 128 comment 5968415251"
+      "producerSha": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
+      "source": "PR 154 comment 5970805607"
     },
     "integration": {
       "result": "MERGED",
-      "pr": 128,
-      "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+      "pr": 154,
+      "canonicalSha": "c4df87d34022854b15b6416538756399ab020891"
     },
     "smoke": {
       "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
+      "receiptSchemaVersion": 6,
+      "receiptCommit": "995727d2302970fdf994eccdf11d12cfa1801e6f",
       "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
     },
     "exactHeadCi": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37117473969,
+        "runId": 37136942081,
+        "headSha": "c4df87d34022854b15b6416538756399ab020891",
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37117473982,
+        "runId": 37136942094,
+        "headSha": "c4df87d34022854b15b6416538756399ab020891",
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37117473978,
+        "runId": 37136942133,
+        "headSha": "c4df87d34022854b15b6416538756399ab020891",
         "conclusion": "success"
       }
-    ]
+    ],
+    "provenance": {
+      "result": "PASS_VERIFIED_REFERENCE_EXTRACTION_AND_QA_BINDING",
+      "extractionRun": 37117831711,
+      "artifactId": 11271783526,
+      "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+      "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360"
+    }
   },
-  "privateTarget": {
-    "universeId": "10768955678",
-    "placeId": "87245440673982",
-    "publishAuthorized": false
-  },
+  "localOnlyRequired": [
+    {
+      "id": "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE",
+      "exactSha": "c4df87d34022854b15b6416538756399ab020891",
+      "status": "DEFERRED_NONBLOCKING_FOR_CLOUD_SAFE_PACKAGE"
+    }
+  ],
   "packageSemantics": {
     "checkpointOnly": true,
     "productComplete": false,
