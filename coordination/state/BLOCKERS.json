@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 17,
+  "schemaVersion": 18,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "currentBlockers": [],
-  "gateStatus": "CLEARED_FOR_EXACT_HEAD_SMOKE",
-  "nextProducer": "Roblox High School Integration Smoke",
-  "nextObjective": "SMOKE_HOUSING_EDITOR_V2_00DF979",
+  "gateStatus": "CLEARED_FOR_RELEASE_PACKAGE",
+  "nextProducer": "Roblox High School Release & Package Gate",
+  "nextObjective": "PACKAGE_HOUSING_EDITOR_V2_00DF979",
   "deferredRuntimeEvidence": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
