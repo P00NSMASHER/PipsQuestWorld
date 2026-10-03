@@ -113,7 +113,10 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
-          "$path": "src/client/CanonicalSchoolClient.client.lua"
+          "$path": "src/client/CanonicalSchoolClient.client.lua",
+          "AvatarCustomization": {
+            "$path": "src/client/AvatarCustomization.client.lua"
+          }
         }
       }
     }
