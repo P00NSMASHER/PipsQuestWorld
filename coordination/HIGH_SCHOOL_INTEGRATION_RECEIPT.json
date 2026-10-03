@@ -1,56 +1,16 @@
 {
-  "schemaVersion": 4,
-  "lane": "Roblox High School Integration Director",
-  "result": "PASS_CONTENT_EQUIVALENT_HEAD_HANDOFF_SMOKE",
-  "canonicalProduct": "Pip High",
-  "canonicalSourceRoot": "school/**",
-  "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "639b1c6d7be7abe629576ebc38802f87a36fdbc9",
-  "productEquivalentSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-  "lastProductIntegration": {
-    "pr": 128,
-    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "milestone": "HOUSING_EDITOR_V2",
-    "qaResult": "PASS_EXACT_HEAD",
-    "qaEvidence": "PR#128 comment 5968415251"
+  "pr": 165,
+  "baseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+  "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+  "mergeable": true,
+  "guardRunIds": {
+    "foundation": 37141490985,
+    "classEducation": 37141490978,
+    "progression": 37141491082
   },
-  "nonProductCanonicalAdvance": {
-    "pr": 146,
-    "mergeSha": "639b1c6d7be7abe629576ebc38802f87a36fdbc9",
-    "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "schoolRuntimeChanged": false,
-    "changedFiles": [
-      ".github/workflows/high-school-reference-extract.yml",
-      "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
-      "coordination/reference-extraction/request.json",
-      "scripts/extract-roblox-binary-reference.py"
-    ],
-    "note": "Compare 00df979...639b1c6 contains no school/** file changes; runtime/product semantics are byte-content equivalent to the previously integrated head."
+  "wip": {
+    "count": 3,
+    "cap": 3
   },
-  "authorityChecks": {
-    "singleSchoolClockPreserved": true,
-    "singleEconomyAuthorityPreserved": true,
-    "singleHousingLayoutPersistenceAuthorityPreserved": true,
-    "classAuthorityUnchanged": true,
-    "worldPlotAuthorityUnchanged": true,
-    "retiredRuntimeConsumed": false,
-    "phase2SchoolworkDeferred": true
-  },
-  "productEvidenceReusedFrom": {
-    "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "foundationRunId": 37117473969,
-    "classEducationRunId": 37117473982,
-    "progressionRunId": 37117473978,
-    "reuseReason": "No school/** changes between the exact heads."
-  },
-  "scope": {
-    "runtimeTestRoot": "school/**",
-    "robloxPublished": false,
-    "moneySpent": false,
-    "taskScheduleOrEnablementChanged": false
-  },
-  "handoff": {
-    "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Certify exact canonical SHA 639b1c6d7be7abe629576ebc38802f87a36fdbc9 as content-equivalent to product-integrated 00df979add2b5d0e961205b62cf88340c56ee662 after confirming the four PR #146 files remain outside school/**. Reuse unchanged product smoke evidence where valid and keep runtime-only vehicle/HUD/House/Housing-Editor checks explicit."
-  }
+  "qaGateStatus": "PENDING_PASS_EXACT_HEAD"
 }
