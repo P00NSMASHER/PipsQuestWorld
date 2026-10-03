@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:55:00Z",
+  "observedAt": "2026-10-03T11:22:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "guards": "PASS"
+    "sha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "guards": "SCHOOL_TREE_UNCHANGED_FROM_00df979_PACKAGE__ONLY_BINARY_REFERENCE_INFRA_POLICY_COMMITS_ADDED"
   },
   "target": {
     "universeId": "10768955678",
@@ -14,12 +14,12 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 1,
     "producerPr": null,
     "producerSha": null,
     "producerBranch": "rebuild/high-school-avatar-customization-00df979-v1",
-    "supportPr": null,
-    "supportSha": null,
+    "supportPr": 150,
+    "supportSha": "f5239fc806ff39b793b7ea7a7158c032ed5ef8c3",
     "supportBranch": "support/high-school-avatar-customization-content-00df979"
   },
   "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
@@ -33,7 +33,7 @@
   "directives": {
     "Foundation": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute cloud-safe regression/authority audit of the live canonical or current avatar/customization candidate for world/clock/location/spawn/environment drift. Inspect only touched seams plus exact-head authority invariants; do not invent product edits when unchanged.",
       "owned": "world/clock/location/spawn/environment",
       "dependency": "Housing Editor V2 package checkpoint complete; exact canonical guards remain green",
@@ -42,7 +42,7 @@
     },
     "ClassEducation": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute cloud-safe authority/regression audit of class/session/activity against the live canonical or current candidate. Phase-2 curriculum remains deferred; inspect only for clone-parity regressions or accidental second Class authority.",
       "owned": "class/session/activity",
       "dependency": "Housing Editor V2 package checkpoint complete",
@@ -51,18 +51,18 @@
     },
     "ContentQA": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "branch": "support/high-school-avatar-customization-content-00df979",
       "objective": "Recover verified authorized Roblox High School Legacy avatar/customization/shopping presentation references needed for the first exact slice: entry labels/icons, category hierarchy, interaction sequence, visible labels, prices/constants where applicable, and asset provenance. Keep unknowns explicit; do not invent Legacy-exact content.",
       "owned": "school/tests/fixtures/**, QA-owned reference/provenance assertions, authorized labels/assets/metadata only",
-      "dependency": "Housing Editor V2 package complete; next parity priority is AVATAR_CUSTOMIZATION_SHOPPING",
-      "exit": "one exact-base reference contract with verified labels/interactions/provenance, explicit unknowns, deterministic checks green",
+      "dependency": "PR 150 exact head f5239fc806ff39b793b7ea7a7158c032ed5ef8c3 PASS: Foundation 37119226954, Progression 37119226955, Class/Education 37119226956; deep artifact 11271783526 verified.",
+      "exit": "Current exact reference contract green; continue only genuinely new avatar/customization/shopping provenance needed by producer.",
       "handoff": "Pip High Free Roam",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute cloud-safe review of progression/economy/ownership/mobile-read-only seams needed by the active avatar/customization/shopping slice. Verify server authority and prepare the narrow ownership/unlock contract if the producer needs it; never take shop interaction ownership.",
       "owned": "progression/economy/ownership/mobile read-only",
       "dependency": "Free Roam owns customization/shop mechanics; Content QA owns reference semantics",
@@ -71,18 +71,18 @@
     },
     "FreeRoam": {
       "mode": "PRODUCE",
-      "base": "rebuild/high-school-foundation@00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "rebuild/high-school-foundation@48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "branch": "rebuild/high-school-avatar-customization-00df979-v1",
       "objective": "Build the first exact-clone avatar/customization/shopping slice from the exact canonical head. Implement only verified player-facing Legacy reference interactions as evidence arrives: entry/open-close flow, category navigation, avatar/outfit/customization application, shop interaction and owned-item state. Preserve existing authorities and isolate unverified presentation instead of inventing it.",
       "owned": "avatar/outfit/customization mechanics, shopping interactions, world-facing UX only",
-      "dependency": "Housing Editor V2 packaged; Content QA supplies verified reference fixture; Progression supplies ownership/economy seam only if needed",
+      "dependency": "Exact producer branch fast-forwarded to current canonical 48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad; Content QA PR 150 exact head f5239fc806ff39b793b7ea7a7158c032ed5ef8c3 has all three guards green and deep verified binary artifact evidence.",
       "exit": "one narrow PR to rebuild/high-school-foundation with changed exact SHA, deterministic tests, all three PR-head guards green, unknown/non-exact surfaces explicit",
       "handoff": "Roblox High School QA & Contract",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute QA-readiness increment: track the live producer/support heads, map touched contracts to the exact authorized reference, reuse unchanged PASS evidence, and keep deterministic validators/checklists ready. The moment a changed candidate with required guards exists, switch the work of that run to exact-candidate validation.",
       "owned": "QA contracts and receipts only",
       "dependency": "Free Roam producer/support heads may be in progress; useful QA-readiness work continues without waiting",
@@ -92,7 +92,7 @@
     },
     "Integration": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute integration-readiness increment: inspect live producer PR/head, mergeability, candidate-cap compliance, QA evidence identity, and exact-head guard state. Do not merge until QA PASS; do not sit idle while the candidate is being prepared.",
       "owned": "mechanical integration only",
       "dependency": "QA PASS remains the merge gate, but preflight/merge-readiness work continues before that gate",
@@ -101,7 +101,7 @@
     },
     "Smoke": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute smoke-readiness increment: maintain the current vertical-slice smoke matrix, inspect candidate/integration deltas that will require smoke, and classify genuine runtime-only checks as LOCAL_ONLY_REQUIRED without carrying stale blockers. Execute exact-head smoke immediately after integration.",
       "owned": "post-integration smoke evidence only",
       "dependency": "integration is required for final smoke certification, not for preparatory smoke work",
@@ -110,7 +110,7 @@
     },
     "ReleasePackage": {
       "mode": "SUPPORT",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
       "objective": "Every run, perform one bounded ~10-minute package-readiness increment: verify the deterministic school/** packaging recipe, current canonical tree identity, prior artifact continuity, and exact release inputs. Build a new package only after Smoke PASS on a changed canonical; never publish Roblox.",
       "owned": "package/hash/readiness only",
       "dependency": "Smoke PASS remains the package gate, but deterministic package-readiness verification continues before that gate",
@@ -168,13 +168,24 @@
   "branchReadiness": {
     "producer": {
       "branch": "rebuild/high-school-avatar-customization-00df979-v1",
-      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "status": "READY_EXACT_BASE"
+      "baseSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+      "status": "READY_EXACT_CURRENT_BASE"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
-      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "status": "READY_EXACT_BASE"
+      "headSha": "f5239fc806ff39b793b7ea7a7158c032ed5ef8c3",
+      "status": "GREEN_SUPPORT_EVIDENCE__THREE_GUARDS_PASS"
     }
+  },
+  "binaryReference": {
+    "policy": "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
+    "canonicalSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "verifiedRun": 37117831711,
+    "verifiedJob": 111187960403,
+    "artifactId": 11271783526,
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "cloudArtifactMaterialization": "PASS",
+    "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   }
 }
