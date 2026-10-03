@@ -102,5 +102,17 @@
     "certifiedProductAncestor": "00df979add2b5d0e961205b62cf88340c56ee662",
     "certifiedSchoolTree": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
     "productTreeRelationship": "IDENTICAL_TO_CERTIFIED_ANCESTOR"
+  },
+  "activeProducerCandidate": {
+    "branch": "rebuild/high-school-avatar-customization-00df979-v1",
+    "sha": "8ea7c2199638cd698e556eecee4b0cb0d5f06b2f",
+    "baseSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "commitsAhead": 6,
+    "filesChanged": 5,
+    "state": "PREP_ACTIVE_NOT_PROMOTED",
+    "pr": null,
+    "exactHeadPrGuards": "NOT_RUN_NO_PR",
+    "implemented": "device-specific outfit GUI identity; Custom Outfits entry/open-close; exact hierarchy markers; 12 saved outfit slots; page starts; R6 morph warning; canonical client mount; deterministic entry/mount guards",
+    "nextVerifiedGap": "Add verified WearOutfit/SaveOutfit/ChangeBodyMorph server seams and persisted/filtered field handling before shopping purchase mechanics; do not invent catalog/assets."
   }
 }
