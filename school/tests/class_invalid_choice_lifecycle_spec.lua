@@ -53,5 +53,18 @@ eq(correctedStatus, "accepted", "corrective answer status")
 eq(corrected.classCompleted, true, "corrective answer did not complete class")
 eq(corrected.returnToFreeRoam, true, "completion did not restore free roam")
 eq(controller:getPlayerSnapshot("invalid-choice-player").completionCount, 1, "completion count not exactly once")
+eq(controller:isCompleted("invalid-choice-player", "1:2:math"), true, "completion receipt not recorded")
+
+local replay, replayStatus = controller:submit(
+    "invalid-choice-player",
+    "1:2:math",
+    entered.activity.id,
+    "valid-after-invalid-2",
+    2
+)
+eq(replayStatus, "duplicate", "completion replay status")
+eq(replay.classCompleted, false, "completion replay emitted completion twice")
+eq(replay.completionAlreadyRecorded, true, "completion replay missing exactly-once marker")
+eq(controller:getPlayerSnapshot("invalid-choice-player").completionCount, 1, "completion replay changed count")
 
 print("CLASS_INVALID_CHOICE_LIFECYCLE_PASS")
