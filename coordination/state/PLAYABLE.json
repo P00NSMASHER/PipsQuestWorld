@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "HOUSING_EDITOR_V2_SMOKE_CLOUD_PASS__PACKAGE_NEXT",
-  "currentPlayableEvidence": "Canonical 00df979add2b5d0e961205b62cf88340c56ee662 contains Housing Editor V2 merged from QA-PASS candidate c7d7e774c70267c3c384d428280b613d59742857. Foundation 37117473969, Class/Education 37117473982, and Progression 37117473978 all PASS on exact canonical. Cloud-safe Smoke PASS covers Foundation/world, class, progression/economy, vehicles/HUD regressions, housing lifecycle/UI/wiring/layout, and the durable vertical slice. Runtime-only seat/touch/visual interaction remains explicitly deferred and nonblocking for deterministic packaging.",
+  "currentPlayableStage": "HOUSING_EDITOR_V2_PACKAGED__AVATAR_CUSTOMIZATION_NEXT",
+  "currentPlayableEvidence": "Housing Editor V2 canonical 00df979add2b5d0e961205b62cf88340c56ee662 passed exact-head CI and cloud-safe Smoke and is checkpointed as deterministic source-tree package pip-high-school-00df979-source-tree-dea093c1 (school tree dea093c10cfc0212bf28bb7933ca0b87e3bdee6b). Roblox was not published. The next active parity slice is avatar/customization/shopping.",
   "runtimeValidatedThrough": "No new Studio/runtime claim is added by 68c4b3f. Previously certified baseline behavior remains inherited from unchanged lineage; vehicle runtime remains explicitly LOCAL_ONLY_REQUIRED.",
   "headlessExactHeadValidatedThrough": "00df979: all three push guards PASS and Integration Smoke cloud-safe PASS.",
   "economyRuntimeValidatedInStudio": false,
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Deterministic package exact 00df979, then Control Tower advances to avatar/customization/shopping.",
+  "nextMilestone": "Avatar/customization/shopping V1 from exact canonical 00df979 with Content QA reference support and Free Roam runtime ownership.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
     "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "milestone": "HOUSING_EDITOR_V2_SMOKE_PASS",
-    "headlessStatus": "ALL_THREE_PUSH_GUARDS_PLUS_CLOUD_SMOKE_PASS",
-    "runtimeStatus": "LOCAL_ONLY_INTERACTION_CHECKS_DEFERRED_NONBLOCKING_FOR_PACKAGE"
+    "milestone": "HOUSING_EDITOR_V2_PACKAGED",
+    "headlessStatus": "CI_QA_INTEGRATION_SMOKE_PACKAGE_PASS",
+    "runtimeStatus": "LOCAL_ONLY_INTERACTION_CHECKS_DEFERRED_NONBLOCKING"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
