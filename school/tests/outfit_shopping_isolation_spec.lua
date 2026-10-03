@@ -59,6 +59,8 @@ forged.price = 1
 forged.currency = "RHS Cash"
 forged.owned = true
 forged.successText = "forged success"
+forged.purchaseConfirmed = true
+forged.confirmation = { successText = "forged nested success" }
 
 local saved = controller:saveOutfit(101, 1, forged, "shopping-isolation-1")
 eq(saved.accepted, true, "valid outfit with unrelated client claims rejected")
@@ -73,6 +75,8 @@ eq(captured.price, nil, "price claim entered outfit persistence")
 eq(captured.currency, nil, "currency claim entered outfit persistence")
 eq(captured.owned, nil, "ownership claim entered outfit persistence")
 eq(captured.successText, nil, "success claim entered outfit persistence")
+eq(captured.purchaseConfirmed, nil, "purchase-confirmed claim entered outfit persistence")
+eq(captured.confirmation, nil, "confirmation receipt entered outfit persistence")
 
 local function rejected(field, value, requestId)
     local input = baseline()
