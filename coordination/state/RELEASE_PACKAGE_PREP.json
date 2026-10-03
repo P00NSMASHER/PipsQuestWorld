@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "kind": "HIGH_SCHOOL_RELEASE_PACKAGE_PREP",
+  "nonRelease": true,
+  "nonPublish": true,
+  "canonicalBranch": "rebuild/high-school-foundation",
+  "canonicalSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+  "packagedBaseline": {
+    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "schoolTreeGitSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "artifact": "pip-high-school-00df979-source-tree-dea093c1"
+  },
+  "candidate": {
+    "pr": 154,
+    "sha": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
+    "schoolTreeGitSha": "d77bf9e48c0992241e6b71ba753ed8caef962907",
+    "preparedArtifactIdentity": "pip-high-school-fa50b85-source-tree-d77bf9e4",
+    "schoolBlobCount": 50,
+    "baselineBlobCount": 46,
+    "unchangedBaselineBlobCount": 43,
+    "addedSchoolPaths": [
+      "school/src/client/AvatarCustomization.client.lua",
+      "school/src/shared/LegacyOutfitEntry.lua",
+      "school/tests/avatar_customization_entry_spec.lua",
+      "school/tests/avatar_customization_runtime_mount_spec.lua"
+    ],
+    "modifiedSchoolPaths": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/tests/legacy_hud_contract_spec.lua"
+    ],
+    "deletedBaselinePaths": [],
+    "avatarRuntime": {
+      "source": "school/src/shared/LegacyOutfitEntry.lua",
+      "sourceBlobSha": "08bbffed9440d6ccc20eab92719a218cc35645ce",
+      "projectFile": "school/default.project.json",
+      "projectFileBlobSha": "4dfedd2f567367fd9ddff1edce0e48aae632c3fa",
+      "projectMapping": "src/shared/LegacyOutfitEntry.lua",
+      "canonicalClientBlobSha": "108770adeac23852907e6d088d870ebbac46f1dc",
+      "canonicalClientMountObserved": true,
+      "standaloneAvatarSourceBlobSha": "d0d408a368df96d11bdf8a3fc4af134d0b832105",
+      "standaloneAvatarSourceProjectMapped": false
+    },
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37134778742,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37134778798,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37134778747,
+        "conclusion": "success"
+      }
+    ],
+    "qa": "PASS_EXACT_HEAD",
+    "integration": "NOT_YET_INTEGRATED",
+    "smoke": "NOT_YET_SMOKE_CERTIFIED",
+    "packageEligible": false
+  },
+  "binaryReference": {
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "verifiedRun": 37117831711,
+    "extractorHead": "8a7363c785b15fd5ff3110a22abf5e22b14f152e",
+    "artifactId": 11271783526
+  },
+  "nextAction": "After Integration and exact-SHA Smoke PASS on the same changed canonical SHA, recompute school tree identity, verify these release inputs, then emit the deterministic package receipt. Do not publish Roblox."
+}
