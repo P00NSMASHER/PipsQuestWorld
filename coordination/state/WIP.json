@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 35,
+  "schemaVersion": 36,
   "owner": "Roblox High School Control Tower",
   "observedAt": "2026-10-03T10:55:00Z",
   "canonical": {
@@ -32,21 +32,21 @@
   },
   "directives": {
     "Foundation": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Hold canonical world/clock/location/spawn/environment stable while avatar/customization/shopping advances.",
+      "objective": "Every run, perform one bounded ~10-minute cloud-safe regression/authority audit of the live canonical or current avatar/customization candidate for world/clock/location/spawn/environment drift. Inspect only touched seams plus exact-head authority invariants; do not invent product edits when unchanged.",
       "owned": "world/clock/location/spawn/environment",
       "dependency": "Housing Editor V2 package checkpoint complete; exact canonical guards remain green",
-      "exit": "Foundation-owned regression from the avatar/customization candidate",
+      "exit": "fresh scoped regression finding or explicit no-drift handoff for the current head",
       "handoff": "Pip High Free Roam"
     },
     "ClassEducation": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Hold class/session/activity authority stable; Phase-2 curriculum remains deferred.",
+      "objective": "Every run, perform one bounded ~10-minute cloud-safe authority/regression audit of class/session/activity against the live canonical or current candidate. Phase-2 curriculum remains deferred; inspect only for clone-parity regressions or accidental second Class authority.",
       "owned": "class/session/activity",
       "dependency": "Housing Editor V2 package checkpoint complete",
-      "exit": "Class-owned regression from candidate/QA",
+      "exit": "fresh scoped regression finding or explicit no-drift handoff for the current head",
       "handoff": "Roblox High School QA & Contract"
     },
     "ContentQA": {
@@ -63,10 +63,10 @@
     "ProgressionMobile": {
       "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Prepare only the minimal server-authoritative ownership/unlock/read-only snapshot contract needed by avatar/customization/shopping; do not create shop interaction semantics.",
+      "objective": "Every run, perform one bounded ~10-minute cloud-safe review of progression/economy/ownership/mobile-read-only seams needed by the active avatar/customization/shopping slice. Verify server authority and prepare the narrow ownership/unlock contract if the producer needs it; never take shop interaction ownership.",
       "owned": "progression/economy/ownership/mobile read-only",
       "dependency": "Free Roam owns customization/shop mechanics; Content QA owns reference semantics",
-      "exit": "one narrow ownership/economy seam only if required by the first candidate; otherwise WAIT_PIPELINE",
+      "exit": "current-head ownership/economy seam verified or one narrow producer handoff",
       "handoff": "Pip High Free Roam"
     },
     "FreeRoam": {
@@ -81,40 +81,40 @@
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Validate only the first changed avatar/customization/shopping candidate against verified reference and authority/provenance contracts.",
+      "objective": "Every run, perform one bounded ~10-minute QA-readiness increment: track the live producer/support heads, map touched contracts to the exact authorized reference, reuse unchanged PASS evidence, and keep deterministic validators/checklists ready. The moment a changed candidate with required guards exists, switch the work of that run to exact-candidate validation.",
       "owned": "QA contracts and receipts only",
-      "dependency": "Free Roam produces an exact candidate with three green PR-head guards",
-      "exit": "PASS exact candidate or one precise FAIL handoff",
+      "dependency": "Free Roam producer/support heads may be in progress; useful QA-readiness work continues without waiting",
+      "exit": "changed candidate validated immediately, or current-head validation plan/harness remains ready with no stale blocker",
       "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Mechanically merge only a QA-PASS avatar/customization/shopping candidate.",
+      "objective": "Every run, perform one bounded ~10-minute integration-readiness increment: inspect live producer PR/head, mergeability, candidate-cap compliance, QA evidence identity, and exact-head guard state. Do not merge until QA PASS; do not sit idle while the candidate is being prepared.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact candidate plus unchanged green PR-head guards",
-      "exit": "new canonical SHA plus three push guards PASS",
+      "dependency": "QA PASS remains the merge gate, but preflight/merge-readiness work continues before that gate",
+      "exit": "candidate becomes QA-PASS and merge-ready, or a precise integration-risk handoff is recorded",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Smoke only the integrated changed avatar/customization/shopping surface plus baseline vertical slice.",
+      "objective": "Every run, perform one bounded ~10-minute smoke-readiness increment: maintain the current vertical-slice smoke matrix, inspect candidate/integration deltas that will require smoke, and classify genuine runtime-only checks as LOCAL_ONLY_REQUIRED without carrying stale blockers. Execute exact-head smoke immediately after integration.",
       "owned": "post-integration smoke evidence only",
-      "dependency": "integrated exact candidate",
-      "exit": "cloud-safe PASS plus explicit LOCAL_ONLY_REQUIRED list if any",
+      "dependency": "integration is required for final smoke certification, not for preparatory smoke work",
+      "exit": "integrated changed head smoked immediately, or current smoke matrix is fresh and scoped to the live pipeline",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Housing Editor V2 package checkpoint complete; await next smoke-certified canonical.",
+      "objective": "Every run, perform one bounded ~10-minute package-readiness increment: verify the deterministic school/** packaging recipe, current canonical tree identity, prior artifact continuity, and exact release inputs. Build a new package only after Smoke PASS on a changed canonical; never publish Roblox.",
       "owned": "package/hash/readiness only",
-      "dependency": "artifact pip-high-school-00df979-source-tree-dea093c1 recorded",
-      "exit": "next Smoke PASS exact canonical",
+      "dependency": "Smoke PASS remains the package gate, but deterministic package-readiness verification continues before that gate",
+      "exit": "smoke-certified changed canonical packaged immediately, or package recipe/artifact continuity verified against the live head",
       "handoff": "Roblox High School Control Tower"
     }
   },
