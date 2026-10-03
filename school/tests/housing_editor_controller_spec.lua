@@ -79,48 +79,78 @@ local function authorize(playerId)
     return clone(auth[playerId] or { owned = false, editing = false })
 end
 
-local editor = Editor.new({
+local productionEditor = Editor.new({
     layoutRepositoryFactory = layoutFactory,
     economyRepositoryFactory = economyFactory,
     authorize = authorize,
 })
+eq(#productionEditor:getCatalog(), 0, "production catalog must stay empty until exact furniture provenance is verified")
+
+local TEST_CATALOG = {
+    {
+        itemId = "test-utility-v1",
+        displayName = "Test Utility",
+        category = "Utilities",
+        price = 10,
+        sellPrice = 5,
+        geometry = "lamp",
+        referenceExact = false,
+    },
+    {
+        itemId = "test-other-v1",
+        displayName = "Test Other",
+        category = "Other",
+        price = 8,
+        sellPrice = 4,
+        geometry = "chair",
+        referenceExact = false,
+    },
+}
+
+local editor = Editor.new({
+    layoutRepositoryFactory = layoutFactory,
+    economyRepositoryFactory = economyFactory,
+    authorize = authorize,
+    catalog = TEST_CATALOG,
+    allowUnverifiedTestCatalog = true,
+})
 
 local state = editor:getState(101)
 eq(state.accepted, true, "state accepted")
-eq(#state.catalog, 2, "catalog size")
+eq(#state.catalog, 2, "test catalog size")
 eq(state.catalog[1].category, "Utilities", "verified category one")
 eq(state.catalog[2].category, "Other", "verified category two")
 
-local visitor = editor:purchase(202, "other-chair-v1", "visitor-buy")
+local visitor = editor:purchase(202, "test-other-v1", "visitor-buy")
 eq(visitor.accepted, false, "visitor purchase accepted")
 eq(visitor.code, "house_not_owned", "visitor purchase code")
 
 auth[101].editing = false
-local notEditing = editor:purchase(101, "other-chair-v1", "not-editing")
+local notEditing = editor:purchase(101, "test-other-v1", "not-editing")
 eq(notEditing.accepted, false, "non-edit purchase accepted")
 eq(notEditing.code, "edit_mode_required", "non-edit purchase code")
 auth[101].editing = true
 
-local bought = editor:purchase(101, "other-chair-v1", "buy-1")
+local bought = editor:purchase(101, "test-other-v1", "buy-1")
 eq(bought.accepted, true, "buy rejected")
 eq(bought.code, "furniture_purchased", "buy code")
 eq(bought.inventory[1].quantity, 1, "buy inventory")
 eq(economyState[101].balance, 92, "buy balance")
 
-local buyReplay = editor:purchase(101, "other-chair-v1", "buy-1")
+local buyReplay = editor:purchase(101, "test-other-v1", "buy-1")
 eq(buyReplay.accepted, true, "buy replay rejected")
 eq(buyReplay.replayed, true, "buy replay flag")
 eq(buyReplay.inventory[1].quantity, 1, "buy replay duplicated inventory")
 eq(economyState[101].balance, 92, "buy replay double charged")
 
-local placed = editor:place(101, "other-chair-v1", { x = 0, y = 0, z = 0, rotation = 0 }, "place-1")
+local placed = editor:place(101, "test-other-v1", { x = 0, y = 0, z = 0, rotation = 0 }, "place-1")
 eq(placed.accepted, true, "place rejected")
 eq(placed.code, "furniture_placed", "place code")
 eq(#placed.inventory, 0, "place did not consume inventory")
 eq(#placed.placements, 1, "placement count")
 local placementId = placed.placementId
 
-local placeReplay = editor:place(101, "other-chair-v1", { x = 0, y = 0, z = 0, rotation = 0 }, "place-1")
+local placeReplay = editor:place(101, "test-other-v1", { x = 0, y = 0, z = 0, rotation = 0 }, "place-1")
 eq(placeReplay.accepted, true, "place replay rejected")
 eq(#placeReplay.placements, 1, "place replay duplicated placement")
 
@@ -141,25 +171,25 @@ local hidden = editor:setHideWalls(101, true, "walls-1")
 eq(hidden.accepted, true, "hide walls rejected")
 eq(hidden.hideWalls, true, "hide walls state")
 
-local removed = editor:remove(101, placementId, "other-chair-v1", "remove-1")
+local removed = editor:remove(101, placementId, "test-other-v1", "remove-1")
 eq(removed.accepted, true, "remove rejected")
 eq(#removed.placements, 0, "remove placement")
 eq(removed.inventory[1].quantity, 1, "remove did not return inventory")
 
-local sold = editor:sellInventory(101, "other-chair-v1", "sell-1")
+local sold = editor:sellInventory(101, "test-other-v1", "sell-1")
 eq(sold.accepted, true, "sell rejected")
 eq(sold.code, "furniture_sold", "sell code")
 eq(#sold.inventory, 0, "sell inventory")
 eq(economyState[101].balance, 96, "sell balance")
 
-local sellReplay = editor:sellInventory(101, "other-chair-v1", "sell-1")
+local sellReplay = editor:sellInventory(101, "test-other-v1", "sell-1")
 eq(sellReplay.accepted, true, "sell replay rejected")
 eq(sellReplay.replayed, true, "sell replay flag")
 eq(economyState[101].balance, 96, "sell replay double credited")
 
-local boughtLamp = editor:purchase(101, "utility-floor-lamp-v1", "buy-lamp")
+local boughtLamp = editor:purchase(101, "test-utility-v1", "buy-lamp")
 eq(boughtLamp.accepted, true, "lamp buy")
-local placedLamp = editor:place(101, "utility-floor-lamp-v1", { x = -3, y = 0, z = 3, rotation = 180 }, "place-lamp")
+local placedLamp = editor:place(101, "test-utility-v1", { x = -3, y = 0, z = 3, rotation = 180 }, "place-lamp")
 eq(placedLamp.accepted, true, "lamp place")
 
 layoutRepos[101] = nil
@@ -167,11 +197,13 @@ local reopenedEditor = Editor.new({
     layoutRepositoryFactory = layoutFactory,
     economyRepositoryFactory = economyFactory,
     authorize = authorize,
+    catalog = TEST_CATALOG,
+    allowUnverifiedTestCatalog = true,
 })
 local reopened = reopenedEditor:getState(101)
 eq(reopened.hideWalls, true, "rejoin hide walls")
 eq(#reopened.placements, 1, "rejoin placement count")
-eq(reopened.placements[1].itemId, "utility-floor-lamp-v1", "rejoin placement item")
+eq(reopened.placements[1].itemId, "test-utility-v1", "rejoin placement item")
 eq(reopened.placements[1].rotation, 180, "rejoin rotation")
 eq(economyState[101].balance, 86, "rejoin economy balance")
 
