@@ -6,26 +6,11 @@
 local Controller = {}
 Controller.__index = Controller
 
-local CATALOG = {
-    {
-        itemId = "utility-floor-lamp-v1",
-        displayName = "Floor Lamp",
-        category = "Utilities",
-        price = 10,
-        sellPrice = 5,
-        geometry = "lamp",
-        referenceExact = false,
-    },
-    {
-        itemId = "other-chair-v1",
-        displayName = "Chair",
-        category = "Other",
-        price = 8,
-        sellPrice = 4,
-        geometry = "chair",
-        referenceExact = false,
-    },
-}
+-- Production catalog remains empty until exact furniture items/assets are
+-- independently verified by Content QA. Tests inject non-production catalog
+-- entries explicitly so behavior coverage remains complete without presenting
+-- invented furniture as Legacy-exact.
+local CATALOG = {}
 
 local PAINTS = {
     ["default"] = true,
@@ -97,11 +82,13 @@ function Controller.new(options)
     assert(type(options.authorize) == "function", "authorize is required")
 
     local catalog = options.catalog or CATALOG
+    local allowUnverifiedTestCatalog = options.allowUnverifiedTestCatalog == true
     local catalogById = {}
     local publicCatalog = {}
     for index, entry in ipairs(catalog) do
         assert(nonEmpty(entry.itemId), "catalog itemId is required")
         assert(nonEmpty(entry.displayName), "catalog displayName is required")
+        assert(entry.referenceExact == true or allowUnverifiedTestCatalog, "catalog entries must carry verified reference provenance")
         assert(entry.category == "Utilities" or entry.category == "Other", "catalog category must be verified")
         assert(isInteger(entry.price) and entry.price >= 0, "catalog price must be a nonnegative integer")
         assert(isInteger(entry.sellPrice) and entry.sellPrice >= 0, "catalog sellPrice must be a nonnegative integer")
