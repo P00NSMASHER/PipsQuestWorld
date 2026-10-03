@@ -122,6 +122,35 @@ local studioReopened = assert(Repository.open(StudioStore.new(studioBacking), 10
 eq(studioReopened:getState().completionCount, 1, "studio reopen completion count")
 eq(studioReopened:getState().totalPoints, 25, "studio reopen points")
 
+local outfit = {
+    OutfitName = "Filtered Hero",
+    Hat1 = 101,
+    Hat2 = 202,
+    Hat3 = 303,
+    Shirt = 404,
+    Pants = 505,
+    Face = 606,
+    Package = 707,
+    RPName = "Filtered RP",
+    RPDesc = "Filtered Description",
+    RemoveShirt = false,
+}
+local outfitSaved = studioReopened:saveOutfit(12, outfit)
+eq(outfitSaved.status, "applied", "outfit save status")
+eq(outfitSaved.durable, true, "outfit save durable")
+eq(outfitSaved.outfit.Hat3, 303, "outfit third hat persisted")
+
+local outfitReopened = assert(Repository.open(StudioStore.new(studioBacking), 101))
+local loadedOutfit = assert(outfitReopened:loadOutfit(12))
+eq(loadedOutfit.OutfitName, "Filtered Hero", "outfit name survives reopen")
+eq(loadedOutfit.Hat1, 101, "outfit Hat1 survives reopen")
+eq(loadedOutfit.Hat2, 202, "outfit Hat2 survives reopen")
+eq(loadedOutfit.Hat3, 303, "outfit Hat3 survives reopen")
+eq(loadedOutfit.RemoveShirt, false, "outfit boolean survives reopen")
+local lastPage = assert(outfitReopened:loadOutfitPage(10))
+eq(#lastPage, 3, "outfit page 10 size")
+eq(lastPage[3].slot, 12, "outfit page 10 includes slot 12")
+
 local staleStudioStore = StudioStore.new(studioBacking)
 local _, staleVersion = staleStudioStore:read(101)
 eq(staleVersion, 1, "studio read revision")
