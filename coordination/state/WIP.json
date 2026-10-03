@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 28,
+  "schemaVersion": 29,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
@@ -7,31 +7,27 @@
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "status": "PASS_EXACT_HEAD_CI_WITH_LOCAL_RUNTIME_GATE"
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "status": "LIVE_CANONICAL_HEAD__EXACT_HEAD_PUSH_GUARDS_UNVERIFIED_CURRENT_RUN"
     },
     "upstream": {
-      "lane": "Roblox High School Progression & Mobile",
-      "objective": "HOUSING_EDITOR_INVENTORY_QUANTITY_SUPPORT",
-      "baseSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "branch": "support/high-school-housing-editor-inventory-6a48e36",
-      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
-      "pr": 124,
-      "status": "QA_PASS_READY_INTEGRATION"
+      "lane": "Content QA",
+      "objective": "HOUSING_EDITOR_V2_REFERENCE_CONTRACT",
+      "baseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "status": "SUPPORT"
     },
     "downstream": {
-      "lane": "Roblox High School Integration Director",
-      "objective": "INTEGRATE_HOUSING_EDITOR_INVENTORY_SUPPORT",
-      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
-      "pr": 124,
-      "status": "INTEGRATE"
+      "lane": "Pip High Free Roam",
+      "objective": "HOUSING_EDITOR_V2",
+      "baseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "status": "WAIT_PIPELINE_PENDING_EXACT_HEAD_PUSH_GUARDS"
     }
   },
   "priorityBacklog": [
     {
       "priority": 1,
       "milestone": "WORLD_CAMPUS_TOWN_DEPTH",
-      "status": "INTEGRATED_TO_CURRENT_CERTIFIED_LINE"
+      "status": "INTEGRATED"
     },
     {
       "priority": 2,
@@ -41,164 +37,139 @@
     {
       "priority": 3,
       "milestone": "PROGRESSION_JOBS_ECONOMY",
-      "status": "CAFE_JOB_PLUS_REJOIN_REPAIR_INTEGRATED_SMOKE_CERTIFIED"
+      "status": "CAFE_JOB_PLUS_REJOIN_REPAIR_INTEGRATED"
     },
     {
       "priority": 4,
       "milestone": "VEHICLES",
-      "status": "ACTIVE_RUNTIME_SMOKE_LOCAL_ONLY_REQUIRED"
+      "status": "LOCAL_ONLY_RUNTIME_SMOKE_REQUIRED"
     },
     {
       "priority": 5,
       "milestone": "HOUSING_PROPERTY",
-      "status": "ACTIVE_EDITOR_PARITY"
+      "status": "ACTIVE_HOUSING_EDITOR_V2"
     },
     {
       "priority": 6,
       "milestone": "AVATAR_CUSTOMIZATION_SHOPPING",
-      "status": "NEXT_AFTER_HOUSING_EDITOR"
+      "status": "NEXT_AFTER_HOUSING"
     },
     {
       "priority": 7,
-      "milestone": "SOCIAL_FREE_ROAM_POLISH",
+      "milestone": "JOBS_BEYOND_CAFE",
       "status": "WAITING_PRIORITY"
     },
     {
       "priority": 8,
-      "milestone": "MOBILE_PRESENTATION_POLISH",
+      "milestone": "SOCIAL_FREE_ROAM",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 9,
+      "milestone": "ANIMATIONS_PRESENTATION",
+      "status": "WAITING_PRIORITY"
+    },
+    {
+      "priority": 10,
+      "milestone": "MOBILE_POLISH",
       "status": "WAITING_PRIORITY"
     }
   ],
-  "supportLaneAssignments": {
-    "Foundation": "WAIT_PIPELINE on exact canonical c236b747. Housing world/plot seams are integrated and green; act only on a returned world-anchor or house-geometry defect.",
-    "Class & Education": "WAIT_PIPELINE on exact canonical c236b747. Preserve class/session/activity authority; Phase-2 schoolwork remains deferred.",
-    "Content QA": "SUPPORT Housing Editor V2 by extracting authorized Legacy furniture categories/labels/editor presentation from the licensed reference only; no runtime authority or retired branch code enters school/**.",
-    "Progression & Mobile": "SUPPORT exact 6a48e36: add durable furniture inventory quantities to HousingLayoutRepository only (add/remove counts, idempotent/reopen-safe); no money mutation or gameplay remotes.",
-    "Pip High Free Roam": "WAIT_PIPELINE until durable furniture inventory quantities land. Do not fake multiple-copy purchases with immutable unlocks or start editor branch against an incomplete persistence contract.",
-    "QA/Contract": "WAIT_PIPELINE until exact Housing Editor V2 candidate is green; then validate Legacy editor UI, server ownership/edit-mode/transforms, durable layout, economy uniqueness and baseline regressions.",
-    "Integration": "WAIT_PIPELINE until exact-SHA QA PASS; mechanical integration only.",
-    "Integration Smoke": "WAIT_PIPELINE. Vehicle/HUD/House runtime coexistence remains LOCAL_ONLY_REQUIRED on c236b747; do not poll laptop or publish while cloud-safe editor work advances.",
-    "Release/Package": "WAIT_PIPELINE. Package only exact smoke-certified canonical checkpoint; package is never product completion.",
-    "DevEx": "CI/evidence infrastructure only; provide exact-head editor coverage if needed without changing semantics."
-  },
   "nextHandoff": {
-    "from": "Roblox High School Integration Director",
-    "to": "Roblox High School Control Tower",
-    "condition": "PR #124 integrates and the resulting canonical exact-head guards pass; then authorize Housing Editor V2 on that exact new base."
+    "from": "Roblox High School Control Tower",
+    "to": "Pip High Free Roam",
+    "condition": "When all required exact-head push guards are green on db0a700fd1a65b3648abc06353f8250adfab1bbb, authorize exactly one fresh Free Roam lane branch from that exact SHA and switch Free Roam to PRODUCE Housing Editor V2."
   },
   "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
-  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
-  "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
-  "unchangedFingerprintRule": {
-    "maxCheapReads": 2,
-    "broadTests": 0,
-    "branches": 0,
-    "commits": 0,
-    "statusWrites": 0,
-    "result": "WAITING_UNCHANGED"
-  },
+  "successMetric": "Validated player-facing exact Roblox High School parity advancement per hour on the one canonical school/** lineage.",
   "programDirective": {
     "phase1": "EXACT_LIVE_ROBLOX_HIGH_SCHOOL_CLONE",
     "phase1Status": "ACTIVE_USER_PRIORITY",
-    "target": "The currently live private-server Roblox High School clone on the canonical school/** lineage; resolve the exact universe/place only from current Release/Package/publish receipts and never switch targets by inference.",
-    "objective": "Complete the authorized Roblox High School clone first: behavior, world/layout, spawn, HUD/menu/icon interactions, clock/schedule, classes, jobs, vehicles, housing/property, avatar/outfit/customization, shopping, social/free-roam, animations, mobile controls, persistence/rejoin, lighting and presentation.",
-    "rightsBoundary": "Use exact reference source/assets/content only where the user's rights/licenses are verified; provenance remains mandatory.",
     "phase2": "SECOND_GRADE_SCHOOLWORK",
-    "phase2Status": "DEFERRED_UNTIL_USER_EXPLICITLY_ADVANCES_PHASE",
-    "forbiddenPhase1Drift": [
-      "second-grade schoolwork",
-      "Emma-specific schoolwork",
-      "STAR-style practice",
-      "K-8 educational expansion",
-      "unrelated original feature breadth"
-    ]
+    "phase2Status": "DEFERRED_PHASE_2_UNTIL_USER_EXPLICITLY_ADVANCES"
   },
   "runDirectives": {
     "Foundation": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "objective": "Keep integrated HousingPlots/world seams frozen unless editor work returns one reproducible Foundation defect.",
-      "owned": "world/clock/location/spawn and house-geometry seams only",
-      "dependency": "canonical c236b747 exact-head Foundation PASS",
-      "exit": "Returned Foundation-owned defect or later map parity slice.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Keep world/clock/location/spawn and housing-plot seams frozen unless Housing Editor V2 returns one reproducible Foundation-owned defect.",
+      "owned": "school/** world/clock/location/spawn and house-geometry seams only",
+      "dependency": "PR #124 merged; current exact-head push guards are not yet evidenced through the connector.",
+      "exit": "A reproducible Foundation-owned defect or a later map/spawn parity slice.",
       "handoff": "Pip High Free Roam"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "objective": "Housing Editor V2 does not change class/session authority; perform only freshness read.",
-      "owned": "class/session/activity authority only",
-      "dependency": "canonical c236b747 Class guard PASS",
-      "exit": "Changed canonical or class-owned regression.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Preserve class/session/activity authority while Housing Editor V2 advances; Phase-2 schoolwork remains deferred.",
+      "owned": "school/** class/session/activity authority only",
+      "dependency": "Housing editor does not alter class authority.",
+      "exit": "A class-owned regression on the current canonical head.",
       "handoff": "Control Tower"
     },
     "Content QA": {
       "mode": "SUPPORT",
-      "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "base": "rebuild/high-school-foundation@c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "objective": "Prepare the authorized Legacy Housing Editor V2 reference contract: exact visible labels/actions (Add Furni, Hide Walls, furniture categories, painting/build tools) and provenance for any referenced assets, without importing retired runtime code.",
-      "owned": "authorized reference fixtures/labels/assets/provenance only; no gameplay authority",
-      "dependency": "licensed Legacy reference evidence and current canonical House V1",
-      "exit": "Free Roam has one explicit editor UI/behavior contract and any needed authorized asset provenance, with no runtime implementation in this lane.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Produce one exact authorized reference contract for Housing Editor V2 covering Add Furni, Hide Walls, furniture categories/labels, place/move/rotate/remove/sell, painting/build tools, and provenance for any referenced assets.",
+      "owned": "authorized fixtures/assets/labels/provenance only; no gameplay semantics",
+      "dependency": "Licensed original Roblox High School reference plus integrated durable furniture inventory quantities.",
+      "exit": "A deterministic editor-reference fixture/contract exists with enough evidence for Free Roam implementation and no retired runtime code imported.",
       "handoff": "Pip High Free Roam"
     },
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
-      "objective": "Furniture inventory quantity support is exact-head green and QA-cleared. Freeze semantics while Integration lands PR #124.",
-      "owned": "durable mutable housing inventory/layout persistence only",
-      "dependency": "Foundation 37087392516 + Class 37087392551 + Progression 37087392548 PASS; housing layout quantity tests PASS",
-      "exit": "Integration lands exact candidate or returns one reproducible Progression defect.",
-      "handoff": "Integration"
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Freeze the newly integrated durable furniture inventory quantity semantics and respond only to a reproducible persistence/economy defect from Housing Editor V2.",
+      "owned": "durable progression/economy/ownership/housing inventory persistence/mobile read-only presentation only",
+      "dependency": "PR #124 merged as canonical commit db0a700fd1a65b3648abc06353f8250adfab1bbb.",
+      "exit": "Returned Progression-owned defect or future mobile presentation slice.",
+      "handoff": "Pip High Free Roam"
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "objective": "Wait for PR #124 integration; do not branch editor from a base that will become stale.",
-      "owned": "housing editor gameplay/UI only",
-      "dependency": "exact inventory support integration",
-      "exit": "Control Tower authorizes a fresh editor branch from the resulting canonical SHA.",
-      "handoff": "Control Tower"
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Prepare to implement Housing Editor V2 as the next player-facing clone slice without starting from an uncertified base.",
+      "owned": "housing editor gameplay/UI, housing customization interactions, furniture runtime behavior only",
+      "dependency": "Exact-head push guards must pass on db0a700fd1a65b3648abc06353f8250adfab1bbb and Content QA reference contract must be consumable.",
+      "exit": "On green exact-head current canonical, receive one fresh current-base lane branch and switch to PRODUCE.",
+      "handoff": "QA/Contract"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
-      "objective": "QA PASS recorded for exact support candidate; wait unless it changes.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Wait for an exact Housing Editor V2 candidate, then validate editor UI actions, server ownership/edit restrictions, durable inventory/layout, economy uniqueness, and baseline regressions.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "exact candidate unchanged",
-      "exit": "Changed candidate or Integration-returned evidence defect.",
+      "dependency": "Free Roam exact-head Housing Editor V2 candidate.",
+      "exit": "PASS/FAIL on the exact candidate SHA with deterministic evidence.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "INTEGRATE",
-      "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
-      "base": "rebuild/high-school-foundation@6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "objective": "Mechanically integrate PR #124 furniture inventory quantity support.",
+      "mode": "WAIT_PIPELINE",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Mechanical integration only after QA clears the exact Housing Editor V2 candidate.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact 7a5325a + exact-head guard PASS",
-      "exit": "Merge only exact candidate/base and verify resulting canonical push guards.",
-      "handoff": "Control Tower"
+      "dependency": "QA PASS exact candidate plus exact-head guards.",
+      "exit": "Merge only the certified exact candidate/base and verify resulting canonical head.",
+      "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "objective": "Vehicle/HUD/House runtime coexistence remains LOCAL_ONLY_REQUIRED; do not poll laptop or publish while cloud-safe Housing Editor V2 advances.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Preserve the genuine LOCAL_ONLY_REQUIRED vehicle/HUD/House runtime gate without polling the laptop; add Housing Editor runtime checks only after integration.",
       "owned": "post-integration runtime certification only",
-      "dependency": "authorized runtime access to universe 10768955678/place 87245440673982",
-      "exit": "When separately authorized, smoke exact current canonical runtime; otherwise stay quiet.",
+      "dependency": "Authorized runtime access to universe 10768955678 / place 87245440673982 plus an integrated exact canonical candidate.",
+      "exit": "Smoke PASS on exact current canonical when separately authorized; otherwise stay quiet.",
       "handoff": "Release/Package"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
-      "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "objective": "Wait for exact smoke-certified canonical checkpoint; do not publish.",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "objective": "Package only an exact smoke-certified canonical checkpoint; never publish Roblox without separate authorization.",
       "owned": "deterministic package checkpoint only",
-      "dependency": "Smoke PASS exact current canonical",
-      "exit": "Package exact smoke-certified SHA only and return to Control Tower.",
+      "dependency": "Smoke PASS exact current canonical.",
+      "exit": "Package receipt bound to the exact smoke-certified SHA.",
       "handoff": "Control Tower"
     }
   }
