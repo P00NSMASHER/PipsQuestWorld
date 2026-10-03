@@ -3,10 +3,11 @@ name: High School Binary Reference Extract
 on:
   push:
     branches:
-      - support/high-school-binary-reference-extractor-db0a700
+      - "support/high-school-binary-reference-extract-*"
     paths:
       - ".github/workflows/high-school-reference-extract.yml"
       - "scripts/extract-roblox-binary-reference.py"
+      - "coordination/reference-extraction/request.json"
   workflow_dispatch:
 
 permissions:
