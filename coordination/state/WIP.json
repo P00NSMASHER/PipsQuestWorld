@@ -14,11 +14,13 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 1,
+    "countIncludingBase": 2,
     "producerPr": null,
     "producerSha": null,
+    "producerBranch": "rebuild/high-school-avatar-customization-00df979-v1",
     "supportPr": null,
-    "supportSha": null
+    "supportSha": null,
+    "supportBranch": "support/high-school-avatar-customization-content-00df979"
   },
   "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
   "automationAudit": {
@@ -162,5 +164,17 @@
     "schoolTreeGitSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "robloxPublished": false
+  },
+  "branchReadiness": {
+    "producer": {
+      "branch": "rebuild/high-school-avatar-customization-00df979-v1",
+      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "status": "READY_EXACT_BASE"
+    },
+    "contentQa": {
+      "branch": "support/high-school-avatar-customization-content-00df979",
+      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "status": "READY_EXACT_BASE"
+    }
   }
 }
