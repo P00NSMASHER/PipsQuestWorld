@@ -1,0 +1,4667 @@
+{
+  "terms": [
+    "vehicle",
+    "car",
+    "truck",
+    "bike",
+    "motor",
+    "drive",
+    "seat",
+    "garage",
+    "spawn car",
+    "spawn vehicle"
+  ],
+  "termCounts": {
+    "motor": 98,
+    "seat": 511,
+    "vehicle": 123,
+    "car": 211,
+    "drive": 73,
+    "bike": 16,
+    "spawn car": 3,
+    "truck": 6
+  },
+  "hitCount": 411,
+  "hits": [
+    {
+      "chunk": 56,
+      "tag": "INST",
+      "encoding": "ascii",
+      "offset": 8,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Motor"
+    },
+    {
+      "chunk": 57,
+      "tag": "INST",
+      "encoding": "ascii",
+      "offset": 8,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Motor6D"
+    },
+    {
+      "chunk": 78,
+      "tag": "INST",
+      "encoding": "ascii",
+      "offset": 8,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat"
+    },
+    {
+      "chunk": 118,
+      "tag": "INST",
+      "encoding": "ascii",
+      "offset": 8,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "VehicleSeat"
+    },
+    {
+      "chunk": 145,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1338,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "DestroyCar"
+    },
+    {
+      "chunk": 178,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1271,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "DriverLocked"
+    },
+    {
+      "chunk": 178,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1305,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatsLocked"
+    },
+    {
+      "chunk": 178,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1645,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "OldSchoolCar"
+    },
+    {
+      "chunk": 288,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 624,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "Vehicle"
+    },
+    {
+      "chunk": 288,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 661,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarLocked"
+    },
+    {
+      "chunk": 288,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 674,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarUnlocked"
+    },
+    {
+      "chunk": 288,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 689,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "DriverLocked"
+    },
+    {
+      "chunk": 288,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 705,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "DriverUnlocked"
+    },
+    {
+      "chunk": 298,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 5139,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarSelectHolder"
+    },
+    {
+      "chunk": 350,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 199,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Cars"
+    },
+    {
+      "chunk": 381,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 737,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarImage"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 901,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "DriversLicense"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 3802,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "music_Skrillex - Scary Monsters & Nice Sprites"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 14897,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "gear_Blue Hyperbike"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 14979,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "gear_Red Hyperbike"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 15060,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "gear_Emerald Hyperbike"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 15145,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "gear_Rainbow Disco Hyperbike"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 16764,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "gear_Robloxsai Bike"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 16981,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "gear_Rainbow Magic Carpet"
+    },
+    {
+      "chunk": 400,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20226,
+      "terms": [
+        "bike",
+        "car"
+      ],
+      "assetIds": [],
+      "text": "gear_Rainbow Hyperbike with Sidecar"
+    },
+    {
+      "chunk": 417,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 8326,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CartTypeTracker"
+    },
+    {
+      "chunk": 417,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 8977,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarSteering"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 44869,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "yer -> PlayerScripts. // Required Modules: ClickToMove DPad KeyboardMovement Thumbpad Thumbstick TouchJump MasterControl VehicleController --]] --[[ Services ]]-- local ContextActionService = game:GetService('ContextActionService') local Players = game:GetService('Players"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 54040,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "BindableEvent_OnFailStateChanged = script.Parent:WaitForChild('OnClickToMoveFailStateChange') end -- not used, but needs to be required local VehicleController = require(script.MasterControl:WaitForChild('VehicleController')) --[[ Initialization/Setup ]]-- local function createTouchGuiContainer() if TouchGui then TouchGui:Destroy() end -- Containe"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 97593,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "e char.Humanoid.PlatformStand = false end end function checkIfStanding(char) if char and char:FindFirstChild(\"Humanoid\") then if char.Humanoid.SeatPart == nil and char.Humanoid.PlatformStand == false then return true else return false end end end function teleport(locationname) local"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 116676,
+      "terms": [
+        "car",
+        "drive",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "account to experience the full game and be able to save your progress here!\",true) end end hum.Changed:connect(function(property) if property == \"SeatPart\" and totaltime.Value < 120 and hum.SeatPart ~= nil and hum.SeatPart.Name == \"Drive\" then local car = hum.SeatPart.Parent if car:FindFirstChild(\"DriverLocked\") and car.DriverLocked.Value == true and car.Owner.Value ~= plr.Name then notification:Fire(\"You can't drive this person's car. Spawn your own car via the Cars menu!\") end end end) game.Li\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 117571,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "\"You've earned $\"..cash.Value..\" RHS Cash so far, simply for playing the game! Use RHS Cash to buy stuff such as housing & furniture, RHS gear items, cars, and more!\",true) else notification:Fire(\"Enjoying ROBLOX High School? Create a free ROBLOX account so that you can save your progress here a"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 117977,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "--display old car and CD refunds game.ReplicatedStorage.RemoteFunctions.DisplayRefundWindow.OnClientEvent:connect(function(windowname, amount) repeat wait(math.rando"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 123333,
+      "terms": [
+        "bike",
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "local bikes = {\"Roped\",\"Blue Hyperbike\",\"Deluxe Blue Roped\",\"Bloxster 2XH\", \"The Astral Cloak\",\"Red Hyperbike\",\"Emerald Hyperbike\", \"Ro-torcycle\", \"Rainbow Disco Hyperbike\",\"Robloxsai Bike\",\"Bloxster 2XZ\",\"Hover Roped\", \"Magical Unicorn\", \"Santa's Flying Reindeer\", \"Rainbow Hyperbike with Sidecar\", \"Festive Roped\", \"Donut Delivery Moped\", \"Sparkle Time Bloxster\"} --can't be equipped on any seat, and equipping in a car will deal damage local nav_enhancers = {\"The Astral Cloak\",\"Gravity Coil\",\"Sup\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 124327,
+      "terms": [
+        "bike",
+        "car"
+      ],
+      "assetIds": [],
+      "text": "YERNAME..\"'s SpaceCraft\"] - no PlatformStand UFO is a completely new object, so not included in this LocalScript - the server scripts will prevent car collisions ]] local plr = game.Players.LocalPlayer if plr.Character == nil or plr.Character.Parent == nil then plr.CharacterAdded:wait() end local char = plr.Character local hum = char:WaitForChild(\"Humanoid\") local injury = game.ReplicatedStorage.RemoteFunctions.InjureSelf function IsABike(tool) for _,v in pairs(bikes) do if tool.Name == v then r\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 125146,
+      "terms": [
+        "bike",
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "n false end local equipcount = 0 char.ChildAdded:connect(function(child) equipcount = equipcount + 1 --prevent above tools from being equipped in cars local bp = plr:FindFirstChild(\"Backpack\") if hum and hum.SeatPart ~= nil and child:IsA(\"Tool\") and (IsABike(child) or IsANavigationEnhancer(child) or IsAFlier(child)) then hum:UnequipTools() if hum.SeatPart.Parent:FindFirstChild(\"SeatsLocked\") then if IsABike(child) then injury:FireServer(47) game.ReplicatedStorage.RemoteFunctions.LocalNotificatio\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 126409,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "d.Parent == char and IsAFlier(child) then local tool = child local disruptor local thisequipcount = equipcount if tool.Name == \"Rainbow Magic Carpet\" then disruptor = child:FindFirstChild(\"Handle\") elseif tool.Name == \"Pompous Flying Cloud\" then disruptor = char:FindFirstChild(\"Humanoid"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 126854,
+      "terms": [
+        "bike",
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "hisequipcount then return end end if disruptor then check1 = disruptor.Touched:connect(function(hit) if hit and hit.Parent:FindFirstChild(\"SeatsLocked\") and hum then hum:UnequipTools() if tool.Name == \"Rainbow Magic Carpet\" and hum.PlatformStand == true then injury:FireServer(55) hum.Sit = true game.ReplicatedStorage.RemoteFunctions.LocalNotification:Fire(\"You seriously injure yourself from colliding with a car while on the Magic Carpet.\") elseif tool.Name == \"Personal Rocketship\" and hum.Sit ==\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 209019,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "\"..(totaltime - math.floor(totaltime/60) * 60)..\"m\" frame.Cash.Text = \"RHS Cash: $\"..data.cash.Value local gear = 0 local pets = 0 local cars = 0 local totalgear = 0 local totalpets = 0 local totalcars = 0 for _,obj in pairs(game.ReplicatedStorage.Objects:GetChildren()) do local hasobj = false local onsale = true if data.Objects:FindFirstChild(obj.ItemID.Value) and not obj:FindFirstChild(\"OldSchoolCar\") then hasobj = true end if obj:FindFirstChild(\"NotForSale\") and not obj:FindFirstChild(\"Loyalt\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 209810,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "pets = pets + 1 end if onsale then totalpets = totalpets + 1 end elseif obj.Name:match(\"vehic_\") then if hasobj then cars = cars + 1 end if onsale then totalcars = totalcars + 1 end end end frame.Gears.Text = gear..\"/\"..totalgear..\" RHS Gear Owned\" frame.Pets.Text = pets..\"/\"..totalpets..\" Pets Owned\" frame.Cars.Text = cars..\"/\"..totalcars..\" Cars Owned\" end ends"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 272648,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "--this'll be grey \"Spawn\" if a car isn't selected script.Parent.MouseButton1Click:connect(function() script.Parent.Parent.WearOutfit:Fire() end)d"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 346028,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "ry\") if not savedcategory then savedcategory = Instance.new(\"StringValue\",plr) savedcategory.Name = \"FurnitureShopCategory\" savedcategory.Value = \"Seating\" end local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId) function getAvailableItemCount(id) local count = 0 for _,v in pai"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 400121,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "script.Parent.MouseButton1Click:connect(function() game.ReplicatedStorage.RemoteFunctions.ChangeSelectedCar:FireServer(game.Players.LocalPlayer.SelectedCar.Value) local module = require(game.ReplicatedStorage.Modules.InterfaceModule) module.closeWindow(script.Parent.Parent) end)"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 400538,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "--this'll be grey \"Spawn\" if a car isn't selected script.Parent.MouseButton1Click:connect(function() script.Parent.Parent.MainButtonPress:Fire(script.Parent) end)"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 401394,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "local plr = game.Players.LocalPlayer local shopframe = script.Parent:WaitForChild(\"Frame\") local frame = shopframe:WaitForChild(\"CarSelectHolder\"):WaitForChild(\"ScrollingFrame\") local enabled = shopframe:WaitForChild(\"Enabled\") local selectedcar = plr:WaitForChild(\"SelectedCar\") local backbutton = shopframe:WaitForChild(\"BackButton\") local forwardbutton = shopframe:WaitForChild(\"ForwardButton\") local data = game.Replicate"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 403857,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "e button.BackgroundColor3 = Color3.new(1,1,1) end if button.ItemID.Value == 288 then button.ItemCost.Text = \"\" end if plr.SelectedCar.Value == button.ItemID.Value then button.BackgroundColor3 = Color3.new(1,1,.25) end end end end function setNavigationButtonColors() loca"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 405250,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "objdata = game.ReplicatedStorage.Objects for _,v in pairs(objdata:GetChildren()) do if v.Name:match(\"vehic_\") and not (v:FindFirstChild(\"OldSchoolCar\")) and not (v:FindFirstChild(\"NotForSale\") and data.Objects:FindFirstChild(v.ItemID.Value) == nil) and not ((v:FindFirstChild(\"ReleaseTime\") and game"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 408933,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "UDim2.new(0,0,0,0) end button.Visible = true end frame.CanvasSize = UDim2.new(0,(#frame:GetChildren() - 1) * 100,0,0) local id = selectedcar.Value local item = getItemDataFromID(id) if item then if data.Objects:FindFirstChild(id) then shopframe.BuyButton.Text = \"Spawn\" else if not item:FindFirstChild(\"TwitterCode\") then shopframe.BuyButton.Text = \"Buy Car\" else shopframe.BuyButton.Visible = false end end if item:FindFirstChild(\"OffSaleTime\") then local timeleft = item.OffSaleTime.Value"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 409941,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "shopframe.ChangeSelection.Event:connect(function(button) if button ~= nil and enabled.Value == true then local id = button.ItemID.Value selectedcar.Value = id shopframe.Header.Text = button.Name local item = getItemDataFromID(id) shopframe.ItemDesc.Text = item.ItemDesc.Value shopframe.Buy"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 410332,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "irstChild(id) then shopframe.BuyButton.Text = \"Spawn\" else if not item:FindFirstChild(\"TwitterCode\") then shopframe.BuyButton.Text = \"Buy Car\" else shopframe.BuyButton.Visible = false end if button:FindFirstChild(\"OffSaleTime\") then local timeleft = button.OffSaleTime.Value"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 411135,
+      "terms": [
+        "car",
+        "spawn car"
+      ],
+      "assetIds": [],
+      "text": "orderColor3 button.BackgroundColor3 = Color3.new(.6,.6,.6) button.BorderColor3 = Color3.new(.1,.1,.1) if data.Objects:FindFirstChild(selectedcar.Value) then --has car, get the spawn tool local bp = plr:FindFirstChild(\"Backpack\") local char = plr.Character if bp and char and char:FindFirstChild(\"Humanoid\") and not char:FindFirstChild(\"Spawn Car\") then if bp:FindFirstChild(\"Spawn Car\") then char.Humanoid:EquipTool(bp[\"Spawn Car\"]) else local tool = script.Parent[\"Spawn Car\"]:clone() tool.Parent = \u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 413929,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "enabled then enabled = false if mouse.Target and mouse.Target.Name == \"Road\" then local request = game.ReplicatedStorage.RemoteFunctions.SpawnCarRequest:InvokeServer(mouse.Hit) if request == true then if plr.PlayerGui:FindFirstChild(\"SpawnCarGui\") then plr.PlayerGui.SpawnCarGui:Destroy() end removeMarker() Tool:Destroy() end end wait(.15) enabled = true end end) script.Parent.Equipped:connect(function() local clonegui = script.SpawnCarGui:clone() clonegui.Parent = plr.PlayerGui clonegui.Frame.Vi\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 414881,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "BrickColor = BrickColor.new(\"Lime green\") end end end) end) script.Parent.Unequipped:connect(function() if plr.PlayerGui:FindFirstChild(\"SpawnCarGui\") then plr.PlayerGui.SpawnCarGui:Destroy() end removeMarker() end)"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 416272,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "local plr = game.Players.LocalPlayer local shopframe = script.Parent:WaitForChild(\"Frame\") local frame = shopframe:WaitForChild(\"CarSelectHolder\"):WaitForChild(\"ScrollingFrame\") local enabled = shopframe:WaitForChild(\"Enabled\") local selectedpaint = plr:WaitForChild(\"SelectedPaint\""
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 425177,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ata:WaitForChild(\"Objects\") local frame = script.Parent:WaitForChild(\"Frame\") if objects:FindFirstChild(game.ReplicatedStorage.Objects[\"vehic_Classy Car\"].ItemID.Value) then --has classy car, display cash reward instead local img = frame:WaitForChild(\"CarImage\") local cash = img:WaitForChild(\"CashImage\") local name = img:WaitForChild(\"ItemName\") img.ImageTransparency = 0.7 cash.ImageTransparency ="
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 428255,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "game.ReplicatedStorage.RemoteFunctions.SetCartType:FireServer(\"Prompt\") script.Parent.ChildAdded:connect(function(child) if child.Name == \"ACTIVE_Game Pass Shop\" then for _,v in pairs(script.Parent:GetChildren()) do if string.sub(v.Name,1,7) == \"ACTIVE_\" and v ~= child then game.ReplicatedStorage.RemoteFunctions.SetCartType:FireServer(\"GetCashButton\") return end end game.ReplicatedStorage.RemoteFunctions.SetCartType:FireServer(\"ShopMainMenu\") end end) script.Parent.ChildRemoved:connect(function(\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 504519,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "noid\") then char.Humanoid.Jump = true end end function checkIfStanding(char) if char and char:FindFirstChild(\"Humanoid\") then if char.Humanoid.SeatPart == nil then return true else return false end end end function enable() if playermouse then playermouse.Icon = \"rbxasset://texture"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 534034,
+      "terms": [
+        "car",
+        "motor",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "--MADE BY NWSPACEK wait(1)-- give it time to adjust to the scary and new environment of Backpack SeatValue = script:WaitForChild(\"Seat\")-- orient ourselves to the car we are sitting in if SeatValue:IsA(\"ObjectValue\") and SeatValue.Value and SeatValue.Value:IsA(\"VehicleSeat\") then seat = SeatValue.Value car = seat.Parent if seat:FindFirstChild(\"RocketPropulsion\") then seat.RocketPropulsion:Fire()--THIS DOESNT WORK MEGA QQ end local RemoteControlled = car:FindFirstChild(\"ControlByRemote\") while se\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 663481,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "{ Speed = {Min = 3, Max = 3}, TurnAlpha = 0.5, AlphaDampening = 0.2 }, Pitch = {Min = 40, Max = 40} } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed, Turn = Speed.TurnSpeed.Speed, Pitch = Speed.Pitch, Acceleration = Speed.Acceleration, Deceleration = Speed.Deceleration } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0, Pitch = 0 } ToolEquipped = false function SetAnimation(mode, value) if mode ==\u2026"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 690105,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "e char.Humanoid.PlatformStand = false end end function checkIfStanding(char) if char and char:FindFirstChild(\"Humanoid\") then if char.Humanoid.SeatPart == nil and char.Humanoid.PlatformStand == false then return true else return false end end end function enable() if playermouse then"
+    },
+    {
+      "chunk": 419,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 705152,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "{ Speed = {Min = 3, Max = 3}, TurnAlpha = 0.5, AlphaDampening = 0.2 }, Pitch = {Min = 40, Max = 40} } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed, Turn = Speed.TurnSpeed.Speed, Pitch = Speed.Pitch, Acceleration = Speed.Acceleration, Deceleration = Speed.Deceleration } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0, Pitch = 0 } XRotation = CFrame.new(0, 0, 0) YRotation = CFrame.new(0, 0, 0) ZR\u2026"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 7822,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Stylish Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 9232,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "TeacherSeat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 9277,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 10443,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarStoppers"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 14339,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Hanging Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25353,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Wooden Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25396,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Modern Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25463,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Sleek Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25642,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Void Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27034,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Modern Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27054,
+      "terms": [
+        "truck"
+      ],
+      "assetIds": [],
+      "text": "vehic_Trailblazer Truck V2"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27084,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_ROBLOXian Racecar V2"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27114,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Elite Sports Car V2"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27143,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Sparkle Time Sports Car V2"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27636,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Sparkle Time Sports Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27669,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Elite Sports Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27695,
+      "terms": [
+        "truck"
+      ],
+      "assetIds": [],
+      "text": "vehic_Trailblazer Truck"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27722,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Roblox Circuit Racecar"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27754,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Standard Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27776,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_Classy Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27884,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "furni_Spooky Seat"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27948,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "vehic_RHS Fan Car"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28044,
+      "terms": [
+        "truck"
+      ],
+      "assetIds": [],
+      "text": "vehic_Maxhaul Truck"
+    },
+    {
+      "chunk": 474,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28093,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "furni_Holiday Carpet"
+    },
+    {
+      "chunk": 477,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 112,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "VehicleController"
+    },
+    {
+      "chunk": 477,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 355,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "VehicleModule"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 532,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ") while not Players.LocalPlayer do wait() end local LocalPlayer = Players.LocalPlayer local CachedHumanoid = nil local RenderSteppedCon = nil local SeatedCn = nil local moveFunc = LocalPlayer.Move local isJumping = false local isSeated = false local myVehicleSeat = nil local moveValue = Vector3.new(0,0,0) --[[ Local Functions ]]-- function MasterControl:GetHumanoid() local character = LocalPlayer and LocalP"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 22230,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "l KeyboardMovement = {} while not Players.LocalPlayer do wait() end local LocalPlayer = Players.LocalPlayer local CachedHumanoid = nil local SeatJumpCn = nil local TextFocusReleasedCn = nil local TextFocusGainedCn = nil local WindowFocusReleasedCn = nil local MasterControl = require(scrip"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25903,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "MasterControl:SetIsJumping(false) end end local function onTextFocusGained(textboxFocused) MasterControl:SetIsJumping(false) end SeatJumpCn = UserInputService.InputBegan:connect(function(inputObject, isProcessed) if inputObject.KeyCode == Enum.KeyCode.Backspace and not isProcesse"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26827,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "onService:UnbindAction(\"leftMovement\") ContextActionService:UnbindAction(\"rightMovement\") ContextActionService:UnbindAction(\"jumpAction\") if SeatJumpCn then SeatJumpCn:disconnect() SeatJumpCn = nil end if TextFocusReleasedCn then TextFocusReleasedCn:disconnect() TextFocusReleasedCn = nil end if TextFocusGainedCn then"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 49010,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "--[[ // FileName: VehicleControl // Version 1.0 // Written by: jmargh // Description: Implements in-game vehicle controls for all input devices // NOTE: This works for basic vehicles (single vehicle seat). If you use custom VehicleSeat code, // multiple VehicleSeats or your own implementation of a VehicleSeat this will not work. --]] local VehicleController = {} local ContextActionService = game:GetService('ContextActionService') local Players = game:GetService('Players') local RunService"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 49563,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local MasterControl = require(script.Parent) while not Players.LocalPlayer do wait() end local LocalPlayer = Players.LocalPlayer local CurrentVehicleSeat = nil local CurrentThrottle = 0 local CurrentSteer = 0 local HumanoidSeatedCn = nil local RenderSteppedCn = nil local Accelerating = false local Deccelerating = false local TurningRight = false local TurningLeft = fals"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 52628,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "lue) if value > 0.5 then return 1 elseif value < -0.5 then return -1 end return 0 end local function onRenderStepped() if CurrentVehicleSeat then local moveValue = MasterControl:GetMoveVector() if game:GetService(\"UserInputService\"):GetGamepadConnected(Enum.UserInputType.Gamepad1) and onlyTriggersForThrottle and useTriggersForThrottle then CurrentVehicleSeat.Throttle = -CurrentThrottle else CurrentVehicleSeat.Throttle = getClosestFittingValue(-moveValue.z) end CurrentVehicleSeat.Steer = getClose\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 53739,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "xtActionService:BindAction(\"arrowSteerLeft\", onSteerLeft, false, Enum.KeyCode.Left) local success = pcall(function() RunService:BindToRenderStep(\"VehicleControlStep\", Enum.RenderPriority.Input.Value, onRenderStepped) end) if not success then if RenderSteppedCn then return end RenderSteppedCn = RunService.RenderStepped:connect(onRenderStepped) end end else CurrentVehicleSeat = nil if useTriggersForThrottle then ContextActionService:UnbindAction(\"throttleAccel\") ContextActionService:UnbindAction(\"\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 54465,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "(-CurrentSteer, 0, -CurrentThrottle)) CurrentThrottle = 0 CurrentSteer = 0 local success = pcall(function() RunService:UnbindFromRenderStep(\"VehicleControlStep\") end) if not success and RenderSteppedCn then RenderSteppedCn:disconnect() RenderSteppedCn = nil end end end local fu"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 54774,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "tion CharacterAdded(character) local humanoid = getHumanoid() while not humanoid do wait() humanoid = getHumanoid() end -- if HumanoidSeatedCn then HumanoidSeatedCn:disconnect() HumanoidSeatedCn = nil end HumanoidSeatedCn = humanoid.Seated:connect(onSeated) end if LocalPlayer.Character then CharacterAdded(LocalPlayer.Character) end LocalPlayer.CharacterAdded:connect(CharacterAdded) return VehicleController O"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 85494,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "), Anchored = false, CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 112511429, }, TextureId = 104515809 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 86999,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "Part1 = Body, Parent = ExhaustPipe } local Tables = { ExhaustSmoke = ExhaustSmoke, Lights = Lights, Sparkles = Sparkles } return { Vehicle = Body, Tables = Tables } end for i, v in pairs(MeshData) do if type(v) == \"table\" then for ii, vv in pairs(v) do if type(vv) == \"string\""
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 87412,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "== \"string\" or type(v) == \"number\" then MeshData[i] = (BaseUrl .. tostring(v)) end end return { BaseUrl = BaseUrl, MeshData = MeshData, CreateVehicle = CreateVehicle }"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 87970,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "), Anchored = false, CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 112511429, }, TextureId = 112511290 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 89888,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "== \"string\" or type(v) == \"number\" then MeshData[i] = (BaseUrl .. tostring(v)) end end return { BaseUrl = BaseUrl, MeshData = MeshData, CreateVehicle = CreateVehicle }4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 90466,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ", CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 122185640, Wheel = 122202439 }, TextureId = 122185866 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1,"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 92270,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "adows = false, Enabled = false, Parent = BaseLightPart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -1.1, -3.6) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, Part1\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 94648,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= true } MeshData = { Meshes = { Body = 158071925, FrontWheel = 157152145, BackWheel = 157152190 }, TextureId = 157152110 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 96495,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "5), (127 / 255)), Enabled = true, Parent = BaseSmokePart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -0.975, -2.25) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, \u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 98022,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "o if v:IsA(\"BasePart\") or v:IsA(\"JointInstance\") then v:Destroy() end end Body.Transparency = 1 DisplayBody.CanCollide = true local DisplayMotor = Instance.new(\"Motor6D\") DisplayMotor.Name = \"DisplayMotor\" DisplayMotor.Part0 = Body DisplayMotor.Part1 = DisplayBody DisplayMotor.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, -(math.pi / 2), 0) DisplayMotor.C1 = CFrame.new(0, 0, 0) * CFrame.Angles(0, -(math.pi / 2), 0) DisplayMotor.MaxVelocity = 0.01 DisplayMotor.Parent = Body DisplayBody.Parent = Bod\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 99041,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "== \"string\" or type(v) == \"number\" then MeshData[i] = (BaseUrl .. tostring(v)) end end return { BaseUrl = BaseUrl, MeshData = MeshData, CreateVehicle = CreateVehicle }j"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 99620,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 130087108, Wheel = 130087185, }, TextureId = 130087211 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 101539,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "adows = false, Enabled = false, Parent = BaseLightPart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -0.7, -3.1) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, Part1\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 102578,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ".Angles(0, 0, 0), Parent = HeadLight } local Tables = { ExhaustSmoke = ExhaustSmoke, Lights = Lights, Sparkles = Sparkles } return { Vehicle = Body, Tables = Tables } end for i, v in pairs(MeshData) do if type(v) == \"table\" then for ii, vv in pairs(v) do if type(vv) == \"string\""
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 102991,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "== \"string\" or type(v) == \"number\" then MeshData[i] = (BaseUrl .. tostring(v)) end end return { BaseUrl = BaseUrl, MeshData = MeshData, CreateVehicle = CreateVehicle }p"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 103576,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 130087108, Wheel = 130087185, }, TextureId = 165896476 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 107526,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 206414124, Wheel = 206414152, }, TextureId = 204410898 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 3"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 109342,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "adows = false, Enabled = false, Parent = BaseLightPart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -0.5, -3.375) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, Par\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 115253,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= true } MeshData = { Meshes = { Body = 158071925, FrontWheel = 157152145, BackWheel = 157152190 }, TextureId = 184765081 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 4"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 117099,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "5), (255 / 255)), Enabled = true, Parent = BaseSmokePart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -0.975, -2.25) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, \u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 121207,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "ckWheel.Mesh.MeshId = MeshData.Meshes.BackWheel FakeHandle = Body:Clone() FakeHandle.CanCollide = false FrontWheelClone = FrontWheel:Clone() FrontMotor = Instance.new(\"Motor6D\") FrontMotor.Name = \"FrontMotor\" FrontMotor.Part0 = FakeHandle FrontMotor.Part1 = FrontWheelClone FrontMotor.C0 = CFrame.Angles(0, (math.pi / 2), 0) + Vector3.new(0, -1.125, -2.1) FrontMotor.C1 = CFrame.Angles(0, -(math.pi / 2), 0) FrontMotor.Parent = FakeHandle FrontWheelClone.Parent = FakeHandle BackWheelClone = BackWhee\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 122629,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= 218514114, HoverPiece3 = 218514147, SmallHoverPiece1 = 218514214, SmallHoverPiece2 = 218514260, }, TextureId = 218513845 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local HoverParts = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body."
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 134920,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "htHoverPiece) local Tables = { ExhaustSmoke = ExhaustSmoke, Lights = Lights, Sparkles = Sparkles, HoverParts = HoverParts, } return { Vehicle = Body, Tables = Tables } end for i, v in pairs(MeshData) do if type(v) == \"table\" then for ii, vv in pairs(v) do if type(vv) == \"string\""
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 137430,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "= Body, Part1 = ParticlePart, C0 = (CFrame.new(0, 0, 3) * CFrame.Angles((math.pi / 2), 0, 0)), C1 = CFrame.new(0, 0, 0)}}, {Name = \"Tail\", Class = \"Motor\", Properties = {Part0 = Body, Part1 = Tail, MaxVelocity = 0.015, C0 = CFrame.new(0.365923166, -0.727078259, 5.21935654, 1, 0, 0, 0, 1, 0, 0, 0, 1), C"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 137800,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "999e-007, -5.66244125e-007, 2.30967999e-007, 1.00000048, 2.98023224e-007, -5.96046448e-008, 3.57627869e-007, 1)}}, {Name = \"Left Shoulder\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = LeftArm, MaxVelocity = 0.1, C0 = CFrame.new(1.92124736, -1.41252208, -0.642749071, -4.37113883e-008, 0, 1, 0,"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 138181,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": ".14269352, 0, 5.21540642e-008, 1, -1.34110451e-007, 1, 9.68575478e-008, -1, 4.76837158e-007, -5.96046448e-008)}}, {Name = \"Right Shoulder\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = RightArm, MaxVelocity = 0.1, C0 = CFrame.new(0.671006262, -1.22540283, -0.888130188, -2.98023224e-008, 1.4901"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 138632,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "8, 3.65078449e-007, -0.99999994, 5.21540642e-007, 1.00000048, -3.65078449e-007, 1, 7.59959221e-007, 2.68220901e-007)}}, {Name = \"Left Hip\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = LeftLeg, MaxVelocity = 0.1, C0 = CFrame.new(3.03076577, -2.07473755, 3.62987709, -2.98023224e-008, 2.23517418"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 139077,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "8, 1.02818012e-006, -0.999999881, 1.5348196e-006, 1.00000203, -9.90927219e-007, 1, 1.47521496e-006, 7.4505806e-007)}}, {Name = \"Right Hip\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = RightLeg, MaxVelocity = 0.1, C0 = CFrame.new(4.33719444, -2.07716751, 3.49755383, -2.98023224e-008, 1.4901161"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 141455,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "= \"RightLeg\" RightLeg.Size = Vector3.new(0.75, 2, 2.5) RightLeg.Mesh.MeshId = (BaseUrl .. \"329892531\") Joints = { {Name = \"Left Shoulder\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = LeftArm, MaxVelocity = 0.1, C0 = CFrame.new(0.719957352, -1.5801506, -0.669919133, -0.258818179, 4.83047188e-"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 141939,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "-007, 0.965927064, 0.965925872, 7.76904017e-007, 0.258817494, -6.98761141e-007, 0.999999821, -5.86327587e-007)}}, {Name = \"Right Shoulder\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = RightArm, MaxVelocity = 0.1, C0 = CFrame.new(1.7801125, -2.57996368, -0.669932902, 0.49999997, 0, 0.866025448"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 142402,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "5864549e-008, 0.86602515, 0.86602515, -1.03314179e-007, -0.499999732, 6.07251422e-008, 0.999999464, 1.36926246e-007)}}, {Name = \"Left Hip\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = LeftLeg, MaxVelocity = 0.1, C0 = CFrame.new(0.554751158, -1.80840826, 2.28847075, -4.37113883e-008, 0, -1, 0,"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 142818,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "0191e-007, -1.00000203, 7.15255737e-007, 1.00000298, 1.49010347e-007, 1.00000632, 2.02655792e-006, 1.93830056e-006)}}, {Name = \"Right Hip\", Class = \"Motor6D\", Properties = {Part0 = Body, Part1 = RightLeg, MaxVelocity = 0.1, C0 = CFrame.new(1.6174655, -1.80840826, 2.28847075, -4.37113883e-008, 0, -1, 0,"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 144135,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ".new(0.2, 0.2, 0.2), Anchored = false, CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 206414124, Wheel = 206414152, SideCar = 477750963, SideCarWheel = 477751306, }, TextureId = 204410898 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 3"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 144698,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "eId, Scale = Vector3.new(1.25, 1.25, 1.25), VertexColor = Vector3.new(1, 1, 1), Offset = Vector3.new(0, 0, 0), Parent = Body, } local SideCar = Body:Clone() SideCar.Name = \"SideCar\" SideCar.Size = Vector3.new(3, 2.25, 5.5) SideCar.Mesh.MeshId = MeshData.Meshes.SideCar Create(\"Weld\"){ Name = \"Weld\", Part0 = Body, Part1 = SideCar, C0 = CFrame.new(-2.375, -0.125, 1.225), C1 = CFrame.new(0, 0, 0), Parent = SideCar, } SideCar.Parent = Body local BaseWheel = BasePart:Clone() BaseWheel.Size = Vector3.n\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 145684,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "heel local BaseBackWheel = BaseWheel:Clone() BaseBackWheel.Name = \"BackWheel\" BaseBackWheel.Mesh.MeshId = MeshData.Meshes.Wheel local BaseSideCarWheel = BaseWheel:Clone() BaseSideCarWheel.Name = \"Wheel\" BaseSideCarWheel.Mesh.MeshId = MeshData.Meshes.SideCarWheel local BaseSmokePart = BasePart:Clone() BaseSmokePart.Name = \"SmokePart\" BaseSmokePart.Transparency = 1 local BaseExhaustSmoke = Create(\"Smo"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 148292,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "9) * CFrame.Angles(0, 0, 0), Parent = HeadLight } local Tables = { ExhaustSmoke = ExhaustSmoke, Lights = Lights, Sparkles = Sparkles } Seat = Create(\"Seat\"){ Name = \"Seat\", Transparency = 1, Material = Enum.Material.Plastic, Shape = Enum.PartType.Block, TopSurface = Enum.SurfaceType.Smooth, BottomSurface = En"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 148705,
+      "terms": [
+        "car",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "r3.new(1.5, 2, 1.5), Anchored = false, CanCollide = true, Locked = true, Disabled = false, } Create(\"Weld\"){ Name = \"Weld\", Part0 = SideCar, Part1 = Seat, C0 = CFrame.new(0, 1, 0), C1 = CFrame.new(0, 0, 0), Parent = Seat, } Seat.CFrame = SideCar.CFrame Seat.Parent = Body return { Vehicle = Body, Tables = Tables } end for i, v in pairs(MeshData) do if type(v) == \"table\" then for ii, vv in pairs(v) do if type(vv) == \"string\""
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 149837,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "), Anchored = false, CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 139142962, }, TextureId = 139143056 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 6"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 151755,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "== \"string\" or type(v) == \"number\" then MeshData[i] = (BaseUrl .. tostring(v)) end end return { BaseUrl = BaseUrl, MeshData = MeshData, CreateVehicle = CreateVehicle }:"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 152333,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ", CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 168119200, Wheel = 168119240 }, TextureId = 209729366 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 5"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 154143,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "adows = false, Enabled = false, Parent = BaseLightPart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -2.05, -2.2) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, Part\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 156492,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "CanCollide = true, Locked = true } MeshData = { Meshes = { Body = 215130094 , Wheel = 215130160 }, TextureId = 553732913 } function CreateVehicle() local ExhaustSmoke = {} local Lights = {} local Sparkles = {} local Body = BasePart:Clone() Body.Name = \"Body\" Body.Size = Vector3.new(1, 3"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 158403,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "5), (127 / 255)), Enabled = true, Parent = BaseSmokePart, } local FrontWheel = BaseFrontWheel:Clone() FrontWheel.Parent = Body local FrontMotor = Create(\"Motor6D\"){ Name = \"FrontMotor\", Part0 = Body, Part1 = FrontWheel, C0 = CFrame.new(0, -0.85, -2.7) * CFrame.Angles(0, (math.pi / 2), 0), C1 = CFrame.new() * CFrame.Angles(0, -(math.pi / 2), 0), Parent = Body } local BackWheel = BaseBackWheel:Clone() BackWheel.Parent = Body local BackMotor = Create(\"Motor6D\"){ Name = \"BackMotor\", Part0 = Body, Pa\u2026"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 167290,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "local module = {} module.RunAction = function(plr,object) game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire(\"CarPaint\") end return module"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 167446,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "local module = {} module.RunAction = function(plr,object) game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar:FireServer(object) end return module"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 167606,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "local module = {} module.RunAction = function(plr,object) game.ReplicatedStorage.RemoteFunctions.ToggleCarLock:FireServer(object) end return module"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 167916,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "local module = {} module.RunAction = function(plr,object) game.ReplicatedStorage.RemoteFunctions.ToggleDriverLock:FireServer(object) end return module"
+    },
+    {
+      "chunk": 479,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 168074,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "local module = {} module.RunAction = function(plr,object) game.ReplicatedStorage.RemoteFunctions.ToggleDriverLock:FireServer(object) end return module d"
+    },
+    {
+      "chunk": 484,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 17,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Motor"
+    },
+    {
+      "chunk": 497,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 475,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat"
+    },
+    {
+      "chunk": 526,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 265095,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatFakePart"
+    },
+    {
+      "chunk": 526,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 319085,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat Back"
+    },
+    {
+      "chunk": 526,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 322431,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat Bottom"
+    },
+    {
+      "chunk": 526,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 334214,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "SideCar"
+    },
+    {
+      "chunk": 574,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 403,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "RequestToRemoveCar"
+    },
+    {
+      "chunk": 574,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 425,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ChangeSelectedCar"
+    },
+    {
+      "chunk": 574,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 468,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ToggleCarLock"
+    },
+    {
+      "chunk": 574,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 485,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "ToggleDriverLock"
+    },
+    {
+      "chunk": 574,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1508,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "SetCartType"
+    },
+    {
+      "chunk": 575,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 344,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "SpawnCarRequest"
+    },
+    {
+      "chunk": 589,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 830,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "OldCarRefund"
+    },
+    {
+      "chunk": 589,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 937,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Cars"
+    },
+    {
+      "chunk": 589,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 945,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "SpawnCarGui"
+    },
+    {
+      "chunk": 589,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 960,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarPaint"
+    },
+    {
+      "chunk": 593,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1777,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarSpawnScript"
+    },
+    {
+      "chunk": 593,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1795,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "CarStopperScript"
+    },
+    {
+      "chunk": 593,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 2999,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Create Motors And Doors 2"
+    },
+    {
+      "chunk": 593,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 3645,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "MotorizeRightGrip"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25599,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Can you not try to drive your car into school? Thanks!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25869,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"What on earth are you trying to do?\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26133,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "text = \"You shouldn't be driving around in this area! Jeez...\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26389,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Why don't you get out of the car and enjoy nature for once?\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26664,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"How would you like it if someone slammed their car into your home?\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26946,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Car soccer can work. Car football, on the other hand...\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27217,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"AAAHHHH GETOUTGETOUTGETOUTGETOUT!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27466,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"I'm pretty sure cars can't swim...\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27716,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Get that car out of our shop!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)'"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28004,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "nched straight into the sun if you keep hitting their cafe...\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28260,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Congrats, your car is now the property of the Void.\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28527,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Get your car out of the mall, why don't ya?\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28786,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Go play Rocket League if you want car soccer!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 29047,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"I know it's tempting. But really, just don't. Your car will just get stuck.\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 29605,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Get that car out of our shop!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 30848,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"I'm pretty sure cars can't swim...\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)'"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 31397,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Trying to buy a bikini for your car or something?\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 31690,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ou trying to bounce off the rocks to get onto the beach. Bad!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 32514,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"No, you can't drive on the beach... sorry!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 32772,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "local warningtext = \"Smashing your car into buildings isn't a good way of showing school spirit!\" script.Parent.Touched:connect(function(hit) if hit ~= nil and hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,warningtext) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 63838,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= highest + 1 print(\"success - \"..highest + 1) --add furniture (according to a model ID) --has to be done from the Furniture place first --add vehicles (according to an in-game model in workspace) (we move all the car's actual parts out of the model it's enclosed in in the workspace) local Prefix = \"vehic\" local DecalID = 580912188 local objName = \"Frostrider Ultimate\" local desc = \"A legendary car crafted with ice from the North Pole! It leaves a frosty trail behind and emits the sound of Santa\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 72394,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "hen --Christmas, midnight game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients(\"UPDATE: Merry Christmas! A brand new luxury car is now available for purchase: The Exotix! It's one of the fastest, most impressive cars in RHS!\",true) end end"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 77412,
+      "terms": [
+        "car",
+        "drive",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "e.ReplicatedStorage.Objects:GetChildren()) do if v.ItemID.Value == id then return v end end end game.ReplicatedStorage.RemoteFunctions.ToggleCarLock.OnServerEvent:connect(function(plr,car) if car and car.Name == \"vehicle_\"..plr.Name then local lock = car.SeatsLocked if lock.Value == true then lock.Value = false game.ServerStorage.RemoteFunctions.AddSpecialStatus:Fire(plr,\"CarUnlocked\") game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,\"CarLocked\") else lock.Value = true game.Server\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 79171,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "jects:FindFirstChild(id) then local obj = getItemDataFromID(id) if obj and obj.Name:match(\"paint_\") then plr.SelectedPaint.Value = id local car = workspace:FindFirstChild(\"vehicle_\"..plr.Name) if car then for i,v in pairs(car:GetChildren()) do if v.Name == \"Paintable\" then v.BrickColor = obj.BrickColorValue.Value v.Reflectance = obj.Reflectance.Value"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 79793,
+      "terms": [
+        "car",
+        "spawn car"
+      ],
+      "assetIds": [],
+      "text": "then y.Color = obj.BrickColorValue.Value.Color end end end end end end) --[[game.ReplicatedStorage.RemoteFunctions.RequestSpawnCarTool.OnServerEvent:connect(function(plr) --doing it locally local bp = plr:FindFirstChild(\"Backpack\") local char = plr.Character if bp and char and char:FindFirstChild(\"Humanoid\") then if bp:FindFirstChild(\"Spawn Car\") then char.Humanoid:EquipTool(bp[\"Spawn Car\"]) return end local tool = script[\"Spawn Car\"]:clone() tool.Parent = bp wait() char.Humanoid:EquipTool(tool)\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 80501,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "nd function AddToCooldown(plr) table.insert(cooldown,plr.Name) wait(.5) table.remove(cooldown,1) end game.ReplicatedStorage.RemoteFunctions.SpawnCarRequest.OnServerInvoke = function(plr,position) local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId) if data and CheckCooldown("
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 80934,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "n.p).magnitude < 52 then coroutine.resume(coroutine.create(AddToCooldown),plr) for i,v in pairs(game.Workspace:GetChildren()) do if v.Name == \"vehicle_\"..plr.Name then v:Destroy() end end game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,\"CarLocked\") game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,\"DriverUnlocked\") game.ServerStorage.RemoteFunctions.AddSpecialStatus:Fire(plr,\"CarUnlocked\") game.ServerStorage.RemoteFunctions.AddSpecialStatus:Fire(plr,\"DriverLocked\") \u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 82141,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "l parts = bb:GetTouchingParts() bb:Destroy() for _,v in pairs(parts) do if v.Parent:FindFirstChild(\"Humanoid\") or (v.Parent:FindFirstChild(\"DriverLocked\") and v.Parent:FindFirstChild(\"Owner\") and v.Parent.Owner.Value ~= plr.Name) then --too close to something else game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,\"You cannot spawn your car here, as it is too close to yourself or another car/person.\") return end end local car = findcar:clone() car.Name = \"vehicle_\"..plr.\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 83367,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "end local y = v:FindFirstChild(\"SpecialLight\") if y then y.Color = paint.BrickColorValue.Value.Color end end end car.DetectLeave.Disabled = false local engine = car:FindFirstChild(\"Engine\") or car:FindFirstChild(\"Anchor\") car.PrimaryPart = engine for i,v in pairs(car:GetChildren()) do if v:IsA(\"Part\") and v.Shape == Enum.PartType.Cylinder then local weld = Instance.new(\"Weld\") weld.Part0 = engine weld.Part1 = v weld.C0 = engine.CFrame:inverse() weld.C1 = v.CFrame:inverse() weld.Parent = v end en\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 84551,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "game.ServerStorage.RemoteFunctions.DestroyCar.Event:connect(function(car,message) if car.Name:match(\"vehicle_\") then local plr = game.Players:FindFirstChild(string.sub(car.Name,9)) car:Destroy() if plr and message then game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,message) end end end) for _,v in pairs(workspace.CarStoppers:GetChildren()) do v.CFrame = v.CFrame + Vector3.new(0,100,0) end --[[for _,v in pairs(workspace.CarStoppers:GetChildren()) do v.CFrame = v.CFram\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 103235,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "f part:IsA(\"BasePart\") then part.Parent = v end end v.PrimaryPart = pp for _,part in pairs(v:GetChildren()) do if part:IsA(\"Seat\") and part.Anchored == false then createWeld(pp,part) end end print(\"Loaded furniture \"..model.Name) model:Destroy() end)) end"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 108666,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "pairs(house:GetChildren()) do if v:IsA(\"Model\") then for i,part in pairs(v:GetChildren()) do if part:IsA(\"BasePart\") and not part:IsA(\"Seat\") then part.Anchored = true end end end end for i,v in pairs(house.Floor:GetChildren()) do if v:IsA(\"Weld\") then"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 145791,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "toreService\"):GetDataStore(pid..\"_data\") end) if not success then wait(2) end counter = counter + 1 until pd or counter >= 10 --INSERT CAR SELECTION VALUES-- (IDs) local selectedcar = Instance.new(\"IntValue\") selectedcar.Name = \"SelectedCar\" selectedcar.Parent = player local selectedpaint = Instance.new(\"IntValue\") selectedpaint.Name = \"SelectedPaint\" selectedpaint.Parent = player --INSERT"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 151587,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "able(alloutfitdata) end end maindata[\"Outfits\"] = alloutfitdata changestable[\"Outfits\"] = true --compensations local oldcarcomp = RepeatGet(pd, \"oldcarcomp\", successes, 3) if oldcarcomp then maindata[\"Compensation\"][\"oldcarcomp\"] = true changestable[\"Compensation\"] = true end local djcomp = RepeatGet(pd, \"djcompensation\", successes, 3) if djcomp then"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 159474,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "emdataloader = require(258548692) end) if itemdataloader then itemdataloader.loadExtraItemData(game.ReplicatedStorage.Objects) end local oldcarobjects = {} --check these for the old car refund for i,v in pairs(maindata[\"objects\"]) do --check table of player's objects for _,obj in pairs(game.ReplicatedStorage.Objects:GetChildren("
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 159931,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ker = Instance.new(\"StringValue\") marker.Name = v --marker's name is the ID marker.Parent = playerobjects if obj:FindFirstChild(\"OldSchoolCar\") then table.insert(oldcarobjects,obj) end end end end for _,obj in pairs(game.ReplicatedStorage.Objects:GetChildren()) do if (obj.ItemCost.Value == 0 and not ob"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 164910,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "orClient:FireClient(player, \"You have received +$\"..incvalue..\" RHS Cash with your purchase of Unrestricted DJ!\",true) end end end --old cars comp if #oldcarobjects > 0 and safetoload then if maindata[\"Compensation\"][\"oldcarcomp\"] == nil then changesmade = true changestable[\"Compensation\"] = true changestable[\"cash\"] = true local totalcost = 0 for _,obj in pairs(oldcarobjects) do totalcost = totalcost + obj.ItemCost.Value end maindata[\"cash\"] = maindata[\"cash\"] + totalcost maindata[\"Compensation\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 183726,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "t been processed; you will automatically be refunded your ROBUX after 3 days.\", true) return end -- Award starter pack ($7500, Classy Car, furniture set) local cashaward = 7500 local hashouse = true local objectstbl = {151,124,124,124,125,125,153,147,259,148,109,146,141,1"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 184063,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "8,108,108,108,108,108, 135, 318} --318 is starter pack item ID if not data.Objects:FindFirstChild(\"278\") then --does not have classy car table.insert(objectstbl, 278) else --already has it cashaward = cashaward + 1600 end if not data.Objects:FindF"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 185880,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "orage.RemoteFunctions.LoadHouseForPlayer:Fire(player) end end if player then if cashaward == 7500 then --got car too game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,\"You have received your Starter Pack containing +$\"..cashaward..\" RHS Cash, the Classy Car, and a set of starting furniture for your Custom House!\", true) else game.ReplicatedStorage.RemoteFunctions.NotificationForClient:Fire"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 187305,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "th.floor(math.floor(receiptInfo.CurrencySpent * .7) / 4), [\"currency\"] = \"USD\", [\"transaction_num\"] = data.NumPurchases.Value, [\"cart_type\"] = data.CartType.Value } ) GA:SendEvent( { [\"category\"] = \"resource\", [\"event_id\"] = \"Source:Cash:RobuxPurchase:\"..(spc"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 188256,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "s (60) - Standard Bed (100) - 3x Stylish Rug (120) - TV & Wood Stand (260) - Wooden Rectangle Table (15) - Wooden Square Table (15) - 8x Wooden Seat (40) - 3x Antique End Table (270) TOTAL: 1,370 RHS Cash (~R$80) --]] game.ReplicatedStorage.RemoteFunctions.PlayerIsInFanClub.OnServerEvent:con"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 196392,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "n pairs(firings) do if v == plr.Name then return true end end return false end --[[ Check: Chat history / iCinder RP name Target's SeatPart (must match classroom seat) --]] local consecdets = {} local chattimers = {} --count everyone down from 45 function TrackConsecutiveDetentions(plr, targetplr, detlimit) if detlimit > 5 then detlimit = 5 end local seatpart local tchar = targetplr.Character if tchar and tchar:FindFirstChild(\"Humanoid\") then seatpart = tchar.Humanoid.SeatPart if seatpart and se\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 197574,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "NameStorage:FindFirstChild(targetplr.Name) and game.ServerStorage.RPNameStorage[targetplr.Name]:FindFirstChild(\"nameval\")) and true) or false, [\"WasSeated\"] = seatpart } table.insert(consecdets,detdata) local detsbyenforcer = 0 for _,v in pairs(consecdets) do if v.Enforcer == plr then detsbyenforcer"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 198006,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "s \"..detlimit) if detsbyenforcer >= detlimit then print(\"Issuing flag(s)\") local flags = 1 local nonchats = 0 local unnamed = 0 local seated = 0 local chatlimit = 3 local namelimit = 3 local seatlimit = (detlimit == 5 and 4) or 3 for _,v in pairs(consecdets) do if v.Enforcer == plr then if v.DidChat == false then nonchats = nonchats + 1 end if v.WasNamed == false then unnamed = unnamed + 1 end if v.WasSeated == true then seated = seated + 1 end end end if nonchats >= chatlimit then flags = 2 end\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 218692,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "= math.floor(math.floor(v.CurrentPrice.Value * .7) / 4), [\"currency\"] = \"USD\", [\"transaction_num\"] = data.NumPurchases.Value, [\"cart_type\"] = data.CartType.Value } ) if v.Name == \"UnrestrictedDJ\" then local incvalue = game.ServerStorage.RemoteFunctions.GetDJCompensation:I"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 263767,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "]]..str..[[ p.formFactor = \"Custom\" p.Size = Vector3.new(.2,.2,.2) local msh = Instance.new(\"BlockMesh\", p) msh.Scale = Vector3.new(9,17.5,.5) local motor1 = Instance.new(\"Motor\", p) motor1.Part0 = p motor1.Part1 = torso motor1.MaxVelocity = .01 motor1.C0 = CFrame.new(0,1.75,0)*CFrame.Angles(0,math.rad(90),0) motor1.C1 = CFrame.new(0,1,.45)*CFrame.Angles(0,math.rad(90),0) local wave = false repeat wait(1/44) local ang = 0.1 local oldmag = torso.Velocity.magnitud"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 264255,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "wave then ang = ang + ((torso.Velocity.magnitude/10)*.05)+.05 wave = false else wave = true end ang = ang + math.min(torso.Velocity.magnitude/11, .5) motor1.MaxVelocity = math.min((torso.Velocity.magnitude/111), .04) + mv motor1.DesiredAngle = -ang if motor1.CurrentAngle < -.2 and motor1.DesiredAngle > -.2 then motor1.MaxVelocity = .04 end repeat wait() until motor1.CurrentAngle == motor1.DesiredAngle or math.abs(torso.Velocity.magnitude - oldmag) >= (torso.Velocity.magnitude/10) + 1 if torso.Ve\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 297705,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "d=109301474\" p.formFactor = \"Custom\" p.Size = Vector3.new(.2,.2,.2) local msh = Instance.new(\"BlockMesh\", p) msh.Scale = Vector3.new(9,17.5,.5) local motor1 = Instance.new(\"Motor\", p) motor1.Part0 = p motor1.Part1 = torso motor1.MaxVelocity = .01 motor1.C0 = CFrame.new(0,1.75,0)*CFrame.Angles(0,math.rad(90),0) motor1.C1 = CFrame.new(0,1,.45)*CFrame.Angles(0,math.rad(90),0) local wave = false repeat wait(1/44) local ang = 0.1 local oldmag = torso.Velocity.magnitud"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 298907,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "in pairs(game.Workspace:children()) do if v:IsA(\"Sound\") then v:Destroy() end end local id = msg:sub(7) local pitch = 1 if tostring(id):lower():find(\"caramell\") then id = 2303479 end if tostring(id):find(\"epic\") then id = 27697743 pitch = 2.5 end if tostring(id):find(\"rick\") then id = 2027611 end if to"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 301270,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Gui:findFirstChild(\"MUSICGUI\") then return end local scr, cmf, ent, num = ScrollGui() scr.Name = \"MUSICGUI\" scr.Parent = plr.PlayerGui local list = {\"caramell\",\"epic\",\"rick\",\"halo\",\"pokemon\",\"cursed\",\"extreme\",\"awaken\",\"alone\",\"mario\",\"choir\",\"chrono\",\"dotr\",\"entertain\",\"fantasy\",\"final\",\"emblem\",\"flig"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 307881,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "(0,math.rad(90),0) v.Character.HumanoidRootPart[\"Left Hip\"].C0 = CFrame.new(-1.5,-1,1.5) * CFrame.Angles(0,math.rad(-90),0) local new = Instance.new(\"Seat\", v.Character) new.Name = \"FAKETORSO\" new.formFactor = \"Symmetric\" new.TopSurface = 0 new.BottomSurface = 0 new.Size = Vector3.new(3,1,4) new.CFrame"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 363877,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "hape end) return result,shape end local selection = game.Selection:Get() for _,model in pairs(selection) do if not model:FindFirstChild(\"OldSchoolCar\") then --model.Configuration.Torque.Value = model.Configuration.Torque.Value * 1.5 for _,v in pairs(model:GetChildren()) do local check,shape"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 365770,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": ".Parent:IsA(\"Model\") and v.Parent ~= workspace and toselect[v.Parent] == nil and not v:IsDescendantOf(workspace[\"!HighDetail\"]) and v.Parent.Name ~= \"CarStoppers\" and v.Parent.Name ~= \"TeleportLocations\" then table.insert(toselect,v.Parent) elseif v.Parent == workspace and toselect[v] == nil and v"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 367518,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": ".Parent:IsA(\"Model\") and v.Parent ~= workspace and toselect[v.Parent] == nil and not v:IsDescendantOf(workspace[\"!HighDetail\"]) and v.Parent.Name ~= \"CarStoppers\" and v.Parent.Name ~= \"TeleportLocations\" then table.insert(toselect,v.Parent) elseif v.Parent == workspace and toselect[v] == nil and"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 439846,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "orage.Schedule local weekdayspassed = game.ReplicatedStorage.WeekdaysPassed local usedclasses = {} local startime = 9999 local starsfound = 0 local seatsmodel = Instance.new(\"Model\") seatsmodel.Name = \"RegenSeats\" for i,v in pairs(game.Workspace:GetChildren()) do if v:IsA(\"Seat\") then local seat = v:clone() seat.Parent = seatsmodel v:Destroy() elseif v:IsA(\"Model\") then for i,x in pairs(v:GetChildren()) do if x:IsA(\"Seat\") then local seat = x:clone() seat.Parent = seatsmodel x:Destroy() end end \u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 448572,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Value + 1 end day.Value = day.Value + 1 if day.Value == 8 then day.Value = 1 end game.ServerStorage.Detentions:ClearAllChildren() regenSeats() elseif (day.Value == 1 or day.Value == 7) then speed = .8 / debugtimemod period.Value = 0 else speed = 1.4 / debugtimemod period.Value ="
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 468409,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "--[[ Track the following stats: - Individual permanent item purchases - RHS Cash/gamepass purchases (and the cart type: ShopMainMenu/Prompt/GetCashButton) - Count of items purchased from each temporary food shop (sent every 10 min, each set separated by 15s)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 469142,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ent.GameAnalytics) GA:Init(\"7d361e0dbfe17b23b51576f32525c0f2\", \"fb59503a9241196e9b7e39c16e360c4750585c2f\") game.ReplicatedStorage.RemoteFunctions.SetCartType.OnServerEvent:connect(function(plr, carttype) if carttype == \"ShopMainMenu\" or carttype == \"GetCashButton\" or carttype == \"Prompt\" then local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId) if data and data:FindFirstChild(\"CartType\") then data.CartType.Value = carttype end end end) game.ReplicatedStorage.PlayerData.Child\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 478584,
+      "terms": [
+        "car",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "e at this time. The owner may be in Edit Mode.\") wait(2) msgenabled = true end end function onHit(hit) if hit then if hit.Parent.Name:match(\"vehicle_\") then game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,\"It's not very polite to smash your car into other people's houses!\") else local plr = game.Players:GetPlayerFromCharacter(hit.Parent) if plr ~= nil then if plr.Character and pl"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 506730,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "cript:WaitForChild(\"BalloonScript\") Gui = script:WaitForChild(\"Gui\") MaxSpeed = 15 IdleDuration = 15 --If the owner of the balloon doesn't sit in a seat for this long, the balloon is removed. DeployTick = 0 Connections = {} Seated = false Flying = false MouseDown = false ToolEquipped = false ServerControl = (Tool:FindFirstChild(\"ServerControl\") or Instance.new(\"RemoteFunctio"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 508385,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "tedParts(v) end end end GetConnectedParts(Object) return Parts end function CreateBalloon() local BaseSize = Vector3.new(10, 1, 8.5) local SeatSize = Vector3.new(2, 0.6, 2) local WallSize = Vector2.new(4, 1) --Y, Z local XWallSize = Vector3.new(BaseSize.X, WallSize.X, WallSize.Y) local ZWa"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 509172,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Surface = Enum.SurfaceType.Smooth, FormFactor = Enum.FormFactor.Custom, Size = BaseSize, Locked = true, Create(\"Weld\"){ Name = \"RightSeatWeld\", }, Create(\"Weld\"){ Name = \"LeftSeatWeld\", }, Create(\"Weld\"){ Name = \"BalloonWeld\", }, Create(\"Weld\"){ Name = \"FireWeld1\" }, Create(\"Weld\"){ Name = \"FireW"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 511099,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "ype.Smooth, BottomSurface = Enum.SurfaceType.Smooth, FormFactor = Enum.FormFactor.Custom, Size = XWallSize, Locked = true, }, Create(\"Seat\"){ Name = \"RightSeat\", BrickColor = BrickColor.new(\"Really black\"), Material = Enum.Material.Plastic, Shape = Enum.PartType.Block, TopSurface = Enum.SurfaceType.Smooth, BottomSurface = Enum.SurfaceType.Smooth, FormFactor = Enum.FormFactor.Custom, Size = SeatSize, Locked = true, }, Create(\"Seat\"){ Name = \"LeftSeat\", BrickColor = BrickColor.new(\"Really black\"),\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 513074,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [
+        "115983592"
+      ],
+      "text": "et/?id=115983648\", TextureId = \"http://www.roblox.com/asset/?id=115983592\", Scale = Vector3.new(2.1, 1.8, 2.1), }, }, } local RightSeatWeld = Model.MainPart.RightSeatWeld RightSeatWeld.Part0 = RightSeatWeld.Parent RightSeatWeld.Part1 = Model.RightSeat RightSeatWeld.C0 = CFrame.new(SeatSize.X, SeatSize.Y, 0) local LeftSeatWeld = Model.MainPart.LeftSeatWeld LeftSeatWeld.Part0 = LeftSeatWeld.Parent LeftSeatWeld.Part1 = Model.LeftSeat LeftSeatWeld.C0 = CFrame.new(-SeatSize.X, SeatSize.Y, 0) local Ba\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 519661,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Property == \"Parent\" and not Balloon.Parent then Handle.Transparency = 0 end end) for i, v in pairs(Balloon:GetChildren()) do if v:IsA(\"Seat\") then local SeatWeldAdded = v.ChildAdded:connect(function(Child) if Child:IsA(\"JointInstance\") and Child.Name == \"SeatWeld\" and not Flying then if ((Child.Part0 and Child.Part0.Parent == Character) or (Child.Part1 and Child.Part1.Parent == Character)) then Seated = true BeginFlight() end end end) local SeatWeldRemoved = v.ChildRemoved:connect(function(Chil\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 521338,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "GuiClone.Parent = PlayerGui end end) Spawn(function() if CurrentBalloon and CurrentBalloon.Balloon.Parent then Handle.Transparency = 1 if Seated then BeginFlight() end end end) ToolEquipped = true end function Unequipped() MouseDown = false EndFlight() if GuiClone and GuiClone"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 521936,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "n = true if (tick() - DeployTick) > IdleDuration and (not CurrentBalloon or not CurrentBalloon.Balloon.Parent) then DeployTick = tick() Seated = false Flying = false Handle.Transparency = 1 local MousePosition = InvokeClient(\"MousePosition\") local Direction = CFrame.new"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 523751,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Model:FindFirstChild(\"Balloon\") MainPart = Model:FindFirstChild(\"MainPart\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") Seated = Instance.new(\"BoolValue\") Seated.Value = false Seats = {} function DestroyModel() Debris:AddItem(Model, 0.5) end Creator = Model:FindFirstChild(\"Creator\") IdleDuration = Model:FindFirstChild(\"IdleDu"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 524815,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "tConnectedParts(v) end end end GetConnectedParts(Object) return Parts end function IdleRemove() local CanRemove = true local RemoveCheck = Seated.Changed:connect(function() if Seated.Value then CanRemove = false end end) wait(IdleDuration) if RemoveCheck then RemoveCheck:disconnect() end if CanRemove then DestroyMo"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 525309,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "racter\" and not Player.Character or not Player.Character.Parent then DestroyModel() end end) for i, v in pairs(Model:GetChildren()) do if v:IsA(\"Seat\") then table.insert(Seats, v) v.ChildAdded:connect(function(Child) if Child:IsA(\"JointInstance\") and Child.Name == \"SeatWeld\" then if ((Child.Part0 and Child.Part0.Parent == Character) or (Child.Part1 and Child.Part1.Parent == Character)) then Seated.Value = true end end end) v.ChildRemoved:connect(function(Child) if Child:IsA(\"JointInstance\") and \u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 526521,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "l is missing, so the balloon is removed. DestroyModel() break end local ConnectedParts = GetAllConnectedParts(MainPart) for i, v in pairs(Seats) do local SeatWelded = false for ii, vv in pairs(ConnectedParts) do if v == vv then SeatWelded = true end end if not SeatWelded then --If neither seat is attached to the balloon, it is unusable, therefore it is removed. table.remove(Seats, i) end if #Seats == 0 then DestroyModel() break end end wait(1) end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 527044,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "for _,i in pairs (script:GetChildren()) do if i:IsA(\"VehicleSeat\") then i.Torque = 0 i.MaxSpeed = 0 i.Changed:connect(function() i.Torque = 0 i.MaxSpeed = 0 end) end end"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 527233,
+      "terms": [
+        "car",
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "--MADE BY NWSPACEK --the reason for this script being 2 instead of 1 is MAGIC WheelSize = 3--diameter of the wheel --When you are editing the car, make sure that the Left, Right, and Base parts are in a --straight line, and in the orientation the models comes with, or they won't be where you expect --them to be at all! motorSpeed = 0.05 -- a typical number is 0.1 but lower is better if you get weird behavior --don't touch below, very delicate car = script.Parent.Parent Base = car:FindFirstChild(\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 528224,
+      "terms": [
+        "car",
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "== \"HumanoidRootPart\" and game:GetService(\"Players\"):GetPlayerFromCharacter(it.Parent) then doorDebounce = true door.CanCollide = false doorMotor.DesiredAngle = math.pi/3 wait(1.5) doorMotor.DesiredAngle = 0 wait(0.5) door.CanCollide = true doorDebounce = false end end) end function MakeWeldDoor(hinge,door) local doorMotor = Instance.new(\"Motor6D\",car) doorMotor.Name = hinge.Name..\"Motor\" doorMotor.Part0 = door doorMotor.Part1 = hinge doorMotor.C1 = hinge.CFrame:inverse()*door.CFrame door.CanCol\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 529330,
+      "terms": [
+        "car",
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "print your CFrame and paste it into the string value, this will find that out and use it properly end) return cframe end end for _,h in pairs (car:GetChildren()) do if h:IsA(\"Motor6D\") then--make sure we start with a blank slate h:Destroy() end end for _,i in pairs (car:GetChildren()) do if i:IsA(\"BasePart\") and i.Name:find(\"DoorHinge\") then-- found a door with regex! local DoorID = i.Name:match(\"DoorHinge(.*)\")--haha regex is fun local MatchingDoor = car:FindFirstChild(\"Door\"..DoorID)--can we u\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 530315,
+      "terms": [
+        "car",
+        "motor"
+      ],
+      "assetIds": [],
+      "text": ") else MakeWeldDoor(i,MatchingDoor) end else MakeWeldDoor(i,MatchingDoor) end end end end if Base then if Left then leftMotor = Instance.new(\"Motor6D\", car) leftMotor.Name = \"LeftMotor\" leftMotor.Part0 = Left leftMotor.Part1 = Base leftMotor.C0 = CFrame.new(-WheelSize/2-Left.Size.x/2,0,0)*CFrame.Angles(math.pi/2,0,-math.pi/2) leftMotor.C1 = CFrame.new(Base.Size.x/2+Left.Size.x+WheelSize/2,0,0)*CFrame.Angles(math.pi/2,0,math.pi/2) leftMotor.MaxVelocity = motorSpeed end if Right then rightMotor = \u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 531236,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "--MADE BY NWSPACEK wait(0.1) Players = game:GetService(\"Players\") seat = script.Parent-- the driving seat car = seat.Parent Player = nil forwardsSpeed = 60--if you removed the Configuration folder, it defaults to this speed forwards reverseSpeed = 20--if you remov"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 531562,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "wards allowFlipping = true--if you removed the Configuration folder, it defaults to automatically flipping StartTime = 1.2--how long (in seconds) the car should wait before starting up. This is dependant on the starting sfx engineBlock = car:FindFirstChild(\"EngineBlock\")--maybe someone doesn't like sound? lightsOn = false-- whether or not the lights turn on carRunning = false--whether or not the car is running RemoteControlled = car:FindFirstChild(\"ControlByRemote\")--this is so the car turns pro\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 532807,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "things if type(ReverseSpeedValue.Value) == \"number\" then-- to make it look a little better reverseSpeed = ReverseSpeedValue.Value UpdateVehicle() end end end) end local ForwardsSpeedValue = Configuration:FindFirstChild(\"Forwards Speed\") if ForwardsSpeedValue then if type(Forward"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 533324,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "mething 'is' is the same as if ForwardsSpeedValue.Value then-- asking if it is \"~= nil\" forwardsSpeed = ForwardsSpeedValue.Value UpdateVehicle() end end end) end local AllowFlippingValue = Configuration:FindFirstChild(\"Allow Flipping\") if AllowFlippingValue then if type(All"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 534370,
+      "terms": [
+        "car",
+        "drive",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "rent and type(TorqueValue.Value) == \"number\" and RemoteControlled then RemoteControlled.Torque = TorqueValue.Value end end) end end script.CarSteering.Seat.Value = seat if not RemoteControlled:IsA(\"VehicleSeat\") then-- how dare you try to disturb this ancient harmony RemoteControlled = nil-- no food 4 u! end seat.ChildAdded:connect(function(it)-- something was added to our seat! if it:IsA(\"Weld\") and it.Name == \"SeatWeld\" then-- is it the kind of thing players use to sit with? Player = Players:G\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 535647,
+      "terms": [
+        "car",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "sA(\"Sound\") then engineBlock.Stopping:Stop() end wait(StartTime)-- just in case you use different starting sound effects if it.Parent ~= seat then-- DID OUR LOVELY PLAYER LEAVE WHILE WE WEREN'T LOOKING??????? byebye()--maybe they did, so it's time to shut down the car else-- they didn't leave! seat:SetNetworkOwner(Player) lightsOn = true-- turn on the lights carRunning = true-- turn on the car updatelights()-- make sure we turn on the lights UpdateVehicle()-- maybe they're in a hurry, so we bett\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 536298,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "gineBlock.Running:IsA(\"Sound\") then engineBlock.Running:Play() engineBlock.Running.Pitch = CalculatePitch() end end end end end) seat.ChildRemoved:connect(function(it)--did an object get removed? if it:isA(\"Weld\") and it.Name == \"SeatWeld\" then-- if it's a weld and named like a seat weld byebye()-- time to shut down the car seat:SetNetworkOwnershipAuto() end end) function byebye() if engineBlock and carRunning then-- remember scripting level 3? that applies to below: if engineBlock and engineBlo\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 537345,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "rting:IsA(\"Sound\") then engineBlock.Starting:Stop()-- THIS SCRIPT IS BREAK-PROOF >:U end end RemoteControlled.MaxSpeed = 0--make sure that the car doesn't drive off without us carRunning = false lightsOn = false updatelights()--turn the lights off UpdateVehicle()--make sure the car stops now that it's off end RearLight = {}--all the brake lights. These contain one SpotLight that gets manipulated RearBulb = {}--the brake lights"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 537929,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "front ReverseLight = {}--These light up when you reverse ReverseBulb = {}--these also light up when you reverse: SurfaceGui style for _, i in pairs (car:GetChildren()) do--populate the tables for ease of modularity. if i.Name == \"RearBulb\" then-- you can have any number of these items you want tabl"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 538526,
+      "terms": [
+        "car",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ght) elseif i.Name == \"FrontBulb\" then table.insert(FrontBulb,i) elseif i.Name == \"ReverseBulb\" then table.insert(ReverseBulb,i) elseif i:IsA(\"VehicleSeat\") and i ~= seat then i.ChildAdded:connect(function(it)-- something was added to our seat! if it:IsA(\"Weld\") and it.Name == \"SeatWeld\" then-- is it the kind of thing players use to sit with? local plr = game.Players:GetPlayerFromCharacter(it.Part1.Parent) if plr then if car.SeatsLocked.Value and plr.Name ~= car.Owner.Value then wait(2/30) if it\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 539422,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "ightsOn end for _,i in pairs (FrontBulb) do SurfaceGuiStandard(i,lightsOn) end for _,g in pairs (RearBulb) do SurfaceGuiBrightness(g,lightsOn,seat.Throttle == 0) end end flippingDebounce = false-- a debounce is a simple way of preventing a function from -- being called multiple times whi"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 539853,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "is off flippingDebounce = true-- if it's on, then the function stops, but if it's off, set it to true local bodypos = Instance.new(\"BodyPosition\",seat)-- so we get uninterupted function fun bodypos.maxForce = Vector3.new(100000,10000000,100000) bodypos.position = seat.Position + Vector3.new(0,2,0) local bodygyro = Instance.new(\"BodyGyro\",seat) game:GetService(\"Debris\"):AddItem(bodypos, 3)-- this makes sure that the flippy bit game:GetService(\"Debris\"):AddItem(bodygyro, 3)-- deletes its"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 540614,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "if i:IsA(\"SurfaceGui\") then i.Enabled = on end end end function SurfaceGuiBrightness(part,on,bright)-- this is so the brake lights dim when we drive for _,i in pairs (part:GetChildren()) do if i:IsA(\"SurfaceGui\") then i.Enabled = on if i:FindFirstChild(\"Frame\") and i.Frame:IsA(\"Frame\") th"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 541834,
+      "terms": [
+        "car",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ait(0.5)-- but since this is a secret, lets keep it between you and me, OK? engineBlock.horn:Stop() hornDebounce = false end end function UpdateVehicle()-- this is for the brake lights and speed and stuff like that if seat.Torque ~= 0 and type(seat.Torque) == \"number\" and RemoteControlled then RemoteControlled.Torque = math.abs(seat.Torque) seat.Torque = 0 else seat.Torque = 0 end if seat.Throttle == 1 and carRunning then-- if we're going forwards RemoteControlled.MaxSpeed = forwardsSpeed-- give\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 542611,
+      "terms": [
+        "car",
+        "drive",
+        "motor",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "Enabled and RemoteControlled and RemoteControlled.Parent then--the idea from scripting level 2 applies to false as well RemoteControlled.Throttle = seat.Throttle-- that is, it also works for \"~= false\" end-- the reason this line exists is to prevent the server from doing something the client -- is already doing. for _,h in pairs (ReverseLight) do-- all these loops below are just updating the lights h.Enabled = lightsOn and seat.Throttle == -1 end for _,i in pairs (ReverseBulb) do SurfaceGuiStand\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 641941,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "wards allowFlipping = true--if you removed the Configuration folder, it defaults to automatically flipping StartTime = 2.7--how long (in seconds) the car should wait before starting up. This is dependant on the starting sfx engineBlock = car:FindFirstChild(\"EngineBlock\")--maybe someone doesn't like sound? lightsOn = false-- whether or not the lights turn on carRunning = false--whether or not the car is running RemoteControlled = car:FindFirstChild(\"ControlByRemote\")--this is so the car turns pro\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 657092,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -1.5125, -0.3) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 657635,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ", Max = 50} }, TurnSpeed = { Speed = {Min = 5, Max = 5}, TurnAlpha = 0.30, AlphaDampening = 0.2 }, } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed.Normal, Turn = Speed.TurnSpeed.Speed, Acceleration = Speed.Acceleration.Normal, Deceleration = Speed.Deceleration.Normal } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0 } Honk = { Honking = false, LastHonk = 0, ReloadTime = 1 } Jump = { Jumping = fa\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 662245,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "999999999 * (-CurrentSpeed.Movement / math.abs(CurrentSpeed.Movement))) local MaxVelocity = (CurrentSpeed.Movement / 250) for i, v in pairs({FrontMotor, BackMotor}) do if v and v.Parent then v.DesiredAngle = DesiredAngle v.MaxVelocity = MaxVelocity end end --Smoke exhaust from vehicle running. for i, v in pairs(ExhaustSmoke) do if v and v.Parent then v.Opacity = ((math.min(math.abs(CurrentSpeed.Movement), 10) / 10) * 0.5)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 662768,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ile in motion. Sounds.Engine.Pitch = (1 + (math.abs(CurrentSpeed.Movement / MaxSpeed.Movement.Max) * 1)) wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end) Humanoid.PlatformStand = true local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle local ParticleTable = VehicleData.Tables --FrontMotor = Body.FrontMotor --BackMotor = Body.BackMotor ExhaustSmoke = Pa\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 666073,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "so = Character:FindFirstChild(\"HumanoidRootPart\") if not CheckIfAlive() then return end Spawn(CleanUp) Spawn(EnableFirstPersonView) Spawn(SpawnVehicle) ToolEquipped = true end function Unequipped() Spawn(CleanUp) Spawn(FreezePlayer) for i, v in pairs(Sounds) do v:Stop() Spawn(function()"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 671425,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": ", Max = 70} }, TurnSpeed = { Speed = {Min = 5, Max = 5}, TurnAlpha = 0.30, AlphaDampening = 0.2 }, } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed.Normal, Turn = Speed.TurnSpeed.Speed, Acceleration = Speed.Acceleration.Normal, Deceleration = Speed.Deceleration.Normal } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0 } Honk = { Honking = false, LastHonk = 0, ReloadTime = 1 } Jump = { Jumping = fa\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 684670,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= (1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -1.1, -0.9) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 690346,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ile in motion. Sounds.Engine.Pitch = (1 + (math.abs(CurrentSpeed.Movement / MaxSpeed.Movement.Max) * 1)) wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end) Humanoid.PlatformStand = true local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle local ParticleTable = VehicleData.Tables FrontMotor = Body.FrontMotor BackMotor = Body.BackMotor ExhaustSmoke = Partic\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 698449,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "(1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -1.365, -0.3) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 699417,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "t)}, TurnAlpha = (0.30 * BasePercentageIncrement), AlphaDampening = (0.2 * BasePercentageIncrement) }, } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed.Normal, Turn = Speed.TurnSpeed.Speed, Acceleration = Speed.Acceleration.Normal, Deceleration = Speed.Deceleration.Normal } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0 } Honk = { Honking = false, LastHonk = 0, ReloadTime = 1 } Jump = { Jumping \u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 704550,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ile in motion. Sounds.Engine.Pitch = (1 + (math.abs(CurrentSpeed.Movement / MaxSpeed.Movement.Max) * 1)) wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end) Humanoid.PlatformStand = true local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle DisplayBody = Body.DisplayBody local ParticleTable = VehicleData.Tables FrontMotor = Body.FrontMotor BackMotor = Body.\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 711464,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "end end SpeedBoost.Active = false wait(SpeedBoost.ReloadTime) SpeedBoost.Enabled = true]] elseif ByteKey == 48 then if DisplayMotor and DisplayMotor.Parent then DisplayMotor.DesiredAngle = ((Down and -0.8) or 0) end end end end end function InvokeClient(Mode, Value) local ClientReturn = nil pcall(function()"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 720449,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= (1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -1.5, -1.4) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 750772,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "te = (1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -2, 0.5) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 774263,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "vv.Color = ColorTable.Color.Color elseif vv:IsA(\"BasePart\") then end end end end wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end) Humanoid.PlatformStand = true CurrentColor = math.random(1, #Colors) ColorValue.Value = Colors[CurrentColor].Color.Color local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle local ParticleTable = VehicleData.Tables FrontMotor\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 777771,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "olors) do Spawn(function() InvokeClient(\"Preload\", (BaseUrl .. v.Texture)) end) end Spawn(CleanUp) Spawn(EnableFirstPersonView) Spawn(SpawnVehicle) ToolEquipped = true end function Unequipped() Spawn(CleanUp) Spawn(FreezePlayer) for i, v in pairs(Sounds) do v:Stop() Spawn(function()"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 790771,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "v.Parent = obj else obj[k] = v end end return obj end end local Tool = script.Parent.Parent local armChildRemovedConn = nil local Motor6DGrip = nil local EquippedNum = 0 Tool.Equipped:connect(function() EquippedNum = EquippedNum + 1 local myEquip = EquippedNum --some vars local P"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 791541,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "ing and the character doesn't --glitch up. local armChildRemovedConn = rightarm.ChildRemoved:connect(function(ch) if ch == rightGrip then Motor6DGrip:Remove() Motor6DGrip = nil -- if handle and Character:FindFirstChild('HumanoidRootPart') then if Tool.Parent.Parent:IsA('Player') then --the swor"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 792267,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "dle.CFrame = Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -(handle.Size.magnitude+2)) end end end end) --make my new joint Motor6DGrip = Create'Motor6D'{ Name = 'RightGrip_Motor', Part0 = rightarm, Part1 = handle, } --kill the old weld rightGrip.Part1 = nil rightGrip.Part0 = nil Motor6DGrip.Parent = rightGrip.Parent end end) Tool.Unequipped:connect(function() EquippedNum = EquippedNum + 1 if armChildRemovedConn then armChildR"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 813191,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "de by Luckymaxer Tool = script.Parent Handle = Tool:WaitForChild(\"Handle\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") VehicleModule = require(Tool:WaitForChild(\"VehicleModule\")) Controls = { Forward = false, Backward = false, Left = false, Right = false, Up = false, Down = false } LastSpace = 0 Animations ="
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 817316,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "eed / 50) * 1)) local DesiredAngle = (999999999 * (-CurrentSpeed / math.abs(CurrentSpeed))) local MaxVelocity = (CurrentSpeed / 250) if FrontMotor and FrontMotor.Parent then FrontMotor.DesiredAngle = DesiredAngle FrontMotor.MaxVelocity = MaxVelocity end if BackMotor and BackMotor.Parent then BackMotor.DesiredAngle = DesiredAngle BackMotor.MaxVelocity = MaxVelocity end RotationForce.angularvelocity = Vector3.new(0, TurnSpeed, 0) if math.abs(TurnSpeed) > AlphaDampening then"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 820134,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "+ Handle.Size.Y), 0) end if FakeHandle and FakeHandle.Parent then FakeHandle:Destroy() end Handle.Transparency = 1 FakeHandle = VehicleModule:Clone() FrontMotor = FakeHandle:FindFirstChild(\"FrontMotor\") BackMotor = FakeHandle:FindFirstChild(\"BackMotor\") Handle.CFrame = Torso.CFrame Humanoid.WalkSpeed = 0 Humanoid.PlatformStand = true RotationForce = Instance.new(\"BodyAngularVelocity\")"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 825824,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "tForChild(\"Handle\") Players = game:GetService(\"Players\") Debris = game:GetService(\"Debris\") RemovalMonitor = script:WaitForChild(\"RemovalMonitor\") CarpetPieces = { {MeshId = 223079795, Angle = 160}, {MeshId = 223079835, Angle = 100}, {MeshId = 223079888, Angle = 100}, {MeshId = 223079981, Angle = 160}, } CarpetSize = Vector3.new(3, 0.5, 6.5) BaseUrl = \"http://www.roblox.com/asset/?id=\" Rate = (1 / 10) BasePart = Instance.new(\"Part\") BasePart.Material ="
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 831517,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "ed() if not Tool.Enabled then return end Tool.Enabled = false Flying = not Flying if Flying then Handle.Transparency = 1 CleanUp() local CarpetParts = {} for i, v in pairs(CarpetPieces) do local CarpetPart = BasePart:Clone() CarpetPart.Size = Vector3.new(CarpetSize.X, CarpetSize.Y, (CarpetSize.Z / #CarpetPieces)) local Mesh = Instance.new(\"SpecialMesh\") Mesh.MeshType = Enum.MeshType.FileMesh Mesh.MeshId = (BaseUrl .. v.MeshId) Mesh.Textu"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 832020,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "\") Mesh.Scale = Vector3.new(1.125, 1.125, 1.125) Mesh.VertexColor = Vector3.new(1, 1, 1) Mesh.Offset = Vector3.new(0, 0, 0) Mesh.Parent = CarpetPart local Weld = Instance.new(\"Weld\") Weld.Part0 = Handle Weld.Part1 = CarpetPart local XOffset = (((i == 1 or i == #CarpetPieces) and -0.005) or 0) local YOffset = ((-((Handle.Size.Z / 2) - (CarpetPart.Size.Z / 2))) + ((CarpetPart.Size.Z * (i - 1))) + ((i == 2 and 0.245) or (i == 3 and 0.04) or (i == #CarpetPieces and 0.28) or 0)) Weld.C1 = CFrame.new(\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 837905,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "/ 60) Gravity = 196.20 PoseOffset = CFrame.new(0.1, -2.95, -0.25) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 838449,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "Max = 100} }, TurnSpeed = { Speed = {Min = 5, Max = 5}, TurnAlpha = 0.30, AlphaDampening = 0.2 }, } MaxSpeed = { --Maximum speed which the vehicle can move and turn at. Movement = Speed.MovementSpeed.Normal, Turn = Speed.TurnSpeed.Speed, Acceleration = Speed.Acceleration.Normal, Deceleration = Speed.Deceleration.Normal } CurrentSpeed = { --The speed which the vehicle is moving and turning at. Movement = 0, Turn = 0 } Honk = { Honking = false, LastHonk = 0, ReloadTime = 1 } Jump = { Jumping = fal\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 843162,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "999999999 * (-CurrentSpeed.Movement / math.abs(CurrentSpeed.Movement))) local MaxVelocity = (CurrentSpeed.Movement / 250) for i, v in pairs({FrontMotor, BackMotor}) do if v and v.Parent then v.DesiredAngle = DesiredAngle v.MaxVelocity = MaxVelocity end end --Animate hover effects SmallHov"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 845120,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "gle and -MaxTurnAngle) or TurnAngle) HandleBarsWeld.C0 = CFrame.new(HandleBarsWeld.C0.p) * CFrame.Angles(0, TurnAngle, 0) --Smoke exhaust from vehicle running. for i, v in pairs(ExhaustSmoke) do if v and v.Parent then v.Opacity = ((math.min(math.abs(CurrentSpeed.Movement), 10) / 10) * 0.5)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 845560,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "ement / MaxSpeed.Movement.Max) * 1.8)) --Thanks to Europeancow2 for the perfect hoverboard sound effect!!! wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end) Humanoid.PlatformStand = true local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle local ParticleTable = VehicleData.Tables --FrontMotor = Body.FrontMotor --BackMotor = Body.BackMotor HandleBars = Bo\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 857438,
+      "terms": [
+        "car",
+        "drive",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "car = script.Parent.Parent seat = script.Parent script.Parent.Touched:connect(function(hit) local h = hit.Parent:FindFirstChild(\"Humanoid\") if h ~= nil then if hit.Parent.Name ~= string.sub(car.Name,9) and car.DriverLocked.Value == true then wait() if seat:FindFirstChild(\"SeatWeld\") == nil then for i=1,50 do if not seat:FindFirstChild(\"SeatWeld\") then wait(1/30) end end end if h then h.Sit = false end end end end) script.Parent.Changed:connect(function(property) if property == \"Throttle\" then if\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 858371,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "end end) script.Parent.Touched:connect(function(part) if part then if part.Parent:FindFirstChild(\"Humanoid\") and part.Parent.Name == string.sub(car.Name,9) then for i,v in pairs(car:GetChildren()) do if v.Name == \"Headlight\" then v.BrickColor = BrickColor.new(\"Institutional white\") v.Light.Enabled = true end end end end end) while true do wait(1) local plr = game.Players:FindFirstChild(string.sub(car.Name,9)) if plr and plr.Character and plr.Character:FindFirstChild(\"HumanoidRootPart\") and (scri\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 859187,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "car = script.Parent.Parent seat = script.Parent script.Parent.Touched:connect(function(hit) local h = hit.Parent:FindFirstChild(\"Humanoid\") if h ~= nil then if hit.Parent.Name ~= string.sub(car.Name,9) and car.SeatsLocked.Value == true then wait() if seat:FindFirstChild(\"SeatWeld\") == nil then for i=1,30 do if not seat:FindFirstChild(\"SeatWeld\") then wait(1/30) end end end if h then h.Sit = false end end end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 861699,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "car = script.Parent.Parent seat = script.Parent script.Parent.Touched:connect(function(hit) local h = hit.Parent:FindFirstChild(\"Humanoid\") if h ~= nil then if hit.Parent.Name ~= string.sub(car.Name,9) and car.SeatsLocked.Value == true then wait() if seat:FindFirstChild(\"SeatWeld\") == nil then for i=1,50 do if not seat:FindFirstChild(\"SeatWeld\") then wait(1/30) end end end if h then h.Sit = false end end end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 864549,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "car = script.Parent.Parent seat = script.Parent script.Parent.Touched:connect(function(hit) local h = hit.Parent:FindFirstChild(\"Humanoid\") if h ~= nil then if hit.Parent.Name ~= string.sub(car.Name,9) and car.SeatsLocked.Value == true then wait() if seat:FindFirstChild(\"SeatWeld\") == nil then for i=1,50 do if not seat:FindFirstChild(\"SeatWeld\") then wait(1/30) end end end wait(1/30) if h then h.Sit = false end end end end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 865044,
+      "terms": [
+        "car",
+        "drive",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "car = script.Parent.Parent seat = script.Parent script.Parent.Touched:connect(function(hit) local h = hit.Parent:FindFirstChild(\"Humanoid\") if h ~= nil then if hit.Parent.Name ~= string.sub(car.Name,9) and car.DriverLocked.Value == true then wait() if seat:FindFirstChild(\"SeatWeld\") == nil then for i=1,50 do if not seat:FindFirstChild(\"SeatWeld\") then wait(1/30) end end end wait(1/30) if h then h.Sit = false end end end end) script.Parent.Changed:connect(function(property) if property == \"Thrott\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 947397,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "til script.Parent.Parent == workspace local colors = {\"Bright red\",\"Deep blue\",\"Bright green\",\"Bright orange\",\"Bright yellow\",\"Bright violet\"} local car = script.Parent local usednums = {} function selectColor() local num repeat num = math.random(1,#colors) for _,v in pairs(usednums) do if"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 947845,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "end return num end while script.Parent ~= nil do wait(1.35) local num = selectColor() local bc = BrickColor.new(colors[num]) for _,v in pairs(car:GetChildren()) do if v.Name == \"Paintable\" then v.BrickColor = bc end end car.Anchor.PointLight.Color = bc.Color if car.ParticleHolder:FindFirstChild(\"ParticleEmitter\") then local old = car.ParticleHolder.ParticleEmitter old.Name = \"old_PE\" old.Enabled = false game:GetService(\"Debris\"):AddItem(old,4) end if car.ParticleHolder.Velocity.magnitude > 3 the\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 955616,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "tion EquipWings() LeftWing = Wing:Clone() LeftWing.Name = \"LeftWing\" LeftWing.Mesh.MeshId = (BaseUrl .. \"223377755\") LeftWingWeld = Instance.new(\"Motor6D\") LeftWingWeld.Part0 = Torso LeftWingWeld.Part1 = LeftWing LeftWingWeld.C0 = CFrame.new(0.2, 1.6, 1.2) * CFrame.Angles((math.pi / 2), 0, (math.p"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 956029,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "= LeftWing RightWing = Wing:Clone() RightWing.Name = \"LeftWing\" RightWing.Mesh.MeshId = (BaseUrl .. \"223377796\") RightWingWeld = Instance.new(\"Motor6D\") RightWingWeld.Part0 = Torso RightWingWeld.Part1 = RightWing RightWingWeld.C0 = CFrame.new(-0.2, 1.6, 1.2) * CFrame.Angles((math.pi / 2), 0, -("
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 983752,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "eploy.Mesh.Scale = Vector3.new(NewScale, NewScale, NewScale) wait() end if UFODeploy and UFODeploy.Parent then local UFOVehicle = UFO:Clone() local Creator = Instance.new(\"ObjectValue\") Creator.Name = \"Creator\" Creator.Value = Player Creator.Parent = UFOVehicle local RemoverScriptClone = RemoverScript:Clone() RemoverScriptClone.Disabled = false RemoverScriptClone.Parent = UFOVehicle CurrentUFO.Value = UFOVehicle UFOVehicle.Parent = game:GetService(\"Workspace\") UFOVehicle.Changed:connect(function\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 986824,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "ris=game:GetService(\"Debris\") check=true local handle=sp:WaitForChild(\"Handle\") local handle2=sp:WaitForChild(\"Handle2\") local weld=sp:WaitForChild(\"Motor\") local animation=sp:WaitForChild(\"Animation\") local sound=handle:WaitForChild(\"Sound\") local fireflyscript=script:WaitForChild(\"FireflyScript\") loca"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1013761,
+      "terms": [
+        "car",
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "--MADE BY NWSPACEK --the reason for this script being 2 instead of 1 is MAGIC WheelSize = 3.4--diameter of the wheel --When you are editing the car, make sure that the Left, Right, and Base parts are in a --straight line, and in the orientation the models comes with, or they won't be where you expect --them to be at all! motorSpeed = 0.05 -- a typical number is 0.1 but lower is better if you get weird behavior --don't touch below, very delicate car = script.Parent.Parent Base = car:FindFirstChil\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1045751,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "indFirstChild(\"WindSound\") then engineBlock.WindSound:Play() engineBlock.WindSound.Pitch = CalculatePitch() end end end end end) seat.ChildRemoved:connect(function(it)--did an object get removed? if it:isA(\"Weld\") and it.Name == \"SeatWeld\" then-- if it's a weld and named like a seat weld byebye()-- time to shut down the car seat:SetNetworkOwnershipAuto() end end) function byebye() if engineBlock and carRunning then-- remember scripting level 3? that applies to below: if engineBlock and engineBlo\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1055138,
+      "terms": [
+        "car",
+        "drive",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "repeat wait() until script.Parent.Parent == workspace local car = script.Parent local seat = car.Drive local part = script.Parent:WaitForChild(\"Paintable\") local pe = car.ParticleHolder.ParticleEmitter function SetColors() car.Anchor.PointLight.Color = part.Color pe.Color = ColorSequence.new(part.Color) end pe.Enabled = true SetColors() part.Changed:connect(function(pro"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1087141,
+      "terms": [
+        "motor",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "999999999 * (-CurrentSpeed.Movement / math.abs(CurrentSpeed.Movement))) local MaxVelocity = (CurrentSpeed.Movement / 250) for i, v in pairs({FrontMotor, BackMotor, LeftMotor, RightMotor}) do if v and v.Parent then v.DesiredAngle = DesiredAngle v.MaxVelocity = MaxVelocity end end --Smoke exhaust from vehicle running. for i, v in pairs(ExhaustSmoke) do if v and v.Parent then v.Opacity = ((math.min(math.abs(CurrentSpeed.Movement), 10) / 10) * 0.5)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1088455,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "vv.Color = ColorTable.Color.Color elseif vv:IsA(\"BasePart\") then end end end end wait(Rate) end end function SpawnVehicle() Handle.Transparency = 1 Spawn(function() InvokeClient(\"PlaySound\", Sounds.Engine) InvokeClient(\"PlayAnimation\", Animations.Hold) end)"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1088779,
+      "terms": [
+        "motor",
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "rmStand = true CurrentColor = math.random(1, #Colors) ColorValue.Value = Colors[CurrentColor].Color.Color local OrigCF = Torso.CFrame local VehicleData = Assets.CreateVehicle() Body = VehicleData.Vehicle local ParticleTable = VehicleData.Tables FrontMotor = Body.FrontMotor BackMotor = Body.BackMotor LeftMotor = Body.LeftMotor RightMotor = Body.RightMotor Seat = Body.Seat Seat.ChildAdded:connect(function(Child) if Child:IsA(\"Weld\") and Child.Name == \"SeatWeld\" then Child.C1 = (CFrame.new(0, 0.75,\u2026"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1091158,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "dle.Velocity = Vector3.new(0, 0, 0) Handle.RotVelocity = Vector3.new(0, 0, 0) for i, v in pairs({}) do if v then v:disconnect() end end if Seat and Seat.Parent and Seat.Occupant then local humanoid = Seat.Occupant if humanoid and humanoid:IsA(\"Humanoid\") then humanoid.Sit = false end end for i, v in pairs({Body, RotationForce, ThrustForce, Tur"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1097262,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "= (1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -0.8, -0.3) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1111579,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "(1 / 60) Gravity = 196.20 PoseOffset = CFrame.new(0, -0.75, -0.75) * CFrame.Angles(0, 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = true, Enabled = true"
+    },
+    {
+      "chunk": 595,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1136793,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "avity = 196.20 PoseOffset = CFrame.new(0, -1.25, -1.125) * CFrame.Angles((math.pi / 8), 0, 0) --The offset your character is from the center of the vehicle. SpeedBoost = { Allowed = false, Active = false, Enabled = true, Duration = 10, ReloadTime = 30 } Special = { Allowed = false, Enabled = tru"
+    },
+    {
+      "chunk": 652,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 17,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "ClassroomSeat"
+    },
+    {
+      "chunk": 652,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 1566,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat"
+    },
+    {
+      "chunk": 652,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 3828,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat2"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11624,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A two-seat hot air balloon! Take a friend along for a ride in the skies."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11766,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11813,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingD"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11824,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A standard couch that does the job for seating 3 people. [Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11907,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A stylish black-and-white seat."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11942,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating'"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 11996,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating3"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12007,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A stylish black-and-white sofa that seats 3 people."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12062,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating,"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12073,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A nice seat with a sleek design. [Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12175,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingP"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12270,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingE"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12281,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A comfortable, high-quality wooden armchair. [Seat Fabric: Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12354,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating="
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12430,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seatingw"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12564,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seatingh"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12575,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A shiny golden armchair. Your dreams of being the king/queen can finally come true. [Seating: Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12683,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seatingg"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12694,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A golden sofa with a beautiful back panel. Impress everyone with this masterpiece. [Seating: Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 12812,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "An ultra-rare seat specially designed by Umbra himself. This set of furniture was crafted using some very unique materials from the Void, allowing it to seamlessly floa"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 13202,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "An ultra-rare sofa specially designed by Umbra himself. This seats 4 people, all of whom will never want to sit on any other sofa again. [Colored Parts: Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 13861,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A stylish black-and-white end table, made to be placed beside seating items."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 13951,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A stylish black end table with a glass panel, made to be placed beside seating items."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 14153,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A nice wooden end table, made to be placed beside seating items."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 16466,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating`"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 16734,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating8"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 19758,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "An old junkyard car. Slow and unimpressive, but hey, it'll let you get around while you're saving for something better!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 19885,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Your everyday car, upgraded from the older model to hold up to 4 people now! Goes at average speed."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 19992,
+      "terms": [
+        "seat",
+        "truck"
+      ],
+      "assetIds": [],
+      "text": "This heavy-duty truck has 2 interior seats and 4 seats in the back. Take people around town with ease!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20102,
+      "terms": [
+        "car",
+        "drive",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "This upgraded racecar is a drifty vehicle that goes pretty fast. For experienced drivers only!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20204,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A snazzy sports car that gives you slick control and blazing fast speed! Impress all your friends with this."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20320,
+      "terms": [
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "Own the most amazing vehicle in town! It has sparkles, it glows, and it goes FAST!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20713,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "A classic motorcycle! Ride around anywhere on this thing.W"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20774,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Ride around town on this super-stylish motorcycle! Press 'X' to turn on your headlight.s"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20984,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "A futuristic motorcycle that leaves a blue trail behind you as you ride on it!?"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21066,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "A futuristic motorcycle that leaves a red trail along its path!w"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21133,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "The Emerald Hyperbike goes faster than the previous 2 hyperbikes, and it leaves a pretty emerald green trail behind it!t"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21256,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "The most epic hyperbike of all. This bike and its trail change to all different colors as you're riding across town!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21376,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating;"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21843,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A cool tiki stand for your own home! Also comes with 2 stools to seat visitors. [Wood = Paintable]"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 22454,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating("
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 22942,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "The latest model in the Bloxster series, this motorcycle goes even faster than its predecessor!p"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 23632,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Fly around on a magic carpet that leaves a rainbow trail behind you! The ultimate transportation option.B"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 23945,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "An old car that Larry salvaged from a junkyard. It's not all that impressive, but hey, at least it's still drivable.R"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24164,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A snazzy sports car specially designed by Cindering. Gives you slick control and blazing fast speed! This'll impress all your friends."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24328,
+      "terms": [
+        "seat",
+        "truck",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "A heavy-duty truck with 2 interior seats and 4 seats in the back! It also has more speed than the standard vehicles."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24461,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A speedy, drifty racecar with modifications to make it... well, at least somewhat street legal!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24573,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A simple car for those who are just starting out on the road. Not the fastest, but simple to control."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24682,
+      "terms": [
+        "car",
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A car from the good ol' days! It packs plenty of speed for its average cost, and it seats up to 4 people!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 24844,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingK"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25155,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingU"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25255,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seatingd"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25484,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "When you join the ROBLOX High School Fan Club, you will be awarded this car when you play tomorrow! Link is in the game's description."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25626,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "The ultimate luxury car. This sweet ride goes super fast and will easily impress anyone that lays eyes on it."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 25743,
+      "terms": [
+        "car",
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "An ultra-rare color-changing car from the Holiday Event that leaves behind a rainbow trail of sparkles as you drive!;"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27260,
+      "terms": [
+        "truck"
+      ],
+      "assetIds": [],
+      "text": "A large, tough truck that can fit a whopping 8 people; 4 inside, and 4 in the back! Haul anyone and anything with ease."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27497,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A festive carpet with a snowflake pattern in the center!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 27568,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "A festive chair to seat your friends and family during the holidays!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28036,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "SeatingJ"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28198,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "A sturdy car with plenty of interior room! Bring 4 people along for a ride, and hide your stash of pizza boxes in the trunk."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28330,
+      "terms": [
+        "car",
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "A legendary car crafted with ice from the North Pole! It leaves a frosty trail behind, and the Arctic wind will howl as you drive!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 28788,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Take a friend along for a ride with you on this awesome color-changing bike!P"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 29239,
+      "terms": [
+        "motor"
+      ],
+      "assetIds": [],
+      "text": "Ride into the new year with this beautiful limited-edition sparkly motorcycle!|"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33335,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Paint Car"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33348,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Remove Car"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33362,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Unlock Car"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33376,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Lock Car"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33388,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "Allow Other Driver"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 33410,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "Disallow Other Driver"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 40155,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "If you found a serious glitch, message Cindering about what happened, along with what you were doing at the time. He'll take care of it."
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 44055,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Why, sure! A long time ago, I got hired to sell cars to people in this small town. It was a great time back then!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 44564,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "However, a lot of people showed support for me, so I started up a donation drive to help get me back on my feet!"
+    },
+    {
+      "chunk": 833,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 45566,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "I've been doing fine these days. Actually... it makes my day that you would go through the effort to come and visit me up here. I didn't think anyone cared that much."
+    },
+    {
+      "chunk": 965,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 3461,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating"
+    },
+    {
+      "chunk": 978,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 2956,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seating"
+    },
+    {
+      "chunk": 978,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 3454,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Buy Car"
+    },
+    {
+      "chunk": 1001,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 2994,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Cars"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 5736,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Cars"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 5808,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Join the ROBLOX High School Fan Club, and when you play this game tomorrow, you'll receive FREE, EXCLUSIVE furniture items, a car, and access to the iCinder phone! Link to the RHS Fan Club is in the game's description.o"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 9914,
+      "terms": [
+        "car",
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "RHS Cash is the currency used to buy cool extra items in this game! With it, you can... - Buy furniture for your house - Get fancier, faster cars to drive - Buy your own pets and special in-game gear"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 17856,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Refunded for Old-School Cars"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 17888,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "You have received an RHS Cash refund for the discontinued old-school cars in your inventory! Back in 2015, the game's old-school V1 cars had to be removed from the game, since they were broken by changes to the ROBLOX physics engine. Anyone who owned those old cars has been refunded for the full RHS Cash cost of the cars owned. Thank you for your understanding, and thank you for being such a longtime supporter of the game! You can use this refund to grab some of the newer V2 cars! Enjoy."
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20027,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Select a Car to Spawn"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20060,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "New cars by NWSpacek!"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 20179,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Click on any nearby road to spawn your car"
+    },
+    {
+      "chunk": 1012,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 21318,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Classy Car!"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 55,
+      "terms": [
+        "car",
+        "spawn car"
+      ],
+      "assetIds": [],
+      "text": "Spawn Car"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 237,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Blue Hyperbike"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 255,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Red Hyperbike"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 272,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Emerald Hyperbike"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 293,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Rainbow Disco Hyperbike"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 396,
+      "terms": [
+        "bike"
+      ],
+      "assetIds": [],
+      "text": "Robloxsai Bike"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 443,
+      "terms": [
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Rainbow Magic Carpet"
+    },
+    {
+      "chunk": 1036,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 814,
+      "terms": [
+        "bike",
+        "car"
+      ],
+      "assetIds": [],
+      "text": "Rainbow Hyperbike with Sidecar"
+    },
+    {
+      "chunk": 1119,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 17,
+      "terms": [
+        "drive"
+      ],
+      "assetIds": [],
+      "text": "Drive"
+    },
+    {
+      "chunk": 1119,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 26,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat"
+    },
+    {
+      "chunk": 1119,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 437,
+      "terms": [
+        "seat",
+        "vehicle"
+      ],
+      "assetIds": [],
+      "text": "VehicleSeat"
+    },
+    {
+      "chunk": 1179,
+      "tag": "PROP",
+      "encoding": "ascii",
+      "offset": 5342,
+      "terms": [
+        "seat"
+      ],
+      "assetIds": [],
+      "text": "Seat Back"
+    }
+  ],
+  "truncated": false
+}
