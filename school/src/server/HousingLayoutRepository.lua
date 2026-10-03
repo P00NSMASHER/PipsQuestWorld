@@ -43,6 +43,7 @@ local function emptySnapshot()
         houseStyleId = DEFAULT_STYLE,
         hideWalls = false,
         operations = {},
+        inventory = {},
         placements = {},
     }
 end
@@ -80,6 +81,11 @@ local function validateOperation(operation)
         if not nonEmptyString(operation.styleId) then return false, "INVALID_STYLE_ID" end
     elseif kind == "set_hide_walls" then
         if type(operation.enabled) ~= "boolean" then return false, "INVALID_HIDE_WALLS" end
+    elseif kind == "add_inventory" or kind == "remove_inventory" then
+        if not nonEmptyString(operation.itemId) then return false, "INVALID_ITEM_ID" end
+        if not isInteger(operation.quantity) or operation.quantity <= 0 then
+            return false, "INVALID_QUANTITY"
+        end
     elseif kind == "place_furniture" then
         if not nonEmptyString(operation.placementId) then return false, "INVALID_PLACEMENT_ID" end
         if not nonEmptyString(operation.itemId) then return false, "INVALID_ITEM_ID" end
@@ -115,6 +121,7 @@ local function comparableOperation(operation)
         paintId = operation.paintId,
         styleId = operation.styleId,
         enabled = operation.enabled,
+        quantity = operation.quantity,
     }
 end
 
@@ -128,6 +135,15 @@ local function sameOperation(left, right)
         if a[key] ~= value then return false end
     end
     return true
+end
+
+local function findInventoryIndex(snapshot, itemId)
+    for index, entry in ipairs(snapshot.inventory) do
+        if entry.itemId == itemId then
+            return index
+        end
+    end
+    return nil
 end
 
 local function findPlacementIndex(snapshot, placementId)
@@ -146,6 +162,27 @@ local function applyMutation(snapshot, operation)
         return true, nil
     elseif kind == "set_hide_walls" then
         snapshot.hideWalls = operation.enabled
+        return true, nil
+    elseif kind == "add_inventory" then
+        local index = findInventoryIndex(snapshot, operation.itemId)
+        if index then
+            snapshot.inventory[index].quantity = snapshot.inventory[index].quantity + operation.quantity
+        else
+            table.insert(snapshot.inventory, {
+                itemId = operation.itemId,
+                quantity = operation.quantity,
+            })
+        end
+        return true, nil
+    elseif kind == "remove_inventory" then
+        local index = findInventoryIndex(snapshot, operation.itemId)
+        if not index or snapshot.inventory[index].quantity < operation.quantity then
+            return false, "INSUFFICIENT_INVENTORY"
+        end
+        snapshot.inventory[index].quantity = snapshot.inventory[index].quantity - operation.quantity
+        if snapshot.inventory[index].quantity == 0 then
+            table.remove(snapshot.inventory, index)
+        end
         return true, nil
     elseif kind == "place_furniture" then
         if findPlacementIndex(snapshot, operation.placementId) then
@@ -184,6 +221,13 @@ local function applyMutation(snapshot, operation)
     return false, "UNKNOWN_OPERATION_KIND"
 end
 
+local function validateInventoryEntry(entry)
+    return type(entry) == "table"
+        and nonEmptyString(entry.itemId)
+        and isInteger(entry.quantity)
+        and entry.quantity > 0
+end
+
 local function validatePlacement(placement)
     return type(placement) == "table"
         and nonEmptyString(placement.placementId)
@@ -193,6 +237,14 @@ local function validatePlacement(placement)
         and isFiniteNumber(placement.z)
         and isFiniteNumber(placement.rotation)
         and nonEmptyString(placement.paintId)
+end
+
+local function canonicalInventory(inventory)
+    local copy = clone(inventory)
+    table.sort(copy, function(a, b)
+        return a.itemId < b.itemId
+    end)
+    return copy
 end
 
 local function canonicalPlacements(placements)
@@ -221,8 +273,16 @@ local function validateSnapshot(snapshot)
         or not nonEmptyString(snapshot.houseStyleId)
         or type(snapshot.hideWalls) ~= "boolean"
         or not validateArray(snapshot.operations)
+        or not validateArray(snapshot.inventory)
         or not validateArray(snapshot.placements) then
         return false, "INVALID_SNAPSHOT"
+    end
+
+    local inventoryIds = {}
+    for _, entry in ipairs(snapshot.inventory) do
+        if not validateInventoryEntry(entry) then return false, "INVALID_INVENTORY" end
+        if inventoryIds[entry.itemId] then return false, "DUPLICATE_INVENTORY_ITEM" end
+        inventoryIds[entry.itemId] = true
     end
 
     local placementIds = {}
@@ -249,6 +309,16 @@ local function validateSnapshot(snapshot)
         return false, "DERIVED_STATE_MISMATCH"
     end
 
+    local expectedInventory = canonicalInventory(replay.inventory)
+    local actualInventory = canonicalInventory(snapshot.inventory)
+    if #expectedInventory ~= #actualInventory then return false, "INVENTORY_COUNT_MISMATCH" end
+    for index, entry in ipairs(expectedInventory) do
+        local actualEntry = actualInventory[index]
+        if entry.itemId ~= actualEntry.itemId or entry.quantity ~= actualEntry.quantity then
+            return false, "INVENTORY_STATE_MISMATCH"
+        end
+    end
+
     local expected = canonicalPlacements(replay.placements)
     local actual = canonicalPlacements(snapshot.placements)
     if #expected ~= #actual then return false, "PLACEMENT_COUNT_MISMATCH" end
@@ -267,6 +337,7 @@ local function summarize(snapshot)
         houseStyleId = snapshot.houseStyleId,
         hideWalls = snapshot.hideWalls,
         operationCount = #snapshot.operations,
+        inventory = canonicalInventory(snapshot.inventory),
         placements = canonicalPlacements(snapshot.placements),
     }
 end
