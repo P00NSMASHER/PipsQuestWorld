@@ -1,0 +1,46 @@
+name: High School Binary Reference Extract
+
+on:
+  push:
+    branches:
+      - "support/high-school-binary-reference-*"
+    paths:
+      - ".github/workflows/high-school-reference-extract.yml"
+      - "scripts/extract-roblox-binary-reference.py"
+      - "coordination/reference-extraction/request.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Verify and extract licensed RBXL reference
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout support branch
+        uses: actions/checkout@v4
+
+      - name: Extract exact verified Roblox High School binary reference
+        run: |
+          python3 scripts/extract-roblox-binary-reference.py --outdir reference-extract
+
+      - name: Publish compact UTF-8 evidence in job log
+        run: |
+          echo "===== reference_manifest.json ====="
+          cat reference-extract/reference_manifest.json
+          echo "===== summary.md ====="
+          cat reference-extract/summary.md
+          echo "===== first 400 housing hits ====="
+          sed -n '1,400p' reference-extract/housing_hits.txt
+          echo "===== asset IDs ====="
+          cat reference-extract/asset_ids.txt
+
+      - name: Upload complete extraction evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: high-school-binary-reference-extract
+          path: reference-extract/
+          if-no-files-found: error
+          retention-days: 30
