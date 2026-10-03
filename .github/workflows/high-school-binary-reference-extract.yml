@@ -1,0 +1,57 @@
+name: High School Binary Reference Extract
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'devex/high-school-binary-reference-extractor-*'
+      - 'support/high-school-binary-reference-*'
+    paths:
+      - '.github/workflows/high-school-binary-reference-extract.yml'
+      - 'coordination/tools/extract_rbxl_reference.py'
+      - 'coordination/state/BINARY_REFERENCE_REQUESTS.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: high-school-binary-reference-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact request branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Extract and verify RBXL binary references
+        run: |
+          rm -rf coordination/generated/binary-reference
+          python3 coordination/tools/extract_rbxl_reference.py \
+            coordination/state/BINARY_REFERENCE_REQUESTS.json \
+            coordination/generated/binary-reference
+
+      - name: Print bounded verified evidence
+        run: |
+          cat coordination/generated/binary-reference/index.json
+          find coordination/generated/binary-reference -name hits.txt -print0 |
+            while IFS= read -r -d '' file; do
+              echo "===== ${file} ====="
+              sed -n '1,800p' "${file}"
+            done
+
+      - name: Persist UTF-8 evidence on support branch
+        run: |
+          git config user.name "high-school-binary-reference-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/generated/binary-reference
+          if git diff --cached --quiet; then
+            echo "BINARY_REFERENCE_EVIDENCE_UNCHANGED"
+            exit 0
+          fi
+          git commit -m "binary-reference: refresh verified extraction [skip ci]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
