@@ -93,6 +93,12 @@
         },
         "VehicleInput": {
           "$path": "src/server/VehicleInput.lua"
+        },
+        "HousingLifecycle": {
+          "$path": "src/server/HousingLifecycle.lua"
+        },
+        "HousingService": {
+          "$path": "src/server/HousingService.server.lua"
         }
       }
     },

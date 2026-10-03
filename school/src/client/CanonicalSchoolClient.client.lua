@@ -915,3 +915,300 @@ task.spawn(function()
         task.wait(0.12)
     end
 end)
+
+
+-- Legacy House menu. The original experience exposed this from the lower-left
+-- HUD and used it for permanent house purchase, teleport, and edit mode.
+-- Server authority remains in HousingService; this client only presents state
+-- and requests actions.
+local housingRoot = root:WaitForChild("FreeRoam"):WaitForChild("Housing")
+local getHousingState = housingRoot:WaitForChild("GetState")
+local buyHouse = housingRoot:WaitForChild("BuyHouse")
+local teleportToHouse = housingRoot:WaitForChild("TeleportToHouse")
+local setHouseEditMode = housingRoot:WaitForChild("SetEditMode")
+local setHouseStyle = housingRoot:WaitForChild("SetStyle")
+
+local houseIcon = Instance.new("TextButton")
+houseIcon.Name = "LegacyHouseButton"
+houseIcon.AnchorPoint = Vector2.new(0, 1)
+houseIcon.Position = UDim2.new(0, 256, 1, -bottomMargin)
+houseIcon.Size = UDim2.new(0, 58, 0, 58)
+houseIcon.BackgroundColor3 = LEGACY_BUTTON
+houseIcon.Font = Enum.Font.ArialBold
+houseIcon.Text = "HOUSE"
+houseIcon.TextColor3 = LEGACY_BLUE_DARK
+houseIcon.TextSize = 12
+houseIcon.Parent = gui
+round(houseIcon, 2)
+outline(houseIcon, 2)
+
+local housePanel = Instance.new("Frame")
+housePanel.Name = "LegacyHousePanel"
+housePanel.AnchorPoint = Vector2.new(0, 1)
+housePanel.Position = UDim2.new(0, 256, 1, -(bottomMargin + 66))
+housePanel.Size = UDim2.new(0, 248, 0, 252)
+housePanel.BackgroundColor3 = LEGACY_PANEL
+housePanel.BackgroundTransparency = 0.02
+housePanel.Visible = false
+housePanel.Parent = gui
+round(housePanel, 2)
+outline(housePanel, 2)
+
+local houseTitle = Instance.new("TextLabel")
+houseTitle.BackgroundColor3 = LEGACY_BLUE
+houseTitle.BorderSizePixel = 0
+houseTitle.Size = UDim2.new(1, 0, 0, 28)
+houseTitle.Font = Enum.Font.ArialBold
+houseTitle.Text = "House"
+houseTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseTitle.TextSize = 15
+houseTitle.Parent = housePanel
+
+local houseStatus = Instance.new("TextLabel")
+houseStatus.BackgroundTransparency = 1
+houseStatus.Position = UDim2.new(0, 10, 0, 36)
+houseStatus.Size = UDim2.new(1, -20, 0, 52)
+houseStatus.Font = Enum.Font.Arial
+houseStatus.Text = "Loading house..."
+houseStatus.TextColor3 = LEGACY_BLUE_DARK
+houseStatus.TextSize = 13
+houseStatus.TextWrapped = true
+houseStatus.TextXAlignment = Enum.TextXAlignment.Left
+houseStatus.TextYAlignment = Enum.TextYAlignment.Top
+houseStatus.Parent = housePanel
+
+local housePrimary = Instance.new("TextButton")
+housePrimary.Name = "HousePrimaryAction"
+housePrimary.Position = UDim2.new(0, 10, 0, 94)
+housePrimary.Size = UDim2.new(1, -20, 0, 38)
+housePrimary.BackgroundColor3 = LEGACY_BUTTON
+housePrimary.Font = Enum.Font.ArialBold
+housePrimary.Text = "BUY HOUSE  •  $50"
+housePrimary.TextColor3 = LEGACY_BLUE_DARK
+housePrimary.TextSize = 13
+housePrimary.Parent = housePanel
+round(housePrimary, 2)
+outline(housePrimary, 1)
+
+local houseEdit = Instance.new("TextButton")
+houseEdit.Name = "HouseEditAction"
+houseEdit.Position = UDim2.new(0, 10, 0, 138)
+houseEdit.Size = UDim2.new(1, -20, 0, 38)
+houseEdit.BackgroundColor3 = LEGACY_BUTTON
+houseEdit.Font = Enum.Font.ArialBold
+houseEdit.Text = "EDIT HOUSE"
+houseEdit.TextColor3 = LEGACY_BLUE_DARK
+houseEdit.TextSize = 13
+houseEdit.Visible = false
+houseEdit.Parent = housePanel
+round(houseEdit, 2)
+outline(houseEdit, 1)
+
+local houseColorLabel = Instance.new("TextLabel")
+houseColorLabel.BackgroundTransparency = 1
+houseColorLabel.Position = UDim2.new(0, 10, 0, 181)
+houseColorLabel.Size = UDim2.new(1, -20, 0, 18)
+houseColorLabel.Font = Enum.Font.ArialBold
+houseColorLabel.Text = "HOUSE COLOR"
+houseColorLabel.TextColor3 = LEGACY_BLUE_DARK
+houseColorLabel.TextSize = 12
+houseColorLabel.TextXAlignment = Enum.TextXAlignment.Left
+houseColorLabel.Visible = false
+houseColorLabel.Parent = housePanel
+
+local colorRow = Instance.new("Frame")
+colorRow.BackgroundTransparency = 1
+colorRow.Position = UDim2.new(0, 10, 0, 202)
+colorRow.Size = UDim2.new(1, -20, 0, 38)
+colorRow.Visible = false
+colorRow.Parent = housePanel
+
+local colorLayout = Instance.new("UIListLayout")
+colorLayout.FillDirection = Enum.FillDirection.Horizontal
+colorLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+colorLayout.Padding = UDim.new(0, 6)
+colorLayout.Parent = colorRow
+
+local HOUSE_STYLES = {
+    { id = "classic-blue", label = "BLUE", color = Color3.fromRGB(176, 190, 199) },
+    { id = "classic-tan", label = "TAN", color = Color3.fromRGB(191, 177, 155) },
+    { id = "classic-red", label = "RED", color = Color3.fromRGB(183, 127, 119) },
+    { id = "classic-green", label = "GREEN", color = Color3.fromRGB(145, 171, 132) },
+}
+
+local latestHousingState = nil
+local housingBusy = false
+local housingMessageUntil = 0
+
+local function setHousingMessage(message)
+    houseStatus.Text = message
+    housingMessageUntil = os.clock() + 2.8
+end
+
+local function applyHousingState(state)
+    if type(state) ~= "table" then
+        return
+    end
+
+    latestHousingState = state
+    local owned = state.owned == true
+    local editing = state.editing == true
+
+    if owned then
+        housePrimary.Text = "TELEPORT TO HOUSE"
+        houseEdit.Visible = true
+        houseEdit.Text = editing and "SAVE HOUSE" or "EDIT HOUSE"
+        houseColorLabel.Visible = editing
+        colorRow.Visible = editing
+
+        if os.clock() >= housingMessageUntil then
+            local plotText = state.plotId and ("  •  " .. tostring(state.plotId)) or ""
+            houseStatus.Text = "Your permanent house" .. plotText
+                .. "\nBalance: $" .. tostring(state.balance or 0)
+        end
+    else
+        housePrimary.Text = "BUY HOUSE  •  $" .. tostring(state.price or 50)
+        houseEdit.Visible = false
+        houseColorLabel.Visible = false
+        colorRow.Visible = false
+
+        if os.clock() >= housingMessageUntil then
+            houseStatus.Text = "Buy your own permanent customizable house."
+                .. "\nBalance: $" .. tostring(state.balance or 0)
+        end
+    end
+
+    housePrimary.Active = state.available ~= false
+    houseEdit.Active = owned and state.plotId ~= nil
+end
+
+local function refreshHousing()
+    local ok, state = pcall(function()
+        return getHousingState:InvokeServer()
+    end)
+    if ok and type(state) == "table" then
+        applyHousingState(state)
+    else
+        setHousingMessage("House service unavailable. Try again.")
+    end
+end
+
+for _, spec in ipairs(HOUSE_STYLES) do
+    local button = Instance.new("TextButton")
+    button.Name = "HouseColor_" .. spec.id
+    button.Size = UDim2.new(0, 50, 1, 0)
+    button.BackgroundColor3 = spec.color
+    button.Font = Enum.Font.ArialBold
+    button.Text = spec.label
+    button.TextColor3 = Color3.fromRGB(35, 55, 69)
+    button.TextSize = 10
+    button.Parent = colorRow
+    round(button, 2)
+    outline(button, 1)
+
+    button.Activated:Connect(function()
+        if housingBusy or not latestHousingState or latestHousingState.editing ~= true then
+            return
+        end
+
+        housingBusy = true
+        local ok, response = pcall(function()
+            return setHouseStyle:InvokeServer(spec.id)
+        end)
+        housingBusy = false
+
+        if ok and type(response) == "table" and response.accepted == true then
+            setHousingMessage("House color updated.")
+            applyHousingState(response)
+        else
+            setHousingMessage("Could not change house color.")
+            refreshHousing()
+        end
+    end)
+end
+
+houseIcon.Activated:Connect(function()
+    housePanel.Visible = not housePanel.Visible
+    if housePanel.Visible then
+        refreshHousing()
+    end
+end)
+
+housePrimary.Activated:Connect(function()
+    if housingBusy then
+        return
+    end
+
+    housingBusy = true
+    housePrimary.Active = false
+
+    local ok, response
+    if latestHousingState and latestHousingState.owned == true then
+        housePrimary.Text = "TELEPORTING..."
+        ok, response = pcall(function()
+            return teleportToHouse:InvokeServer()
+        end)
+    else
+        housePrimary.Text = "BUYING..."
+        ok, response = pcall(function()
+            return buyHouse:InvokeServer()
+        end)
+    end
+
+    housingBusy = false
+    housePrimary.Active = true
+
+    if not ok or type(response) ~= "table" then
+        setHousingMessage("House service unavailable. Try again.")
+        refreshHousing()
+        return
+    end
+
+    if response.accepted ~= true then
+        if response.code == "insufficient_funds" then
+            setHousingMessage("You need $50 RHS Cash to buy this house.")
+        elseif response.code == "no_plot_available" then
+            setHousingMessage("No house plot is available in this server.")
+        else
+            setHousingMessage("That house action is not available right now.")
+        end
+    elseif response.code == "house_purchased" then
+        setHousingMessage("House purchased! Use Teleport to House to find it.")
+    elseif response.code == "teleported_to_house" then
+        setHousingMessage("Teleported to your house.")
+    end
+
+    applyHousingState(response)
+end)
+
+houseEdit.Activated:Connect(function()
+    if housingBusy or not latestHousingState or latestHousingState.owned ~= true then
+        return
+    end
+
+    housingBusy = true
+    houseEdit.Active = false
+    local nextEditing = latestHousingState.editing ~= true
+    local ok, response = pcall(function()
+        return setHouseEditMode:InvokeServer(nextEditing)
+    end)
+    housingBusy = false
+    houseEdit.Active = true
+
+    if ok and type(response) == "table" and response.accepted == true then
+        setHousingMessage(nextEditing and "Edit House mode enabled." or "House saved.")
+        applyHousingState(response)
+    else
+        setHousingMessage("Could not update Edit House mode.")
+        refreshHousing()
+    end
+end)
+
+task.spawn(function()
+    while gui.Parent do
+        if housePanel.Visible then
+            refreshHousing()
+        end
+        task.wait(1.0)
+    end
+end)
