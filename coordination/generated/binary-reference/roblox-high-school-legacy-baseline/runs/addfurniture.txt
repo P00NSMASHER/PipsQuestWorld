@@ -1,0 +1,272 @@
+=== chunk=145 type=PROP offset=755 runSha256=76b5ac519c5394672ea849ff379d40a9ed4c2b409013bc16be0f3ee85a82050d ===
+AddFurniture
+=== chunk=419 type=PROP offset=343117 runSha256=0941089493677cc89d0ba1c270416ab04c957653621b4fc4b83ed0351de34b15 ===
+script.Parent.MouseButton1Click:connect(function()
+	script.Parent.Parent.Parent.AddFurniture:Fire(script.Parent)
+end)v
+=== chunk=419 type=PROP offset=345461 runSha256=157449c96ffe5f38f1ca406d2977889b1a97badbe73094e09648f68960d573d9 ===
+local shopname = script.Parent.Name
+if shopname:match("ACTIVE_") then
+	shopname = string.sub(shopname,8)
+end
+
+local shop = {} --table referencing all the objects that belong to the category
+
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+	if v.Name:match("furni_") then
+		table.insert(shop,v)
+	end
+end
+
+local gui = script.Parent:WaitForChild("Frame")
+local plr = game.Players.LocalPlayer
+local enabled = gui:WaitForChild("Enabled")
+local selectedcategory = gui:WaitForChild("Category")
+
+local savedcategory = plr:FindFirstChild("FurnitureShopCategory")
+if not savedcategory then
+	savedcategory = Instance.new("StringValue",plr)
+	savedcategory.Name = "FurnitureShopCategory"
+	savedcategory.Value = "Seating"
+end
+
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+
+function getAvailableItemCount(id)
+	local count = 0
+	for _,v in pairs(data.Objects:GetChildren()) do
+		if tonumber(v.Name) == id then
+			count = count + 1
+		end
+	end
+	local furnbought = data.FurnitureCost:FindFirstChild(id)
+	if furnbought then
+		count = count + furnbought.PendingSales.Value + furnbought.Value --items in Objects - sold items - added items (or + removed items)
+	end
+	return count
+end
+
+--now load all the buttons
+function loadCategory(categoryname)
+	if enabled.Value == true then
+		local xv = 0
+		local yv = 0
+		
+		selectedcategory.Value = categoryname
+		savedcategory.Value = categoryname
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.Name ~= "BaseButton" then
+				v:Destroy()
+			end
+		end
+		
+		for i,v in pairs(shop) do
+			if v.Category.Value == selectedcategory.Value and not (v:FindFirstChild("NotForSale") and getAvailableItemCount(v.ItemID.Value) <= 0) and not (v:FindFirstChild("ReleaseTime") and v.ReleaseTime.Value > game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) then
+				local button = gui.Items.BaseButton:clone() --make new button for each item
+				button.Parent = gui.Items
+				button.Name = v.Name
+				button.ItemID.Value = v.ItemID.Value
+				button.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. v.ModelID.Value
+				button.Position = UDim2.new(0, xv*75, 0, yv*75)
+				if v:FindFirstChild("TwitterCode") then
+					local bird = script.TwitterBird:clone()
+					bird.Parent = button
+					bird.Visible = true
+				end
+				if v:FindFirstChild("ReleaseTime") and game.ReplicatedStorage.IntroGUIData.CurrentTime.Value - v.ReleaseTime.Value < 86400*21 then
+					local newb = script.NewBanner:clone()
+					newb.Parent = button
+					newb.Visible = true
+				end
+				xv = xv + 1
+				if xv == 4 then
+					xv = 0
+					yv = yv + 1
+				end
+				button.Visible = true
+			end
+		end
+		
+		gui.Items.CanvasSize = UDim2.new(0,0,0,(yv + 1) * 75)
+		gui.LoadItemInfo:Fire()
+		setButtonColors()
+		
+		for _,v in pairs(gui.Nav:GetChildren()) do
+			if v.Name == categoryname then
+				v.BackgroundTransparency = 0
+			else
+				v.BackgroundTransparency = .5
+			end
+		end
+	end
+end
+
+local module = require(game.ReplicatedStorage.Modules.InterfaceModule)
+module.openWindow(gui)
+
+
+function setButtonColors()
+	for _,button in pairs(gui.Items:GetChildren()) do
+		if button.Name ~= "BaseButton" then
+			if getAvailableItemCount(button.ItemID.Value) > 0 then --has object
+				button.BackgroundColor3 = Color3.new(.5,1,.5)
+			else
+				button.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			if gui.SelectedItem.Value == button.ItemID.Value then
+				button.BackgroundColor3 = Color3.new(1,1,.25)
+			end
+		end
+	end
+end
+
+
+function displayFailureWindow(result,reason) --reason == amount of cash needed
+	if result == false then
+		
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Oops!"
+		failure.Reason.Text = reason
+		failure.NormalButton.Visible = true
+		failure.OptionButtons.Visible = false
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+	elseif result == "sell" then --reason is the obj
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Sell Item? (70%)"
+		failure.Reason.Text = "Sell this item for $"..math.ceil(reason.ItemCost.Value * .7).."? This will be deducted from your final expenses."
+		failure.NormalButton.Visible = false
+		failure.OptionButtons.Visible = true
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.ItemID.Value == gui.SelectedItem.Value then
+				gui.LoadItemInfo:Fire(v)
+				break
+			end
+		end
+	end
+end
+
+
+gui.AddFurniture.Event:connect(function(button)
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			local oldbg = button.BackgroundColor3
+			local oldborder = button.BorderColor3
+			button.BackgroundColor3 = Color3.new(.6,.6,.6)
+			button.BorderColor3 = Color3.new(.1,.1,.1)
+			local result,reason = game.ReplicatedStorage.RemoteFunctions.GetFurniture:InvokeServer(obj.Name)
+			if result == true then
+				module.closeWindow(script.Parent)
+			elseif result == false then
+				displayFailureWindow(result,reason)
+			end
+			button.BackgroundColor3 = oldbg
+			button.BorderColor3 = oldborder
+			enabled.Value = true
+		end
+	end
+end)
+
+gui.SellFurniture.Event:connect(function()
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			displayFailureWindow("sell",obj)
+			enabled.Value = true
+		end
+	end
+end)
+
+
+gui.LoadItemInfo.Event:connect(function(button) --selected button, get item data
+	if enabled.Value == true then
+		if button ~= nil then
+			local itemdata = game.ReplicatedStorage.Objects:FindFirstChild(button.Name)
+			local itemname = string.sub(button.Name,7)
+			gui.Desc.ItemName.Text = itemname
+			gui.Desc.ItemDesc.Text = itemdata.ItemDesc.Value
+			
+			local count = getAvailableItemCount(itemdata.ItemID.Value)
+			if count < 0 then count = 0 end
+			
+			gui.Desc.ItemsOwned.Text = "["..count.."] in Inventory"
+			gui.Desc.ItemCost.Text = "Price: $"..itemdata.ItemCost.Value
+			gui.Desc.TwitterNotice.Text = ""
+			gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(0, 48/255, 99/255) --items are available
+			
+			--[[
+				gui.Desc.BuyButton.Visible = false
+				gui.Desc.SellButton.Visible = false
+				gui.Desc.ItemCost.Text = ""
+				gui.Desc.ItemsOwned.Text = ""
+				gui.Desc.TwitterNotice.Text = ""
+			--]]
+			
+			if itemdata:FindFirstChild("TwitterCode") then
+				if count > 0 and data.IsInFanClub.Value == true then --owned
+					gui.Desc.BuyButton.Visible = true
+					gui.Desc.SellButton.Visible = false
+				else --need code
+					gui.Desc.BuyButton.Visible = false
+					gui.Desc.SellButton.Visible = false
+					gui.Desc.ItemCost.Text = ""
+					gui.Desc.ItemsOwned.Text = ""
+					gui.Desc.TwitterNotice.Text = "Join the RHS Fan Club, and this item will be unlocked when you play tomorrow! The link is in the game's description."
+				end
+			else
+				gui.Desc.BuyButton.Visible = true
+				if count > 0 then --owned
+					gui.Desc.SellButton.Text = "Sell Item ($"..math.ceil(itemdata.ItemCost.Value * .7)..")"
+					if itemdata:FindFirstChild("NotForSale") then
+						gui.Desc.SellButton.Visible = false
+					else
+						gui.Desc.SellButton.Visible = true
+					end
+				else
+					gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(1,0,0)
+					gui.Desc.SellButton.Visible = false
+				end
+			end
+			
+			for i,v in pairs(gui.Items:GetChildren()) do
+				v.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			button.BackgroundColor3 = Color3.new(1,1,.25)
+			gui.SelectedItem.Value = button.ItemID.Value
+			setButtonColors()
+		else
+			--[[gui.Desc.BuyButton.Visible = false
+			gui.Desc.SellButton.Visible = false
+			gui.Desc.ItemCost.Text = ""
+			gui.Desc.ItemsOwned.Text = ""
+			gui.Desc.ItemName.Text = "Welcome!"
+			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+			gui.SelectedItem.Value = 0
+			gui.Desc.TwitterNotice.Text = ""]]
+		end
+	end
+end)
+
+gui.LoadMenu.Event:connect(function(categoryname)
+	loadCategory(categoryname)
+end)
+
+loadCategory(savedcategory.Value)

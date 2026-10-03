@@ -1,0 +1,4 @@
+chunk=145 type=PROP offset=131 | SaveHouse	
+chunk=419 type=PROP offset=154392 | 	script.Parent.Parent.SaveHouse:Fire()
+chunk=419 type=PROP offset=157256 | 			script.Parent.Parent.Parent.Parent.SaveHouse:Fire(true)
+chunk=419 type=PROP offset=159001 | frame.SaveHouse.Event:connect(function(confirmed)

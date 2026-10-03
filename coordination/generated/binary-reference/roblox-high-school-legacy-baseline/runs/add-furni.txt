@@ -1,0 +1,677 @@
+=== chunk=419 type=PROP offset=345461 runSha256=157449c96ffe5f38f1ca406d2977889b1a97badbe73094e09648f68960d573d9 ===
+local shopname = script.Parent.Name
+if shopname:match("ACTIVE_") then
+	shopname = string.sub(shopname,8)
+end
+
+local shop = {} --table referencing all the objects that belong to the category
+
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+	if v.Name:match("furni_") then
+		table.insert(shop,v)
+	end
+end
+
+local gui = script.Parent:WaitForChild("Frame")
+local plr = game.Players.LocalPlayer
+local enabled = gui:WaitForChild("Enabled")
+local selectedcategory = gui:WaitForChild("Category")
+
+local savedcategory = plr:FindFirstChild("FurnitureShopCategory")
+if not savedcategory then
+	savedcategory = Instance.new("StringValue",plr)
+	savedcategory.Name = "FurnitureShopCategory"
+	savedcategory.Value = "Seating"
+end
+
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+
+function getAvailableItemCount(id)
+	local count = 0
+	for _,v in pairs(data.Objects:GetChildren()) do
+		if tonumber(v.Name) == id then
+			count = count + 1
+		end
+	end
+	local furnbought = data.FurnitureCost:FindFirstChild(id)
+	if furnbought then
+		count = count + furnbought.PendingSales.Value + furnbought.Value --items in Objects - sold items - added items (or + removed items)
+	end
+	return count
+end
+
+--now load all the buttons
+function loadCategory(categoryname)
+	if enabled.Value == true then
+		local xv = 0
+		local yv = 0
+		
+		selectedcategory.Value = categoryname
+		savedcategory.Value = categoryname
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.Name ~= "BaseButton" then
+				v:Destroy()
+			end
+		end
+		
+		for i,v in pairs(shop) do
+			if v.Category.Value == selectedcategory.Value and not (v:FindFirstChild("NotForSale") and getAvailableItemCount(v.ItemID.Value) <= 0) and not (v:FindFirstChild("ReleaseTime") and v.ReleaseTime.Value > game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) then
+				local button = gui.Items.BaseButton:clone() --make new button for each item
+				button.Parent = gui.Items
+				button.Name = v.Name
+				button.ItemID.Value = v.ItemID.Value
+				button.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. v.ModelID.Value
+				button.Position = UDim2.new(0, xv*75, 0, yv*75)
+				if v:FindFirstChild("TwitterCode") then
+					local bird = script.TwitterBird:clone()
+					bird.Parent = button
+					bird.Visible = true
+				end
+				if v:FindFirstChild("ReleaseTime") and game.ReplicatedStorage.IntroGUIData.CurrentTime.Value - v.ReleaseTime.Value < 86400*21 then
+					local newb = script.NewBanner:clone()
+					newb.Parent = button
+					newb.Visible = true
+				end
+				xv = xv + 1
+				if xv == 4 then
+					xv = 0
+					yv = yv + 1
+				end
+				button.Visible = true
+			end
+		end
+		
+		gui.Items.CanvasSize = UDim2.new(0,0,0,(yv + 1) * 75)
+		gui.LoadItemInfo:Fire()
+		setButtonColors()
+		
+		for _,v in pairs(gui.Nav:GetChildren()) do
+			if v.Name == categoryname then
+				v.BackgroundTransparency = 0
+			else
+				v.BackgroundTransparency = .5
+			end
+		end
+	end
+end
+
+local module = require(game.ReplicatedStorage.Modules.InterfaceModule)
+module.openWindow(gui)
+
+
+function setButtonColors()
+	for _,button in pairs(gui.Items:GetChildren()) do
+		if button.Name ~= "BaseButton" then
+			if getAvailableItemCount(button.ItemID.Value) > 0 then --has object
+				button.BackgroundColor3 = Color3.new(.5,1,.5)
+			else
+				button.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			if gui.SelectedItem.Value == button.ItemID.Value then
+				button.BackgroundColor3 = Color3.new(1,1,.25)
+			end
+		end
+	end
+end
+
+
+function displayFailureWindow(result,reason) --reason == amount of cash needed
+	if result == false then
+		
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Oops!"
+		failure.Reason.Text = reason
+		failure.NormalButton.Visible = true
+		failure.OptionButtons.Visible = false
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+	elseif result == "sell" then --reason is the obj
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Sell Item? (70%)"
+		failure.Reason.Text = "Sell this item for $"..math.ceil(reason.ItemCost.Value * .7).."? This will be deducted from your final expenses."
+		failure.NormalButton.Visible = false
+		failure.OptionButtons.Visible = true
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.ItemID.Value == gui.SelectedItem.Value then
+				gui.LoadItemInfo:Fire(v)
+				break
+			end
+		end
+	end
+end
+
+
+gui.AddFurniture.Event:connect(function(button)
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			local oldbg = button.BackgroundColor3
+			local oldborder = button.BorderColor3
+			button.BackgroundColor3 = Color3.new(.6,.6,.6)
+			button.BorderColor3 = Color3.new(.1,.1,.1)
+			local result,reason = game.ReplicatedStorage.RemoteFunctions.GetFurniture:InvokeServer(obj.Name)
+			if result == true then
+				module.closeWindow(script.Parent)
+			elseif result == false then
+				displayFailureWindow(result,reason)
+			end
+			button.BackgroundColor3 = oldbg
+			button.BorderColor3 = oldborder
+			enabled.Value = true
+		end
+	end
+end)
+
+gui.SellFurniture.Event:connect(function()
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			displayFailureWindow("sell",obj)
+			enabled.Value = true
+		end
+	end
+end)
+
+
+gui.LoadItemInfo.Event:connect(function(button) --selected button, get item data
+	if enabled.Value == true then
+		if button ~= nil then
+			local itemdata = game.ReplicatedStorage.Objects:FindFirstChild(button.Name)
+			local itemname = string.sub(button.Name,7)
+			gui.Desc.ItemName.Text = itemname
+			gui.Desc.ItemDesc.Text = itemdata.ItemDesc.Value
+			
+			local count = getAvailableItemCount(itemdata.ItemID.Value)
+			if count < 0 then count = 0 end
+			
+			gui.Desc.ItemsOwned.Text = "["..count.."] in Inventory"
+			gui.Desc.ItemCost.Text = "Price: $"..itemdata.ItemCost.Value
+			gui.Desc.TwitterNotice.Text = ""
+			gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(0, 48/255, 99/255) --items are available
+			
+			--[[
+				gui.Desc.BuyButton.Visible = false
+				gui.Desc.SellButton.Visible = false
+				gui.Desc.ItemCost.Text = ""
+				gui.Desc.ItemsOwned.Text = ""
+				gui.Desc.TwitterNotice.Text = ""
+			--]]
+			
+			if itemdata:FindFirstChild("TwitterCode") then
+				if count > 0 and data.IsInFanClub.Value == true then --owned
+					gui.Desc.BuyButton.Visible = true
+					gui.Desc.SellButton.Visible = false
+				else --need code
+					gui.Desc.BuyButton.Visible = false
+					gui.Desc.SellButton.Visible = false
+					gui.Desc.ItemCost.Text = ""
+					gui.Desc.ItemsOwned.Text = ""
+					gui.Desc.TwitterNotice.Text = "Join the RHS Fan Club, and this item will be unlocked when you play tomorrow! The link is in the game's description."
+				end
+			else
+				gui.Desc.BuyButton.Visible = true
+				if count > 0 then --owned
+					gui.Desc.SellButton.Text = "Sell Item ($"..math.ceil(itemdata.ItemCost.Value * .7)..")"
+					if itemdata:FindFirstChild("NotForSale") then
+						gui.Desc.SellButton.Visible = false
+					else
+						gui.Desc.SellButton.Visible = true
+					end
+				else
+					gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(1,0,0)
+					gui.Desc.SellButton.Visible = false
+				end
+			end
+			
+			for i,v in pairs(gui.Items:GetChildren()) do
+				v.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			button.BackgroundColor3 = Color3.new(1,1,.25)
+			gui.SelectedItem.Value = button.ItemID.Value
+			setButtonColors()
+		else
+			--[[gui.Desc.BuyButton.Visible = false
+			gui.Desc.SellButton.Visible = false
+			gui.Desc.ItemCost.Text = ""
+			gui.Desc.ItemsOwned.Text = ""
+			gui.Desc.ItemName.Text = "Welcome!"
+			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+			gui.SelectedItem.Value = 0
+			gui.Desc.TwitterNotice.Text = ""]]
+		end
+	end
+end)
+
+gui.LoadMenu.Event:connect(function(categoryname)
+	loadCategory(categoryname)
+end)
+
+loadCategory(savedcategory.Value)
+=== chunk=595 type=PROP offset=59419 runSha256=d5d183b9c5e5847765b4a4fb931595c0412f10f123d5235454ed4d0d7fcbb3af ===
+--add music
+
+local Prefix = "music"
+local AssetID = 188712851
+local objName = "Walk the Moon - Shut up and Dance"
+local Genre = "Rock"
+local ItemCost = 40
+local ItemID
+local Modifier = 0
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local ai = Instance.new("IntValue",obj)
+ai.Name = "AssetID"
+ai.Value = AssetID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "Genre"
+gen.Value = Genre
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local modi = Instance.new("NumberValue",obj)
+modi.Name = "Modifier"
+modi.Value = Modifier
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add pets (according to a part in the workspace [rename to PetPart during processing])
+
+local Prefix = "pets"
+local DecalID = 224060528
+local objName = "The Golden ROBLOXian"
+local desc = "A glowing, sparkling golden statue. If you own this incredibly rare statue, people will forever be in awe of you."
+local ItemCost = 50000
+local LPCost
+local ItemID
+
+local TwitterCode --ye
+
+--if not workspace:FindFirstChild(objName) then return end
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local petpart = workspace.PetPart
+petpart.Name = "PetPart"
+petpart.Parent = obj
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add gear (according to an in-game tool in workspace) (set Tool TextureId to DecalID)
+
+local Prefix = "gear"
+
+local DecalID = 600231089
+local objName = "Madi's Broken Guitar"
+local desc = "A souvenir from Madi. This favorite guitar of hers doesn't work anymore, but you can still use it  to look like a rock star!"
+local ItemCost = 0
+local NotForSale = true
+local LPCost
+local ItemID
+local TwitterCode --set this if we want a TwitterCode
+
+local DayOfHolidayEvent -- = 8
+local ReleaseTime -- = 1482307200 -- + (DayOfHolidayEvent - 1) * 86400 -- (day 1: 12/21)
+local OffSaleTime -- = 1484143200 -- (1/11, 14:00 UTC)
+
+if not workspace:FindFirstChild(objName) then return end
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+if OffSaleTime then
+	local ost = Instance.new("IntValue",obj)
+	ost.Name = "TimeToGoOffSale"
+	ost.Value = OffSaleTime
+end
+
+if NotForSale then
+	local nfs = Instance.new("BoolValue",obj)
+	nfs.Name = "NotForSale"
+	nfs.Value = true
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local petpart = workspace[objName]
+petpart.Parent = obj
+petpart.TextureId = "http://www.roblox.com/asset/?id="..DecalID
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+if ReleaseTime then
+	local rt = Instance.new("IntValue",obj)
+	rt.Name = "ReleaseTime"
+	rt.Value = ReleaseTime
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+print("success - "..highest + 1)
+
+
+
+--add furniture (according to a model ID)
+
+--has to be done from the Furniture place first
+
+
+
+--add vehicles (according to an in-game model in workspace) (we move all the car's actual parts out of the model it's enclosed in in the workspace)
+
+local Prefix = "vehic"
+local DecalID = 580912188
+local objName = "Frostrider Ultimate"
+local desc = "A legendary car crafted with ice from the North Pole! It leaves a frosty trail behind and emits the sound of Santa's sleigh bells as you drive!"
+local ItemCost = 21000
+local LPCost
+local ItemID
+
+local DayOfHolidayEvent = 5
+local ReleaseTime = 1482307200 + (DayOfHolidayEvent - 1) * 86400 -- (day 1: 12/21)
+local OffSaleTime = 1484143200 -- (1/11, 14:00 UTC)
+
+local TwitterCode --set this if we want a TwitterCode
+
+if not workspace:FindFirstChild(objName) then return end
+
+local obj = workspace[objName]
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+if ReleaseTime then
+	local rt = Instance.new("IntValue",obj)
+	rt.Name = "ReleaseTime"
+	rt.Value = ReleaseTime
+end
+if OffSaleTime then
+	local ost = Instance.new("IntValue",obj)
+	ost.Name = "TimeToGoOffSale"
+	ost.Value = OffSaleTime
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+obj.Parent = game.ReplicatedStorage.Objects
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add a special developer product marker
+
+
+local Prefix = "devprod"
+local objName = "RHS Starter Pack"
+local ItemCost = 100000
+local ItemID
+
+local TwitterCode
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+print(objName.." item ID: "..id.Value)
+
+
+
+
+--add a special loyalty product (loyalty (single purch) or loyaltymulti)
+
+
+local Prefix = "loyaltymulti"
+local objName = "+$14,500 RHS Cash"
+local ItemDesc = "Trade in your Loyalty Points to receive a ton of RHS Cash!"
+local LPCost = 100000
+local DecalID = 345974014
+local CashValueToAdd = 14500 --set this if it is a cash product
+local ItemID
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = 0
+local desc = Instance.new("StringValue",obj)
+desc.Name = "ItemDesc"
+desc.Value = ItemDesc
+Instance.new("BoolValue",obj).Name = "NotForSale"
+Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+local lpc = Instance.new("IntValue",obj)
+lpc.Name = "LPCost"
+lpc.Value = LPCost
+if CashValueToAdd then
+	local cvta = Instance.new("IntValue",obj)
+	cvta.Name = "CashValueToAdd"
+	cvta.Value = CashValueToAdd
+end
+local di = Instance.new("IntValue",obj)
+di.Name = "DecalID"
+di.Value = DecalID
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+print(objName.." item ID: "..id.Value)
+
+
+
+
+
+--convert ROBLOX dialog to my dialog
+
+for _,v in pairs(game.ReplicatedStorage.Dialog:GetChildren()) do
+	if v:IsA("Dialog") then
+		local rdialog = v
+		local name = v.Name
+		
+		local function createChoice(rchoice,currentlocation)
+			local choice = Instance.new("Folder",currentlocation)
+			choice.Name = rchoice.Name
+			local response = Instance.new("StringValue",choice)
+			response.Name = "ResponseDialog"
+			response.Value = rchoice.ResponseDialog
+			local user = Instance.new("StringValue",choice)
+			user.Name = "UserDialog"
+			user.Value = rchoice.UserDialog
+			return choice
+		end
+		
+		local function checkOptions(instance,currentlocation) --currentlocation is in the NEW dialog
+			for i=1,4 do
+				if instance:FindFirstChild(i) then
+					local choice = createChoice(instance:FindFirstChild(i),currentlocation)
+					checkOptions(instance:FindFirstChild(i),choice)
+				end
+			end
+		end
+		
+		local dialog = Instance.new("StringValue",game.ReplicatedStorage.Dialog)
+		dialog.Name = name
+		dialog.Value = rdialog.InitialPrompt
+		
+		checkOptions(rdialog,dialog)
+	end
+end
+
+
+
+
+local highest = 243
+for _,v in pairs(game.ReplicatedStorage.NewFurniture:GetChildren()) do
+	local id = Instance.new("IntValue",v)
+	id.Name = "ItemID"
+	id.Value = highest
+	highest = highest + 1
+	v.Parent = game.ReplicatedStorage.Objects
+end
+game.ReplicatedStorage.NewFurniture:Destroy()
+print("next open item ID: "..highest)
+
+
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+print("next open item ID: "..highest + 1)
+
+
+
+
+
+
+local toselect = {}
+for _,v in pairs(workspace.SELECTPART:GetTouchingParts()) do
+	table.insert(toselect,v)
+end
+game.Selection:Set(toselect)
+=== chunk=833 type=PROP offset=37005 runSha256=905e48b308a849220f08ae542f1559f0bf47e35642d8ac925bb9bdde33d62b5f ===
+You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+
+=== chunk=978 type=PROP offset=580 runSha256=7fbb7f23a97a2babd61e16fb7fa583b52c0b19530bce54a39c41f1c10fef7feb ===
+Add Furniture
+=== chunk=1012 type=PROP offset=15732 runSha256=3f4fe0198e6bedc2565b5df78e319fbb579d02bf479dc18acc9d9cc8b7b98c0f ===
+Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.

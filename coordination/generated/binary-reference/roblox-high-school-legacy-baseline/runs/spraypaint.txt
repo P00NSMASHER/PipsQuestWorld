@@ -1,0 +1,145 @@
+=== chunk=125 type=PROP offset=499 runSha256=fa93591ceeb35a8af57e7d5408a6a3c49fbce4197d42cd65fffa1e4e439bda88 ===
+SprayPaint
+
+=== chunk=417 type=PROP offset=906 runSha256=850699295c5d22eedb717447158184ebd1897da0e4b0e2a95d70a7311fec5476 ===
+LocalSprayPaintDrawer
+=== chunk=419 type=PROP offset=95573 runSha256=13c267cf91db4bf12567ef5b63dc31d12e7609a0a1ca0ed3364fd189372bd4ab ===
+spraysize = 5
+cooldown = 1.9
+baseid = "http://www.roblox.com/asset/?id="
+
+game.ReplicatedStorage.RemoteFunctions.SendSprayPaint.OnClientEvent:connect(function(plr,sprayid, mousepos, surface, target)
+	if target == nil then return end
+	local canspray=false
+	if (surface==Enum.NormalId.Front or surface==Enum.NormalId.Back) and target.Size.x>=spraysize and target.Size.y>=spraysize then
+		canspray=true
+	elseif (surface==Enum.NormalId.Left or surface==Enum.NormalId.Right) and target.Size.y>=spraysize and target.Size.z>=spraysize then
+		canspray=true
+	elseif (surface==Enum.NormalId.Top or surface==Enum.NormalId.Bottom) and target.Size.x>=spraysize and target.Size.z>=spraysize then
+		canspray=true
+	end
+	if canspray then
+		local p=Instance.new("Part")
+		local d=Instance.new("Decal")
+		d.Texture=baseid..tostring(sprayid-1)
+		d.Face=surface
+		d.Parent=p
+		p.Name="!SPRAY_"..plr.Name
+		p.formFactor="Custom"
+		p.Anchored=false
+		p.CanCollide=false
+		p.Transparency=1
+		p.CustomPhysicalProperties = PhysicalProperties.new(0.01,1,1)
+		if surface==Enum.NormalId.Front or surface==Enum.NormalId.Back then
+			p.Size=Vector3.new(spraysize,spraysize,.2)
+		elseif surface==Enum.NormalId.Left or surface==Enum.NormalId.Right then
+			p.Size=Vector3.new(.2,spraysize,spraysize)
+		elseif surface==Enum.NormalId.Top or surface==Enum.NormalId.Bottom then
+			p.Size=Vector3.new(spraysize,.2,spraysize)
+		end
+		local w=Instance.new("Weld")
+		w.Part0=target
+		w.Part1=p
+		local cf=CFrame.new(target.CFrame:pointToObjectSpace(mousepos))
+		w.C0=cf
+		w.C1=CFrame.new(0,0,0)
+		w.Parent=target
+		p.CFrame=target.CFrame:toWorldSpace(cf)		--this is here to position the spray other wise it will be at 0,0,0 if the target is anchored
+		game:GetService("Debris"):AddItem(p,60)
+		p.Parent=game.Workspace
+	end
+end)
+=== chunk=419 type=PROP offset=673966 runSha256=dcf61fb9cf43b1609f785888abfb05889ea17bc752539930dbcc4459a320d4ea ===
+--Stickmasterluke
+
+
+sp=script.Parent
+
+cooldown=2.1
+
+baseid="http://www.roblox.com/asset/?id="
+sprayid=80373024
+local debris=game:GetService("Debris")
+equipped=false
+check=true
+
+while gui==nil do
+	wait()
+	gui=sp:FindFirstChild("SprayGui")
+end
+
+function updateid()
+	if gui:FindFirstChild("Frame") and gui.Frame:FindFirstChild("ImageLabel") and gui.Frame:FindFirstChild("Frame") then
+		sprayid=tonumber(tostring(gui.Frame.Frame.TextBox.Text)) or 0
+		gui.Frame.ImageLabel.Image=baseid..tostring(sprayid-1)
+		gui.Frame.Frame.TextBox.Text=tostring(sprayid)
+	end
+end
+
+gui.Frame.Frame.TextBox.Changed:connect(updateid)
+updateid()
+
+function onEquipped(mouse)
+	equipped=true
+	local plr=game.Players.LocalPlayer
+	if mouse~=nil and plr~=nil then
+		local plrgui=plr.PlayerGui
+		if plrgui~=nil then
+			gui.Parent=plrgui
+		end
+		mouse.Button1Down:connect(function()
+			local chr=sp.Parent
+			if chr and check and mouse.Target~=nil and mouse.TargetSurface~=nil and mouse.Target.Name~="Spray" and mouse.Target.Name~="Effect" and sprayid>0 then
+				local surface=mouse.TargetSurface
+				local t=chr:FindFirstChild("HumanoidRootPart")
+				local h=chr:FindFirstChild("Humanoid")
+				local animobject=sp:FindFirstChild("SprayPaint")
+				if t and h and animobject then
+					if h.Health>0 then
+						check=false
+						anim=h:LoadAnimation(animobject)
+						if anim then
+							anim:Play()
+							sp.Handle.Sound:Play()
+						end
+						script.Parent.SprayEvent:FireServer(sprayid,t.Position, mouse.Hit.p, surface, mouse.Target)
+						wait(cooldown)
+						sp.Handle.Sound:Stop()
+						check=true
+					end
+				end
+			end
+		end)
+	end
+end
+
+function onUnequipped()
+	gui.Parent=sp
+	equipped=false
+end
+
+sp.Equipped:connect(onEquipped)
+sp.Unequipped:connect(onUnequipped)
+
+
+=== chunk=574 type=PROP offset=1038 runSha256=3d0e8d31f6460db55266887d861835b3f432c521857feccfb73fea6e76e8759c ===
+SendSprayPaint
+=== chunk=595 type=PROP offset=989678 runSha256=3fe0c3738864613cfabb868e2f24cad79cf6fa7abd4d5aba8254e44036c30852 ===
+range = 18
+cooldown = 1.9
+enabled = script.Parent.IsEnabled
+baseid = "http://www.roblox.com/asset/?id="
+
+script.Parent.SprayEvent.OnServerEvent:connect(function(plr,sprayid,torsopos, mousepos, surface, target)
+	if target == nil or enabled.Value == false then return end
+	enabled.Value = true
+	if (torsopos-mousepos).magnitude<range then
+		for _,p in pairs(game.Players:GetChildren()) do
+			if p == plr or (plr:FindFirstChild("CanUserChat") and plr.CanUserChat.Value == true and p:FindFirstChild("CanUserChat") and p.CanUserChat.Value == true and game.ServerStorage.RemoteFunctions.PlayersAreFriends:Invoke(plr,p)) then
+				game.ReplicatedStorage.RemoteFunctions.SendSprayPaint:FireClient(p, plr, sprayid, mousepos, surface, target)
+			end
+		end
+	end
+	wait(cooldown)
+	enabled.Value = true
+end)!

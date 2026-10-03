@@ -1,0 +1,3 @@
+chunk=145 type=PROP offset=755 | AddFurniture
+chunk=419 type=PROP offset=343117 | 	script.Parent.Parent.Parent.AddFurniture:Fire(script.Parent)
+chunk=419 type=PROP offset=345461 | gui.AddFurniture.Event:connect(function(button)

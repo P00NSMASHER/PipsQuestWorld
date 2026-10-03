@@ -1,0 +1,6 @@
+chunk=125 type=PROP offset=499 | SprayPaint
+chunk=417 type=PROP offset=906 | LocalSprayPaintDrawer
+chunk=419 type=PROP offset=95573 | game.ReplicatedStorage.RemoteFunctions.SendSprayPaint.OnClientEvent:connect(function(plr,sprayid, mousepos, surface, target)
+chunk=419 type=PROP offset=673966 | 				local animobject=sp:FindFirstChild("SprayPaint")
+chunk=574 type=PROP offset=1038 | SendSprayPaint
+chunk=595 type=PROP offset=989678 | 				game.ReplicatedStorage.RemoteFunctions.SendSprayPaint:FireClient(p, plr, sprayid, mousepos, surface, target)

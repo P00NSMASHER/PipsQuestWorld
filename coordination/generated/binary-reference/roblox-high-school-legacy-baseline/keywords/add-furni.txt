@@ -1,0 +1,5 @@
+chunk=419 type=PROP offset=345461 | 			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+chunk=595 type=PROP offset=59419 | --add furniture (according to a model ID)
+chunk=833 type=PROP offset=37005 | You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+chunk=978 type=PROP offset=580 | Add Furniture
+chunk=1012 type=PROP offset=15732 | Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.

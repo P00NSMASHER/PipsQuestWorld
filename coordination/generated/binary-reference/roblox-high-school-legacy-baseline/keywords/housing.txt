@@ -1,2 +1,0 @@
-chunk=419 type=PROP offset=115388 | 				notification:Fire("You've earned $"..cash.Value.." RHS Cash so far, simply for playing the game! Use RHS Cash to buy stuff such as housing & furniture, RHS gear items, cars, and more!",true)
-chunk=474 type=PROP offset=8446 | HousingHelp	

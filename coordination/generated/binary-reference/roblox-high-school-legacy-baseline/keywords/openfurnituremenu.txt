@@ -1,0 +1,5 @@
+chunk=145 type=PROP offset=157 | OpenFurnitureMenu
+chunk=419 type=PROP offset=154490 | 	script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=154490 | 		script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=154490 | 				script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=159001 | frame.OpenFurnitureMenu.Event:connect(function()

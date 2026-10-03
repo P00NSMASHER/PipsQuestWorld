@@ -1,0 +1,5 @@
+chunk=145 type=PROP offset=771 | SellFurniture
+chunk=419 type=PROP offset=343238 | 	script.Parent.Parent.Parent.SellFurniture:Fire(script.Parent)
+chunk=419 type=PROP offset=344264 | 			local result = game.ReplicatedStorage.RemoteFunctions.SellFurniture:InvokeServer(obj.Name)
+chunk=419 type=PROP offset=345461 | gui.SellFurniture.Event:connect(function()
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.SellFurniture.OnServerInvoke = function(plr,objname)

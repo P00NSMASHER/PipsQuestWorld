@@ -9,12 +9,9 @@ chunk=124 type=PROP offset=2736 | rbxassetid://667392217'
 chunk=124 type=PROP offset=2848 | rbxassetid://667392217(
 chunk=124 type=PROP offset=2962 | rbxassetid://667448864'
 chunk=124 type=PROP offset=3162 | rbxassetid://667392217
-chunk=267 type=PROP offset=114 | rbxasset://Textures/SpawnLocation.png)
 chunk=267 type=PROP offset=6412 | rbxassetid://319681563'
-chunk=267 type=PROP offset=9192 | rbxasset://textures/face.png)
 chunk=267 type=PROP offset=15714 | rbxassetid://345972100)
 chunk=267 type=PROP offset=17313 | rbxassetid://606203974*
-chunk=267 type=PROP offset=22813 | rbxasset://Textures/SpawnLocation.png%
 chunk=267 type=PROP offset=23104 | rbxassetid://607236049)
 chunk=267 type=PROP offset=25138 | rbxassetid://24295218
 chunk=267 type=PROP offset=25188 | rbxassetid://24295218)
@@ -80,16 +77,11 @@ chunk=375 type=PROP offset=1566 | rbxassetid://580288915
 chunk=375 type=PROP offset=1618 | rbxassetid://662075045
 chunk=375 type=PROP offset=1644 | rbxassetid://662079058
 chunk=375 type=PROP offset=1696 | rbxassetid://662079058)
-chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
-chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=61191 | Mouse_Icon = "rbxasset://textures/GunCursor.png"
-chunk=419 type=PROP offset=61191 | Reloading_Icon = "rbxasset://textures/GunWaitCursor.png"
 chunk=419 type=PROP offset=61686 | 			x.SoundId = "rbxassetid://"..SplashSound
 chunk=419 type=PROP offset=78041 | 	sound.SoundId = "rbxassetid://224339308" --wind gust
 chunk=419 type=PROP offset=78041 | 	s.SoundId = "rbxassetid://224339090" --ice break
 chunk=419 type=PROP offset=79159 | 	sound.SoundId = "rbxassetid://131886985"
 chunk=419 type=PROP offset=99396 | local hover_icon = "rbxassetid://231195429"
-chunk=419 type=PROP offset=99396 | local normal_icon = "rbxasset://textures/ArrowFarCursor.png"
 chunk=419 type=PROP offset=99396 | local select_sound = "rbxassetid://231188062"
 chunk=419 type=PROP offset=118610 | 			sound.SoundId = "rbxassetid://460261083"
 chunk=419 type=PROP offset=119615 | 	game:GetService("ContentProvider"):Preload("rbxassetid://"..v)
@@ -112,34 +104,10 @@ chunk=419 type=PROP offset=428926 | 			sound.SoundId = "rbxassetid://"..queueite
 chunk=419 type=PROP offset=428926 | 			temp.SoundId = "rbxassetid://"..nextsong.SongID.Value
 chunk=419 type=PROP offset=428926 | 	local id = "rbxassetid://"..songs[musicset][segment]
 chunk=419 type=PROP offset=428926 | 				sound.SoundId = "rbxassetid://"..nextsong.SongID.Value
-chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
-chunk=419 type=PROP offset=507297 | 	mouse.Icon ="rbxasset://textures\\ArrowCursor.png"
-chunk=419 type=PROP offset=507297 | 		--[[mouse.Icon ="rbxasset://textures\\FillCursor.png"
-chunk=419 type=PROP offset=603124 | 				SoundId = 'rbxasset://sounds//Rocket shot.wav';
 chunk=419 type=PROP offset=622644 | 				s.SoundId = "rbxassetid://"..input.Text
-chunk=419 type=PROP offset=675711 | 	mouse.Icon = bool == true and "rbxasset://textures\\GunCursor.png" or "rbxasset://textures\\GunWaitCursor.png"
-chunk=419 type=PROP offset=682618 | 		mouse.Icon="rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=739705 | 	--if (Tool.Enabled) then mouse.Icon = "rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=739705 | 	--else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
-chunk=419 type=PROP offset=746726 | local MOUSE_ICON = 'rbxasset://textures/GunCursor.png'
-chunk=419 type=PROP offset=746726 | local RELOADING_ICON = 'rbxasset://textures/GunWaitCursor.png'
-chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowFarCursor.png"
-chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowCursor.png"
-chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
-chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
-chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunCursor.png" end
-chunk=419 type=PROP offset=756710 | 	if Tool.Enabled then mouse.Icon = "rbxasset://textures\\GunCursor.png"
-chunk=419 type=PROP offset=756710 | 	else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
-chunk=419 type=PROP offset=793625 | 		mouse.Icon ="rbxasset://textures\\FillCursor.png"
-chunk=419 type=PROP offset=793625 | 	mouse.Icon ="rbxasset://textures\\FillCursor.png"
 chunk=455 type=PROP offset=19 | rbxassetid://558033335
 chunk=465 type=PROP offset=22 | rbxassetid://572010326
-chunk=479 type=PROP offset=3292 | local DPAD_SHEET = "rbxasset://textures/ui/DPadSheet.png"
-chunk=479 type=PROP offset=27522 | local TOUCH_CONTROL_SHEET = "rbxasset://textures/ui/TouchControlsSheet.png"
 chunk=479 type=PROP offset=171232 | 	sound.SoundId = "rbxassetid://203785492"
-chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxasset://sounds/action_jump.mp3"
 chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxassetid://203785492"
 chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxassetid://203785584"
 chunk=500 type=PROP offset=205 | rbxassetid://252423829
@@ -345,34 +313,16 @@ chunk=500 type=PROP offset=11912 | rbxassetid://249143397
 chunk=500 type=PROP offset=11938 | rbxassetid://305204096
 chunk=500 type=PROP offset=11964 | rbxassetid://366794911
 chunk=500 type=PROP offset=11990 | rbxassetid://380627088)
-chunk=556 type=PROP offset=20 | rbxasset://textures/particles/sparkles_main.dds/
-chunk=556 type=PROP offset=887 | rbxasset://textures/particles/sparkles_main.dds)
-chunk=556 type=PROP offset=1028 | rbxasset://textures/particles/smoke_main.dds/
-chunk=595 type=PROP offset=224428 | local sword = Instance.new("Tool", v.Backpack) sword.Name = "Sword"  sword.TextureId = "rbxasset://Textures/Sword128.png"
-chunk=595 type=PROP offset=224428 | local msh = Instance.new("SpecialMesh", handle) msh.MeshId = "rbxasset://fonts/sword.mesh" msh.TextureId = "rbxasset://textures/SwordTexture.png"
-chunk=595 type=PROP offset=224428 | SlashSound.SoundId = "rbxasset://sounds\\swordslash.wav"
-chunk=595 type=PROP offset=224428 | LungeSound.SoundId = "rbxasset://sounds\\swordlunge.wav"
-chunk=595 type=PROP offset=224428 | UnsheathSound.SoundId = "rbxasset://sounds\\unsheath.wav"
 chunk=595 type=PROP offset=398582 | 						shirt.ShirtTemplate = "rbxassetid://"..tonumber(v) - statuses[i]
 chunk=595 type=PROP offset=398582 | 						pants.PantsTemplate = "rbxassetid://"..tonumber(v) - statuses[i]
 chunk=595 type=PROP offset=398582 | 							face.Texture = "rbxassetid://"..tonumber(v) - statuses[i]
 chunk=595 type=PROP offset=408649 | 		["ImageID"] = "rbxassetid://"..item.DecalID.Value,
 chunk=595 type=PROP offset=408649 | 	local imgid = (tier == 3 and "rbxassetid://343339178" or tier == 4 and "rbxassetid://343339188" or "rbxassetid://343339162")
 chunk=595 type=PROP offset=452730 | 	sound.SoundId = "rbxassetid://"..songid
-chunk=595 type=PROP offset=1182125 | 	"rbxasset://textures/face.png",
-chunk=595 type=PROP offset=1185115 | 	sound.SoundId = "rbxasset://sounds\\Rocket shot.wav"
-chunk=603 type=PROP offset=24 | rbxasset://textures/ui/Scroll/scroll-bottom.png)
-chunk=603 type=PROP offset=165 | rbxasset://textures/blackBkg_square.png'
-chunk=603 type=PROP offset=380 | rbxasset://textures/blackBkg_square.png
 chunk=603 type=PROP offset=423 | rbxassetid://202954368'
 chunk=603 type=PROP offset=621 | rbxassetid://202954368
 chunk=603 type=PROP offset=699 | rbxassetid://202954368/
-chunk=603 type=PROP offset=725 | rbxasset://textures/ui/Scroll/scroll-bottom.png
-chunk=609 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-middle.png)
-chunk=609 type=PROP offset=722 | rbxasset://textures/ui/Scroll/scroll-middle.png
-chunk=623 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-top.png)
 chunk=623 type=PROP offset=693 | rbxassetid://202954368,
-chunk=623 type=PROP offset=719 | rbxasset://textures/ui/Scroll/scroll-top.png
 chunk=673 type=PROP offset=294 | rbxassetid://183177691)
 chunk=673 type=PROP offset=553 | rbxassetid://403593680(
 chunk=673 type=PROP offset=623 | rbxassetid://183219914
@@ -541,13 +491,9 @@ chunk=735 type=PROP offset=882 | rbxassetid://153613030(
 chunk=735 type=PROP offset=1266 | rbxassetid://138210320
 chunk=735 type=PROP offset=1292 | rbxassetid://460261083
 chunk=735 type=PROP offset=1318 | rbxassetid://12222095 
-chunk=735 type=PROP offset=1343 | rbxasset://sounds/swordslash.wav
-chunk=735 type=PROP offset=1379 | rbxasset://sounds/unsheath.wav 
-chunk=735 type=PROP offset=1449 | rbxasset://sounds/unsheath.wav(
 chunk=735 type=PROP offset=5491 | rbxassetid://55224766
 chunk=735 type=PROP offset=5516 | rbxassetid://101166084)
 chunk=735 type=PROP offset=5818 | rbxassetid://158853971'
-chunk=735 type=PROP offset=7348 | rbxasset://sounds//short spring sound.wav(
 chunk=797 type=PROP offset=24779 | rbxassetid://159689271
 chunk=797 type=PROP offset=24883 | rbxassetid://159689271(
 chunk=797 type=PROP offset=62104 | rbxassetid://568906051)
@@ -559,6 +505,5 @@ chunk=802 type=PROP offset=17195 | rbxassetid://159689289(
 chunk=802 type=PROP offset=29789 | rbxassetid://568906488)
 chunk=802 type=PROP offset=30219 | rbxassetid://553732913)
 chunk=1029 type=PROP offset=45902 | rbxassetid://279152769)
-chunk=1038 type=PROP offset=42 | rbxasset://icons/color.png)
 chunk=1038 type=PROP offset=3165 | rbxassetid://579004582)
 chunk=1038 type=PROP offset=3463 | rbxassetid://607135413

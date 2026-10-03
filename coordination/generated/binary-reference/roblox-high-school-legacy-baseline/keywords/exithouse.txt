@@ -1,0 +1,3 @@
+chunk=145 type=PROP offset=144 | ExitHouse
+chunk=419 type=PROP offset=154294 | 	script.Parent.Parent.ExitHouse:Fire()
+chunk=419 type=PROP offset=159001 | frame.ExitHouse.Event:connect(function(confirmed)

@@ -1165,20 +1165,3 @@ end]]
 
 
 	
-=== chunk=833 type=PROP offset=37622 runSha256=2de6ce3c2e0b34ba2846f476be8ba43f46b241a587aa3d8dc4835f13a577367c ===
-How do I sell fish?e
-=== chunk=833 type=PROP offset=44055 runSha256=7955dd9c67954785aac24bf1b6270e7128bfbdb22bf56c349524c4ace4b22769 ===
-Why, sure! A long time ago, I got hired to sell cars to people in this small town. It was a great time back then!
-=== chunk=833 type=PROP offset=46308 runSha256=be0702826dfe52119200738c6d352b74dd35d03c11a27063c8d397d6885b2cc7 ===
-I'm Madi. Back in the day, I ran this music shop down in town to sell CDs for people to play in Club Red. Times have changed and the club has done away with CDs so people can choose custom music IDs instead, so my work is done.
-=== chunk=833 type=PROP offset=47383 runSha256=7d872009436ab6db5337f0faee857435b893461454e2d0b21262c5397eb1c120 ===
-No, we can't sell CDs anymore. We were required to remove them to avoid serious issues later down the line. But y'know, they're letting all DJs enter custom song IDs now, so that's a plus.
-=== chunk=965 type=PROP offset=3393 runSha256=d05ce7547aac7fd37cc688bf813a43bee9177badef0ba398eca2bd64eeef5c51 ===
-SellButton
-=== chunk=978 type=PROP offset=2889 runSha256=1ac8f2ffb3e5b400851bfd36c426373cd484df1177755a67f3dfa7fc7f0e3313 ===
-Sell Item ($99999)
-
-=== chunk=1012 type=PROP offset=15899 runSha256=caae58b2a957e1c209a875b7f79b95d99179420f89b643bdafe5d3202e28424f ===
-Sell Item?P
-=== chunk=1012 type=PROP offset=15913 runSha256=6c12d4685b0b6815d4e60350d67a9f068aaf3d1981077feb0c9d21edf700c813 ===
-Sell this item for $9999? This amount will be deducted from your final expenses.

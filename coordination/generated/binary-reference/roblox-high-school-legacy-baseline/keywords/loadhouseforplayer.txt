@@ -1,0 +1,4 @@
+chunk=145 type=PROP offset=1316 | LoadHouseForPlayer
+chunk=595 type=PROP offset=98799 | game.ServerStorage.RemoteFunctions.LoadHouseForPlayer.Event:connect(function(plr)
+chunk=595 type=PROP offset=138629 | 								game.ServerStorage.RemoteFunctions.LoadHouseForPlayer:Fire(player)
+chunk=595 type=PROP offset=369727 | 			game.ServerStorage.RemoteFunctions.LoadHouseForPlayer:Fire(plr)

@@ -1,0 +1,276 @@
+=== chunk=145 type=PROP offset=157 runSha256=0169ed1c6a412f83d4881900784d48484c337b640b21c19a9697b620dd543e9a ===
+OpenFurnitureMenu
+=== chunk=419 type=PROP offset=154490 runSha256=4cd0bb6647232331481e00a64ad6fe6935bf9b12d74648029a96f98759d16a2e ===
+script.Parent.MouseButton1Click:connect(function()
+	script.Parent.Parent.OpenFurnitureMenu:Fire()
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+mouse.KeyDown:connect(function(key)
+	if key == "v" and script.Parent.Parent.Parent.Visible == true and not script.Parent.Parent.Parent.Parent.Parent:FindFirstChild("ACTIVE_FurnitureShopGui") then
+		script.Parent.Parent.OpenFurnitureMenu:Fire()
+	end
+end)
+
+local gamepadmode = game.Players.LocalPlayer:WaitForChild("GamepadMode")
+if gamepadmode then
+	local UserInputService = game:GetService("UserInputService")
+	script.Parent.ButtonLabel.Visible = true
+	
+	UserInputService.InputBegan:connect(function(input,gameprocessed)
+		if script.Parent.Parent.Parent.Visible == true and input.UserInputType == Enum.UserInputType.Gamepad1 and not gameprocessed then
+			if input.KeyCode == Enum.KeyCode.ButtonY then
+				script.Parent.Parent.OpenFurnitureMenu:Fire()
+			end
+		end
+	end)
+end
+=== chunk=419 type=PROP offset=159001 runSha256=061587abad5188732dd18a317edaed4c38b86a3b98aa060f8854a8a3f121bda2 ===
+--house product id: 183
+--house painting license: 208
+--furniture shop name: ACTIVE_FurnitureShop
+
+local plr = game.Players.LocalPlayer
+local tools = {"Move","Paint","Remove"}
+
+if plr.Character == nil or plr.Character.Parent == nil then
+	plr.CharacterAdded:wait()
+end
+
+local char = plr.Character
+local hum = char:WaitForChild("Humanoid")
+local backpack = plr:WaitForChild("Backpack")
+
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+
+local cf = script.Parent:WaitForChild("CenterFrame")
+local frame = cf:WaitForChild("Frame")
+
+local enabled = frame:WaitForChild("Enabled")
+local selectedtool = frame:WaitForChild("SelectedTool")
+
+local prompts = frame:WaitForChild("GamepadToolPrompts")
+
+local moveinc = plr:FindFirstChild("HouseMoveIncrement") --1, 2, 4, 8, 16
+if moveinc == nil then
+	moveinc = Instance.new("IntValue",plr)
+	moveinc.Name = "HouseMoveIncrement"
+	moveinc.Value = 1
+end
+
+local rotateinc = plr:FindFirstChild("HouseRotateIncrement") --45, 15
+if rotateinc == nil then
+	rotateinc = Instance.new("IntValue",plr)
+	rotateinc.Name = "HouseRotateIncrement"
+	rotateinc.Value = 45
+end
+
+local paintcolor = plr:FindFirstChild("HousePaintColor") --send this value with REs
+if paintcolor == nil then
+	paintcolor = Instance.new("BrickColorValue",plr)
+	paintcolor.Name = "HousePaintColor"
+	paintcolor.Value = BrickColor.new("Dark green")
+end
+
+
+
+
+
+function setFeedback(type,text,value) --types: Save, Exit, Dialog (no buttons), NormalButton, Cash
+	local gui = frame.FeedbackDialog
+	gui.WindowType.Value = type
+	if text == nil then
+		text = ""
+	end
+	gui.Reason.Text = text
+	for _,v in pairs(gui:GetChildren()) do
+		if v:IsA("Frame") then
+			v.Visible = false
+		end
+	end
+	if type == "Save" or type == "Exit" then
+		gui.OptionButtons.Visible = true
+	--elseif type == "Dialog" then	
+	elseif type == "NormalButton" then
+		gui[type].Visible = true
+	elseif type == "Cash" then
+
+		local cash = data.cash.Value
+		local products = game.ReplicatedStorage.CashProducts:GetChildren()
+		local bestprod
+		local highestprod
+		for i,v in pairs(products) do
+			if v.Name ~= "30" then
+				local diff = tonumber(v.Name) - value
+				if diff >= 0 and (bestprod == nil or tonumber(bestprod.Name) > tonumber(v.Name)) then
+					bestprod = v
+				end
+				if highestprod == nil or tonumber(v.Name) > tonumber(highestprod.Name) then
+					highestprod = v
+				end
+			end
+		end
+		if bestprod == nil then
+			bestprod = highestprod
+		end
+		
+		gui.Reason.Text = "You need more Cash in order to save all the items that you've added to your house. Get more Cash & save the house?"
+		gui.CashAmount.Value = tonumber(bestprod.Name)
+		gui.ProductId.Value = bestprod.Value
+		gui.BuyCashButtons.GetCash.Text = "Get +"..bestprod.Name.." Cash!"
+		gui.BuyCashButtons.Visible = true
+		
+	end
+	gui.Visible = true
+end
+
+function removeTools()
+	for _,v in pairs(tools) do
+		local t = backpack:FindFirstChild(v)
+		if t then
+			t:Destroy()
+		end
+		local tool = char:FindFirstChild(v)
+		if tool then
+			hum:UnequipTools()
+			wait(1/30)
+			if tool then
+				tool:Destroy()
+			end
+		end
+		
+		if plr:FindFirstChild("GamepadMode") then
+			for _,v in pairs(prompts:GetChildren()) do
+				v.Visible = false
+			end
+		end
+	end
+end
+
+data:WaitForChild("cash").Changed:connect(function(val)
+	local gui = frame:WaitForChild("FeedbackDialog")
+	if gui.Visible == true and gui:WaitForChild("WindowType").Value == "Cash" then
+		local diff = data:WaitForChild("FurnitureCost").Value - data.cash.Value
+		if diff > 0 then --can't afford
+			
+		else
+			setFeedback("Save","Save your house?")
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
+
+function checkForNoGui()
+	for _,v in pairs(plr.PlayerGui:GetChildren()) do
+		if v.Name:match("ACTIVE_") then
+			return false
+		end
+	end
+	return true
+end
+
+frame.SelectTool.Event:connect(function(toolname)
+	if enabled.Value == true then
+		if toolname == selectedtool.Value then
+			selectedtool.Value = ""
+			enabled.Value = false
+			removeTools()
+			enabled.Value = true
+			return
+		else
+			selectedtool.Value = toolname
+		end
+
+		enabled.Value = false
+		removeTools()
+		enabled.Value = true
+		local tool = game.ReplicatedStorage.HouseEditingTools:FindFirstChild(toolname)
+		if tool then
+			local cl = tool:clone()
+			cl.Parent = backpack
+			hum:EquipTool(cl)
+		end
+		if plr:FindFirstChild("GamepadMode") then
+			game:GetService("GuiService").SelectedObject = nil
+			for _,v in pairs(prompts:GetChildren()) do
+				if v.Name == toolname then
+					v.Visible = true
+				else
+					v.Visible = false
+				end
+				prompts.Visible = true
+			end
+		end
+	end
+end)
+
+selectedtool.Changed:connect(function(val)
+	for _,v in pairs(frame.ToolsFrame:GetChildren()) do
+		if v.Name == val then
+			v.BackgroundColor3 = Color3.new(104/255, 1, 88/255)
+		else
+			v.BackgroundColor3 = Color3.new(1,1,1)
+		end
+	end
+end)
+
+frame.OpenFurnitureMenu.Event:connect(function()
+	if enabled.Value == true then
+		game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire("FurnitureShopGui")
+	end
+end)
+
+
+--confirmed == ready to perform action. if not confirmed, show dialog box
+--cancel button sets enabled to true again
+
+frame.ExitHouse.Event:connect(function(confirmed)
+	if checkForNoGui() and (enabled.Value == true or confirmed) then
+		if confirmed then --exit house
+			selectedtool.Value = ""
+			removeTools()
+			local house = workspace["!home_"..plr.Name]
+			local request = game.ReplicatedStorage.RemoteFunctions.ReloadHouse:InvokeServer(house.HousePlacement.Value)
+			if request == true or request == nil then
+				cf.Visible = false
+				enabled.Value = true
+			else
+				setFeedback("NormalButton","Error: Please wait a few seconds, then try again.")
+			end
+		else --display dialog
+			setFeedback("Exit","Exit edit mode? Any unsaved progress on your house will be lost.")
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
+
+frame.SaveHouse.Event:connect(function(confirmed)
+	if checkForNoGui() and (enabled.Value == true or confirmed) then
+		if confirmed then
+			selectedtool.Value = ""
+			removeTools()
+			setFeedback("Dialog","Saving your house...")
+			local request = game.ReplicatedStorage.RemoteFunctions.HouseSave:InvokeServer()
+			if request == true then
+				setFeedback("NormalButton","Save successful!")
+			elseif request == false then
+				setFeedback("NormalButton","Error: Please wait a few seconds, then try again.")
+			else
+				setFeedback("NormalButton","Error: Failed to save house. Please try again.")
+			end
+		else
+			local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+			local diff = data.FurnitureCost.Value - data.cash.Value
+			if diff > 0 then --can't afford
+				setFeedback("Cash","",diff)
+			else
+				setFeedback("Save","Save your house?")
+			end
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
