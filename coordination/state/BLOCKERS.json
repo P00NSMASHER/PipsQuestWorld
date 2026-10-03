@@ -1,21 +1,21 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
   "currentBlockers": [],
-  "gateStatus": "NEXT_PARITY_SLICE_UNBLOCKED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "AVATAR_CUSTOMIZATION_SHOPPING_V1",
+  "gateStatus": "PR159_QA_PENDING__ALL_PR_HEAD_GUARDS_PASS",
+  "nextProducer": "Roblox High School QA & Contract",
+  "nextObjective": "VALIDATE_PR159_OUTFIT_OPERATIONS_EXACT_HEAD_71a6d565df826cfcf359b34951e179fd61fb8165",
   "deferredRuntimeEvidence": [
     {
-      "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
+      "id": "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+      "exactSha": "c4df87d34022854b15b6416538756399ab020891",
       "status": "DEFERRED_NONBLOCKING",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "Older-sha vehicle/HUD/House runtime evidence remains uncollected, but it does not block cloud-safe Housing Editor work on live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb."
+      "reason": "Cloud-safe exact-head smoke/package passed for c4df87d; rendered/touch avatar validation remains local-only and does not block cloud-safe outfit-operations QA."
     }
   ],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
