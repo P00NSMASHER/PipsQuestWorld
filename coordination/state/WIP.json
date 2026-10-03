@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 33,
+  "schemaVersion": 34,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:47:00Z",
+  "observedAt": "2026-10-03T10:51:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
@@ -20,7 +20,7 @@
     "supportPr": 127,
     "supportSha": "0f0d10ca852e815727fae51e6c26db5135bdcd8c"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2_INTEGRATED_AWAITING_SMOKE",
+  "currentMilestone": "HOUSING_EDITOR_V2_SMOKE_PASS_PACKAGE_NEXT",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -97,24 +97,26 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "SMOKE",
+      "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
       "candidate": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Certify exact integrated Housing Editor V2 canonical head with cloud-safe smoke; record any genuinely runtime-only checks as LOCAL_ONLY_REQUIRED without blocking cloud-safe evidence.",
+      "objective": "Cloud-safe exact-head Smoke PASS recorded; no repeated unchanged smoke.",
       "owned": "post-integration smoke evidence only",
-      "dependency": "QA PASS c7d7e774 + PR 128 merge + Foundation 37117473969, Class 37117473982, Progression 37117473978 all PASS on 00df979",
-      "exit": "Smoke PASS exact 00df979 plus explicit local-only list if any",
+      "dependency": "Smoke receipt PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED on 00df979",
+      "exit": "Next integrated exact canonical requiring smoke",
       "handoff": "Roblox High School Release & Package Gate",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ReleasePackage": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "PACKAGE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Package only after Smoke PASS exact 00df979; never publish.",
-      "owned": "package/hash/readiness",
-      "dependency": "Smoke PASS exact canonical",
-      "exit": "artifact identity bound to exact SHA",
-      "handoff": "Roblox High School Control Tower"
+      "candidate": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Build or reuse one deterministic school/** package for exact smoke-certified canonical 00df979; record artifact identity/hash; do not publish Roblox.",
+      "owned": "package/hash/readiness only",
+      "dependency": "Smoke receipt PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED; releasePackageEligible=true",
+      "exit": "deterministic artifact identity/hash bound to exact 00df979",
+      "handoff": "Roblox High School Control Tower",
+      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     }
   },
   "connectorReliability": {
@@ -149,5 +151,11 @@
       37117473982,
       37117473978
     ]
+  },
+  "smokeResult": {
+    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+    "releasePackageEligible": true
   }
 }
