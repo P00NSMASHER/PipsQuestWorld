@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 32,
+  "schemaVersion": 33,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:34:00Z",
+  "observedAt": "2026-10-03T10:36:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
@@ -23,9 +23,10 @@
   "currentMilestone": "HOUSING_EDITOR_V2",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
-    "coreEnabledIncludingTower": 9,
-    "freeRoam": "DISABLED_NO_CHANGE_AUTHORIZED",
-    "devExAuxiliary": "DISABLED_NO_CHANGE_AUTHORIZED"
+    "coreEnabledIncludingTower": 10,
+    "status": "ALL_CORE_ENABLED_EXISTING_STAGGERED_SCHEDULES",
+    "freeRoam": "ACTIVE_HOURLY",
+    "devExAuxiliary": "DISABLED_BY_DESIGN_UNTIL_ASSIGNED_DEFECT"
   },
   "directives": {
     "Foundation": {
@@ -136,5 +137,15 @@
     "status": "FAIL_EXACT_CLONE_PARITY",
     "evidence": "PR 128 comment 5968318162",
     "reason": "Behavior/authority guards pass, but recoverable Legacy-facing UI/catalog/asset presentation remains generic or explicitly referenceExact=false; reference coverage is incomplete."
+  },
+  "coordinationHealth": {
+    "liveCanonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+    "staleCanonicalShardCleared": true,
+    "staleBlockerShardCleared": true,
+    "playableShardAligned": true,
+    "olderLocalOnlyEvidenceBlocksCloudWork": false,
+    "producer": "Pip High Free Roam",
+    "producerPr": 128,
+    "qaState": "WAIT_FOR_CHANGED_PR128_HEAD_AFTER_EXACT_PARITY_FAIL"
   }
 }
