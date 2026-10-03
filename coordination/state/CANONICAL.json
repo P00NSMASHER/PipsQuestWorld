@@ -1,118 +1,38 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "sha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
   "sourceRoot": "school/**",
-  "status": "PACKAGE_CHECKPOINT_COMPLETE__NEXT_PARITY_SLICE_ASSIGNED",
-  "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-  "repair": {
-    "pr": 64,
-    "branch": "fix/economy-operation-order-rejoin-2ab1584",
-    "sha": "03ea7f172d8bc898b687644f416803851220437f",
-    "scope": "economy durable operation ordering/rejoin"
+  "schoolTree": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+  "status": "CERTIFIED_PRODUCT_TREE_INHERITED__AVATAR_CUSTOMIZATION_PR154_ACTIVE",
+  "certifiedProductAncestor": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "exactHeadCi": [],
+  "exactHeadCiNote": "No product workflow/status runs exist on 48bbdb9 because the commits after 00df979 are coordination/binary-reference infrastructure only and school/** is unchanged.",
+  "activeCandidate": {
+    "pr": 154,
+    "branch": "rebuild/high-school-avatar-customization-00df979-v1",
+    "sha": "b72c53de3b8628134b1e2187851e5979721bad1e",
+    "mergeable": true,
+    "foundationGuard": "PASS",
+    "classEducationGuard": "PASS",
+    "progressionGuard": "FAIL",
+    "failureRun": 37129491381,
+    "failureJob": 111221584480,
+    "failure": "legacy HUD contract cannot find the AvatarCustomization project node"
   },
-  "exactHeadCi": [
-    {
-      "workflow": "High School Foundation Static Guards",
-      "runId": 37117473969,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    },
-    {
-      "workflow": "High School Class Education Guards",
-      "runId": 37117473982,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    },
-    {
-      "workflow": "High School Progression Guards",
-      "runId": 37117473978,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    }
-  ],
-  "qaContract": {
-    "result": "PASS_EXACT_HEAD",
-    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "evidence": "PR 128 comment 5968415251"
-  },
-  "integration": {
-    "result": "PASS_EXACT_HEAD",
-    "mergedPr": 128,
-    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-  },
-  "integrationSmoke": {
-    "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
-    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "releasePackageEligible": true,
-    "localOnlyRequired": [
-      "CURRENT_RUNTIME_INTERACTION_SMOKE"
-    ]
-  },
-  "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
-  "vehicleIntegration": {
-    "producerPr": 85,
-    "groundingRepairPr": 92,
-    "groundingRepairHeadSha": "ca84d70f22a091034c8054d511e78472cb856ffa",
-    "reliableControlsPr": 103,
-    "reliableControlsCandidateSha": "e83a22d0696966595feb41971844a021f637abe7",
-    "currentSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6",
-    "rootTree": "9148fc95d32f736ad8c7514fda1a615d19d427cf",
-    "schoolTree": "10154572532d91fd066903a7933b1ac99fe74eb6"
-  },
-  "presentationIntegration": {
-    "pr": 107,
-    "candidateSha": "dc50e04872d44541024fbd62cd845569fa7dce2d",
-    "currentSha": "f9564e344ba0a3de96beeec919b230ebe501a1f4",
-    "rootTree": "f32f073a3bffdf319b0b73bbf8ebe1ea48e63496",
-    "schoolTree": "74431c8d3ae75a4751bdaec867d664eeec626082",
-    "milestone": "LEGACY_HUD_PRESENTATION_PARITY_V1"
-  },
-  "housingFoundation": {
-    "pr": 111,
-    "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-    "currentSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-    "rootTree": "81989074747c43c911c5c043b83ce6b6c50ecf0c",
-    "schoolTree": "c2b5ab1dec90b2df576d83a16d77c5621c406f38",
-    "milestone": "HOUSING_PLOT_SEAMS_V1"
-  },
-  "housingProperty": {
-    "pr": 115,
-    "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
-    "currentSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-    "rootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
-    "schoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
-    "milestone": "HOUSING_PROPERTY_V1",
-    "surfaces": [
-      "$50 permanent house purchase",
-      "server-assigned plot",
-      "lower-left House button/menu",
-      "Teleport to House",
-      "Edit/Save House",
-      "house color controls"
-    ]
-  },
-  "housingEditorPersistence": {
-    "pr": 120,
-    "candidateSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
-    "currentSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "rootTree": "727d1e6dd6acf663101517fba1492a098b724996",
-    "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
-    "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
+  "supportEvidence": {
+    "pr": 150,
+    "sha": "f5239fc806ff39b793b7ea7a7158c032ed5ef8c3",
+    "guards": "PASS_ALL_THREE"
   },
   "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
   "releasePackage": {
     "result": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
     "artifact": "pip-high-school-00df979-source-tree-dea093c1",
     "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
-    "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "robloxPublished": false
-  }
+  },
+  "exactHeadRule": "Live rebuild/high-school-foundation head and current exact-head CI outrank stale receipts; candidate promotion requires all three guards and QA PASS on the same changed SHA."
 }
