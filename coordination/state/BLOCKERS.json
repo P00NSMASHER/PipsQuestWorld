@@ -1,23 +1,25 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "canonicalSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
   "currentBlockers": [],
-  "gateStatus": "NEXT_PARITY_SLICE_UNBLOCKED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "AVATAR_CUSTOMIZATION_SHOPPING_V1",
-  "deferredRuntimeEvidence": [
+  "candidateBlockers": [
     {
-      "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-      "owner": "Roblox High School Integration Smoke",
-      "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "status": "DEFERRED_NONBLOCKING",
-      "universeId": "10768955678",
-      "placeId": "87245440673982",
-      "reason": "Older-sha vehicle/HUD/House runtime evidence remains uncollected, but it does not block cloud-safe Housing Editor work on live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb."
+      "id": "PR154_AVATAR_RUNTIME_MOUNT",
+      "owner": "Pip High Free Roam",
+      "type": "CI_CONTRACT_FAILURE",
+      "pr": 154,
+      "candidateSha": "b72c53de3b8628134b1e2187851e5979721bad1e",
+      "runId": 37129491381,
+      "jobId": 111221584480,
+      "step": "Run legacy HUD contract",
+      "reason": "avatar_customization_runtime_mount_spec.lua reports missing AvatarCustomization project node in school/default.project.json.",
+      "exitCriterion": "Change PR 154 head so school/default.project.json mounts src/client/AvatarCustomization.client.lua as AvatarCustomization; obtain Foundation, Class/Education, and Progression PASS on the same changed head before QA promotion."
     }
   ],
-  "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
+  "gateStatus": "CANONICAL_UNBLOCKED__PR154_BLOCKED_ON_PROGRESSSION_GUARD",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "REPAIR_PR154_RUNTIME_MOUNT_THEN_CONTINUE_AVATAR_CUSTOMIZATION",
+  "staleBlockerRule": "A blocker bound to a non-current candidate or canonical SHA cannot gate current cloud-safe work unless reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
 }
