@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "observedAt": "2026-10-03T20:59:12Z",
+  "controlBase": "33b0e72769a98c0b948c242a9fffa66de00b1253",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b"
+  },
+  "wip": {
+    "cap": 3,
+    "countIncludingBase": 3,
+    "supportPr": 150,
+    "producerPr": 165
+  },
+  "producer": {
+    "pr": 165,
+    "head": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+    "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "mergeable": true,
+    "reviews": "NONE_AT_REFRESH",
+    "guards": {
+      "foundation": 37141490985,
+      "classEducation": 37141490978,
+      "progression": 37141491082
+    },
+    "qaDefectEvidence": "5728a92fb9c5447157bc1bc8cc543f5fa3e26b8d",
+    "status": "OWNER_REPAIR_REQUIRED__DO_NOT_MERGE"
+  },
+  "latestLaneOutputs": {
+    "Foundation": "6e52a1e9351c7fab58b868335e5b292849b5fa14",
+    "ClassEducation": "85c32a6148f5aca1f49a9ee3e6b3f30822231901",
+    "ContentQA": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+    "ProgressionMobile": "0ec4dd414efd135fa05b3c6ede8ef503d14250be",
+    "FreeRoamPrep": "185e01f9df599295b91b35d29986764c84e938fe",
+    "QA": "5728a92fb9c5447157bc1bc8cc543f5fa3e26b8d",
+    "Integration": "0cc419da56c822bd333fff35de3a49ee83b3924a",
+    "Smoke": "657ca53b55ab3839e2aa514ec38dd4284c35897b",
+    "ReleasePackage": "15bdeecb0c3b84d441131b2099f3dd5140e10135"
+  },
+  "preciseBlocker": {
+    "owner": "Pip High Free Roam",
+    "condition": "PR 165 still has unchanged head e3be5df and no formal QA review at refresh.",
+    "exit": "Push one repaired PR 165 head that delivers the verified success text only to the purchasing player after confirmed purchase, preserves fail-closed authority/idempotency/no-spend boundaries, adds deterministic purchaser-isolation coverage, and passes all three exact-head guards."
+  },
+  "coordinationWrite": {
+    "target": "coordination/state/WIP.json",
+    "result": "CONNECTOR_SAFETY_DENIAL",
+    "postcondition": "ABSENT__SCHEMA_44_UNCHANGED",
+    "retry": "NONE"
+  },
+  "handoff": "Pip High Free Roam"
+}
