@@ -1,67 +1,60 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "lane": "Roblox High School Integration Director",
   "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "2ab1584ee34e711828768cd999c86feba9202984",
-  "parentIntegratedRuntimeSha": "99e12750b8b87812f3363e3691c12fb8797669bd",
-  "integratedPr": 56,
-  "milestone": "PROGRESSION_JOBS_ECONOMY_CAFE_JOB_ASSIGNED",
+  "integrationSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "parentIntegratedRuntimeSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+  "integratedPr": 128,
+  "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+  "milestone": "HOUSING_EDITOR_V2",
   "eligibility": {
-    "currentBlockersEmpty": true,
-    "wipAssignedLane": "Pip High Free Roam",
-    "wipObjective": "PARITY_STAGE_3B_CAFE_JOB_LOOP_V1",
-    "assignedCandidatePr": 56,
-    "staleLegacyQaReceiptRejected": true,
-    "note": "The legacy QA receipt on Control Tower records an obsolete SHA and is not authority over the newer live WIP assignment, merged candidate, or exact-head CI."
+    "qaResult": "PASS_EXACT_HEAD",
+    "qaEvidence": "PR#128 comment 5968415251",
+    "candidateBaseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+    "candidateHeadSha": "c7d7e774c70267c3c384d428280b613d59742857",
+    "candidateGuards": "PASS_ALL_THREE",
+    "staleWipReceiptRejected": true
   },
   "deltaFromParent": {
-    "status": "ahead",
     "changedFiles": [
       "school/default.project.json",
       "school/src/client/CanonicalSchoolClient.client.lua",
-      "school/src/server/CafeJob.server.lua",
-      "school/src/server/CafeJobController.lua",
-      "school/tests/cafe_job_controller_spec.lua",
-      "school/tests/economy_repository_spec.lua"
+      "school/src/server/HousingEditorController.lua",
+      "school/src/server/HousingService.server.lua",
+      "school/tests/fixtures/legacy_housing_editor_v2_reference.lua",
+      "school/tests/housing_editor_controller_spec.lua",
+      "school/tests/housing_ui_contract_spec.lua"
     ],
-    "note": "Assigned cafe-job slice only: Foundation cafe location -> shift start -> one deterministic serve_order task -> idempotent wage through existing EconomyRepository -> return to free roam."
+    "note": "Housing Editor V2 exact-parity remediation only on canonical school/**."
   },
   "authorityChecks": {
     "singleSchoolClockPreserved": true,
-    "singleEconomyProgressionPersistenceAuthorityPreserved": true,
+    "singleEconomyAuthorityPreserved": true,
+    "singleHousingLayoutPersistenceAuthorityPreserved": true,
     "classAuthorityUnchanged": true,
-    "worldGeneratorAuthorityUnchanged": true,
-    "vehicleAuthorityNotAdded": true,
-    "housingAuthorityNotAdded": true,
-    "retiredRuntimeConsumed": false
+    "worldPlotAuthorityUnchanged": true,
+    "retiredRuntimeConsumed": false,
+    "phase2SchoolworkDeferred": true
   },
   "deterministicIntegratedHeadEvidence": {
     "foundationExactHeadCi": {
-      "runId": 37006496757,
+      "runId": 37117473969,
       "event": "push",
       "conclusion": "success"
     },
     "classEducationExactHeadCi": {
-      "runId": 37006496676,
+      "runId": 37117473982,
       "event": "push",
       "conclusion": "success"
     },
     "progressionExactHeadCi": {
-      "runId": 37006496664,
+      "runId": 37117473978,
       "event": "push",
       "conclusion": "success"
-    },
-    "cafeJobCoverage": [
-      "proximity-gated shift start",
-      "deterministic serve_order task",
-      "idempotent job:cafe:<shiftId> wage",
-      "duplicate completion/replay no-double-pay",
-      "failed wage commit retains active shift for retry",
-      "return to free roam"
-    ]
+    }
   },
   "scope": {
     "runtimeTestRoot": "school/**",
@@ -71,6 +64,6 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Smoke only canonical SHA 2ab1584ee34e711828768cd999c86feba9202984. Re-run/consume exact-head smoke evidence for the cafe-job milestone before Control Tower advances the next parity slice. Any newer canonical commit invalidates this handoff until re-certified."
+    "instruction": "Smoke only canonical SHA 00df979add2b5d0e961205b62cf88340c56ee662. Preserve existing vehicle/HUD/House local-only runtime items and add Housing Editor V2 runtime acceptance to the exact-SHA smoke surface. Any newer canonical commit invalidates this handoff until re-certified."
   }
 }
