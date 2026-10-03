@@ -237,7 +237,6 @@ local function summarize(snapshot, playerId)
         totalPoints = totalPoints,
         completionCount = #snapshot.completions,
         classes = classList,
-        outfits = normalizeOutfits(snapshot.outfits),
         outfitStorageSlotCount = OUTFIT_STORAGE_SLOT_COUNT,
         outfitLegacyPresentedSlotCount = OUTFIT_LEGACY_SLOT_COUNT,
     }
