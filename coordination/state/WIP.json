@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 20,
+  "schemaVersion": 21,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
@@ -15,14 +15,16 @@
       "objective": "HOUSING_PROPERTY_V1",
       "baseSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
       "branch": "rebuild/high-school-housing-property-477fa61-v1",
-      "candidateSha": "00c07c6a96547505274e5ac32f9207f9f7cd24d9",
-      "status": "PRODUCE_IN_PROGRESS__3_COMMITS_AHEAD__NO_PR_NO_CI"
+      "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "pr": 115,
+      "status": "PLAYER_VISIBLE_FLOW_COMPLETE__PR_OPEN__CI_RUNNING"
     },
     "downstream": {
       "lane": "Pip High QA & Architecture Contract",
       "objective": "VALIDATE_HOUSING_PROPERTY_V1",
-      "dependency": "Free Roam exact-head candidate with completed player-facing House flow and exact-head CI",
-      "status": "WAIT_PIPELINE"
+      "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "dependency": "PR #115 exact-head Foundation/Class/Progression guards all PASS",
+      "status": "WAIT_PIPELINE_CI"
     }
   },
   "priorityBacklog": [
@@ -72,9 +74,9 @@
     "Class & Education": "WAIT_PIPELINE on exact canonical 477fa61. Preserve class/session/activity authority; second-grade/Emma/STAR/K-8 remains DEFERRED_PHASE_2.",
     "Content QA": "WAIT_PIPELINE on exact canonical 477fa61. No new assets/content are required by current housing backend candidate; provenance-only if a new authorized reference asset is introduced.",
     "Progression & Mobile": "SUPPORT on exact canonical 477fa61. Verify the existing EconomyRepository ownership/money contract is sufficient for starter-house purchase; no duplicate ledger or persistence writer.",
-    "Pip High Free Roam": "PRODUCE Housing Property V1 on rebuild/high-school-housing-property-477fa61-v1. Candidate 00c07c6 is server-side only so far; finish the player-facing House menu/Buy/Teleport/Edit/style flow and deterministic contract evidence before QA.",
-    "QA/Contract": "WAIT_PIPELINE until Free Roam publishes a complete exact-head housing candidate with PR/CI; then validate lifecycle, ownership/economy uniqueness, House UI calls, and no regressions to class/cafe/vehicle surfaces.",
-    "Integration": "WAIT_PIPELINE until exact-SHA QA PASS; mechanical integration only.",
+    "Pip High Free Roam": "Housing Property V1 player-facing flow is implemented on exact candidate 2659fd8 / PR #115: runtime project wiring plus Legacy House button/menu, $50 buy, Teleport to House, Edit/Save House and color controls. Freeze semantics while exact-head CI runs.",
+    "QA/Contract": "WAIT_PIPELINE until all three exact-head guards pass on PR #115 head 2659fd8; then VALIDATE the runtime wiring, House flow, authority uniqueness, and preservation of class/cafe/vehicle calls.",
+    "Integration": "WAIT_PIPELINE until QA PASS on PR #115 exact head 2659fd8; mechanical integration only.",
     "Integration Smoke": "WAIT_PIPELINE. Vehicle runtime drive/HUD coexistence remains LOCAL_ONLY_REQUIRED on current canonical 477fa61; do not poll laptop or publish while cloud-safe housing work proceeds.",
     "Release/Package": "WAIT_PIPELINE. Package only an exact smoke-certified canonical checkpoint; never publish and never treat package as product completion.",
     "DevEx": "CI/evidence infrastructure only; if producer PR lacks exact-head workflow coverage, repair CI without changing product semantics."
@@ -82,11 +84,11 @@
   "nextHandoff": {
     "from": "Pip High Free Roam",
     "to": "Pip High QA & Architecture Contract",
-    "condition": "Housing candidate must remain based on exact canonical 477fa61c15f7fefe7e70d6e7b5ddd03f78c21773, include complete player-facing House flow plus deterministic tests, have an open PR to rebuild/high-school-foundation, and have exact-head CI evidence before QA consumes it."
+    "condition": "When Foundation/Class/Progression guards all PASS on exact PR #115 head 2659fd812e55cede8c5d1634cbbba465c99a98ce, QA validates that unchanged SHA immediately."
   },
-  "openCanonicalPrCount": 0,
-  "openNoncanonicalPrCount": 0,
-  "cyclesSinceLastEndToEndPlayableAdvancement": 1,
+  "openCanonicalPrCount": 1,
+  "openNoncanonicalPrCount": 1,
+  "cyclesSinceLastEndToEndPlayableAdvancement": 0,
   "successMetric": "Validated player-facing exact Roblox High School clone parity advancement on the one canonical live private-server school/** lineage; second-grade schoolwork remains deferred Phase 2.",
   "unchangedFingerprintRule": {
     "maxCheapReads": 2,
@@ -151,34 +153,34 @@
       "handoff": "Pip High Free Roam"
     },
     "Pip High Free Roam": {
-      "mode": "PRODUCE",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "base": "rebuild/high-school-foundation@477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "branch": "rebuild/high-school-housing-property-477fa61-v1",
-      "candidateSha": "00c07c6a96547505274e5ac32f9207f9f7cd24d9",
-      "objective": "Complete Legacy housing property V1 from the current server backend by adding the player-visible House state/menu interaction flow for Buy ($50), owned/plot state, Teleport to House, owner-only Edit mode and style selection, while preserving one authoritative HousingLifecycle and EconomyRepository.",
-      "owned": "housing/property lifecycle and house-facing interaction semantics under school/**; may touch existing school client House/HUD surface but must not create a second economy/persistence/class/world authority",
-      "dependency": "Foundation HousingPlots integrated at 477fa61 + existing EconomyRepository ownership contract; current candidate 00c07c6 provides HousingLifecycle/HousingService backend",
-      "exit": "Exact candidate visibly exposes House state/actions, deterministic tests cover lifecycle/idempotency/insufficient funds/release-reclaim/owner-only edit plus client-to-remote contract, PR targets rebuild/high-school-foundation, and all exact-head CI is green.",
+      "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "objective": "Housing Property V1 player-visible implementation is complete on PR #115. Freeze producer semantics while exact-head CI runs; make changes only if a guard or QA returns a reproducible Free Roam defect.",
+      "owned": "housing/property lifecycle and house-facing interaction semantics under school/** only",
+      "dependency": "PR #115 exact head 2659fd8 contains runtime project mapping, HousingLifecycle/HousingService, shipped Legacy House UI and deterministic housing contracts",
+      "exit": "All exact-head CI PASS then hand unchanged candidate to QA, or fix exactly one reproduced producer-owned failure.",
       "handoff": "QA/Contract"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "objective": "Wait for complete exact Housing Property V1 PR/CI, then validate player-facing House flow, lifecycle, authority uniqueness, and preservation of class/cafe/vehicle calls.",
+      "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "objective": "Wait only for exact-head CI on PR #115; then validate player-facing House button/menu, $50 purchase, Teleport to House, Edit/Save House, style controls, runtime project wiring, central EconomyRepository authority and baseline class/cafe/vehicle calls.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Free Roam complete exact-head candidate on current base",
-      "exit": "PASS exact candidate or one reproducible defect returned to its sole semantic owner.",
+      "dependency": "Foundation/Class/Progression PASS on exact candidate 2659fd8",
+      "exit": "Switch to VALIDATE immediately when all three guards pass; return one reproducible defect to the sole semantic owner or PASS exact SHA to Integration.",
       "handoff": "Integration"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "objective": "Wait for QA PASS on exact Housing Property V1 candidate.",
+      "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "objective": "Wait for QA PASS on exact PR #115 head; no semantic edits.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact candidate and green exact-head CI",
-      "exit": "Integrate only the exact QA-cleared head without semantic edits, then verify canonical exact-head guards.",
-      "handoff": "Control Tower"
+      "dependency": "QA PASS exact 2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "exit": "Integrate only exact QA-cleared PR #115 head and verify post-merge canonical guards.",
+      "handoff": "Integration Smoke"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
