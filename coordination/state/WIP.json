@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 37,
+  "schemaVersion": 38,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T11:22:00Z",
+  "observedAt": "2026-10-03T16:48:05Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-    "guards": "SCHOOL_TREE_UNCHANGED_FROM_00df979_PACKAGE__ONLY_BINARY_REFERENCE_INFRA_POLICY_COMMITS_ADDED"
+    "sha": "c4df87d34022854b15b6416538756399ab020891",
+    "guards": "PASS_EXACT_HEAD_PUSH__FOUNDATION_37136942081__CLASS_37136942094__PROGRESSION_37136942133"
   },
   "target": {
     "universeId": "10768955678",
@@ -14,15 +14,19 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 1,
+    "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": "rebuild/high-school-avatar-customization-00df979-v1",
+    "producerBranch": null,
     "supportPr": 150,
-    "supportSha": "f5239fc806ff39b793b7ea7a7158c032ed5ef8c3",
-    "supportBranch": "support/high-school-avatar-customization-content-00df979"
+    "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+    "supportBranch": "support/high-school-avatar-customization-content-00df979",
+    "qaSupportPr": null,
+    "qaSupportSha": "9fe7f6b5307ebcd58113cb16bf2e2f302e429d26",
+    "qaSupportBranch": "qa/avatar-customization-authority-c4df87d-v1",
+    "rule": "NO_NEW_PRODUCT_OR_SUPPORT_CANDIDATE_UNTIL_RELEASE_PACKAGE_COMPLETES_AND_CONTROL_TOWER_REASSIGNS_FROM_EXACT_PACKAGED_HEAD"
   },
-  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
+  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING_V1_POST_MERGE_PACKAGE_GATE",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -33,89 +37,99 @@
   "directives": {
     "Foundation": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute cloud-safe regression/authority audit of the live canonical or current avatar/customization candidate for world/clock/location/spawn/environment drift. Inspect only touched seams plus exact-head authority invariants; do not invent product edits when unchanged.",
-      "owned": "world/clock/location/spawn/environment",
-      "dependency": "Housing Editor V2 package checkpoint complete; exact canonical guards remain green",
-      "exit": "fresh scoped regression finding or explicit no-drift handoff for the current head",
-      "handoff": "Pip High Free Roam"
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Audit only the merged avatar/customization entry delta for world, clock, location, spawn, and environment drift on the exact canonical head. Reuse the green Foundation push guard; do not create source or coordination candidates while Release/Package owns the gate.",
+      "owned": "world/clock/location/spawn/environment authority",
+      "dependency": "Exact-head Foundation push guard 37136942081 PASS",
+      "exit": "one precise regression finding or explicit no-drift handoff bound to c4df87d",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "ClassEducation": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute cloud-safe authority/regression audit of class/session/activity against the live canonical or current candidate. Phase-2 curriculum remains deferred; inspect only for clone-parity regressions or accidental second Class authority.",
-      "owned": "class/session/activity",
-      "dependency": "Housing Editor V2 package checkpoint complete",
-      "exit": "fresh scoped regression finding or explicit no-drift handoff for the current head",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Audit class/session/activity authority against the merged avatar/customization entry delta only. Phase-2 curriculum remains deferred; do not create source candidates while Release/Package owns the gate.",
+      "owned": "class/session/activity authority",
+      "dependency": "Exact-head Class/Education push guard 37136942094 PASS",
+      "exit": "one precise regression finding or explicit no-drift handoff bound to c4df87d",
       "handoff": "Roblox High School QA & Contract"
     },
     "ContentQA": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
       "branch": "support/high-school-avatar-customization-content-00df979",
-      "objective": "Recover verified authorized Roblox High School Legacy avatar/customization/shopping presentation references needed for the first exact slice: entry labels/icons, category hierarchy, interaction sequence, visible labels, prices/constants where applicable, and asset provenance. Keep unknowns explicit; do not invent Legacy-exact content.",
-      "owned": "school/tests/fixtures/**, QA-owned reference/provenance assertions, authorized labels/assets/metadata only",
-      "dependency": "PR 150 exact head f5239fc806ff39b793b7ea7a7158c032ed5ef8c3 PASS: Foundation 37119226954, Progression 37119226955, Class/Education 37119226956; deep artifact 11271783526 verified.",
-      "exit": "Current exact reference contract green; continue only genuinely new avatar/customization/shopping provenance needed by producer.",
+      "objective": "Freeze the current verified reference candidate at 762e1d17e001635a8f0a8cc9bed66a36080ed68d while the package gate runs. Preserve exact Legacy outfit/shopping provenance and explicit unknown catalogs/assets; make no further commits or replacement support branch until Control Tower reassigns from the packaged exact head.",
+      "owned": "authorized reference fixtures/provenance and exact visible semantics only",
+      "dependency": "PR 150 head 762e1d17e001635a8f0a8cc9bed66a36080ed68d guards PASS: Foundation 37135947470, Progression 37135947463, Class/Education 37135947467",
+      "exit": "a concise next-slice provenance handoff with unknowns explicit; no product runtime",
       "handoff": "Pip High Free Roam",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute cloud-safe review of progression/economy/ownership/mobile-read-only seams needed by the active avatar/customization/shopping slice. Verify server authority and prepare the narrow ownership/unlock contract if the producer needs it; never take shop interaction ownership.",
-      "owned": "progression/economy/ownership/mobile read-only",
-      "dependency": "Free Roam owns customization/shop mechanics; Content QA owns reference semantics",
-      "exit": "current-head ownership/economy seam verified or one narrow producer handoff",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Verify the merged entry surface introduces no second economy, persistence, ownership, or mobile authority. Reuse the green exact-head Progression guard and prepare only a narrow handoff for future server-authoritative outfit/shop operations.",
+      "owned": "progression/economy/persistence/ownership/mobile authority seams",
+      "dependency": "Exact-head Progression push guard 37136942133 PASS",
+      "exit": "one exact-head authority finding or a narrow future producer contract; no shop interaction implementation",
       "handoff": "Pip High Free Roam"
     },
     "FreeRoam": {
-      "mode": "PRODUCE",
-      "base": "rebuild/high-school-foundation@48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "branch": "rebuild/high-school-avatar-customization-00df979-v1",
-      "objective": "Build the first exact-clone avatar/customization/shopping slice from the exact canonical head. Implement only verified player-facing Legacy reference interactions as evidence arrives: entry/open-close flow, category navigation, avatar/outfit/customization application, shop interaction and owned-item state. Preserve existing authorities and isolate unverified presentation instead of inventing it.",
+      "mode": "WAIT_PIPELINE",
+      "base": "rebuild/high-school-foundation@c4df87d34022854b15b6416538756399ab020891",
+      "branch": null,
+      "objective": "Do not create or extend a product branch while the exact merged avatar entry slice is being packaged and the three-candidate cap is full. After Package PASS and a fresh Control Tower assignment, remain the sole producer for the next narrow avatar/customization/shopping behavior slice from that exact packaged canonical SHA.",
       "owned": "avatar/outfit/customization mechanics, shopping interactions, world-facing UX only",
-      "dependency": "Exact producer branch fast-forwarded to current canonical 48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad; Content QA PR 150 exact head f5239fc806ff39b793b7ea7a7158c032ed5ef8c3 has all three guards green and deep verified binary artifact evidence.",
-      "exit": "one narrow PR to rebuild/high-school-foundation with changed exact SHA, deterministic tests, all three PR-head guards green, unknown/non-exact surfaces explicit",
+      "dependency": "Smoke PASS exists; Release/Package is the active gate; WIP count is 3 including canonical",
+      "exit": "fresh exact-base branch assigned by Control Tower after package and candidate-cap reconciliation",
       "handoff": "Roblox High School QA & Contract",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute QA-readiness increment: track the live producer/support heads, map touched contracts to the exact authorized reference, reuse unchanged PASS evidence, and keep deterministic validators/checklists ready. The moment a changed candidate with required guards exists, switch the work of that run to exact-candidate validation.",
-      "owned": "QA contracts and receipts only",
-      "dependency": "Free Roam producer/support heads may be in progress; useful QA-readiness work continues without waiting",
-      "exit": "changed candidate validated immediately, or current-head validation plan/harness remains ready with no stale blocker",
-      "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "branch": "qa/avatar-customization-authority-c4df87d-v1",
+      "objective": "Hold the QA-only harness candidate at exact head 9fe7f6b5307ebcd58113cb16bf2e2f302e429d26; do not add commits or open a competing product PR during packaging. Reuse PR 154 PASS evidence and inspect only exact-head authority/provenance regressions.",
+      "owned": "QA contracts, validators, receipts, and adversarial authority checks only",
+      "dependency": "PR 154 head fa50b857dda1256e9a97f0b2607f73bc3c9caf24 QA PASS comment 5970805607; canonical push guards all PASS",
+      "exit": "package-stage QA continuity for c4df87d or one precise FAIL owner/exit criterion",
+      "handoff": "Roblox High School Integration Director",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute integration-readiness increment: inspect live producer PR/head, mergeability, candidate-cap compliance, QA evidence identity, and exact-head guard state. Do not merge until QA PASS; do not sit idle while the candidate is being prepared.",
-      "owned": "mechanical integration only",
-      "dependency": "QA PASS remains the merge gate, but preflight/merge-readiness work continues before that gate",
-      "exit": "candidate becomes QA-PASS and merge-ready, or a precise integration-risk handoff is recorded",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Preserve the verified PR 154 merge identity and prevent competing merges while downstream gates run. No additional canonical merge is eligible before Smoke and Package complete and Control Tower reopens capacity.",
+      "owned": "mechanical protected integration only",
+      "dependency": "PR 154 merged from exact QA-PASS head fa50b857dda1256e9a97f0b2607f73bc3c9caf24 to c4df87d; canonical push guards all PASS",
+      "exit": "unchanged exact merge identity handed to Smoke and Package",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
       "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute smoke-readiness increment: maintain the current vertical-slice smoke matrix, inspect candidate/integration deltas that will require smoke, and classify genuine runtime-only checks as LOCAL_ONLY_REQUIRED without carrying stale blockers. Execute exact-head smoke immediately after integration.",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Preserve and audit the exact-head Smoke PASS for the changed avatar/customization entry surface. Do not rerun unchanged evidence or alter product source; keep rendered device interaction checks SHA-specific LOCAL_ONLY_REQUIRED.",
       "owned": "post-integration smoke evidence only",
-      "dependency": "integration is required for final smoke certification, not for preparatory smoke work",
-      "exit": "integrated changed head smoked immediately, or current smoke matrix is fresh and scoped to the live pipeline",
+      "dependency": "Smoke receipt schema 6 merged on coordination/high-school-integration-smoke@995727d2302970fdf994eccdf11d12cfa1801e6f",
+      "exit": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED handed to Release/Package",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "SUPPORT",
-      "base": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "objective": "Every run, perform one bounded ~10-minute package-readiness increment: verify the deterministic school/** packaging recipe, current canonical tree identity, prior artifact continuity, and exact release inputs. Build a new package only after Smoke PASS on a changed canonical; never publish Roblox.",
-      "owned": "package/hash/readiness only",
-      "dependency": "Smoke PASS remains the package gate, but deterministic package-readiness verification continues before that gate",
-      "exit": "smoke-certified changed canonical packaged immediately, or package recipe/artifact continuity verified against the live head",
+      "mode": "PACKAGE",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Build and verify one deterministic school/** source-tree package for c4df87d using the merged Smoke PASS. Record artifact identity and hashes through the protected coordination path; preserve local-only rendered checks and never publish Roblox.",
+      "owned": "deterministic package, hashes, artifact continuity, and release receipt only",
+      "dependency": "Smoke PASS receipt at coordination/high-school-integration-smoke@995727d2302970fdf994eccdf11d12cfa1801e6f; exact-head push guards PASS",
+      "exit": "package receipt and artifact identity bound to c4df87d, Roblox published=false",
       "handoff": "Roblox High School Control Tower"
+    },
+    "ControlTower": {
+      "mode": "COORDINATE",
+      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "objective": "Enforce the three-candidate cap, exact-head gate order, and unique lane authority. Do not assign a new product producer until Release/Package completes and stale support candidates are reconciled; then issue exactly one fresh exact-base directive for the next avatar/customization/shopping increment.",
+      "owned": "coordination/state/WIP.json, candidate-cap enforcement, lane assignment, and pipeline handoffs only",
+      "dependency": "Release/Package is the sole active downstream gate",
+      "exit": "package result recorded, candidate capacity reconciled, and exactly one next producer assigned",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -135,57 +149,72 @@
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
-    "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
+    "candidate": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
     "status": "PASS_EXACT_HEAD",
-    "evidence": "PR 128 comment 5968415251",
-    "reason": "Prior Legacy-facing presentation defects closed; exact PR-head guards green."
+    "evidence": "PR 154 comment 5970805607",
+    "reason": "Canonical client mounts Shared.LegacyOutfitEntry exactly once; verified labels and 12-slot hierarchy are provenance-bound; unverified layout remains explicit."
   },
   "integrationResult": {
-    "pr": 128,
-    "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
-    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "pr": 154,
+    "candidate": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
+    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
     "status": "MERGED_PUSH_GUARDS_PASS",
     "exactHeadCi": [
-      37117473969,
-      37117473982,
-      37117473978
+      37136942081,
+      37136942094,
+      37136942133
     ]
   },
   "smokeResult": {
-    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
     "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "releasePackageEligible": true
+    "receiptBranch": "coordination/high-school-integration-smoke",
+    "receiptCommit": "995727d2302970fdf994eccdf11d12cfa1801e6f",
+    "releasePackageEligible": true,
+    "localOnlyRequired": [
+      "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE"
+    ]
   },
   "packageResult": {
-    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
-    "artifact": "pip-high-school-00df979-source-tree-dea093c1",
-    "schoolTreeGitSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
+    "status": "IN_PROGRESS__EXACT_SMOKE_PASS_CONSUMED",
+    "priorArtifact": "pip-high-school-00df979-source-tree-dea093c1",
+    "artifact": null,
+    "schoolTreeGitSha": null,
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "robloxPublished": false
   },
   "branchReadiness": {
-    "producer": {
-      "branch": "rebuild/high-school-avatar-customization-00df979-v1",
-      "baseSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
-      "status": "READY_EXACT_CURRENT_BASE"
+    "canonical": {
+      "branch": "rebuild/high-school-foundation",
+      "headSha": "c4df87d34022854b15b6416538756399ab020891",
+      "status": "CI_QA_INTEGRATION_SMOKE_PASS__PACKAGE_IN_PROGRESS"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
-      "headSha": "f5239fc806ff39b793b7ea7a7158c032ed5ef8c3",
-      "status": "GREEN_SUPPORT_EVIDENCE__THREE_GUARDS_PASS"
+      "headSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+      "status": "GREEN_SUPPORT_EVIDENCE__FROZEN_DURING_PACKAGE"
+    },
+    "qa": {
+      "branch": "qa/avatar-customization-authority-c4df87d-v1",
+      "headSha": "9fe7f6b5307ebcd58113cb16bf2e2f302e429d26",
+      "status": "QA_ONLY_CANDIDATE__HOLD_NO_MORE_COMMITS_DURING_PACKAGE"
+    },
+    "nextProducer": {
+      "branch": null,
+      "status": "NOT_ASSIGNED_UNTIL_PACKAGE_AND_CAP_RECONCILIATION"
     }
   },
   "binaryReference": {
     "policy": "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
-    "canonicalSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
     "verifiedRun": 37117831711,
     "verifiedJob": 111187960403,
     "artifactId": 11271783526,
     "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
     "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "cloudArtifactMaterialization": "PASS",
-    "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
+    "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   }
 }
