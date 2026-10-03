@@ -99,6 +99,9 @@
         },
         "HousingService": {
           "$path": "src/server/HousingService.server.lua"
+        },
+        "HousingLayoutRepository": {
+          "$path": "src/server/HousingLayoutRepository.lua"
         }
       }
     },
