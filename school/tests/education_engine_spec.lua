@@ -219,6 +219,26 @@ assertEqual(invalidRecoveredReplayStatus, "duplicate", "corrected retry replay s
 assertDeepEqual(invalidRecoveredReplay, invalidRecovered, "corrected retry duplicate response")
 assertEqual(engine:getSessionSnapshot("invalid-choice-session").completedCount, 1, "corrected retry replay duplicated history")
 
+-- A wrong activity id is a pure rejection: it must not consume an attempt or
+-- reserve the submission id, so the same id can recover against the active activity.
+engine:beginSession("wrong-activity-session", "Math", 1)
+local wrongActivityActive = assert(engine:nextActivity("wrong-activity-session"))
+local wrongActivity, wrongActivityStatus = engine:submit(
+    "wrong-activity-session", "not-active", "wrong-activity-retry", 2
+)
+assertEqual(wrongActivityStatus, "rejected", "wrong activity status")
+assertEqual(wrongActivity.accepted, false, "wrong activity was accepted")
+assertEqual(wrongActivity.code, "activity_not_active", "wrong activity rejection code")
+local wrongActivitySnapshot = engine:getSessionSnapshot("wrong-activity-session")
+assertEqual(wrongActivitySnapshot.activeAttempts, 0, "wrong activity consumed an attempt")
+assertEqual(wrongActivitySnapshot.active.id, wrongActivityActive.id, "wrong activity cleared active state")
+local wrongActivityRecovered, wrongActivityRecoveredStatus = engine:submit(
+    "wrong-activity-session", wrongActivityActive.id, "wrong-activity-retry", 2
+)
+assertEqual(wrongActivityRecoveredStatus, "accepted", "wrong activity rejection poisoned submission id")
+assertEqual(wrongActivityRecovered.completed, true, "wrong activity recovery did not complete")
+assertEqual(engine:getSessionSnapshot("wrong-activity-session").completedCount, 1, "wrong activity recovery missing history")
+
 -- Deterministic adaptive selection: independent correct answers raise the
 -- session-local target by one without skipping more than one difficulty level.
 engine:beginSession("adaptive-session", "Math", 1)
