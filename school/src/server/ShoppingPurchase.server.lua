@@ -40,7 +40,15 @@ purchasePermanentItem.OnServerInvoke = function(player, itemKey, requestId, clie
 end
 
 MarketplaceService.PromptPurchaseFinished:Connect(function(player, assetId, purchased)
-    -- Callback-only success boundary. With the authorized catalog empty this
-    -- necessarily fails closed and cannot produce a success notification.
-    controller:confirmPurchase(player.UserId, assetId, purchased)
+    local confirmation = controller:confirmPurchase(player.UserId, assetId, purchased)
+    if confirmation.accepted == true
+        and confirmation.code == "purchase_confirmed"
+        and confirmation.purchaseConfirmed == true
+        and type(confirmation.successText) == "string" then
+        -- Reuse the verified PurchasePermanentItem seam; do not invent a reference transport.
+        -- Only the purchasing player receives the first confirmed server result.
+        pcall(function()
+            purchasePermanentItem:InvokeClient(player, confirmation.successText)
+        end)
+    end
 end)
