@@ -1,4 +1,4 @@
-local path = "school/src/client/AvatarCustomization.client.lua"
+local path = "school/src/shared/LegacyOutfitEntry.lua"
 local file = assert(io.open(path, "r"))
 local text = file:read("*a")
 file:close()
