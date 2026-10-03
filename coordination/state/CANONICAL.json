@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 12,
+  "schemaVersion": 13,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+  "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_PUSH_GUARDS__LIVE_BRANCH_HEAD_GOVERNS",
-  "parentCertifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
+  "status": "PASS_EXACT_HEAD_PUSH_GUARDS__HOUSING_EDITOR_V2_INTEGRATED",
+  "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "repair": {
     "pr": 64,
     "branch": "fix/economy-operation-order-rejoin-2ab1584",
@@ -16,42 +16,43 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37087510133,
+      "runId": 37117473969,
       "event": "push",
       "conclusion": "success",
-      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37087510242,
+      "runId": 37117473982,
       "event": "push",
       "conclusion": "success",
-      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37087510189,
+      "runId": 37117473978,
       "event": "push",
       "conclusion": "success",
-      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     }
   ],
   "qaContract": {
-    "result": "PRIOR_RECEIPT_STALE_FOR_LIVE_HEAD",
-    "certifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "rule": "Active Housing Editor QA occurs on the live PR candidate; stale prior canonical receipts do not gate current WIP."
+    "result": "PASS_EXACT_HEAD",
+    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+    "evidence": "PR 128 comment 5968415251"
   },
   "integration": {
-    "result": "LIVE_BASE_READY_FOR_CURRENT_PIPELINE",
-    "certifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-    "rule": "Integration waits on QA PASS of the active candidate."
+    "result": "PASS_EXACT_HEAD",
+    "mergedPr": 128,
+    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662"
   },
   "integrationSmoke": {
-    "result": "DEFERRED_RUNTIME_EVIDENCE_TRACKED_SEPARATELY",
-    "pendingSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-    "rule": "Older-sha LOCAL_ONLY_REQUIRED runtime evidence is non-blocking for cloud-safe work."
+    "result": "PENDING_EXACT_HEAD_SMOKE",
+    "pendingSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "rule": "Smoke owns post-integration certification; runtime-only evidence must be explicit and nonblocking for cloud-safe checks."
   },
-  "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head CI are authoritative; SHA-mismatched state/receipts are stale.",
+  "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
   "vehicleIntegration": {
     "producerPr": 85,
     "groundingRepairPr": 92,
@@ -102,5 +103,5 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2"
+  "currentMilestone": "HOUSING_EDITOR_V2_INTEGRATED_AWAITING_SMOKE"
 }

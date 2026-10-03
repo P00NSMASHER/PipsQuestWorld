@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 32,
+  "schemaVersion": 33,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:36:30Z",
+  "observedAt": "2026-10-03T10:47:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+    "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
     "guards": "PASS"
   },
   "target": {
@@ -14,13 +14,13 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
-    "producerPr": 128,
-    "producerSha": "4de817ce5e546feb3d59dea23efd8648af507e7e",
+    "countIncludingBase": 1,
+    "producerPr": null,
+    "producerSha": null,
     "supportPr": 127,
     "supportSha": "0f0d10ca852e815727fae51e6c26db5135bdcd8c"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2",
+  "currentMilestone": "HOUSING_EDITOR_V2_INTEGRATED_AWAITING_SMOKE",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -31,87 +31,88 @@
   "directives": {
     "Foundation": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Hold world clock location and spawn stable.",
-      "owned": "world/clock/location/spawn",
-      "dependency": "canonical guards pass",
-      "exit": "Foundation-owned regression from QA",
-      "handoff": "Pip High Free Roam"
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Hold world clock location spawn and environment stable after Housing Editor V2 integration.",
+      "owned": "world/clock/location/spawn/environment",
+      "dependency": "Foundation push guard 37117473969 PASS on exact canonical",
+      "exit": "Foundation-owned regression from Smoke",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "ClassEducation": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Hold class session activity stable; Phase 2 deferred.",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Hold class/session/activity stable after Housing Editor V2 integration.",
       "owned": "class/session/activity",
-      "dependency": "canonical guards pass",
-      "exit": "Class-owned regression from QA",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Class Education push guard 37117473982 PASS",
+      "exit": "Class-owned regression from Smoke",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "ContentQA": {
-      "mode": "SUPPORT",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Recover remaining verified Housing Editor reference hierarchy labels assets dimensions constants and provenance.",
+      "mode": "WAIT_PIPELINE",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Housing Editor V2 parity evidence consumed; await next clone slice.",
       "owned": "fixtures/reference/provenance only",
-      "dependency": "PR 127 exact head 0f0d10ca852e815727fae51e6c26db5135bdcd8c green",
-      "exit": "verified reference evidence with unknowns explicit and checks green",
-      "handoff": "Pip High Free Roam",
+      "dependency": "QA PASS candidate c7d7e774c70267c3c384d428280b613d59742857 and PR 128 merged",
+      "exit": "Next Control Tower support assignment",
+      "handoff": "Roblox High School Control Tower",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Hold integrated durable housing economy ownership and persistence contracts stable.",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Hold durable progression/economy/ownership/mobile read-only contracts stable.",
       "owned": "progression/economy/ownership/mobile read-only",
-      "dependency": "canonical guards pass",
-      "exit": "Progression-owned regression from QA",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Progression push guard 37117473978 PASS",
+      "exit": "Progression-owned regression from Smoke",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "FreeRoam": {
-      "mode": "PRODUCE",
-      "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "branch": "rebuild/high-school-housing-editor-db0a700-v1",
-      "objective": "Remediate QA exact-parity FAIL on PR 128: replace recoverable generic Housing Editor UI/catalog/presentation with verified authorized original-reference hierarchy, labels, dimensions, constants and assets; preserve current server authorities and explicitly isolate any still-unverified surfaces.",
-      "owned": "housing editor UI/gameplay/furniture runtime",
-      "dependency": "QA FAIL on exact head 4de817ce5e546feb3d59dea23efd8648af507e7e (PR 128 comment 5968318162) plus Content QA verified evidence.",
-      "exit": "new PR 128 exact head with QA-listed parity defects closed where recoverable, unknowns explicitly non-exact, deterministic housing tests and all three PR-head guards green",
-      "handoff": "Roblox High School QA & Contract",
+      "mode": "WAIT_PIPELINE",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Housing Editor V2 producer work is integrated; stop edits pending Smoke.",
+      "owned": "jobs/vehicles/housing/customization/social mechanics",
+      "dependency": "PR 128 merged exact candidate c7d7e774c70267c3c384d428280b613d59742857 to canonical 00df979add2b5d0e961205b62cf88340c56ee662",
+      "exit": "Smoke-owned defect or next Control Tower product assignment",
+      "handoff": "Roblox High School Integration Smoke",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "candidate": "4de817ce5e546feb3d59dea23efd8648af507e7e",
-      "objective": "Revalidate only after PR 128 head changes in response to exact-parity FAIL.",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
+      "objective": "Exact candidate QA PASS consumed; do not rerun unchanged QA.",
       "owned": "QA contracts and receipts",
-      "dependency": "Free Roam remediation produces a new exact PR 128 head.",
-      "exit": "new exact-SHA PASS or one new precise FAIL handoff",
-      "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
+      "dependency": "PR 128 comment 5968415251 PASS_EXACT_HEAD",
+      "exit": "Changed post-integration candidate requiring QA",
+      "handoff": "Roblox High School Integration Smoke",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Mechanically merge only a QA-PASS Housing Editor candidate.",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Housing Editor V2 integration complete; no further merge action.",
       "owned": "mechanical integration",
-      "dependency": "QA PASS on a post-remediation PR 128 exact head; current 4de817ce5e546feb3d59dea23efd8648af507e7e is QA FAIL.",
-      "exit": "new canonical SHA plus three push guards pass",
+      "dependency": "PR 128 merged candidate c7d7e774c70267c3c384d428280b613d59742857",
+      "exit": "Next QA-PASS product candidate",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Post-integration cloud smoke; keep runtime-only checks recorded without laptop polling.",
-      "owned": "post-integration smoke evidence",
-      "dependency": "integrated exact canonical candidate",
-      "exit": "cloud PASS plus explicit local-only list or separately authorized runtime PASS",
-      "handoff": "Roblox High School Release & Package Gate"
+      "mode": "SMOKE",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "candidate": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Certify exact integrated Housing Editor V2 canonical head with cloud-safe smoke; record any genuinely runtime-only checks as LOCAL_ONLY_REQUIRED without blocking cloud-safe evidence.",
+      "owned": "post-integration smoke evidence only",
+      "dependency": "QA PASS c7d7e774 + PR 128 merge + Foundation 37117473969, Class 37117473982, Progression 37117473978 all PASS on 00df979",
+      "exit": "Smoke PASS exact 00df979 plus explicit local-only list if any",
+      "handoff": "Roblox High School Release & Package Gate",
+      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ReleasePackage": {
       "mode": "WAIT_PIPELINE",
-      "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Package only an exact smoke-certified checkpoint, never publish.",
+      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "objective": "Package only after Smoke PASS exact 00df979; never publish.",
       "owned": "package/hash/readiness",
-      "dependency": "Smoke PASS exact integrated SHA",
+      "dependency": "Smoke PASS exact canonical",
       "exit": "artifact identity bound to exact SHA",
       "handoff": "Roblox High School Control Tower"
     }
@@ -133,9 +134,20 @@
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
-    "candidate": "4de817ce5e546feb3d59dea23efd8648af507e7e",
-    "status": "FAIL_EXACT_CLONE_PARITY",
-    "evidence": "PR 128 comment 5968318162",
-    "reason": "Behavior/authority guards pass, but recoverable Legacy-facing UI/catalog/asset presentation remains generic or explicitly referenceExact=false; reference coverage is incomplete."
+    "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
+    "status": "PASS_EXACT_HEAD",
+    "evidence": "PR 128 comment 5968415251",
+    "reason": "Prior Legacy-facing presentation defects closed; exact PR-head guards green."
+  },
+  "integrationResult": {
+    "pr": 128,
+    "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
+    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "status": "MERGED_PUSH_GUARDS_PASS",
+    "exactHeadCi": [
+      37117473969,
+      37117473982,
+      37117473978
+    ]
   }
 }
