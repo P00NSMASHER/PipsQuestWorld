@@ -4,9 +4,12 @@ local HttpService = game:GetService("HttpService")
 local ContextActionService = game:GetService("ContextActionService")
 local UserInputService = game:GetService("UserInputService")
 
-local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
+local shared = ReplicatedStorage:WaitForChild("Shared")
+local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
+local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 
 local player = Players.LocalPlayer
+LegacyOutfitEntry(player, UserInputService)
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
 local stateSnapshot = root:WaitForChild("StateSnapshot")
 local requestTravel = root:WaitForChild("RequestTravel")
