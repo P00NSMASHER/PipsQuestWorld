@@ -1,54 +1,48 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-03T02:10:00Z",
-  "result": "PASS_EXACT_HEAD",
-  "canonicalBaseSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+  "updatedAt": "2026-10-03T02:22:00Z",
+  "result": "PASS_EXACT_HEAD_SUPPORT",
+  "canonicalBaseSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
   "candidate": {
-    "pr": 120,
-    "branch": "support/high-school-housing-editor-persistence-c236b74",
-    "sha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
-    "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
+    "pr": 124,
+    "branch": "support/high-school-housing-editor-inventory-6a48e36",
+    "sha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+    "milestone": "HOUSING_EDITOR_INVENTORY_QUANTITY_SUPPORT"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37087083253,
-      "event": "push",
+      "runId": 37087392516,
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13"
+      "headSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37087083263,
-      "event": "push",
+      "runId": 37087392551,
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13"
+      "headSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37087083313,
-      "event": "push",
+      "runId": 37087392548,
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
+      "headSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
       "housingLayoutRepositoryStep": "success"
     }
   ],
   "validation": {
-    "mutableLayoutPersistenceOnly": true,
-    "cashMutationAuthorityAdded": false,
-    "gameplayRemoteAuthorityAdded": false,
+    "inventoryQuantityPersistence": true,
+    "multipleCopyAdd": true,
+    "quantityRemove": true,
+    "underflowRejected": true,
+    "idempotentRetry": true,
+    "operationConflictDetection": true,
+    "reopenRestore": true,
+    "cashAuthorityAdded": false,
+    "gameplayAuthorityAdded": false,
     "worldAuthorityAdded": false,
     "classAuthorityAdded": false,
-    "versionedCompareAndSwap": true,
-    "idempotentOperationIds": true,
-    "operationIdConflictDetection": true,
-    "finiteTransformValidation": true,
-    "durableStyle": true,
-    "durableHideWalls": true,
-    "durablePlaceMovePaintRemove": true,
-    "reopenRestoreCoverage": true,
-    "projectMappingSingle": true,
     "retiredRuntimeCoupling": false,
     "phase2SchoolworkDrift": false,
     "testWeakening": false
@@ -56,16 +50,8 @@
   "integrationEligibility": "PASS",
   "blocker": null,
   "handoff": {
-    "owner": "Roblox High School Control Tower",
-    "exactSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "nextParity": "HOUSING_EDITOR_V2"
-  },
-  "certifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-  "exactIntegrationRebind": {
-    "candidateRootTree": "727d1e6dd6acf663101517fba1492a098b724996",
-    "canonicalRootTree": "727d1e6dd6acf663101517fba1492a098b724996",
-    "candidateSchoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
-    "canonicalSchoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
-    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
+    "owner": "Roblox High School Integration Director",
+    "exactSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+    "pr": 124
   }
 }
