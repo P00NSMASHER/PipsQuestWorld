@@ -8,6 +8,7 @@ on:
       - "rebuild/high-school-vehicle-*"
       - "rebuild/high-school-legacy-hud-*"
       - "rebuild/high-school-housing-*"
+      - "support/high-school-housing-editor-*"
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"
@@ -51,6 +52,8 @@ jobs:
         run: lua5.4 school/tests/housing_lifecycle_spec.lua
       - name: Run housing UI and runtime wiring contract
         run: lua5.4 school/tests/housing_ui_contract_spec.lua
+      - name: Run housing layout repository tests
+        run: lua5.4 school/tests/housing_layout_repository_spec.lua
       - name: Run class-to-progression binding test
         run: lua5.4 school/tests/progression_binding_spec.lua
       - name: Run durable vertical-slice integration gate
