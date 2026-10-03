@@ -28,6 +28,22 @@ If a GitHub mutation returns a platform message equivalent to `blocked by OpenAI
 
 A real GitHub error must retain its real class (for example permission denied/403, stale SHA/conflict/409, validation/422, rate limit, or branch/ruleset rejection). Do not relabel those as safety denials.
 
+## Mandatory read-after-write reconciliation
+A connector response is not authoritative evidence that a GitHub mutation did or did not commit. Before retrying or classifying any reported safety denial, transport error, or ambiguous mutation response, perform exactly one read-only postcondition check through the supported object-specific read path.
+
+- **Create PR:** search PRs for the exact head branch in the same repository, then verify the returned PR has the intended head and base. If it exists, reuse it; do not create a duplicate.
+- **Create branch:** search for the exact branch and verify it resolves.
+- **Create/update file:** fetch the exact path on the intended branch and verify the expected content/blob state.
+- **PR/issue comment or review:** read the target conversation/reviews and verify the intended entry exists before retrying.
+- **Merge:** fetch PR metadata and verify merged state and the expected head before retrying.
+- **Other idempotent object writes:** use the narrowest supported read that proves or disproves the intended postcondition.
+
+If the expected postcondition **exists**, classify the result as `WRITE_COMMITTED_RESPONSE_UNCERTAIN`, record/reuse the resulting GitHub object identity, and continue the pipeline with **zero retries**. A blocked or missing response after a committed write is not `CONNECTOR_SAFETY_DENIAL`.
+
+Only when the expected postcondition is **absent** may a safety-check response be classified as `CONNECTOR_SAFETY_DENIAL`. The existing zero-retry and no-bypass rules then apply unchanged.
+
+This reconciliation is read-only. It must never be used to evade a safety decision, weaken repository protections, or replay blocked content through alternate Git plumbing.
+
 ## Retry budget
 - Identical safety-denied payload: **0 retries**.
 - A different supported GitHub action may be attempted only when it materially reduces or changes the payload/risk surface and still follows repository protections.
