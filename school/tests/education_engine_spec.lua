@@ -243,6 +243,27 @@ local exhausted, exhaustedStatus = engine:nextActivity("adaptive-session")
 assertNil(exhausted, "completed bank should be exhausted")
 assertEqual(exhaustedStatus, "exhausted", "exhaustion status")
 
+-- Closed sessions stay inert under duplicate teardown and late activity/submission calls.
+engine:beginSession("closed-session", "Math", 1)
+local closedActivity = assert(engine:nextActivity("closed-session"))
+local firstClose = engine:closeSession("closed-session")
+assertEqual(firstClose.closed, true, "closed session did not report closed")
+assertNil(firstClose.active, "closed session kept active activity")
+assertEqual(firstClose.completedCount, 0, "closing session fabricated history")
+local secondClose = engine:closeSession("closed-session")
+assertEqual(secondClose.closed, true, "duplicate close reopened session")
+assertNil(secondClose.active, "duplicate close restored activity")
+local closedNext, closedNextStatus = engine:nextActivity("closed-session")
+assertNil(closedNext, "closed session produced another activity")
+assertEqual(closedNextStatus, "closed", "closed session next-activity status")
+local closedSubmit, closedSubmitStatus = engine:submit(
+    "closed-session", closedActivity.id, "closed-session-late", 2
+)
+assertEqual(closedSubmitStatus, "rejected", "closed session accepted a late submission")
+assertEqual(closedSubmit.accepted, false, "closed session late submission accepted")
+assertEqual(closedSubmit.code, "session_closed", "closed session late submission code")
+assertEqual(engine:getSessionSnapshot("closed-session").completedCount, 0, "closed session late submit changed history")
+
 -- Subject isolation is deterministic.
 engine:beginSession("ela-session", "ELA", 1)
 local elaActivity = assert(engine:nextActivity("ela-session"))
