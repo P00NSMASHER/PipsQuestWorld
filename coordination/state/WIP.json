@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 27,
+  "schemaVersion": 28,
   "owner": "Roblox High School Control Tower",
   "wipCap": 3,
   "unintegratedProductCandidateCount": 1,
@@ -15,13 +15,16 @@
       "objective": "HOUSING_EDITOR_INVENTORY_QUANTITY_SUPPORT",
       "baseSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
       "branch": "support/high-school-housing-editor-inventory-6a48e36",
-      "status": "PRODUCE_SUPPORT"
+      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+      "pr": 124,
+      "status": "QA_PASS_READY_INTEGRATION"
     },
     "downstream": {
-      "lane": "Pip High Free Roam",
-      "objective": "HOUSING_EDITOR_V2",
-      "dependency": "Progression inventory-quantity support integrated on current exact canonical",
-      "status": "WAIT_PIPELINE"
+      "lane": "Roblox High School Integration Director",
+      "objective": "INTEGRATE_HOUSING_EDITOR_INVENTORY_SUPPORT",
+      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+      "pr": 124,
+      "status": "INTEGRATE"
     }
   },
   "priorityBacklog": [
@@ -79,9 +82,9 @@
     "DevEx": "CI/evidence infrastructure only; provide exact-head editor coverage if needed without changing semantics."
   },
   "nextHandoff": {
-    "from": "Roblox High School Progression & Mobile",
-    "to": "Pip High QA & Architecture Contract",
-    "condition": "Inventory quantity support exact-head candidate is green and remains mutable housing persistence only."
+    "from": "Roblox High School Integration Director",
+    "to": "Roblox High School Control Tower",
+    "condition": "PR #124 integrates and the resulting canonical exact-head guards pass; then authorize Housing Editor V2 on that exact new base."
   },
   "openCanonicalPrCount": 0,
   "openNoncanonicalPrCount": 0,
@@ -141,42 +144,44 @@
       "handoff": "Pip High Free Roam"
     },
     "Progression & Mobile": {
-      "mode": "SUPPORT",
+      "mode": "WAIT_PIPELINE",
       "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "base": "rebuild/high-school-foundation@6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "branch": "support/high-school-housing-editor-inventory-6a48e36",
-      "objective": "Extend HousingLayoutRepository with durable per-item furniture inventory quantities so the Legacy editor can buy multiple copies and sell/remove inventory without abusing immutable EconomyRepository unlocks.",
-      "owned": "durable mutable housing layout/inventory persistence contract only; no cash/gameplay/world/class authority",
-      "dependency": "integrated HousingLayoutRepository at exact 6a48e36; EconomyRepository remains sole money authority",
-      "exit": "Exact support branch provides idempotent add/remove inventory operations, rejects underflow/invalid quantities, restores quantities after reopen, focused tests pass and all exact-head guards are green.",
-      "handoff": "QA/Contract"
+      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+      "objective": "Furniture inventory quantity support is exact-head green and QA-cleared. Freeze semantics while Integration lands PR #124.",
+      "owned": "durable mutable housing inventory/layout persistence only",
+      "dependency": "Foundation 37087392516 + Class 37087392551 + Progression 37087392548 PASS; housing layout quantity tests PASS",
+      "exit": "Integration lands exact candidate or returns one reproducible Progression defect.",
+      "handoff": "Integration"
     },
     "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "objective": "Wait for durable inventory quantity support; do not implement buy/sell against incomplete state semantics.",
-      "owned": "housing editor gameplay/UI semantics only",
-      "dependency": "Progression HOUSING_EDITOR_INVENTORY_QUANTITY_SUPPORT integration",
-      "exit": "Control Tower authorizes a fresh Housing Editor V2 branch from the resulting exact canonical SHA.",
+      "objective": "Wait for PR #124 integration; do not branch editor from a base that will become stale.",
+      "owned": "housing editor gameplay/UI only",
+      "dependency": "exact inventory support integration",
+      "exit": "Control Tower authorizes a fresh editor branch from the resulting canonical SHA.",
       "handoff": "Control Tower"
     },
     "QA/Contract": {
       "mode": "WAIT_PIPELINE",
       "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "objective": "Wait for exact Housing Editor V2 candidate, then validate editor UI, security, persistence and authority uniqueness.",
+      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+      "objective": "QA PASS recorded for exact support candidate; wait unless it changes.",
       "owned": "QA harnesses/contracts/receipt only",
-      "dependency": "Free Roam exact-head candidate on 6a48e36 base",
-      "exit": "PASS exact candidate or return one reproducible defect to sole owner.",
+      "dependency": "exact candidate unchanged",
+      "exit": "Changed candidate or Integration-returned evidence defect.",
       "handoff": "Integration"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "INTEGRATE",
       "canonicalSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "objective": "Wait for QA PASS on Housing Editor V2.",
+      "candidateSha": "7a5325a3b2e378c4a23a79ed8b3a3ccadf162dad",
+      "base": "rebuild/high-school-foundation@6a48e36f2e5fa6508476dab54f897389726b2a13",
+      "objective": "Mechanically integrate PR #124 furniture inventory quantity support.",
       "owned": "mechanical integration only",
-      "dependency": "QA PASS exact editor candidate",
-      "exit": "Integrate exact QA-cleared head only, then verify canonical push guards.",
-      "handoff": "Integration Smoke"
+      "dependency": "QA PASS exact 7a5325a + exact-head guard PASS",
+      "exit": "Merge only exact candidate/base and verify resulting canonical push guards.",
+      "handoff": "Control Tower"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
