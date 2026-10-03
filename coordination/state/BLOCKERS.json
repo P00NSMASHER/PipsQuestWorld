@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "canonicalSha": "639b1c6d7be7abe629576ebc38802f87a36fdbc9",
   "currentBlockers": [],
-  "gateStatus": "NEXT_PARITY_SLICE_UNBLOCKED",
+  "gateStatus": "CLEARED_FOR_CONTINUOUS_AVATAR_CUSTOMIZATION_WORK",
   "nextProducer": "Pip High Free Roam",
-  "nextObjective": "AVATAR_CUSTOMIZATION_SHOPPING_V1",
+  "nextObjective": "AVATAR_CUSTOMIZATION_SHOPPING",
   "deferredRuntimeEvidence": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
@@ -19,5 +19,12 @@
     }
   ],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
-  "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
+  "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker.",
+  "binaryReferenceStatus": {
+    "status": "VERIFIED_NOT_BLOCKED",
+    "policy": "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
+    "run": 37117831711,
+    "artifact": 11271783526,
+    "rule": "UTF-8/raw-binary rejection is transport-only."
+  }
 }
