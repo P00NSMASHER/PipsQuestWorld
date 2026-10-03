@@ -1,83 +1,84 @@
 {
-  "schemaVersion": 12,
+  "schemaVersion": 13,
   "lane": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-02T21:36:00Z",
-  "result": "WAITING_LOCAL_ONLY_REQUIRED",
+  "recordedAt": "2026-10-03T10:50:00Z",
+  "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "sourceRoot": "school/**",
-  "milestone": "HOUSING_PLOT_SEAMS_V1_PLUS_VEHICLE_RUNTIME_GATE",
-  "eligibility": "QA_AND_INTEGRATION_EXACT_SHA_PASS",
-  "prerequisiteReceipts": {
+  "milestone": "HOUSING_EDITOR_V2_INTEGRATED",
+  "eligibility": "QA_PASS_INTEGRATION_MERGED_EXACT_HEAD_PUSH_GUARDS_PASS",
+  "prerequisiteEvidence": {
     "qa": {
       "result": "PASS_EXACT_HEAD",
-      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
+      "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+      "source": "PR 128 comment 5968415251"
     },
     "integration": {
-      "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
-      "exactSha": "68c4b3f80eec2ddd6bcf7eb44d9afd7442bdbbd6"
+      "result": "MERGED",
+      "pr": 128,
+      "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+      "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     }
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37067265741,
+      "runId": 37117473969,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "housingPlotStep": "success"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37067265753,
+      "runId": 37117473982,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37067265684,
+      "runId": 37117473978,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
     }
   ],
   "cloudChecks": {
-    "buildLoadSourceRootIsolation": "PASS_EXACT_HEAD",
-    "baselineSpawnClockClassCafe": "PASS_REUSED_UNCHANGED_PLUS_EXACT_HEAD_GUARDS",
-    "vehicleLifecyclePureState": "PASS_EXACT_HEAD_PROGRESS_GUARD",
-    "oneActiveVehiclePerPlayer": "PASS_DETERMINISTIC",
-    "staleTokenDespawnProtection": "PASS_DETERMINISTIC",
-    "ownerOnlySeatEnforcement": "PASS_STATIC",
-    "groundedAutoShopSpawn": "PASS_EXACT_HEAD",
-    "ownerOnlyControlIntent": "PASS_STATIC",
-    "finiteClampedControls": "PASS_DETERMINISTIC",
-    "staleInputTimeout": "PASS_STATIC",
-    "serverOnlyMovementAuthority": "PASS_STATIC",
-    "keyboardTouchBindings": "PASS_STATIC",
-    "playerLeaveCleanup": "PASS_STATIC",
-    "provenanceOriginality": "PASS_NO_NEW_ASSET_IDS",
+    "sourceRootIsolation": "PASS_EXACT_HEAD",
+    "foundationWorldContracts": "PASS_EXACT_HEAD",
+    "housingPlotContracts": "PASS_EXACT_HEAD",
+    "educationEngine": "PASS_EXACT_HEAD",
+    "classEducation": "PASS_EXACT_HEAD",
+    "progressionRepository": "PASS_EXACT_HEAD",
+    "economyLedgerOwnership": "PASS_EXACT_HEAD",
+    "vehicleLifecycle": "PASS_EXACT_HEAD",
+    "vehicleInputValidation": "PASS_EXACT_HEAD",
+    "legacyHudContract": "PASS_EXACT_HEAD",
+    "housingLifecycle": "PASS_EXACT_HEAD",
+    "housingUiRuntimeWiring": "PASS_EXACT_HEAD",
+    "housingLayoutRepository": "PASS_EXACT_HEAD",
+    "classProgressionBinding": "PASS_EXACT_HEAD",
+    "verticalSliceIntegration": "PASS_EXACT_HEAD",
+    "exactParityPresentationQa": "PASS_EXACT_CANDIDATE_MERGED",
     "retiredRuntimeIsolation": "PASS",
     "duplicateAuthorityExclusion": "PASS"
   },
   "localOnlyRequired": [
     {
-      "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-      "exactSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+      "id": "CURRENT_RUNTIME_INTERACTION_SMOKE",
+      "exactSha": "00df979add2b5d0e961205b62cf88340c56ee662",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "check": "Roblox runtime vehicle drive/touch/HUD coexistence plus baseline school/class/cafe behavior.",
-      "reason": "Cloud checks cannot establish actual Roblox seat/touch/GUI runtime interaction; current directive forbids laptop polling and no publish is authorized."
+      "check": "Roblox runtime vehicle seat/drive/touch plus Housing Editor visual placement/move/rotate/remove/sell/paint/Hide Walls, owner/visitor restrictions, mobile obstruction, HUD/House/editor coexistence, and baseline school/class/cafe behavior.",
+      "reason": "Cloud/static/deterministic checks cannot establish actual Roblox seat/touch/GUI interaction and no local runtime session or publish is authorized in this smoke run."
     }
   ],
-  "blocker": {
-    "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
-    "type": "LOCAL_ONLY_REQUIRED",
-    "owner": "Roblox High School Integration Smoke"
-  },
-  "releasePackageEligible": false,
-  "nextOwner": "Roblox High School Integration Smoke",
-  "exactExitCriterion": "Runtime PASS must identify exact current canonical and private target 10768955678/87245440673982.",
+  "localOnlyIsPackagingBlocker": false,
+  "releasePackageEligible": true,
+  "releasePackageRule": "Packaging is a deterministic source checkpoint and does not authorize Roblox publish or claim runtime visual acceptance.",
+  "nextOwner": "Roblox High School Release & Package Gate",
+  "exactExitCriterion": "Package exact canonical 00df979add2b5d0e961205b62cf88340c56ee662 with deterministic artifact identity/hash; do not publish Roblox.",
   "sourceEdited": false,
   "published": false,
   "moneySpent": false,
