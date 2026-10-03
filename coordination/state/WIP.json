@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 34,
+  "schemaVersion": 35,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:51:00Z",
+  "observedAt": "2026-10-03T10:55:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
@@ -14,13 +14,15 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 1,
+    "countIncludingBase": 2,
     "producerPr": null,
     "producerSha": null,
-    "supportPr": 127,
-    "supportSha": "0f0d10ca852e815727fae51e6c26db5135bdcd8c"
+    "producerBranch": "rebuild/high-school-avatar-customization-00df979-v1",
+    "supportPr": null,
+    "supportSha": null,
+    "supportBranch": "support/high-school-avatar-customization-content-00df979"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2_SMOKE_PASS_PACKAGE_NEXT",
+  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -32,91 +34,88 @@
     "Foundation": {
       "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Hold world clock location spawn and environment stable after Housing Editor V2 integration.",
+      "objective": "Hold canonical world/clock/location/spawn/environment stable while avatar/customization/shopping advances.",
       "owned": "world/clock/location/spawn/environment",
-      "dependency": "Foundation push guard 37117473969 PASS on exact canonical",
-      "exit": "Foundation-owned regression from Smoke",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Housing Editor V2 package checkpoint complete; exact canonical guards remain green",
+      "exit": "Foundation-owned regression from the avatar/customization candidate",
+      "handoff": "Pip High Free Roam"
     },
     "ClassEducation": {
       "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Hold class/session/activity stable after Housing Editor V2 integration.",
+      "objective": "Hold class/session/activity authority stable; Phase-2 curriculum remains deferred.",
       "owned": "class/session/activity",
-      "dependency": "Class Education push guard 37117473982 PASS",
-      "exit": "Class-owned regression from Smoke",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Housing Editor V2 package checkpoint complete",
+      "exit": "Class-owned regression from candidate/QA",
+      "handoff": "Roblox High School QA & Contract"
     },
     "ContentQA": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Housing Editor V2 parity evidence consumed; await next clone slice.",
-      "owned": "fixtures/reference/provenance only",
-      "dependency": "QA PASS candidate c7d7e774c70267c3c384d428280b613d59742857 and PR 128 merged",
-      "exit": "Next Control Tower support assignment",
-      "handoff": "Roblox High School Control Tower",
+      "branch": "support/high-school-avatar-customization-content-00df979",
+      "objective": "Recover verified authorized Roblox High School Legacy avatar/customization/shopping presentation references needed for the first exact slice: entry labels/icons, category hierarchy, interaction sequence, visible labels, prices/constants where applicable, and asset provenance. Keep unknowns explicit; do not invent Legacy-exact content.",
+      "owned": "school/tests/fixtures/**, QA-owned reference/provenance assertions, authorized labels/assets/metadata only",
+      "dependency": "Housing Editor V2 package complete; next parity priority is AVATAR_CUSTOMIZATION_SHOPPING",
+      "exit": "one exact-base reference contract with verified labels/interactions/provenance, explicit unknowns, deterministic checks green",
+      "handoff": "Pip High Free Roam",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
-      "mode": "WAIT_PIPELINE",
+      "mode": "SUPPORT",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Hold durable progression/economy/ownership/mobile read-only contracts stable.",
+      "objective": "Prepare only the minimal server-authoritative ownership/unlock/read-only snapshot contract needed by avatar/customization/shopping; do not create shop interaction semantics.",
       "owned": "progression/economy/ownership/mobile read-only",
-      "dependency": "Progression push guard 37117473978 PASS",
-      "exit": "Progression-owned regression from Smoke",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Free Roam owns customization/shop mechanics; Content QA owns reference semantics",
+      "exit": "one narrow ownership/economy seam only if required by the first candidate; otherwise WAIT_PIPELINE",
+      "handoff": "Pip High Free Roam"
     },
     "FreeRoam": {
-      "mode": "WAIT_PIPELINE",
-      "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Housing Editor V2 producer work is integrated; stop edits pending Smoke.",
-      "owned": "jobs/vehicles/housing/customization/social mechanics",
-      "dependency": "PR 128 merged exact candidate c7d7e774c70267c3c384d428280b613d59742857 to canonical 00df979add2b5d0e961205b62cf88340c56ee662",
-      "exit": "Smoke-owned defect or next Control Tower product assignment",
-      "handoff": "Roblox High School Integration Smoke",
+      "mode": "PRODUCE",
+      "base": "rebuild/high-school-foundation@00df979add2b5d0e961205b62cf88340c56ee662",
+      "branch": "rebuild/high-school-avatar-customization-00df979-v1",
+      "objective": "Build the first exact-clone avatar/customization/shopping slice from the exact canonical head. Implement only verified player-facing Legacy reference interactions as evidence arrives: entry/open-close flow, category navigation, avatar/outfit/customization application, shop interaction and owned-item state. Preserve existing authorities and isolate unverified presentation instead of inventing it.",
+      "owned": "avatar/outfit/customization mechanics, shopping interactions, world-facing UX only",
+      "dependency": "Housing Editor V2 packaged; Content QA supplies verified reference fixture; Progression supplies ownership/economy seam only if needed",
+      "exit": "one narrow PR to rebuild/high-school-foundation with changed exact SHA, deterministic tests, all three PR-head guards green, unknown/non-exact surfaces explicit",
+      "handoff": "Roblox High School QA & Contract",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
       "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "candidate": "c7d7e774c70267c3c384d428280b613d59742857",
-      "objective": "Exact candidate QA PASS consumed; do not rerun unchanged QA.",
-      "owned": "QA contracts and receipts",
-      "dependency": "PR 128 comment 5968415251 PASS_EXACT_HEAD",
-      "exit": "Changed post-integration candidate requiring QA",
-      "handoff": "Roblox High School Integration Smoke",
+      "objective": "Validate only the first changed avatar/customization/shopping candidate against verified reference and authority/provenance contracts.",
+      "owned": "QA contracts and receipts only",
+      "dependency": "Free Roam produces an exact candidate with three green PR-head guards",
+      "exit": "PASS exact candidate or one precise FAIL handoff",
+      "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Housing Editor V2 integration complete; no further merge action.",
-      "owned": "mechanical integration",
-      "dependency": "PR 128 merged candidate c7d7e774c70267c3c384d428280b613d59742857",
-      "exit": "Next QA-PASS product candidate",
+      "objective": "Mechanically merge only a QA-PASS avatar/customization/shopping candidate.",
+      "owned": "mechanical integration only",
+      "dependency": "QA PASS exact candidate plus unchanged green PR-head guards",
+      "exit": "new canonical SHA plus three push guards PASS",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
       "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "candidate": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Cloud-safe exact-head Smoke PASS recorded; no repeated unchanged smoke.",
+      "objective": "Smoke only the integrated changed avatar/customization/shopping surface plus baseline vertical slice.",
       "owned": "post-integration smoke evidence only",
-      "dependency": "Smoke receipt PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED on 00df979",
-      "exit": "Next integrated exact canonical requiring smoke",
-      "handoff": "Roblox High School Release & Package Gate",
-      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
+      "dependency": "integrated exact candidate",
+      "exit": "cloud-safe PASS plus explicit LOCAL_ONLY_REQUIRED list if any",
+      "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PACKAGE",
+      "mode": "WAIT_PIPELINE",
       "base": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "candidate": "00df979add2b5d0e961205b62cf88340c56ee662",
-      "objective": "Build or reuse one deterministic school/** package for exact smoke-certified canonical 00df979; record artifact identity/hash; do not publish Roblox.",
+      "objective": "Housing Editor V2 package checkpoint complete; await next smoke-certified canonical.",
       "owned": "package/hash/readiness only",
-      "dependency": "Smoke receipt PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED; releasePackageEligible=true",
-      "exit": "deterministic artifact identity/hash bound to exact 00df979",
-      "handoff": "Roblox High School Control Tower",
-      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
+      "dependency": "artifact pip-high-school-00df979-source-tree-dea093c1 recorded",
+      "exit": "next Smoke PASS exact canonical",
+      "handoff": "Roblox High School Control Tower"
     }
   },
   "connectorReliability": {
@@ -157,5 +156,25 @@
     "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
     "releasePackageEligible": true
+  },
+  "packageResult": {
+    "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+    "artifact": "pip-high-school-00df979-source-tree-dea093c1",
+    "schoolTreeGitSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "robloxPublished": false
+  },
+  "branchReadiness": {
+    "producer": {
+      "branch": "rebuild/high-school-avatar-customization-00df979-v1",
+      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "status": "READY_EXACT_BASE"
+    },
+    "contentQa": {
+      "branch": "support/high-school-avatar-customization-content-00df979",
+      "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+      "status": "READY_EXACT_BASE"
+    }
   }
 }

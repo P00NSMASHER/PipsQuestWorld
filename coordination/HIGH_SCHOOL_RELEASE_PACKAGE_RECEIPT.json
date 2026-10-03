@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "recordedAt": "2026-10-03T10:54:00Z",
+  "result": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+  "canonicalBranch": "rebuild/high-school-foundation",
+  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "sourceRoot": "school/**",
+  "milestone": "HOUSING_EDITOR_V2",
+  "artifact": {
+    "name": "pip-high-school-00df979-source-tree-dea093c1",
+    "type": "deterministic_git_source_tree_checkpoint",
+    "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "rootCommitTreeSha": "eefd1f5f46b5a50c5994d51127675f39c9bbe783",
+    "canonicalCommitSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "reproducibilityRule": "Artifact identity is canonical commit plus exact school/** Git tree SHA; rebuild only if either changes."
+  },
+  "prerequisiteEvidence": {
+    "qa": {
+      "result": "PASS_EXACT_HEAD",
+      "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+      "source": "PR 128 comment 5968415251"
+    },
+    "integration": {
+      "result": "MERGED",
+      "pr": 128,
+      "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+    },
+    "smoke": {
+      "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
+      "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
+    },
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37117473969,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37117473982,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37117473978,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "privateTarget": {
+    "universeId": "10768955678",
+    "placeId": "87245440673982",
+    "publishAuthorized": false
+  },
+  "packageSemantics": {
+    "checkpointOnly": true,
+    "productComplete": false,
+    "robloxPublished": false,
+    "runtimeVisualAcceptanceClaimed": false,
+    "deferredRuntimeChecksPreserved": true
+  },
+  "nextPriority": "AVATAR_CUSTOMIZATION_SHOPPING",
+  "nextOwner": "Roblox High School Control Tower",
+  "moneySpent": false,
+  "taskStateChanged": false
+}
