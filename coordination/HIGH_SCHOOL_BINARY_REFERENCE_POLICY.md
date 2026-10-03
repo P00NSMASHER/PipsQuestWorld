@@ -93,3 +93,55 @@ Do not use BINARY_REFERENCE_BLOCKED for:
 - lack of text indexing,
 - one mirror being unavailable when another verified mirror succeeds,
 - optional bookkeeping/comment write failures.
+
+
+## Proven cloud artifact consumption path
+
+This path has been validated end-to-end and is mandatory before any worker calls a binary reference local-only or blocked.
+
+Validated extraction:
+- Workflow run: 37117831711
+- Job: 111187960403
+- Extractor head: 8a7363c785b15fd5ff3110a22abf5e22b14f152e
+- Artifact ID: 11271783526
+- Artifact name: high-school-binary-reference-extract
+- Verified Git blob SHA: 95ee3d762f419bb3572e18db57c03682651dc8c4
+- Verified SHA-256: d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360
+
+Deep-evidence procedure:
+1. Read the workflow run and confirm success on the expected extractor head.
+2. List artifacts for that run and select only the expected extraction artifact.
+3. Use the dedicated GitHub workflow-artifact download action with the exact artifact ID. Do not fetch the raw .rbxl through a text endpoint.
+4. The downloaded ZIP is materialized into the cloud workspace by the connector. Use the returned file reference/path; do not involve a personal laptop.
+5. Unzip only in the cloud workspace.
+6. Read reference_manifest.json first. Evidence is admissible only when verified=true and BOTH the Git blob SHA and SHA-256 equal the pinned baseline identities above.
+7. For targeted reference work, search the UTF-8 outputs instead of re-reading the binary:
+   - script_like_strings.txt for recoverable source/script seams,
+   - housing_hits.txt for housing/editor evidence,
+   - all_strings.txt for exact object/property/UI strings,
+   - asset_ids.txt for candidate asset identifiers,
+   - chunk_manifest.json for decompressed-chunk provenance.
+8. Content QA must bind any recovered product-facing string, asset ID, constant, hierarchy, or code seam to the surrounding extracted context before a producer treats it as exact.
+9. Reuse this immutable artifact for the same pinned baseline. Do not rerun extraction merely because another worker needs a different search term.
+10. If the artifact has expired or a materially different binary reference is required, trigger the canonical support-branch extraction workflow once, then consume the new verified artifact by the same procedure.
+
+Successful cloud materialization has been demonstrated for artifact 11271783526, including direct inspection of script_like_strings.txt and housing_hits.txt. Therefore a UnicodeDecodeError, raw-binary rejection, connector text-size limit, or inability to display the .rbxl itself is NOT LOCAL_ONLY_REQUIRED and is NOT BINARY_REFERENCE_BLOCKED.
+
+High-signal exact evidence already recovered from the verified artifact includes:
+- OpenFurnitureMenu and the original event wiring,
+- AddFurniture and SellFurniture event/server seams,
+- SaveHouse and ExitHouse,
+- HouseMoveIncrement values 1, 2, 4, 8, 16,
+- HouseRotateIncrement values 45 and 15,
+- original editing tool names Move, Paint, Remove,
+- FurnitureShopCategory with default Seating,
+- furniture item thumbnails sourced from ModelID,
+- inventory quantity display and item cost behavior,
+- sell confirmation at 70 percent of ItemCost,
+- original text explaining that furniture can be tried before paying when the house is saved.
+
+These are verified extraction facts. Whether and how they become product code still follows Content QA provenance and normal QA/Integration gates.
+
+## Zero-spend runner rule
+
+Keep binary extraction on the repository's standard public-repository GitHub-hosted runner labels (for example ubuntu-latest). Never select a larger/paid runner for this workflow. Artifact retention should be bounded and existing verified artifacts should be reused when possible.
