@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Deterministic verifier for canonical High School school/** release checkpoints.
 
-This tool never publishes Roblox and never decides QA/Smoke eligibility. It only
-proves source-tree identity/isolation so Release/Package can reuse an unchanged
-checkpoint instead of rebuilding it.
+This tool never publishes Roblox and never decides QA/Smoke eligibility. It proves
+source-tree identity/isolation, distinguishes safe artifact reuse from changed-tree
+candidate prep, and emits stable hashes for release manifests.
 """
 from __future__ import annotations
 
@@ -46,10 +46,23 @@ def normalize(path: str) -> str:
     return "/".join(part.lower() for part in PurePosixPath(path).parts)
 
 
+def sha256_text(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def tree_inventory(commit_sha: str) -> tuple[list[str], str]:
+    raw = git("ls-tree", "-r", commit_sha, "school")
+    lines = [line for line in raw.splitlines() if line]
+    files = [line.split("\t", 1)[1] for line in lines]
+    normalized = "\n".join(lines) + ("\n" if lines else "")
+    return files, sha256_text(normalized)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--canonical-ref", required=True)
-    ap.add_argument("--expected-school-tree", required=True)
+    ap.add_argument("--mode", choices=("reuse", "candidate"), default="reuse")
+    ap.add_argument("--expected-school-tree")
     ap.add_argument("--packaged-ref")
     ap.add_argument("--artifact-name")
     ap.add_argument("--manifest-out")
@@ -57,17 +70,15 @@ def main() -> int:
 
     canonical_sha = git("rev-parse", f"{args.canonical_ref}^{{commit}}")
     school_tree = git("rev-parse", f"{canonical_sha}:school")
-    if school_tree != args.expected_school_tree:
+
+    if args.expected_school_tree and school_tree != args.expected_school_tree:
         print(
             f"SCHOOL_TREE_MISMATCH expected={args.expected_school_tree} actual={school_tree}",
             file=sys.stderr,
         )
         return 2
 
-    school_files = [
-        x for x in git("ls-tree", "-r", "--name-only", f"{canonical_sha}:school").splitlines()
-        if x
-    ]
+    school_files, content_sha256 = tree_inventory(canonical_sha)
     if not school_files:
         print("EMPTY_SCHOOL_TREE", file=sys.stderr)
         return 3
@@ -79,41 +90,65 @@ def main() -> int:
         print("FORBIDDEN_SCHOOL_PATHS " + json.dumps(forbidden), file=sys.stderr)
         return 4
 
-    changed_school_paths: list[str] = []
     packaged_sha = None
+    packaged_school_tree = None
+    changed_school_paths: list[str] = []
     if args.packaged_ref:
         packaged_sha = git("rev-parse", f"{args.packaged_ref}^{{commit}}")
-        changed_school_paths = [
+        packaged_school_tree = git("rev-parse", f"{packaged_sha}:school")
+        changed_school_paths = sorted(
             x for x in git(
                 "diff", "--name-only", packaged_sha, canonical_sha, "--", "school/"
             ).splitlines()
             if x
-        ]
-        if changed_school_paths:
+        )
+
+    changed = bool(changed_school_paths)
+    if args.mode == "reuse":
+        if not args.packaged_ref:
+            print("REUSE_MODE_REQUIRES_PACKAGED_REF", file=sys.stderr)
+            return 5
+        if changed or packaged_school_tree != school_tree:
             print(
                 "SCHOOL_TREE_CHANGED_SINCE_PACKAGED "
-                + json.dumps(sorted(changed_school_paths)),
+                + json.dumps(changed_school_paths),
                 file=sys.stderr,
             )
-            return 5
+            return 6
+        disposition = "REUSE_EXISTING_UNCHANGED_SCHOOL_TREE"
+    else:
+        disposition = (
+            "PREP_NEW_ARTIFACT_REQUIRED_IF_GATES_PASS"
+            if changed or packaged_school_tree not in (None, school_tree)
+            else "CANDIDATE_TREE_MATCHES_EXISTING_CHECKPOINT"
+        )
 
+    artifact_name = args.artifact_name or (
+        f"pip-high-school-{canonical_sha[:7]}-source-tree-{school_tree[:8]}"
+    )
     manifest = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "kind": "HIGH_SCHOOL_PACKAGE_READINESS_TREE_PROOF",
         "checkpointOnly": True,
         "nonPublish": True,
         "sourceRoot": "school/**",
+        "mode": args.mode,
         "canonicalSha": canonical_sha,
         "schoolTreeGitSha": school_tree,
+        "schoolInventorySha256": content_sha256,
         "schoolFileCount": len(school_files),
         "forbiddenPathMatches": 0,
         "packagedSha": packaged_sha,
-        "changedSchoolPathsSincePackaged": 0 if packaged_sha else None,
-        "artifactName": args.artifact_name,
-        "result": "PASS_DETERMINISTIC_TREE_IDENTITY",
+        "packagedSchoolTreeGitSha": packaged_school_tree,
+        "schoolChangedSincePackaged": changed if packaged_sha else None,
+        "changedSchoolPaths": changed_school_paths,
+        "artifactName": artifact_name,
+        "artifactDisposition": disposition,
+        "eligibilityDecision": "NOT_EVALUATED_BY_THIS_TOOL",
+        "result": "PASS_DETERMINISTIC_TREE_READINESS",
     }
     payload = json.dumps(manifest, sort_keys=True, separators=(",", ":")) + "\n"
-    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    digest = sha256_text(payload)
 
     if args.manifest_out:
         with open(args.manifest_out, "w", encoding="utf-8", newline="\n") as f:
