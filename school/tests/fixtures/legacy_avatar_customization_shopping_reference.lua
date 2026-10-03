@@ -2,7 +2,7 @@
 -- Reference/provenance data only: no runtime authority and no copied Legacy product code.
 
 return {
-    schemaVersion = 2,
+    schemaVersion = 3,
     target = "ROBLOX High School [Legacy] pinned authorized baseline",
 
     pinnedBaseline = {
@@ -11,10 +11,19 @@ return {
         extractionRunId = 37117603516,
         extractionJobId = 111187324599,
         extractionArtifactId = 11272277500,
+        deepExtractionRunId = 37117831711,
+        deepExtractionJobId = 111187960403,
+        deepExtractionArtifactId = 11271783526,
+        cloudArtifactMaterializationVerified = true,
         verifiedBytes = 2283775,
     },
 
     exactBaselineOutfit = {
+        entryGuis = {
+            desktop = "Outfits",
+            mobile = "OutfitsMobile",
+            console = "OutfitsConsole",
+        },
         eventNames = {
             "LoadOutfit",
             "LoadOutfitPage",
@@ -30,8 +39,13 @@ return {
             "Hat3",
             "Shirt",
             "Pants",
+            "Face",
             "RemoveShirt",
             "OutfitName",
+            "RPName",
+            "RPDesc",
+            "BaseSlot",
+            "MorphsFrame",
         },
         visibleLabels = {
             "Wear Outfit",
@@ -44,12 +58,44 @@ return {
             "Remove Shirt:",
             "Outfit Name:",
             "Empty",
+            "Custom Outfits",
+            "[Morphs only work with R6]",
         },
+        persistedFields = {
+            "OutfitName",
+            "Hat1",
+            "Hat2",
+            "Hat3",
+            "Shirt",
+            "Pants",
+            "Face",
+            "Package",
+            "RPName",
+            "RPDesc",
+            "RemoveShirt",
+        },
+        persistedDefaults = {
+            OutfitName = "",
+            Hat1 = 0,
+            Hat2 = 0,
+            Hat3 = 0,
+            Shirt = 0,
+            Pants = 0,
+            Face = 0,
+            Package = 0,
+            RPName = "",
+            RPDesc = "",
+            RemoveShirt = false,
+        },
+        pageStartSlots = { 1, 4, 7, 10 },
         hatInputCount = 3,
         savedOutfitSlotCount = 12,
+        morphsRequireR6 = true,
         serverAuthority = {
             wearRemote = "WearOutfit",
             saveRemote = "SaveOutfit",
+            morphRemote = "ChangeBodyMorph",
+            filteredIdentityFields = { "OutfitName", "RPName", "RPDesc" },
         },
     },
 
@@ -66,6 +112,13 @@ return {
             "Clothing Display",
             "ShirtID",
             "PantsID",
+            "PurchasePermanentItem",
+        },
+        exactBinaryBehavior = {
+            purchaseRemote = "PurchasePermanentItem",
+            shirtTemplateField = "ShirtTemplate",
+            pantsTemplateField = "PantsTemplate",
+            successNotification = "Item purchased successfully! You can wear it via the Character tab on the ROBLOX website.",
         },
         locations = {
             schoolSpirit = "School Spirit",
@@ -97,6 +150,13 @@ return {
             locator = "GitHub Actions run 37117603516 / artifact 11272277500",
             use = "licensed_reference",
             supports = "exact outfit hierarchy/event names/visible labels, three pinned-baseline hat inputs, twelve outfit slots, clothing/shop binary signals",
+        },
+        {
+            id = "licensed-binary-artifact-deep-inspection",
+            kind = "authorized_binary_reference",
+            locator = "GitHub Actions run 37117831711 / job 111187960403 / artifact 11271783526",
+            use = "licensed_reference",
+            supports = "device-specific outfit entry GUIs, persisted outfit field schema/defaults, page start slots, R6 morph warning, WearOutfit/SaveOutfit/ChangeBodyMorph server seams, filtered identity fields, PurchasePermanentItem and clothing-template extraction behavior",
         },
         {
             id = "legacy-wiki-home",
