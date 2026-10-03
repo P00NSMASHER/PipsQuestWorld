@@ -1,7 +1,7 @@
 {
   "schemaVersion": 32,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:34:00Z",
+  "observedAt": "2026-10-03T10:36:30Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
@@ -23,9 +23,10 @@
   "currentMilestone": "HOUSING_EDITOR_V2",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
-    "coreEnabledIncludingTower": 9,
-    "freeRoam": "DISABLED_NO_CHANGE_AUTHORIZED",
-    "devExAuxiliary": "DISABLED_NO_CHANGE_AUTHORIZED"
+    "coreEnabledIncludingTower": 10,
+    "freeRoam": "ENABLED_USER_AUTHORIZED",
+    "devExAuxiliary": "DISABLED_NO_CHANGE_AUTHORIZED",
+    "freeRoamAuthorizedAt": "2026-10-03T10:36:05Z"
   },
   "directives": {
     "Foundation": {
