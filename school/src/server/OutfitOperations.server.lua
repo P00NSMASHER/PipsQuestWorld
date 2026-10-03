@@ -49,17 +49,14 @@ local function applyOutfit(player, outfit)
     return true, nil
 end
 
-local controller = OutfitOperationsController.new(
-    getRepository,
-    function(value, _field, player)
-        return filterIdentityForPlayer(player, value)
-    end,
-    applyOutfit
-)
-
--- Bind the player into the controller's server filter without making filtering client-owned.
-local function filterFor(player, value, field)
-    return filterIdentityForPlayer(player, value)
+local function controllerForPlayer(player)
+    return OutfitOperationsController.new(
+        getRepository,
+        function(value, _field)
+            return filterIdentityForPlayer(player, value)
+        end,
+        applyOutfit
+    )
 end
 
 local function getOrCreateFolder(parent, name)
@@ -91,28 +88,26 @@ local freeRoam = getOrCreateFolder(remoteRoot, "FreeRoam")
 local outfitRoot = getOrCreateFolder(freeRoam, "Outfits")
 local loadOutfit = getOrCreateRemoteFunction(outfitRoot, "LoadOutfit")
 local loadOutfitPage = getOrCreateRemoteFunction(outfitRoot, "LoadOutfitPage")
+local getFilteredNamesForOutfit = getOrCreateRemoteFunction(outfitRoot, "GetFilteredNamesForOutfit")
 local wearOutfit = getOrCreateRemoteFunction(outfitRoot, "WearOutfit")
 local saveOutfit = getOrCreateRemoteFunction(outfitRoot, "SaveOutfit")
 
 loadOutfit.OnServerInvoke = function(player, slot)
-    return controller:loadOutfit(player.UserId, slot)
+    return controllerForPlayer(player):loadOutfit(player.UserId, slot)
 end
 
 loadOutfitPage.OnServerInvoke = function(player, startSlot)
-    return controller:loadOutfitPage(player.UserId, startSlot)
+    return controllerForPlayer(player):loadOutfitPage(player.UserId, startSlot)
+end
+
+getFilteredNamesForOutfit.OnServerInvoke = function(player, input)
+    return controllerForPlayer(player):getFilteredNamesForOutfit(input)
 end
 
 wearOutfit.OnServerInvoke = function(player, slot)
-    return controller:wearOutfit(player.UserId, slot, player)
+    return controllerForPlayer(player):wearOutfit(player.UserId, slot, player)
 end
 
-saveOutfit.OnServerInvoke = function(player, slot, input)
-    local filteredController = OutfitOperationsController.new(
-        getRepository,
-        function(value, field)
-            return filterFor(player, value, field)
-        end,
-        applyOutfit
-    )
-    return filteredController:saveOutfit(player.UserId, slot, input)
+saveOutfit.OnServerInvoke = function(player, slot, input, requestId)
+    return controllerForPlayer(player):saveOutfit(player.UserId, slot, input, requestId)
 end
