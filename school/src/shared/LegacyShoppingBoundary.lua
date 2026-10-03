@@ -11,6 +11,15 @@ local function mount()
         :WaitForChild("PurchasePermanentItem")
 
     local pendingRequestIds = {}
+    local pendingServerConfirmation = nil
+
+    purchasePermanentItem.OnClientInvoke = function(message)
+        if type(message) ~= "string" or message == "" then
+            return false
+        end
+        pendingServerConfirmation = message
+        return true
+    end
 
     local api = {}
 
@@ -34,6 +43,12 @@ local function mount()
             pendingRequestIds[itemKey] = nil
         end
         return response
+    end
+
+    function api.consumeServerConfirmation()
+        local message = pendingServerConfirmation
+        pendingServerConfirmation = nil
+        return message
     end
 
     return api
