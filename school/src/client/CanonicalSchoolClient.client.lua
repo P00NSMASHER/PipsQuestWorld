@@ -927,6 +927,15 @@ local buyHouse = housingRoot:WaitForChild("BuyHouse")
 local teleportToHouse = housingRoot:WaitForChild("TeleportToHouse")
 local setHouseEditMode = housingRoot:WaitForChild("SetEditMode")
 local setHouseStyle = housingRoot:WaitForChild("SetStyle")
+local getHousingEditorState = housingRoot:WaitForChild("GetEditorState")
+local purchaseFurniture = housingRoot:WaitForChild("PurchaseFurniture")
+local placeFurniture = housingRoot:WaitForChild("PlaceFurniture")
+local moveFurniture = housingRoot:WaitForChild("MoveFurniture")
+local rotateFurniture = housingRoot:WaitForChild("RotateFurniture")
+local removeFurniture = housingRoot:WaitForChild("RemoveFurniture")
+local sellFurniture = housingRoot:WaitForChild("SellFurniture")
+local paintFurniture = housingRoot:WaitForChild("PaintFurniture")
+local setHousingWalls = housingRoot:WaitForChild("SetHideWalls")
 
 local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
@@ -1113,7 +1122,7 @@ for _, spec in ipairs(HOUSE_STYLES) do
 
         housingBusy = true
         local ok, response = pcall(function()
-            return setHouseStyle:InvokeServer(spec.id)
+            return setHouseStyle:InvokeServer(spec.id, HttpService:GenerateGUID(false))
         end)
         housingBusy = false
 
@@ -1210,5 +1219,373 @@ task.spawn(function()
             refreshHousing()
         end
         task.wait(1.0)
+    end
+end)
+
+
+-- Housing Editor V2. Visible only while the owner is in Edit House mode.
+-- Exact verified Legacy labels retained: Add Furni, Hide Walls, Utilities, Other.
+local editorPanel = Instance.new("Frame")
+editorPanel.Name = "LegacyHousingEditorV2"
+editorPanel.AnchorPoint = Vector2.new(0, 1)
+editorPanel.Position = UDim2.new(0, 512, 1, -(bottomMargin + 66))
+editorPanel.Size = UDim2.new(0, 330, 0, 346)
+editorPanel.BackgroundColor3 = LEGACY_PANEL
+editorPanel.BackgroundTransparency = 0.02
+editorPanel.Visible = false
+editorPanel.Parent = gui
+round(editorPanel, 2)
+outline(editorPanel, 2)
+
+local editorTitle = Instance.new("TextLabel")
+editorTitle.BackgroundColor3 = LEGACY_BLUE
+editorTitle.BorderSizePixel = 0
+editorTitle.Size = UDim2.new(1, 0, 0, 28)
+editorTitle.Font = Enum.Font.ArialBold
+editorTitle.Text = "Add Furni"
+editorTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+editorTitle.TextSize = 15
+editorTitle.Parent = editorPanel
+
+local editorCategories = Instance.new("TextLabel")
+editorCategories.BackgroundTransparency = 1
+editorCategories.Position = UDim2.new(0, 10, 0, 34)
+editorCategories.Size = UDim2.new(1, -20, 0, 20)
+editorCategories.Font = Enum.Font.ArialBold
+editorCategories.Text = "Utilities   |   Other"
+editorCategories.TextColor3 = LEGACY_BLUE_DARK
+editorCategories.TextSize = 12
+editorCategories.TextXAlignment = Enum.TextXAlignment.Left
+editorCategories.Parent = editorPanel
+
+local editorCatalog = Instance.new("Frame")
+editorCatalog.BackgroundTransparency = 1
+editorCatalog.Position = UDim2.new(0, 10, 0, 58)
+editorCatalog.Size = UDim2.new(1, -20, 0, 82)
+editorCatalog.Parent = editorPanel
+
+local editorCatalogLayout = Instance.new("UIListLayout")
+editorCatalogLayout.Padding = UDim.new(0, 4)
+editorCatalogLayout.Parent = editorCatalog
+
+local editorStatus = Instance.new("TextLabel")
+editorStatus.BackgroundTransparency = 1
+editorStatus.Position = UDim2.new(0, 10, 0, 144)
+editorStatus.Size = UDim2.new(1, -20, 0, 38)
+editorStatus.Font = Enum.Font.Arial
+editorStatus.Text = "Loading furniture inventory..."
+editorStatus.TextColor3 = LEGACY_BLUE_DARK
+editorStatus.TextSize = 12
+editorStatus.TextWrapped = true
+editorStatus.TextXAlignment = Enum.TextXAlignment.Left
+editorStatus.TextYAlignment = Enum.TextYAlignment.Top
+editorStatus.Parent = editorPanel
+
+local editorActions = Instance.new("Frame")
+editorActions.BackgroundTransparency = 1
+editorActions.Position = UDim2.new(0, 10, 0, 188)
+editorActions.Size = UDim2.new(1, -20, 0, 112)
+editorActions.Parent = editorPanel
+
+local editorGrid = Instance.new("UIGridLayout")
+editorGrid.CellSize = UDim2.new(0, 96, 0, 32)
+editorGrid.CellPadding = UDim2.new(0, 5, 0, 5)
+editorGrid.Parent = editorActions
+
+local function editorButton(name, label)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.BackgroundColor3 = LEGACY_BUTTON
+    button.Font = Enum.Font.ArialBold
+    button.Text = label
+    button.TextColor3 = LEGACY_BLUE_DARK
+    button.TextSize = 11
+    button.Parent = editorActions
+    round(button, 2)
+    outline(button, 1)
+    return button
+end
+
+local buyFurni = editorButton("BuyFurniture", "BUY +1")
+local placeFurni = editorButton("PlaceFurniture", "PLACE")
+local moveFurni = editorButton("MoveFurniture", "MOVE")
+local rotateFurni = editorButton("RotateFurniture", "ROTATE")
+local removeFurni = editorButton("RemoveFurniture", "REMOVE")
+local sellFurni = editorButton("SellFurniture", "SELL")
+local paintFurni = editorButton("PaintFurniture", "PAINT")
+
+local hideWallsButton = Instance.new("TextButton")
+hideWallsButton.Name = "HideWalls"
+hideWallsButton.Position = UDim2.new(0, 10, 1, -40)
+hideWallsButton.Size = UDim2.new(1, -20, 0, 30)
+hideWallsButton.BackgroundColor3 = LEGACY_BUTTON
+hideWallsButton.Font = Enum.Font.ArialBold
+hideWallsButton.Text = "Hide Walls"
+hideWallsButton.TextColor3 = LEGACY_BLUE_DARK
+hideWallsButton.TextSize = 11
+hideWallsButton.Parent = editorPanel
+round(hideWallsButton, 2)
+outline(hideWallsButton, 1)
+
+local latestEditorState = nil
+local selectedFurnitureItemId = nil
+local selectedPlacementId = nil
+local editorBusy = false
+local pendingEditorRequests = {}
+local paintSequence = { "default", "legacy-blue", "legacy-red", "legacy-green", "legacy-tan" }
+local paintIndex = 1
+
+local function inventoryQuantity(state, itemId)
+    for _, entry in ipairs((state and state.inventory) or {}) do
+        if entry.itemId == itemId then
+            return entry.quantity or 0
+        end
+    end
+    return 0
+end
+
+local function placementById(state, placementId)
+    for _, placement in ipairs((state and state.placements) or {}) do
+        if placement.placementId == placementId then
+            return placement
+        end
+    end
+    return nil
+end
+
+local function catalogById(state, itemId)
+    for _, item in ipairs((state and state.catalog) or {}) do
+        if item.itemId == itemId then
+            return item
+        end
+    end
+    return nil
+end
+
+local function editorRequestId(key)
+    if pendingEditorRequests[key] == nil then
+        pendingEditorRequests[key] = HttpService:GenerateGUID(false)
+    end
+    return pendingEditorRequests[key]
+end
+
+local function finishEditorRequest(key, response)
+    if type(response) ~= "table" or response.retryable ~= true then
+        pendingEditorRequests[key] = nil
+    end
+end
+
+local function clearEditorCatalogButtons()
+    for _, child in ipairs(editorCatalog:GetChildren()) do
+        if child:IsA("TextButton") then child:Destroy() end
+    end
+end
+
+local function applyEditorState(state)
+    if type(state) ~= "table" or state.accepted ~= true then return end
+    latestEditorState = state
+
+    if not catalogById(state, selectedFurnitureItemId) then
+        selectedFurnitureItemId = state.catalog and state.catalog[1] and state.catalog[1].itemId or nil
+    end
+    if selectedPlacementId and not placementById(state, selectedPlacementId) then
+        selectedPlacementId = nil
+    end
+    if not selectedPlacementId and state.placements and state.placements[1] then
+        selectedPlacementId = state.placements[1].placementId
+    end
+
+    clearEditorCatalogButtons()
+    for _, item in ipairs(state.catalog or {}) do
+        local button = Instance.new("TextButton")
+        button.Name = "Catalog_" .. tostring(item.itemId)
+        button.Size = UDim2.new(1, 0, 0, 36)
+        button.BackgroundColor3 = item.itemId == selectedFurnitureItemId
+            and Color3.fromRGB(210, 225, 240)
+            or LEGACY_BUTTON
+        button.Font = Enum.Font.ArialBold
+        button.TextColor3 = LEGACY_BLUE_DARK
+        button.TextSize = 11
+        button.TextXAlignment = Enum.TextXAlignment.Left
+        button.Text = string.format(
+            "  [%s] %s  $%d  x%d",
+            tostring(item.category),
+            tostring(item.displayName),
+            tonumber(item.price) or 0,
+            inventoryQuantity(state, item.itemId)
+        )
+        button.Parent = editorCatalog
+        round(button, 2)
+        outline(button, 1)
+        button.Activated:Connect(function()
+            selectedFurnitureItemId = item.itemId
+            applyEditorState(latestEditorState)
+        end)
+    end
+
+    local selected = catalogById(state, selectedFurnitureItemId)
+    local placement = placementById(state, selectedPlacementId)
+    local itemText = selected and selected.displayName or "No furniture selected"
+    local placementText = placement and (" • Selected placed " .. tostring(placement.itemId)) or ""
+    editorStatus.Text = itemText .. " • Inventory x"
+        .. tostring(selected and inventoryQuantity(state, selected.itemId) or 0)
+        .. placementText
+
+    hideWallsButton.Text = state.hideWalls == true and "SHOW WALLS" or "Hide Walls"
+end
+
+local function refreshHousingEditor()
+    if not latestHousingState
+        or latestHousingState.owned ~= true
+        or latestHousingState.editing ~= true then
+        editorPanel.Visible = false
+        return
+    end
+
+    editorPanel.Visible = housePanel.Visible
+    if not editorPanel.Visible or editorBusy then return end
+
+    local ok, response = pcall(function()
+        return getHousingEditorState:InvokeServer()
+    end)
+    if ok and type(response) == "table" and response.accepted == true then
+        applyEditorState(response)
+    end
+end
+
+local function handleEditorResponse(key, ok, response, successText)
+    editorBusy = false
+    finishEditorRequest(key, response)
+    if not ok or type(response) ~= "table" then
+        editorStatus.Text = "Housing editor service unavailable."
+        return
+    end
+    if response.accepted == true then
+        if response.placementId then selectedPlacementId = response.placementId end
+        applyEditorState(response)
+        editorStatus.Text = successText
+    else
+        editorStatus.Text = tostring(response.code or response.error or "Editor action unavailable.")
+    end
+end
+
+buyFurni.Activated:Connect(function()
+    if editorBusy or not selectedFurnitureItemId then return end
+    editorBusy = true
+    local key = "buy:" .. selectedFurnitureItemId
+    local ok, response = pcall(function()
+        return purchaseFurniture:InvokeServer(selectedFurnitureItemId, editorRequestId(key))
+    end)
+    handleEditorResponse(key, ok, response, "Furniture added to inventory.")
+end)
+
+placeFurni.Activated:Connect(function()
+    if editorBusy or not selectedFurnitureItemId or not latestEditorState then return end
+    editorBusy = true
+    local slot = #(latestEditorState.placements or {})
+    local transform = {
+        x = ((slot % 3) - 1) * 5,
+        y = 0,
+        z = (math.floor(slot / 3) % 3 - 1) * 4,
+        rotation = 0,
+    }
+    local key = "place:" .. selectedFurnitureItemId
+    local ok, response = pcall(function()
+        return placeFurniture:InvokeServer(
+            selectedFurnitureItemId,
+            transform,
+            editorRequestId(key)
+        )
+    end)
+    handleEditorResponse(key, ok, response, "Furniture placed.")
+end)
+
+moveFurni.Activated:Connect(function()
+    local placement = placementById(latestEditorState, selectedPlacementId)
+    if editorBusy or not placement then return end
+    editorBusy = true
+    local nextX = placement.x + 3
+    if nextX > 12 then nextX = -12 end
+    local transform = {
+        x = nextX,
+        y = placement.y,
+        z = placement.z,
+        rotation = placement.rotation,
+    }
+    local key = "move:" .. placement.placementId
+    local ok, response = pcall(function()
+        return moveFurniture:InvokeServer(placement.placementId, transform, editorRequestId(key))
+    end)
+    handleEditorResponse(key, ok, response, "Furniture moved.")
+end)
+
+rotateFurni.Activated:Connect(function()
+    local placement = placementById(latestEditorState, selectedPlacementId)
+    if editorBusy or not placement then return end
+    editorBusy = true
+    local key = "rotate:" .. placement.placementId
+    local ok, response = pcall(function()
+        return rotateFurniture:InvokeServer(placement.placementId, 90, editorRequestId(key))
+    end)
+    handleEditorResponse(key, ok, response, "Furniture rotated.")
+end)
+
+removeFurni.Activated:Connect(function()
+    local placement = placementById(latestEditorState, selectedPlacementId)
+    if editorBusy or not placement then return end
+    editorBusy = true
+    local key = "remove:" .. placement.placementId
+    local ok, response = pcall(function()
+        return removeFurniture:InvokeServer(
+            placement.placementId,
+            placement.itemId,
+            editorRequestId(key)
+        )
+    end)
+    handleEditorResponse(key, ok, response, "Furniture returned to inventory.")
+end)
+
+sellFurni.Activated:Connect(function()
+    if editorBusy or not selectedFurnitureItemId then return end
+    editorBusy = true
+    local key = "sell:" .. selectedFurnitureItemId
+    local ok, response = pcall(function()
+        return sellFurniture:InvokeServer(selectedFurnitureItemId, editorRequestId(key))
+    end)
+    handleEditorResponse(key, ok, response, "Furniture sold.")
+end)
+
+paintFurni.Activated:Connect(function()
+    local placement = placementById(latestEditorState, selectedPlacementId)
+    if editorBusy or not placement then return end
+    editorBusy = true
+    paintIndex = (paintIndex % #paintSequence) + 1
+    local paintId = paintSequence[paintIndex]
+    local key = "paint:" .. placement.placementId
+    local ok, response = pcall(function()
+        return paintFurniture:InvokeServer(
+            placement.placementId,
+            paintId,
+            editorRequestId(key)
+        )
+    end)
+    handleEditorResponse(key, ok, response, "Furniture paint updated.")
+end)
+
+hideWallsButton.Activated:Connect(function()
+    if editorBusy or not latestEditorState then return end
+    editorBusy = true
+    local enabled = latestEditorState.hideWalls ~= true
+    local key = "walls:" .. tostring(enabled)
+    local ok, response = pcall(function()
+        return setHousingWalls:InvokeServer(enabled, editorRequestId(key))
+    end)
+    handleEditorResponse(key, ok, response, enabled and "Walls hidden." or "Walls shown.")
+end)
+
+task.spawn(function()
+    while gui.Parent do
+        refreshHousingEditor()
+        task.wait(0.75)
     end
 end)
