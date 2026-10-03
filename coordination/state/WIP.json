@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 31,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T02:47:38Z",
+  "observedAt": "2026-10-03T03:59:28Z",
   "wipCap": 3,
   "productCandidateCountIncludingCanonicalBase": 2,
   "unintegratedProductCandidateCount": 1,
-  "currentParityMilestone": "HOUSING_EDITOR_V2",
+  "currentParityMilestone": "HOUSING_EDITOR_V2_QA",
   "canonicalEvidence": {
     "branch": "rebuild/high-school-foundation",
     "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
     "sourceRoot": "school/**",
-    "status": "PASS_EXACT_HEAD_PUSH_GUARDS_WITH_LOCAL_RUNTIME_GATE",
+    "status": "PASS_EXACT_HEAD_PUSH_GUARDS__HOUSING_EDITOR_CANDIDATE_READY_FOR_QA__LOCAL_RUNTIME_GATE_PRESERVED",
     "exactHeadCi": [
       {
         "workflow": "High School Foundation Static Guards",
@@ -34,12 +34,12 @@
         "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
       }
     ],
-    "liveOpenProductPrCount": 0
+    "liveOpenProductPrCount": 1
   },
   "slots": {
     "base": {
       "canonicalRef": "coordination/state/CANONICAL.json",
-      "canonicalRefStatus": "STALE_CACHE_AT_6A48E36__LIVE_BRANCH_HEAD_GOVERNS",
+      "canonicalRefStatus": "STALE_CACHE__LIVE_BRANCH_HEAD_AND_WIP_EVIDENCE_GOVERN",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "status": "LIVE_CANONICAL_HEAD_EXACT_HEAD_CI_PASS"
     },
@@ -48,25 +48,44 @@
       "objective": "HOUSING_EDITOR_V2",
       "baseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "branch": "rebuild/high-school-housing-editor-db0a700-v1",
-      "status": "PRODUCE_AUTHORIZED__SCHEDULED_TASK_CURRENTLY_PAUSED"
+      "candidateSha": "4de817ce5e546feb3d59dea23efd8648af507e7e",
+      "pr": 128,
+      "status": "CANDIDATE_READY_FOR_QA__ALL_THREE_PR_HEAD_GUARDS_PASS",
+      "exactHeadCi": [
+        {
+          "workflow": "High School Foundation Static Guards",
+          "runId": 37093599139,
+          "conclusion": "success",
+          "headSha": "4de817ce5e546feb3d59dea23efd8648af507e7e"
+        },
+        {
+          "workflow": "High School Class Education Guards",
+          "runId": 37093599168,
+          "conclusion": "success",
+          "headSha": "4de817ce5e546feb3d59dea23efd8648af507e7e"
+        },
+        {
+          "workflow": "High School Progression Guards",
+          "runId": 37093599147,
+          "conclusion": "success",
+          "headSha": "4de817ce5e546feb3d59dea23efd8648af507e7e"
+        }
+      ]
     },
     "downstream": {
       "lane": "Roblox High School QA & Contract",
       "objective": "CERTIFY_EXACT_HOUSING_EDITOR_V2_CANDIDATE",
-      "status": "WAIT_PIPELINE",
-      "dependency": "Free Roam candidate exact SHA plus all three pull-request guards."
+      "candidateSha": "4de817ce5e546feb3d59dea23efd8648af507e7e",
+      "pr": 128,
+      "status": "VALIDATE_NOW",
+      "dependency": "Free Roam PR #128 exact head 4de817ce5e546feb3d59dea23efd8648af507e7e with all three required PR-head guards PASS."
     }
   },
   "supportEvidence": {
     "contentQa": {
       "priorBranch": "support/high-school-housing-editor-content-qa-6a48e36",
       "priorHeadSha": "89e0d6cc699744083914131ce0e64b839aadf999",
-      "relationshipToCanonical": "DIVERGED_AHEAD_2_BEHIND_1__REFERENCE_ONLY",
-      "priorExactHeadCi": {
-        "workflow": "High School Progression Guards",
-        "runId": 37089776436,
-        "conclusion": "success"
-      },
+      "relationshipToCanonical": "REFERENCE_ONLY",
       "reusableFiles": [
         "school/tests/fixtures/legacy_housing_editor_v2_reference.lua",
         "school/tests/housing_ui_contract_spec.lua"
@@ -79,8 +98,26 @@
       ],
       "knownGap": "Remaining exact furniture category labels/assets are unverified and must not be invented.",
       "currentBaseBranch": "support/high-school-housing-editor-content-qa-db0a700",
-      "currentBaseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "status": "SUPPORT_AUTHORIZED_ON_FRESH_EXACT_BASE"
+      "currentHeadSha": "0f0d10ca852e815727fae51e6c26db5135bdcd8c",
+      "currentPr": 127,
+      "currentExactHeadCi": [
+        {
+          "workflow": "High School Foundation Static Guards",
+          "runId": 37093377601,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Class Education Guards",
+          "runId": 37093377591,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Progression Guards",
+          "runId": 37093377619,
+          "conclusion": "success"
+        }
+      ],
+      "status": "SUPPORT_COMPLETE__REFERENCE_CONSUMED_BY_PR_128__WAIT_PIPELINE"
     }
   },
   "priorityBacklog": [
@@ -107,12 +144,12 @@
     {
       "priority": 5,
       "milestone": "HOUSING_PROPERTY",
-      "status": "ACTIVE_HOUSING_EDITOR_V2"
+      "status": "HOUSING_EDITOR_V2_QA_GATE_ACTIVE"
     },
     {
       "priority": 6,
       "milestone": "AVATAR_CUSTOMIZATION_SHOPPING",
-      "status": "NEXT_AFTER_HOUSING"
+      "status": "NEXT_AFTER_HOUSING_EDITOR_V2_INTEGRATION_SMOKE_PACKAGE_CHECKPOINT"
     },
     {
       "priority": 7,
@@ -136,11 +173,11 @@
     }
   ],
   "nextHandoff": {
-    "from": "Pip High Free Roam",
-    "to": "Roblox High School QA & Contract",
-    "condition": "Free Roam produces one Housing Editor V2 candidate on rebuild/high-school-housing-editor-db0a700-v1, opens a PR to rebuild/high-school-foundation, and all required exact PR-head guards pass."
+    "from": "Roblox High School QA & Contract",
+    "to": "Roblox High School Integration Director",
+    "condition": "QA emits PASS pinned exactly to PR #128 head 4de817ce5e546feb3d59dea23efd8648af507e7e while all three exact PR-head guards remain green and the PR head is unchanged."
   },
-  "openProductPrCount": 0,
+  "openProductPrCount": 1,
   "openNoncanonicalPrCount": 0,
   "privateServerEvidence": {
     "universeId": "10768955678",
@@ -154,20 +191,21 @@
     "runtimeStatus": "VEHICLE_HUD_HOUSE_RUNTIME_SMOKE_LOCAL_ONLY_REQUIRED__NO_LAPTOP_POLLING"
   },
   "scheduledWorkerAudit": {
-    "observedAt": "2026-10-03T02:47:38Z",
+    "observedAt": "2026-10-03T03:59:28Z",
     "policy": "READ_ONLY_AUDIT__NO_SCHEDULE_OR_ENABLEMENT_CHANGE",
     "controlTower": {
       "task": "Roblox High School Control Tower",
       "state": "ACTIVE_HOURLY"
     },
-    "activeCanonicalWorkerCount": 8,
-    "pausedCanonicalWorkerCount": 2,
+    "activeCanonicalWorkerCountIncludingControlTower": 10,
+    "activeWorkerLaneCount": 9,
+    "pausedAuxiliaryWorkerCount": 1,
     "workers": {
       "Foundation": "ACTIVE_HOURLY",
       "Class & Education": "ACTIVE_HOURLY",
       "Content QA": "ACTIVE_HOURLY",
       "Progression & Mobile": "ACTIVE_HOURLY",
-      "Pip High Free Roam": "PAUSED_HOURLY",
+      "Pip High Free Roam": "ACTIVE_HOURLY",
       "QA/Contract": "ACTIVE_HOURLY",
       "Integration": "ACTIVE_HOURLY",
       "Integration Smoke": "ACTIVE_HOURLY",
@@ -176,13 +214,8 @@
     },
     "automationDefects": [
       {
-        "task": "Pip High Free Roam",
-        "impact": "Critical-path PRODUCE directive cannot execute while paused.",
-        "owner": "USER_OR_AUTHORIZED_TASK_ADMIN"
-      },
-      {
         "task": "Roblox High School DevEx",
-        "impact": "CI/evidence support cannot self-run while paused.",
+        "impact": "Auxiliary CI/evidence lane is paused; current Housing Editor V2 PR already has all required exact-head guards, so this does not block the active pipeline.",
         "owner": "USER_OR_AUTHORIZED_TASK_ADMIN"
       }
     ]
@@ -207,115 +240,105 @@
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Freeze world/clock/location/spawn and housing-plot seams; act only on one reproducible Foundation-owned defect returned by Housing Editor V2.",
+      "objective": "Freeze world/clock/location/spawn and housing-plot seams while QA validates PR #128; act only on one reproduced Foundation-owned defect returned by QA.",
       "owned": "school/** world geometry, location registry, spawn seams, authoritative school clock only",
-      "forbidden": "housing editor UI/runtime, economy, persistence, class semantics",
-      "dependency": "Exact canonical Foundation push guard 37087510133 PASS.",
-      "exit": "Reproducible Foundation-owned defect on the exact candidate or a later assigned map/spawn parity slice.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Canonical Foundation exact-head guard PASS; PR #128 Foundation guard 37093599139 PASS.",
+      "exit": "QA identifies a reproducible Foundation-owned defect on exact candidate 4de817ce5e546feb3d59dea23efd8648af507e7e.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "Class & Education": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Preserve class/session/activity authority while Housing Editor V2 advances; Phase-2 schoolwork remains deferred.",
+      "objective": "Preserve class/session/activity authority while QA validates Housing Editor V2; Phase-2 schoolwork remains deferred.",
       "owned": "school/** class/session/activity authority only",
-      "forbidden": "housing, economy, progression, world, Phase-2 curriculum",
-      "dependency": "Exact canonical Class Education push guard 37087510242 PASS.",
-      "exit": "A class-owned regression on the exact candidate.",
+      "dependency": "PR #128 Class/Education guard 37093599168 PASS.",
+      "exit": "QA identifies a class-owned regression on exact candidate 4de817ce5e546feb3d59dea23efd8648af507e7e.",
       "handoff": "Roblox High School QA & Contract"
     },
     "Content QA": {
-      "mode": "SUPPORT",
+      "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "branch": "support/high-school-housing-editor-content-qa-db0a700",
-      "objective": "Port the verified two-file Housing Editor V2 reference contract from 89e0d6c onto this fresh exact-base support branch, then add only independently verified missing Legacy category labels/assets/provenance.",
+      "objective": "Hold after the verified Housing Editor V2 reference/provenance contract was consumed into PR #128; do not invent missing Legacy labels/assets.",
       "owned": "school/tests/fixtures/**, QA-owned reference contract assertions, authorized asset/label provenance only",
-      "forbidden": "gameplay semantics, runtime authority, economy/persistence/world authority, guessed labels, retired runtime imports",
-      "dependency": "Authorized original reference plus prior support head 89e0d6cc699744083914131ce0e64b839aadf999 as evidence only.",
-      "exit": "Exact-base reference contract names verified labels, explicitly marks remaining gaps, carries provenance, and passes applicable checks.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Support PR #127 exact head 0f0d10ca852e815727fae51e6c26db5135bdcd8c green; its needed two-file reference semantics are already present in PR #128.",
+      "exit": "QA requests a specific missing provenance fact for PR #128 or Control Tower assigns the next exact customization/shopping reference slice.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "Progression & Mobile": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Freeze the integrated durable furniture inventory/layout semantics; repair only a reproducible Progression-owned persistence, ownership, economy, or mobile read-only defect returned by the producer.",
+      "objective": "Freeze durable housing inventory/layout, economy and ownership authorities; repair only one reproduced Progression-owned defect returned by QA.",
       "owned": "HousingLayoutRepository, durable progression/economy/ownership, mobile read-only presentation",
-      "forbidden": "housing editor gameplay/UI, duplicate cash authority, world/class semantics",
-      "dependency": "PR #124 merged and Progression push guard 37087510189 PASS.",
-      "exit": "One exact candidate defect within this authority or the later mobile-polish phase.",
-      "handoff": "Pip High Free Roam"
-    },
-    "Pip High Free Roam": {
-      "mode": "PRODUCE",
-      "taskState": "PAUSED_HOURLY__USER_ENABLEMENT_REQUIRED",
-      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "branch": "rebuild/high-school-housing-editor-db0a700-v1",
-      "objective": "Implement the complete player-facing Housing Editor V2: Add Furni, Hide Walls, verified catalog/inventory, purchase/place/move/rotate/remove/sell, item/wall painting and build controls, durable save/rejoin, and owner/visitor edit restrictions.",
-      "owned": "school/** housing editor gameplay/UI and furniture runtime behavior only",
-      "reuseRule": "Reuse exact authorized original source/assets where rights and provenance are verified; copy the verified Content QA fixture/test semantics onto this exact-base branch; never import retired product branches wholesale.",
-      "forbidden": "second money/persistence/world/class authority, unverified Legacy labels/assets, retired runtime product code",
-      "dependency": "All three exact canonical push guards PASS; fresh exact-base product branch exists; Content QA contract at 89e0d6c is consumable as reference evidence.",
-      "exit": "One narrow PR to rebuild/high-school-foundation with exact candidate SHA, all three PR-head guards green, deterministic editor tests, and explicit untested runtime items.",
+      "dependency": "PR #128 Progression guard 37093599147 PASS.",
+      "exit": "QA identifies a persistence, economy, ownership, or mobile read-only defect on exact candidate 4de817ce5e546feb3d59dea23efd8648af507e7e.",
       "handoff": "Roblox High School QA & Contract"
     },
-    "QA/Contract": {
+    "Pip High Free Roam": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Certify only the exact Housing Editor V2 PR head for Legacy-visible actions, server ownership/edit restrictions, durable inventory/layout, economy uniqueness, baseline regressions, and provenance boundaries.",
-      "owned": "QA harnesses/contracts/receipt only",
-      "forbidden": "producer semantics, implementation rewrites, gate weakening",
-      "dependency": "Free Roam exact PR-head candidate and three required PR guards.",
-      "exit": "PASS or FAIL receipt pinned to the exact candidate SHA; no ambiguous latest-branch authorization.",
+      "objective": "Freeze PR #128 exact head 4de817ce5e546feb3d59dea23efd8648af507e7e during QA; fix only one QA-returned Free-Roam-owned Housing Editor V2 defect on the same lane branch.",
+      "owned": "school/** housing editor gameplay/UI and furniture runtime behavior only",
+      "dependency": "PR #128 is open, mergeable, and all three exact PR-head guards PASS.",
+      "exit": "QA PASS hands the unchanged exact candidate to Integration, or QA FAIL returns one measurable Free-Roam-owned repair.",
+      "handoff": "Roblox High School QA & Contract"
+    },
+    "QA/Contract": {
+      "mode": "VALIDATE",
+      "taskState": "ACTIVE_HOURLY",
+      "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
+      "candidate": "rebuild/high-school-housing-editor-db0a700-v1@4de817ce5e546feb3d59dea23efd8648af507e7e",
+      "pr": 128,
+      "objective": "Certify the exact Housing Editor V2 candidate for verified Legacy-visible labels/interactions, server-only edit/economy authority, idempotent purchase/place/remove/sell/move/rotate/paint/wall operations, durable reopen/rejoin, provenance boundaries, and baseline regressions.",
+      "owned": "QA harnesses/contracts and exact-SHA validation receipt only",
+      "dependency": "PR #128 exact head 4de817ce5e546feb3d59dea23efd8648af507e7e; Foundation 37093599139, Class/Education 37093599168, Progression 37093599147 all PASS; Content-QA verified labels Add Furni, Hide Walls, Utilities, Other.",
+      "exit": "Emit one PASS or FAIL receipt pinned exactly to 4de817ce5e546feb3d59dea23efd8648af507e7e. PASS requires unchanged PR head, all three guards green, no duplicate authority, deterministic controller/UI contract coverage, and no unverified asset/label claim.",
       "handoff": "Roblox High School Integration Director"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Mechanically integrate only the QA-certified exact Housing Editor V2 candidate into rebuild/high-school-foundation.",
+      "objective": "Mechanically integrate only QA-certified PR #128 exact head; no producer semantics.",
       "owned": "mechanical merge/conflict resolution only",
-      "forbidden": "new gameplay semantics, self-QA, unrelated cleanup",
-      "dependency": "QA PASS exact candidate plus unchanged green PR-head guards.",
-      "exit": "Merge exact candidate/base, capture resulting canonical SHA, and verify all three push guards on that new head.",
+      "dependency": "QA PASS exact 4de817ce5e546feb3d59dea23efd8648af507e7e with unchanged green PR-head guards.",
+      "exit": "Merge exact candidate/base, capture new canonical SHA, verify all three push guards on that new head.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Integration Smoke": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Preserve the vehicle/HUD/House LOCAL_ONLY_REQUIRED runtime gate without polling the laptop; after integration, certify cloud-safe exact-head behavior and record the editor runtime check as local-only until separately authorized.",
+      "objective": "After integration, certify cloud-safe exact-head Housing Editor V2 behavior while preserving the existing vehicle/HUD/House LOCAL_ONLY_REQUIRED gate without polling the laptop.",
       "owned": "post-integration smoke evidence only",
-      "forbidden": "product edits, Roblox publish, laptop polling without lease and authorization",
-      "dependency": "Integrated exact canonical candidate; private target 10768955678/87245440673982.",
-      "exit": "Cloud smoke PASS plus separately authorized local runtime PASS on the same exact SHA, or an explicit LOCAL_ONLY_REQUIRED receipt.",
+      "dependency": "Integrated exact canonical Housing Editor V2 candidate and private target 10768955678/87245440673982.",
+      "exit": "Cloud smoke PASS plus explicit LOCAL_ONLY_REQUIRED list for any actual Roblox runtime/editor/mobile checks that cannot be proven cloud-side.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "Release/Package": {
       "mode": "WAIT_PIPELINE",
       "taskState": "ACTIVE_HOURLY",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Package only an exact smoke-certified canonical checkpoint; package is not product completion and never authorizes Roblox publishing.",
+      "objective": "Package only an exact smoke-certified canonical Housing Editor V2 checkpoint; never treat package as product completion or Roblox publish authorization.",
       "owned": "deterministic package/checksum/readiness receipt only",
-      "forbidden": "publish, spend, gameplay edits, target changes by inference",
-      "dependency": "Smoke PASS exact current canonical.",
-      "exit": "Package receipt and artifact identity bound to the exact smoke-certified SHA.",
+      "dependency": "Smoke PASS exact post-integration canonical SHA.",
+      "exit": "Package receipt/artifact identity bound to exact smoke-certified SHA, then hand back immediately for avatar/customization/shopping.",
       "handoff": "Roblox High School Control Tower"
     },
     "DevEx": {
       "mode": "WAIT_PIPELINE",
       "taskState": "PAUSED_HOURLY__DO_NOT_SELF_ENABLE",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-      "objective": "Keep exact-head CI/evidence infrastructure ready; current product branches receive Progression push coverage and all three guards on pull_request, so change workflows only for a reproduced coverage defect.",
+      "objective": "No current CI/evidence defect: PR #128 has all three exact-head guards. Remain idle unless a reproduced coverage defect appears.",
       "owned": ".github/workflows/**, CI verification scripts, evidence infrastructure only",
-      "forbidden": "product semantics, gate weakening, schedule/enablement changes",
-      "dependency": "Current workflows provide all three pull-request guards for school/** changes.",
-      "exit": "A reproduced exact-head coverage/evidence defect, otherwise WAIT_PIPELINE.",
+      "dependency": "Current PR #128 exact-head coverage complete.",
+      "exit": "A reproduced exact-head coverage/evidence defect.",
       "handoff": "Roblox High School Control Tower"
     }
-  }
+  },
+  "openSupportPrCount": 1
 }
