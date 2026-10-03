@@ -1,6 +1,7 @@
 local clientPath = "school/src/client/CanonicalSchoolClient.client.lua"
 local projectPath = "school/default.project.json"
 local servicePath = "school/src/server/HousingService.server.lua"
+local editorControllerPath = "school/src/server/HousingEditorController.lua"
 
 local function read(path)
     local file = assert(io.open(path, "r"))
@@ -12,6 +13,7 @@ end
 local client = read(clientPath)
 local project = read(projectPath)
 local service = read(servicePath)
+local editorController = read(editorControllerPath)
 
 local function has(source, fragment, label)
     if not source:find(fragment, 1, true) then
@@ -60,6 +62,20 @@ has(client, '"classic-green"', "green house style")
 has(client, 'editorTitle.Text = "Add Furni"', "Add Furni exact label")
 has(client, 'hideWallsButton.Text = "Hide Walls"', "Hide Walls exact label")
 has(client, 'editorCategories.Text = "Utilities   |   Other"', "verified exact category labels")
+has(client, 'editorActions.Visible = false', "unverified action controls isolated from Legacy-facing UI")
+has(client, 'item.referenceExact == true', "client only renders verified exact catalog entries")
+lacks(client, '"BUY +1"', "invented buy action label")
+lacks(client, '"PLACE"', "invented place action label")
+lacks(client, '"MOVE"', "invented move action label")
+lacks(client, '"ROTATE"', "invented rotate action label")
+lacks(client, '"REMOVE"', "invented remove action label")
+lacks(client, '"SELL"', "invented sell action label")
+lacks(client, '"PAINT"', "invented paint action label")
+lacks(client, '"SHOW WALLS"', "unverified show-walls label")
+has(editorController, 'local CATALOG = {}', "production furniture catalog remains empty until verified")
+lacks(editorController, 'displayName = "Floor Lamp"', "unverified Floor Lamp product entry")
+lacks(editorController, 'displayName = "Chair"', "unverified Chair product entry")
+has(editorController, 'catalog entries must carry verified reference provenance', "production catalog provenance gate")
 
 has(service, 'local HOUSE_PRICE = 50', "$50 Legacy house price")
 has(service, 'local HOUSE_UNLOCK = { category = "house", itemId = "starter-house" }', "durable house ownership")
