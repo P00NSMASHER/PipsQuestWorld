@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 31,
+  "schemaVersion": 32,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T10:33:00Z",
+  "observedAt": "2026-10-03T10:34:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
@@ -69,21 +69,21 @@
       "mode": "PRODUCE",
       "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "branch": "rebuild/high-school-housing-editor-db0a700-v1",
-      "objective": "Replace recoverable generic Housing Editor surfaces in PR 128 using only verified authorized reference evidence while preserving existing authorities.",
+      "objective": "Remediate QA exact-parity FAIL on PR 128: replace recoverable generic Housing Editor UI/catalog/presentation with verified authorized original-reference hierarchy, labels, dimensions, constants and assets; preserve current server authorities and explicitly isolate any still-unverified surfaces.",
       "owned": "housing editor UI/gameplay/furniture runtime",
-      "dependency": "PR 128 exact head 4de817ce5e546feb3d59dea23efd8648af507e7e green plus Content QA evidence",
-      "exit": "updated PR head with deterministic tests, all three guards green, recoverable reference gaps closed",
+      "dependency": "QA FAIL on exact head 4de817ce5e546feb3d59dea23efd8648af507e7e (PR 128 comment 5968318162) plus Content QA verified evidence.",
+      "exit": "new PR 128 exact head with QA-listed parity defects closed where recoverable, unknowns explicitly non-exact, deterministic housing tests and all three PR-head guards green",
       "handoff": "Roblox High School QA & Contract",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
-      "mode": "VALIDATE",
+      "mode": "WAIT_PIPELINE",
       "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "candidate": "4de817ce5e546feb3d59dea23efd8648af507e7e",
-      "objective": "Audit PR 128 against the verified Housing Editor reference and authority/provenance contracts.",
+      "objective": "Revalidate only after PR 128 head changes in response to exact-parity FAIL.",
       "owned": "QA contracts and receipts",
-      "dependency": "PR 128 three guards green and PR 127 reference evidence",
-      "exit": "exact-SHA PASS or one precise FAIL handoff",
+      "dependency": "Free Roam remediation produces a new exact PR 128 head.",
+      "exit": "new exact-SHA PASS or one new precise FAIL handoff",
       "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
@@ -92,7 +92,7 @@
       "base": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "objective": "Mechanically merge only a QA-PASS Housing Editor candidate.",
       "owned": "mechanical integration",
-      "dependency": "QA PASS same exact candidate and green guards",
+      "dependency": "QA PASS on a post-remediation PR 128 exact head; current 4de817ce5e546feb3d59dea23efd8648af507e7e is QA FAIL.",
       "exit": "new canonical SHA plus three push guards pass",
       "handoff": "Roblox High School Integration Smoke"
     },
@@ -130,5 +130,11 @@
     "committedUncertainStatus": "WRITE_COMMITTED_RESPONSE_UNCERTAIN",
     "postconditionPresentRetries": 0
   },
-  "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING"
+  "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
+  "qaResult": {
+    "candidate": "4de817ce5e546feb3d59dea23efd8648af507e7e",
+    "status": "FAIL_EXACT_CLONE_PARITY",
+    "evidence": "PR 128 comment 5968318162",
+    "reason": "Behavior/authority guards pass, but recoverable Legacy-facing UI/catalog/asset presentation remains generic or explicitly referenceExact=false; reference coverage is incomplete."
+  }
 }
