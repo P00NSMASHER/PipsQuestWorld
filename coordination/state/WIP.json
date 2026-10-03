@@ -1,7 +1,7 @@
 {
   "schemaVersion": 31,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T09:56:03Z",
+  "observedAt": "2026-10-03T10:33:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
@@ -53,7 +53,8 @@
       "owned": "fixtures/reference/provenance only",
       "dependency": "PR 127 exact head 0f0d10ca852e815727fae51e6c26db5135bdcd8c green",
       "exit": "verified reference evidence with unknowns explicit and checks green",
-      "handoff": "Pip High Free Roam"
+      "handoff": "Pip High Free Roam",
+      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
       "mode": "WAIT_PIPELINE",
@@ -72,7 +73,8 @@
       "owned": "housing editor UI/gameplay/furniture runtime",
       "dependency": "PR 128 exact head 4de817ce5e546feb3d59dea23efd8648af507e7e green plus Content QA evidence",
       "exit": "updated PR head with deterministic tests, all three guards green, recoverable reference gaps closed",
-      "handoff": "Roblox High School QA & Contract"
+      "handoff": "Roblox High School QA & Contract",
+      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
       "mode": "VALIDATE",
@@ -82,7 +84,8 @@
       "owned": "QA contracts and receipts",
       "dependency": "PR 128 three guards green and PR 127 reference evidence",
       "exit": "exact-SHA PASS or one precise FAIL handoff",
-      "handoff": "Pip High Free Roam on FAIL; Integration on PASS"
+      "handoff": "Pip High Free Roam on FAIL; Integration on PASS",
+      "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
@@ -122,7 +125,10 @@
     "staleDenialCarryForward": false,
     "identicalDeniedPayloadRetries": 0,
     "fallbackRule": "NO_BLOB_TREE_REF_BROWSER_OR_LAPTOP_REPLAY_AFTER_CANONICAL_DENIAL",
-    "continuationRule": "CONTINUE_INDEPENDENT_ASSIGNED_WORK_AFTER_OPTIONAL_BOOKKEEPING_OR_PAYLOAD_SPECIFIC_DENIAL"
+    "continuationRule": "CONTINUE_INDEPENDENT_ASSIGNED_WORK_AFTER_OPTIONAL_BOOKKEEPING_OR_PAYLOAD_SPECIFIC_DENIAL",
+    "postconditionRule": "ONE_READ_ONLY_POSTCONDITION_CHECK_BEFORE_RETRY_OR_SAFETY_DENIAL_CLASSIFICATION",
+    "committedUncertainStatus": "WRITE_COMMITTED_RESPONSE_UNCERTAIN",
+    "postconditionPresentRetries": 0
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING"
 }
