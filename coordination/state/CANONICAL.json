@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 14,
+  "schemaVersion": 15,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
   "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_SMOKE_CLOUD_SAFE_WITH_LOCAL_ONLY_REQUIRED",
+  "status": "PACKAGE_CHECKPOINT_COMPLETE__NEXT_PARITY_SLICE_ASSIGNED",
   "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "repair": {
     "pr": 64,
@@ -107,5 +107,12 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2_SMOKE_PASS_PACKAGE_NEXT"
+  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
+  "releasePackage": {
+    "result": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+    "artifact": "pip-high-school-00df979-source-tree-dea093c1",
+    "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "robloxPublished": false
+  }
 }
