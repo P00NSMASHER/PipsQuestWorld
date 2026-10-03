@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "lane": "Roblox High School Release & Package Gate",
-  "observedAt": "2026-10-03T20:01:26Z",
+  "observedAt": "2026-10-03T20:53:00Z",
   "result": "RELEASE_PREP_READY_AWAITING_QA_INTEGRATION_SMOKE",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
@@ -206,14 +206,35 @@
   ],
   "stateReconciliation": {
     "liveEvidenceAuthoritative": true,
-    "wip": "PARTIALLY_STALE_PRODUCER_HEAD_BUT_CURRENT_CANONICAL_AND_OBJECTIVE_MATCH",
-    "canonicalShard": "STALE_AT_00df979",
-    "blockersShard": "STALE_AT_00df979_WITH_EMPTY_CURRENT_BLOCKERS",
-    "playableShard": "STALE_AT_00df979",
+    "wip": "SCHEMA_44_CURRENT__PRODUCER_HEAD_E3BE5DF__RELEASE_PREP_ONLY",
+    "canonicalShard": "NOT_USED_FOR_PROMOTION_THIS_RUN",
+    "blockersShard": "NOT_USED_FOR_PROMOTION_THIS_RUN",
+    "playableShard": "NOT_USED_FOR_PROMOTION_THIS_RUN",
     "currentReleaseReceipt": "VALID_FOR_LIVE_CANONICAL_23cc398"
   },
   "published": false,
   "moneySpent": false,
   "productSourceEdited": false,
-  "taskStateChanged": false
+  "taskStateChanged": false,
+  "continuityVerification": {
+    "controlTowerWipSchemaVersion": 44,
+    "controlTowerCommit": "33b0e72769a98c0b948c242a9fffa66de00b1253",
+    "prepBranchExpectedPreviousHead": "2bc289d56c7760b3a1f119d27c8823e5c90ad414",
+    "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "canonicalPackage": "pip-high-school-23cc398-source-tree-284f86df",
+    "candidatePr": 165,
+    "candidateHeadSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+    "candidateRootTreeSha": "d8df1f2e796a5b7cf73f703b21b401905a2ec5f8",
+    "candidateSchoolTreeSha": "39bff846e8cece6f4c59ca21d084ce7b538c8e7c",
+    "candidateRecursiveEntryCount": 66,
+    "candidateBlobCount": 60,
+    "candidateRecursiveTreeTruncated": false,
+    "prBaseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "prState": "OPEN_UNMERGED",
+    "qaState": "DEFECT_CONFIRMED_REPAIR_REQUIRED",
+    "integrationState": "NOT_MERGED",
+    "smokeState": "NO_CHANGED_CANONICAL_SMOKE_PASS",
+    "packageEmitted": false,
+    "result": "PASS_UNPROMOTED_MANIFEST_CONTINUITY"
+  }
 }
