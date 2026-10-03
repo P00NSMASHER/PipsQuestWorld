@@ -154,5 +154,17 @@ end
 Controller.SUCCESS_TEXT = SUCCESS_TEXT
 Controller.CURRENCY = "Robux"
 Controller.SERVER_CATALOG_STARTS_EMPTY = true
+Controller.REFERENCE_SIGNALS = {
+    "BuyClothing",
+    "ShopGui",
+    "Clothing Display",
+    "ShirtID",
+    "PantsID",
+    "PurchasePermanentItem",
+}
+Controller.TEMPLATE_FIELDS = {
+    "ShirtTemplate",
+    "PantsTemplate",
+}
 
 return Controller
