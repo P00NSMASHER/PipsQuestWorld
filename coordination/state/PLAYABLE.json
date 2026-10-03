@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "LEGACY_HUD_PLUS_HOUSING_PLOTS_INTEGRATED__VEHICLE_RUNTIME_SMOKE_PENDING",
-  "currentPlayableEvidence": "Canonical 477fa61 integrates the Legacy HUD plus six Foundation-owned housing plot seams generated from one registry. Foundation, Class/Education, Progression, QA and Integration are exact-head green. Vehicle runtime/HUD coexistence remains LOCAL_ONLY_REQUIRED.",
+  "currentPlayableStage": "LEGACY_HUD_PLUS_HOUSING_V1_INTEGRATED__VEHICLE_RUNTIME_SMOKE_PENDING",
+  "currentPlayableEvidence": "Canonical c236b747 integrates the Legacy HUD, housing plot seams, server-authoritative permanent $50 house purchase, unique active plot allocation, lower-left House menu, Teleport to House, Edit/Save House mode and house-color controls. Foundation, Class/Education, Progression, QA and Integration are exact-head green. Vehicle runtime/HUD/House coexistence remains LOCAL_ONLY_REQUIRED.",
   "runtimeValidatedThrough": "No new Studio/runtime claim is added by 68c4b3f. Previously certified baseline behavior remains inherited from unchanged lineage; vehicle runtime remains explicitly LOCAL_ONLY_REQUIRED.",
-  "headlessExactHeadValidatedThrough": "477fa61: Foundation 37067265741 + Class/Education 37067265753 + Progression 37067265684 push guards PASS; housing plot contract PASS; candidate/canonical trees identical.",
+  "headlessExactHeadValidatedThrough": "c236b747: Foundation 37086431460 + Class/Education 37086431454 + Progression 37086431446 push guards PASS; housing lifecycle and UI/runtime wiring steps PASS; candidate/canonical root tree 8ed00218 and school tree 304c2777 are identical.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,12 +16,12 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Free Roam implements Legacy housing property V1 on the integrated HousingPlots seam: permanent house purchase through the existing economy/ownership repository, server-assigned plot, House menu state, teleport-to-house, owner edit-mode entry, and cleanup/rejoin-safe ownership read.",
+  "nextMilestone": "Housing Editor V2: reproduce Legacy Edit House behavior from the authorized reference—Add Furni, Hide Walls, furniture catalog/purchase/place/move/rotate/remove/sell, wall/item painting, save/reload, and edit-mode/visitor restrictions—using server authority and durable state.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-    "milestone": "HOUSING_PLOT_SEAMS_V1",
+    "sha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+    "milestone": "HOUSING_PROPERTY_V1",
     "headlessStatus": "QA_INTEGRATION_EXACT_HEAD_CI_PASS",
     "runtimeStatus": "VEHICLE_SMOKE_LOCAL_ONLY_REQUIRED"
   },

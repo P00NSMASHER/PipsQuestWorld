@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-03T01:35:00Z",
-  "result": "PASS_EXACT_HEAD_CANDIDATE",
+  "updatedAt": "2026-10-03T01:45:00Z",
+  "result": "PASS_EXACT_HEAD",
   "canonicalBaseSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
   "candidate": {
     "pr": 115,
@@ -13,21 +13,24 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37086196551,
+      "runId": 37086431460,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37086196591,
+      "runId": 37086431454,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37086196550,
+      "runId": 37086431446,
+      "event": "push",
       "conclusion": "success",
-      "headSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
       "housingLifecycleStep": "success",
       "housingUiRuntimeWiringStep": "success"
     }
@@ -64,8 +67,16 @@
   "integrationEligibility": "PASS",
   "blocker": null,
   "handoff": {
-    "owner": "Roblox High School Integration Director",
-    "exactSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
-    "pr": 115
+    "owner": "Roblox High School Control Tower",
+    "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+    "nextParity": "HOUSING_EDITOR_V2"
+  },
+  "certifiedSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+  "exactIntegrationRebind": {
+    "candidateRootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
+    "canonicalRootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
+    "candidateSchoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
+    "canonicalSchoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
+    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
   }
 }

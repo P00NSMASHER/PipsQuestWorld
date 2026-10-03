@@ -1,49 +1,52 @@
 {
-  "schemaVersion": 8,
+  "schemaVersion": 9,
   "lane": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-02T21:36:00Z",
+  "recordedAt": "2026-10-03T01:45:00Z",
   "result": "PASS_EXACT_HEAD",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-  "milestone": "HOUSING_PLOT_SEAMS_V1",
-  "producerPr": 111,
-  "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
+  "integrationSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+  "milestone": "HOUSING_PROPERTY_V1",
+  "producerPr": 115,
+  "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
   "treeIdentity": {
-    "rootTree": "81989074747c43c911c5c043b83ce6b6c50ecf0c",
-    "schoolTree": "c2b5ab1dec90b2df576d83a16d77c5621c406f38"
+    "rootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
+    "schoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37067265741,
+      "runId": 37086431460,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "housingPlotStep": "success"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37067265753,
+      "runId": 37086431454,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37067265684,
+      "runId": 37086431446,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+      "housingLifecycleStep": "success",
+      "housingUiRuntimeWiringStep": "success"
     }
   ],
   "authorityChecks": {
     "singleWorldAuthorityPreserved": true,
     "classAuthorityUnchanged": true,
-    "economyProgressionPersistenceAuthorityUnchanged": true,
-    "housingOwnershipSemanticsAdded": false,
-    "phase2SchoolworkAdded": false
+    "economyProgressionPersistenceAuthoritySingle": true,
+    "housingLifecycleAuthoritySingle": true,
+    "clientTeleportAuthority": false,
+    "phase2SchoolworkAdded": false,
+    "retiredRuntimeConsumed": false
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
@@ -52,7 +55,7 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Control Tower",
-    "exactSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-    "instruction": "Foundation housing seams are ready; assign Free Roam housing property lifecycle on a fresh current-base branch."
+    "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+    "instruction": "Housing V1 is integrated and green. Continue exact housing parity with Add Furni / Hide Walls / furniture placement and painting before moving to avatar/customization."
   }
 }
