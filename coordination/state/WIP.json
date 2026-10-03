@@ -63,10 +63,10 @@
       "mode": "SUPPORT",
       "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
       "branch": "support/high-school-avatar-customization-content-00df979",
-      "objective": "Provide QA the exact verified shopping provenance from PR 150 head 762e1d17, keep unverified asset IDs/catalog/prices/interiors explicit, then advance one evidence/validator improvement without mutating PR 150 or PR 165.",
+      "objective": "Inspect verified extraction context around the exact purchase-success string and PurchasePermanentItem to recover the original notification delivery transport/hierarchy if present. Keep PR 150 and PR 165 frozen. If exact transport is recoverable, bind it in one unpromoted evidence/validator prep increment; otherwise mark transport UNVERIFIED while preserving the server-confirmed success invariant.",
       "owned": "authorized fixtures/assets/metadata, provenance, exact labels/interactions, deterministic reference validators",
       "dependency": "verified extraction run 37117831711 and frozen PR 150 evidence",
-      "exit": "one concise exact-value handoff plus one GitHub-visible evidence/validator prep increment",
+      "exit": "exact notification transport provenance or explicit TRANSPORT_UNVERIFIED handoff, plus one GitHub-visible evidence/validator prep increment",
       "handoff": "Roblox High School QA & Contract"
     },
     "ProgressionMobile": {
@@ -83,7 +83,7 @@
       "mode": "PREP",
       "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
       "branch": "prep/high-school-free-roam-avatar-shopping-isolation-23cc398-v1",
-      "objective": "Keep PR 165 exact head e3be5df frozen for QA/Integration. Advance the next Content-QA-verified avatar/customization/shopping gap or deterministic isolation/exploit regression on the existing prep branch without opening another integration candidate.",
+      "objective": "Keep current PR 165 head frozen until QA formalizes the defect. Continue useful work on the existing unpromoted Free-Roam prep branch. Once QA REQUEST_CHANGES/FAIL binds e3be5df, repair the producer by consuming the server confirmation result and delivering the exact verified success text only to the purchasing player after confirmed purchase, without client-authored success, automatic spend, or RHS Cash; do not claim any unverified transport name as exact.",
       "owned": "jobs/vehicles/housing/avatar/customization/shopping/social/free-roam mechanics and world-facing UX",
       "dependency": "PR 165 guards green; exact QA disposition pending",
       "exit": "one GitHub-visible unpromoted Free-Roam prep increment",
@@ -94,10 +94,10 @@
       "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
       "candidatePr": 165,
       "candidateSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
-      "objective": "Validate PR 165 exact head now against shopping authority, provenance, exploit/idempotency, and no-regression contracts. Issue PASS_EXACT_HEAD or one precise FAIL. If disposition write is safety-denied and absent after read-after-write, create one QA-owned unpromoted validator/receipt improvement instead of idling.",
+      "objective": "Formalize the exact-head defect evidenced by QA prep commit 546a774 (parent e3be5df): current ShoppingPurchase callback discards confirmPurchase result and never delivers the verified success notification. Use the dedicated PR review action to REQUEST_CHANGES on exact head if still applicable; if write is denied and absent after read-after-write, keep the QA validator branch as formal evidence and continue useful QA prep.",
       "owned": "QA contracts, validators, receipts, adversarial authority/provenance checks",
       "dependency": "Foundation 37141490985, Class 37141490978, Progression 37141491082 all PASS on exact head",
-      "exit": "PASS_EXACT_HEAD or precise FAIL on e3be5df, plus GitHub-visible QA prep if bookkeeping is denied",
+      "exit": "REQUEST_CHANGES/FAIL on e3be5df with exact owner/exit criterion, or PASS only after a changed head fixes delivery and all three guards rerun",
       "handoff": "Roblox High School Integration Director"
     },
     "Integration": {
@@ -105,7 +105,7 @@
       "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
       "candidatePr": 165,
       "candidateSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
-      "objective": "Perform mechanical mergeability/conflict/candidate-cap/authority readiness now. Merge PR 165 only after PASS_EXACT_HEAD binds the same SHA and live canonical is unchanged; otherwise persist a compact Integration-owned readiness receipt on one unpromoted branch.",
+      "objective": "Do not merge PR 165 while QA prep commit 546a774 evidences missing success-notification delivery. Continue mechanical readiness/candidate-cap work. Only integrate a changed PR 165 head after all three guards and PASS_EXACT_HEAD bind that same changed SHA.",
       "owned": "mechanical protected integration/readiness only",
       "dependency": "exact-head QA disposition pending",
       "exit": "merge exact QA-PASS e3be5df or one GitHub-visible readiness increment",
@@ -160,19 +160,15 @@
   "qaResult": {
     "pr": 165,
     "candidate": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
-    "status": "PENDING_EXACT_HEAD",
-    "requiredGuards": [
-      37141490985,
-      37141490978,
-      37141491082
-    ],
-    "evidence": "producer handoff PR 165 comment 5971776434"
+    "status": "DEFECT_EVIDENCE_FOUND__FORMAL_DISPOSITION_PENDING",
+    "evidence": "QA prep commit 546a774d46daba47603e6087e269fd17d56b84f0 parent=e3be5df",
+    "reason": "Candidate confirms purchase server-side but discards the confirmation result; the verified exact success notification is not delivered to the purchasing client."
   },
   "integrationResult": {
     "pr": 165,
     "candidate": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
     "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
-    "status": "PREP_ACTIVE__AWAITING_QA_PASS"
+    "status": "PREP_ACTIVE__DO_NOT_MERGE__QA_DEFECT_EVIDENCE"
   },
   "smokeResult": {
     "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
