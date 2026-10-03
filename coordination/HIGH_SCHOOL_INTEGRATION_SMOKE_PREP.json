@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Integration Smoke",
   "mode": "PRE_INTEGRATION_SMOKE_PREP",
   "canonicalBaseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
@@ -85,5 +85,51 @@
   "robloxPublished": false,
   "moneySpent": false,
   "laptopPolled": false,
-  "taskStateChanged": false
+  "taskStateChanged": false,
+  "exactHeadJobs": {
+    "foundationJobId": 111256682879,
+    "classEducationJobId": 111256682906,
+    "progressionJobId": 111256683342
+  },
+  "exactCandidateFileBlobs": {
+    "school/src/server/ShoppingPurchase.server.lua": "405f02ba2408cc1ab59fefb5208607cf2b570f0e",
+    "school/src/server/ShoppingPurchaseController.lua": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
+    "school/src/shared/LegacyShoppingBoundary.lua": "535e63d6ac16cf123a38a7a0989e5590b51e041f",
+    "school/src/client/CanonicalSchoolClient.client.lua": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+    "school/tests/shopping_purchase_authority_spec.lua": "a22bd692b46811c52135570f9fa102074d645174",
+    "school/tests/shopping_runtime_authority_spec.lua": "851f601f77fea0477810b028ef623c8a83f48682",
+    "school/tests/legacy_hud_contract_spec.lua": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544"
+  },
+  "reachabilityProof": {
+    "productCatalogEntryCount": 0,
+    "canonicalClientMountsBoundaryButDoesNotInvokePurchaseAtMount": true,
+    "servicePromptPurchaseCalls": 0,
+    "servicePromptProductPurchaseCalls": 0,
+    "clientAuthorityClaimsSent": false,
+    "shoppingEconomyDependency": false,
+    "callbackResultForwardedToClient": false,
+    "liveSpendSurface": "NON_EXECUTABLE_EMPTY_AUTHORIZED_CATALOG",
+    "notificationClaim": "CONTROLLER_CALLBACK_SUCCESS_PROVEN__SERVER_TO_CLIENT_DELIVERY_NOT_PROVEN"
+  },
+  "regressionProof": {
+    "progressionJobId": 111256683342,
+    "exactHeadMarkers": [
+      "PIP_HIGH_FOUNDATION_GUARDS_OK",
+      "HIGH_SCHOOL_PROGRESSION_REPOSITORY_PASS",
+      "HIGH_SCHOOL_ECONOMY_REPOSITORY_PASS",
+      "HIGH_SCHOOL_VEHICLE_LIFECYCLE_PASS",
+      "HIGH_SCHOOL_VEHICLE_INPUT_PASS",
+      "HIGH_SCHOOL_OUTFIT_OPERATIONS_PASS",
+      "HIGH_SCHOOL_OUTFIT_OPERATIONS_RUNTIME_PASS",
+      "HIGH_SCHOOL_SHOPPING_PURCHASE_AUTHORITY_PASS",
+      "HIGH_SCHOOL_SHOPPING_RUNTIME_AUTHORITY_PASS",
+      "HIGH_SCHOOL_LEGACY_HUD_CONTRACT_PASS",
+      "HIGH_SCHOOL_HOUSING_LIFECYCLE_PASS",
+      "HIGH_SCHOOL_HOUSING_EDITOR_CONTROLLER_PASS",
+      "HIGH_SCHOOL_HOUSING_UI_CONTRACT_PASS",
+      "HIGH_SCHOOL_HOUSING_LAYOUT_REPOSITORY_PASS",
+      "HIGH_SCHOOL_PROGRESSION_BINDING_PASS",
+      "HIGH_SCHOOL_CLASS_PROGRESSION_INTEGRATION_PASS"
+    ]
+  }
 }
