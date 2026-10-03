@@ -1,7 +1,7 @@
 {
   "schemaVersion": 30,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T02:47:38Z",
+  "observedAt": "2026-10-03T03:30:47.800Z",
   "wipCap": 3,
   "productCandidateCountIncludingCanonicalBase": 2,
   "unintegratedProductCandidateCount": 1,
@@ -48,7 +48,7 @@
       "objective": "HOUSING_EDITOR_V2",
       "baseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "branch": "rebuild/high-school-housing-editor-db0a700-v1",
-      "status": "PRODUCE_AUTHORIZED__SCHEDULED_TASK_CURRENTLY_PAUSED"
+      "status": "PRODUCE_ACTIVE__SCHEDULED_TASK_RESUMED"
     },
     "downstream": {
       "lane": "Roblox High School QA & Contract",
@@ -154,20 +154,20 @@
     "runtimeStatus": "VEHICLE_HUD_HOUSE_RUNTIME_SMOKE_LOCAL_ONLY_REQUIRED__NO_LAPTOP_POLLING"
   },
   "scheduledWorkerAudit": {
-    "observedAt": "2026-10-03T02:47:38Z",
-    "policy": "READ_ONLY_AUDIT__NO_SCHEDULE_OR_ENABLEMENT_CHANGE",
+    "observedAt": "2026-10-03T03:30:47.800Z",
+    "policy": "USER_AUTHORIZED_OPTIMIZATION_APPLIED",
     "controlTower": {
       "task": "Roblox High School Control Tower",
       "state": "ACTIVE_HOURLY"
     },
-    "activeCanonicalWorkerCount": 8,
-    "pausedCanonicalWorkerCount": 2,
+    "activeCanonicalWorkerCount": 9,
+    "pausedCanonicalWorkerCount": 1,
     "workers": {
       "Foundation": "ACTIVE_HOURLY",
       "Class & Education": "ACTIVE_HOURLY",
       "Content QA": "ACTIVE_HOURLY",
       "Progression & Mobile": "ACTIVE_HOURLY",
-      "Pip High Free Roam": "PAUSED_HOURLY",
+      "Pip High Free Roam": "ACTIVE_HOURLY",
       "QA/Contract": "ACTIVE_HOURLY",
       "Integration": "ACTIVE_HOURLY",
       "Integration Smoke": "ACTIVE_HOURLY",
@@ -176,16 +176,13 @@
     },
     "automationDefects": [
       {
-        "task": "Pip High Free Roam",
-        "impact": "Critical-path PRODUCE directive cannot execute while paused.",
-        "owner": "USER_OR_AUTHORIZED_TASK_ADMIN"
-      },
-      {
         "task": "Roblox High School DevEx",
-        "impact": "CI/evidence support cannot self-run while paused.",
-        "owner": "USER_OR_AUTHORIZED_TASK_ADMIN"
+        "impact": "Paused intentionally so the observed ten active game-development tasks retain the critical product and full gate pipeline; current workflows already cover the exact candidate.",
+        "owner": "CONTROL_TOWER_REEVALUATE_ONLY_ON_REPRODUCED_CI_DEFECT_OR_AVAILABLE_SLOT"
       }
-    ]
+    ],
+    "activeGameDevelopmentTaskCountIncludingControlTower": 10,
+    "activationNote": "Free Roam resumed under explicit user authorization and immediately dispatched on Housing Editor V2. DevEx instructions were optimized but the task remains paused rather than displacing a product or gate lane."
   },
   "successMetric": "Validated player-facing exact Roblox High School parity advancement per hour on the one canonical school/** lineage.",
   "programDirective": {
@@ -250,7 +247,7 @@
     },
     "Pip High Free Roam": {
       "mode": "PRODUCE",
-      "taskState": "PAUSED_HOURLY__USER_ENABLEMENT_REQUIRED",
+      "taskState": "ACTIVE_HOURLY__USER_AUTHORIZED_RESUME",
       "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "base": "rebuild/high-school-foundation@db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "branch": "rebuild/high-school-housing-editor-db0a700-v1",
