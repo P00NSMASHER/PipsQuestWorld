@@ -100,6 +100,30 @@ r6Warning.Size = UDim2.new(1, 0, 0, 24)
 r6Warning:SetAttribute("ReferenceExactLabel", true)
 r6Warning.Parent = morphs
 
+local verifiedInputLabels = {
+    { name = "WearOutfitLabel", text = "Wear Outfit" },
+    { name = "SaveOutfitLabel", text = "Save Outfit:" },
+    { name = "Hat1Label", text = "Hat 1:" },
+    { name = "Hat2Label", text = "Hat 2:" },
+    { name = "Hat3Label", text = "Hat 3:" },
+    { name = "ShirtLabel", text = "Shirt:" },
+    { name = "PantsLabel", text = "Pants:" },
+    { name = "RemoveShirtLabel", text = "Remove Shirt:" },
+    { name = "OutfitNameLabel", text = "Outfit Name:" },
+}
+
+for index, definition in ipairs(verifiedInputLabels) do
+    local label = Instance.new("TextLabel")
+    label.Name = definition.name
+    label.Text = definition.text
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.fromOffset(128, 20)
+    label.Position = UDim2.fromOffset(8, 210 + ((index - 1) * 20))
+    label:SetAttribute("ReferenceExactLabel", true)
+    label:SetAttribute("ReferenceExactLayout", false)
+    label.Parent = panel
+end
+
 for _, fieldName in ipairs({ "Hat1", "Hat2", "Hat3", "Shirt", "Pants", "Face", "RemoveShirt", "RPName", "RPDesc", "BaseSlot" }) do
     local marker = Instance.new("StringValue")
     marker.Name = fieldName
