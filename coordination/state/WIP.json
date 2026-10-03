@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T16:53:15Z",
+  "observedAt": "2026-10-03T17:11:01Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "c4df87d34022854b15b6416538756399ab020891",
@@ -15,8 +15,8 @@
   "wip": {
     "cap": 3,
     "countIncludingBase": 3,
-    "producerPr": null,
-    "producerSha": "c4df87d34022854b15b6416538756399ab020891",
+    "producerPr": 159,
+    "producerSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
     "producerBranch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
@@ -71,39 +71,39 @@
     "ProgressionMobile": {
       "mode": "SUPPORT",
       "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Define and audit the single server-authoritative persistence/ownership seam for outfit save/wear on the producer candidate: validate slot bounds, filtered identity fields, durable reopen/rejoin semantics, and no client DataStore or client-owned balance/ownership. Do not implement the Free Roam interaction surface or create a branch.",
+      "objective": "Audit PR 159's exact changed head against the pinned persistence contract: 24 durable slots with 12 legacy-presented slots and 12-to-24 migration; OutfitName max length 25; INVALID_NAME/noload; filtered fallbacks; GetFilteredNamesForOutfit/SaveOutfit/WearOutfit seams; durable reopen/rejoin; stale-retry and retry-idempotency expectations; one shared persistence authority. Provide findings only; do not edit product source or create a branch.",
       "owned": "progression/economy/persistence/ownership/mobile authority seams only",
-      "dependency": "Free Roam is the sole product producer; Content QA owns reference semantics",
-      "exit": "one narrow authority contract or precise producer finding bound to the exact producer head",
+      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 confirms PR 159 head 71a6d565df826cfcf359b34951e179fd61fb8165 does not match the verified persistence contract despite green CI.",
+      "exit": "one precise producer remediation handoff bound to changed PR 159 head; re-audit only after head changes",
       "handoff": "Pip High Free Roam"
     },
     "FreeRoam": {
       "mode": "PRODUCE",
       "base": "rebuild/high-school-foundation@c4df87d34022854b15b6416538756399ab020891",
       "branch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
-      "objective": "Implement one narrow verified outfit-operations slice on this exact-base branch: server-authoritative LoadOutfit, LoadOutfitPage, WearOutfit, and SaveOutfit for the pinned 12-slot/three-hat baseline, exact persisted fields/defaults, server filtering of OutfitName/RPName/RPDesc, deterministic reopen/rejoin coverage, and canonical-client integration. Do not add shopping/catalog/Robux behavior, invent assets/layout, create a second persistence/economy authority, or import retired runtime code.",
+      "objective": "Remediate PR 159 on the same sole producer branch. Preserve 12 legacy-presented slots while implementing 24 durable storage slots with deterministic 12-to-24 migration; OutfitName max length 25; INVALID_NAME and noload semantics; filtered fallbacks Saved Outfit/RP Name Here/RP Desc Here; verified GetFilteredNamesForOutfit, SaveOutfit, and WearOutfit server seams; deterministic migration/reopen/rejoin plus stale-retry and retry-idempotency coverage. Preserve the single PipHighProgressionV1 authority and current shopping/unknown-asset exclusions.",
       "owned": "avatar/outfit/customization mechanics and world-facing UX for this slice only",
-      "dependency": "Packaged canonical c4df87d; Content QA PR 150 exact head 762e1d17e001635a8f0a8cc9bed66a36080ed68d; Progression provides authority constraints only",
-      "exit": "one narrow PR to rebuild/high-school-foundation with a changed exact SHA, deterministic contract tests, all three PR-head guards green, and explicit unknown/non-exact surfaces",
+      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 on 71a6d565df826cfcf359b34951e179fd61fb8165; exact-head guards 37138986407/37138986447/37138986492 are green but insufficient.",
+      "exit": "changed PR 159 head with the full verified persistence contract, deterministic tests, all three exact-head guards green, then exact-SHA QA revalidation",
       "handoff": "Roblox High School QA & Contract",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
-      "mode": "SUPPORT",
+      "mode": "WAIT_CHANGED_HEAD",
       "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Use existing QA knowledge without extending superseded branch qa/avatar-customization-authority-c4df87d-v1. Prepare exact-candidate validation for slot bounds, three-hat/12-slot provenance, server filtering, duplicate-authority exclusion, rejoin durability, idempotent retry behavior where applicable, and preservation of packaged baseline contracts. Validate immediately once the producer head changes and its three guards are green.",
+      "objective": "Do not revalidate failed head 71a6d565df826cfcf359b34951e179fd61fb8165. When PR 159 changes and all three guards are green, validate the exact successor for 24 durable versus 12 presented slots, migration, length/sentinel/fallback/filter seams, reopen/rejoin, stale-retry/idempotency, unique persistence authority, and no shopping/unknown-asset leakage.",
       "owned": "QA contracts, validators, receipts, and adversarial authority/provenance checks only",
-      "dependency": "Free Roam is the sole active product candidate; WIP is at cap",
-      "exit": "PASS_EXACT_HEAD or one precise FAIL owner/exit criterion on the changed producer SHA",
+      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 is authoritative for the current head.",
+      "exit": "PASS_EXACT_HEAD on a changed green head or one precise FAIL owner/exit criterion",
       "handoff": "Roblox High School Integration Director",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
       "mode": "WAIT_PIPELINE",
       "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Perform read-only mergeability, candidate-cap, and exact-head evidence preflight for the single Free Roam producer. Do not merge until all three changed-head guards are green and QA has issued PASS for that same SHA.",
+      "objective": "Maintain read-only preflight only. Do not merge PR 159 while QA FAIL applies; any head change requires all three exact-head guards and a new QA decision on that same SHA.",
       "owned": "mechanical protected integration only",
-      "dependency": "Producer branch exists at exact canonical base with no changed head yet",
+      "dependency": "PR 159 current head is CI-green but QA FAIL_EXACT_HEAD; integration is prohibited until changed-head QA PASS.",
       "exit": "changed producer becomes QA-PASS and merge-ready, or a precise integration-risk handoff is recorded",
       "handoff": "Roblox High School Integration Smoke"
     },
@@ -130,8 +130,8 @@
       "base": "c4df87d34022854b15b6416538756399ab020891",
       "objective": "Keep exactly one producer, one frozen Content-QA support candidate, and canonical base active. Reconcile live heads and gates, prevent writes to the superseded QA-prep branch, and advance the exact CI → QA → Integration → Smoke → Package chain without schedule changes.",
       "owned": "coordination/state/WIP.json, candidate-cap enforcement, lane assignment, and pipeline handoffs only",
-      "dependency": "Fresh producer branch exists byte-identical to packaged canonical c4df87d",
-      "exit": "one changed producer head enters exact-head CI with unique authority and cap compliance",
+      "dependency": "PR 159 head 71a6d565df826cfcf359b34951e179fd61fb8165 is the sole producer candidate and is QA FAIL with a single Free Roam remediation owner.",
+      "exit": "changed PR 159 head with all three guards green is handed to QA without adding another candidate",
       "handoff": "Pip High Free Roam"
     }
   },
@@ -152,10 +152,12 @@
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
-    "candidate": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
-    "status": "PASS_EXACT_HEAD",
-    "evidence": "PR 154 comment 5970805607",
-    "reason": "Canonical client mounts Shared.LegacyOutfitEntry exactly once; verified labels and 12-slot hierarchy are provenance-bound; unverified layout remains explicit."
+    "candidate": "71a6d565df826cfcf359b34951e179fd61fb8165",
+    "status": "FAIL_EXACT_HEAD",
+    "evidence": "PR 159 comment 5971451059",
+    "reason": "Candidate hard-codes 12 durable slots and omits verified 24-slot storage with 12-to-24 migration, OutfitName length 25, INVALID_NAME/noload, filtered fallbacks, and GetFilteredNamesForOutfit seam semantics.",
+    "owner": "Pip High Free Roam",
+    "exitCriterion": "Changed PR 159 head implements the complete verified persistence contract with deterministic migration/rejoin/stale-retry/idempotency coverage and all three exact-head guards green."
   },
   "integrationResult": {
     "pr": 154,
@@ -208,8 +210,9 @@
     "producer": {
       "branch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
       "baseSha": "c4df87d34022854b15b6416538756399ab020891",
-      "headSha": "c4df87d34022854b15b6416538756399ab020891",
-      "status": "READY_EXACT_PACKAGED_BASE__SOLE_PRODUCER__NO_PRODUCT_COMMIT_YET"
+      "headSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
+      "pr": 159,
+      "status": "QA_FAIL_EXACT_HEAD__FREE_ROAM_REMEDIATION_ACTIVE"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -228,5 +231,27 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "JOBS_AFTER_AVATAR_CUSTOMIZATION_SHOPPING_PARITY_IS_VERIFIED_COMPLETE"
+  "nextPriorityAfterCurrent": "JOBS_AFTER_AVATAR_CUSTOMIZATION_SHOPPING_PARITY_IS_VERIFIED_COMPLETE",
+  "candidateExactHeadCi": {
+    "pr": 159,
+    "headSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
+    "status": "PASS_ALL_THREE_BUT_QA_FAIL",
+    "runs": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37138986407,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37138986447,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37138986492,
+        "conclusion": "success"
+      }
+    ]
+  }
 }
