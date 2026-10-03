@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "LEGACY_HUD_PLUS_HOUSING_V1_INTEGRATED__VEHICLE_RUNTIME_SMOKE_PENDING",
-  "currentPlayableEvidence": "Canonical c236b747 integrates the Legacy HUD, housing plot seams, server-authoritative permanent $50 house purchase, unique active plot allocation, lower-left House menu, Teleport to House, Edit/Save House mode and house-color controls. Foundation, Class/Education, Progression, QA and Integration are exact-head green. Vehicle runtime/HUD/House coexistence remains LOCAL_ONLY_REQUIRED. Canonical 6a48e36 additionally contains the Progression-owned durable HousingLayoutRepository for style, Hide Walls, and furniture placement/move/paint/remove state; all three post-merge guards pass.",
+  "currentPlayableStage": "HOUSING_EDITOR_V2_CLOUD_PIPELINE_ACTIVE__OLDER_RUNTIME_EVIDENCE_DEFERRED",
+  "currentPlayableEvidence": "Live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb has all three push guards PASS. Housing Editor V2 is active on PR 128 and is in producer remediation after exact-parity QA FAIL. Older vehicle runtime evidence remains LOCAL_ONLY_REQUIRED on c236b747 and is tracked separately rather than blocking current cloud-safe Housing work.",
   "runtimeValidatedThrough": "No new Studio/runtime claim is added by 68c4b3f. Previously certified baseline behavior remains inherited from unchanged lineage; vehicle runtime remains explicitly LOCAL_ONLY_REQUIRED.",
-  "headlessExactHeadValidatedThrough": "6a48e36: Foundation 37087083253 + Class/Education 37087083263 + Progression 37087083313 push guards PASS; HousingLayoutRepository exact-head step PASS; support candidate/canonical trees identical.",
+  "headlessExactHeadValidatedThrough": "db0a700: Foundation 37087510133 + Class/Education 37087510242 + Progression 37087510189 push guards PASS.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Housing Editor V2 on a fresh exact-base Free Roam branch: reproduce Legacy Add Furni / Hide Walls, furniture catalog purchase/inventory, place/move/rotate/remove/sell, wall/item painting, save/reload durable layout, and edit-mode/visitor restrictions.",
+  "nextMilestone": "Remediate Housing Editor V2 exact-parity QA findings on PR 128 using current Content QA evidence, then QA -> Integration -> Smoke -> Package.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "milestone": "HOUSING_EDITOR_PERSISTENCE_READY",
-    "headlessStatus": "QA_INTEGRATION_EXACT_HEAD_CI_PASS",
-    "runtimeStatus": "VEHICLE_SMOKE_LOCAL_ONLY_REQUIRED"
+    "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+    "milestone": "HOUSING_EDITOR_V2_BASE",
+    "headlessStatus": "ALL_THREE_PUSH_GUARDS_PASS",
+    "runtimeStatus": "OLDER_SHA_LOCAL_ONLY_EVIDENCE_DEFERRED_NONBLOCKING"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",

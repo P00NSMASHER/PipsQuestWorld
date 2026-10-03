@@ -1,21 +1,23 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-  "currentBlockers": [
+  "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+  "currentBlockers": [],
+  "gateStatus": "CLOUD_PRODUCT_WORK_UNBLOCKED",
+  "nextProducer": "Pip High Free Roam",
+  "nextObjective": "HOUSING_EDITOR_V2_QA_REMEDIATION",
+  "deferredRuntimeEvidence": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
       "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+      "status": "STALE_SHA_EVIDENCE_TRACKED_ONLY",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "All cloud/deterministic checks pass on current canonical including Legacy House V1. Remaining runtime evidence is vehicle seat/touch plus HUD/House-menu coexistence on the authorized private target; laptop polling and Roblox publish are not authorized.",
-      "exitCriterion": "On exact c236b747b2d38b2ad7ff8493087a18fb19352e4c, validate vehicle spawn/drive/exit/re-enter/despawn, non-owner rejection, cleanup, Legacy HUD + House button/menu coexistence, and baseline school/class/cafe behavior."
+      "reason": "Older-sha vehicle/HUD/House runtime evidence remains uncollected, but it does not block cloud-safe Housing Editor work on live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb."
     }
   ],
-  "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED_WITH_CLOUD_PRODUCT_WORK",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "HOUSING_EDITOR_V2",
-  "waitingWriteClassification": "Use CONNECTOR_SAFETY_DENIAL only when the platform safety layer rejects a mutation before GitHub accepts it; never retry an identical blocked payload."
+  "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
+  "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
 }
