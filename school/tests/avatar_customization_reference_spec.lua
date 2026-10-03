@@ -6,38 +6,66 @@ local function equals(actual, expected, label)
     end
 end
 
-equals(reference.schemaVersion, 1, "schema version")
-equals(reference.verified.avatarCustomizationExists, true, "avatar customization existence")
-equals(reference.verified.outfitHatSlots, 9, "Legacy outfit hat slots")
-equals(reference.verified.clothingPurchase.interaction, "click_item_to_purchase", "clothing purchase interaction")
-equals(reference.verified.clothingPurchase.wearPath, "roblox_website_avatar", "clothing wear path")
-equals(reference.verified.clothingPurchase.typicalPriceRobux, 5, "verified clothing price")
-equals(reference.verified.locations.schoolSpirit, "School Spirit", "School Spirit label")
-equals(reference.verified.locations.mall, "The Mall", "The Mall label")
-equals(reference.verified.schoolSpirit.priceRobux, 5, "School Spirit price")
+equals(reference.schemaVersion, 2, "schema version")
+equals(reference.pinnedBaseline.gitBlobSha, "95ee3d762f419bb3572e18db57c03682651dc8c4", "pinned blob")
+equals(reference.pinnedBaseline.sha256, "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360", "pinned sha256")
+equals(reference.pinnedBaseline.extractionRunId, 37117603516, "extraction run")
+equals(reference.pinnedBaseline.extractionArtifactId, 11272277500, "extraction artifact")
 
-local expectedStores = {
-    ["Nilvou"] = true,
-    ["MrMudMan"] = true,
-    ["Bad Ghoul RiRi"] = true,
-    ["Pastelly"] = true,
-    ["Jovani"] = true,
-    ["Sheric"] = true,
-    ["MissMudMan"] = true,
-    ["SouledOut & SouledIn"] = true,
-}
-
-local seenStores = {}
-for _, storeName in ipairs(reference.verified.mallStores or {}) do
-    if seenStores[storeName] then
-        error("invalid avatar/customization reference: duplicate mall store " .. storeName, 2)
+local function setOf(values, label)
+    local result = {}
+    for _, value in ipairs(values or {}) do
+        if result[value] then
+            error("invalid avatar/customization reference: duplicate " .. label .. " " .. tostring(value), 2)
+        end
+        result[value] = true
     end
-    seenStores[storeName] = true
+    return result
 end
-equals(#(reference.verified.mallStores or {}), 8, "verified mall store count")
-for storeName in pairs(expectedStores) do
-    equals(seenStores[storeName], true, "missing verified mall store " .. storeName)
+
+local events = setOf(reference.exactBaselineOutfit.eventNames, "event")
+equals(events.LoadOutfit, true, "LoadOutfit")
+equals(events.LoadOutfitPage, true, "LoadOutfitPage")
+equals(events.WearOutfit, true, "WearOutfit")
+equals(events.SaveOutfit, true, "SaveOutfit")
+
+local hierarchy = setOf(reference.exactBaselineOutfit.hierarchyNames, "hierarchy name")
+for _, name in ipairs({
+    "OutfitInputs", "OutfitSlots", "OutfitPages",
+    "Hat1", "Hat2", "Hat3", "Shirt", "Pants", "RemoveShirt", "OutfitName",
+}) do
+    equals(hierarchy[name], true, "missing exact hierarchy name " .. name)
 end
+
+local labels = setOf(reference.exactBaselineOutfit.visibleLabels, "visible label")
+for _, label in ipairs({
+    "Wear Outfit", "Save Outfit:", "Hat 1:", "Hat 2:", "Hat 3:",
+    "Shirt:", "Pants:", "Remove Shirt:", "Outfit Name:", "Empty",
+}) do
+    equals(labels[label], true, "missing exact visible label " .. label)
+end
+
+equals(reference.exactBaselineOutfit.hatInputCount, 3, "pinned baseline hat inputs")
+equals(reference.exactBaselineOutfit.savedOutfitSlotCount, 12, "pinned baseline outfit slots")
+equals(reference.exactBaselineOutfit.serverAuthority.wearRemote, "WearOutfit", "wear server authority")
+equals(reference.exactBaselineOutfit.serverAuthority.saveRemote, "SaveOutfit", "save server authority")
+
+equals(reference.verifiedShopping.clothingPurchase.interaction, "click_item_to_purchase", "clothing purchase interaction")
+equals(reference.verifiedShopping.clothingPurchase.wearPath, "roblox_website_avatar", "clothing wear path")
+equals(reference.verifiedShopping.clothingPurchase.currency, "Robux", "clothing currency")
+equals(reference.verifiedShopping.clothingPurchase.typicalPriceRobux, 5, "verified clothing price")
+
+local binarySignals = setOf(reference.verifiedShopping.exactBinarySignals, "binary signal")
+for _, signal in ipairs({"BuyClothing", "ShopGui", "Clothing Display", "ShirtID", "PantsID"}) do
+    equals(binarySignals[signal], true, "missing binary shopping signal " .. signal)
+end
+
+equals(reference.verifiedShopping.locations.schoolSpirit, "School Spirit", "School Spirit label")
+equals(reference.verifiedShopping.locations.mall, "The Mall", "The Mall label")
+equals(#(reference.verifiedShopping.mallStores or {}), 8, "verified mall store count")
+
+equals(reference.laterLegacyChange.publicOutfitHatSlots, 9, "later public Legacy hat slots")
+equals(reference.laterLegacyChange.appliesToPinnedBaseline, false, "later Legacy revision must not override pinned baseline")
 
 local evidenceIds = {}
 for _, evidence in ipairs(reference.evidence or {}) do
@@ -50,10 +78,12 @@ for _, evidence in ipairs(reference.evidence or {}) do
     if type(evidence.locator) ~= "string" or evidence.locator == "" then
         error("invalid avatar/customization reference: evidence locator missing for " .. evidence.id, 2)
     end
-    equals(evidence.use, "corroboration_only", "public evidence must remain corroboration only")
+    if evidence.use ~= "licensed_reference" and evidence.use ~= "corroboration_only" then
+        error("invalid avatar/customization reference: invalid evidence use " .. evidence.id, 2)
+    end
     evidenceIds[evidence.id] = true
 end
-equals(#(reference.evidence or {}), 6, "evidence source count")
+equals(evidenceIds["licensed-binary-extraction"], true, "licensed binary evidence")
 
 for unknownName, isUnknown in pairs(reference.explicitUnknowns or {}) do
     equals(isUnknown, true, "unknown must remain explicit: " .. tostring(unknownName))
