@@ -188,6 +188,37 @@ assertEqual(duplicateCorrectStatus, "duplicate", "completed duplicate status")
 assertDeepEqual(duplicateCorrect, supportedCorrect, "completed duplicate response")
 assertEqual(engine:getSessionSnapshot("retry-session").completedCount, 1, "completed duplicate appended history")
 
+-- Invalid choices are pure rejections: they consume no attempt or receipt,
+-- so the same submission id can be corrected without a soft lock.
+engine:beginSession("invalid-choice-session", "Math", 1)
+local invalidActivity = assert(engine:nextActivity("invalid-choice-session"))
+local invalidChoice, invalidChoiceStatus = engine:submit(
+    "invalid-choice-session", invalidActivity.id, "invalid-choice-retry", 0
+)
+assertEqual(invalidChoiceStatus, "rejected", "invalid choice status")
+assertEqual(invalidChoice.accepted, false, "invalid choice was accepted")
+assertEqual(invalidChoice.code, "invalid_choice", "invalid choice code")
+local invalidAfterReject = engine:getSessionSnapshot("invalid-choice-session")
+assertEqual(invalidAfterReject.activeAttempts, 0, "invalid choice consumed an attempt")
+assertEqual(invalidAfterReject.completedCount, 0, "invalid choice changed history")
+assertEqual(invalidAfterReject.active.id, invalidActivity.id, "invalid choice cleared the active activity")
+
+local invalidRecovered, invalidRecoveredStatus = engine:submit(
+    "invalid-choice-session", invalidActivity.id, "invalid-choice-retry", 2
+)
+assertEqual(invalidRecoveredStatus, "accepted", "corrected invalid choice was rejected")
+assertEqual(invalidRecovered.correct, true, "corrected invalid choice was not correct")
+assertEqual(invalidRecovered.completed, true, "corrected invalid choice did not complete")
+assertEqual(invalidRecovered.attempts, 1, "rejected invalid choice polluted attempt count")
+assertEqual(engine:getSessionSnapshot("invalid-choice-session").completedCount, 1, "corrected retry missing history")
+
+local invalidRecoveredReplay, invalidRecoveredReplayStatus = engine:submit(
+    "invalid-choice-session", invalidActivity.id, "invalid-choice-retry", 2
+)
+assertEqual(invalidRecoveredReplayStatus, "duplicate", "corrected retry replay status")
+assertDeepEqual(invalidRecoveredReplay, invalidRecovered, "corrected retry duplicate response")
+assertEqual(engine:getSessionSnapshot("invalid-choice-session").completedCount, 1, "corrected retry replay duplicated history")
+
 -- Deterministic adaptive selection: independent correct answers raise the
 -- session-local target by one without skipping more than one difficulty level.
 engine:beginSession("adaptive-session", "Math", 1)
