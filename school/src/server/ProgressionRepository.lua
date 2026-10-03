@@ -43,7 +43,8 @@ local function validateRecord(record)
     return true
 end
 
-local OUTFIT_SLOT_COUNT = 12
+local OUTFIT_STORAGE_SLOT_COUNT = 24
+local OUTFIT_LEGACY_SLOT_COUNT = 12
 
 local function defaultOutfit()
     return {
@@ -75,7 +76,7 @@ end
 
 local function defaultOutfits()
     local slots = {}
-    for index = 1, OUTFIT_SLOT_COUNT do
+    for index = 1, OUTFIT_STORAGE_SLOT_COUNT do
         slots[index] = defaultOutfit()
     end
     return slots
@@ -93,14 +94,28 @@ local function validOutfit(outfit)
     return true
 end
 
+local function outfitSlotCount(outfits)
+    if type(outfits) ~= "table" then return 0 end
+    local count = 0
+    local maxIndex = 0
+    for key in pairs(outfits) do
+        if not isInteger(key) or key < 1 or key > OUTFIT_STORAGE_SLOT_COUNT then return -1 end
+        count = count + 1
+        if key > maxIndex then maxIndex = key end
+    end
+    if count ~= maxIndex then return -1 end
+    return count
+end
+
 local function validOutfits(outfits)
     if outfits == nil then return true end
     if type(outfits) ~= "table" then return false end
-    for index = 1, OUTFIT_SLOT_COUNT do
-        if not validOutfit(outfits[index]) then return false end
+    local count = outfitSlotCount(outfits)
+    if count ~= OUTFIT_LEGACY_SLOT_COUNT and count ~= OUTFIT_STORAGE_SLOT_COUNT then
+        return false
     end
-    for key in pairs(outfits) do
-        if not isInteger(key) or key < 1 or key > OUTFIT_SLOT_COUNT then return false end
+    for index = 1, count do
+        if not validOutfit(outfits[index]) then return false end
     end
     return true
 end
@@ -108,8 +123,17 @@ end
 local function normalizeOutfits(outfits)
     if outfits == nil then return defaultOutfits() end
     local result = {}
-    for index = 1, OUTFIT_SLOT_COUNT do
+    for index = 1, OUTFIT_STORAGE_SLOT_COUNT do
         result[index] = copyOutfit(outfits[index])
+    end
+    return result
+end
+
+local function normalizeSaveRequestIds(values)
+    local result = {}
+    for index = 1, OUTFIT_STORAGE_SLOT_COUNT do
+        local value = type(values) == "table" and values[index] or nil
+        result[index] = type(value) == "string" and value or ""
     end
     return result
 end
@@ -120,6 +144,7 @@ local function emptySnapshot()
         revision = 0,
         completions = {},
         outfits = defaultOutfits(),
+        outfitSaveRequestIds = normalizeSaveRequestIds(nil),
     }
 end
 
@@ -133,6 +158,16 @@ local function validateSnapshot(snapshot, playerId)
     end
     if not validOutfits(snapshot.outfits) then
         return false, "INVALID_OUTFITS"
+    end
+    if snapshot.outfitSaveRequestIds ~= nil then
+        if type(snapshot.outfitSaveRequestIds) ~= "table" then
+            return false, "INVALID_OUTFIT_REQUEST_IDS"
+        end
+        for key, value in pairs(snapshot.outfitSaveRequestIds) do
+            if not isInteger(key) or key < 1 or key > OUTFIT_STORAGE_SLOT_COUNT or type(value) ~= "string" then
+                return false, "INVALID_OUTFIT_REQUEST_IDS"
+            end
+        end
     end
 
     local count = 0
@@ -168,6 +203,7 @@ local function cloneSnapshot(snapshot)
         revision = snapshot.revision,
         completions = completions,
         outfits = normalizeOutfits(snapshot.outfits),
+        outfitSaveRequestIds = normalizeSaveRequestIds(snapshot.outfitSaveRequestIds),
     }
 end
 
@@ -202,6 +238,8 @@ local function summarize(snapshot, playerId)
         completionCount = #snapshot.completions,
         classes = classList,
         outfits = normalizeOutfits(snapshot.outfits),
+        outfitStorageSlotCount = OUTFIT_STORAGE_SLOT_COUNT,
+        outfitLegacyPresentedSlotCount = OUTFIT_LEGACY_SLOT_COUNT,
     }
 end
 
@@ -384,12 +422,12 @@ function Repository:record(record)
 end
 
 
-local function validateSlot(slot)
-    return isInteger(slot) and slot >= 1 and slot <= OUTFIT_SLOT_COUNT
+local function validateStorageSlot(slot)
+    return isInteger(slot) and slot >= 1 and slot <= OUTFIT_STORAGE_SLOT_COUNT
 end
 
 function Repository:loadOutfit(slot)
-    if not validateSlot(slot) then return nil, "INVALID_OUTFIT_SLOT" end
+    if not validateStorageSlot(slot) then return nil, "INVALID_OUTFIT_SLOT" end
     return copyOutfit(self._snapshot.outfits[slot]), nil
 end
 
@@ -398,7 +436,7 @@ function Repository:loadOutfitPage(startSlot)
         return nil, "INVALID_OUTFIT_PAGE"
     end
     local page = {}
-    for slot = startSlot, math.min(startSlot + 2, OUTFIT_SLOT_COUNT) do
+    for slot = startSlot, math.min(startSlot + 2, OUTFIT_LEGACY_SLOT_COUNT) do
         page[#page + 1] = {
             slot = slot,
             outfit = copyOutfit(self._snapshot.outfits[slot]),
@@ -407,12 +445,15 @@ function Repository:loadOutfitPage(startSlot)
     return page, nil
 end
 
-function Repository:saveOutfit(slot, outfit)
-    if not validateSlot(slot) then
+function Repository:saveOutfit(slot, outfit, requestId)
+    if not validateStorageSlot(slot) then
         return { status = "rejected", durable = false, error = "INVALID_OUTFIT_SLOT" }
     end
     if not validOutfit(outfit) then
         return { status = "rejected", durable = false, error = "INVALID_OUTFIT" }
+    end
+    if type(requestId) ~= "string" or requestId == "" then
+        return { status = "rejected", durable = false, error = "INVALID_REQUEST_ID" }
     end
 
     for _ = 1, self._maxRetries do
@@ -421,8 +462,29 @@ function Repository:saveOutfit(slot, outfit)
             return { status = "rejected", durable = false, error = readError }
         end
 
+        local priorRequestId = current.outfitSaveRequestIds[slot]
+        if priorRequestId == requestId then
+            local priorOutfit = current.outfits[slot]
+            local same = true
+            for field, value in pairs(outfit) do
+                if priorOutfit[field] ~= value then same = false break end
+            end
+            if same then
+                self._snapshot = current
+                return {
+                    status = "duplicate",
+                    durable = true,
+                    revision = version,
+                    slot = slot,
+                    outfit = copyOutfit(priorOutfit),
+                }
+            end
+            return { status = "conflict", durable = false, error = "OUTFIT_REQUEST_ID_CONFLICT" }
+        end
+
         local candidate = cloneSnapshot(current)
         candidate.outfits[slot] = copyOutfit(outfit)
+        candidate.outfitSaveRequestIds[slot] = requestId
         candidate.revision = version + 1
 
         local saved, newVersion, saveError = self._adapter:compareAndSwap(
@@ -456,5 +518,8 @@ function Repository:saveOutfit(slot, outfit)
 
     return { status = "rejected", durable = false, error = "STALE_WRITE_RETRY_EXHAUSTED" }
 end
+
+Repository.OUTFIT_STORAGE_SLOT_COUNT = OUTFIT_STORAGE_SLOT_COUNT
+Repository.OUTFIT_LEGACY_SLOT_COUNT = OUTFIT_LEGACY_SLOT_COUNT
 
 return Repository
