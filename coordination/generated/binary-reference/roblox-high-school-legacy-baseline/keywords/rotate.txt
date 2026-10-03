@@ -1,0 +1,60 @@
+chunk=298 type=PROP offset=7351 | RotateFrame
+chunk=320 type=PROP offset=8 | AutoRotate
+chunk=419 type=PROP offset=159001 | local rotateinc = plr:FindFirstChild("HouseRotateIncrement") --45, 15
+chunk=419 type=PROP offset=159001 | if rotateinc == nil then
+chunk=419 type=PROP offset=159001 | 	rotateinc = Instance.new("IntValue",plr)
+chunk=419 type=PROP offset=159001 | 	rotateinc.Name = "HouseRotateIncrement"
+chunk=419 type=PROP offset=159001 | 	rotateinc.Value = 45
+chunk=419 type=PROP offset=569908 | 			Humanoid.AutoRotate = false
+chunk=419 type=PROP offset=569908 | 			Humanoid.AutoRotate = true
+chunk=419 type=PROP offset=569908 | 		Humanoid.AutoRotate = true
+chunk=419 type=PROP offset=629640 | 				Humanoid.AutoRotate = true
+chunk=419 type=PROP offset=652011 | 		Humanoid.AutoRotate = false
+chunk=419 type=PROP offset=662636 | 	Humanoid.AutoRotate = false
+chunk=419 type=PROP offset=682618 | 			humanoid.AutoRotate = false
+chunk=419 type=PROP offset=682618 | 		humanoid.AutoRotate = true
+chunk=419 type=PROP offset=749944 | 	-- Get a handle to the Torso of our character to rotate it
+chunk=419 type=PROP offset=749944 | 	-- torso, so that we can rotate him 360 degrees. 6 steps of 60 deg each 
+chunk=419 type=PROP offset=763083 | 	local rotater = Instance.new("BodyAngularVelocity")
+chunk=419 type=PROP offset=763083 | 	rotater.P = 100000
+chunk=419 type=PROP offset=763083 | 	rotater.angularvelocity = Vector3.new(0,1000,0)
+chunk=419 type=PROP offset=763083 | 	rotater.maxTorque = Vector3.new(rotater.P,rotater.P,rotater.P)
+chunk=419 type=PROP offset=763083 | 	rotater.Parent = root
+chunk=419 type=PROP offset=784075 | local rotateincrement = plr:WaitForChild("HouseRotateIncrement")
+chunk=419 type=PROP offset=784075 | local dragging = false --can't rotate while dragging
+chunk=419 type=PROP offset=784075 | 				gui.RotateFrame.Visible = true
+chunk=419 type=PROP offset=784075 | 				gui.RotateFrame.Visible = false
+chunk=419 type=PROP offset=784075 | function rotateModel(direction)
+chunk=419 type=PROP offset=784075 | 		local degrees = rotateincrement.Value * direction
+chunk=419 type=PROP offset=784075 | 	gui.RotateFrame.Clockwise.MouseButton1Click:connect(function()
+chunk=419 type=PROP offset=784075 | 		rotateModel(-1)
+chunk=419 type=PROP offset=784075 | 	gui.RotateFrame.CounterClockwise.MouseButton1Click:connect(function()
+chunk=419 type=PROP offset=784075 | 		rotateModel(1)
+chunk=419 type=PROP offset=784075 | 			rotateModel(1)
+chunk=419 type=PROP offset=784075 | 			rotateModel(-1)
+chunk=419 type=PROP offset=784075 | 				rotateModel(1)
+chunk=419 type=PROP offset=784075 | 				rotateModel(-1)
+chunk=419 type=PROP offset=790819 | local inc = game.Players.LocalPlayer:WaitForChild("HouseRotateIncrement")
+chunk=419 type=PROP offset=790819 | 	script.Parent.Text = "Rotate by: "..inc.Value.." "
+chunk=479 type=PROP offset=64829 | local LROT = Bit.lrotate;
+chunk=479 type=PROP offset=64829 | local RROT = Bit.rrotate;
+chunk=479 type=PROP offset=70486 | if e.rol and not e.lrotate then
+chunk=479 type=PROP offset=70486 | 	e.lrotate = e.rol
+chunk=479 type=PROP offset=70486 | if e.ror and not e.rrotate then
+chunk=479 type=PROP offset=70486 | 	e.rrotate = e.ror
+chunk=479 type=PROP offset=76229 | function M.rrotate(x, disp)  -- Lua5.2 inspired
+chunk=479 type=PROP offset=76229 | local rrotate = M.rrotate
+chunk=479 type=PROP offset=76229 | function M.lrotate(x, disp)  -- Lua5.2 inspired
+chunk=479 type=PROP offset=76229 |   return rrotate(x, -disp)
+chunk=479 type=PROP offset=76229 | local lrotate = M.lrotate
+chunk=479 type=PROP offset=76229 | M.rol = M.lrotate  -- LuaOp inspired
+chunk=479 type=PROP offset=76229 | M.ror = M.rrotate  -- LuaOp insipred
+chunk=479 type=PROP offset=76229 | function M.bit32.lrotate(x, disp)
+chunk=479 type=PROP offset=76229 |   return lrotate(x % MOD, disp)
+chunk=479 type=PROP offset=76229 | function M.bit32.rrotate(x, disp)
+chunk=479 type=PROP offset=76229 |   return rrotate(x % MOD, disp)
+chunk=479 type=PROP offset=76229 |   return bit_tobit(lrotate(x % MOD, n % 32))
+chunk=479 type=PROP offset=76229 |   return bit_tobit(rrotate(x % MOD, n % 32))
+chunk=575 type=PROP offset=476 | RotateFurniture
+chunk=978 type=PROP offset=3941 | Rotate by: 45 
+chunk=1012 type=PROP offset=5221 | : Rotate item

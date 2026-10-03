@@ -1,0 +1,513 @@
+chunk=145 type=PROP offset=1242 | RemoveSpecialStatus
+chunk=145 type=PROP offset=1303 | RemovePet
+chunk=298 type=PROP offset=2028 | Move
+chunk=298 type=PROP offset=2045 | Remove
+chunk=298 type=PROP offset=3277 | RemoveShirt
+chunk=298 type=PROP offset=7333 | MoveIncrements
+chunk=417 type=PROP offset=2081 | GamepadRemoveButtons
+chunk=419 type=PROP offset=35562 | game.ReplicatedFirst:RemoveDefaultLoadingScreen()
+chunk=419 type=PROP offset=44447 | 		ClickToMove
+chunk=419 type=PROP offset=44447 | 		KeyboardMovement
+chunk=419 type=PROP offset=44447 | local UserMovementMode = IsTouchDevice and GameSettings.TouchMovementMode or GameSettings.ComputerMovementMode
+chunk=419 type=PROP offset=44447 | local DevMovementMode = IsTouchDevice and LocalPlayer.DevTouchMovementMode or LocalPlayer.DevComputerMovementMode
+chunk=419 type=PROP offset=44447 | local IsUserChoice = (IsTouchDevice and DevMovementMode == Enum.DevTouchMovementMode.UserChoice) or (DevMovementMode == Enum.DevComputerMovementMode.UserChoice)
+chunk=419 type=PROP offset=44447 | local ClickToMoveTouchControls = nil
+chunk=419 type=PROP offset=44447 | local keyboardModule = require(script.MasterControl:WaitForChild('KeyboardMovement'))
+chunk=419 type=PROP offset=44447 | 		if DevMovementMode == Enum.DevTouchMovementMode.Thumbstick then
+chunk=419 type=PROP offset=44447 | 		elseif DevMovementMode == Enum.DevTouchMovementMode.Thumbpad then
+chunk=419 type=PROP offset=44447 | 		elseif DevMovementMode == Enum.DevTouchMovementMode.DPad then
+chunk=419 type=PROP offset=44447 | 		elseif DevMovementMode == Enum.DevTouchMovementMode.ClickToMove then
+chunk=419 type=PROP offset=44447 | 		elseif DevMovementMode == Enum.DevTouchMovementMode.Scriptable then
+chunk=419 type=PROP offset=44447 | 		if UserMovementMode == Enum.TouchMovementMode.Default or UserMovementMode == Enum.TouchMovementMode.Thumbstick then
+chunk=419 type=PROP offset=44447 | 		elseif UserMovementMode == Enum.TouchMovementMode.Thumbpad then
+chunk=419 type=PROP offset=44447 | 		elseif UserMovementMode == Enum.TouchMovementMode.DPad then
+chunk=419 type=PROP offset=44447 | 		elseif UserMovementMode == Enum.TouchMovementMode.ClickToMove then
+chunk=419 type=PROP offset=44447 | function setClickToMove()
+chunk=419 type=PROP offset=44447 | 	if DevMovementMode == Enum.DevTouchMovementMode.ClickToMove or DevMovementMode == Enum.DevComputerMovementMode.ClickToMove or
+chunk=419 type=PROP offset=44447 | 		UserMovementMode == Enum.ComputerMovementMode.ClickToMove or UserMovementMode == Enum.TouchMovementMode.ClickToMove then
+chunk=419 type=PROP offset=44447 | 			ClickToMoveTouchControls = ControlState.Current
+chunk=419 type=PROP offset=44447 | 	elseif ClickToMoveTouchControls then
+chunk=419 type=PROP offset=44447 | 		ClickToMoveTouchControls:Disable()
+chunk=419 type=PROP offset=44447 | 		ClickToMoveTouchControls = nil
+chunk=419 type=PROP offset=44447 | 	DevMovementMode = LocalPlayer.DevTouchMovementMode
+chunk=419 type=PROP offset=44447 | 	IsUserChoice = DevMovementMode == Enum.DevTouchMovementMode.UserChoice
+chunk=419 type=PROP offset=44447 | 		UserMovementMode = GameSettings.TouchMovementMode
+chunk=419 type=PROP offset=44447 | 		setClickToMove()
+chunk=419 type=PROP offset=44447 | 	-- This being within the above if statement was causing issues with ClickToMove, which isn't a module within this script.
+chunk=419 type=PROP offset=44447 | 		if property == 'DevTouchMovementMode' then
+chunk=419 type=PROP offset=44447 | 		if property == 'TouchMovementMode' then
+chunk=419 type=PROP offset=44447 | 	-- NOTE: Click to move still uses keyboard. Leaving cases in case this ever changes.
+chunk=419 type=PROP offset=44447 | 		if DevMovementMode == Enum.DevComputerMovementMode.KeyboardMouse then
+chunk=419 type=PROP offset=44447 | 		elseif DevMovementMode == Enum.DevComputerMovementMode.ClickToMove then
+chunk=419 type=PROP offset=44447 | 		if UserMovementMode == Enum.ComputerMovementMode.KeyboardMouse or UserMovementMode == Enum.ComputerMovementMode.Default then
+chunk=419 type=PROP offset=44447 | 		elseif UserMovementMode == Enum.ComputerMovementMode.ClickToMove then
+chunk=419 type=PROP offset=44447 | 	DevMovementMode = LocalPlayer.DevComputerMovementMode
+chunk=419 type=PROP offset=44447 | 	IsUserChoice = DevMovementMode == Enum.DevComputerMovementMode.UserChoice
+chunk=419 type=PROP offset=44447 | 		UserMovementMode = GameSettings.ComputerMovementMode
+chunk=419 type=PROP offset=44447 | 		if property == 'DevComputerMovementMode' then
+chunk=419 type=PROP offset=44447 | 		if property == 'ComputerMovementMode' then
+chunk=419 type=PROP offset=44447 | 	BindableEvent_OnFailStateChanged = script.Parent:WaitForChild('OnClickToMoveFailStateChange')
+chunk=419 type=PROP offset=44447 | 	if lastInputType == Enum.UserInputType.Touch and property == 'DevTouchMovementMode' then
+chunk=419 type=PROP offset=44447 | 	elseif UserInputService.KeyboardEnabled and property == 'DevComputerMovementMode' then
+chunk=419 type=PROP offset=44447 | 	if property == 'TouchMovementMode' or property == 'ComputerMovementMode' then
+chunk=419 type=PROP offset=44447 | 		UserMovementMode = GameSettings[property]
+chunk=419 type=PROP offset=44447 | 		elseif property == 'ComputerMovementMode' then
+chunk=419 type=PROP offset=44447 | 		if lastInputType == Enum.UserInputType.Touch and ClickToMoveTouchControls then
+chunk=419 type=PROP offset=44447 | 				ControlState:SwitchTo(ClickToMoveTouchControls)
+chunk=419 type=PROP offset=44447 | 			lastInputType == Enum.UserInputType.MouseMovement  then
+chunk=419 type=PROP offset=59240 | 		table.remove(messages, 1)
+chunk=419 type=PROP offset=67724 | function removeCompanion(plr)
+chunk=419 type=PROP offset=67724 | 		removeCompanion(plr)
+chunk=419 type=PROP offset=88285 | 	script.Parent.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=88285 | 	game.ReplicatedStorage.UnrenderedHouses.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=99396 | - if ContextActionsModelName is different (or there is currently a CurrentObjectHoveringOver, and a new ContextActionsModelName is not found), then remove the "Interact with" overlay if there is one and set mouse icon to White. if there is a ContextActionsModelName in the new object, make that the overlay and set mouse icon to Green.
+chunk=419 type=PROP offset=99396 | - if mouse is outside of context menu's range, remove context menu
+chunk=419 type=PROP offset=99396 | - remove any overlays, do not change mouse icon
+chunk=419 type=PROP offset=99396 | - if mouse is not over context menu, remove context menu
+chunk=419 type=PROP offset=99396 | each action button has its own Clicked connection which will run the action's module and then remove the context menu
+chunk=419 type=PROP offset=99396 | 			else --remove overlay if not hovering over valid object - either no CAMN, too far away, hovering over active GUI frame, or RMB is down
+chunk=419 type=PROP offset=99396 | mouse.Button2Down:connect(function() --remove on right click outside of menu
+chunk=419 type=PROP offset=112163 | game.ReplicatedStorage.RemoteFunctions.RemoveRPNameOnClient.OnClientEvent:connect(function(v)
+chunk=419 type=PROP offset=123333 | 	--if tool wasn't removed, set up the Touched checks to ensure no collisions (for disruptive fliers)
+chunk=419 type=PROP offset=130315 | function RemoveActiveButton()
+chunk=419 type=PROP offset=130315 | script.Parent.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=130315 | 			RemoveActiveButton()
+chunk=419 type=PROP offset=135940 | 		table.remove(messagedata,1)
+chunk=419 type=PROP offset=159001 | local tools = {"Move","Paint","Remove"}
+chunk=419 type=PROP offset=159001 | local moveinc = plr:FindFirstChild("HouseMoveIncrement") --1, 2, 4, 8, 16
+chunk=419 type=PROP offset=159001 | if moveinc == nil then
+chunk=419 type=PROP offset=159001 | 	moveinc = Instance.new("IntValue",plr)
+chunk=419 type=PROP offset=159001 | 	moveinc.Name = "HouseMoveIncrement"
+chunk=419 type=PROP offset=159001 | 	moveinc.Value = 1
+chunk=419 type=PROP offset=159001 | function removeTools()
+chunk=419 type=PROP offset=159001 | 			removeTools()
+chunk=419 type=PROP offset=159001 | 		removeTools()
+chunk=419 type=PROP offset=191153 | 	game.ReplicatedStorage.RemoteFunctions.RemoveRPName:FireServer()
+chunk=419 type=PROP offset=192698 | 	script.Parent.Parent.Parent.Parent.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=219448 | 		button.Parent.NoticeText.Text = "Song ID "..id.." ".. (button.Parent.Favorited.Value and "added to" or "removed from") .." favorites".. (button.Parent.Favorited.Value and "!" or ".")
+chunk=419 type=PROP offset=219448 | game.ReplicatedStorage.SongQueueItems.ChildRemoved:connect(function()
+chunk=419 type=PROP offset=274107 | local rs = script.Parent.Parent.Parent:WaitForChild("RemoveShirt")
+chunk=419 type=PROP offset=279847 | 				if v.Name == "RemoveShirt" then
+chunk=419 type=PROP offset=279847 | 					v.Enabled.Value = outfit.RemoveShirt.Value
+chunk=419 type=PROP offset=279847 | 			if v.Name == "RemoveShirt" then
+chunk=419 type=PROP offset=303077 | 		if v.Name ~= "RemoveShirt" and v.InputBox.Text ~= "" then
+chunk=419 type=PROP offset=303077 | 				if v.Name ~= "RemoveShirt" and v.InputBox.Text ~= tostring(val) then
+chunk=419 type=PROP offset=303077 | 				if v.Enabled.Value ~= outfit.RemoveShirt.Value then return false end
+chunk=419 type=PROP offset=303077 | 					 outfit.RemoveShirt.Value = v.Enabled.Value
+chunk=419 type=PROP offset=345461 | 		count = count + furnbought.PendingSales.Value + furnbought.Value --items in Objects - sold items - added items (or + removed items)
+chunk=419 type=PROP offset=380083 | 					table.remove(recentlyusedtable,1)
+chunk=419 type=PROP offset=412941 | function removeMarker()
+chunk=419 type=PROP offset=412941 | 				removeMarker()
+chunk=419 type=PROP offset=412941 | 	removeMarker()
+chunk=419 type=PROP offset=428926 | 				table.remove(loudnesses, 1)
+chunk=419 type=PROP offset=441495 | script.Parent.Parent.Parent.Parent.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=448932 | 				table.remove(ActiveAnimations, i)
+chunk=419 type=PROP offset=448932 | function MoveStateChanged(NewState, OldState)
+chunk=419 type=PROP offset=448932 | 	if NewState == Enum.MoveState.AirFree then
+chunk=419 type=PROP offset=448932 | 	elseif NewState == Enum.MoveState.Pushing then
+chunk=419 type=PROP offset=448932 | 	elseif NewState == Enum.MoveState.Coasting then
+chunk=419 type=PROP offset=448932 | 	elseif NewState == Enum.MoveState.Stopping then
+chunk=419 type=PROP offset=448932 | 	Board.MoveStateChanged:connect(MoveStateChanged)
+chunk=419 type=PROP offset=507297 | function on3dMouseMove(mouse) 
+chunk=419 type=PROP offset=507297 | 	mouse.Move:connect(function() on3dMouseMove(mouse) end)
+chunk=419 type=PROP offset=507297 | 	guiMain:Remove()
+chunk=419 type=PROP offset=507297 | 	selectionBox:Remove()
+chunk=419 type=PROP offset=507297 | 	selectionLasso:Remove()
+chunk=419 type=PROP offset=518904 | 	paintmodel.ChildRemoved:connect(function()
+chunk=419 type=PROP offset=525466 | 				table.remove(Animations, i)
+chunk=419 type=PROP offset=527916 | 	Mouse.Move:connect(function()
+chunk=419 type=PROP offset=527916 | 		InvokeServer("MouseMove", {Position = Mouse.Hit.p, Target = Mouse.Target})
+chunk=419 type=PROP offset=527916 | 		ContextActionService:BindActionToInputTypes("Remove", function()
+chunk=419 type=PROP offset=527916 | 		ContextActionService:SetTitle("Remove", "Remove")
+chunk=419 type=PROP offset=527916 | 								InvokeServer("MouseMove", {Position = Mouse.Hit.p, Target = Mouse.Target})
+chunk=419 type=PROP offset=527916 | 		ContextActionService:UnbindAction("Remove")
+chunk=419 type=PROP offset=527916 | 							table.remove(LocalObjects, i)
+chunk=419 type=PROP offset=569908 | 				table.remove(AnimationTracks, i)
+chunk=419 type=PROP offset=603124 | local function EndFlight(forceremove)
+chunk=419 type=PROP offset=603124 | 	if UnequipCooldown == false or forceremove then
+chunk=419 type=PROP offset=603124 | 			local moveDir = game.Workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(0.6, 0, 0)
+chunk=419 type=PROP offset=603124 | 				local theta = math.acos(DesiredFlightCFrame.lookVector:Dot(moveDir.lookVector))
+chunk=419 type=PROP offset=603124 | 				local unit = Slerp(frac, DesiredFlightCFrame.lookVector, moveDir.lookVector)
+chunk=419 type=PROP offset=616559 | 		InvokeServer("WheelMoved", {Forward = true})
+chunk=419 type=PROP offset=616559 | 		InvokeServer("WheelMoved", {Forward = false})
+chunk=419 type=PROP offset=652011 | 			local Movement = Direction * Speed.CurrentSpeed
+chunk=419 type=PROP offset=652011 | 			Momentum = (Momentum * Inertia) + Movement
+chunk=419 type=PROP offset=662636 | 	MovementSpeed = {Min = 35, Max = 35},
+chunk=419 type=PROP offset=662636 | MaxSpeed = { --Maximum speed which the vehicle can move and turn at.
+chunk=419 type=PROP offset=662636 | 	Movement = Speed.MovementSpeed,
+chunk=419 type=PROP offset=662636 | 	Movement = 0,
+chunk=419 type=PROP offset=662636 | 	ThrustForce.velocity = (Direction * CurrentSpeed.Movement)
+chunk=419 type=PROP offset=662636 | function SetUpMovement()
+chunk=419 type=PROP offset=662636 | 	CurrentSpeed.Movement = MaxSpeed.Movement.Max
+chunk=419 type=PROP offset=662636 | 	Spawn(SetUpMovement)
+chunk=419 type=PROP offset=676658 | 		force:remove()
+chunk=419 type=PROP offset=676658 | 		bodyGyro:remove()
+chunk=419 type=PROP offset=676658 | 		anim:remove()
+chunk=419 type=PROP offset=676658 | 		gui:remove()
+chunk=419 type=PROP offset=676658 | 		jetPack:remove()
+chunk=419 type=PROP offset=682618 | function RemoveFlyStuff()
+chunk=419 type=PROP offset=682618 | 						v:remove()
+chunk=419 type=PROP offset=682618 | 	RemoveFlyStuff()
+chunk=419 type=PROP offset=682618 | 				local movement = Vector3.new()
+chunk=419 type=PROP offset=682618 | 					movement=game.Workspace.CurrentCamera.CoordinateFrame:vectorToWorldSpace(cvector.unit*speed)
+chunk=419 type=PROP offset=682618 | 				momentum=(momentum*inertia)+movement
+chunk=419 type=PROP offset=682618 | 		RemoveFlyStuff()
+chunk=419 type=PROP offset=704362 | 	ThrustForce = Create("BodyVelocity"){ --Handle movement
+chunk=419 type=PROP offset=739705 | 	if cookieSound ~= nil then cookieSound.Parent = nil end -- remove cookie sound
+chunk=419 type=PROP offset=739705 | 	screen.Parent = nil -- remove fortune cookie GUI
+chunk=419 type=PROP offset=744019 | -- Feed the Humanoid this script is attached to, then remove their food and attach poisonScript
+chunk=419 type=PROP offset=749944 | -- On Unequip, stop the animation, remove the sound and disable the connection
+chunk=419 type=PROP offset=763083 | 		root:Remove()
+chunk=419 type=PROP offset=784075 | local moveincrement = plr:WaitForChild("HouseMoveIncrement")
+chunk=419 type=PROP offset=784075 | 	handles.Style = "Movement"
+chunk=419 type=PROP offset=784075 | 	gui = script.Parent.MoveToolGui:clone()
+chunk=419 type=PROP offset=784075 | 						selectedmodel:SetPrimaryPartCFrame(pp.CFrame + faces * (newdistance / moveincrement.Value))
+chunk=419 type=PROP offset=790376 | local inc = game.Players.LocalPlayer:WaitForChild("HouseMoveIncrement")
+chunk=419 type=PROP offset=790376 | 	script.Parent.TextLabel.Text = "Move Increments: [1/"..inc.Value.."]"
+chunk=419 type=PROP offset=791121 | 	gui.Name = "RemoveGui"
+chunk=419 type=PROP offset=791121 | 					button.Text = "Remove Item"
+chunk=419 type=PROP offset=791121 | 	local function RemoveObject()
+chunk=419 type=PROP offset=791121 | 			game.ReplicatedStorage.RemoteFunctions.RemoveFurniture:FireServer(selectedmodel)
+chunk=419 type=PROP offset=791121 | 		RemoveObject()
+chunk=419 type=PROP offset=791121 | 					RemoveObject()
+chunk=474 type=PROP offset=10743 | Click to Remove Hats
+chunk=477 type=PROP offset=53 | KeyboardMovement
+chunk=479 type=PROP offset=19 | local moveFunc = LocalPlayer.Move
+chunk=479 type=PROP offset=19 | local moveValue = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=19 | 			local adjustedMoveValue = moveValue
+chunk=479 type=PROP offset=19 | 				adjustedMoveValue = rotation:vectorToWorldSpace(adjustedMoveValue)
+chunk=479 type=PROP offset=19 | 			moveFunc(LocalPlayer, adjustedMoveValue, true)	
+chunk=479 type=PROP offset=19 | 	moveValue = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=19 | function MasterControl:AddToPlayerMovement(playerMoveVector)
+chunk=479 type=PROP offset=19 | 	moveValue = Vector3.new(moveValue.X + playerMoveVector.X, moveValue.Y + playerMoveVector.Y, moveValue.Z + playerMoveVector.Z)
+chunk=479 type=PROP offset=19 | function MasterControl:GetMoveVector()
+chunk=479 type=PROP offset=19 | 	return moveValue
+chunk=479 type=PROP offset=3292 | 	local movementVector = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=3292 | 			movementVector = COMPASS_DIR[octant]
+chunk=479 type=PROP offset=3292 | 		if not flBtn.Visible and movementVector == COMPASS_DIR[7] then
+chunk=479 type=PROP offset=3292 | 		MasterControl:AddToPlayerMovement(-movementVector)
+chunk=479 type=PROP offset=3292 | 		MasterControl:AddToPlayerMovement(movementVector)
+chunk=479 type=PROP offset=3292 | 			MasterControl:AddToPlayerMovement(-movementVector)
+chunk=479 type=PROP offset=3292 | 			MasterControl:AddToPlayerMovement(movementVector)
+chunk=479 type=PROP offset=3292 | 		movementVector = Vector3.new(0, 0, 0)
+chunk=479 type=PROP offset=8421 | 	// Description: Implements movement controls for gamepad devices (XBox, PS4, MFi, etc.)
+chunk=479 type=PROP offset=8421 | local currentMoveVector = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=8421 | 	local moveFunc = LocalPlayer.Move
+chunk=479 type=PROP offset=8421 | 			MasterControl:AddToPlayerMovement(-currentMoveVector)
+chunk=479 type=PROP offset=8421 | 			currentMoveVector =  Vector3.new(0,0,0)
+chunk=479 type=PROP offset=8421 | 			currentMoveVector =  Vector3.new(inputObject.Position.X, 0, -inputObject.Position.Y)
+chunk=479 type=PROP offset=8421 | 			MasterControl:AddToPlayerMovement(currentMoveVector)
+chunk=479 type=PROP offset=8421 | 	local doDpadMoveUpdate = function(userInputType)
+chunk=479 type=PROP offset=8421 | 				MasterControl:AddToPlayerMovement(-currentMoveVector)
+chunk=479 type=PROP offset=8421 | 				currentMoveVector = Vector3.new(leftValue + rightValue,0,forwardValue + backwardValue)
+chunk=479 type=PROP offset=8421 | 				MasterControl:AddToPlayerMovement(currentMoveVector)
+chunk=479 type=PROP offset=8421 | 	local moveForwardFunc = function(actionName, inputState, inputObject)
+chunk=479 type=PROP offset=8421 | 		doDpadMoveUpdate(inputObject.UserInputType)
+chunk=479 type=PROP offset=8421 | 	local moveBackwardFunc = function(actionName, inputState, inputObject)	
+chunk=479 type=PROP offset=8421 | 	local moveLeftFunc = function(actionName, inputState, inputObject)	
+chunk=479 type=PROP offset=8421 | 	local moveRightFunc = function(actionName, inputState, inputObject)	
+chunk=479 type=PROP offset=8421 | 	ContextActionService:BindAction("MoveThumbstick",controlCharacterGamepad, false, Enum.KeyCode.Thumbstick1)
+chunk=479 type=PROP offset=8421 | 	ContextActionService:BindAction("forwardDpad", moveForwardFunc, false, Enum.KeyCode.DPadUp)
+chunk=479 type=PROP offset=8421 | 	ContextActionService:BindAction("backwardDpad", moveBackwardFunc, false, Enum.KeyCode.DPadDown)
+chunk=479 type=PROP offset=8421 | 	ContextActionService:BindAction("leftDpad", moveLeftFunc, false, Enum.KeyCode.DPadLeft)
+chunk=479 type=PROP offset=8421 | 	ContextActionService:BindAction("rightDpad", moveRightFunc, false, Enum.KeyCode.DPadRight)
+chunk=479 type=PROP offset=8421 | 		MasterControl:AddToPlayerMovement(-currentMoveVector)
+chunk=479 type=PROP offset=8421 | 		currentMoveVector = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=8421 | 	ContextActionService:UnbindAction("MoveThumbstick")
+chunk=479 type=PROP offset=8421 | 	MasterControl:AddToPlayerMovement(-currentMoveVector)
+chunk=479 type=PROP offset=8421 | 	currentMoveVector = Vector3.new(0,0,0)
+chunk=479 type=PROP offset=8421 | 			local vec = currentMoveVector
+chunk=479 type=PROP offset=21733 | 	// FileName: ComputerMovementKeyboardMovement
+chunk=479 type=PROP offset=21733 | 	// Description: Implements movement controls for keyboard devices
+chunk=479 type=PROP offset=21733 | local KeyboardMovement = {}
+chunk=479 type=PROP offset=21733 | function KeyboardMovement:Enable()
+chunk=479 type=PROP offset=21733 | 	local updateMovement = function(inputState)
+chunk=479 type=PROP offset=21733 | 			currentMoveVector = Vector3.new(0, 0, 0)
+chunk=479 type=PROP offset=21733 | 			currentMoveVector = Vector3.new(leftValue + rightValue,0,forwardValue + backwardValue)
+chunk=479 type=PROP offset=21733 | 			MasterControl:AddToPlayerMovement(currentMoveVector)	
+chunk=479 type=PROP offset=21733 | 	local moveForwardFunc = function(actionName, inputState, inputObject)			
+chunk=479 type=PROP offset=21733 | 		updateMovement(inputState)
+chunk=479 type=PROP offset=21733 | 	-- TODO: remove up and down arrows, these seem unnecessary
+chunk=479 type=PROP offset=21733 | 	ContextActionService:BindActionToInputTypes("forwardMovement", moveForwardFunc, false, Enum.PlayerActions.CharacterForward)
+chunk=479 type=PROP offset=21733 | 	ContextActionService:BindActionToInputTypes("backwardMovement", moveBackwardFunc, false, Enum.PlayerActions.CharacterBackward)
+chunk=479 type=PROP offset=21733 | 	ContextActionService:BindActionToInputTypes("leftMovement", moveLeftFunc, false, Enum.PlayerActions.CharacterLeft)
+chunk=479 type=PROP offset=21733 | 	ContextActionService:BindActionToInputTypes("rightMovement", moveRightFunc, false, Enum.PlayerActions.CharacterRight)
+chunk=479 type=PROP offset=21733 | 	-- TODO: remove pcall when API is live
+chunk=479 type=PROP offset=21733 | function KeyboardMovement:Disable()
+chunk=479 type=PROP offset=21733 | 	ContextActionService:UnbindAction("forwardMovement")
+chunk=479 type=PROP offset=21733 | 	ContextActionService:UnbindAction("backwardMovement")
+chunk=479 type=PROP offset=21733 | 	ContextActionService:UnbindAction("leftMovement")
+chunk=479 type=PROP offset=21733 | 	ContextActionService:UnbindAction("rightMovement")
+chunk=479 type=PROP offset=21733 | return KeyboardMovement
+chunk=479 type=PROP offset=27522 | 	local function doMove(pos)
+chunk=479 type=PROP offset=27522 | 		currentMoveVector = delta / (thumbpadSize/2)
+chunk=479 type=PROP offset=27522 | 		local inputAxisMagnitude = currentMoveVector.magnitude
+chunk=479 type=PROP offset=27522 | 			currentMoveVector = currentMoveVector.unit * ((inputAxisMagnitude - deadZone) / (1 - deadZone))
+chunk=479 type=PROP offset=27522 | 			if currentMoveVector.magnitude == 0 then
+chunk=479 type=PROP offset=27522 | 				currentMoveVector = Vector3.new(0, 0, 0)
+chunk=479 type=PROP offset=27522 | 				currentMoveVector = Vector3.new(currentMoveVector.x, 0, currentMoveVector.y).unit
+chunk=479 type=PROP offset=27522 | 		MasterControl:AddToPlayerMovement(currentMoveVector)
+chunk=479 type=PROP offset=27522 | 		local forwardDot = currentMoveVector:Dot(vForward)
+chunk=479 type=PROP offset=27522 | 		local rightDot = currentMoveVector:Dot(vRight)
+chunk=479 type=PROP offset=27522 | 		doMove(inputObject.Position)
+chunk=479 type=PROP offset=27522 | 	OnTouchChangedCn = UserInputService.TouchMoved:connect(function(inputObject, isProcessed)
+chunk=479 type=PROP offset=27522 | 			doMove(TouchObject.Position)
+chunk=479 type=PROP offset=35972 | local MoveTouchObject = nil
+chunk=479 type=PROP offset=35972 | local OnTouchMovedCn = nil
+chunk=479 type=PROP offset=35972 | 		if OnTouchMovedCn then
+chunk=479 type=PROP offset=35972 | 			OnTouchMovedCn:disconnect()
+chunk=479 type=PROP offset=35972 | 			OnTouchMovedCn = nil
+chunk=479 type=PROP offset=35972 | 	local function doMove(direction)
+chunk=479 type=PROP offset=35972 | 		currentMoveVector = direction / (thumbstickSize/2)
+chunk=479 type=PROP offset=35972 | 			currentMoveVector = Vector3.new()
+chunk=479 type=PROP offset=35972 | 			-- NOTE: Making currentMoveVector a unit vector will cause the player to instantly go max speed
+chunk=479 type=PROP offset=35972 | 			currentMoveVector = Vector3.new(currentMoveVector.x, 0, currentMoveVector.y)
+chunk=479 type=PROP offset=35972 | 	local function moveStick(pos)
+chunk=479 type=PROP offset=35972 | 		if MoveTouchObject or inputObject.UserInputType ~= Enum.UserInputType.Touch then
+chunk=479 type=PROP offset=35972 | 		MoveTouchObject = inputObject
+chunk=479 type=PROP offset=35972 | 	OnTouchMovedCn = UserInputService.TouchMoved:connect(function(inputObject, isProcessed)
+chunk=479 type=PROP offset=35972 | 		if inputObject == MoveTouchObject then
+chunk=479 type=PROP offset=35972 | 			doMove(direction)
+chunk=479 type=PROP offset=35972 | 			moveStick(inputObject.Position)
+chunk=479 type=PROP offset=35972 | 		MoveTouchObject = nil
+chunk=479 type=PROP offset=35972 | 		if MoveTouchObject then
+chunk=479 type=PROP offset=49010 | 	MasterControl:AddToPlayerMovement(Vector3.new(0, 0, -CurrentThrottle))
+chunk=479 type=PROP offset=49010 | 	MasterControl:AddToPlayerMovement(Vector3.new(0, 0, CurrentThrottle))
+chunk=479 type=PROP offset=49010 | 		MasterControl:AddToPlayerMovement(Vector3.new(0, 0, CurrentThrottle))
+chunk=479 type=PROP offset=49010 | 	MasterControl:AddToPlayerMovement(Vector3.new(-CurrentSteer, 0, 0))
+chunk=479 type=PROP offset=49010 | 	MasterControl:AddToPlayerMovement(Vector3.new(CurrentSteer, 0, 0))
+chunk=479 type=PROP offset=49010 | 		MasterControl:AddToPlayerMovement(Vector3.new(CurrentSteer, 0, 0))
+chunk=479 type=PROP offset=49010 | 		local moveValue = MasterControl:GetMoveVector()
+chunk=479 type=PROP offset=49010 | 			CurrentVehicleSeat.Throttle = getClosestFittingValue(-moveValue.z)
+chunk=479 type=PROP offset=49010 | 		CurrentVehicleSeat.Steer = getClosestFittingValue(moveValue.x)
+chunk=479 type=PROP offset=49010 | 		MasterControl:AddToPlayerMovement(Vector3.new(-CurrentSteer, 0, -CurrentThrottle))
+chunk=479 type=PROP offset=167446 | 	game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar:FireServer(object)
+chunk=479 type=PROP offset=182940 | 		table.remove(msgcooldown,1)
+chunk=574 type=PROP offset=119 | RemoveRPName
+chunk=574 type=PROP offset=135 | MoveHouseItem
+chunk=574 type=PROP offset=403 | RequestToRemoveCar
+chunk=574 type=PROP offset=673 | RemoveFurniture
+chunk=574 type=PROP offset=1128 | RemoveRPNameOnClient
+chunk=575 type=PROP offset=459 | MoveFurniture
+chunk=589 type=PROP offset=1286 | MoveToolGui	
+chunk=589 type=PROP offset=1301 | RemoveGui
+chunk=593 type=PROP offset=333 | Movement
+chunk=593 type=PROP offset=2559 | RemoveHats
+chunk=593 type=PROP offset=2937 | Remover
+chunk=595 type=PROP offset=20368 | game.Players.ChildRemoved:connect(function(plr)
+chunk=595 type=PROP offset=33063 | 			table.remove(cooldown,1)
+chunk=595 type=PROP offset=58543 | 				plr:Kick("You are a member of a group (Group ID: "..v..") which is not allowed to enter the game. Groups created to target and/or harass certain players are not allowed, regardless of the target players' behavior. A significant portion of 'Anti-ODing' group members come here solely to target/harass people and just add to the rulebreaking. If you witness players ODing, then please use ROBLOX's Report Abuse function and move on. Allow the ROBLOX mods to take appropriate action. Do not come here solely to target/harass other players. Thank you.")
+chunk=595 type=PROP offset=59419 | --add vehicles (according to an in-game model in workspace) (we move all the car's actual parts out of the model it's enclosed in in the workspace)
+chunk=595 type=PROP offset=77360 | 			game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"CarLocked")
+chunk=595 type=PROP offset=77360 | 			game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"CarUnlocked")
+chunk=595 type=PROP offset=77360 | 			game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"DriverLocked")
+chunk=595 type=PROP offset=77360 | 			game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"DriverUnlocked")
+chunk=595 type=PROP offset=77360 | 	table.remove(cooldown,1)
+chunk=595 type=PROP offset=77360 | 		game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"CarLocked")
+chunk=595 type=PROP offset=77360 | 		game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(plr,"DriverUnlocked")
+chunk=595 type=PROP offset=77360 | game.ReplicatedStorage.RemoteFunctions.RequestToRemoveCar.OnServerEvent:connect(function(plr,car)
+chunk=595 type=PROP offset=88480 | game.ReplicatedStorage.RemoteFunctions.RemoveRPName.OnServerEvent:connect(function(v)
+chunk=595 type=PROP offset=88480 | 			game.ReplicatedStorage.RemoteFunctions.RemoveRPNameOnClient:FireClient(plr,v)
+chunk=595 type=PROP offset=98799 | 						if v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove" then
+chunk=595 type=PROP offset=98799 | 						if (v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove") and v:IsA("Tool") then
+chunk=595 type=PROP offset=98799 | 						if v:IsA("SelectionBox") or v:IsA("Handles") or v.Name == "RemoveGui" or v.Name == "MoveToolGui" then
+chunk=595 type=PROP offset=98799 | function RemoveFurnitureItem(plr,model) --referenced later down
+chunk=595 type=PROP offset=98799 | 			--remove furniture glitched outside of the house
+chunk=595 type=PROP offset=98799 | 						RemoveFurnitureItem(plr,v)
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Error: Your house's save file has surpassed the maximum size (".. math.ceil((#savestr/259000)*100) .."%). You will have to remove some items first.")
+chunk=595 type=PROP offset=98799 | 											table.remove(tbl["objects"],i)
+chunk=595 type=PROP offset=98799 | 											--cant call findfirstchild ONLY, that makes it so only 1 gets removed
+chunk=595 type=PROP offset=98799 | 			house:Destroy() --remove the cloned house
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.RemoveFurniture.OnServerEvent:connect(function(plr,model)
+chunk=595 type=PROP offset=98799 | 	RemoveFurnitureItem(plr,model)
+chunk=595 type=PROP offset=126311 | 	table.remove(skatecooldown,1)
+chunk=595 type=PROP offset=126311 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Alex19 isn't so great? Are you kidding me? When was the last time you saw a player with such an ability and movement with fox? Alex puts the game in another level, and we will be blessed if we ever see a player with his skill and passion for the game again. mang0 breaks records. Armada breaks records. Alex19 breaks the rules. You can keep your statistics. I prefer the magic.",true)
+chunk=595 type=PROP offset=138629 | 		["RemoveShirt"] = false
+chunk=595 type=PROP offset=138629 | 			table.remove(maindata["SpecialFlags"], 1)
+chunk=595 type=PROP offset=138629 | 	--two folders for each list: one that holds the actual current list of songs (stringvalues where Name = songID and Value is set by the client to the song's name), and another that stores boolvalues indicating whether to add/remove a song from the list when saving
+chunk=595 type=PROP offset=138629 | 		local removeshirt = Instance.new("BoolValue",outfit)
+chunk=595 type=PROP offset=138629 | 		removeshirt.Name = "RemoveShirt"
+chunk=595 type=PROP offset=138629 | 		removeshirt.Value = outfitdata["RemoveShirt"]
+chunk=595 type=PROP offset=138629 | 	local furniturestat --holds all furniture counters, removed on quit
+chunk=595 type=PROP offset=138629 | 					--this is only required if there's been a transfer from the old objects format - NEVER overwrite like this just for adding/removing a few objects - if we were doing that, should give a table with a list of objects to add/remove
+chunk=595 type=PROP offset=138629 | 								["RemoveShirt"] = false
+chunk=595 type=PROP offset=138629 | 						--DJRecent and DJFavorites changes (true = add, false = remove)
+chunk=595 type=PROP offset=138629 | 									table.remove(tbl["DJRecent"], i)
+chunk=595 type=PROP offset=138629 | 										table.remove(tbl["DJFavorites"], i)
+chunk=595 type=PROP offset=191521 | local detentions = {} --current ppl in detention (remove from this list upon a suspension)
+chunk=595 type=PROP offset=191521 | 			table.remove(detentions,i)
+chunk=595 type=PROP offset=191521 | 			table.remove(detentioncooldown,1)
+chunk=595 type=PROP offset=191521 | 		table.remove(consecdets,1)
+chunk=595 type=PROP offset=191521 | 		print("Consec. detention removed from table")
+chunk=595 type=PROP offset=191521 | 					table.remove(suspensionhistory,i)
+chunk=595 type=PROP offset=191521 | 				table.remove(suspensions,i)
+chunk=595 type=PROP offset=191521 | 				table.remove(firings,i)
+chunk=595 type=PROP offset=206992 | 							print("Punishment removed from history of "..plr.Name)
+chunk=595 type=PROP offset=206992 | 					print("Flag removed for "..plr.Name)
+chunk=595 type=PROP offset=213083 | 	table.remove(waitlist,1)
+chunk=595 type=PROP offset=224428 | --game.ReplicatedFirst:RemoveDefaultLoadingScreen()
+chunk=595 type=PROP offset=224428 | 0. clean -- Is a command anyone can use to remove hats/tools lagging up the place
+chunk=595 type=PROP offset=224428 | 3. :clear -- Will remove all scripts/localscripts and jails
+chunk=595 type=PROP offset=224428 | 16. :unfire kohl -- Removes fire from the player
+chunk=595 type=PROP offset=224428 | 18. :unsmoke kohl -- Removes smoke from the player
+chunk=595 type=PROP offset=224428 | 20. :unsparkles kohl -- Removes sparkles from the player
+chunk=595 type=PROP offset=224428 | 22. :unff kohl -- Removes the forcefield from the player
+chunk=595 type=PROP offset=224428 | 36. :removetools kohl -- Removes all tools from the player
+chunk=595 type=PROP offset=224428 | 46. :unname kohl -- Remove the player's name
+chunk=595 type=PROP offset=224428 | 51. :kick kohl -- Removes the player from the game
+chunk=595 type=PROP offset=224428 | 72. :removelimbs kohl -- Removes the player's limbs
+chunk=595 type=PROP offset=224428 | 74. :unjail kohl -- Removes the jail from the player
+chunk=595 type=PROP offset=224428 | 77. :unfly kohl -- Removes fly from the player
+chunk=595 type=PROP offset=224428 | 79. :clip kohl -- Removes noclipping from the player
+chunk=595 type=PROP offset=224428 | 102. :uncape kohl -- Removes the player's cape
+chunk=595 type=PROP offset=224428 | 106. :unloopheal kohl -- Will remove the loopheal on the player
+chunk=595 type=PROP offset=224428 | 107. :unloopfling kohl -- Will remove the loopfling on the player
+chunk=595 type=PROP offset=224428 | 108. :unspin kohl -- Removes spin from the player
+chunk=595 type=PROP offset=224428 | 110. :undisco -- Removes disco effects
+chunk=595 type=PROP offset=224428 | 111. :unflash -- Removes flash effects
+chunk=595 type=PROP offset=224428 | - :unloopkill kohl -- Will remove the loopkill on the player
+chunk=595 type=PROP offset=224428 | - :unpa kohl -- Removes a super admin
+chunk=595 type=PROP offset=224428 | - :unoa kohl -- Removes an owner
+chunk=595 type=PROP offset=224428 | function RemoveMessage() 
+chunk=595 type=PROP offset=224428 | _G["RemoveMessage"] = RemoveMessage()
+chunk=595 type=PROP offset=224428 | local cmds = {"s code","ls code","clear","fix","m msg","h msg","kill plr","respawn plr","trip plr","stun plr","unstun plr","jump plr","sit plr","invisible plr","visible plr","explode plr","fire plr","unfire plr","smoke plr","unsmoke plr","sparkles plr","unsparkle plr","ff plr","unff plr","punish plr","unpunish plr","freeze plr","thaw plr","heal plr","god plr","ungod plr","ambient num num num","brightness num","time num","fogcolor num num num","fogend num","fogstart num","removetools plr","btools plr","give plr tool","damage plr","grav plr","setgrav plr num","nograv plr","health plr num","speed plr num","name plr name","unname plr","team plr color","teleport plr plr","change plr stat num","kick plr","infect plr","rainbowify plr","flashify plr","noobify plr","ghostify plr","goldify plr","shiny plr","normal plr","trippy plr","untrippy plr","strobe plr","unstrobe plr","blind plr","unblind plr","guifix plr","fling plr","seizure plr","music num","stopmusic","lock plr","unlock plr","removelimbs plr","jail plr","unjail plr","fly plr","unfly plr","noclip plr","clip plr","pm plr msg","dog plr","undog plr","creeper plr","uncreeper plr","place plr id","char plr id","unchar plr id","rank plr id","starttools plr","sword plr","bighead plr","minihead plr","spin plr","insert id","disco","flash","admins","bans","musiclist","cape plr color","uncape plr","loopheal plr","loopfling plr","hat plr id","unloopfling plr","unloopheal plr","unspin plr","tools","undisco","unflash","resetstats plr","gear plr id","cmdbar","shirt plr id","pants plr id","face plr id","swagify plr id","version","tm num msg","countdown num","clone plr","lsplr plr code","startergive plr tool","control plr"}
+chunk=595 type=PROP offset=224428 | table.insert(objects, obj) for i,v in pairs(obj:children()) do table.insert(objects, v) end obj.Parent = game.Workspace obj:MakeJoints() obj:MoveTo(plr.Character:GetModelCFrame().p)
+chunk=595 type=PROP offset=224428 | RemoveMessage()
+chunk=595 type=PROP offset=224428 | cl:MoveTo(v.Character:GetModelCFrame().p)
+chunk=595 type=PROP offset=224428 | local t1 = Instance.new("HopperBin", v.Backpack) t1.Name = "Move" t1.BinType = "GameTool"
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(1,12) == "removetools " then
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(1,12) == "removelimbs " then
+chunk=595 type=PROP offset=224428 | for i,v in pairs(plrz) do for q,sc in pairs(objects) do if sc.Name == "LoopHeal:"..v.Name then sc:Destroy() table.remove(objects,q) end end end
+chunk=595 type=PROP offset=224428 | for i,v in pairs(plrz) do for q,sc in pairs(objects) do if sc.Name == "LoopFling:"..v.Name then sc:Destroy() table.remove(objects,q) end end end
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(6) == "all" or owners[i]:lower():find(msg:lower():sub(6)) == 1 then table.remove(owners, i) end
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(6) == "all" or admins[i]:lower():find(msg:lower():sub(6)) == 1 then table.remove(admins, i) end
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(9) == "all" or tempadmins[i]:lower():find(msg:lower():sub(9)) == 1 then table.remove(tempadmins, i) end
+chunk=595 type=PROP offset=224428 | for i,v in pairs(plrz) do for q,sc in pairs(objects) do if sc.Name == "LoopKill:"..v.Name then sc:Destroy() table.remove(objects,q) end end end
+chunk=595 type=PROP offset=224428 | if msg:lower():sub(7) == "all" or banland[i]:lower():find(msg:lower():sub(7)) == 1 then table.remove(banland, i) end
+chunk=595 type=PROP offset=352862 | 			game.ServerStorage.RemoteFunctions.RemoveSpecialStatus:Fire(player,"Enforcer")
+chunk=595 type=PROP offset=369727 | 	table.remove(gearcooldown,1)
+chunk=595 type=PROP offset=385642 | game.ServerStorage.RemoteFunctions.RemovePet.Event:connect(function(plr)
+chunk=595 type=PROP offset=385642 | 				game.ServerStorage.RemoteFunctions.RemovePet:Fire(plr)
+chunk=595 type=PROP offset=395144 | 	table.remove(cooldown[buildingname],1)
+chunk=595 type=PROP offset=398582 | 	table.remove(handling,1)
+chunk=595 type=PROP offset=398582 | 		elseif i == "RemoveShirt" then
+chunk=595 type=PROP offset=398582 | 					elseif i == "RemoveShirt" then
+chunk=595 type=PROP offset=431191 | 		char.ChildRemoved:connect(function(child)
+chunk=595 type=PROP offset=434267 | game.ServerStorage.RemoteFunctions.RemoveSpecialStatus.Event:connect(function(plr,status)
+chunk=595 type=PROP offset=436497 | 						table.remove(banned,index)
+chunk=595 type=PROP offset=452730 | -- Turn off the machines, activated whenever the first song in the queue is removed
+chunk=595 type=PROP offset=452730 | 		local changeremoved
+chunk=595 type=PROP offset=452730 | 			changeremoved = true
+chunk=595 type=PROP offset=452730 | 		--see whether to add or remove favorite
+chunk=595 type=PROP offset=452730 | 		if not changeremoved then
+chunk=595 type=PROP offset=452730 | 			--remove favorite
+chunk=595 type=PROP offset=452730 | 		--move objects back into list, but remove any excess songs past 30
+chunk=595 type=PROP offset=452730 | -- Remove a song from queue position n, shifting the queue position of all upcoming songs forward.
+chunk=595 type=PROP offset=452730 | 	table.remove(queue, n)
+chunk=595 type=PROP offset=452730 | 		table.remove(banned_userIDs, 1)
+chunk=595 type=PROP offset=473908 | local maxmovedistance = 11
+chunk=595 type=PROP offset=473908 | 	maxmovedistance = 14
+chunk=595 type=PROP offset=473908 | 	maxmovedistance = 18
+chunk=595 type=PROP offset=473908 | function MoveOrb()
+chunk=595 type=PROP offset=473908 | 	local targetpos = orb.Position + Vector3.new(math.random(-maxmovedistance, maxmovedistance), math.random(0,6), math.random(-maxmovedistance, maxmovedistance))
+chunk=595 type=PROP offset=473908 | 		MoveOrb()
+chunk=595 type=PROP offset=490482 | Remover = script:WaitForChild("Remover")
+chunk=595 type=PROP offset=490482 | 	local RemoverClone = Remover:Clone()
+chunk=595 type=PROP offset=490482 | 	RemoverClone.Disabled = false
+chunk=595 type=PROP offset=490482 | 	RemoverClone.Parent = RobloxianModel
+chunk=595 type=PROP offset=490482 | 						table.remove(CurrentRobloxians, i)
+chunk=595 type=PROP offset=498084 | LastMove = 0
+chunk=595 type=PROP offset=498084 | 	local FigureRemoved = Child.Changed:connect(function(Property)
+chunk=595 type=PROP offset=498084 | 					table.remove(Figures, i)
+chunk=595 type=PROP offset=498084 | 	for i ,v in pairs({HumanoidChanged, FigureRemoved}) do
+chunk=595 type=PROP offset=498084 | 										v.Humanoid:MoveTo((FollowTorso.CFrame * CFrame.new(v.Offset.Value)).p)
+chunk=595 type=PROP offset=498084 | 						elseif v.Mode.Value == "MoveTo" then
+chunk=595 type=PROP offset=498084 | 							v.Humanoid:MoveTo(v.TargetPos.Value)
+chunk=595 type=PROP offset=498084 | 							LastMove = Time
+chunk=595 type=PROP offset=498084 | 										v.Humanoid:MoveTo((TargetTorso.CFrame * CFrame.new(ChaseOffset)).p)
+chunk=595 type=PROP offset=498084 | 							if (Time - LastMove) >= 30 then
+chunk=595 type=PROP offset=506492 | IdleDuration = 15 --If the owner of the balloon doesn't sit in a seat for this long, the balloon is removed.
+chunk=595 type=PROP offset=506492 | 			local MoveDirection = (CoordinateFrame * CFrame.Angles(0.6, 0, 0))
+chunk=595 type=PROP offset=506492 | 				local Theta = math.acos(DesiredFlightCFrame.lookVector:Dot(MoveDirection.lookVector))
+chunk=595 type=PROP offset=506492 | 				local Unit = Slerp(Frac, DesiredFlightCFrame.lookVector, MoveDirection.lookVector)
+chunk=595 type=PROP offset=506492 | 		local BalloonRemoved = Balloon.Changed:connect(function(Property)
+chunk=595 type=PROP offset=506492 | 				local SeatWeldRemoved = v.ChildRemoved:connect(function(Child)
+chunk=595 type=PROP offset=506492 | 				for i, v in pairs({BalloonRemoved, SeatWeldAdded, SeatWeldRemoved}) do
+chunk=595 type=PROP offset=523697 | function IdleRemove()
+chunk=595 type=PROP offset=523697 | 	local CanRemove = true
+chunk=595 type=PROP offset=523697 | 	local RemoveCheck = Seated.Changed:connect(function()
+chunk=595 type=PROP offset=523697 | 			CanRemove = false
+chunk=595 type=PROP offset=523697 | 	if RemoveCheck then
+chunk=595 type=PROP offset=523697 | 		RemoveCheck:disconnect()
+chunk=595 type=PROP offset=523697 | 	if CanRemove then
+chunk=595 type=PROP offset=523697 | 		v.ChildRemoved:connect(function(Child)
+chunk=595 type=PROP offset=523697 | 			IdleRemove()
+chunk=595 type=PROP offset=523697 | 	IdleRemove()
+chunk=595 type=PROP offset=523697 | 		if not MainPart.Parent or not Balloon.Parent or (not BalloonWeld.Parent or not BalloonWeld.Part0 or not BalloonWeld.Part0.Parent or not BalloonWeld.Part1 or not BalloonWeld.Part1.Parent) then --The base or balloon of the model is missing, so the balloon is removed.
+chunk=595 type=PROP offset=523697 | 			if not SeatWelded then --If neither seat is attached to the balloon, it is unusable, therefore it is removed.
+chunk=595 type=PROP offset=523697 | 				table.remove(Seats, i)
+chunk=595 type=PROP offset=531236 | forwardsSpeed = 60--if you removed the Configuration folder, it defaults to this speed forwards
+chunk=595 type=PROP offset=531236 | reverseSpeed = 20--if you removed the Configuration folder, it defaults to this speed backwards
+chunk=595 type=PROP offset=531236 | allowFlipping = true--if you removed the Configuration folder, it defaults to automatically flipping
+chunk=595 type=PROP offset=531236 | seat.ChildRemoved:connect(function(it)--did an object get removed?
+chunk=595 type=PROP offset=656040 | 	MovementSpeed = {
+chunk=595 type=PROP offset=656040 | 	Movement = Speed.MovementSpeed.Normal,
+chunk=595 type=PROP offset=656040 | 			CurrentSpeed.Movement = (CurrentSpeed.Movement * 0.99)
+chunk=595 type=PROP offset=656040 | 			CurrentSpeed.Movement = (CurrentSpeed.Movement * 0.9)
+chunk=595 type=PROP offset=656040 | 			CurrentSpeed.Movement = math.min(MaxSpeed.Movement.Max, (CurrentSpeed.Movement + (MaxSpeed.Acceleration * Rate)))
+chunk=595 type=PROP offset=656040 | 			CurrentSpeed.Movement = math.max(-MaxSpeed.Movement.Min, (CurrentSpeed.Movement - (MaxSpeed.Deceleration * ((CurrentSpeed.Movement > 0 and 2.8) or 1) * Rate)))
+chunk=595 type=PROP offset=656040 | 		local Velocity = (Direction * CurrentSpeed.Movement) --The thrust force which you move.
+chunk=595 type=PROP offset=656040 | 		local DesiredAngle = (999999999 * (-CurrentSpeed.Movement / math.abs(CurrentSpeed.Movement)))
+chunk=595 type=PROP offset=656040 | 		local MaxVelocity = (CurrentSpeed.Movement / 250)
+chunk=595 type=PROP offset=656040 | 				v.Opacity = ((math.min(math.abs(CurrentSpeed.Movement), 10) / 10) * 0.5)
+chunk=595 type=PROP offset=656040 | 		Sounds.Engine.Pitch = (1 + (math.abs(CurrentSpeed.Movement / MaxSpeed.Movement.Max) * 1))
+chunk=595 type=PROP offset=656040 | 				MaxSpeed.Movement = Speed.MovementSpeed.Boost
+chunk=595 type=PROP offset=656040 | 				MaxSpeed.Movement = Speed.MovementSpeed.Normal
+chunk=595 type=PROP offset=716619 | 				table.remove(TrailParts, 1)
+chunk=595 type=PROP offset=716619 | 			table.remove(TrailParts, 1)
+chunk=595 type=PROP offset=790636 | local armChildRemovedConn = nil
+chunk=595 type=PROP offset=790636 | 		--kill my joint when the normal joint is removed
+chunk=595 type=PROP offset=790636 | 		--this must be done here so that the joint is removed 
+chunk=595 type=PROP offset=790636 | 		local armChildRemovedConn = rightarm.ChildRemoved:connect(function(ch)
+chunk=595 type=PROP offset=790636 | 				Motor6DGrip:Remove()
+chunk=595 type=PROP offset=790636 | 	if armChildRemovedConn then
+chunk=595 type=PROP offset=790636 | 		armChildRemovedConn:disconnect()
+chunk=595 type=PROP offset=790636 | 		armChildRemovedConn = nil
+chunk=595 type=PROP offset=836404 | function RemoveModel()
+chunk=595 type=PROP offset=836404 | Model.ChildRemoved:connect(function(Child)
+chunk=595 type=PROP offset=836404 | 	RemoveModel()
+chunk=595 type=PROP offset=836404 | RemoveModel()
+chunk=595 type=PROP offset=836858 | 		Sounds.Engine.Pitch = (1 + (math.abs(CurrentSpeed.Movement / MaxSpeed.Movement.Max) * 1.8)) --Thanks to Europeancow2 for the perfect hoverboard sound effect!!!
+chunk=595 type=PROP offset=947381 | 		table.remove(usednums,1)
+chunk=595 type=PROP offset=965549 | function Move(Time)
+chunk=595 type=PROP offset=965549 | 	Move(Time)
+chunk=595 type=PROP offset=980995 | RemoverScript = script:WaitForChild("Remover")
+chunk=595 type=PROP offset=980995 | 								local RemoverScriptClone = RemoverScript:Clone()
+chunk=595 type=PROP offset=980995 | 								RemoverScriptClone.Disabled = false
+chunk=595 type=PROP offset=980995 | 								RemoverScriptClone.Parent = UFOVehicle
+chunk=595 type=PROP offset=990474 | 		bolt:remove()
+chunk=595 type=PROP offset=990474 | 	--	bolt:Remove()
+chunk=595 type=PROP offset=990474 | 		bolt.BodyPosition:remove()
+chunk=595 type=PROP offset=1178183 | 		decoy:MoveTo(Vector3.new(posX + humanoid.Parent.HumanoidRootPart.Position.x,humanoid.Parent.HumanoidRootPart.Position.y,posZ + humanoid.Parent.HumanoidRootPart.Position.z))
+chunk=595 type=PROP offset=1182125 | 			dummy:MoveTo(Vector3.new(math.random(x - 10, x + 10), torsoPosition.Y, math.random(z - 10, z + 10)))
+chunk=595 type=PROP offset=1192115 | s:Remove()
+chunk=730 type=PROP offset=8 | PlayOnRemove
+chunk=822 type=PROP offset=8 | DevComputerCameraMovementMode
+chunk=823 type=PROP offset=8 | DevComputerMovementMode
+chunk=824 type=PROP offset=8 | DevTouchCameraMovementMode
+chunk=825 type=PROP offset=8 | DevTouchMovementMode
+chunk=833 type=PROP offset=23157 | GOTTA GO FAST! Equip this coil to increase your movement speed beyond the standard running speed.Z
+chunk=833 type=PROP offset=23258 | A classic bicycle for you to ride on. Moves pretty quickly, too. Good for the environment!
+chunk=833 type=PROP offset=30396 | This drink lets you embrace your inner swag and show off some epic dance moves!	
+chunk=833 type=PROP offset=32689 | Energize yourself with this drink! Apologies to all the middle schoolers coming up, but the highly flammable contents in this drink have been removed.	
+chunk=833 type=PROP offset=33348 | Remove Car
+chunk=833 type=PROP offset=36485 | You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+chunk=833 type=PROP offset=37005 | You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+chunk=833 type=PROP offset=46664 | How did you move to this island?
+chunk=833 type=PROP offset=47383 | No, we can't sell CDs anymore. We were required to remove them to avoid serious issues later down the line. But y'know, they're letting all DJs enter custom song IDs now, so that's a plus.
+chunk=965 type=PROP offset=3644 | RemoveButton
+chunk=1012 type=PROP offset=5164 | hold             and move cursor
+chunk=1012 type=PROP offset=5321 | : Remove selected item
+chunk=1012 type=PROP offset=11041 | Remove Shirt:
+chunk=1012 type=PROP offset=17888 | Back in 2015, the game's old-school V1 cars had to be removed from the game, since they were broken by changes to the ROBLOX physics engine. Anyone who owned those old cars has been refunded for the full RHS Cash cost of the cars owned.
+chunk=1012 type=PROP offset=22272 | Move Increments: [1/1]

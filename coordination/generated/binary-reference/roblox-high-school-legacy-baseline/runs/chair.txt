@@ -1,0 +1,56 @@
+=== chunk=474 type=PROP offset=110 runSha256=984e446faa6663f070d348311bd2ef5264fa65509f20ef09b71cce87bd8fdfc1 ===
+RHS Chairs 	
+=== chunk=474 type=PROP offset=11772 runSha256=df4f35bb6eedc2669b5638047413dafed5fc0264a5379f0ab9760256959208c0 ===
+CHAIR BOY
+=== chunk=474 type=PROP offset=11794 runSha256=25d2c52d065a1fa72e9dee3f627a36eed9cfa16e08832b4bf1d59d7a8ed21054 ===
+CHAIR BOY	
+=== chunk=474 type=PROP offset=25417 runSha256=9a2eaa5efa59a78227aeacba4a2a4e8dae62baff83bf9dcd301c5aeca71c9682 ===
+furni_Modern Armchair
+=== chunk=474 type=PROP offset=25503 runSha256=b786d9fb09ede25cf9341160a327a099415a0cedadf9ff2447cb6ac5657b92a8 ===
+furni_Antique Chair
+=== chunk=474 type=PROP offset=25526 runSha256=fcfa9e61adf700a1cd42cad61ba263256a89baf64c3131eb2a4455db2d912e80 ===
+furni_Antique Armchair
+=== chunk=474 type=PROP offset=25574 runSha256=9abf136eaab12a8ce55277c7cab5f69d3b37daae8ff664fe13244cd8262e7658 ===
+furni_Golden Chair
+=== chunk=474 type=PROP offset=25596 runSha256=4d4fc8014ed72494fc06d742744efd15fbd9c879158e67d79bcc5fa114f9d98e ===
+furni_Golden Armchair
+=== chunk=474 type=PROP offset=25661 runSha256=3b5b6e1cbd03e5dd8687fa514b99ce9e7fd7a7728f60973fddea0e41f6ba1230 ===
+furni_Void Armchair
+=== chunk=474 type=PROP offset=26917 runSha256=de04bcf73d2ccd993940404a82c824e11890b515d0f36752a0bea565b9949900 ===
+furni_Gothic Chair
+=== chunk=474 type=PROP offset=27220 runSha256=a6b3ec69bee7b5d94502e3853c65df0513950c91eaf86b9327ae34a8abe812f6 ===
+furni_Beachy Chair
+=== chunk=474 type=PROP offset=27813 runSha256=54d0ce727aab4244c95611c8d002cc63aaf8e544eb438b4661dc5808c68bf94e ===
+furni_Spooky Armchair
+=== chunk=474 type=PROP offset=28067 runSha256=f95f582960c00a957c7b257c0cefaa72806f651bb648e3a58a50e1ee17a422e7 ===
+furni_Holiday Armchair
+=== chunk=474 type=PROP offset=28117 runSha256=50fbccc8a41083a0092f831e1144cba34de278a98ffe682bcc8019e59ee8e76f ===
+furni_Holiday Chair
+=== chunk=833 type=PROP offset=11777 runSha256=bce81319fe0a6ad86924fddaa3665c545678020e3c65de03e9271e348c3abb8b ===
+A sturdy wooden chair to sit on.
+=== chunk=833 type=PROP offset=11953 runSha256=74896ade2f7bd2ad226873167d41410d31345dbd3a3a6487e6b2ce05728da05c ===
+A comfortable black-and-white armchair.
+=== chunk=833 type=PROP offset=12186 runSha256=cd4105ae88523e77cd52379faf4c9bfe54d02ea368b541cae10450cb74bbe4f2 ===
+A high-quality wood chair with a colored center panel. [Center Panel: Paintable]
+=== chunk=833 type=PROP offset=12281 runSha256=fb6b21942d9e11453527361aa6341fcff29bf5a7bfa044e6be5071fb074503bc ===
+A comfortable, high-quality wooden armchair. [Seat Fabric: Paintable]
+=== chunk=833 type=PROP offset=12441 runSha256=36a4267288f02dc7a9c3312b432f90b8afff551089cca9e02913e7b1dc1941cb ===
+A shiny golden chair. With this in your home, people will always want to come over for dinner. [Glass Panel: Paintable]
+=== chunk=833 type=PROP offset=12575 runSha256=7abb4804b8e3d95221cf20cc40fbf38d1264726b8a0062493e308871009ec3f5 ===
+A shiny golden armchair. Your dreams of being the king/queen can finally come true. [Seating: Paintable]
+=== chunk=833 type=PROP offset=13037 runSha256=d622686c96f4d1a46e9dc0c0cbabf54d1a3024417061924cd31beb6f498878fa ===
+An ultra-rare armchair specially designed by Umbra himself. Anyone who sits here will feel a supernatural sense of comfort. [Colored Parts: Paintable]
+=== chunk=833 type=PROP offset=17065 runSha256=d04a503bab30bfced83c6a5d500d12b5bf81f5f8ea341fe0ba83951bc771b367 ===
+A nice chair built for the Stylish set.	
+=== chunk=833 type=PROP offset=17989 runSha256=19f2894bb879d86e752767f55a75e5dba225ff0d022e46d83bbf76eae18e4851 ===
+A fancy gothic chair.<
+=== chunk=833 type=PROP offset=21387 runSha256=1c9912dfa704e08f90ae600abc59e23894d0e9707a754f0ce37787009143ed76 ===
+A nice wooden chair for your beach-themed room! [Paintable]
+=== chunk=833 type=PROP offset=24855 runSha256=79c43aa14ea71395ddded172c510f8cb21df5ae120d2ffc3d2e79573c2ace05e ===
+A nice, comfy armchair for when you're waiting for those trick-or-treaters.
+=== chunk=833 type=PROP offset=25166 runSha256=474094c2389df393e6204040186e142fa0e9936e8518eb7ec41f0fa218aa4347 ===
+A fancy black and purple chair adorned with two skulls on the corners. Spooky indeed!
+=== chunk=833 type=PROP offset=27387 runSha256=e58f3dbaa77fcf08c6a1546e6393f8e8fee58ea78333f0649d880ea5d421c8dc ===
+A super comfortable festive armchair with sleigh runners and a Christmas tree backing!
+=== chunk=833 type=PROP offset=27568 runSha256=a9b08101da30bd5162c4cdd32654abe46be8fd6ad4df8f93b55e94c2f5f2a6de ===
+A festive chair to seat your friends and family during the holidays!

@@ -1,0 +1,112 @@
+chunk=145 type=PROP offset=131 | SaveHouse	
+chunk=145 type=PROP offset=511 | SaveOutfit
+chunk=145 type=PROP offset=1696 | SaveLocalChatData
+chunk=298 type=PROP offset=3075 | SaveWarning
+chunk=419 type=PROP offset=59240 | game.ReplicatedStorage.RemoteFunctions.SaveLocalChatData.Event:connect(function(data)
+chunk=419 type=PROP offset=115388 | 		notification:Fire("Note: While playing as a Guest, many features are unavailable. Create a free ROBLOX account to experience the full game and be able to save your progress here!",true)
+chunk=419 type=PROP offset=115388 | 				notification:Fire("Enjoying ROBLOX High School? Create a free ROBLOX account so that you can save your progress here and gain access to more features, such as chatting with other players!",true)
+chunk=419 type=PROP offset=135940 | 	game.ReplicatedStorage.RemoteFunctions.SaveLocalChatData:Fire(msgdata)
+chunk=419 type=PROP offset=154392 | 	script.Parent.Parent.SaveHouse:Fire()
+chunk=419 type=PROP offset=157256 | 		if script.Parent.Parent.Parent.Visible and script.Parent.Parent.Parent.WindowType.Value == "Save" then
+chunk=419 type=PROP offset=157256 | 			script.Parent.Parent.Parent.Parent.SaveHouse:Fire(true)
+chunk=419 type=PROP offset=159001 | function setFeedback(type,text,value) --types: Save, Exit, Dialog (no buttons), NormalButton, Cash
+chunk=419 type=PROP offset=159001 | 	if type == "Save" or type == "Exit" then
+chunk=419 type=PROP offset=159001 | 		gui.Reason.Text = "You need more Cash in order to save all the items that you've added to your house. Get more Cash & save the house?"
+chunk=419 type=PROP offset=159001 | 			setFeedback("Save","Save your house?")
+chunk=419 type=PROP offset=159001 | 			setFeedback("Exit","Exit edit mode? Any unsaved progress on your house will be lost.")
+chunk=419 type=PROP offset=159001 | frame.SaveHouse.Event:connect(function(confirmed)
+chunk=419 type=PROP offset=159001 | 			local request = game.ReplicatedStorage.RemoteFunctions.HouseSave:InvokeServer()
+chunk=419 type=PROP offset=159001 | 				setFeedback("NormalButton","Save successful!")
+chunk=419 type=PROP offset=159001 | 				setFeedback("NormalButton","Error: Failed to save house. Please try again.")
+chunk=419 type=PROP offset=159001 | 				setFeedback("Save","Save your house?")
+chunk=419 type=PROP offset=243030 | local desc = "Play ANY song ID on ROBLOX at the Club Red DJ stand, plus gain bonus abilities:\n- Queue x2 songs at once\n- Save your Recently Played & Favorite songs\n- Play 7 minute songs\n- Fire & Smoke Machines\n[If you own both DJ passes, you receive a +$3,000 RHS Cash upgrade bonus!]"
+chunk=419 type=PROP offset=243030 | 			gui.Desc.Savings.Text = "You save: "..baseprice - asset.PriceInRobux.." R$!"
+chunk=419 type=PROP offset=272902 | 	script.Parent.Parent.Parent.Parent.SaveOutfit:Fire(true)
+chunk=419 type=PROP offset=279847 | function checkIfSafeToExit() --for loading or closing - (if input boxes are NOT blank, or input boxes do NOT match an already saved outfit)
+chunk=419 type=PROP offset=299694 | 	frame.SaveOutfit:Fire()
+chunk=419 type=PROP offset=303077 | function checkIfSafeToSave() --(if slot is NOT empty, or outfit in that slot is NOT the same)
+chunk=419 type=PROP offset=303077 | frame.SaveOutfit.Event:connect(function(confirmed)
+chunk=419 type=PROP offset=303077 | 	local check = checkIfSafeToSave()
+chunk=419 type=PROP offset=303077 | 		displayWindow("SaveWarning")
+chunk=419 type=PROP offset=303077 | 			local request,statuses = game.ReplicatedStorage.RemoteFunctions.SaveOutfit:InvokeServer(tabletosend,slot)
+chunk=419 type=PROP offset=303077 | 				displayWindow("SuccessWindow","Outfit saved successfully!")
+chunk=419 type=PROP offset=312389 | 				gui.Desc.Savings.Text = "You save: $"..button.LocalOldCost.Value - itemdata.ItemCost.Value.."!"
+chunk=419 type=PROP offset=345461 | local savedcategory = plr:FindFirstChild("FurnitureShopCategory")
+chunk=419 type=PROP offset=345461 | if not savedcategory then
+chunk=419 type=PROP offset=345461 | 	savedcategory = Instance.new("StringValue",plr)
+chunk=419 type=PROP offset=345461 | 	savedcategory.Name = "FurnitureShopCategory"
+chunk=419 type=PROP offset=345461 | 	savedcategory.Value = "Seating"
+chunk=419 type=PROP offset=345461 | 		savedcategory.Value = categoryname
+chunk=419 type=PROP offset=345461 | 			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+chunk=419 type=PROP offset=345461 | loadCategory(savedcategory.Value)
+chunk=419 type=PROP offset=378775 | 		game.ReplicatedStorage.RemoteFunctions.LocalNotification:Fire("Since you still have unused spins, these spins have been saved for you to use tomorrow.")
+chunk=419 type=PROP offset=784075 | function savePosition()
+chunk=419 type=PROP offset=784075 | 			savePosition()
+chunk=419 type=PROP offset=784075 | 		savePosition()
+chunk=419 type=PROP offset=784075 | 	savePosition()
+chunk=575 type=PROP offset=429 | HouseSave
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.HouseSave.OnServerInvoke = function(plr)
+chunk=595 type=PROP offset=98799 | 	if not script:FindFirstChild("save_"..plr.Name) then
+chunk=595 type=PROP offset=98799 | 			local savefunc = pcall(function()
+chunk=595 type=PROP offset=98799 | 				local save = {}
+chunk=595 type=PROP offset=98799 | 						save[keyid] = {}
+chunk=595 type=PROP offset=98799 | 						save[keyid]["CFrame"] = {}
+chunk=595 type=PROP offset=98799 | 						save[keyid]["CFrame"][1] = pos.X
+chunk=595 type=PROP offset=98799 | 						save[keyid]["CFrame"][2] = pos.Y
+chunk=595 type=PROP offset=98799 | 						save[keyid]["CFrame"][3] = pos.Z
+chunk=595 type=PROP offset=98799 | 						save[keyid]["CFrame"][4] = rot
+chunk=595 type=PROP offset=98799 | 						save[keyid]["Name"] = v.Name
+chunk=595 type=PROP offset=98799 | 						save[keyid]["PaintColor"] = v.PaintColor.Value.Number
+chunk=595 type=PROP offset=98799 | 				save["MainHouseData"] = {}
+chunk=595 type=PROP offset=98799 | 						save["MainHouseData"][v.Name] = v.BrickColor.Number
+chunk=595 type=PROP offset=98799 | 				local savestr
+chunk=595 type=PROP offset=98799 | 					savestr = game:GetService("HttpService"):JSONEncode(save)
+chunk=595 type=PROP offset=98799 | 				if savestr and #savestr > 259000 then
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Error: Your house's save file has surpassed the maximum size (".. math.ceil((#savestr/259000)*100) .."%). You will have to remove some items first.")
+chunk=595 type=PROP offset=98799 | 					pd:SetAsync("house",save)
+chunk=595 type=PROP offset=98799 | 					local savesuccess = pd:UpdateAsync("maindata", function(tbl)
+chunk=595 type=PROP offset=98799 | 					if stats and savesuccess then
+chunk=595 type=PROP offset=98799 | 					local savemarker = Instance.new("BoolValue")
+chunk=595 type=PROP offset=98799 | 					savemarker.Name = "save_"..plr.Name
+chunk=595 type=PROP offset=98799 | 					savemarker.Parent = script
+chunk=595 type=PROP offset=98799 | 					game:GetService("Debris"):AddItem(savemarker,18)
+chunk=595 type=PROP offset=98799 | 			end) --end the save function
+chunk=595 type=PROP offset=98799 | 			if savefunc == true then
+chunk=595 type=PROP offset=138629 | 						outfit["OutfitName"] = "Saved Outfit"
+chunk=595 type=PROP offset=138629 | 				--populate the save file with any new data types that may be missing
+chunk=595 type=PROP offset=138629 | 	local pendingobjects --objects that will be saved at the autosave interval
+chunk=595 type=PROP offset=138629 | 			--save pending objects first
+chunk=595 type=PROP offset=206992 | function SaveNewData(plr)
+chunk=595 type=PROP offset=206992 | 		local datatosave = {
+chunk=595 type=PROP offset=206992 | 		dss:GetDataStore(plr.userId.."_data"):SetAsync("EnforcerViolations",datatosave)
+chunk=595 type=PROP offset=206992 | 		print("Enforcer violation data saved")
+chunk=595 type=PROP offset=206992 | 			SaveNewData(plr)
+chunk=595 type=PROP offset=206992 | 				SaveNewData(plr)
+chunk=595 type=PROP offset=369727 | function AddPendingObject(data, itemid, isfreeaward) --object to be added to the autosave queue
+chunk=595 type=PROP offset=390615 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Your data was not loaded correctly upon joining, so the game will not attempt to save any changes.")
+chunk=595 type=PROP offset=398582 | 		outfitname = "Saved Outfit"
+chunk=595 type=PROP offset=398582 | 				outfitname = "Saved Outfit"
+chunk=595 type=PROP offset=398582 | game.ReplicatedStorage.RemoteFunctions.SaveOutfit.OnServerInvoke = function(plr,inputs,slot)
+chunk=595 type=PROP offset=468409 | 	(If server closes: finish saving if 2 or less players in server or already in mid-save. Otherwise, don't.)
+chunk=595 type=PROP offset=477722 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(owner, invader.Name.." tried to enter your house, but you are still in Edit Mode. (Save & Exit to allow visitors to enter)")
+chunk=833 type=PROP offset=35087 | Yup. Anything you buy here is saved to your Inventory forever!
+chunk=833 type=PROP offset=37005 | You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+chunk=833 type=PROP offset=49697 | RHS Gear only usable in this game. Gear is saved permanently in your Inventory.
+chunk=965 type=PROP offset=651 | SaveButton	
+chunk=965 type=PROP offset=2732 | Save
+chunk=1012 type=PROP offset=4544 | Create a free ROBLOX.com account to gain access to all features in ROBLOX High School, such as the ability to chat with other players, save your RHS Cash/items permanently, and much more!
+chunk=1012 type=PROP offset=5027 | Exit edit mode? Any unsaved progress on your house will be lost.
+chunk=1012 type=PROP offset=7874 | - Save Recently Played + Favorite Songs!
+chunk=1012 type=PROP offset=10474 | Save Outfit:
+chunk=1012 type=PROP offset=10489 | Overwrite the outfit that is currently saved to this slot?
+chunk=1012 type=PROP offset=10551 | Play the PC version of RHS to save Custom Outfits which you can then load here on Xbox! Custom Outfits allow you to wear any item on the ROBLOX catalog while playing this game, and you can save your outfits and load them again at any time here. 
+chunk=1012 type=PROP offset=10915 | Close the window? Unsaved progress on your outfit will be lost.
+chunk=1012 type=PROP offset=11266 | If you save an RP Name and Description to this outfit, the name will automatically be applied whenever you wear this outfit. Great for setting up different characters!
+chunk=1012 type=PROP offset=11565 | Outfit saved successfully!
+chunk=1012 type=PROP offset=12104 | Overwrite the outfit that is currently saved to this slot?Q
+chunk=1012 type=PROP offset=12166 | Paste clothing IDs into the correct boxes below, then save your outfit to a slot!
+chunk=1012 type=PROP offset=14962 | Buy your own customizable house for just 50 RHS Cash! This house is saved permamently; it is loaded every time you join the game.
+chunk=1012 type=PROP offset=15732 | Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.
+chunk=1012 type=PROP offset=16659 | Overwrite the outfit that is currently saved to this slot?Z
+chunk=1012 type=PROP offset=16721 | When you're finished, save the outfit to one of your Outfit Slots, then wear it!
+chunk=1012 type=PROP offset=21409 | Save R$375!

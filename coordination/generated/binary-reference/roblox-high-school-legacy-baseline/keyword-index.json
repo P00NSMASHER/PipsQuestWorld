@@ -1,0 +1,427 @@
+{
+  "house": {
+    "matchedRunCount": 84,
+    "uniqueFragmentCount": 269,
+    "uniqueFullRunCount": 82,
+    "fragmentFile": "keywords/house.txt",
+    "runFile": "runs/house.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 269,
+      "bytesWritten": 26582,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 82,
+      "bytesWritten": 181662,
+      "truncated": false
+    }
+  },
+  "housing": {
+    "matchedRunCount": 2,
+    "uniqueFragmentCount": 2,
+    "uniqueFullRunCount": 2,
+    "fragmentFile": "keywords/housing.txt",
+    "runFile": "runs/housing.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 2,
+      "bytesWritten": 278,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 2,
+      "bytesWritten": 2832,
+      "truncated": false
+    }
+  },
+  "furn": {
+    "matchedRunCount": 201,
+    "uniqueFragmentCount": 256,
+    "uniqueFullRunCount": 156,
+    "fragmentFile": "keywords/furn.txt",
+    "runFile": "runs/furn.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 256,
+      "bytesWritten": 21829,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 156,
+      "bytesWritten": 184895,
+      "truncated": false
+    }
+  },
+  "furniture": {
+    "matchedRunCount": 41,
+    "uniqueFragmentCount": 113,
+    "uniqueFullRunCount": 40,
+    "fragmentFile": "keywords/furniture.txt",
+    "runFile": "runs/furniture.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 113,
+      "bytesWritten": 12038,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 40,
+      "bytesWritten": 137316,
+      "truncated": false
+    }
+  },
+  "hide walls": {
+    "matchedRunCount": 0,
+    "uniqueFragmentCount": 0,
+    "uniqueFullRunCount": 0,
+    "fragmentFile": "keywords/hide-walls.txt",
+    "runFile": "runs/hide-walls.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 0,
+      "bytesWritten": 0,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 0,
+      "bytesWritten": 0,
+      "truncated": false
+    }
+  },
+  "wall": {
+    "matchedRunCount": 125,
+    "uniqueFragmentCount": 51,
+    "uniqueFullRunCount": 29,
+    "fragmentFile": "keywords/wall.txt",
+    "runFile": "runs/wall.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 51,
+      "bytesWritten": 4973,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 29,
+      "bytesWritten": 87673,
+      "truncated": false
+    }
+  },
+  "paint": {
+    "matchedRunCount": 649,
+    "uniqueFragmentCount": 258,
+    "uniqueFullRunCount": 127,
+    "fragmentFile": "keywords/paint.txt",
+    "runFile": "runs/paint.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 258,
+      "bytesWritten": 23916,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 127,
+      "bytesWritten": 184075,
+      "truncated": false
+    }
+  },
+  "build": {
+    "matchedRunCount": 8470,
+    "uniqueFragmentCount": 55,
+    "uniqueFullRunCount": 34,
+    "fragmentFile": "keywords/build.txt",
+    "runFile": "runs/build.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 55,
+      "bytesWritten": 6146,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 34,
+      "bytesWritten": 177640,
+      "truncated": false
+    }
+  },
+  "chair": {
+    "matchedRunCount": 50,
+    "uniqueFragmentCount": 28,
+    "uniqueFullRunCount": 28,
+    "fragmentFile": "keywords/chair.txt",
+    "runFile": "runs/chair.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 28,
+      "bytesWritten": 2283,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 28,
+      "bytesWritten": 4551,
+      "truncated": false
+    }
+  },
+  "lamp": {
+    "matchedRunCount": 10,
+    "uniqueFragmentCount": 6,
+    "uniqueFullRunCount": 6,
+    "fragmentFile": "keywords/lamp.txt",
+    "runFile": "runs/lamp.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 6,
+      "bytesWritten": 591,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 6,
+      "bytesWritten": 33930,
+      "truncated": false
+    }
+  },
+  "utilities": {
+    "matchedRunCount": 24,
+    "uniqueFragmentCount": 15,
+    "uniqueFullRunCount": 15,
+    "fragmentFile": "keywords/utilities.txt",
+    "runFile": "runs/utilities.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 15,
+      "bytesWritten": 689,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 15,
+      "bytesWritten": 1904,
+      "truncated": false
+    }
+  },
+  "other": {
+    "matchedRunCount": 112,
+    "uniqueFragmentCount": 101,
+    "uniqueFullRunCount": 71,
+    "fragmentFile": "keywords/other.txt",
+    "runFile": "runs/other.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 101,
+      "bytesWritten": 14015,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 71,
+      "bytesWritten": 356723,
+      "truncated": false
+    }
+  },
+  "save": {
+    "matchedRunCount": 82,
+    "uniqueFragmentCount": 112,
+    "uniqueFullRunCount": 58,
+    "fragmentFile": "keywords/save.txt",
+    "runFile": "runs/save.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 112,
+      "bytesWritten": 11527,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 58,
+      "bytesWritten": 211148,
+      "truncated": false
+    }
+  },
+  "sell": {
+    "matchedRunCount": 14,
+    "uniqueFragmentCount": 24,
+    "uniqueFullRunCount": 14,
+    "fragmentFile": "keywords/sell.txt",
+    "runFile": "runs/sell.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 24,
+      "bytesWritten": 2459,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 14,
+      "bytesWritten": 38837,
+      "truncated": false
+    }
+  },
+  "rotate": {
+    "matchedRunCount": 20,
+    "uniqueFragmentCount": 60,
+    "uniqueFullRunCount": 20,
+    "fragmentFile": "keywords/rotate.txt",
+    "runFile": "runs/rotate.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 60,
+      "bytesWritten": 4249,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 20,
+      "bytesWritten": 88215,
+      "truncated": false
+    }
+  },
+  "move": {
+    "matchedRunCount": 241,
+    "uniqueFragmentCount": 513,
+    "uniqueFullRunCount": 170,
+    "fragmentFile": "keywords/move.txt",
+    "runFile": "runs/move.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 513,
+      "bytesWritten": 49997,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 108,
+      "bytesWritten": 691582,
+      "truncated": true
+    }
+  },
+  "edit": {
+    "matchedRunCount": 205,
+    "uniqueFragmentCount": 60,
+    "uniqueFullRunCount": 42,
+    "fragmentFile": "keywords/edit.txt",
+    "runFile": "runs/edit.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 60,
+      "bytesWritten": 6011,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 42,
+      "bytesWritten": 271187,
+      "truncated": false
+    }
+  },
+  "catalog": {
+    "matchedRunCount": 3,
+    "uniqueFragmentCount": 3,
+    "uniqueFullRunCount": 3,
+    "fragmentFile": "keywords/catalog.txt",
+    "runFile": "runs/catalog.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 3,
+      "bytesWritten": 715,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 3,
+      "bytesWritten": 1267,
+      "truncated": false
+    }
+  },
+  "rbxasset": {
+    "matchedRunCount": 740,
+    "uniqueFragmentCount": 564,
+    "uniqueFullRunCount": 547,
+    "fragmentFile": "keywords/rbxasset.txt",
+    "runFile": "runs/rbxasset.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 564,
+      "bytesWritten": 35472,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 547,
+      "bytesWritten": 423403,
+      "truncated": false
+    }
+  },
+  "texture": {
+    "matchedRunCount": 1755,
+    "uniqueFragmentCount": 111,
+    "uniqueFullRunCount": 86,
+    "fragmentFile": "keywords/texture.txt",
+    "runFile": "runs/texture.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 111,
+      "bytesWritten": 10468,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 86,
+      "bytesWritten": 450599,
+      "truncated": false
+    }
+  },
+  "decal": {
+    "matchedRunCount": 899,
+    "uniqueFragmentCount": 37,
+    "uniqueFullRunCount": 23,
+    "fragmentFile": "keywords/decal.txt",
+    "runFile": "runs/decal.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 37,
+      "bytesWritten": 3679,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 23,
+      "bytesWritten": 243807,
+      "truncated": false
+    }
+  },
+  "image": {
+    "matchedRunCount": 120,
+    "uniqueFragmentCount": 124,
+    "uniqueFullRunCount": 61,
+    "fragmentFile": "keywords/image.txt",
+    "runFile": "runs/image.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 124,
+      "bytesWritten": 10839,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 61,
+      "bytesWritten": 306556,
+      "truncated": false
+    }
+  },
+  "gui": {
+    "matchedRunCount": 369,
+    "uniqueFragmentCount": 939,
+    "uniqueFullRunCount": 198,
+    "fragmentFile": "keywords/gui.txt",
+    "runFile": "runs/gui.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 939,
+      "bytesWritten": 90935,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 183,
+      "bytesWritten": 685143,
+      "truncated": true
+    }
+  },
+  "frame": {
+    "matchedRunCount": 779,
+    "uniqueFragmentCount": 1230,
+    "uniqueFullRunCount": 277,
+    "fragmentFile": "keywords/frame.txt",
+    "runFile": "runs/frame.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 1230,
+      "bytesWritten": 127636,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 205,
+      "bytesWritten": 622559,
+      "truncated": true
+    }
+  },
+  "textbutton": {
+    "matchedRunCount": 25,
+    "uniqueFragmentCount": 23,
+    "uniqueFullRunCount": 17,
+    "fragmentFile": "keywords/textbutton.txt",
+    "runFile": "runs/textbutton.txt",
+    "fragmentFileStatus": {
+      "recordsWritten": 23,
+      "bytesWritten": 2645,
+      "truncated": false
+    },
+    "runFileStatus": {
+      "recordsWritten": 17,
+      "bytesWritten": 170400,
+      "truncated": false
+    }
+  }
+}

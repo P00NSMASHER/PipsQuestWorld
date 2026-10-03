@@ -1,0 +1,6 @@
+chunk=419 type=PROP offset=652011 | function Clamp(Number, Min, Max)
+chunk=419 type=PROP offset=652011 | 		Momentum = Vector3.new(Clamp(Momentum.X, -15, 15), Clamp(Momentum.Y, -15, 15), Clamp(Momentum.Z, -15, 15))		
+chunk=419 type=PROP offset=704362 | 	XRotation = CFrame.Angles(Clamp(-CurrentSpeed.Pitch, -1, 1), 0, 0)
+chunk=474 type=PROP offset=7432 | furni_Stylish Lamp
+chunk=595 type=PROP offset=1066780 | 			local DistPercent = GetPercentage(MaxDist, MinDist, Clamp(CurrDist, MinDist, MaxDist))
+chunk=833 type=PROP offset=17121 | A stylish lamp to light up your home. [Red = Paintable]

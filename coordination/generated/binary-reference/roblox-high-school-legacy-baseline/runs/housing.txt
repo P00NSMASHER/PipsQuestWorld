@@ -1,0 +1,53 @@
+=== chunk=419 type=PROP offset=115388 runSha256=e846d0e352b90f2a93f0ab448c6c2386662ec4fd61b11a67c18ef847dada0923 ===
+local plr = game.Players.LocalPlayer
+
+repeat wait() until plr.Character and plr.Character.Parent ~= nil
+
+local char = plr.Character
+local hum = char:WaitForChild("Humanoid")
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+local totaltime = data:WaitForChild("totaltime")
+local cash = data:WaitForChild("cash")
+local loaded = data:WaitForChild("LoadedSuccessfully")
+local notification = game.ReplicatedStorage.RemoteFunctions.LocalNotification
+
+if totaltime.Value <= 1 and loaded.Value == true then
+	repeat wait() until script.Parent:FindFirstChild("ACTIVE_IntroGUI") == nil
+	wait(.4)
+	repeat wait() until script.Parent:FindFirstChild("ACTIVE_DailyLoyaltyReward") == nil
+	wait(.3)
+	notification:Fire("Welcome to ROBLOX High School! A game where you can roleplay, make new friends, and have fun with people around town!",true)
+	wait(16.6)
+	notification:Fire("This isn't just a school - after class, you can do things such as party at the dance club, buy and furnish your own house, and more!",true)
+	wait(16.7)
+	if plr.userId > 0 then
+		notification:Fire("Check out all the fun things that are available here - and enjoy playing ROBLOX High School!",true)
+	else
+		notification:Fire("Note: While playing as a Guest, many features are unavailable. Create a free ROBLOX account to experience the full game and be able to save your progress here!",true)
+	end
+end
+
+hum.Changed:connect(function(property)
+	if property == "SeatPart" and totaltime.Value < 120 and hum.SeatPart ~= nil and hum.SeatPart.Name == "Drive" then
+		local car = hum.SeatPart.Parent
+		if car:FindFirstChild("DriverLocked") and car.DriverLocked.Value == true and car.Owner.Value ~= plr.Name then
+			notification:Fire("You can't drive this person's car. Spawn your own car via the Cars menu!")
+		end
+	end
+end)
+
+game.Lighting.Changed:connect(function(property)
+	if property == "TimeOfDay" and game.Lighting:GetMinutesAfterMidnight() == 919 and totaltime.Value >= 10 and totaltime.Value <= 30 then
+		local mincash = 50 + totaltime.Value * 2 - 40
+		local maxcash = 50 + totaltime.Value * 2 + 20
+		if cash.Value >= mincash and cash.Value <= maxcash then
+			if plr.userId > 0 then
+				notification:Fire("You've earned $"..cash.Value.." RHS Cash so far, simply for playing the game! Use RHS Cash to buy stuff such as housing & furniture, RHS gear items, cars, and more!",true)
+			else
+				notification:Fire("Enjoying ROBLOX High School? Create a free ROBLOX account so that you can save your progress here and gain access to more features, such as chatting with other players!",true)
+			end
+		end
+	end
+end)u
+=== chunk=474 type=PROP offset=8446 runSha256=d3757288528f226c556651b7418a5f50bcae8a8eda481d13118ef137d5049c5d ===
+HousingHelp	

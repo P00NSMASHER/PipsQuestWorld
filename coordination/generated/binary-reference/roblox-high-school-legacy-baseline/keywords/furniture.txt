@@ -1,0 +1,113 @@
+chunk=145 type=PROP offset=157 | OpenFurnitureMenu
+chunk=145 type=PROP offset=755 | AddFurniture
+chunk=145 type=PROP offset=771 | SellFurniture
+chunk=419 type=PROP offset=115388 | 				notification:Fire("You've earned $"..cash.Value.." RHS Cash so far, simply for playing the game! Use RHS Cash to buy stuff such as housing & furniture, RHS gear items, cars, and more!",true)
+chunk=419 type=PROP offset=153277 | local fc = data:WaitForChild("FurnitureCost")
+chunk=419 type=PROP offset=153969 | local cash = playerdata:WaitForChild("FurnitureCost")
+chunk=419 type=PROP offset=153969 | playerdata:WaitForChild("FurnitureCost").Changed:connect(function(val)
+chunk=419 type=PROP offset=154490 | 	script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=154490 | 	if key == "v" and script.Parent.Parent.Parent.Visible == true and not script.Parent.Parent.Parent.Parent.Parent:FindFirstChild("ACTIVE_FurnitureShopGui") then
+chunk=419 type=PROP offset=154490 | 		script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=154490 | 				script.Parent.Parent.OpenFurnitureMenu:Fire()
+chunk=419 type=PROP offset=158727 | local count = data:WaitForChild("FurnitureCount")
+chunk=419 type=PROP offset=159001 | --furniture shop name: ACTIVE_FurnitureShop
+chunk=419 type=PROP offset=159001 | 		local diff = data:WaitForChild("FurnitureCost").Value - data.cash.Value
+chunk=419 type=PROP offset=159001 | frame.OpenFurnitureMenu.Event:connect(function()
+chunk=419 type=PROP offset=159001 | 		game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire("FurnitureShopGui")
+chunk=419 type=PROP offset=159001 | 			local diff = data.FurnitureCost.Value - data.cash.Value
+chunk=419 type=PROP offset=343117 | 	script.Parent.Parent.Parent.AddFurniture:Fire(script.Parent)
+chunk=419 type=PROP offset=343238 | 	script.Parent.Parent.Parent.SellFurniture:Fire(script.Parent)
+chunk=419 type=PROP offset=344264 | 			local result = game.ReplicatedStorage.RemoteFunctions.SellFurniture:InvokeServer(obj.Name)
+chunk=419 type=PROP offset=345461 | local savedcategory = plr:FindFirstChild("FurnitureShopCategory")
+chunk=419 type=PROP offset=345461 | 	savedcategory.Name = "FurnitureShopCategory"
+chunk=419 type=PROP offset=345461 | 	local furnbought = data.FurnitureCost:FindFirstChild(id)
+chunk=419 type=PROP offset=345461 | gui.AddFurniture.Event:connect(function(button)
+chunk=419 type=PROP offset=345461 | 			local result,reason = game.ReplicatedStorage.RemoteFunctions.GetFurniture:InvokeServer(obj.Name)
+chunk=419 type=PROP offset=345461 | gui.SellFurniture.Event:connect(function()
+chunk=419 type=PROP offset=345461 | 			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+chunk=419 type=PROP offset=784075 | 		game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition:FireServer(selectedmodel,selectedmodel.PrimaryPart.CFrame,selectedmodel.RotValue.Value)
+chunk=419 type=PROP offset=791121 | 			game.ReplicatedStorage.RemoteFunctions.RemoveFurniture:FireServer(selectedmodel)
+chunk=574 type=PROP offset=673 | RemoveFurniture
+chunk=574 type=PROP offset=719 | SendNewFurniturePosition
+chunk=575 type=PROP offset=413 | GetFurniture	
+chunk=575 type=PROP offset=459 | MoveFurniture
+chunk=575 type=PROP offset=476 | RotateFurniture
+chunk=589 type=PROP offset=740 | FurnitureShopGui
+chunk=595 type=PROP offset=59419 | --add furniture (according to a model ID)
+chunk=595 type=PROP offset=59419 | --has to be done from the Furniture place first
+chunk=595 type=PROP offset=59419 | for _,v in pairs(game.ReplicatedStorage.NewFurniture:GetChildren()) do
+chunk=595 type=PROP offset=59419 | game.ReplicatedStorage.NewFurniture:Destroy()
+chunk=595 type=PROP offset=69633 | Get a house and customize it with furniture items. Buy pets and RHS Gear to spice up your time in town! There's lots to do in ROBLOX High School - enjoy your time here!]]
+chunk=595 type=PROP offset=98799 | function getFurnitureCount(plr)
+chunk=595 type=PROP offset=98799 | 		local val = data:FindFirstChild("FurnitureCount")
+chunk=595 type=PROP offset=98799 | 			val.Name = "FurnitureCount"
+chunk=595 type=PROP offset=98799 | function getFurnitureCostMarker(stats,servobj)
+chunk=595 type=PROP offset=98799 | 	if stats.FurnitureCost:FindFirstChild(id) then
+chunk=595 type=PROP offset=98799 | 		furnbought = stats.FurnitureCost:FindFirstChild(id)
+chunk=595 type=PROP offset=98799 | 		furnbought.Parent = stats.FurnitureCost
+chunk=595 type=PROP offset=98799 | coroutine.resume(coroutine.create(function() --initialize all furniture models
+chunk=595 type=PROP offset=98799 | 			print("Loaded furniture "..model.Name)
+chunk=595 type=PROP offset=98799 | 	print("All furniture loaded and ready")
+chunk=595 type=PROP offset=98799 | 			if data:FindFirstChild("FurnitureCost") then
+chunk=595 type=PROP offset=98799 | 				data.FurnitureCost.Value = 0
+chunk=595 type=PROP offset=98799 | 				data.FurnitureCost:ClearAllChildren()
+chunk=595 type=PROP offset=98799 | 			for i,obj in pairs(housedata) do --load all furniture and house data
+chunk=595 type=PROP offset=98799 | 			end --end the furniture loading
+chunk=595 type=PROP offset=98799 | 			getFurnitureCount(plr)
+chunk=595 type=PROP offset=98799 | function RemoveFurnitureItem(plr,model) --referenced later down
+chunk=595 type=PROP offset=98799 | 			local furnbought,pending = getFurnitureCostMarker(stats,itemserv)
+chunk=595 type=PROP offset=98799 | 				stats.FurnitureCost.Value = stats.FurnitureCost.Value - itemserv.ItemCost.Value
+chunk=595 type=PROP offset=98799 | 	--change the CFrame to be relative to the house center (loading? add the offset value. saving? furniture CFrame - floor CFrame = offset)
+chunk=595 type=PROP offset=98799 | 			--remove furniture glitched outside of the house
+chunk=595 type=PROP offset=98799 | 					if findpart == nil or findpart.Parent.Name ~= house.Name or not findpart.Name:match("Floor") then --put the furniture back in inventory
+chunk=595 type=PROP offset=98799 | 						RemoveFurnitureItem(plr,v)
+chunk=595 type=PROP offset=98799 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Furniture that was detected outside of your house has been placed back into your inventory.")
+chunk=595 type=PROP offset=98799 | 				if stats and stats:FindFirstChild("FurnitureCost") and stats:FindFirstChild("cash") and stats.cash.Value >= stats.FurnitureCost.Value then
+chunk=595 type=PROP offset=98799 | 					--FurnitureCost child's name is the item's ID
+chunk=595 type=PROP offset=98799 | 						--[[for _,v in pairs(stats.FurnitureCost:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 						for _,v in pairs(stats.FurnitureCost:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 						tbl["cash"] = tbl["cash"] - stats.FurnitureCost.Value
+chunk=595 type=PROP offset=98799 | 						stats.cash.Value = stats.cash.Value - stats.FurnitureCost.Value
+chunk=595 type=PROP offset=98799 | 						stats.oldcash.Value = stats.oldcash.Value - stats.FurnitureCost.Value
+chunk=595 type=PROP offset=98799 | 						stats.FurnitureCost.Value = 0
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.GetFurniture.OnServerInvoke = function(plr,objname)
+chunk=595 type=PROP offset=98799 | 		local fcount = getFurnitureCount(plr)
+chunk=595 type=PROP offset=98799 | 				stats.FurnitureCost.Value = stats.FurnitureCost.Value + itemserv.ItemCost.Value
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.RemoveFurniture.OnServerEvent:connect(function(plr,model)
+chunk=595 type=PROP offset=98799 | 	RemoveFurnitureItem(plr,model)
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.SellFurniture.OnServerInvoke = function(plr,objname)
+chunk=595 type=PROP offset=98799 | 			local furnbought,pending = getFurnitureCostMarker(stats,servobj)
+chunk=595 type=PROP offset=98799 | 				stats.FurnitureCost.Value = stats.FurnitureCost.Value - math.ceil(servobj.ItemCost.Value * .7)
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition.OnServerEvent:connect(function(plr,selectedmodel,newcframe,newrotval)
+chunk=595 type=PROP offset=98799 | 			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"An error occurred while trying to position this piece of furniture. Please try again.")
+chunk=595 type=PROP offset=138629 | 	local furniturestat --holds all furniture counters, removed on quit
+chunk=595 type=PROP offset=138629 | 	furniturestat = Instance.new("IntValue")
+chunk=595 type=PROP offset=138629 | 	furniturestat.Name = "FurnitureCost"
+chunk=595 type=PROP offset=138629 | 	furniturestat.Value = 0
+chunk=595 type=PROP offset=138629 | 	furniturestat.Parent = stats
+chunk=595 type=PROP offset=138629 | 					-- Award starter pack ($7500, Classy Car, furniture set)
+chunk=595 type=PROP offset=138629 | 								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash, the Classy Car, and a set of starting furniture for your Custom House!", true)
+chunk=595 type=PROP offset=138629 | 								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash and a set of starting furniture for your Custom House!", true)
+chunk=595 type=PROP offset=138629 | 	Starter pack furniture list:
+chunk=595 type=PROP offset=408649 | function GetItems(plr,type,minprice,maxprice) --return all possible items that can be awarded - if 0, award furniture instead
+chunk=595 type=PROP offset=408649 | function GetFurniture(plr,minprice,maxprice,tier) --select random furniture based on price, and return table
+chunk=595 type=PROP offset=408649 | 	Mid-tier furniture (220-520) (COMMON)
+chunk=595 type=PROP offset=408649 | 	Higher-tier furniture (500-900) (UNCOMMON) (most common)
+chunk=595 type=PROP offset=408649 | 	Rare furniture (Void, expensive goldens) (RARE)
+chunk=595 type=PROP offset=408649 | 		if chance <= 7 then --furniture 200-520
+chunk=595 type=PROP offset=408649 | 			return GetFurniture(plr,200,520,tier)
+chunk=595 type=PROP offset=408649 | 			return GetFurniture(plr,500,950,tier)
+chunk=595 type=PROP offset=408649 | 			return GetFurniture(plr,1000,4200,tier)
+chunk=833 type=PROP offset=12812 | An ultra-rare seat specially designed by Umbra himself. This set of furniture was crafted using some very unique materials from the Void, allowing it to seamlessly float above ground. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=15261 | A one-of-a-kind piece of furniture designed by Umbra himself. This bed is an incredible show of Void 
+chunk=833 type=PROP offset=17725 | Enjoy your favorite TV shows without the distractions of light-colored furniture!	
+chunk=833 type=PROP offset=36485 | You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+chunk=833 type=PROP offset=37005 | You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+chunk=978 type=PROP offset=580 | Add Furniture
+chunk=1001 type=PROP offset=2134 | FurnitureCount
+chunk=1012 type=PROP offset=5200 | to drag furniture
+chunk=1012 type=PROP offset=5808 | Join the ROBLOX High School Fan Club, and when you play this game tomorrow, you'll receive FREE, EXCLUSIVE furniture items, a car, and access to the iCinder phone! Link to the RHS Fan Club is in the game's description.o
+chunk=1012 type=PROP offset=9914 | - Buy furniture for your house
+chunk=1012 type=PROP offset=15732 | Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.
+chunk=1012 type=PROP offset=20746 | Each present contains a free in-game item - you may also find pieces of the exclusive Holiday furniture set in these presents!0
+chunk=1012 type=PROP offset=21293 | Starter Furniture Set

@@ -1,0 +1,28 @@
+chunk=474 type=PROP offset=110 | RHS Chairs 	
+chunk=474 type=PROP offset=11772 | CHAIR BOY
+chunk=474 type=PROP offset=11794 | CHAIR BOY	
+chunk=474 type=PROP offset=25417 | furni_Modern Armchair
+chunk=474 type=PROP offset=25503 | furni_Antique Chair
+chunk=474 type=PROP offset=25526 | furni_Antique Armchair
+chunk=474 type=PROP offset=25574 | furni_Golden Chair
+chunk=474 type=PROP offset=25596 | furni_Golden Armchair
+chunk=474 type=PROP offset=25661 | furni_Void Armchair
+chunk=474 type=PROP offset=26917 | furni_Gothic Chair
+chunk=474 type=PROP offset=27220 | furni_Beachy Chair
+chunk=474 type=PROP offset=27813 | furni_Spooky Armchair
+chunk=474 type=PROP offset=28067 | furni_Holiday Armchair
+chunk=474 type=PROP offset=28117 | furni_Holiday Chair
+chunk=833 type=PROP offset=11777 | A sturdy wooden chair to sit on.
+chunk=833 type=PROP offset=11953 | A comfortable black-and-white armchair.
+chunk=833 type=PROP offset=12186 | A high-quality wood chair with a colored center panel. [Center Panel: Paintable]
+chunk=833 type=PROP offset=12281 | A comfortable, high-quality wooden armchair. [Seat Fabric: Paintable]
+chunk=833 type=PROP offset=12441 | A shiny golden chair. With this in your home, people will always want to come over for dinner. [Glass Panel: Paintable]
+chunk=833 type=PROP offset=12575 | A shiny golden armchair. Your dreams of being the king/queen can finally come true. [Seating: Paintable]
+chunk=833 type=PROP offset=13037 | An ultra-rare armchair specially designed by Umbra himself. Anyone who sits here will feel a supernatural sense of comfort. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=17065 | A nice chair built for the Stylish set.	
+chunk=833 type=PROP offset=17989 | A fancy gothic chair.<
+chunk=833 type=PROP offset=21387 | A nice wooden chair for your beach-themed room! [Paintable]
+chunk=833 type=PROP offset=24855 | A nice, comfy armchair for when you're waiting for those trick-or-treaters.
+chunk=833 type=PROP offset=25166 | A fancy black and purple chair adorned with two skulls on the corners. Spooky indeed!
+chunk=833 type=PROP offset=27387 | A super comfortable festive armchair with sleigh runners and a Christmas tree backing!
+chunk=833 type=PROP offset=27568 | A festive chair to seat your friends and family during the holidays!

@@ -1,0 +1,101 @@
+chunk=288 type=PROP offset=771 | OtherOwner
+chunk=288 type=PROP offset=2150 | OtherDevProducts
+chunk=419 type=PROP offset=708 | 								tmi.Text = "You are buying a lot of items - please wait and give the other customers a chance!"
+chunk=419 type=PROP offset=95573 | 		p.CFrame=target.CFrame:toWorldSpace(cf)		--this is here to position the spray other wise it will be at 0,0,0 if the target is anchored
+chunk=419 type=PROP offset=99396 | otherwise, IF TOOL EQUIPPED: 
+chunk=419 type=PROP offset=99396 | 						for i,v in pairs(objdata.OtherOwner:GetChildren()) do
+chunk=419 type=PROP offset=115388 | 				notification:Fire("Enjoying ROBLOX High School? Create a free ROBLOX account so that you can save your progress here and gain access to more features, such as chatting with other players!",true)
+chunk=419 type=PROP offset=175095 | 										gui.WaitForRankRequest.TextLabel.Text = "You've met the requirements for the next rank! You may send another Rank-Up Request in ".. diff .." day".. (diff == 1 and "" or "s") .."."
+chunk=419 type=PROP offset=192698 | 				local otherwindowopen
+chunk=419 type=PROP offset=192698 | 						otherwindowopen = true
+chunk=419 type=PROP offset=192698 | 				if not otherwindowopen then
+chunk=419 type=PROP offset=193963 | 				if v ~= button and v.Name ~= "ShopButton" and v.Name ~= "MobileAd" and v.Name ~= "ToggleVisibility" then --make other buttons def.
+chunk=419 type=PROP offset=193963 | 			if v.Name ~= "ShopButton" and v.Name ~= "MobileAd" and v.Name ~= "ToggleVisibility" then --make other buttons def.
+chunk=419 type=PROP offset=245345 | local desc = "Principals with this pass can give out detentions, suspend players, make overhead announcements, alter the school schedule, and prevent other players from being on the Principal team! Click on the 'Enforcer's Powers' button in the Options menu to use this."
+chunk=419 type=PROP offset=423540 | local itemid = game.ReplicatedStorage.OtherDevProducts.StarterPack.ItemID.Value
+chunk=419 type=PROP offset=425067 | if objects:FindFirstChild(game.ReplicatedStorage.OtherDevProducts.StarterPack.ItemID.Value) then
+chunk=419 type=PROP offset=425067 | local assetid = game.ReplicatedStorage.OtherDevProducts.StarterPack.Value
+chunk=419 type=PROP offset=441495 | if objects:FindFirstChild(game.ReplicatedStorage.OtherDevProducts.StarterPack.ItemID.Value) == nil and currenttimeobj.Value - jointime < 86400 * 7 then
+chunk=419 type=PROP offset=441495 | 	if child.Name:match(tostring(game.ReplicatedStorage.OtherDevProducts.StarterPack.ItemID.Value)) then
+chunk=419 type=PROP offset=749944 | --Blow function, called when the character touches another character
+chunk=419 type=PROP offset=749944 | -- Connect our function to the Tool's Activate and other interfaces
+chunk=479 type=PROP offset=55226 | return function(thread,threadview,msg,otherperson) --msg can either be the string message (if it's the local player) or the msg object (with the name being the sender)
+chunk=479 type=PROP offset=55226 | 	if otherperson == true then
+chunk=479 type=PROP offset=182940 | 			Notification(plr, "Another player has claimed this canvas. Try painting on a different canvas!")
+chunk=479 type=PROP offset=182940 | 				Notification(plr, "You are already painting on another canvas. Erase the paint from your old canvas first.")
+chunk=595 type=PROP offset=26946 | local warningtext = "Car soccer can work. Car football, on the other hand..."
+chunk=595 type=PROP offset=58543 | 				plr:Kick("You are a member of a group (Group ID: "..v..") which is not allowed to enter the game. Groups created to target and/or harass certain players are not allowed, regardless of the target players' behavior. A significant portion of 'Anti-ODing' group members come here solely to target/harass people and just add to the rulebreaking. If you witness players ODing, then please use ROBLOX's Report Abuse function and move on. Allow the ROBLOX mods to take appropriate action. Do not come here solely to target/harass other players. Thank you.")
+chunk=595 type=PROP offset=77360 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"You cannot spawn your car here, as it is too close to yourself or another car/person.")
+chunk=595 type=PROP offset=85335 | 				return false,"You already own this item! Please choose another one."
+chunk=595 type=PROP offset=126311 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Alex19 isn't so great? Are you kidding me? When was the last time you saw a player with such an ability and movement with fox? Alex puts the game in another level, and we will be blessed if we ever see a player with his skill and passion for the game again. mang0 breaks records. Armada breaks records. Alex19 breaks the rules. You can keep your statistics. I prefer the magic.",true)
+chunk=595 type=PROP offset=138629 | 					if success then --check 1st format - otherwise, objects is already the appropriate value
+chunk=595 type=PROP offset=138629 | 	--two folders for each list: one that holds the actual current list of songs (stringvalues where Name = songID and Value is set by the client to the song's name), and another that stores boolvalues indicating whether to add/remove a song from the list when saving
+chunk=595 type=PROP offset=138629 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Cannot process your purchase yet, as ROBLOX's DataStore servers are down. Rejoin the game at a later time to receive your purchased product. Otherwise, you will automatically be refunded your ROBUX after 72 hours.", true)
+chunk=595 type=PROP offset=138629 | 						game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Cannot process your purchase yet, as ROBLOX's DataStore servers are down. Rejoin the game at a later time to receive your purchased product. Otherwise, you will automatically be refunded your ROBUX after 72 hours.", true)
+chunk=595 type=PROP offset=138629 | 				if receiptInfo.ProductId == game.ReplicatedStorage.OtherDevProducts.StarterPack.Value then
+chunk=595 type=PROP offset=206992 | 								plr:Kick("You have been banned from ROBLOX High School due to your extreme misuse of Enforcer's Powers. Using Enforcer's Powers to randomly punish innocent players is strictly forbidden, and you are well aware of this. Do not come here to disrupt the experience for other players.")
+chunk=595 type=PROP offset=214982 | --collect :GetFriendsOnline() calls from the clients - use the results to verify friendships between users, store them in this script so that other aspects of the game can use the IsFriendsWith BindableFunction to check
+chunk=595 type=PROP offset=219869 | 				plr:Kick("You are banned from the game for "..math.ceil((( v - os.time() ) / 24 / 60 / 60)).." day(s)! Please be respectful of other people; disruptive behavior is not welcome here or anywhere else on ROBLOX.")
+chunk=595 type=PROP offset=219869 | 					plr:Kick("You have been banned from the game for "..days.." days! Please be respectful of other people; disruptive behavior is not welcome here or anywhere else on ROBLOX.")
+chunk=595 type=PROP offset=224428 | local banland = {"idioticbot", "idioticn00bz", "1337MB", "system79","warloris","exefilez","13GB", "64x47","SomeRandomDuded","APEXCODER", "CHAOSdragon1999","XxGhostxPredatorrxX","LongLive1x1x1x1","Owned8035","teamplatinum","buildermansucksbad11","1x1x1x1BigBrother","TopSecretFriend","x1337xx1337x","weirdgirl26","monster26632","x89x89x","weird26632","jt93","Guestx1x1x1x","Guest1x1x1x","ZukaWarrior","SergeantSmokey","LikeATrollFace","TeamTokens","PythonScripter","SincereIy","xXx1337xx1337xXx","1x1x1x1xx1x1x1","Cycoboy83","69x69x69x69x","xxranger99xx","xXp0ss3s3d969Xx", "powerhotmail123","Chris12902","Scripth","Kensai666"} -- Permanently Bans people
+chunk=595 type=PROP offset=224428 | 	 others
+chunk=595 type=PROP offset=224428 | elseif str == "others" then for i, v in pairs(game.Players:children()) do if v ~= plr then table.insert(plrz, v) end end
+chunk=595 type=PROP offset=352862 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Error: Enforcer's Powers data could not be loaded yet. Please wait, or try another server.")
+chunk=595 type=PROP offset=352862 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"You cannot claim Enforcer's Powers; there is already another Enforcer on this server.")
+chunk=595 type=PROP offset=369727 | 				return false,"You already own this item! Please select another one."
+chunk=595 type=PROP offset=369727 | 			return false,"You already own this item. Select another one!"
+chunk=595 type=PROP offset=385642 | 				return false,"You've already equipped this gear. Respawn to get another copy."
+chunk=595 type=PROP offset=452730 | -- type: firemachine/smokemachine -- enabled: true/false if turning it on or off, otherwise nil -- color: color if changing color, otherwise nil
+chunk=595 type=PROP offset=452730 | 			return false, "Please wait for another one of your songs to finish playing."
+chunk=595 type=PROP offset=467280 | 	other page gets refreshed with the newest data daily.
+chunk=595 type=PROP offset=468409 | 	(If server closes: finish saving if 2 or less players in server or already in mid-save. Otherwise, don't.)
+chunk=595 type=PROP offset=468409 | -- This script is responsible for tracking the cached counts & other info not handled by other scripts
+chunk=595 type=PROP offset=477722 | 			game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,"It's not very polite to smash your car into other people's houses!")
+chunk=595 type=PROP offset=531236 | 		RemoteControlled.MaxSpeed = 0 -- otherwise, give it 0 speed
+chunk=595 type=PROP offset=1157883 | Food.Touched:connect(function(otherPart)
+chunk=595 type=PROP offset=1157883 | 	if otherPart and otherPart.Parent and otherPart.Parent:IsA("Model") and not otherPart.Parent:FindFirstChild('ForceField') then
+chunk=595 type=PROP offset=1157883 | 		local otherModel = otherPart.Parent
+chunk=595 type=PROP offset=1157883 | 		local otherPlayer = PlayersService:GetPlayerFromCharacter(otherModel)
+chunk=595 type=PROP offset=1157883 | 		if otherPlayer and otherPlayer ~= creator then return end
+chunk=595 type=PROP offset=1157883 | 		local ra = otherModel:FindFirstChild("Right Arm") or otherModel:FindFirstChild("RightHand")
+chunk=595 type=PROP offset=1157883 | 		if otherModel:FindFirstChild("Humanoid") and otherModel.Humanoid.Health > 0 and ra then
+chunk=595 type=PROP offset=1157883 | 			local otherHumanoid = otherModel.Humanoid
+chunk=595 type=PROP offset=1157883 | 			if not otherHumanoid:FindFirstChild(eatingScript.Name) and not otherHumanoid:FindFirstChild("Poisoned") then
+chunk=595 type=PROP offset=1157883 | 				local children = otherModel:GetChildren()
+chunk=595 type=PROP offset=1157883 | 				if otherPlayer then
+chunk=595 type=PROP offset=1157883 | 					Spawn(function() AddGuis(otherPlayer) end)
+chunk=595 type=PROP offset=1157883 | 				Food.Parent = otherModel
+chunk=595 type=PROP offset=1157883 | 				eatingScriptClone.Parent = otherHumanoid
+chunk=595 type=PROP offset=1160423 | local COOLDOWN = 22 -- Seconds until another can be thrown
+chunk=833 type=PROP offset=10625 | Other
+chunk=833 type=PROP offset=13202 | An ultra-rare sofa specially designed by Umbra himself. This seats 4 people, all of whom will never want to sit on any other sofa again. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=15448 | Other8
+chunk=833 type=PROP offset=16968 | OtherI
+chunk=833 type=PROP offset=17180 | Other7
+chunk=833 type=PROP offset=17382 | Other5
+chunk=833 type=PROP offset=17504 | Other*
+chunk=833 type=PROP offset=18219 | Other9
+chunk=833 type=PROP offset=18397 | The Fancy Fox scoffs at his Arctic brother. The top hat gives him so many more style points.E
+chunk=833 type=PROP offset=20564 | Other	
+chunk=833 type=PROP offset=22009 | Other-
+chunk=833 type=PROP offset=22825 | Fly anywhere on the map with this awesome glider! Not as fast as the other flying gear, but it gets the job done._
+chunk=833 type=PROP offset=24791 | Other(
+chunk=833 type=PROP offset=26680 | Use Spray Paint to spray any ROBLOX decal onto a surface! To keep the place clean, only Friends see each other's decals.w
+chunk=833 type=PROP offset=28464 | Other3
+chunk=833 type=PROP offset=29010 | This thing has an endless supply of donuts, making it infinitely better than all other forms of transportation.G
+chunk=833 type=PROP offset=30296 | A simple drink that will quench your thirst, though it has no other special effects.
+chunk=833 type=PROP offset=33388 | Allow Other Driver
+chunk=833 type=PROP offset=33410 | Disallow Other Driver
+chunk=833 type=PROP offset=37170 | Oh... Larry lost his job a while back, but thanks to some helpful people, he was able to build another home for himself. Now he lives down the street to your right.
+chunk=833 type=PROP offset=37338 | What happened to your brother?:
+chunk=833 type=PROP offset=43870 | Will you be getting another job?p
+chunk=833 type=PROP offset=47736 | Do you have any other clothes on sale?~
+chunk=833 type=PROP offset=48879 | Zelante and Kwoopa -- my two little brothers! They make SUPER cute clothing!*
+chunk=833 type=PROP offset=48959 | Who are the other designers featured here?I
+chunk=1001 type=PROP offset=5042 | OtherText
+chunk=1012 type=PROP offset=17 | This secret portal teleports you out of RHS and into Cindering's other game, Sharpshooter Mines!
+chunk=1012 type=PROP offset=4544 | Create a free ROBLOX.com account to gain access to all features in ROBLOX High School, such as the ability to chat with other players, save your RHS Cash/items permanently, and much more!
+chunk=1012 type=PROP offset=6534 | You've met the requirements for the next rank! You may send another Rank-Up Request in # days.
+chunk=1012 type=PROP offset=14099 | + Prevent others from being the Principal
+chunk=1012 type=PROP offset=19710 | Load other players' Custom Houses:B
+chunk=1012 type=PROP offset=22111 | Note: Only Friends can see each others' paintings.

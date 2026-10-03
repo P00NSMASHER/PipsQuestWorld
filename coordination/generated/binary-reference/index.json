@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "requests": [
     {
-      "schemaVersion": 1,
+      "schemaVersion": 2,
       "id": "roblox-high-school-legacy-baseline",
       "sourceUrl": "https://raw.githubusercontent.com/MisoNotSoupx/Old-Roblox-Place-Archive/b817aef0eaf77d3382acacdc8f22537e54c76822/Created%20by%20Users/Cindering/ROBLOX%20High%20School.rbxl",
       "sizeBytes": 2283775,
@@ -19,7 +19,7 @@
       },
       "chunkCount": 1196,
       "printableRunCount": 74938,
-      "hitRecordCount": 14208,
+      "matchedRunCount": 14208,
       "keywords": [
         "house",
         "housing",

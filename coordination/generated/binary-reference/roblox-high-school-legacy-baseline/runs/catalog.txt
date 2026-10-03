@@ -1,0 +1,12 @@
+=== chunk=1012 type=PROP offset=10551 runSha256=e881b5a9de5a16effa0fd7f9c0f7ee795260c3a5fe118f931b73f74e365bdcf6 ===
+Play the PC version of RHS to save Custom Outfits which you can then load here on Xbox! Custom Outfits allow you to wear any item on the ROBLOX catalog while playing this game, and you can save your outfits and load them again at any time here. 
+=== chunk=1012 type=PROP offset=16721 runSha256=281d842675aab2715b9b932cb3d15708c2afb8ea38a66d6b08e00d1a0b59269f ===
+Create your dream outfit that you can wear at RHS anytime! 
+Find the items that you want to wear on the ROBLOX Catalog. When you get to an item's Catalog page, copy the URL (or ID) you see in your browser's Address Bar and paste it into the corresponding box below.
+When you're finished, save the outfit to one of your Outfit Slots, then wear it!
+=== chunk=1012 type=PROP offset=20371 runSha256=ba532d25c82d33ce402859a43f92bbf3c6c97651aa27c13954cc8c81076b60bf ===
+The Club Red DJ Access gamepass has been updated!
+
+One of the major changes is that you no longer need in-game CDs to play music; you can now play ANY SONG ID on the ROBLOX catalog when using the DJ stand!
+
+Because of this, you have received a full RHS Cash refund for all of the CDs you have purchased in the past. Enjoy!

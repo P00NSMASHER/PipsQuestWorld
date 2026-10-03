@@ -1,0 +1,269 @@
+chunk=145 type=PROP offset=131 | SaveHouse	
+chunk=145 type=PROP offset=144 | ExitHouse
+chunk=145 type=PROP offset=1316 | LoadHouseForPlayer
+chunk=288 type=PROP offset=299 | UnrenderedHouses
+chunk=288 type=PROP offset=2102 | HouseEditingTools
+chunk=298 type=PROP offset=2368 | menu_House
+chunk=298 type=PROP offset=5068 | HousesFrame
+chunk=350 type=PROP offset=207 | House	
+chunk=400 type=PROP offset=645 | TempHouses
+chunk=400 type=PROP offset=1006 | House
+chunk=400 type=PROP offset=12031 | devprod_Custom House
+chunk=400 type=PROP offset=13157 | devprod_House Painting License
+chunk=417 type=PROP offset=1735 | HouseEditMenu
+chunk=419 type=PROP offset=88285 | local housessetting = plr:WaitForChild("HousesSetting")
+chunk=419 type=PROP offset=88285 | function HouseMagnitudeCheck(house)
+chunk=419 type=PROP offset=88285 | 	if house then
+chunk=419 type=PROP offset=88285 | 		local fl = house:FindFirstChild("Floor")
+chunk=419 type=PROP offset=88285 | function ChangePlaceholderHouse(placement, toadd, house)
+chunk=419 type=PROP offset=88285 | 		local placeholder = game.ReplicatedStorage.PlaceholderHouse:clone()
+chunk=419 type=PROP offset=88285 | 		placeholder.Name = "PlaceholderHouse"..tostring(placement)
+chunk=419 type=PROP offset=88285 | 		placeholder:SetPrimaryPartCFrame(workspace.HousePlacement[tostring(placement)].CFrame)
+chunk=419 type=PROP offset=88285 | 		local placeholder = workspace:FindFirstChild("PlaceholderHouse"..tostring(placement))
+chunk=419 type=PROP offset=88285 | function HousesSettingChanged(val)
+chunk=419 type=PROP offset=88285 | 		for _,v in pairs(game.ReplicatedStorage.UnrenderedHouses:GetChildren()) do
+chunk=419 type=PROP offset=88285 | 				ChangePlaceholderHouse(v.HousePlacement.Value, false, v)
+chunk=419 type=PROP offset=88285 | 				v.Parent = game.ReplicatedStorage.UnrenderedHouses
+chunk=419 type=PROP offset=88285 | 				ChangePlaceholderHouse(v.HousePlacement.Value, true, v)
+chunk=419 type=PROP offset=88285 | 	HousesSettingChanged(housessetting.Value)
+chunk=419 type=PROP offset=88285 | 	housessetting.Changed:connect(HousesSettingChanged)
+chunk=419 type=PROP offset=88285 | 				if housessetting.Value == 1 then
+chunk=419 type=PROP offset=88285 | 					child.Parent = game.ReplicatedStorage.UnrenderedHouses
+chunk=419 type=PROP offset=88285 | 					ChangePlaceholderHouse(child.HousePlacement.Value, true, child)
+chunk=419 type=PROP offset=88285 | 	game.ReplicatedStorage.UnrenderedHouses.ChildRemoved:connect(function(child)
+chunk=419 type=PROP offset=88285 | 				ChangePlaceholderHouse(child.HousePlacement.Value, false, child)
+chunk=419 type=PROP offset=88285 | 			if housessetting.Value == 2 then
+chunk=419 type=PROP offset=88285 | 						local check = HouseMagnitudeCheck(v)
+chunk=419 type=PROP offset=88285 | 							v.Parent = game.ReplicatedStorage.UnrenderedHouses
+chunk=419 type=PROP offset=88285 | 							ChangePlaceholderHouse(v.HousePlacement.Value, true, v)
+chunk=419 type=PROP offset=88285 | 				for _,v in pairs(game.ReplicatedStorage.UnrenderedHouses:GetChildren()) do
+chunk=419 type=PROP offset=88285 | 							ChangePlaceholderHouse(v.HousePlacement.Value, false, v)
+chunk=419 type=PROP offset=99396 | 		if gui:FindFirstChild("HouseEditMode") and gui.HouseEditMode.CenterFrame.Visible == true then
+chunk=419 type=PROP offset=99396 | 			recurse(gui.HouseEditMode.CenterFrame)
+chunk=419 type=PROP offset=115388 | 	notification:Fire("This isn't just a school - after class, you can do things such as party at the dance club, buy and furnish your own house, and more!",true)
+chunk=419 type=PROP offset=154294 | 	script.Parent.Parent.ExitHouse:Fire()
+chunk=419 type=PROP offset=154392 | 	script.Parent.Parent.SaveHouse:Fire()
+chunk=419 type=PROP offset=157256 | 			script.Parent.Parent.Parent.Parent.SaveHouse:Fire(true)
+chunk=419 type=PROP offset=158188 | 	script.Parent.Parent.Parent.Parent[script.Parent.Parent.Parent.WindowType.Value.."House"]:Fire(true)
+chunk=419 type=PROP offset=159001 | --house product id: 183
+chunk=419 type=PROP offset=159001 | --house painting license: 208
+chunk=419 type=PROP offset=159001 | local moveinc = plr:FindFirstChild("HouseMoveIncrement") --1, 2, 4, 8, 16
+chunk=419 type=PROP offset=159001 | 	moveinc.Name = "HouseMoveIncrement"
+chunk=419 type=PROP offset=159001 | local rotateinc = plr:FindFirstChild("HouseRotateIncrement") --45, 15
+chunk=419 type=PROP offset=159001 | 	rotateinc.Name = "HouseRotateIncrement"
+chunk=419 type=PROP offset=159001 | local paintcolor = plr:FindFirstChild("HousePaintColor") --send this value with REs
+chunk=419 type=PROP offset=159001 | 	paintcolor.Name = "HousePaintColor"
+chunk=419 type=PROP offset=159001 | 		gui.Reason.Text = "You need more Cash in order to save all the items that you've added to your house. Get more Cash & save the house?"
+chunk=419 type=PROP offset=159001 | 			setFeedback("Save","Save your house?")
+chunk=419 type=PROP offset=159001 | 		local tool = game.ReplicatedStorage.HouseEditingTools:FindFirstChild(toolname)
+chunk=419 type=PROP offset=159001 | frame.ExitHouse.Event:connect(function(confirmed)
+chunk=419 type=PROP offset=159001 | 		if confirmed then --exit house
+chunk=419 type=PROP offset=159001 | 			local house = workspace["!home_"..plr.Name]
+chunk=419 type=PROP offset=159001 | 			local request = game.ReplicatedStorage.RemoteFunctions.ReloadHouse:InvokeServer(house.HousePlacement.Value)
+chunk=419 type=PROP offset=159001 | 			setFeedback("Exit","Exit edit mode? Any unsaved progress on your house will be lost.")
+chunk=419 type=PROP offset=159001 | frame.SaveHouse.Event:connect(function(confirmed)
+chunk=419 type=PROP offset=159001 | 			setFeedback("Dialog","Saving your house...")
+chunk=419 type=PROP offset=159001 | 			local request = game.ReplicatedStorage.RemoteFunctions.HouseSave:InvokeServer()
+chunk=419 type=PROP offset=159001 | 				setFeedback("NormalButton","Error: Failed to save house. Please try again.")
+chunk=419 type=PROP offset=159001 | 				setFeedback("Save","Save your house?")
+chunk=419 type=PROP offset=168367 | 	if game.ReplicatedStorage.RemoteFunctions.LocalGamePassCheck:Invoke("House") == true then
+chunk=419 type=PROP offset=168367 | 		game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire("BuyHouse")
+chunk=419 type=PROP offset=191278 | 	local house = workspace:FindFirstChild("!home_"..plr.Name)
+chunk=419 type=PROP offset=191278 | 	local gui = plr.PlayerGui.HouseEditMode.CenterFrame
+chunk=419 type=PROP offset=191278 | 	if house and gui.Visible == false then
+chunk=419 type=PROP offset=191278 | 		game.ReplicatedStorage.RemoteFunctions.EnterHouseEditMode:FireServer()
+chunk=419 type=PROP offset=191702 | 			script.Parent.Text = "Teleport to House"
+chunk=419 type=PROP offset=342008 | 		game.ReplicatedStorage.RemoteFunctions.PurchaseHouse:FireServer()
+chunk=419 type=PROP offset=345461 | 			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+chunk=419 type=PROP offset=397826 | 	script.Parent.Parent.Parent.ChangeTempSetting:Fire("TempHouses",tonumber(script.Parent.Name))
+chunk=419 type=PROP offset=398392 | local th = frame:WaitForChild("TempHouses")
+chunk=419 type=PROP offset=398392 | local houses = plr:WaitForChild("HousesSetting")
+chunk=419 type=PROP offset=398392 | local housesframe = frame:WaitForChild("HousesFrame")
+chunk=419 type=PROP offset=398392 | th.Value = houses.Value
+chunk=419 type=PROP offset=398392 | 	for _,v in pairs(housesframe:GetChildren()) do
+chunk=419 type=PROP offset=398392 | 	local existingval = datatype == "TempDetail" and lod.Value or houses.Value
+chunk=419 type=PROP offset=784075 | local moveincrement = plr:WaitForChild("HouseMoveIncrement")
+chunk=419 type=PROP offset=784075 | local rotateincrement = plr:WaitForChild("HouseRotateIncrement")
+chunk=419 type=PROP offset=790376 | local inc = game.Players.LocalPlayer:WaitForChild("HouseMoveIncrement")
+chunk=419 type=PROP offset=790819 | local inc = game.Players.LocalPlayer:WaitForChild("HouseRotateIncrement")
+chunk=419 type=PROP offset=793625 | 	game.Players.LocalPlayer.HousePaintColor.Value = Tool.Value.Value
+chunk=419 type=PROP offset=793625 | function canSelectHouseObject(part)
+chunk=419 type=PROP offset=793625 | 		game.ReplicatedStorage.RemoteFunctions.PaintHouseItem:FireServer(model,primaryColor.BackgroundColor)
+chunk=419 type=PROP offset=793625 | 	elseif canSelectHouseObject(part) then
+chunk=419 type=PROP offset=793625 | 		game.ReplicatedStorage.RemoteFunctions.PaintHouseItem:FireServer(part,primaryColor.BackgroundColor)
+chunk=419 type=PROP offset=793625 | 	Tool.Value.Value = player.HousePaintColor.Value
+chunk=474 type=PROP offset=10772 | HousePlacement	
+chunk=474 type=PROP offset=21234 | Dog House
+chunk=474 type=PROP offset=25248 | BaseHouse
+chunk=474 type=PROP offset=29203 | PlaceholderHouse
+chunk=479 type=PROP offset=179045 | 	elseif areaname == "Houses" then
+chunk=574 type=PROP offset=135 | MoveHouseItem
+chunk=574 type=PROP offset=152 | PaintHouseItem
+chunk=574 type=PROP offset=656 | PurchaseHouse
+chunk=574 type=PROP offset=747 | EnterHouseEditMode
+chunk=575 type=PROP offset=429 | HouseSave
+chunk=575 type=PROP offset=812 | ReloadHouse
+chunk=589 type=PROP offset=310 | HouseEditMode	
+chunk=589 type=PROP offset=706 | BuyHouse
+chunk=593 type=PROP offset=1925 | CustomHouseScript_NEW
+chunk=595 type=PROP offset=69633 | Get a house and customize it with furniture items. Buy pets and RHS Gear to spice up your time in town! There's lots to do in ROBLOX High School - enjoy your time here!]]
+chunk=595 type=PROP offset=76258 | --solves the problem of tools falling thru houses
+chunk=595 type=PROP offset=98799 | local housepassid = game.ReplicatedStorage.GamePasses.House.Value
+chunk=595 type=PROP offset=98799 | 	if data and house then
+chunk=595 type=PROP offset=98799 | 		for i,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | function loadHouse(plr,placement)
+chunk=595 type=PROP offset=98799 | 		local hp = passes:WaitForChild("House")
+chunk=595 type=PROP offset=98799 | 		if plr and (game.ServerStorage.RemoteFunctions.GamePassCheck:Invoke(plr,"House") == true or game:GetService("GamePassService"):PlayerHasPass(plr,housepassid) == true or data.Objects:FindFirstChild("183")) then
+chunk=595 type=PROP offset=98799 | 			local housedata 
+chunk=595 type=PROP offset=98799 | 				housedata = pd:GetAsync("house")
+chunk=595 type=PROP offset=98799 | 			if housedata == nil then
+chunk=595 type=PROP offset=98799 | 				housedata = {}
+chunk=595 type=PROP offset=98799 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Your house failed to load for this session. ROBLOX's servers may be experiencing issues; please try again later.",true)
+chunk=595 type=PROP offset=98799 | 			local house = game.ServerStorage.BaseHouse:clone()
+chunk=595 type=PROP offset=98799 | 			house.PrimaryPart = house.Floor
+chunk=595 type=PROP offset=98799 | 			for i,obj in pairs(housedata) do --load all furniture and house data
+chunk=595 type=PROP offset=98799 | 				if housedata[i]["Name"] ~= nil and storage:FindFirstChild(housedata[i]["Name"]) ~= nil then
+chunk=595 type=PROP offset=98799 | 					local model = storage:FindFirstChild(housedata[i]["Name"]):clone()
+chunk=595 type=PROP offset=98799 | 					model.Name = housedata[i]["Name"]
+chunk=595 type=PROP offset=98799 | 					model.Parent = house
+chunk=595 type=PROP offset=98799 | 						model:SetPrimaryPartCFrame(house.Floor.CFrame + (Vector3.new(housedata[i]["CFrame"][1],housedata[i]["CFrame"][2],housedata[i]["CFrame"][3])))
+chunk=595 type=PROP offset=98799 | 						model:SetPrimaryPartCFrame(model.PrimaryPart.CFrame * CFrame.Angles(0,math.rad(housedata[i]["CFrame"][4]),0))
+chunk=595 type=PROP offset=98799 | 						model.RotValue.Value = housedata[i]["CFrame"][4]
+chunk=595 type=PROP offset=98799 | 						model.PaintColor.Value = BrickColor.new(housedata[i]["PaintColor"])
+chunk=595 type=PROP offset=98799 | 			if housedata["MainHouseData"] ~= nil then
+chunk=595 type=PROP offset=98799 | 				for i,v in pairs(housedata["MainHouseData"]) do
+chunk=595 type=PROP offset=98799 | 					for _,part in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 			local nametag = house:FindFirstChild("NameTag",true)
+chunk=595 type=PROP offset=98799 | 				workspace.HousePlacement[workspace["!home_"..plr.Name].HousePlacement.Value].Occupied.Value = false
+chunk=595 type=PROP offset=98799 | 			house["Lock Button"].Owner.Value = plr.Name
+chunk=595 type=PROP offset=98799 | 			house["Restrict Button"].Owner.Value = plr.Name
+chunk=595 type=PROP offset=98799 | 					if workspace.HousePlacement[i].Occupied.Value == false then
+chunk=595 type=PROP offset=98799 | 						workspace.HousePlacement[i].Occupied.Value = true
+chunk=595 type=PROP offset=98799 | 						house.Parent = workspace
+chunk=595 type=PROP offset=98799 | 						house.Name = "!home_"..plr.Name
+chunk=595 type=PROP offset=98799 | 						house:SetPrimaryPartCFrame(workspace.HousePlacement[i].CFrame)
+chunk=595 type=PROP offset=98799 | 						placevalue.Name = "HousePlacement"
+chunk=595 type=PROP offset=98799 | 						placevalue.Parent = house
+chunk=595 type=PROP offset=98799 | 				workspace.HousePlacement[placement].Occupied.Value = true
+chunk=595 type=PROP offset=98799 | 				house.Parent = workspace
+chunk=595 type=PROP offset=98799 | 				house.Name = "!home_"..plr.Name
+chunk=595 type=PROP offset=98799 | 				house:SetPrimaryPartCFrame(workspace.HousePlacement[placement].CFrame)
+chunk=595 type=PROP offset=98799 | 				placevalue.Name = "HousePlacement"
+chunk=595 type=PROP offset=98799 | 				placevalue.Parent = house
+chunk=595 type=PROP offset=98799 | 			--[[for i,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 			for i,v in pairs(house.Floor:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 				workspace.HousePlacement[house.HousePlacement.Value].Occupied.Value = false
+chunk=595 type=PROP offset=98799 | 				house:Destroy()
+chunk=595 type=PROP offset=98799 | 		end --end the entire house loading function
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.ReloadHouse.OnServerInvoke = function(plr,placement)
+chunk=595 type=PROP offset=98799 | 	local request = loadHouse(plr,placement)
+chunk=595 type=PROP offset=98799 | 	loadHouse(plr)
+chunk=595 type=PROP offset=98799 | game.ServerStorage.RemoteFunctions.LoadHouseForPlayer.Event:connect(function(plr)
+chunk=595 type=PROP offset=98799 | 	if house and stats and model.Parent == house then
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.HouseSave.OnServerInvoke = function(plr)
+chunk=595 type=PROP offset=98799 | 	--change the CFrame to be relative to the house center (loading? add the offset value. saving? furniture CFrame - floor CFrame = offset)
+chunk=595 type=PROP offset=98799 | 		local house = workspace:FindFirstChild("!home_"..plr.Name)
+chunk=595 type=PROP offset=98799 | 		if house ~= nil then
+chunk=595 type=PROP offset=98799 | 			--house.Parent = game.ServerStorage
+chunk=595 type=PROP offset=98799 | 			--[[local origfloorpos = house.Floor.CFrame
+chunk=595 type=PROP offset=98799 | 			for i,model in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 					weld.Part0 = house.Floor 
+chunk=595 type=PROP offset=98799 | 					weld.C0 = house.Floor.CFrame:inverse() 
+chunk=595 type=PROP offset=98799 | 					weld.Parent = house.Floor
+chunk=595 type=PROP offset=98799 | 			for i,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 			house.Floor.Anchored = false]]
+chunk=595 type=PROP offset=98799 | 			--remove furniture glitched outside of the house
+chunk=595 type=PROP offset=98799 | 			for _,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 					if findpart == nil or findpart.Parent.Name ~= house.Name or not findpart.Name:match("Floor") then --put the furniture back in inventory
+chunk=595 type=PROP offset=98799 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Furniture that was detected outside of your house has been placed back into your inventory.")
+chunk=595 type=PROP offset=98799 | 			house = house:clone() --create a clone house to use for saving
+chunk=595 type=PROP offset=98799 | 			house.Name = "SAVINGHOUSE"
+chunk=595 type=PROP offset=98799 | 			house.Parent = workspace
+chunk=595 type=PROP offset=98799 | 			house:SetPrimaryPartCFrame(game.ServerStorage.BaseHouse.Floor.CFrame)
+chunk=595 type=PROP offset=98799 | 			house.Floor.Anchored = true]]
+chunk=595 type=PROP offset=98799 | 				for _,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 						local pos = v.PrimaryPart.Position - house.Floor.Position
+chunk=595 type=PROP offset=98799 | 				save["MainHouseData"] = {}
+chunk=595 type=PROP offset=98799 | 				for i,v in pairs(house:GetChildren()) do
+chunk=595 type=PROP offset=98799 | 						save["MainHouseData"][v.Name] = v.BrickColor.Number
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Error: Your house's save file has surpassed the maximum size (".. math.ceil((#savestr/259000)*100) .."%). You will have to remove some items first.")
+chunk=595 type=PROP offset=98799 | 					pd:SetAsync("house",save)
+chunk=595 type=PROP offset=98799 | 			house:Destroy() --remove the cloned house
+chunk=595 type=PROP offset=98799 | 			--house.Parent = workspace
+chunk=595 type=PROP offset=98799 | 	if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and house and house.Floor.Editing.Value == true and stats then
+chunk=595 type=PROP offset=98799 | 		--check if ray is inside house
+chunk=595 type=PROP offset=98799 | 		if findpart == nil or findpart.Parent.Name ~= house.Name or not findpart.Name:match("Floor") then
+chunk=595 type=PROP offset=98799 | 			return false,"Please stand facing some empty space inside your house, then try again."
+chunk=595 type=PROP offset=98799 | 			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Notice: You are approaching the item limit for your house. You have placed "..fcount.."/500 items.")
+chunk=595 type=PROP offset=98799 | 			item.Parent = house
+chunk=595 type=PROP offset=98799 | 			item:SetPrimaryPartCFrame(house.Floor.CFrame)
+chunk=595 type=PROP offset=98799 | 			local yoffset = item.PrimaryPart.Position.Y - bottomboundary + house.Floor.Size.Y / 2
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)
+chunk=595 type=PROP offset=98799 | 				if (data and (data.Objects:FindFirstChild("208") or game.ServerStorage.RemoteFunctions.GamePassCheck:Invoke(plr,"House"))) and colorbanned == false then
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.EnterHouseEditMode.OnServerEvent:connect(function(plr)
+chunk=595 type=PROP offset=98799 | 		house.Floor.Editing.Value = true
+chunk=595 type=PROP offset=98799 | --"exit house" is just ReloadHouse(), nothing else needed
+chunk=595 type=PROP offset=98799 | 		workspace.HousePlacement[house.HousePlacement.Value].Occupied.Value = false
+chunk=595 type=PROP offset=98799 | 		house:Destroy()
+chunk=595 type=PROP offset=138629 | 		["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+chunk=595 type=PROP offset=138629 | 				["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+chunk=595 type=PROP offset=138629 | 	local housessetting = Instance.new("IntValue")
+chunk=595 type=PROP offset=138629 | 	housessetting.Name = "HousesSetting"
+chunk=595 type=PROP offset=138629 | 	housessetting.Value = options["LevelOfDetail"][2]
+chunk=595 type=PROP offset=138629 | 	housessetting.Parent = player
+chunk=595 type=PROP offset=138629 | 		elseif v.Name == "House" and playerobjects:FindFirstChild("183") then --Custom House product's ItemID
+chunk=595 type=PROP offset=138629 | 		if v.Name ~= "House" and v.Value == true then
+chunk=595 type=PROP offset=138629 | game.ReplicatedStorage.RemoteFunctions.ChangeDetailSetting.OnServerEvent:connect(function(plr,lod,houses)
+chunk=595 type=PROP offset=138629 | 	plr.HousesSetting.Value = houses
+chunk=595 type=PROP offset=138629 | 					["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+chunk=595 type=PROP offset=138629 | 			local hsetting = plr.HousesSetting.Value
+chunk=595 type=PROP offset=138629 | 							["LevelOfDetail"] = {lod,hsetting} --LoD, houses enabled
+chunk=595 type=PROP offset=138629 | 					local hashouse = true
+chunk=595 type=PROP offset=138629 | 					if not data.Objects:FindFirstChild("183") and data.GamePasses.House.Value == false then
+chunk=595 type=PROP offset=138629 | 						--does not have custom house
+chunk=595 type=PROP offset=138629 | 						hashouse = false
+chunk=595 type=PROP offset=138629 | 							if player and hashouse == false and data:FindFirstChild("GamePasses") then
+chunk=595 type=PROP offset=138629 | 								--give the custom house
+chunk=595 type=PROP offset=138629 | 								data.GamePasses.House.Value = true
+chunk=595 type=PROP offset=138629 | 								game.ServerStorage.RemoteFunctions.LoadHouseForPlayer:Fire(player)
+chunk=595 type=PROP offset=138629 | 								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash, the Classy Car, and a set of starting furniture for your Custom House!", true)
+chunk=595 type=PROP offset=138629 | 								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash and a set of starting furniture for your Custom House!", true)
+chunk=595 type=PROP offset=369727 | game.ReplicatedStorage.RemoteFunctions.PurchaseHouse.OnServerEvent:connect(function(plr)
+chunk=595 type=PROP offset=369727 | 			data.GamePasses.House.Value = true
+chunk=595 type=PROP offset=369727 | 			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Success! You now have your very own Custom House!")
+chunk=595 type=PROP offset=369727 | 			game.ServerStorage.RemoteFunctions.LoadHouseForPlayer:Fire(plr)
+chunk=595 type=PROP offset=369727 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Sorry, you need "..reason.." more RHS Cash to get a house. You can purchase RHS Cash by clicking the golden Shop button!")
+chunk=595 type=PROP offset=369727 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Purchase successful! You are now permitted to paint the exterior walls of your house.")
+chunk=595 type=PROP offset=468409 | local areas = {"School","Club Red","Mall", "ChefUmbra", "Archaeic Gear Shop", "Myzta Pet Shop", "Pool", "Sunblox Cafe", "Soccer Field", "Apartments", "Houses", "Beach", "Forest", "SchoolSpirit", "BeachsideBean"}
+chunk=595 type=PROP offset=477722 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(owner, invader.Name.." tried to enter your house, but you are still in Edit Mode. (Save & Exit to allow visitors to enter)")
+chunk=595 type=PROP offset=477722 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"You are restricted from entering the house at this time. The owner may be in Edit Mode.")
+chunk=595 type=PROP offset=477722 | 			game.ServerStorage.RemoteFunctions.DestroyCar:Fire(hit.Parent,"It's not very polite to smash your car into other people's houses!")
+chunk=833 type=PROP offset=13379 | A kitchen countertop to prepare your next meal, or house fire, on.
+chunk=833 type=PROP offset=13459 | A kitchen countertop corner piece to prepare your next meal, or house fire, on.
+chunk=833 type=PROP offset=13552 | A long kitchen countertop to prepare your next meal, or house fire, on.
+chunk=833 type=PROP offset=15885 | Use this to cook some delicious meals, or to burn the house down. Your choice. [Disclaimer: You can't cook 
+chunk=833 type=PROP offset=17189 | A stylish rug for your stylish house. [Red = Paintable]	
+chunk=833 type=PROP offset=22080 | A torch to light up your house!
+chunk=833 type=PROP offset=36358 | See the House button on the menu? Click on that to buy your own permanent Customizable House!
+chunk=833 type=PROP offset=36455 | How do I get my own house?i
+chunk=833 type=PROP offset=36485 | You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+chunk=833 type=PROP offset=36594 | How customizable are the houses?
+chunk=833 type=PROP offset=36663 | I have questions about houses.
+chunk=833 type=PROP offset=36697 | There's a residential area to your right where all the houses appear! You can open the House menu and click "Teleport to House" to find yours immediately.
+chunk=833 type=PROP offset=36855 | Where do the houses appear?X
+chunk=833 type=PROP offset=36886 | Open the House menu and click the Edit House button, and you'll be taken into edit mode.
+chunk=833 type=PROP offset=36978 | How do I edit my house?
+chunk=833 type=PROP offset=37005 | You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+chunk=978 type=PROP offset=1047 | Edit House
+chunk=978 type=PROP offset=1061 | Teleport to House
+chunk=978 type=PROP offset=2825 | Get a House! ($50)
+chunk=1012 type=PROP offset=5027 | Exit edit mode? Any unsaved progress on your house will be lost.
+chunk=1012 type=PROP offset=9914 | - Buy furniture for your house
+chunk=1012 type=PROP offset=14940 | Customizable Housem
+chunk=1012 type=PROP offset=14962 | Buy your own customizable house for just 50 RHS Cash! This house is saved permamently; it is loaded every time you join the game.
+chunk=1012 type=PROP offset=14962 | Furnish your custom house with tons of items which you can purchase and place anywhere inside! Plus, use the Paint Bucket to paint certain items and interior walls different colors.
+chunk=1012 type=PROP offset=15354 | Landlord Lenny requires homeowners to purchase a house painting license for $150 RHS Cash before being able to paint a house's outside walls. This helps keep the neighborhood looking nicer!
+chunk=1012 type=PROP offset=15732 | Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.
+chunk=1012 type=PROP offset=19710 | Load other players' Custom Houses:B
+chunk=1012 type=PROP offset=19748 | Unloaded houses will use placeholder blocks instead, reducing lag.
+chunk=1012 type=PROP offset=22091 | House Owner Here2

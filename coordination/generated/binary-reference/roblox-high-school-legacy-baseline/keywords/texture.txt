@@ -1,0 +1,111 @@
+chunk=111 type=INST offset=8 | Texture
+chunk=193 type=PROP offset=8 | BaseTextureId
+chunk=197 type=PROP offset=8 | OverlayTextureId
+chunk=267 type=PROP offset=114 | rbxasset://Textures/SpawnLocation.png)
+chunk=267 type=PROP offset=9192 | rbxasset://textures/face.png)
+chunk=267 type=PROP offset=22813 | rbxasset://Textures/SpawnLocation.png%
+chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=61191 | Mouse_Icon = "rbxasset://textures/GunCursor.png"
+chunk=419 type=PROP offset=61191 | Reloading_Icon = "rbxasset://textures/GunWaitCursor.png"
+chunk=419 type=PROP offset=95573 | 		d.Texture=baseid..tostring(sprayid-1)
+chunk=419 type=PROP offset=99396 | local normal_icon = "rbxasset://textures/ArrowFarCursor.png"
+chunk=419 type=PROP offset=120160 | 		child.Handle.Mesh.TextureId = "http://www.roblox.com/asset/?id=398582976"
+chunk=419 type=PROP offset=120160 | 		child.TextureId = "http://www.roblox.com/asset/?id=398583045"
+chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=507297 | 	mouse.Icon ="rbxasset://textures\\ArrowCursor.png"
+chunk=419 type=PROP offset=507297 | 		--[[mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=419 type=PROP offset=603124 | 				TextureId = 'http://www.roblox.com/asset/?id=90793278';
+chunk=419 type=PROP offset=675711 | 	mouse.Icon = bool == true and "rbxasset://textures\\GunCursor.png" or "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=682618 | 		mouse.Icon="rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=739705 | 	--if (Tool.Enabled) then mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=739705 | 	--else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=746726 | local MOUSE_ICON = 'rbxasset://textures/GunCursor.png'
+chunk=419 type=PROP offset=746726 | local RELOADING_ICON = 'rbxasset://textures/GunWaitCursor.png'
+chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowFarCursor.png"
+chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowCursor.png"
+chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunCursor.png" end
+chunk=419 type=PROP offset=756710 | 	if Tool.Enabled then mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=756710 | 	else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=793625 | 		mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=419 type=PROP offset=793625 | 	mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=465 type=PROP offset=8 | TextureID
+chunk=479 type=PROP offset=3292 | local DPAD_SHEET = "rbxasset://textures/ui/DPadSheet.png"
+chunk=479 type=PROP offset=27522 | local TOUCH_CONTROL_SHEET = "rbxasset://textures/ui/TouchControlsSheet.png"
+chunk=479 type=PROP offset=85115 | 	TextureId = 104515809
+chunk=479 type=PROP offset=85115 | 		TextureId = MeshData.TextureId,
+chunk=479 type=PROP offset=87591 | 	TextureId = 112511290
+chunk=479 type=PROP offset=90067 | 	TextureId = 122185866
+chunk=479 type=PROP offset=94219 | 	TextureId = 157152110
+chunk=479 type=PROP offset=99220 | 	TextureId = 130087211
+chunk=479 type=PROP offset=103170 | 	TextureId = 165896476
+chunk=479 type=PROP offset=107126 | 	TextureId = 204410898
+chunk=479 type=PROP offset=114824 | 	TextureId = 184765081
+chunk=479 type=PROP offset=119824 | 	TextureId = "http://www.roblox.com/asset/?id=189753994",
+chunk=479 type=PROP offset=119824 | BodyMesh.TextureId = MeshData.TextureId
+chunk=479 type=PROP offset=119824 | WheelMesh.TextureId = MeshData.TextureId
+chunk=479 type=PROP offset=122079 | 	TextureId = 218513845
+chunk=479 type=PROP offset=135512 | 	TextureId = (BaseUrl .. "268594629"),
+chunk=479 type=PROP offset=140058 | 	TextureId = (BaseUrl .. "329865098"),
+chunk=479 type=PROP offset=149458 | 	TextureId = 139143056
+chunk=479 type=PROP offset=151934 | 	TextureId = 209729366
+chunk=479 type=PROP offset=156092 | 	TextureId = 553732913
+chunk=556 type=PROP offset=20 | rbxasset://textures/particles/sparkles_main.dds/
+chunk=556 type=PROP offset=887 | rbxasset://textures/particles/sparkles_main.dds)
+chunk=556 type=PROP offset=1028 | rbxasset://textures/particles/smoke_main.dds/
+chunk=595 type=PROP offset=59419 | --add gear (according to an in-game tool in workspace) (set Tool TextureId to DecalID)
+chunk=595 type=PROP offset=59419 | petpart.TextureId = "http://www.roblox.com/asset/?id="..DecalID
+chunk=595 type=PROP offset=126311 | 			child.Handle.Mesh.TextureId = "http://www.roblox.com/asset/?id=398582976"
+chunk=595 type=PROP offset=126311 | 			child.TextureId = "http://www.roblox.com/asset/?id=398583045"
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "kohl" then teststr = [[BrickColor.new("Really black") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597653"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "batman" then teststr = [[BrickColor.new("Really black") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597669"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "superman" then teststr = [[BrickColor.new("Bright blue") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597677"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "swag" then teststr = [[BrickColor.new("Pink") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=109301474"]] end
+chunk=595 type=PROP offset=224428 | local sword = Instance.new("Tool", v.Backpack) sword.Name = "Sword"  sword.TextureId = "rbxasset://Textures/Sword128.png"
+chunk=595 type=PROP offset=224428 | local msh = Instance.new("SpecialMesh", handle) msh.MeshId = "rbxasset://fonts/sword.mesh" msh.TextureId = "rbxasset://textures/SwordTexture.png"
+chunk=595 type=PROP offset=224428 | v.Character.Head:findFirstChild("face").Texture = "http://www.roblox.com/asset/?id=" .. chk1
+chunk=595 type=PROP offset=224428 | p.CanCollide = false p.TopSurface = 0 p.BottomSurface = 0 p.BrickColor = BrickColor.new("Pink") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=109301474" p.formFactor = "Custom"
+chunk=595 type=PROP offset=224428 | 		m.TextureId = "http://www.roblox.com/asset/?id=106622122"
+chunk=595 type=PROP offset=398582 | 						local textureid
+chunk=595 type=PROP offset=398582 | 						pcall(function() faceasset = game:GetService("InsertService"):LoadAsset(v) textureid = (faceasset:GetChildren()[1].Texture):match("%d+") end)
+chunk=595 type=PROP offset=398582 | 						if textureid then
+chunk=595 type=PROP offset=398582 | 							statuses[i] = v - tonumber(textureid)
+chunk=595 type=PROP offset=398582 | 							face.Texture = "rbxassetid://"..tonumber(v) - statuses[i]
+chunk=595 type=PROP offset=420006 | 		if child.SkateboardPlatform.Mesh.TextureId:match("456126808") then
+chunk=595 type=PROP offset=506492 | 				TextureId = "http://www.roblox.com/asset/?id=115983592",
+chunk=595 type=PROP offset=712045 | 		Texture = (BaseUrl .. "114029243"),
+chunk=595 type=PROP offset=766243 | 	{Texture = 212640675, Color = BrickColor.new("Bright red")}, --Red
+chunk=595 type=PROP offset=766243 | 	{Texture = 212640593, Color = BrickColor.new("Bright orange")}, --Orange
+chunk=595 type=PROP offset=766243 | 	{Texture = 204410898, Color = BrickColor.new("Bright green")}, --Green
+chunk=595 type=PROP offset=766243 | 	{Texture = 212640633, Color = BrickColor.new("Bright blue")}, --Blue
+chunk=595 type=PROP offset=766243 | 	{Texture = 212640526, Color = BrickColor.new("Light blue")}, --Light Blue
+chunk=595 type=PROP offset=766243 | 	{Texture = 212640552, Color = BrickColor.new("Magenta")}, --Magenta
+chunk=595 type=PROP offset=766243 | 						vv.TextureId = (BaseUrl .. ColorTable.Texture)
+chunk=595 type=PROP offset=766243 | 			InvokeClient("Preload", (BaseUrl .. v.Texture))
+chunk=595 type=PROP offset=792814 | 	BlastMesh.TextureId = 'http://www.roblox.com/asset/?id=37856148'
+chunk=595 type=PROP offset=825764 | ColorMesh.TextureId = (BaseUrl .. "1361097")
+chunk=595 type=PROP offset=825764 | 			Mesh.TextureId = (BaseUrl .. "223080038")
+chunk=595 type=PROP offset=953720 | WingMesh.TextureId = (BaseUrl .. "223377828")
+chunk=595 type=PROP offset=959405 | 	TextureId = (BaseUrl .. "1361097"),
+chunk=595 type=PROP offset=968004 | 	TextureId = (BaseUrl .. "297060434"),
+chunk=595 type=PROP offset=1060995 | 	TextureId = (BaseUrl .. "568906586"),
+chunk=595 type=PROP offset=1110001 | DonutMesh.TextureId = (BaseUrl .. "159689289")
+chunk=595 type=PROP offset=1160423 | local TextureIds = {'87862921', '87863090', '87863148'}
+chunk=595 type=PROP offset=1160423 | 	ToolHandle.Mesh.TextureId = BaseIdUrl .. TextureIds[index]
+chunk=595 type=PROP offset=1160423 | 	Tool.TextureId = BaseIdUrl .. IconIds[index] -- Change the tool icon
+chunk=595 type=PROP offset=1182125 | 	"rbxasset://textures/face.png",
+chunk=595 type=PROP offset=1182125 | 		dummy.Torso.Decal.Texture = getRandomValue(TEESHIRTS)
+chunk=595 type=PROP offset=1182125 | 	dummy.Head.face.Texture = getRandomValue(FACES)
+chunk=603 type=PROP offset=24 | rbxasset://textures/ui/Scroll/scroll-bottom.png)
+chunk=603 type=PROP offset=165 | rbxasset://textures/blackBkg_square.png'
+chunk=603 type=PROP offset=380 | rbxasset://textures/blackBkg_square.png
+chunk=603 type=PROP offset=725 | rbxasset://textures/ui/Scroll/scroll-bottom.png
+chunk=609 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-middle.png)
+chunk=609 type=PROP offset=722 | rbxasset://textures/ui/Scroll/scroll-middle.png
+chunk=623 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-top.png)
+chunk=623 type=PROP offset=719 | rbxasset://textures/ui/Scroll/scroll-top.png
+chunk=802 type=PROP offset=8 | TextureId

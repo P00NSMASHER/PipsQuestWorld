@@ -1,0 +1,60 @@
+chunk=178 type=PROP offset=1193 | Editing
+chunk=288 type=PROP offset=2102 | HouseEditingTools
+chunk=400 type=PROP offset=366 | SelectedItem
+chunk=417 type=PROP offset=1735 | HouseEditMenu
+chunk=419 type=PROP offset=35562 | 	main.Credits1.Position = UDim2.new(0,-150,0,61)
+chunk=419 type=PROP offset=35562 | 	main.Credits1.FontSize = "Size14"
+chunk=419 type=PROP offset=35562 | 	main.Credits2.Position = UDim2.new(0,-150,0,74)
+chunk=419 type=PROP offset=35562 | 	main.Credits2.FontSize = "Size12"
+chunk=419 type=PROP offset=44447 | 	// Written by: jmargh and jeditkacheff
+chunk=419 type=PROP offset=99396 | 		if gui:FindFirstChild("HouseEditMode") and gui.HouseEditMode.CenterFrame.Visible == true then
+chunk=419 type=PROP offset=99396 | 			recurse(gui.HouseEditMode.CenterFrame)
+chunk=419 type=PROP offset=159001 | 		local tool = game.ReplicatedStorage.HouseEditingTools:FindFirstChild(toolname)
+chunk=419 type=PROP offset=159001 | 			setFeedback("Exit","Exit edit mode? Any unsaved progress on your house will be lost.")
+chunk=419 type=PROP offset=191278 | 	local gui = plr.PlayerGui.HouseEditMode.CenterFrame
+chunk=419 type=PROP offset=191278 | 		game.ReplicatedStorage.RemoteFunctions.EnterHouseEditMode:FireServer()
+chunk=419 type=PROP offset=211474 | 		local result,reason = game.ReplicatedStorage.RemoteFunctions.PurchaseTemporaryItem:InvokeServer(shop.Name, gui.SelectedItem.Value)
+chunk=419 type=PROP offset=211474 | 	gui.SelectedItem.Value = button.Name
+chunk=419 type=PROP offset=312389 | 			if gui.SelectedItem.Value == button.ItemID.Value then
+chunk=419 type=PROP offset=312389 | 		local result,reason = game.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem:InvokeServer( gui.SelectedItem.Value) --the item ID
+chunk=419 type=PROP offset=312389 | 	gui.SelectedItem.Value = button.ItemID.Value
+chunk=419 type=PROP offset=323008 | 				if selectedpet.Value == gui.SelectedItem.Value then
+chunk=419 type=PROP offset=323008 | 		local result,reason = game.ReplicatedStorage.RemoteFunctions.EquipPet:InvokeServer(gui.SelectedItem.Value)
+chunk=419 type=PROP offset=328987 | 		local result,reason = game.ReplicatedStorage.RemoteFunctions.RequestToEquipGear:InvokeServer(gui.SelectedItem.Value)
+chunk=419 type=PROP offset=344264 | 			if v.ItemID.Value == script.Parent.Parent.Parent.Parent.SelectedItem.Value then
+chunk=419 type=PROP offset=345461 | 			if v.ItemID.Value == gui.SelectedItem.Value then
+chunk=419 type=PROP offset=345461 | 			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+chunk=419 type=PROP offset=345461 | 			gui.SelectedItem.Value = button.ItemID.Value
+chunk=419 type=PROP offset=345461 | 			gui.SelectedItem.Value = 0
+chunk=419 type=PROP offset=391383 | 		local result,reason = game.ReplicatedStorage.RemoteFunctions.PurchaseLoyaltyItem:InvokeServer( gui.SelectedItem.Value) --the item ID
+chunk=419 type=PROP offset=675711 | --Edited by QS
+chunk=419 type=PROP offset=763083 | -- music used under the Creative Commons licensing (by Attribution): all credit for the sample loop used goes to Mike Koenig
+chunk=479 type=PROP offset=19 | 	// Written by: jeditkacheff
+chunk=479 type=PROP offset=21733 | 	// Written by: jeditkacheff/jmargh
+chunk=526 type=PROP offset=192638 | Cannot_Edit
+chunk=526 type=PROP offset=196901 | Cannot_Edit	
+chunk=574 type=PROP offset=747 | EnterHouseEditMode
+chunk=589 type=PROP offset=310 | HouseEditMode	
+chunk=595 type=PROP offset=98799 | 	if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and house and house.Floor.Editing.Value == true and stats then
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.EnterHouseEditMode.OnServerEvent:connect(function(plr)
+chunk=595 type=PROP offset=98799 | 		house.Floor.Editing.Value = true
+chunk=595 type=PROP offset=224428 | -- Thanx for using mah admin script I'd appreciate credit if you used in your place c: --
+chunk=595 type=PROP offset=224428 | for i, v in pairs(game.Workspace:children()) do if v.Name == "LightEdit" then v:Destroy() end end
+chunk=595 type=PROP offset=224428 | local cl = CreateScript("Disco", game.Workspace, "LightEdit")
+chunk=595 type=PROP offset=224428 | local cl = CreateScript("Flash", game.Workspace, "LightEdit")
+chunk=595 type=PROP offset=477722 | local editing = script.Parent.Editing
+chunk=595 type=PROP offset=477722 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(owner, invader.Name.." tried to enter your house, but you are still in Edit Mode. (Save & Exit to allow visitors to enter)")
+chunk=595 type=PROP offset=477722 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"You are restricted from entering the house at this time. The owner may be in Edit Mode.")
+chunk=595 type=PROP offset=477722 | 					if (editing.Value == true and plr.Name ~= string.sub(script.Parent.Parent.Name,7)) or (restrictions.Value == true and not restrictions:FindFirstChild(plr.Name) and plr.Name ~= string.sub(script.Parent.Parent.Name,7)) then
+chunk=595 type=PROP offset=477722 | 						if editing.Value == true then
+chunk=595 type=PROP offset=527233 | --When you are editing the car, make sure that the Left, Right, and Base parts are in a 
+chunk=833 type=PROP offset=28868 | Ride around on this limited-edition Roped, sporting antlers and holiday stripes!6
+chunk=833 type=PROP offset=29239 | Ride into the new year with this beautiful limited-edition sparkly motorcycle!|
+chunk=833 type=PROP offset=30939 | The green edition of the Spice-It-Up Drink - this one will make you bounce around like crazy!	
+chunk=833 type=PROP offset=36886 | Open the House menu and click the Edit House button, and you'll be taken into edit mode.
+chunk=833 type=PROP offset=36978 | How do I edit my house?
+chunk=965 type=PROP offset=1163 | EditButton
+chunk=978 type=PROP offset=1047 | Edit House
+chunk=1001 type=PROP offset=1479 | Credits1	
+chunk=1001 type=PROP offset=1504 | Credits2
+chunk=1012 type=PROP offset=5027 | Exit edit mode? Any unsaved progress on your house will be lost.

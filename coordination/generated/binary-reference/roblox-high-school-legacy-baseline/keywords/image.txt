@@ -1,0 +1,124 @@
+chunk=44 type=INST offset=8 | ImageButton
+chunk=45 type=INST offset=8 | ImageLabel
+chunk=306 type=PROP offset=8 | SelectionImageObject
+chunk=343 type=PROP offset=8 | Image
+chunk=344 type=PROP offset=8 | ImageColor3
+chunk=345 type=PROP offset=8 | ImageRectOffset
+chunk=346 type=PROP offset=8 | ImageRectSize
+chunk=347 type=PROP offset=8 | ImageTransparency
+chunk=381 type=PROP offset=215 | PhoneImage
+chunk=381 type=PROP offset=313 | ImageLabel	
+chunk=381 type=PROP offset=415 | HoverImage
+chunk=381 type=PROP offset=613 | StarImage
+chunk=381 type=PROP offset=710 | CashImage
+chunk=381 type=PROP offset=723 | FurniImage
+chunk=381 type=PROP offset=737 | CarImage	
+chunk=419 type=PROP offset=35562 | 	main.ImageLabel.Position = UDim2.new(0,-100,0,3)
+chunk=419 type=PROP offset=35562 | 	main.ImageLabel.Size = UDim2.new(0,200,0,60)
+chunk=419 type=PROP offset=132796 | script.Parent.Event:connect(function(imageid)
+chunk=419 type=PROP offset=132796 | 	local button = gui.ImageButton
+chunk=419 type=PROP offset=132796 | 	button.Image = "rbxassetid://"..imageid
+chunk=419 type=PROP offset=146443 | 		script.Parent.ImageTransparency = .5
+chunk=419 type=PROP offset=146443 | 		script.Parent.ImageTransparency = 0
+chunk=419 type=PROP offset=215432 | 			script.Parent.Parent.FavButton.ImageTransparency = 0
+chunk=419 type=PROP offset=215432 | 			script.Parent.Parent.FavButton.ImageTransparency = 1
+chunk=419 type=PROP offset=215432 | 		script.Parent.Parent.FavButton.ImageTransparency = 1
+chunk=419 type=PROP offset=216233 | 		script.Parent.ImageTransparency = 1
+chunk=419 type=PROP offset=219448 | 		button.FavButton.ImageTransparency = 0
+chunk=419 type=PROP offset=219448 | 			label.FavButton.ImageTransparency = 0
+chunk=419 type=PROP offset=219448 | 	button.ImageTransparency = button.Parent.Favorited.Value and 0 or 1
+chunk=419 type=PROP offset=219448 | 		shopframe.AudioIDSelector.FavButton.ImageTransparency = 1
+chunk=419 type=PROP offset=243030 | local regularimg = script.Parent.Image
+chunk=419 type=PROP offset=243030 | local hoverimg = script.Parent:WaitForChild("HoverImage")
+chunk=419 type=PROP offset=312389 | 		button.Image = "http://www.roblox.com/asset/?id="..v.DecalID.Value
+chunk=419 type=PROP offset=345461 | 				button.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. v.ModelID.Value
+chunk=419 type=PROP offset=356208 | 	gui.TwoItemsContainer.Shirt.ImageButton.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=110&height=110&assetId="..shirtid.Value
+chunk=419 type=PROP offset=356208 | 	gui.TwoItemsContainer.Pants.ImageButton.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=110&height=110&assetId="..pantsid.Value
+chunk=419 type=PROP offset=356208 | 			container.ImageButton.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=110&height=110&assetId="..v.Value
+chunk=419 type=PROP offset=380083 | function ImageFade(element, totalframes, fadein)
+chunk=419 type=PROP offset=380083 | 			element.ImageTransparency = 1
+chunk=419 type=PROP offset=380083 | 			element.ImageTransparency = 0
+chunk=419 type=PROP offset=380083 | 				element.ImageTransparency = element.ImageTransparency + increment * mult
+chunk=419 type=PROP offset=380083 | local star = frame.StarImage:clone()
+chunk=419 type=PROP offset=380083 | star.ImageColor3 = stats.ConsecDays.Value > 5 and colors[3] or colors[2]
+chunk=419 type=PROP offset=380083 | ImageFade(star, 32, false)
+chunk=419 type=PROP offset=380083 | 	{  {"ItemName" = "Generic Item Name", "ItemID" = 210, "ImageID" = "rbxassetid://12345678", "PrizeTier" = 1, "IsCash" = false}, [...]  }
+chunk=419 type=PROP offset=380083 | 		frame.SpinnerFrame.ItemPic.Image = item["ImageID"]
+chunk=419 type=PROP offset=391383 | 		button.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. v.ModelID.Value
+chunk=419 type=PROP offset=401394 | 		backbutton.ImageTransparency = .7
+chunk=419 type=PROP offset=401394 | 		backbutton.ImageTransparency = 0
+chunk=419 type=PROP offset=401394 | 		forwardbutton.ImageTransparency = .7
+chunk=419 type=PROP offset=401394 | 		forwardbutton.ImageTransparency = 0
+chunk=419 type=PROP offset=401394 | 		button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=419 type=PROP offset=416272 | 			button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=419 type=PROP offset=425067 | 	local img = frame:WaitForChild("CarImage")
+chunk=419 type=PROP offset=425067 | 	local cash = img:WaitForChild("CashImage")
+chunk=419 type=PROP offset=425067 | 	img.ImageTransparency = 0.7
+chunk=419 type=PROP offset=425067 | 	cash.ImageTransparency = .07
+chunk=419 type=PROP offset=459670 | 		elseif v:IsA("ImageLabel") then
+chunk=419 type=PROP offset=459670 | 			v.ImageColor3 = DisplayColor
+chunk=419 type=PROP offset=673966 | 	if gui:FindFirstChild("Frame") and gui.Frame:FindFirstChild("ImageLabel") and gui.Frame:FindFirstChild("Frame") then
+chunk=419 type=PROP offset=673966 | 		gui.Frame.ImageLabel.Image=baseid..tostring(sprayid-1)
+chunk=419 type=PROP offset=726997 | InputButton = Instance.new("ImageButton")
+chunk=419 type=PROP offset=726997 | InputButton.Image = ""
+chunk=419 type=PROP offset=726997 | InputButton.ImageTransparency = 1
+chunk=479 type=PROP offset=3292 | 	local image = Instance.new('ImageLabel')
+chunk=479 type=PROP offset=3292 | 	image.Name = name
+chunk=479 type=PROP offset=3292 | 	image.Image = DPAD_SHEET
+chunk=479 type=PROP offset=3292 | 	image.ImageRectOffset = rectOffset
+chunk=479 type=PROP offset=3292 | 	image.ImageRectSize = rectSize
+chunk=479 type=PROP offset=3292 | 	image.BackgroundTransparency = 1
+chunk=479 type=PROP offset=3292 | 	image.Size = size
+chunk=479 type=PROP offset=3292 | 	image.Position = position
+chunk=479 type=PROP offset=3292 | 	image.Parent = DPadFrame
+chunk=479 type=PROP offset=3292 | 	return image
+chunk=479 type=PROP offset=8421 | 				if prizegui and prizegui:FindFirstChild("ImageButton") and prizegui.ImageButton.Visible then
+chunk=479 type=PROP offset=27522 | 	image.ImageColor3 = Color3.new(190/255, 190/255, 190/255)
+chunk=479 type=PROP offset=27522 | 	image.Parent = parent
+chunk=479 type=PROP offset=27522 | 	local outerImage = Instance.new('ImageLabel')
+chunk=479 type=PROP offset=27522 | 	outerImage.Name = "OuterImage"
+chunk=479 type=PROP offset=27522 | 	outerImage.Image = TOUCH_CONTROL_SHEET
+chunk=479 type=PROP offset=27522 | 	outerImage.ImageRectOffset = Vector2.new(0, 0)
+chunk=479 type=PROP offset=27522 | 	outerImage.ImageRectSize = Vector2.new(220, 220)
+chunk=479 type=PROP offset=27522 | 	outerImage.BackgroundTransparency = 1
+chunk=479 type=PROP offset=27522 | 	outerImage.Size = UDim2.new(0, thumbpadSize, 0, thumbpadSize)
+chunk=479 type=PROP offset=27522 | 	outerImage.Position = UDim2.new(0, 10, 0, 10)
+chunk=479 type=PROP offset=27522 | 	outerImage.Parent = ThumbpadFrame
+chunk=479 type=PROP offset=27522 | 	local dArrow = createArrowLabel("DownArrow", outerImage, UDim2.new(0.5, -smArrowSize.X.Offset/2, 1, lgImgOffset), smArrowSize, Vector2.new(8, 8), imgRectSize)
+chunk=479 type=PROP offset=27522 | 	local uArrow = createArrowLabel("UpArrow", outerImage, UDim2.new(0.5, -smArrowSize.X.Offset/2, 0, smImgOffset), smArrowSize, Vector2.new(8, 266), imgRectSize)
+chunk=479 type=PROP offset=27522 | 	local lArrow = createArrowLabel("LeftArrow", outerImage, UDim2.new(0, smImgOffset, 0.5, -smArrowSize.Y.Offset/2), smArrowSize, Vector2.new(137, 137), imgRectSize)
+chunk=479 type=PROP offset=27522 | 	local rArrow = createArrowLabel("RightArrow", outerImage, UDim2.new(1, lgImgOffset, 0.5, -smArrowSize.Y.Offset/2), smArrowSize, Vector2.new(8, 137), imgRectSize)
+chunk=479 type=PROP offset=35972 | 	outerImage.ImageRectOffset = Vector2.new()
+chunk=479 type=PROP offset=35972 | 	outerImage.Size = UDim2.new(0, thumbstickSize, 0, thumbstickSize)
+chunk=479 type=PROP offset=35972 | 	outerImage.Position = UDim2.new(0, 0, 0, 0)
+chunk=479 type=PROP offset=35972 | 	outerImage.Parent = ThumbstickFrame
+chunk=479 type=PROP offset=35972 | 	StickImage = Instance.new('ImageLabel')
+chunk=479 type=PROP offset=35972 | 	StickImage.Name = "StickImage"
+chunk=479 type=PROP offset=35972 | 	StickImage.Image = TOUCH_CONTROL_SHEET
+chunk=479 type=PROP offset=35972 | 	StickImage.ImageRectOffset = Vector2.new(220, 0)
+chunk=479 type=PROP offset=35972 | 	StickImage.ImageRectSize = Vector2.new(111, 111)
+chunk=479 type=PROP offset=35972 | 	StickImage.BackgroundTransparency = 1
+chunk=479 type=PROP offset=35972 | 	StickImage.Size = UDim2.new(0, thumbstickSize/2, 0, thumbstickSize/2)
+chunk=479 type=PROP offset=35972 | 	StickImage.Position = UDim2.new(0, thumbstickSize/2 - thumbstickSize/4, 0, thumbstickSize/2 - thumbstickSize/4)
+chunk=479 type=PROP offset=35972 | 	StickImage.ZIndex = 2
+chunk=479 type=PROP offset=35972 | 	StickImage.Parent = ThumbstickFrame
+chunk=479 type=PROP offset=35972 | 		StickImage.Position = UDim2.new(0, relativePosition.x + StickImage.AbsoluteSize.x/2, 0, relativePosition.y + StickImage.AbsoluteSize.y/2)
+chunk=479 type=PROP offset=35972 | 		StickImage.Position = UDim2.new(0, ThumbstickFrame.Size.X.Offset/2 - thumbstickSize/4, 0, ThumbstickFrame.Size.Y.Offset/2 - thumbstickSize/4)
+chunk=479 type=PROP offset=44084 | 	JumpButton = Instance.new('ImageButton')
+chunk=479 type=PROP offset=44084 | 	JumpButton.Image = TOUCH_CONTROL_SHEET
+chunk=479 type=PROP offset=44084 | 	JumpButton.ImageRectOffset = Vector2.new(176, 222)
+chunk=479 type=PROP offset=44084 | 	JumpButton.ImageRectSize = Vector2.new(174, 174)
+chunk=479 type=PROP offset=44084 | 		JumpButton.ImageRectOffset = Vector2.new(0, 222)
+chunk=479 type=PROP offset=44084 | 		JumpButton.ImageRectOffset = Vector2.new(176, 222)
+chunk=479 type=PROP offset=171232 | 				button.Image = "http://www.roblox.com/asset/?id="..v.DecalID.Value
+chunk=595 type=PROP offset=224428 | local down = Instance.new("ImageButton", main) down.Image = "http://www.roblox.com/asset/?id=108326725" down.BackgroundTransparency = 1 down.Size = UDim2.new(0,25,0,25) down.Position = UDim2.new(1,-20,1,-20) down.ZIndex = 9
+chunk=595 type=PROP offset=224428 | local up = down:Clone() up.Image = "http://www.roblox.com/asset/?id=108326682" up.Parent = main up.Position = UDim2.new(1,-20,1,-50)
+chunk=595 type=PROP offset=398582 | 	integer = good to load this item! (the int designates the ID offset to the Image)
+chunk=595 type=PROP offset=398582 | 					if asset.AssetTypeId == 1 then --it's already an Image
+chunk=595 type=PROP offset=408649 | 		["ImageID"] = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. item.ModelID.Value,
+chunk=595 type=PROP offset=408649 | 		["ImageID"] = "rbxassetid://"..item.DecalID.Value,
+chunk=595 type=PROP offset=408649 | 		["ImageID"] = imgid,
+chunk=603 type=PROP offset=8 | BottomImage
+chunk=609 type=PROP offset=8 | MidImage
+chunk=623 type=PROP offset=8 | TopImage
+chunk=802 type=PROP offset=24187 | rbxgameasset://Images/d96a2fd8b89ff3dd2c31669b8bcd5044

@@ -1,0 +1,4383 @@
+=== chunk=145 type=PROP offset=157 runSha256=0169ed1c6a412f83d4881900784d48484c337b640b21c19a9697b620dd543e9a ===
+OpenFurnitureMenu
+=== chunk=145 type=PROP offset=755 runSha256=76b5ac519c5394672ea849ff379d40a9ed4c2b409013bc16be0f3ee85a82050d ===
+AddFurniture
+=== chunk=145 type=PROP offset=771 runSha256=9ecf5c4ff2aad2e9df604c0b2ecdf983ea4035ef4d16505e719805aa8897ddcd ===
+SellFurniture
+=== chunk=419 type=PROP offset=115388 runSha256=e846d0e352b90f2a93f0ab448c6c2386662ec4fd61b11a67c18ef847dada0923 ===
+local plr = game.Players.LocalPlayer
+
+repeat wait() until plr.Character and plr.Character.Parent ~= nil
+
+local char = plr.Character
+local hum = char:WaitForChild("Humanoid")
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+local totaltime = data:WaitForChild("totaltime")
+local cash = data:WaitForChild("cash")
+local loaded = data:WaitForChild("LoadedSuccessfully")
+local notification = game.ReplicatedStorage.RemoteFunctions.LocalNotification
+
+if totaltime.Value <= 1 and loaded.Value == true then
+	repeat wait() until script.Parent:FindFirstChild("ACTIVE_IntroGUI") == nil
+	wait(.4)
+	repeat wait() until script.Parent:FindFirstChild("ACTIVE_DailyLoyaltyReward") == nil
+	wait(.3)
+	notification:Fire("Welcome to ROBLOX High School! A game where you can roleplay, make new friends, and have fun with people around town!",true)
+	wait(16.6)
+	notification:Fire("This isn't just a school - after class, you can do things such as party at the dance club, buy and furnish your own house, and more!",true)
+	wait(16.7)
+	if plr.userId > 0 then
+		notification:Fire("Check out all the fun things that are available here - and enjoy playing ROBLOX High School!",true)
+	else
+		notification:Fire("Note: While playing as a Guest, many features are unavailable. Create a free ROBLOX account to experience the full game and be able to save your progress here!",true)
+	end
+end
+
+hum.Changed:connect(function(property)
+	if property == "SeatPart" and totaltime.Value < 120 and hum.SeatPart ~= nil and hum.SeatPart.Name == "Drive" then
+		local car = hum.SeatPart.Parent
+		if car:FindFirstChild("DriverLocked") and car.DriverLocked.Value == true and car.Owner.Value ~= plr.Name then
+			notification:Fire("You can't drive this person's car. Spawn your own car via the Cars menu!")
+		end
+	end
+end)
+
+game.Lighting.Changed:connect(function(property)
+	if property == "TimeOfDay" and game.Lighting:GetMinutesAfterMidnight() == 919 and totaltime.Value >= 10 and totaltime.Value <= 30 then
+		local mincash = 50 + totaltime.Value * 2 - 40
+		local maxcash = 50 + totaltime.Value * 2 + 20
+		if cash.Value >= mincash and cash.Value <= maxcash then
+			if plr.userId > 0 then
+				notification:Fire("You've earned $"..cash.Value.." RHS Cash so far, simply for playing the game! Use RHS Cash to buy stuff such as housing & furniture, RHS gear items, cars, and more!",true)
+			else
+				notification:Fire("Enjoying ROBLOX High School? Create a free ROBLOX account so that you can save your progress here and gain access to more features, such as chatting with other players!",true)
+			end
+		end
+	end
+end)u
+=== chunk=419 type=PROP offset=153277 runSha256=cb649dc64b0b321d053d5e3b4cbcf6b6822239d3c140b95a67edeedc42b01b5f ===
+local plr = game.Players.LocalPlayer
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+local cash = data:WaitForChild("cash")
+local fc = data:WaitForChild("FurnitureCost")
+data:WaitForChild("LoadedSuccessfully")
+
+if data.LoadedSuccessfully.Value == false then
+	script.Parent.Text = "Error! Rejoin"
+	return
+end
+
+function setText()
+	script.Parent.Text = "$"..cash.Value
+	if cash.Value < fc.Value then
+		script.Parent.TextStrokeColor3 = Color3.new(1, 51/255, 51/255)
+	else
+		script.Parent.TextStrokeColor3 = Color3.new(11/255, 212/255, 25/255)
+	end
+end
+
+script.Parent.Text = "$"..cash.Value
+
+cash.Changed:connect(function(val)
+	script.Parent.Text = "$"..cash.Value
+end)A
+=== chunk=419 type=PROP offset=153969 runSha256=ff0fa2a1b5ca99320e1bbcd5c1cf754fc7c8d44ab5b13611550e03fe8b399b2f ===
+local player = game.Players.LocalPlayer
+local playerdata = game.ReplicatedStorage.PlayerData:WaitForChild(player.userId)
+local cash = playerdata:WaitForChild("FurnitureCost")
+
+script.Parent.Text = "$"..cash.Value
+
+playerdata:WaitForChild("FurnitureCost").Changed:connect(function(val)
+	script.Parent.Text = "$"..val
+end)
+^
+=== chunk=419 type=PROP offset=154490 runSha256=4cd0bb6647232331481e00a64ad6fe6935bf9b12d74648029a96f98759d16a2e ===
+script.Parent.MouseButton1Click:connect(function()
+	script.Parent.Parent.OpenFurnitureMenu:Fire()
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+mouse.KeyDown:connect(function(key)
+	if key == "v" and script.Parent.Parent.Parent.Visible == true and not script.Parent.Parent.Parent.Parent.Parent:FindFirstChild("ACTIVE_FurnitureShopGui") then
+		script.Parent.Parent.OpenFurnitureMenu:Fire()
+	end
+end)
+
+local gamepadmode = game.Players.LocalPlayer:WaitForChild("GamepadMode")
+if gamepadmode then
+	local UserInputService = game:GetService("UserInputService")
+	script.Parent.ButtonLabel.Visible = true
+	
+	UserInputService.InputBegan:connect(function(input,gameprocessed)
+		if script.Parent.Parent.Parent.Visible == true and input.UserInputType == Enum.UserInputType.Gamepad1 and not gameprocessed then
+			if input.KeyCode == Enum.KeyCode.ButtonY then
+				script.Parent.Parent.OpenFurnitureMenu:Fire()
+			end
+		end
+	end)
+end
+=== chunk=419 type=PROP offset=158727 runSha256=0e6a50d0fc1f905136e6efa1036c27a45a29d8fcd11993dbb92eface3bd16a6b ===
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(game.Players.LocalPlayer.userId)
+
+local count = data:WaitForChild("FurnitureCount")
+
+function setText()
+	script.Parent.Text = count.Value.."/500"
+end
+
+setText()
+
+count.Changed:connect(function()
+	setText()
+end)I
+=== chunk=419 type=PROP offset=159001 runSha256=061587abad5188732dd18a317edaed4c38b86a3b98aa060f8854a8a3f121bda2 ===
+--house product id: 183
+--house painting license: 208
+--furniture shop name: ACTIVE_FurnitureShop
+
+local plr = game.Players.LocalPlayer
+local tools = {"Move","Paint","Remove"}
+
+if plr.Character == nil or plr.Character.Parent == nil then
+	plr.CharacterAdded:wait()
+end
+
+local char = plr.Character
+local hum = char:WaitForChild("Humanoid")
+local backpack = plr:WaitForChild("Backpack")
+
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+
+local cf = script.Parent:WaitForChild("CenterFrame")
+local frame = cf:WaitForChild("Frame")
+
+local enabled = frame:WaitForChild("Enabled")
+local selectedtool = frame:WaitForChild("SelectedTool")
+
+local prompts = frame:WaitForChild("GamepadToolPrompts")
+
+local moveinc = plr:FindFirstChild("HouseMoveIncrement") --1, 2, 4, 8, 16
+if moveinc == nil then
+	moveinc = Instance.new("IntValue",plr)
+	moveinc.Name = "HouseMoveIncrement"
+	moveinc.Value = 1
+end
+
+local rotateinc = plr:FindFirstChild("HouseRotateIncrement") --45, 15
+if rotateinc == nil then
+	rotateinc = Instance.new("IntValue",plr)
+	rotateinc.Name = "HouseRotateIncrement"
+	rotateinc.Value = 45
+end
+
+local paintcolor = plr:FindFirstChild("HousePaintColor") --send this value with REs
+if paintcolor == nil then
+	paintcolor = Instance.new("BrickColorValue",plr)
+	paintcolor.Name = "HousePaintColor"
+	paintcolor.Value = BrickColor.new("Dark green")
+end
+
+
+
+
+
+function setFeedback(type,text,value) --types: Save, Exit, Dialog (no buttons), NormalButton, Cash
+	local gui = frame.FeedbackDialog
+	gui.WindowType.Value = type
+	if text == nil then
+		text = ""
+	end
+	gui.Reason.Text = text
+	for _,v in pairs(gui:GetChildren()) do
+		if v:IsA("Frame") then
+			v.Visible = false
+		end
+	end
+	if type == "Save" or type == "Exit" then
+		gui.OptionButtons.Visible = true
+	--elseif type == "Dialog" then	
+	elseif type == "NormalButton" then
+		gui[type].Visible = true
+	elseif type == "Cash" then
+
+		local cash = data.cash.Value
+		local products = game.ReplicatedStorage.CashProducts:GetChildren()
+		local bestprod
+		local highestprod
+		for i,v in pairs(products) do
+			if v.Name ~= "30" then
+				local diff = tonumber(v.Name) - value
+				if diff >= 0 and (bestprod == nil or tonumber(bestprod.Name) > tonumber(v.Name)) then
+					bestprod = v
+				end
+				if highestprod == nil or tonumber(v.Name) > tonumber(highestprod.Name) then
+					highestprod = v
+				end
+			end
+		end
+		if bestprod == nil then
+			bestprod = highestprod
+		end
+		
+		gui.Reason.Text = "You need more Cash in order to save all the items that you've added to your house. Get more Cash & save the house?"
+		gui.CashAmount.Value = tonumber(bestprod.Name)
+		gui.ProductId.Value = bestprod.Value
+		gui.BuyCashButtons.GetCash.Text = "Get +"..bestprod.Name.." Cash!"
+		gui.BuyCashButtons.Visible = true
+		
+	end
+	gui.Visible = true
+end
+
+function removeTools()
+	for _,v in pairs(tools) do
+		local t = backpack:FindFirstChild(v)
+		if t then
+			t:Destroy()
+		end
+		local tool = char:FindFirstChild(v)
+		if tool then
+			hum:UnequipTools()
+			wait(1/30)
+			if tool then
+				tool:Destroy()
+			end
+		end
+		
+		if plr:FindFirstChild("GamepadMode") then
+			for _,v in pairs(prompts:GetChildren()) do
+				v.Visible = false
+			end
+		end
+	end
+end
+
+data:WaitForChild("cash").Changed:connect(function(val)
+	local gui = frame:WaitForChild("FeedbackDialog")
+	if gui.Visible == true and gui:WaitForChild("WindowType").Value == "Cash" then
+		local diff = data:WaitForChild("FurnitureCost").Value - data.cash.Value
+		if diff > 0 then --can't afford
+			
+		else
+			setFeedback("Save","Save your house?")
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
+
+function checkForNoGui()
+	for _,v in pairs(plr.PlayerGui:GetChildren()) do
+		if v.Name:match("ACTIVE_") then
+			return false
+		end
+	end
+	return true
+end
+
+frame.SelectTool.Event:connect(function(toolname)
+	if enabled.Value == true then
+		if toolname == selectedtool.Value then
+			selectedtool.Value = ""
+			enabled.Value = false
+			removeTools()
+			enabled.Value = true
+			return
+		else
+			selectedtool.Value = toolname
+		end
+
+		enabled.Value = false
+		removeTools()
+		enabled.Value = true
+		local tool = game.ReplicatedStorage.HouseEditingTools:FindFirstChild(toolname)
+		if tool then
+			local cl = tool:clone()
+			cl.Parent = backpack
+			hum:EquipTool(cl)
+		end
+		if plr:FindFirstChild("GamepadMode") then
+			game:GetService("GuiService").SelectedObject = nil
+			for _,v in pairs(prompts:GetChildren()) do
+				if v.Name == toolname then
+					v.Visible = true
+				else
+					v.Visible = false
+				end
+				prompts.Visible = true
+			end
+		end
+	end
+end)
+
+selectedtool.Changed:connect(function(val)
+	for _,v in pairs(frame.ToolsFrame:GetChildren()) do
+		if v.Name == val then
+			v.BackgroundColor3 = Color3.new(104/255, 1, 88/255)
+		else
+			v.BackgroundColor3 = Color3.new(1,1,1)
+		end
+	end
+end)
+
+frame.OpenFurnitureMenu.Event:connect(function()
+	if enabled.Value == true then
+		game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire("FurnitureShopGui")
+	end
+end)
+
+
+--confirmed == ready to perform action. if not confirmed, show dialog box
+--cancel button sets enabled to true again
+
+frame.ExitHouse.Event:connect(function(confirmed)
+	if checkForNoGui() and (enabled.Value == true or confirmed) then
+		if confirmed then --exit house
+			selectedtool.Value = ""
+			removeTools()
+			local house = workspace["!home_"..plr.Name]
+			local request = game.ReplicatedStorage.RemoteFunctions.ReloadHouse:InvokeServer(house.HousePlacement.Value)
+			if request == true or request == nil then
+				cf.Visible = false
+				enabled.Value = true
+			else
+				setFeedback("NormalButton","Error: Please wait a few seconds, then try again.")
+			end
+		else --display dialog
+			setFeedback("Exit","Exit edit mode? Any unsaved progress on your house will be lost.")
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
+
+frame.SaveHouse.Event:connect(function(confirmed)
+	if checkForNoGui() and (enabled.Value == true or confirmed) then
+		if confirmed then
+			selectedtool.Value = ""
+			removeTools()
+			setFeedback("Dialog","Saving your house...")
+			local request = game.ReplicatedStorage.RemoteFunctions.HouseSave:InvokeServer()
+			if request == true then
+				setFeedback("NormalButton","Save successful!")
+			elseif request == false then
+				setFeedback("NormalButton","Error: Please wait a few seconds, then try again.")
+			else
+				setFeedback("NormalButton","Error: Failed to save house. Please try again.")
+			end
+		else
+			local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+			local diff = data.FurnitureCost.Value - data.cash.Value
+			if diff > 0 then --can't afford
+				setFeedback("Cash","",diff)
+			else
+				setFeedback("Save","Save your house?")
+			end
+			selectedtool.Value = ""
+			removeTools()
+		end
+	end
+end)
+=== chunk=419 type=PROP offset=343117 runSha256=0941089493677cc89d0ba1c270416ab04c957653621b4fc4b83ed0351de34b15 ===
+script.Parent.MouseButton1Click:connect(function()
+	script.Parent.Parent.Parent.AddFurniture:Fire(script.Parent)
+end)v
+=== chunk=419 type=PROP offset=343238 runSha256=5bca8e9523bc049def17492c9872e5617d5c713a40624e82ecfecef6a18c7d77 ===
+script.Parent.MouseButton1Click:connect(function()
+	script.Parent.Parent.Parent.SellFurniture:Fire(script.Parent)
+end){
+=== chunk=419 type=PROP offset=344264 runSha256=0cfa2747cccbb0c9be88fac348d484fe4b770a1832885fcd63d21fffe374c4b6 ===
+local enabled = true
+
+script.Parent.MouseButton1Click:connect(function()
+	if enabled then
+		script.Parent.Parent.Visible = false
+		script.Parent.Parent.Parent.Reason.Text = "Selling item..."
+		enabled = false
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.ItemID.Value == script.Parent.Parent.Parent.Parent.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			local result = game.ReplicatedStorage.RemoteFunctions.SellFurniture:InvokeServer(obj.Name)
+		end
+		script.Parent.Parent.Parent.Visible = false
+		enabled = true
+	end
+end)v
+=== chunk=419 type=PROP offset=345461 runSha256=157449c96ffe5f38f1ca406d2977889b1a97badbe73094e09648f68960d573d9 ===
+local shopname = script.Parent.Name
+if shopname:match("ACTIVE_") then
+	shopname = string.sub(shopname,8)
+end
+
+local shop = {} --table referencing all the objects that belong to the category
+
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+	if v.Name:match("furni_") then
+		table.insert(shop,v)
+	end
+end
+
+local gui = script.Parent:WaitForChild("Frame")
+local plr = game.Players.LocalPlayer
+local enabled = gui:WaitForChild("Enabled")
+local selectedcategory = gui:WaitForChild("Category")
+
+local savedcategory = plr:FindFirstChild("FurnitureShopCategory")
+if not savedcategory then
+	savedcategory = Instance.new("StringValue",plr)
+	savedcategory.Name = "FurnitureShopCategory"
+	savedcategory.Value = "Seating"
+end
+
+local data = game.ReplicatedStorage.PlayerData:WaitForChild(plr.userId)
+
+function getAvailableItemCount(id)
+	local count = 0
+	for _,v in pairs(data.Objects:GetChildren()) do
+		if tonumber(v.Name) == id then
+			count = count + 1
+		end
+	end
+	local furnbought = data.FurnitureCost:FindFirstChild(id)
+	if furnbought then
+		count = count + furnbought.PendingSales.Value + furnbought.Value --items in Objects - sold items - added items (or + removed items)
+	end
+	return count
+end
+
+--now load all the buttons
+function loadCategory(categoryname)
+	if enabled.Value == true then
+		local xv = 0
+		local yv = 0
+		
+		selectedcategory.Value = categoryname
+		savedcategory.Value = categoryname
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.Name ~= "BaseButton" then
+				v:Destroy()
+			end
+		end
+		
+		for i,v in pairs(shop) do
+			if v.Category.Value == selectedcategory.Value and not (v:FindFirstChild("NotForSale") and getAvailableItemCount(v.ItemID.Value) <= 0) and not (v:FindFirstChild("ReleaseTime") and v.ReleaseTime.Value > game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) then
+				local button = gui.Items.BaseButton:clone() --make new button for each item
+				button.Parent = gui.Items
+				button.Name = v.Name
+				button.ItemID.Value = v.ItemID.Value
+				button.Image = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. v.ModelID.Value
+				button.Position = UDim2.new(0, xv*75, 0, yv*75)
+				if v:FindFirstChild("TwitterCode") then
+					local bird = script.TwitterBird:clone()
+					bird.Parent = button
+					bird.Visible = true
+				end
+				if v:FindFirstChild("ReleaseTime") and game.ReplicatedStorage.IntroGUIData.CurrentTime.Value - v.ReleaseTime.Value < 86400*21 then
+					local newb = script.NewBanner:clone()
+					newb.Parent = button
+					newb.Visible = true
+				end
+				xv = xv + 1
+				if xv == 4 then
+					xv = 0
+					yv = yv + 1
+				end
+				button.Visible = true
+			end
+		end
+		
+		gui.Items.CanvasSize = UDim2.new(0,0,0,(yv + 1) * 75)
+		gui.LoadItemInfo:Fire()
+		setButtonColors()
+		
+		for _,v in pairs(gui.Nav:GetChildren()) do
+			if v.Name == categoryname then
+				v.BackgroundTransparency = 0
+			else
+				v.BackgroundTransparency = .5
+			end
+		end
+	end
+end
+
+local module = require(game.ReplicatedStorage.Modules.InterfaceModule)
+module.openWindow(gui)
+
+
+function setButtonColors()
+	for _,button in pairs(gui.Items:GetChildren()) do
+		if button.Name ~= "BaseButton" then
+			if getAvailableItemCount(button.ItemID.Value) > 0 then --has object
+				button.BackgroundColor3 = Color3.new(.5,1,.5)
+			else
+				button.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			if gui.SelectedItem.Value == button.ItemID.Value then
+				button.BackgroundColor3 = Color3.new(1,1,.25)
+			end
+		end
+	end
+end
+
+
+function displayFailureWindow(result,reason) --reason == amount of cash needed
+	if result == false then
+		
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Oops!"
+		failure.Reason.Text = reason
+		failure.NormalButton.Visible = true
+		failure.OptionButtons.Visible = false
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+	elseif result == "sell" then --reason is the obj
+		local failure = gui.FailureWindow
+		failure.Header.Text = "Sell Item? (70%)"
+		failure.Reason.Text = "Sell this item for $"..math.ceil(reason.ItemCost.Value * .7).."? This will be deducted from your final expenses."
+		failure.NormalButton.Visible = false
+		failure.OptionButtons.Visible = true
+		failure.Visible = true
+		repeat wait() until failure.Visible == false
+		
+		for _,v in pairs(gui.Items:GetChildren()) do
+			if v.ItemID.Value == gui.SelectedItem.Value then
+				gui.LoadItemInfo:Fire(v)
+				break
+			end
+		end
+	end
+end
+
+
+gui.AddFurniture.Event:connect(function(button)
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			local oldbg = button.BackgroundColor3
+			local oldborder = button.BorderColor3
+			button.BackgroundColor3 = Color3.new(.6,.6,.6)
+			button.BorderColor3 = Color3.new(.1,.1,.1)
+			local result,reason = game.ReplicatedStorage.RemoteFunctions.GetFurniture:InvokeServer(obj.Name)
+			if result == true then
+				module.closeWindow(script.Parent)
+			elseif result == false then
+				displayFailureWindow(result,reason)
+			end
+			button.BackgroundColor3 = oldbg
+			button.BorderColor3 = oldborder
+			enabled.Value = true
+		end
+	end
+end)
+
+gui.SellFurniture.Event:connect(function()
+	if enabled.Value == true then
+		local obj
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.ItemID.Value == gui.SelectedItem.Value then
+				obj = v
+			end
+		end
+		if obj then
+			enabled.Value = false
+			displayFailureWindow("sell",obj)
+			enabled.Value = true
+		end
+	end
+end)
+
+
+gui.LoadItemInfo.Event:connect(function(button) --selected button, get item data
+	if enabled.Value == true then
+		if button ~= nil then
+			local itemdata = game.ReplicatedStorage.Objects:FindFirstChild(button.Name)
+			local itemname = string.sub(button.Name,7)
+			gui.Desc.ItemName.Text = itemname
+			gui.Desc.ItemDesc.Text = itemdata.ItemDesc.Value
+			
+			local count = getAvailableItemCount(itemdata.ItemID.Value)
+			if count < 0 then count = 0 end
+			
+			gui.Desc.ItemsOwned.Text = "["..count.."] in Inventory"
+			gui.Desc.ItemCost.Text = "Price: $"..itemdata.ItemCost.Value
+			gui.Desc.TwitterNotice.Text = ""
+			gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(0, 48/255, 99/255) --items are available
+			
+			--[[
+				gui.Desc.BuyButton.Visible = false
+				gui.Desc.SellButton.Visible = false
+				gui.Desc.ItemCost.Text = ""
+				gui.Desc.ItemsOwned.Text = ""
+				gui.Desc.TwitterNotice.Text = ""
+			--]]
+			
+			if itemdata:FindFirstChild("TwitterCode") then
+				if count > 0 and data.IsInFanClub.Value == true then --owned
+					gui.Desc.BuyButton.Visible = true
+					gui.Desc.SellButton.Visible = false
+				else --need code
+					gui.Desc.BuyButton.Visible = false
+					gui.Desc.SellButton.Visible = false
+					gui.Desc.ItemCost.Text = ""
+					gui.Desc.ItemsOwned.Text = ""
+					gui.Desc.TwitterNotice.Text = "Join the RHS Fan Club, and this item will be unlocked when you play tomorrow! The link is in the game's description."
+				end
+			else
+				gui.Desc.BuyButton.Visible = true
+				if count > 0 then --owned
+					gui.Desc.SellButton.Text = "Sell Item ($"..math.ceil(itemdata.ItemCost.Value * .7)..")"
+					if itemdata:FindFirstChild("NotForSale") then
+						gui.Desc.SellButton.Visible = false
+					else
+						gui.Desc.SellButton.Visible = true
+					end
+				else
+					gui.Desc.ItemsOwned.TextStrokeColor3 = Color3.new(1,0,0)
+					gui.Desc.SellButton.Visible = false
+				end
+			end
+			
+			for i,v in pairs(gui.Items:GetChildren()) do
+				v.BackgroundColor3 = Color3.new(1,1,1)
+			end
+			button.BackgroundColor3 = Color3.new(1,1,.25)
+			gui.SelectedItem.Value = button.ItemID.Value
+			setButtonColors()
+		else
+			--[[gui.Desc.BuyButton.Visible = false
+			gui.Desc.SellButton.Visible = false
+			gui.Desc.ItemCost.Text = ""
+			gui.Desc.ItemsOwned.Text = ""
+			gui.Desc.ItemName.Text = "Welcome!"
+			gui.Desc.ItemDesc.Text = "Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house."
+			gui.SelectedItem.Value = 0
+			gui.Desc.TwitterNotice.Text = ""]]
+		end
+	end
+end)
+
+gui.LoadMenu.Event:connect(function(categoryname)
+	loadCategory(categoryname)
+end)
+
+loadCategory(savedcategory.Value)
+=== chunk=419 type=PROP offset=784075 runSha256=297be51e7417ecff8119b2704452374dd302d9f938da173d3f22127a701fa684 ===
+local plr = game.Players.LocalPlayer
+local tool = script.Parent
+local mouse = plr:GetMouse() 
+
+local moveincrement = plr:WaitForChild("HouseMoveIncrement")
+local rotateincrement = plr:WaitForChild("HouseRotateIncrement")
+
+local dragging = false --can't rotate while dragging
+
+--[[
+	local size,cframe = require(game.ReplicatedStorage.Modules.GetBoundingBox)(selectedmodel)
+	local cover = Instance.new("Part")
+	cover.Transparency = 1
+	cover.FormFactor = "Custom"
+	cover.Size = size
+	cover.CFrame = cframe
+	cover.Parent = selectedmodel
+]]
+
+local selectedmodel
+local boundingbox --the box we get from the ModelPositioning module
+local gui
+
+function getBoundingBox(remake)
+	if selectedmodel == nil or remake then
+		if boundingbox ~= nil then
+			boundingbox.Parent = nil
+		end
+		if not remake then return end
+	end
+	if boundingbox == nil then
+		boundingbox = Instance.new("Part")
+		boundingbox.Name = "BoundingBox"
+		boundingbox.Transparency = 1
+		boundingbox.FormFactor = "Custom"
+		boundingbox.Anchored = true
+		boundingbox.CanCollide = false
+	end
+	local size,cframe = require(game.ReplicatedStorage.Modules.GetBoundingBox)(selectedmodel)
+	boundingbox.Size = size
+	boundingbox.CFrame = cframe
+	boundingbox.Parent = selectedmodel
+	return boundingbox
+end
+
+function savePosition()
+	if selectedmodel then
+		game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition:FireServer(selectedmodel,selectedmodel.PrimaryPart.CFrame,selectedmodel.RotValue.Value)
+	end
+end
+
+tool.Activated:connect(function()
+	if mouse and mouse.Target ~= nil then
+		local model = mouse.Target.Parent
+		if string.sub(model.Name,1,6) == "furni_" and model.Parent.Name == "!home_"..plr.Name and model ~= selectedmodel then
+			savePosition()
+			selectedmodel = model
+			getBoundingBox()
+			handles.Adornee = boundingbox
+			handles.Parent = plr.PlayerGui --neater way of doing this?
+			box.Adornee = boundingbox
+			if gui then
+				gui.RotateFrame.Visible = true
+			end
+		elseif model ~= selectedmodel then
+			savePosition()
+			handles.Adornee = nil
+			box.Adornee = nil
+			selectedmodel = nil
+			if gui then
+				gui.RotateFrame.Visible = false
+			end
+			getBoundingBox()
+		end
+	end
+end)
+
+function rotateModel(direction)
+	if selectedmodel and not dragging then
+		local degrees = rotateincrement.Value * direction
+		local angle = math.rad(degrees)
+		local pp = selectedmodel.PrimaryPart
+		local center = pp.CFrame
+		selectedmodel:SetPrimaryPartCFrame(center * CFrame.Angles(0,angle,0))
+		selectedmodel.RotValue.Value = selectedmodel.RotValue.Value + degrees
+		
+		if selectedmodel.RotValue.Value > 359 then
+			selectedmodel.RotValue.Value = selectedmodel.RotValue.Value - 360
+		elseif selectedmodel.RotValue.Value < -1 then
+			selectedmodel.RotValue.Value = selectedmodel.RotValue.Value + 360
+		end
+		getBoundingBox(true)
+	end
+end
+
+tool.Equipped:connect(function()
+	handles = Instance.new("Handles")
+	handles.Color = BrickColor.new("Bright yellow")
+	handles.Style = "Movement"
+	handles.Parent = plr.PlayerGui
+	
+	box = Instance.new("SelectionBox")
+	box.Color = BrickColor.new("Bright blue")
+	box.Parent = plr.PlayerGui
+	
+	gui = script.Parent.MoveToolGui:clone()
+	gui.Parent = plr.PlayerGui
+	
+	gui.RotateFrame.Clockwise.MouseButton1Click:connect(function()
+		rotateModel(-1)
+	end)
+	
+	gui.RotateFrame.CounterClockwise.MouseButton1Click:connect(function()
+		rotateModel(1)
+	end)
+	
+	handles.MouseButton1Down:connect(function(axis)
+		if selectedmodel ~= nil and tool.Enabled then
+			dragging = true
+			olddistance = 0
+			handles.MouseDrag:connect(function(face,distance)
+				newdistance = (distance) - olddistance
+				if newdistance >= 1 or newdistance <= -1 then
+					if newdistance < 0 then
+						olddistance = olddistance + math.ceil(newdistance)
+						newdistance = math.ceil(newdistance)
+					else
+						olddistance = olddistance + math.floor(newdistance)
+						newdistance = math.floor(newdistance)
+					end
+					if selectedmodel ~= nil and newdistance ~= 0 then
+						local faces=Vector3.new();
+						if face==Enum.NormalId.Left then
+							faces=Vector3.new(-1, 0, 0);
+						elseif face==Enum.NormalId.Right then
+							faces=Vector3.new(1, 0, 0);
+						elseif face==Enum.NormalId.Top then
+							faces=Vector3.new(0, 1, 0);
+						elseif face==Enum.NormalId.Bottom then
+							faces=Vector3.new(0, -1, 0);
+						elseif face==Enum.NormalId.Front then
+							faces=Vector3.new(0, 0, -1);
+						elseif face==Enum.NormalId.Back then
+							faces=Vector3.new(0, 0, 1);
+						end
+						
+						local pp = selectedmodel.PrimaryPart
+						local origpos = pp.CFrame
+						selectedmodel:SetPrimaryPartCFrame(pp.CFrame + faces * (newdistance / moveincrement.Value))
+					
+						--perform the ray check to see that it's over the floor, also verify this on server
+						local ray = Ray.new(pp.Position, ((pp.Position + Vector3.new(0,-15,0)) - pp.Position).unit*10)
+						local ignoredparts = {}
+						for i,v in pairs(selectedmodel.Parent:GetChildren()) do
+							if v:IsA("Model") then
+								table.insert(ignoredparts,v)
+							end
+						end
+						local findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)
+						if findpart == nil or not findpart.Name:match("Floor") then --put it back in orig pos
+							
+							selectedmodel:SetPrimaryPartCFrame(origpos)
+						end
+						
+						
+					end
+				end
+			end)
+			mouse.Button1Up:connect(function()
+				dragging = false
+			end)
+		end
+	end)
+	
+end)
+
+mouse.KeyDown:connect(function(key)
+	if selectedmodel then
+		if key == "q" then
+			rotateModel(1)
+		elseif key == "e" then
+			rotateModel(-1)
+		end
+	end
+end)
+
+if plr:FindFirstChild("GamepadMode") then
+	local UserInputService = game:GetService("UserInputService")
+	local GuiService = game:GetService("GuiService")
+	
+	UserInputService.InputBegan:connect(function(input,gameprocessed)
+		if selectedmodel and GuiService.SelectedObject == nil and input.UserInputType == Enum.UserInputType.Gamepad1 then
+			if input.KeyCode == Enum.KeyCode.DPadLeft then
+				rotateModel(1)
+			elseif input.KeyCode == Enum.KeyCode.DPadRight then
+				rotateModel(-1)
+			end
+		end
+	end)
+end
+
+tool.Changed:connect(function()
+	if tool.Parent == nil then
+		savePosition()
+		handles:Destroy()
+		box:Destroy()
+		gui:Destroy()
+	end
+end)
+
+tool.Unequipped:connect(function()
+	savePosition()
+	handles:Destroy()
+	box:Destroy()
+	gui:Destroy()
+	selectedmodel = nil
+end)
+
+
+
+
+
+
+=== chunk=419 type=PROP offset=791121 runSha256=bc59f4e6139cfb34e67d7976a1bd546f05e5f4458d499d70f84e44fb923d6796 ===
+local plr = game.Players.LocalPlayer
+local tool = script.Parent
+local mouse = plr:GetMouse()
+
+local selectedmodel
+
+tool.Equipped:connect(function()
+	box = Instance.new("SelectionBox")
+	box.Color = BrickColor.new("Bright blue")
+	box.Parent = plr.PlayerGui
+	
+	gui = Instance.new("ScreenGui")
+	gui.Name = "RemoveGui"
+	gui.Parent = plr.PlayerGui
+	local frame = Instance.new("Frame")
+	frame.Name = "CenterFrame"
+	frame.Parent = gui
+	frame.Position = UDim2.new(.5,0,.68,0)
+	frame.Size = UDim2.new(0,1,0,1)
+	frame.BackgroundTransparency = 1
+	local button = Instance.new("TextButton")
+	button.Parent = frame
+	button.BackgroundTransparency = .5
+	button.BackgroundColor3 = Color3.new(1,0,0)
+	button.Position = UDim2.new(0,-150,0,0)
+	button.Size = UDim2.new(0,300,0,40)
+	button.Font = "SourceSansBold"
+	button.FontSize = "Size36"
+	button.Text = "Select an item"
+	button.Visible = false
+	
+	tool.Activated:connect(function()
+		if mouse and mouse.Target ~= nil then
+			local model = mouse.Target.Parent
+			if string.sub(model.Name,1,6) == "furni_" and model.Parent.Name == "!home_"..plr.Name then
+				selectedmodel = model
+				gui.Parent = plr.PlayerGui
+				box.Adornee = model
+				button.Visible = true
+				if model:FindFirstChild("temp") then
+					box.Color = BrickColor.Yellow()
+					button.Text = "Remove Item"
+				else
+					box.Color = BrickColor.Red()
+					button.Text = "Place in Inventory"
+				end
+			else
+				button.Visible = false
+				gui.Parent = tool
+				box.Adornee = nil
+				selectedmodel = nil
+			end
+		end
+	end)
+	
+	local function RemoveObject()
+		if selectedmodel ~= nil then
+			button.Visible = false
+			box.Adornee = nil
+			game.ReplicatedStorage.RemoteFunctions.RemoveFurniture:FireServer(selectedmodel)
+			selectedmodel:Destroy()
+			selectedmodel = nil
+		end
+	end
+	
+	button.MouseButton1Down:connect(function()
+		RemoveObject()
+	end)
+	
+	if plr:FindFirstChild("GamepadMode") then
+		local UserInputService = game:GetService("UserInputService")
+		local GuiService = game:GetService("GuiService")
+		
+		UserInputService.InputBegan:connect(function(input,gameprocessed)
+			if selectedmodel and button.Visible == true and input.UserInputType == Enum.UserInputType.Gamepad1 and not gameprocessed then
+				if input.KeyCode == Enum.KeyCode.ButtonX then
+					RemoveObject()
+				end
+			end
+		end)
+	end
+	
+end)
+
+tool.Changed:connect(function()
+	if tool.Parent == nil then
+		gui:Destroy()
+		box:Destroy()
+	end
+end)
+
+tool.Unequipped:connect(function()
+	box:Destroy()
+	selectedmodel = nil
+	gui:Destroy()
+end)
+
+
+
+W'
+=== chunk=574 type=PROP offset=673 runSha256=10d7651c2eba9e1be707f42269e88934742d372aab9e6c1a8e58ae853909681c ===
+RemoveFurniture
+=== chunk=574 type=PROP offset=719 runSha256=38d153cb660dd1cc677b58b2296102af9deab563b95ea29522b178d51a2da732 ===
+SendNewFurniturePosition
+=== chunk=575 type=PROP offset=413 runSha256=175aa250ce82e1ecbb189210c43c2d569bffe00eeb4520114d81970b3a9e7729 ===
+GetFurniture	
+=== chunk=575 type=PROP offset=442 runSha256=c516e3ede01ba885377a6dc8377305deb69fa374a08d820db8ca52fea98c2ba5 ===
+SellFurniture
+=== chunk=575 type=PROP offset=459 runSha256=7f3a4119eea53fd70512958f1473f81ea12fe80e0b11ca24e5025e61473ff8ca ===
+MoveFurniture
+=== chunk=575 type=PROP offset=476 runSha256=3820fe6f73a9f473b2a7a8432f19e15a0e932aa9019d2323bcdd258003f2cb1a ===
+RotateFurniture
+
+=== chunk=589 type=PROP offset=740 runSha256=f2af7f5d105bc5b0d5314cd7a4712d0967aa9fda4aa0949533d954cfa59f53f5 ===
+FurnitureShopGui
+=== chunk=595 type=PROP offset=59419 runSha256=d5d183b9c5e5847765b4a4fb931595c0412f10f123d5235454ed4d0d7fcbb3af ===
+--add music
+
+local Prefix = "music"
+local AssetID = 188712851
+local objName = "Walk the Moon - Shut up and Dance"
+local Genre = "Rock"
+local ItemCost = 40
+local ItemID
+local Modifier = 0
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local ai = Instance.new("IntValue",obj)
+ai.Name = "AssetID"
+ai.Value = AssetID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "Genre"
+gen.Value = Genre
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local modi = Instance.new("NumberValue",obj)
+modi.Name = "Modifier"
+modi.Value = Modifier
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add pets (according to a part in the workspace [rename to PetPart during processing])
+
+local Prefix = "pets"
+local DecalID = 224060528
+local objName = "The Golden ROBLOXian"
+local desc = "A glowing, sparkling golden statue. If you own this incredibly rare statue, people will forever be in awe of you."
+local ItemCost = 50000
+local LPCost
+local ItemID
+
+local TwitterCode --ye
+
+--if not workspace:FindFirstChild(objName) then return end
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local petpart = workspace.PetPart
+petpart.Name = "PetPart"
+petpart.Parent = obj
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add gear (according to an in-game tool in workspace) (set Tool TextureId to DecalID)
+
+local Prefix = "gear"
+
+local DecalID = 600231089
+local objName = "Madi's Broken Guitar"
+local desc = "A souvenir from Madi. This favorite guitar of hers doesn't work anymore, but you can still use it  to look like a rock star!"
+local ItemCost = 0
+local NotForSale = true
+local LPCost
+local ItemID
+local TwitterCode --set this if we want a TwitterCode
+
+local DayOfHolidayEvent -- = 8
+local ReleaseTime -- = 1482307200 -- + (DayOfHolidayEvent - 1) * 86400 -- (day 1: 12/21)
+local OffSaleTime -- = 1484143200 -- (1/11, 14:00 UTC)
+
+if not workspace:FindFirstChild(objName) then return end
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+if OffSaleTime then
+	local ost = Instance.new("IntValue",obj)
+	ost.Name = "TimeToGoOffSale"
+	ost.Value = OffSaleTime
+end
+
+if NotForSale then
+	local nfs = Instance.new("BoolValue",obj)
+	nfs.Name = "NotForSale"
+	nfs.Value = true
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+local petpart = workspace[objName]
+petpart.Parent = obj
+petpart.TextureId = "http://www.roblox.com/asset/?id="..DecalID
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+if ReleaseTime then
+	local rt = Instance.new("IntValue",obj)
+	rt.Name = "ReleaseTime"
+	rt.Value = ReleaseTime
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+print("success - "..highest + 1)
+
+
+
+--add furniture (according to a model ID)
+
+--has to be done from the Furniture place first
+
+
+
+--add vehicles (according to an in-game model in workspace) (we move all the car's actual parts out of the model it's enclosed in in the workspace)
+
+local Prefix = "vehic"
+local DecalID = 580912188
+local objName = "Frostrider Ultimate"
+local desc = "A legendary car crafted with ice from the North Pole! It leaves a frosty trail behind and emits the sound of Santa's sleigh bells as you drive!"
+local ItemCost = 21000
+local LPCost
+local ItemID
+
+local DayOfHolidayEvent = 5
+local ReleaseTime = 1482307200 + (DayOfHolidayEvent - 1) * 86400 -- (day 1: 12/21)
+local OffSaleTime = 1484143200 -- (1/11, 14:00 UTC)
+
+local TwitterCode --set this if we want a TwitterCode
+
+if not workspace:FindFirstChild(objName) then return end
+
+local obj = workspace[objName]
+obj.Name = Prefix.."_"..objName
+
+if LPCost then
+	Instance.new("BoolValue",obj).Name = "NotForSale"
+	Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+	local lpc = Instance.new("IntValue",obj)
+	lpc.Name = "LPCost"
+	lpc.Value = LPCost
+end
+
+if ReleaseTime then
+	local rt = Instance.new("IntValue",obj)
+	rt.Name = "ReleaseTime"
+	rt.Value = ReleaseTime
+end
+if OffSaleTime then
+	local ost = Instance.new("IntValue",obj)
+	ost.Name = "TimeToGoOffSale"
+	ost.Value = OffSaleTime
+end
+
+local ai = Instance.new("IntValue",obj)
+ai.Name = "DecalID"
+ai.Value = DecalID
+local gen = Instance.new("StringValue",obj)
+gen.Name = "ItemDesc"
+gen.Value = desc
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+obj.Parent = game.ReplicatedStorage.Objects
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+
+
+--add a special developer product marker
+
+
+local Prefix = "devprod"
+local objName = "RHS Starter Pack"
+local ItemCost = 100000
+local ItemID
+
+local TwitterCode
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = ItemCost
+
+if TwitterCode then
+	local tc = Instance.new("StringValue",obj)
+	tc.Name = "TwitterCode"
+	tc.Value = TwitterCode
+end
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+print(objName.." item ID: "..id.Value)
+
+
+
+
+--add a special loyalty product (loyalty (single purch) or loyaltymulti)
+
+
+local Prefix = "loyaltymulti"
+local objName = "+$14,500 RHS Cash"
+local ItemDesc = "Trade in your Loyalty Points to receive a ton of RHS Cash!"
+local LPCost = 100000
+local DecalID = 345974014
+local CashValueToAdd = 14500 --set this if it is a cash product
+local ItemID
+
+local obj = Instance.new("IntValue",game.ReplicatedStorage.Objects)
+obj.Name = Prefix.."_"..objName
+local cost = Instance.new("IntValue",obj)
+cost.Name = "ItemCost"
+cost.Value = 0
+local desc = Instance.new("StringValue",obj)
+desc.Name = "ItemDesc"
+desc.Value = ItemDesc
+Instance.new("BoolValue",obj).Name = "NotForSale"
+Instance.new("BoolValue",obj).Name = "LoyaltyItem"
+local lpc = Instance.new("IntValue",obj)
+lpc.Name = "LPCost"
+lpc.Value = LPCost
+if CashValueToAdd then
+	local cvta = Instance.new("IntValue",obj)
+	cvta.Name = "CashValueToAdd"
+	cvta.Value = CashValueToAdd
+end
+local di = Instance.new("IntValue",obj)
+di.Name = "DecalID"
+di.Value = DecalID
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+
+local id = Instance.new("IntValue",obj)
+id.Name = "ItemID"
+id.Value = highest + 1
+
+print(objName.." item ID: "..id.Value)
+
+
+
+
+
+--convert ROBLOX dialog to my dialog
+
+for _,v in pairs(game.ReplicatedStorage.Dialog:GetChildren()) do
+	if v:IsA("Dialog") then
+		local rdialog = v
+		local name = v.Name
+		
+		local function createChoice(rchoice,currentlocation)
+			local choice = Instance.new("Folder",currentlocation)
+			choice.Name = rchoice.Name
+			local response = Instance.new("StringValue",choice)
+			response.Name = "ResponseDialog"
+			response.Value = rchoice.ResponseDialog
+			local user = Instance.new("StringValue",choice)
+			user.Name = "UserDialog"
+			user.Value = rchoice.UserDialog
+			return choice
+		end
+		
+		local function checkOptions(instance,currentlocation) --currentlocation is in the NEW dialog
+			for i=1,4 do
+				if instance:FindFirstChild(i) then
+					local choice = createChoice(instance:FindFirstChild(i),currentlocation)
+					checkOptions(instance:FindFirstChild(i),choice)
+				end
+			end
+		end
+		
+		local dialog = Instance.new("StringValue",game.ReplicatedStorage.Dialog)
+		dialog.Name = name
+		dialog.Value = rdialog.InitialPrompt
+		
+		checkOptions(rdialog,dialog)
+	end
+end
+
+
+
+
+local highest = 243
+for _,v in pairs(game.ReplicatedStorage.NewFurniture:GetChildren()) do
+	local id = Instance.new("IntValue",v)
+	id.Name = "ItemID"
+	id.Value = highest
+	highest = highest + 1
+	v.Parent = game.ReplicatedStorage.Objects
+end
+game.ReplicatedStorage.NewFurniture:Destroy()
+print("next open item ID: "..highest)
+
+
+
+local highest = 0
+for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+if v:FindFirstChild("ItemID") and v.ItemID.Value > highest then
+highest = v.ItemID.Value
+end
+end
+print("next open item ID: "..highest + 1)
+
+
+
+
+
+
+local toselect = {}
+for _,v in pairs(workspace.SELECTPART:GetTouchingParts()) do
+	table.insert(toselect,v)
+end
+game.Selection:Set(toselect)
+=== chunk=595 type=PROP offset=69633 runSha256=d631a3aa2c2bdf649e0f5d6f9fbd01a83ddf406cde19ef3cdf4e8dd156db117e ===
+updatetime = {year=2017, month=3, day=19, hour=21}
+--print(os.time(updatetime))
+
+starttime = 145101960
+endtime = os.time(updatetime) --always change this to updatetime whenever we wanna show patch notes
+
+normalnews = [[Welcome to ROBLOX High School, the #1 roleplaying hangout!
+
+Be a student, teacher, or principal in this small town. Meet new friends and hang out with them after school at places like Club Red, the skate park, the forest, and more!
+
+Get a house and customize it with furniture items. Buy pets and RHS Gear to spice up your time in town! There's lots to do in ROBLOX High School - enjoy your time here!]]
+
+--[[Welcome to ROBLOX High School, the #1 roleplaying hangout!
+
+Be a student, teacher, or principal in this small town. Meet new friends and hang out with them after school at places like Club Red, the skate park, the forest, and more!
+
+Get a house and customize it with furniture items. Buy pets and RHS Gear to spice up your time in town! There's lots to do in ROBLOX High School - enjoy your time here!]]
+
+promonews = [[You can now play Roblox High School using the R15 avatar type! Whether you prefer R6 or R15, the choice is yours now!
+Say goodbye to the snow, because springtime has arrived as well!
+
+Also, if you haven't heard... The Roblox High School real-life toy set, created by Roblox and Jazwares, is in stores now! The toy set also comes with a code for the exclusive RHS Headphones virtual item!
+
+To combat admin/developer impersonation, [*Roblox Admins*] and [*RHS Devs*] will now have these official titles before their names in the chat. Anyone else claiming to be an admin/developer is trying to trick you! (The RHS Devs are also listed at the top of this intro screen...)
+
+Plus, there are three updated stores in the RHS clothing mall! Check out the brand new selections that Pastelly, Kwoopi (sheric), and Nilvou have to offer!
+
+Enjoy!]]
+
+local data = game.ReplicatedStorage.IntroGUIData
+
+data.CurrentTime.Value = os.time()
+data.UpdateTime.Value = os.time(updatetime)
+data.NormalNews.Value = normalnews
+data.PromoNews.Value = promonews
+data.StartTime.Value = starttime
+data.EndTime.Value = endtime
+
+--HolidayStartTime is Dec 9th, 3:00 AM - when the gift times reset
+data.CurrentRealLifeDay.Value = math.ceil((os.time() - data.HolidayStartTime.Value)/86400)
+
+--[[if game.PlaceId == 345689990 then --RHS separate data testing
+	data.CurrentRealLifeDay.Value = -959
+end]]
+
+--print(math.ceil((os.time() - game.ReplicatedStorage.IntroGUIData.HolidayStartTime.Value)/86400))
+
+while true do
+	wait(1)
+	data.CurrentTime.Value = os.time()
+	if game.PlaceId ~= 345689990 then
+		data.CurrentRealLifeDay.Value = math.ceil((data.CurrentTime.Value - data.HolidayStartTime.Value)/86400)
+	end
+	if data.CurrentTime.Value == 1451019600 then --Christmas, midnight
+			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients("UPDATE: Merry Christmas! A brand new luxury car is now available for purchase: The Exotix! It's one of the fastest, most impressive cars in RHS!",true)
+	end
+end
+
+=== chunk=595 type=PROP offset=98799 runSha256=92f0a5b52906731b26bb85f6730a294928905130320cd9b746a4be28e8ac59cb ===
+local gps = game:GetService("GamePassService")
+local housepassid = game.ReplicatedStorage.GamePasses.House.Value
+local storage = game.ReplicatedStorage.Objects
+
+local bannedcolors = {"Really red","New Yeller","Really blue","Lime green","Hot pink","Toothpaste","Teal"}
+local exteriorparts = {"Foundation","Deck","OuterParts","ExteriorWall","Roof"}
+
+local objectsready = false
+
+function createWeld(mainpart,target)
+	local weld = Instance.new("Weld") 
+	weld.Part0 = mainpart
+	weld.Part1 = target 
+	weld.C0 = mainpart.CFrame:inverse() 
+	weld.C1 = target.CFrame:inverse() 
+	weld.Parent = target
+	target.Anchored = false
+end
+
+function getItemIDByName(itemname)
+	for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+		if v.Name == itemname then
+			return v.ItemID.Value
+		end
+	end
+end
+
+
+function getFurnitureCount(plr)
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	local house = workspace:FindFirstChild("!home_"..plr.Name)
+	if data and house then
+		local val = data:FindFirstChild("FurnitureCount")
+		if val == nil then
+			val = Instance.new("IntValue",data)
+			val.Name = "FurnitureCount"
+		end
+		local fcount = 0
+		for i,v in pairs(house:GetChildren()) do
+			if v:IsA("Model") then
+				fcount = fcount + 1
+			end
+		end
+		val.Value = fcount
+		return fcount
+	end
+end
+
+
+game.ReplicatedStorage.RemoteFunctions.ToggleHomeLock.OnServerEvent:connect(function(plr,home) --can be home or apartment
+	if home.Name:match(plr.Name) then
+		local door = home.Door
+		local lock = home:FindFirstChild("LockButton",true)
+		if door.CanCollide == false then
+			door.CanCollide = true
+			lock.BrickColor = BrickColor.new("Bright red")
+		else
+			door.CanCollide = false
+			lock.BrickColor = BrickColor.new("Bright green")
+		end
+	end
+end)
+
+
+game.ReplicatedStorage.RemoteFunctions.ToggleRestrictLock.OnServerEvent:connect(function(plr,home)
+	if home.Name:match(plr.Name) then
+		local restrict = home.Restrictions
+		if restrict.Value == true then
+			restrict.Value = false
+		else
+			restrict.Value = true
+		end
+	end
+end)
+
+
+game.ReplicatedStorage.RemoteFunctions.ToggleHomeRestrictedPlayer.OnServerInvoke = function(plr,home,targetname) --okay, really we're adding people to the whitelist, not restricting them
+	if home.Name:match(plr.Name) then
+		local restrict = home.Restrictions
+		local targetplr
+		for _,v in pairs(game.Players:GetChildren()) do
+			if string.lower(targetname) == string.lower(v.Name) then
+				targetplr = v
+			end
+		end
+		if targetplr then
+			if targetplr ~= plr then
+				if restrict:FindFirstChild(targetplr.Name) then
+					restrict[targetplr.Name]:Destroy()
+					return true
+				else
+					local marker = Instance.new("Folder",restrict)
+					marker.Name = targetplr.Name
+					return true
+				end
+			else
+				return false,"Can't whitelist yourself"
+			end
+		else
+			return false,"Player not in server"
+		end
+	end
+end
+
+
+function getFurnitureCostMarker(stats,servobj)
+	local furnbought
+	local id = servobj.ItemID.Value
+	if stats.FurnitureCost:FindFirstChild(id) then
+		furnbought = stats.FurnitureCost:FindFirstChild(id)
+	else
+		furnbought = Instance.new("IntValue")
+		furnbought.Value = 0
+		furnbought.Name = id
+		furnbought.Parent = stats.FurnitureCost
+	end
+	local pending
+	if furnbought:FindFirstChild("PendingSales") then
+		pending = furnbought.PendingSales
+	else
+		pending = Instance.new("IntValue")
+		pending.Value = 0
+		pending.Name = "PendingSales"
+		pending.Parent = furnbought
+	end
+	return furnbought,pending
+end
+
+
+function getOwnedObjectCount(plr,itemid)
+	local count = 0
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data then
+		for _,v in pairs(data.Objects:GetChildren()) do
+			if tonumber(v.Name) == itemid then
+				count = count + 1
+			end
+		end
+	end
+	return count
+end
+
+
+coroutine.resume(coroutine.create(function() --initialize all furniture models
+	for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+		if v.Name:match("furni_") then
+			coroutine.resume(coroutine.create(function()
+			local model
+			repeat
+				local success = pcall(function()
+					model = game:GetService("InsertService"):LoadAsset(v.ModelID.Value):GetChildren()[1]
+				end)
+				if not success then print("Failed to load "..v.Name) wait(1) end
+			until model ~= nil
+			
+			local pp = model.PrimaryPart
+			for _,part in pairs(model:GetChildren()) do
+				local weld = part:FindFirstChild("Weld")
+				if weld then
+					part.Anchored = true
+					weld:Destroy()
+				end
+				if part:IsA("BasePart") then
+					part.Parent = v
+				end
+			end
+			
+			v.PrimaryPart = pp
+			for _,part in pairs(v:GetChildren()) do
+				if part:IsA("Seat") and part.Anchored == false then
+					createWeld(pp,part)
+				end
+			end
+			print("Loaded furniture "..model.Name)
+			model:Destroy()
+			end))
+		end
+	end
+	local complete = true
+	repeat
+		wait(5)
+		complete = true
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match("furni_") and v.PrimaryPart == nil then
+				complete = false
+			end
+		end
+	until complete == true
+	objectsready = true
+	print("All furniture loaded and ready")
+end))
+
+function loadHouse(plr,placement)
+	if not script:FindFirstChild("load_"..plr.Name) then
+		if objectsready == false then
+			repeat wait(math.random()) until objectsready == true
+		end
+		local pid = plr.userId
+		local data = game.ReplicatedStorage.PlayerData:WaitForChild(pid)
+		local passes = data:WaitForChild("GamePasses")
+		local hp = passes:WaitForChild("House")
+		if plr and (game.ServerStorage.RemoteFunctions.GamePassCheck:Invoke(plr,"House") == true or game:GetService("GamePassService"):PlayerHasPass(plr,housepassid) == true or data.Objects:FindFirstChild("183")) then
+			local pd = game:GetService("DataStoreService"):GetDataStore(pid.."_data")
+			
+			--the table name is the	unique name, like Object_1, to load each indiv obj
+			--the Name key is the name of the object in ServerStorage (to load it)		
+			
+			
+			local housedata 
+			local success = pcall(function()
+				housedata = pd:GetAsync("house")
+			end)
+			if housedata == nil then
+				housedata = {}
+			end
+			
+			if not success then
+				wait(2)
+				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Your house failed to load for this session. ROBLOX's servers may be experiencing issues; please try again later.",true)
+				return
+			end
+
+			if data:FindFirstChild("FurnitureCost") then
+				data.FurnitureCost.Value = 0
+				data.FurnitureCost:ClearAllChildren()
+			end
+			
+			local house = game.ServerStorage.BaseHouse:clone()
+			house.PrimaryPart = house.Floor
+			
+			for i,obj in pairs(housedata) do --load all furniture and house data
+				
+				if housedata[i]["Name"] ~= nil and storage:FindFirstChild(housedata[i]["Name"]) ~= nil then
+					local model = storage:FindFirstChild(housedata[i]["Name"]):clone()
+					model.Name = housedata[i]["Name"]
+					model.Parent = house
+					if model:IsA("Model") then
+						model:SetPrimaryPartCFrame(house.Floor.CFrame + (Vector3.new(housedata[i]["CFrame"][1],housedata[i]["CFrame"][2],housedata[i]["CFrame"][3])))
+						model:SetPrimaryPartCFrame(model.PrimaryPart.CFrame * CFrame.Angles(0,math.rad(housedata[i]["CFrame"][4]),0))
+						model.RotValue.Value = housedata[i]["CFrame"][4]
+						model.PaintColor.Value = BrickColor.new(housedata[i]["PaintColor"])
+						for i,part in pairs(model:GetChildren()) do
+							if part:IsA("BasePart") and (part.Name == "Paintable") then
+								part.BrickColor = model.PaintColor.Value
+							end
+						end
+					end
+				end
+	
+			end --end the furniture loading
+			
+			if housedata["MainHouseData"] ~= nil then
+			
+				for i,v in pairs(housedata["MainHouseData"]) do
+					for _,part in pairs(house:GetChildren()) do
+						if part:IsA("BasePart") and part.Name == i then
+							part.BrickColor = BrickColor.new(v)
+						end
+					end
+				end
+			
+			end
+			
+			local nametag = house:FindFirstChild("NameTag",true)
+			nametag.TextLabel.Text = plr.Name
+			
+			if workspace:FindFirstChild("!home_"..plr.Name) then
+				workspace.HousePlacement[workspace["!home_"..plr.Name].HousePlacement.Value].Occupied.Value = false
+				workspace["!home_"..plr.Name]:Destroy()
+			end
+			
+			house["Lock Button"].Owner.Value = plr.Name
+			house["Restrict Button"].Owner.Value = plr.Name
+			
+			if placement == nil then
+				for i=1,20 do
+					if workspace.HousePlacement[i].Occupied.Value == false then
+						workspace.HousePlacement[i].Occupied.Value = true
+						house.Parent = workspace
+						house.Name = "!home_"..plr.Name
+						house:SetPrimaryPartCFrame(workspace.HousePlacement[i].CFrame)
+						local placevalue = Instance.new("IntValue")
+						placevalue.Name = "HousePlacement"
+						placevalue.Value = i
+						placevalue.Parent = house
+						break
+					end
+				end
+			else
+				workspace.HousePlacement[placement].Occupied.Value = true
+				house.Parent = workspace
+				house.Name = "!home_"..plr.Name
+				house:SetPrimaryPartCFrame(workspace.HousePlacement[placement].CFrame)
+				local placevalue = Instance.new("IntValue")
+				placevalue.Name = "HousePlacement"
+				placevalue.Value = placement
+				placevalue.Parent = house
+				if plr and plr:FindFirstChild("Backpack") and plr:FindFirstChild("PlayerGui") and plr.Character and plr.Character:FindFirstChild("Humanoid") then
+					for i,v in pairs(plr.Backpack:GetChildren()) do
+						if v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove" then
+							v:Destroy()
+						end
+					end
+					for i,v in pairs(plr.Character:GetChildren()) do
+						if (v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove") and v:IsA("Tool") then
+							plr.Character.Humanoid:UnequipTools()
+							wait()
+							v:Destroy()
+						end
+					end
+					--[[for i,v in pairs(plr.PlayerGui:GetChildren()) do
+						if v:IsA("SelectionBox") or v:IsA("Handles") or v.Name == "RemoveGui" or v.Name == "MoveToolGui" then
+							v:Destroy()
+						end
+					end]] --can't do that
+				end
+			end
+			
+			--[[for i,v in pairs(house:GetChildren()) do
+				if v:IsA("Model") then
+					for i,part in pairs(v:GetChildren()) do
+						if part:IsA("BasePart") and not part:IsA("Seat") then
+							part.Anchored = true
+						end
+					end
+				end
+			end
+			for i,v in pairs(house.Floor:GetChildren()) do
+				if v:IsA("Weld") then
+					v:Destroy()
+				end
+			end]]
+			
+			local loadmarker = Instance.new("BoolValue")
+			loadmarker.Name = "load_"..plr.Name
+			loadmarker.Parent = script
+			game:GetService("Debris"):AddItem(loadmarker,12)
+			
+			if plr.Parent == nil then
+				workspace.HousePlacement[house.HousePlacement.Value].Occupied.Value = false
+				house:Destroy()
+				return false
+			end
+			
+			getFurnitureCount(plr)
+			
+			return true
+			
+		end --end the entire house loading function
+	else
+		return false
+	end
+end
+
+game.ReplicatedStorage.RemoteFunctions.ReloadHouse.OnServerInvoke = function(plr,placement)
+	local request = loadHouse(plr,placement)
+	return request
+end
+
+game.Players.ChildAdded:connect(function(plr)
+	loadHouse(plr)
+end)
+
+game.ServerStorage.RemoteFunctions.LoadHouseForPlayer.Event:connect(function(plr)
+	loadHouse(plr)
+end)
+
+
+function RemoveFurnitureItem(plr,model) --referenced later down
+	local house = workspace:FindFirstChild("!home_"..plr.Name)
+	local stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if house and stats and model.Parent == house then
+		local itemserv = game.ReplicatedStorage.Objects:FindFirstChild(model.Name)
+		if itemserv then
+			local furnbought,pending = getFurnitureCostMarker(stats,itemserv)
+			furnbought.Value = furnbought.Value + 1
+			model:Destroy()
+			if getOwnedObjectCount(plr,itemserv.ItemID.Value) + furnbought.Value <= 0 then
+				stats.FurnitureCost.Value = stats.FurnitureCost.Value - itemserv.ItemCost.Value
+			end
+			getFurnitureCount(plr)
+			return true
+		end
+	end
+end
+
+
+game.ReplicatedStorage.RemoteFunctions.HouseSave.OnServerInvoke = function(plr)
+	
+	--change the CFrame to be relative to the house center (loading? add the offset value. saving? furniture CFrame - floor CFrame = offset)
+	
+	if not script:FindFirstChild("save_"..plr.Name) then
+		local house = workspace:FindFirstChild("!home_"..plr.Name)
+		if house ~= nil then
+			--house.Parent = game.ServerStorage
+			--[[local tools = {}
+			if plr and plr.Character then
+				for i,v in pairs(plr.Backpack:GetChildren()) do
+					if v:IsA("Tool") then
+						v.Enabled = false
+						table.insert(tools,v)
+					end
+				end
+				for i,v in pairs(plr.Character:GetChildren()) do
+					if v:IsA("Tool") then
+						v.Enabled = false
+						table.insert(tools,v)
+					end
+				end
+			end]]
+			--[[local origfloorpos = house.Floor.CFrame
+			
+			for i,model in pairs(house:GetChildren()) do
+				if model:IsA("Model") then
+					local weld = Instance.new("Weld") 
+					weld.Part0 = house.Floor 
+					weld.Part1 = model.MainPart 
+					weld.C0 = house.Floor.CFrame:inverse() 
+					weld.C1 = model.MainPart.CFrame:inverse() 
+					weld.Parent = house.Floor
+				end
+			end
+			
+			for i,v in pairs(house:GetChildren()) do
+				if v:IsA("Model") then
+					for i,part in pairs(v:GetChildren()) do
+						if part:IsA("BasePart") then
+							part.Anchored = false
+						end
+					end
+				end
+			end
+			house.Floor.Anchored = false]]
+			
+			
+			--remove furniture glitched outside of the house
+			local ignoredrayparts = {}
+			for i,v in pairs(house:GetChildren()) do
+				if v:IsA("Model") then
+					table.insert(ignoredrayparts,v)
+				end
+			end
+			local cleanedup = false
+			
+			for _,v in pairs(house:GetChildren()) do
+				if v:IsA("Model") and string.sub(v.Name,1,6) == "furni_" then
+					local pp = v.PrimaryPart
+					local newcframe = pp.CFrame
+					local ray = Ray.new(newcframe.p, ((newcframe.p + Vector3.new(0,-15,0)) - newcframe.p).unit*10)
+					local findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredrayparts)
+					if findpart == nil or findpart.Parent.Name ~= house.Name or not findpart.Name:match("Floor") then --put the furniture back in inventory
+						RemoveFurnitureItem(plr,v)
+						cleanedup = true
+					end
+				end
+			end
+			
+			if cleanedup == true then
+				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Furniture that was detected outside of your house has been placed back into your inventory.")
+			end
+			
+			
+			
+			house = house:clone() --create a clone house to use for saving
+			house.Name = "SAVINGHOUSE"
+			house.Parent = workspace
+			house:SetPrimaryPartCFrame(game.ServerStorage.BaseHouse.Floor.CFrame)
+			--[[for i,v in pairs(house:GetChildren()) do
+				if v:IsA("Model") then
+					for i,part in pairs(v:GetChildren()) do
+						if part:IsA("BasePart") then
+							part.Anchored = true
+						end
+					end
+				end
+			end
+			house.Floor.Anchored = true]]
+			
+			
+			local savefunc = pcall(function()
+				local save = {}
+				for _,v in pairs(house:GetChildren()) do
+					if v:IsA("Model") and string.sub(v.Name,1,6) == "furni_" then
+						local keyid = v.Name.."_"..math.random(-9999999,9999999)
+						save[keyid] = {}
+						save[keyid]["CFrame"] = {}
+						local pos = v.PrimaryPart.Position - house.Floor.Position
+						local rot = v.RotValue.Value
+						save[keyid]["CFrame"][1] = pos.X
+						save[keyid]["CFrame"][2] = pos.Y
+						save[keyid]["CFrame"][3] = pos.Z
+						save[keyid]["CFrame"][4] = rot
+						save[keyid]["Name"] = v.Name
+						save[keyid]["PaintColor"] = v.PaintColor.Value.Number
+						if v:FindFirstChild("temp") then
+							v.temp:Destroy()
+						end
+					end
+				end
+				
+				save["MainHouseData"] = {}
+				
+				for i,v in pairs(house:GetChildren()) do
+					if v:IsA("BasePart") and v.Name ~= "SPECIAL" then
+						save["MainHouseData"][v.Name] = v.BrickColor.Number
+					end
+				end
+				
+				local savestr
+				
+				pcall(function()
+					savestr = game:GetService("HttpService"):JSONEncode(save)
+				end)
+				
+				if savestr and #savestr > 259000 then
+					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Error: Your house's save file has surpassed the maximum size (".. math.ceil((#savestr/259000)*100) .."%). You will have to remove some items first.")
+					return
+				end
+				
+				local stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+				if stats and stats:FindFirstChild("FurnitureCost") and stats:FindFirstChild("cash") and stats.cash.Value >= stats.FurnitureCost.Value then
+				
+					local pd = game:GetService("DataStoreService"):GetDataStore(plr.userId.."_data")
+					pd:SetAsync("house",save)
+					
+					local markerstocreate = {} --names of markers (numerical IDs)
+					local markerstodestroy = {} --pointers to markers
+					
+					--do not change ROBLOX objects within the UpdateAsync call, it could get repeated
+					--FurnitureCost child's name is the item's ID
+					local savesuccess = pd:UpdateAsync("maindata", function(tbl)
+						--[[for _,v in pairs(stats.FurnitureCost:GetChildren()) do
+							tbl[v.Name] = tbl[v.Name] + v.PendingSales.Value + v.Value
+							if tbl[v.Name] < 0 then
+								tbl[v.Name] = 0
+							end
+							stats.Objects[v.Name].Value = tbl[v.Name]
+						end]]
+						if tbl == nil then
+							return tbl
+						end
+						
+						markerstocreate = {}
+						markerstodestroy = {}
+						
+						for _,v in pairs(stats.FurnitureCost:GetChildren()) do
+							
+							local netchange = v.PendingSales.Value + v.Value
+							if netchange > 0 then --new stuff
+								for _=1,netchange do
+									table.insert(tbl["objects"],tonumber(v.Name))
+									table.insert(markerstocreate, v.Name)
+									--local marker = Instance.new("StringValue",stats.Objects)
+									--marker.Name = v.Name
+								end
+							elseif netchange < 0 then
+								for _=1,netchange*-1 do
+									for i,val in pairs(tbl["objects"]) do
+										if val == tonumber(v.Name) then
+											table.remove(tbl["objects"],i)
+											--need to make sure we get the unique objects out of the player's inv...
+											--cant call findfirstchild ONLY, that makes it so only 1 gets removed
+											for _,x in pairs(stats.Objects:GetChildren()) do
+												if x.Name == v.Name then
+													local matches
+													for _,z in pairs(markerstodestroy) do
+														if z == x then
+															matches = true
+														end
+													end
+													if not matches then
+														--it is unique, not already being destroyed
+														table.insert(markerstodestroy, x)
+														break
+													end
+												end
+											end
+											break
+										end
+									end
+								end
+							end
+							
+						end
+						
+						tbl["cash"] = tbl["cash"] - stats.FurnitureCost.Value
+						
+						return tbl
+					end)
+					
+					if stats and savesuccess then
+						for _,v in pairs(markerstocreate) do
+							local marker = Instance.new("StringValue",stats.Objects)
+							marker.Name = v
+						end
+						for _,v in pairs(markerstodestroy) do
+							v:Destroy()
+						end
+						
+						stats.cash.Value = stats.cash.Value - stats.FurnitureCost.Value
+						stats.oldcash.Value = stats.oldcash.Value - stats.FurnitureCost.Value
+						
+						stats.FurnitureCost.Value = 0
+						for _,v in pairs(stats.FurnitureCost:GetChildren()) do
+							v:Destroy()
+						end
+					end
+					
+					local savemarker = Instance.new("BoolValue")
+					savemarker.Name = "save_"..plr.Name
+					savemarker.Parent = script
+					game:GetService("Debris"):AddItem(savemarker,18)
+					return true
+				end
+			end) --end the save function
+			
+			house:Destroy() --remove the cloned house
+			
+			--[[if plr and plr:FindFirstChild("Backpack") then
+				for i,v in pairs(tools) do
+					v.Enabled = true
+				end
+			end]]
+			--house.Parent = workspace
+			
+			if savefunc == true then
+				return true
+			end
+		end
+	else
+		return false --please wait
+	end
+end
+
+
+
+game.ReplicatedStorage.RemoteFunctions.GetFurniture.OnServerInvoke = function(plr,objname)
+	local house = workspace:FindFirstChild("!home_"..plr.Name)
+	local stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and house and house.Floor.Editing.Value == true and stats then
+		local torso = plr.Character.HumanoidRootPart
+		local ray = Ray.new((torso.CFrame + torso.CFrame.lookVector * 10).p, (((torso.CFrame + torso.CFrame.lookVector * 10).p + Vector3.new(0,-15,0)) - (torso.CFrame + torso.CFrame.lookVector * 10).p).unit*15)
+		local ignoredparts = {}
+		for i,v in pairs(house:GetChildren()) do
+			if v:IsA("Model") then
+				table.insert(ignoredparts,v)
+			end
+		end
+		--check if ray is inside house
+		local findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)
+		if findpart == nil or findpart.Parent.Name ~= house.Name or not findpart.Name:match("Floor") then
+			return false,"Please stand facing some empty space inside your house, then try again."
+		end
+		local fcount = getFurnitureCount(plr)
+		if fcount == 450 then
+			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Notice: You are approaching the item limit for your house. You have placed "..fcount.."/500 items.")
+		end
+		if fcount >= 500 then
+			--hoarder!!
+			return false,"Sorry, you cannot fit more than 1000 items in your home!"
+		end
+		
+		
+		local components = (torso.CFrame + torso.CFrame.lookVector * 10).p
+		local itemserv = game.ReplicatedStorage.Objects:FindFirstChild(objname)
+		if itemserv then
+			local item = itemserv:clone()
+			for _,v in pairs(item:GetChildren()) do
+				if v.ClassName:match("Value") and v.Name ~= "PaintColor" and v.Name ~= "RotValue" and v.Name ~= "ItemID" then
+					v:Destroy()
+				end
+			end
+			item.Parent = house
+			
+			item:SetPrimaryPartCFrame(house.Floor.CFrame)
+			local boxsize,boxcframe = require(game.ReplicatedStorage.Modules.GetBoundingBox)(item)
+			local bottomboundary = boxcframe.Y - boxsize.Y / 2
+			local yoffset = item.PrimaryPart.Position.Y - bottomboundary + house.Floor.Size.Y / 2
+			local origpos = item.PrimaryPart.Position
+			item:SetPrimaryPartCFrame(item.PrimaryPart.CFrame + (Vector3.new(math.floor(components.X),yoffset,math.floor(components.Z))) - Vector3.new(origpos.X,0,origpos.Z)) -- orig CFrame + (newpos - oldpos)
+
+			local tempval = Instance.new("BoolValue")
+			tempval.Name = "temp"
+			tempval.Parent = item
+			local furnbought,pending = getFurnitureCostMarker(stats,itemserv)
+			furnbought.Value = furnbought.Value - 1
+			if getOwnedObjectCount(plr,itemserv.ItemID.Value) + pending.Value + furnbought.Value < 0 then
+				stats.FurnitureCost.Value = stats.FurnitureCost.Value + itemserv.ItemCost.Value
+			end
+			getFurnitureCount(plr)
+			return true
+		end
+		
+	end
+end
+
+game.ReplicatedStorage.RemoteFunctions.RemoveFurniture.OnServerEvent:connect(function(plr,model)
+	RemoveFurnitureItem(plr,model)
+end)
+
+game.ReplicatedStorage.RemoteFunctions.SellFurniture.OnServerInvoke = function(plr,objname)
+	local stats = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if stats then
+		local servobj = game.ReplicatedStorage.Objects:FindFirstChild(objname)
+		--local obj = stats.Objects:FindFirstChild(objname)
+		if servobj and not servobj:FindFirstChild("TwitterCode") and not servobj:FindFirstChild("NotForSale") then
+			local furnbought,pending = getFurnitureCostMarker(stats,servobj)
+			if getOwnedObjectCount(plr,servobj.ItemID.Value) + pending.Value + furnbought.Value > 0 then
+				pending.Value = pending.Value - 1
+				stats.FurnitureCost.Value = stats.FurnitureCost.Value - math.ceil(servobj.ItemCost.Value * .7)
+				return true
+			end
+		end
+	end
+end
+
+
+
+
+
+game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)
+	if item.Parent.Name == "!home_"..plr.Name then
+		if item:IsA("Model") then
+			item.PaintColor.Value = color
+			for i,v in pairs(item:GetChildren()) do
+				if v:IsA("BasePart") and v.Name == "Paintable" then
+					v.BrickColor = color
+				end
+			end
+		elseif item:IsA("BasePart") then
+			local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+			
+			local function paintParts(part,cl)
+				for i,v in pairs(part.Parent:GetChildren()) do
+					if v:IsA("BasePart") and v.Name == part.Name then
+						v.BrickColor = cl
+					end
+				end
+			end
+			
+			local colorbanned = false
+			for _,v in pairs(bannedcolors) do
+				if color.Name == v then
+					colorbanned = true
+				end
+			end
+			
+			local isexterior = false
+			for _,v in pairs(exteriorparts) do
+				if item.Name == v then
+					isexterior = true
+				end
+			end
+			
+			if not isexterior then
+				paintParts(item,color)
+			else
+				if (data and (data.Objects:FindFirstChild("208") or game.ServerStorage.RemoteFunctions.GamePassCheck:Invoke(plr,"House"))) and colorbanned == false then
+					paintParts(item,color)
+				elseif colorbanned then
+					paintParts(item,item.BrickColor)
+					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "You're not allowed to paint your exterior walls with neon colors!")
+				else
+					paintParts(item,item.BrickColor)
+					game.ReplicatedStorage.RemoteFunctions.OpenGuiFromServer:FireClient(plr,"BuyPaintingLicense")
+				end
+			end
+			
+			
+		end
+	end
+end)
+
+
+
+game.ReplicatedStorage.RemoteFunctions.SendNewFurniturePosition.OnServerEvent:connect(function(plr,selectedmodel,newcframe,newrotval)
+	if selectedmodel then
+		local pp = selectedmodel.PrimaryPart
+		local ray = Ray.new(newcframe.p, ((newcframe.p + Vector3.new(0,-15,0)) - newcframe.p).unit*10)
+		local ignoredparts = {}
+		for i,v in pairs(selectedmodel.Parent:GetChildren()) do
+			if v:IsA("Model") then
+				table.insert(ignoredparts,v)
+			end
+		end
+		local findpart = workspace:FindPartOnRayWithIgnoreList(ray,ignoredparts)
+		if findpart == nil or not findpart.Name:match("Floor") then --put it back in orig pos for the client
+			selectedmodel:SetPrimaryPartCFrame(pp.CFrame)
+			selectedmodel.RotValue.Value = selectedmodel.RotValue.Value
+			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"An error occurred while trying to position this piece of furniture. Please try again.")
+		else --apply the new position and rotation
+			selectedmodel:SetPrimaryPartCFrame(newcframe)
+			selectedmodel.RotValue.Value = newrotval
+		end
+	end
+end)
+
+
+
+game.ReplicatedStorage.RemoteFunctions.EnterHouseEditMode.OnServerEvent:connect(function(plr)
+	local house = workspace:FindFirstChild("!home_"..plr.Name)
+	if house then
+		house.Floor.Editing.Value = true
+	end
+end)
+
+
+--"exit house" is just ReloadHouse(), nothing else needed
+
+
+game.Players.ChildRemoved:connect(function(plr)
+	local house = workspace:FindFirstChild("!home_"..plr.Name)
+	if house then
+		workspace.HousePlacement[house.HousePlacement.Value].Occupied.Value = false
+		house:Destroy()
+	end
+end)
+
+
+
+--[[local ba = workspace.BaseApartment
+
+local function ClearAllButDecals(instance)
+	for _,v in pairs(instance:GetChildren()) do
+		if not v:IsA("Decal") then
+			v:Destroy()
+		end
+	end
+end
+
+for _,v in pairs(workspace:GetChildren()) do
+	if v.Name == "Apartment" then
+		v.RegenScript:Destroy()
+		local cl = ba.RegenScript:clone()
+		cl.Parent = v
+		
+		ClearAllButDecals(v.LockButton)
+		ClearAllButDecals(v.BuyDoor)
+		ClearAllButDecals(v.RestrictBlock)
+		ClearAllButDecals(v.RestrictButton)
+		
+		local lb = Instance.new("Model",v)
+		lb.Name = "Lock Button"
+		v.LockButton.Parent = lb
+		local c1 = ba["Lock Button"].ContextActionsModelName:clone()
+		c1.Parent = lb
+		local c2 = ba["Lock Button"].Owner:clone()
+		c2.Parent = lb
+		
+		local rb = Instance.new("Model",v)
+		rb.Name = "Restrict Button"
+		v.RestrictButton.Parent = rb
+		local c3 = ba["Restrict Button"].ContextActionsModelName:clone()
+		c3.Parent = lb
+		local c4 = ba["Restrict Button"].Owner:clone()
+		c4.Parent = lb
+		
+		local c5 = ba.RestrictBlock.Script:clone()
+		c5.Parent = v.RestrictBlock
+	end
+end]]
+
+
+
+
+
+
+
+
+
+	
+=== chunk=595 type=PROP offset=138629 runSha256=4ac88aeb57263d513670f74c0417c77d9de7ab9d7a568c81a99cec7d1d18f7b5 ===
+local coredatatable = {
+	["cash"] = 50,
+	["options"] = {
+		["ChatColor"] = {999,0,0},
+		["Volume"] = {7,7,true}, --normal, club, boombox
+		["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+	},
+	["objects"] = {},
+	["loyaltytable"] = {0,0,0,0}, --LP, consec. days logged in, # of last day logged in, # spins available
+	["Outfits"] = {}, --initialize later
+	["Compensation"] = {}, --put each comp in here as ["CompName"] = true
+	["DJRecent"] = {},
+	["DJFavorites"] = {},
+	["FirstLoginTime"] = 0,
+	["SpecialFlags"] = {"FirstLoginWithNewData","OutfitNamesFiltered"},
+	["PurchaseHistory"] = {}
+}
+
+--[[if game.PlaceId == 253100090 then --R15 testing
+	coredatatable["cash"] = 99999999
+	coredatatable["loyaltytable"] = {9999999,0,0,2}
+end]]
+
+--chat name colors
+local basecolors = {
+	{ 0, 0, 0 },
+	{ 0.513726, 0.513726, 0.513726 },
+	{ 0.690196, 0, 0 },
+	{ 0.0235294, 0.0392157, 0.478431 },
+	{ 0.74902, 0.360784, 0.0431373 },
+	{ 0.219608, 0.596078, 0.596078 },
+}
+
+local badgeids = {258548691,165762568,165762674,165762744}
+
+local GA = require(script.Parent.GameAnalytics)
+
+function GetCoreDataTable()
+	local tbl = {}
+	for i,v in pairs(coredatatable) do
+		tbl[i] = v
+	end
+	tbl["options"]["ChatColor"] = basecolors[math.random(1,#basecolors)]
+	return tbl
+end
+
+
+local debugmode = false
+
+BadgeService = game:GetService("BadgeService")
+
+cashpass = game.ReplicatedStorage.GamePasses.DoubleCash.Value --2x cash gamepass ID
+
+starttime = 1415934000 --thursday, 10:00 PM
+endtime = 1416193200 --sunday, 10:00 PM
+
+marketplace = game:GetService("MarketplaceService")
+
+local pt = game:GetService("DataStoreService"):GetOrderedDataStore("Playtime")
+--local loyaltystore = game:GetService("DataStoreService"):GetDataStore("loyalplayers")
+local loadsuccess = game.ServerStorage.RemoteFunctions.IsDataLoadedSuccessfully
+
+--[[
+	local pt = game:GetService("DataStoreService"):GetOrderedDataStore("Playtime")
+	local pages = pt:GetSortedAsync(false, 100)
+	for i,v in pairs(pages:GetCurrentPage()) do
+	local plrname = game.Players:GetNameFromUserIdAsync(v.key:match("%d+"))
+	local mins = v.value
+	local timestring = math.floor(mins / 1440).." days, "..math.floor((mins / 60) % 24) .." hours, "..mins % 60 .." minutes"
+	print(i,"-",plrname,"-",timestring)
+	end
+]]
+
+function CheckFreeGamePasses(plr)
+	if _G["freepasses"] and _G["admins"] then
+		for _,v in pairs(_G["freepasses"]) do
+			if v == plr.Name then return true end
+		end
+		for _,v in pairs(_G["admins"]) do
+			if v == plr.Name then return true end
+		end
+	end
+end
+
+function AwardFanclubItems(plr)
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data then
+		local idstoaward = {}
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if data.Objects:FindFirstChild(v.ItemID.Value) == nil and v:FindFirstChild("TwitterCode") and not (v:FindFirstChild("ReleaseTime") and v.ReleaseTime.Value > game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) then
+				local loopcount = 1
+				if v:FindFirstChild("LoopCount") then
+					loopcount = v.LoopCount.Value
+				end
+				for i=1,loopcount do
+					table.insert(idstoaward,v.ItemID.Value)
+				end
+			end
+		end
+		if #idstoaward > 0 then
+			game.ServerStorage.RemoteFunctions.AwardTableOfItems:Fire(plr,idstoaward)
+		end
+	end
+end
+
+
+
+function GetDJCompensation(plr, datafolder, datatable)
+	local compfolder = datafolder:FindFirstChild("Compensation")
+	local success
+	if not compfolder:FindFirstChild("djcompensation") then
+		if datatable then
+			datatable["Compensation"]["djcompensation"] = true
+		else
+			local marker = Instance.new("Folder")
+			marker.Name = "djcompensation"
+			marker.Parent = compfolder
+			success = pcall(function()
+				game:GetService("DataStoreService"):GetDataStore(plr.userId.."_data"):UpdateAsync("maindata", function(tbl)
+					if tbl ~= nil then
+						tbl["Compensation"]["djcompensation"] = true
+					end
+					return tbl
+				end)
+			end)
+		end
+		if datatable or success then
+			return 3000
+		end
+	end
+end
+
+function GetCDCompensation(plr, datafolder, datatable)
+	local compfolder = datafolder:FindFirstChild("Compensation")
+	local playerobjects = datafolder:FindFirstChild("Objects")
+	
+	if not compfolder:FindFirstChild("CDcompensation") and not compfolder:FindFirstChild("djcompensation") and playerobjects then
+		local refund = 0
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if string.sub(v.Name,1,6) == "music_" then
+				if playerobjects:FindFirstChild(v.ItemID.Value) then
+					refund = refund + v.ItemCost.Value
+				end
+			end
+		end
+		if refund > 0 then
+			datatable["Compensation"]["CDcompensation"] = true
+		end
+		return refund
+	end
+end
+
+game.ServerStorage.RemoteFunctions.GetDJCompensation.OnInvoke = function(plr, datafolder)
+	return GetDJCompensation(plr, datafolder)
+end
+
+
+
+function InsertOutfitTable(targettable)
+	local tabletoinsert = {
+		
+		["OutfitName"] = "", --25 char limit
+		
+		["Hat1"] = 0,
+		["Hat2"] = 0,
+		["Hat3"] = 0,
+		["Shirt"] = 0,
+		["Pants"] = 0,
+		
+		["Face"] = 0,
+		["Package"] = 0, --specific packages kept in-game (not used yet) or package IDs
+		
+		["RPName"] = "",
+		["RPDesc"] = "",
+		
+		["RemoveShirt"] = false
+
+	}
+	table.insert(targettable,tabletoinsert)
+end
+
+
+
+function RepeatGet(pd, key, successes, tries)
+	local success, reason, returnvalue
+	local i = 0
+	repeat
+		if i ~= 0 then
+			wait(3)
+		end
+		success, reason = pcall(function()
+			returnvalue = pd:GetAsync(key)
+		end)
+		i = i + 1
+	until success or i >= (tries or 10)
+	
+	if successes then
+		table.insert(successes,success)
+		if debugmode or not success then print(reason) end
+	end
+	
+	return returnvalue, success, reason
+end
+
+function RepeatSet(pd, key, value, successes, tries)
+	local success, reason, returnvalue
+	local i = 0
+	repeat
+		if i ~= 0 then
+			wait(3)
+		end
+		success, reason = pcall(function()
+			returnvalue = pd:SetAsync(key, value)
+		end)
+		i = i + 1
+	until success or i >= (tries or 10)
+	
+	if successes then
+		table.insert(successes,success)
+		if debugmode or not success then print(reason) end
+	end
+	
+	return returnvalue, success, reason
+end
+
+function RepeatUpdate(pd, key, funct, successes, tries)
+	local success, reason, returnvalue
+	local i = 0
+	repeat
+		if i ~= 0 then
+			wait(3)
+		end
+		success, reason = pcall(function()
+			returnvalue = pd:UpdateAsync(key, funct)
+		end)
+		i = i + 1
+	until success or i >= (tries or 10)
+	
+	if successes then
+		table.insert(successes,success)
+		if debugmode or not success then print(reason) end
+	end
+	
+	return returnvalue, success, reason
+end
+
+
+
+game.Players.ChildAdded:connect(function(player)
+	
+	local pid = player.userId
+	
+	local isguest = player.Name:match("Guest ") and true or false
+	
+	local leaderstats = Instance.new("IntValue")
+	leaderstats.Name = "leaderstats"
+	
+	local timeleader = Instance.new("IntValue")
+	timeleader.Name = "Time Played"
+	timeleader.Value = 0
+	
+	local stats = Instance.new("Folder") --STORES ALL DATA
+	stats.Name = pid
+	
+	timeleader.Parent = leaderstats
+	leaderstats.Parent = player
+	
+	if player.userId == 2364169 then
+		player.TeamColor = game.Teams.Seniors.TeamColor
+	end
+	
+	local pd
+	local counter = 0
+	repeat
+		local success = pcall(function()
+			pd = game:GetService("DataStoreService"):GetDataStore(pid.."_data")
+		end)
+		if not success then
+			wait(2)
+		end
+		counter = counter + 1
+	until pd or counter >= 10
+	
+	--INSERT CAR SELECTION VALUES-- (IDs)
+	
+	local selectedcar = Instance.new("IntValue")
+	selectedcar.Name = "SelectedCar"
+	selectedcar.Parent = player
+	
+	local selectedpaint = Instance.new("IntValue")
+	selectedpaint.Name = "SelectedPaint"
+	selectedpaint.Parent = player
+	
+	
+	--INSERT THE CELL PHONE DATA--
+	
+	local phonedata = Instance.new("Folder")
+	phonedata.Name = "textingdata"
+	
+	local allownotifications = Instance.new("BoolValue")
+	allownotifications.Name = "allownotifications"
+	allownotifications.Parent = phonedata
+	allownotifications.Value = true
+	
+	local phonemessages = Instance.new("Folder")
+	phonemessages.Name = "messages"
+	phonemessages.Parent = phonedata
+	
+	local blocklist = Instance.new("Folder")
+	blocklist.Name = "blocklist"
+	blocklist.Parent = phonedata
+	
+	phonedata.Parent = player
+	
+	
+	
+	--INSERT FISHING DATA--
+	
+	local fish = {"Goldfish","Black Bass","Trout","Salmon","Eel"}
+	
+	local fishdata
+
+	fishdata = Instance.new("Folder",stats)
+	fishdata.Name = "FishingInventory"
+	
+	for i,v in pairs(fish) do
+		local fishmarker = Instance.new("IntValue",fishdata)
+		fishmarker.Name = v
+	end
+
+
+	--CAN USER CHAT--
+	local canuserchat = Instance.new("BoolValue")
+	canuserchat.Value = false
+	local flag
+	repeat
+		local success = pcall(function()
+			flag = game:GetService("Chat"):CanUserChatAsync(player.userId)
+		end)
+		if not success then flag = nil wait(1.5) end 
+	until flag ~= nil or player.Parent == nil
+	if flag then
+		canuserchat.Value = flag
+	end
+	canuserchat.Name = "CanUserChat"
+	canuserchat.Parent = player
+	
+	
+	local statuses = Instance.new("Folder",stats)
+	statuses.Name = "SpecialStatus"
+	
+	local selectedpet = Instance.new("IntValue",player)
+	selectedpet.Name = "SelectedPet"
+	
+	
+	--[[local fakedata = Instance.new("IntValue")
+	fakedata.Name = "phonedata"
+	
+	local fakemessages = Instance.new("IntValue")
+	fakemessages.Name = "messages"
+	fakemessages.Parent = fakedata
+	
+	fakedata.Parent = player]]
+	
+	
+	--BEGIN DATA LOAD FUNCTIONS--
+	
+	local safetoload = true --if there was a failure, this is false - create LoadedSuccessfully
+	
+	local successes = {}
+	
+	local totaltime
+	if not isguest then
+		totaltime = RepeatGet(pt, pid.."_playtime", successes, 3)
+	end
+	
+	if totaltime == nil or isguest then
+		totaltime = 0
+	end
+	
+	local maindata, success
+	
+	wait(math.random(10,20)/10)
+	
+	if not isguest then
+		maindata, success = RepeatUpdate(pd, "maindata", function(tbl)
+			if tbl == nil then
+				tbl = GetCoreDataTable()
+			end
+			return tbl
+		end, successes, 15)
+	end
+
+	if maindata == nil or maindata == "NULL" then
+		maindata = GetCoreDataTable()
+	end
+	
+	local origdata = {} --keep to compare with changed data when performing initialization update
+	for i,v in pairs(maindata) do
+		origdata[i] = v
+	end
+	
+	
+	--for reference only
+	
+	--[[
+		local coredatatable = {
+			["cash"] = 50,
+			["options"] = {
+				["ChatColor"] = {999,0,0},
+				["Volume"] = {7,7,true}, --normal, club, boombox
+				["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+			},
+			["objects"] = {},
+			["loyaltytable"] = {0,0,0,0}, --LP, consec. days logged in, # of last day logged in, # spins available
+			["Outfits"] = {}, --initialize later
+			["Compensation"] = {}, --put each comp in here as ["CompName"] = true
+			["DJRecent"] = {},
+			["DJFavorites"] = {},
+			["FirstLoginTime"] = 0,
+			["SpecialFlags"] = {"FirstLoginWithNewData"},
+			["PurchaseHistory"] = {}
+		}
+	--]]
+	
+	
+	local changesmade = false
+	
+	local changestable = {}
+	
+	if success then
+		if maindata["SpecialFlags"][1] == "FirstLoginWithNewData" then
+			--check for old data, initialize the new data file, perform update to file
+			changesmade = true
+			changestable["SpecialFlags"] = true
+			changestable["FirstLoginTime"] = true
+			table.remove(maindata["SpecialFlags"], 1)
+			maindata["FirstLoginTime"] = os.time()
+			local cash = RepeatGet(pd, "cash", successes, 3)
+			local isolddata = false
+			if cash then
+				isolddata = true
+				maindata["FirstLoginTime"] = 1476576000 - (totaltime * 1200) --Oct. 9, 2016 - mins played * 20
+				if maindata["FirstLoginTime"] < 1403812800 then
+					maindata["FirstLoginTime"] = 1403812800
+				end
+				--player has an old data file, start transferring everything
+				maindata["cash"] = cash
+				changestable["cash"] = true
+				
+				local options = RepeatGet(pd, "options", successes, 3)
+				if options then
+					maindata["options"] = options
+					changestable["options"] = true
+				end
+				
+				--convert objects - first check the 2nd format, then the 1st format
+				
+				local objects, success = RepeatGet(pd, "objects", successes)
+				if objects == nil then
+					objects = {}
+					if success then --check 1st format - otherwise, objects is already the appropriate value
+						local oldobjects = RepeatGet(pd, "objectstable", successes)
+						if oldobjects then
+							for objname,val in pairs(oldobjects) do
+								local obj = game.ReplicatedStorage.Objects:FindFirstChild(objname)
+								if obj then
+									for i=1,val do
+										table.insert(objects,obj.ItemID.Value)
+									end
+								end
+							end
+						end
+					end
+				end
+				if objects then
+					maindata["objects"] = objects
+					changestable["objects"] = true
+				end
+				
+				local loyaltytable = RepeatGet(pd, "loyaltytable", successes)
+				if loyaltytable then
+					maindata["loyaltytable"] = loyaltytable
+					changestable["loyaltytable"] = true
+				end
+				
+				--outfits
+				local alloutfitdata = RepeatGet(pd, "Outfits", successes, 3)
+				if alloutfitdata == nil then
+					alloutfitdata = {}
+					for i=1,24 do
+						InsertOutfitTable(alloutfitdata)
+					end
+				end
+				if #alloutfitdata == 12 then
+					for i=1,12 do
+						InsertOutfitTable(alloutfitdata)
+					end
+				end
+				maindata["Outfits"] = alloutfitdata
+				changestable["Outfits"] = true
+				
+				--compensations
+				local oldcarcomp = RepeatGet(pd, "oldcarcomp", successes, 3)
+				if oldcarcomp then
+					maindata["Compensation"]["oldcarcomp"] = true
+					changestable["Compensation"] = true
+				end
+				local djcomp = RepeatGet(pd, "djcompensation", successes, 3)
+				if djcomp then
+					maindata["Compensation"]["djcompensation"] = true
+					changestable["Compensation"] = true
+				end
+				
+			end
+		end
+		
+		local filtered
+		for _,v in pairs(maindata["SpecialFlags"]) do
+			if v == "OutfitNamesFiltered" then
+				filtered = true
+			end
+		end
+		
+		if not filtered then
+			-- need to filter outfit names
+			for i,outfit in pairs(maindata["Outfits"]) do
+				local outfitname, rpname, rpdesc = game.ServerStorage.RemoteFunctions.GetFilteredNamesForOutfit:Invoke(player, outfit["OutfitName"], outfit["RPName"], outfit["RPDesc"])
+				
+				if outfit["OutfitName"] ~= "" then
+					if outfitname and outfitname ~= "INVALID_NAME" then
+						outfit["OutfitName"] = outfitname
+					else
+						outfit["OutfitName"] = "Saved Outfit"
+					end
+				end
+				
+				if outfit["RPName"] ~= "" then
+					if rpname and rpname ~= "INVALID_NAME" then
+						outfit["RPName"] = rpname
+					else
+						outfit["RPName"] = "RP Name Here"
+					end
+				end
+				
+				if outfit["RPDesc"] ~= "" then
+					if rpdesc and rpdesc ~= "INVALID_NAME" then
+						outfit["RPDesc"] = rpdesc
+					else
+						outfit["RPDesc"] = "RP Desc Here"
+					end
+				end
+			end
+			
+			table.insert(maindata["SpecialFlags"], "OutfitNamesFiltered")
+		end
+		
+		if #maindata["Outfits"] == 0 then
+			for i=1,24 do
+				InsertOutfitTable(maindata["Outfits"])
+			end
+			changestable["Outfits"] = true
+		end
+		
+		for i,v in pairs(coredatatable) do
+			if maindata[i] == nil then
+				--populate the save file with any new data types that may be missing
+				maindata[i] = v 
+				changesmade = true
+				changestable[i] = true
+			end
+		end
+		for i,v in pairs(coredatatable["options"]) do
+			if maindata["options"][i] == nil then
+				maindata["options"][i] = v 
+				changestable["options"] = true
+				changesmade = true
+			end
+		end
+		
+
+	end
+
+
+	--loyalty changes
+	
+	local function GetLoyaltyData(tbl)
+		local changes = false
+		local timedata = game.ReplicatedStorage.IntroGUIData
+		local day = timedata.CurrentRealLifeDay.Value
+		local endtime = timedata.HolidayStartTime.Value + (day * 86400)
+		local timeleft = endtime - timedata.CurrentTime.Value
+		local timeleftstring = math.floor(timeleft/3600).."h "..math.floor((timeleft%3600)/60).."m"
+		
+		local current_lp = tbl[1]
+		local lp_reward = 0
+		local consec_days = tbl[2]
+		local current_spins = tbl[4]
+		local firstlogintoday = false
+		local lastdayloggedin = tbl[3]
+		
+		if tbl[3] ~= day then --hasn't logged in today
+			firstlogintoday = true
+			changes = true
+			if day - tbl[3] <= 2 then --logged in yesterday or 2 days before, offer rewards for consec. logins
+				tbl[3] = day
+				tbl[2] = tbl[2] + 1
+				consec_days = tbl[2]
+				if tbl[2] >= 5 then
+					lp_reward = 1000
+				else
+					lp_reward = 500 + tbl[2] * 100
+				end
+				tbl[1] = tbl[1] + lp_reward
+				current_lp = tbl[1]
+				if consec_days % 5 == 0 then
+					tbl[4] = tbl[4] + 2
+				end
+				current_spins = tbl[4]
+			else --didn't log in yesterday, reset counter
+				tbl[2] = 1
+				consec_days = 1
+				lp_reward = 600
+				tbl[1] = tbl[1] + lp_reward
+				current_lp = tbl[1]
+				tbl[3] = day
+				current_spins = tbl[4]
+			end
+		end
+		
+		--create stats
+		local loyaltystats = Instance.new("Folder")
+		loyaltystats.Name = "LoyaltyStats"
+		
+		local lp = Instance.new("IntValue",loyaltystats)
+		lp.Name = "LP"
+		lp.Value = current_lp
+		local oldlp = Instance.new("IntValue",loyaltystats)
+		oldlp.Name = "OldLP"
+		oldlp.Value = current_lp
+		
+		local spins = Instance.new("IntValue",loyaltystats)
+		spins.Name = "Spins"
+		spins.Value = current_spins
+		local oldspins = Instance.new("IntValue",loyaltystats)
+		oldspins.Name = "OldSpins"
+		oldspins.Value = current_spins
+		
+		local lastday = Instance.new("IntValue",loyaltystats)
+		lastday.Name = "LastDayLoggedIn"
+		lastday.Value = lastdayloggedin
+		
+		--store data that is only used to determine what's displayed on GUI
+		local rewardstat = Instance.new("IntValue",loyaltystats)
+		rewardstat.Name = "LPReward"
+		rewardstat.Value = lp_reward
+		local daysstat = Instance.new("IntValue",loyaltystats)
+		daysstat.Name = "ConsecDays"
+		daysstat.Value = consec_days
+		local dayendtime = Instance.new("IntValue",loyaltystats)
+		dayendtime.Name = "EndTime"
+		dayendtime.Value = endtime
+		local firstloginval = Instance.new("BoolValue",loyaltystats)
+		firstloginval.Name = "FirstLogin"
+		firstloginval.Value = firstlogintoday
+		local playerloginday = Instance.new("IntValue",loyaltystats)
+		playerloginday.Name = "PlayerLoginDay"
+		playerloginday.Value = day
+		
+		loyaltystats.Parent = stats	
+		
+		return tbl, changes
+	end
+	
+	local loyaltytable, changes = GetLoyaltyData(maindata["loyaltytable"])
+	maindata["loyaltytable"] = loyaltytable
+	if changes then
+		changesmade = true
+		changestable["loyaltytable"] = true
+	end
+	
+	
+	for _,v in pairs(successes) do
+		if v == false then
+			safetoload = false
+		end
+	end
+	
+	
+	--start creating the stats objects
+	local options = maindata["options"]
+	
+	local color = Instance.new("Color3Value")
+	color.Value = Color3.new(options["ChatColor"][1],options["ChatColor"][2],options["ChatColor"][3])
+	color.Name = "chatcolor"
+	color.Parent = player
+	
+	local volumesetting = Instance.new("IntValue")
+	volumesetting.Name = "VolumeSetting"
+	volumesetting.Value = options["Volume"][1]
+	volumesetting.Parent = player
+	
+	local clubvolumesetting = Instance.new("IntValue")
+	clubvolumesetting.Name = "ClubVolumeSetting"
+	clubvolumesetting.Value = options["Volume"][2]
+	clubvolumesetting.Parent = player
+	
+	local boomboxsetting = Instance.new("BoolValue")
+	boomboxsetting.Name = "BoomboxSetting"
+	boomboxsetting.Value = options["Volume"][3]
+	boomboxsetting.Parent = player
+	
+	
+	local detailsetting = Instance.new("IntValue")
+	detailsetting.Name = "DetailSetting"
+	detailsetting.Value = options["LevelOfDetail"][1]
+	detailsetting.Parent = player
+	
+	local housessetting = Instance.new("IntValue")
+	housessetting.Name = "HousesSetting"
+	housessetting.Value = options["LevelOfDetail"][2]
+	housessetting.Parent = player
+	
+	--add FirstLoginTime to the data object
+	
+	local flt = Instance.new("IntValue")
+	flt.Name = "FirstLoginTime"
+	flt.Value = maindata["FirstLoginTime"]
+	flt.Parent = stats
+	
+	
+	--handle the DJ recently played and favorites lists
+	--two folders for each list: one that holds the actual current list of songs (stringvalues where Name = songID and Value is set by the client to the song's name), and another that stores boolvalues indicating whether to add/remove a song from the list when saving
+	
+	local songlists = Instance.new("Folder",stats)
+	songlists.Name = "SongLists"
+	
+	local recent = Instance.new("Folder",songlists)
+	recent.Name = "RecentlyPlayed"
+	local recentchanges = Instance.new("Folder",songlists)
+	recentchanges.Name = "RecentChanges"
+	local favorites = Instance.new("Folder",songlists)
+	favorites.Name = "Favorites"
+	local favoritechanges = Instance.new("Folder",songlists)
+	favoritechanges.Name = "FavoriteChanges"
+	
+	for _,v in pairs(maindata["DJRecent"]) do
+		local marker = Instance.new("StringValue",recent)
+		marker.Name = v 
+	end
+	for _,v in pairs(maindata["DJFavorites"]) do
+		local marker = Instance.new("StringValue",favorites)
+		marker.Name = v 
+	end
+	
+	
+	local playerobjects
+
+	playerobjects = Instance.new("Folder")
+	playerobjects.Name = "Objects"
+	playerobjects.Parent = stats
+	
+	local pendingobjects --objects that will be saved at the autosave interval
+	pendingobjects = Instance.new("Folder")
+	pendingobjects.Name = "PendingObjects"
+	pendingobjects.Parent = stats
+	
+	local itemdataloader
+	pcall(function()
+		itemdataloader = require(258548692)
+	end)
+	if itemdataloader then
+		itemdataloader.loadExtraItemData(game.ReplicatedStorage.Objects)
+	end
+	
+	
+	local oldcarobjects = {} --check these for the old car refund
+	
+	for i,v in pairs(maindata["objects"]) do --check table of player's objects
+		for _,obj in pairs(game.ReplicatedStorage.Objects:GetChildren()) do --check server objects
+			if obj.ItemID.Value == v then --if object's ID == player's item ID
+				local marker = Instance.new("StringValue")
+				marker.Name = v --marker's name is the ID
+				marker.Parent = playerobjects
+				if obj:FindFirstChild("OldSchoolCar") then
+					table.insert(oldcarobjects,obj)
+				end
+			end
+		end
+	end
+	
+	for _,obj in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+		if (obj.ItemCost.Value == 0 and not obj:FindFirstChild("TwitterCode") and not obj:FindFirstChild("NotForSale")) and not playerobjects:FindFirstChild(obj.ItemID.Value) then --give 'em all the free objects
+			local marker = Instance.new("StringValue")
+			marker.Name = obj.ItemID.Value
+			marker.Parent = playerobjects
+		end
+	end
+	
+	
+	local passes = Instance.new("Folder")
+	passes.Name = "GamePasses"
+	passes.Parent = stats
+	for i,v in pairs(game.ReplicatedStorage.GamePasses:GetChildren()) do
+		local marker = Instance.new("BoolValue")
+		marker.Name = v.Name
+		marker.Value = false
+		if game:GetService("GamePassService"):PlayerHasPass(player,v.Value) or CheckFreeGamePasses(player) == true then
+			marker.Value = true
+		elseif v.Name == "House" and playerobjects:FindFirstChild("183") then --Custom House product's ItemID
+			marker.Value = true
+		end
+		marker.Parent = passes
+	end
+	
+	
+	--track number of purchases for analytics
+	local numpurchases = Instance.new("IntValue")
+	numpurchases.Name = "NumPurchases"
+	local purchcount = 0
+	for _,v in pairs(passes:GetChildren()) do
+		if v.Name ~= "House" and v.Value == true then
+			purchcount = purchcount + 1
+		end
+	end
+	purchcount = purchcount + #maindata["PurchaseHistory"]
+	numpurchases.Value = purchcount
+	numpurchases.Parent = stats
+	
+	
+	local outfits = Instance.new("Folder",stats)
+	outfits.Name = "Outfits"
+	local alloutfitdata = maindata["Outfits"]
+	
+	for i=1,24 do --create all of the outfits in the data
+		local outfit = Instance.new("Folder",outfits)
+		outfit.Name = i
+		
+		local outfitdata = alloutfitdata[i]
+		
+		for x=1,3 do
+			local hat = Instance.new("IntValue",outfit)
+			hat.Name = "Hat"..x
+			hat.Value = outfitdata["Hat"..x]
+		end
+		
+		local outfitname = Instance.new("StringValue",outfit)
+		outfitname.Name = "OutfitName"
+		outfitname.Value = outfitdata["OutfitName"]
+		local shirt = Instance.new("IntValue",outfit)
+		shirt.Name = "Shirt"
+		shirt.Value = outfitdata["Shirt"]
+		local pants = Instance.new("IntValue",outfit)
+		pants.Name = "Pants"
+		pants.Value = outfitdata["Pants"]
+		local face = Instance.new("IntValue",outfit)
+		face.Name = "Face"
+		face.Value = outfitdata["Face"]
+		local package = Instance.new("IntValue",outfit)
+		package.Name = "Package"
+		package.Value = outfitdata["Package"]
+		local removeshirt = Instance.new("BoolValue",outfit)
+		removeshirt.Name = "RemoveShirt"
+		removeshirt.Value = outfitdata["RemoveShirt"]
+		local rpname = Instance.new("StringValue",outfit)
+		rpname.Name = "RPName"
+		rpname.Value = outfitdata["RPName"]
+		local rpdesc = Instance.new("StringValue",outfit)
+		rpdesc.Name = "RPDesc"
+		rpdesc.Value = outfitdata["RPDesc"]
+	end
+	
+	
+	
+	
+	--for special flags (whenever we get to that): Special flags structure will be: Folders are tables. For value objects, the name is the i and the value is the v
+	
+	
+	
+	--do compensation checks, perform compensation if conditions are met and the flags are missing
+	
+	--for DJ, need two different compensations! The same old one for having both CR+Unrestricted (but only the 1,000, not the CD bonus) and a separate one just for having the CR DJ pass (CD refund only) (this must ONLY be given if the player doesn't already have the Unrestricted refund)
+	
+	-- place refund markers inside of a refunds folder, and on the local side, player will wait to display each refund window
+	
+	local compfolder = Instance.new("Folder",stats)
+	compfolder.Name = "Compensation"
+	
+	-- CDs only comp for DJ pass
+	if game:GetService("GamePassService"):PlayerHasPass(player,game.ReplicatedStorage.GamePasses.ClubRed.Value) and maindata["Compensation"]["CDcompensation"] == nil and maindata["Compensation"]["djcompensation"] == nil and safetoload then
+		local incvalue = GetCDCompensation(player, stats, maindata)
+		if incvalue and incvalue > 0 then
+			maindata["cash"] = maindata["cash"] + incvalue
+			changesmade = true
+			changestable["Compensation"] = true
+			changestable["cash"] = true
+			if player then
+				game.ReplicatedStorage.RemoteFunctions.DisplayRefundWindow:FireClient(player, "CD", incvalue)
+			end
+		end
+	end
+	
+	-- +3,000 comp for both passes
+	if game:GetService("GamePassService"):PlayerHasPass(player,game.ReplicatedStorage.GamePasses.UnrestrictedDJ.Value) and game:GetService("GamePassService"):PlayerHasPass(player,game.ReplicatedStorage.GamePasses.ClubRed.Value) and maindata["Compensation"]["djcompensation"] == nil and safetoload then
+		local incvalue = GetDJCompensation(player, stats, maindata)
+		if incvalue then
+			maindata["cash"] = maindata["cash"] + incvalue
+			changesmade = true
+			changestable["Compensation"] = true
+			changestable["cash"] = true
+			if player then
+				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player, "You have received +$"..incvalue.." RHS Cash with your purchase of Unrestricted DJ!",true)
+			end
+		end
+	end
+	
+	
+	
+	--old cars comp
+	if #oldcarobjects > 0 and safetoload then
+		if maindata["Compensation"]["oldcarcomp"] == nil then
+			changesmade = true
+			changestable["Compensation"] = true
+			changestable["cash"] = true
+			
+			local totalcost = 0
+			for _,obj in pairs(oldcarobjects) do
+				totalcost = totalcost + obj.ItemCost.Value
+			end
+			maindata["cash"] = maindata["cash"] + totalcost
+			maindata["Compensation"]["oldcarcomp"] = true
+			if player then
+				game.ReplicatedStorage.RemoteFunctions.DisplayRefundWindow:FireClient(player, "OldCar", totalcost)
+			end
+		end
+	end
+	
+	for i,_ in pairs(maindata["Compensation"]) do
+		local marker = Instance.new("Folder",compfolder)
+		marker.Name = i 
+	end
+	
+	
+	--finish creating stats objects that are dependent on compensation results
+	
+	
+	local timestat
+	timestat = Instance.new("IntValue")
+	timestat.Name = "totaltime"
+	timestat.Value = totaltime
+	timestat.Parent = stats
+	
+	local cashstat
+	cashstat = Instance.new("IntValue")
+	cashstat.Name = "cash"
+	cashstat.Value = maindata["cash"]
+	cashstat.Parent = stats
+	
+	local oldcashstat
+	oldcashstat = Instance.new("IntValue")
+	oldcashstat.Name = "oldcash"
+	oldcashstat.Value = maindata["cash"]
+	oldcashstat.Parent = stats
+		
+	local furniturestat --holds all furniture counters, removed on quit
+	furniturestat = Instance.new("IntValue")
+	furniturestat.Name = "FurnitureCost"
+	furniturestat.Value = 0
+	furniturestat.Parent = stats
+	
+	local fanclub = Instance.new("BoolValue",stats)
+	fanclub.Name = "IsInFanClub"
+	fanclub.Value = false
+	
+	local badgesearned = Instance.new("Folder",stats)
+	badgesearned.Name = "BadgesEarned"
+	
+	
+	--update the data if: there are no failures, if changes are made, and if not a guest
+	local success
+	
+	--compare origdata and maindata for changes with cash
+	if safetoload and changesmade and not isguest then
+		maindata, success = RepeatUpdate(pd, "maindata", function(tbl)
+			for i,_ in pairs(changestable) do
+				if i == "cash" then
+					local toadd = maindata["cash"] - origdata["cash"]
+					tbl["cash"] = tbl["cash"] + toadd
+				elseif i == "objects" then
+					--this is only required if there's been a transfer from the old objects format - NEVER overwrite like this just for adding/removing a few objects - if we were doing that, should give a table with a list of objects to add/remove
+					tbl["objects"] = maindata["objects"]
+				else
+					tbl[i] = maindata[i]
+				end
+			end
+			return tbl
+		end, successes, 15)
+	elseif safetoload and (not changesmade or isguest) then
+		success = true
+	end
+	
+	if not success then
+		safetoload = false
+	end
+	
+	
+	local marker = Instance.new("BoolValue")
+	marker.Name = "LoadedSuccessfully"
+	
+	if safetoload == false then
+		marker.Value = false
+		if player then
+			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Error: Your data could not be loaded at this time. ROBLOX's servers may be experiencing connection issues. Try rejoining at a later time.",true)
+		end
+	else
+		marker.Value = true
+	end
+	
+	marker.Parent = stats
+	
+	
+	if player ~= nil and player.Parent ~= nil then
+		stats.Parent = game.ReplicatedStorage.PlayerData
+		if game.PlaceId ~= 9689581 or player:IsInGroup(1127093) then
+			fanclub.Value = true
+			AwardFanclubItems(player)
+		end
+	end
+	
+	BadgeService:AwardBadge(pid,badgeids[1])
+	
+	--john doe badge Kappa
+	if (os.time() > 1489820400 and os.time() < 1489906800) then
+		BadgeService:AwardBadge(pid,693040536)
+	end
+	
+	
+	--LOAD RHS HEADPHONES OWNERSHIP--
+	local hastoy = Instance.new("BoolValue")
+	hastoy.Name = "HasRHSToy"
+	hastoy.Value = false
+	pcall(function()
+		if game:GetService("MarketplaceService"):PlayerOwnsAsset(player, 501960266) then
+			hastoy.Value = true
+		end
+	end)
+	hastoy.Parent = player
+	
+	
+	--IS ROBLOX ADMIN--
+	if player:IsInGroup(1200769) then
+		local isrobloxadmin = Instance.new("BoolValue")
+		isrobloxadmin.Name = "IsRobloxAdmin"
+		isrobloxadmin.Value = true
+		isrobloxadmin.Parent = player
+	end
+	
+	
+	--IS RHS DEV--
+	if player:IsInGroup(1127093) and player:GetRankInGroup(1127093) >= 253 then
+		local isrhsdev = Instance.new("BoolValue")
+		isrhsdev.Name = "IsRHSDev"
+		isrhsdev.Value = true
+		isrhsdev.Parent = player
+	end
+	
+	
+	
+	
+	
+	--BEGIN STATS UPDATING CODE--
+	
+	
+	--COROUTINE TO UPDATE TOTAL TIME + TIMED CASH BONUS--
+	
+	local timecoroutine
+	timecoroutine = coroutine.resume(coroutine.create(function() 
+		local ticktock = 0
+		while true do
+			wait(.99)
+			if player.Parent ~= nil then
+				if not (player:FindFirstChild("IdleChecker") == nil or player.IdleChecker.Value == true) then
+					ticktock = ticktock + 1
+					if ticktock == 60 then
+						game.ServerStorage.RemoteFunctions.FlushData:Fire(player)
+					end
+					if ticktock == 60 then
+						ticktock = 0
+						timeleader.Value = timeleader.Value + 1
+						local tottime
+						pcall(function()
+							tottime = pt:IncrementAsync(pid.."_playtime", 1)
+							timestat.Value = tottime
+						end)
+						
+						if tottime then
+							if tottime >= 300 and not stats.BadgesEarned:FindFirstChild(tostring(badgeids[2])) then
+								BadgeService:AwardBadge(pid,badgeids[2])
+								local marker = Instance.new("Folder",stats.BadgesEarned)
+								marker.Name = badgeids[2]
+							end
+							
+							if tottime >= 1440 and not stats.BadgesEarned:FindFirstChild(tostring(badgeids[3])) then
+								BadgeService:AwardBadge(pid,badgeids[3])
+								local marker = Instance.new("Folder",stats.BadgesEarned)
+								marker.Name = badgeids[3]
+							end
+							
+							if tottime >= 4320 and not stats.BadgesEarned:FindFirstChild(tostring(badgeids[4])) then
+								BadgeService:AwardBadge(pid,badgeids[4])
+								local marker = Instance.new("Folder",stats.BadgesEarned)
+								marker.Name = badgeids[3]
+							end
+						end
+						
+						local cashbonus = 2
+						if game:GetService("GamePassService"):PlayerHasPass(player,cashpass) or (os.time() > starttime and os.time() < endtime) then
+							cashbonus = cashbonus + 2
+						end
+						if game.ServerStorage.RemoteFunctions.GamePassCheck:Invoke(player,"VIP") then
+							cashbonus = cashbonus + 3
+						end
+						if game:GetService("GamePassService"):PlayerHasPass(player,191991934) and cashstat.Value < 2000000000 then
+							cashbonus = 5000
+						end
+						
+						cashstat.Value = cashstat.Value + cashbonus
+						
+						game.ServerStorage.AnalyticsCache.CashEarned.Playtime.Value = game.ServerStorage.AnalyticsCache.CashEarned.Playtime.Value + cashbonus
+						
+					end
+				end
+			else
+				timecoroutine = nil
+				coroutine.yield()
+			end
+		end
+	end))
+	
+	
+	--CHARACTERADDED THINGS--
+	
+	player.CharacterAdded:connect(function(char)
+		local ca = Instance.new("StringValue",char)
+		ca.Name = "ContextActionsModelName"
+		ca.Value = "Player"
+	end)
+	
+	if player.Character and not player.Character:FindFirstChild("ContextActionsModelName") then
+		local ca = Instance.new("StringValue",player.Character)
+		ca.Name = "ContextActionsModelName"
+		ca.Value = "Player"
+	end
+	
+	
+	
+end)
+
+game.ServerStorage.RemoteFunctions.IsDataLoadedSuccessfully.OnInvoke = function(plr)
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data then
+		if data.LoadedSuccessfully.Value == true then
+			return true
+		else
+			return false
+		end
+	end
+end
+
+
+game.ReplicatedStorage.RemoteFunctions.ChangeVolume.OnServerEvent:connect(function(plr,vol,clubvol,boombox)
+	plr.VolumeSetting.Value = vol
+	plr.ClubVolumeSetting.Value = clubvol
+	plr.BoomboxSetting.Value = boombox
+end)
+
+game.ReplicatedStorage.RemoteFunctions.ChangeDetailSetting.OnServerEvent:connect(function(plr,lod,houses)
+	plr.DetailSetting.Value = lod
+	plr.HousesSetting.Value = houses
+end)
+
+
+game.ServerStorage.RemoteFunctions.FlushData.Event:connect(function(plr)
+	
+	if plr and loadsuccess:Invoke(plr) == true then
+		--print("Flushing data for "..plr.Name)
+		local isingame = true
+		if plr.Parent == nil then
+			isingame = false
+		end
+		local pid = plr.userId
+		local data = game.ReplicatedStorage.PlayerData:FindFirstChild(pid)
+		
+		if isingame == false and script.Flushing:FindFirstChild(pid) then
+			repeat wait() until script.Flushing:FindFirstChild(pid) == nil
+		end
+		
+		if data and not script.Flushing:FindFirstChild(pid) then
+			local marker = Instance.new("Folder",script.Flushing)
+			marker.Name = pid
+			
+			
+			--save pending objects first
+			--format of a pending object:
+			--Name/Value: ItemID. 
+			----CurrencyType: "LP" or "cash".
+			----ItemCost
+			local pendingobjects = data.PendingObjects:GetChildren()
+			local objects = data.Objects
+			
+			--[[
+			local coredatatable = {
+				["cash"] = 50,
+				["options"] = {
+					["ChatColor"] = {999,0,0},
+					["Volume"] = {7,7,true}, --normal, club, boombox
+					["LevelOfDetail"] = {1,1} --LoD, houses enabled (1 = never, 2 = nearby only, 3 = always)
+				},
+				["objects"] = {},
+				["loyaltytable"] = {0,0,0,0}, --LP, consec. days logged in, # of last day logged in, # spins available
+				["Outfits"] = {}, --initialize later
+				["Compensation"] = {}, --put each comp in here as ["CompName"] = true
+				["DJRecent"] = {},
+				["DJFavorites"] = {},
+				["FirstLoginTime"] = 0,
+				["SpecialFlags"] = {"FirstLoginWithNewData"}
+			}
+			]]
+			
+			local cash = data.cash.Value
+			local oldcash = data.oldcash.Value
+			data.oldcash.Value = cash
+			local diff = cash - oldcash
+			
+			local vol = plr.VolumeSetting.Value
+			local clubvol = plr.ClubVolumeSetting.Value
+			local boombox = plr.BoomboxSetting.Value
+			local color = plr.chatcolor
+			local lod = plr.DetailSetting.Value
+			local hsetting = plr.HousesSetting.Value
+			
+			local recentchanges = data.SongLists.RecentChanges
+			local favoritechanges = data.SongLists.FavoriteChanges
+			
+			local ls = plr:FindFirstChild("leaderstats")
+			local tp
+			if ls then
+				tp = ls:FindFirstChild("Time Played")
+			end
+			
+			local loyaltystats = data:FindFirstChild("LoyaltyStats")
+			local lp
+			local oldlp
+			local spins
+			local oldspins
+			local lpdiff
+			local spinsdiff
+			
+			if loyaltystats then
+				lp = loyaltystats.LP.Value
+				oldlp = loyaltystats.OldLP.Value
+				spins = loyaltystats.Spins.Value
+				oldspins = loyaltystats.OldSpins.Value
+				
+				lpdiff = lp - oldlp
+				spinsdiff = spins - oldspins
+				
+				loyaltystats.OldLP.Value = lp
+				loyaltystats.OldSpins.Value = spins
+			end
+			
+			--update it all in 1 go!
+			local success
+			local tries = 0
+			repeat
+				success = pcall(function()
+					local update = game:GetService("DataStoreService"):GetDataStore(plr.userId.."_data"):UpdateAsync("maindata",function(tbl)
+						if tbl == nil then
+							tbl = GetCoreDataTable()
+						end
+						
+						--objects
+						for _,v in pairs(pendingobjects) do
+							table.insert(tbl["objects"],v.Value)
+						end
+						
+						--cash 
+						tbl["cash"] = tbl["cash"] + diff
+						
+						--options
+						if ls and tp and tp.Value < 1 then
+							if lod > 1 then
+								lod = lod - 1
+							else
+								hsetting = 1
+							end
+						end
+						tbl["options"] = {
+							["ChatColor"] = {color.Value.r,color.Value.g,color.Value.b},
+							["Volume"] = {vol,clubvol,boombox}, --normal, club, boombox
+							["LevelOfDetail"] = {lod,hsetting} --LoD, houses enabled
+						}
+						
+						--loyaltytable
+						if loyaltystats then
+							tbl["loyaltytable"][1] = tbl["loyaltytable"][1] + lpdiff
+							tbl["loyaltytable"][4] = tbl["loyaltytable"][4] + spinsdiff
+						end
+						
+						--outfits
+						local outfits = {}
+						for i=1,24 do
+							local outfit = data.Outfits:FindFirstChild(i)
+							local entry = {
+								
+								["OutfitName"] = "", --25 char limit
+					
+								["Hat1"] = 0,
+								["Hat2"] = 0,
+								["Hat3"] = 0,
+								["Shirt"] = 0,
+								["Pants"] = 0,
+								
+								["Face"] = 0,
+								["Package"] = 0,
+								
+								["RPName"] = "",
+								["RPDesc"] = "",
+								
+								["RemoveShirt"] = false
+								
+							}
+							for _,v in pairs(outfit:GetChildren()) do
+								entry[v.Name] = v.Value
+							end
+							table.insert(outfits,entry)
+						end
+						tbl["Outfits"] = outfits
+						
+						--compensation
+						for _,v in pairs(data.Compensation:GetChildren()) do
+							if tbl["Compensation"][v.Name] == nil then
+								tbl["Compensation"][v.Name] = true
+							end
+						end
+						
+						--DJRecent and DJFavorites changes (true = add, false = remove)
+						for _,v in pairs(recentchanges:GetChildren()) do
+							for i,x in pairs(tbl["DJRecent"]) do
+								if x == v.Name then
+									table.remove(tbl["DJRecent"], i)
+									break
+								end
+							end
+							if v.Value == true then
+								table.insert(tbl["DJRecent"], 1, v.Name)
+							end
+						end
+						for _,v in pairs(favoritechanges:GetChildren()) do
+							if v.Value == true then
+								table.insert(tbl["DJFavorites"], v.Name)
+							else
+								for i,x in pairs(tbl["DJFavorites"]) do
+									if x == v.Name then
+										table.remove(tbl["DJFavorites"], i)
+										break
+									end
+								end
+							end
+						end
+						
+						
+						return tbl
+					end)
+				end)
+				tries = tries + 1
+				if not success then wait(2) end
+			until success or tries >= 10
+			
+			
+			
+			if success then
+				for _,v in pairs(pendingobjects) do
+					v:Destroy()
+				end
+				for _,v in pairs(recentchanges:GetChildren()) do
+					v:Destroy()
+				end
+				for _,v in pairs(favoritechanges:GetChildren()) do
+					v:Destroy()
+				end
+			else
+				data.oldcash.Value = data.oldcash.Value - diff
+				print("Cash change unsuccessful for user "..pid)
+				
+				if loyaltystats then
+					loyaltystats.OldLP.Value = loyaltystats.OldLP.Value - lpdiff
+					loyaltystats.OldSpins.Value = loyaltystats.OldSpins.Value - spinsdiff
+					print("Loyalty table change unsuccessful for user "..pid)
+				end
+					
+				local arepaidobjects = false
+				for _,v in pairs(pendingobjects) do
+					if v.ItemCost.Value ~= 0 then
+						arepaidobjects = true
+						local itemmarker = objects:FindFirstChild(v.Name)
+						if itemmarker then
+							itemmarker:Destroy()
+						end
+						local currency = v.CurrencyType.Value == "LP" and data.LoyaltyStats.LP or data.cash
+						currency.Value = currency.Value + v.ItemCost.Value
+					end
+				end
+				for _,v in pairs(pendingobjects) do
+					if v.ItemCost.Value ~= 0 then
+						v:Destroy()
+					end
+				end
+				if arepaidobjects then
+					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"An error occurred with your recent purchase(s). You have been refunded; please try again later.")
+				end
+			end
+			
+			
+			
+			--[[if data:FindFirstChild("ClassesAttended") then
+				local classes = data.ClassesAttended.Value
+				local oldclasses = data.OldClassesAttended.Value
+				local hasbadge = data.HasBadge.Value
+				data.OldClassesAttended.Value = classes
+				local classdiff = classes - oldclasses
+				if classdiff ~= 0 and not hasbadge then
+					local success = pcall(function()
+						pd:IncrementAsync("ImaginationClasses",classdiff)
+					end)
+					if success then
+						
+					else
+						data.OldClassesAttended.Value = oldclasses
+						print("Classes attended change unsuccessful for user "..pid)
+					end
+				end
+			end]]
+			
+			if isingame == false then
+				print("Removing user "..pid.."'s data")
+				data:Destroy()
+			end
+			
+			if marker then
+				marker:Destroy()
+			end
+		end
+	else
+		if plr and loadsuccess:Invoke(plr) == false and plr.Parent ~= game.Players then
+			local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+			if data then
+				data:Destroy()
+			end
+		end
+		--[[if plr and plr:FindFirstChild("PlayerGui") then
+			local h = Instance.new("Hint",plr.PlayerGui)
+			h.Text = "ROBLOX's data servers are experiencing connection issues. Please be patient for service to be restored!"
+			game:GetService("Debris"):AddItem(h,30)
+		end]]
+	end
+	
+end)
+
+
+game.Players.ChildRemoved:connect(function(plr)
+	game.ServerStorage.RemoteFunctions.FlushData:Fire(plr)
+end)
+
+
+
+marketplace.ProcessReceipt = function(receiptInfo)
+	print("Attempting to process receipt for "..receiptInfo.PlayerId)
+	local playerProductKey = receiptInfo.CurrencySpent .. ":" .. receiptInfo.PurchaseId
+	
+	for i,player in pairs(game.Players:GetChildren()) do
+		if player.userId == receiptInfo.PlayerId then
+			local data = game.ReplicatedStorage.PlayerData:WaitForChild(tostring(player.userId), 10)
+			if data then
+				
+				if data.LoadedSuccessfully.Value == false then
+					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Cannot process your purchase yet, as ROBLOX's DataStore servers are down. Rejoin the game at a later time to receive your purchased product. Otherwise, you will automatically be refunded your ROBUX after 72 hours.", true)
+					return
+				end
+				
+				print("Granting purchase to "..receiptInfo.PlayerId)
+				local pd = game:GetService("DataStoreService"):GetDataStore(player.userId.."_data")
+				local cashval = 0
+				
+				for _,v in pairs(game.ReplicatedStorage.CashProducts:GetChildren()) do
+					if v.Value == receiptInfo.ProductId then
+						cashval = tonumber(v.Name)
+					end
+				end
+				
+				if cashval ~= 0 then
+					local processed = false
+					local _, success = RepeatUpdate(pd, "maindata", function(tbl)
+						if tbl == nil then
+							return tbl
+						end
+						
+						for _,v in pairs(tbl["PurchaseHistory"]) do
+							if v == playerProductKey then
+								processed = true
+							end
+						end
+						
+						if not processed then
+							table.insert(tbl["PurchaseHistory"], playerProductKey)
+							tbl["cash"] = tbl["cash"] + cashval
+						end
+						
+						return tbl
+					end)
+					
+					if processed then
+						return Enum.ProductPurchaseDecision.PurchaseGranted
+					end
+					
+					if success == true then
+						if data then
+							data.cash.Value = data.cash.Value + cashval
+							data.oldcash.Value = data.oldcash.Value + cashval
+						end
+					else
+						game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Cannot process your purchase yet, as ROBLOX's DataStore servers are down. Rejoin the game at a later time to receive your purchased product. Otherwise, you will automatically be refunded your ROBUX after 72 hours.", true)
+						return
+					end
+					if player then
+						game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"+$"..cashval.." RHS Cash has been added to your in-game balance!")
+						game.ReplicatedStorage.RemoteFunctions.PlayChachingSound:FireClient(player)
+					end
+				end
+				
+				local spcash
+				
+				if receiptInfo.ProductId == game.ReplicatedStorage.OtherDevProducts.StarterPack.Value then
+					if data.Objects:FindFirstChild("318") then
+						--already purchased starter pack, notify of refund
+						game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player, "You have somehow purchased a second RHS Starter Pack in error. Your second purchase has not been processed; you will automatically be refunded your ROBUX after 3 days.", true)
+						return
+					end
+					-- Award starter pack ($7500, Classy Car, furniture set)
+					local cashaward = 7500
+					local hashouse = true
+					local objectstbl = {151,124,124,124,125,125,153,147,259,148,109,146,141,189,189,189, 70,128,127, 108,108,108,108,108,108,108,108, 135, 318} --318 is starter pack item ID
+					
+					if not data.Objects:FindFirstChild("278") then
+						--does not have classy car
+						table.insert(objectstbl, 278)
+					else
+						--already has it
+						cashaward = cashaward + 1600
+					end
+					
+					if not data.Objects:FindFirstChild("183") and data.GamePasses.House.Value == false then
+						--does not have custom house
+						table.insert(objectstbl, 183)
+						hashouse = false
+					end
+					
+					local processed = false
+					local success = pcall(function()
+						local update = pd:UpdateAsync("maindata",function(tbl)
+							if tbl == nil then
+								return tbl
+							end
+							
+							for _,v in pairs(tbl["PurchaseHistory"]) do
+								if v == playerProductKey then
+									processed = true
+								end
+							end
+							
+							if not processed then
+								table.insert(tbl["PurchaseHistory"], playerProductKey)
+								tbl["cash"] = tbl["cash"] + cashaward
+								for _,itemid in pairs(objectstbl) do
+									table.insert(tbl["objects"],itemid)
+								end
+							end
+							return tbl
+						end)
+					end)
+					
+					if processed then
+						return Enum.ProductPurchaseDecision.PurchaseGranted
+					end
+					
+					if success then
+						if data and data:FindFirstChild("Objects") then
+							for _,itemid in pairs(objectstbl) do
+								local marker = Instance.new("StringValue",data.Objects)
+								marker.Name = itemid
+							end
+							if data:FindFirstChild("cash") and data:FindFirstChild("oldcash") then
+								data.cash.Value = data.cash.Value + cashaward
+								data.oldcash.Value = data.oldcash.Value + cashaward
+							end
+							
+							if player and hashouse == false and data:FindFirstChild("GamePasses") then
+								--give the custom house
+								data.GamePasses.House.Value = true
+								game.ServerStorage.RemoteFunctions.LoadHouseForPlayer:Fire(player)
+							end
+						end
+						
+						if player then
+							if cashaward == 7500 then
+								--got car too
+								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash, the Classy Car, and a set of starting furniture for your Custom House!", true)
+							else
+								game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"You have received your Starter Pack containing +$"..cashaward.." RHS Cash and a set of starting furniture for your Custom House!", true)
+							end
+							game.ReplicatedStorage.RemoteFunctions.PlayChachingSound:FireClient(player)
+						end
+						
+						spcash = cashaward
+					else
+						game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(player,"Cannot process your purchase yet, as ROBLOX's DataStore servers are down. Rejoin the game at a later time to receive your purchased product. Otherwise, you will automatically be refunded your ROBUX after 72 hours.", true)
+						return
+					end
+				end
+				
+				if data:FindFirstChild("NumPurchases") then
+					local id = (cashval ~= 0 and tostring(cashval) or "StarterPack")
+					data.NumPurchases.Value = data.NumPurchases.Value + 1
+					GA:SendEvent(
+						{
+							["category"] = "business",
+							["event_id"] = "Cash:Cash"..id,
+							["amount"] = math.floor(math.floor(receiptInfo.CurrencySpent * .7) / 4),
+							["currency"] = "USD",
+							["transaction_num"] = data.NumPurchases.Value,
+							["cart_type"] = data.CartType.Value
+						}
+					)
+					
+					GA:SendEvent(
+						{
+							["category"] = "resource",
+							["event_id"] = "Source:Cash:RobuxPurchase:"..(spcash and "StarterPack" or "RHSCash"),
+							["amount"] = spcash or cashval
+						}
+					)
+				end
+				
+				print("Dev Product purchase completed for "..receiptInfo.PlayerId)
+				return Enum.ProductPurchaseDecision.PurchaseGranted
+				
+			end
+		end
+	end
+	
+    --[[PurchaseHistory:SetAsync(playerProductKey, true)
+	print("Cash purchase completed for "..receiptInfo.PlayerId)
+	return Enum.ProductPurchaseDecision.PurchaseGranted]]
+end
+
+
+--[[
+	Starter pack furniture list:
+	- Refrigerator (65)
+	- 3x Countertop (90)
+	- 2x Countertop Corner (60)
+	- Stove (70)
+	- Toilet (60)
+	- Sink (60)
+	- Bathtub (70)
+	- Bloxxy Couch (15)
+	- Drawers (60)
+	- Standard Bed (100)
+	- 3x Stylish Rug (120)
+	- TV & Wood Stand (260)
+	- Wooden Rectangle Table (15)
+	- Wooden Square Table (15)
+	- 8x Wooden Seat (40)
+	- 3x Antique End Table (270)
+	
+	TOTAL: 1,370 RHS Cash (~R$80)
+--]]
+
+
+game.ReplicatedStorage.RemoteFunctions.PlayerIsInFanClub.OnServerEvent:connect(function(plr)
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data and data.IsInFanClub.Value == false then
+		data.IsInFanClub.Value = true
+		AwardFanclubItems(plr)
+	end
+end)
+
+local available = game.ReplicatedStorage.DataStoresAvailable
+
+--datastore uptime checker
+coroutine.resume(coroutine.create(function()
+	wait(math.random(1,90))
+	while true do
+		wait(math.random(30,60))
+		local v
+		local check = pcall(function()
+			v = game:GetService("DataStoreService"):GetDataStore("Testing"):GetAsync("UptimeTest")
+		end)
+		
+		if available.Value == false then
+			if v ~= nil and check == true then
+				available.Value = true
+				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients("ROBLOX appears to have fixed their server issues! Thanks for being patient. You may need to rejoin this game if you encountered loading issues.",true)
+			end
+		end
+		
+		if v == nil and check ~= true then
+			available.Value = false
+			game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients("Notice: ROBLOX's servers are having temporary issues affecting all games. Please be patient if your data/character is not loading. All of your data is safe.")
+		end
+		wait(160)
+	end
+end))
+
+
+coroutine.resume(coroutine.create(function()
+	while true do
+		wait(180)
+		for _,plr in pairs(game.Players:GetChildren()) do
+			local canuserchat = plr:FindFirstChild("CanUserChat")
+			if canuserchat then
+				local flag
+				local success = pcall(function()
+					flag = game:GetService("Chat"):CanUserChatAsync(plr.userId)
+				end)
+				if success then
+					canuserchat.Value = flag
+				end
+			end
+		end
+	end
+end))
+
+
+game.OnClose = function()
+	if #game.Players:GetChildren() <= 3 then
+		game.ServerStorage.RemoteFunctions.AnalyticsPushCashEarned:Invoke()
+		game.ServerStorage.RemoteFunctions.AnalyticsPushShopPurchases:Invoke()
+		game.ServerStorage.RemoteFunctions.AnalyticsPushTimeSpent:Invoke()
+		
+		GA:Post()
+	end
+	
+	if #game.Players:GetChildren() > 1 and game.PlaceId == 9689581 then
+		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients("The ROBLOX High School servers are now restarting for an update! Hang tight for a few seconds.",true)
+		wait(4)
+		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireAllClients("Teleporting...",true)
+		wait(.9)
+		game.ReplicatedStorage.RemoteFunctions.TeleportToUpdateServer:FireAllClients()
+		for i=1,8 do
+			if #game.Players:GetChildren() > 0 then
+				wait(1)
+			end
+		end
+		for _,v in pairs(game.Players:GetChildren()) do
+			v:Kick("The ROBLOX High School servers are restarting for an update. Please rejoin the game!")
+		end
+	end
+	if #game.ReplicatedStorage.PlayerData:GetChildren() > 0 then
+		repeat wait(.25)
+			for _,v in pairs(game.Players:GetChildren()) do
+				v:Kick("The ROBLOX High School servers are restarting for an update. Please rejoin the game!")
+			end
+		until #game.ReplicatedStorage.PlayerData:GetChildren() == 0
+	end
+endk<
+=== chunk=595 type=PROP offset=408649 runSha256=f224ba46dad825031edc9b85aa82c632756e88c802a90fcca89d389db5fdad2c ===
+local playerprizetables = {}
+
+math.randomseed(tick())
+
+local dss = game:GetService("DataStoreService")
+
+function AddItemToData(plr,id)
+	game.ServerStorage.RemoteFunctions.AwardItem:Fire(plr,id)
+end
+
+
+function GetItems(plr,type,minprice,maxprice) --return all possible items that can be awarded - if 0, award furniture instead
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data then
+		local possibleitems = {}
+		for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+			if v.Name:match(type.."_") and v.ItemCost.Value >= minprice and v.ItemCost.Value <= maxprice and not data.Objects:FindFirstChild(v.ItemID.Value) and not v:FindFirstChild("NotForSale") and not v:FindFirstChild("TwitterCode") and not (v:FindFirstChild("ReleaseTime") and v.ReleaseTime.Value > game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) and not (v:FindFirstChild("TimeToGoOffSale") and v.TimeToGoOffSale.Value < game.ReplicatedStorage.IntroGUIData.CurrentTime.Value) then
+				table.insert(possibleitems,v)
+			end
+		end
+		return possibleitems
+	end
+end
+
+
+--all these functions return the item's full table for going into the prize table
+
+
+function GetFurniture(plr,minprice,maxprice,tier) --select random furniture based on price, and return table
+	local possibleitems = {}
+	for _,v in pairs(game.ReplicatedStorage.Objects:GetChildren()) do
+		if v.Name:match("furni_") and v.ItemCost.Value >= minprice and v.ItemCost.Value <= maxprice and not v:FindFirstChild("NotForSale") and not v:FindFirstChild("TwitterCode") then
+			table.insert(possibleitems,v)
+		end
+	end
+	local item = possibleitems[math.random(1,#possibleitems)]
+	local tbl = {
+		["ItemName"] = string.sub(item.Name,7),
+		["ItemID"] = item.ItemID.Value,
+		["ImageID"] = "http://www.roblox.com/Thumbs/Asset.ashx?width=75&height=75&assetId=".. item.ModelID.Value,
+		["PrizeTier"] = tier,
+		["IsCash"] = false
+	}
+	return tbl
+end
+
+function GetPermanentItem(plr,item,tier) --return table for perm. gear/pets
+	local tbl = {
+		["ItemName"] = string.sub(item.Name,6),
+		["ItemID"] = item.ItemID.Value,
+		["ImageID"] = "rbxassetid://"..item.DecalID.Value,
+		["PrizeTier"] = tier,
+		["IsCash"] = false
+	}
+	return tbl
+end
+
+function GetCash(plr,amount,tier) --return table for cash amt
+	local imgid = (tier == 3 and "rbxassetid://343339178" or tier == 4 and "rbxassetid://343339188" or "rbxassetid://343339162")
+	local rareitemname
+	if tier == 4 then
+		rareitemname = "$100,000 Cash Jackpot!"
+	end
+	local tbl = {
+		["ItemName"] = rareitemname or "+$"..amount.." RHS Cash",
+		["ItemID"] = amount,
+		["ImageID"] = imgid,
+		["PrizeTier"] = tier,
+		["IsCash"] = true
+	}
+	return tbl
+end
+
+
+--[[format of spin prize table:
+	{  {"ItemName" = "Generic Item Name", "ItemID" = 210, "ImageID" = "rbxassetid://12345678", "PrizeTier" = 1, "IsCash" = false}, [...]  }
+	if IsCash, then ItemID is the amount
+--]]
+
+
+--[[
+Wheel Prizes:
+	Mid-tier furniture (220-520) (COMMON)
+	250-400 RHS Cash ($25 increments) (COMMON) (less likely to appear on wheel)
+	Higher-tier furniture (500-900) (UNCOMMON) (most common)
+	Gear (150-900) (UNCOMMON) (less likely to appear on wheel)
+	Pets (250-1200) (UNCOMMON) (hardly ever on wheel)
+	Rare furniture (Void, expensive goldens) (RARE)
+	High-tier gear (1000-3000) (RARE)
+	1000-2500 RHS Cash ($250 increments) (RARE) (unlikely to appear on wheel)
+	$100,000 RHS Cash Jackpot (ULTRA-RARE)
+--]]
+
+
+
+function GetPrize(plr,tier)
+	if tier == 1 then
+		
+		local chance = math.random(1,11)
+		if chance <= 7 then --furniture 200-520
+			return GetFurniture(plr,200,520,tier)
+		else --cash 250-400 ($25 incs.)
+			return GetCash(plr,225 + 25 * math.random(1,9),tier)
+		end
+		
+	elseif tier == 2 then
+		
+		local chance = math.random(1,21)
+		local possiblepets = GetItems(plr,"pets",250,1200)
+		local possiblegear = GetItems(plr,"gear",150,900)
+		if chance >= 12 and chance <= 18 and #possiblegear > 0 then
+			return GetPermanentItem(plr,possiblegear[math.random(1,#possiblegear)],tier)
+		elseif chance >= 19 and chance <= 21 and #possiblepets > 0 then
+			return GetPermanentItem(plr,possiblepets[math.random(1,#possiblepets)],tier)
+		else
+			return GetFurniture(plr,500,950,tier)
+		end
+		
+	elseif tier == 3 then
+		
+		local chance = math.random(1,10)
+		local possiblegear = GetItems(plr,"gear",1000,3000)
+		if chance >= 5 and chance <= 9 and #possiblegear > 0 then
+			return GetPermanentItem(plr,possiblegear[math.random(1,#possiblegear)],tier)
+		elseif chance == 10 then
+			return GetCash(plr,750 + 250 * math.random(1,7),tier)
+		else
+			return GetFurniture(plr,1000,4200,tier)
+		end
+		
+	elseif tier == 4 then
+		return GetCash(plr,100000,tier)
+	end
+end
+
+local numberofprizes = {9,6,2,1} --each prize tier
+
+game.ReplicatedStorage.RemoteFunctions.FetchSpinPrizeTable.OnServerInvoke = function(plr) --generate a player prize table, insert it into this server-side table, then send it to the client to use
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if data and data:FindFirstChild("LoyaltyStats") and data.LoyaltyStats.Spins.Value > 0 then
+		local prizetable = {}
+		for i,v in pairs(numberofprizes) do
+			for x = 1,v do --pick out prizes for this tier
+				table.insert(prizetable,GetPrize(plr,i))
+			end
+		end
+		playerprizetables[plr.Name] = prizetable
+		for x,tb in pairs(prizetable) do
+			print("TABLE "..x)
+			for i,v in pairs(tb) do
+				print(i,v)
+			end
+			print("----------------------------------------")
+		end
+		return prizetable
+	end
+end
+
+function WaitForWheelStop(plr,itemtable)
+	coroutine.resume(coroutine.create(function()
+		local enabled = true
+		local connection
+		connection = game.ReplicatedStorage.RemoteFunctions.PrizeWheelStopped.OnServerEvent:connect(function(firer)
+			local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+			if firer == plr and enabled and data then
+				enabled = false
+				connection:disconnect()
+				if itemtable["IsCash"] == false then
+					AddItemToData(plr,itemtable["ItemID"])
+				else
+					data.cash.Value = data.cash.Value + itemtable["ItemID"]
+					
+					--analytics
+					if itemtable["ItemID"] == 100000 then
+						game.ServerStorage.AnalyticsCache.CashEarned.Jackpot.Value = game.ServerStorage.AnalyticsCache.CashEarned.Jackpot.Value + 100000
+					else
+						game.ServerStorage.AnalyticsCache.CashEarned.PrizeSpin.Value = game.ServerStorage.AnalyticsCache.CashEarned.PrizeSpin.Value + itemtable["ItemID"]
+					end
+				end
+				print("Successfully awarded prize "..itemtable["ItemName"]..", ID "..itemtable["ItemID"]..", to "..plr.Name)
+			end
+		end)
+	end))
+end
+
+game.ReplicatedStorage.RemoteFunctions.FetchWinningSpinPrize.OnServerInvoke = function(plr) --randomly select a winning prize from the player's prize table, then send the winning index back to the client - reduce player's spins by 1
+	local tbl = playerprizetables[plr.Name]
+	local data = game.ReplicatedStorage.PlayerData:FindFirstChild(plr.userId)
+	if tbl ~= nil and data and data:FindFirstChild("LoyaltyStats") and data.LoyaltyStats.Spins.Value > 0 then
+		playerprizetables[plr.Name] = nil
+		local tierchance = math.random(1,10000)
+		local tier = 1
+		if tierchance <= 5200 then
+			tier = 1
+		elseif tierchance >= 5201 and tierchance <= 9350 then
+			tier = 2
+		elseif tierchance >= 9351 and tierchance <= 9999 then
+			tier = 3
+		elseif tierchance == 10000 then
+			tier = 4
+		end
+		print("Tier Chance: "..tierchance.." ... Prize Tier: "..tier)
+		
+		local availableindicies = {}
+		
+		for i,itemtable in pairs(tbl) do
+			if itemtable["PrizeTier"] == tier then
+				table.insert(availableindicies,i)
+			end
+		end
+		
+		data.LoyaltyStats.Spins.Value = data.LoyaltyStats.Spins.Value - 1
+		
+		local index = availableindicies[math.random(1,#availableindicies)] --winner!
+		--now a function that will wait for the client's wheel to stop spinning to award the prize
+		WaitForWheelStop(plr,tbl[index])
+		
+		print("Index "..index.." selected, player will win "..tbl[index]["ItemName"])
+		return index
+	end
+endd
+=== chunk=833 type=PROP offset=12812 runSha256=0c4f6b3b229f2d90179a466254e312fa2de2f79ed8685efc0b40350bad7490e4 ===
+An ultra-rare seat specially designed by Umbra himself. This set of furniture was crafted using some very unique materials from the Void, allowing it to seamlessly float above ground. [Colored Parts: Paintable]
+=== chunk=833 type=PROP offset=15261 runSha256=79be784cf8ab214d3abdb893e9eeed940d25985048c4161a09560759c5608bcf ===
+A one-of-a-kind piece of furniture designed by Umbra himself. This bed is an incredible show of Void 
+craftsmanship - you won't find anything else like it. [Colored Parts: Paintable]
+=== chunk=833 type=PROP offset=17725 runSha256=de7c588e7cf0a9adc7e7bd154739ffeaa89e103436996b8314ad2177d5872969 ===
+Enjoy your favorite TV shows without the distractions of light-colored furniture!	
+=== chunk=833 type=PROP offset=36485 runSha256=fe7daea078aeed66cadef0ca9b31d8dcdb4fb6f9505b2891f6a852a0c401be98 ===
+You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+=== chunk=833 type=PROP offset=37005 runSha256=905e48b308a849220f08ae542f1559f0bf47e35642d8ac925bb9bdde33d62b5f ===
+You can add furniture to your house and use the building tools to move them around, then you save when you're done. Pretty straightforward process!
+
+=== chunk=978 type=PROP offset=580 runSha256=7fbb7f23a97a2babd61e16fb7fa583b52c0b19530bce54a39c41f1c10fef7feb ===
+Add Furniture
+=== chunk=1001 type=PROP offset=2134 runSha256=a8eda152c7e38752afba5fb52df28d5d3d1d9632dd324b812ce80ea9cce5885f ===
+FurnitureCount
+=== chunk=1012 type=PROP offset=5200 runSha256=489de6a432ef8d90633b6a6bc8a5546274078ca4b2f719645b8979aeed7b47c2 ===
+to drag furniture
+=== chunk=1012 type=PROP offset=5808 runSha256=a08e7e1bd9542001030c14eb4001a094e76e77d069e33d7eead4a3c499d2f51b ===
+Join the ROBLOX High School Fan Club, and when you play this game tomorrow, you'll receive FREE, EXCLUSIVE furniture items, a car, and access to the iCinder phone! Link to the RHS Fan Club is in the game's description.o
+=== chunk=1012 type=PROP offset=9914 runSha256=a74e417844206bbb069dfee2101616ffef21bad7556e451416cf78e9b9065810 ===
+RHS Cash is the currency used to buy cool extra items in this game! With it, you can...
+
+- Buy furniture for your house
+- Get fancier, faster cars to drive
+- Buy your own pets and special in-game gear
+=== chunk=1012 type=PROP offset=15732 runSha256=3f4fe0198e6bedc2565b5df78e319fbb579d02bf479dc18acc9d9cc8b7b98c0f ===
+Add furniture items to your house from here. You are free to try out any items you want; you only have to pay when you're ready to save your house.
+=== chunk=1012 type=PROP offset=20746 runSha256=8942fbd7883d4024af5b2c0f43fcb49ae31cc32aa9dd2ad4c766a37bff0ec5ad ===
+Each present contains a free in-game item - you may also find pieces of the exclusive Holiday furniture set in these presents!0
+=== chunk=1012 type=PROP offset=21293 runSha256=506774a65b0b2f5bc30ff73ba4538371d4e9ab8b970cfbc1fe6b1bd428754f03 ===
+Starter Furniture Set

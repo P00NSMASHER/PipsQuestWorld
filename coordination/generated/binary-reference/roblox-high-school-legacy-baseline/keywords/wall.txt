@@ -1,0 +1,51 @@
+chunk=419 type=PROP offset=682618 | 	Fixed by ArceusInator.  Now works with FE, fixed an issue with first person allowing the player to phase through walls.  Now runs at 60 FPS.
+chunk=474 type=PROP offset=21292 | Medium Bow Wall Decor
+chunk=474 type=PROP offset=21317 | Large Bow Wall Decor
+chunk=474 type=PROP offset=21341 | Small Bow Wall Decor
+chunk=474 type=PROP offset=21414 | Small Bow Wall Decor	
+chunk=511 type=PROP offset=535093 | aWallqWqqqvvvv
+chunk=526 type=PROP offset=197620 | Wall1
+chunk=526 type=PROP offset=197629 | Wall4
+chunk=526 type=PROP offset=197647 | Wall3
+chunk=526 type=PROP offset=197684 | ExteriorWall
+chunk=526 type=PROP offset=198643 | Wall2
+chunk=526 type=PROP offset=275159 | Walls
+chunk=595 type=PROP offset=98799 | local exteriorparts = {"Foundation","Deck","OuterParts","ExteriorWall","Roof"}
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "You're not allowed to paint your exterior walls with neon colors!")
+chunk=595 type=PROP offset=356540 | 		v.Name = "SchoolWall"
+chunk=595 type=PROP offset=356540 | 	if v.Name == "SchoolWall" then
+chunk=595 type=PROP offset=369727 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Purchase successful! You are now permitted to paint the exterior walls of your house.")
+chunk=595 type=PROP offset=477722 | 	if v.Name:match("Floor%d+") or v.Name == "ExteriorWall" or v.Name == "Ceiling" or v.Name == "Door" then
+chunk=595 type=PROP offset=506492 | 	local WallSize = Vector2.new(4, 1) --Y, Z
+chunk=595 type=PROP offset=506492 | 	local XWallSize = Vector3.new(BaseSize.X, WallSize.X, WallSize.Y)
+chunk=595 type=PROP offset=506492 | 	local ZWallSize = Vector3.new(WallSize.Y, WallSize.X, BaseSize.Z - (WallSize.Y * 2))
+chunk=595 type=PROP offset=506492 | 				Name = "LeftWallWeld",
+chunk=595 type=PROP offset=506492 | 				Name = "RightWallWeld",
+chunk=595 type=PROP offset=506492 | 				Name = "FrontWallWeld",
+chunk=595 type=PROP offset=506492 | 				Name = "BackWallWeld",
+chunk=595 type=PROP offset=506492 | 			Name = "LeftWall",
+chunk=595 type=PROP offset=506492 | 			Size = ZWallSize,
+chunk=595 type=PROP offset=506492 | 			Name = "RightWall",
+chunk=595 type=PROP offset=506492 | 			Name = "FrontWall",
+chunk=595 type=PROP offset=506492 | 			Size = XWallSize,
+chunk=595 type=PROP offset=506492 | 			Name = "BackWall",
+chunk=595 type=PROP offset=506492 | 	local LeftWeld = Model.MainPart.LeftWallWeld
+chunk=595 type=PROP offset=506492 | 	LeftWeld.Part1 = Model.LeftWall
+chunk=595 type=PROP offset=506492 | 	LeftWeld.C0 = CFrame.new(((Model.LeftWall.Size.X / 2) + (Model.MainPart.Size.X / 2) - Model.FrontWall.Size.X), ((Model.LeftWall.Size.Y / 2) + (Model.MainPart.Size.Y / 2)), 0)
+chunk=595 type=PROP offset=506492 | 	local RightWeld = Model.MainPart.RightWallWeld
+chunk=595 type=PROP offset=506492 | 	RightWeld.Part1 = Model.RightWall
+chunk=595 type=PROP offset=506492 | 	RightWeld.C0 = CFrame.new(-((Model.RightWall.Size.X / 2) + (Model.MainPart.Size.X / 2) - Model.FrontWall.Size.X), ((Model.RightWall.Size.Y / 2) + (Model.MainPart.Size.Y / 2)), 0)
+chunk=595 type=PROP offset=506492 | 	local FrontWeld = Model.MainPart.FrontWallWeld
+chunk=595 type=PROP offset=506492 | 	FrontWeld.Part1 = Model.FrontWall
+chunk=595 type=PROP offset=506492 | 	FrontWeld.C0 = CFrame.new(0, ((Model.FrontWall.Size.Y / 2) + (Model.MainPart.Size.Y / 2)), ((Model.FrontWall.Size.Z / 2) + (Model.MainPart.Size.Z / 2) - Model.FrontWall.Size.Z))
+chunk=595 type=PROP offset=506492 | 	local BackWeld = Model.MainPart.BackWallWeld
+chunk=595 type=PROP offset=506492 | 	BackWeld.Part1 = Model.BackWall
+chunk=595 type=PROP offset=506492 | 	BackWeld.C0 = CFrame.new(0, ((Model.BackWall.Size.Y / 2) + (Model.MainPart.Size.Y / 2)), -((Model.BackWall.Size.Z / 2) + (Model.MainPart.Size.Z / 2) - Model.BackWall.Size.Z))
+chunk=833 type=PROP offset=17513 | A wall mirror with a gothic black backing.
+chunk=833 type=PROP offset=36485 | You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+chunk=833 type=PROP offset=38344 | The current period/class is shown on the main menu. The list of classrooms on each floor is on the wall over there.
+chunk=1012 type=PROP offset=5285 | item/floor/wall
+chunk=1012 type=PROP offset=14962 | Furnish your custom house with tons of items which you can purchase and place anywhere inside! Plus, use the Paint Bucket to paint certain items and interior walls different colors.
+chunk=1012 type=PROP offset=15331 | Paint Outside WallsY
+chunk=1012 type=PROP offset=15354 | Landlord Lenny requires homeowners to purchase a house painting license for $150 RHS Cash before being able to paint a house's outside walls. This helps keep the neighborhood looking nicer!
+chunk=1012 type=PROP offset=15354 | Also, Lenny won't let you paint your outside walls in eye-burning colors such as Really Red, Lime Green, Really Blue, Hot Pink, Toothpaste, or New Yeller.

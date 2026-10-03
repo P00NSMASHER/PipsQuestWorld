@@ -1,0 +1,258 @@
+chunk=125 type=PROP offset=499 | SprayPaint
+chunk=180 type=PROP offset=526 | PaintColor
+chunk=288 type=PROP offset=1420 | Paintbrush Container
+chunk=298 type=PROP offset=2036 | Paint
+chunk=298 type=PROP offset=6582 | PlayerPaintings
+chunk=400 type=PROP offset=1900 | paint_Orange
+chunk=400 type=PROP offset=2527 | paint_Red
+chunk=400 type=PROP offset=2562 | paint_Blue
+chunk=400 type=PROP offset=2598 | paint_Black
+chunk=400 type=PROP offset=2635 | paint_White
+chunk=400 type=PROP offset=3053 | paint_Purple
+chunk=400 type=PROP offset=3091 | paint_Navy Blue
+chunk=400 type=PROP offset=3132 | paint_Camo Green
+chunk=400 type=PROP offset=3174 | paint_Pastel Blue
+chunk=400 type=PROP offset=3217 | paint_Pink
+chunk=400 type=PROP offset=3253 | paint_Silver
+chunk=400 type=PROP offset=3291 | paint_Glossy Black
+chunk=400 type=PROP offset=3335 | paint_Glass
+chunk=400 type=PROP offset=3372 | paint_Gold
+chunk=400 type=PROP offset=11604 | paint_Festive Green
+chunk=400 type=PROP offset=13157 | devprod_House Painting License
+chunk=400 type=PROP offset=18781 | gear_Spray Paint (Friends)
+chunk=417 type=PROP offset=501 | PaintingScript
+chunk=417 type=PROP offset=906 | LocalSprayPaintDrawer
+chunk=417 type=PROP offset=8725 | Super Paint Local
+chunk=419 type=PROP offset=42091 | local view = plr:FindFirstChild("PaintingView")
+chunk=419 type=PROP offset=42091 | local mode = plr:FindFirstChild("PaintingMode")
+chunk=419 type=PROP offset=42091 | 	view.Name = "PaintingView"
+chunk=419 type=PROP offset=42091 | 	mode.Name = "PaintingMode"
+chunk=419 type=PROP offset=42091 | 	mode.Value = "Paint"
+chunk=419 type=PROP offset=42091 | --[[local paintmodel = game.ReplicatedStorage.ArtCanvases:WaitForChild(plr.Name)
+chunk=419 type=PROP offset=42091 | paintmodel.Changed:connect(function(property)
+chunk=419 type=PROP offset=42091 | 		if paintmodel.Parent == game.ReplicatedStorage.ArtCanvases then
+chunk=419 type=PROP offset=42091 | 			paintmodel.Parent = workspace.ArtCanvases
+chunk=419 type=PROP offset=42091 | function SetVisiblePaintings()
+chunk=419 type=PROP offset=42091 | 				local paintmodel = game.ReplicatedStorage.ArtCanvases:FindFirstChild(target.Name)
+chunk=419 type=PROP offset=42091 | 				if paintmodel then
+chunk=419 type=PROP offset=42091 | 					paintmodel.Parent = workspace.ArtCanvases
+chunk=419 type=PROP offset=42091 | 	local personalpaint = game.ReplicatedStorage.ArtCanvases:FindFirstChild(plr.Name)
+chunk=419 type=PROP offset=42091 | 	if personalpaint then
+chunk=419 type=PROP offset=42091 | 		personalpaint.Parent = workspace.ArtCanvases
+chunk=419 type=PROP offset=42091 | 		SetVisiblePaintings()
+chunk=419 type=PROP offset=42091 | SetVisiblePaintings()
+chunk=419 type=PROP offset=42091 | 	SetVisiblePaintings()
+chunk=419 type=PROP offset=42091 | 	require(game.ReplicatedStorage.Modules.ArtPainting).SetCanvases()
+chunk=419 type=PROP offset=95573 | game.ReplicatedStorage.RemoteFunctions.SendSprayPaint.OnClientEvent:connect(function(plr,sprayid, mousepos, surface, target)
+chunk=419 type=PROP offset=119615 | --451693870: splash screen, 451693918: 10 class prize, 451693963: painting prize
+chunk=419 type=PROP offset=159001 | --house painting license: 208
+chunk=419 type=PROP offset=159001 | local tools = {"Move","Paint","Remove"}
+chunk=419 type=PROP offset=159001 | local paintcolor = plr:FindFirstChild("HousePaintColor") --send this value with REs
+chunk=419 type=PROP offset=159001 | if paintcolor == nil then
+chunk=419 type=PROP offset=159001 | 	paintcolor = Instance.new("BrickColorValue",plr)
+chunk=419 type=PROP offset=159001 | 	paintcolor.Name = "HousePaintColor"
+chunk=419 type=PROP offset=159001 | 	paintcolor.Value = BrickColor.new("Dark green")
+chunk=419 type=PROP offset=342644 | 		game.ReplicatedStorage.RemoteFunctions.PurchasePaintingLicense:FireServer()
+chunk=419 type=PROP offset=416272 | local selectedpaint = plr:WaitForChild("SelectedPaint")
+chunk=419 type=PROP offset=416272 | 			if plr.SelectedPaint.Value == button.ItemID.Value then
+chunk=419 type=PROP offset=416272 | 		if v.Name:match("paint_") and v.ItemCost.Value < 1000000 then
+chunk=419 type=PROP offset=416272 | 	local id = selectedpaint.Value
+chunk=419 type=PROP offset=416272 | 			shopframe.BuyButton.Text = "Buy Paint"
+chunk=419 type=PROP offset=416272 | 		selectedpaint.Value = id
+chunk=419 type=PROP offset=416272 | 		if data.Objects:FindFirstChild(selectedpaint.Value) then --has paint
+chunk=419 type=PROP offset=416272 | 			game.ReplicatedStorage.RemoteFunctions.ApplySelectedPaint:FireServer(selectedpaint.Value)
+chunk=419 type=PROP offset=416272 | 			local result,reason = game.ReplicatedStorage.RemoteFunctions.PurchasePermanentItem:InvokeServer(selectedpaint.Value)
+chunk=419 type=PROP offset=441495 | 	if child.Name == "PaintBucketGui" then
+chunk=419 type=PROP offset=507297 | local paintmodel = workspace.ArtCanvases:WaitForChild(game.Players.LocalPlayer.Name)
+chunk=419 type=PROP offset=507297 | local mode = game.Players.LocalPlayer:WaitForChild("PaintingMode")
+chunk=419 type=PROP offset=507297 | paintmodel.ChildAdded:connect(function(part)
+chunk=419 type=PROP offset=507297 | local module = require(game.ReplicatedStorage.Modules.ArtPainting)
+chunk=419 type=PROP offset=507297 | function Paint(canvas,position)
+chunk=419 type=PROP offset=507297 | 		module.PlacePaint(game.Players.LocalPlayer, canvas, position, mode.Value, script.Parent.Value.Value)
+chunk=419 type=PROP offset=507297 | 				Paint(canvas,pos)
+chunk=419 type=PROP offset=507297 | 	PBGui = script.Parent:WaitForChild("PaintbrushGui"):clone()
+chunk=419 type=PROP offset=507297 | 	guiMain.Name = "PaintBucketGui"
+chunk=419 type=PROP offset=507297 | 						Paint(canvas,pos)
+chunk=419 type=PROP offset=518012 | 	script.Parent.Parent.Parent.ChangeSetting:Fire("PaintingView",tonumber(script.Parent.Name))
+chunk=419 type=PROP offset=518468 | 	script.Parent.Parent.Parent.ChangeSetting:Fire("PaintingMode",script.Parent.Text)
+chunk=419 type=PROP offset=518752 | 	require(game.ReplicatedStorage.Modules.ArtPainting).EraseAllPaint(game.Players.LocalPlayer)
+chunk=419 type=PROP offset=518904 | local paintmodel = game.ReplicatedStorage.ArtCanvases:FindFirstChild(plr.Name) or workspace.ArtCanvases:FindFirstChild(plr.Name)
+chunk=419 type=PROP offset=518904 | local maxcount = module.GetMaxPaint()
+chunk=419 type=PROP offset=518904 | 	if paintmodel then
+chunk=419 type=PROP offset=518904 | 		script.Parent.Text = "Paint used: "..#paintmodel:GetChildren().."/"..maxcount
+chunk=419 type=PROP offset=518904 | if paintmodel then
+chunk=419 type=PROP offset=518904 | 	paintmodel.ChildAdded:connect(function()
+chunk=419 type=PROP offset=518904 | 	paintmodel.ChildRemoved:connect(function()
+chunk=419 type=PROP offset=519458 | local lod = plr:WaitForChild("PaintingView")
+chunk=419 type=PROP offset=519458 | local mode = plr:WaitForChild("PaintingMode")
+chunk=419 type=PROP offset=519458 | local lodframe = frame:WaitForChild("PlayerPaintings")
+chunk=419 type=PROP offset=673966 | 				local animobject=sp:FindFirstChild("SprayPaint")
+chunk=419 type=PROP offset=793625 | 	game.Players.LocalPlayer.HousePaintColor.Value = Tool.Value.Value
+chunk=419 type=PROP offset=793625 | 		model.PaintColor.Value = primaryColor.BackgroundColor
+chunk=419 type=PROP offset=793625 | 			if v:IsA("BasePart") and v.Name == "Paintable" then
+chunk=419 type=PROP offset=793625 | 		game.ReplicatedStorage.RemoteFunctions.PaintHouseItem:FireServer(model,primaryColor.BackgroundColor)
+chunk=419 type=PROP offset=793625 | 		game.ReplicatedStorage.RemoteFunctions.PaintHouseItem:FireServer(part,primaryColor.BackgroundColor)
+chunk=419 type=PROP offset=793625 | 	Tool.Value.Value = player.HousePaintColor.Value
+chunk=474 type=PROP offset=9338 | PaintbrushCan
+chunk=477 type=PROP offset=830 | ArtPainting
+chunk=479 type=PROP offset=167290 | 	game.ReplicatedStorage.RemoteFunctions.RequestToLoadGui:Fire("CarPaint")
+chunk=479 type=PROP offset=170931 | 	game.ReplicatedStorage.RemoteFunctions.GetPaintbrush:FireServer(true)
+chunk=479 type=PROP offset=171081 | 	game.ReplicatedStorage.RemoteFunctions.GetPaintbrush:FireServer(false)
+chunk=479 type=PROP offset=182940 | local maxpaint = 250
+chunk=479 type=PROP offset=182940 | 		local paintmodel = workspace.ArtCanvases:FindFirstChild(plr.Name)
+chunk=479 type=PROP offset=182940 | 		if paintmodel and data and data.PaintBadge.Value == false then
+chunk=479 type=PROP offset=182940 | 			local children = #paintmodel:GetChildren()
+chunk=479 type=PROP offset=182940 | 				data.PaintBadge.Value = true
+chunk=479 type=PROP offset=182940 | 					game:GetService("BadgeService"):AwardBadge(plr.userId, game.ReplicatedStorage.PaintingBadgeID.Value)
+chunk=479 type=PROP offset=182940 | 					game.ReplicatedStorage.RemoteFunctions.EventPrizeAwardedToPlayer:FireClient(plr, "Painting")
+chunk=479 type=PROP offset=182940 | function ApplyPaint(plr, paintmodel, canvas, position, mode, brickcolor)
+chunk=479 type=PROP offset=182940 | 	if mode == "Paint" then
+chunk=479 type=PROP offset=182940 | 		for _,v in pairs(paintmodel:GetChildren()) do
+chunk=479 type=PROP offset=182940 | 	part.Parent = paintmodel
+chunk=479 type=PROP offset=182940 | 			local request = game.ReplicatedStorage.RemoteFunctions.PlacePaintRequest:InvokeServer(canvas, position, mode, brickcolor)
+chunk=479 type=PROP offset=182940 | 			if v.Parent == paintmodel then
+chunk=479 type=PROP offset=182940 | 		if #paintmodel:GetChildren() == 0 then
+chunk=479 type=PROP offset=182940 | 			local request = game.ReplicatedStorage.RemoteFunctions.PlacePaintRequest:InvokeServer(canvas, position, mode)
+chunk=479 type=PROP offset=182940 | module.GetMaxPaint = function()
+chunk=479 type=PROP offset=182940 | 	return maxpaint
+chunk=479 type=PROP offset=182940 | module.EraseAllPaint = function(plr)
+chunk=479 type=PROP offset=182940 | 	local paintmodel = game.ReplicatedStorage.ArtCanvases:FindFirstChild(plr.Name) or workspace.ArtCanvases:FindFirstChild(plr.Name)
+chunk=479 type=PROP offset=182940 | 		game.ReplicatedStorage.RemoteFunctions.EraseAllPaint:FireServer()
+chunk=479 type=PROP offset=182940 | module.PlacePaint = function(plr, canvas, position, mode, brickcolor)
+chunk=479 type=PROP offset=182940 | 	local paintmodel = game.ReplicatedStorage.ArtCanvases:FindFirstChild(plr.Name) or workspace.ArtCanvases:FindFirstChild(plr.Name) --holds all of the player's paint parts
+chunk=479 type=PROP offset=182940 | 	if paintmodel and canvas and position and mode then
+chunk=479 type=PROP offset=182940 | 			Notification(plr, "Another player has claimed this canvas. Try painting on a different canvas!")
+chunk=479 type=PROP offset=182940 | 				Notification(plr, "You are already painting on another canvas. Erase the paint from your old canvas first.")
+chunk=479 type=PROP offset=182940 | 		local paintcount = #paintmodel:GetChildren()
+chunk=479 type=PROP offset=182940 | 		if mode == "Paint" and paintcount >= maxpaint then
+chunk=479 type=PROP offset=182940 | 			Notification(plr, "You've used up all of your available paint. Erase some parts if you wish to continue painting more!")
+chunk=479 type=PROP offset=182940 | 		--[[if game:GetService("RunService"):IsServer() and mode == "Paint" and paintcount > 175 then
+chunk=479 type=PROP offset=182940 | 		coroutine.resume(coroutine.create(ApplyPaint),plr,paintmodel,canvas,position,mode,brickcolor)
+chunk=479 type=PROP offset=182940 | 		--ApplyPaint(plr,paintmodel,canvas,position,mode,brickcolor)
+chunk=526 type=PROP offset=199452 | Paintable
+chunk=526 type=PROP offset=199730 | Paintable	
+chunk=574 type=PROP offset=152 | PaintHouseItem
+chunk=574 type=PROP offset=446 | ApplySelectedPaint
+chunk=574 type=PROP offset=692 | PurchasePaintingLicense
+chunk=574 type=PROP offset=1038 | SendSprayPaint
+chunk=574 type=PROP offset=1214 | EraseAllPaint
+chunk=574 type=PROP offset=1231 | GetPaintbrush
+chunk=575 type=PROP offset=1007 | PlacePaintRequest
+chunk=589 type=PROP offset=718 | BuyPaintingLicense
+chunk=589 type=PROP offset=960 | CarPaint
+chunk=589 type=PROP offset=1219 | PaintbrushGui
+chunk=593 type=PROP offset=2663 | ServerPaintingManager
+chunk=595 type=PROP offset=77360 | --[[game.ReplicatedStorage.RemoteFunctions.ChangeSelectedPaint.OnServerEvent:connect(function(plr,id)
+chunk=595 type=PROP offset=77360 | 	plr.SelectedPaint.Value = id
+chunk=595 type=PROP offset=77360 | game.ReplicatedStorage.RemoteFunctions.ApplySelectedPaint.OnServerEvent:connect(function(plr,id)
+chunk=595 type=PROP offset=77360 | 		if obj and obj.Name:match("paint_") then
+chunk=595 type=PROP offset=77360 | 			plr.SelectedPaint.Value = id
+chunk=595 type=PROP offset=77360 | 					if v.Name == "Paintable" then
+chunk=595 type=PROP offset=77360 | 		local paint = getItemDataFromID(plr.SelectedPaint.Value)
+chunk=595 type=PROP offset=77360 | 		if data.Objects:FindFirstChild(plr.SelectedCar.Value) == nil or (paint ~= nil and paint.Name:match("paint_") and data.Objects:FindFirstChild(plr.SelectedPaint.Value) == nil) then print("car spawn fail "..plr.Name) return end --bad!
+chunk=595 type=PROP offset=77360 | 			if paint then
+chunk=595 type=PROP offset=77360 | 						v.BrickColor = paint.BrickColorValue.Value
+chunk=595 type=PROP offset=77360 | 						v.Reflectance = paint.Reflectance.Value
+chunk=595 type=PROP offset=77360 | 						v.Transparency = paint.Transparency.Value
+chunk=595 type=PROP offset=77360 | 						x.SparkleColor = paint.BrickColorValue.Value.Color
+chunk=595 type=PROP offset=77360 | 						y.Color = paint.BrickColorValue.Value.Color
+chunk=595 type=PROP offset=98799 | 						model.PaintColor.Value = BrickColor.new(housedata[i]["PaintColor"])
+chunk=595 type=PROP offset=98799 | 							if part:IsA("BasePart") and (part.Name == "Paintable") then
+chunk=595 type=PROP offset=98799 | 								part.BrickColor = model.PaintColor.Value
+chunk=595 type=PROP offset=98799 | 						if v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove" then
+chunk=595 type=PROP offset=98799 | 						if (v.Name == "Move" or v.Name == "Paint" or v.Name == "Remove") and v:IsA("Tool") then
+chunk=595 type=PROP offset=98799 | 						save[keyid]["PaintColor"] = v.PaintColor.Value.Number
+chunk=595 type=PROP offset=98799 | 				if v.ClassName:match("Value") and v.Name ~= "PaintColor" and v.Name ~= "RotValue" and v.Name ~= "ItemID" then
+chunk=595 type=PROP offset=98799 | game.ReplicatedStorage.RemoteFunctions.PaintHouseItem.OnServerEvent:connect(function(plr,item,color)
+chunk=595 type=PROP offset=98799 | 			item.PaintColor.Value = color
+chunk=595 type=PROP offset=98799 | 				if v:IsA("BasePart") and v.Name == "Paintable" then
+chunk=595 type=PROP offset=98799 | 			local function paintParts(part,cl)
+chunk=595 type=PROP offset=98799 | 				paintParts(item,color)
+chunk=595 type=PROP offset=98799 | 					paintParts(item,color)
+chunk=595 type=PROP offset=98799 | 					paintParts(item,item.BrickColor)
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "You're not allowed to paint your exterior walls with neon colors!")
+chunk=595 type=PROP offset=98799 | 					game.ReplicatedStorage.RemoteFunctions.OpenGuiFromServer:FireClient(plr,"BuyPaintingLicense")
+chunk=595 type=PROP offset=138629 | 	local selectedpaint = Instance.new("IntValue")
+chunk=595 type=PROP offset=138629 | 	selectedpaint.Name = "SelectedPaint"
+chunk=595 type=PROP offset=138629 | 	selectedpaint.Parent = player
+chunk=595 type=PROP offset=369727 | game.ReplicatedStorage.RemoteFunctions.PurchasePaintingLicense.OnServerEvent:connect(function(plr)
+chunk=595 type=PROP offset=369727 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr,"Purchase successful! You are now permitted to paint the exterior walls of your house.")
+chunk=595 type=PROP offset=369727 | 				if string.sub(objname,1,6) == "music_" or string.sub(objname,1,6) == "vehic_" or string.sub(objname,1,6) == "paint_" then
+chunk=595 type=PROP offset=420006 | 	elseif child:IsA("Tool") and child.Name == "Paintbrush" then
+chunk=595 type=PROP offset=431191 | game.ReplicatedStorage.RemoteFunctions.PlacePaintRequest.OnServerInvoke = function(plr, canvas, position, mode, brickcolor)
+chunk=595 type=PROP offset=431191 | 	return module.PlacePaint(plr, canvas, position, mode, brickcolor)
+chunk=595 type=PROP offset=431191 | game.ReplicatedStorage.RemoteFunctions.EraseAllPaint.OnServerEvent:connect(function(plr)
+chunk=595 type=PROP offset=431191 | 	module.EraseAllPaint(plr)
+chunk=595 type=PROP offset=431191 | game.ReplicatedStorage.RemoteFunctions.GetPaintbrush.OnServerEvent:connect(function(plr, bool)
+chunk=595 type=PROP offset=431191 | 		game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "Guest players cannot use this feature. Create a free ROBLOX.com account to gain the ability to paint in the art room!")
+chunk=595 type=PROP offset=431191 | 				if v.Name == "Paintbrush" then
+chunk=595 type=PROP offset=431191 | 				local tool = game.ServerStorage.Paintbrush:clone()
+chunk=595 type=PROP offset=431191 | 				game.ReplicatedStorage.RemoteFunctions.NotificationForClient:FireClient(plr, "You already have a paintbrush in your backpack.")
+chunk=595 type=PROP offset=431191 | 	local paintmodel = Instance.new("Model")
+chunk=595 type=PROP offset=431191 | 	paintmodel.Name = plr.Name
+chunk=595 type=PROP offset=431191 | 	paintmodel.Parent = workspace.ArtCanvases
+chunk=595 type=PROP offset=431191 | 			if child.Name == "Paintbrush" then
+chunk=595 type=PROP offset=431191 | 			if paintmodel then
+chunk=595 type=PROP offset=431191 | 				local children = paintmodel:GetChildren()
+chunk=595 type=PROP offset=431191 | 	local paintmodel = workspace.ArtCanvases:FindFirstChild(plr.Name)
+chunk=595 type=PROP offset=431191 | 		paintmodel:Destroy()
+chunk=595 type=PROP offset=947381 | 		if v.Name == "Paintable" then
+chunk=595 type=PROP offset=989678 | 				game.ReplicatedStorage.RemoteFunctions.SendSprayPaint:FireClient(p, plr, sprayid, mousepos, surface, target)
+chunk=595 type=PROP offset=1055138 | local part = script.Parent:WaitForChild("Paintable")
+chunk=833 type=PROP offset=11092 | Watch all your favorite shows on this. [Wood stand: Paintable]
+chunk=833 type=PROP offset=11824 | A standard couch that does the job for seating 3 people. [Paintable]
+chunk=833 type=PROP offset=12073 | A nice seat with a sleek design. [Paintable]
+chunk=833 type=PROP offset=12132 | A more compact, sleek sofa. [Paintable]
+chunk=833 type=PROP offset=12186 | A high-quality wood chair with a colored center panel. [Center Panel: Paintable]
+chunk=833 type=PROP offset=12281 | A comfortable, high-quality wooden armchair. [Seat Fabric: Paintable]
+chunk=833 type=PROP offset=12365 | A sofa designed with the highest quality in mind. [Paintable]
+chunk=833 type=PROP offset=12441 | A shiny golden chair. With this in your home, people will always want to come over for dinner. [Glass Panel: Paintable]
+chunk=833 type=PROP offset=12575 | A shiny golden armchair. Your dreams of being the king/queen can finally come true. [Seating: Paintable]
+chunk=833 type=PROP offset=12694 | A golden sofa with a beautiful back panel. Impress everyone with this masterpiece. [Seating: Paintable]
+chunk=833 type=PROP offset=12812 | An ultra-rare seat specially designed by Umbra himself. This set of furniture was crafted using some very unique materials from the Void, allowing it to seamlessly float above ground. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=13037 | An ultra-rare armchair specially designed by Umbra himself. Anyone who sits here will feel a supernatural sense of comfort. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=13202 | An ultra-rare sofa specially designed by Umbra himself. This seats 4 people, all of whom will never want to sit on any other sofa again. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=14050 | A nice table with a sleek design. [Paintable]
+chunk=833 type=PROP offset=14631 | A beautiful golden table with a colored glass panel. [Glass: Paintable]
+chunk=833 type=PROP offset=14716 | materials used to craft this will keep it floating upright. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=14932 | A classic rectangular bed to sleep in. [Blanket: Paintable]
+chunk=833 type=PROP offset=15057 | A high-quality wooden bed to sleep in. [Blanket: Paintable]
+chunk=833 type=PROP offset=15128 | A shiny golden bed with a beautiful back panel. Sleep like a king/queen in this bed. [Blanket and Centerpiece: Paintable]
+chunk=833 type=PROP offset=15261 | craftsmanship - you won't find anything else like it. [Colored Parts: Paintable]
+chunk=833 type=PROP offset=15457 | Drawers to keep your precious belongings in. [Paintable]	
+chunk=833 type=PROP offset=16477 | A large L-shaped stylish couch - perfect if you're having lots of people over! [Red = Paintable]
+chunk=833 type=PROP offset=16585 | A super stylish bed to sleep in. [Red = Paintable]
+chunk=833 type=PROP offset=16745 | A stylish couch suitable for any home. [Red = Paintable]
+chunk=833 type=PROP offset=16894 | An intricate table that's built for the Stylish set. [Red = Paintable]
+chunk=833 type=PROP offset=17121 | A stylish lamp to light up your home. [Red = Paintable]
+chunk=833 type=PROP offset=17189 | A stylish rug for your stylish house. [Red = Paintable]	
+chunk=833 type=PROP offset=17261 | A bright HDTV on top of a stylish stand. [Red = Paintable]	
+chunk=833 type=PROP offset=17569 | A stylish countertop for your kitchen. [Red = Paintable]R
+chunk=833 type=PROP offset=17905 | A stylish countertop corner piece for your kitchen. [Red = Paintable]
+chunk=833 type=PROP offset=21387 | A nice wooden chair for your beach-themed room! [Paintable]
+chunk=833 type=PROP offset=21460 | A low table that goes great in front of your couch. [Paintable].
+chunk=833 type=PROP offset=21527 | A comfy beach-themed couch! [Wood = Paintable]
+chunk=833 type=PROP offset=21843 | A cool tiki stand for your own home! Also comes with 2 stools to seat visitors. [Wood = Paintable]
+chunk=833 type=PROP offset=21964 | A large, simple wooden table. [Paintable]
+chunk=833 type=PROP offset=22125 | A nice wooden end table to sit next to your Beachy Couch. [Paintable]
+chunk=833 type=PROP offset=22282 | A beach-themed wooden bed! Sleep as if you're on sand underneath the stars. [Wood = Paintable]
+chunk=833 type=PROP offset=22465 | A beach-themed wooden stool! [Paintable]
+chunk=833 type=PROP offset=26680 | Use Spray Paint to spray any ROBLOX decal onto a surface! To keep the place clean, only Friends see each other's decals.w
+chunk=833 type=PROP offset=33335 | Paint Car
+chunk=833 type=PROP offset=33632 | Take Paintbrush
+chunk=833 type=PROP offset=33651 | Put Away Paintbrush
+chunk=833 type=PROP offset=36485 | You can buy furniture and move it anywhere in your house! You can also paint your walls different colors! 
+chunk=978 type=PROP offset=547 |  Change Paint
+chunk=978 type=PROP offset=3508 | Buy Paint
+chunk=1012 type=PROP offset=5243 | : Select paint color
+chunk=1012 type=PROP offset=5267 | : Paint target
+chunk=1012 type=PROP offset=14962 | Furnish your custom house with tons of items which you can purchase and place anywhere inside! Plus, use the Paint Bucket to paint certain items and interior walls different colors.
+chunk=1012 type=PROP offset=15331 | Paint Outside WallsY
+chunk=1012 type=PROP offset=15354 | Landlord Lenny requires homeowners to purchase a house painting license for $150 RHS Cash before being able to paint a house's outside walls. This helps keep the neighborhood looking nicer!
+chunk=1012 type=PROP offset=15354 | Also, Lenny won't let you paint your outside walls in eye-burning colors such as Really Red, Lime Green, Really Blue, Hot Pink, Toothpaste, or New Yeller.
+chunk=1012 type=PROP offset=20225 | Select Paint Color
+chunk=1012 type=PROP offset=22111 | Note: Only Friends can see each others' paintings.
+chunk=1012 type=PROP offset=22179 | Paint used: 0/2507
+chunk=1036 type=PROP offset=81 | Paintbrush
+chunk=1036 type=PROP offset=634 | Spray Paint (Friends)
+chunk=1072 type=PROP offset=4430 | Not-Paintable	

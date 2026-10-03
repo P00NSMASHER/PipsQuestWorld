@@ -1,0 +1,37 @@
+chunk=32 type=INST offset=8 | Decal
+chunk=400 type=PROP offset=7413 | DecalID
+chunk=419 type=PROP offset=95573 | 		local d=Instance.new("Decal")
+chunk=419 type=PROP offset=312389 | 		button.Image = "http://www.roblox.com/asset/?id="..v.DecalID.Value
+chunk=419 type=PROP offset=391383 | 	if v:FindFirstChild("DecalID") then
+chunk=419 type=PROP offset=401394 | 		button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=419 type=PROP offset=416272 | 			button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=479 type=PROP offset=171232 | 				button.Image = "http://www.roblox.com/asset/?id="..v.DecalID.Value
+chunk=595 type=PROP offset=59419 | local DecalID = 224060528
+chunk=595 type=PROP offset=59419 | ai.Name = "DecalID"
+chunk=595 type=PROP offset=59419 | ai.Value = DecalID
+chunk=595 type=PROP offset=59419 | --add gear (according to an in-game tool in workspace) (set Tool TextureId to DecalID)
+chunk=595 type=PROP offset=59419 | local DecalID = 600231089
+chunk=595 type=PROP offset=59419 | petpart.TextureId = "http://www.roblox.com/asset/?id="..DecalID
+chunk=595 type=PROP offset=59419 | local DecalID = 580912188
+chunk=595 type=PROP offset=59419 | local DecalID = 345974014
+chunk=595 type=PROP offset=59419 | di.Name = "DecalID"
+chunk=595 type=PROP offset=59419 | di.Value = DecalID
+chunk=595 type=PROP offset=98799 | local function ClearAllButDecals(instance)
+chunk=595 type=PROP offset=98799 | 		if not v:IsA("Decal") then
+chunk=595 type=PROP offset=98799 | 		ClearAllButDecals(v.LockButton)
+chunk=595 type=PROP offset=98799 | 		ClearAllButDecals(v.BuyDoor)
+chunk=595 type=PROP offset=98799 | 		ClearAllButDecals(v.RestrictBlock)
+chunk=595 type=PROP offset=98799 | 		ClearAllButDecals(v.RestrictButton)
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "kohl" then teststr = [[BrickColor.new("Really black") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597653"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "batman" then teststr = [[BrickColor.new("Really black") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597669"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "superman" then teststr = [[BrickColor.new("Bright blue") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=108597677"]] end
+chunk=595 type=PROP offset=224428 | if msg:sub(chk1+1):lower() == "swag" then teststr = [[BrickColor.new("Pink") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=109301474"]] end
+chunk=595 type=PROP offset=224428 | p.CanCollide = false p.TopSurface = 0 p.BottomSurface = 0 p.BrickColor = BrickColor.new("Pink") local dec = Instance.new("Decal", p) dec.Face = 2 dec.Texture = "http://www.roblox.com/asset/?id=109301474" p.formFactor = "Custom"
+chunk=595 type=PROP offset=356540 | 		if v:FindFirstChild("Decal") and v.Size.Y > 3.1 and v.Name ~= "ImportantPoster" then
+chunk=595 type=PROP offset=408649 | 		["ImageID"] = "rbxassetid://"..item.DecalID.Value,
+chunk=595 type=PROP offset=712045 | 	local EnchantmentDecal = Create("Decal"){
+chunk=595 type=PROP offset=712045 | 		Name = "Decal",
+chunk=595 type=PROP offset=853001 | 		if (child:IsA('BasePart') and child.Name ~= "HumanoidRootPart") or child:IsA('Decal') then
+chunk=595 type=PROP offset=1182125 | 		dummy.Torso.Decal.Texture = getRandomValue(TEESHIRTS)
+chunk=833 type=PROP offset=26680 | Use Spray Paint to spray any ROBLOX decal onto a surface! To keep the place clean, only Friends see each other's decals.w
+chunk=1012 type=PROP offset=22259 | Decal Id:

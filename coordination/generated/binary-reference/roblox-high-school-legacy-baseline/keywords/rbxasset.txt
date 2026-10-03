@@ -1,0 +1,564 @@
+chunk=124 type=PROP offset=509 | rbxassetid://667358668)
+chunk=124 type=PROP offset=651 | rbxassetid://667344524)
+chunk=124 type=PROP offset=1051 | rbxassetid://667344524(
+chunk=124 type=PROP offset=1209 | rbxassetid://660306357)
+chunk=124 type=PROP offset=1350 | rbxassetid://667366956)
+chunk=124 type=PROP offset=1421 | rbxassetid://660280474)
+chunk=124 type=PROP offset=1492 | rbxassetid://667358668(
+chunk=124 type=PROP offset=2736 | rbxassetid://667392217'
+chunk=124 type=PROP offset=2848 | rbxassetid://667392217(
+chunk=124 type=PROP offset=2962 | rbxassetid://667448864'
+chunk=124 type=PROP offset=3162 | rbxassetid://667392217
+chunk=267 type=PROP offset=114 | rbxasset://Textures/SpawnLocation.png)
+chunk=267 type=PROP offset=6412 | rbxassetid://319681563'
+chunk=267 type=PROP offset=9192 | rbxasset://textures/face.png)
+chunk=267 type=PROP offset=15714 | rbxassetid://345972100)
+chunk=267 type=PROP offset=17313 | rbxassetid://606203974*
+chunk=267 type=PROP offset=22813 | rbxasset://Textures/SpawnLocation.png%
+chunk=267 type=PROP offset=23104 | rbxassetid://607236049)
+chunk=267 type=PROP offset=25138 | rbxassetid://24295218
+chunk=267 type=PROP offset=25188 | rbxassetid://24295218)
+chunk=267 type=PROP offset=32302 | rbxassetid://176652229)
+chunk=343 type=PROP offset=46 | rbxassetid://420284449
+chunk=343 type=PROP offset=72 | rbxassetid://203876229
+chunk=343 type=PROP offset=531 | rbxassetid://558129760
+chunk=343 type=PROP offset=609 | rbxassetid://261798884
+chunk=343 type=PROP offset=635 | rbxassetid://261796086
+chunk=343 type=PROP offset=661 | rbxassetid://261795770
+chunk=343 type=PROP offset=687 | rbxassetid://261796178
+chunk=343 type=PROP offset=713 | rbxassetid://261834745
+chunk=343 type=PROP offset=739 | rbxassetid://261834767
+chunk=343 type=PROP offset=765 | rbxassetid://261834814
+chunk=343 type=PROP offset=791 | rbxassetid://261834801
+chunk=343 type=PROP offset=817 | rbxassetid://261834844
+chunk=343 type=PROP offset=843 | rbxassetid://261834829
+chunk=343 type=PROP offset=869 | rbxassetid://261834875
+chunk=343 type=PROP offset=895 | rbxassetid://261834864
+chunk=343 type=PROP offset=921 | rbxassetid://281485371
+chunk=343 type=PROP offset=947 | rbxassetid://281485400
+chunk=343 type=PROP offset=973 | rbxassetid://281485426
+chunk=343 type=PROP offset=999 | rbxassetid://281485446
+chunk=343 type=PROP offset=1499 | rbxassetid://252737816
+chunk=343 type=PROP offset=1525 | rbxassetid://452147279
+chunk=343 type=PROP offset=1551 | rbxassetid://452147228
+chunk=343 type=PROP offset=1655 | rbxassetid://133293265
+chunk=343 type=PROP offset=1711 | rbxassetid://275546074
+chunk=375 type=PROP offset=18 | rbxassetid://319179409
+chunk=375 type=PROP offset=44 | rbxassetid://419049142
+chunk=375 type=PROP offset=70 | rbxassetid://421892777
+chunk=375 type=PROP offset=96 | rbxassetid://273561913
+chunk=375 type=PROP offset=122 | rbxassetid://273561984
+chunk=375 type=PROP offset=148 | rbxassetid://273561871
+chunk=375 type=PROP offset=174 | rbxassetid://421892925
+chunk=375 type=PROP offset=226 | rbxassetid://421893078
+chunk=375 type=PROP offset=252 | rbxassetid://421893003
+chunk=375 type=PROP offset=278 | rbxassetid://421892704
+chunk=375 type=PROP offset=382 | rbxassetid://159983312
+chunk=375 type=PROP offset=408 | rbxassetid://163278247)
+chunk=375 type=PROP offset=524 | rbxassetid://170211108
+chunk=375 type=PROP offset=550 | rbxassetid://416962716
+chunk=375 type=PROP offset=602 | rbxassetid://163278247
+chunk=375 type=PROP offset=628 | rbxassetid://288934190
+chunk=375 type=PROP offset=654 | rbxassetid://558129801
+chunk=375 type=PROP offset=732 | rbxassetid://574418967
+chunk=375 type=PROP offset=758 | rbxassetid://154117259
+chunk=375 type=PROP offset=784 | rbxassetid://319108594
+chunk=375 type=PROP offset=810 | rbxassetid://261798900
+chunk=375 type=PROP offset=836 | rbxassetid://261796109
+chunk=375 type=PROP offset=862 | rbxassetid://261795827
+chunk=375 type=PROP offset=888 | rbxassetid://261796199
+chunk=375 type=PROP offset=940 | rbxassetid://580013236)
+chunk=375 type=PROP offset=1011 | rbxassetid://580013493
+chunk=375 type=PROP offset=1037 | rbxassetid://580012984)
+chunk=375 type=PROP offset=1134 | rbxassetid://340389334
+chunk=375 type=PROP offset=1264 | rbxassetid://329395341
+chunk=375 type=PROP offset=1290 | rbxassetid://340559506
+chunk=375 type=PROP offset=1488 | rbxassetid://345973947
+chunk=375 type=PROP offset=1514 | rbxassetid://580281963
+chunk=375 type=PROP offset=1540 | rbxassetid://304427779
+chunk=375 type=PROP offset=1566 | rbxassetid://580288915
+chunk=375 type=PROP offset=1618 | rbxassetid://662075045
+chunk=375 type=PROP offset=1644 | rbxassetid://662079058
+chunk=375 type=PROP offset=1696 | rbxassetid://662079058)
+chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=19755 | 	mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=61191 | Mouse_Icon = "rbxasset://textures/GunCursor.png"
+chunk=419 type=PROP offset=61191 | Reloading_Icon = "rbxasset://textures/GunWaitCursor.png"
+chunk=419 type=PROP offset=61686 | 			x.SoundId = "rbxassetid://"..SplashSound
+chunk=419 type=PROP offset=78041 | 	sound.SoundId = "rbxassetid://224339308" --wind gust
+chunk=419 type=PROP offset=78041 | 	s.SoundId = "rbxassetid://224339090" --ice break
+chunk=419 type=PROP offset=79159 | 	sound.SoundId = "rbxassetid://131886985"
+chunk=419 type=PROP offset=99396 | local hover_icon = "rbxassetid://231195429"
+chunk=419 type=PROP offset=99396 | local normal_icon = "rbxasset://textures/ArrowFarCursor.png"
+chunk=419 type=PROP offset=99396 | local select_sound = "rbxassetid://231188062"
+chunk=419 type=PROP offset=118610 | 			sound.SoundId = "rbxassetid://460261083"
+chunk=419 type=PROP offset=119615 | 	game:GetService("ContentProvider"):Preload("rbxassetid://"..v)
+chunk=419 type=PROP offset=128643 | 	sound.SoundId = "rbxassetid://153613030"
+chunk=419 type=PROP offset=132796 | 	button.Image = "rbxassetid://"..imageid
+chunk=419 type=PROP offset=132796 | 	sound.SoundId = "rbxassetid://140413818"
+chunk=419 type=PROP offset=149204 | 		sound.SoundId = "rbxassetid://345830614"
+chunk=419 type=PROP offset=152657 | 		sound.SoundId = "rbxassetid://231188062"
+chunk=419 type=PROP offset=211474 | 			sound.SoundId = "rbxassetid://"..game.ReplicatedStorage.AssetIDs[sound.Name].Value
+chunk=419 type=PROP offset=233921 | 		sound.SoundId = "rbxassetid://"..item.AssetID.Value
+chunk=419 type=PROP offset=380083 | 	sound.SoundId = "rbxassetid://"..id
+chunk=419 type=PROP offset=380083 | 	{  {"ItemName" = "Generic Item Name", "ItemID" = 210, "ImageID" = "rbxassetid://12345678", "PrizeTier" = 1, "IsCash" = false}, [...]  }
+chunk=419 type=PROP offset=401394 | 		button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=419 type=PROP offset=401394 | 				sound.SoundId = "rbxassetid://"..game.ReplicatedStorage.AssetIDs[sound.Name].Value --better change this in all scripts!
+chunk=419 type=PROP offset=416272 | 			button.Image = "rbxassetid://"..v.DecalID.Value
+chunk=419 type=PROP offset=416272 | 				sound.SoundId = "rbxassetid://"..game.ReplicatedStorage.AssetIDs[sound.Name].Value
+chunk=419 type=PROP offset=428926 | local defaultid = "rbxassetid://143080540" --the default club music
+chunk=419 type=PROP offset=428926 | 				sound.SoundId = "rbxassetid://"..nextsongid
+chunk=419 type=PROP offset=428926 | 			sound.SoundId = "rbxassetid://"..queueitem.SongID.Value
+chunk=419 type=PROP offset=428926 | 			temp.SoundId = "rbxassetid://"..nextsong.SongID.Value
+chunk=419 type=PROP offset=428926 | 	local id = "rbxassetid://"..songs[musicset][segment]
+chunk=419 type=PROP offset=428926 | 				sound.SoundId = "rbxassetid://"..nextsong.SongID.Value
+chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=504207 | 		playermouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=507297 | 	mouse.Icon ="rbxasset://textures\\ArrowCursor.png"
+chunk=419 type=PROP offset=507297 | 		--[[mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=419 type=PROP offset=603124 | 				SoundId = 'rbxasset://sounds//Rocket shot.wav';
+chunk=419 type=PROP offset=622644 | 				s.SoundId = "rbxassetid://"..input.Text
+chunk=419 type=PROP offset=675711 | 	mouse.Icon = bool == true and "rbxasset://textures\\GunCursor.png" or "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=682618 | 		mouse.Icon="rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=739705 | 	--if (Tool.Enabled) then mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=739705 | 	--else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=746726 | local MOUSE_ICON = 'rbxasset://textures/GunCursor.png'
+chunk=419 type=PROP offset=746726 | local RELOADING_ICON = 'rbxasset://textures/GunWaitCursor.png'
+chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowFarCursor.png"
+chunk=419 type=PROP offset=748381 | 	mouse.Icon = "rbxasset://textures\\ArrowCursor.png"
+chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=749353 | 		mouse.Icon = "rbxasset://textures\\GunWaitCursor.png"
+chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=756710 | 	if myMouse ~= nil then myMouse.Icon = "rbxasset://textures\\GunCursor.png" end
+chunk=419 type=PROP offset=756710 | 	if Tool.Enabled then mouse.Icon = "rbxasset://textures\\GunCursor.png"
+chunk=419 type=PROP offset=756710 | 	else mouse.Icon = "rbxasset://textures\\GunWaitCursor.png" end
+chunk=419 type=PROP offset=793625 | 		mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=419 type=PROP offset=793625 | 	mouse.Icon ="rbxasset://textures\\FillCursor.png"
+chunk=455 type=PROP offset=19 | rbxassetid://558033335
+chunk=465 type=PROP offset=22 | rbxassetid://572010326
+chunk=479 type=PROP offset=3292 | local DPAD_SHEET = "rbxasset://textures/ui/DPadSheet.png"
+chunk=479 type=PROP offset=27522 | local TOUCH_CONTROL_SHEET = "rbxasset://textures/ui/TouchControlsSheet.png"
+chunk=479 type=PROP offset=171232 | 	sound.SoundId = "rbxassetid://203785492"
+chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxasset://sounds/action_jump.mp3"
+chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxassetid://203785492"
+chunk=479 type=PROP offset=171232 | 		sound.SoundId = "rbxassetid://203785584"
+chunk=500 type=PROP offset=205 | rbxassetid://252423829
+chunk=500 type=PROP offset=231 | rbxassetid://55491364
+chunk=500 type=PROP offset=256 | rbxassetid://115877424
+chunk=500 type=PROP offset=282 | rbxassetid://112675708
+chunk=500 type=PROP offset=308 | rbxassetid://261701619
+chunk=500 type=PROP offset=334 | rbxassetid://112675727
+chunk=500 type=PROP offset=360 | rbxassetid://55491352
+chunk=500 type=PROP offset=385 | rbxassetid://253333660
+chunk=500 type=PROP offset=411 | rbxassetid://41375702)
+chunk=500 type=PROP offset=614 | rbxassetid://183176546
+chunk=500 type=PROP offset=640 | rbxassetid://183227076)
+chunk=500 type=PROP offset=1114 | rbxassetid://403591650)
+chunk=500 type=PROP offset=1185 | rbxassetid://403591673
+chunk=500 type=PROP offset=1211 | rbxassetid://403591700(
+chunk=500 type=PROP offset=1281 | rbxassetid://403591755)
+chunk=500 type=PROP offset=1352 | rbxassetid://148626405)
+chunk=500 type=PROP offset=1423 | rbxassetid://403591591
+chunk=500 type=PROP offset=1449 | rbxassetid://183227076
+chunk=500 type=PROP offset=1475 | rbxassetid://473173026
+chunk=500 type=PROP offset=1501 | rbxassetid://419077587
+chunk=500 type=PROP offset=1565 | rbxassetid://403591637
+chunk=500 type=PROP offset=1640 | rbxassetid://691261636)
+chunk=500 type=PROP offset=6365 | rbxassetid://199375556
+chunk=500 type=PROP offset=6391 | rbxassetid://383090523
+chunk=500 type=PROP offset=6417 | rbxassetid://414507672
+chunk=500 type=PROP offset=6443 | rbxassetid://456450906
+chunk=500 type=PROP offset=6469 | rbxassetid://418951989
+chunk=500 type=PROP offset=6495 | rbxassetid://263033540
+chunk=500 type=PROP offset=6521 | rbxassetid://536151228
+chunk=500 type=PROP offset=6547 | rbxassetid://263240726
+chunk=500 type=PROP offset=6573 | rbxassetid://433417030
+chunk=500 type=PROP offset=6599 | rbxassetid://456451011
+chunk=500 type=PROP offset=6625 | rbxassetid://519672718
+chunk=500 type=PROP offset=6651 | rbxassetid://171530625
+chunk=500 type=PROP offset=6677 | rbxassetid://191917666
+chunk=500 type=PROP offset=6703 | rbxassetid://437469863
+chunk=500 type=PROP offset=6729 | rbxassetid://485574198
+chunk=500 type=PROP offset=6755 | rbxassetid://310688147
+chunk=500 type=PROP offset=6781 | rbxassetid://318441360
+chunk=500 type=PROP offset=6807 | rbxassetid://268642114
+chunk=500 type=PROP offset=6833 | rbxassetid://470452239
+chunk=500 type=PROP offset=6859 | rbxassetid://233704009
+chunk=500 type=PROP offset=6885 | rbxassetid://378730008
+chunk=500 type=PROP offset=6911 | rbxassetid://171208637
+chunk=500 type=PROP offset=6937 | rbxassetid://399283088
+chunk=500 type=PROP offset=6963 | rbxassetid://536255405
+chunk=500 type=PROP offset=6989 | rbxassetid://271467683
+chunk=500 type=PROP offset=7015 | rbxassetid://257836679
+chunk=500 type=PROP offset=7041 | rbxassetid://221764031
+chunk=500 type=PROP offset=7067 | rbxassetid://264883920
+chunk=500 type=PROP offset=7093 | rbxassetid://279638356
+chunk=500 type=PROP offset=7119 | rbxassetid://424625665
+chunk=500 type=PROP offset=7145 | rbxassetid://378731141
+chunk=500 type=PROP offset=7171 | rbxassetid://276838511
+chunk=500 type=PROP offset=7197 | rbxassetid://246760438
+chunk=500 type=PROP offset=7223 | rbxassetid://303357958
+chunk=500 type=PROP offset=7249 | rbxassetid://497710603
+chunk=500 type=PROP offset=7275 | rbxassetid://245353342
+chunk=500 type=PROP offset=7301 | rbxassetid://553184532
+chunk=500 type=PROP offset=7335 | rbxassetid://572911348
+chunk=500 type=PROP offset=7361 | rbxassetid://628990249
+chunk=500 type=PROP offset=7387 | rbxassetid://635759654
+chunk=500 type=PROP offset=7413 | rbxassetid://572367320
+chunk=500 type=PROP offset=7439 | rbxassetid://553175159
+chunk=500 type=PROP offset=7481 | rbxassetid://569796252
+chunk=500 type=PROP offset=7511 | rbxassetid://442726060
+chunk=500 type=PROP offset=7537 | rbxassetid://451401132
+chunk=500 type=PROP offset=7583 | rbxassetid://596457495
+chunk=500 type=PROP offset=7609 | rbxassetid://520590404
+chunk=500 type=PROP offset=7643 | rbxassetid://552474838
+chunk=500 type=PROP offset=7669 | rbxassetid://552089087
+chunk=500 type=PROP offset=7707 | rbxassetid://549093695
+chunk=500 type=PROP offset=7745 | rbxassetid://471184136
+chunk=500 type=PROP offset=7771 | rbxassetid://584397613
+chunk=500 type=PROP offset=7809 | rbxassetid://472753095
+chunk=500 type=PROP offset=7839 | rbxassetid://626855506
+chunk=500 type=PROP offset=7873 | rbxassetid://647031156
+chunk=500 type=PROP offset=7911 | rbxassetid://428035218
+chunk=500 type=PROP offset=7945 | rbxassetid://627773396
+chunk=500 type=PROP offset=7983 | rbxassetid://442664007
+chunk=500 type=PROP offset=8013 | rbxassetid://536359967
+chunk=500 type=PROP offset=8039 | rbxassetid://628532294
+chunk=500 type=PROP offset=8069 | rbxassetid://664199526
+chunk=500 type=PROP offset=8095 | rbxassetid://660638333
+chunk=500 type=PROP offset=8121 | rbxassetid://652444208
+chunk=500 type=PROP offset=8147 | rbxassetid://652444200
+chunk=500 type=PROP offset=8173 | rbxassetid://652444179
+chunk=500 type=PROP offset=8199 | rbxassetid://652444144
+chunk=500 type=PROP offset=8225 | rbxassetid://652443940
+chunk=500 type=PROP offset=8251 | rbxassetid://652444122
+chunk=500 type=PROP offset=8277 | rbxassetid://652443687
+chunk=500 type=PROP offset=8303 | rbxassetid://373405272
+chunk=500 type=PROP offset=8329 | rbxassetid://635917580
+chunk=500 type=PROP offset=8355 | rbxassetid://528250341
+chunk=500 type=PROP offset=8385 | rbxassetid://471711211
+chunk=500 type=PROP offset=8411 | rbxassetid://635918884
+chunk=500 type=PROP offset=8437 | rbxassetid://407943614
+chunk=500 type=PROP offset=8471 | rbxassetid://475795969)
+chunk=500 type=PROP offset=8542 | rbxassetid://635916720
+chunk=500 type=PROP offset=8568 | rbxassetid://635916644)
+chunk=500 type=PROP offset=8639 | rbxassetid://471711197
+chunk=500 type=PROP offset=8665 | rbxassetid://635916748
+chunk=500 type=PROP offset=8691 | rbxassetid://635916647
+chunk=500 type=PROP offset=8717 | rbxassetid://471711220
+chunk=500 type=PROP offset=8743 | rbxassetid://548010725)
+chunk=500 type=PROP offset=8814 | rbxassetid://426723596
+chunk=500 type=PROP offset=8840 | rbxassetid://635917553
+chunk=500 type=PROP offset=8866 | rbxassetid://635917583
+chunk=500 type=PROP offset=8892 | rbxassetid://210184703)
+chunk=500 type=PROP offset=8963 | rbxassetid://624596354
+chunk=500 type=PROP offset=8989 | rbxassetid://635917559)
+chunk=500 type=PROP offset=9150 | rbxassetid://635917587
+chunk=500 type=PROP offset=9176 | rbxassetid://585319535
+chunk=500 type=PROP offset=9255 | rbxassetid://529114960
+chunk=500 type=PROP offset=9281 | rbxassetid://585319547
+chunk=500 type=PROP offset=9307 | rbxassetid://373405272)
+chunk=500 type=PROP offset=9382 | rbxassetid://555007035)
+chunk=500 type=PROP offset=9453 | rbxassetid://478857042)
+chunk=500 type=PROP offset=9524 | rbxassetid://478857052
+chunk=500 type=PROP offset=9550 | rbxassetid://565643528)
+chunk=500 type=PROP offset=9633 | rbxassetid://482607208
+chunk=500 type=PROP offset=9691 | rbxassetid://492654707
+chunk=500 type=PROP offset=9717 | rbxassetid://492654695
+chunk=500 type=PROP offset=9743 | rbxassetid://492654690
+chunk=500 type=PROP offset=9769 | rbxassetid://492654700
+chunk=500 type=PROP offset=9799 | rbxassetid://345808397
+chunk=500 type=PROP offset=9825 | rbxassetid://189013784)
+chunk=500 type=PROP offset=9896 | rbxassetid://448339058
+chunk=500 type=PROP offset=9922 | rbxassetid://276624313
+chunk=500 type=PROP offset=9948 | rbxassetid://222348452
+chunk=500 type=PROP offset=9974 | rbxassetid://211496299
+chunk=500 type=PROP offset=10000 | rbxassetid://673704603
+chunk=500 type=PROP offset=10026 | rbxassetid://276646186
+chunk=500 type=PROP offset=10052 | rbxassetid://246439451
+chunk=500 type=PROP offset=10078 | rbxassetid://673703306
+chunk=500 type=PROP offset=10104 | rbxassetid://430787746
+chunk=500 type=PROP offset=10130 | rbxassetid://438193969
+chunk=500 type=PROP offset=10156 | rbxassetid://222624064
+chunk=500 type=PROP offset=10182 | rbxassetid://222321375
+chunk=500 type=PROP offset=10208 | rbxassetid://438701023
+chunk=500 type=PROP offset=10234 | rbxassetid://223809220
+chunk=500 type=PROP offset=10260 | rbxassetid://680479124
+chunk=500 type=PROP offset=10286 | rbxassetid://381668238
+chunk=500 type=PROP offset=10312 | rbxassetid://246456124
+chunk=500 type=PROP offset=10342 | rbxassetid://673701041
+chunk=500 type=PROP offset=10368 | rbxassetid://272226110
+chunk=500 type=PROP offset=10394 | rbxassetid://348603480
+chunk=500 type=PROP offset=10420 | rbxassetid://380953647
+chunk=500 type=PROP offset=10446 | rbxassetid://673704944
+chunk=500 type=PROP offset=10476 | rbxassetid://511432498
+chunk=500 type=PROP offset=10510 | rbxassetid://674142905
+chunk=500 type=PROP offset=10540 | rbxassetid://673701006
+chunk=500 type=PROP offset=10574 | rbxassetid://392145394
+chunk=500 type=PROP offset=10604 | rbxassetid://380964825
+chunk=500 type=PROP offset=10654 | rbxassetid://421644533
+chunk=500 type=PROP offset=10684 | rbxassetid://393735628
+chunk=500 type=PROP offset=10710 | rbxassetid://674088479
+chunk=500 type=PROP offset=10744 | rbxassetid://432680792
+chunk=500 type=PROP offset=10778 | rbxassetid://626597499
+chunk=500 type=PROP offset=10820 | rbxassetid://528355967
+chunk=500 type=PROP offset=10866 | rbxassetid://349415070
+chunk=500 type=PROP offset=10892 | rbxassetid://348274811
+chunk=500 type=PROP offset=10926 | rbxassetid://348275073
+chunk=500 type=PROP offset=10956 | rbxassetid://554253236
+chunk=500 type=PROP offset=10982 | rbxassetid://307999515
+chunk=500 type=PROP offset=11012 | rbxassetid://404642874
+chunk=500 type=PROP offset=11038 | rbxassetid://273628262
+chunk=500 type=PROP offset=11068 | rbxassetid://348365735
+chunk=500 type=PROP offset=11106 | rbxassetid://233840397
+chunk=500 type=PROP offset=11132 | rbxassetid://336869603
+chunk=500 type=PROP offset=11158 | rbxassetid://268321359
+chunk=500 type=PROP offset=11184 | rbxassetid://286273649
+chunk=500 type=PROP offset=11210 | rbxassetid://364369172
+chunk=500 type=PROP offset=11236 | rbxassetid://212084657
+chunk=500 type=PROP offset=11262 | rbxassetid://305351532
+chunk=500 type=PROP offset=11288 | rbxassetid://454972723
+chunk=500 type=PROP offset=11314 | rbxassetid://227920563
+chunk=500 type=PROP offset=11340 | rbxassetid://348139276
+chunk=500 type=PROP offset=11366 | rbxassetid://558817638
+chunk=500 type=PROP offset=11392 | rbxassetid://281350161
+chunk=500 type=PROP offset=11418 | rbxassetid://289381813
+chunk=500 type=PROP offset=11444 | rbxassetid://268402944
+chunk=500 type=PROP offset=11470 | rbxassetid://472356713
+chunk=500 type=PROP offset=11496 | rbxassetid://271536850
+chunk=500 type=PROP offset=11522 | rbxassetid://534111007
+chunk=500 type=PROP offset=11548 | rbxassetid://388640712
+chunk=500 type=PROP offset=11574 | rbxassetid://204579177
+chunk=500 type=PROP offset=11600 | rbxassetid://270023416
+chunk=500 type=PROP offset=11626 | rbxassetid://533447872
+chunk=500 type=PROP offset=11652 | rbxassetid://189799293
+chunk=500 type=PROP offset=11678 | rbxassetid://337994045
+chunk=500 type=PROP offset=11704 | rbxassetid://227460287
+chunk=500 type=PROP offset=11730 | rbxassetid://357795090
+chunk=500 type=PROP offset=11756 | rbxassetid://222240943
+chunk=500 type=PROP offset=11782 | rbxassetid://251545599
+chunk=500 type=PROP offset=11808 | rbxassetid://189811566
+chunk=500 type=PROP offset=11834 | rbxassetid://673701030
+chunk=500 type=PROP offset=11860 | rbxassetid://262968386
+chunk=500 type=PROP offset=11886 | rbxassetid://539037536
+chunk=500 type=PROP offset=11912 | rbxassetid://249143397
+chunk=500 type=PROP offset=11938 | rbxassetid://305204096
+chunk=500 type=PROP offset=11964 | rbxassetid://366794911
+chunk=500 type=PROP offset=11990 | rbxassetid://380627088)
+chunk=556 type=PROP offset=20 | rbxasset://textures/particles/sparkles_main.dds/
+chunk=556 type=PROP offset=887 | rbxasset://textures/particles/sparkles_main.dds)
+chunk=556 type=PROP offset=1028 | rbxasset://textures/particles/smoke_main.dds/
+chunk=595 type=PROP offset=224428 | local sword = Instance.new("Tool", v.Backpack) sword.Name = "Sword"  sword.TextureId = "rbxasset://Textures/Sword128.png"
+chunk=595 type=PROP offset=224428 | local msh = Instance.new("SpecialMesh", handle) msh.MeshId = "rbxasset://fonts/sword.mesh" msh.TextureId = "rbxasset://textures/SwordTexture.png"
+chunk=595 type=PROP offset=224428 | SlashSound.SoundId = "rbxasset://sounds\\swordslash.wav"
+chunk=595 type=PROP offset=224428 | LungeSound.SoundId = "rbxasset://sounds\\swordlunge.wav"
+chunk=595 type=PROP offset=224428 | UnsheathSound.SoundId = "rbxasset://sounds\\unsheath.wav"
+chunk=595 type=PROP offset=398582 | 						shirt.ShirtTemplate = "rbxassetid://"..tonumber(v) - statuses[i]
+chunk=595 type=PROP offset=398582 | 						pants.PantsTemplate = "rbxassetid://"..tonumber(v) - statuses[i]
+chunk=595 type=PROP offset=398582 | 							face.Texture = "rbxassetid://"..tonumber(v) - statuses[i]
+chunk=595 type=PROP offset=408649 | 		["ImageID"] = "rbxassetid://"..item.DecalID.Value,
+chunk=595 type=PROP offset=408649 | 	local imgid = (tier == 3 and "rbxassetid://343339178" or tier == 4 and "rbxassetid://343339188" or "rbxassetid://343339162")
+chunk=595 type=PROP offset=452730 | 	sound.SoundId = "rbxassetid://"..songid
+chunk=595 type=PROP offset=1182125 | 	"rbxasset://textures/face.png",
+chunk=595 type=PROP offset=1185115 | 	sound.SoundId = "rbxasset://sounds\\Rocket shot.wav"
+chunk=603 type=PROP offset=24 | rbxasset://textures/ui/Scroll/scroll-bottom.png)
+chunk=603 type=PROP offset=165 | rbxasset://textures/blackBkg_square.png'
+chunk=603 type=PROP offset=380 | rbxasset://textures/blackBkg_square.png
+chunk=603 type=PROP offset=423 | rbxassetid://202954368'
+chunk=603 type=PROP offset=621 | rbxassetid://202954368
+chunk=603 type=PROP offset=699 | rbxassetid://202954368/
+chunk=603 type=PROP offset=725 | rbxasset://textures/ui/Scroll/scroll-bottom.png
+chunk=609 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-middle.png)
+chunk=609 type=PROP offset=722 | rbxasset://textures/ui/Scroll/scroll-middle.png
+chunk=623 type=PROP offset=21 | rbxasset://textures/ui/Scroll/scroll-top.png)
+chunk=623 type=PROP offset=693 | rbxassetid://202954368,
+chunk=623 type=PROP offset=719 | rbxasset://textures/ui/Scroll/scroll-top.png
+chunk=673 type=PROP offset=294 | rbxassetid://183177691)
+chunk=673 type=PROP offset=553 | rbxassetid://403593680(
+chunk=673 type=PROP offset=623 | rbxassetid://183219914
+chunk=673 type=PROP offset=653 | rbxassetid://183177691
+chunk=673 type=PROP offset=735 | rbxassetid://473172728
+chunk=673 type=PROP offset=761 | rbxassetid://419077464
+chunk=673 type=PROP offset=787 | rbxassetid://473362190
+chunk=673 type=PROP offset=813 | rbxassetid://403593696
+chunk=673 type=PROP offset=839 | rbxassetid://403593673
+chunk=673 type=PROP offset=865 | rbxassetid://581285245
+chunk=673 type=PROP offset=895 | rbxassetid://581285125)
+chunk=673 type=PROP offset=966 | rbxassetid://691261113)
+chunk=673 type=PROP offset=3497 | rbxassetid://240497237
+chunk=673 type=PROP offset=3527 | rbxassetid://415523395
+chunk=673 type=PROP offset=3561 | rbxassetid://263019210
+chunk=673 type=PROP offset=3587 | rbxassetid://536150958
+chunk=673 type=PROP offset=3617 | rbxassetid://359348992
+chunk=673 type=PROP offset=3647 | rbxassetid://163552843
+chunk=673 type=PROP offset=3673 | rbxassetid://166627885
+chunk=673 type=PROP offset=3699 | rbxassetid://185138677
+chunk=673 type=PROP offset=3725 | rbxassetid://437470072
+chunk=673 type=PROP offset=3751 | rbxassetid://486293595
+chunk=673 type=PROP offset=3785 | rbxassetid://399520682
+chunk=673 type=PROP offset=3811 | rbxassetid://456464909
+chunk=673 type=PROP offset=3845 | rbxassetid://472937828
+chunk=673 type=PROP offset=3875 | rbxassetid://536256021
+chunk=673 type=PROP offset=3901 | rbxassetid://519750805
+chunk=673 type=PROP offset=3931 | rbxassetid://456465129
+chunk=673 type=PROP offset=3965 | rbxassetid://425338361
+chunk=673 type=PROP offset=3995 | rbxassetid://276840825
+chunk=673 type=PROP offset=4021 | rbxassetid://293873352
+chunk=673 type=PROP offset=4047 | rbxassetid://303358108
+chunk=673 type=PROP offset=4081 | rbxassetid://553154034
+chunk=673 type=PROP offset=4107 | rbxassetid://629009332
+chunk=673 type=PROP offset=4133 | rbxassetid://584365458
+chunk=673 type=PROP offset=4159 | rbxassetid://572947163
+chunk=673 type=PROP offset=4185 | rbxassetid://628991029
+chunk=673 type=PROP offset=4211 | rbxassetid://635771620
+chunk=673 type=PROP offset=4237 | rbxassetid://572368696
+chunk=673 type=PROP offset=4263 | rbxassetid://553176345
+chunk=673 type=PROP offset=4289 | rbxassetid://520590701
+chunk=673 type=PROP offset=4315 | rbxassetid://572369060
+chunk=673 type=PROP offset=4341 | rbxassetid://635771966
+chunk=673 type=PROP offset=4367 | rbxassetid://572947940
+chunk=673 type=PROP offset=4393 | rbxassetid://569809820
+chunk=673 type=PROP offset=4419 | rbxassetid://572368882
+chunk=673 type=PROP offset=4453 | rbxassetid://520590806
+chunk=673 type=PROP offset=4479 | rbxassetid://635792920
+chunk=673 type=PROP offset=4505 | rbxassetid://471199765
+chunk=673 type=PROP offset=4531 | rbxassetid://536362278
+chunk=673 type=PROP offset=4557 | rbxassetid://569810159
+chunk=673 type=PROP offset=4587 | rbxassetid://520590634
+chunk=673 type=PROP offset=4613 | rbxassetid://572947407
+chunk=673 type=PROP offset=4639 | rbxassetid://520590774
+chunk=673 type=PROP offset=4673 | rbxassetid://629008893
+chunk=673 type=PROP offset=4699 | rbxassetid://584364895
+chunk=673 type=PROP offset=4725 | rbxassetid://635772530
+chunk=673 type=PROP offset=4755 | rbxassetid://553176462
+chunk=673 type=PROP offset=4781 | rbxassetid://536361756
+chunk=673 type=PROP offset=4807 | rbxassetid://629008597
+chunk=673 type=PROP offset=4833 | rbxassetid://471184813
+chunk=673 type=PROP offset=4859 | rbxassetid://584363663
+chunk=673 type=PROP offset=4885 | rbxassetid://626857494
+chunk=673 type=PROP offset=4911 | rbxassetid://584366902
+chunk=673 type=PROP offset=4937 | rbxassetid://569811418
+chunk=673 type=PROP offset=4967 | rbxassetid://572368783
+chunk=673 type=PROP offset=4993 | rbxassetid://626856382
+chunk=673 type=PROP offset=5019 | rbxassetid://536362240
+chunk=673 type=PROP offset=5045 | rbxassetid://553176965
+chunk=673 type=PROP offset=5071 | rbxassetid://647009021
+chunk=673 type=PROP offset=5097 | rbxassetid://471185773
+chunk=673 type=PROP offset=5123 | rbxassetid://572947721
+chunk=673 type=PROP offset=5149 | rbxassetid://647009382
+chunk=673 type=PROP offset=5179 | rbxassetid://626857061
+chunk=673 type=PROP offset=5205 | rbxassetid://647009297
+chunk=673 type=PROP offset=5235 | rbxassetid://626857920
+chunk=673 type=PROP offset=5261 | rbxassetid://553176681
+chunk=673 type=PROP offset=5287 | rbxassetid://647011010
+chunk=673 type=PROP offset=5317 | rbxassetid://471185677
+chunk=673 type=PROP offset=5343 | rbxassetid://536360074
+chunk=673 type=PROP offset=5373 | rbxassetid://569810527
+chunk=673 type=PROP offset=5399 | rbxassetid://664199245
+chunk=673 type=PROP offset=5425 | rbxassetid://652452837
+chunk=673 type=PROP offset=5479 | rbxassetid://667068510
+chunk=673 type=PROP offset=5509 | rbxassetid://528247921
+chunk=673 type=PROP offset=5535 | rbxassetid://484944748
+chunk=673 type=PROP offset=5573 | rbxassetid://549919434
+chunk=673 type=PROP offset=5599 | rbxassetid://484944781
+chunk=673 type=PROP offset=5663 | rbxassetid://548009177
+chunk=673 type=PROP offset=5714 | rbxassetid://624595806
+chunk=673 type=PROP offset=5799 | rbxassetid://0
+chunk=673 type=PROP offset=5817 | rbxassetid://585319297
+chunk=673 type=PROP offset=5843 | rbxassetid://443699473
+chunk=673 type=PROP offset=5873 | rbxassetid://453736212
+chunk=673 type=PROP offset=5899 | rbxassetid://529114257
+chunk=673 type=PROP offset=5925 | rbxassetid://585319303
+chunk=673 type=PROP offset=5951 | rbxassetid://628549550)
+chunk=673 type=PROP offset=6022 | rbxassetid://453736223
+chunk=673 type=PROP offset=6048 | rbxassetid://554994633)
+chunk=673 type=PROP offset=6119 | rbxassetid://482536158)
+chunk=673 type=PROP offset=6190 | rbxassetid://482536158
+chunk=673 type=PROP offset=6216 | rbxassetid://564000752)
+chunk=673 type=PROP offset=6287 | rbxassetid://453736260
+chunk=673 type=PROP offset=6313 | rbxassetid://453736245
+chunk=673 type=PROP offset=6339 | rbxassetid://453736236
+chunk=673 type=PROP offset=6365 | rbxassetid://482609146
+chunk=673 type=PROP offset=6391 | rbxassetid://453736151
+chunk=673 type=PROP offset=6417 | rbxassetid://549919480
+chunk=673 type=PROP offset=6443 | rbxassetid://488492419
+chunk=673 type=PROP offset=6469 | rbxassetid://443699312
+chunk=673 type=PROP offset=6495 | rbxassetid://443699440
+chunk=673 type=PROP offset=6521 | rbxassetid://443699331
+chunk=673 type=PROP offset=6547 | rbxassetid://488492410
+chunk=673 type=PROP offset=6573 | rbxassetid://443699489
+chunk=673 type=PROP offset=6615 | rbxassetid://443699466
+chunk=673 type=PROP offset=6641 | rbxassetid://345808330
+chunk=673 type=PROP offset=6716 | rbxassetid://448947672
+chunk=673 type=PROP offset=6754 | rbxassetid://673710462
+chunk=673 type=PROP offset=6788 | rbxassetid://673703801
+chunk=673 type=PROP offset=6830 | rbxassetid://438697333
+chunk=673 type=PROP offset=6856 | rbxassetid://223803636
+chunk=673 type=PROP offset=6882 | rbxassetid://680484746
+chunk=673 type=PROP offset=6908 | rbxassetid://226800722
+chunk=673 type=PROP offset=6954 | rbxassetid://380986240
+chunk=673 type=PROP offset=6980 | rbxassetid://673711058
+chunk=673 type=PROP offset=7006 | rbxassetid://276260413
+chunk=673 type=PROP offset=7036 | rbxassetid://276260273
+chunk=673 type=PROP offset=7062 | rbxassetid://276260190
+chunk=673 type=PROP offset=7092 | rbxassetid://276260266
+chunk=673 type=PROP offset=7122 | rbxassetid://276260399
+chunk=673 type=PROP offset=7148 | rbxassetid://276260319
+chunk=673 type=PROP offset=7178 | rbxassetid://276260192
+chunk=673 type=PROP offset=7208 | rbxassetid://348128879
+chunk=673 type=PROP offset=7234 | rbxassetid://276260306
+chunk=673 type=PROP offset=7268 | rbxassetid://276260408
+chunk=673 type=PROP offset=7294 | rbxassetid://276260390
+chunk=673 type=PROP offset=7324 | rbxassetid://276260286
+chunk=673 type=PROP offset=7350 | rbxassetid://393736785
+chunk=673 type=PROP offset=7380 | rbxassetid://348484231
+chunk=673 type=PROP offset=7406 | rbxassetid://396293305
+chunk=673 type=PROP offset=7436 | rbxassetid://176274886
+chunk=673 type=PROP offset=7462 | rbxassetid://349127806
+chunk=673 type=PROP offset=7492 | rbxassetid://472337302
+chunk=673 type=PROP offset=7518 | rbxassetid://349370370
+chunk=673 type=PROP offset=7544 | rbxassetid://204406269
+chunk=673 type=PROP offset=7570 | rbxassetid://276260410
+chunk=673 type=PROP offset=7600 | rbxassetid://396423740
+chunk=673 type=PROP offset=7626 | rbxassetid://468972904
+chunk=673 type=PROP offset=7672 | rbxassetid://468972919
+chunk=673 type=PROP offset=7698 | rbxassetid://553929447
+chunk=673 type=PROP offset=7728 | rbxassetid://352216414
+chunk=673 type=PROP offset=7762 | rbxassetid://468972701
+chunk=673 type=PROP offset=7796 | rbxassetid://276260396
+chunk=673 type=PROP offset=7826 | rbxassetid://276260300
+chunk=673 type=PROP offset=7852 | rbxassetid://553929516
+chunk=673 type=PROP offset=7878 | rbxassetid://468972900
+chunk=673 type=PROP offset=7912 | rbxassetid://268321617
+chunk=673 type=PROP offset=7938 | rbxassetid://286273720
+chunk=673 type=PROP offset=7976 | rbxassetid://454975033
+chunk=673 type=PROP offset=8032 | rbxassetid://558214725
+chunk=673 type=PROP offset=8058 | rbxassetid://281351316
+chunk=673 type=PROP offset=8096 | rbxassetid://271538197
+chunk=673 type=PROP offset=8178 | rbxassetid://539024542
+chunk=735 type=PROP offset=812 | rbxassetid://158853971(
+chunk=735 type=PROP offset=882 | rbxassetid://153613030(
+chunk=735 type=PROP offset=1266 | rbxassetid://138210320
+chunk=735 type=PROP offset=1292 | rbxassetid://460261083
+chunk=735 type=PROP offset=1318 | rbxassetid://12222095 
+chunk=735 type=PROP offset=1343 | rbxasset://sounds/swordslash.wav
+chunk=735 type=PROP offset=1379 | rbxasset://sounds/unsheath.wav 
+chunk=735 type=PROP offset=1449 | rbxasset://sounds/unsheath.wav(
+chunk=735 type=PROP offset=5491 | rbxassetid://55224766
+chunk=735 type=PROP offset=5516 | rbxassetid://101166084)
+chunk=735 type=PROP offset=5818 | rbxassetid://158853971'
+chunk=735 type=PROP offset=7348 | rbxasset://sounds//short spring sound.wav(
+chunk=797 type=PROP offset=24779 | rbxassetid://159689271
+chunk=797 type=PROP offset=24883 | rbxassetid://159689271(
+chunk=797 type=PROP offset=62104 | rbxassetid://568906051)
+chunk=797 type=PROP offset=62265 | rbxassetid://477751137)
+chunk=797 type=PROP offset=63929 | rbxassetid://159689271)
+chunk=802 type=PROP offset=16826 | rbxassetid://159689289
+chunk=802 type=PROP offset=16930 | rbxassetid://159689289)
+chunk=802 type=PROP offset=17195 | rbxassetid://159689289(
+chunk=802 type=PROP offset=29789 | rbxassetid://568906488)
+chunk=802 type=PROP offset=30219 | rbxassetid://553732913)
+chunk=1029 type=PROP offset=45902 | rbxassetid://279152769)
+chunk=1038 type=PROP offset=42 | rbxasset://icons/color.png)
+chunk=1038 type=PROP offset=3165 | rbxassetid://579004582)
+chunk=1038 type=PROP offset=3463 | rbxassetid://607135413
