@@ -151,4 +151,41 @@ eq(defaults.outfit.Hat2, 0, "default Hat2")
 eq(defaults.outfit.Hat3, 0, "default Hat3")
 eq(defaults.outfit.RemoveShirt, false, "default RemoveShirt")
 
+-- Shopping/client claims must never enter durable outfit state. This guards the
+-- avatar boundary while shopping authority is integrated separately.
+local forgedShoppingClaims = copy(input)
+forgedShoppingClaims.PurchasePermanentItem = true
+forgedShoppingClaims.ShirtTemplate = "forged-template"
+forgedShoppingClaims.PantsTemplate = "forged-template"
+forgedShoppingClaims.assetId = 999
+forgedShoppingClaims.price = 1
+forgedShoppingClaims.currency = "RHS Cash"
+forgedShoppingClaims.owned = true
+forgedShoppingClaims.successText = "forged success"
+
+local isolated = controller:saveOutfit(101, 2, forgedShoppingClaims, "req-isolation")
+eq(isolated.accepted, true, "isolated outfit save rejected")
+eq(saved[2].PurchasePermanentItem, nil, "purchase claim entered outfit persistence")
+eq(saved[2].ShirtTemplate, nil, "shirt template claim entered outfit persistence")
+eq(saved[2].PantsTemplate, nil, "pants template claim entered outfit persistence")
+eq(saved[2].assetId, nil, "asset claim entered outfit persistence")
+eq(saved[2].price, nil, "price claim entered outfit persistence")
+eq(saved[2].currency, nil, "currency claim entered outfit persistence")
+eq(saved[2].owned, nil, "ownership claim entered outfit persistence")
+eq(saved[2].successText, nil, "success claim entered outfit persistence")
+
+local invalidAsset = copy(input)
+invalidAsset.Shirt = -1
+local rejectedAsset = controller:saveOutfit(101, 3, invalidAsset, "req-negative-shirt")
+eq(rejectedAsset.accepted, false, "negative shirt accepted")
+eq(rejectedAsset.code, "invalid_outfit", "negative shirt code")
+eq(saved[3], nil, "negative shirt reached persistence")
+
+local fractionalAsset = copy(input)
+fractionalAsset.Pants = 1.5
+local rejectedFraction = controller:saveOutfit(101, 3, fractionalAsset, "req-fractional-pants")
+eq(rejectedFraction.accepted, false, "fractional pants accepted")
+eq(rejectedFraction.code, "invalid_outfit", "fractional pants code")
+eq(saved[3], nil, "fractional pants reached persistence")
+
 print("HIGH_SCHOOL_OUTFIT_OPERATIONS_PASS")
