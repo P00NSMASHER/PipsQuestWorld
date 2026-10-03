@@ -39,6 +39,9 @@
         },
         "LegacyOutfitEntry": {
           "$path": "src/shared/LegacyOutfitEntry.lua"
+        },
+        "LegacyShoppingBoundary": {
+          "$path": "src/shared/LegacyShoppingBoundary.lua"
         }
       }
     },
@@ -84,6 +87,12 @@
         },
         "OutfitOperations": {
           "$path": "src/server/OutfitOperations.server.lua"
+        },
+        "ShoppingPurchaseController": {
+          "$path": "src/server/ShoppingPurchaseController.lua"
+        },
+        "ShoppingPurchase": {
+          "$path": "src/server/ShoppingPurchase.server.lua"
         },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
