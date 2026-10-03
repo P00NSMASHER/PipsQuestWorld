@@ -82,6 +82,16 @@ eq(duplicateConfirm.accepted, true, "duplicate confirmation rejected")
 eq(duplicateConfirm.code, "purchase_already_confirmed", "duplicate confirmation idempotency")
 eq(duplicateConfirm.successText, Controller.SUCCESS_TEXT, "duplicate exact success text")
 
+-- Confirmation identity is scoped to purchaser + asset. Another player receives
+-- an independent first confirmation, while a duplicate for player 101 stays duplicate.
+local secondPurchaser = authorized:confirmPurchase(202, 123, true)
+eq(secondPurchaser.accepted, true, "second purchaser confirmation rejected")
+eq(secondPurchaser.code, "purchase_confirmed", "purchaser isolation lost first-confirm semantics")
+eq(secondPurchaser.successText, Controller.SUCCESS_TEXT, "second purchaser exact success text")
+
+local duplicateAgain = authorized:confirmPurchase(101, 123, true)
+eq(duplicateAgain.code, "purchase_already_confirmed", "other purchaser changed first purchaser idempotency")
+
 eq(#Controller.REFERENCE_SIGNALS, 6, "verified signal count")
 eq(Controller.REFERENCE_SIGNALS[1], "BuyClothing", "BuyClothing signal")
 eq(Controller.REFERENCE_SIGNALS[2], "ShopGui", "ShopGui signal")
