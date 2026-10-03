@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "sha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
   "sourceRoot": "school/**",
-  "status": "PACKAGE_CHECKPOINT_COMPLETE__NEXT_PARITY_SLICE_ASSIGNED",
+  "status": "PACKAGE_CHECKPOINT_INHERITED__BINARY_REFERENCE_INFRA_ONLY__AVATAR_CUSTOMIZATION_ACTIVE",
   "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "repair": {
     "pr": 64,
@@ -13,29 +13,7 @@
     "sha": "03ea7f172d8bc898b687644f416803851220437f",
     "scope": "economy durable operation ordering/rejoin"
   },
-  "exactHeadCi": [
-    {
-      "workflow": "High School Foundation Static Guards",
-      "runId": 37117473969,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    },
-    {
-      "workflow": "High School Class Education Guards",
-      "runId": 37117473982,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    },
-    {
-      "workflow": "High School Progression Guards",
-      "runId": 37117473978,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
-    }
-  ],
+  "exactHeadCi": [],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
     "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
@@ -113,6 +91,16 @@
     "artifact": "pip-high-school-00df979-source-tree-dea093c1",
     "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
-    "robloxPublished": false
+    "robloxPublished": false,
+    "liveCanonicalSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "productTreeInheritedFrom": "00df979add2b5d0e961205b62cf88340c56ee662"
+  },
+  "exactHeadCiResolution": {
+    "headSha": "48bbdb9c0d70919d6164e82a68e15dcc2d2f7cad",
+    "workflowRunsFound": 0,
+    "reason": "No product guard workflow run was triggered for the live head because the commits since 00df979 are coordination/binary-reference infrastructure only.",
+    "certifiedProductAncestor": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "certifiedSchoolTree": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "productTreeRelationship": "IDENTICAL_TO_CERTIFIED_ANCESTOR"
   }
 }
