@@ -36,6 +36,9 @@
         "$className": "Folder",
         "SchoolConfig": {
           "$path": "src/shared/SchoolConfig.lua"
+        },
+        "LegacyOutfitEntry": {
+          "$path": "src/shared/LegacyOutfitEntry.lua"
         }
       }
     },
