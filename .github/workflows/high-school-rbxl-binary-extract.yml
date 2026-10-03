@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - devex/high-school-rbxl-binary-extract-v1
+      - devex/rbxl-extract-*
     paths:
+      - coordination/state/RBXL_EXTRACTION_REQUEST.json
       - coordination/tools/extract_rbxl_binary.py
       - .github/workflows/high-school-rbxl-binary-extract.yml
 
@@ -12,11 +14,11 @@ permissions:
   contents: write
 
 jobs:
-  extract-licensed-baseline:
+  extract-verified-binary-reference:
     runs-on: ubuntu-latest
     if: github.actor != 'github-actions[bot]'
     steps:
-      - name: Checkout extractor branch
+      - name: Checkout extraction branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -24,33 +26,65 @@ jobs:
       - name: Install LZ4 parser dependency
         run: python -m pip install --disable-pip-version-check lz4==4.4.4
 
-      - name: Download exact licensed baseline
+      - name: Validate extraction request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          req='coordination/state/RBXL_EXTRACTION_REQUEST.json'
+          slug="$(jq -r '.slug' "$req")"
+          url="$(jq -r '.sourceUrl' "$req")"
+          blob="$(jq -r '.expectedGitBlobSha' "$req")"
+          sha256="$(jq -r '.expectedSha256 // empty' "$req")"
+
+          [[ "$slug" =~ ^[a-z0-9][a-z0-9._-]{0,79}$ ]]
+          [[ "$url" == https://raw.githubusercontent.com/* ]]
+          [[ "$blob" =~ ^[0-9a-f]{40}$ ]]
+          if [[ -n "$sha256" ]]; then
+            [[ "$sha256" =~ ^[0-9a-f]{64}$ ]]
+          fi
+
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "blob=$blob" >> "$GITHUB_OUTPUT"
+          echo "sha256=$sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Download one exact reference object
+        shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/rbxl
           curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/MisoNotSoupx/Old-Roblox-Place-Archive/b817aef0eaf77d3382acacdc8f22537e54c76822/Created%20by%20Users/Cindering/ROBLOX%20High%20School.rbxl' \
-            --output /tmp/rbxl/ROBLOX_High_School.rbxl
+            '\${{ steps.request.outputs.url }}' \
+            --output /tmp/rbxl/reference.rbxl
 
       - name: Verify and extract binary RBXL
+        shell: bash
         run: |
           set -euo pipefail
-          rm -rf coordination/evidence/rbxl/legacy-high-school
-          python coordination/tools/extract_rbxl_binary.py \
-            /tmp/rbxl/ROBLOX_High_School.rbxl \
-            --expected-blob-sha 95ee3d762f419bb3572e18db57c03682651dc8c4 \
-            --expected-sha256 d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360 \
-            --out-dir coordination/evidence/rbxl/legacy-high-school
+          out="coordination/evidence/rbxl/\${{ steps.request.outputs.slug }}"
+          rm -rf "$out"
+          args=(
+            /tmp/rbxl/reference.rbxl
+            --expected-blob-sha '\${{ steps.request.outputs.blob }}'
+            --out-dir "$out"
+          )
+          if [[ -n '\${{ steps.request.outputs.sha256 }}' ]]; then
+            args+=(--expected-sha256 '\${{ steps.request.outputs.sha256 }}')
+          fi
+          python coordination/tools/extract_rbxl_binary.py "\${args[@]}"
 
-      - name: Commit deterministic extraction evidence
+      - name: Commit deterministic text evidence only
+        shell: bash
         run: |
           set -euo pipefail
+          out="coordination/evidence/rbxl/\${{ steps.request.outputs.slug }}"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add coordination/evidence/rbxl/legacy-high-school
+          git add "$out"
           if git diff --cached --quiet; then
             echo 'Extraction evidence unchanged.'
             exit 0
           fi
-          git commit -m 'evidence: extract licensed High School RBXL binary [skip ci]'
-          git push origin HEAD:devex/high-school-rbxl-binary-extract-v1
+          git commit -m "evidence: extract \${{ steps.request.outputs.slug }} RBXL binary [skip ci]"
+          git push origin HEAD:"$GITHUB_REF_NAME"
