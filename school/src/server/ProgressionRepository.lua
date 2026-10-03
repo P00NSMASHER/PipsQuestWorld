@@ -45,6 +45,7 @@ end
 
 local OUTFIT_STORAGE_SLOT_COUNT = 24
 local OUTFIT_LEGACY_SLOT_COUNT = 12
+local OUTFIT_REQUEST_HISTORY_LIMIT = 16
 
 local function defaultOutfit()
     return {
@@ -138,6 +139,65 @@ local function normalizeSaveRequestIds(values)
     return result
 end
 
+local function outfitFingerprint(outfit)
+    local function text(value)
+        return tostring(#value) .. ":" .. value
+    end
+    return table.concat({
+        text(outfit.OutfitName),
+        tostring(outfit.Hat1),
+        tostring(outfit.Hat2),
+        tostring(outfit.Hat3),
+        tostring(outfit.Shirt),
+        tostring(outfit.Pants),
+        tostring(outfit.Face),
+        tostring(outfit.Package),
+        text(outfit.RPName),
+        text(outfit.RPDesc),
+        outfit.RemoveShirt and "1" or "0",
+    }, "|")
+end
+
+local function normalizeSaveRequestHistory(values)
+    local result = {}
+    for slot = 1, OUTFIT_STORAGE_SLOT_COUNT do
+        local normalized = {}
+        local source = type(values) == "table" and values[slot] or nil
+        if type(source) == "table" then
+            for _, entry in ipairs(source) do
+                if type(entry) == "table"
+                    and type(entry.requestId) == "string"
+                    and entry.requestId ~= ""
+                    and type(entry.fingerprint) == "string"
+                    and entry.fingerprint ~= "" then
+                    normalized[#normalized + 1] = {
+                        requestId = entry.requestId,
+                        fingerprint = entry.fingerprint,
+                    }
+                end
+            end
+        end
+        while #normalized > OUTFIT_REQUEST_HISTORY_LIMIT do
+            table.remove(normalized, 1)
+        end
+        result[slot] = normalized
+    end
+    return result
+end
+
+local function rememberOutfitRequest(history, requestId, fingerprint)
+    for _, entry in ipairs(history) do
+        if entry.requestId == requestId then return end
+    end
+    history[#history + 1] = {
+        requestId = requestId,
+        fingerprint = fingerprint,
+    }
+    while #history > OUTFIT_REQUEST_HISTORY_LIMIT do
+        table.remove(history, 1)
+    end
+end
+
 local function emptySnapshot()
     return {
         schemaVersion = SCHEMA_VERSION,
@@ -145,6 +205,7 @@ local function emptySnapshot()
         completions = {},
         outfits = defaultOutfits(),
         outfitSaveRequestIds = normalizeSaveRequestIds(nil),
+        outfitSaveRequestHistory = normalizeSaveRequestHistory(nil),
     }
 end
 
@@ -166,6 +227,31 @@ local function validateSnapshot(snapshot, playerId)
         for key, value in pairs(snapshot.outfitSaveRequestIds) do
             if not isInteger(key) or key < 1 or key > OUTFIT_STORAGE_SLOT_COUNT or type(value) ~= "string" then
                 return false, "INVALID_OUTFIT_REQUEST_IDS"
+            end
+        end
+    end
+    if snapshot.outfitSaveRequestHistory ~= nil then
+        if type(snapshot.outfitSaveRequestHistory) ~= "table" then
+            return false, "INVALID_OUTFIT_REQUEST_HISTORY"
+        end
+        for slot, history in pairs(snapshot.outfitSaveRequestHistory) do
+            if not isInteger(slot) or slot < 1 or slot > OUTFIT_STORAGE_SLOT_COUNT or type(history) ~= "table" then
+                return false, "INVALID_OUTFIT_REQUEST_HISTORY"
+            end
+            if #history > OUTFIT_REQUEST_HISTORY_LIMIT then
+                return false, "INVALID_OUTFIT_REQUEST_HISTORY"
+            end
+            local seenRequestIds = {}
+            for _, entry in ipairs(history) do
+                if type(entry) ~= "table"
+                    or type(entry.requestId) ~= "string"
+                    or entry.requestId == ""
+                    or type(entry.fingerprint) ~= "string"
+                    or entry.fingerprint == ""
+                    or seenRequestIds[entry.requestId] then
+                    return false, "INVALID_OUTFIT_REQUEST_HISTORY"
+                end
+                seenRequestIds[entry.requestId] = true
             end
         end
     end
@@ -204,6 +290,7 @@ local function cloneSnapshot(snapshot)
         completions = completions,
         outfits = normalizeOutfits(snapshot.outfits),
         outfitSaveRequestIds = normalizeSaveRequestIds(snapshot.outfitSaveRequestIds),
+        outfitSaveRequestHistory = normalizeSaveRequestHistory(snapshot.outfitSaveRequestHistory),
     }
 end
 
@@ -461,13 +548,28 @@ function Repository:saveOutfit(slot, outfit, requestId)
             return { status = "rejected", durable = false, error = readError }
         end
 
+        local requestFingerprint = outfitFingerprint(outfit)
+        local requestHistory = current.outfitSaveRequestHistory[slot]
+        for _, prior in ipairs(requestHistory) do
+            if prior.requestId == requestId then
+                if prior.fingerprint ~= requestFingerprint then
+                    return { status = "conflict", durable = false, error = "OUTFIT_REQUEST_ID_CONFLICT" }
+                end
+                self._snapshot = current
+                return {
+                    status = "duplicate",
+                    durable = true,
+                    revision = version,
+                    slot = slot,
+                    outfit = copyOutfit(current.outfits[slot]),
+                }
+            end
+        end
+
         local priorRequestId = current.outfitSaveRequestIds[slot]
         if priorRequestId == requestId then
             local priorOutfit = current.outfits[slot]
-            local same = true
-            for field, value in pairs(outfit) do
-                if priorOutfit[field] ~= value then same = false break end
-            end
+            local same = outfitFingerprint(priorOutfit) == requestFingerprint
             if same then
                 self._snapshot = current
                 return {
@@ -482,8 +584,17 @@ function Repository:saveOutfit(slot, outfit, requestId)
         end
 
         local candidate = cloneSnapshot(current)
+        local candidateHistory = candidate.outfitSaveRequestHistory[slot]
+        if priorRequestId ~= "" then
+            rememberOutfitRequest(
+                candidateHistory,
+                priorRequestId,
+                outfitFingerprint(current.outfits[slot])
+            )
+        end
         candidate.outfits[slot] = copyOutfit(outfit)
         candidate.outfitSaveRequestIds[slot] = requestId
+        rememberOutfitRequest(candidateHistory, requestId, requestFingerprint)
         candidate.revision = version + 1
 
         local saved, newVersion, saveError = self._adapter:compareAndSwap(
