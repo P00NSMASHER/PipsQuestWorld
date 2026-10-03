@@ -51,7 +51,8 @@
     "housingRegression": "PASS",
     "vehicleRegression": "PASS",
     "retiredRuntimeLeakage": "PASS_NONE",
-    "phase2Schoolwork": "DEFERRED_NO_CHANGE"
+    "phase2Schoolwork": "DEFERRED_NO_CHANGE",
+    "callbackPurchaserIsolation": "PASS_Marketplace_callback_binds_player.UserId_and_confirmation_state_is_keyed_by_playerId_assetId"
   },
   "exactHeadTestMarkers": [
     "HIGH_SCHOOL_SHOPPING_PURCHASE_AUTHORITY_PASS",
