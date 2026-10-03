@@ -3,6 +3,7 @@
 -- Layout/styling remain explicitly non-exact until verified reference geometry is available.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
 
 local function mount(player, UserInputService)
 local playerGui = player:WaitForChild("PlayerGui")
@@ -11,6 +12,7 @@ local outfitRoot = ReplicatedStorage:WaitForChild("SchoolFoundation")
     :WaitForChild("Outfits")
 local loadOutfit = outfitRoot:WaitForChild("LoadOutfit")
 local loadOutfitPage = outfitRoot:WaitForChild("LoadOutfitPage")
+local getFilteredNamesForOutfit = outfitRoot:WaitForChild("GetFilteredNamesForOutfit")
 local wearOutfit = outfitRoot:WaitForChild("WearOutfit")
 local saveOutfit = outfitRoot:WaitForChild("SaveOutfit")
 
@@ -165,6 +167,7 @@ baseSlot.Parent = panel
 
 local selectedSlot = 1
 local selectedOutfit = nil
+local pendingSaveRequestId = nil
 
 local function applyLoadedOutfit(slot, outfit)
     if type(outfit) ~= "table" then return end
@@ -199,7 +202,12 @@ for index = 1, 12 do
                 return loadOutfit:InvokeServer(index)
             end)
             if ok and type(response) == "table" and response.accepted == true then
-                applyLoadedOutfit(index, response.outfit)
+                if response.status ~= "noload" then
+                    applyLoadedOutfit(index, response.outfit)
+                else
+                    selectedSlot = index
+                    selectedOutfit = nil
+                end
             end
         end)
     end
@@ -215,8 +223,8 @@ actionControls.WearOutfitLabel.Activated:Connect(function()
 end)
 
 actionControls.SaveOutfitLabel.Activated:Connect(function()
-    local outfit = selectedOutfit or {
-        OutfitName = "",
+    local outfit = {
+        OutfitName = selectedOutfit and selectedOutfit.OutfitName or "",
         Hat1 = 0,
         Hat2 = 0,
         Hat3 = 0,
@@ -224,19 +232,42 @@ actionControls.SaveOutfitLabel.Activated:Connect(function()
         Pants = 0,
         Face = 0,
         Package = 0,
-        RPName = "",
-        RPDesc = "",
+        RPName = selectedOutfit and selectedOutfit.RPName or "",
+        RPDesc = selectedOutfit and selectedOutfit.RPDesc or "",
         RemoveShirt = false,
     }
     for fieldName, marker in pairs(fieldValues) do
         outfit[fieldName] = marker.Value
     end
-    local ok, response = pcall(function()
-        return saveOutfit:InvokeServer(selectedSlot, outfit)
+
+    local filterOk, filtered = pcall(function()
+        return getFilteredNamesForOutfit:InvokeServer(outfit)
     end)
-    if ok and type(response) == "table" and response.accepted == true then
-        applyLoadedOutfit(selectedSlot, response.outfit)
-        refreshPage(baseSlot.Value)
+    if not filterOk or type(filtered) ~= "table" or filtered.accepted ~= true then
+        if type(filtered) == "table" and filtered.code == "INVALID_NAME" then
+            pendingSaveRequestId = nil
+        end
+        return
+    end
+    outfit.OutfitName = filtered.OutfitName
+    outfit.RPName = filtered.RPName
+    outfit.RPDesc = filtered.RPDesc
+
+    if pendingSaveRequestId == nil then
+        pendingSaveRequestId = HttpService:GenerateGUID(false)
+    end
+    local requestId = pendingSaveRequestId
+    local ok, response = pcall(function()
+        return saveOutfit:InvokeServer(selectedSlot, outfit, requestId)
+    end)
+    if ok and type(response) == "table" then
+        if response.accepted == true then
+            pendingSaveRequestId = nil
+            applyLoadedOutfit(selectedSlot, response.outfit)
+            refreshPage(baseSlot.Value)
+        elseif response.retryable ~= true then
+            pendingSaveRequestId = nil
+        end
     end
 end)
 
