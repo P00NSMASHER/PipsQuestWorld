@@ -1,82 +1,60 @@
 {
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "lane": "Pip High QA & Architecture Contract",
-  "updatedAt": "2026-10-03T01:45:00Z",
-  "result": "PASS_EXACT_HEAD",
-  "canonicalBaseSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+  "updatedAt": "2026-10-03T01:58:00Z",
+  "result": "PASS_EXACT_HEAD_SUPPORT",
+  "canonicalBaseSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
   "candidate": {
-    "pr": 115,
-    "branch": "rebuild/high-school-housing-property-477fa61-v1",
-    "sha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
-    "milestone": "HOUSING_PROPERTY_V1"
+    "pr": 120,
+    "branch": "support/high-school-housing-editor-persistence-c236b74",
+    "sha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
+    "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37086431460,
-      "event": "push",
+      "runId": 37086941126,
       "conclusion": "success",
-      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
+      "headSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37086431454,
-      "event": "push",
+      "runId": 37086941139,
       "conclusion": "success",
-      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
+      "headSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37086431446,
-      "event": "push",
+      "runId": 37086941093,
       "conclusion": "success",
-      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-      "housingLifecycleStep": "success",
-      "housingUiRuntimeWiringStep": "success"
+      "headSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
+      "housingLayoutRepositoryStep": "success"
     }
   ],
   "validation": {
-    "canonicalRuntimeMapping": true,
-    "singleActiveCanonicalClient": true,
-    "houseButtonLowerLeft": true,
-    "permanentHousePrice50": true,
-    "teleportToHouseAction": true,
-    "editSaveHouseAction": true,
-    "houseColorControls": true,
-    "fiveHousingRemotesWired": true,
-    "centralEconomyRepositoryAuthority": true,
-    "durableHouseOwnership": true,
-    "uniqueActivePlotAuthority": true,
-    "plotReleaseOnLeave": true,
-    "durableOwnershipPreservedOnLeave": true,
-    "ownerOnlyEditGate": true,
-    "serverAuthoritativeTeleport": true,
-    "duplicateWorldAuthority": false,
-    "duplicateEconomyPersistenceAuthority": false,
-    "duplicateClassAuthority": false,
+    "mutableLayoutPersistenceOnly": true,
+    "cashMutationAuthorityAdded": false,
+    "gameplayRemoteAuthorityAdded": false,
+    "worldAuthorityAdded": false,
+    "classAuthorityAdded": false,
+    "versionedCompareAndSwap": true,
+    "idempotentOperationIds": true,
+    "operationIdConflictDetection": true,
+    "finiteTransformValidation": true,
+    "durableStyle": true,
+    "durableHideWalls": true,
+    "durablePlaceMovePaintRemove": true,
+    "reopenRestoreCoverage": true,
+    "projectMappingSingle": true,
     "retiredRuntimeCoupling": false,
     "phase2SchoolworkDrift": false,
-    "externalAssetIdsAdded": false,
     "testWeakening": false
-  },
-  "knownRemainingParity": {
-    "housingFurnitureEditor": "NOT_YET_IMPLEMENTED",
-    "durableHouseCustomizationBeyondOwnership": "NOT_YET_IMPLEMENTED",
-    "classification": "NEXT_HOUSING_PARITY_SLICE_NOT_A_V1_INTEGRATION_BLOCKER"
   },
   "integrationEligibility": "PASS",
   "blocker": null,
   "handoff": {
-    "owner": "Roblox High School Control Tower",
-    "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-    "nextParity": "HOUSING_EDITOR_V2"
-  },
-  "certifiedSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-  "exactIntegrationRebind": {
-    "candidateRootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
-    "canonicalRootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
-    "candidateSchoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
-    "canonicalSchoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
-    "conclusion": "PASS_IDENTICAL_CONTENT_TREE"
+    "owner": "Roblox High School Integration Director",
+    "exactSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
+    "pr": 120
   }
 }
