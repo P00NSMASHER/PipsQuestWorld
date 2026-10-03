@@ -58,4 +58,53 @@ lacks(client, 'CFrame.new(', "client must not own house teleport transforms")
 lacks(client, 'repository:record(', "client must not mutate economy")
 lacks(client, 'DataStoreService', "client must not access persistence")
 
+
+local editorReference = dofile("school/tests/fixtures/legacy_housing_editor_v2_reference.lua")
+
+local function equals(actual, expected, label)
+    if actual ~= expected then
+        error("invalid Housing Editor V2 reference: " .. label, 2)
+    end
+end
+
+equals(editorReference.visibleLabels.addFurniture, "Add Furni", "Add Furni label")
+equals(editorReference.visibleLabels.hideWalls, "Hide Walls", "Hide Walls label")
+equals(editorReference.furnitureCategories.complete, false, "category coverage must remain explicitly incomplete")
+
+local verifiedCategories = {}
+for _, label in ipairs(editorReference.furnitureCategories.verifiedExactLabels or {}) do
+    verifiedCategories[label] = true
+end
+equals(verifiedCategories.Utilities, true, "Utilities category")
+equals(verifiedCategories.Other, true, "Other category")
+
+local requiredEditorSemantics = {
+    "buyFurniture",
+    "placeFurniture",
+    "moveFurniture",
+    "rotateFurniture",
+    "removeFurniture",
+    "sellFurniture",
+    "paintHouseItem",
+    "saveHouse",
+    "reloadHouse",
+    "hideWalls",
+    "restrictVisitorsWhileEditing",
+}
+local editorSemantics = {}
+for _, actionName in ipairs(editorReference.interactionSemantics or {}) do
+    editorSemantics[actionName] = true
+end
+for _, actionName in ipairs(requiredEditorSemantics) do
+    equals(editorSemantics[actionName], true, "missing editor semantic " .. actionName)
+end
+
+equals(#(editorReference.assetProvenance.referencedAssetIds or {}), 0, "no unproven asset IDs")
+equals(editorReference.boundaries.runtimeAuthority, false, "Content QA must not own runtime")
+equals(editorReference.boundaries.economyAuthority, false, "Content QA must not own economy")
+equals(editorReference.boundaries.persistenceAuthority, false, "Content QA must not own persistence")
+equals(editorReference.boundaries.worldGeometryAuthority, false, "Content QA must not own world geometry")
+equals(editorReference.boundaries.customizationMechanicsAuthority, false, "Content QA must not own customization mechanics")
+equals(editorReference.boundaries.productCodeImportedFromLegacyRuntime, false, "no Legacy runtime product-code import")
+
 print("HIGH_SCHOOL_HOUSING_UI_CONTRACT_PASS")
