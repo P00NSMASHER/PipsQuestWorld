@@ -153,7 +153,7 @@ eq(lastPage[3].slot, 12, "outfit page 10 includes slot 12")
 
 local staleStudioStore = StudioStore.new(studioBacking)
 local _, staleVersion = staleStudioStore:read(101)
-eq(staleVersion, 1, "studio read revision")
+eq(staleVersion, 2, "studio read revision after outfit save")
 local staleSave, _, staleError = staleStudioStore:compareAndSwap(
     101,
     0,
