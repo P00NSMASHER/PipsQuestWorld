@@ -1233,6 +1233,8 @@ editorPanel.Size = UDim2.new(0, 330, 0, 346)
 editorPanel.BackgroundColor3 = LEGACY_PANEL
 editorPanel.BackgroundTransparency = 0.02
 editorPanel.Visible = false
+editorPanel:SetAttribute("ReferenceExactLayout", false)
+editorPanel:SetAttribute("ReferenceCoverage", "verified-labels-only")
 editorPanel.Parent = gui
 round(editorPanel, 2)
 outline(editorPanel, 2)
@@ -1273,7 +1275,8 @@ editorStatus.BackgroundTransparency = 1
 editorStatus.Position = UDim2.new(0, 10, 0, 144)
 editorStatus.Size = UDim2.new(1, -20, 0, 38)
 editorStatus.Font = Enum.Font.Arial
-editorStatus.Text = "Loading furniture inventory..."
+editorStatus.Text = ""
+editorStatus.Visible = false
 editorStatus.TextColor3 = LEGACY_BLUE_DARK
 editorStatus.TextSize = 12
 editorStatus.TextWrapped = true
@@ -1285,6 +1288,8 @@ local editorActions = Instance.new("Frame")
 editorActions.BackgroundTransparency = 1
 editorActions.Position = UDim2.new(0, 10, 0, 188)
 editorActions.Size = UDim2.new(1, -20, 0, 112)
+editorActions.Visible = false
+editorActions:SetAttribute("ReferenceExact", false)
 editorActions.Parent = editorPanel
 
 local editorGrid = Instance.new("UIGridLayout")
@@ -1306,13 +1311,13 @@ local function editorButton(name, label)
     return button
 end
 
-local buyFurni = editorButton("BuyFurniture", "BUY +1")
-local placeFurni = editorButton("PlaceFurniture", "PLACE")
-local moveFurni = editorButton("MoveFurniture", "MOVE")
-local rotateFurni = editorButton("RotateFurniture", "ROTATE")
-local removeFurni = editorButton("RemoveFurniture", "REMOVE")
-local sellFurni = editorButton("SellFurniture", "SELL")
-local paintFurni = editorButton("PaintFurniture", "PAINT")
+local buyFurni = editorButton("BuyFurniture", "")
+local placeFurni = editorButton("PlaceFurniture", "")
+local moveFurni = editorButton("MoveFurniture", "")
+local rotateFurni = editorButton("RotateFurniture", "")
+local removeFurni = editorButton("RemoveFurniture", "")
+local sellFurni = editorButton("SellFurniture", "")
+local paintFurni = editorButton("PaintFurniture", "")
 
 local hideWallsButton = Instance.new("TextButton")
 hideWallsButton.Name = "HideWalls"
@@ -1355,8 +1360,17 @@ end
 
 local function catalogById(state, itemId)
     for _, item in ipairs((state and state.catalog) or {}) do
-        if item.itemId == itemId then
+        if item.itemId == itemId and item.referenceExact == true then
             return item
+        end
+    end
+    return nil
+end
+
+local function firstExactCatalogItemId(state)
+    for _, item in ipairs((state and state.catalog) or {}) do
+        if item.referenceExact == true then
+            return item.itemId
         end
     end
     return nil
@@ -1386,7 +1400,7 @@ local function applyEditorState(state)
     latestEditorState = state
 
     if not catalogById(state, selectedFurnitureItemId) then
-        selectedFurnitureItemId = state.catalog and state.catalog[1] and state.catalog[1].itemId or nil
+        selectedFurnitureItemId = firstExactCatalogItemId(state)
     end
     if selectedPlacementId and not placementById(state, selectedPlacementId) then
         selectedPlacementId = nil
@@ -1397,6 +1411,7 @@ local function applyEditorState(state)
 
     clearEditorCatalogButtons()
     for _, item in ipairs(state.catalog or {}) do
+        if item.referenceExact == true then
         local button = Instance.new("TextButton")
         button.Name = "Catalog_" .. tostring(item.itemId)
         button.Size = UDim2.new(1, 0, 0, 36)
@@ -1421,6 +1436,7 @@ local function applyEditorState(state)
             selectedFurnitureItemId = item.itemId
             applyEditorState(latestEditorState)
         end)
+        end
     end
 
     local selected = catalogById(state, selectedFurnitureItemId)
@@ -1431,7 +1447,7 @@ local function applyEditorState(state)
         .. tostring(selected and inventoryQuantity(state, selected.itemId) or 0)
         .. placementText
 
-    hideWallsButton.Text = state.hideWalls == true and "SHOW WALLS" or "Hide Walls"
+    hideWallsButton.Text = "Hide Walls"
 end
 
 local function refreshHousingEditor()
