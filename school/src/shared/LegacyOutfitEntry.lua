@@ -2,8 +2,17 @@
 -- Verified Legacy names/labels come from Content-QA PR #150.
 -- Layout/styling remain explicitly non-exact until verified reference geometry is available.
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local function mount(player, UserInputService)
 local playerGui = player:WaitForChild("PlayerGui")
+local outfitRoot = ReplicatedStorage:WaitForChild("SchoolFoundation")
+    :WaitForChild("FreeRoam")
+    :WaitForChild("Outfits")
+local loadOutfit = outfitRoot:WaitForChild("LoadOutfit")
+local loadOutfitPage = outfitRoot:WaitForChild("LoadOutfitPage")
+local wearOutfit = outfitRoot:WaitForChild("WearOutfit")
+local saveOutfit = outfitRoot:WaitForChild("SaveOutfit")
 
 local function exactGuiName()
     if UserInputService.TouchEnabled then
@@ -108,8 +117,11 @@ local verifiedInputLabels = {
     { name = "OutfitNameLabel", text = "Outfit Name:" },
 }
 
+local actionControls = {}
+
 for index, definition in ipairs(verifiedInputLabels) do
-    local label = Instance.new("TextLabel")
+    local isAction = definition.name == "WearOutfitLabel" or definition.name == "SaveOutfitLabel"
+    local label = Instance.new(isAction and "TextButton" or "TextLabel")
     label.Name = definition.name
     label.Text = definition.text
     label.BackgroundTransparency = 1
@@ -118,18 +130,119 @@ for index, definition in ipairs(verifiedInputLabels) do
     label:SetAttribute("ReferenceExactLabel", true)
     label:SetAttribute("ReferenceExactLayout", false)
     label.Parent = panel
+    if isAction then actionControls[definition.name] = label end
 end
 
-for _, fieldName in ipairs({ "Hat1", "Hat2", "Hat3", "Shirt", "Pants", "Face", "RemoveShirt", "RPName", "RPDesc", "BaseSlot" }) do
+local fieldValues = {}
+for _, fieldName in ipairs({ "Hat1", "Hat2", "Hat3", "Shirt", "Pants", "Face", "Package" }) do
+    local marker = Instance.new("IntValue")
+    marker.Name = fieldName
+    marker.Value = 0
+    marker:SetAttribute("ReferenceExactHierarchy", true)
+    marker.Parent = panel
+    fieldValues[fieldName] = marker
+end
+for _, fieldName in ipairs({ "RPName", "RPDesc" }) do
     local marker = Instance.new("StringValue")
     marker.Name = fieldName
     marker.Value = ""
     marker:SetAttribute("ReferenceExactHierarchy", true)
     marker.Parent = panel
+    fieldValues[fieldName] = marker
 end
+local removeShirt = Instance.new("BoolValue")
+removeShirt.Name = "RemoveShirt"
+removeShirt.Value = false
+removeShirt:SetAttribute("ReferenceExactHierarchy", true)
+removeShirt.Parent = panel
+fieldValues.RemoveShirt = removeShirt
+
+local baseSlot = Instance.new("IntValue")
+baseSlot.Name = "BaseSlot"
+baseSlot.Value = 1
+baseSlot:SetAttribute("ReferenceExactHierarchy", true)
+baseSlot.Parent = panel
+
+local selectedSlot = 1
+local selectedOutfit = nil
+
+local function applyLoadedOutfit(slot, outfit)
+    if type(outfit) ~= "table" then return end
+    selectedSlot = slot
+    selectedOutfit = outfit
+    for fieldName, marker in pairs(fieldValues) do
+        local value = outfit[fieldName]
+        if value ~= nil then marker.Value = value end
+    end
+end
+
+local function refreshPage(startSlot)
+    local ok, response = pcall(function()
+        return loadOutfitPage:InvokeServer(startSlot)
+    end)
+    if not ok or type(response) ~= "table" or response.accepted ~= true then return end
+    baseSlot.Value = startSlot
+    for _, entryData in ipairs(response.outfits or {}) do
+        local slotButton = slots:FindFirstChild("Slot" .. tostring(entryData.slot))
+        local outfit = entryData.outfit
+        if slotButton and type(outfit) == "table" then
+            slotButton.Text = outfit.OutfitName ~= "" and outfit.OutfitName or "Empty"
+        end
+    end
+end
+
+for index = 1, 12 do
+    local slot = slots:FindFirstChild("Slot" .. tostring(index))
+    if slot and slot:IsA("TextButton") then
+        slot.Activated:Connect(function()
+            local ok, response = pcall(function()
+                return loadOutfit:InvokeServer(index)
+            end)
+            if ok and type(response) == "table" and response.accepted == true then
+                applyLoadedOutfit(index, response.outfit)
+            end
+        end)
+    end
+end
+
+actionControls.WearOutfitLabel.Activated:Connect(function()
+    local ok, response = pcall(function()
+        return wearOutfit:InvokeServer(selectedSlot)
+    end)
+    if ok and type(response) == "table" and response.accepted == true then
+        applyLoadedOutfit(selectedSlot, response.outfit)
+    end
+end)
+
+actionControls.SaveOutfitLabel.Activated:Connect(function()
+    local outfit = selectedOutfit or {
+        OutfitName = "",
+        Hat1 = 0,
+        Hat2 = 0,
+        Hat3 = 0,
+        Shirt = 0,
+        Pants = 0,
+        Face = 0,
+        Package = 0,
+        RPName = "",
+        RPDesc = "",
+        RemoveShirt = false,
+    }
+    for fieldName, marker in pairs(fieldValues) do
+        outfit[fieldName] = marker.Value
+    end
+    local ok, response = pcall(function()
+        return saveOutfit:InvokeServer(selectedSlot, outfit)
+    end)
+    if ok and type(response) == "table" and response.accepted == true then
+        applyLoadedOutfit(selectedSlot, response.outfit)
+        refreshPage(baseSlot.Value)
+    end
+end)
 
 entry.Activated:Connect(function()
     panel.Visible = not panel.Visible
+    if panel.Visible then refreshPage(baseSlot.Value) end
 end)
 
 
