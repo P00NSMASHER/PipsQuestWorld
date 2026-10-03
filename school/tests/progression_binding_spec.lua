@@ -80,4 +80,33 @@ eq(failedCommit.committed, false, "failed persistence reported committed")
 eq(failedCommit.returnToFreeRoam, false, "free roam released before durable progression")
 eq(failedCommit.code, "progression_commit_failed", "failed commit code")
 
+
+local function outfitState(name, hat1)
+    return {
+        OutfitName = name,
+        Hat1 = hat1,
+        Hat2 = 0,
+        Hat3 = 0,
+        Shirt = 0,
+        Pants = 0,
+        Face = 0,
+        Package = 0,
+        RPName = "",
+        RPDesc = "",
+        RemoveShirt = false,
+    }
+end
+
+local idStore = newStore()
+local idRepo = assert(Repository.open(idStore, 303))
+eq(idRepo:saveOutfit(3, outfitState("A", 111), "id-a").status, "applied", "first outfit request")
+eq(idRepo:saveOutfit(3, outfitState("B", 222), "id-b").status, "applied", "second outfit request")
+local oldRequest = idRepo:saveOutfit(3, outfitState("A", 111), "id-a")
+eq(oldRequest.status, "duplicate", "prior outfit request id")
+eq(oldRequest.outfit.OutfitName, "B", "prior request kept current outfit")
+eq(assert(idRepo:loadOutfit(3)).OutfitName, "B", "prior request changed durable outfit")
+local idRejoined = assert(Repository.open(idStore, 303))
+eq(idRejoined:saveOutfit(3, outfitState("A", 111), "id-a").status, "duplicate", "prior request survived reopen")
+eq(assert(idRejoined:loadOutfit(3)).OutfitName, "B", "reopen prior request changed outfit")
+
 print("HIGH_SCHOOL_PROGRESSION_BINDING_PASS")
