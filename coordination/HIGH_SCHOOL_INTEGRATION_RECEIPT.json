@@ -1,34 +1,31 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "lane": "Roblox High School Integration Director",
-  "result": "PASS_EXACT_HEAD_HANDOFF_SMOKE",
+  "result": "PASS_CONTENT_EQUIVALENT_HEAD_HANDOFF_SMOKE",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "integrationSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-  "parentIntegratedRuntimeSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-  "integratedPr": 128,
-  "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-  "milestone": "HOUSING_EDITOR_V2",
-  "eligibility": {
+  "canonicalSha": "639b1c6d7be7abe629576ebc38802f87a36fdbc9",
+  "productEquivalentSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "lastProductIntegration": {
+    "pr": 128,
+    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
+    "milestone": "HOUSING_EDITOR_V2",
     "qaResult": "PASS_EXACT_HEAD",
-    "qaEvidence": "PR#128 comment 5968415251",
-    "candidateBaseSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
-    "candidateHeadSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "candidateGuards": "PASS_ALL_THREE",
-    "staleWipReceiptRejected": true
+    "qaEvidence": "PR#128 comment 5968415251"
   },
-  "deltaFromParent": {
+  "nonProductCanonicalAdvance": {
+    "pr": 146,
+    "mergeSha": "639b1c6d7be7abe629576ebc38802f87a36fdbc9",
+    "baseSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "schoolRuntimeChanged": false,
     "changedFiles": [
-      "school/default.project.json",
-      "school/src/client/CanonicalSchoolClient.client.lua",
-      "school/src/server/HousingEditorController.lua",
-      "school/src/server/HousingService.server.lua",
-      "school/tests/fixtures/legacy_housing_editor_v2_reference.lua",
-      "school/tests/housing_editor_controller_spec.lua",
-      "school/tests/housing_ui_contract_spec.lua"
+      ".github/workflows/high-school-reference-extract.yml",
+      "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
+      "coordination/reference-extraction/request.json",
+      "scripts/extract-roblox-binary-reference.py"
     ],
-    "note": "Housing Editor V2 exact-parity remediation only on canonical school/**."
+    "note": "Compare 00df979...639b1c6 contains no school/** file changes; runtime/product semantics are byte-content equivalent to the previously integrated head."
   },
   "authorityChecks": {
     "singleSchoolClockPreserved": true,
@@ -39,22 +36,12 @@
     "retiredRuntimeConsumed": false,
     "phase2SchoolworkDeferred": true
   },
-  "deterministicIntegratedHeadEvidence": {
-    "foundationExactHeadCi": {
-      "runId": 37117473969,
-      "event": "push",
-      "conclusion": "success"
-    },
-    "classEducationExactHeadCi": {
-      "runId": 37117473982,
-      "event": "push",
-      "conclusion": "success"
-    },
-    "progressionExactHeadCi": {
-      "runId": 37117473978,
-      "event": "push",
-      "conclusion": "success"
-    }
+  "productEvidenceReusedFrom": {
+    "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "foundationRunId": 37117473969,
+    "classEducationRunId": 37117473982,
+    "progressionRunId": 37117473978,
+    "reuseReason": "No school/** changes between the exact heads."
   },
   "scope": {
     "runtimeTestRoot": "school/**",
@@ -64,6 +51,6 @@
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "instruction": "Smoke only canonical SHA 00df979add2b5d0e961205b62cf88340c56ee662. Preserve existing vehicle/HUD/House local-only runtime items and add Housing Editor V2 runtime acceptance to the exact-SHA smoke surface. Any newer canonical commit invalidates this handoff until re-certified."
+    "instruction": "Certify exact canonical SHA 639b1c6d7be7abe629576ebc38802f87a36fdbc9 as content-equivalent to product-integrated 00df979add2b5d0e961205b62cf88340c56ee662 after confirming the four PR #146 files remain outside school/**. Reuse unchanged product smoke evidence where valid and keep runtime-only vehicle/HUD/House/Housing-Editor checks explicit."
   }
 }
