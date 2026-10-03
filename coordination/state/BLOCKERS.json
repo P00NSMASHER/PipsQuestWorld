@@ -1,17 +1,17 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+  "canonicalSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "currentBlockers": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+      "exactSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "reason": "All cloud/deterministic checks pass on current canonical including Legacy House V1. Remaining runtime evidence is vehicle seat/touch plus HUD/House-menu coexistence on the authorized private target; laptop polling and Roblox publish are not authorized.",
-      "exitCriterion": "On exact c236b747b2d38b2ad7ff8493087a18fb19352e4c, validate vehicle spawn/drive/exit/re-enter/despawn, non-owner rejection, cleanup, Legacy HUD + House button/menu coexistence, and baseline school/class/cafe behavior."
+      "reason": "Cloud/deterministic guards pass on current canonical. Fresh runtime evidence is still required for vehicle seat/touch plus HUD/House-menu coexistence on the authorized private target; this local-only gate does not block cloud Housing Editor work.",
+      "exitCriterion": "On exact db0a700fd1a65b3648abc06353f8250adfab1bbb or its later integrated descendant, validate vehicle spawn/drive/exit/re-enter/despawn, non-owner rejection, cleanup, Legacy HUD + House button/menu coexistence, and baseline school/class/cafe behavior."
     }
   ],
   "gateStatus": "WAITING_LOCAL_ONLY_REQUIRED_WITH_CLOUD_PRODUCT_WORK",
