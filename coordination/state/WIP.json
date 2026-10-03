@@ -112,5 +112,17 @@
       "handoff": "Roblox High School Control Tower"
     }
   },
+  "connectorReliability": {
+    "policy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
+    "mandatoryForAllCanonicalWorkers": true,
+    "preflight": "READ_POLICY_AND_DISCOVER_DEDICATED_ACTION_BEFORE_FIRST_MUTATION",
+    "mutationDiscipline": "ONE_OBJECT_SPECIFIC_MUTATION_AT_A_TIME_WITH_EXACT_LIVE_HEAD_AND_BLOB_IDENTITY",
+    "payloadRule": "MINIMAL_PAYLOAD_NO_RAW_TOOL_DUMPS_LOGS_BINARY_BASE64_OR_UNRELATED_STATE",
+    "denialScope": "OBJECT_ACTION_PAYLOAD_SPECIFIC_NOT_GLOBAL_GITHUB_OUTAGE",
+    "staleDenialCarryForward": false,
+    "identicalDeniedPayloadRetries": 0,
+    "fallbackRule": "NO_BLOB_TREE_REF_BROWSER_OR_LAPTOP_REPLAY_AFTER_CANONICAL_DENIAL",
+    "continuationRule": "CONTINUE_INDEPENDENT_ASSIGNED_WORK_AFTER_OPTIONAL_BOOKKEEPING_OR_PAYLOAD_SPECIFIC_DENIAL"
+  },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING"
 }
