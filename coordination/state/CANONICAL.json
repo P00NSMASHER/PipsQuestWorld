@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
   "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_PUSH_GUARDS__HOUSING_EDITOR_V2_INTEGRATED",
+  "status": "PASS_EXACT_HEAD_SMOKE_CLOUD_SAFE_WITH_LOCAL_ONLY_REQUIRED",
   "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "repair": {
     "pr": 64,
@@ -48,9 +48,13 @@
     "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662"
   },
   "integrationSmoke": {
-    "result": "PENDING_EXACT_HEAD_SMOKE",
-    "pendingSha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "rule": "Smoke owns post-integration certification; runtime-only evidence must be explicit and nonblocking for cloud-safe checks."
+    "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
+    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+    "releasePackageEligible": true,
+    "localOnlyRequired": [
+      "CURRENT_RUNTIME_INTERACTION_SMOKE"
+    ]
   },
   "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
   "vehicleIntegration": {
@@ -103,5 +107,5 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "HOUSING_EDITOR_V2_INTEGRATED_AWAITING_SMOKE"
+  "currentMilestone": "HOUSING_EDITOR_V2_SMOKE_PASS_PACKAGE_NEXT"
 }
