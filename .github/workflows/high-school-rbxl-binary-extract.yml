@@ -1,0 +1,56 @@
+name: High School RBXL Binary Extract
+
+on:
+  push:
+    branches:
+      - devex/high-school-rbxl-binary-extract-v1
+    paths:
+      - coordination/tools/extract_rbxl_binary.py
+      - .github/workflows/high-school-rbxl-binary-extract.yml
+
+permissions:
+  contents: write
+
+jobs:
+  extract-licensed-baseline:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - name: Checkout extractor branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install LZ4 parser dependency
+        run: python -m pip install --disable-pip-version-check lz4==4.4.4
+
+      - name: Download exact licensed baseline
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rbxl
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/MisoNotSoupx/Old-Roblox-Place-Archive/b817aef0eaf77d3382acacdc8f22537e54c76822/Created%20by%20Users/Cindering/ROBLOX%20High%20School.rbxl' \
+            --output /tmp/rbxl/ROBLOX_High_School.rbxl
+
+      - name: Verify and extract binary RBXL
+        run: |
+          set -euo pipefail
+          rm -rf coordination/evidence/rbxl/legacy-high-school
+          python coordination/tools/extract_rbxl_binary.py \
+            /tmp/rbxl/ROBLOX_High_School.rbxl \
+            --expected-blob-sha 95ee3d762f419bb3572e18db57c03682651dc8c4 \
+            --expected-sha256 d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360 \
+            --out-dir coordination/evidence/rbxl/legacy-high-school
+
+      - name: Commit deterministic extraction evidence
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add coordination/evidence/rbxl/legacy-high-school
+          if git diff --cached --quiet; then
+            echo 'Extraction evidence unchanged.'
+            exit 0
+          fi
+          git commit -m 'evidence: extract licensed High School RBXL binary [skip ci]'
+          git push origin HEAD:devex/high-school-rbxl-binary-extract-v1
