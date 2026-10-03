@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "baseline": "ROBLOX High School [Legacy]",
+  "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+  "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+  "purpose": "bootstrap canonical binary reference extraction",
+  "requestedDomains": [
+    "housing",
+    "vehicles",
+    "avatar-customization",
+    "shopping",
+    "jobs",
+    "social-free-roam",
+    "animations-presentation",
+    "mobile-polish"
+  ],
+  "rule": "Extractor must verify both pinned hashes before emitting evidence; binary connector UTF-8 decode failure is not a blocker."
+}
