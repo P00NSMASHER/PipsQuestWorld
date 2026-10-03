@@ -122,9 +122,121 @@ local studioReopened = assert(Repository.open(StudioStore.new(studioBacking), 10
 eq(studioReopened:getState().completionCount, 1, "studio reopen completion count")
 eq(studioReopened:getState().totalPoints, 25, "studio reopen points")
 
+local outfit = {
+    OutfitName = "Filtered Hero",
+    Hat1 = 101,
+    Hat2 = 202,
+    Hat3 = 303,
+    Shirt = 404,
+    Pants = 505,
+    Face = 606,
+    Package = 707,
+    RPName = "Filtered RP",
+    RPDesc = "Filtered Description",
+    RemoveShirt = false,
+}
+local outfitSaved = studioReopened:saveOutfit(12, outfit, "studio-outfit-12")
+eq(outfitSaved.status, "applied", "outfit save status")
+eq(outfitSaved.durable, true, "outfit save durable")
+eq(outfitSaved.outfit.Hat3, 303, "outfit third hat persisted")
+
+local outfitReopened = assert(Repository.open(StudioStore.new(studioBacking), 101))
+local loadedOutfit = assert(outfitReopened:loadOutfit(12))
+eq(loadedOutfit.OutfitName, "Filtered Hero", "outfit name survives reopen")
+eq(loadedOutfit.Hat1, 101, "outfit Hat1 survives reopen")
+eq(loadedOutfit.Hat2, 202, "outfit Hat2 survives reopen")
+eq(loadedOutfit.Hat3, 303, "outfit Hat3 survives reopen")
+eq(loadedOutfit.RemoveShirt, false, "outfit boolean survives reopen")
+local lastPage = assert(outfitReopened:loadOutfitPage(10))
+eq(#lastPage, 3, "outfit page 10 size")
+eq(lastPage[3].slot, 12, "outfit page 10 includes slot 12")
+
+
+local function defaultOutfit()
+    return {
+        OutfitName = "",
+        Hat1 = 0,
+        Hat2 = 0,
+        Hat3 = 0,
+        Shirt = 0,
+        Pants = 0,
+        Face = 0,
+        Package = 0,
+        RPName = "",
+        RPDesc = "",
+        RemoveShirt = false,
+    }
+end
+
+local legacyOutfits = {}
+for slot = 1, 12 do
+    legacyOutfits[slot] = defaultOutfit()
+end
+legacyOutfits[12].OutfitName = "Legacy Slot Twelve"
+legacyOutfits[12].Hat1 = 1200
+
+local migrationStore = newStore({
+    schemaVersion = 2,
+    revision = 7,
+    completions = {},
+    outfits = legacyOutfits,
+})
+local migrated = assert(Repository.open(migrationStore, 101))
+eq(migrated:getState().outfitStorageSlotCount, 24, "migrated storage slot count")
+eq(migrated:getState().outfitLegacyPresentedSlotCount, 12, "legacy presented slot count")
+local migratedLegacy = assert(migrated:loadOutfit(12))
+eq(migratedLegacy.OutfitName, "Legacy Slot Twelve", "legacy slot 12 migrated")
+local migratedHidden = assert(migrated:loadOutfit(24))
+eq(migratedHidden.OutfitName, "", "new storage slot 24 default name")
+eq(migratedHidden.Hat1, 0, "new storage slot 24 default hat")
+
+local hiddenOutfit = defaultOutfit()
+hiddenOutfit.OutfitName = "Storage Twenty Four"
+hiddenOutfit.Hat3 = 2400
+local hiddenSave = migrated:saveOutfit(24, hiddenOutfit, "hidden-24")
+eq(hiddenSave.status, "applied", "hidden slot save status")
+eq(hiddenSave.durable, true, "hidden slot save durable")
+eq(hiddenSave.revision, 8, "hidden slot save revision")
+
+local migratedReopened = assert(Repository.open(migrationStore, 101))
+local hiddenReload = assert(migratedReopened:loadOutfit(24))
+eq(hiddenReload.OutfitName, "Storage Twenty Four", "hidden slot survives reopen")
+eq(hiddenReload.Hat3, 2400, "hidden slot hat survives reopen")
+
+local savesBeforeRetry = migrationStore.saves
+local duplicateHidden = migratedReopened:saveOutfit(24, hiddenOutfit, "hidden-24")
+eq(duplicateHidden.status, "duplicate", "same request retry status")
+eq(duplicateHidden.durable, true, "same request retry durable")
+eq(migrationStore.saves, savesBeforeRetry, "same request retry wrote again")
+
+local changedHidden = clone(hiddenOutfit)
+changedHidden.Hat3 = 2401
+local requestConflict = migratedReopened:saveOutfit(24, changedHidden, "hidden-24")
+eq(requestConflict.status, "conflict", "request-id payload conflict status")
+eq(requestConflict.error, "OUTFIT_REQUEST_ID_CONFLICT", "request-id payload conflict code")
+eq(migrationStore.saves, savesBeforeRetry, "request conflict wrote")
+
+migrationStore.injectConflict = function(storeWithRace)
+    local racedSnapshot = clone(storeWithRace.snapshot)
+    racedSnapshot.revision = storeWithRace.version + 1
+    racedSnapshot.outfits[1].OutfitName = "Concurrent Outfit"
+    storeWithRace.snapshot = racedSnapshot
+    storeWithRace.version = racedSnapshot.revision
+end
+
+local staleRetryOutfit = defaultOutfit()
+staleRetryOutfit.OutfitName = "After Retry"
+local staleRetry = migratedReopened:saveOutfit(2, staleRetryOutfit, "stale-retry-2")
+eq(staleRetry.status, "applied", "stale outfit retry status")
+eq(staleRetry.durable, true, "stale outfit retry durable")
+eq(staleRetry.revision, 10, "stale outfit retry revision")
+local afterStaleRetry = assert(Repository.open(migrationStore, 101))
+eq(assert(afterStaleRetry:loadOutfit(1)).OutfitName, "Concurrent Outfit", "stale retry preserved concurrent write")
+eq(assert(afterStaleRetry:loadOutfit(2)).OutfitName, "After Retry", "stale retry persisted requested outfit")
+
 local staleStudioStore = StudioStore.new(studioBacking)
 local _, staleVersion = staleStudioStore:read(101)
-eq(staleVersion, 1, "studio read revision")
+eq(staleVersion, 2, "studio read revision after outfit save")
 local staleSave, _, staleError = staleStudioStore:compareAndSwap(
     101,
     0,
