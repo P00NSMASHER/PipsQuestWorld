@@ -36,6 +36,9 @@
         "$className": "Folder",
         "SchoolConfig": {
           "$path": "src/shared/SchoolConfig.lua"
+        },
+        "LegacyOutfitEntry": {
+          "$path": "src/shared/LegacyOutfitEntry.lua"
         }
       }
     },
@@ -113,10 +116,7 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
-          "$path": "src/client/CanonicalSchoolClient.client.lua",
-          "AvatarCustomization": {
-            "$path": "src/client/AvatarCustomization.client.lua"
-          }
+          "$path": "src/client/CanonicalSchoolClient.client.lua"
         }
       }
     }
