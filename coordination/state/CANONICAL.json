@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 11,
+  "schemaVersion": 12,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
+  "sha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
   "sourceRoot": "school/**",
-  "status": "PASS_EXACT_HEAD_CI_WITH_LOCAL_RUNTIME_GATE",
-  "parentCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
+  "status": "PASS_EXACT_HEAD_PUSH_GUARDS__LIVE_BRANCH_HEAD_GOVERNS",
+  "parentCertifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
   "repair": {
     "pr": 64,
     "branch": "fix/economy-operation-order-rejoin-2ab1584",
@@ -16,46 +16,42 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37087083253,
+      "runId": 37087510133,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13"
+      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37087083263,
+      "runId": 37087510242,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13"
+      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37087083313,
+      "runId": 37087510189,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-      "housingLayoutRepositoryStep": "success"
+      "headSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb"
     }
   ],
   "qaContract": {
-    "result": "PASS_EXACT_HEAD",
+    "result": "PRIOR_RECEIPT_STALE_FOR_LIVE_HEAD",
     "certifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
+    "rule": "Active Housing Editor QA occurs on the live PR candidate; stale prior canonical receipts do not gate current WIP."
   },
   "integration": {
-    "result": "PASS_EXACT_HEAD",
-    "mergedPr": 120,
-    "candidateSha": "9620e8e907cb1399fb0aec6ff8711721e32dc01f",
-    "certifiedSha": "6a48e36f2e5fa6508476dab54f897389726b2a13",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
+    "result": "LIVE_BASE_READY_FOR_CURRENT_PIPELINE",
+    "certifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+    "rule": "Integration waits on QA PASS of the active candidate."
   },
   "integrationSmoke": {
-    "result": "WAITING_LOCAL_ONLY_REQUIRED",
+    "result": "DEFERRED_RUNTIME_EVIDENCE_TRACKED_SEPARATELY",
     "pendingSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
-    "requiredCheck": "Roblox runtime: vehicle drive/touch/HUD/House-menu coexistence plus baseline school/class/cafe behavior on the same private target.",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
+    "rule": "Older-sha LOCAL_ONLY_REQUIRED runtime evidence is non-blocking for cloud-safe work."
   },
-  "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale.",
+  "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head CI are authoritative; SHA-mismatched state/receipts are stale.",
   "vehicleIntegration": {
     "producerPr": 85,
     "groundingRepairPr": 92,
@@ -105,5 +101,6 @@
     "rootTree": "727d1e6dd6acf663101517fba1492a098b724996",
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
-  }
+  },
+  "currentMilestone": "HOUSING_EDITOR_V2"
 }
