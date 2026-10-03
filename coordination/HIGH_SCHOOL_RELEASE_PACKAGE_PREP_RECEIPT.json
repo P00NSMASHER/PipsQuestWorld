@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "observedAt": "2026-10-03T18:55:29Z",
+  "result": "RELEASE_PREP_READY_AWAITING_QA_INTEGRATION_SMOKE",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "packageArtifact": "pip-high-school-23cc398-source-tree-284f86df",
+    "schoolTreeSha": "284f86df558f0033aeca463f5a34129a3b2beaac",
+    "rootTreeSha": "2b5a7537f2b41d0332d517a4da65a6982cc6d7b2",
+    "recursiveEntryCount": 61
+  },
+  "candidate": {
+    "pr": 165,
+    "branch": "rebuild/high-school-avatar-shopping-authority-23cc398-v1",
+    "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+    "mergeBaseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "aheadBy": 10,
+    "behindBy": 0,
+    "rootTreeSha": "d8df1f2e796a5b7cf73f703b21b401905a2ec5f8",
+    "schoolTreeSha": "39bff846e8cece6f4c59ca21d084ce7b538c8e7c",
+    "recursiveEntryCount": 66,
+    "recursiveTreeTruncated": false
+  },
+  "sourceTreeContinuity": {
+    "baselineBlobCount": 55,
+    "candidateBlobCount": 60,
+    "unchangedBaselineBlobs": 52,
+    "modifiedBaselineBlobs": 3,
+    "addedBlobs": 5,
+    "removedBlobs": 0,
+    "modified": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/tests/legacy_hud_contract_spec.lua"
+    ],
+    "added": [
+      "school/src/server/ShoppingPurchase.server.lua",
+      "school/src/server/ShoppingPurchaseController.lua",
+      "school/src/shared/LegacyShoppingBoundary.lua",
+      "school/tests/shopping_purchase_authority_spec.lua",
+      "school/tests/shopping_runtime_authority_spec.lua"
+    ],
+    "outsideSchoolChanges": 0
+  },
+  "inclusionVerification": {
+    "projectMappingBlob": "ba5e85e82652f137cb17e76016f062731c033761",
+    "canonicalClientBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+    "shoppingServiceBlob": "405f02ba2408cc1ab59fefb5208607cf2b570f0e",
+    "shoppingControllerBlob": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
+    "clientBoundaryBlob": "535e63d6ac16cf123a38a7a0989e5590b51e041f",
+    "authorityTestBlob": "a22bd692b46811c52135570f9fa102074d645174",
+    "runtimeAuthorityTestBlob": "851f601f77fea0477810b028ef623c8a83f48682",
+    "legacyHudTestAggregatorBlob": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544",
+    "status": "PASS_ALL_NEW_RUNTIME_AND_TEST_INPUTS_INCLUDED_IN_CANDIDATE_SCHOOL_TREE"
+  },
+  "candidateExactHeadCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37141490985,
+      "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+      "conclusion": "success"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37141490978,
+      "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+      "conclusion": "success"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37141491082,
+      "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+      "conclusion": "success"
+    }
+  ],
+  "binaryReference": {
+    "policy": "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "verifiedRun": 37117831711,
+    "extractorSha": "8a7363c785b15fd5ff3110a22abf5e22b14f152e",
+    "artifactId": 11271783526,
+    "status": "PINNED_REFERENCE_REUSED_NO_BINARY_TRANSPORT_BLOCKER"
+  },
+  "gateReadiness": {
+    "qaExactHead": "PENDING_NO_QA_PASS_COMMENT_ON_PR_165",
+    "integration": "PENDING_PR_165_OPEN",
+    "smokeExactCanonical": "PENDING_NOT_INTEGRATED",
+    "newPackageEmitted": false,
+    "packageRule": "Only package after PR 165 or its exact successor is integrated, live canonical changes, exact-head push CI passes, and Integration Smoke PASS binds to that exact canonical SHA."
+  },
+  "postIntegrationReproducibilityGate": {
+    "requiredSchoolTreeSha": "39bff846e8cece6f4c59ca21d084ce7b538c8e7c",
+    "requiredRecursiveEntryCount": 66,
+    "requiredTreeTruncated": false,
+    "artifactNameTemplate": "pip-high-school-<canonical7>-source-tree-39bff846",
+    "rule": "If integrated canonical school/** tree differs, recompute and revalidate before packaging."
+  },
+  "localOnlyRequired": [
+    {
+      "id": "SHOPPING_RENDERED_DEVICE_MARKETPLACE_SMOKE",
+      "exactCandidateSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+      "universeId": "10768955678",
+      "placeId": "87245440673982",
+      "status": "DEFERRED_NONBLOCKING_NOT_CURRENTLY_EXECUTABLE",
+      "reason": "Authorized product catalog is empty and candidate contains no automatic purchase prompt; rendered/device/Marketplace behavior remains local-only if a later verified concrete-asset/prompt surface requires it."
+    }
+  ],
+  "stateReconciliation": {
+    "liveEvidenceAuthoritative": true,
+    "wip": "PARTIALLY_STALE_PRODUCER_HEAD_BUT_CURRENT_CANONICAL_AND_OBJECTIVE_MATCH",
+    "canonicalShard": "STALE_AT_00df979",
+    "blockersShard": "STALE_AT_00df979_WITH_EMPTY_CURRENT_BLOCKERS",
+    "playableShard": "STALE_AT_00df979",
+    "currentReleaseReceipt": "VALID_FOR_LIVE_CANONICAL_23cc398"
+  },
+  "published": false,
+  "moneySpent": false,
+  "productSourceEdited": false,
+  "taskStateChanged": false
+}
