@@ -14,6 +14,8 @@ local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChi
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local EconomyRepository = require(schoolFoundation:WaitForChild("EconomyRepository"))
 local HousingLifecycle = require(schoolFoundation:WaitForChild("HousingLifecycle"))
+local HousingLayoutRepository = require(schoolFoundation:WaitForChild("HousingLayoutRepository"))
+local HousingEditorController = require(schoolFoundation:WaitForChild("HousingEditorController"))
 local VersionedDataStore = require(schoolFoundation:WaitForChild("ProgressionDataStore"))
 
 local HOUSE_PRICE = 50
@@ -38,8 +40,23 @@ local function createEconomyStore()
     )
 end
 
+local function createHousingLayoutStore()
+    if RunService:IsStudio() and game.GameId == 0 then
+        local StudioStore = require(schoolFoundation:WaitForChild("ProgressionStudioStore"))
+        Workspace:SetAttribute("HousingLayoutPersistenceMode", "StudioMemoryUnpublished")
+        return StudioStore.new()
+    end
+
+    Workspace:SetAttribute("HousingLayoutPersistenceMode", "DataStore")
+    return VersionedDataStore.new(
+        DataStoreService:GetDataStore("PipHighHousingLayoutV1")
+    )
+end
+
 local economyStore = createEconomyStore()
+local housingLayoutStore = createHousingLayoutStore()
 local repositoryByPlayerId = {}
+local layoutRepositoryByPlayerId = {}
 
 local plotIds = {}
 local plotConfigById = {}
@@ -84,6 +101,15 @@ local buyHouseRemote = getOrCreateRemoteFunction(housingRoot, "BuyHouse")
 local teleportRemote = getOrCreateRemoteFunction(housingRoot, "TeleportToHouse")
 local editModeRemote = getOrCreateRemoteFunction(housingRoot, "SetEditMode")
 local styleRemote = getOrCreateRemoteFunction(housingRoot, "SetStyle")
+local getEditorStateRemote = getOrCreateRemoteFunction(housingRoot, "GetEditorState")
+local purchaseFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "PurchaseFurniture")
+local placeFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "PlaceFurniture")
+local moveFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "MoveFurniture")
+local rotateFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "RotateFurniture")
+local removeFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "RemoveFurniture")
+local sellFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "SellFurniture")
+local paintFurnitureRemote = getOrCreateRemoteFunction(housingRoot, "PaintFurniture")
+local hideWallsRemote = getOrCreateRemoteFunction(housingRoot, "SetHideWalls")
 
 local function playerKey(player)
     return tostring(player.UserId)
@@ -102,6 +128,24 @@ local function openRepository(playerId, reload)
         local ok, reloadError = repository:reload()
         if not ok then
             return nil, tostring(reloadError or "repository_reload_failed")
+        end
+    end
+    return repository, nil
+end
+
+local function openLayoutRepository(playerId, reload)
+    local repository = layoutRepositoryByPlayerId[playerId]
+    if repository == nil then
+        local opened, openError = HousingLayoutRepository.open(housingLayoutStore, playerId)
+        if opened == nil then
+            return nil, tostring(openError or "layout_repository_unavailable")
+        end
+        repository = opened
+        layoutRepositoryByPlayerId[playerId] = repository
+    elseif reload == true then
+        local ok, reloadError = repository:reload()
+        if not ok then
+            return nil, tostring(reloadError or "layout_repository_reload_failed")
         end
     end
     return repository, nil
@@ -152,6 +196,94 @@ for _, plot in ipairs(SchoolConfig.HousingPlots) do
     setHouseVisual(plot.id, false, "classic-blue", 0)
 end
 
+local PAINT_COLORS = {
+    ["default"] = Color3.fromRGB(151, 116, 84),
+    ["legacy-blue"] = Color3.fromRGB(92, 132, 204),
+    ["legacy-red"] = Color3.fromRGB(183, 127, 119),
+    ["legacy-green"] = Color3.fromRGB(145, 171, 132),
+    ["legacy-tan"] = Color3.fromRGB(191, 177, 155),
+}
+
+local function getFurnitureFolder(plotId)
+    local plotFolder = housingPlotsFolder:FindFirstChild(plotId)
+    if not plotFolder then return nil end
+    local existing = plotFolder:FindFirstChild("EditorFurniture")
+    if existing then return existing end
+    local folder = Instance.new("Folder")
+    folder.Name = "EditorFurniture"
+    folder.Parent = plotFolder
+    return folder
+end
+
+local function setEditorWalls(plotId, hidden)
+    local folder = housingPlotsFolder:FindFirstChild(plotId)
+    if not folder then return end
+    folder:SetAttribute("HideWalls", hidden == true)
+    for _, child in ipairs(folder:GetChildren()) do
+        if child:IsA("BasePart") then
+            if child.Name == "HouseBody" then
+                child.Transparency = hidden and 1 or 0
+            elseif child.Name == "HouseRoof" then
+                child.Transparency = hidden and 0.82 or 0
+            end
+        end
+    end
+end
+
+local function catalogEntry(catalog, itemId)
+    for _, entry in ipairs(catalog or {}) do
+        if entry.itemId == itemId then return entry end
+    end
+    return nil
+end
+
+local function syncEditorVisuals(player, editorState)
+    if type(editorState) ~= "table"
+        or editorState.accepted ~= true
+        or not editorState.plotId then
+        return
+    end
+
+    local plot = plotConfigById[editorState.plotId]
+    local folder = getFurnitureFolder(editorState.plotId)
+    if not plot or not folder then return end
+
+    folder:ClearAllChildren()
+    for _, placement in ipairs(editorState.placements or {}) do
+        local entry = catalogEntry(editorState.catalog, placement.itemId)
+        if entry then
+            local part = Instance.new("Part")
+            part.Name = "Furniture_" .. tostring(placement.placementId)
+            part.Anchored = true
+            part.TopSurface = Enum.SurfaceType.Smooth
+            part.BottomSurface = Enum.SurfaceType.Smooth
+            part.Material = Enum.Material.Wood
+            if entry.geometry == "lamp" then
+                part.Size = Vector3.new(2, 5, 2)
+            else
+                part.Size = Vector3.new(4, 3, 4)
+            end
+            local localY = placement.y + (part.Size.Y / 2)
+            part.CFrame = CFrame.new(
+                plot.houseOrigin.X + placement.x,
+                plot.houseOrigin.Y + localY,
+                plot.houseOrigin.Z + placement.z
+            ) * CFrame.Angles(0, math.rad(placement.rotation), 0)
+            part.Color = PAINT_COLORS[placement.paintId] or PAINT_COLORS.default
+            part:SetAttribute("PlacementId", placement.placementId)
+            part:SetAttribute("ItemId", placement.itemId)
+            part:SetAttribute("OwnerUserId", player.UserId)
+            part.Parent = folder
+        end
+    end
+
+    local hideWalls = editorState.editing == true and editorState.hideWalls == true
+    setEditorWalls(editorState.plotId, hideWalls)
+    folder:SetAttribute("Editing", editorState.editing == true)
+    folder:SetAttribute("OwnerUserId", player.UserId)
+end
+
+
 local function ensureClaim(player, ownsHouse)
     local current = lifecycle:get(playerKey(player))
     if ownsHouse ~= true then
@@ -170,6 +302,32 @@ local function ensureClaim(player, ownsHouse)
     return nil
 end
 
+local function editorAuthorization(playerId)
+    local player = Players:GetPlayerByUserId(playerId)
+    if not player then return { owned = false, editing = false } end
+
+    local repository = openRepository(playerId, true)
+    if repository == nil then return { owned = false, editing = false } end
+
+    local owned = hasHouse(repository:getState())
+    local state = ensureClaim(player, owned)
+    return {
+        owned = owned,
+        editing = state and state.editing == true or false,
+        plotId = state and state.plotId or nil,
+    }
+end
+
+local editorController = HousingEditorController.new({
+    layoutRepositoryFactory = function(playerId)
+        return openLayoutRepository(playerId, true)
+    end,
+    economyRepositoryFactory = function(playerId)
+        return openRepository(playerId, true)
+    end,
+    authorize = editorAuthorization,
+})
+
 local function discovery(player, reload)
     local repository, repositoryError = openRepository(player.UserId, reload)
     if repository == nil then
@@ -184,17 +342,43 @@ local function discovery(player, reload)
     local economyState = repository:getState()
     local owned = hasHouse(economyState)
     local houseState = ensureClaim(player, owned)
-    return {
+    local layoutState = nil
+    if owned then
+        local layout = openLayoutRepository(player.UserId, reload)
+        if layout then
+            layoutState = layout:getState()
+            if houseState then
+                setHouseVisual(
+                    houseState.plotId,
+                    true,
+                    layoutState.houseStyleId or "classic-blue",
+                    player.UserId
+                )
+            end
+        end
+    end
+
+    local response = {
         available = true,
         owned = owned,
         price = HOUSE_PRICE,
         balance = economyState.balance,
         plotId = houseState and houseState.plotId or nil,
         editing = houseState and houseState.editing == true or false,
-        styleId = houseState and houseState.styleId or "classic-blue",
+        styleId = layoutState and layoutState.houseStyleId or "classic-blue",
+        hideWalls = layoutState and layoutState.hideWalls == true or false,
+        inventory = layoutState and layoutState.inventory or {},
+        placements = layoutState and layoutState.placements or {},
         plotAvailable = owned == false or houseState ~= nil,
-        customizationPersistence = "session_v1",
+        customizationPersistence = "durable_v2",
     }
+    if owned and houseState and layoutState then
+        response.accepted = true
+        response.catalog = editorController:getCatalog()
+        syncEditorVisuals(player, response)
+        response.accepted = nil
+    end
+    return response
 end
 
 getStateRemote.OnServerInvoke = function(player)
@@ -295,29 +479,71 @@ editModeRemote.OnServerInvoke = function(player, enabled)
     local updated = discovery(player, false)
     updated.accepted = true
     updated.code = result.code
+    local editorState = editorController:getState(player.UserId)
+    if editorState.accepted then syncEditorVisuals(player, editorState) end
     return updated
 end
 
-styleRemote.OnServerInvoke = function(player, styleId)
+styleRemote.OnServerInvoke = function(player, styleId, requestId)
     if STYLE_COLORS[styleId] == nil then
         return { accepted = false, code = "invalid_style" }
     end
-
-    local state = discovery(player, true)
-    if state.owned ~= true or not state.plotId then
-        return { accepted = false, code = "house_not_owned" }
+    if type(requestId) ~= "string" or requestId == "" then
+        return { accepted = false, code = "invalid_request_id" }
     end
 
-    local result = lifecycle:setStyle(playerKey(player), styleId)
-    if not result.accepted then
-        return result
-    end
+    local result = editorController:setHouseStyle(player.UserId, styleId, requestId)
+    if result.accepted ~= true then return result end
+    setHouseVisual(result.plotId, true, result.houseStyleId, player.UserId)
+    syncEditorVisuals(player, result)
+    return result
+end
 
-    setHouseVisual(result.state.plotId, true, result.state.styleId, player.UserId)
-    local updated = discovery(player, false)
-    updated.accepted = true
-    updated.code = "style_changed"
-    return updated
+local function editorResponse(player, response)
+    if type(response) == "table" and response.accepted == true then
+        syncEditorVisuals(player, response)
+        local economy = openRepository(player.UserId, false)
+        if economy then
+            response.balance = economy:getState().balance
+        end
+    end
+    return response
+end
+
+getEditorStateRemote.OnServerInvoke = function(player)
+    return editorResponse(player, editorController:getState(player.UserId))
+end
+
+purchaseFurnitureRemote.OnServerInvoke = function(player, itemId, requestId)
+    return editorResponse(player, editorController:purchase(player.UserId, itemId, requestId))
+end
+
+placeFurnitureRemote.OnServerInvoke = function(player, itemId, transform, requestId)
+    return editorResponse(player, editorController:place(player.UserId, itemId, transform, requestId))
+end
+
+moveFurnitureRemote.OnServerInvoke = function(player, placementId, transform, requestId)
+    return editorResponse(player, editorController:move(player.UserId, placementId, transform, requestId))
+end
+
+rotateFurnitureRemote.OnServerInvoke = function(player, placementId, deltaDegrees, requestId)
+    return editorResponse(player, editorController:rotate(player.UserId, placementId, deltaDegrees, requestId))
+end
+
+removeFurnitureRemote.OnServerInvoke = function(player, placementId, itemId, requestId)
+    return editorResponse(player, editorController:remove(player.UserId, placementId, itemId, requestId))
+end
+
+sellFurnitureRemote.OnServerInvoke = function(player, itemId, requestId)
+    return editorResponse(player, editorController:sellInventory(player.UserId, itemId, requestId))
+end
+
+paintFurnitureRemote.OnServerInvoke = function(player, placementId, paintId, requestId)
+    return editorResponse(player, editorController:paint(player.UserId, placementId, paintId, requestId))
+end
+
+hideWallsRemote.OnServerInvoke = function(player, enabled, requestId)
+    return editorResponse(player, editorController:setHideWalls(player.UserId, enabled, requestId))
 end
 
 local function restoreOwnedHouse(player)
@@ -343,4 +569,5 @@ Players.PlayerRemoving:Connect(function(player)
     end
     lifecycle:release(playerKey(player))
     repositoryByPlayerId[player.UserId] = nil
+    layoutRepositoryByPlayerId[player.UserId] = nil
 end)
