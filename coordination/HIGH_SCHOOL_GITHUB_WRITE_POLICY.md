@@ -31,7 +31,7 @@ A real GitHub error must retain its real class (for example permission denied/40
 ## Mandatory read-after-write reconciliation
 A connector response is not authoritative evidence that a GitHub mutation did or did not commit. Before retrying or classifying any reported safety denial, transport error, or ambiguous mutation response, perform exactly one read-only postcondition check through the supported object-specific read path.
 
-- **Create PR:** search PRs for the exact head branch in the same repository, then verify the returned PR has the intended head and base. If it exists, reuse it; do not create a duplicate.
+- **Create PR:** if the mutation response exposed a PR number, fetch that PR directly and verify its head/base. If no PR number was returned, use a direct pull-request collection read filtered by the exact head/base; do not rely on search-index freshness. If the PR exists, reuse it; do not create a duplicate.
 - **Create branch:** search for the exact branch and verify it resolves.
 - **Create/update file:** fetch the exact path on the intended branch and verify the expected content/blob state.
 - **PR/issue comment or review:** read the target conversation/reviews and verify the intended entry exists before retrying.
