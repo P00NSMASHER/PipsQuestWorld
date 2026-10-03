@@ -249,10 +249,9 @@ actionControls.SaveOutfitLabel.Activated:Connect(function()
         end
         return
     end
-    outfit.OutfitName = filtered.OutfitName
-    outfit.RPName = filtered.RPName
-    outfit.RPDesc = filtered.RPDesc
-
+    -- GetFilteredNamesForOutfit is the verified preview/validation seam.
+    -- SaveOutfit receives the original values and performs the authoritative
+    -- server filter exactly once before durability.
     if pendingSaveRequestId == nil then
         pendingSaveRequestId = HttpService:GenerateGUID(false)
     end
