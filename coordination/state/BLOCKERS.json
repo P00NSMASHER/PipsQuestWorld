@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
   "currentBlockers": [],
-  "gateStatus": "NEXT_PARITY_SLICE_UNBLOCKED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "AVATAR_CUSTOMIZATION_SHOPPING_V1",
+  "gateStatus": "PR_165_QA_GATE_ACTIVE__NO_PRODUCT_BLOCKER",
+  "nextProducer": "Roblox High School QA & Contract",
+  "nextObjective": "VALIDATE_SHOPPING_PURCHASE_AUTHORITY_PR_165_EXACT_HEAD",
   "deferredRuntimeEvidence": [
     {
       "id": "VEHICLE_RUNTIME_DRIVE_SMOKE",
@@ -18,6 +18,14 @@
       "reason": "Older-sha vehicle/HUD/House runtime evidence remains uncollected, but it does not block cloud-safe Housing Editor work on live canonical db0a700fd1a65b3648abc06353f8250adfab1bbb."
     }
   ],
-  "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
-  "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
+  "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical/candidate SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
+  "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker.",
+  "currentCandidate": {
+    "pr": 165,
+    "headSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+    "baseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "mergeable": true,
+    "exactHeadCi": "PASS_ALL_THREE",
+    "qa": "PENDING"
+  }
 }
