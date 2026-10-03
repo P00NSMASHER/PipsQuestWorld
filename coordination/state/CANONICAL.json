@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+  "sha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
   "sourceRoot": "school/**",
   "status": "PASS_EXACT_HEAD_CI_WITH_LOCAL_RUNTIME_GATE",
   "parentCertifiedSha": "92691e009869ee9cd5d9306786502b157a5b6c84",
@@ -16,43 +16,44 @@
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37067265741,
+      "runId": 37086431460,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-      "housingPlotStep": "success"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37067265753,
+      "runId": 37086431454,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37067265684,
+      "runId": 37086431446,
       "event": "push",
       "conclusion": "success",
-      "headSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773"
+      "headSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+      "housingLifecycleStep": "success",
+      "housingUiRuntimeWiringStep": "success"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "certifiedSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+    "certifiedSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
     "receipt": "coordination/HIGH_SCHOOL_QA_CONTRACT_RECEIPT.json"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD",
-    "mergedPr": 111,
-    "candidateSha": "6f90b67f7d8a045356c0c7b20c892d1fe6220de5",
-    "certifiedSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+    "mergedPr": 115,
+    "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+    "certifiedSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json"
   },
   "integrationSmoke": {
     "result": "WAITING_LOCAL_ONLY_REQUIRED",
-    "pendingSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
-    "requiredCheck": "Roblox runtime: vehicle drive/touch/HUD coexistence plus baseline school/class/cafe behavior on the same private target.",
+    "pendingSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+    "requiredCheck": "Roblox runtime: vehicle drive/touch/HUD/House-menu coexistence plus baseline school/class/cafe behavior on the same private target.",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json"
   },
   "exactHeadRule": "Live branch head and exact-head CI are authoritative; SHA-mismatched receipts are stale.",
@@ -81,5 +82,21 @@
     "rootTree": "81989074747c43c911c5c043b83ce6b6c50ecf0c",
     "schoolTree": "c2b5ab1dec90b2df576d83a16d77c5621c406f38",
     "milestone": "HOUSING_PLOT_SEAMS_V1"
+  },
+  "housingProperty": {
+    "pr": 115,
+    "candidateSha": "2659fd812e55cede8c5d1634cbbba465c99a98ce",
+    "currentSha": "c236b747b2d38b2ad7ff8493087a18fb19352e4c",
+    "rootTree": "8ed00218eb861e3148e1cb555f4423a46d5c681d",
+    "schoolTree": "304c2777c7823b48acd18af859f6ec9fb721e1ab",
+    "milestone": "HOUSING_PROPERTY_V1",
+    "surfaces": [
+      "$50 permanent house purchase",
+      "server-assigned plot",
+      "lower-left House button/menu",
+      "Teleport to House",
+      "Edit/Save House",
+      "house color controls"
+    ]
   }
 }
