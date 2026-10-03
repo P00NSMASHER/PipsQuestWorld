@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Release & Package Gate",
-  "observedAt": "2026-10-03T18:55:29Z",
+  "observedAt": "2026-10-03T20:01:26Z",
   "result": "RELEASE_PREP_READY_AWAITING_QA_INTEGRATION_SMOKE",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
@@ -9,7 +9,8 @@
     "packageArtifact": "pip-high-school-23cc398-source-tree-284f86df",
     "schoolTreeSha": "284f86df558f0033aeca463f5a34129a3b2beaac",
     "rootTreeSha": "2b5a7537f2b41d0332d517a4da65a6982cc6d7b2",
-    "recursiveEntryCount": 61
+    "recursiveEntryCount": 61,
+    "blobCount": 55
   },
   "candidate": {
     "pr": 165,
@@ -21,6 +22,7 @@
     "rootTreeSha": "d8df1f2e796a5b7cf73f703b21b401905a2ec5f8",
     "schoolTreeSha": "39bff846e8cece6f4c59ca21d084ce7b538c8e7c",
     "recursiveEntryCount": 66,
+    "blobCount": 60,
     "recursiveTreeTruncated": false
   },
   "sourceTreeContinuity": {
@@ -30,30 +32,120 @@
     "modifiedBaselineBlobs": 3,
     "addedBlobs": 5,
     "removedBlobs": 0,
-    "modified": [
-      "school/default.project.json",
-      "school/src/client/CanonicalSchoolClient.client.lua",
-      "school/tests/legacy_hud_contract_spec.lua"
-    ],
-    "added": [
-      "school/src/server/ShoppingPurchase.server.lua",
-      "school/src/server/ShoppingPurchaseController.lua",
-      "school/src/shared/LegacyShoppingBoundary.lua",
-      "school/tests/shopping_purchase_authority_spec.lua",
-      "school/tests/shopping_runtime_authority_spec.lua"
-    ],
-    "outsideSchoolChanges": 0
+    "outsideSchoolChanges": 0,
+    "status": "PASS_EXACT_SCHOOL_ONLY_CONTINUITY"
   },
+  "deterministicChangedBlobManifest": [
+    {
+      "path": "school/default.project.json",
+      "status": "modified",
+      "mode": "100644",
+      "blobSha": "ba5e85e82652f137cb17e76016f062731c033761",
+      "size": 4095,
+      "baselineBlobSha": "f16f7cc10b9a223bdc31ffbc20a46fe18c5c2511",
+      "role": "Rojo inclusion mapping for shopping service/controller/client boundary"
+    },
+    {
+      "path": "school/src/client/CanonicalSchoolClient.client.lua",
+      "status": "modified",
+      "mode": "100644",
+      "blobSha": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+      "size": 54788,
+      "baselineBlobSha": "108770adeac23852907e6d088d870ebbac46f1dc",
+      "role": "canonical client mount for LegacyShoppingBoundary"
+    },
+    {
+      "path": "school/src/server/ShoppingPurchase.server.lua",
+      "status": "added",
+      "mode": "100644",
+      "blobSha": "405f02ba2408cc1ab59fefb5208607cf2b570f0e",
+      "size": 2071,
+      "baselineBlobSha": null,
+      "role": "server runtime adapter, empty catalog, PurchasePermanentItem remote, callback bridge"
+    },
+    {
+      "path": "school/src/server/ShoppingPurchaseController.lua",
+      "status": "added",
+      "mode": "100644",
+      "blobSha": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
+      "size": 5097,
+      "baselineBlobSha": null,
+      "role": "server-owned allowlist authority and request/confirmation idempotency"
+    },
+    {
+      "path": "school/src/shared/LegacyShoppingBoundary.lua",
+      "status": "added",
+      "mode": "100644",
+      "blobSha": "535e63d6ac16cf123a38a7a0989e5590b51e041f",
+      "size": 1468,
+      "baselineBlobSha": null,
+      "role": "client request-only boundary without asset/price/currency/ownership authority"
+    },
+    {
+      "path": "school/tests/legacy_hud_contract_spec.lua",
+      "status": "modified",
+      "mode": "100644",
+      "blobSha": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544",
+      "size": 2140,
+      "baselineBlobSha": "ab61b03a70dbf7652e2dbf50e104d5d0772420bf",
+      "role": "aggregates shopping authority/runtime tests into existing canonical HUD contract"
+    },
+    {
+      "path": "school/tests/shopping_purchase_authority_spec.lua",
+      "status": "added",
+      "mode": "100644",
+      "blobSha": "a22bd692b46811c52135570f9fa102074d645174",
+      "size": 4265,
+      "baselineBlobSha": null,
+      "role": "deterministic forged-claim, unknown-item, replay/conflict, callback and duplicate-confirmation tests"
+    },
+    {
+      "path": "school/tests/shopping_runtime_authority_spec.lua",
+      "status": "added",
+      "mode": "100644",
+      "blobSha": "851f601f77fea0477810b028ef623c8a83f48682",
+      "size": 3094,
+      "baselineBlobSha": null,
+      "role": "deterministic runtime wiring and forbidden-authority checks"
+    }
+  ],
   "inclusionVerification": {
-    "projectMappingBlob": "ba5e85e82652f137cb17e76016f062731c033761",
-    "canonicalClientBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
-    "shoppingServiceBlob": "405f02ba2408cc1ab59fefb5208607cf2b570f0e",
-    "shoppingControllerBlob": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
-    "clientBoundaryBlob": "535e63d6ac16cf123a38a7a0989e5590b51e041f",
-    "authorityTestBlob": "a22bd692b46811c52135570f9fa102074d645174",
-    "runtimeAuthorityTestBlob": "851f601f77fea0477810b028ef623c8a83f48682",
-    "legacyHudTestAggregatorBlob": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544",
-    "status": "PASS_ALL_NEW_RUNTIME_AND_TEST_INPUTS_INCLUDED_IN_CANDIDATE_SCHOOL_TREE"
+    "projectMappings": {
+      "LegacyShoppingBoundary": "src/shared/LegacyShoppingBoundary.lua",
+      "ShoppingPurchaseController": "src/server/ShoppingPurchaseController.lua",
+      "ShoppingPurchase": "src/server/ShoppingPurchase.server.lua",
+      "status": "PASS"
+    },
+    "canonicalClientMount": {
+      "require": "require(shared:WaitForChild(\"LegacyShoppingBoundary\"))",
+      "mount": "local shoppingBoundary = LegacyShoppingBoundary()",
+      "status": "PASS"
+    },
+    "runtimeAuthority": {
+      "serverCatalogStartsEmpty": true,
+      "purchaseRemote": "PurchasePermanentItem",
+      "confirmationCallback": "MarketplaceService.PromptPurchaseFinished",
+      "automaticPromptCallsAbsent": true,
+      "economyRepositoryDependencyAbsent": true,
+      "rhsCashDependencyAbsent": true,
+      "status": "PASS_FAIL_CLOSED_NO_SPEND"
+    },
+    "deterministicTests": {
+      "authorityMarker": "HIGH_SCHOOL_SHOPPING_PURCHASE_AUTHORITY_PASS",
+      "runtimeMarker": "HIGH_SCHOOL_SHOPPING_RUNTIME_AUTHORITY_PASS",
+      "aggregatedByLegacyHudContract": true,
+      "forgedClientClaimsRejected": true,
+      "unknownItemRejected": true,
+      "unknownCallbackAssetRejected": true,
+      "stableReplayPreserved": true,
+      "requestIdConflictRejected": true,
+      "cancelledCallbackRejected": true,
+      "successRequiresConfirmedAllowlistedCallback": true,
+      "duplicateConfirmationIdempotent": true,
+      "clientSendsNoAuthorityClaims": true,
+      "status": "PASS_SOURCE_INCLUDED"
+    },
+    "status": "PASS_ALL_RUNTIME_AND_TEST_INPUTS_INCLUDED_IN_CANDIDATE_SCHOOL_TREE"
   },
   "candidateExactHeadCi": [
     {
@@ -77,6 +169,7 @@
   ],
   "binaryReference": {
     "policy": "coordination/HIGH_SCHOOL_BINARY_REFERENCE_POLICY.md",
+    "policyBlobSha": "d4c6caeef36823f1dd6fee8da5821b05d26dd7bd",
     "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
     "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "verifiedRun": 37117831711,
@@ -85,18 +178,21 @@
     "status": "PINNED_REFERENCE_REUSED_NO_BINARY_TRANSPORT_BLOCKER"
   },
   "gateReadiness": {
-    "qaExactHead": "PENDING_NO_QA_PASS_COMMENT_ON_PR_165",
+    "qaExactHead": "PENDING_NO_QA_PASS_COMMENT_OR_REVIEW_ON_PR_165",
     "integration": "PENDING_PR_165_OPEN",
     "smokeExactCanonical": "PENDING_NOT_INTEGRATED",
     "newPackageEmitted": false,
-    "packageRule": "Only package after PR 165 or its exact successor is integrated, live canonical changes, exact-head push CI passes, and Integration Smoke PASS binds to that exact canonical SHA."
+    "packageRule": "Only package after this exact candidate or an exact successor integrates, live canonical changes, exact-head push CI passes, and Integration Smoke PASS binds to that exact canonical SHA."
   },
   "postIntegrationReproducibilityGate": {
     "requiredSchoolTreeSha": "39bff846e8cece6f4c59ca21d084ce7b538c8e7c",
     "requiredRecursiveEntryCount": 66,
+    "requiredBlobCount": 60,
     "requiredTreeTruncated": false,
+    "requiredChangedBlobCount": 8,
+    "requiredOutsideSchoolChanges": 0,
     "artifactNameTemplate": "pip-high-school-<canonical7>-source-tree-39bff846",
-    "rule": "If integrated canonical school/** tree differs, recompute and revalidate before packaging."
+    "rule": "If integrated canonical school/** tree, blob count, entry count, or changed manifest differs, recompute and revalidate before packaging."
   },
   "localOnlyRequired": [
     {
