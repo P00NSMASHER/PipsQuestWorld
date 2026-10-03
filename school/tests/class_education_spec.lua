@@ -133,4 +133,6 @@ assertEqual(type(secondWrong.explanation), "string", "modeled answer explanation
 assertEqual(secondWrong.classCompleted, true, "supported recovery did not close class")
 assertEqual(secondWrong.returnToFreeRoam, true, "supported recovery did not return to free roam")
 
+dofile("school/tests/class_invalid_choice_lifecycle_spec.lua")
+
 print("CLASS_EDUCATION_DETERMINISTIC_TESTS_OK")
