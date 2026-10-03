@@ -43,11 +43,83 @@ local function validateRecord(record)
     return true
 end
 
+local OUTFIT_SLOT_COUNT = 12
+
+local function defaultOutfit()
+    return {
+        OutfitName = "",
+        Hat1 = 0,
+        Hat2 = 0,
+        Hat3 = 0,
+        Shirt = 0,
+        Pants = 0,
+        Face = 0,
+        Package = 0,
+        RPName = "",
+        RPDesc = "",
+        RemoveShirt = false,
+    }
+end
+
+local function copyOutfit(outfit)
+    local copy = defaultOutfit()
+    if type(outfit) ~= "table" then return copy end
+    for key, defaultValue in pairs(copy) do
+        local value = outfit[key]
+        if type(value) == type(defaultValue) then
+            copy[key] = value
+        end
+    end
+    return copy
+end
+
+local function defaultOutfits()
+    local slots = {}
+    for index = 1, OUTFIT_SLOT_COUNT do
+        slots[index] = defaultOutfit()
+    end
+    return slots
+end
+
+local function validOutfit(outfit)
+    if type(outfit) ~= "table" then return false end
+    local defaults = defaultOutfit()
+    for key, defaultValue in pairs(defaults) do
+        if type(outfit[key]) ~= type(defaultValue) then return false end
+        if type(defaultValue) == "number" and (outfit[key] < 0 or not isInteger(outfit[key])) then
+            return false
+        end
+    end
+    return true
+end
+
+local function validOutfits(outfits)
+    if outfits == nil then return true end
+    if type(outfits) ~= "table" then return false end
+    for index = 1, OUTFIT_SLOT_COUNT do
+        if not validOutfit(outfits[index]) then return false end
+    end
+    for key in pairs(outfits) do
+        if not isInteger(key) or key < 1 or key > OUTFIT_SLOT_COUNT then return false end
+    end
+    return true
+end
+
+local function normalizeOutfits(outfits)
+    if outfits == nil then return defaultOutfits() end
+    local result = {}
+    for index = 1, OUTFIT_SLOT_COUNT do
+        result[index] = copyOutfit(outfits[index])
+    end
+    return result
+end
+
 local function emptySnapshot()
     return {
         schemaVersion = SCHEMA_VERSION,
         revision = 0,
         completions = {},
+        outfits = defaultOutfits(),
     }
 end
 
@@ -58,6 +130,9 @@ local function validateSnapshot(snapshot, playerId)
         or snapshot.revision < 0
         or type(snapshot.completions) ~= "table" then
         return false, "INVALID_SNAPSHOT"
+    end
+    if not validOutfits(snapshot.outfits) then
+        return false, "INVALID_OUTFITS"
     end
 
     local count = 0
@@ -92,6 +167,7 @@ local function cloneSnapshot(snapshot)
         schemaVersion = SCHEMA_VERSION,
         revision = snapshot.revision,
         completions = completions,
+        outfits = normalizeOutfits(snapshot.outfits),
     }
 end
 
@@ -125,6 +201,7 @@ local function summarize(snapshot, playerId)
         totalPoints = totalPoints,
         completionCount = #snapshot.completions,
         classes = classList,
+        outfits = normalizeOutfits(snapshot.outfits),
     }
 end
 
@@ -304,6 +381,80 @@ function Repository:record(record)
         durable = false,
         error = "STALE_WRITE_RETRY_EXHAUSTED",
     }
+end
+
+
+local function validateSlot(slot)
+    return isInteger(slot) and slot >= 1 and slot <= OUTFIT_SLOT_COUNT
+end
+
+function Repository:loadOutfit(slot)
+    if not validateSlot(slot) then return nil, "INVALID_OUTFIT_SLOT" end
+    return copyOutfit(self._snapshot.outfits[slot]), nil
+end
+
+function Repository:loadOutfitPage(startSlot)
+    if not (startSlot == 1 or startSlot == 4 or startSlot == 7 or startSlot == 10) then
+        return nil, "INVALID_OUTFIT_PAGE"
+    end
+    local page = {}
+    for slot = startSlot, math.min(startSlot + 2, OUTFIT_SLOT_COUNT) do
+        page[#page + 1] = {
+            slot = slot,
+            outfit = copyOutfit(self._snapshot.outfits[slot]),
+        }
+    end
+    return page, nil
+end
+
+function Repository:saveOutfit(slot, outfit)
+    if not validateSlot(slot) then
+        return { status = "rejected", durable = false, error = "INVALID_OUTFIT_SLOT" }
+    end
+    if not validOutfit(outfit) then
+        return { status = "rejected", durable = false, error = "INVALID_OUTFIT" }
+    end
+
+    for _ = 1, self._maxRetries do
+        local current, version, readError = readSnapshot(self._adapter, self._playerId)
+        if not current then
+            return { status = "rejected", durable = false, error = readError }
+        end
+
+        local candidate = cloneSnapshot(current)
+        candidate.outfits[slot] = copyOutfit(outfit)
+        candidate.revision = version + 1
+
+        local saved, newVersion, saveError = self._adapter:compareAndSwap(
+            self._playerId,
+            version,
+            cloneSnapshot(candidate)
+        )
+
+        if saved == true then
+            if newVersion ~= candidate.revision then
+                return { status = "rejected", durable = false, error = "SAVE_REVISION_MISMATCH" }
+            end
+            self._snapshot = candidate
+            return {
+                status = "applied",
+                durable = true,
+                revision = newVersion,
+                slot = slot,
+                outfit = copyOutfit(candidate.outfits[slot]),
+            }
+        end
+
+        if saveError ~= "conflict" then
+            return {
+                status = "rejected",
+                durable = false,
+                error = "SAVE_FAILED:" .. tostring(saveError or "unknown"),
+            }
+        end
+    end
+
+    return { status = "rejected", durable = false, error = "STALE_WRITE_RETRY_EXHAUSTED" }
 end
 
 return Repository
