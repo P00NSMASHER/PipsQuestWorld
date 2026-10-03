@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Integration Smoke",
+  "mode": "PRE_INTEGRATION_SMOKE_PREP",
+  "canonicalBaseSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+  "candidatePr": 165,
+  "candidateSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+  "sourceRoot": "school/**",
+  "exactHeadGuards": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37141490985,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37141490978,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37141491082,
+      "conclusion": "success"
+    }
+  ],
+  "binaryReference": {
+    "runId": 37117831711,
+    "artifactId": 11271783526,
+    "gitBlobSha": "95ee3d762f419bb3572e18db57c03682651dc8c4",
+    "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
+    "extractorSha": "8a7363c785b15fd5ff3110a22abf5e22b14f152e"
+  },
+  "deterministicMatrix": {
+    "purchasePermanentItemRemoteServiceClientWiring": "PASS",
+    "serverOwnedCatalogStartsEmpty": "PASS",
+    "unknownItemFailsClosed": "PASS",
+    "unknownAssetCallbackFailsClosed": "PASS",
+    "clientAssetTemplatePriceOwnershipCurrencyClaimsNonAuthoritative": "PASS",
+    "noRHSCashDebit": "PASS",
+    "noEconomyRepositoryDependency": "PASS",
+    "noAutomaticPromptPurchaseSpend": "PASS",
+    "stableRequestReplay": "PASS",
+    "conflictingRequestIdRejected": "PASS_request_id_conflict",
+    "callbackOnlyControllerSuccessText": "PASS_CONTROLLER_ONLY",
+    "endToEndSuccessNotificationDelivery": "NOT_PROVEN_CLOUD_SIDE",
+    "canonicalClientNonAuthority": "PASS",
+    "outfitRegression": "PASS",
+    "progressionRegression": "PASS",
+    "worldFoundationRegression": "PASS",
+    "classRegression": "PASS",
+    "housingRegression": "PASS",
+    "vehicleRegression": "PASS",
+    "retiredRuntimeLeakage": "PASS_NONE",
+    "phase2Schoolwork": "DEFERRED_NO_CHANGE"
+  },
+  "exactHeadTestMarkers": [
+    "HIGH_SCHOOL_SHOPPING_PURCHASE_AUTHORITY_PASS",
+    "HIGH_SCHOOL_SHOPPING_RUNTIME_AUTHORITY_PASS",
+    "HIGH_SCHOOL_OUTFIT_OPERATIONS_PASS",
+    "HIGH_SCHOOL_OUTFIT_OPERATIONS_RUNTIME_PASS",
+    "HIGH_SCHOOL_PROGRESSION_REPOSITORY_PASS",
+    "HIGH_SCHOOL_ECONOMY_REPOSITORY_PASS",
+    "HIGH_SCHOOL_VEHICLE_LIFECYCLE_PASS",
+    "HIGH_SCHOOL_HOUSING_LIFECYCLE_PASS",
+    "HIGH_SCHOOL_CLASS_PROGRESSION_INTEGRATION_PASS"
+  ],
+  "finding": {
+    "id": "SHOPPING_SUCCESS_NOTIFICATION_DELIVERY_UNPROVEN",
+    "severity": "PRE_INTEGRATION_QA_DECISION",
+    "evidence": "ShoppingPurchaseController.confirmPurchase returns the exact verified success text, but ShoppingPurchase.server.lua discards that return value and exposes no server-to-client notification path.",
+    "currentReachability": "NON_EXECUTABLE_PRODUCT_CATALOG_EMPTY",
+    "integrationRule": "Do not claim end-to-end success-notification delivery on this SHA unless QA explicitly accepts the unreachable notification surface as deferred or the producer adds a verified delivery seam on a changed exact head."
+  },
+  "localOnlyRequired": [
+    {
+      "id": "SHOPPING_MARKETPLACE_PROMPT_RENDERED_DEVICE_SMOKE",
+      "exactSha": "e3be5dfab4b825064c7ac14616330dc54f3f640f",
+      "universeId": "10768955678",
+      "placeId": "87245440673982",
+      "status": "DEFERRED_NONBLOCKING_WHILE_CATALOG_EMPTY",
+      "condition": "Only applicable if concrete authorized assets and a separately authorized Marketplace prompt/render surface are introduced."
+    }
+  ],
+  "producerSourceEditedBySmoke": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "laptopPolled": false,
+  "taskStateChanged": false
+}
