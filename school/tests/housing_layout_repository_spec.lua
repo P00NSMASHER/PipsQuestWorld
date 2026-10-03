@@ -58,6 +58,44 @@ local hide = repo:commit({
 eq(hide.status, "applied", "hide walls status")
 eq(hide.state.hideWalls, true, "hide walls persisted")
 
+local addInventory = repo:commit({
+    operationId = "inventory:add:chair:1",
+    kind = "add_inventory",
+    itemId = "chair-basic",
+    quantity = 2,
+})
+eq(addInventory.status, "applied", "inventory add status")
+eq(#addInventory.state.inventory, 1, "inventory item count")
+eq(addInventory.state.inventory[1].itemId, "chair-basic", "inventory item id")
+eq(addInventory.state.inventory[1].quantity, 2, "inventory quantity")
+
+local duplicateInventory = repo:commit({
+    operationId = "inventory:add:chair:1",
+    kind = "add_inventory",
+    itemId = "chair-basic",
+    quantity = 2,
+})
+eq(duplicateInventory.status, "duplicate", "inventory duplicate")
+eq(duplicateInventory.state.inventory[1].quantity, 2, "duplicate inventory quantity")
+
+local removeOne = repo:commit({
+    operationId = "inventory:remove:chair:1",
+    kind = "remove_inventory",
+    itemId = "chair-basic",
+    quantity = 1,
+})
+eq(removeOne.status, "applied", "inventory remove status")
+eq(removeOne.state.inventory[1].quantity, 1, "inventory quantity after remove")
+
+local inventoryUnderflow = repo:commit({
+    operationId = "inventory:remove:chair:underflow",
+    kind = "remove_inventory",
+    itemId = "chair-basic",
+    quantity = 2,
+})
+eq(inventoryUnderflow.status, "rejected", "inventory underflow status")
+eq(inventoryUnderflow.error, "INSUFFICIENT_INVENTORY", "inventory underflow error")
+
 local place = repo:commit({
     operationId = "place:chair:1",
     kind = "place_furniture",
@@ -122,6 +160,9 @@ eq(painted.state.placements[1].paintId, "legacy-red", "paint persisted")
 
 local reopened = assert(Repository.open(adapter, 101))
 local restored = reopened:getState()
+eq(#restored.inventory, 1, "reopened inventory count")
+eq(restored.inventory[1].itemId, "chair-basic", "reopened inventory item")
+eq(restored.inventory[1].quantity, 1, "reopened inventory quantity")
 eq(restored.houseStyleId, "classic-tan", "reopened style")
 eq(restored.hideWalls, true, "reopened hide walls")
 eq(#restored.placements, 1, "reopened placement count")
