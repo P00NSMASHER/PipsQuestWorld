@@ -1,0 +1,9 @@
+{
+  "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+  "pr": 165,
+  "candidateSha": "9bb1c4c76927195edb22abff96c7d9679685f342",
+  "guardRuns": [37154588351, 37154588306, 37154588308],
+  "qaPassComment": 5973588737,
+  "nextLane": "Roblox High School Integration Director",
+  "status": "INTEGRATION_READY_EXACT_HEAD"
+}
