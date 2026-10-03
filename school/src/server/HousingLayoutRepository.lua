@@ -55,7 +55,7 @@ local function validateArray(value)
         if not isInteger(key) or key < 1 then
             return false
         end
-        count += 1
+        count = count + 1
         if key > maxIndex then
             maxIndex = key
         end
