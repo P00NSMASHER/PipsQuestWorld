@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-03T17:11:01Z",
+  "observedAt": "2026-10-03T17:27:18.114Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "c4df87d34022854b15b6416538756399ab020891",
-    "guards": "PASS_EXACT_HEAD_PUSH__FOUNDATION_37136942081__CLASS_37136942094__PROGRESSION_37136942133"
+    "sha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "guards": "PASS_EXACT_HEAD_PUSH__FOUNDATION_37140308118__CLASS_37140308112__PROGRESSION_37140308137"
   },
   "target": {
     "universeId": "10768955678",
@@ -14,10 +14,10 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 3,
-    "producerPr": 159,
-    "producerSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
-    "producerBranch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
+    "countIncludingBase": 2,
+    "producerPr": null,
+    "producerSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "producerBranch": null,
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
@@ -28,9 +28,9 @@
         "status": "SUPERSEDED_QA_PREP__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "ACTIVE_WIP_IS_CANONICAL_PLUS_ONE_FROZEN_CONTENT_QA_SUPPORT_CANDIDATE_PLUS_ONE_FREE_ROAM_PRODUCT_CANDIDATE"
+    "rule": "ACTIVE_WIP_IS_CANONICAL_PLUS_ONE_FROZEN_CONTENT_QA_SUPPORT_CANDIDATE__NO_NEW_PRODUCER_UNTIL_EXACT_CANONICAL_SMOKE_AND_PACKAGE"
   },
-  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING_V2_OUTFIT_OPERATIONS",
+  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING_V2_OUTFIT_OPERATIONS_SMOKE_PACKAGE",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -41,98 +41,97 @@
   "directives": {
     "Foundation": {
       "mode": "SUPPORT",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Audit the exact Free Roam outfit-operations candidate only for world, clock, location, spawn, and environment authority drift. Reuse the packaged c4df87d baseline and do not create a competing source branch.",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Audit exact canonical 23cc398 only for world, clock, location, spawn, and environment authority drift introduced by PR 159. Reuse established baseline evidence; do not create a product branch.",
       "owned": "world/clock/location/spawn/environment authority",
-      "dependency": "Producer starts byte-identical to packaged canonical c4df87d; package pip-high-school-c4df87d-source-tree-d77bf9e4 is complete",
-      "exit": "one exact-candidate regression finding or no-drift handoff",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "PR 159 merged with exact-head QA PASS and all three exact canonical push guards PASS",
+      "exit": "one exact-canonical regression finding or no-drift handoff",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "ClassEducation": {
       "mode": "SUPPORT",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Audit the exact Free Roam outfit-operations candidate only for class/session/activity authority drift. Phase-2 curriculum remains deferred; do not create a competing source branch.",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Audit exact canonical 23cc398 only for class/session/activity authority drift from the outfit-operations merge. Phase-2 curriculum remains deferred; do not create a product branch.",
       "owned": "class/session/activity authority",
-      "dependency": "Producer starts byte-identical to packaged canonical c4df87d",
-      "exit": "one exact-candidate regression finding or no-drift handoff",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Class/Education canonical push guard 37140308112 PASS",
+      "exit": "one exact-canonical regression finding or no-drift handoff",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "ContentQA": {
       "mode": "SUPPORT",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
       "branch": "support/high-school-avatar-customization-content-00df979",
-      "objective": "Provide only the already verified pinned-baseline semantics needed by the producer: LoadOutfit, LoadOutfitPage, WearOutfit, SaveOutfit, 12 slots with page starts 1/4/7/10, three-hat baseline, exact persisted fields/defaults, and server-filtered OutfitName/RPName/RPDesc. Keep unknown catalogs/assets explicit and make no new support candidate while WIP is at cap.",
+      "objective": "Keep PR 150 reference evidence frozen and available for Smoke: 24 durable storage / 12 Legacy-presented slots, migration, filtering/default/sentinel seams, and exact server remote names. Prepare a concise authorized shopping/catalog provenance matrix only; do not add another candidate while package is pending.",
       "owned": "authorized reference fixtures/provenance and exact visible/event semantics only",
-      "dependency": "PR 150 head 762e1d17e001635a8f0a8cc9bed66a36080ed68d guards PASS: 37135947470, 37135947463, 37135947467",
-      "exit": "one concise provenance handoff to producer; no runtime or economy implementation",
-      "handoff": "Pip High Free Roam",
+      "dependency": "PR 159 QA PASS reconciled to support head 762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+      "exit": "one smoke provenance handoff plus explicit verified/unknown shopping surfaces; no runtime/economy implementation",
+      "handoff": "Roblox High School Integration Smoke",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "ProgressionMobile": {
       "mode": "SUPPORT",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Audit PR 159's exact changed head against the pinned persistence contract: 24 durable slots with 12 legacy-presented slots and 12-to-24 migration; OutfitName max length 25; INVALID_NAME/noload; filtered fallbacks; GetFilteredNamesForOutfit/SaveOutfit/WearOutfit seams; durable reopen/rejoin; stale-retry and retry-idempotency expectations; one shared persistence authority. Provide findings only; do not edit product source or create a branch.",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Audit exact canonical 23cc398 for the integrated 24-slot durable schema, 12-slot presentation boundary, 12-to-24 migration, reopen/rejoin, stale CAS retry, request-id idempotency, single PipHighProgressionV1 authority, and mobile authority seams. Findings only.",
       "owned": "progression/economy/persistence/ownership/mobile authority seams only",
-      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 confirms PR 159 head 71a6d565df826cfcf359b34951e179fd61fb8165 does not match the verified persistence contract despite green CI.",
-      "exit": "one precise producer remediation handoff bound to changed PR 159 head; re-audit only after head changes",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Progression canonical push guard 37140308137 PASS and QA receipt 5971587631",
+      "exit": "one exact-canonical smoke finding or no-drift handoff",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "FreeRoam": {
-      "mode": "PRODUCE",
-      "base": "rebuild/high-school-foundation@c4df87d34022854b15b6416538756399ab020891",
-      "branch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
-      "objective": "Remediate PR 159 on the same sole producer branch. Preserve 12 legacy-presented slots while implementing 24 durable storage slots with deterministic 12-to-24 migration; OutfitName max length 25; INVALID_NAME and noload semantics; filtered fallbacks Saved Outfit/RP Name Here/RP Desc Here; verified GetFilteredNamesForOutfit, SaveOutfit, and WearOutfit server seams; deterministic migration/reopen/rejoin plus stale-retry and retry-idempotency coverage. Preserve the single PipHighProgressionV1 authority and current shopping/unknown-asset exclusions.",
-      "owned": "avatar/outfit/customization mechanics and world-facing UX for this slice only",
-      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 on 71a6d565df826cfcf359b34951e179fd61fb8165; exact-head guards 37138986407/37138986447/37138986492 are green but insufficient.",
-      "exit": "changed PR 159 head with the full verified persistence contract, deterministic tests, all three exact-head guards green, then exact-SHA QA revalidation",
-      "handoff": "Roblox High School QA & Contract",
+      "mode": "WAIT_PIPELINE",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Do not mutate the merged producer branch or create the next product branch. Preserve the integrated outfit-operations handoff; after exact canonical Smoke and Package complete, the next authorized producer slice is verified avatar shopping/catalog behavior only.",
+      "owned": "avatar/outfit/customization mechanics and world-facing UX for the next slice only",
+      "dependency": "PR 159 is merged; new canonical 23cc398 is awaiting Smoke and Package",
+      "exit": "Smoke and Package receipts bind to 23cc398, then receive exactly one fresh branch from that exact canonical SHA",
+      "handoff": "Roblox High School Control Tower",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "QA": {
-      "mode": "WAIT_CHANGED_HEAD",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Do not revalidate failed head 71a6d565df826cfcf359b34951e179fd61fb8165. When PR 159 changes and all three guards are green, validate the exact successor for 24 durable versus 12 presented slots, migration, length/sentinel/fallback/filter seams, reopen/rejoin, stale-retry/idempotency, unique persistence authority, and no shopping/unknown-asset leakage.",
+      "mode": "SUPPORT",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Preserve PASS_EXACT_HEAD receipt 5971587631 for producer 9515919 and support Smoke on canonical 23cc398. Any producer or canonical head change invalidates the relevant receipt; do not create a competing product branch.",
       "owned": "QA contracts, validators, receipts, and adversarial authority/provenance checks only",
-      "dependency": "QA FAIL_EXACT_HEAD comment 5971451059 is authoritative for the current head.",
-      "exit": "PASS_EXACT_HEAD on a changed green head or one precise FAIL owner/exit criterion",
-      "handoff": "Roblox High School Integration Director",
+      "dependency": "PR 159 merged without changing QA-certified producer head",
+      "exit": "one exact-canonical smoke QA finding or no-drift confirmation",
+      "handoff": "Roblox High School Integration Smoke",
       "connectorPolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md"
     },
     "Integration": {
-      "mode": "WAIT_PIPELINE",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Maintain read-only preflight only. Do not merge PR 159 while QA FAIL applies; any head change requires all three exact-head guards and a new QA decision on that same SHA.",
+      "mode": "COMPLETE",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Preserve the verified PR 159 integration record and perform no additional merge until Smoke and Package complete for exact canonical 23cc398.",
       "owned": "mechanical protected integration only",
-      "dependency": "PR 159 current head is CI-green but QA FAIL_EXACT_HEAD; integration is prohibited until changed-head QA PASS.",
-      "exit": "changed producer becomes QA-PASS and merge-ready, or a precise integration-risk handoff is recorded",
+      "dependency": "PR 159 merged from exact QA-PASS head 9515919 to canonical 23cc398; push guards all PASS",
+      "exit": "one stable exact-head integration receipt handed to Smoke",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "WAIT_PIPELINE",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Prepare the changed-surface smoke delta for server-authoritative outfit operations while reusing the packaged baseline. Execute only after Integration; keep genuinely rendered/touch checks exact-SHA LOCAL_ONLY_REQUIRED and do not poll the laptop.",
+      "mode": "PRODUCE",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Run cloud-safe exact-head smoke for canonical 23cc398 over the outfit-operations delta and unchanged baseline: durable/presented slot boundaries, migration, filtering/default/sentinel seams, hidden-slot reopen, stale retry/idempotency, server remote wiring, unique authority, and no shopping/unknown/retired leakage. Record rendered/device/touch checks LOCAL_ONLY_REQUIRED without laptop polling.",
       "owned": "post-integration smoke evidence only",
-      "dependency": "Integration of an exact QA-PASS producer SHA is required",
-      "exit": "integrated changed head smoked immediately or exact smoke matrix remains ready",
+      "dependency": "Canonical push guards PASS: 37140308118, 37140308112, 37140308137",
+      "exit": "receipt-only coordination PR records PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED or one precise failure owner",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "SUPPORT",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Preserve deterministic package pip-high-school-c4df87d-source-tree-d77bf9e4 and verify candidate package readiness without emitting another package until a changed canonical SHA receives Smoke PASS. Never publish Roblox.",
+      "mode": "WAIT_PIPELINE",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Preserve prior deterministic package pip-high-school-c4df87d-source-tree-d77bf9e4. Emit exactly one new deterministic source-tree package only after Smoke PASS binds to canonical 23cc398. Never publish Roblox.",
       "owned": "deterministic package, hashes, artifact continuity, and release receipt only",
-      "dependency": "Current canonical package COMPLETE; next package requires changed integrated Smoke-PASS head",
-      "exit": "artifact continuity verified or new exact Smoke-PASS canonical packaged",
+      "dependency": "Exact canonical Smoke receipt for 23cc398 is required",
+      "exit": "new exact Smoke-PASS canonical package receipt or precise packaging blocker",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
       "mode": "COORDINATE",
-      "base": "c4df87d34022854b15b6416538756399ab020891",
-      "objective": "Keep exactly one producer, one frozen Content-QA support candidate, and canonical base active. Reconcile live heads and gates, prevent writes to the superseded QA-prep branch, and advance the exact CI → QA → Integration → Smoke → Package chain without schedule changes.",
+      "base": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "objective": "Hold new product work while exact canonical 23cc398 advances through Smoke then Package. Keep active WIP at canonical plus frozen Content-QA support only; after package, create exactly one new producer branch from that exact head for verified avatar shopping/catalog parity.",
       "owned": "coordination/state/WIP.json, candidate-cap enforcement, lane assignment, and pipeline handoffs only",
-      "dependency": "PR 159 head 71a6d565df826cfcf359b34951e179fd61fb8165 is the sole producer candidate and is QA FAIL with a single Free Roam remediation owner.",
-      "exit": "changed PR 159 head with all three guards green is handed to QA without adding another candidate",
-      "handoff": "Pip High Free Roam"
+      "dependency": "PR 159 merged; all three canonical push guards PASS; Smoke dispatched",
+      "exit": "Smoke and Package receipts bind to 23cc398 and the next sole producer is assigned without exceeding the cap",
+      "handoff": "Roblox High School Integration Smoke"
     }
   },
   "connectorReliability": {
@@ -152,38 +151,39 @@
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
-    "candidate": "71a6d565df826cfcf359b34951e179fd61fb8165",
-    "status": "FAIL_EXACT_HEAD",
-    "evidence": "PR 159 comment 5971451059",
-    "reason": "Candidate hard-codes 12 durable slots and omits verified 24-slot storage with 12-to-24 migration, OutfitName length 25, INVALID_NAME/noload, filtered fallbacks, and GetFilteredNamesForOutfit seam semantics.",
-    "owner": "Pip High Free Roam",
-    "exitCriterion": "Changed PR 159 head implements the complete verified persistence contract with deterministic migration/rejoin/stale-retry/idempotency coverage and all three exact-head guards green."
+    "candidate": "95159191c404263668fb85765cf5904d7ba36dfc",
+    "status": "PASS_EXACT_HEAD",
+    "evidence": "PR 159 comment 5971587631",
+    "reason": "Verified 24 durable / 12 presented slots, deterministic migration, validation/filter/fallback seams, reopen/rejoin, stale retry, idempotency, unique persistence authority, and no shopping/retired leakage."
   },
   "integrationResult": {
-    "pr": 154,
-    "candidate": "fa50b857dda1256e9a97f0b2607f73bc3c9caf24",
-    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
+    "pr": 159,
+    "candidate": "95159191c404263668fb85765cf5904d7ba36dfc",
+    "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
     "status": "MERGED_PUSH_GUARDS_PASS",
     "exactHeadCi": [
-      37136942081,
-      37136942094,
-      37136942133
+      37140308118,
+      37140308112,
+      37140308137
     ]
   },
   "smokeResult": {
-    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
-    "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptBranch": "coordination/high-school-integration-smoke",
-    "receiptCommit": "995727d2302970fdf994eccdf11d12cfa1801e6f",
-    "releasePackageEligible": true,
+    "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "status": "IN_PROGRESS_EXACT_HEAD",
+    "priorBaseline": {
+      "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
+      "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
+      "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+      "receiptCommit": "995727d2302970fdf994eccdf11d12cfa1801e6f"
+    },
     "localOnlyRequired": [
-      "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE"
+      "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE",
+      "OUTFIT_OPERATIONS_RENDERED_DEVICE_TOUCH_SMOKE"
     ]
   },
   "packageResult": {
-    "canonicalSha": "c4df87d34022854b15b6416538756399ab020891",
-    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+    "canonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "status": "PREVIOUS_CANONICAL_PACKAGE_COMPLETE__NEW_HEAD_WAIT_SMOKE",
     "artifact": "pip-high-school-c4df87d-source-tree-d77bf9e4",
     "schoolTreeGitSha": "d77bf9e48c0992241e6b71ba753ed8caef962907",
     "rootCommitTreeSha": "39d07b10467595c26f93b6117122d68c14ff18f8",
@@ -194,25 +194,26 @@
     "robloxPublished": false,
     "localOnlyRequired": [
       "AVATAR_CUSTOMIZATION_RENDERED_DEVICE_SMOKE"
-    ]
+    ],
+    "previousCanonicalSha": "c4df87d34022854b15b6416538756399ab020891"
   },
   "branchReadiness": {
     "canonical": {
       "branch": "rebuild/high-school-foundation",
-      "headSha": "c4df87d34022854b15b6416538756399ab020891",
-      "status": "CI_QA_INTEGRATION_SMOKE_PACKAGE_PASS"
+      "headSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "status": "CI_QA_INTEGRATION_PASS__SMOKE_IN_PROGRESS"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
       "headSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
-      "status": "GREEN_SUPPORT_EVIDENCE__FROZEN_AT_WIP_CAP"
+      "status": "GREEN_SUPPORT_EVIDENCE__FROZEN__ONLY_ACTIVE_NONCANONICAL_WIP"
     },
     "producer": {
       "branch": "rebuild/high-school-avatar-outfit-operations-c4df87d-v1",
       "baseSha": "c4df87d34022854b15b6416538756399ab020891",
-      "headSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
+      "headSha": "95159191c404263668fb85765cf5904d7ba36dfc",
       "pr": 159,
-      "status": "QA_FAIL_EXACT_HEAD__FREE_ROAM_REMEDIATION_ACTIVE"
+      "status": "MERGED_TO_CANONICAL_23CC398__NO_FURTHER_WRITES"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -234,22 +235,43 @@
   "nextPriorityAfterCurrent": "JOBS_AFTER_AVATAR_CUSTOMIZATION_SHOPPING_PARITY_IS_VERIFIED_COMPLETE",
   "candidateExactHeadCi": {
     "pr": 159,
-    "headSha": "71a6d565df826cfcf359b34951e179fd61fb8165",
-    "status": "PASS_ALL_THREE_BUT_QA_FAIL",
+    "headSha": "95159191c404263668fb85765cf5904d7ba36dfc",
+    "status": "PASS_ALL_THREE_AND_QA_PASS_MERGED",
     "runs": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37138986407,
+        "runId": 37139770648,
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37138986447,
+        "runId": 37139770655,
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37138986492,
+        "runId": 37139770656,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "canonicalExactHeadCi": {
+    "headSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+    "status": "PASS_ALL_THREE_PUSH",
+    "runs": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37140308118,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37140308112,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37140308137,
         "conclusion": "success"
       }
     ]
