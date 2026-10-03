@@ -38,17 +38,22 @@ jobs:
       - name: Print bounded verified evidence
         run: |
           cat coordination/generated/binary-reference/index.json
-          find coordination/generated/binary-reference -name hits.txt -print0 |
+          find coordination/generated/binary-reference -name keyword-index.json -print0 |
             while IFS= read -r -d '' file; do
               echo "===== ${file} ====="
-              sed -n '1,800p' "${file}"
+              cat "${file}"
+            done
+          find coordination/generated/binary-reference -path '*/keywords/*.txt' -print0 |
+            while IFS= read -r -d '' file; do
+              echo "===== ${file} ====="
+              sed -n '1,300p' "${file}"
             done
 
-      - name: Persist UTF-8 evidence on support branch
+      - name: Persist connector-readable UTF-8 evidence
         run: |
           git config user.name "high-school-binary-reference-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add coordination/generated/binary-reference
+          git add -A coordination/generated/binary-reference
           if git diff --cached --quiet; then
             echo "BINARY_REFERENCE_EVIDENCE_UNCHANGED"
             exit 0
