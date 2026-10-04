@@ -1,0 +1,639 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Release & Package Gate",
+  "recordedAt": "2026-10-04T20:33:03Z",
+  "result": "PACKAGE_MANIFEST_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "sourceIdentity": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "branch": "rebuild/high-school-foundation",
+    "canonicalCommitSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "rootCommitTreeSha": "ddfb6e428b267e66d820bbd52e0b8932168b0601",
+    "sourceRoot": "school/**",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "recursiveEntryCount": 68,
+    "blobCount": 61,
+    "treeCount": 7,
+    "totalBlobBytes": 427853,
+    "recursiveTreeTruncated": false,
+    "identityRule": "Git commit and tree object IDs are the content-addressed package identity; entries below are path-sorted for reproducible inspection."
+  },
+  "artifact": {
+    "id": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
+    "name": "pip-high-school-4323049-source-tree-836ffa7d",
+    "type": "deterministic_git_source_tree_checkpoint",
+    "reproducibilityRule": "Resolve exact canonical commit, require root tree ddfb6e428b267e66d820bbd52e0b8932168b0601, then require school tree 836ffa7df77240e5980fe79727436a446880cf90 and the path-sorted entries below."
+  },
+  "prerequisiteEvidence": {
+    "smoke": {
+      "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING",
+      "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+      "receiptSchemaVersion": 15,
+      "receiptBlob": "007c31cafaa72c536f5e804473c7cf3f2851d317",
+      "receiptPr": 181,
+      "exactSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+    },
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37225838208,
+        "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37225838207,
+        "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37225838221,
+        "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "comparisonBundle": {
+    "priorPackage": {
+      "canonicalCommitSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "schoolTreeGitSha": "284f86df558f0033aeca463f5a34129a3b2beaac",
+      "receiptSchemaVersion": 3
+    },
+    "schoolTreeDelta": {
+      "added": [
+        "repair-outfit-mount/HANDOFF.md",
+        "src/server/ShoppingPurchase.server.lua",
+        "src/server/ShoppingPurchaseController.lua",
+        "src/shared/LegacyShoppingBoundary.lua",
+        "tests/shopping_purchase_authority_spec.lua",
+        "tests/shopping_runtime_authority_spec.lua"
+      ],
+      "changed": [
+        "default.project.json",
+        "src/client/CanonicalSchoolClient.client.lua",
+        "src/shared/LegacyOutfitEntry.lua",
+        "tests/legacy_hud_contract_spec.lua"
+      ],
+      "removed": []
+    },
+    "referenceEvidence": [
+      {
+        "owner": "Roblox High School QA & Contract",
+        "branch": "qa/high-school-rhs2-video-acceptance-23cc398-v1",
+        "branchHead": "16ef696294b877285830d4b1b006f1ef2d752432",
+        "path": "coordination/reference-extraction/qa_p1_spawn_school_hud_acceptance_4323049.json",
+        "blobSha": "a013055de1a9651e112065f4ed75388143312b28",
+        "referenceClipTime": [
+          "A@00:05",
+          "A@00:25",
+          "A@00:45",
+          "A@02:05",
+          "B@00:45",
+          "C@00:05",
+          "C@01:05"
+        ],
+        "status": "ACCESSIBLE_COORDINATION_ACCEPTANCE__P1_CANDIDATE_NOT_YET_TESTED"
+      },
+      {
+        "owner": "Roblox High School Progression & Mobile",
+        "branch": "prep/high-school-progression-outfit-replay-23cc398-v1",
+        "branchHead": "92b676b325a295dddd93a6189d46332648f059b5",
+        "path": "coordination/reference-extraction/mobile_hud_normalized_safe_area_contract_4323049.json",
+        "blobSha": "91e96c88d119c80c8c2256a1de869a4e9176fff9",
+        "referenceClipTime": [
+          "B@00:45",
+          "C@00:05",
+          "C@01:05"
+        ],
+        "status": "ACCESSIBLE_NORMALIZED_SOURCE_OCCUPANCY__TARGET_DEVICE_EXECUTION_PENDING"
+      },
+      {
+        "owner": "Roblox High School Content QA",
+        "branch": "support/high-school-avatar-customization-content-00df979",
+        "branchHead": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+        "status": "FROZEN_SUPPORT_EVIDENCE__RAW_VIDEO_BINARIES_NOT_COMMITTED"
+      }
+    ],
+    "rawReferencePolicy": "Authorized video bytes remain in persistent Library IDs and are not duplicated into Git. Package carries hashes, timestamps and evidence pointers only.",
+    "beforeAfterStatus": "PRIOR_PACKAGE_TREE_DELTA_RECORDED__RHS2_RENDERED_BEFORE_AFTER_PENDING_P1_CANDIDATE"
+  },
+  "referenceClipTime": [
+    "A@00:05 school frontage",
+    "A@00:25 bright atrium",
+    "A@00:45 corridor/staircase",
+    "A@02:05 stairwell/inventory",
+    "B@00:45 dealership",
+    "C@00:05 Travel",
+    "C@01:05 job result"
+  ],
+  "acceptanceCriteria": [
+    "Exact canonical commit, root tree and school tree resolve unchanged.",
+    "Smoke receipt schema 15 and all three exact-head push guards point to the same canonical SHA.",
+    "Known rendered, device, collision and live-rejoin gaps remain explicit and are not upgraded by packaging.",
+    "Reference evidence remains accessible by exact branch head, path and blob without committing raw video binaries.",
+    "No Roblox publication, spend, credential change, task mutation or product source edit occurs."
+  ],
+  "knownGaps": [
+    {
+      "id": "SPAWN_ENTRY_MAT_AABB_OVERLAP",
+      "owner": "Pip High Free Roam",
+      "status": "OPEN_P1"
+    },
+    {
+      "id": "RHS2_VISIBLE_BASELINE_NOT_IMPLEMENTED",
+      "owner": "Pip High Free Roam",
+      "status": "OPEN_P1"
+    },
+    {
+      "id": "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
+      "owner": "Roblox High School QA & Contract / Integration Smoke",
+      "status": "LOCAL_ONLY_REQUIRED_AFTER_P1"
+    },
+    {
+      "id": "LIVE_DATASTORE_REJOIN",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "RUNTIME_PENDING"
+    }
+  ],
+  "outputLocation": "coordination/release-packages/pip-high-school-4323049-source-tree-836ffa7d.json",
+  "blocker": null,
+  "nextHandoff": "Roblox High School Control Tower activates exactly one Pip High Free Roam P1 producer from canonical 43230492964ea637f69747e25a3e72d6cb268ebe.",
+  "packageSemantics": {
+    "checkpointOnly": true,
+    "productComplete": false,
+    "exactRhs2ParityClaimed": false,
+    "robloxPublished": false
+  },
+  "entries": [
+    {
+      "path": "default.project.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba5e85e82652f137cb17e76016f062731c033761",
+      "size": 4095
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5e5da58287d0d8496bfea5c74995155d1e752553",
+      "size": 384
+    },
+    {
+      "path": "repair-outfit-mount",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "63208d0cc5edbd5c980e2efd891dbf5dfcbda455"
+    },
+    {
+      "path": "repair-outfit-mount/HANDOFF.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8fe44483c8737c40db10d9557f5c7b96c2480bc",
+      "size": 924
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "714fb35b932dd03be8b32017c679b56a1e537e1a"
+    },
+    {
+      "path": "src/client",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4e0d76e5916d40e05a684864870c14a07358c4f6"
+    },
+    {
+      "path": "src/client/AvatarCustomization.client.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0d408a368df96d11bdf8a3fc4af134d0b832105",
+      "size": 4689
+    },
+    {
+      "path": "src/client/CanonicalSchoolClient.client.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+      "size": 54788
+    },
+    {
+      "path": "src/client/SchoolHud.client.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6408bfc2d15bc455309d516f04e4f6ff5f3b8f6",
+      "size": 9549
+    },
+    {
+      "path": "src/server",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c67039242207d3ebe7bb1ee47dd7f9748da11192"
+    },
+    {
+      "path": "src/server/CafeJob.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "501ed91eaf46a5a21d9703a207b72026076a0649",
+      "size": 4677
+    },
+    {
+      "path": "src/server/CafeJobController.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "18948eb98f864e76685a807a2e5a9351ca521725",
+      "size": 7302
+    },
+    {
+      "path": "src/server/CampusBuilder.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "402bc78ab622464e2f6ee12cc737ad32b6e8143a",
+      "size": 23476
+    },
+    {
+      "path": "src/server/ClassActivityCatalog.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+      "size": 1717
+    },
+    {
+      "path": "src/server/ClassEducation.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "034eb06201c6e86ad553fbe088f0fbe61a3a76cc",
+      "size": 10032
+    },
+    {
+      "path": "src/server/ClassProgressionCoordinator.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2115e20f81eae95bed1b7b15785394f952e1d6d8",
+      "size": 4841
+    },
+    {
+      "path": "src/server/ClassSessionController.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+      "size": 7395
+    },
+    {
+      "path": "src/server/EconomyRepository.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef06d4e29597b035767e10c1fd6b7313b331739f",
+      "size": 12050
+    },
+    {
+      "path": "src/server/EducationEngine.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4dc804691622f8945fc9949616cb3dc768df1bff",
+      "size": 12326
+    },
+    {
+      "path": "src/server/FoundationBootstrap.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64f45e7a7957fe2bada9b6eedffa05b4e575d120",
+      "size": 5888
+    },
+    {
+      "path": "src/server/FoundationRuntime.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4ffc7af31070d4aa680333de8721a8c9beb7137",
+      "size": 56
+    },
+    {
+      "path": "src/server/HousingEditorController.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6568be9d19063e0320bdae0fedd55439f9856405",
+      "size": 21175
+    },
+    {
+      "path": "src/server/HousingLayoutRepository.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb20f798823c5430cd3aa7faaaed111edd98f235",
+      "size": 16072
+    },
+    {
+      "path": "src/server/HousingLifecycle.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5e7360a33c6288f785f5809d8cd458524ffcf899",
+      "size": 4072
+    },
+    {
+      "path": "src/server/HousingService.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4a5a8f17d3d01a0249280f2e0e9f46a72edae52f",
+      "size": 21411
+    },
+    {
+      "path": "src/server/OutfitOperations.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "685f7a698001380d254e3868dbd119589f3853ba",
+      "size": 4352
+    },
+    {
+      "path": "src/server/OutfitOperationsController.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "559eee7ea8d7363814d5645229392527cf05ba86",
+      "size": 8679
+    },
+    {
+      "path": "src/server/ProgressionBinding.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "979d63565a745d5674c4d2ba8181efd258d5169c",
+      "size": 2685
+    },
+    {
+      "path": "src/server/ProgressionDataStore.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2eb864eb32d434f7853b9ce508c12a3c35280a64",
+      "size": 2219
+    },
+    {
+      "path": "src/server/ProgressionPersistence.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d68c87009a393c3bc8da959bd63cc5e1c9911838",
+      "size": 1246
+    },
+    {
+      "path": "src/server/ProgressionRepository.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+      "size": 16381
+    },
+    {
+      "path": "src/server/ProgressionStudioStore.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23e737c1e48788455b045436de01ce01128059d8",
+      "size": 1511
+    },
+    {
+      "path": "src/server/QuestionBank.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbffb082af5f2ff53793a2ae96aaf12c9ac2b9b4",
+      "size": 6529
+    },
+    {
+      "path": "src/server/SchoolLoop.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bddce8f4e1e06bf686fb8526005021996218982c",
+      "size": 8780
+    },
+    {
+      "path": "src/server/ShoppingPurchase.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb59086b4b21abfcb038f4972ecafb17b2d38b9a",
+      "size": 2445
+    },
+    {
+      "path": "src/server/ShoppingPurchaseController.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
+      "size": 5097
+    },
+    {
+      "path": "src/server/VehicleInput.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "189f96a19d8ba7a9330f915a148a76e3a1b392c0",
+      "size": 774
+    },
+    {
+      "path": "src/server/VehicleLifecycle.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8476cc74f7f51cbe203f0fdb60d476652fc93ab",
+      "size": 2331
+    },
+    {
+      "path": "src/server/VehicleService.server.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54f12d7a7dfddcccc9fbaaa70317d6f2c10475a5",
+      "size": 12041
+    },
+    {
+      "path": "src/shared",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "08c7aed3a5eb7c5a5e7d0c16ebee2200ab375fd0"
+    },
+    {
+      "path": "src/shared/LegacyOutfitEntry.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8cad0a6d510a98f9af3a1d3f243ec310acbed05e",
+      "size": 9828
+    },
+    {
+      "path": "src/shared/LegacyShoppingBoundary.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "517d3ae9eca6d81a77d5b97294d25a7f0ed47c9a",
+      "size": 1907
+    },
+    {
+      "path": "src/shared/SchoolConfig.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "334705e54cab66bd586f356d3f6ba0cfe28a5340",
+      "size": 4156
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "80fc65a5439b9421a4b5c41345e1b7a19008cebd"
+    },
+    {
+      "path": "tests/avatar_customization_entry_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24d99ea02bcf3f033ca844dbaf51e6c77804c2e3",
+      "size": 2632
+    },
+    {
+      "path": "tests/avatar_customization_runtime_mount_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22eae4299e87d15683e6cb744c448720d4a252b2",
+      "size": 1220
+    },
+    {
+      "path": "tests/cafe_job_controller_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ecdbe60cc6af6561f421f5a32aeb1976ed07c63",
+      "size": 6625
+    },
+    {
+      "path": "tests/class_education_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b7e318bcfcc32e586267e654a64a5c3266b7181",
+      "size": 8707
+    },
+    {
+      "path": "tests/class_progression_integration_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d33ef33b9059efef6efd38461f76cc1a218287c1",
+      "size": 4159
+    },
+    {
+      "path": "tests/economy_repository_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fda527cfc727fdcea7ff25ca2c628c3fb42e786b",
+      "size": 6670
+    },
+    {
+      "path": "tests/education_engine_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59a15b58b752e3d856a5f97928ecd3129058c65b",
+      "size": 9476
+    },
+    {
+      "path": "tests/fixtures",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2a10f39c8b9b0fbaf54c7bd2666409ee598a63a7"
+    },
+    {
+      "path": "tests/fixtures/legacy_housing_editor_v2_reference.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "405022b4f460663329dbb6a571804afba0b31518",
+      "size": 2925
+    },
+    {
+      "path": "tests/foundation_world_contract_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bbf5f7ed9a8bcb55556e0280eb1690b9bed1634a",
+      "size": 1871
+    },
+    {
+      "path": "tests/housing_editor_controller_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4bdfe0072d4971e7cef8e86ae42c617fc41a0d62",
+      "size": 8449
+    },
+    {
+      "path": "tests/housing_layout_repository_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8bb01ea3453d737aede152cc18319b0446889dda",
+      "size": 6418
+    },
+    {
+      "path": "tests/housing_lifecycle_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec56131b5651e456b0be882191660457b62ea28a",
+      "size": 1937
+    },
+    {
+      "path": "tests/housing_plot_contract_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29af23df9263d3af0d7720fd725d21feb7db4801",
+      "size": 2389
+    },
+    {
+      "path": "tests/housing_ui_contract_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "855c1826b15192da9937a361ecc04854041aa3ba",
+      "size": 8412
+    },
+    {
+      "path": "tests/legacy_hud_contract_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544",
+      "size": 2140
+    },
+    {
+      "path": "tests/outfit_operations_runtime_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc23239958fccbd18cb2a9777e23202e43125b9c",
+      "size": 3937
+    },
+    {
+      "path": "tests/outfit_operations_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af859ad3173947f5630fc48f7c1ffb30bcd3dc25",
+      "size": 5654
+    },
+    {
+      "path": "tests/progression_binding_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43086556864320203793de19d8704108bc2cbd5f",
+      "size": 4212
+    },
+    {
+      "path": "tests/progression_repository_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3616a9a73a3cf8f2f31d1b3d4436803f6d797581",
+      "size": 9629
+    },
+    {
+      "path": "tests/shopping_purchase_authority_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9741df963e21664929f4675cc26d2482ad1fc0ff",
+      "size": 4950
+    },
+    {
+      "path": "tests/shopping_runtime_authority_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c31737c11733fab2df6e469fc9605870c0da4f12",
+      "size": 3838
+    },
+    {
+      "path": "tests/vehicle_input_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68777cc678aebd48b0e0126ba91bacaa3d77ad5b",
+      "size": 1455
+    },
+    {
+      "path": "tests/vehicle_lifecycle_spec.lua",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3812c0d42b2d1a98fbb9b73ecc74a56bef17541",
+      "size": 2268
+    }
+  ]
+}
