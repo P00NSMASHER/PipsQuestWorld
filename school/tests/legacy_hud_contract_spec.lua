@@ -37,5 +37,7 @@ dofile("school/tests/avatar_customization_entry_spec.lua")
 dofile("school/tests/avatar_customization_runtime_mount_spec.lua")
 dofile("school/tests/outfit_operations_spec.lua")
 dofile("school/tests/outfit_operations_runtime_spec.lua")
+dofile("school/tests/shopping_purchase_authority_spec.lua")
+dofile("school/tests/shopping_runtime_authority_spec.lua")
 
 print("HIGH_SCHOOL_LEGACY_HUD_CONTRACT_PASS")
