@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "Roblox High School Control Tower",
   "observedAt": "2026-10-04T16:23:13Z",
-  "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+  "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, one reserved producer, and no parity claim without exact-SHA QA plus rendered/device comparison.",
@@ -120,9 +120,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "RESERVED_NOT_ACTIVE",
+      "status": "RESERVED_NOT_ACTIVE__WAIT_SMOKE_PACKAGE",
       "owner": "Pip High Free Roam",
-      "inputSha": "POST_PACKAGE_CANONICAL_SHA_TO_BE_PINNED",
+      "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -139,7 +139,7 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "school/** on one activated producer branch",
-      "blocker": "PR 165 Integration -> Smoke -> Package incomplete; exact next base unavailable.",
+      "blocker": "Exact canonical 6fe2541 has Integration PASS; Smoke and deterministic Package remain.",
       "nextHandoff": "Roblox High School QA & Contract"
     },
     {
@@ -239,5 +239,19 @@
     "TIMESTAMPED_OBSERVATION_INDEX",
     "PLAYBACK_2X_CAUTION"
   ],
-  "productParityGapsClosed": []
+  "productParityGapsClosed": [],
+  "lastReconciledAt": "2026-10-04T16:52:26Z",
+  "pipeline": {
+    "canonicalSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "integrationStatus": "PASS_INTEGRATED_EXACT_HEAD",
+    "smokeStatus": "ACTIVE",
+    "packageStatus": "PENDING",
+    "nextProducerActivation": "BLOCKED_UNTIL_EXACT_SMOKE_PASS_AND_PACKAGE"
+  },
+  "referenceAccess": {
+    "owner": "Roblox High School Content QA",
+    "persistentIdsAvailable": true,
+    "status": "SOURCE_IDENTITIES_AND_TIMESTAMP_INDEX_AVAILABLE__TRANSIENT_BYTE_RETRIEVAL_DOES_NOT_BLOCK_PIPELINE",
+    "rule": "Content QA owns retrieval/annotation issues; other lanes continue from the durable timestamped evidence without inventing unseen details."
+  }
 }
