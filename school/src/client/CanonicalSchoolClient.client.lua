@@ -204,24 +204,10 @@ local function controlExclusionZones(viewportWidth, viewportHeight, insets)
         return {}
     end
 
-    local zoneWidth = math.min(190, math.floor(viewportWidth * 0.22))
-    local zoneHeight = math.min(120, math.floor(viewportHeight * 0.25))
-    local zoneY = viewportHeight - insets.bottom - zoneHeight
-    local leftX = insets.left
-    local rightX = viewportWidth - insets.right - zoneWidth
-
-    local function zone(x)
-        return {
-            x = x,
-            y = zoneY,
-            width = zoneWidth,
-            height = zoneHeight,
-            right = x + zoneWidth,
-            bottom = zoneY + zoneHeight,
-        }
-    end
-
-    return { zone(leftX), zone(rightX) }
+    return ResponsiveHudLayout.touchExclusionZones(
+        { width = viewportWidth, height = viewportHeight },
+        insets
+    )
 end
 
 local function applyResponsiveHudLayout()
