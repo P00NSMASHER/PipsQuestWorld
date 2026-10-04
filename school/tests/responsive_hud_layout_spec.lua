@@ -22,27 +22,24 @@ local fixtures = {
         name = "reference-desktop-909x483",
         viewport = { width = 909, height = 483 },
         insets = { left = 0, top = 0, right = 0, bottom = 0 },
-        zones = {},
     },
     {
         name = "iphone-landscape-852x393",
         viewport = { width = 852, height = 393 },
-        insets = { left = 47, top = 0, right = 47, bottom = 21 },
-        zones = {
-            zone(47, 274, 187, 98),
-            zone(618, 274, 187, 98),
-        },
+        insets = { left = 47, top = 12, right = 47, bottom = 21 },
     },
     {
         name = "ipad-landscape-1024x768",
         viewport = { width = 1024, height = 768 },
-        insets = { left = 24, top = 0, right = 24, bottom = 20 },
-        zones = {
-            zone(24, 628, 190, 120),
-            zone(810, 628, 190, 120),
-        },
+        insets = { left = 24, top = 24, right = 24, bottom = 20 },
     },
 }
+
+for _, fixture in ipairs(fixtures) do
+    fixture.zones = fixture.name == "reference-desktop-909x483"
+        and {}
+        or ResponsiveHudLayout.touchExclusionZones(fixture.viewport, fixture.insets)
+end
 
 local layouts = {}
 for _, fixture in ipairs(fixtures) do
@@ -61,18 +58,33 @@ for _, fixture in ipairs(fixtures) do
     assert(not ResponsiveHudLayout.overlaps(layout.status, layout.quick), fixture.name .. ": status/quick overlap")
     assert(not ResponsiveHudLayout.overlaps(layout.rail, layout.quick), fixture.name .. ": rail/quick overlap")
 
-    for _, exclusion in ipairs(fixture.zones) do
-        assert(not ResponsiveHudLayout.overlaps(layout.status, exclusion), fixture.name .. ": status/control overlap")
-        assert(not ResponsiveHudLayout.overlaps(layout.rail, exclusion), fixture.name .. ": rail/control overlap")
-        assert(not ResponsiveHudLayout.overlaps(layout.quick, exclusion), fixture.name .. ": quick/control overlap")
+    for index, exclusion in ipairs(fixture.zones) do
+        assert(ResponsiveHudLayout.contains(layout.safe, exclusion), fixture.name .. ": touch zone outside safe area")
+        assert(not ResponsiveHudLayout.overlaps(layout.status, exclusion), fixture.name .. ": status/movement-camera overlap " .. index)
+        assert(not ResponsiveHudLayout.overlaps(layout.rail, exclusion), fixture.name .. ": rail/movement-camera overlap " .. index)
+        assert(not ResponsiveHudLayout.overlaps(layout.quick, exclusion), fixture.name .. ": quick/movement-camera overlap " .. index)
+        assert(exclusion.width == math.min(190, math.floor(fixture.viewport.width * 0.22)), fixture.name .. ": normalized touch-zone width")
+        assert(exclusion.height == math.min(120, math.floor(fixture.viewport.height * 0.25)), fixture.name .. ": normalized touch-zone height")
+        assert(exclusion.bottom == fixture.viewport.height - fixture.insets.bottom, fixture.name .. ": touch zone respects bottom safe inset")
+    end
+
+    assert(layout.railButtonSize * 4 + layout.railGap * 3 <= layout.rail.height, fixture.name .. ": rail buttons exceed rail")
+    assert(layout.quickSlotSize * 4 + layout.quickGap * 3 <= layout.quick.width, fixture.name .. ": quick slots exceed bar")
+    assert(layout.quickSlotSize <= layout.quick.height, fixture.name .. ": quick slots exceed bar height")
+
+    if #fixture.zones > 0 then
+        assert(fixture.zones[1].x == fixture.insets.left, fixture.name .. ": left movement zone respects safe inset")
+        assert(fixture.zones[2].right == fixture.viewport.width - fixture.insets.right, fixture.name .. ": right camera zone respects safe inset")
+        assert(layout.status.y >= fixture.insets.top, fixture.name .. ": status ignores top safe inset")
+        assert(layout.rail.y >= fixture.insets.top, fixture.name .. ": rail ignores top safe inset")
     end
 
     layouts[fixture.name] = layout
 end
 
 local nominal = layouts["reference-desktop-909x483"]
-approxBetween(nominal.status.width / 909, 0.12, 0.15, "nominal status width")
-approxBetween(nominal.status.height / 483, 0.13, 0.17, "nominal status height")
+approxBetween(nominal.status.width / 909, 0.129, 0.131, "nominal normalized status width")
+approxBetween(nominal.status.height / 483, 0.146, 0.148, "nominal normalized status height")
 approxBetween(nominal.rail.width / 909, 0.045, 0.065, "nominal rail width")
 approxBetween(nominal.rail.height / 483, 0.40, 0.48, "nominal rail height")
 approxBetween(nominal.quick.width / 909, 0.24, 0.30, "nominal quick width")
