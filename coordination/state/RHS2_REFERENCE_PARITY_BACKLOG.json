@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T20:05:09.141Z",
+  "observedAt": "2026-10-04T20:39:52.605Z",
   "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved P1 owner, exact-SHA pipeline gates, and no parity claim without rendered/device comparison.",
     "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "blocker": "Exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe has Smoke PASS with rendered/device checks pending; deterministic Package is the sole remaining gate before P1 product activation.",
-    "nextHandoff": "Roblox High School Release & Package Gate packages exact 4323049; Control Tower then activates exactly one Pip High Free Roam P1 producer."
+    "blocker": null,
+    "nextHandoff": "Pip High Free Roam implements P1 on the sole activated producer branch; Roblox High School QA & Contract reviews only the exact candidate head."
   },
   "sources": {
     "A": {
@@ -135,9 +135,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "RESERVED_NOT_ACTIVE__WAIT_EXACT_PACKAGE",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER",
       "owner": "Pip High Free Roam",
-      "inputSha": "POST_4323049_PACKAGED_CANONICAL_TBD",
+      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -153,9 +153,9 @@
         "Deterministic CI, independent QA, Integration, Smoke and Package bind to exact heads.",
         "Rendered target-device comparison remains required."
       ],
-      "outputLocation": "school/** on one activated producer branch",
-      "blocker": "Deterministic Package must bind exact canonical 4323049 before Control Tower authorizes one producer branch.",
-      "nextHandoff": "Release & Package -> Control Tower -> one Pip High Free Roam producer."
+      "outputLocation": "school/** on rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract after exact-head CI on one bounded candidate PR."
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
@@ -241,15 +241,15 @@
     }
   ],
   "supportAssignments": {
-    "Foundation": "Preserve PR 179 MainSpawn/EntryMat AABB finding and PR 175 authority delta; wait unchanged unless a new exact-canonical authority fact appears.",
+    "Foundation": "Preserve PR 179 MainSpawn/EntryMat AABB finding and PR 175 authority delta; support the active P1 producer without opening a second product branch.",
     "ContentQA": "Maintain stable A/B/C identities, timestamps, explicit unknowns and 2x caution; own retry of the transient Library byte-materialization 502 without blocking Package or P1 preparation.",
     "ProgressionMobile": "Preserve the schema-15 normalized obstruction measurement protocol; prepare no UI product code before P1 activation.",
     "ClassEducation": "Prepare classroom/free-roam transition evidence only; no custom schoolwork before the P1 visual baseline.",
-    "QA": "Preserve PR 170 review 5407562971. Prepare exact P1 rendered comparison criteria without self-certifying parity.",
+    "QA": "Wait for the exact P1 candidate from the sole producer; validate exact head independently, including unique authorities and preserved rendered/device pending status.",
     "Integration": "Preserve PR 180 exact baseline blobs, collision surfaces and ordered protected handoff; wait for a future QA-approved P1 candidate.",
     "Smoke": "PR 181 / receipt schema 15 is PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING on 4323049; runtime, rendered, device, physical-collision and live-rejoin checks remain pending.",
-    "ReleasePackage": "ACTIVE: package only exact canonical 4323049 using Smoke receipt schema 15; bind deterministic tree identity and never publish Roblox.",
-    "FreeRoam": "Unique reserved P1 owner; no product branch or writes until Control Tower supplies the exact packaged 4323049 activation SHA."
+    "ReleasePackage": "PR 183 / receipt schema 4 packages exact canonical 4323049 as deterministic school tree 836ffa7; preserve frozen evidence and wait for the next candidate.",
+    "FreeRoam": "ACTIVE sole P1 product producer on rebuild/high-school-rhs2-spawn-school-hud-4323049-v1 rooted at exact packaged canonical 4323049; implement only the spawn/school/HUD slice."
   },
   "evidenceGapsClosed": [
     "SOURCE_IDENTITY",
@@ -263,7 +263,7 @@
     "SMOKE_DEVICE_OBSTRUCTION_MEASUREMENT_PROTOCOL_PINNED"
   ],
   "productParityGapsClosed": [],
-  "lastReconciledAt": "2026-10-04T20:05:09.141Z",
+  "lastReconciledAt": "2026-10-04T20:39:52.605Z",
   "pipeline": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "canonicalCiStatus": "PASS_ALL_THREE_EXACT_PUSH_GUARDS",
@@ -274,8 +274,11 @@
     "integrationStatus": "PASS__PR177_RECEIPT_SCHEMA12",
     "integrationReadiness": "PR180_P1_SEAMS_PINNED",
     "smokeStatus": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING__PR181_SCHEMA15",
-    "packageStatus": "ACTIVE_PACKAGE_EXACT_4323049",
-    "nextProducerActivation": "BLOCKED_ONLY_UNTIL_EXACT_4323049_DETERMINISTIC_PACKAGE"
+    "packageStatus": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE__PR183_SCHEMA4__SCHOOL_TREE_836FFA7",
+    "nextProducerActivation": "ACTIVE__SOLE_PIP_HIGH_FREE_ROAM_PRODUCER__rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+    "activeProducerBranch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+    "activeProducerBaseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "activeProducerPr": null
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -295,8 +298,8 @@
       "finding": "Canonical MainSpawn is inside the lobby and overlaps the collidable EntryMat across a 10-by-3-stud horizontal region.",
       "acceptanceCriteria": "P1 relocates the singular spawn outside, preserves one SchoolEntrance seam, and proves collision-safe spawn -> stairs -> doors -> atrium -> corridor navigation.",
       "outputLocation": "coordination/reference/rhs2-entry-6fe2541/FOUNDATION_4323049_SPAWN_AABB_DELTA.md",
-      "blocker": "P1 producer not active until exact Package.",
-      "nextHandoff": "Pip High Free Roam after Control Tower activation."
+      "blocker": null,
+      "nextHandoff": "Pip High Free Roam active producer implements the collision-safe route."
     },
     {
       "id": "CURRENT_FREE_ROAM_HUD_OBSTRUCTION_BASELINE",
@@ -306,8 +309,39 @@
       "finding": "Canonical LegacySchoolMenu is an always-visible 236x184 bottom-left card with touch bottom margin 112, unlike the compact recurring placement groups in the footage.",
       "acceptanceCriteria": "P1 captures normalized bounds for right rail, top-right status/balances, bottom slots, modals and Roblox controls on iPhone/iPad; menu-closed view must not obstruct the navigation sightline.",
       "outputLocation": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json schema 15",
-      "blocker": "Rendered/device execution pending; static evidence does not close parity.",
-      "nextHandoff": "Pip High Free Roam implementation, then QA and Smoke rendered/device comparison."
+      "blocker": "Rendered/device execution remains pending; static evidence cannot close parity.",
+      "nextHandoff": "Pip High Free Roam active producer, then independent QA and Smoke rendered/device comparison."
     }
-  ]
+  ],
+  "packageCheckpoint": {
+    "owner": "Roblox High School Release & Package Gate",
+    "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "referenceClipTime": "A/B/C timestamps preserved; package is source identity only",
+    "acceptanceCriteria": "Exact canonical commit, exact school/** Git tree, Smoke receipt and all three exact push guards bind to the same SHA.",
+    "outputLocation": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json schema 4; coordination/release-package-4323049/HANDOFF.md",
+    "blocker": null,
+    "nextHandoff": "Roblox High School Control Tower -> Pip High Free Roam",
+    "receiptPr": 183,
+    "receiptMergeCommit": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d",
+    "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "robloxPublished": false
+  },
+  "producerActivation": {
+    "owner": "Pip High Free Roam",
+    "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "referenceClipTime": [
+      "A@00:05",
+      "A@00:25",
+      "A@00:45",
+      "A@02:05",
+      "A/B/C recurring HUD"
+    ],
+    "acceptanceCriteria": "One bounded P1 branch only; unique authorities preserved; exact-head CI -> independent QA -> Integration -> Smoke -> Package; rendered/device comparison required before parity.",
+    "outputLocation": "school/** on rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+    "blocker": null,
+    "nextHandoff": "Roblox High School QA & Contract",
+    "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+    "status": "ACTIVE_SOLE_PRODUCT_PRODUCER"
+  }
 }
