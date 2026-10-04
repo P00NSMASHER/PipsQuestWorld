@@ -1,43 +1,48 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Release & Package Gate",
   "owner": "Roblox High School Release & Package Gate",
-  "observedAt": "2026-10-04T17:02:00Z",
+  "observedAt": "2026-10-04T18:58:00Z",
   "result": "REFERENCE_COMPARISON_BUNDLE_PREPARED__WAIT_EXACT_SMOKE_AND_AFTER_CAPTURE",
-  "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
   "outputLocation": "coordination/HIGH_SCHOOL_RELEASE_REFERENCE_BUNDLE_PREP.json",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
-    "rootCommitTreeSha": "faa494f67001727cd162ca9049d1e7f008c64982",
-    "schoolTreeGitSha": "6faddfe9ec04f866931e2659a109eaf8ebd59b91",
-    "recursiveEntryCount": 66,
-    "blobCount": 60,
+    "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "parentSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "rootCommitTreeSha": "ddfb6e428b267e66d820bbd52e0b8932168b0601",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "recursiveEntryCount": 68,
+    "blobCount": 61,
+    "subtreeCount": 7,
     "recursiveTreeTruncated": false,
+    "packageArtifactNameTemplate": "pip-high-school-4323049-source-tree-836ffa7d",
+    "packageArtifactEmitted": false,
     "exactHeadPushCi": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37217941089,
+        "runId": 37225838208,
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37217941074,
+        "runId": 37225838207,
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37217941080,
+        "runId": 37225838221,
         "conclusion": "success"
       }
     ]
   },
   "integration": {
-    "pr": 165,
-    "producerSha": "9bb1c4c76927195edb22abff96c7d9679685f342",
-    "mergeCommitSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
-    "mergedAt": "2026-10-04T16:45:25Z",
-    "status": "MERGED_EXACT_QA_PASS"
+    "pr": 170,
+    "producerSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "status": "PASS_INTEGRATED_EXACT_HEAD",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
+    "qaEvidence": "PR 170 review 5407562971"
   },
   "referenceClips": {
     "A": {
@@ -83,102 +88,71 @@
     }
   },
   "referenceAccessibility": {
-    "metadataResolution": "PASS_ALL_THREE",
-    "binaryMaterialization": "TRANSIENT_HTTP_502_ALL_THREE",
+    "sourceMetadata": "PASS_ALL_THREE__CONTROL_TOWER_BACKLOG",
+    "durableTimestampContracts": [
+      {
+        "owner": "Roblox High School Progression & Mobile",
+        "branch": "prep/high-school-progression-outfit-replay-23cc398-v1",
+        "headSha": "280011403f6ec1e6580323b28c7fe778f4daa737",
+        "path": "coordination/reference-extraction/mobile_hud_read_state_contract_6fe2541.json",
+        "clips": [
+          "B",
+          "C"
+        ]
+      },
+      {
+        "owner": "Roblox High School Class & Education",
+        "branch": "rebuild/high-school-class-education-invalid-choice-23cc398-v1",
+        "headSha": "e6f90a673a9cb45a76763276910edd22c9d270cb",
+        "path": "coordination/reference-extraction/class_activity_parity_contract_6fe2541.json",
+        "clips": [
+          "A",
+          "B"
+        ]
+      }
+    ],
     "rawVideoCommittedToGit": false,
-    "retryRule": "Re-prepare signed transfers and materialize through the Library helper on the next release run; never use raw curl or commit the videos.",
-    "packagingDisposition": "REFERENCE_BUNDLE_NOT_YET_ACCESSIBLE__DO_NOT_CLAIM_BEFORE_AFTER_COMPLETE"
+    "status": "COMPACT_HASHED_REFERENCE_EVIDENCE_ACCESSIBLE__RAW_BINARIES_EXCLUDED",
+    "note": "The prior release-lane transient Library transfer error is not carried forward as a global blocker because later lane-owned contracts pin validated A/B/C hashes and timestamp evidence."
   },
   "beforeAfterEvidence": {
     "before": {
       "source": "authorized RHS2 clips A/B/C",
-      "status": "REFERENCE_IDENTITIES_AND_TIMESTAMPS_PINNED__BINARY_RETRY_REQUIRED"
+      "status": "HASHES_IDS_TIMESTAMPS_AND_COMPACT_CONTRACTS_ACCESSIBLE"
     },
     "after": {
-      "source": "exact canonical rendered/device capture",
+      "source": "exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe rendered/device capture",
       "status": "NOT_CAPTURED"
     },
     "exactParityClaimed": false,
     "timingParityClaimed": false,
     "timingNote": "Visible 2x playback segments prohibit deriving original movement speed or animation timing without correction."
   },
-  "changedSchoolManifest": {
-    "parentCanonicalSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
-    "changedBlobCount": 8,
-    "outsideSchoolChanges": 0,
-    "paths": [
-      {
-        "path": "school/default.project.json",
-        "blobSha": "ba5e85e82652f137cb17e76016f062731c033761",
-        "size": 4095
-      },
-      {
-        "path": "school/src/client/CanonicalSchoolClient.client.lua",
-        "blobSha": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
-        "size": 54788
-      },
-      {
-        "path": "school/src/server/ShoppingPurchase.server.lua",
-        "blobSha": "cb59086b4b21abfcb038f4972ecafb17b2d38b9a",
-        "size": 2445
-      },
-      {
-        "path": "school/src/server/ShoppingPurchaseController.lua",
-        "blobSha": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
-        "size": 5097
-      },
-      {
-        "path": "school/src/shared/LegacyShoppingBoundary.lua",
-        "blobSha": "517d3ae9eca6d81a77d5b97294d25a7f0ed47c9a",
-        "size": 1907
-      },
-      {
-        "path": "school/tests/legacy_hud_contract_spec.lua",
-        "blobSha": "c5cf32c28b8bf0ef177fa0154767394d5cfd3544",
-        "size": 2140
-      },
-      {
-        "path": "school/tests/shopping_purchase_authority_spec.lua",
-        "blobSha": "9741df963e21664929f4675cc26d2482ad1fc0ff",
-        "size": 4950
-      },
-      {
-        "path": "school/tests/shopping_runtime_authority_spec.lua",
-        "blobSha": "c31737c11733fab2df6e469fc9605870c0da4f12",
-        "size": 3838
-      }
-    ]
-  },
   "acceptanceCriteria": [
-    "Integration Smoke receipt passes exact canonical 6fe254139ae3382f0ab71e6725df00c1c1a69822.",
+    "Integration Smoke passes exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe.",
     "Deterministic package identity binds canonical SHA, root tree, school tree, entry count and blob count.",
-    "Before evidence is accessible from the pinned Library identities and hashes.",
-    "After evidence is an exact-canonical rendered/device capture for the priority visual and interaction surfaces.",
-    "Known visual, interaction and device gaps remain explicit; no exact RHS2 parity claim is made from static CI."
+    "Before evidence remains accessible from pinned clip IDs, hashes, timestamps and lane-owned compact contracts.",
+    "After evidence is a rendered/device capture bound to the exact packaged canonical for the priority surfaces.",
+    "Known visual, interaction and device gaps remain explicit; static CI never certifies exact RHS2 parity."
   ],
   "blockers": [
     {
       "id": "EXACT_SMOKE_PENDING",
       "owner": "Roblox High School Integration Smoke",
-      "status": "ACTIVE_VALIDATE",
-      "unblock": "Exact 6fe2541 Smoke PASS receipt."
-    },
-    {
-      "id": "REFERENCE_BINARY_TRANSFER_502",
-      "owner": "Roblox High School Release & Package Gate",
-      "status": "TRANSIENT_RETRY",
-      "unblock": "Successful Library-helper materialization with hashes revalidated."
+      "status": "WAIT_REPAIRED_CANONICAL_SMOKE",
+      "unblock": "Smoke PASS receipt bound to exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe."
     },
     {
       "id": "EXACT_CANONICAL_AFTER_CAPTURE_MISSING",
       "owner": "Roblox High School QA & Contract",
       "status": "LOCAL_ONLY_REQUIRED",
-      "unblock": "Rendered/device capture bound to exact canonical 6fe2541."
+      "unblock": "Rendered/device capture bound to the exact packaged canonical."
     }
   ],
-  "nextHandoff": "Integration Smoke -> Release & Package -> Control Tower",
+  "nextHandoff": "Integration Smoke -> Release & Package -> Roblox High School Control Tower",
   "packageAllowedNow": false,
   "published": false,
   "moneySpent": false,
+  "productSourceEdited": false,
   "taskStateChanged": false
 }
