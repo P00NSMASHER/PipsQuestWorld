@@ -3,11 +3,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 local ContextActionService = game:GetService("ContextActionService")
 local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local GuiService = game:GetService("GuiService")
 
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
+local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -27,13 +30,13 @@ local gui = Instance.new("ScreenGui")
 gui.Name = "RobloxHighSchoolLegacyUI"
 gui.ResetOnSpawn = false
 gui.DisplayOrder = 10
+gui.IgnoreGuiInset = true
 gui.Parent = playerGui
 
 local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
 local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
 local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
-local bottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
@@ -52,9 +55,9 @@ end
 -- Reference A recurring HUD: compact top-right school status beside a colored action rail.
 local card = Instance.new("Frame")
 card.Name = "CompactSchoolStatus"
-card.AnchorPoint = Vector2.new(1, 0)
-card.Position = UDim2.new(1, -76, 0, 12)
-card.Size = UDim2.new(0, 226, 0, 122)
+card.AnchorPoint = Vector2.new(0, 0)
+card.Position = UDim2.fromOffset(0, 0)
+card.Size = UDim2.fromOffset(118, 70)
 card.BackgroundColor3 = LEGACY_PANEL
 card.BackgroundTransparency = 0.02
 card.Parent = gui
@@ -124,9 +127,9 @@ outline(action, 1)
 
 local actionRail = Instance.new("Frame")
 actionRail.Name = "RHS2ActionRail"
-actionRail.AnchorPoint = Vector2.new(1, 0)
-actionRail.Position = UDim2.new(1, -10, 0, 142)
-actionRail.Size = UDim2.new(0, 56, 0, 226)
+actionRail.AnchorPoint = Vector2.new(0, 0)
+actionRail.Position = UDim2.fromOffset(0, 0)
+actionRail.Size = UDim2.fromOffset(48, 176)
 actionRail.BackgroundTransparency = 1
 actionRail.Parent = gui
 
@@ -160,9 +163,9 @@ local travelRailButton = makeRailButton("RailTravel", "TRAVEL", Color3.fromRGB(2
 
 local quickBar = Instance.new("Frame")
 quickBar.Name = "RHS2QuickBar"
-quickBar.AnchorPoint = Vector2.new(0.5, 1)
-quickBar.Position = UDim2.new(0.5, 0, 1, -bottomMargin)
-quickBar.Size = UDim2.new(0, 238, 0, 54)
+quickBar.AnchorPoint = Vector2.new(0, 0)
+quickBar.Position = UDim2.fromOffset(0, 0)
+quickBar.Size = UDim2.fromOffset(216, 48)
 quickBar.BackgroundTransparency = 1
 quickBar.Parent = gui
 
@@ -191,6 +194,118 @@ for index, slot in ipairs({
     local quickStroke = outline(quickSlot, 2)
     quickStroke.Color = Color3.fromRGB(236, 243, 250)
 end
+
+local currentHudLayout = nil
+local viewportConnection = nil
+
+local function controlExclusionZones(viewportWidth, viewportHeight, insets)
+    if not UserInputService.TouchEnabled then
+        return {}
+    end
+
+    local zoneWidth = math.min(190, math.floor(viewportWidth * 0.22))
+    local zoneHeight = math.min(120, math.floor(viewportHeight * 0.25))
+    local zoneY = viewportHeight - insets.bottom - zoneHeight
+    local leftX = insets.left
+    local rightX = viewportWidth - insets.right - zoneWidth
+
+    local function zone(x)
+        return {
+            x = x,
+            y = zoneY,
+            width = zoneWidth,
+            height = zoneHeight,
+            right = x + zoneWidth,
+            bottom = zoneY + zoneHeight,
+        }
+    end
+
+    return { zone(leftX), zone(rightX) }
+end
+
+local function applyResponsiveHudLayout()
+    local camera = Workspace.CurrentCamera
+    if not camera then
+        return
+    end
+
+    local viewport = camera.ViewportSize
+    local insets = { left = 0, top = 0, right = 0, bottom = 0 }
+    local insetOk, topLeftInset, bottomRightInset = pcall(function()
+        return GuiService:GetGuiInset()
+    end)
+    if insetOk and topLeftInset and bottomRightInset then
+        insets.left = topLeftInset.X
+        insets.top = topLeftInset.Y
+        insets.right = bottomRightInset.X
+        insets.bottom = bottomRightInset.Y
+    end
+
+    local layout = ResponsiveHudLayout.compute(
+        { width = viewport.X, height = viewport.Y },
+        insets,
+        controlExclusionZones(viewport.X, viewport.Y, insets)
+    )
+    local valid, reason = ResponsiveHudLayout.validate(layout)
+    if not valid then
+        warn("Compact HUD layout rejected: " .. tostring(reason))
+        return
+    end
+    currentHudLayout = layout
+
+    card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
+    card.Size = UDim2.fromOffset(layout.status.width, layout.status.height)
+    actionRail.Position = UDim2.fromOffset(layout.rail.x, layout.rail.y)
+    actionRail.Size = UDim2.fromOffset(layout.rail.width, layout.rail.height)
+    quickBar.Position = UDim2.fromOffset(layout.quick.x, layout.quick.y)
+    quickBar.Size = UDim2.fromOffset(layout.quick.width, layout.quick.height)
+
+    title.Position = UDim2.fromOffset(0, 0)
+    title.Size = UDim2.new(1, 0, 0, 17)
+    title.TextSize = 11
+    periodLabel.Position = UDim2.new(0, 6, 0, 18)
+    periodLabel.Size = UDim2.new(1, -12, 0, 17)
+    periodLabel.TextSize = 9
+    statusLabel.Position = UDim2.new(0, 6, 0, 35)
+    statusLabel.Size = UDim2.new(1, -12, 0, 15)
+    statusLabel.TextSize = 8
+    pointsLabel.Position = UDim2.new(0, 6, 0, 51)
+    pointsLabel.Size = UDim2.new(0.42, -8, 0, 14)
+    pointsLabel.TextSize = 8
+    action.Position = UDim2.new(0.42, 0, 0, 50)
+    action.Size = UDim2.new(0.58, -6, 0, 16)
+    action.TextSize = 8
+
+    actionRailLayout.Padding = UDim.new(0, layout.railGap)
+    for _, child in ipairs(actionRail:GetChildren()) do
+        if child:IsA("GuiButton") then
+            child.Size = UDim2.fromOffset(layout.railButtonSize, layout.railButtonSize)
+        end
+    end
+
+    quickLayout.Padding = UDim.new(0, layout.quickGap)
+    for _, child in ipairs(quickBar:GetChildren()) do
+        if child:IsA("GuiObject") and child.Name:match("^QuickSlot") then
+            child.Size = UDim2.fromOffset(layout.quickSlotSize, layout.quickSlotSize)
+        end
+    end
+end
+
+local function bindViewport(camera)
+    if viewportConnection then
+        viewportConnection:Disconnect()
+        viewportConnection = nil
+    end
+    if camera then
+        viewportConnection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveHudLayout)
+    end
+    applyResponsiveHudLayout()
+end
+
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    bindViewport(Workspace.CurrentCamera)
+end)
+bindViewport(Workspace.CurrentCamera)
 
 local modal = Instance.new("Frame")
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1074,6 +1189,7 @@ houseIcon.Parent = actionRail
 round(houseIcon, 10)
 local houseRailStroke = outline(houseIcon, 2)
 houseRailStroke.Color = Color3.fromRGB(255, 255, 255)
+applyResponsiveHudLayout()
 
 local housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
