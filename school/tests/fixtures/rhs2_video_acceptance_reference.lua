@@ -68,6 +68,20 @@ return {
         },
     },
 
+    defects = {
+        {
+            id = "QA-VIS-SHOPPING-SUCCESS-NOT-OBSERVABLE",
+            owner = "FreeRoam",
+            status = "CONFIRMED_SOURCE_GAP__RENDERED_INTERACTION_NOT_TESTED",
+            candidateSha = "9bb1c4c76927195edb22abff96c7d9679685f342",
+            observation = "LegacyShoppingBoundary buffers the server message in pendingServerConfirmation, but no current client code calls consumeServerConfirmation or renders that message.",
+            functionalImpact = "The purchaser-scoped callback transport is present and exact-head tests pass; this gap is the missing observable consumption/display surface.",
+            blocker = "The server catalog is intentionally empty, so a live purchase path is unavailable until authorized catalog data exists.",
+            acceptance = "After an authorized first purchase confirmation, only the purchaser sees the exact server-authored success text; cancelled, duplicate, unknown and other-player paths show no new success notification.",
+            nextHandoff = "Free Roam implements the smallest purchaser-only display consumer; QA performs rendered interaction and device checks.",
+        },
+    },
+
     cases = {
         {
             id = "VIS-SCHOOL-FRONTAGE-A005",
