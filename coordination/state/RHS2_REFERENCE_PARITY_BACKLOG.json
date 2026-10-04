@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T22:53:30Z",
+  "observedAt": "2026-10-04T23:13:13Z",
   "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,7 +141,7 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "QA_STAIR_FLIGHT_REPAIR_REQUIRED__SOLE_PRODUCER_ACTIVE",
+      "status": "REPAIR_GREEN__INDEPENDENT_QA_PENDING",
       "owner": "Pip High Free Roam",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": [
@@ -160,12 +160,12 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "PR188 / seven school/** paths",
-      "blocker": "QA review 5408581109 on exact 728d62b fails the A@02:05 visual source contract: no blue rails follow the stair flight and no stair-local red/blue bands. Rendered desktop/iPhone/iPad, traversal, panel restoration and live save/rejoin remain pending.",
-      "nextHandoff": "Pip High Free Roam amends existing PR188 only; rerun all three guards; QA reviews the changed exact head; Integration remains unauthorized.",
+      "blocker": "Exact 3cde55e contains the bounded two-file stair-flight repair and all three guards are green. Independent QA on this same SHA plus rendered desktop/iPhone/iPad, traversal, panel restoration and live save/rejoin remain pending.",
+      "nextHandoff": "Roblox High School QA & Contract reviews exact 3cde55e; Integration remains unauthorized until same-SHA approval.",
       "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
       "pr": 188,
-      "headSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
-      "openDefect": "PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP"
+      "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+      "openDefect": "PR188_REPAIRED_EXACT_HEAD_QA_GATE"
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
@@ -251,15 +251,15 @@
     }
   ],
   "supportAssignments": {
-    "Foundation": "PR201 is merged and pins the exact A@02:05 stair-flight source gap plus authority constraints. Re-audit only a changed PR188 head.",
-    "ContentQA": "PR200 refreshes the exact 728d62b reference pack. Current A/B/C bytes and hashes were reverified from persistent Library at 2026-10-04T22:53:30Z; access is not a pipeline blocker.",
-    "ProgressionMobile": "Responsive static geometry risk is resolved on 728d62b. On a changed stair-repair head, inspect only progression/economy/persistence authority drift; rendered device evidence stays pending.",
+    "Foundation": "PR207 is merged and confirms exact 3cde55e authority continuity plus the bounded stair-repair shape. Re-audit only a future changed head or concrete defect.",
+    "ContentQA": "PR200 remains bound to prior 728d62b; durable current A/B/C hashes remain available. Refresh candidate linkage only if materially required.",
+    "ProgressionMobile": "Exact 3cde55e Progression guard is green. Preserve authority continuity and keep rendered device evidence pending.",
     "ClassEducation": "PR202 holds the nonconflicting activity state contract. No classroom product work before P1 completes QA -> Integration -> Smoke -> Package.",
-    "QA": "PR203/review 5408581109 binds exact 728d62b to a functional static PASS, visual source-contract FAIL and interaction/device hold. Re-review only the repaired changed head.",
-    "Integration": "PR204 is merged and pins the expected two-file repair seam plus protected handoff. Do not integrate until full independent QA authorizes the same changed SHA.",
-    "Smoke": "PR198 harness remains ready. Execute only on the exact repaired canonical handed from Integration; rendered/device results remain pending until executed.",
-    "ReleasePackage": "Preserve PR183 and PR186. Package only an exact repaired canonical after QA, Integration and Smoke.",
-    "FreeRoam": "Sole product owner of PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP. Expected minimal delta is CampusBuilder.server.lua plus foundation_world_contract_spec.lua; no second producer."
+    "QA": "PR203/review 5408581109 is stale for current 3cde55e. Perform independent exact-head review now and keep static, rendered, interaction and device states separate.",
+    "Integration": "PR204 pins the expected repair seam. Do not integrate until independent QA explicitly authorizes exact 3cde55e.",
+    "Smoke": "PR198 harness remains ready. Execute only on the exact canonical mechanically integrated from QA-approved 3cde55e.",
+    "ReleasePackage": "PR186 is closed unmerged; preserve prior package. Package only after exact 3cde55e lineage completes QA, Integration and Smoke.",
+    "FreeRoam": "Sole product owner completed the bounded two-file repair at 3cde55e. Freeze product writes until independent QA returns a concrete same-head defect."
   },
   "evidenceGapsClosed": [
     "SOURCE_IDENTITY",
@@ -278,10 +278,11 @@
     "CURRENT_LIBRARY_BYTES_AND_HASHES_REVERIFIED_2026-10-04T22:53Z",
     "PR188_EXACT_HEAD_QA_DECISION_BOUND_728D62B",
     "PR188_STAIR_FLIGHT_REFERENCE_GAP_CONFIRMED_A0205",
-    "PR188_INTEGRATION_REPAIR_SEAMS_PINNED_PR204"
+    "PR188_INTEGRATION_REPAIR_SEAMS_PINNED_PR204",
+    "PR188_STAIR_FLIGHT_STATIC_REPAIR_GREEN_3CDE55E"
   ],
   "productParityGapsClosed": [],
-  "lastReconciledAt": "2026-10-04T22:53:30Z",
+  "lastReconciledAt": "2026-10-04T23:13:13Z",
   "pipeline": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "canonicalCiStatus": "PASS_ALL_THREE_EXACT_PUSH_GUARDS",
@@ -293,14 +294,14 @@
     "integrationReadiness": "PR180_P1_SEAMS_PINNED",
     "smokeStatus": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING__PR181_SCHEMA15",
     "packageStatus": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE__PR183",
-    "nextProducerActivation": "EXISTING_SOLE_PRODUCER_PR188_ACTIVE_FOR_QA_STAIR_REPAIR__WIP_CAP_3_FULL",
+    "nextProducerActivation": "EXISTING_SOLE_PRODUCER_PR188_FROZEN_AT_3CDE55E_FOR_INDEPENDENT_QA__WIP_CAP_3_FULL",
     "p1CandidatePr": 188,
-    "p1CandidateHead": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
-    "p1CandidateCiStatus": "PASS_ALL_THREE_EXACT_HEAD",
-    "p1QaStatus": "PASS_FUNCTIONAL_STATIC__FAIL_VISUAL_SOURCE_CONTRACT__HOLD_INTERACTION_DEVICE__REVIEW_5408581109",
-    "p1IntegrationStatus": "NOT_AUTHORIZED__QA_STAIR_FLIGHT_DEFECT",
-    "p1SmokeStatus": "WAIT_REPAIRED_QA_APPROVED_INTEGRATED_CANONICAL__PR198_HARNESS_PINNED",
-    "p1PackageStatus": "BLOCKED_ON_REPAIRED_SMOKE"
+    "p1CandidateHead": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+    "p1CandidateCiStatus": "PASS_ALL_THREE_EXACT_HEAD__RUNS_37242078845_37242078873_37242078844",
+    "p1QaStatus": "REQUIRED_ON_3CDE55E__PR203_REVIEW_5408581109_STALE_FOR_CHANGED_HEAD",
+    "p1IntegrationStatus": "NOT_AUTHORIZED__WAIT_SAME_SHA_QA",
+    "p1SmokeStatus": "WAIT_QA_APPROVED_INTEGRATED_CANONICAL__PR198_HARNESS_PINNED",
+    "p1PackageStatus": "BLOCKED_ON_QA_INTEGRATION_SMOKE"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -327,7 +328,7 @@
       "blocker": "Independent QA and rendered/runtime physical traversal pending.",
       "nextHandoff": "Roblox High School QA & Contract",
       "candidatePr": 188,
-      "candidateHead": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895"
+      "candidateHead": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3"
     },
     {
       "id": "CURRENT_FREE_ROAM_HUD_OBSTRUCTION_BASELINE",
@@ -340,14 +341,14 @@
       "blocker": "Independent exact-head QA plus actual desktop/iPhone/iPad rendered bounds, physical traversal, modal restoration, camera rebinding and save/rejoin execution remain pending.",
       "nextHandoff": "Roblox High School QA & Contract, then Integration, then Integration Smoke on the exact integrated canonical.",
       "candidatePr": 188,
-      "candidateHead": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895"
+      "candidateHead": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3"
     }
   ],
   "candidateEvidence": {
     "owner": "Pip High Free Roam",
     "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "pr": 188,
-    "headSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
     "referenceClipTime": [
       "A@00:05",
       "A@00:25",
@@ -363,14 +364,14 @@
       "Rendered desktop/iPhone/iPad and physical traversal remain required"
     ],
     "outputLocation": "PR188 / seven school/** paths",
-    "blocker": "QA review 5408581109 on exact 728d62b fails the A@02:05 visual source contract: no blue rails follow the stair flight and no stair-local red/blue bands. Rendered desktop/iPhone/iPad, traversal, panel restoration and live save/rejoin remain pending.",
-    "nextHandoff": "Pip High Free Roam amends existing PR188 only; rerun all three guards; QA reviews the changed exact head; Integration remains unauthorized.",
+    "blocker": "Exact 3cde55e contains the bounded two-file stair-flight repair and all three guards are green. Independent same-SHA QA and rendered/runtime/device evidence remain pending.",
+    "nextHandoff": "Roblox High School QA & Contract reviews exact 3cde55e; Integration waits for explicit same-SHA authorization.",
     "qaReceipt": {
       "pr": 203,
       "headSha": "82cf4835ef67a1f8fa061f7bd0f45f55a79ffcdc",
       "review": 5408581109,
       "candidateSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
-      "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__FAIL_VISUAL_SOURCE_CONTRACT__HOLD_INTERACTION_DEVICE",
+      "status": "STALE_FOR_CHANGED_HEAD_3CDE55E__PRIOR_728D62B_VISUAL_SOURCE_FAIL",
       "integrationAuthorized": false
     },
     "priorQaReceipt": {
@@ -383,48 +384,32 @@
   },
   "openDefects": [
     {
-      "id": "PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP",
-      "owner": "Pip High Free Roam",
-      "inputSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+      "id": "PR188_REPAIRED_EXACT_HEAD_QA_GATE",
+      "owner": "Roblox High School QA & Contract",
+      "inputSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
       "referenceClipTime": [
         "A@00:45",
         "A@02:05"
       ],
-      "status": "OPEN_QA_BLOCK_VISUAL_AND_INTEGRATION",
-      "evidence": "PR188 review 5408581109; QA PR203; Foundation PR201",
+      "status": "READY_FOR_INDEPENDENT_EXACT_HEAD_QA",
+      "evidence": "PR188 compare 728d62b...3cde55e ahead by one; expected two-file delta; all three guards green; Foundation PR207 merged",
       "acceptanceCriteria": [
-        "Add blue rails following both stair-flight edges outside the usable tread envelope",
-        "Add stair-local red/blue wall bands without covering route openings or central sightline",
-        "Extend Foundation contract to distinguish flight-side rails/bands from landing rails",
-        "Preserve unique server authorities and every existing gate",
-        "Return changed exact head through all three guards and independent QA"
+        "Bind QA verdict to exact 3cde55e",
+        "Verify repaired flight rails/posts/bands remain distinct from landing rails",
+        "Preserve all unique authorities and gates",
+        "Separate static, rendered, interaction and device results",
+        "Authorize Integration only on the same SHA"
       ],
-      "outputLocation": "Existing PR188; expected minimal two-file repair",
-      "blocker": "No repaired changed head yet",
-      "nextHandoff": "Pip High Free Roam -> QA & Contract -> Integration"
+      "outputLocation": "PR188 review plus exact-head QA receipt",
+      "blocker": "No independent QA verdict is bound to exact 3cde55e.",
+      "nextHandoff": "Roblox High School Integration Director"
     }
   ],
   "remainingEvidenceGaps": [
     {
-      "id": "PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP",
-      "owner": "Pip High Free Roam",
-      "inputSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
-      "referenceClipTime": "A@00:45 and A@02:05",
-      "acceptanceCriteria": [
-        "Add blue rails following both stair-flight edges outside the usable tread envelope",
-        "Add stair-local red/blue wall bands without covering route openings or central sightline",
-        "Extend Foundation contract to distinguish flight-side rails/bands from landing rails",
-        "Preserve unique server authorities and every existing gate",
-        "Return changed exact head through all three guards and independent QA"
-      ],
-      "outputLocation": "PR188 changed exact head",
-      "blocker": "Current 728d62b lacks flight-side rails and stair-local bands",
-      "nextHandoff": "Roblox High School QA & Contract"
-    },
-    {
       "id": "P1_FULL_EXACT_HEAD_QA",
       "owner": "Roblox High School QA & Contract",
-      "inputSha": "FUTURE_REPAIRED_PR188_HEAD",
+      "inputSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
       "referenceClipTime": "A@00:05/00:25/00:45/02:05 and recurring HUD",
       "acceptanceCriteria": [
         "All three exact-head guards green",
@@ -433,7 +418,7 @@
         "Panel restoration plus desktop/iPhone/iPad evidence"
       ],
       "outputLocation": "PR188 review plus QA receipt",
-      "blocker": "Wait repaired changed head",
+      "blocker": "Ready now on exact 3cde55e.",
       "nextHandoff": "Roblox High School Integration Director"
     },
     {
@@ -449,9 +434,44 @@
         "Save/rejoin restoration"
       ],
       "outputLocation": "PR198 plan plus exact-SHA smoke receipt",
-      "blocker": "Repaired QA-approved Integration",
+      "blocker": "Same-SHA QA authorization then protected Integration.",
       "nextHandoff": "Roblox High School Release & Package Gate"
     }
   ],
-  "distinctProductParityGapsClosed": []
+  "distinctProductParityGapsClosed": [],
+  "p1RepairResult": {
+    "pr": 188,
+    "priorHeadSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "repairedHeadSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+    "compareStatus": "AHEAD_BY_1__BEHIND_BY_0",
+    "exactDelta": [
+      {
+        "path": "school/src/server/CampusBuilder.server.lua",
+        "additions": 78,
+        "deletions": 1,
+        "blob": "1e49e99026352ffd5e412515636cc662097a3305"
+      },
+      {
+        "path": "school/tests/foundation_world_contract_spec.lua",
+        "additions": 28,
+        "deletions": 0,
+        "blob": "015fc22d0f8a7deba9895d9ab1cb1f56ba843acf"
+      }
+    ],
+    "referenceClipTime": [
+      "A@00:45",
+      "A@02:05"
+    ],
+    "acceptanceCriteria": [
+      "Two blue flight-side rails and eight posts",
+      "Four stair-local red/blue bands",
+      "Distinct landing-rail contract",
+      "All three exact-head guards pass",
+      "Same-SHA independent QA before Integration"
+    ],
+    "outputLocation": "PR188 exact head 3cde55e; Foundation audit coordination/foundation/pr188-3cde55e-repaired-head-audit.md",
+    "blocker": "Independent QA and rendered traversal/device evidence remain pending.",
+    "nextHandoff": "Roblox High School QA & Contract",
+    "status": "STATIC_REPAIR_PRESENT__ALL_THREE_GUARDS_GREEN__QA_PENDING"
+  }
 }
