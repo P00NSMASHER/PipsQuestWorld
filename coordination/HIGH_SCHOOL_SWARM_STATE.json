@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "stateModel": "SHARDED_COORDINATION",
   "owner": "Roblox High School Control Tower",
   "writePolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
@@ -12,6 +12,7 @@
     "coordination/state/WIP.json",
     "coordination/state/PLAYABLE.json",
     "coordination/state/BLOCKERS.json",
+    "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
     "newest lane receipts",
     "live GitHub heads/PRs/CI"
   ],
@@ -20,7 +21,8 @@
     "wip": "coordination/state/WIP.json",
     "playable": "coordination/state/PLAYABLE.json",
     "blockers": "coordination/state/BLOCKERS.json",
-    "localMachineLease": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json"
+    "localMachineLease": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
+    "referenceParity": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json"
   },
   "receiptRule": "Lane receipts are exact-SHA evidence caches and never outrank a newer live branch head.",
   "mutationRule": "Change only the smallest owning shard. Do not expand this manifest back into a monolithic mutable state payload.",
@@ -32,5 +34,6 @@
   },
   "canonicalSourceRoot": "school/**",
   "retiredRuntimePolicy": "Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, game/**, old feat/*, retired Maze/Pips worktrees/branches, and Roblox places titled StarBlox are historical only.",
-  "automationImmutability": "No worker may mutate any Roblox task definition, schedule, or enablement without explicit user instruction."
+  "automationImmutability": "No worker may mutate any Roblox task definition, schedule, or enablement without explicit user instruction.",
+  "referenceRule": "Persistent A/B/C Library IDs and timestamped visual/behavioral evidence live in the reference-parity shard; it never proves hidden source/assets/backend behavior and never replaces rendered/device validation."
 }

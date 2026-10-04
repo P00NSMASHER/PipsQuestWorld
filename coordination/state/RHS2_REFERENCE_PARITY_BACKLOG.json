@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "observedAt": "2026-10-04T16:23:13Z",
+  "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+  "artifact": {
+    "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
+    "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, one reserved producer, and no parity claim without exact-SHA QA plus rendered/device comparison.",
+    "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
+    "blocker": "Current shopping repair must complete Integration -> Smoke -> Package before the next producer activates.",
+    "nextHandoff": "Roblox High School Content QA for deeper annotation; Pip High Free Roam after package activation."
+  },
+  "sources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "fileName": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "durationSeconds": 141.533,
+      "resolution": "1112x512"
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "fileName": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "durationSeconds": 92,
+      "resolution": "1112x512"
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "fileName": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "durationSeconds": 120.933,
+      "resolution": "1112x512"
+    }
+  },
+  "evidenceRules": [
+    "Footage is visual/behavioral evidence; it does not prove hidden source, asset IDs, remote names, backend behavior or audio.",
+    "Visible 2x playback segments prohibit uncorrected movement-speed or animation-timing inference.",
+    "Player-authored nameplate text is not required product copy.",
+    "Static/headless checks cannot close rendered appearance, feel or target-device parity."
+  ],
+  "observations": [
+    {
+      "id": "A_FRONTAGE",
+      "clip": "A",
+      "time": "00:05",
+      "visible": "School frontage with stairs, crest, red/white/blue architecture and landscaped approach."
+    },
+    {
+      "id": "A_ATRIUM",
+      "clip": "A",
+      "time": "00:25",
+      "visible": "Bright atrium/lobby with circular central display, strong ceiling lighting and broad open circulation."
+    },
+    {
+      "id": "A_CORRIDOR",
+      "clip": "A",
+      "time": "00:45",
+      "visible": "Broad school corridor and staircase; red/white/blue wayfinding language continues."
+    },
+    {
+      "id": "A_GYM_GAME",
+      "clip": "A",
+      "time": "01:05-01:45",
+      "visible": "Gym court, active ball minigame, score/heart feedback and report-card result."
+    },
+    {
+      "id": "A_STAIRS_ITEMS",
+      "clip": "A",
+      "time": "02:05",
+      "visible": "School stairwell/free-roam with bottom item slots."
+    },
+    {
+      "id": "B_CLASS_HOME",
+      "clip": "B",
+      "time": "00:05-00:35",
+      "visible": "Class/activity room, town traversal and home doorway/interior transition."
+    },
+    {
+      "id": "B_DEALERSHIP",
+      "clip": "B",
+      "time": "00:45-01:05",
+      "visible": "Blue dealership grid with category tabs, item tiles, price, preview/details and balances."
+    },
+    {
+      "id": "B_ACTIVITY_LOBBY",
+      "clip": "B",
+      "time": "01:05-01:25",
+      "visible": "Wood-floor activity room/minigame UI and lobby display pedestals."
+    },
+    {
+      "id": "C_TRAVEL",
+      "clip": "C",
+      "time": "00:05",
+      "visible": "Travel window with destination image tiles and tabs."
+    },
+    {
+      "id": "C_JOB",
+      "clip": "C",
+      "time": "00:25-01:05",
+      "visible": "Purple obstacle job, progress bar, cancel action and performance/reward dialog."
+    },
+    {
+      "id": "C_CLAIM",
+      "clip": "C",
+      "time": "01:25",
+      "visible": "World claim interaction followed by item reward reveal."
+    },
+    {
+      "id": "C_NIGHT_ROUTE",
+      "clip": "C",
+      "time": "01:45",
+      "visible": "Nighttime bridge, directional signs and town/school route readability."
+    },
+    {
+      "id": "HUD_RECURRING",
+      "clip": "A/B/C",
+      "time": "recurring",
+      "visible": "Compact colored right-side icon rail, top-right balances/status and bottom item slots."
+    }
+  ],
+  "productParityBacklog": [
+    {
+      "id": "P1_SPAWN_SCHOOL_HUD",
+      "priority": 1,
+      "status": "RESERVED_NOT_ACTIVE",
+      "owner": "Pip High Free Roam",
+      "inputSha": "POST_PACKAGE_CANONICAL_SHA_TO_BE_PINNED",
+      "referenceClipTime": [
+        "A@00:05",
+        "A@00:25",
+        "A@00:45",
+        "A@02:05",
+        "B/C recurring HUD"
+      ],
+      "acceptanceCriteria": [
+        "Observable spawn approach, entrance silhouette, stairs, crest and palette match the reference composition closely.",
+        "Entrance reaches a bright atrium with circular focal display and connected broad corridor/staircase.",
+        "Free-roam HUD is compact and nonblocking with the three recurring placement groups.",
+        "No duplicate spawn, clock, economy, progression or persistence authority.",
+        "Deterministic CI, independent QA, Integration, Smoke and Package bind to exact heads.",
+        "Rendered target-device comparison remains required."
+      ],
+      "outputLocation": "school/** on one activated producer branch",
+      "blocker": "PR 165 Integration -> Smoke -> Package incomplete; exact next base unavailable.",
+      "nextHandoff": "Roblox High School QA & Contract"
+    },
+    {
+      "id": "P2_CLASSROOM_FREE_ROAM",
+      "priority": 2,
+      "status": "EVIDENCE_PREP",
+      "owner": "Roblox High School Class & Education",
+      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "referenceClipTime": [
+        "B@00:05",
+        "A@00:45"
+      ],
+      "acceptanceCriteria": [
+        "One classroom/free-roam transition contract with no second class or clock authority."
+      ],
+      "outputLocation": "lane-owned evidence only until activated",
+      "blocker": "P1 and current repair pipeline",
+      "nextHandoff": "Control Tower"
+    },
+    {
+      "id": "P3_HOUSING",
+      "priority": 3,
+      "status": "OPEN",
+      "owner": "Pip High Free Roam",
+      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "referenceClipTime": [
+        "B@00:25",
+        "B@00:55"
+      ],
+      "acceptanceCriteria": [
+        "Doorway/interior transition and house grid behavior require rendered comparison."
+      ],
+      "outputLocation": "future school/** producer branch",
+      "blocker": "Earlier priorities",
+      "nextHandoff": "Control Tower"
+    },
+    {
+      "id": "P4_AVATAR",
+      "priority": 4,
+      "status": "OPEN",
+      "owner": "Pip High Free Roam",
+      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "referenceClipTime": [
+        "A@00:15"
+      ],
+      "acceptanceCriteria": [
+        "Avatar/catalog presentation supported by evidence and authorized assets only."
+      ],
+      "outputLocation": "future school/** producer branch",
+      "blocker": "Earlier priorities and asset provenance",
+      "nextHandoff": "Content QA"
+    },
+    {
+      "id": "P5_VEHICLES",
+      "priority": 5,
+      "status": "OPEN",
+      "owner": "Pip High Free Roam",
+      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "referenceClipTime": [
+        "B@00:45-01:05"
+      ],
+      "acceptanceCriteria": [
+        "Dealership grid, preview/details and server authority close only with rendered/runtime evidence."
+      ],
+      "outputLocation": "future school/** producer branch",
+      "blocker": "Earlier priorities",
+      "nextHandoff": "QA"
+    },
+    {
+      "id": "P6_JOBS",
+      "priority": 6,
+      "status": "OPEN",
+      "owner": "Pip High Free Roam",
+      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "referenceClipTime": [
+        "C@00:25-01:05"
+      ],
+      "acceptanceCriteria": [
+        "Observable obstacle flow, progress/cancel and reward dialog; timing corrected for 2x segments."
+      ],
+      "outputLocation": "future school/** producer branch",
+      "blocker": "Earlier priorities",
+      "nextHandoff": "QA"
+    }
+  ],
+  "supportAssignments": {
+    "Foundation": "Prepare entrance/atrium geometry and unique spawn/clock/lighting authority acceptance evidence only.",
+    "ContentQA": "Maintain stable clip IDs, timestamp annotations, explicit unknowns and evidence access.",
+    "ProgressionMobile": "Prepare compact HUD/mobile obstruction criteria only.",
+    "ClassEducation": "Prepare classroom/free-roam transition contract evidence only.",
+    "QA": "Define rendered comparison and exact-head validation; do not self-certify.",
+    "Smoke": "Prepare post-integration rendered/device gap list without foreground GUI use.",
+    "ReleasePackage": "Track deterministic package eligibility only."
+  },
+  "evidenceGapsClosed": [
+    "SOURCE_IDENTITY",
+    "TIMESTAMPED_OBSERVATION_INDEX",
+    "PLAYBACK_2X_CAUTION"
+  ],
+  "productParityGapsClosed": []
+}
