@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School QA & Contract",
+  "observedAt": "2026-10-04T22:34:09Z",
+  "input": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "pullRequest": 188,
+    "baseBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "candidateBranch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+    "candidateSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "coordinationInputSha": "71026729f4634ff3c38ea4e35d88cc5183a041eb",
+    "changedFiles": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CampusBuilder.server.lua",
+      "school/src/shared/ResponsiveHudLayout.lua",
+      "school/tests/foundation_world_contract_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua",
+      "school/tests/responsive_hud_layout_spec.lua"
+    ]
+  },
+  "reference": {
+    "source": "authorized RHS2 video evidence",
+    "pinnedPack": {
+      "pullRequest": 200,
+      "exactHead": "b40d677c3c821da3400e0b31ce1ccef4a080269e",
+      "artifact": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+      "blobSha": "da5a6b16850cc1704a176a13e536668c94766d93"
+    },
+    "checks": [
+      {
+        "clipTime": "A@00:05",
+        "frameSha256": "7cdb56f06352f4a5f1e8b1e60c55c185f499f8dd917dfac47a2e70707fece538",
+        "contract": "frontage, centered entrance, broad stairs, crest zone and red/white/blue massing"
+      },
+      {
+        "clipTime": "A@00:25",
+        "frameSha256": "ca33f052596a70ce87a37a5ae8197e9c33d2070aefee901bc51afebd746d5d60",
+        "contract": "bright atrium, low circular focal display, repeated ceiling lights and circulation on both sides"
+      },
+      {
+        "clipTime": "A@00:45",
+        "frameSha256": "d6b263ea003c24a7c0abbdf80644efa95907581c8cde70e2e2a16dc6fc967ee0",
+        "contract": "broad corridor with central sightline and ascending red/blue-accented circulation"
+      },
+      {
+        "clipTime": "A@02:05",
+        "frameSha256": "6b090c2b01b200d380d860184ca381c77fcf5a7daedc06fd7c3fc0148082ced0",
+        "contract": "stair flight with blue rails and red/blue wall bands; bottom shortcuts visible; visible 2x marker"
+      },
+      {
+        "clipTime": "C@00:05",
+        "frameSha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+        "contract": "Travel panel close reachable with compact edge HUD retained"
+      },
+      {
+        "clipTime": "C@01:05",
+        "frameSha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+        "contract": "job result panel with compact edge HUD retained"
+      },
+      {
+        "clipTime": "C@01:10",
+        "frameSha256": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c",
+        "contract": "result panel gone and free-roam compact HUD restored"
+      }
+    ],
+    "caution": "Visible 2x playback prohibits uncorrected movement-speed and animation-timing claims. No asset IDs, exact RGB values, hidden hierarchy, audio behavior or scoring formula are inferred."
+  },
+  "exactHeadChecks": {
+    "pullRequestState": "OPEN_MERGEABLE_AT_OBSERVATION",
+    "reviewsAtObservation": [],
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37237332258,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37237332337,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37237332270,
+        "conclusion": "success"
+      }
+    ],
+    "staleObjections": [
+      {
+        "id": "PR188_MAINSPAWN_ENTRYWALK_AABB",
+        "priorHead": "f9910fae5c672fea3b0569d228d986eb4e701401",
+        "status": "RESOLVED_BEFORE_728D62B",
+        "evidence": "The singular MainSpawn is raised and the exact-head Foundation guard parses named surfaces to reject positive-volume overlap."
+      },
+      {
+        "id": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+        "priorHead": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+        "status": "RESOLVED_ON_728D62B",
+        "evidence": [
+          "pure responsive geometry module is driven by viewport size and GUI safe insets",
+          "desktop 909x483, iPhone landscape 852x393 and iPad landscape 1024x768 fixtures assert containment and non-overlap",
+          "negative mutations prove status/rail and quick/control-zone overlap rejection"
+        ],
+        "limitation": "These deterministic contracts do not substitute for rendered target-device captures."
+      }
+    ],
+    "authorityContinuity": "PASS_STATIC: no additional mapped clock, schedule, spawn, location, economy, progression or persistence authority is introduced."
+  },
+  "evidenceStatus": {
+    "functional": {
+      "status": "PASS_STATIC_EXACT_HEAD_ONLY",
+      "covered": [
+        "candidate remains based on the packaged canonical",
+        "one mapped campus builder and one singular MainSpawn",
+        "source-parsed spawn clearance contract",
+        "responsive HUD safe-bound and declared exclusion-zone contracts",
+        "all three exact-head workflows succeeded",
+        "no new durable client state writer or server authority"
+      ],
+      "notCovered": [
+        "physical spawn-to-entrance-to-atrium-to-corridor traversal",
+        "live remote responses",
+        "panel open/close restoration"
+      ]
+    },
+    "visual": {
+      "status": "FAIL_STATIC_REFERENCE_COMPOSITION__RENDERED_COMPARISON_PENDING",
+      "passedStaticPresence": [
+        "frontage red/white/blue massing and crest zone",
+        "atrium circular focal display and repeated ceiling strips",
+        "corridor stair run and compact HUD geometry contracts"
+      ],
+      "failed": [
+        "A@02:05 requires blue rails along the visible stair flight and red/blue wall bands; exact candidate source provides only transverse upper-landing rails and no stair-local wall bands."
+      ],
+      "requiredRendered": [
+        "comparable-FOV A@00:05 entrance capture",
+        "comparable-FOV A@00:25 atrium capture with luminance and side-clearance notes",
+        "comparable-FOV A@00:45 and A@02:05 corridor/stair captures after the source gap is repaired"
+      ],
+      "rule": "Static source inspection and CI cannot certify rendered parity."
+    },
+    "interaction": {
+      "status": "PENDING_PHYSICAL_TRAVERSAL_AND_PANEL_RESTORATION",
+      "owner": "Roblox High School QA & Contract",
+      "required": [
+        "walk from MainSpawn through decorative tread volumes and the glass doors into the atrium and corridor; record clipping, camera bump, snag, drop or route deviation",
+        "ascend and descend the corridor stair after repair without collision or route narrowing",
+        "exercise Shop, Avatar, House and Travel actions and confirm close/dismiss restores compact free-roam HUD and controls"
+      ],
+      "blocker": "Requires an authorized current Roblox Studio/device GUI run; no such GUI lease or rendered session is available to this background run."
+    },
+    "device": {
+      "status": "PENDING_RENDERED_DESKTOP_IPHONE_IPAD",
+      "owner": "Roblox High School QA & Contract",
+      "staticContract": "PASS_EXACT_HEAD",
+      "required": [
+        "desktop comparison capture",
+        "iPhone landscape capture with safe-area and movement/camera-zone measurements",
+        "iPad landscape capture with safe-area and movement/camera-zone measurements",
+        "confirm status, right rail, quick bar and panel close/dismiss controls are legible, reachable and unobstructed"
+      ],
+      "blocker": "Deterministic fixtures pass, but no rendered target-device evidence is present."
+    }
+  },
+  "openDefects": [
+    {
+      "id": "PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP",
+      "owner": "Pip High Free Roam",
+      "severity": "QA_BLOCK_VISUAL_AND_INTEGRATION",
+      "status": "OPEN_EXACT_HEAD_728D62B",
+      "evidence": {
+        "reference": "A@02:05, frame 6b090c2b01b200d380d860184ca381c77fcf5a7daedc06fd7c3fc0148082ced0",
+        "candidate": "school/src/server/CampusBuilder.server.lua at 728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+        "coordinationSpec": "coordination/foundation/pr188-728d62b-world-reference-gap-spec.md",
+        "summary": "The reference visibly shows blue rails following the stair flight and red/blue stairwell wall bands. Candidate source creates ten stair steps and transverse landing rails only; it has no rail following either flight edge and no stair-local red/blue wall bands."
+      },
+      "acceptance": [
+        "preserve the ten-step central run, landing and clear tread envelope",
+        "add blue rail geometry following both flight edges without narrowing or snagging the usable route",
+        "continue a red/blue wall-band motif through the stairwell without covering route openings",
+        "extend the Foundation static contract to distinguish flight-side rails and bands from transverse landing rails",
+        "preserve unique server authorities and all existing spawn/HUD gates",
+        "rerun all three workflows at the changed exact head",
+        "return the changed exact head for independent comparable-FOV A@00:45 and A@02:05 rendered review plus physical ascent/descent"
+      ]
+    }
+  ],
+  "decision": {
+    "result": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__FAIL_VISUAL_SOURCE_CONTRACT__HOLD_INTERACTION_DEVICE",
+    "fullQaPass": false,
+    "exactParityClaim": false,
+    "integrationHandoff": "NOT_AUTHORIZED",
+    "reason": "Exact-head static guards and responsive HUD contracts pass, but a timestamp-bound stair-flight composition requirement is absent from source and rendered/runtime/device evidence remains incomplete."
+  },
+  "output": {
+    "location": "coordination/reference-extraction/qa_pr188_exact_head_acceptance_728d62b.json",
+    "productWrites": "NONE"
+  },
+  "blocker": "The sole WIP-authorized Free Roam producer must repair PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP on PR 188. QA then needs the changed exact head, green exact-head CI, comparable-FOV rendered captures, physical traversal, panel restoration and desktop/iPhone/iPad evidence.",
+  "nextHandoff": "Pip High Free Roam amends the existing PR 188 only; Roblox High School QA & Contract rechecks the changed exact head. Integration remains unauthorized until functional, visual, interaction and device gates pass."
+}
