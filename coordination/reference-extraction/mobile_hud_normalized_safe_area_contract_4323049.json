@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-04T20:13:26Z",
+  "result": "PASS_NORMALIZED_REFERENCE_OCCUPANCY_CONTRACT__NO_PRODUCT_WRITE",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "sourceContract": {
+    "path": "coordination/reference-extraction/mobile_hud_read_state_contract_6fe2541.json",
+    "blobSha": "e849782c2a494949c773be61e86ebae595845b3e",
+    "status": "FROZEN_PIXEL_OBSERVATION_CONTRACT_REUSED_WITHOUT_EDIT"
+  },
+  "referenceClipTime": [
+    "B@00:45 dealership selected-detail state",
+    "C@00:05 Travel open state",
+    "C@01:05 job-result state"
+  ],
+  "referenceSources": {
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "dimensions": [1112, 512],
+      "durationSeconds": 92
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "dimensions": [1112, 512],
+      "durationSeconds": 120.933333
+    }
+  },
+  "frameEvidence": [
+    {
+      "clip": "B",
+      "timestampSeconds": 45,
+      "sha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+      "purpose": "dealership selected-detail state"
+    },
+    {
+      "clip": "C",
+      "timestampSeconds": 5,
+      "sha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+      "purpose": "Travel open state"
+    },
+    {
+      "clip": "C",
+      "timestampSeconds": 65,
+      "sha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+      "purpose": "job-result state"
+    }
+  ],
+  "normalization": {
+    "sourceGameplayViewportRecordingBounds": {
+      "x": [101, 1010],
+      "y": [28, 511],
+      "width": 909,
+      "height": 483
+    },
+    "formula": "left=(x0-101)/909; right=(x1-101)/909; top=(y0-28)/483; bottom=(y1-28)/483",
+    "interpretation": "Ratios describe occupancy relationships inside the sampled gameplay viewport. They are not target-device pixel positions and must be recomputed after safe-area insets."
+  },
+  "normalizedOccupancy": {
+    "B45Dealership": {
+      "behavior": "FEATURE_SURFACE_REPLACES_FREE_ROAM_RAIL",
+      "leftPreview": {
+        "left": 0.0,
+        "right": 0.3982,
+        "top": 0.0,
+        "bottom": 1.0,
+        "width": 0.3982,
+        "height": 1.0
+      },
+      "rightBrowse": {
+        "left": 0.3993,
+        "right": 1.0,
+        "top": 0.0,
+        "bottom": 1.0,
+        "width": 0.6007,
+        "height": 1.0
+      },
+      "observed": "Selected details appear in the browse pane while the left pane retains Select an Item; the recurring right rail is not visible.",
+      "prohibitedInference": "Do not require selection to animate a 3D preview or immediately purchase/spawn."
+    },
+    "C05Travel": {
+      "behavior": "CENTERED_MODAL_WITH_EDGE_HUD_RETAINED",
+      "modal": {
+        "left": 0.209,
+        "right": 0.7921,
+        "top": 0.1346,
+        "bottom": 0.8675,
+        "width": 0.5831,
+        "height": 0.7329
+      },
+      "observed": "Travel is centered while top-right status, right rails and bottom shortcuts remain simultaneously visible.",
+      "prohibitedInference": "Do not infer destination backend, cost, unlock state, image asset IDs or a complete catalog."
+    },
+    "C65JobResult": {
+      "behavior": "NARROWER_CENTERED_MODAL_WITH_EDGE_HUD_RETAINED",
+      "modal": {
+        "left": 0.2805,
+        "right": 0.7206,
+        "top": 0.1304,
+        "bottom": 0.8799,
+        "width": 0.44,
+        "height": 0.7495
+      },
+      "observed": "The result surface separates job/difficulty, performance, earnings, promotion progress, reward copy and one dismissal action.",
+      "prohibitedInference": "Do not infer reward formula, currency identity, durable commit moment, grade threshold or direct return to free roam."
+    },
+    "retainedEdgeHud": {
+      "primaryRightRail": {
+        "left": 0.9439,
+        "right": 0.9978,
+        "top": 0.1884,
+        "bottom": 0.6273,
+        "width": 0.0539,
+        "height": 0.4389
+      },
+      "secondaryRightRail": {
+        "left": 0.9439,
+        "right": 0.9978,
+        "top": 0.6335,
+        "bottom": 0.793,
+        "width": 0.0539,
+        "height": 0.1594
+      },
+      "topRightStatus": {
+        "left": 0.868,
+        "right": 0.9978,
+        "top": 0.0021,
+        "bottom": 0.1491,
+        "width": 0.1298,
+        "height": 0.147
+      },
+      "bottomShortcuts": {
+        "left": 0.3938,
+        "right": 0.6689,
+        "top": 0.8758,
+        "bottom": 0.9917,
+        "width": 0.275,
+        "height": 0.1159
+      }
+    }
+  },
+  "responsiveAcceptanceCriteria": {
+    "allDevices": [
+      "Apply platform safe-area and top-bar insets before layout; never copy the recording coordinates literally.",
+      "Free roam keeps movement, camera and center-world visibility clear with no permanent large school panel.",
+      "At most one large feature surface is open; close remains reachable and restores the compact edge HUD without writing durable state.",
+      "Read-only status and balances come from cloned server snapshots; the client does not calculate, debit, credit, own or persist."
+    ],
+    "dealership": [
+      "Preserve the approximately 40/60 preview-to-browse relationship when width permits; on narrower devices the same information may reflow without losing selection details, close or explicit server-authoritative actions.",
+      "It is acceptable for the dealership to replace the free-roam rail while open, as observed at B@00:45.",
+      "No automatic spend, client-authored price/ownership or inferred vehicle asset ID."
+    ],
+    "travelAndJobResult": [
+      "Travel and job-result panels remain centered and visually distinct from the edge HUD.",
+      "If safe-area pressure prevents coexistence, preserve close/dismiss, content hierarchy and movement/camera safety instead of forcing the desktop ratios.",
+      "Destination selection and reward acknowledgement remain explicit and server-confirmed; client replay cannot duplicate durable effects."
+    ],
+    "requiredScreenshots": [
+      "Exact-candidate free-roam, dealership, Travel and job-result screenshots at desktop landscape.",
+      "The same four states at iPhone-class landscape with movement/camera zones visible.",
+      "The same four states at iPad-class landscape without unnecessary panel inflation.",
+      "Each screenshot record names exact candidate SHA, viewport, safe-area insets and separate visual/device result."
+    ]
+  },
+  "authorityContinuity": {
+    "progression": "ProgressionRepository remains the durable progression owner; HUD consumes cloned read state only.",
+    "economy": "EconomyRepository remains the only money and durable ownership writer.",
+    "schedule": "FoundationBootstrap remains the schedule/time owner; HUD displays canonical state only.",
+    "currentKnownObstruction": {
+      "id": "P1_HUD_PERMANENT_MENU_OBSTRUCTION",
+      "owner": "Pip High Free Roam",
+      "status": "CONFIRMED_ON_EXACT_CANONICAL_SOURCE",
+      "note": "This annex does not duplicate ownership or implement the fix."
+    }
+  },
+  "evidenceLimits": [
+    "Visible 2x playback segments prohibit original timing, latency, movement-speed or animation claims.",
+    "Player-authored nameplate text and sampled balances are not required seed data.",
+    "Footage does not prove UI instance hierarchy, asset IDs, remote names, persistence schema or backend behavior.",
+    "Static source and normalized reference occupancy cannot certify rendered phone/tablet parity."
+  ],
+  "outputLocation": "coordination/reference-extraction/mobile_hud_normalized_safe_area_contract_4323049.json",
+  "blocker": {
+    "status": "WAIT_EXACT_PACKAGE_AND_CONTROL_TOWER_P1_ACTIVATION",
+    "owner": "Roblox High School Release & Package Gate / Roblox High School Control Tower",
+    "detail": "Progression/Mobile is evidence-only. Product HUD work remains reserved to the future sole Pip High Free Roam P1 producer after exact canonical 4323049 packages."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam consumes the normalized relationships only after Control Tower activates the one P1 producer.",
+    "Roblox High School QA & Contract captures exact-candidate desktop/iPhone/iPad screenshots and keeps visual, interaction and device results separate.",
+    "Roblox High School Progression & Mobile reviews any changed read-state or replay surface without adding a second durable writer."
+  ],
+  "productFilesChanged": false,
+  "rawVideosCommitted": false,
+  "automaticSpendIntroduced": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
