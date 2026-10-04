@@ -42,6 +42,9 @@
         },
         "LegacyShoppingBoundary": {
           "$path": "src/shared/LegacyShoppingBoundary.lua"
+        },
+        "ResponsiveHudLayout": {
+          "$path": "src/shared/ResponsiveHudLayout.lua"
         }
       }
     },

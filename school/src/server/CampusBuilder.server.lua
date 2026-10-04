@@ -56,6 +56,9 @@ local wallColor = Color3.fromRGB(232, 236, 243)
 local floorColor = Color3.fromRGB(203, 210, 220)
 local accentA = Color3.fromRGB(92, 132, 204)
 local accentB = Color3.fromRGB(126, 92, 181)
+local referenceBlue = Color3.fromRGB(37, 112, 190)
+local referenceRed = Color3.fromRGB(216, 63, 70)
+local referenceWhite = Color3.fromRGB(245, 247, 250)
 
 makePart("CampusGround", Vector3.new(720, 2, 820), CFrame.new(0, -1, 185), Color3.fromRGB(117, 163, 102), Enum.Material.Grass)
 makePart("SchoolFloor", Vector3.new(190, 1, 245), CFrame.new(0, 0, 0), floorColor, Enum.Material.Concrete)
@@ -79,6 +82,133 @@ makePart("FrontLobbyFloor", Vector3.new(54, 0.45, 32), CFrame.new(0, 0.75, 101),
 makePart("FrontDesk", Vector3.new(22, 4, 5), CFrame.new(-19, 2.5, 96), Color3.fromRGB(123, 88, 61), Enum.Material.Wood)
 makePart("FrontDeskTop", Vector3.new(23, 0.5, 6), CFrame.new(-19, 4.7, 96), Color3.fromRGB(61, 68, 82), Enum.Material.SmoothPlastic)
 makePart("EntryMat", Vector3.new(16, 0.12, 8), CFrame.new(0, 1.05, 111), trimColor, Enum.Material.Fabric)
+
+-- Reference A@00:25 and A@00:45: bright atrium, round display, ceiling strips,
+-- long red/blue wall bands, and a staircase focal point with circulation on both sides.
+for _, sideX in ipairs({ -27, 27 }) do
+    makePart("AtriumBlueBand", Vector3.new(0.45, 1.3, 48), CFrame.new(sideX, 5.6, 96), referenceBlue, Enum.Material.SmoothPlastic)
+    makePart("AtriumRedBand", Vector3.new(0.5, 1.1, 48), CFrame.new(sideX, 8.0, 96), referenceRed, Enum.Material.SmoothPlastic)
+end
+
+for _, z in ipairs({ 78, 90, 102, 114 }) do
+    for _, x in ipairs({ -18, -6, 6, 18 }) do
+        local light = makePart(
+            "AtriumCeilingLight",
+            Vector3.new(8, 0.35, 1.4),
+            CFrame.new(x, 16.2, z),
+            Color3.fromRGB(250, 252, 244),
+            Enum.Material.Neon
+        )
+        light.CanCollide = false
+    end
+end
+
+for index, tier in ipairs({
+    { diameter = 26, height = 1.8, y = 1.6, color = referenceRed, material = Enum.Material.Brick },
+    { diameter = 24, height = 1.0, y = 2.9, color = referenceWhite, material = Enum.Material.Neon },
+    { diameter = 21, height = 1.4, y = 4.0, color = referenceBlue, material = Enum.Material.SmoothPlastic },
+}) do
+    local displayTier = makePart(
+        "AtriumDisplayTier" .. tostring(index),
+        Vector3.new(tier.height, tier.diameter, tier.diameter),
+        CFrame.new(0, tier.y, 91) * CFrame.Angles(0, 0, math.rad(90)),
+        tier.color,
+        tier.material
+    )
+    displayTier.Shape = Enum.PartType.Cylinder
+end
+
+makePart("AtriumDisplayTop", Vector3.new(13, 0.7, 9), CFrame.new(0, 5.0, 91), Color3.fromRGB(35, 43, 57), Enum.Material.SmoothPlastic)
+
+local corridorStairWidth = 25
+local corridorStairRailX = 12.1
+local corridorStairWallX = 16.5
+local corridorStairWallThickness = 0.6
+
+for step = 0, 9 do
+    makePart(
+        "CorridorStairStep" .. tostring(step + 1),
+        Vector3.new(corridorStairWidth, 0.9, 2.8),
+        CFrame.new(0, 1.15 + (step * 0.65), -91 - (step * 2.5)),
+        referenceWhite,
+        Enum.Material.Concrete
+    )
+end
+
+-- Reference A@02:05: blue rails follow both edges of the stair flight while
+-- red/blue bands repeat locally on the stairwell walls. Flight accents are
+-- separately named from the transverse landing rails so their composition
+-- cannot be satisfied by the landing alone. Non-collidable rails/posts/bands
+-- preserve the full stair traversal surface without edge snags.
+local corridorStairRailAngle = math.rad(13.2)
+local flightRailLeft = makePart(
+    "CorridorStairFlightRailBlueLeft",
+    Vector3.new(0.6, 0.6, 26),
+    CFrame.new(-corridorStairRailX, 7.1, -102.25) * CFrame.Angles(corridorStairRailAngle, 0, 0),
+    referenceBlue,
+    Enum.Material.Metal
+)
+flightRailLeft.CanCollide = false
+
+local flightRailRight = makePart(
+    "CorridorStairFlightRailBlueRight",
+    Vector3.new(0.6, 0.6, 26),
+    CFrame.new(corridorStairRailX, 7.1, -102.25) * CFrame.Angles(corridorStairRailAngle, 0, 0),
+    referenceBlue,
+    Enum.Material.Metal
+)
+flightRailRight.CanCollide = false
+
+for _, side in ipairs({
+    { suffix = "Left", x = -corridorStairRailX },
+    { suffix = "Right", x = corridorStairRailX },
+}) do
+    for postNumber, stairIndex in ipairs({ 0, 3, 6, 9 }) do
+        local flightPost = makePart(
+            "CorridorStairFlightPostBlue" .. side.suffix .. tostring(postNumber),
+            Vector3.new(0.45, 2.6, 0.45),
+            CFrame.new(side.x, 2.9 + (stairIndex * 0.65), -91 - (stairIndex * 2.5)),
+            referenceBlue,
+            Enum.Material.Metal
+        )
+        flightPost.CanCollide = false
+    end
+end
+
+makePart(
+    "CorridorStairWallLeft",
+    Vector3.new(corridorStairWallThickness, 13, 22),
+    CFrame.new(-corridorStairWallX, 6.5, -105),
+    wallColor,
+    Enum.Material.SmoothPlastic
+)
+makePart(
+    "CorridorStairWallRight",
+    Vector3.new(corridorStairWallThickness, 13, 22),
+    CFrame.new(corridorStairWallX, 6.5, -105),
+    wallColor,
+    Enum.Material.SmoothPlastic
+)
+
+for _, band in ipairs({
+    { name = "CorridorStairBlueBandLeft", x = -(corridorStairWallX - 0.32), y = 5.5, height = 1.2, color = referenceBlue },
+    { name = "CorridorStairBlueBandRight", x = corridorStairWallX - 0.32, y = 5.5, height = 1.2, color = referenceBlue },
+    { name = "CorridorStairRedBandLeft", x = -(corridorStairWallX - 0.32), y = 8.0, height = 0.9, color = referenceRed },
+    { name = "CorridorStairRedBandRight", x = corridorStairWallX - 0.32, y = 8.0, height = 0.9, color = referenceRed },
+}) do
+    local stairBand = makePart(
+        band.name,
+        Vector3.new(0.18, band.height, 22),
+        CFrame.new(band.x, band.y, -105),
+        band.color,
+        Enum.Material.SmoothPlastic
+    )
+    stairBand.CanCollide = false
+end
+
+makePart("UpperHallLanding", Vector3.new(32, 1, 13), CFrame.new(0, 7.5, -119), referenceWhite, Enum.Material.Concrete)
+makePart("UpperHallRailBlue", Vector3.new(31, 1.1, 0.7), CFrame.new(0, 11.0, -112.8), referenceBlue, Enum.Material.Metal)
+makePart("UpperHallRailRed", Vector3.new(31, 0.7, 0.8), CFrame.new(0, 12.1, -112.8), referenceRed, Enum.Material.Metal)
 
 local trophyGlass = makePart("TrophyCaseGlass", Vector3.new(24, 8, 1), CFrame.new(32, 5, 84), glassColor, Enum.Material.Glass)
 trophyGlass.Transparency = 0.35
@@ -259,12 +389,57 @@ for _, direction in ipairs({-1, 1}) do
     rim.CFrame = rim.CFrame * CFrame.Angles(0, 0, math.rad(90))
 end
 
+-- Reference A@00:05: broad stairs, a symmetrical planted approach, blue school
+-- massing with red framing, a white canopy, and a large readable crest.
+makePart("SchoolFacadeLeft", Vector3.new(64, 25, 1.2), CFrame.new(-49, 12.5, 123.1), referenceBlue, Enum.Material.Brick)
+makePart("SchoolFacadeRight", Vector3.new(64, 25, 1.2), CFrame.new(49, 12.5, 123.1), referenceBlue, Enum.Material.Brick)
+for _, x in ipairs({ -80, -18, 18, 80 }) do
+    makePart("FacadeRedColumn", Vector3.new(3.2, 27, 1.8), CFrame.new(x, 13.5, 123.8), referenceRed, Enum.Material.SmoothPlastic)
+end
+makePart("FacadeWhiteHeader", Vector3.new(38, 4, 2), CFrame.new(0, 22, 123.4), referenceWhite, Enum.Material.SmoothPlastic)
+makePart("FacadeRedRoofline", Vector3.new(174, 2, 2.2), CFrame.new(0, 26, 123.5), referenceRed, Enum.Material.Metal)
+
+local crest = makePart("SchoolCrest", Vector3.new(15, 17, 1.5), CFrame.new(49, 15, 122.2), referenceBlue, Enum.Material.SmoothPlastic)
+local crestGui = Instance.new("SurfaceGui")
+crestGui.Face = Enum.NormalId.Front
+crestGui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+crestGui.PixelsPerStud = 36
+crestGui.Parent = crest
+local crestText = Instance.new("TextLabel")
+crestText.BackgroundTransparency = 1
+crestText.Size = UDim2.fromScale(1, 1)
+crestText.Font = Enum.Font.GothamBlack
+crestText.Text = "PH\n★"
+crestText.TextColor3 = referenceWhite
+crestText.TextScaled = true
+crestText.Parent = crestGui
+
 -- Original campus exterior: a readable entrance, drop-off, parking, and street edge.
 makePart("FrontPlaza", Vector3.new(116, 0.45, 34), CFrame.new(0, 0.7, 140), Color3.fromRGB(196, 199, 202), Enum.Material.Concrete)
 makePart("EntryWalk", Vector3.new(18, 0.3, 82), CFrame.new(0, 0.75, 171), Color3.fromRGB(204, 207, 211), Enum.Material.Concrete)
-makePart("EntryCanopy", Vector3.new(38, 1.2, 14), CFrame.new(0, 13.5, 129), trimColor, Enum.Material.Metal)
-for _, x in ipairs({-9, 9}) do
-    makePart("CanopyPost", Vector3.new(1.2, 13, 1.2), CFrame.new(x, 6.7, 134), trimColor, Enum.Material.Metal)
+makePart("EntryCanopy", Vector3.new(44, 1.2, 16), CFrame.new(0, 17.5, 129), referenceWhite, Enum.Material.Metal)
+for _, x in ipairs({-10, 10}) do
+    makePart("CanopyPost", Vector3.new(1.2, 17, 1.2), CFrame.new(x, 8.7, 134), referenceWhite, Enum.Material.Metal)
+end
+
+for step = 0, 6 do
+    local entryStep = makePart(
+        "EntryStep" .. tostring(step + 1),
+        Vector3.new(72 - (step * 4), 0.45 + (step * 0.12), 3.2),
+        CFrame.new(0, 0.85 + (step * 0.08), 151 - (step * 3.0)),
+        (step % 2 == 0) and referenceWhite or Color3.fromRGB(221, 225, 231),
+        Enum.Material.Concrete
+    )
+    entryStep.CanCollide = false
+end
+
+for _, x in ipairs({ -43, 43 }) do
+    makePart("EntryPlanter", Vector3.new(15, 2.2, 24), CFrame.new(x, 1.7, 145), referenceRed, Enum.Material.Brick)
+    for _, offset in ipairs({ -4, 4 }) do
+        makePart("EntryEvergreenTrunk", Vector3.new(1.6, 8, 1.6), CFrame.new(x + offset, 5.8, 145), Color3.fromRGB(93, 69, 48), Enum.Material.Wood)
+        local crown = makePart("EntryEvergreen", Vector3.new(7, 18, 7), CFrame.new(x + offset, 15, 145), Color3.fromRGB(47, 133, 82), Enum.Material.Grass)
+        crown.Shape = Enum.PartType.Cylinder
+    end
 end
 
 for _, x in ipairs({-8, 0, 8}) do
@@ -449,7 +624,7 @@ makeLabel("PIP HIGH", CFrame.new(0, 11, 123.2) * CFrame.Angles(0, math.rad(180),
 local spawn = Instance.new("SpawnLocation")
 spawn.Name = "MainSpawn"
 spawn.Size = Vector3.new(10, 1, 10)
-spawn.CFrame = CFrame.new(0, 1, 105)
+spawn.CFrame = CFrame.new(0, 1.55, 177)
 spawn.Anchored = true
 spawn.Neutral = true
 spawn.Color = Color3.fromRGB(111, 174, 229)

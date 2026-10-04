@@ -3,13 +3,17 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 local ContextActionService = game:GetService("ContextActionService")
 local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local GuiService = game:GetService("GuiService")
 
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
+local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
 
 local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 LegacyOutfitEntry(player, UserInputService)
 local shoppingBoundary = LegacyShoppingBoundary()
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
@@ -26,13 +30,14 @@ local gui = Instance.new("ScreenGui")
 gui.Name = "RobloxHighSchoolLegacyUI"
 gui.ResetOnSpawn = false
 gui.DisplayOrder = 10
-gui.Parent = player:WaitForChild("PlayerGui")
+gui.IgnoreGuiInset = true
+gui.Parent = playerGui
 
 local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
 local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
 local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
-local bottomMargin = UserInputService.TouchEnabled and 112 or 12
+local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
@@ -48,11 +53,12 @@ local function outline(target, thickness)
     return stroke
 end
 
+-- Reference A recurring HUD: compact top-right school status beside a colored action rail.
 local card = Instance.new("Frame")
-card.Name = "LegacySchoolMenu"
-card.AnchorPoint = Vector2.new(0, 1)
-card.Position = UDim2.new(0, 12, 1, -bottomMargin)
-card.Size = UDim2.new(0, 236, 0, 184)
+card.Name = "CompactSchoolStatus"
+card.AnchorPoint = Vector2.new(0, 0)
+card.Position = UDim2.fromOffset(0, 0)
+card.Size = UDim2.fromOffset(118, 70)
 card.BackgroundColor3 = LEGACY_PANEL
 card.BackgroundTransparency = 0.02
 card.Parent = gui
@@ -63,9 +69,9 @@ local title = Instance.new("TextLabel")
 title.BackgroundTransparency = 0
 title.BackgroundColor3 = LEGACY_BLUE
 title.Position = UDim2.new(0, 0, 0, 0)
-title.Size = UDim2.new(1, 0, 0, 28)
+title.Size = UDim2.new(1, 0, 0, 24)
 title.Font = Enum.Font.ArialBold
-title.Text = "Menu"
+title.Text = "SCHOOL DAY"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 15
 title.TextXAlignment = Enum.TextXAlignment.Center
@@ -73,8 +79,8 @@ title.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
 pointsLabel.BackgroundTransparency = 1
-pointsLabel.Position = UDim2.new(0, 10, 0, 121)
-pointsLabel.Size = UDim2.new(1, -20, 0, 20)
+pointsLabel.Position = UDim2.new(0, 10, 0, 82)
+pointsLabel.Size = UDim2.new(0, 82, 0, 28)
 pointsLabel.Font = Enum.Font.ArialBold
 pointsLabel.Text = "Points: 0"
 pointsLabel.TextColor3 = LEGACY_BLUE_DARK
@@ -84,12 +90,12 @@ pointsLabel.Parent = card
 
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
-periodLabel.Position = UDim2.new(0, 10, 0, 35)
-periodLabel.Size = UDim2.new(1, -20, 0, 43)
+periodLabel.Position = UDim2.new(0, 9, 0, 29)
+periodLabel.Size = UDim2.new(1, -18, 0, 32)
 periodLabel.Font = Enum.Font.ArialBold
 periodLabel.Text = "Loading school day..."
 periodLabel.TextColor3 = LEGACY_BLUE_DARK
-periodLabel.TextSize = 15
+periodLabel.TextSize = 13
 periodLabel.TextWrapped = true
 periodLabel.TextXAlignment = Enum.TextXAlignment.Left
 periodLabel.TextYAlignment = Enum.TextYAlignment.Top
@@ -97,20 +103,20 @@ periodLabel.Parent = card
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.BackgroundTransparency = 1
-statusLabel.Position = UDim2.new(0, 10, 0, 78)
-statusLabel.Size = UDim2.new(1, -20, 0, 40)
+statusLabel.Position = UDim2.new(0, 9, 0, 61)
+statusLabel.Size = UDim2.new(1, -18, 0, 22)
 statusLabel.Font = Enum.Font.Arial
 statusLabel.Text = "Connecting..."
 statusLabel.TextColor3 = Color3.fromRGB(31, 72, 102)
-statusLabel.TextSize = 13
+statusLabel.TextSize = 11
 statusLabel.TextWrapped = true
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.TextYAlignment = Enum.TextYAlignment.Top
 statusLabel.Parent = card
 
 local action = Instance.new("TextButton")
-action.Position = UDim2.new(0, 8, 1, -50)
-action.Size = UDim2.new(1, -16, 0, 44)
+action.Position = UDim2.new(0, 96, 0, 87)
+action.Size = UDim2.new(1, -104, 0, 27)
 action.BackgroundColor3 = LEGACY_BUTTON
 action.Font = Enum.Font.ArialBold
 action.Text = "CHECKING CLASS..."
@@ -119,6 +125,174 @@ action.TextSize = 13
 action.Parent = card
 round(action, 2)
 outline(action, 1)
+
+local actionRail = Instance.new("Frame")
+actionRail.Name = "RHS2ActionRail"
+actionRail.AnchorPoint = Vector2.new(0, 0)
+actionRail.Position = UDim2.fromOffset(0, 0)
+actionRail.Size = UDim2.fromOffset(48, 176)
+actionRail.BackgroundTransparency = 1
+actionRail.Parent = gui
+
+local actionRailLayout = Instance.new("UIListLayout")
+actionRailLayout.Padding = UDim.new(0, 5)
+actionRailLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+actionRailLayout.SortOrder = Enum.SortOrder.LayoutOrder
+actionRailLayout.Parent = actionRail
+
+local function makeRailButton(name, label, color, order)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.LayoutOrder = order
+    button.Size = UDim2.fromOffset(52, 52)
+    button.BackgroundColor3 = color
+    button.Font = Enum.Font.ArialBold
+    button.Text = label
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextSize = 12
+    button.TextWrapped = true
+    button.Parent = actionRail
+    round(button, 10)
+    local railStroke = outline(button, 2)
+    railStroke.Color = Color3.fromRGB(255, 255, 255)
+    return button
+end
+
+local shopRailButton = makeRailButton("RailShop", "SHOP", Color3.fromRGB(220, 66, 66), 1)
+local avatarRailButton = makeRailButton("RailAvatar", "AVATAR", Color3.fromRGB(54, 174, 221), 2)
+local travelRailButton = makeRailButton("RailTravel", "TRAVEL", Color3.fromRGB(235, 177, 49), 4)
+
+local quickBar = Instance.new("Frame")
+quickBar.Name = "RHS2QuickBar"
+quickBar.AnchorPoint = Vector2.new(0, 0)
+quickBar.Position = UDim2.fromOffset(0, 0)
+quickBar.Size = UDim2.fromOffset(216, 48)
+quickBar.BackgroundTransparency = 1
+quickBar.Parent = gui
+
+local quickLayout = Instance.new("UIListLayout")
+quickLayout.FillDirection = Enum.FillDirection.Horizontal
+quickLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+quickLayout.Padding = UDim.new(0, 7)
+quickLayout.Parent = quickBar
+
+for index, slot in ipairs({
+    { label = "BAG", color = Color3.fromRGB(56, 177, 220) },
+    { label = "", color = Color3.fromRGB(36, 45, 77) },
+    { label = "PHONE", color = Color3.fromRGB(68, 195, 80) },
+    { label = "ITEMS", color = Color3.fromRGB(210, 83, 188) },
+}) do
+    local quickSlot = Instance.new("TextLabel")
+    quickSlot.Name = "QuickSlot" .. tostring(index)
+    quickSlot.Size = UDim2.fromOffset(52, 52)
+    quickSlot.BackgroundColor3 = slot.color
+    quickSlot.Font = Enum.Font.ArialBold
+    quickSlot.Text = slot.label
+    quickSlot.TextColor3 = Color3.fromRGB(255, 255, 255)
+    quickSlot.TextSize = 10
+    quickSlot.Parent = quickBar
+    round(quickSlot, 10)
+    local quickStroke = outline(quickSlot, 2)
+    quickStroke.Color = Color3.fromRGB(236, 243, 250)
+end
+
+local currentHudLayout = nil
+local viewportConnection = nil
+
+local function controlExclusionZones(viewportWidth, viewportHeight, insets)
+    if not UserInputService.TouchEnabled then
+        return {}
+    end
+
+    return ResponsiveHudLayout.touchExclusionZones(
+        { width = viewportWidth, height = viewportHeight },
+        insets
+    )
+end
+
+local function applyResponsiveHudLayout()
+    local camera = Workspace.CurrentCamera
+    if not camera then
+        return
+    end
+
+    local viewport = camera.ViewportSize
+    local insets = { left = 0, top = 0, right = 0, bottom = 0 }
+    local insetOk, topLeftInset, bottomRightInset = pcall(function()
+        return GuiService:GetGuiInset()
+    end)
+    if insetOk and topLeftInset and bottomRightInset then
+        insets.left = topLeftInset.X
+        insets.top = topLeftInset.Y
+        insets.right = bottomRightInset.X
+        insets.bottom = bottomRightInset.Y
+    end
+
+    local layout = ResponsiveHudLayout.compute(
+        { width = viewport.X, height = viewport.Y },
+        insets,
+        controlExclusionZones(viewport.X, viewport.Y, insets)
+    )
+    local valid, reason = ResponsiveHudLayout.validate(layout)
+    if not valid then
+        warn("Compact HUD layout rejected: " .. tostring(reason))
+        return
+    end
+    currentHudLayout = layout
+
+    card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
+    card.Size = UDim2.fromOffset(layout.status.width, layout.status.height)
+    actionRail.Position = UDim2.fromOffset(layout.rail.x, layout.rail.y)
+    actionRail.Size = UDim2.fromOffset(layout.rail.width, layout.rail.height)
+    quickBar.Position = UDim2.fromOffset(layout.quick.x, layout.quick.y)
+    quickBar.Size = UDim2.fromOffset(layout.quick.width, layout.quick.height)
+
+    title.Position = UDim2.fromOffset(0, 0)
+    title.Size = UDim2.new(1, 0, 0, 17)
+    title.TextSize = 11
+    periodLabel.Position = UDim2.new(0, 6, 0, 18)
+    periodLabel.Size = UDim2.new(1, -12, 0, 17)
+    periodLabel.TextSize = 9
+    statusLabel.Position = UDim2.new(0, 6, 0, 35)
+    statusLabel.Size = UDim2.new(1, -12, 0, 15)
+    statusLabel.TextSize = 8
+    pointsLabel.Position = UDim2.new(0, 6, 0, 51)
+    pointsLabel.Size = UDim2.new(0.42, -8, 0, 14)
+    pointsLabel.TextSize = 8
+    action.Position = UDim2.new(0.42, 0, 0, 50)
+    action.Size = UDim2.new(0.58, -6, 0, 16)
+    action.TextSize = 8
+
+    actionRailLayout.Padding = UDim.new(0, layout.railGap)
+    for _, child in ipairs(actionRail:GetChildren()) do
+        if child:IsA("GuiButton") then
+            child.Size = UDim2.fromOffset(layout.railButtonSize, layout.railButtonSize)
+        end
+    end
+
+    quickLayout.Padding = UDim.new(0, layout.quickGap)
+    for _, child in ipairs(quickBar:GetChildren()) do
+        if child:IsA("GuiObject") and child.Name:match("^QuickSlot") then
+            child.Size = UDim2.fromOffset(layout.quickSlotSize, layout.quickSlotSize)
+        end
+    end
+end
+
+local function bindViewport(camera)
+    if viewportConnection then
+        viewportConnection:Disconnect()
+        viewportConnection = nil
+    end
+    if camera then
+        viewportConnection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveHudLayout)
+    end
+    applyResponsiveHudLayout()
+end
+
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    bindViewport(Workspace.CurrentCamera)
+end)
+bindViewport(Workspace.CurrentCamera)
 
 local modal = Instance.new("Frame")
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -357,6 +531,53 @@ action.Activated:Connect(function()
     end
 end)
 
+local function findOutfitPanel()
+    for _, guiName in ipairs({ "Outfits", "OutfitsMobile", "OutfitsConsole" }) do
+        local outfitGui = playerGui:FindFirstChild(guiName)
+        if outfitGui then
+            local internalEntry = outfitGui:FindFirstChild("OutfitEntryInternal")
+            if internalEntry then
+                internalEntry.Visible = false
+            end
+            local panel = outfitGui:FindFirstChild("OutfitInputs")
+            if panel then
+                return panel
+            end
+        end
+    end
+    return nil
+end
+
+shopRailButton.Activated:Connect(function()
+    local confirmation = shoppingBoundary.consumeServerConfirmation()
+    statusLabel.Text = confirmation or "Visit the Style Shop to browse verified items."
+end)
+
+avatarRailButton.Activated:Connect(function()
+    local outfitPanel = findOutfitPanel()
+    if outfitPanel then
+        outfitPanel.Visible = not outfitPanel.Visible
+    else
+        statusLabel.Text = "Avatar controls are still loading."
+    end
+end)
+
+travelRailButton.Activated:Connect(function()
+    if busy then return end
+    busy = true
+    local ok, response = pcall(function()
+        return requestTravel:InvokeServer()
+    end)
+    busy = false
+    if ok and type(response) == "table" and response.accepted == true then
+        statusLabel.Text = "Traveling to " .. tostring(response.destination or response.roomDisplayName or "school")
+    else
+        statusLabel.Text = "Travel becomes available with the next destination."
+    end
+end)
+
+findOutfitPanel()
+
 task.spawn(function()
     while gui.Parent do
         local okState, state = pcall(function()
@@ -426,7 +647,7 @@ local leaveCafeShift = cafeJobRoot:WaitForChild("LeaveShift")
 local cafeCard = Instance.new("Frame")
 cafeCard.Name = "LegacyCafePanel"
 cafeCard.AnchorPoint = Vector2.new(1, 1)
-cafeCard.Position = UDim2.new(1, -12, 1, -bottomMargin)
+cafeCard.Position = UDim2.new(1, -12, 1, -auxiliaryPanelBottomMargin)
 cafeCard.Size = UDim2.new(0, 260, 0, 150)
 cafeCard.BackgroundColor3 = LEGACY_PANEL
 cafeCard.BackgroundTransparency = 0.02
@@ -633,7 +854,7 @@ local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 local vehicleCard = Instance.new("Frame")
 vehicleCard.Name = "LegacyVehiclePanel"
 vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
-vehicleCard.Position = UDim2.new(0.5, 0, 1, -bottomMargin)
+vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
 vehicleCard.Size = UDim2.new(0, 260, 0, 132)
 vehicleCard.BackgroundColor3 = LEGACY_PANEL
 vehicleCard.BackgroundTransparency = 0.02
@@ -944,22 +1165,23 @@ local setHousingWalls = housingRoot:WaitForChild("SetHideWalls")
 
 local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
-houseIcon.AnchorPoint = Vector2.new(0, 1)
-houseIcon.Position = UDim2.new(0, 256, 1, -bottomMargin)
-houseIcon.Size = UDim2.new(0, 58, 0, 58)
-houseIcon.BackgroundColor3 = LEGACY_BUTTON
+houseIcon.LayoutOrder = 3
+houseIcon.Size = UDim2.fromOffset(52, 52)
+houseIcon.BackgroundColor3 = Color3.fromRGB(83, 188, 77)
 houseIcon.Font = Enum.Font.ArialBold
 houseIcon.Text = "HOUSE"
-houseIcon.TextColor3 = LEGACY_BLUE_DARK
+houseIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
 houseIcon.TextSize = 12
-houseIcon.Parent = gui
-round(houseIcon, 2)
-outline(houseIcon, 2)
+houseIcon.Parent = actionRail
+round(houseIcon, 10)
+local houseRailStroke = outline(houseIcon, 2)
+houseRailStroke.Color = Color3.fromRGB(255, 255, 255)
+applyResponsiveHudLayout()
 
 local housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
 housePanel.AnchorPoint = Vector2.new(0, 1)
-housePanel.Position = UDim2.new(0, 256, 1, -(bottomMargin + 66))
+housePanel.Position = UDim2.new(0, 256, 1, -(auxiliaryPanelBottomMargin + 66))
 housePanel.Size = UDim2.new(0, 248, 0, 252)
 housePanel.BackgroundColor3 = LEGACY_PANEL
 housePanel.BackgroundTransparency = 0.02
@@ -1233,7 +1455,7 @@ end)
 local editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 1)
-editorPanel.Position = UDim2.new(0, 512, 1, -(bottomMargin + 66))
+editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
 editorPanel.Size = UDim2.new(0, 330, 0, 346)
 editorPanel.BackgroundColor3 = LEGACY_PANEL
 editorPanel.BackgroundTransparency = 0.02
