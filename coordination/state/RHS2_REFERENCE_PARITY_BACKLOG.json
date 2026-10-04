@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T20:38:40.770Z",
+  "observedAt": "2026-10-04T21:22:27Z",
   "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved P1 owner, exact-SHA pipeline gates, and no parity claim without rendered/device comparison.",
     "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "blocker": null,
-    "nextHandoff": "Sole Pip High Free Roam P1 producer activated from packaged canonical 4323049."
+    "blocker": "PR188 exact head 3aad19e has no independent QA review; rendered desktop/iPhone/iPad and physical traversal remain pending.",
+    "nextHandoff": "Roblox High School QA & Contract reviews PR188 exact head 3aad19e; Integration consumes only the same approved SHA."
   },
   "sources": {
     "A": {
@@ -17,9 +17,11 @@
       "durationSeconds": 141.533,
       "resolution": "1112x512",
       "access": {
-        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED__BYTE_MATERIALIZATION_TRANSIENT_502_ASSIGNED_CONTENT_QA",
-        "verifiedAt": "2026-10-04T18:54:00Z",
-        "sizeBytes": 101853818
+        "status": "BYTE_MATERIALIZATION_PASS__CONTENT_QA_HASH_PACK_PR190_OPEN",
+        "verifiedAt": "2026-10-04T21:03:33Z",
+        "sizeBytes": 101853818,
+        "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+        "evidence": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json @ a2ed245455176a2dad83f2a87c477b1f5b3b1158"
       }
     },
     "B": {
@@ -28,9 +30,11 @@
       "durationSeconds": 92,
       "resolution": "1112x512",
       "access": {
-        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED__BYTE_MATERIALIZATION_TRANSIENT_502_ASSIGNED_CONTENT_QA",
-        "verifiedAt": "2026-10-04T18:54:00Z",
-        "sizeBytes": 66390233
+        "status": "BYTE_MATERIALIZATION_PASS__CONTENT_QA_HASH_PACK_PR190_OPEN",
+        "verifiedAt": "2026-10-04T21:03:33Z",
+        "sizeBytes": 66390233,
+        "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+        "evidence": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json @ a2ed245455176a2dad83f2a87c477b1f5b3b1158"
       }
     },
     "C": {
@@ -39,9 +43,11 @@
       "durationSeconds": 120.933,
       "resolution": "1112x512",
       "access": {
-        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED__BYTE_MATERIALIZATION_TRANSIENT_502_ASSIGNED_CONTENT_QA",
-        "verifiedAt": "2026-10-04T18:54:00Z",
-        "sizeBytes": 87770778
+        "status": "BYTE_MATERIALIZATION_PASS__CONTENT_QA_HASH_PACK_PR190_OPEN",
+        "verifiedAt": "2026-10-04T21:03:33Z",
+        "sizeBytes": 87770778,
+        "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+        "evidence": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json @ a2ed245455176a2dad83f2a87c477b1f5b3b1158"
       }
     }
   },
@@ -135,7 +141,7 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "ACTIVE_SINGLE_PRODUCER__BRANCH_PENDING",
+      "status": "CANDIDATE_PR188__EXACT_HEAD_CI_PASS__WAIT_INDEPENDENT_QA",
       "owner": "Pip High Free Roam",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": [
@@ -153,9 +159,12 @@
         "Deterministic CI, independent QA, Integration, Smoke and Package bind to exact heads.",
         "Rendered target-device comparison remains required."
       ],
-      "outputLocation": "school/** on one activated producer branch",
-      "blocker": null,
-      "nextHandoff": "Pip High Free Roam creates one P1 branch; QA reviews exact candidate."
+      "outputLocation": "PR188 / four school/** files",
+      "blocker": "No independent QA review on exact 3aad19e; rendered/device and physical traversal evidence pending.",
+      "nextHandoff": "Roblox High School QA & Contract reviews only exact 3aad19e.",
+      "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+      "pr": 188,
+      "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a"
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
@@ -241,15 +250,15 @@
     }
   ],
   "supportAssignments": {
-    "Foundation": "Preserve PR 179 MainSpawn/EntryMat AABB finding and PR 175 authority delta; wait unchanged unless a new exact-canonical authority fact appears.",
-    "ContentQA": "Maintain stable A/B/C identities, timestamps, explicit unknowns and 2x caution; own retry of the transient Library byte-materialization 502 without blocking Package or P1 preparation.",
-    "ProgressionMobile": "Preserve the schema-15 normalized obstruction measurement protocol; prepare no UI product code before P1 activation.",
-    "ClassEducation": "Prepare classroom/free-roam transition evidence only; no custom schoolwork before the P1 visual baseline.",
-    "QA": "Preserve PR 170 review 5407562971. Prepare exact P1 rendered comparison criteria without self-certifying parity.",
-    "Integration": "Preserve PR 180 exact baseline blobs, collision surfaces and ordered protected handoff; wait for a future QA-approved P1 candidate.",
-    "Smoke": "PR 181 / receipt schema 15 is PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING on 4323049; runtime, rendered, device, physical-collision and live-rejoin checks remain pending.",
-    "ReleasePackage": "PR183 exact package PASS; preserve receipt and wait for P1 candidate downstream gates.",
-    "FreeRoam": "Sole active P1 owner; create exactly one branch from packaged canonical 4323049, implement school entrance/atrium/corridor and compact HUD, then hand to QA."
+    "Foundation": "Preserve PR191 f991 spawn/EntryWalk AABB blocker evidence. Changed head 3aad19e is static-green with a deterministic overlap contract; decorative-step collision and physical traversal remain QA/Smoke checks.",
+    "ContentQA": "PR190 successfully materializes A/B/C and pins byte/video metadata plus eight frame hashes. Refresh its stale no-candidate blocker to PR188 before merge; other lanes may consume the durable open-PR evidence without blocking.",
+    "ProgressionMobile": "Apply durable obstruction criteria to PR188 exact 3aad19e on desktop/iPhone/iPad; no rendered PASS from static tests.",
+    "ClassEducation": "Prepare nonconflicting classroom/free-roam transition evidence only; no custom schoolwork before P1 gates complete.",
+    "QA": "Independently review PR188 exact 3aad19e after three successful workflows; keep functional, rendered, interaction and device statuses separate.",
+    "Integration": "Wait for formal QA on exact 3aad19e; mechanically merge only the same approved SHA and immediately hand the resulting canonical to Smoke.",
+    "Smoke": "Preserve PR189 checkpoints, rebind them to the future exact integrated canonical derived from approved 3aad19e, and keep rendered/device/physical traversal/save-rejoin pending until executed.",
+    "ReleasePackage": "Preserve PR183 package and open PR186 manifest; package only an exact PR188-derived canonical after QA, Integration and Smoke.",
+    "FreeRoam": "Sole product producer is PR188 at exact 3aad19e. Hold the head after CI; no further product writes unless independent QA requests repair."
   },
   "evidenceGapsClosed": [
     "SOURCE_IDENTITY",
@@ -260,10 +269,12 @@
     "PR170_FOUNDATION_AUTHORITY_DELTA_PINNED",
     "P1_FOUNDATION_SPAWN_ENTRY_AABB_COLLISION_PINNED",
     "P1_INTEGRATION_SEAMS_AND_ORDERED_HANDOFF_PINNED",
-    "SMOKE_DEVICE_OBSTRUCTION_MEASUREMENT_PROTOCOL_PINNED"
+    "SMOKE_DEVICE_OBSTRUCTION_MEASUREMENT_PROTOCOL_PINNED",
+    "REFERENCE_BYTES_MATERIALIZED_AND_HASHED_PR190_OPEN",
+    "PR188_SPAWN_ENTRYWALK_AABB_STATIC_REPAIR_VERIFIED"
   ],
   "productParityGapsClosed": [],
-  "lastReconciledAt": "2026-10-04T20:38:40.770Z",
+  "lastReconciledAt": "2026-10-04T21:22:27Z",
   "pipeline": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "canonicalCiStatus": "PASS_ALL_THREE_EXACT_PUSH_GUARDS",
@@ -275,16 +286,27 @@
     "integrationReadiness": "PR180_P1_SEAMS_PINNED",
     "smokeStatus": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING__PR181_SCHEMA15",
     "packageStatus": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE__PR183",
-    "nextProducerActivation": "ACTIVE_SINGLE_PRODUCER__BRANCH_PENDING"
+    "nextProducerActivation": "SOLE_PRODUCER_ALREADY_ACTIVE__WIP_CAP_3_FULL__NO_SECOND_PRODUCER",
+    "p1CandidatePr": 188,
+    "p1CandidateHead": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+    "p1CandidateCiStatus": "PASS_ALL_THREE_EXACT_HEAD",
+    "p1QaStatus": "WAIT_INDEPENDENT_QA__NO_REVIEWS",
+    "p1IntegrationStatus": "BLOCKED_ON_QA",
+    "p1SmokeStatus": "BLOCKED_ON_INTEGRATION__RENDERED_DEVICE_PENDING",
+    "p1PackageStatus": "BLOCKED_ON_SMOKE"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
     "persistentIdsAvailable": true,
-    "directMetadataVerifiedAt": "2026-10-04T19:55:00Z",
-    "status": "ALL_THREE_LIBRARY_FILES_RESOLVED_BY_EXACT_TITLE_AND_PERSISTENT_ID__BYTE_MATERIALIZATION_TRANSIENT_502_RECONFIRMED_BY_SMOKE",
-    "materializationBlocker": "Transient HTTP 502 recurred for A/B/C during Smoke; Content QA owns retry/deeper annotation.",
-    "pipelineImpact": "NONBLOCKING__PACKAGE_AND_P1_PREPARATION_CONTINUE_FROM_DURABLE_TIMESTAMPED_EVIDENCE__NO_UNSEEN_DETAILS_MAY_BE_INVENTED",
-    "rule": "Content QA owns byte-materialization or deeper-annotation issues; other lanes continue from durable observations and exact IDs without treating metadata access as rendered parity."
+    "directMetadataVerifiedAt": "2026-10-04T21:03:33Z",
+    "status": "ALL_THREE_LIBRARY_FILES_MATERIALIZED__BYTE_AND_VIDEO_METADATA_HASHED__EIGHT_TIMESTAMP_FRAMES_PINNED_IN_PR190_OPEN",
+    "materializationBlocker": null,
+    "evidencePr": 190,
+    "evidenceHead": "a2ed245455176a2dad83f2a87c477b1f5b3b1158",
+    "outputLocation": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+    "staleField": "PR190 still says no candidate exists; refresh to PR188 exact 3aad19e before merge.",
+    "pipelineImpact": "REFERENCE_ACCESS_AVAILABLE__RENDERED_CANDIDATE_COMPARISON_STILL_PENDING",
+    "rule": "Other lanes consume durable observations/hashes without inventing hidden values; Content QA owns any access refresh."
   },
   "boundedReadinessFindings": [
     {
@@ -292,22 +314,49 @@
       "owner": "Roblox High School Foundation",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": "A@00:05",
-      "finding": "Canonical MainSpawn is inside the lobby and overlaps the collidable EntryMat across a 10-by-3-stud horizontal region.",
-      "acceptanceCriteria": "P1 relocates the singular spawn outside, preserves one SchoolEntrance seam, and proves collision-safe spawn -> stairs -> doors -> atrium -> corridor navigation.",
-      "outputLocation": "coordination/reference/rhs2-entry-6fe2541/FOUNDATION_4323049_SPAWN_AABB_DELTA.md",
-      "blocker": "P1 producer not active until exact Package.",
-      "nextHandoff": "Pip High Free Roam after Control Tower activation."
+      "finding": "Canonical overlap is addressed in PR188 changed head 3aad19e by raising the singular spawn to center Y 1.55 and adding deterministic positive-volume AABB rejection against CampusGround, EntryWalk, DropOffLane and ParkingLot.",
+      "acceptanceCriteria": "Static AABB contract stays green on the exact candidate; independent QA/Smoke still proves physical spawn -> entrance -> atrium -> corridor traversal and checks noncollidable decorative EntryStep risk.",
+      "outputLocation": "PR191 blocker evidence plus PR188 exact head 3aad19e",
+      "blocker": "Independent QA and rendered/runtime physical traversal pending.",
+      "nextHandoff": "Roblox High School QA & Contract",
+      "candidatePr": 188,
+      "candidateHead": "3aad19ea4e3a47753307c8f9d8422f55cbba082a"
     },
     {
       "id": "CURRENT_FREE_ROAM_HUD_OBSTRUCTION_BASELINE",
       "owner": "Roblox High School Integration Smoke",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": "A/B/C recurring HUD; A@02:05",
-      "finding": "Canonical LegacySchoolMenu is an always-visible 236x184 bottom-left card with touch bottom margin 112, unlike the compact recurring placement groups in the footage.",
+      "finding": "PR188 replaces the large bottom-left card with a compact top-right status, four-entry right rail and four-slot bottom quick bar; static layout presence is green.",
       "acceptanceCriteria": "P1 captures normalized bounds for right rail, top-right status/balances, bottom slots, modals and Roblox controls on iPhone/iPad; menu-closed view must not obstruct the navigation sightline.",
-      "outputLocation": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json schema 15",
-      "blocker": "Rendered/device execution pending; static evidence does not close parity.",
-      "nextHandoff": "Pip High Free Roam implementation, then QA and Smoke rendered/device comparison."
+      "outputLocation": "PR188 exact head 3aad19e plus PR189 runtime checkpoint plan",
+      "blocker": "Desktop/iPhone/iPad rendered bounds, safe-area obstruction and modal transitions are pending.",
+      "nextHandoff": "Roblox High School QA & Contract, then Integration Smoke on exact integrated canonical.",
+      "candidatePr": 188,
+      "candidateHead": "3aad19ea4e3a47753307c8f9d8422f55cbba082a"
     }
-  ]
+  ],
+  "candidateEvidence": {
+    "owner": "Pip High Free Roam",
+    "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "pr": 188,
+    "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+    "referenceClipTime": [
+      "A@00:05",
+      "A@00:25",
+      "A@00:45",
+      "A@02:05",
+      "A/B/C recurring HUD"
+    ],
+    "acceptanceCriteria": [
+      "Single exterior spawn and no duplicate authority",
+      "Reference-visible frontage/atrium/corridor/HUD composition",
+      "All three exact-head guards pass",
+      "Independent QA, Integration, Smoke and Package preserve exact SHA lineage",
+      "Rendered desktop/iPhone/iPad and physical traversal remain required"
+    ],
+    "outputLocation": "PR188 / school/**",
+    "blocker": "WAIT_INDEPENDENT_QA_AND_RENDERED_DEVICE_EVIDENCE",
+    "nextHandoff": "Roblox High School QA & Contract"
+  }
 }
