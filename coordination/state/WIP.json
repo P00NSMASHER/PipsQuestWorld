@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 50,
+  "schemaVersion": 51,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T20:38:25.530Z",
+  "observedAt": "2026-10-04T20:41:24.814Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
@@ -15,18 +15,19 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 3,
     "producerPr": null,
-    "producerSha": null,
-    "producerBranch": null,
+    "producerSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "producerBranch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
       "scope": "P1_SPAWN_SCHOOL_HUD",
-      "status": "ACTIVE_AUTHORIZED__CREATE_ONE_BRANCH_FROM_EXACT_CANONICAL",
-      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+      "status": "ACTIVE_AUTHORIZED__SOLE_BRANCH_CREATED__NO_PRODUCT_DELTA_YET",
+      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1"
     },
     "supersededCandidates": [
       {
@@ -41,7 +42,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "CURRENT_WIP_IS_EXACT_PACKAGED_CANONICAL_PLUS_FROZEN_CONTENT_QA_PR150; FREE_ROAM_IS_THE_SOLE_AUTHORIZED_P1_PRODUCT_PRODUCER; CREATE_ONLY_ONE_BRANCH_FROM_4323049_AND_RECONCILE_WIP_COUNT_AT_FIRST_CANDIDATE",
+    "rule": "CURRENT_WIP_IS_EXACT_PACKAGED_CANONICAL_PLUS_FROZEN_CONTENT_QA_PR150_PLUS_THE_SOLE_FREE_ROAM_P1_PRODUCER_BRANCH; ONLY_rebuild/high-school-rhs2-spawn-school-hud-4323049-v1_MAY_WRITE_P1_PRODUCT_CODE",
     "recentlyIntegrated": {
       "pr": 170,
       "candidateSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
@@ -50,7 +51,7 @@
       "status": "INTEGRATED__FORMAL_QA_PASS__ALL_THREE_EXACT_PUSH_GUARDS_PASS__SMOKE_NEXT"
     }
   },
-  "currentMilestone": "P1_SPAWN_SCHOOL_HUD_SINGLE_PRODUCER_ACTIVATED",
+  "currentMilestone": "P1_SPAWN_SCHOOL_HUD__SOLE_PRODUCER_BRANCH_BOUND",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -100,15 +101,15 @@
       "handoff": "Roblox High School QA & Contract"
     },
     "FreeRoam": {
-      "mode": "ACTIVE_SINGLE_PRODUCER",
+      "mode": "ACTIVE_SINGLE_PRODUCER__BRANCH_CREATED",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "branch": null,
+      "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
       "candidatePr": null,
-      "candidateSha": null,
-      "objective": "Create exactly one fresh P1 branch from packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe and implement the reference-matched spawn, school entrance, atrium/corridor and compact HUD slice. Preserve unique server authorities and route exact-head CI -> independent QA -> Integration -> Smoke -> Package.",
+      "candidateSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "objective": "Implement only P1_SPAWN_SCHOOL_HUD on the sole branch rebuild/high-school-rhs2-spawn-school-hud-4323049-v1: reference-matched exterior spawn approach, school frontage/entrance, bright atrium/corridor/staircase and compact recurring HUD.",
       "owned": "future reference-matched spawn -> school entrance -> bright atrium/corridor + compact recurring HUD only",
       "dependency": "Satisfied: exact canonical Smoke PR181 PASS and deterministic package PR183 merged.",
-      "exit": "One P1 candidate PR with reference-linked acceptance evidence on the sole authorized branch.",
+      "exit": "One bounded candidate PR from rebuild/high-school-rhs2-spawn-school-hud-4323049-v1 with exact-head CI, then independent QA.",
       "handoff": "Roblox High School QA & Contract after implementation"
     },
     "QA": {
@@ -152,11 +153,11 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "COORDINATE",
+      "mode": "COORDINATE_ACTIVE_P1",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "objective": "Track the sole active P1 Free Roam producer from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe; enforce WIP cap and stage CI -> QA -> Integration -> Smoke -> Package.",
+      "objective": "Preserve exactly one active P1 product branch and route its exact candidate through CI -> independent QA -> Integration -> Smoke -> Package; keep other lanes evidence-only.",
       "owned": "coordination/state/WIP.json, RHS2 parity backlog, candidate-cap enforcement, lane assignment and pipeline handoffs only",
-      "dependency": "Package PR183 merged; activation complete.",
+      "dependency": "Exact P1 candidate from rebuild/high-school-rhs2-spawn-school-hud-4323049-v1.",
       "exit": "P1 producer branch and PR registered in WIP, then exact-head gates progress.",
       "handoff": "Pip High Free Roam"
     }
@@ -238,10 +239,10 @@
     },
     "producer": {
       "pr": null,
-      "branch": null,
+      "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
       "baseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "headSha": null,
-      "status": "ACTIVE_OWNER_AUTHORIZED__NO_BRANCH_YET"
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__NO_PRODUCT_DELTA_YET"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -372,7 +373,7 @@
   "referenceParityBacklog": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
   "nextProducerReservation": {
     "owner": "Pip High Free Roam",
-    "status": "ACTIVE_AUTHORIZED__CREATE_ONE_BRANCH_FROM_EXACT_CANONICAL",
+    "status": "ACTIVE_AUTHORIZED__SOLE_BRANCH_CREATED__NO_PRODUCT_DELTA_YET",
     "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "scope": "One reference-matched spawn -> school entrance -> bright atrium/corridor slice with compact recurring HUD; reuse existing unique spawn/clock/economy authorities.",
     "referenceClips": [
@@ -391,10 +392,11 @@
       "Deterministic guards pass, then independent QA, Integration, Smoke and Package on the same exact heads",
       "Rendered comparison on target device remains required before any parity claim"
     ],
-    "outputLocation": "school/** on one WIP-authorized producer branch",
+    "outputLocation": "school/** on rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
     "blocker": null,
-    "nextHandoff": "Pip High Free Roam",
-    "activationRule": "Pip High Free Roam creates exactly one fresh P1 producer branch from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe; WIP then registers its branch/PR."
+    "nextHandoff": "Pip High Free Roam implements P1; Roblox High School QA & Contract reviews only the exact candidate head.",
+    "activationRule": "This is the only authorized P1 product branch. No other lane may create or write a product candidate.",
+    "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1"
   },
   "priorityAfterCurrent": [
     "SPAWN_SCHOOL_ENTRANCE_ATRIUM_CORRIDOR_COMPACT_HUD",
@@ -454,13 +456,15 @@
     "ControlTower": {
       "enabled": true,
       "lastOutput": {
-        "pr": 178,
-        "sha": "848d4d14f63422032e37d2e07e5cda85675b0e39",
-        "mergeCommit": "fe15c1e41ea9a5b26ff33712d33c3eff25500159",
-        "summary": "schema 48 exact canonical Smoke routing"
+        "pr": 185,
+        "sha": "ab04e94e0250a6da70ce24154c9c01f1f9bcddb6",
+        "mergeCommit": "b44ec6fdc354966ca5b3d3faa5f4b42af589db30",
+        "producerBranch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+        "producerBaseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+        "summary": "schema 50 activated the sole P1 producer; schema 51 binds the created exact-base branch"
       },
       "blockedSince": null,
-      "nextAction": "Register sole P1 branch and exact head; keep WIP cap.",
+      "nextAction": "Track the sole P1 branch head and candidate PR; preserve 3/3 WIP and exact-head pipeline gates.",
       "referenceGapsClosed": 8
     },
     "Foundation": {
@@ -513,14 +517,13 @@
     "FreeRoam": {
       "enabled": true,
       "lastOutput": {
-        "pr": 170,
-        "sha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
-        "mergeCommit": "43230492964ea637f69747e25a3e72d6cb268ebe",
-        "summary": "startup syntax repair integrated"
+        "branch": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1",
+        "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+        "summary": "sole P1 branch created from exact packaged canonical; no product delta yet"
       },
       "blockedSince": null,
       "blockedAgeHoursAtObservation": 0,
-      "nextAction": "Create one P1 branch from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe and implement the visible spawn/school/HUD slice.",
+      "nextAction": "Implement the bounded spawn -> entrance -> atrium/corridor + compact HUD slice on the sole branch, then open one candidate PR.",
       "referenceGapsClosed": 0
     },
     "QA": {
@@ -667,6 +670,20 @@
       "from": "fe15c1e41ea9a5b26ff33712d33c3eff25500159",
       "to": "a13fbde8bdd1f720f956621d1062b0cf24b57799",
       "output": "Foundation delta, Integration seams and Smoke PASS receipts merged"
+    }
+  ],
+  "changedHeadsSinceSchema50": [
+    {
+      "lane": "ControlTower",
+      "from": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d",
+      "to": "b44ec6fdc354966ca5b3d3faa5f4b42af589db30",
+      "output": "PR 185 producer authorization merged"
+    },
+    {
+      "lane": "FreeRoam",
+      "from": "AUTHORIZED_BRANCH_PENDING",
+      "to": "rebuild/high-school-rhs2-spawn-school-hud-4323049-v1@43230492964ea637f69747e25a3e72d6cb268ebe",
+      "output": "sole P1 branch created; no product delta yet"
     }
   ]
 }
