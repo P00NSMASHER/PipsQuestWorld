@@ -1,33 +1,48 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T16:23:13Z",
+  "observedAt": "2026-10-04T17:59:18Z",
   "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, one reserved producer, and no parity claim without exact-SHA QA plus rendered/device comparison.",
     "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "blocker": "Current shopping repair must complete Integration -> Smoke -> Package before the next producer activates.",
-    "nextHandoff": "Roblox High School Content QA for deeper annotation; Pip High Free Roam after package activation."
+    "blocker": "Exact canonical 6fe2541 fails client startup parsing. PR 170 at dfbbb5e2 is the sole repair and must complete formal QA -> Integration -> canonical push CI -> Smoke -> Package before the next visible producer activates.",
+    "nextHandoff": "Roblox High School QA & Contract for PR 170 exact-head review; Pip High Free Roam P1 remains reserved but inactive."
   },
   "sources": {
     "A": {
       "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
       "fileName": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
       "durationSeconds": 141.533,
-      "resolution": "1112x512"
+      "resolution": "1112x512",
+      "access": {
+        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED",
+        "verifiedAt": "2026-10-04T17:59:18Z",
+        "sizeBytes": 101853818
+      }
     },
     "B": {
       "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
       "fileName": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
       "durationSeconds": 92,
-      "resolution": "1112x512"
+      "resolution": "1112x512",
+      "access": {
+        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED",
+        "verifiedAt": "2026-10-04T17:59:18Z",
+        "sizeBytes": 66390233
+      }
     },
     "C": {
       "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
       "fileName": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
       "durationSeconds": 120.933,
-      "resolution": "1112x512"
+      "resolution": "1112x512",
+      "access": {
+        "status": "DIRECT_LIBRARY_METADATA_CONFIRMED",
+        "verifiedAt": "2026-10-04T17:59:18Z",
+        "sizeBytes": 87770778
+      }
     }
   },
   "evidenceRules": [
@@ -120,9 +135,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "RESERVED_NOT_ACTIVE__WAIT_SMOKE_PACKAGE",
+      "status": "RESERVED_NOT_ACTIVE__WAIT_PR170_QA_INTEGRATION_SMOKE_PACKAGE",
       "owner": "Pip High Free Roam",
-      "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+      "inputSha": "POST_PR170_PACKAGED_CANONICAL_TBD",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -139,15 +154,15 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "school/** on one activated producer branch",
-      "blocker": "Exact canonical 6fe2541 has Integration PASS; Smoke and deterministic Package remain.",
-      "nextHandoff": "Roblox High School QA & Contract"
+      "blocker": "Canonical 6fe2541 has a confirmed client-startup parse failure. PR 170 must traverse the full gated repair pipeline first.",
+      "nextHandoff": "Control Tower activates exactly one Pip High Free Roam producer only after the repaired package exists."
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
       "status": "EVIDENCE_PREP",
       "owner": "Roblox High School Class & Education",
-      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
       "referenceClipTime": [
         "B@00:05",
         "A@00:45"
@@ -156,7 +171,7 @@
         "One classroom/free-roam transition contract with no second class or clock authority."
       ],
       "outputLocation": "lane-owned evidence only until activated",
-      "blocker": "P1 and current repair pipeline",
+      "blocker": "PR 170 repair pipeline and P1 visible baseline.",
       "nextHandoff": "Control Tower"
     },
     {
@@ -164,7 +179,7 @@
       "priority": 3,
       "status": "OPEN",
       "owner": "Pip High Free Roam",
-      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
       "referenceClipTime": [
         "B@00:25",
         "B@00:55"
@@ -181,7 +196,7 @@
       "priority": 4,
       "status": "OPEN",
       "owner": "Pip High Free Roam",
-      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
       "referenceClipTime": [
         "A@00:15"
       ],
@@ -197,7 +212,7 @@
       "priority": 5,
       "status": "OPEN",
       "owner": "Pip High Free Roam",
-      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
       "referenceClipTime": [
         "B@00:45-01:05"
       ],
@@ -213,7 +228,7 @@
       "priority": 6,
       "status": "OPEN",
       "owner": "Pip High Free Roam",
-      "inputSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
+      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
       "referenceClipTime": [
         "C@00:25-01:05"
       ],
@@ -230,28 +245,35 @@
     "ContentQA": "Maintain stable clip IDs, timestamp annotations, explicit unknowns and evidence access.",
     "ProgressionMobile": "Prepare compact HUD/mobile obstruction criteria only.",
     "ClassEducation": "Prepare classroom/free-roam transition contract evidence only.",
-    "QA": "Define rendered comparison and exact-head validation; do not self-certify.",
-    "Smoke": "Prepare post-integration rendered/device gap list without foreground GUI use.",
-    "ReleasePackage": "Track deterministic package eligibility only."
+    "QA": "Formally validate PR 170 exact head dfbbb5e2 now; after repair packaging, define rendered P1 comparison without self-certification.",
+    "Smoke": "PR 173 records the exact-canonical startup failure. Rerun only the post-PR170 integrated SHA; keep camera/device checks pending without foreground GUI use.",
+    "ReleasePackage": "Do not package 6fe2541 as Smoke-passed. Track eligibility only for the repaired exact Smoke-PASS SHA."
   },
   "evidenceGapsClosed": [
     "SOURCE_IDENTITY",
     "TIMESTAMPED_OBSERVATION_INDEX",
-    "PLAYBACK_2X_CAUTION"
+    "PLAYBACK_2X_CAUTION",
+    "DIRECT_LIBRARY_METADATA_ACCESS_CONFIRMED",
+    "ENTRY_AUTHORITY_ACCEPTANCE_ANNEX"
   ],
   "productParityGapsClosed": [],
-  "lastReconciledAt": "2026-10-04T16:52:26Z",
+  "lastReconciledAt": "2026-10-04T17:59:18Z",
   "pipeline": {
     "canonicalSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
-    "integrationStatus": "PASS_INTEGRATED_EXACT_HEAD",
-    "smokeStatus": "ACTIVE",
-    "packageStatus": "PENDING",
-    "nextProducerActivation": "BLOCKED_UNTIL_EXACT_SMOKE_PASS_AND_PACKAGE"
+    "canonicalSmokeStatus": "FAIL_CORE_CLIENT_STARTUP_SYNTAX",
+    "repairPr": 170,
+    "repairHeadSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
+    "repairStatus": "SOLE_PRODUCT_REPAIR__ALL_THREE_CI_GREEN__FORMAL_QA_REQUIRED",
+    "integrationStatus": "WAIT_FORMAL_QA",
+    "smokeStatus": "WAIT_POST_REPAIR_INTEGRATION",
+    "packageStatus": "BLOCKED_BY_SMOKE_FAIL",
+    "nextProducerActivation": "BLOCKED_UNTIL_PR170_QA_INTEGRATION_PUSH_CI_SMOKE_PACKAGE"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
     "persistentIdsAvailable": true,
-    "status": "SOURCE_IDENTITIES_AND_TIMESTAMP_INDEX_AVAILABLE__TRANSIENT_BYTE_RETRIEVAL_DOES_NOT_BLOCK_PIPELINE",
-    "rule": "Content QA owns retrieval/annotation issues; other lanes continue from the durable timestamped evidence without inventing unseen details."
+    "directMetadataVerifiedAt": "2026-10-04T17:59:18Z",
+    "status": "ALL_THREE_LIBRARY_FILES_DIRECTLY_RESOLVED_BY_EXACT_TITLE_AND_PERSISTENT_ID",
+    "rule": "Content QA owns any later byte-materialization or deeper-annotation issue; other lanes continue from the durable timestamped evidence without inventing unseen details."
   }
 }
