@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Class & Education",
+  "owner": "Roblox High School Class & Education",
+  "observedAt": "2026-10-04T17:10:48.130Z",
+  "result": "REFERENCE_BOUND_CLASS_ACTIVITY_CONTRACT_PREPARED__NO_PRODUCT_WRITE",
+  "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+  "prepBranch": {
+    "name": "rebuild/high-school-class-education-invalid-choice-23cc398-v1",
+    "priorHead": "35ea431448995f4bd48efce627d24893ab6507ec",
+    "disposition": "EVIDENCE_PREP_ONLY__NOT_A_PRODUCT_CANDIDATE"
+  },
+  "outputLocation": "coordination/reference-extraction/class_activity_parity_contract_6fe2541.json",
+  "referenceSources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "fileName": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "durationSeconds": 141.533333,
+      "dimensions": "1112x512",
+      "videoCodec": "h264",
+      "frameRate": "30/1"
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "fileName": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "durationSeconds": 92,
+      "dimensions": "1112x512",
+      "videoCodec": "h264",
+      "frameRate": "30/1"
+    }
+  },
+  "evidenceRules": [
+    "Timestamps are positions in the supplied recordings, not claims about original gameplay duration.",
+    "Visible 2x playback markers prohibit movement-speed, animation-timing, countdown-rate or transition-duration acceptance without correction.",
+    "Player-authored nameplates are excluded from required product copy.",
+    "No audio, hidden scoring formula, backend hierarchy, remote name or server calculation is inferred from the footage."
+  ],
+  "observations": [
+    {
+      "id": "A_GYM_ENTRY",
+      "referenceClipTime": "A@01:00-01:25",
+      "observed": [
+        "The avatar moves from a bright school common area into the red/white gym and approaches the court while the compact roam HUD remains visible.",
+        "No entry prompt or hidden trigger is visible in this sampled span."
+      ]
+    },
+    {
+      "id": "A_DODGEBALL_ACTIVE",
+      "referenceClipTime": "A@01:30-01:48",
+      "observed": [
+        "Active play replaces the roam presentation with a top team-style score strip and central circular count, plus bottom personal points, heart-like indicators and a ball-count icon.",
+        "Thrown balls and other players are visible on the court.",
+        "Transient point increments and a knockout message appear during play."
+      ]
+    },
+    {
+      "id": "A_DODGEBALL_COMPLETE",
+      "referenceClipTime": "A@01:49-01:58",
+      "observed": [
+        "A notebook overlay displays Finish!, followed by a team-winner message.",
+        "A Report Card follows with activity title, grade, personal score, KOs, hits and a per-player result table.",
+        "After the result closes, coin-style +45 feedback appears in the gym."
+      ]
+    },
+    {
+      "id": "A_RETURN_TO_ROAM",
+      "referenceClipTime": "A@02:00-02:08",
+      "observed": [
+        "The avatar is back in the school common area with the compact roam HUD and can move and open inventory.",
+        "A level toast is visible but its cause is not proven by the class sequence."
+      ]
+    },
+    {
+      "id": "B_CLASS_RESULT_EXIT",
+      "referenceClipTime": "B@00:00-00:12",
+      "observed": [
+        "A Science activity Report Card is open in a classroom.",
+        "After it closes, coin-style +45 feedback appears at a classroom workstation.",
+        "The avatar leaves the workstation/classroom and resumes corridor free roam with item slots and the right icon rail."
+      ]
+    },
+    {
+      "id": "B_ACTIVITY_ENTRY",
+      "referenceClipTime": "B@01:00-01:08",
+      "observed": [
+        "The avatar is first shown in outdoor free roam with a compact schedule strip.",
+        "A black crest transition is followed by arrival in a bright wood-floor activity room.",
+        "A notebook instruction overlay appears before active play."
+      ]
+    },
+    {
+      "id": "B_DANCE_ACTIVE",
+      "referenceClipTime": "B@01:12-01:18",
+      "observed": [
+        "Active play uses four vertical lanes, directional notes, Q/W/E/R prompts, a horizontal progress line, visible streak/multiplier/score fields and transient point feedback.",
+        "The room and other avatars remain visible behind the activity overlay."
+      ]
+    },
+    {
+      "id": "B_DANCE_COMPLETE",
+      "referenceClipTime": "B@01:18.5-01:21",
+      "observed": [
+        "A Report Card replaces the active overlay and includes the activity title, grade, score, accuracy and a per-player result table.",
+        "After the report closes, coin-style +41 feedback appears and the avatar resumes movement in the activity room."
+      ]
+    },
+    {
+      "id": "B_REPEATABLE_ACTIVITY_STRUCTURE",
+      "referenceClipTime": "B@01:22-01:31",
+      "observed": [
+        "A second activity room presents notebook instructions, active task-specific UI and another Report Card, supporting the same broad instruction-active-result structure.",
+        "The clip ends before a full free-roam return from this second activity is shown."
+      ]
+    }
+  ],
+  "observationVsInferenceLedger": {
+    "observed": [
+      "Room/world entry precedes activity instructions or active play.",
+      "Activity-specific HUD is distinct from the compact roam HUD.",
+      "In-play feedback changes while the activity remains active.",
+      "Completion can include Finish!, winner feedback and a Report Card.",
+      "Coin-style reward feedback appears after the result closes.",
+      "The player can resume movement after completion."
+    ],
+    "notEstablished": [
+      "How activity entry is triggered or whether every activity uses a teleport.",
+      "Team assignment, score, knockout, hit, streak, accuracy, grade or reward formulas.",
+      "The semantic meaning of every heart-like or ball-count icon.",
+      "Exact thresholds, original durations or animation timings because 2x playback is visible.",
+      "Whether coin-style feedback is a specific currency or which authority calculates it.",
+      "Required audio, track identity, asset IDs, UI instance hierarchy, remote names or network protocol.",
+      "Whether the second B activity returns directly to roam; that transition is outside the clip."
+    ]
+  },
+  "canonicalAuthorityAudit": {
+    "mappedScheduleAuthority": "school/src/server/FoundationBootstrap.server.lua",
+    "scheduleEvidence": "default.project.json maps FoundationBootstrap; it writes SchoolDay/SchoolPeriod* attributes and emits period/session events.",
+    "classSessionAuthority": "school/src/server/ClassSessionController.lua owns only per-player ephemeral activity state and must not advance the school day or period.",
+    "dormantDuplicateSource": "school/src/server/SchoolLoop.server.lua contains a separate period loop but is not mapped by default.project.json at input SHA; it must remain unmapped or be removed in a separately authorized cleanup.",
+    "currentPresentationGap": "CanonicalSchoolClient renders ClassActivityCatalog multiple-choice prompts and choices in one modal; it does not implement the observed room-based dodgeball or lane-rhythm activity presentations.",
+    "priorityConstraint": "Do not expand custom curriculum before reference gameplay baseline."
+  },
+  "observableStateContract": [
+    {
+      "state": "ROAM_SCHEDULED",
+      "acceptance": "Compact roam HUD and schedule context are visible; no activity overlay owns the screen."
+    },
+    {
+      "state": "ENTRY_TRANSITION",
+      "acceptance": "A bounded transition into the assigned room occurs without creating another school clock or schedule writer; exact trigger and duration remain implementation choices until separately observed."
+    },
+    {
+      "state": "INSTRUCTIONS",
+      "acceptance": "When instructions exist, a dismissible notebook-style card names the activity and explains controls without exposing hidden answer/scoring authority."
+    },
+    {
+      "state": "ACTIVE_PLAY",
+      "acceptance": "Activity-specific controls, shared progress/score context and personal feedback update during play; the server validates outcomes and the client cannot authoritatively write score, completion or reward."
+    },
+    {
+      "state": "FINISH_SIGNAL",
+      "acceptance": "Input closes once, completion feedback is visible, and late/replayed input cannot create a second completion."
+    },
+    {
+      "state": "RESULT_CARD",
+      "acceptance": "A report-style result summarizes the observed metrics appropriate to the activity without claiming formulas not established by footage."
+    },
+    {
+      "state": "REWARD_FEEDBACK",
+      "acceptance": "Any reward is emitted once through the existing progression/economy authority; the class lane does not create a second ledger."
+    },
+    {
+      "state": "RETURN_OR_ADVANCE",
+      "acceptance": "The activity overlay clears and control returns to roam or the next scheduled activity; period/session exit clears ephemeral state exactly once."
+    }
+  ],
+  "producerAcceptanceCriteria": [
+    "Implement only after Control Tower authorizes one exact-base producer for the class/activity slice.",
+    "Preserve FoundationBootstrap as the only mapped day/period/schedule authority.",
+    "Preserve ClassSessionController as the only active per-player class/activity session authority; activity implementations plug into it rather than creating parallel session loops.",
+    "Add no custom schoolwork/curriculum content in this parity slice.",
+    "Model dodgeball and lane-rhythm as activity-specific presentation/interaction adapters with server-validated completion and replay-safe results; do not encode unobserved exact scoring formulas as reference truth.",
+    "Completion orders finish/winner feedback, report card, single reward feedback and return/advance state as supported by the relevant clip.",
+    "The compact roam HUD is restored after the activity presentation clears.",
+    "No new clock, progression, persistence or economy writer is introduced."
+  ],
+  "qaAcceptanceCriteria": [
+    "Static tests cover legal state ordering, single completion, replay/late-input rejection, period-change exit and reward handoff without validating guessed score formulas.",
+    "Rendered comparison binds to the exact candidate SHA at A@01:00-02:08 and B@00:00-00:12/01:00-01:21.",
+    "Functional, visual, interaction and target-device evidence statuses remain separate.",
+    "Static CI cannot certify appearance, feel, input timing or mobile obstruction.",
+    "Any timing comparison corrects for visible 2x playback or remains NOT_EVALUATED."
+  ],
+  "blocker": {
+    "status": "WAIT_P1_AND_PIPELINE_ACTIVATION",
+    "detail": "Canonical 6fe2541 is in Smoke/Package and P1 spawn-school-HUD is reserved first; this Class contract is prep-only until Control Tower authorizes the class/activity producer."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam: consume only room-entry/return and compact-roam-HUD seams after activation.",
+    "Roblox High School QA & Contract: convert this ledger into exact-head rendered/device checks when a producer candidate exists.",
+    "Roblox High School Control Tower: retain one owner for the future class/activity parity gap."
+  ],
+  "productFilesChanged": [],
+  "rawVideosCommitted": false,
+  "exactParityClaimed": false,
+  "taskStateChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false
+}
