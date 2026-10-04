@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-04T17:19:46.860Z",
+  "result": "REFERENCE_MATCHED_MOBILE_HUD_CONTRACT_PREPARED__NO_PRODUCT_WRITE",
+  "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+  "prepBranch": {
+    "name": "prep/high-school-progression-outfit-replay-23cc398-v1",
+    "priorHead": "71af58f9eafd2f2e58a6a3746cc61134e7598b63",
+    "disposition": "EVIDENCE_PREP_ONLY__NOT_A_PRODUCT_CANDIDATE"
+  },
+  "referenceClipTime": [
+    "A@00:05,00:25,00:45,02:05 recurring free-roam HUD calibration",
+    "B@00:45 dealership grid/preview/details",
+    "C@00:05 Travel destination tiles",
+    "C@01:05 job performance/reward dialog"
+  ],
+  "outputLocation": "coordination/reference-extraction/mobile_hud_read_state_contract_6fe2541.json",
+  "referenceSources": {
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "fileName": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "durationSeconds": 92,
+      "dimensions": "1112x512"
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "fileName": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "durationSeconds": 120.933333,
+      "dimensions": "1112x512"
+    }
+  },
+  "evidenceStatus": {
+    "persistentIdentity": "PASS_B_AND_C",
+    "timestampObservationIndex": "PASS_FROM_CANONICAL_COORDINATION_BACKLOG",
+    "binaryMaterializationThisRun": "TRANSIENT_HTTP_502_AFTER_TWO_HELPER_RETRIES",
+    "detailedPixelExtractionForBAndC": "PENDING_RETRY",
+    "hudCalibrationConsumedFrom": {
+      "pullRequest": 169,
+      "mergeCommit": "f6225f98c3977cfa354a1b729bee56175809ec6e",
+      "inspectedSource": "A@00:05,00:25,00:45,02:05",
+      "status": "MERGED_COORDINATION_EVIDENCE"
+    },
+    "exactParityClaimed": false
+  },
+  "evidenceRules": [
+    "Footage proves only visible presentation and observable interaction; it does not prove asset IDs, UI instance hierarchy, data schema or backend behavior.",
+    "Visible 2x playback segments prohibit uncorrected animation, transition, input or movement timing comparisons.",
+    "Player-authored nameplates and sample balances are not required product copy or seed data.",
+    "The B/C binary transfer failure is transient and does not authorize invented pixel bounds or labels."
+  ],
+  "observedReferenceContract": {
+    "recurringFreeRoamHud": {
+      "source": "Merged PR 169 manual calibration against A",
+      "viewportNote": "Approximate game viewport x=101..1011 within the 1112x512 recording; dark side bars are recording framing.",
+      "primaryRightRail": "Approximate recording bounds x=958..1009, y=119..331; four stacked colored actions observed as Shop, Avatar, House, Travel.",
+      "secondaryRightRail": "Approximate recording bounds x=959..1008, y=334..411; smaller two-column actions, exact semantics not established.",
+      "topRightStatus": "Approximate recording bounds x=890..1008, y=29..100; compact stacked balance/status fields.",
+      "bottomItems": "Approximate recording bounds x=459..709, y=450..507; four separated controls, but exact inventory/phone/bag semantics are not fully established.",
+      "worldVisibility": "No permanent large school menu occupies the sampled free-roam center/left view."
+    },
+    "dealership": {
+      "source": "B@00:45 canonical timestamp observation",
+      "observed": "Blue dealership surface with category/grid controls, item tiles, price, preview/details and balances.",
+      "unknown": [
+        "Exact item catalog, vehicle asset IDs, tab labels, tile count and purchase protocol.",
+        "Whether the same rail remains visible while the dealership is open.",
+        "Pixel-exact panel bounds pending successful binary materialization."
+      ]
+    },
+    "travel": {
+      "source": "C@00:05 canonical timestamp observation",
+      "observed": "Travel window uses destination image tiles and tabs.",
+      "unknown": [
+        "Exact destination set, image assets, labels, ordering, cost and transport backend.",
+        "Pixel-exact panel bounds pending successful binary materialization."
+      ]
+    },
+    "jobResult": {
+      "source": "C@01:05 canonical timestamp observation",
+      "observed": "Job completion presents performance/reward feedback in a dialog before returning to world interaction.",
+      "unknown": [
+        "Exact reward formula, grade thresholds, currency identity and persistence protocol.",
+        "Pixel-exact panel bounds pending successful binary materialization."
+      ]
+    }
+  },
+  "canonicalSourceAudit": {
+    "mappedClient": {
+      "path": "school/src/client/CanonicalSchoolClient.client.lua",
+      "blobSha": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+      "status": "ACTIVE_RUNTIME_CLIENT"
+    },
+    "unmappedHud": {
+      "path": "school/src/client/SchoolHud.client.lua",
+      "status": "NOT_MAPPED_BY_DEFAULT_PROJECT__DO_NOT_EDIT_AS_RUNTIME_FIX"
+    },
+    "currentObstructionGap": [
+      "LegacySchoolMenu is permanently visible at bottom-left, 236x184, with a 112px touch bottom margin.",
+      "The class modal can occupy 90% width and 390px height.",
+      "House is a separate bottom-left button/panel; Avatar is a separate top-right button/panel.",
+      "Cafe and Vehicle panels are hidden until relevant but occupy bottom-right and bottom-center respectively and can conflict with new edge HUD controls.",
+      "Housing editor can occupy 330x346 beginning at x=512; it needs a responsive safe-area strategy."
+    ],
+    "progressionReadAuthority": {
+      "path": "school/src/server/ProgressionRepository.lua",
+      "blobSha": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+      "state": "server summary exposes playerId, revision, totalPoints, completionCount, classes and outfit slot counts",
+      "rule": "Client receives copies only and never mutates durable state directly."
+    },
+    "progressionReadRiskCoverage": {
+      "branchCommit": "71af58f9eafd2f2e58a6a3746cc61134e7598b63",
+      "test": "school/tests/progression_read_state_isolation_prep_spec.lua",
+      "covers": [
+        "client-side mutation of returned read state does not leak into repository state",
+        "reads and duplicate replay do not perform durable writes",
+        "reopen/rejoin preserves totals and per-class points"
+      ],
+      "disposition": "REUSE_UNCHANGED__NO_DUPLICATE_TEST_RUN"
+    },
+    "economyAuthority": {
+      "path": "school/src/server/EconomyRepository.lua",
+      "rule": "remains the only money and durable ownership writer; HUD consumes getState/read snapshots only"
+    }
+  },
+  "readOnlyHudModel": {
+    "scheduleAndTime": {
+      "owner": "FoundationBootstrap",
+      "use": "display only from canonical state snapshot"
+    },
+    "progression": {
+      "owner": "ProgressionRepository",
+      "use": "display totalPoints/completion status/outfit slot availability from cloned server state"
+    },
+    "moneyAndOwnership": {
+      "owner": "EconomyRepository",
+      "use": "display balance/ownership from server state; never let the HUD calculate, debit or credit"
+    },
+    "unavailableReferenceFields": {
+      "fields": [
+        "gems",
+        "weather",
+        "unverified item-slot semantics",
+        "dealership catalog",
+        "Travel destination assets"
+      ],
+      "rule": "omit, disable or label unavailable; do not fabricate values, writers, asset IDs or spend paths"
+    }
+  },
+  "responsivePresentationContract": [
+    {
+      "mode": "FREE_ROAM_CLOSED",
+      "acceptance": [
+        "Use a compact right-edge action rail, compact top-right read-only status stack and separated bottom-center shortcuts.",
+        "Remove the permanent 236x184 LegacySchoolMenu from the open world view; schedule/class detail remains reachable on demand.",
+        "Keep the lower-left movement area, lower-right camera/jump area and center world view unobstructed after applying device safe-area insets."
+      ]
+    },
+    {
+      "mode": "ON_DEMAND_PANEL",
+      "acceptance": [
+        "At most one large feature panel is open at a time.",
+        "Panel fits inside the current device safe area, remains dismissible, and does not leave feature actions stranded off-screen.",
+        "Closing the panel restores the compact edge HUD without changing server state."
+      ]
+    },
+    {
+      "mode": "DEALERSHIP",
+      "referenceClipTime": "B@00:45",
+      "acceptance": [
+        "Responsive blue panel preserves grid/tile browsing, preview/details, price and server-read balances.",
+        "Selecting a tile changes preview only; purchase/spawn requires a separate explicit action.",
+        "No automatic spend, client-authored price, client-authored ownership or invented vehicle asset ID."
+      ]
+    },
+    {
+      "mode": "TRAVEL",
+      "referenceClipTime": "C@00:05",
+      "acceptance": [
+        "Responsive Travel panel presents destination image tiles and tabs without blocking its close control.",
+        "Destination selection is an explicit tap and transport remains server-confirmed.",
+        "Unknown destinations/images remain placeholders or absent until verified; no inferred asset IDs."
+      ]
+    },
+    {
+      "mode": "JOB_RESULT",
+      "referenceClipTime": "C@01:05",
+      "acceptance": [
+        "Performance/reward dialog is legible over the activity result, then dismisses back to the edge HUD.",
+        "Reward is displayed from the authoritative server receipt and cannot be claimed twice by replaying the client dialog.",
+        "No reward formula or currency identity is inferred from one reference result."
+      ]
+    }
+  ],
+  "deviceAcceptanceCriteria": {
+    "desktopLandscape": [
+      "Compare against cropped game viewport rather than recording side bars.",
+      "Right rail and top-right status remain compact; world center/left has no permanent large menu."
+    ],
+    "phoneLandscape": [
+      "Apply current safe-area/top-bar insets instead of copying desktop recording coordinates.",
+      "Movement thumb zone and camera/jump controls remain unobstructed while all four primary rail actions are reachable.",
+      "Bottom shortcuts remain above platform controls and do not overlap the active vehicle or activity controls."
+    ],
+    "tabletLandscape": [
+      "Do not scale panels to fill the larger canvas unnecessarily; preserve compact rail/status density.",
+      "Housing editor, dealership and Travel grids use available width without exceeding safe-area bounds."
+    ],
+    "requiredEvidence": [
+      "Exact-candidate rendered screenshots in free roam, dealership, Travel and job-result states.",
+      "Separate visual, interaction and device statuses; static CI alone cannot pass rendered parity.",
+      "Successful open/close and state-refresh checks on iPhone and iPad form factors before parity claims."
+    ]
+  },
+  "producerAcceptanceCriteria": [
+    "Implement only after Control Tower activates one exact-base producer; Progression/Mobile remains support unless explicitly reassigned.",
+    "Modify the mapped CanonicalSchoolClient path or a mapped presentation adapter, not the unmapped SchoolHud file alone.",
+    "Preserve current House, Avatar, class, cafe, vehicle and housing-editor handlers while relocating presentation.",
+    "Consume only cloned/read-only server snapshots; no client-side durable mutation, balance calculation or duplicate writer.",
+    "No automatic spend and no inferred asset IDs.",
+    "Keep current save/rejoin/idempotency tests green and add narrow tests only for changed read-model or replay behavior."
+  ],
+  "qaAcceptanceCriteria": [
+    "Source tests verify mapped runtime path, one-panel exclusivity, read-only state flow and absence of client-authoritative spend/reward.",
+    "Rendered tests verify compactness, safe-area placement, movement/camera clearance and panel legibility at exact candidate SHA.",
+    "Dealership, Travel and job-result comparisons remain timestamp-bound to B@00:45, C@00:05 and C@01:05.",
+    "Detailed B/C pixel measurements remain NOT_EVALUATED until video bytes materialize successfully."
+  ],
+  "blockers": [
+    {
+      "id": "PRODUCT_OWNERSHIP_NOT_ASSIGNED",
+      "owner": "Roblox High School Control Tower",
+      "status": "WAIT_P1_ACTIVATION",
+      "unblock": "Smoke and Package complete canonical 6fe2541 and Control Tower activates one producer."
+    },
+    {
+      "id": "B_C_BINARY_TRANSFER_502",
+      "owner": "Roblox High School Progression & Mobile",
+      "status": "TRANSIENT_RETRY",
+      "unblock": "Materialize B/C through the Library helper and append measured pixel bounds/screenshots; do not invent them."
+    }
+  ],
+  "nextHandoff": [
+    "Pip High Free Roam: consume the compact rail/panel contract when activated for P1.",
+    "Roblox High School QA & Contract: convert the device criteria into exact-head rendered checks.",
+    "Roblox High School Content QA: retain authoritative B/C clip identities and timestamp observations."
+  ],
+  "productFilesChanged": [],
+  "rawVideosCommitted": false,
+  "exactParityClaimed": false,
+  "moneySpent": false,
+  "robloxPublished": false,
+  "taskStateChanged": false
+}
