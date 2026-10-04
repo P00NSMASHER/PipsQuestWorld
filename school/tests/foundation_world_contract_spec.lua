@@ -48,7 +48,7 @@ local function hasCampus(fragment, label)
 end
 
 hasCampus('makePart("SchoolFacadeLeft"', "blue/red/white school facade")
-hasCampus('crest.Name', "crest instance")
+hasCampus('makePart("SchoolCrest"', "crest instance")
 hasCampus('crestText.Text = "PH\\n★"', "school crest face")
 hasCampus('"EntryStep" .. tostring(step + 1)', "broad entrance steps")
 hasCampus('makePart("AtriumDisplayTier" .. tostring(index)', "round atrium display")
