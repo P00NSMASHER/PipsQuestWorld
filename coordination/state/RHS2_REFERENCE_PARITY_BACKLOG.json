@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T20:05:09.141Z",
+  "observedAt": "2026-10-04T20:38:40.770Z",
   "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved P1 owner, exact-SHA pipeline gates, and no parity claim without rendered/device comparison.",
     "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "blocker": "Exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe has Smoke PASS with rendered/device checks pending; deterministic Package is the sole remaining gate before P1 product activation.",
-    "nextHandoff": "Roblox High School Release & Package Gate packages exact 4323049; Control Tower then activates exactly one Pip High Free Roam P1 producer."
+    "blocker": null,
+    "nextHandoff": "Sole Pip High Free Roam P1 producer activated from packaged canonical 4323049."
   },
   "sources": {
     "A": {
@@ -135,9 +135,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "RESERVED_NOT_ACTIVE__WAIT_EXACT_PACKAGE",
+      "status": "ACTIVE_SINGLE_PRODUCER__BRANCH_PENDING",
       "owner": "Pip High Free Roam",
-      "inputSha": "POST_4323049_PACKAGED_CANONICAL_TBD",
+      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -154,8 +154,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "school/** on one activated producer branch",
-      "blocker": "Deterministic Package must bind exact canonical 4323049 before Control Tower authorizes one producer branch.",
-      "nextHandoff": "Release & Package -> Control Tower -> one Pip High Free Roam producer."
+      "blocker": null,
+      "nextHandoff": "Pip High Free Roam creates one P1 branch; QA reviews exact candidate."
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
@@ -248,8 +248,8 @@
     "QA": "Preserve PR 170 review 5407562971. Prepare exact P1 rendered comparison criteria without self-certifying parity.",
     "Integration": "Preserve PR 180 exact baseline blobs, collision surfaces and ordered protected handoff; wait for a future QA-approved P1 candidate.",
     "Smoke": "PR 181 / receipt schema 15 is PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING on 4323049; runtime, rendered, device, physical-collision and live-rejoin checks remain pending.",
-    "ReleasePackage": "ACTIVE: package only exact canonical 4323049 using Smoke receipt schema 15; bind deterministic tree identity and never publish Roblox.",
-    "FreeRoam": "Unique reserved P1 owner; no product branch or writes until Control Tower supplies the exact packaged 4323049 activation SHA."
+    "ReleasePackage": "PR183 exact package PASS; preserve receipt and wait for P1 candidate downstream gates.",
+    "FreeRoam": "Sole active P1 owner; create exactly one branch from packaged canonical 4323049, implement school entrance/atrium/corridor and compact HUD, then hand to QA."
   },
   "evidenceGapsClosed": [
     "SOURCE_IDENTITY",
@@ -263,7 +263,7 @@
     "SMOKE_DEVICE_OBSTRUCTION_MEASUREMENT_PROTOCOL_PINNED"
   ],
   "productParityGapsClosed": [],
-  "lastReconciledAt": "2026-10-04T20:05:09.141Z",
+  "lastReconciledAt": "2026-10-04T20:38:40.770Z",
   "pipeline": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "canonicalCiStatus": "PASS_ALL_THREE_EXACT_PUSH_GUARDS",
@@ -274,8 +274,8 @@
     "integrationStatus": "PASS__PR177_RECEIPT_SCHEMA12",
     "integrationReadiness": "PR180_P1_SEAMS_PINNED",
     "smokeStatus": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING__PR181_SCHEMA15",
-    "packageStatus": "ACTIVE_PACKAGE_EXACT_4323049",
-    "nextProducerActivation": "BLOCKED_ONLY_UNTIL_EXACT_4323049_DETERMINISTIC_PACKAGE"
+    "packageStatus": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE__PR183",
+    "nextProducerActivation": "ACTIVE_SINGLE_PRODUCER__BRANCH_PENDING"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
