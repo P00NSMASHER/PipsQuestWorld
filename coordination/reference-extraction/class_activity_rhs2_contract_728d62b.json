@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Class & Education",
+  "owner": "Roblox High School Class & Education",
+  "observedAt": "2026-10-04T22:18:00Z",
+  "result": "BOUNDED_REFERENCE_CONTRACT__ACTIVE_PLAY_OBSERVED__ENTRY_COMPLETION_RETURN_REQUIRE_TEMPORAL_VERIFICATION",
+  "input": {
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "candidatePr": 188,
+    "candidateExactHeadSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "controlTowerBaseSha": "71026729f4634ff3c38ea4e35d88cc5183a041eb",
+    "wipMode": "EVIDENCE_PREP",
+    "productProducerAuthorized": false
+  },
+  "referenceSources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "durationSeconds": 141.533,
+      "dimensions": "1112x512",
+      "referenceClipTime": "A@01:05-01:45",
+      "providedSampleObservation": "Gym environment and active ball minigame are visible during this interval.",
+      "newFrameEvidenceThisRun": false
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "durationSeconds": 92,
+      "dimensions": "1112x512",
+      "referenceClipTime": [
+        "B@00:05",
+        "B@01:05"
+      ],
+      "providedSampleObservation": [
+        "A classroom is visible near B@00:05.",
+        "A wood-floor activity room is visible near B@01:05."
+      ],
+      "newFrameEvidenceThisRun": false
+    }
+  },
+  "materializationAttempt": {
+    "result": "TRANSIENT_HTTP_502_BOTH_REFERENCES",
+    "impact": "No new frame, timestamp-transition, UI copy, score value or animation-timing claim is made.",
+    "safeContinuation": "Use only the supplied sampled observations and current exact-head source contracts; leave unobserved transitions open for Content QA and independent QA."
+  },
+  "observationInferenceLedger": {
+    "verifiedFromProvidedSampleSummary": [
+      "A school gym setting is present during A@01:05-01:45.",
+      "An active ball minigame is present during A@01:05-01:45.",
+      "A classroom is visible at B@00:05.",
+      "A wood-floor activity room is visible at B@01:05."
+    ],
+    "notVerifiedThisRun": [
+      "The exact action that enters any activity.",
+      "The exact start cue, countdown, objective copy, control mapping or camera transition.",
+      "The exact scoring feedback, score values, scoring formula, reward formula or completion threshold.",
+      "The exact completion dialog, dismissal input, transition duration or return-to-roam frame.",
+      "Whether B@00:05 and B@01:05 belong to the same class session."
+    ],
+    "prohibitedInferences": [
+      "Do not infer original movement or animation timing from any visible 2x playback segment.",
+      "Do not infer hidden activity identifiers, UI hierarchy, server remotes, scoring formulas or persistence semantics.",
+      "Do not convert the current text-question catalog into claimed RHS2 parity."
+    ]
+  },
+  "observableStateContract": [
+    {
+      "state": "FREE_ROAM_ELIGIBLE",
+      "currentAuthority": "Foundation schedule plus server room-proximity check",
+      "referenceStatus": "Entry trigger is not verified by the supplied sampled observations.",
+      "acceptance": [
+        "One Foundation schedule remains the sole day/period authority.",
+        "A player cannot start a second class while one class is active.",
+        "Class availability is server-derived and does not create a client-side session authority."
+      ]
+    },
+    {
+      "state": "ENTRY_TRANSITION",
+      "currentAuthority": "ClassSessionController.enter through ClassEducation server adapter",
+      "referenceStatus": "PENDING_TEMPORAL_EVIDENCE",
+      "acceptance": [
+        "Future implementation must show an observable transition from roam or room presence into the selected activity.",
+        "Entry must bind to the current authoritative period and room.",
+        "Re-entry to the same active session is idempotent; entry to another session is rejected."
+      ]
+    },
+    {
+      "state": "ACTIVE_PLAY",
+      "currentAuthority": "ClassSessionController owns ephemeral activity state only",
+      "referenceStatus": "PARTIAL__A@01:05-01:45 visibly supports a gym ball activity; B@01:05 supports an activity-room environment.",
+      "acceptance": [
+        "First parity activity should be a bounded observable in-world gym/ball interaction, not additional custom curriculum.",
+        "The activity presents a clear playable objective and immediate observable response to player actions.",
+        "Do not assert exact scoring values or formulas until timestamped temporal evidence exists.",
+        "The compact free-roam HUD must not obscure the active-play area or required controls."
+      ]
+    },
+    {
+      "state": "SCORING_FEEDBACK",
+      "currentAuthority": "Server class activity semantics; client presentation is read-only",
+      "referenceStatus": "PENDING_TEMPORAL_EVIDENCE",
+      "acceptance": [
+        "Feedback must distinguish active play from a successful or unsuccessful event without exposing hidden answer or score authority to the client.",
+        "Duplicate input identifiers cannot award progress twice.",
+        "Any displayed score is a server-returned presentation value."
+      ]
+    },
+    {
+      "state": "COMPLETION_COMMIT",
+      "currentAuthority": "ClassProgressionCoordinator gates return until ProgressionBinding commits exactly once",
+      "referenceStatus": "PENDING_TEMPORAL_EVIDENCE",
+      "acceptance": [
+        "Completion emits once for the authoritative session.",
+        "A failed durable progression commit holds the player in a pending state and does not falsely release or reward.",
+        "Retry of the same completion reuses the existing receipt and cannot duplicate progression."
+      ]
+    },
+    {
+      "state": "RETURN_TO_FREE_ROAM",
+      "currentAuthority": "ClassSessionController.leave or a committed completion response",
+      "referenceStatus": "PENDING_TEMPORAL_EVIDENCE",
+      "acceptance": [
+        "Completion, period change, session end or explicit leave clears the single ephemeral activity session.",
+        "Return-to-roam restores the compact edge HUD and movement/camera access.",
+        "Leaving an incomplete activity does not fabricate completion or durable reward."
+      ]
+    }
+  ],
+  "currentExactHeadAssessment": {
+    "classFilesUnchangedByPr188": true,
+    "authorityFiles": [
+      {
+        "path": "school/src/server/ClassSessionController.lua",
+        "blobSha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+        "role": "single ephemeral class/activity state authority"
+      },
+      {
+        "path": "school/src/server/ClassEducation.server.lua",
+        "blobSha": "034eb06201c6e86ad553fbe088f0fbe61a3a76cc",
+        "role": "server adapter bound to Foundation schedule and room"
+      },
+      {
+        "path": "school/src/server/ClassProgressionCoordinator.lua",
+        "blobSha": "2115e20f81eae95bed1b7b15785394f952e1d6d8",
+        "role": "exactly-once progression handoff and pending gate"
+      },
+      {
+        "path": "school/src/server/ClassActivityCatalog.lua",
+        "blobSha": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+        "role": "current server-only text-question catalog; not RHS2 gym parity"
+      }
+    ],
+    "testEvidence": [
+      {
+        "path": "school/tests/class_education_spec.lua",
+        "blobSha": "3b7e318bcfcc32e586267e654a64a5c3266b7181",
+        "covers": "entry idempotency, active-session exclusion, feedback, completion-once, leave, re-entry and free-roam return"
+      },
+      {
+        "path": "school/tests/class_progression_integration_spec.lua",
+        "blobSha": "d33ef33b9059efef6efd38461f76cc1a218287c1",
+        "covers": "pending durable commit, retry, duplicate suppression and save/rejoin restoration"
+      }
+    ],
+    "exactHeadCi": [
+      { "workflow": "High School Foundation Static Guards", "runId": 37237332258, "conclusion": "success" },
+      { "workflow": "High School Class Education Guards", "runId": 37237332337, "conclusion": "success" },
+      { "workflow": "High School Progression Guards", "runId": 37237332270, "conclusion": "success" }
+    ],
+    "parityGap": "Current text-question presentation does not match the observed gym/ball active-play mode. Product implementation remains deferred until Control Tower assigns the sole producer after the P1 entrance/atrium/HUD baseline."
+  },
+  "handoffs": {
+    "producer": {
+      "owner": "Future Control-Tower-assigned class producer",
+      "criteria": "Implement one bounded gym/ball activity behind the existing ClassSessionController and ClassProgressionCoordinator seams; do not add another schedule, session, reward or persistence authority."
+    },
+    "qa": {
+      "owner": "Roblox High School QA & Contract",
+      "criteria": [
+        "Bind testing to the exact future producer head.",
+        "Capture entry, active play, visible scoring feedback, completion and return-to-roam as separate runtime checkpoints.",
+        "Keep functional, visual, interaction and device evidence statuses separate."
+      ]
+    },
+    "contentQa": {
+      "owner": "Roblox High School Content QA",
+      "criteria": "When Library transfer succeeds, extract timestamped frames or short temporal annotations across A@01:05-01:45 and B@00:05/01:05 sufficient to establish entry, feedback, completion and return without inferring formulas."
+    }
+  },
+  "outputLocation": "coordination/reference-extraction/class_activity_rhs2_contract_728d62b.json",
+  "blocker": {
+    "status": "P1_BASELINE_AND_TEMPORAL_REFERENCE_EVIDENCE_PENDING",
+    "owner": "Roblox High School QA & Contract / Roblox High School Content QA",
+    "detail": "PR188 remains the sole frozen producer awaiting independent rendered/device QA. The class lane has no product slot, and this run's authorized A/B materialization returned transient HTTP 502."
+  },
+  "nextHandoff": "QA consumes the state contract for future runtime checkpoints; Content QA fills the timestamp-transition gaps when A/B materialization succeeds; no class product write occurs until Control Tower assigns ownership.",
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
