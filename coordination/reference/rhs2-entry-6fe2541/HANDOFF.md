@@ -13,9 +13,9 @@ Preserve existing server remotes and callback behavior while changing presentati
 
 ## Frame geometry and measured layout
 Source A: libfile_94cb10b32d9c819186b9ad708b9d4736, 1112x512.
-Frames directly inspected for this handoff: 00:05 and 00:25.
+Frames directly inspected for this handoff: 00:05, 00:25, 00:45 and 02:05.
 Approximate game viewport is x=101..1011, y=0..512; the dark side bars are recording framing, not game UI.
-All measurements below are manual visual estimates, not source constants or pixel-exact acceptance limits.
+All measurements below are manual visual estimates, not source constants or pixel-exact acceptance limits. Recording coordinates include the Roblox top bar; convert through ScreenGui safe-area/inset handling rather than directly copying y values.
 
 | Element | Recording bounds, approx px | Viewport interpretation |
 | --- | --- | --- |
@@ -23,15 +23,15 @@ All measurements below are manual visual estimates, not source constants or pixe
 | Rail labels/order | Shop, Avatar, House, Travel | Red, cyan, green, amber backgrounds |
 | Secondary rail | x959..1008, y334..411 | Two columns of small buttons below Travel |
 | Balances/status | x890..1008, y29..100 | Compact top-right stack, dark fields with colored borders |
-| Bottom items | x459..709, y450..507 | Four separated slots centered near viewport bottom |
+| Bottom items | x459..709, y450..507 | Four separated controls centered near viewport bottom; semantics partly unknown |
 | World view | remaining center/left | No permanent large school menu in these sampled frames |
 
 Do not copy the sample balances (13,914 coins / 400 gems), player nameplate, weather/time values or player biography as fixed game data. Missing gem/weather services remain explicit data gaps; never fabricate balances or introduce another writer to fill the UI.
 
 ## Product gaps and narrow implementation route
 1. CanonicalSchoolClient creates LegacySchoolMenu at bottom-left, 236x184. Move schedule/progression display into the compact HUD; expose class details/actions on demand while retaining pending-save feedback, travel, class exit and answer handling.
-2. Reparent existing House and outfit controls into the right rail with their current handlers. Keep all available actions reachable by touch and keyboard. Verify the existing outfit entry module before adding another Avatar control.
-3. Bottom slots must reflect actual inventory/tool state. Screenshot contents are appearance evidence, not authorization to fabricate tools or claim an inventory system exists.
+2. Move existing House and outfit actions into the right rail while preserving their current handlers. LegacyOutfitEntry creates a separate ScreenGui and exposes no controller return; use a small presentation adapter or explicit existing-button lookup rather than assuming the mount call returns a handle. Keep all available actions reachable by touch and keyboard.
+3. Do not assume the four bottom controls are four inventory slots. A02:05 shows a numbered tool popup above the second dark control; the other controls resemble bag/phone shortcuts, with behavior not established by these frames. Preserve verified functionality and record unknown actions explicitly.
 4. Existing CampusBuilder entrance uses a flat FrontPlaza, EntryWalk, EntryCanopy and three noncolliding glass doors. Replace the entrance composition as one coherent geometry change: broad stairs, symmetrical planted approach, blue facade, red framing, white canopy and prominent crest to the right of the entrance, as seen at A00:05.
 5. Current FrontLobbyFloor is 54x32 with a front desk and trophy case. A00:25 shows a broad bright open atrium, low round central display with red/white/blue illuminated tiers, pale floor, perimeter red/blue wall bands, bright ceiling strips, red/blue bunting and clear circulation on both sides.
 6. Central display decorations in the footage may be seasonal/user content. Prioritize permanent architectural silhouette and circulation; record exact prop assets as unknown rather than guessing IDs.
@@ -44,12 +44,13 @@ Do not copy the sample balances (13,914 coins / 400 gems), player nameplate, wea
 - Verify a walk from spawn through entrance and around both sides of the display into the existing corridor; no stuck steps, collision barriers or falling through streaming boundaries.
 - Check desktop and phone landscape layouts. Proposed engineering requirement: touch controls remain usable and do not overlap movement/jump or Roblox system controls; this is not a dimension inferred from the desktop footage.
 - Open/close House, Avatar and class detail surfaces; preserve server-authoritative data and existing actions.
+- Check active vehicle and cafe states: existing LegacyVehiclePanel (bottom-center) and LegacyCafePanel (bottom-right) can overlap the new bottom controls/right rail. Preserve actions while resolving layout conflicts.
 - Check class travel, active class exit, pending-save feedback and bell transition after the HUD relocation.
 - CI and independent QA bind to exact candidate SHA. Rendered/runtime comparison remains required before claiming appearance or feel matched.
 
 ## Handoff status
 Implemented: evidence-based change map and viewport calibration only.
-Actually checked: two reference frames; explicit Rojo mapping; active client layout and campus builder source.
+Actually checked: four reference frames; explicit Rojo mapping; active client layout and campus builder source.
 Not tested: changed gameplay, Roblox render, movement, touch behavior or frame timing; no product source changed by this handoff.
-Known gaps: original RHS2 source, exact assets/measurements, full scene geometry and corrected animation timing are not established by these two frames.
+Known gaps: original RHS2 source, exact assets/measurements, full scene geometry and corrected animation timing are not established by these sampled frames.
 Next: Control Tower consumes this handoff when activating its existing reserved P1 producer. Free Roam implements; QA reviews independently.
