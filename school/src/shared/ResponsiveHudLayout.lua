@@ -40,6 +40,24 @@ function ResponsiveHudLayout.contains(container, item)
         and item.bottom <= container.bottom
 end
 
+-- Thumbstick and right-side camera/action touch regions used by Roblox on mobile.
+-- These remain pure geometry so the same zones are exercised by static contracts.
+function ResponsiveHudLayout.touchExclusionZones(viewport, insets)
+    local width = assert(tonumber(viewport and viewport.width), "viewport width required")
+    local height = assert(tonumber(viewport and viewport.height), "viewport height required")
+    local safeInsets = normalizeInsets(insets)
+    local zoneWidth = math.min(190, math.floor(width * 0.22))
+    local zoneHeight = math.min(120, math.floor(height * 0.25))
+    local zoneY = height - safeInsets.bottom - zoneHeight
+    local leftX = safeInsets.left
+    local rightX = width - safeInsets.right - zoneWidth
+
+    return {
+        rect(leftX, zoneY, zoneWidth, zoneHeight),
+        rect(rightX, zoneY, zoneWidth, zoneHeight),
+    }
+end
+
 function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     assert(type(viewport) == "table", "viewport table required")
     local width = assert(tonumber(viewport.width), "viewport width required")
