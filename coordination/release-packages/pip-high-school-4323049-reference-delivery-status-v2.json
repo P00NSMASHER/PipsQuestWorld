@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 2,
+  "owner": "Roblox High School Release & Package Gate",
+  "recordedAt": "2026-10-04T22:59:29Z",
+  "input": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "coordinationSha": "c0869690cfd43752d0070f1b567dd59d27117420",
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "canonicalSchoolTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "packageReceipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "packageReceiptBlob": "be9e263eb66714d086e36a3fc76b71f7b7289e3e"
+  },
+  "result": "CURRENT_CANONICAL_PACKAGE_PRESERVED__REFERENCE_DELIVERY_GAPS_PINNED__NEXT_PACKAGE_BLOCKED",
+  "packageStatus": {
+    "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
+    "artifactName": "pip-high-school-4323049-source-tree-836ffa7d",
+    "status": "PRESERVED_EXACT_SMOKE_APPROVED_CHECKPOINT",
+    "exactRhs2ParityClaimed": false,
+    "robloxPublished": false,
+    "nextCandidate": {
+      "pullRequest": 188,
+      "exactHeadSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+      "eligibility": "NOT_PACKAGE_ELIGIBLE",
+      "reason": "Exact-head QA reports a visual source-contract failure and Integration/Smoke have not consumed a repaired changed head."
+    }
+  },
+  "referenceArtifactAccessibility": [
+    {
+      "owner": "Roblox High School Content QA",
+      "pullRequest": 200,
+      "pullRequestState": "OPEN_NONMERGEABLE_AT_OBSERVATION",
+      "exactHeadSha": "b40d677c3c821da3400e0b31ce1ccef4a080269e",
+      "path": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+      "blobSha": "da5a6b16850cc1704a176a13e536668c94766d93",
+      "access": "PASS_EXACT_HEAD_PATH_AND_BLOB",
+      "role": "authoritative reference-byte inventory, timestamp frame hashes and observation-versus-inference ledger",
+      "note": "Base drift does not invalidate exact-head blob access. Content QA owns any rebase or merge."
+    },
+    {
+      "owner": "Roblox High School QA & Contract",
+      "pullRequest": 203,
+      "exactHeadSha": "82cf4835ef67a1f8fa061f7bd0f45f55a79ffcdc",
+      "path": "coordination/reference-extraction/qa_pr188_exact_head_acceptance_728d62b.json",
+      "blobSha": "d7fe8c29cf92246377257dbeb6cd8a40716f76a9",
+      "access": "PASS_EXACT_HEAD_PATH_AND_BLOB",
+      "role": "candidate-bound functional, visual, interaction and device status",
+      "note": "Receipt establishes the A@02:05 stair-flight defect, but two non-decision frame hashes need correction before use as a release comparison index."
+    }
+  ],
+  "referenceSources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "sizeBytes": 101853818,
+      "durationSeconds": 141.533333,
+      "width": 1112,
+      "height": 512
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "durationSeconds": 92,
+      "width": 1112,
+      "height": 512
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "sizeBytes": 87770778,
+      "durationSeconds": 120.933333,
+      "width": 1112,
+      "height": 512
+    }
+  },
+  "referenceClipTime": [
+    "A@00:05 school frontage",
+    "A@00:25 bright atrium",
+    "A@00:45 corridor/staircase",
+    "A@02:05 stair flight/inventory",
+    "B@00:45 dealership",
+    "C@00:05 Travel",
+    "C@01:05 job result",
+    "C@01:10 return to free roam"
+  ],
+  "authoritativeFrameHashes": {
+    "A@00:05": "7cdb56f20ef716c572c0d908fb3729acc4d445096a14100f2f7b3f96896e2350",
+    "A@00:25": "ca33f057eb02723bbcded9d4c419937ba0ba9b03d9fdd363a7071ecb97d3a4ce",
+    "A@00:45": "d6b263ea003c24a7c0abbdf80644efa95907581c8cde70e2e2a16dc6fc967ee0",
+    "A@02:05": "6b090c2b01b200d380d860184ca381c77fcf5a7daedc06fd7c3fc0148082ced0",
+    "B@00:45": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+    "C@00:05": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+    "C@01:05": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+    "C@01:10": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c"
+  },
+  "currentMaterializationCheck": {
+    "attemptedAt": "2026-10-04T22:57:00Z",
+    "result": "TRANSIENT_HTTP_502_ALL_THREE_SIGNED_TRANSFERS",
+    "impact": "NO_NEW_BYTE_OR_FRAME_CLAIMS; exact Git evidence artifacts and previously verified source hashes remain accessible",
+    "retryPolicy": "Do not treat the transient transfer failure as reference invalidation and do not commit raw videos."
+  },
+  "deliveryGapFix": {
+    "supersedesReleaseManifestPullRequest": 186,
+    "problemsCorrected": [
+      "removes stale package-pointer reliance on the pre-candidate QA harness",
+      "does not carry the resolved spawn/EntryWalk AABB objection as an open package defect",
+      "binds the delivery index to Content QA PR200 and candidate QA PR203 exact heads and blobs",
+      "records the current sole product defect and preserves separate rendered/device/runtime holds",
+      "prevents two incorrect QA receipt frame hashes from becoming package comparison identities"
+    ],
+    "futurePackageRequirements": [
+      "exact repaired PR188 head receives all three green workflows",
+      "independent QA binds functional, visual, interaction and device results to that same head",
+      "Integration consumes only the QA-approved SHA",
+      "Smoke runs on the exact integrated canonical and records rendered/device status without promoting headless checks",
+      "Release recomputes commit, root-tree and school-tree identities and produces a path-sorted delta from 4323049",
+      "before/after bundle uses authoritative frame hashes from Content QA PR200 or its byte-identical successor"
+    ]
+  },
+  "openDefects": [
+    {
+      "id": "PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP",
+      "owner": "Pip High Free Roam",
+      "status": "OPEN_PRODUCT_DEFECT",
+      "reference": "A@02:05",
+      "blocker": "PR188 must add blue flight-edge rails and stair-local red/blue wall bands, preserve route clearance and strengthen the Foundation contract."
+    },
+    {
+      "id": "QA203_REFERENCE_HASH_MISMATCH_A0005_A0025",
+      "owner": "Roblox High School QA & Contract",
+      "status": "OPEN_COORDINATION_METADATA_DEFECT",
+      "evidence": {
+        "authoritativeSource": "Content QA PR200 blob da5a6b16850cc1704a176a13e536668c94766d93",
+        "qaReceipt": "QA PR203 blob d7fe8c29cf92246377257dbeb6cd8a40716f76a9",
+        "mismatch": [
+          {
+            "clipTime": "A@00:05",
+            "authoritative": "7cdb56f20ef716c572c0d908fb3729acc4d445096a14100f2f7b3f96896e2350",
+            "qaReceiptValue": "7cdb56f06352f4a5f1e8b1e60c55c185f499f8dd917dfac47a2e70707fece538"
+          },
+          {
+            "clipTime": "A@00:25",
+            "authoritative": "ca33f057eb02723bbcded9d4c419937ba0ba9b03d9fdd363a7071ecb97d3a4ce",
+            "qaReceiptValue": "ca33f052596a70ce87a37a5ae8197e9c33d2070aefee901bc51afebd746d5d60"
+          }
+        ]
+      },
+      "impact": "Does not overturn the A@02:05 defect because that decision hash matches, but the two values must be corrected before the QA receipt is used as a release comparison index.",
+      "acceptance": "QA corrects only the two metadata values on a current-base coordination receipt; no product write or repeated candidate review is required."
+    },
+    {
+      "id": "RHS2_RENDERED_DEVICE_INTERACTION_EVIDENCE",
+      "owner": "Roblox High School QA & Contract / Integration Smoke",
+      "status": "PENDING_AFTER_REPAIRED_INTEGRATED_HEAD",
+      "blocker": "Comparable-FOV desktop/iPhone/iPad captures, physical traversal, panel restoration and applicable save/rejoin remain required."
+    }
+  ],
+  "acceptanceCriteria": [
+    "Only exact Smoke-approved canonical commits are packaged.",
+    "Every reference pointer resolves by exact head, path and blob.",
+    "Authoritative Content QA frame hashes win over copied metadata in downstream receipts.",
+    "Known visual, interaction and device gaps remain explicit.",
+    "No exact RHS2 parity claim, Roblox publication, spend, credential change, task mutation or product write occurs."
+  ],
+  "outputLocation": "coordination/release-packages/pip-high-school-4323049-reference-delivery-status-v2.json",
+  "blocker": "No repaired PR188-derived canonical has completed exact-head QA, Integration and Smoke. Current canonical package remains the only valid package checkpoint.",
+  "nextHandoff": "Roblox High School QA & Contract corrects QA203_REFERENCE_HASH_MISMATCH_A0005_A0025; Pip High Free Roam repairs PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP; Release & Package waits for the exact integrated Smoke-approved successor canonical."
+}
