@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-04T22:14:00Z",
+  "result": "PASS_STATIC_RESPONSIVE_HUD_CONTRACT_EXACT_HEAD__HOLD_RENDERED_DEVICE_INTERACTION",
+  "input": {
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "candidatePr": 188,
+    "candidateBranch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+    "exactHeadSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "controlTowerBaseSha": "71026729f4634ff3c38ea4e35d88cc5183a041eb",
+    "supersedesReceiptPr": 196,
+    "supersedesCandidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a"
+  },
+  "referenceContract": {
+    "sourcePackPr": 200,
+    "sourcePackBlobSha": "da5a6b16850cc1704a176a13e536668c94766d93",
+    "clips": [
+      {
+        "referenceClipTime": "B@00:45",
+        "frameSha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+        "observed": "Dealership is viewport-dominant and the compact free-roam rail is not visible.",
+        "acceptance": "A dealership feature state may replace the free-roam rail, but ownership, spending and catalog authority remain server-owned."
+      },
+      {
+        "referenceClipTime": "C@00:05",
+        "frameSha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+        "observed": "Travel presents destination image tiles with a visible close control while compact edge HUD remains visible.",
+        "acceptance": "Close remains reachable and dismissal restores unobstructed free roam; destination IDs and teleport implementation are not inferred."
+      },
+      {
+        "referenceClipTime": "C@01:05",
+        "frameSha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+        "observed": "Centered job result separates performance, earnings, XP/progress, gift text and OK while compact edge HUD remains visible.",
+        "acceptance": "Result presentation is read-only; scoring, reward authority and persistence timing are not inferred."
+      },
+      {
+        "referenceClipTime": "C@01:10",
+        "frameSha256": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c",
+        "observed": "Result panel is dismissed and compact free-roam HUD is restored.",
+        "acceptance": "Independent runtime evidence must prove dismissal and restoration on the candidate."
+      }
+    ]
+  },
+  "candidateSurface": {
+    "changedFiles": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CampusBuilder.server.lua",
+      "school/src/shared/ResponsiveHudLayout.lua",
+      "school/tests/foundation_world_contract_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua",
+      "school/tests/responsive_hud_layout_spec.lua"
+    ],
+    "responsiveModuleBlobSha": "0f4fb2c5d6d8ac58a7741567fe4738146d79cbeb",
+    "clientBlobSha": "25ee0d9bd48516f107e53d2abca6535181e2f68b",
+    "responsiveSpecBlobSha": "1a6dbd0aeead14eda46330bf083d943a36e5211e",
+    "legacyHudSpecBlobSha": "5cb8c25b3df5e5a7411905fc76bd689d1741c91e"
+  },
+  "staticLayoutRecheck": [
+    {
+      "fixture": "reference-desktop-909x483",
+      "viewport": { "width": 909, "height": 483 },
+      "insets": { "left": 0, "top": 0, "right": 0, "bottom": 0 },
+      "status": { "x": 728, "y": 6, "width": 118, "height": 71, "widthRatio": 0.129813, "heightRatio": 0.146998 },
+      "rail": { "x": 854, "y": 91, "width": 49, "height": 212, "widthRatio": 0.053905, "heightRatio": 0.438923 },
+      "quick": { "x": 329.5, "y": 421, "width": 250, "height": 56, "widthRatio": 0.275028, "heightRatio": 0.115942 },
+      "safeBounds": "PASS_STATIC",
+      "mutualOverlap": "PASS_STATIC",
+      "controlZoneOverlap": "NOT_EXERCISED__DESKTOP_FIXTURE_DECLARES_NO_EXCLUSION_ZONES"
+    },
+    {
+      "fixture": "iphone-landscape-852x393",
+      "viewport": { "width": 852, "height": 393 },
+      "insets": { "left": 47, "top": 0, "right": 47, "bottom": 21 },
+      "status": { "x": 627, "y": 6, "width": 118, "height": 70 },
+      "rail": { "x": 753, "y": 84, "width": 46, "height": 176 },
+      "quick": { "x": 309, "y": 318, "width": 234, "height": 48 },
+      "declaredControlZones": [
+        { "x": 47, "y": 274, "width": 187, "height": 98 },
+        { "x": 618, "y": 274, "width": 187, "height": 98 }
+      ],
+      "safeBounds": "PASS_STATIC",
+      "mutualOverlap": "PASS_STATIC",
+      "controlZoneOverlap": "PASS_STATIC"
+    },
+    {
+      "fixture": "ipad-landscape-1024x768",
+      "viewport": { "width": 1024, "height": 768 },
+      "insets": { "left": 24, "top": 0, "right": 24, "bottom": 20 },
+      "status": { "x": 794, "y": 9, "width": 133, "height": 86 },
+      "rail": { "x": 936, "y": 145, "width": 55, "height": 230 },
+      "quick": { "x": 386, "y": 681, "width": 252, "height": 58 },
+      "declaredControlZones": [
+        { "x": 24, "y": 628, "width": 190, "height": 120 },
+        { "x": 810, "y": 628, "width": 190, "height": 120 }
+      ],
+      "safeBounds": "PASS_STATIC",
+      "mutualOverlap": "PASS_STATIC",
+      "controlZoneOverlap": "PASS_STATIC"
+    }
+  ],
+  "staticContractResult": {
+    "resolvedDefect": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+    "status": "RESOLVED_STATIC_ON_EXACT_HEAD",
+    "evidence": [
+      "ResponsiveHudLayout.compute derives status, rail and quick geometry from viewport and safe-area insets.",
+      "ResponsiveHudLayout.validate rejects safe-bound violations, HUD-group overlap and caller-declared exclusion-zone overlap.",
+      "Desktop, iPhone landscape and iPad landscape fixtures pass; negative status/rail and quick/control mutations fail as intended.",
+      "Runtime client binds to CurrentCamera.ViewportSize changes and reads GuiService:GetGuiInset before applying validated geometry."
+    ],
+    "limit": "The calculations and tests do not establish rendered text legibility, Roblox device inset fidelity, touch reachability, modal stacking, dismissal restoration or exact RHS2 visual parity."
+  },
+  "authorityContinuity": {
+    "progression": "PASS_STATIC__No progression repository or server progression authority file is changed.",
+    "economy": "PASS_STATIC__No economy repository, automatic spend or ownership writer is added.",
+    "schedule": "PASS_STATIC__The client continues to format server-returned schedule state.",
+    "clientDurableWritesAdded": false,
+    "automaticSpendAdded": false,
+    "saveRejoinRisk": "UNCHANGED_BY_THIS_HEAD__No durability authority changed; no new save/rejoin pass is claimed."
+  },
+  "exactHeadCi": [
+    { "workflow": "High School Foundation Static Guards", "runId": 37237332258, "conclusion": "success" },
+    { "workflow": "High School Class Education Guards", "runId": 37237332337, "conclusion": "success" },
+    { "workflow": "High School Progression Guards", "runId": 37237332270, "conclusion": "success" }
+  ],
+  "evidenceStatuses": {
+    "functionalStatic": "PASS_EXACT_HEAD",
+    "visual": "PENDING_RENDERED_TIMESTAMP_COMPARISON",
+    "interaction": "PENDING_TRAVEL_CLOSE_JOB_RESULT_DISMISS_AND_PANEL_RESTORE",
+    "device": "PENDING_RENDERED_DESKTOP_IPHONE_IPAD",
+    "persistence": "UNCHANGED_NOT_RETESTED",
+    "exactParity": "NOT_CLAIMED"
+  },
+  "remainingDefect": {
+    "id": "PR188_RENDERED_DEVICE_INTERACTION_EVIDENCE_PENDING",
+    "owner": "Roblox High School QA & Contract",
+    "status": "OPEN_GATE",
+    "acceptance": [
+      "Capture the exact 728d62b head at desktop 909x483, iPhone landscape 852x393 and iPad landscape 1024x768 with viewport and inset metadata.",
+      "Compare compact free-roam HUD against B@00:45 and C@00:05/01:05/01:10 without treating 1112x512 pixels as universal dimensions.",
+      "Verify Travel close and job-result OK are reachable, panel dismissal restores free roam, and the dealership feature surface does not expose client-owned spend.",
+      "Maintain functional, visual, interaction and device statuses separately."
+    ]
+  },
+  "outputLocation": "coordination/reference-extraction/progression_mobile_pr188_hud_exact_head_728d62b.json",
+  "nextHandoff": "Roblox High School QA & Contract tests only PR188 exact head 728d62b909bf8d8b7bd9d0466f3fb18c80ebb895; Integration remains unauthorized until independent rendered/device/interaction acceptance.",
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
