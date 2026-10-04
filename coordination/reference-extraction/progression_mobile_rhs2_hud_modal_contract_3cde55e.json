@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Progression & Mobile",
+  "recordedAt": "2026-10-04T23:12:00Z",
+  "input": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "controlTowerBranch": "coordination/high-school-control-tower",
+    "controlTowerWipSchemaObserved": 54,
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "candidatePr": 188,
+    "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+    "candidateClientPath": "school/src/client/CanonicalSchoolClient.client.lua",
+    "candidateClientBlob": "25ee0d9bd48516f107e53d2abca6535181e2f68b",
+    "previousCandidateSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "changedHeadDelta": [
+      "school/src/server/CampusBuilder.server.lua",
+      "school/tests/foundation_world_contract_spec.lua"
+    ]
+  },
+  "referenceSources": {
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "durationSeconds": 92,
+      "dimensions": "1112x512"
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "sizeBytes": 87770778,
+      "durationSeconds": 120.933333,
+      "dimensions": "1112x512"
+    }
+  },
+  "frameEvidence": [
+    {
+      "clipTime": "B@00:42",
+      "frameSha256": "47298d7a72b8f9b82067667a763f185ff6a93e4ba630985bf3f7bd1724a508d4",
+      "observed": [
+        "dealership is a wide blue overlay with a left preview/details area and a right catalog grid",
+        "All, Vehicles and Skins tabs, Search and Sort controls are visible",
+        "coin and premium-currency totals remain visible at the bottom of the panel"
+      ],
+      "notInferred": [
+        "purchase formula",
+        "ownership persistence",
+        "catalog asset identifiers"
+      ]
+    },
+    {
+      "clipTime": "B@00:45",
+      "frameSha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+      "observed": [
+        "vehicle cards show imagery, names and currency-marked prices",
+        "selected details show category and stat bars",
+        "panel has an explicit top-right close control"
+      ],
+      "notInferred": [
+        "which item is purchased",
+        "server response semantics",
+        "automatic spend"
+      ]
+    },
+    {
+      "clipTime": "B@00:48",
+      "frameSha256": "943855c8f0e5aaef1d328d518381cc4f22f10e4754f3d9de66f3b80953f1b5ec",
+      "observed": [
+        "centered Buy House panel uses image tiles and visible prices",
+        "top-right balances, right action rail and bottom four-slot item bar remain visible around the panel",
+        "panel exposes back and close controls"
+      ],
+      "notInferred": [
+        "house purchase success",
+        "price authority",
+        "save/rejoin durability"
+      ]
+    },
+    {
+      "clipTime": "C@00:02",
+      "frameSha256": "5853d65ff6e41fed465f68963827c1f7f7741ab61c6e664ba9531267228bae58",
+      "observed": [
+        "free roam retains stacked top-right coin, premium-currency and level rows",
+        "colored right-side action rail and centered four-slot item bar are simultaneously visible",
+        "movement/camera view remains broadly clear"
+      ],
+      "notInferred": [
+        "exact safe-area margins on another device",
+        "bottom-slot identities from icon imagery alone"
+      ]
+    },
+    {
+      "clipTime": "C@00:05",
+      "frameSha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+      "observed": [
+        "Travel is a centered blue panel with Locations and Servers tabs",
+        "destination image tiles form a three-column grid",
+        "top-right close control is visible while balances, action rail and bottom item bar remain present"
+      ],
+      "notInferred": [
+        "destination asset IDs",
+        "teleport authority",
+        "server selection behavior"
+      ]
+    },
+    {
+      "clipTime": "C@00:08",
+      "frameSha256": "8337bb2ffa17cf98b5f7b790c77d4d9f1f1b8137aa9c79c3d9442e71f7fa3001",
+      "observed": [
+        "Travel grid can expose additional destination rows while preserving the same modal shell",
+        "modal does not replace the recurring HUD regions"
+      ],
+      "notInferred": [
+        "scroll implementation",
+        "destination ordering contract"
+      ]
+    },
+    {
+      "clipTime": "C@01:02",
+      "frameSha256": "bdd5632d8bcb480e996283f6fd0f3badc8902b3209f0d1bb45719de98c675170",
+      "observed": [
+        "Jobs result panel is centered and purple with a performance meter, outcome text, earnings rows, progress bar, reward note and OK action",
+        "right rail, balances and bottom item bar remain visible around the result panel"
+      ],
+      "notInferred": [
+        "hidden scoring formula",
+        "whether all reward components commit atomically"
+      ]
+    },
+    {
+      "clipTime": "C@01:05",
+      "frameSha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+      "observed": [
+        "result visibly reports +66 coins and +664 XP for this recorded outcome",
+        "an explicit green OK button dismisses the result"
+      ],
+      "notInferred": [
+        "general reward formula",
+        "that the later balance change is solely caused by this result",
+        "original animation timing because playback visibly includes 2x segments"
+      ]
+    },
+    {
+      "clipTime": "C@01:08",
+      "frameSha256": "4461f0f94ef178ff7a7661f8b93a595899723849042762de32005b1d897011d0",
+      "observed": [
+        "after result dismissal, the Jobs panel returns with difficulty, level, reward and inventory controls",
+        "HUD remains layered consistently"
+      ],
+      "notInferred": [
+        "daily shift persistence",
+        "boost purchase behavior"
+      ]
+    },
+    {
+      "clipTime": "C@01:10",
+      "frameSha256": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c",
+      "observed": [
+        "free roam returns with the compact HUD restored",
+        "a later higher coin balance is visible"
+      ],
+      "notInferred": [
+        "exact attribution of the intervening balance delta",
+        "save/rejoin success",
+        "timing from this 2x playback recording"
+      ]
+    }
+  ],
+  "changedHeadAuthorityAudit": {
+    "result": "PASS_NO_PROGRESSION_ECONOMY_PERSISTENCE_OR_HUD_AUTHORITY_DRIFT",
+    "reason": "The 728d62b to 3cde55e delta changes only CampusBuilder world composition and its Foundation contract.",
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37242078845,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37242078873,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37242078844,
+        "conclusion": "success"
+      }
+    ],
+    "limits": "This static audit does not establish rendered layout, touch interaction, runtime economy behavior or device safety."
+  },
+  "candidateInteractionGaps": [
+    {
+      "id": "PR188_VISIBLE_CONTROL_INTERACTION_FLOW_GAP",
+      "owner": "Pip High Free Roam",
+      "writeAuthorization": "PENDING_CONTROL_TOWER_WIP_RECONCILIATION",
+      "sourceEvidence": [
+        "QuickSlot1 through QuickSlot4 are TextLabel objects with no Activated handlers.",
+        "RailShop consumes a pending confirmation or changes status text; it does not open the B@00:42-00:45 browse/details flow.",
+        "RailTravel invokes RequestTravel directly; it does not present the C@00:05 destination-selection panel."
+      ],
+      "acceptance": [
+        "Control Tower keeps one producer and explicitly authorizes the bounded repair on existing PR188.",
+        "Visible controls activate through mouse, keyboard where applicable and touch.",
+        "Travel opens the reference-backed Locations/Servers destination-tile shell before requesting server-owned travel.",
+        "Shop opens a reference-backed browse/details shell and never spends automatically.",
+        "Bottom slots are interactive only after Content QA binds observable identities/behaviors; provisional BAG/PHONE/ITEMS text is not evidence.",
+        "close, back, denied response and successful response restore the compact free-roam HUD and movement/camera areas",
+        "no client durable state writer, economy writer, schedule authority or persistence authority is introduced",
+        "respawn and save/rejoin preserve server-owned state without duplicate requests"
+      ]
+    },
+    {
+      "id": "RHS2_MOBILE_RENDERED_DEVICE_EVIDENCE",
+      "owner": "Roblox High School QA & Contract",
+      "status": "PENDING_AFTER_INTERACTION_REPAIR",
+      "acceptance": [
+        "capture comparable free-roam and modal screenshots on desktop, iPhone landscape and iPad landscape",
+        "confirm top-right balance/status stack, right action rail and bottom item bar are legible, reachable and unobstructed",
+        "confirm each panel keeps a visible close or back route and restores the same HUD state",
+        "record movement and camera control clear zones rather than inferring them from static fixtures"
+      ]
+    }
+  ],
+  "implementationContract": {
+    "readStateRule": "Client HUD renders server snapshots and responses only; it does not mint currency, XP, ownership, job completion or travel state.",
+    "spendRule": "No panel opening, card selection or preview action may debit currency. Spend requires a distinct user confirmation and server-owned validation.",
+    "idempotencyRule": "Every durable purchase/reward/action uses one stable request identity per logical attempt; safe retry reuses that identity and duplicate completion is side-effect free.",
+    "restorationRule": "Close, back, denial, respawn and completed action return to compact free-roam HUD without duplicating panels or listeners.",
+    "timingRule": "Do not derive animation, movement or response timing from the clips because visible 2x playback is present."
+  },
+  "screenshotAcceptance": [
+    "Free roam: three-row top-right balances/status, compact colored right rail and centered four-slot bottom bar visible together with open movement/camera space.",
+    "Travel: centered blue Locations/Servers panel with three-column image-tile grid, visible close control and surrounding HUD preserved.",
+    "Dealership: wide blue browse/details composition with tabs, Search, Sort, catalog grid, preview/details region and explicit close control; currency is read-only until explicit confirmation.",
+    "Job result: centered purple result card with performance, visible earnings, progress, reward note and OK; dismiss returns first to Jobs state and then clean free roam without stale overlay.",
+    "At every target viewport, modal content remains within safe bounds and does not overlap the right rail, top-right stack or declared touch-control zones."
+  ],
+  "outputLocation": "coordination/reference-extraction/progression_mobile_rhs2_hud_modal_contract_3cde55e.json",
+  "blocker": "Control Tower schema 54 still names 728d62b; product interaction work must not begin until it reconciles current PR188 head 3cde55e and explicitly preserves the sole-producer/WIP gate.",
+  "nextHandoff": "Control Tower reconciles PR188 3cde55e and authorizes one bounded interaction-flow repair; Content QA binds bottom-slot identities/behaviors; QA validates rendered desktop/iPhone/iPad interaction and restoration on the repaired exact head.",
+  "productWrites": "NONE",
+  "exactParityClaimed": false
+}
