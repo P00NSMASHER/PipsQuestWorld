@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Release & Package Gate",
+  "observedAt": "2026-10-04T22:00:32Z",
+  "result": "DELIVERY_MANIFEST_READY__PACKAGE_BLOCKED_UPSTREAM",
+  "currentPackagedCanonical": {
+    "branch": "rebuild/high-school-foundation",
+    "commitSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "rootCommitTreeSha": "ddfb6e428b267e66d820bbd52e0b8932168b0601",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
+    "packageReceipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "packageReceiptBlob": "be9e263eb66714d086e36a3fc76b71f7b7289e3e",
+    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE__UNCHANGED"
+  },
+  "candidate": {
+    "pullRequest": 188,
+    "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+    "exactHeadSha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+    "inputBaseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "rootCommitTreeSha": "caf4ad4a8c2329b9edd6d8714b51b3db2dda640c",
+    "schoolTreeGitSha": "b31918f56893b2dcce5f2d06304afac0c84e7506",
+    "schoolRecursiveEntryCount": 70,
+    "schoolBlobCount": 63,
+    "schoolTreeCount": 7,
+    "schoolTotalBlobBytes": 455412,
+    "recursiveTreeTruncated": false,
+    "changedFiles": [
+      "school/default.project.json",
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CampusBuilder.server.lua",
+      "school/src/shared/ResponsiveHudLayout.lua",
+      "school/tests/foundation_world_contract_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua",
+      "school/tests/responsive_hud_layout_spec.lua"
+    ],
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37237332258,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37237332337,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37237332270,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "referenceSources": {
+    "rawVideoPolicy": "Raw authorized video binaries stay in persistent Library and are not committed to Git. Delivery carries identities, hashes, timestamp frame hashes and evidence pointers.",
+    "libraryMetadataValidation": {
+      "status": "PASS_ALL_THREE_IDENTITIES_RESOLVE",
+      "files": [
+        {
+          "clip": "A",
+          "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+          "fileId": "file_00000000ce5c81f5a36a8e3d41862ca0",
+          "name": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+          "sizeBytes": 101853818,
+          "mimeType": "video/mp4",
+          "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+          "durationSeconds": 141.533333,
+          "width": 1112,
+          "height": 512
+        },
+        {
+          "clip": "B",
+          "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+          "fileId": "file_00000000896c81f5b6a0b386426ad86f",
+          "name": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+          "sizeBytes": 66390233,
+          "mimeType": "video/mp4",
+          "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+          "durationSeconds": 92,
+          "width": 1112,
+          "height": 512
+        },
+        {
+          "clip": "C",
+          "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+          "fileId": "file_00000000347c81f58f25a1e4ce718462",
+          "name": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+          "sizeBytes": 87770778,
+          "mimeType": "video/mp4",
+          "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+          "durationSeconds": 120.933333,
+          "width": 1112,
+          "height": 512
+        }
+      ]
+    },
+    "pinnedReferencePack": {
+      "owner": "Roblox High School Content QA",
+      "pullRequest": 190,
+      "branch": "coordination/content-qa-reference-pack-4323049-v1",
+      "branchHead": "a2ed245455176a2dad83f2a87c477b1f5b3b1158",
+      "path": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+      "blobSha": "abe8744cf1c76ba4cf4bfa7a7763e0f30595131e",
+      "status": "ACCESSIBLE_BY_EXACT_BRANCH_HEAD_PATH_AND_BLOB",
+      "timestampFrameSha256": {
+        "A@00:05": "7cdb56f20ef716c572c0d908fb3729acc4d445096a14100f2f7b3f96896e2350",
+        "A@00:25": "ca33f057eb02723bbcded9d4c419937ba0ba9b03d9fdd363a7071ecb97d3a4ce",
+        "A@00:45": "d6b263ea003c24a7c0abbdf80644efa95907581c8cde70e2e2a16dc6fc967ee0",
+        "A@02:05": "6b090c2b01b200d380d860184ca381c77fcf5a7daedc06fd7c3fc0148082ced0",
+        "B@00:45": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+        "C@00:05": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+        "C@01:05": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+        "C@01:10": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c"
+      },
+      "timingCaution": "Visible 2x segments prohibit uncorrected movement-speed or animation-timing claims."
+    }
+  },
+  "priorReceipts": {
+    "qa": {
+      "pullRequest": 195,
+      "inputSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+      "path": "coordination/reference-extraction/qa_pr188_exact_head_acceptance_3aad19e.json",
+      "blobSha": "1763558c95b7e479fdd413a8706f779578ed7f1d",
+      "status": "ACCESSIBLE_BUT_STALE_FOR_728D62B__MUST_NOT_AUTHORIZE_INTEGRATION"
+    },
+    "progressionMobile": {
+      "pullRequest": 196,
+      "inputSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+      "path": "coordination/reference-extraction/progression_mobile_pr188_hud_static_risk_3aad19e.json",
+      "blobSha": "5eef4f427b91d70cc9499095f441c67f343b9e06",
+      "status": "ACCESSIBLE_BUT_STALE_FOR_728D62B__PRODUCER_REPORTS_RESPONSIVE_REPAIR"
+    }
+  },
+  "gateMatrix": {
+    "ci": {
+      "status": "PASS_EXACT_HEAD",
+      "sha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895"
+    },
+    "independentQa": {
+      "status": "REQUIRED_CHANGED_HEAD",
+      "sha": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
+      "missing": [
+        "fresh functional acceptance",
+        "rendered A@00:05/00:25/00:45 comparison",
+        "runtime spawn-to-corridor traversal",
+        "panel restoration",
+        "desktop/iPhone/iPad evidence"
+      ]
+    },
+    "integration": {
+      "status": "BLOCKED_WAIT_QA_PASS_EXACT_HEAD"
+    },
+    "smoke": {
+      "status": "BLOCKED_WAIT_INTEGRATED_EXACT_HEAD"
+    },
+    "package": {
+      "status": "NOT_ELIGIBLE__DO_NOT_PACKAGE_PR188_HEAD"
+    },
+    "parity": {
+      "status": "NOT_CERTIFIED"
+    }
+  },
+  "knownVisualBehavioralGaps": [
+    {
+      "id": "RHS2_TIMESTAMP_MATCHED_RENDERED_COMPARISON",
+      "owner": "Roblox High School QA & Contract",
+      "status": "OPEN_ON_728D62B"
+    },
+    {
+      "id": "SPAWN_TO_ENTRANCE_ATRIUM_CORRIDOR_PHYSICAL_TRAVERSAL",
+      "owner": "Roblox High School QA & Contract",
+      "status": "OPEN_ON_728D62B"
+    },
+    {
+      "id": "HUD_PANEL_DISMISSAL_AND_FREE_ROAM_RESTORE",
+      "owner": "Roblox High School QA & Contract",
+      "status": "OPEN_ON_728D62B"
+    },
+    {
+      "id": "DESKTOP_IPHONE_IPAD_SAFE_AREA_CAPTURE",
+      "owner": "Roblox High School QA & Contract",
+      "status": "OPEN_ON_728D62B"
+    },
+    {
+      "id": "LIVE_DATASTORE_REJOIN",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "OPEN_AFTER_INTEGRATION"
+    }
+  ],
+  "acceptanceCriteria": [
+    "Exact candidate commit and school tree identities remain unchanged through QA.",
+    "Independent QA produces separate functional, visual, interaction and device statuses on exact 728d62b.",
+    "Integration consumes only a QA-approved exact head.",
+    "Smoke runs on the exact integrated canonical and preserves known rendered/live-runtime limitations.",
+    "Release packages only the exact Smoke-approved canonical and records its new root and school tree hashes.",
+    "No raw video binaries, Roblox publication, spend, credential changes or task mutations occur."
+  ],
+  "outputLocation": "coordination/release-packages/pr188-728d62b-delivery-readiness.json",
+  "blocker": "PR188 exact head 728d62b has green CI but no independent changed-head QA, Integration or Smoke approval. Static producer evidence cannot close rendered/device parity.",
+  "nextHandoff": "Roblox High School QA & Contract reviews exact 728d62b; then Integration -> Smoke -> Release & Package.",
+  "packageSemantics": {
+    "checkpointOnly": true,
+    "productComplete": false,
+    "exactRhs2ParityClaimed": false,
+    "robloxPublished": false
+  }
+}
