@@ -123,8 +123,14 @@ function ResponsiveHudLayout.validate(layout)
     end
 
     for index, zone in ipairs(layout.exclusionZones or {}) do
-        if ResponsiveHudLayout.overlaps(layout.quick, zone) then
-            return false, "quick bar overlaps exclusion zone " .. tostring(index)
+        for _, pair in ipairs({
+            { name = "status", value = layout.status },
+            { name = "rail", value = layout.rail },
+            { name = "quick", value = layout.quick },
+        }) do
+            if ResponsiveHudLayout.overlaps(pair.value, zone) then
+                return false, pair.name .. " overlaps exclusion zone " .. tostring(index)
+            end
         end
     end
 
