@@ -12,12 +12,13 @@
 - **Next handoff:** Roblox High School QA & Contract reviews this source-grounded gap on exact `728d62b`; only if QA returns a concrete defect may the existing sole Free Roam producer amend PR 188
 - **Status:** `EVIDENCE_ONLY__NO_PRODUCT_WRITE__RUNTIME_AND_RENDERED_PENDING`
 
-The durable Content QA pack at `a2ed245455176a2dad83f2a87c477b1f5b3b1158` supplies the exact frame hashes and bounded observations used here. A direct fresh materialization attempt returned transient HTTP 502 twice, so this artifact does not invent additional pixel, color, lighting, or hierarchy claims.
+The successful Content QA pack at `a2ed245455176a2dad83f2a87c477b1f5b3b1158` and its exact-head refresh in PR 200 at `b40d677c3c821da3400e0b31ce1ccef4a080269e` supply the frame hashes and bounded observations used here. A direct fresh materialization attempt returned transient HTTP 502 twice, matching the recorded PR 200 retry; this artifact does not invent additional pixel, color, lighting, or hierarchy claims.
 
 ## Live gate snapshot
 
 - WIP schema 53 keeps PR 188 as the sole product producer at the 3-item cap.
 - Exact head `728d62b` is green in Foundation run `37237332258`, Class/Education run `37237332337`, and Progression run `37237332270`.
+- Content QA refreshed the durable reference handoff for exact `728d62b` in open PR 200; this removes reference-access ambiguity but does not authorize Integration.
 - No independent PR review is bound to `728d62b`; the earlier `3aad19e` QA receipt is stale for authorization.
 - Canonical remains `43230492964ea637f69747e25a3e72d6cb268ebe`.
 - Exact parity is not established.
