@@ -54,7 +54,65 @@ hasCampus('"EntryStep" .. tostring(step + 1)', "broad entrance steps")
 hasCampus('"AtriumDisplayTier" .. tostring(index)', "round atrium display")
 hasCampus('"AtriumCeilingLight"', "bright atrium lighting")
 hasCampus('"CorridorStairStep" .. tostring(step + 1)', "corridor stair focal point")
-hasCampus('spawn.CFrame = CFrame.new(0, 1.15, 177)', "exterior-facing spawn seam")
+hasCampus('spawn.CFrame = CFrame.new(0, 1.55, 177)', "exterior-facing spawn seam")
+
+local function parseVectorAssignment(prefix)
+    local x, y, z = campusSource:match(
+        prefix .. '%s*Vector3%.new%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)'
+    )
+    assert(x and y and z, "cannot parse vector assignment: " .. prefix)
+    return { x = tonumber(x), y = tonumber(y), z = tonumber(z) }
+end
+
+local function parsePartGeometry(name)
+    local sx, sy, sz, cx, cy, cz = campusSource:match(
+        'makePart%("' .. name
+            .. '",%s*Vector3%.new%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%),'
+            .. '%s*CFrame%.new%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)'
+    )
+    assert(sx and sy and sz and cx and cy and cz, "cannot parse collidable geometry: " .. name)
+    return {
+        size = { x = tonumber(sx), y = tonumber(sy), z = tonumber(sz) },
+        center = { x = tonumber(cx), y = tonumber(cy), z = tonumber(cz) },
+    }
+end
+
+local function aabb(geometry)
+    return {
+        minX = geometry.center.x - geometry.size.x / 2,
+        maxX = geometry.center.x + geometry.size.x / 2,
+        minY = geometry.center.y - geometry.size.y / 2,
+        maxY = geometry.center.y + geometry.size.y / 2,
+        minZ = geometry.center.z - geometry.size.z / 2,
+        maxZ = geometry.center.z + geometry.size.z / 2,
+    }
+end
+
+local function positiveVolumeOverlap(left, right)
+    return math.min(left.maxX, right.maxX) > math.max(left.minX, right.minX)
+        and math.min(left.maxY, right.maxY) > math.max(left.minY, right.minY)
+        and math.min(left.maxZ, right.maxZ) > math.max(left.minZ, right.minZ)
+end
+
+local spawnGeometry = {
+    size = parseVectorAssignment('spawn%.Size%s*='),
+    center = (function()
+        local x, y, z = campusSource:match(
+            'spawn%.CFrame%s*=%s*CFrame%.new%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)'
+        )
+        assert(x and y and z, "cannot parse MainSpawn CFrame")
+        return { x = tonumber(x), y = tonumber(y), z = tonumber(z) }
+    end)(),
+}
+local spawnBounds = aabb(spawnGeometry)
+
+for _, partName in ipairs({ "CampusGround", "EntryWalk", "DropOffLane", "ParkingLot" }) do
+    local partBounds = aabb(parsePartGeometry(partName))
+    assert(
+        not positiveVolumeOverlap(spawnBounds, partBounds),
+        "MainSpawn AABB overlaps collidable " .. partName
+    )
+end
 
 local _, spawnCount = campusSource:gsub('Instance.new%("SpawnLocation"%)', "")
 eq(spawnCount, 1, "single campus spawn authority")
