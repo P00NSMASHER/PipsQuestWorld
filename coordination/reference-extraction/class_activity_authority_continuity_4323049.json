@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Class & Education",
+  "owner": "Roblox High School Class & Education",
+  "observedAt": "2026-10-04T19:11:00Z",
+  "result": "PASS_CLASS_ACTIVITY_AUTHORITY_CONTINUITY__NO_PRODUCT_WRITE",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "priorEvidence": {
+    "path": "coordination/reference-extraction/class_activity_parity_contract_6fe2541.json",
+    "blobSha": "2f3170d4e58c118df0c4d0e875d1271465ce9fbd",
+    "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "referenceClipTime": [
+      "A@01:00-02:08",
+      "B@00:00-00:12",
+      "B@01:00-01:31"
+    ],
+    "status": "FROZEN_OBSERVATION_LEDGER_REUSED_WITHOUT_EDIT"
+  },
+  "referenceClipTime": [
+    "A@01:00-01:25 gym entry",
+    "A@01:30-01:48 active dodgeball",
+    "A@01:49-01:58 finish/report",
+    "A@02:00-02:08 return to roam",
+    "B@00:00-00:12 classroom result/exit",
+    "B@01:00-01:21 activity entry/active/result",
+    "B@01:22-01:31 repeatable instruction-active-result structure"
+  ],
+  "canonicalContinuity": {
+    "fromSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "toSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "exactPushCi": {
+      "workflow": "High School Class Education Guards",
+      "runId": 37225838207,
+      "conclusion": "success",
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+    },
+    "files": [
+      {
+        "path": "school/default.project.json",
+        "baseBlob": "ba5e85e82652f137cb17e76016f062731c033761",
+        "currentBlob": "ba5e85e82652f137cb17e76016f062731c033761",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/FoundationBootstrap.server.lua",
+        "baseBlob": "64f45e7a7957fe2bada9b6eedffa05b4e575d120",
+        "currentBlob": "64f45e7a7957fe2bada9b6eedffa05b4e575d120",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ClassSessionController.lua",
+        "baseBlob": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+        "currentBlob": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ClassActivityCatalog.lua",
+        "baseBlob": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+        "currentBlob": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/SchoolLoop.server.lua",
+        "baseBlob": "bddce8f4e1e06bf686fb8526005021996218982c",
+        "currentBlob": "bddce8f4e1e06bf686fb8526005021996218982c",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/client/CanonicalSchoolClient.client.lua",
+        "baseBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+        "currentBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+        "unchanged": true
+      }
+    ],
+    "result": "PASS_ALL_RELEVANT_BLOBS_IDENTICAL"
+  },
+  "authorityContract": {
+    "scheduleAuthority": "FoundationBootstrap remains the sole mapped school day/period writer.",
+    "sessionAuthority": "ClassSessionController remains the sole mapped per-player class/activity session authority.",
+    "dormantSource": "SchoolLoop.server.lua remains byte-identical and unmapped by the byte-identical default.project.json; it is not authorized as a second schedule loop.",
+    "presentationStatus": "CanonicalSchoolClient and ClassActivityCatalog remain byte-identical; observed room-based dodgeball and lane-rhythm presentations are still unimplemented gaps, not inferred behavior.",
+    "productWriteAuthorized": false
+  },
+  "acceptanceCriteria": [
+    "Keep exactly one mapped school day/period authority and one per-player class/activity session authority.",
+    "Future activity adapters follow ENTRY_TRANSITION -> INSTRUCTIONS -> ACTIVE_PLAY -> FINISH_SIGNAL -> RESULT_CARD -> REWARD_FEEDBACK -> RETURN_OR_ADVANCE.",
+    "Completion and reward handoff are replay-safe and exactly once through existing progression/economy authority.",
+    "Do not add custom curriculum or encode an unobserved scoring formula.",
+    "Rendered QA remains bound to A@01:00-02:08 and B@00:00-00:12/01:00-01:31 on the future exact candidate; visible 2x segments prohibit uncorrected timing claims."
+  ],
+  "outputLocation": "coordination/reference-extraction/class_activity_authority_continuity_4323049.json",
+  "blocker": {
+    "status": "WAIT_P1_VISIBLE_BASELINE_AND_CONTROL_TOWER_ACTIVATION",
+    "owner": "Pip High Free Roam / Roblox High School Control Tower",
+    "detail": "The repaired canonical still requires exact Smoke then Package, and the spawn/entrance/atrium/corridor/compact-HUD P1 slice precedes class product work."
+  },
+  "nextHandoff": [
+    "Roblox High School QA & Contract: retain the frozen A/B observation ledger and use this exact-canonical continuity proof.",
+    "Pip High Free Roam: preserve the compact-roam HUD and room-entry/return seams in P1.",
+    "Roblox High School Control Tower: assign one future class/activity producer only after P1 baseline gating."
+  ],
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
