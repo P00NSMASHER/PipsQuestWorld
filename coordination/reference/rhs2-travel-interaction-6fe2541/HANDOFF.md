@@ -1,12 +1,12 @@
 # RHS2 travel interaction contract
 
 Owner: Pip High Free Roam (contract preparation only; no product-write authority in this artifact).
-Input product SHA: `6fe254139ae3382f0ab71e6725df00c1c1a69822`.
+Input product SHA: `43230492964ea637f69747e25a3e72d6cb268ebe`.
 Coordination base: `452f83ecfea1826974c92b048cf7bb0e968bcf25`.
 Reference clip/time: C (`libfile_a5903480efe88191a87e5f98ec9729bc`) at approximately 00:04-00:10, plus the recurring A/B/C compact HUD.
 Output location: `coordination/reference/rhs2-travel-interaction-6fe2541/HANDOFF.md`.
-Blocker: PR #170 must complete formal QA -> Integration -> canonical push CI -> Smoke -> Package; Control Tower must then activate a producer before any `school/**` implementation.
-Next handoff: Control Tower for reservation; Pip High Free Roam implements only after activation; Roblox High School QA & Contract validates the exact candidate independently.
+Blocker: PR #170 QA and Integration are complete; all three exact-canonical push guards pass on `43230492964ea637f69747e25a3e72d6cb268ebe`. Smoke passed on that exact canonical SHA (PR #181 / receipt schema 15; rendered/device evidence remains pending), and Release & Package is active next. P1 implementation still waits for deterministic Package and Control Tower activation before any `school/**` implementation.
+Next handoff: Release & Package completes deterministic packaging on exact canonical `43230492964ea637f69747e25a3e72d6cb268ebe`; Control Tower then activates the reserved P1 producer; Pip High Free Roam implements only after activation; Roblox High School QA & Contract validates the exact candidate independently.
 
 This is an observable interaction contract from footage, not proof of hidden source, remotes, destination IDs, teleport backend, asset IDs, or timing. The visible recording is at 2x in parts, so this artifact makes no movement-speed, transition-duration, or animation-timing claim.
 
