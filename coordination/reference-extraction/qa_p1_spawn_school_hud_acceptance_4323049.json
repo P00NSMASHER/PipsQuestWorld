@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School QA & Contract",
+  "owner": "Roblox High School QA & Contract",
+  "observedAt": "2026-10-04T19:32:48Z",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "result": "P1_ACCEPTANCE_READY__NO_P1_CANDIDATE_TESTED",
+  "scope": "Independent acceptance contract for the next activated spawn -> school entrance -> atrium/corridor + compact HUD candidate. This artifact changes no product file and does not certify RHS2 parity.",
+  "frozenInputs": [
+    {
+      "path": "school/tests/fixtures/rhs2_video_acceptance_reference.lua",
+      "blobSha": "4e34d7680c5ca92c1db2acee4ebfb8d03b6b1635",
+      "status": "FROZEN_REFERENCE_FIXTURE_REUSED_WITHOUT_EDIT"
+    },
+    {
+      "path": "school/tests/rhs2_video_acceptance_spec.lua",
+      "blobSha": "2c1d6ddc6d3b6f54982d2dd89b6f7f0ffc7bb288",
+      "status": "FROZEN_REFERENCE_GUARD_REUSED_WITHOUT_EDIT"
+    },
+    {
+      "path": "coordination/reference/rhs2-entry-6fe2541/FOUNDATION_4323049_SPAWN_AABB_DELTA.md",
+      "sourcePr": 179,
+      "sourceHeadSha": "c768190e0e2fb30a7b5c329da5de7cc0dc5c1776",
+      "status": "MERGED_COORDINATION_EVIDENCE"
+    },
+    {
+      "path": "coordination/reference-extraction/mobile_hud_authority_continuity_4323049.json",
+      "blobSha": "af4b958762aa67409c3021be552ffa2c245d9769",
+      "sourceHeadSha": "091ab5a30015ed4af8f8eb6c022083b7f435750b",
+      "status": "PROGRESSION_CONTINUITY_EVIDENCE"
+    }
+  ],
+  "referenceClips": {
+    "A": {
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "times": [
+        "00:05 frontage, broad central stair, crest zone, red/white/blue massing",
+        "00:25 bright atrium, low circular focal display, repeated ceiling-light rhythm and open circulation",
+        "00:45 broad corridor/stair hub and school-color banding",
+        "02:05 stairwell/item-view composition"
+      ]
+    },
+    "B": {
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "times": [
+        "00:45 dealership selected-detail state; free-roam rail is replaced by the feature surface"
+      ]
+    },
+    "C": {
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "times": [
+        "00:05 Travel open state with compact edge HUD retained around the centered modal",
+        "01:05 job-result state with compact edge HUD retained around the centered modal"
+      ]
+    }
+  },
+  "timingLimit": "Visible 2x playback segments prohibit deriving original movement speed, traversal duration or animation timing.",
+  "evidenceStatus": {
+    "functional": {
+      "status": "PASS_STATIC_EXACT_CANONICAL_CI__P1_NOT_PRESENT",
+      "evidence": [
+        "High School Foundation Guards run 37225838208 succeeded on exact SHA 43230492964ea637f69747e25a3e72d6cb268ebe.",
+        "High School Class & Education Guards run 37225838207 succeeded on the same exact SHA.",
+        "High School Progression Guards run 37225838221 succeeded on the same exact SHA."
+      ],
+      "limit": "These runs cover the repaired canonical, not a future P1 implementation and not runtime traversal."
+    },
+    "visual": {
+      "status": "PENDING_RENDERED_P1_CANDIDATE",
+      "required": "Timestamp-bound side-by-side captures for A@00:05, A@00:25 and A@00:45 from the exact candidate."
+    },
+    "interaction": {
+      "status": "PENDING_RUNTIME_P1_CANDIDATE",
+      "required": "One uninterrupted spawn -> steps -> entry -> atrium -> corridor/stair traversal plus open/close restoration for each large feature panel."
+    },
+    "device": {
+      "status": "PENDING_TARGET_DEVICE_CAPTURES",
+      "required": "Desktop, iPhone-class and iPad-class captures with safe-area insets; static source layout is insufficient."
+    }
+  },
+  "confirmedDefects": [
+    {
+      "id": "P1-SPAWN-01_COLLIDING_INTERIOR_SPAWN",
+      "owner": "Pip High Free Roam",
+      "status": "CONFIRMED_ON_EXACT_CANONICAL_SOURCE",
+      "evidence": "MainSpawn remains inside the lobby and its AABB intersects collidable EntryMat geometry as recorded by merged PR 179.",
+      "acceptance": "Exactly one MainSpawn is exterior to the door plane; its full character-clearance envelope intersects no collidable stair, curb, mat, rail, planter, roadway, door or decorative part. Preserve exactly one SchoolEntrance record and one respawn assignment path."
+    },
+    {
+      "id": "P1-HUD-01_PERMANENT_MENU_OBSTRUCTION",
+      "owner": "Pip High Free Roam",
+      "status": "CONFIRMED_ON_EXACT_CANONICAL_SOURCE",
+      "evidence": "CanonicalSchoolClient blob 86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a creates a visible 236x184 LegacySchoolMenu at bottom-left; the exact-canonical continuity artifact records touch bottomMargin 112 and the other large bottom panels.",
+      "acceptance": "Free roam begins with the center/left world view unobstructed. School detail is on demand. At most one large feature panel is open; its reachable close restores the compact edge HUD without a client-authored durable-state change."
+    }
+  ],
+  "acceptanceCases": [
+    {
+      "id": "P1-FUNC-SPAWN-ROUTE",
+      "category": "functional",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45"],
+      "owner": "Pip High Free Roam",
+      "candidateStatus": "BLOCKED_NO_P1_CANDIDATE",
+      "criteria": [
+        "Exactly one SpawnLocation named SchoolCampus.MainSpawn.",
+        "MainSpawn is exterior and has a collision-free character envelope.",
+        "A continuous avatar-clear path reaches the broad stair, landing, door, both circulation sides of the circular atrium display, CentralHall and a guarded stair landing.",
+        "Existing room, town, housing and vehicle seams remain intact; no second schedule, clock, Lighting or room registry authority is introduced."
+      ]
+    },
+    {
+      "id": "P1-VIS-FRONTAGE-ATRIUM-CORRIDOR",
+      "category": "visual",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45"],
+      "owner": "Pip High Free Roam",
+      "candidateStatus": "PENDING_RENDERED_P1_CANDIDATE",
+      "criteria": [
+        "Spawn approach makes the centered entrance, broad stair, crest zone and red/white/blue school massing immediately legible without opening a menu.",
+        "Entry resolves into a bright atrium with one low circular focal display, repeated ceiling-light rhythm and two visible circulation arcs.",
+        "The atrium feeds a broad corridor/stair composition with clear navigation silhouettes and consistent school-color banding.",
+        "Palette and dimensions are tuned from rendered comparison; no exact RGB, crest asset ID or hidden hierarchy is inferred from footage."
+      ]
+    },
+    {
+      "id": "P1-INT-HUD-PANEL-RESTORE",
+      "category": "interaction",
+      "referenceClipTime": ["B@00:45", "C@00:05", "C@01:05"],
+      "owner": "Pip High Free Roam",
+      "candidateStatus": "PENDING_RUNTIME_P1_CANDIDATE",
+      "criteria": [
+        "Free roam shows compact right actions, top-right read-only status and separated bottom shortcuts while preserving movement, camera and center-world visibility.",
+        "Dealership may replace the free-roam rail with one coherent feature surface; Travel and job-result states may retain compact edge HUD around one centered modal.",
+        "Only one large feature panel is open at a time; close is reachable and restores the same compact free-roam HUD.",
+        "Client UI does not author currency, ownership, reward, persistence or automatic spend."
+      ]
+    },
+    {
+      "id": "P1-DEVICE-SAFE-AREA",
+      "category": "device",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45", "B@00:45", "C@00:05", "C@01:05"],
+      "owner": "Roblox High School QA & Contract",
+      "candidateStatus": "PENDING_TARGET_DEVICE_CAPTURES",
+      "criteria": [
+        "Desktop, iPhone-class and iPad-class captures are taken from the identical exact candidate.",
+        "Safe areas keep status, rail, bottom shortcuts and panel close controls visible, legible and non-overlapping.",
+        "No capture is accepted if controls cover the entrance centerline, avatar traversal lane or the atrium focal landmark.",
+        "Device PASS requires actual rendered captures; static CI or source inspection cannot substitute."
+      ]
+    }
+  ],
+  "outputLocation": "coordination/reference-extraction/qa_p1_spawn_school_hud_acceptance_4323049.json",
+  "blocker": {
+    "status": "WAIT_EXACT_SMOKE_PACKAGE_AND_CONTROL_TOWER_P1_ACTIVATION",
+    "detail": "Canonical 43230492964ea637f69747e25a3e72d6cb268ebe still requires exact Smoke and Package before Control Tower may activate the sole P1 producer. No P1 product head exists to test."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam consumes these cases only after Control Tower activation and produces one exact candidate.",
+    "Roblox High School QA & Contract checks the exact candidate with fresh CI, runtime traversal and rendered desktop/iPhone/iPad evidence.",
+    "Integration, Smoke and Package consume only the independently accepted exact head."
+  ],
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
