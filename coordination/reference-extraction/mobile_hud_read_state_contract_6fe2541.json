@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Progression & Mobile",
   "owner": "Roblox High School Progression & Mobile",
-  "observedAt": "2026-10-04T17:19:46.860Z",
-  "result": "REFERENCE_MATCHED_MOBILE_HUD_CONTRACT_PREPARED__NO_PRODUCT_WRITE",
+  "observedAt": "2026-10-04T18:10:00Z",
+  "result": "DETAILED_B_C_PIXEL_CONTRACT_APPENDED__NO_PRODUCT_WRITE",
   "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
   "prepBranch": {
     "name": "prep/high-school-progression-outfit-replay-23cc398-v1",
@@ -36,21 +36,23 @@
   "evidenceStatus": {
     "persistentIdentity": "PASS_B_AND_C",
     "timestampObservationIndex": "PASS_FROM_CANONICAL_COORDINATION_BACKLOG",
-    "binaryMaterializationThisRun": "TRANSIENT_HTTP_502_AFTER_TWO_HELPER_RETRIES",
-    "detailedPixelExtractionForBAndC": "PENDING_RETRY",
+    "binaryMaterializationThisRun": "PASS_ALL_THREE_WORKSPACE_MATERIALIZATION__PINNED_SHA256_MATCH",
+    "detailedPixelExtractionForBAndC": "PASS_B45_C05_C65_WITH_B35_B40_B50_B55_C02_C08_C62_C68_SEQUENCE_CONTEXT",
     "hudCalibrationConsumedFrom": {
       "pullRequest": 169,
       "mergeCommit": "f6225f98c3977cfa354a1b729bee56175809ec6e",
       "inspectedSource": "A@00:05,00:25,00:45,02:05",
       "status": "MERGED_COORDINATION_EVIDENCE"
     },
-    "exactParityClaimed": false
+    "exactParityClaimed": false,
+    "derivedReferenceFrames": "LOCAL_DERIVATIVES_HASHED_IN_CONTRACT__RAW_VIDEO_NOT_COMMITTED"
   },
   "evidenceRules": [
     "Footage proves only visible presentation and observable interaction; it does not prove asset IDs, UI instance hierarchy, data schema or backend behavior.",
     "Visible 2x playback segments prohibit uncorrected animation, transition, input or movement timing comparisons.",
     "Player-authored nameplates and sample balances are not required product copy or seed data.",
-    "The B/C binary transfer failure is transient and does not authorize invented pixel bounds or labels."
+    "Approximate recording bounds are measured against the full 1112x512 recording; dark side bars are recording framing, and target devices must apply their own safe-area insets.",
+    "Derived PNG hashes identify this extraction only; the pinned MP4 SHA-256 values remain the source identities."
   ],
   "observedReferenceContract": {
     "recurringFreeRoamHud": {
@@ -63,28 +65,213 @@
       "worldVisibility": "No permanent large school menu occupies the sampled free-roam center/left view."
     },
     "dealership": {
-      "source": "B@00:45 canonical timestamp observation",
-      "observed": "Blue dealership surface with category/grid controls, item tiles, price, preview/details and balances.",
-      "unknown": [
-        "Exact item catalog, vehicle asset IDs, tab labels, tile count and purchase protocol.",
-        "Whether the same rail remains visible while the dealership is open.",
-        "Pixel-exact panel bounds pending successful binary materialization."
+      "source": "B@00:35,00:40,00:45 with B@00:50,00:55 sequence context",
+      "approximateRecordingBounds": {
+        "fullDealershipSurface": {
+          "x": [
+            101,
+            1010
+          ],
+          "y": [
+            28,
+            511
+          ]
+        },
+        "leftPreviewPane": {
+          "x": [
+            101,
+            463
+          ],
+          "y": [
+            28,
+            511
+          ]
+        },
+        "rightBrowsePane": {
+          "x": [
+            464,
+            1010
+          ],
+          "y": [
+            28,
+            511
+          ]
+        },
+        "closeControl": {
+          "x": [
+            975,
+            1004
+          ],
+          "y": [
+            34,
+            63
+          ]
+        },
+        "browseControls": {
+          "x": [
+            464,
+            1010
+          ],
+          "y": [
+            88,
+            144
+          ]
+        },
+        "serverReadBalanceFooter": {
+          "x": [
+            477,
+            786
+          ],
+          "y": [
+            477,
+            507
+          ]
+        }
+      },
+      "observed": [
+        "The dealership consumes the full gameplay viewport as a split surface: a large left preview/instruction pane and a blue right browse pane.",
+        "The recurring right action rail is not visible while this dealership surface is open; compact weather/day/time remains visible above it in the Roblox top bar area.",
+        "Visible labels include Large Motor Dealership, Buy a new car here!, All, Vehicles, Skins, Search and Sort by.",
+        "At B@00:45 the selected RHS Fan Car exposes Standard, Vehicle, Top Speed: 60, Acceleration: 15 and descriptive copy inside the browse pane while the left pane still says Select an Item.",
+        "The right pane retains surrounding vehicle cards and prices plus two displayed balance fields in the footer.",
+        "B@00:50 and B@00:55 show a separate Buy House panel; this establishes only a later panel state, not the input or backend transition that caused it."
+      ],
+      "inferenceLimits": [
+        "Do not require an animated or 3D preview to change on selection; the sampled selected state keeps the left preview instruction visible.",
+        "Do not infer the complete vehicle catalog, currency names, asset IDs, ownership, purchase/spawn protocol or selection event hierarchy.",
+        "The hidden rail in this state does not prove it is destroyed; only that it is not simultaneously visible in the sampled frame."
       ]
     },
     "travel": {
-      "source": "C@00:05 canonical timestamp observation",
-      "observed": "Travel window uses destination image tiles and tabs.",
-      "unknown": [
-        "Exact destination set, image assets, labels, ordering, cost and transport backend.",
-        "Pixel-exact panel bounds pending successful binary materialization."
+      "source": "C@00:02 free roam, C@00:05 Travel open, C@00:08 Travel open with category strip",
+      "approximateRecordingBounds": {
+        "modal": {
+          "x": [
+            291,
+            821
+          ],
+          "y": [
+            93,
+            447
+          ]
+        },
+        "primaryRightRail": {
+          "x": [
+            959,
+            1008
+          ],
+          "y": [
+            119,
+            331
+          ]
+        },
+        "secondaryRightRail": {
+          "x": [
+            959,
+            1008
+          ],
+          "y": [
+            334,
+            411
+          ]
+        },
+        "topRightStatus": {
+          "x": [
+            890,
+            1008
+          ],
+          "y": [
+            29,
+            100
+          ]
+        },
+        "bottomShortcuts": {
+          "x": [
+            459,
+            709
+          ],
+          "y": [
+            451,
+            507
+          ]
+        }
+      },
+      "observed": [
+        "Travel opens as a centered blue modal while the compact top-right status, right action rails and bottom shortcuts remain visible around it.",
+        "Visible top tabs are Locations and Servers; the modal keeps a clear close control.",
+        "Visible destination tiles include Campsite, Lake, Club Red, Sunblox Cafe, Chef Umbra's and Maisy's Mystical Dining.",
+        "C@00:08 visibly includes a category strip with Neighborhood, Outskirts and Forest; lower tile rows are partially clipped by the sampled frame."
+      ],
+      "inferenceLimits": [
+        "Do not treat the sampled labels/order as an exhaustive destination catalog.",
+        "Do not infer image asset IDs, travel costs, unlock requirements, server browser behavior or transport backend.",
+        "Do not copy recording coordinates directly to a phone or tablet; preserve the relationships after device safe-area insets."
       ]
     },
     "jobResult": {
-      "source": "C@01:05 canonical timestamp observation",
-      "observed": "Job completion presents performance/reward feedback in a dialog before returning to world interaction.",
-      "unknown": [
-        "Exact reward formula, grade thresholds, currency identity and persistence protocol.",
-        "Pixel-exact panel bounds pending successful binary materialization."
+      "source": "C@01:02 and C@01:05 result state; C@01:08 subsequent Jobs detail state",
+      "approximateRecordingBounds": {
+        "resultModal": {
+          "x": [
+            356,
+            756
+          ],
+          "y": [
+            91,
+            453
+          ]
+        },
+        "primaryRightRail": {
+          "x": [
+            959,
+            1008
+          ],
+          "y": [
+            119,
+            331
+          ]
+        },
+        "secondaryRightRail": {
+          "x": [
+            959,
+            1008
+          ],
+          "y": [
+            334,
+            411
+          ]
+        },
+        "topRightStatus": {
+          "x": [
+            890,
+            1008
+          ],
+          "y": [
+            29,
+            100
+          ]
+        },
+        "bottomShortcuts": {
+          "x": [
+            459,
+            709
+          ],
+          "y": [
+            454,
+            507
+          ]
+        }
+      },
+      "observed": [
+        "The centered Jobs result modal leaves the top-right status, right rails and bottom shortcuts visible.",
+        "Visible result text identifies Servant of the Void - Hard, Performance, Excellent! (7 Items Collected), Earnings, +66, +664 XP, 9 Levels to Promotion (Professional), a Gift Box message and one OK action.",
+        "The result dialog separates performance, two earnings fields, promotion progress and reward copy.",
+        "C@01:08 shows a subsequent Jobs detail/difficulty panel rather than a direct free-roam-only frame."
+      ],
+      "inferenceLimits": [
+        "Do not infer reward formula, grade thresholds, currency identity, save timing or promotion rules from one result.",
+        "The top status values in the sampled result frame do not establish whether or when +66 or +664 XP was durably credited.",
+        "Do not require OK to return directly to free roam; the observed sequence includes a Jobs detail state after the result."
       ]
     }
   },
@@ -171,8 +358,10 @@
       "mode": "DEALERSHIP",
       "referenceClipTime": "B@00:45",
       "acceptance": [
-        "Responsive blue panel preserves grid/tile browsing, preview/details, price and server-read balances.",
-        "Selecting a tile changes preview only; purchase/spawn requires a separate explicit action.",
+        "Use a responsive split surface within the safe gameplay viewport: preview/instruction region plus blue browsing region with category, search/sort, cards, selected details and server-read balances.",
+        "A selected item must expose a legible detail state, but the reference does not require the left preview to animate or change.",
+        "The sampled dealership may replace the free-roam right rail while open; close remains reachable and returns to a safe compact HUD state.",
+        "Selection changes read-only presentation only; purchase/spawn requires a separate explicit server-authoritative action.",
         "No automatic spend, client-authored price, client-authored ownership or invented vehicle asset ID."
       ]
     },
@@ -180,18 +369,20 @@
       "mode": "TRAVEL",
       "referenceClipTime": "C@00:05",
       "acceptance": [
-        "Responsive Travel panel presents destination image tiles and tabs without blocking its close control.",
+        "Centered Travel modal preserves the visible top-right status, right rails and bottom shortcuts without covering its close control.",
+        "Locations/Servers tabs and image tiles remain legible; category strips may appear inside the modal.",
         "Destination selection is an explicit tap and transport remains server-confirmed.",
-        "Unknown destinations/images remain placeholders or absent until verified; no inferred asset IDs."
+        "Unknown destinations/images remain placeholders or absent until verified; no inferred asset IDs, cost or unlock state."
       ]
     },
     {
       "mode": "JOB_RESULT",
       "referenceClipTime": "C@01:05",
       "acceptance": [
-        "Performance/reward dialog is legible over the activity result, then dismisses back to the edge HUD.",
-        "Reward is displayed from the authoritative server receipt and cannot be claimed twice by replaying the client dialog.",
-        "No reward formula or currency identity is inferred from one reference result."
+        "Centered result dialog preserves the edge HUD and visibly separates job/difficulty, performance, earnings, promotion progress, reward copy and dismissal.",
+        "Dismissal may lead to the observed Jobs detail state; do not hard-code a direct free-roam return solely from this sample.",
+        "Reward is displayed from an authoritative server receipt and cannot be claimed twice by replaying the client dialog.",
+        "No reward formula, grade threshold, currency identity or durable commit timing is inferred from one result."
       ]
     }
   ],
@@ -212,7 +403,8 @@
     "requiredEvidence": [
       "Exact-candidate rendered screenshots in free roam, dealership, Travel and job-result states.",
       "Separate visual, interaction and device statuses; static CI alone cannot pass rendered parity.",
-      "Successful open/close and state-refresh checks on iPhone and iPad form factors before parity claims."
+      "Successful open/close and state-refresh checks on iPhone and iPad form factors before parity claims.",
+      "Viewport-relative comparison uses the measured B/C relationships, not literal recording coordinates."
     ]
   },
   "producerAcceptanceCriteria": [
@@ -226,32 +418,95 @@
   "qaAcceptanceCriteria": [
     "Source tests verify mapped runtime path, one-panel exclusivity, read-only state flow and absence of client-authoritative spend/reward.",
     "Rendered tests verify compactness, safe-area placement, movement/camera clearance and panel legibility at exact candidate SHA.",
-    "Dealership, Travel and job-result comparisons remain timestamp-bound to B@00:45, C@00:05 and C@01:05.",
-    "Detailed B/C pixel measurements remain NOT_EVALUATED until video bytes materialize successfully."
+    "Dealership comparison checks the full-viewport split state and hidden rail at B@00:45 without requiring the left preview to change.",
+    "Travel comparison checks centered modal coexistence with status/rails/shortcuts at C@00:05.",
+    "Job-result comparison checks separated reward information and the C@01:08 Jobs-detail follow-up without requiring direct free-roam return.",
+    "All recording bounds are approximate evidence coordinates; pass/fail on target devices is relationship- and safe-area-based, not literal-pixel cloning."
   ],
   "blockers": [
     {
       "id": "PRODUCT_OWNERSHIP_NOT_ASSIGNED",
       "owner": "Roblox High School Control Tower",
-      "status": "WAIT_P1_ACTIVATION",
-      "unblock": "Smoke and Package complete canonical 6fe2541 and Control Tower activates one producer."
-    },
-    {
-      "id": "B_C_BINARY_TRANSFER_502",
-      "owner": "Roblox High School Progression & Mobile",
-      "status": "TRANSIENT_RETRY",
-      "unblock": "Materialize B/C through the Library helper and append measured pixel bounds/screenshots; do not invent them."
+      "status": "WAIT_POST_PR170_PACKAGE_AND_P1_ACTIVATION",
+      "unblock": "PR 170 exact-head QA, Integration, canonical push CI, Smoke and Package complete; then Control Tower activates one P1 producer from the repaired packaged SHA."
     }
   ],
   "nextHandoff": [
-    "Pip High Free Roam: consume the compact rail/panel contract when activated for P1.",
-    "Roblox High School QA & Contract: convert the device criteria into exact-head rendered checks.",
-    "Roblox High School Content QA: retain authoritative B/C clip identities and timestamp observations."
+    "Pip High Free Roam: consume this detailed split-panel/edge-HUD contract only after P1 activation from the repaired packaged canonical.",
+    "Roblox High School QA & Contract: use the measured B/C relationships and inference limits for exact-head rendered phone/tablet checks.",
+    "Roblox High School Content QA: retain the pinned MP4 identities and derived-frame hashes; raw videos remain outside Git."
   ],
   "productFilesChanged": [],
   "rawVideosCommitted": false,
   "exactParityClaimed": false,
   "moneySpent": false,
   "robloxPublished": false,
-  "taskStateChanged": false
+  "taskStateChanged": false,
+  "referenceScreenshotEvidence": {
+    "extraction": "ffmpeg first decoded frame at requested timestamp, 1112x512 PNG",
+    "recordingViewportApprox": {
+      "x": [
+        101,
+        1010
+      ],
+      "y": [
+        28,
+        511
+      ],
+      "note": "dark side bars and Roblox top bar are outside or above the gameplay canvas"
+    },
+    "frames": [
+      {
+        "clip": "B",
+        "timestampSeconds": 45,
+        "sha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+        "purpose": "dealership selected-detail state"
+      },
+      {
+        "clip": "C",
+        "timestampSeconds": 5,
+        "sha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+        "purpose": "Travel open state"
+      },
+      {
+        "clip": "C",
+        "timestampSeconds": 65,
+        "sha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+        "purpose": "job result state"
+      }
+    ],
+    "rawVideosCommitted": false
+  },
+  "observationVsInferenceLedger": [
+    {
+      "evidence": "B@00:45",
+      "observation": "Selected vehicle details appear in the blue browse pane while the left preview still shows its instruction.",
+      "prohibitedInference": "Selection must update a 3D preview or immediately buy/spawn the vehicle."
+    },
+    {
+      "evidence": "B@00:45 versus C@00:05/C@01:05",
+      "observation": "Displayed sample balances differ between recordings while one secondary balance remains 400.",
+      "prohibitedInference": "A starting balance, conversion rate, cross-session persistence result or cause of the difference."
+    },
+    {
+      "evidence": "C@00:05",
+      "observation": "Travel modal coexists with status, right rails and bottom shortcuts.",
+      "prohibitedInference": "Exact UI hierarchy, destination backend, cost, unlock state or image asset identity."
+    },
+    {
+      "evidence": "C@01:05",
+      "observation": "Result shows +66 and +664 XP while the top status remains visible.",
+      "prohibitedInference": "Client-authored reward, exact durable commit moment, double-claim behavior or which displayed balance must change."
+    },
+    {
+      "evidence": "C@01:08",
+      "observation": "A Jobs detail/difficulty panel follows the sampled result state.",
+      "prohibitedInference": "The exact input that caused the transition or a requirement that result dismissal return directly to free roam."
+    },
+    {
+      "evidence": "visible 2x badge/segments",
+      "observation": "Playback is visibly accelerated in sampled segments.",
+      "prohibitedInference": "Original movement, animation, panel transition or interaction latency."
+    }
+  ]
 }
