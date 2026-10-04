@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-04T21:22:00Z",
+  "result": "PASS_AUTHORITY_CONTINUITY__OPEN_RESPONSIVE_GEOMETRY_GAP__RENDERED_DEVICE_PENDING",
+  "inputSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+  "inputBaseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "inputPr": 188,
+  "referenceClipTime": [
+    "B@00:45 dealership selected-detail state",
+    "C@00:05 Travel open state",
+    "C@01:05 job-result state"
+  ],
+  "referenceEvidence": {
+    "sourceContract": {
+      "path": "coordination/reference-extraction/mobile_hud_normalized_safe_area_contract_4323049.json",
+      "branch": "prep/high-school-progression-outfit-replay-23cc398-v1",
+      "blobSha": "b4a6968afc74bc0cbb3525f44682c75012298eac",
+      "note": "Lane-owned normalized occupancy evidence; frozen for this exact comparison."
+    },
+    "contentQaPack": {
+      "path": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+      "branch": "coordination/content-qa-reference-pack-4323049-v1",
+      "blobSha": "abe8744cf1c76ba4cf4bfa7a7763e0f30595131e",
+      "pr": 190,
+      "note": "Pins B@00:45, C@00:05 and C@01:05 frame identities from successfully materialized source bytes."
+    },
+    "currentRunMaterialization": "TRANSIENT_HTTP_502__NO_NEW_BYTE_OR_FRAME_CLAIM__CONTENT_QA_OWNS_RETRY"
+  },
+  "exactHeadEvidence": {
+    "clientBlob": "27664ce20fac9c57bd3e89c5f3f4482a13880cd4",
+    "hudTestBlob": "e2f5cede2c4d1a77ba1e8d1a3f08568aa1b4a975",
+    "changedFiles": [
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CampusBuilder.server.lua",
+      "school/tests/foundation_world_contract_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua"
+    ],
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37235656099,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37235656081,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37235656117,
+        "conclusion": "success"
+      }
+    ],
+    "staleHeadExcluded": "f9910fae5c672fea3b0569d228d986eb4e701401"
+  },
+  "staticComparison": {
+    "sourceGameplayViewport": {
+      "width": 909,
+      "height": 483,
+      "note": "Reference normalization bounds; nominal static projection only, not a rendered target-device result."
+    },
+    "reference": {
+      "topRightStatus": {
+        "width": 0.1298,
+        "height": 0.147
+      },
+      "primaryRightRail": {
+        "width": 0.0539,
+        "height": 0.4389
+      },
+      "combinedRightRailVerticalBand": {
+        "top": 0.1884,
+        "bottom": 0.793,
+        "height": 0.6046
+      },
+      "bottomShortcuts": {
+        "width": 0.275,
+        "height": 0.1159,
+        "top": 0.8758,
+        "bottom": 0.9917
+      }
+    },
+    "candidateNominalProjection": {
+      "topRightStatus": {
+        "sourceSizePixels": [
+          226,
+          122
+        ],
+        "width": 0.2486,
+        "height": 0.2526,
+        "widthMultipleOfReference": 1.915,
+        "heightMultipleOfReference": 1.718,
+        "note": "Fixed offsets project materially larger than the sampled status group at the same nominal gameplay bounds."
+      },
+      "actionRail": {
+        "sourceSizePixels": [
+          56,
+          226
+        ],
+        "width": 0.0616,
+        "height": 0.4679,
+        "note": "Width is close to the reference rail band; vertical placement remains a rendered/device question."
+      },
+      "bottomQuickBarDesktop": {
+        "sourceSizePixels": [
+          238,
+          54
+        ],
+        "width": 0.2618,
+        "height": 0.1118,
+        "top": 0.8634,
+        "bottom": 0.9752,
+        "note": "Nominal desktop size is close to the sampled bottom-shortcut occupancy."
+      },
+      "bottomQuickBarTouchAtNominalHeight": {
+        "touchBottomMarginPixels": 112,
+        "top": 0.6563,
+        "bottom": 0.7681,
+        "note": "This is a static projection at 483 pixels high, not an iPhone/iPad pass or fail; actual safe-area and control zones were not rendered."
+      }
+    }
+  },
+  "responsiveAudit": {
+    "observedSourceSignals": {
+      "touchModeBranch": "local bottomMargin = UserInputService.TouchEnabled and 112 or 12",
+      "viewportSizeReads": 0,
+      "currentCameraReads": 0,
+      "viewportChangeListeners": 0,
+      "uiScaleInstances": 0,
+      "uiAspectRatioConstraints": 0,
+      "explicitSafeAreaProperties": 0
+    },
+    "existingTestCoverage": "legacy_hud_contract_spec.lua checks literal names, anchors, positions and preserved remote calls. It does not compute normalized occupancy, viewport bounds, safe-area containment, movement/camera exclusion or device reflow.",
+    "defect": {
+      "id": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+      "owner": "Pip High Free Roam",
+      "status": "OPEN_STATIC_CONTRACT_GAP__DO_NOT_PROMOTE_GREEN_CI_TO_MOBILE_PASS",
+      "detail": "The candidate replaces the permanent lower-left menu with the correct HUD groups, but fixed pixel geometry plus a TouchEnabled-only bottom offset is not sufficient evidence that top status, right rail and quick bar remain compact and unobstructive across target viewports."
+    }
+  },
+  "authorityContinuity": {
+    "progression": "PASS_STATIC__ProgressionRepository remains the durable progression owner; candidate HUD reads server-returned snapshots.",
+    "economy": "PASS_STATIC__EconomyRepository remains the money/ownership writer and is not changed by PR 188.",
+    "schedule": "PASS_STATIC__FoundationBootstrap remains the schedule/time authority; the client formats received state for display.",
+    "clientDurableWritesAdded": false,
+    "automaticSpendAdded": false
+  },
+  "acceptanceCriteria": [
+    "Keep the compact HUD on the sole PR 188 producer branch; do not create another product producer or durable writer.",
+    "Replace or wrap fixed HUD geometry with one viewport/safe-area layout calculation that can be exercised without Roblox rendering.",
+    "Add deterministic layout tests using caller-supplied viewport and inset fixtures. Assert every compact HUD group stays inside safe bounds, the status card does not overlap the rail, and the quick bar does not enter declared movement/camera exclusion zones.",
+    "At the nominal 909x483 reference bounds, reduce the status group's normalized width/height toward the observed 0.1298/0.147 relationship; do not copy raw recording pixels to all devices.",
+    "Preserve the close/dismiss and content hierarchy for later Travel/job-result panels, and allow the dealership feature surface to replace the free-roam rail as observed.",
+    "Keep status and balances read-only from cloned server snapshots; no client debit, credit, ownership, completion or persistence authority.",
+    "Rerun all three exact-head guards after any repair, then capture free-roam, Travel, job-result and dealership states at desktop, iPhone-class landscape and iPad-class landscape with exact SHA, viewport and safe-area insets.",
+    "Maintain separate functional, visual, interaction and device results; static CI alone cannot certify RHS2 parity."
+  ],
+  "outputLocation": "coordination/reference-extraction/progression_mobile_pr188_hud_static_risk_3aad19e.json",
+  "blocker": {
+    "status": "WAIT_CHANGED_HEAD_OR_INDEPENDENT_RENDERED_DEVICE_EVIDENCE",
+    "owner": "Pip High Free Roam / Roblox High School QA & Contract",
+    "detail": "Exact head 3aad19e is green and the prior spawn-overlap objection is fixed. Mobile acceptance remains open because responsive geometry is untested and no rendered target-device captures exist."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam owns the single responsive-geometry/test repair on PR 188 if it changes the candidate.",
+    "Roblox High School QA & Contract reviews only the next exact head and keeps rendered/device evidence pending until actual captures exist.",
+    "Progression & Mobile rechecks authority or replay behavior only if progression/economy/read-state surfaces change."
+  ],
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "renderedDevicePassClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
