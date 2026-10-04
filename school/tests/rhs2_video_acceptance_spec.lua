@@ -31,6 +31,20 @@ expect(gate.limits.visual == "NOT_TESTED", "functional evidence overclaims visua
 expect(gate.limits.interaction == "NOT_RENDERED_TESTED", "functional evidence overclaims interaction status")
 expect(gate.limits.device == "NOT_TESTED", "functional evidence overclaims device status")
 
+local defectOwners = {}
+for _, defect in ipairs(reference.defects) do
+    expect(nonEmpty(defect.id), "defect id missing")
+    expect(nonEmpty(defect.owner), "defect owner missing")
+    expect(defectOwners[defect.id] == nil, "defect owner duplicated")
+    defectOwners[defect.id] = defect.owner
+    expect(nonEmpty(defect.observation), "defect observation missing")
+    expect(nonEmpty(defect.acceptance), "defect acceptance missing")
+    expect(nonEmpty(defect.blocker), "defect blocker missing")
+    expect(nonEmpty(defect.nextHandoff), "defect handoff missing")
+end
+expect(defectOwners["QA-VIS-SHOPPING-SUCCESS-NOT-OBSERVABLE"] == "FreeRoam",
+    "shopping success display gap must have one FreeRoam owner")
+
 local seen = {}
 for _, case in ipairs(reference.cases) do
     expect(nonEmpty(case.id) and not seen[case.id], "acceptance case id missing or duplicated")
