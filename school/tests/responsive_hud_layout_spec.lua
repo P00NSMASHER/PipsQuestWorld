@@ -93,10 +93,10 @@ local badStatus = ResponsiveHudLayout.compute(
 badStatus.status = {
     x = badStatus.rail.x,
     y = badStatus.rail.y,
-    width = badStatus.status.width,
-    height = badStatus.status.height,
-    right = badStatus.rail.x + badStatus.status.width,
-    bottom = badStatus.rail.y + badStatus.status.height,
+    width = badStatus.rail.width,
+    height = badStatus.rail.width,
+    right = badStatus.rail.right,
+    bottom = badStatus.rail.y + badStatus.rail.width,
 }
 local validStatus, statusReason = ResponsiveHudLayout.validate(badStatus)
 assert(not validStatus and statusReason == "status overlaps rail", "status/rail mutation must fail")
