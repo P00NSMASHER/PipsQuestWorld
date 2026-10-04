@@ -37,6 +37,7 @@ local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
 local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
 local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
+local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
@@ -660,7 +661,7 @@ local leaveCafeShift = cafeJobRoot:WaitForChild("LeaveShift")
 local cafeCard = Instance.new("Frame")
 cafeCard.Name = "LegacyCafePanel"
 cafeCard.AnchorPoint = Vector2.new(1, 1)
-cafeCard.Position = UDim2.new(1, -12, 1, -bottomMargin)
+cafeCard.Position = UDim2.new(1, -12, 1, -auxiliaryPanelBottomMargin)
 cafeCard.Size = UDim2.new(0, 260, 0, 150)
 cafeCard.BackgroundColor3 = LEGACY_PANEL
 cafeCard.BackgroundTransparency = 0.02
@@ -867,7 +868,7 @@ local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 local vehicleCard = Instance.new("Frame")
 vehicleCard.Name = "LegacyVehiclePanel"
 vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
-vehicleCard.Position = UDim2.new(0.5, 0, 1, -bottomMargin)
+vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
 vehicleCard.Size = UDim2.new(0, 260, 0, 132)
 vehicleCard.BackgroundColor3 = LEGACY_PANEL
 vehicleCard.BackgroundTransparency = 0.02
@@ -1194,7 +1195,7 @@ applyResponsiveHudLayout()
 local housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
 housePanel.AnchorPoint = Vector2.new(0, 1)
-housePanel.Position = UDim2.new(0, 256, 1, -(bottomMargin + 66))
+housePanel.Position = UDim2.new(0, 256, 1, -(auxiliaryPanelBottomMargin + 66))
 housePanel.Size = UDim2.new(0, 248, 0, 252)
 housePanel.BackgroundColor3 = LEGACY_PANEL
 housePanel.BackgroundTransparency = 0.02
@@ -1468,7 +1469,7 @@ end)
 local editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 1)
-editorPanel.Position = UDim2.new(0, 512, 1, -(bottomMargin + 66))
+editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
 editorPanel.Size = UDim2.new(0, 330, 0, 346)
 editorPanel.BackgroundColor3 = LEGACY_PANEL
 editorPanel.BackgroundTransparency = 0.02
