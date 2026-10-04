@@ -275,5 +275,6 @@ entry.Activated:Connect(function()
     if panel.Visible then refreshPage(baseSlot.Value) end
 end)
 
+end
 
 return mount
