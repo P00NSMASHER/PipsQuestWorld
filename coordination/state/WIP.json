@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 49,
+  "schemaVersion": 50,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T20:04:28.439Z",
+  "observedAt": "2026-10-04T20:38:25.530Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
@@ -25,8 +25,8 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
       "scope": "P1_SPAWN_SCHOOL_HUD",
-      "status": "RESERVED_NOT_ACTIVE__WAIT_EXACT_PACKAGE",
-      "inputSha": "POST_4323049_PACKAGED_CANONICAL_TBD"
+      "status": "ACTIVE_AUTHORIZED__CREATE_ONE_BRANCH_FROM_EXACT_CANONICAL",
+      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
     },
     "supersededCandidates": [
       {
@@ -41,7 +41,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "ACTIVE_WIP_IS_EXACT_CANONICAL_PLUS_ONE_FROZEN_CONTENT_QA_SUPPORT_CANDIDATE; NO_ACTIVE_PRODUCT_PRODUCER; EXACT_4323049_HAS_SMOKE_PASS_AND_REQUIRES_DETERMINISTIC_PACKAGE_BEFORE_ONLY_PIP_HIGH_FREE_ROAM_P1_ACTIVATION",
+    "rule": "CURRENT_WIP_IS_EXACT_PACKAGED_CANONICAL_PLUS_FROZEN_CONTENT_QA_PR150; FREE_ROAM_IS_THE_SOLE_AUTHORIZED_P1_PRODUCT_PRODUCER; CREATE_ONLY_ONE_BRANCH_FROM_4323049_AND_RECONCILE_WIP_COUNT_AT_FIRST_CANDIDATE",
     "recentlyIntegrated": {
       "pr": 170,
       "candidateSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
@@ -50,7 +50,7 @@
       "status": "INTEGRATED__FORMAL_QA_PASS__ALL_THREE_EXACT_PUSH_GUARDS_PASS__SMOKE_NEXT"
     }
   },
-  "currentMilestone": "PR170_REPAIR_SMOKE_PASS__EXACT_4323049_PACKAGE_NEXT",
+  "currentMilestone": "P1_SPAWN_SCHOOL_HUD_SINGLE_PRODUCER_ACTIVATED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -100,15 +100,15 @@
       "handoff": "Roblox High School QA & Contract"
     },
     "FreeRoam": {
-      "mode": "RESERVED_NEXT_PRODUCER__NO_PRODUCT_WRITES_YET",
+      "mode": "ACTIVE_SINGLE_PRODUCER",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "branch": null,
       "candidatePr": null,
       "candidateSha": null,
-      "objective": "Remain the unique owner for P1_SPAWN_SCHOOL_HUD. Do not open or write a producer branch until Smoke PASS and deterministic Package bind exact canonical 4323049 and Control Tower publishes the activation SHA.",
+      "objective": "Create exactly one fresh P1 branch from packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe and implement the reference-matched spawn, school entrance, atrium/corridor and compact HUD slice. Preserve unique server authorities and route exact-head CI -> independent QA -> Integration -> Smoke -> Package.",
       "owned": "future reference-matched spawn -> school entrance -> bright atrium/corridor + compact recurring HUD only",
-      "dependency": "Smoke PASS on exact canonical 4323049, then deterministic Package and Control Tower activation.",
-      "exit": "Control Tower supplies the exact packaged canonical and authorizes one fresh producer branch.",
+      "dependency": "Satisfied: exact canonical Smoke PR181 PASS and deterministic package PR183 merged.",
+      "exit": "One P1 candidate PR with reference-linked acceptance evidence on the sole authorized branch.",
       "handoff": "Roblox High School QA & Contract after implementation"
     },
     "QA": {
@@ -142,22 +142,22 @@
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "ACTIVE_PACKAGE_EXACT_CANONICAL",
+      "mode": "PASS_HANDOFF_COMPLETE",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "branch": "coordination/release-package-4323049-v1",
-      "objective": "Consume Smoke receipt schema 15 / PR 181 and create a deterministic source-tree package bound only to exact canonical 4323049. Never publish Roblox.",
+      "objective": "Preserve PR183 exact deterministic source-tree package for 43230492964ea637f69747e25a3e72d6cb268ebe; no product code or Roblox publication.",
       "owned": "deterministic packaging, hashes, artifact continuity, release receipt/readiness",
-      "dependency": "None: exact Smoke PASS is merged.",
-      "exit": "Deterministic package receipt bound to 4323049 and exact school/** tree.",
+      "dependency": "None for current package.",
+      "exit": "Wait for next QA/Integration/Smoke-approved P1 canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
       "mode": "COORDINATE",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "objective": "Drive exact canonical 4323049 through deterministic Package, then activate exactly one fresh Pip High Free Roam P1 branch for the visible spawn/school/HUD slice. Keep all other lanes evidence-only.",
+      "objective": "Track the sole active P1 Free Roam producer from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe; enforce WIP cap and stage CI -> QA -> Integration -> Smoke -> Package.",
       "owned": "coordination/state/WIP.json, RHS2 parity backlog, candidate-cap enforcement, lane assignment and pipeline handoffs only",
-      "dependency": "Deterministic Package on exact 4323049.",
-      "exit": "Repaired canonical packaged and sole P1 producer activated.",
+      "dependency": "Package PR183 merged; activation complete.",
+      "exit": "P1 producer branch and PR registered in WIP, then exact-head gates progress.",
       "handoff": "Pip High Free Roam"
     }
   },
@@ -207,12 +207,12 @@
   },
   "packageResult": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "ACTIVE_PACKAGE_EXACT_CANONICAL_AFTER_SMOKE_PASS",
-    "artifact": null,
-    "artifactId": null,
-    "schoolTreeGitSha": null,
-    "rootCommitTreeSha": null,
-    "recursiveEntryCount": null,
+    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+    "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
+    "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "rootCommitTreeSha": "ddfb6e428b267e66d820bbd52e0b8932168b0601",
+    "recursiveEntryCount": 68,
     "recursiveTreeTruncated": false,
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "priorReceiptSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
@@ -220,13 +220,16 @@
     "robloxPublished": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE"
-    ]
+    ],
+    "receiptPr": 183,
+    "receiptHead": "52587de61ddca0f4703537b9c4687774935a1276",
+    "receiptMergeCommit": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d"
   },
   "branchReadiness": {
     "canonical": {
       "branch": "rebuild/high-school-foundation",
       "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "status": "ALL_THREE_EXACT_PUSH_GUARDS_AND_SMOKE_PASS__PACKAGE_NEXT"
+      "status": "ALL_THREE_EXACT_PUSH_GUARDS__SMOKE_PASS__PACKAGE_COMPLETE"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
@@ -238,7 +241,7 @@
       "branch": null,
       "baseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "headSha": null,
-      "status": "NO_ACTIVE_PRODUCT_PRODUCER__P1_OWNER_RESERVED_TO_FREE_ROAM_AFTER_EXACT_PACKAGE"
+      "status": "ACTIVE_OWNER_AUTHORIZED__NO_BRANCH_YET"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -361,16 +364,16 @@
       "evidence": "PR 181 / Smoke receipt schema 15",
       "renderedDeviceStatus": "PENDING"
     },
-    "status": "REPAIR_INTEGRATED__SMOKE_PASS__PACKAGE_NEXT",
+    "status": "REPAIR_INTEGRATED__SMOKE_PASS__PACKAGE_COMPLETE__P1_ACTIVE",
     "blockedSince": null,
     "blockedAgeHoursAtObservation": 0,
-    "nextAction": "Release & Package binds deterministic source-tree identity to exact canonical 4323049; Control Tower activates P1 only afterward."
+    "nextAction": "Pip High Free Roam creates one P1 branch from exact 43230492964ea637f69747e25a3e72d6cb268ebe; Control Tower registers the candidate and enforces CI -> QA -> Integration -> Smoke -> Package."
   },
   "referenceParityBacklog": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
   "nextProducerReservation": {
     "owner": "Pip High Free Roam",
-    "status": "RESERVED_NOT_ACTIVE__WAIT_EXACT_PACKAGE",
-    "inputSha": "POST_4323049_PACKAGED_CANONICAL_TBD",
+    "status": "ACTIVE_AUTHORIZED__CREATE_ONE_BRANCH_FROM_EXACT_CANONICAL",
+    "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "scope": "One reference-matched spawn -> school entrance -> bright atrium/corridor slice with compact recurring HUD; reuse existing unique spawn/clock/economy authorities.",
     "referenceClips": [
       "A@00:05 school frontage",
@@ -389,9 +392,9 @@
       "Rendered comparison on target device remains required before any parity claim"
     ],
     "outputLocation": "school/** on one WIP-authorized producer branch",
-    "blocker": "Deterministic Package must bind exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe before product writes.",
+    "blocker": null,
     "nextHandoff": "Pip High Free Roam",
-    "activationRule": "Control Tower activates one fresh P1 branch only from the exact packaged canonical SHA."
+    "activationRule": "Pip High Free Roam creates exactly one fresh P1 producer branch from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe; WIP then registers its branch/PR."
   },
   "priorityAfterCurrent": [
     "SPAWN_SCHOOL_ENTRANCE_ATRIUM_CORRIDOR_COMPACT_HUD",
@@ -457,7 +460,7 @@
         "summary": "schema 48 exact canonical Smoke routing"
       },
       "blockedSince": null,
-      "nextAction": "Package exact 4323049, then activate sole P1 producer.",
+      "nextAction": "Register sole P1 branch and exact head; keep WIP cap.",
       "referenceGapsClosed": 8
     },
     "Foundation": {
@@ -515,9 +518,9 @@
         "mergeCommit": "43230492964ea637f69747e25a3e72d6cb268ebe",
         "summary": "startup syntax repair integrated"
       },
-      "blockedSince": "2026-10-04T18:48:17Z",
-      "blockedAgeHoursAtObservation": 1.24,
-      "nextAction": "Wait without product writes; open exactly one P1 branch only after Control Tower activation.",
+      "blockedSince": null,
+      "blockedAgeHoursAtObservation": 0,
+      "nextAction": "Create one P1 branch from exact packaged canonical 43230492964ea637f69747e25a3e72d6cb268ebe and implement the visible spawn/school/HUD slice.",
       "referenceGapsClosed": 0
     },
     "QA": {
@@ -564,7 +567,7 @@
         "summary": "schema-44 release continuity"
       },
       "blockedSince": null,
-      "nextAction": "Create deterministic package bound only to exact canonical 4323049 and hand receipt to Control Tower.",
+      "nextAction": "Preserve PR183 package; await next integrated Smoke-PASS canonical.",
       "referenceGapsClosed": 0
     }
   },
