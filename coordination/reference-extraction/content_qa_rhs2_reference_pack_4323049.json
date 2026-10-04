@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Content QA",
+  "owner": "Roblox High School Content QA",
+  "observedAt": "2026-10-04T21:03:33Z",
+  "result": "PASS_REFERENCE_BYTES_MATERIALIZED_HASHED_AND_TIMESTAMP_LEDGER_PINNED",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "scope": "Authorized RHS2 visual and observable-behavior evidence pack for the P1 spawn -> school entrance -> atrium/corridor + compact HUD slice and later menu/gameplay parity. No product code, raw video binary, asset ID, hidden hierarchy, audio claim or exact-parity claim is included.",
+  "sources": {
+    "A": {
+      "title": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "materializedFileId": "file_00000000ce5c81f5a36a8e3d41862ca0",
+      "libraryVersion": 0,
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "sizeBytes": 101853818,
+      "video": {
+        "codec": "h264",
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "frameCount": 4246,
+        "durationSeconds": 141.533333
+      },
+      "materialization": "PASS"
+    },
+    "B": {
+      "title": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "materializedFileId": "file_00000000896c81f5b6a0b386426ad86f",
+      "libraryVersion": 0,
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "video": {
+        "codec": "h264",
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "frameCount": 2760,
+        "durationSeconds": 92
+      },
+      "materialization": "PASS"
+    },
+    "C": {
+      "title": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "materializedFileId": "file_00000000347c81f58f25a1e4ce718462",
+      "libraryVersion": 0,
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "sizeBytes": 87770778,
+      "video": {
+        "codec": "h264",
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "frameCount": 3628,
+        "durationSeconds": 120.933333
+      },
+      "materialization": "PASS"
+    }
+  },
+  "extractionMethod": {
+    "tool": "ffmpeg",
+    "operation": "one PNG frame at each requested clip timestamp",
+    "limit": "Frame hashes identify the extracted evidence. They do not establish original movement speed, animation timing or sub-frame event timing."
+  },
+  "timestampEvidence": [
+    {
+      "id": "A_0005",
+      "referenceClipTime": "A@00:05",
+      "frameSha256": "7cdb56f20ef716c572c0d908fb3729acc4d445096a14100f2f7b3f96896e2350",
+      "observed": [
+        "Centered exterior school entrance and broad central stairs are simultaneously visible.",
+        "A crest/shield occupies the entrance zone.",
+        "Red, white and blue architectural accents establish the school palette.",
+        "Compact right-side colored actions, top-right status/balances and separated bottom shortcuts are visible around the world view."
+      ],
+      "notObserved": [
+        "Exact RGB values",
+        "crest asset ID",
+        "hidden instance hierarchy",
+        "collision or spawn coordinate"
+      ]
+    },
+    {
+      "id": "A_0025",
+      "referenceClipTime": "A@00:25",
+      "frameSha256": "ca33f057eb02723bbcded9d4c419937ba0ba9b03d9fdd363a7071ecb97d3a4ce",
+      "observed": [
+        "Bright atrium contains one low circular multi-tier focal display.",
+        "Repeated linear ceiling lights and red/white/blue bands are visible.",
+        "Open floor remains visible around the central display.",
+        "Compact edge HUD remains present."
+      ],
+      "notObserved": [
+        "Exact light count outside this frame",
+        "display dimensions",
+        "room hierarchy",
+        "lighting configuration values"
+      ]
+    },
+    {
+      "id": "A_0045",
+      "referenceClipTime": "A@00:45",
+      "frameSha256": "d6b263ea003c24a7c0abbdf80644efa95907581c8cde70e2e2a16dc6fc967ee0",
+      "observed": [
+        "Broad interior corridor keeps a central traversal sightline.",
+        "An ascending circulation element with red/blue accents is visible ahead.",
+        "Bright repeated ceiling lights and school-color bands continue from the atrium style.",
+        "Compact edge HUD remains present."
+      ],
+      "notObserved": [
+        "Whether the ascending element is implemented as stairs, escalator or another hidden mechanic",
+        "exact corridor dimensions",
+        "pathfinding or collision response"
+      ]
+    },
+    {
+      "id": "A_0125",
+      "referenceClipTime": "A@02:05",
+      "frameSha256": "6b090c2b01b200d380d860184ca381c77fcf5a7daedc06fd7c3fc0148082ced0",
+      "observed": [
+        "A stair flight with blue rails and red/blue wall bands is visible.",
+        "Bottom shortcuts remain visible and an item-selection stack is present above them.",
+        "A visible 2x playback marker is present."
+      ],
+      "notObserved": [
+        "Original traversal speed",
+        "item-selection animation timing",
+        "inventory persistence semantics"
+      ]
+    },
+    {
+      "id": "B_0045",
+      "referenceClipTime": "B@00:45",
+      "frameSha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+      "observed": [
+        "The dealership state occupies most of the gameplay viewport.",
+        "A left preview/instruction area and a larger blue browse/details area are simultaneously visible.",
+        "Vehicle cards show images and price/status text.",
+        "The compact free-roam right rail is not visible in this sampled state."
+      ],
+      "notObserved": [
+        "Hidden UI hierarchy",
+        "ownership or currency authority",
+        "automatic purchase behavior",
+        "catalog completeness"
+      ]
+    },
+    {
+      "id": "C_0005",
+      "referenceClipTime": "C@00:05",
+      "frameSha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+      "observed": [
+        "A Travel panel presents image tiles for destinations.",
+        "The panel has a reachable visible close control.",
+        "Compact right rail, top-right status and bottom shortcuts remain visible around the panel."
+      ],
+      "notObserved": [
+        "Destination IDs",
+        "teleport implementation",
+        "loading behavior",
+        "hidden panel hierarchy"
+      ]
+    },
+    {
+      "id": "C_0065",
+      "referenceClipTime": "C@01:05",
+      "frameSha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+      "observed": [
+        "Centered job-result panel separates job name, performance, earnings, XP/progress, gift text and an OK dismissal.",
+        "Compact edge HUD remains visible around the result panel.",
+        "The purple activity environment remains visible behind the panel."
+      ],
+      "notObserved": [
+        "Hidden scoring formula",
+        "server reward authority",
+        "persistence timing",
+        "audio feedback"
+      ]
+    },
+    {
+      "id": "C_0070",
+      "referenceClipTime": "C@01:10",
+      "frameSha256": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c",
+      "observed": [
+        "The result panel is no longer present.",
+        "Nighttime free roam is visible with compact right rail, top-right status and bottom shortcuts restored."
+      ],
+      "notObserved": [
+        "Exact dismissal input",
+        "transition duration",
+        "whether any hidden persistence write completed"
+      ]
+    }
+  ],
+  "observationInferenceLedger": {
+    "verified": [
+      "All three persistent files materialized successfully in this run.",
+      "Byte hashes, sizes, video dimensions, durations, frame rates and frame counts match the pinned evidence identities.",
+      "The same three compact HUD placement groups recur across sampled world and modal states.",
+      "Dealership uses a viewport-dominant feature state while Travel and job-result samples retain compact edge HUD.",
+      "C@01:05 to C@01:10 provides visible result-dismissed-to-free-roam state evidence."
+    ],
+    "inferredOnly": [
+      "Responsive target-device layout must be derived and tested; the 1112x512 recording is not a universal pixel specification.",
+      "The feature surface may intentionally replace the free-roam rail in dealership, but internal ownership and hierarchy are unknown.",
+      "The visible status/balances are presentation evidence only, not proof of client or server authority."
+    ],
+    "prohibitedClaims": [
+      "No original movement speed, traversal duration or animation timing may be derived from visible 2x playback segments.",
+      "No asset IDs, exact RGB values, hidden UI/world hierarchy, collision values, scoring formulas, currency authority, persistence semantics or audio behavior are established by these frames.",
+      "Player-authored nameplate text is excluded from required product copy.",
+      "Static frame matching cannot certify exact RHS2 parity."
+    ],
+    "audioReview": "NOT_PERFORMED"
+  },
+  "acceptanceHandoffs": {
+    "Foundation": {
+      "owner": "Roblox High School Foundation",
+      "referenceClipTime": [
+        "A@00:05",
+        "A@00:25",
+        "A@00:45"
+      ],
+      "criteria": [
+        "Exterior approach keeps centered entrance, broad stair, crest zone and red/white/blue massing readable without opening a menu.",
+        "Entrance resolves into a bright atrium with one low circular focal display and open circulation on both sides.",
+        "Atrium connects to a broad corridor/stair composition with a clear central sightline.",
+        "Do not hard-code exact RGB, crest asset ID or hidden hierarchy from footage."
+      ]
+    },
+    "ProgressionMobile": {
+      "owner": "Roblox High School Progression & Mobile",
+      "referenceClipTime": [
+        "B@00:45",
+        "C@00:05",
+        "C@01:05",
+        "C@01:10"
+      ],
+      "criteria": [
+        "Free roam preserves compact right actions, top-right read-only status and separated bottom shortcuts outside movement/camera areas.",
+        "Travel and job-result panels leave their close/dismiss control reachable and retain compact edge HUD.",
+        "Dealership may use one coherent viewport-dominant feature surface rather than retaining the free-roam rail.",
+        "Desktop, iPhone-class and iPad-class rendered captures with safe-area measurements remain mandatory."
+      ]
+    },
+    "FreeRoam": {
+      "owner": "Pip High Free Roam",
+      "referenceClipTime": [
+        "A@00:05",
+        "A@00:25",
+        "A@00:45",
+        "A@02:05",
+        "B@00:45",
+        "C@00:05",
+        "C@01:05",
+        "C@01:10"
+      ],
+      "criteria": [
+        "Implement one continuous spawn -> exterior stair -> entrance -> atrium -> corridor/stair slice on the sole WIP-authorized product branch.",
+        "Menu-closed free roam must not show a large permanent panel or block the central traversal sightline.",
+        "At most one large feature panel is open; reachable close/dismiss restores the compact edge HUD.",
+        "Preserve unique server clock, location, economy, progression and persistence authorities."
+      ]
+    },
+    "QA": {
+      "owner": "Roblox High School QA & Contract",
+      "referenceClipTime": [
+        "A@00:05",
+        "A@00:25",
+        "A@00:45",
+        "A@02:05",
+        "B@00:45",
+        "C@00:05",
+        "C@01:05",
+        "C@01:10"
+      ],
+      "criteria": [
+        "Bind functional evidence to the exact product candidate head and exact-head CI.",
+        "Capture timestamp-bound rendered comparisons at comparable aspect/FOV and record camera/device metadata.",
+        "Maintain separate functional, visual, interaction and device statuses.",
+        "Reject any exact-parity claim until rendered desktop/iPhone/iPad comparison and runtime transitions pass."
+      ]
+    }
+  },
+  "frozenEvidence": {
+    "pr": 150,
+    "branch": "support/high-school-avatar-customization-content-00df979",
+    "headSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+    "mutation": "NONE"
+  },
+  "outputLocation": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+  "blocker": {
+    "status": "NO_P1_CANDIDATE_HEAD_YET",
+    "detail": "Control Tower has authorized Pip High Free Roam as the sole P1 producer, but no producer branch or candidate SHA is recorded yet. Rendered comparison therefore remains pending."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam consumes this evidence on one branch rooted at exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe.",
+    "Roblox High School QA & Contract validates only the exact candidate head with fresh CI, runtime transitions and rendered device evidence."
+  ],
+  "rawVideosCommitted": false,
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
