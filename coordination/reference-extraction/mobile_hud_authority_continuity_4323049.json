@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-04T19:14:00Z",
+  "result": "PASS_PROGRESSION_AUTHORITY_CONTINUITY__CONFIRMED_P1_HUD_OBSTRUCTION",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "priorEvidence": {
+    "path": "coordination/reference-extraction/mobile_hud_read_state_contract_6fe2541.json",
+    "blobSha": "e849782c2a494949c773be61e86ebae595845b3e",
+    "inputSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "referenceClipTime": [
+      "B@00:45",
+      "C@00:05",
+      "C@01:05"
+    ],
+    "status": "FROZEN_PIXEL_AND_OBSERVATION_CONTRACT_REUSED_WITHOUT_EDIT"
+  },
+  "referenceClipTime": [
+    "B@00:45 dealership selected-detail state",
+    "C@00:05 Travel open state",
+    "C@01:05 job result state",
+    "A/B/C recurring compact right rail, top-right status and bottom shortcuts"
+  ],
+  "canonicalContinuity": {
+    "fromSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "toSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "exactPushCi": {
+      "workflow": "High School Progression Guards",
+      "runId": 37225838221,
+      "conclusion": "success",
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+    },
+    "files": [
+      {
+        "path": "school/default.project.json",
+        "baseBlob": "ba5e85e82652f137cb17e76016f062731c033761",
+        "currentBlob": "ba5e85e82652f137cb17e76016f062731c033761",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/client/CanonicalSchoolClient.client.lua",
+        "baseBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+        "currentBlob": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ProgressionRepository.lua",
+        "baseBlob": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+        "currentBlob": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ProgressionBinding.lua",
+        "baseBlob": "979d63565a745d5674c4d2ba8181efd258d5169c",
+        "currentBlob": "979d63565a745d5674c4d2ba8181efd258d5169c",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ProgressionDataStore.lua",
+        "baseBlob": "2eb864eb32d434f7853b9ce508c12a3c35280a64",
+        "currentBlob": "2eb864eb32d434f7853b9ce508c12a3c35280a64",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ProgressionStudioStore.lua",
+        "baseBlob": "23e737c1e48788455b045436de01ce01128059d8",
+        "currentBlob": "23e737c1e48788455b045436de01ce01128059d8",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/ProgressionPersistence.lua",
+        "baseBlob": "d68c87009a393c3bc8da959bd63cc5e1c9911838",
+        "currentBlob": "d68c87009a393c3bc8da959bd63cc5e1c9911838",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/server/EconomyRepository.lua",
+        "baseBlob": "ef06d4e29597b035767e10c1fd6b7313b331739f",
+        "currentBlob": "ef06d4e29597b035767e10c1fd6b7313b331739f",
+        "unchanged": true
+      },
+      {
+        "path": "school/src/shared/LegacyOutfitEntry.lua",
+        "baseBlob": "0e51cdc48db10cd3b8c5e7a56a2d1684823b9eb3",
+        "currentBlob": "8cad0a6d510a98f9af3a1d3f243ec310acbed05e",
+        "unchanged": false
+      },
+      {
+        "path": "school/src/shared/LegacyShoppingBoundary.lua",
+        "baseBlob": "517d3ae9eca6d81a77d5b97294d25a7f0ed47c9a",
+        "currentBlob": "517d3ae9eca6d81a77d5b97294d25a7f0ed47c9a",
+        "unchanged": true
+      }
+    ],
+    "interpretation": "All mapped progression, persistence, economy, shopping-boundary and HUD-client blobs are identical. LegacyOutfitEntry alone changed for the accepted startup syntax repair; it adds no progression/economy writer.",
+    "result": "PASS_UNIQUE_AUTHORITIES_PRESERVED"
+  },
+  "boundedFinding": {
+    "id": "P1_HUD_PERMANENT_MENU_OBSTRUCTION",
+    "owner": "Pip High Free Roam",
+    "status": "CONFIRMED_ON_EXACT_CANONICAL_SOURCE",
+    "path": "school/src/client/CanonicalSchoolClient.client.lua",
+    "blobSha": "86ef317f8cae9cd3ae0051fdc103e06fc3c6a55a",
+    "evidence": [
+      "LegacySchoolMenu is created as a visible 236x184 bottom-left frame at x=12 and y=-bottomMargin.",
+      "bottomMargin is 112 on touch devices and 12 otherwise.",
+      "LegacyVehiclePanel occupies bottom-center when visible; LegacyCafePanel occupies bottom-right when visible."
+    ],
+    "referenceConflict": "Sampled A/B/C free roam keeps the center/left view clear and uses compact edge controls; B@00:45 replaces the free-roam rail with a dealership surface, while C@00:05 and C@01:05 preserve compact rails around centered modals.",
+    "inferenceLimits": [
+      "Static source confirms placement and initial visibility, not rendered safe-area behavior on any device.",
+      "Do not copy recording coordinates literally to phone/tablet layouts.",
+      "Do not infer asset IDs, currency meaning, reward formulas or automatic spend."
+    ]
+  },
+  "acceptanceCriteria": [
+    "P1 free roam removes the permanent large school menu from the open-world baseline and exposes school detail on demand.",
+    "A compact right action rail, top-right read-only status and separated bottom shortcuts preserve movement, camera and center-world visibility after device safe-area insets.",
+    "At most one large feature panel is open at a time; close remains reachable and restores the compact edge HUD without a client-authored durable state change.",
+    "Dealership selection remains read-only until an explicit server-authoritative purchase/spawn action; no automatic spend or client-authored price/ownership.",
+    "Travel and job-result dismissal preserve server confirmation and exactly-once reward semantics; no inferred reward formula or direct-return requirement.",
+    "Rendered iPhone and iPad screenshots remain mandatory before visual/device PASS."
+  ],
+  "outputLocation": "coordination/reference-extraction/mobile_hud_authority_continuity_4323049.json",
+  "blocker": {
+    "status": "WAIT_EXACT_SMOKE_PACKAGE_AND_P1_ACTIVATION",
+    "owner": "Roblox High School Integration Smoke / Release & Package / Roblox High School Control Tower",
+    "detail": "Progression/Mobile is evidence-only; no product UI implementation is authorized until exact canonical 4323049 passes Smoke, packages, and Control Tower activates the sole P1 producer."
+  },
+  "nextHandoff": [
+    "Pip High Free Roam: own P1_HUD_PERMANENT_MENU_OBSTRUCTION when activated.",
+    "Roblox High School QA & Contract: bind free-roam, dealership, Travel and job-result screenshots to the future exact candidate on phone/tablet.",
+    "Roblox High School Control Tower: preserve one producer and current progression/economy/persistence authority blobs."
+  ],
+  "productFilesChanged": false,
+  "automaticSpendIntroduced": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
