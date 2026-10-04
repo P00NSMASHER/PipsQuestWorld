@@ -1,147 +1,150 @@
 {
-  "schemaVersion": 11,
+  "schemaVersion": 12,
   "lane": "Roblox High School Integration Director",
   "owner": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-04T16:46:00Z",
+  "recordedAt": "2026-10-04T18:50:00Z",
   "result": "PASS_INTEGRATED_EXACT_HEAD",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "9bb1c4c76927195edb22abff96c7d9679685f342",
-  "integrationSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
-  "milestone": "AVATAR_SHOPPING_CONFIRMATION_DELIVERY_REPAIR",
-  "producerPr": 165,
-  "referenceClipTime": "A/B/C recurring compact HUD; the clips do not prove hidden shopping transport/backend behavior.",
+  "inputSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
+  "inputBaseSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
+  "integrationSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "milestone": "CORE_CLIENT_STARTUP_SYNTAX_REPAIR",
+  "producerPr": 170,
+  "referenceClipTime": "A/B/C recurring compact right-side HUD, top-right balances/status and bottom item slots; this repair is a startup prerequisite only and certifies no rendered parity.",
   "acceptanceCriteria": [
-    "Consume only PR 165 head 9bb1c4c approved by independent QA on the same SHA.",
-    "Require Foundation, Class/Education and Progression guards green on the candidate SHA.",
-    "Preserve the 3-item WIP cap and one product producer at merge.",
-    "Require all changed product paths under school/** and no retired runtime consumption.",
-    "Merge mechanically without semantic edits.",
-    "Require the three canonical push guards green on the exact integrated SHA before Smoke consumes it."
+    "Consume only PR 170 head dfbbb5e2c52930beae7ebaea66d9ab5019c8914f on base 6fe254139ae3382f0ab71e6725df00c1c1a69822.",
+    "Require independent QA PASS_EXACT_HEAD on the same candidate SHA.",
+    "Require Foundation, Class/Education and Progression pull-request guards green on the exact candidate SHA.",
+    "Require the protected merge to produce the exact live canonical SHA with no Integration-authored product edits.",
+    "Require Foundation, Class/Education and Progression push guards green on the exact integrated canonical before Smoke handoff.",
+    "Keep runtime, rendered comparison and iPhone/iPad checks explicitly pending."
   ],
   "outputLocation": {
-    "product": "rebuild/high-school-foundation@6fe254139ae3382f0ab71e6725df00c1c1a69822",
+    "product": "rebuild/high-school-foundation@43230492964ea637f69747e25a3e72d6cb268ebe",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "handoffComment": "PR 165 comment 5982227638"
+    "handoffComment": "PR 170 comment 5983239768"
   },
-  "blocker": "NONE_FOR_INTEGRATION; rendered/device Marketplace behavior remains LOCAL_ONLY_REQUIRED for Smoke and no parity claim is authorized from static tests alone.",
+  "blocker": "NONE_FOR_INTEGRATION; Studio/runtime, rendered parity, touch obstruction, save/rejoin and device checks remain pending for Smoke and cannot be inferred from static guards.",
   "nextHandoff": "Roblox High School Integration Smoke",
-  "treeIdentity": {
-    "rootTree": "faa494f67001727cd162ca9049d1e7f008c64982",
-    "schoolTree": "6faddfe9ec04f866931e2659a109eaf8ebd59b91"
-  },
   "preMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37154588351,
+      "runId": 37218515500,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "9bb1c4c76927195edb22abff96c7d9679685f342"
+      "headSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37154588306,
+      "runId": 37218515472,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "9bb1c4c76927195edb22abff96c7d9679685f342"
+      "headSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37154588308,
+      "runId": 37218515509,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "9bb1c4c76927195edb22abff96c7d9679685f342"
+      "headSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f"
     }
   ],
   "independentQa": {
     "status": "PASS_EXACT_HEAD",
-    "evidence": "PR 165 comment 5973588737",
-    "headSha": "9bb1c4c76927195edb22abff96c7d9679685f342"
+    "evidence": "PR 170 review 5407562971",
+    "reviewNode": "PRR_kwDOU0Wcsc8AAAABQlDc2w",
+    "headSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
+    "runtime": "NOT_RUNTIME_TESTED",
+    "visual": "PENDING_RENDERED",
+    "device": "PENDING"
   },
   "postMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37217941089,
+      "runId": 37225838208,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822"
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37217941074,
+      "runId": 37225838207,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822"
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37217941080,
+      "runId": 37225838221,
       "event": "push",
       "conclusion": "success",
-      "headSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822"
+      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
     }
   ],
   "changedPaths": [
-    "school/default.project.json",
-    "school/src/client/CanonicalSchoolClient.client.lua",
-    "school/src/server/ShoppingPurchase.server.lua",
-    "school/src/server/ShoppingPurchaseController.lua",
-    "school/src/shared/LegacyShoppingBoundary.lua",
-    "school/tests/legacy_hud_contract_spec.lua",
-    "school/tests/shopping_purchase_authority_spec.lua",
-    "school/tests/shopping_runtime_authority_spec.lua"
+    ".github/workflows/high-school-progression-ci.yml",
+    "school/repair-outfit-mount/HANDOFF.md",
+    "school/src/shared/LegacyOutfitEntry.lua"
   ],
-  "authorityChecks": {
-    "shoppingServerAuthoritySingle": true,
-    "callbackSuccessPurchaserOnly": true,
-    "noAutomaticSpend": true,
-    "noRhsCashDebit": true,
-    "spawnClockLightingAuthorityUnchanged": true,
-    "classAuthorityUnchanged": true,
-    "progressionPersistenceAuthorityUnchanged": true,
+  "integrationChecks": {
+    "prMerged": true,
+    "expectedHeadEnforced": true,
+    "canonicalIdenticalToIntegrationSha": true,
+    "sourceEditedByIntegration": false,
+    "productPathsWithinPolicy": true,
+    "secondRuntimeRootIntroduced": false,
+    "spawnClockLightingAuthorityChanged": false,
+    "classAuthorityChanged": false,
+    "progressionPersistenceAuthorityChanged": false,
     "retiredRuntimeConsumed": false,
-    "customSchoolworkAdded": false
+    "spendingOrPublicationPerformed": false,
+    "automationScheduleChanged": false
   },
   "nextSliceIntegrationSeams": {
     "reservedOwner": "Pip High Free Roam",
-    "activation": "Only after exact 6fe2541 Smoke PASS and deterministic Package; Control Tower must pin the resulting canonical base.",
+    "activation": "Only after Smoke and deterministic Package consume exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe and Control Tower releases the producer slot.",
     "scope": "Reference-matched spawn -> school entrance -> bright atrium/corridor + compact HUD.",
+    "authorityBaseline": "Foundation delta PR 175 records unchanged world/clock/spawn/environment authority blobs across the repaired candidate.",
     "likelySharedCollisionSurfaces": [
       {
         "path": "school/default.project.json",
-        "risk": "project mapping/lighting/spawn mappings",
-        "rule": "Foundation authority review required; producer must not create a second spawn/clock/lighting authority."
+        "risk": "project mapping, lighting and spawn mappings",
+        "rule": "Foundation authority review; no second spawn/clock/lighting authority."
       },
       {
         "path": "school/src/client/CanonicalSchoolClient.client.lua",
-        "risk": "compact HUD composition and existing shopping/client wiring",
-        "rule": "Preserve shopping callback wiring and consume balances/read-state without client authority."
+        "risk": "compact HUD composition and existing client wiring",
+        "rule": "Preserve server-authoritative boundaries and existing shopping/avatar mount order."
       },
       {
-        "path": "school/tests/legacy_hud_contract_spec.lua",
-        "risk": "HUD contract touched by PR 165",
-        "rule": "Extend exact visible placement/obstruction assertions; do not weaken existing shopping seam checks."
+        "path": "school/src/shared/LegacyOutfitEntry.lua",
+        "risk": "newly repaired startup dependency",
+        "rule": "Keep the closing end and canonical mount parse guard intact."
+      },
+      {
+        "path": ".github/workflows/high-school-progression-ci.yml",
+        "risk": "shared static gate",
+        "rule": "Retain parse plus avatar mount contract; never weaken existing guards."
       }
     ],
     "frozenSurfaces": [
-      "school/src/server/ShoppingPurchase.server.lua",
-      "school/src/server/ShoppingPurchaseController.lua",
-      "school/src/shared/LegacyShoppingBoundary.lua",
-      "school/tests/shopping_purchase_authority_spec.lua",
-      "school/tests/shopping_runtime_authority_spec.lua"
+      "school/src/shared/LegacyOutfitEntry.lua syntax closure",
+      ".github/workflows/high-school-progression-ci.yml parse/mount guard",
+      "coordination evidence from Foundation PR 175"
     ],
     "orderedHandoff": [
-      "Smoke certifies exact canonical 6fe2541.",
-      "Release/Package emits the deterministic exact-SHA package.",
-      "Control Tower replaces the old producer slot and pins the post-package canonical SHA.",
-      "Pip High Free Roam opens one producer branch for P1_SPAWN_SCHOOL_HUD.",
-      "Independent QA validates exact head, then Integration -> Smoke -> Package repeats."
+      "Smoke consumes exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe and verifies the implemented flow without claiming rendered parity from headless results.",
+      "Release/Package emits the deterministic exact-SHA package only after Smoke.",
+      "Control Tower reconciles WIP, closes the repaired prerequisite and pins the post-package canonical.",
+      "Pip High Free Roam opens the sole producer slice for P1_SPAWN_SCHOOL_HUD.",
+      "Independent QA, Integration, Smoke and Package repeat on the new exact candidate."
     ]
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "6fe254139ae3382f0ab71e6725df00c1c1a69822",
-    "instruction": "Run cloud-safe Smoke only on exact canonical 6fe254139ae3382f0ab71e6725df00c1c1a69822. Require all three push guards listed above; preserve rendered/device Marketplace checks as LOCAL_ONLY_REQUIRED and stop on any canonical-head change."
+    "exactSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "instruction": "Consume only exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe. Verify spawn -> entrance -> atrium -> class/free roam -> menus -> save/rejoin as implemented, confirm client/HUD initialization no longer fails at LegacyOutfitEntry, preserve rendered/iPhone/iPad checks as pending when unavailable, and stop on any canonical-head change."
   }
 }
