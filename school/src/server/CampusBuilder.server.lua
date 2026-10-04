@@ -120,15 +120,92 @@ end
 
 makePart("AtriumDisplayTop", Vector3.new(13, 0.7, 9), CFrame.new(0, 5.0, 91), Color3.fromRGB(35, 43, 57), Enum.Material.SmoothPlastic)
 
+local corridorStairWidth = 25
+local corridorStairRailX = 12.1
+local corridorStairWallX = 16.5
+local corridorStairWallThickness = 0.6
+
 for step = 0, 9 do
     makePart(
         "CorridorStairStep" .. tostring(step + 1),
-        Vector3.new(25, 0.9, 2.8),
+        Vector3.new(corridorStairWidth, 0.9, 2.8),
         CFrame.new(0, 1.15 + (step * 0.65), -91 - (step * 2.5)),
         referenceWhite,
         Enum.Material.Concrete
     )
 end
+
+-- Reference A@02:05: blue rails follow both edges of the stair flight while
+-- red/blue bands repeat locally on the stairwell walls. Flight accents are
+-- separately named from the transverse landing rails so their composition
+-- cannot be satisfied by the landing alone. Non-collidable rails/posts/bands
+-- preserve the full stair traversal surface without edge snags.
+local corridorStairRailAngle = math.rad(13.2)
+local flightRailLeft = makePart(
+    "CorridorStairFlightRailBlueLeft",
+    Vector3.new(0.6, 0.6, 26),
+    CFrame.new(-corridorStairRailX, 7.1, -102.25) * CFrame.Angles(corridorStairRailAngle, 0, 0),
+    referenceBlue,
+    Enum.Material.Metal
+)
+flightRailLeft.CanCollide = false
+
+local flightRailRight = makePart(
+    "CorridorStairFlightRailBlueRight",
+    Vector3.new(0.6, 0.6, 26),
+    CFrame.new(corridorStairRailX, 7.1, -102.25) * CFrame.Angles(corridorStairRailAngle, 0, 0),
+    referenceBlue,
+    Enum.Material.Metal
+)
+flightRailRight.CanCollide = false
+
+for _, side in ipairs({
+    { suffix = "Left", x = -corridorStairRailX },
+    { suffix = "Right", x = corridorStairRailX },
+}) do
+    for postNumber, stairIndex in ipairs({ 0, 3, 6, 9 }) do
+        local flightPost = makePart(
+            "CorridorStairFlightPostBlue" .. side.suffix .. tostring(postNumber),
+            Vector3.new(0.45, 2.6, 0.45),
+            CFrame.new(side.x, 2.9 + (stairIndex * 0.65), -91 - (stairIndex * 2.5)),
+            referenceBlue,
+            Enum.Material.Metal
+        )
+        flightPost.CanCollide = false
+    end
+end
+
+makePart(
+    "CorridorStairWallLeft",
+    Vector3.new(corridorStairWallThickness, 13, 22),
+    CFrame.new(-corridorStairWallX, 6.5, -105),
+    wallColor,
+    Enum.Material.SmoothPlastic
+)
+makePart(
+    "CorridorStairWallRight",
+    Vector3.new(corridorStairWallThickness, 13, 22),
+    CFrame.new(corridorStairWallX, 6.5, -105),
+    wallColor,
+    Enum.Material.SmoothPlastic
+)
+
+for _, band in ipairs({
+    { name = "CorridorStairBlueBandLeft", x = -(corridorStairWallX - 0.32), y = 5.5, height = 1.2, color = referenceBlue },
+    { name = "CorridorStairBlueBandRight", x = corridorStairWallX - 0.32, y = 5.5, height = 1.2, color = referenceBlue },
+    { name = "CorridorStairRedBandLeft", x = -(corridorStairWallX - 0.32), y = 8.0, height = 0.9, color = referenceRed },
+    { name = "CorridorStairRedBandRight", x = corridorStairWallX - 0.32, y = 8.0, height = 0.9, color = referenceRed },
+}) do
+    local stairBand = makePart(
+        band.name,
+        Vector3.new(0.18, band.height, 22),
+        CFrame.new(band.x, band.y, -105),
+        band.color,
+        Enum.Material.SmoothPlastic
+    )
+    stairBand.CanCollide = false
+end
+
 makePart("UpperHallLanding", Vector3.new(32, 1, 13), CFrame.new(0, 7.5, -119), referenceWhite, Enum.Material.Concrete)
 makePart("UpperHallRailBlue", Vector3.new(31, 1.1, 0.7), CFrame.new(0, 11.0, -112.8), referenceBlue, Enum.Material.Metal)
 makePart("UpperHallRailRed", Vector3.new(31, 0.7, 0.8), CFrame.new(0, 12.1, -112.8), referenceRed, Enum.Material.Metal)

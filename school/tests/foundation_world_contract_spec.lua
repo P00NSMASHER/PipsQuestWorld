@@ -54,7 +54,35 @@ hasCampus('"EntryStep" .. tostring(step + 1)', "broad entrance steps")
 hasCampus('"AtriumDisplayTier" .. tostring(index)', "round atrium display")
 hasCampus('"AtriumCeilingLight"', "bright atrium lighting")
 hasCampus('"CorridorStairStep" .. tostring(step + 1)', "corridor stair focal point")
+hasCampus('"CorridorStairFlightRailBlueLeft"', "left blue stair-flight rail")
+hasCampus('"CorridorStairFlightRailBlueRight"', "right blue stair-flight rail")
+hasCampus('"CorridorStairFlightPostBlue" .. side.suffix', "blue stair-flight rail posts")
+hasCampus('"CorridorStairBlueBandLeft"', "left stair-local blue wall band")
+hasCampus('"CorridorStairBlueBandRight"', "right stair-local blue wall band")
+hasCampus('"CorridorStairRedBandLeft"', "left stair-local red wall band")
+hasCampus('"CorridorStairRedBandRight"', "right stair-local red wall band")
+hasCampus('"UpperHallRailBlue"', "distinct transverse upper-landing rail")
+hasCampus('flightRailLeft.CanCollide = false', "left flight rail preserves traversal")
+hasCampus('flightRailRight.CanCollide = false', "right flight rail preserves traversal")
+hasCampus('flightPost.CanCollide = false', "flight posts preserve traversal")
+hasCampus('stairBand.CanCollide = false', "stair bands cannot snag traversal")
 hasCampus('spawn.CFrame = CFrame.new(0, 1.55, 177)', "exterior-facing spawn seam")
+
+local stairWidth = tonumber(campusSource:match('local corridorStairWidth = ([-%d%.]+)'))
+local stairRailX = tonumber(campusSource:match('local corridorStairRailX = ([-%d%.]+)'))
+local stairWallX = tonumber(campusSource:match('local corridorStairWallX = ([-%d%.]+)'))
+local stairWallThickness = tonumber(campusSource:match('local corridorStairWallThickness = ([-%d%.]+)'))
+assert(stairWidth and stairRailX and stairWallX and stairWallThickness, "cannot parse corridor stair clearance geometry")
+assert(stairRailX < stairWidth / 2, "flight rails must visually follow the stair edges")
+assert(
+    stairWallX - (stairWallThickness / 2) > stairWidth / 2,
+    "stairwell walls must remain outside the stair traversal surface"
+)
+
+local _, flightRailNameCount = campusSource:gsub('"CorridorStairFlightRailBlue', "")
+local _, landingRailNameCount = campusSource:gsub('"UpperHallRailBlue"', "")
+eq(flightRailNameCount, 2, "two separately named stair-flight rails")
+eq(landingRailNameCount, 1, "one separately named transverse landing rail")
 
 local function parseVectorAssignment(prefix)
     local x, y, z = campusSource:match(
