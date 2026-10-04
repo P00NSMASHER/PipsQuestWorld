@@ -389,7 +389,14 @@
     "nextHandoff": "Roblox High School QA & Contract",
     "activationRule": "Control Tower activates exactly one fresh P1 branch only from the repaired, packaged canonical SHA."
   },
-  "priorityAfterCurrent": "P1_SPAWN_SCHOOL_HUD remains first visible slice; jobs stay deferred.",
+  "priorityAfterCurrent": [
+    "SPAWN_SCHOOL_ENTRANCE_ATRIUM_CORRIDOR_COMPACT_HUD",
+    "CLASSROOM_AND_SCHOOL_FREE_ROAM",
+    "HOUSING",
+    "AVATAR",
+    "VEHICLES",
+    "JOBS"
+  ],
   "distinctReferenceGapsClosed": {
     "evidence": [
       "THREE_PERSISTENT_LIBRARY_VIDEO_IDS_RECORDED",
