@@ -7,8 +7,8 @@
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved P1 owner, exact-SHA pipeline gates, and no parity claim without rendered/device comparison.",
     "outputLocation": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "blocker": "Independent QA on exact PR188 head 728d62b found PR188_STAIR_FLIGHT_REFERENCE_COMPOSITION_GAP: missing blue flight-side rails and stair-local red/blue bands at A@02:05. Rendered/device/traversal/panel/save-rejoin evidence also remains pending.",
-    "nextHandoff": "Pip High Free Roam repairs the existing sole producer PR188; QA rechecks the changed exact head before Integration."
+    "blocker": "Exact PR188 head 3cde55e contains the bounded stair-flight repair and all three guards are green. Independent same-SHA QA plus rendered/device/traversal/panel/save-rejoin evidence remain pending.",
+    "nextHandoff": "Roblox High School QA & Contract reviews exact 3cde55e; Integration remains unauthorized until explicit same-SHA approval."
   },
   "sources": {
     "A": {
@@ -335,9 +335,9 @@
       "owner": "Roblox High School Integration Smoke",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "referenceClipTime": "A/B/C recurring HUD; A@02:05",
-      "finding": "PR188 exact head 728d62b adds a compact responsive status/rail/quick-bar contract with safe-area containment, mutual non-overlap, declared control-zone rejection, and desktop/iPhone/iPad static fixtures.",
+      "finding": "PR188 exact head 3cde55e preserves the compact responsive status/rail/quick-bar contract with safe-area containment, mutual non-overlap, declared control-zone rejection, and desktop/iPhone/iPad static fixtures.",
       "acceptanceCriteria": "P1 captures normalized bounds for right rail, top-right status/balances, bottom slots, modals and Roblox controls on iPhone/iPad; menu-closed view must not obstruct the navigation sightline.",
-      "outputLocation": "PR188 exact head 728d62b plus merged PR198 runtime harness plan",
+      "outputLocation": "PR188 exact head 3cde55e plus merged PR198 runtime harness plan",
       "blocker": "Independent exact-head QA plus actual desktop/iPhone/iPad rendered bounds, physical traversal, modal restoration, camera rebinding and save/rejoin execution remain pending.",
       "nextHandoff": "Roblox High School QA & Contract, then Integration, then Integration Smoke on the exact integrated canonical.",
       "candidatePr": 188,
