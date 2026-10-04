@@ -41,4 +41,22 @@ assert(roadSizeY and roadCenterY, "cannot parse TownMainStreet vertical geometry
 local roadSurfaceY = tonumber(roadCenterY) + (tonumber(roadSizeY) / 2)
 eq(seam.position.Y, roadSurfaceY, "spawn Y follows TownMainStreet top surface")
 
+local function hasCampus(fragment, label)
+    if not campusSource:find(fragment, 1, true) then
+        error("missing P1 campus contract: " .. (label or fragment), 2)
+    end
+end
+
+hasCampus('makePart("SchoolFacadeLeft"', "blue/red/white school facade")
+hasCampus('crest.Name', "crest instance")
+hasCampus('crestText.Text = "PH\\n★"', "school crest face")
+hasCampus('"EntryStep" .. tostring(step + 1)', "broad entrance steps")
+hasCampus('makePart("AtriumDisplayTier" .. tostring(index)', "round atrium display")
+hasCampus('makePart("AtriumCeilingLight"', "bright atrium lighting")
+hasCampus('makePart("CorridorStairStep" .. tostring(step + 1)', "corridor stair focal point")
+hasCampus('spawn.CFrame = CFrame.new(0, 1.15, 177)', "exterior-facing spawn seam")
+
+local _, spawnCount = campusSource:gsub('Instance.new%("SpawnLocation"%)', "")
+eq(spawnCount, 1, "single campus spawn authority")
+
 print("FOUNDATION_WORLD_CONTRACT_OK")
