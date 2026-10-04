@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School QA & Contract",
+  "observedAt": "2026-10-04T21:22:44Z",
+  "input": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "pullRequest": 188,
+    "baseBranch": "rebuild/high-school-foundation",
+    "baseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "candidateBranch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+    "candidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+    "changedFiles": [
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/server/CampusBuilder.server.lua",
+      "school/tests/foundation_world_contract_spec.lua",
+      "school/tests/legacy_hud_contract_spec.lua"
+    ]
+  },
+  "reference": {
+    "source": "authorized RHS2 video evidence",
+    "primaryChecks": [
+      {
+        "clip": "A",
+        "timestamp": "00:05",
+        "contract": "school frontage, broad stairs, crest, red/white/blue composition"
+      },
+      {
+        "clip": "A",
+        "timestamp": "00:25",
+        "contract": "bright atrium, circular central display, ceiling lights"
+      },
+      {
+        "clip": "A",
+        "timestamp": "00:45",
+        "contract": "broad corridor and staircase focal point"
+      },
+      {
+        "clip": "A",
+        "timestamp": "02:05",
+        "contract": "recurring compact HUD and bottom inventory context"
+      },
+      {
+        "clip": "B",
+        "timestamp": "00:45",
+        "contract": "compact HUD around dealership menu"
+      },
+      {
+        "clip": "C",
+        "timestamp": "00:05",
+        "contract": "Travel panel with world visible behind"
+      },
+      {
+        "clip": "C",
+        "timestamp": "01:05-01:10",
+        "contract": "result dialog then return to free roam"
+      }
+    ],
+    "pinnedEvidence": {
+      "coordinationPr": 190,
+      "artifact": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+      "note": "No new byte or frame claim is made in this receipt; the current Library materialization retry returned transient HTTP 502."
+    },
+    "timingCaution": "Visible 2x playback segments prohibit uncorrected movement-speed or animation-timing claims."
+  },
+  "exactHeadChecks": {
+    "prState": "OPEN_MERGEABLE",
+    "baseIdentity": "PASS_EXACT_PACKAGED_CANONICAL",
+    "changedHeadRepair": {
+      "priorHead": "f9910fae5c672fea3b0569d228d986eb4e701401",
+      "priorObjection": "MainSpawn positive-volume overlap with EntryWalk",
+      "status": "RESOLVED_ON_3AAD19E_STATIC_GEOMETRY",
+      "evidence": [
+        "MainSpawn center Y raised to 1.55; bottom Y is 1.05",
+        "deterministic source-parsed AABB guard covers CampusGround, EntryWalk, DropOffLane and ParkingLot",
+        "single SpawnLocation guard remains"
+      ],
+      "rule": "The stale f9910fa objection is not applied to the changed head."
+    },
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37235656099,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37235656081,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37235656117,
+        "conclusion": "success"
+      }
+    ],
+    "authorityContinuity": "PASS_STATIC: existing server remotes remain the client boundary; no additional spawn, clock, economy, progression or persistence writer is introduced."
+  },
+  "evidenceStatus": {
+    "functional": {
+      "status": "PASS_STATIC_EXACT_HEAD_ONLY",
+      "covered": [
+        "candidate is based on exact packaged canonical SHA",
+        "one spawn authority",
+        "deterministic no-positive-volume spawn overlap for enumerated approach surfaces",
+        "all three exact-head static workflows succeeded",
+        "Shop, Avatar, House and Travel controls retain existing boundaries"
+      ],
+      "notCovered": [
+        "runtime entrance traversal",
+        "panel open-close restoration",
+        "live remote response behavior"
+      ]
+    },
+    "visual": {
+      "status": "PENDING_RENDERED_TIMESTAMP_COMPARISON",
+      "required": [
+        "render candidate at the target camera for A@00:05, A@00:25 and A@00:45",
+        "compare palette hierarchy, entrance silhouette, atrium brightness/display composition and corridor/stair readability",
+        "compare free-roam HUD normalized bounds against pinned A/B/C evidence"
+      ],
+      "rule": "Source literals and green CI do not certify rendered parity."
+    },
+    "interaction": {
+      "status": "PENDING_RUNTIME_TRAVERSAL_AND_UI_RESTORE",
+      "required": [
+        "spawn outside and traverse approach, door, atrium and corridor without collision or reset",
+        "exercise Shop, Avatar, House and Travel rail entries",
+        "close or complete each opened panel and confirm free-roam controls and compact HUD restore without a permanent obstruction"
+      ]
+    },
+    "device": {
+      "status": "HOLD_OPEN_RESPONSIVE_GEOMETRY_AND_TARGET_CAPTURES",
+      "requiredDevices": [
+        "desktop 1112x512 comparison viewport",
+        "iPhone target",
+        "iPad target"
+      ],
+      "required": [
+        "safe-area-aware top-right status and rail placement",
+        "no rail overlap with camera controls",
+        "quick bar does not cover movement or camera zones",
+        "no clipped panel or unreadable status text"
+      ]
+    }
+  },
+  "openDefects": [
+    {
+      "id": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+      "owner": "Pip High Free Roam",
+      "severity": "QA_HOLD_VISUAL_DEVICE",
+      "status": "OPEN_EXACT_HEAD_3AAD19E",
+      "evidence": {
+        "source": "coordination/reference-extraction/progression_mobile_pr188_hud_static_risk_3aad19e.json",
+        "branch": "coordination/progression-mobile-pr188-hud-audit-3aad19e-v1",
+        "summary": "HUD uses fixed pixel geometry plus TouchEnabled bottom margin; current contract asserts literals but not normalized bounds, safe areas, obstruction or device reflow."
+      },
+      "acceptance": [
+        "add deterministic responsive-layout bounds assertions for the status card, action rail and quick bar",
+        "prove no overlap with each other or declared movement/camera zones across the target viewports",
+        "retain read-only client state and unique server authority",
+        "collect rendered desktop, iPhone and iPad captures before closing visual/device status"
+      ]
+    }
+  ],
+  "decision": {
+    "result": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__HOLD_VISUAL_INTERACTION_DEVICE",
+    "fullQaPass": false,
+    "parityClaim": false,
+    "integrationHandoff": "NOT_AUTHORIZED",
+    "reason": "The changed head fixes the stale spawn objection and passes exact-head static guards, but independent rendered, runtime interaction and device evidence is absent and the responsive-geometry contract gap remains open."
+  },
+  "output": {
+    "location": "coordination/reference-extraction/qa_pr188_exact_head_acceptance_3aad19e.json",
+    "productWrites": "NONE"
+  },
+  "blocker": "Free Roam must repair or deterministically cover responsive HUD geometry, then provide the same exact head for independent runtime/rendered/device checks.",
+  "nextHandoff": "Pip High Free Roam; return changed exact head to Roblox High School QA & Contract, then Integration only after all four evidence categories pass."
+}
