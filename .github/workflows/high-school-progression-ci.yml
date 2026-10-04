@@ -46,6 +46,10 @@ jobs:
         run: lua5.4 school/tests/vehicle_lifecycle_spec.lua
       - name: Run vehicle input validation tests
         run: lua5.4 school/tests/vehicle_input_spec.lua
+      - name: Parse avatar entry module and verify canonical mount
+        run: |
+          luac5.4 -p school/src/shared/LegacyOutfitEntry.lua
+          lua5.4 school/tests/avatar_customization_runtime_mount_spec.lua
       - name: Run legacy HUD contract
         run: lua5.4 school/tests/legacy_hud_contract_spec.lua
       - name: Run housing lifecycle tests
