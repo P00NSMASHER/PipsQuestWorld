@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 51,
+  "schemaVersion": 52,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T21:22:27Z",
+  "observedAt": "2026-10-04T21:28:30Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
@@ -25,7 +25,7 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
       "scope": "P1_SPAWN_SCHOOL_HUD",
-      "status": "CANDIDATE_REGISTERED__EXACT_HEAD_CI_PASS__WAIT_INDEPENDENT_QA",
+      "status": "ACTIVE_EXISTING_PRODUCER__QA_REPAIR_REQUIRED__NO_SECOND_PRODUCER",
       "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "pr": 188,
       "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a"
@@ -43,7 +43,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_IS_FULL: EXACT_PACKAGED_CANONICAL + FROZEN_SUPPORT_PR150 + SOLE PRODUCT_PRODUCER_PR188. NO SECOND PRODUCT PRODUCER. PR188 EXACT HEAD 3aad19e MAY ADVANCE ONLY CI -> INDEPENDENT_QA -> INTEGRATION -> SMOKE -> PACKAGE.",
+    "rule": "WIP_CAP_3_IS_FULL: EXACT PACKAGED CANONICAL + FROZEN SUPPORT PR150 + SOLE PRODUCT PRODUCER PR188. QA FUNCTIONAL/STATIC ACCEPTS 3aad19e BUT INTEGRATION IS NOT AUTHORIZED. ONLY THE EXISTING FREE ROAM PRODUCER MAY REPAIR PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION AND RETURN A CHANGED EXACT HEAD TO QA.",
     "recentlyIntegrated": {
       "pr": 170,
       "candidateSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
@@ -52,7 +52,7 @@
       "status": "INTEGRATED__FORMAL_QA_PASS__ALL_THREE_EXACT_PUSH_GUARDS_PASS__SMOKE_NEXT"
     }
   },
-  "currentMilestone": "P1_PR188_EXACT_HEAD_CI_PASS__INDEPENDENT_QA_NEXT",
+  "currentMilestone": "P1_PR188_QA_FUNCTIONAL_STATIC_PASS__RESPONSIVE_HUD_REPAIR_REQUIRED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -105,37 +105,40 @@
       "handoff": "Roblox High School QA & Contract"
     },
     "FreeRoam": {
-      "mode": "CANDIDATE_HANDOFF__NO_FURTHER_PRODUCT_WRITES_WITHOUT_QA_REPAIR",
+      "mode": "ACTIVE_SINGLE_PRODUCER__QA_REPAIR_REQUIRED",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
       "candidatePr": 188,
       "candidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
-      "objective": "Hold exact PR188 head after the Foundation AABB repair and three successful guards. Preserve the single producer and respond only to independent QA findings on this exact head.",
+      "objective": "On the existing PR188 branch only, add deterministic responsive HUD bounds/overlap coverage for normalized safe bounds, obstruction and device reflow. Preserve existing authorities and return a changed exact head through all three guards to independent QA.",
       "owned": "reference-matched spawn -> school entrance -> bright atrium/corridor + compact recurring HUD only",
-      "dependency": "Independent QA review is absent on exact head 3aad19e.",
-      "exit": "Independent QA PASS or a changed-head repair requested by QA.",
+      "dependency": "QA defect PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION is actionable; rendered target-device evidence remains independently required.",
+      "exit": "Changed exact PR188 head with deterministic responsive geometry coverage and all three exact-head guards.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "ACTIVE_EXACT_HEAD_REVIEW",
+      "mode": "FUNCTIONAL_STATIC_PASS__HOLD_VISUAL_INTERACTION_DEVICE",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "candidatePr": 188,
       "candidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
-      "objective": "Independently review only PR188 exact head 3aad19e: static authority/contract evidence plus rendered entrance/atrium/corridor, physical traversal, menu transitions and iPhone/iPad obstruction. Static green cannot become visual PASS.",
+      "objective": "Preserve exact-head functional/static acceptance from PR192 while holding full QA. Re-review only a changed PR188 head that fixes responsive HUD geometry, then execute/verify rendered timestamp comparison, physical traversal, panel restoration and desktop/iPhone/iPad captures.",
       "owned": "QA contracts, validators, receipts, adversarial authority/provenance checks",
-      "dependency": "None; three exact-head PR workflows pass and no review exists.",
-      "exit": "Formal exact-head review PASS/FAIL with rendered statuses separated.",
-      "handoff": "Roblox High School Integration Director"
+      "dependency": "Existing Free Roam producer repairs PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION.",
+      "exit": "Changed-head QA result with functional, visual, interaction and device statuses separated.",
+      "handoff": "Pip High Free Roam for repair; Integration remains unauthorized.",
+      "branch": "coordination/qa-pr188-exact-head-3aad19e-v1",
+      "receiptPr": 192,
+      "receiptSha": "d8df5bf9975c0d7f1d6ccd12561db3e8c7a1a556"
     },
     "Integration": {
-      "mode": "WAIT_FORMAL_QA",
+      "mode": "BLOCKED_QA_HOLD",
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "candidatePr": 188,
       "candidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
       "objective": "Revalidate live PR188 exact head, CI and independent QA; mechanically integrate only the same approved SHA. Preserve PR180 seam inventory and reject stale f991 preparation.",
       "owned": "mechanical protected integration/readiness only",
-      "dependency": "No independent QA review exists for 3aad19e.",
-      "exit": "QA approves exact 3aad19e or candidate head changes.",
+      "dependency": "QA result is PASS_FUNCTIONAL_STATIC_EXACT_HEAD__HOLD_VISUAL_INTERACTION_DEVICE; Integration is explicitly not authorized.",
+      "exit": "Formal full exact-head QA approval on a changed repaired PR188 SHA.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
@@ -167,11 +170,11 @@
       "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "candidatePr": 188,
       "candidateSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
-      "objective": "Register the sole active P1 producer at WIP cap 3, track exact-head CI and route next to independent QA. Reconcile Content QA PR190's stale candidate blocker before merge; preserve all gates and ten enabled tasks.",
+      "objective": "Enforce WIP cap 3 and one-owner repair: route PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION to the existing Free Roam producer, preserve QA's static-only acceptance, and keep Integration blocked.",
       "owned": "coordination/state/WIP.json, RHS2 parity backlog, candidate-cap enforcement, lane assignment and pipeline handoffs only",
-      "dependency": "No independent QA review exists for PR188 exact head 3aad19e.",
-      "exit": "QA posts a formal review on the same exact head or the producer head changes.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Existing producer must return a changed exact PR188 head; no second producer.",
+      "exit": "PR188 head changes and exact-head CI completes, or QA updates the hold.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -254,7 +257,7 @@
       "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
       "baseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
       "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
-      "status": "EXACT_HEAD_CI_PASS__WAIT_INDEPENDENT_QA"
+      "status": "QA_HOLD__EXISTING_PRODUCER_REPAIR_REQUIRED"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -283,7 +286,7 @@
   "candidateExactHeadCi": {
     "pr": 188,
     "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
-    "status": "PASS_ALL_THREE__WAIT_INDEPENDENT_QA",
+    "status": "PASS_ALL_THREE__QA_FUNCTIONAL_STATIC_PASS__REPAIR_REQUIRED",
     "runs": [
       {
         "workflow": "High School Foundation Static Guards",
@@ -391,7 +394,7 @@
   "referenceParityBacklog": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
   "nextProducerReservation": {
     "owner": "Pip High Free Roam",
-    "status": "CANDIDATE_REGISTERED__CI_PASS__WAIT_INDEPENDENT_QA",
+    "status": "ACTIVE_EXISTING_PRODUCER__QA_REPAIR_REQUIRED__NO_SECOND_PRODUCER",
     "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "pr": 188,
     "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
@@ -413,8 +416,8 @@
       "Rendered desktop/iPhone/iPad comparison and physical traversal remain required"
     ],
     "outputLocation": "PR188 / school/**",
-    "blocker": "No independent QA review exists on exact head 3aad19e; rendered/device and physical traversal are pending.",
-    "nextHandoff": "Roblox High School QA & Contract",
+    "blocker": "QA defect PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION; current contract lacks normalized safe bounds, obstruction and device reflow assertions. Rendered desktop/iPhone/iPad and physical traversal remain pending.",
+    "nextHandoff": "Pip High Free Roam repairs the existing PR188 branch, then independent QA reviews only the changed head.",
     "activationRule": "No second product producer; no PR188 merge before formal exact-head QA."
   },
   "priorityAfterCurrent": [
@@ -476,13 +479,13 @@
     "ControlTower": {
       "enabled": true,
       "lastOutput": {
-        "pr": 185,
-        "sha": "ab04e94e0250a6da70ce24154c9c01f1f9bcddb6",
-        "mergeCommit": "b44ec6fdc354966ca5b3d3faa5f4b42af589db30",
-        "summary": "schema 50 P1 sole-producer activation"
+        "pr": 193,
+        "sha": "2e00225760af8e37489ff1e99b94722cd786e806",
+        "mergeCommit": "91f77543d60df03fe3aa687c531f65f956314657",
+        "summary": "schema 51 registered repaired PR188 exact head at WIP cap 3"
       },
       "blockedSince": null,
-      "nextAction": "Route PR188 exact head 3aad19e to independent QA; enforce WIP cap 3.",
+      "nextAction": "Keep Integration blocked; route one responsive HUD defect to existing Free Roam producer.",
       "referenceGapsClosed": 9
     },
     "Foundation": {
@@ -538,22 +541,22 @@
         "sha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
         "summary": "P1 visible slice plus changed-head spawn AABB repair; all three exact-head guards pass"
       },
-      "blockedSince": "2026-10-04T21:20:39Z",
-      "blockedAgeHoursAtObservation": 0.03,
-      "nextAction": "Hold exact head; no product writes unless independent QA requests a repair.",
+      "blockedSince": null,
+      "nextAction": "Repair PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION on the existing branch; rerun all exact-head guards.",
       "referenceGapsClosed": 1
     },
     "QA": {
       "enabled": true,
       "lastOutput": {
-        "pr": 170,
-        "sha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
-        "review": 5407562971,
-        "summary": "last consumed exact-head PASS"
+        "pr": 192,
+        "sha": "d8df5bf9975c0d7f1d6ccd12561db3e8c7a1a556",
+        "comment": 5984568241,
+        "summary": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__HOLD_VISUAL_INTERACTION_DEVICE; open receipt PR"
       },
-      "blockedSince": null,
-      "nextAction": "Independently review PR188 exact head 3aad19e; keep rendered/device statuses separate.",
-      "referenceGapsClosed": 0
+      "blockedSince": "2026-10-04T21:27:09Z",
+      "blockedAgeHoursAtObservation": 0.02,
+      "nextAction": "Wait for changed PR188 head; then re-review responsive contract and retain rendered/device holds until executed.",
+      "referenceGapsClosed": 1
     },
     "Integration": {
       "enabled": true,
@@ -563,10 +566,10 @@
         "mergeCommit": "8cdb3ec609e24885d1b0ffa2f83696d9f3403ef6",
         "summary": "P1 integration seams and protected handoff inventory"
       },
-      "blockedSince": "2026-10-04T21:20:39Z",
-      "nextAction": "Wait for formal QA on exact 3aad19e; integrate only that same approved SHA.",
+      "blockedSince": "2026-10-04T21:27:09Z",
+      "nextAction": "Do not integrate 3aad19e; wait for changed-head full QA approval.",
       "referenceGapsClosed": 1,
-      "blockedAgeHoursAtObservation": 0.03
+      "blockedAgeHoursAtObservation": 0.02
     },
     "Smoke": {
       "enabled": true,
@@ -576,9 +579,9 @@
         "mergeCommit": "28a750d99c08322ea76ae279d72b2fa78d06a07a",
         "summary": "PR188 runtime/camera/device/save-rejoin checkpoint plan for prior f991 head"
       },
-      "blockedSince": "2026-10-04T21:20:39Z",
-      "blockedAgeHoursAtObservation": 0.03,
-      "nextAction": "Rebind plan to exact integrated canonical after QA/Integration; rendered/device evidence pending.",
+      "blockedSince": "2026-10-04T21:27:09Z",
+      "blockedAgeHoursAtObservation": 0.02,
+      "nextAction": "Preserve PR189 plan and wait for QA-approved Integration; rendered/device evidence remains pending.",
       "referenceGapsClosed": 2
     },
     "ReleasePackage": {
@@ -588,8 +591,8 @@
         "sha": "5eaec2059a08467a9ab17851d6fe9b08b012c5bb",
         "summary": "exact 4323049 68-entry reference comparison manifest; open"
       },
-      "blockedSince": "2026-10-04T21:20:39Z",
-      "blockedAgeHoursAtObservation": 0.03,
+      "blockedSince": "2026-10-04T21:27:09Z",
+      "blockedAgeHoursAtObservation": 0.02,
       "nextAction": "Preserve PR183 package; wait for PR188-derived QA/Integration/Smoke PASS canonical.",
       "referenceGapsClosed": 0
     }
@@ -749,22 +752,64 @@
       "status": "STATIC_AABB_REPAIR_PRESENT__RUNTIME_TRAVERSAL_PENDING"
     },
     "qa": {
-      "status": "WAIT_INDEPENDENT_QA",
-      "reviews": 0
+      "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__HOLD_VISUAL_INTERACTION_DEVICE",
+      "receiptPr": 192,
+      "receiptSha": "d8df5bf9975c0d7f1d6ccd12561db3e8c7a1a556",
+      "commentId": 5984568241,
+      "fullPass": false
     },
     "integration": {
-      "status": "BLOCKED_ON_QA"
+      "status": "NOT_AUTHORIZED__QA_HOLD"
     },
     "smoke": {
-      "status": "BLOCKED_ON_INTEGRATION",
+      "status": "BLOCKED_ON_QA_AND_INTEGRATION",
       "planPr": 189,
       "renderedDeviceStatus": "PENDING"
     },
     "package": {
       "status": "BLOCKED_ON_SMOKE"
     },
-    "blockedSince": "2026-10-04T21:20:39Z",
-    "blockedAgeHoursAtObservation": 0.03,
-    "nextAction": "Roblox High School QA & Contract reviews only exact 3aad19e."
+    "blockedSince": "2026-10-04T21:27:09Z",
+    "blockedAgeHoursAtObservation": 0.02,
+    "nextAction": "Pip High Free Roam repairs PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION on the existing branch and returns a changed exact head to QA.",
+    "defect": {
+      "id": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+      "owner": "Pip High Free Roam",
+      "finding": "Current HUD contract asserts fixed literals but not normalized safe bounds, obstruction or device reflow.",
+      "acceptance": "Deterministic responsive bounds/overlap coverage plus independent rendered desktop/iPhone/iPad evidence.",
+      "status": "OPEN_SINGLE_OWNER"
+    }
+  },
+  "changedHeadsSinceSchema51": [
+    {
+      "lane": "QA",
+      "from": "WAIT_INDEPENDENT_QA",
+      "to": "d8df5bf9975c0d7f1d6ccd12561db3e8c7a1a556",
+      "output": "PR192 exact-head functional/static acceptance with visual/interaction/device hold and one responsive HUD defect"
+    },
+    {
+      "lane": "Coordination",
+      "from": "99a21af9d16e87d20310b2333d30d5809158f233",
+      "to": "91f77543d60df03fe3aa687c531f65f956314657",
+      "output": "PR193 schema 51 candidate registration merged"
+    }
+  ],
+  "qaP1Result": {
+    "pr": 192,
+    "headSha": "3aad19ea4e3a47753307c8f9d8422f55cbba082a",
+    "receiptSha": "d8df5bf9975c0d7f1d6ccd12561db3e8c7a1a556",
+    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__HOLD_VISUAL_INTERACTION_DEVICE",
+    "integrationAuthorized": false,
+    "openDefect": {
+      "id": "PR188_HUD_NO_RESPONSIVE_GEOMETRY_ASSERTION",
+      "owner": "Pip High Free Roam"
+    },
+    "pending": [
+      "timestamp-bound rendered comparison A@00:05/00:25/00:45",
+      "physical spawn/entrance/atrium/corridor traversal",
+      "panel close/dismiss restores compact HUD",
+      "desktop/iPhone/iPad obstruction captures"
+    ],
+    "nextAction": "Existing sole producer returns a changed exact head with deterministic responsive geometry coverage."
   }
 }
