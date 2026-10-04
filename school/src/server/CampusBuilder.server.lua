@@ -547,7 +547,7 @@ makeLabel("PIP HIGH", CFrame.new(0, 11, 123.2) * CFrame.Angles(0, math.rad(180),
 local spawn = Instance.new("SpawnLocation")
 spawn.Name = "MainSpawn"
 spawn.Size = Vector3.new(10, 1, 10)
-spawn.CFrame = CFrame.new(0, 1.15, 177)
+spawn.CFrame = CFrame.new(0, 1.55, 177)
 spawn.Anchored = true
 spawn.Neutral = true
 spawn.Color = Color3.fromRGB(111, 174, 229)
