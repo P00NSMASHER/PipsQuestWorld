@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "owner": "Roblox High School Release & Package Gate",
+  "observedAt": "2026-10-04T19:55:57Z",
+  "result": "REFERENCE_DELIVERY_MANIFEST_READY__PACKAGE_BLOCKED_ON_EXACT_SMOKE",
+  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+  "sourceIdentity": {
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "rootCommitTreeSha": "ddfb6e428b267e66d820bbd52e0b8932168b0601",
+    "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
+    "recursiveEntryCount": 68,
+    "blobCount": 61,
+    "subtreeCount": 7,
+    "recursiveTreeTruncated": false,
+    "artifactNameReserved": "pip-high-school-4323049-source-tree-836ffa7d",
+    "artifactEmitted": false,
+    "verification": "LIVE_GIT_OBJECTS_RECOMPUTED_AT_OBSERVATION"
+  },
+  "referenceClips": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "durationSeconds": 141.533333,
+      "dimensions": "1112x512",
+      "priority": ["00:05", "00:25", "00:45", "01:05-01:45", "02:05"]
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "durationSeconds": 92,
+      "dimensions": "1112x512",
+      "priority": ["00:05", "00:25", "00:45", "01:05", "01:25"]
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "durationSeconds": 120.933333,
+      "dimensions": "1112x512",
+      "priority": ["00:05", "00:25-00:45", "01:05", "01:25", "01:45"]
+    }
+  },
+  "accessibleCompactEvidence": [
+    {
+      "owner": "Roblox High School Foundation",
+      "ref": "coordination/high-school-control-tower@8cdb3ec609e24885d1b0ffa2f83696d9f3403ef6",
+      "path": "coordination/reference/rhs2-entry-6fe2541/FOUNDATION_4323049_SPAWN_AABB_DELTA.md",
+      "blobSha": "c9e9d31490058ebcc894e5592e2bcf104899e6d4",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45", "A@02:05"],
+      "status": "READABLE_EXACT_REF"
+    },
+    {
+      "owner": "Roblox High School Progression & Mobile",
+      "ref": "prep/high-school-progression-outfit-replay-23cc398-v1@091ab5a30015ed4af8f8eb6c022083b7f435750b",
+      "path": "coordination/reference-extraction/mobile_hud_authority_continuity_4323049.json",
+      "blobSha": "af4b958762aa67409c3021be552ffa2c245d9769",
+      "referenceClipTime": ["B@00:45", "C@00:05", "C@01:05", "A/B/C recurring HUD"],
+      "status": "READABLE_EXACT_REF"
+    },
+    {
+      "owner": "Roblox High School Class & Education",
+      "ref": "rebuild/high-school-class-education-invalid-choice-23cc398-v1@393065853c43e473b731af53e0e8f9cc51c1a2da",
+      "path": "coordination/reference-extraction/class_activity_authority_continuity_4323049.json",
+      "blobSha": "f075df739ac789b2c96c3132253a4c943f5f616e",
+      "referenceClipTime": ["A@01:00-02:08", "B@00:00-00:12", "B@01:00-01:31"],
+      "status": "READABLE_EXACT_REF"
+    },
+    {
+      "owner": "Roblox High School QA & Contract",
+      "ref": "qa/high-school-rhs2-video-acceptance-23cc398-v1@16ef696294b877285830d4b1b006f1ef2d752432",
+      "path": "coordination/reference-extraction/qa_p1_spawn_school_hud_acceptance_4323049.json",
+      "blobSha": "a013055de1a9651e112065f4ed75388143312b28",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45", "B@00:45", "C@00:05", "C@01:05"],
+      "status": "READABLE_EXACT_REF"
+    },
+    {
+      "owner": "Roblox High School Integration Director",
+      "ref": "coordination/high-school-control-tower@8cdb3ec609e24885d1b0ffa2f83696d9f3403ef6",
+      "path": "coordination/integration/P1_SPAWN_SCHOOL_HUD_SEAMS_4323049.md",
+      "blobSha": "b4f40e29785e1044e7e159b6b579404d3459a8fe",
+      "referenceClipTime": ["A@00:05", "A@00:25", "A@00:45", "A@02:05", "B/C recurring HUD"],
+      "status": "READABLE_EXACT_REF"
+    }
+  ],
+  "deliveryRules": {
+    "rawVideoCommittedToGit": false,
+    "rawVideoBinaryRequiredInSourcePackage": false,
+    "compactEvidenceRequired": true,
+    "allCompactEntriesPinnedByExactRefPathAndBlob": true,
+    "timingPolicy": "VISIBLE_2X_SEGMENTS__NO_UNCORRECTED_MOVEMENT_OR_ANIMATION_TIMING",
+    "playerAuthoredNameplateCopyRequired": false,
+    "unknownAssetIdsOrUiHierarchyInvented": false
+  },
+  "beforeAfterEvidence": {
+    "before": {
+      "source": "Authorized clips A/B/C",
+      "status": "IDS_HASHES_TIMESTAMPS_AND_COMPACT_CONTRACTS_ACCESSIBLE"
+    },
+    "after": {
+      "source": "Exact packaged canonical rendered/device comparison",
+      "status": "NOT_CAPTURED"
+    },
+    "functional": "EXACT_CANONICAL_STATIC_CI_PASS__SMOKE_PENDING",
+    "visual": "PENDING_RENDERED",
+    "interaction": "PENDING_RUNTIME",
+    "device": "PENDING_DESKTOP_IPHONE_IPAD",
+    "exactParityClaimed": false
+  },
+  "knownGaps": [
+    {
+      "id": "P1-SPAWN-01_COLLIDING_INTERIOR_SPAWN",
+      "owner": "Pip High Free Roam",
+      "status": "CONFIRMED_SOURCE_GAP"
+    },
+    {
+      "id": "P1-HUD-01_PERMANENT_MENU_OBSTRUCTION",
+      "owner": "Pip High Free Roam",
+      "status": "CONFIRMED_SOURCE_GAP"
+    },
+    {
+      "id": "RHS2_RENDERED_DEVICE_COMPARISON",
+      "owner": "Roblox High School QA & Contract",
+      "status": "PENDING_NO_AFTER_CAPTURE"
+    }
+  ],
+  "acceptanceCriteria": [
+    "A Smoke receipt must bind PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING to exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe.",
+    "Before packaging, canonical SHA, root tree, school tree, entry count, blob count and non-truncation must re-match this manifest.",
+    "Every compact evidence item must remain retrievable at its exact ref, path and blob SHA.",
+    "The package receipt must list known functional, visual, interaction and device gaps without converting static CI into rendered parity.",
+    "No raw A/B/C video binary is committed to Git; persistent Library IDs and SHA-256 identities remain the authorized binary pointers.",
+    "No Roblox publication, spend, credential change or automation mutation occurs."
+  ],
+  "outputLocation": "coordination/HIGH_SCHOOL_RELEASE_REFERENCE_DELIVERY_MANIFEST_4323049.json",
+  "blocker": {
+    "id": "EXACT_SMOKE_RECEIPT_MISSING",
+    "owner": "Roblox High School Integration Smoke",
+    "status": "WAIT_EXACT_SMOKE",
+    "observedDetail": "The WIP names coordination/integration-smoke-4323049-v1, but that branch and an exact-canonical Smoke receipt were not present at observation. The older receipt remains evidence for a different canonical only.",
+    "unblock": "Publish a Smoke PASS receipt bound to exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe."
+  },
+  "nextHandoff": [
+    "Integration Smoke publishes exact-canonical PASS or one precise defect.",
+    "Release & Package rechecks live source identity, emits the deterministic source-tree checkpoint and updates the release receipt.",
+    "Control Tower activates only the reserved Pip High Free Roam P1 producer from the packaged canonical."
+  ],
+  "packageAllowedNow": false,
+  "productSourceEdited": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
