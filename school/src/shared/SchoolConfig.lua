@@ -17,25 +17,35 @@ SchoolConfig.Interfaces = {
 
 SchoolConfig.Periods = {
     { id = "homeroom", label = "Homeroom", room = "Homeroom" },
-    { id = "math", label = "Math", room = "Math" },
-    { id = "ela", label = "English / Reading", room = "ELA" },
-    { id = "science", label = "Science", room = "Science" },
+    { id = "math", label = "Math", room = "Math", subject = "Math" },
+    { id = "art", label = "Art", room = "ELA", subject = "Art" },
     { id = "lunch", label = "Lunch", room = "Cafeteria" },
-    { id = "social", label = "Social Studies", room = "SocialStudies" },
-    { id = "pe", label = "Physical Education", room = "Gym" },
+    {
+        id = "science_engineering",
+        label = "Science & Engineering",
+        room = "Science",
+        subject = "ScienceEngineering",
+    },
+    { id = "pe", label = "Physical Education", room = "Gym", subject = "PE" },
+    {
+        id = "performance_arts",
+        label = "Performance Arts",
+        room = "SocialStudies",
+        subject = "PerformanceArts",
+    },
     { id = "free", label = "Free Time", room = "Courtyard" },
 }
 
 SchoolConfig.Rooms = {
     Homeroom = { position = Vector3.new(-58, 4, -55), displayName = "Homeroom" },
     Math = { position = Vector3.new(-58, 4, -5), displayName = "Math" },
-    ELA = { position = Vector3.new(-58, 4, 48), displayName = "English / Reading" },
-    Science = { position = Vector3.new(58, 4, -55), displayName = "Science" },
-    SocialStudies = { position = Vector3.new(58, 4, -5), displayName = "Social Studies" },
-    Library = { position = Vector3.new(58, 4, 48), displayName = "Library" },
+    ELA = { position = Vector3.new(-58, 4, 48), displayName = "Art Studio" },
+    Science = { position = Vector3.new(58, 4, -55), displayName = "Science & Engineering" },
+    SocialStudies = { position = Vector3.new(58, 4, -5), displayName = "Performance Hall" },
+    Library = { position = Vector3.new(58, 4, 48), displayName = "Culinary Lab" },
     Cafeteria = { position = Vector3.new(-48, 4, 102), displayName = "Cafeteria" },
     Gym = { position = Vector3.new(48, 4, -108), displayName = "Gym" },
-    Courtyard = { position = Vector3.new(48, 3, 102), displayName = "Courtyard" },
+    Courtyard = { position = Vector3.new(48, 3, 102), displayName = "Dance Courtyard" },
 }
 
 SchoolConfig.WorldLocations = {
@@ -81,7 +91,7 @@ for index, x in ipairs(housingPlotXs) do
         lotCenter = Vector3.new(x, 0.65, houseZ),
         houseOrigin = Vector3.new(x, 0.65, houseZ),
         doorPosition = Vector3.new(x, 3, houseZ - 21),
-        teleportPosition = Vector3.new(x, 3, houseZ - 24),
+        teleportPosition = Vector3.new(x, 3, houseZ - 12),
         drivewayPosition = Vector3.new(x, 0.76, neighborhoodPosition.Z + 17),
         headingDegrees = 180,
         roadPart = "NeighborhoodRoad",

@@ -5,12 +5,24 @@ assert(
     "minimum landscape viewport must be supported"
 )
 assert(
+    ResponsiveHudLayout.isSupportedViewport({ width = 320, height = 480 }),
+    "minimum portrait phone viewport must be supported"
+)
+assert(
     not ResponsiveHudLayout.isSupportedViewport({ width = 1, height = 1 }),
     "transient startup viewport must be rejected without reaching compute"
 )
 assert(
     not ResponsiveHudLayout.isSupportedViewport({ width = 852, height = 280 }),
     "short landscape viewport must remain unsupported"
+)
+assert(
+    not ResponsiveHudLayout.isSupportedViewport({ width = 319, height = 900 }),
+    "too-narrow portrait viewport must remain unsupported"
+)
+assert(
+    not ResponsiveHudLayout.isSupportedViewport({ width = 390, height = 479 }),
+    "too-short portrait viewport must remain unsupported"
 )
 assert(
     not ResponsiveHudLayout.isSupportedViewport(nil),
@@ -49,6 +61,21 @@ local fixtures = {
         name = "ipad-landscape-1024x768",
         viewport = { width = 1024, height = 768 },
         insets = { left = 24, top = 24, right = 24, bottom = 20 },
+    },
+    {
+        name = "iphone-portrait-390x844",
+        viewport = { width = 390, height = 844 },
+        insets = { left = 0, top = 59, right = 0, bottom = 34 },
+    },
+    {
+        name = "android-portrait-360x640",
+        viewport = { width = 360, height = 640 },
+        insets = { left = 0, top = 24, right = 0, bottom = 24 },
+    },
+    {
+        name = "minimum-portrait-320x480",
+        viewport = { width = 320, height = 480 },
+        insets = { left = 0, top = 0, right = 0, bottom = 0 },
     },
 }
 
@@ -113,6 +140,26 @@ assert(iphone.status.width ~= ipad.status.width, "status width must reflow by vi
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
 assert(iphone.quick.y ~= ipad.quick.y, "quick bar must follow safe bottom")
+
+for _, name in ipairs({
+    "iphone-portrait-390x844",
+    "android-portrait-360x640",
+    "minimum-portrait-320x480",
+}) do
+    local portrait = layouts[name]
+    local highestTouchZoneY = portrait.safe.bottom
+    for _, exclusion in ipairs(portrait.exclusionZones) do
+        highestTouchZoneY = math.min(highestTouchZoneY, exclusion.y)
+    end
+    assert(
+        portrait.quick.bottom < highestTouchZoneY,
+        name .. ": quick bar must sit above portrait touch controls"
+    )
+    assert(
+        portrait.quick.right < portrait.rail.x,
+        name .. ": quick bar must retain a gap before the action rail"
+    )
+end
 
 local badStatus = ResponsiveHudLayout.compute(
     { width = 909, height = 483 },

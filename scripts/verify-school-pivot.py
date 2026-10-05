@@ -44,7 +44,13 @@ for old_path in ("src/client/SchoolHud.client.lua", "SchoolLoop.server.lua", "Qu
     if any(old_path in path for path in mapped_paths):
         raise SystemExit(f"project maps retired runtime path: {old_path}")
 
-allowed_client_paths = {"src/client/CanonicalSchoolClient.client.lua"}
+allowed_client_paths = {
+    "src/client/CanonicalSchoolClient.client.lua",
+    "src/client/LifestyleInventory.client.lua",
+    "src/client/MarketStockJob.client.lua",
+    "src/client/PEDodgeballDrill.client.lua",
+    "src/client/StyleShopCatalog.client.lua",
+}
 client_paths = {path for path in mapped_paths if path.startswith("src/client/")}
 unexpected_client_paths = client_paths - allowed_client_paths
 if unexpected_client_paths:
@@ -52,6 +58,22 @@ if unexpected_client_paths:
         "project maps unapproved client path(s): "
         + ", ".join(sorted(unexpected_client_paths))
     )
+
+for client_path in client_paths:
+    client_source = school / client_path
+    if not client_source.exists():
+        raise SystemExit(f"approved client mapping has no source file: {client_path}")
+    client_source_text = client_source.read_text()
+    for forbidden in (
+        "correctIndex",
+        "correctChoiceId",
+        "QuestionBank",
+        "DataStoreService",
+        "UpdateAsync",
+        "SetAsync",
+    ):
+        if forbidden in client_source_text:
+            raise SystemExit(f"approved client owns forbidden authority: {client_path}: {forbidden}")
 
 if "src/client/CanonicalSchoolClient.client.lua" in client_paths:
     canonical_client = school / "src/client/CanonicalSchoolClient.client.lua"

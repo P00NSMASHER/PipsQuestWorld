@@ -307,7 +307,8 @@ for roomName, room in pairs(SchoolConfig.Rooms) do
     elseif roomName == "Gym" then
         local center = room.position
         makePart("GymFloor", Vector3.new(82, 0.5, 46), CFrame.new(center.X, 0.6, center.Z), Color3.fromRGB(194, 154, 104), Enum.Material.WoodPlanks)
-        makePart("CenterLine", Vector3.new(1, 0.15, 42), CFrame.new(center.X, 0.95, center.Z), Color3.fromRGB(245, 245, 245), Enum.Material.SmoothPlastic)
+        local centerLine = makePart("CenterLine", Vector3.new(1, 0.15, 42), CFrame.new(center.X, 0.95, center.Z), Color3.fromRGB(245, 245, 245), Enum.Material.SmoothPlastic)
+        centerLine.CanCollide = false
         makeLabel("Gym", CFrame.new(center.X, 8, center.Z + 22))
         local spawn = Instance.new("Part")
         spawn.Name = roomName
@@ -380,7 +381,47 @@ makePart("ServingCounter", Vector3.new(44, 4, 5), CFrame.new(cafeteria.X, 2.5, c
 makePart("ServingCounterTop", Vector3.new(45, 0.5, 6), CFrame.new(cafeteria.X, 4.7, cafeteria.Z - 15), Color3.fromRGB(225, 228, 232), Enum.Material.SmoothPlastic)
 
 local gym = SchoolConfig.Rooms.Gym.position
-makePart("CenterCircle", Vector3.new(18, 0.12, 18), CFrame.new(gym.X, 0.95, gym.Z), Color3.fromRGB(235, 235, 235), Enum.Material.SmoothPlastic)
+local centerCircle = makePart(
+    "CenterCircle",
+    Vector3.new(0.12, 18, 18),
+    CFrame.new(gym.X, 0.96, gym.Z) * CFrame.Angles(0, 0, math.rad(90)),
+    Color3.fromRGB(235, 235, 235),
+    Enum.Material.SmoothPlastic
+)
+centerCircle.Shape = Enum.PartType.Cylinder
+centerCircle.CanCollide = false
+
+for _, boundary in ipairs({
+    { name = "CourtSidelineLeft", size = Vector3.new(0.3, 0.1, 40), x = -38, z = 0 },
+    { name = "CourtSidelineRight", size = Vector3.new(0.3, 0.1, 40), x = 38, z = 0 },
+    { name = "CourtBaselineNorth", size = Vector3.new(76, 0.1, 0.3), x = 0, z = -20 },
+    { name = "CourtBaselineSouth", size = Vector3.new(76, 0.1, 0.3), x = 0, z = 20 },
+}) do
+    local stripe = makePart(
+        boundary.name,
+        boundary.size,
+        CFrame.new(gym.X + boundary.x, 1.02, gym.Z + boundary.z),
+        Color3.fromRGB(245, 245, 245),
+        Enum.Material.SmoothPlastic
+    )
+    stripe.CanCollide = false
+end
+
+for row = 0, 2 do
+    local bleacher = makePart(
+        "GymBleacher" .. tostring(row + 1),
+        Vector3.new(5 + row * 2, 0.65, 28),
+        CFrame.new(gym.X + 34 - row, 1.2 + row * 1.05, gym.Z),
+        Color3.fromRGB(72, 105, 151),
+        Enum.Material.Metal
+    )
+    bleacher.CanCollide = true
+end
+
+makeLabel(
+    "PIP HIGH  00  -  00  VISITORS",
+    CFrame.new(gym.X, 10, gym.Z - 13.5) * CFrame.Angles(0, math.rad(180), 0)
+)
 for _, direction in ipairs({-1, 1}) do
     local z = gym.Z + direction * 19
     makePart("Backboard", Vector3.new(12, 7, 0.6), CFrame.new(gym.X, 10, z), Color3.fromRGB(245, 245, 245), Enum.Material.SmoothPlastic)
@@ -499,6 +540,95 @@ makePart("TownParkFountainBase", Vector3.new(18, 2, 18), CFrame.new(park.X, 1.5,
 local fountain = makePart("TownParkWater", Vector3.new(14, 0.5, 14), CFrame.new(park.X, 2.7, park.Z), Color3.fromRGB(86, 167, 211), Enum.Material.Glass)
 fountain.Transparency = 0.2
 
+-- Willow Creek gives the park-to-neighborhood walk a memorable evening focal
+-- point. The bridge and lighting are original generated geometry, with a broad
+-- collision surface and decorative rails kept non-collidable for traversal.
+local creekZ = park.Z + 26
+local creek = makePart(
+    "WillowCreek",
+    Vector3.new(150, 0.35, 26),
+    CFrame.new(park.X, 0.48, creekZ),
+    Color3.fromRGB(70, 146, 190),
+    Enum.Material.Glass
+)
+creek.Transparency = 0.18
+creek.CanCollide = false
+
+makePart(
+    "ParkBridgeDeck",
+    Vector3.new(18, 1, 52),
+    CFrame.new(park.X, 1.45, creekZ),
+    Color3.fromRGB(143, 111, 78),
+    Enum.Material.WoodPlanks
+)
+makePart(
+    "ParkBridgeNorthApproach",
+    Vector3.new(18, 0.25, 8),
+    CFrame.new(park.X, 0.84, creekZ - 29),
+    Color3.fromRGB(205, 202, 190),
+    Enum.Material.Concrete
+)
+makePart(
+    "ParkBridgeSouthApproach",
+    Vector3.new(18, 0.25, 8),
+    CFrame.new(park.X, 0.84, creekZ + 29),
+    Color3.fromRGB(205, 202, 190),
+    Enum.Material.Concrete
+)
+
+for _, side in ipairs({ -1, 1 }) do
+    local rail = makePart(
+        side < 0 and "ParkBridgeRailLeft" or "ParkBridgeRailRight",
+        Vector3.new(0.5, 1.2, 50),
+        CFrame.new(park.X + (8.25 * side), 3.15, creekZ),
+        Color3.fromRGB(48, 67, 83),
+        Enum.Material.Metal
+    )
+    rail.CanCollide = false
+
+    for _, zOffset in ipairs({ -20, -10, 0, 10, 20 }) do
+        local railPost = makePart(
+            "ParkBridgeRailPost",
+            Vector3.new(0.65, 3.2, 0.65),
+            CFrame.new(park.X + (8.25 * side), 2.55, creekZ + zOffset),
+            Color3.fromRGB(48, 67, 83),
+            Enum.Material.Metal
+        )
+        railPost.CanCollide = false
+    end
+
+    for _, zOffset in ipairs({ -17, 0, 17 }) do
+        local post = makePart(
+            "BridgeLampPost",
+            Vector3.new(0.55, 8, 0.55),
+            CFrame.new(park.X + (6.65 * side), 5.7, creekZ + zOffset),
+            Color3.fromRGB(42, 50, 62),
+            Enum.Material.Metal
+        )
+        post.CanCollide = false
+        local lamp = makePart(
+            "LampHead",
+            Vector3.new(2.1, 1.15, 2.1),
+            CFrame.new(park.X + (6.65 * side), 10.1, creekZ + zOffset),
+            Color3.fromRGB(255, 232, 171),
+            Enum.Material.Neon
+        )
+        lamp.CanCollide = false
+    end
+end
+
+for _, xOffset in ipairs({ -10.5, 10.5 }) do
+    for _, zOffset in ipairs({ -16, 16 }) do
+        makePart(
+            "BridgeStonePylon",
+            Vector3.new(3.5, 4.5, 3.5),
+            CFrame.new(park.X + xOffset, 1.7, creekZ + zOffset),
+            Color3.fromRGB(124, 131, 140),
+            Enum.Material.Slate
+        )
+    end
+end
+
 local neighborhood = SchoolConfig.WorldLocations.Neighborhood.position
 makePart("NeighborhoodRoad", Vector3.new(360, 0.4, 30), CFrame.new(neighborhood.X, 0.45, neighborhood.Z), Color3.fromRGB(58, 61, 66), Enum.Material.Asphalt)
 
@@ -536,9 +666,43 @@ for index, plot in ipairs(SchoolConfig.HousingPlots) do
     local houseOrigin = plot.houseOrigin
 
     makePart(
-        "HouseBody",
-        Vector3.new(44, 18, 32),
-        CFrame.new(houseOrigin.X, houseOrigin.Y + 8.35, houseOrigin.Z),
+        "HouseFloor",
+        Vector3.new(44, 0.4, 32),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 0.2, houseOrigin.Z),
+        Color3.fromRGB(177, 143, 102),
+        Enum.Material.WoodPlanks,
+        plotFolder
+    )
+    makePart(
+        "HouseWallBack",
+        Vector3.new(44, 18, 1),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 8.35, houseOrigin.Z + 16),
+        houseColor,
+        Enum.Material.Brick,
+        plotFolder
+    )
+    for _, side in ipairs({ -1, 1 }) do
+        makePart(
+            side < 0 and "HouseWallLeft" or "HouseWallRight",
+            Vector3.new(1, 18, 32),
+            CFrame.new(houseOrigin.X + (22 * side), houseOrigin.Y + 8.35, houseOrigin.Z),
+            houseColor,
+            Enum.Material.Brick,
+            plotFolder
+        )
+        makePart(
+            side < 0 and "HouseWallFrontLeft" or "HouseWallFrontRight",
+            Vector3.new(19, 18, 1),
+            CFrame.new(houseOrigin.X + (12.5 * side), houseOrigin.Y + 8.35, houseOrigin.Z - 16),
+            houseColor,
+            Enum.Material.Brick,
+            plotFolder
+        )
+    end
+    makePart(
+        "HouseWallFrontLintel",
+        Vector3.new(6, 8, 1),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 13.35, houseOrigin.Z - 16),
         houseColor,
         Enum.Material.Brick,
         plotFolder

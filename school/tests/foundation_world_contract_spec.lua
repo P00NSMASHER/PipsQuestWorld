@@ -50,6 +50,19 @@ local runtimeFile = assert(io.open("school/src/server/FoundationBootstrap.server
 local runtimeSource = runtimeFile:read("*a")
 runtimeFile:close()
 
+local classFile = assert(io.open("school/src/server/ClassEducation.server.lua", "r"))
+local classSource = classFile:read("*a")
+classFile:close()
+
+assert(
+    runtimeSource:find('Workspace:SetAttribute("SchoolScheduleEpoch"', 1, true),
+    "Foundation must publish a unique school runtime epoch"
+)
+assert(
+    classSource:find('scheduleEpoch .. ":"', 1, true),
+    "durable class keys must be scoped to the unique school runtime epoch"
+)
+
 for _, fragment in ipairs({
     'requestTravel.OnServerInvoke = function(player, destinationKey)',
     'local destination = SchoolConfig.WorldLocations[destinationKey]',
@@ -96,6 +109,19 @@ hasCampus('flightRailRight.CanCollide = false', "right flight rail preserves tra
 hasCampus('flightPost.CanCollide = false', "flight posts preserve traversal")
 hasCampus('stairBand.CanCollide = false', "stair bands cannot snag traversal")
 hasCampus('spawn.CFrame = CFrame.new(0, 1.55, 177)', "exterior-facing spawn seam")
+hasCampus('"WillowCreek"', "park water landmark")
+hasCampus('"ParkBridgeDeck"', "walkable park bridge")
+hasCampus('"ParkBridgeRailLeft"', "park bridge left rail")
+hasCampus('"ParkBridgeRailRight"', "park bridge right rail")
+hasCampus('"BridgeLampPost"', "bridge evening lamp posts")
+hasCampus('"LampHead"', "night-lighting compatible bridge lamps")
+hasCampus('creek.CanCollide = false', "creek water cannot trap players")
+hasCampus('rail.CanCollide = false', "bridge rails cannot snag traversal")
+hasCampus('railPost.CanCollide = false', "bridge rail posts cannot snag traversal")
+hasCampus('centerCircle.Shape = Enum.PartType.Cylinder', "round gym center mark")
+hasCampus('centerLine.CanCollide = false', "gym floor line cannot snag players")
+hasCampus('"GymBleacher" .. tostring(row + 1)', "gym spectator seating")
+hasCampus('"PIP HIGH  00  -  00  VISITORS"', "gym scoreboard")
 
 local stairWidth = tonumber(campusSource:match('local corridorStairWidth = ([-%d%.]+)'))
 local stairRailX = tonumber(campusSource:match('local corridorStairRailX = ([-%d%.]+)'))

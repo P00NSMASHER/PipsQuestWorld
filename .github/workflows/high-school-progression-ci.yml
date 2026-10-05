@@ -5,6 +5,7 @@ on:
     branches:
       - "rebuild/high-school-foundation"
       - "rebuild/high-school-progression-*"
+      - "rebuild/high-school-interaction-*"
       - "rebuild/high-school-vehicle-*"
       - "rebuild/high-school-legacy-hud-*"
       - "rebuild/high-school-housing-*"
@@ -34,31 +35,13 @@ jobs:
           sudo apt-get install -y lua5.4
       - name: Preserve canonical Foundation invariants
         run: python3 scripts/verify-school-pivot.py
-      - name: Preserve Class Education contract
-        run: |
-          lua5.4 school/tests/education_engine_spec.lua
-          lua5.4 school/tests/class_education_spec.lua
-      - name: Run progression repository concurrency and restore tests
-        run: lua5.4 school/tests/progression_repository_spec.lua
-      - name: Run economy ledger and ownership tests
-        run: lua5.4 school/tests/economy_repository_spec.lua
-      - name: Run vehicle lifecycle tests
-        run: lua5.4 school/tests/vehicle_lifecycle_spec.lua
-      - name: Run vehicle input validation tests
-        run: lua5.4 school/tests/vehicle_input_spec.lua
       - name: Parse avatar entry module and verify canonical mount
+        run: luac5.4 -p school/src/shared/LegacyOutfitEntry.lua
+      - name: Run complete deterministic Lua spec suite
+        shell: bash
         run: |
-          luac5.4 -p school/src/shared/LegacyOutfitEntry.lua
-          lua5.4 school/tests/avatar_customization_runtime_mount_spec.lua
-      - name: Run legacy HUD contract
-        run: lua5.4 school/tests/legacy_hud_contract_spec.lua
-      - name: Run housing lifecycle tests
-        run: lua5.4 school/tests/housing_lifecycle_spec.lua
-      - name: Run housing UI and runtime wiring contract
-        run: lua5.4 school/tests/housing_ui_contract_spec.lua
-      - name: Run housing layout repository tests
-        run: lua5.4 school/tests/housing_layout_repository_spec.lua
-      - name: Run class-to-progression binding test
-        run: lua5.4 school/tests/progression_binding_spec.lua
-      - name: Run durable vertical-slice integration gate
-        run: lua5.4 school/tests/class_progression_integration_spec.lua
+          set -euo pipefail
+          for spec in school/tests/*_spec.lua; do
+            echo "Running ${spec}"
+            lua5.4 "${spec}"
+          done

@@ -4,14 +4,20 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Workspace = game:GetService("Workspace")
 
 local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
+local DailySchedule = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("DailySchedule"))
 
 local sessions = {}
 local periodIndex = 1
 local schoolDay = 1
+local periods = DailySchedule.forDay(schoolDay)
 local periodStartedAt = os.clock()
+-- A UTC-day epoch keeps reward keys consistent across servers. Server hopping
+-- cannot mint a second reward for the same school day/period, while the next
+-- real-world day naturally opens a fresh schedule.
+local scheduleEpoch = "utc-day-" .. tostring(math.floor(os.time() / 86400))
 
 local function currentPeriod()
-    return SchoolConfig.Periods[periodIndex]
+    return periods[periodIndex]
 end
 
 local function getOrCreateFolder(parent, name)
@@ -74,6 +80,8 @@ local function snapshot(now)
         periodLabel = period.label,
         room = period.room,
         roomDisplayName = room and room.displayName or period.room,
+        subject = period.subject,
+        periodCount = #periods,
         secondsRemaining = math.max(0, math.ceil(SchoolConfig.PERIOD_SECONDS - elapsed)),
     }
 end
@@ -81,9 +89,13 @@ end
 local function publishState(now)
     local state = snapshot(now)
     Workspace:SetAttribute("SchoolDay", state.schoolDay)
+    Workspace:SetAttribute("SchoolScheduleEpoch", scheduleEpoch)
     Workspace:SetAttribute("SchoolPeriodIndex", state.periodIndex)
     Workspace:SetAttribute("SchoolPeriodId", state.periodId)
     Workspace:SetAttribute("SchoolPeriodRoom", state.room)
+    Workspace:SetAttribute("SchoolPeriodLabel", state.periodLabel)
+    Workspace:SetAttribute("SchoolPeriodSubject", state.subject or "")
+    Workspace:SetAttribute("SchoolPeriodCount", state.periodCount)
 end
 
 local function advanceSchedule(now)
@@ -93,9 +105,10 @@ local function advanceSchedule(now)
         local previous = currentPeriod()
 
         periodStartedAt += SchoolConfig.PERIOD_SECONDS
-        periodIndex = (periodIndex % #SchoolConfig.Periods) + 1
+        periodIndex = (periodIndex % #periods) + 1
         if periodIndex == 1 then
             schoolDay += 1
+            periods = DailySchedule.forDay(schoolDay)
         end
 
         periodChanged:Fire({

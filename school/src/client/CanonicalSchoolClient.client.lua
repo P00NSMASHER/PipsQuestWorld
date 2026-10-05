@@ -84,8 +84,20 @@ title.Font = Enum.Font.ArialBold
 title.Text = "SCHOOL DAY"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 15
-title.TextXAlignment = Enum.TextXAlignment.Center
+title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = card
+
+local cashLevelLabel = Instance.new("TextLabel")
+cashLevelLabel.Name = "CashLevelLabel"
+cashLevelLabel.BackgroundTransparency = 1
+cashLevelLabel.Position = UDim2.new(0.55, 0, 0, 0)
+cashLevelLabel.Size = UDim2.new(0.43, 0, 0, 24)
+cashLevelLabel.Font = Enum.Font.ArialBold
+cashLevelLabel.Text = "$--  •  LV 1"
+cashLevelLabel.TextColor3 = Color3.fromRGB(255, 238, 171)
+cashLevelLabel.TextSize = 10
+cashLevelLabel.TextXAlignment = Enum.TextXAlignment.Right
+cashLevelLabel.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
 pointsLabel.BackgroundTransparency = 1
@@ -189,7 +201,7 @@ quickLayout.Parent = quickBar
 local quickSlotButtons = {}
 for index, slot in ipairs({
     { label = "BAG", color = Color3.fromRGB(56, 177, 220) },
-    { label = "", color = Color3.fromRGB(36, 45, 77) },
+    { label = "JOBS", color = Color3.fromRGB(36, 45, 77) },
     { label = "PHONE", color = Color3.fromRGB(68, 195, 80) },
     { label = "ITEMS", color = Color3.fromRGB(210, 83, 188) },
 }) do
@@ -214,6 +226,7 @@ local featureController = FeaturePanelController.new({
     "travel",
     "house",
     "bag",
+    "jobs",
     "phone",
     "items",
     "job_result",
@@ -290,7 +303,7 @@ local function makeFeaturePanel(name, heading)
     panelStroke.Color = Color3.fromRGB(255, 255, 255)
 
     local sizeConstraint = Instance.new("UISizeConstraint")
-    sizeConstraint.MinSize = Vector2.new(330, 220)
+    sizeConstraint.MinSize = Vector2.new(280, 220)
     sizeConstraint.MaxSize = Vector2.new(560, 360)
     sizeConstraint.Parent = panel
 
@@ -441,9 +454,12 @@ local function applyResponsiveHudLayout()
     quickBar.Position = UDim2.fromOffset(layout.quick.x, layout.quick.y)
     quickBar.Size = UDim2.fromOffset(layout.quick.width, layout.quick.height)
 
-    title.Position = UDim2.fromOffset(0, 0)
-    title.Size = UDim2.new(1, 0, 0, 17)
+    title.Position = UDim2.fromOffset(6, 0)
+    title.Size = UDim2.new(0.54, -6, 0, 17)
     title.TextSize = 11
+    cashLevelLabel.Position = UDim2.new(0.54, 0, 0, 0)
+    cashLevelLabel.Size = UDim2.new(0.43, 0, 0, 17)
+    cashLevelLabel.TextSize = 8
     periodLabel.Position = UDim2.new(0, 6, 0, 18)
     periodLabel.Size = UDim2.new(1, -12, 0, 17)
     periodLabel.TextSize = 9
@@ -499,14 +515,67 @@ modal.Parent = gui
 round(modal, 2)
 outline(modal, 2)
 local constraint = Instance.new("UISizeConstraint")
-constraint.MinSize = Vector2.new(300, 360)
+constraint.MinSize = Vector2.new(280, 250)
 constraint.MaxSize = Vector2.new(540, 430)
 constraint.Parent = modal
 
+local classUi = {
+    themes = {
+        Math = { title = "MATH LAB", color = Color3.fromRGB(52, 122, 167) },
+        Art = { title = "ART STUDIO", color = Color3.fromRGB(169, 83, 151) },
+        PE = { title = "P.E. DODGEBALL", color = Color3.fromRGB(213, 91, 75) },
+        ScienceEngineering = { title = "SCIENCE & ENGINEERING", color = Color3.fromRGB(67, 150, 124) },
+        PerformanceArts = { title = "PERFORMANCE ARTS", color = Color3.fromRGB(113, 87, 166) },
+        Cooking = { title = "CULINARY LAB", color = Color3.fromRGB(218, 145, 61) },
+        Dance = { title = "DANCE STUDIO", color = Color3.fromRGB(62, 170, 190) },
+    },
+}
+
+classUi.header = Instance.new("Frame")
+classUi.header.Size = UDim2.new(1, 0, 0, 44)
+classUi.header.BackgroundColor3 = LEGACY_BLUE
+classUi.header.BorderSizePixel = 0
+classUi.header.Parent = modal
+
+classUi.title = Instance.new("TextLabel")
+classUi.title.BackgroundTransparency = 1
+-- Leave a clear title lane beside Roblox's persistent top-left controls.
+classUi.title.Position = UDim2.new(0, 76, 0, 0)
+classUi.title.Size = UDim2.new(0.52, 0, 1, 0)
+classUi.title.Font = Enum.Font.GothamBold
+classUi.title.Text = "CLASS CHALLENGE"
+classUi.title.TextColor3 = Color3.new(1, 1, 1)
+classUi.title.TextSize = 16
+classUi.title.TextXAlignment = Enum.TextXAlignment.Left
+classUi.title.Parent = classUi.header
+
+classUi.round = Instance.new("TextLabel")
+classUi.round.BackgroundTransparency = 1
+classUi.round.Position = UDim2.new(0.64, 0, 0, 0)
+classUi.round.Size = UDim2.new(0.25, 0, 1, 0)
+classUi.round.Font = Enum.Font.GothamBold
+classUi.round.Text = "ROUND 1 / 3"
+classUi.round.TextColor3 = Color3.new(1, 1, 1)
+classUi.round.TextSize = 12
+classUi.round.TextXAlignment = Enum.TextXAlignment.Right
+classUi.round.Parent = classUi.header
+
+classUi.leave = Instance.new("TextButton")
+classUi.leave.AnchorPoint = Vector2.new(1, 0.5)
+classUi.leave.Position = UDim2.new(1, -8, 0.5, 0)
+classUi.leave.Size = UDim2.fromOffset(30, 30)
+classUi.leave.BackgroundColor3 = Color3.fromRGB(222, 70, 70)
+classUi.leave.Font = Enum.Font.GothamBold
+classUi.leave.Text = "X"
+classUi.leave.TextColor3 = Color3.new(1, 1, 1)
+classUi.leave.TextSize = 14
+classUi.leave.Parent = classUi.header
+round(classUi.leave, 5)
+
 local question = Instance.new("TextLabel")
 question.BackgroundTransparency = 1
-question.Position = UDim2.new(0, 18, 0, 16)
-question.Size = UDim2.new(1, -36, 0, 92)
+question.Position = UDim2.new(0, 18, 0, 56)
+question.Size = UDim2.new(1, -36, 0, 64)
 question.Font = Enum.Font.ArialBold
 question.Text = ""
 question.TextColor3 = LEGACY_BLUE_DARK
@@ -515,10 +584,15 @@ question.TextWrapped = true
 question.TextYAlignment = Enum.TextYAlignment.Top
 question.Parent = modal
 
-local choices = Instance.new("Frame")
+local choices = Instance.new("ScrollingFrame")
 choices.BackgroundTransparency = 1
-choices.Position = UDim2.new(0, 18, 0, 112)
-choices.Size = UDim2.new(1, -36, 0, 220)
+choices.BorderSizePixel = 0
+choices.Position = UDim2.new(0, 18, 0, 126)
+choices.Size = UDim2.new(1, -36, 0, 188)
+choices.AutomaticCanvasSize = Enum.AutomaticSize.Y
+choices.CanvasSize = UDim2.fromOffset(0, 0)
+choices.ScrollingDirection = Enum.ScrollingDirection.Y
+choices.ScrollBarThickness = 4
 choices.Parent = modal
 
 local layout = Instance.new("UIListLayout")
@@ -527,14 +601,155 @@ layout.Parent = choices
 
 local feedback = Instance.new("TextLabel")
 feedback.BackgroundTransparency = 1
-feedback.Position = UDim2.new(0, 18, 1, -50)
-feedback.Size = UDim2.new(1, -36, 0, 38)
+feedback.Position = UDim2.new(0, 18, 1, -72)
+feedback.Size = UDim2.new(1, -36, 0, 58)
 feedback.Font = Enum.Font.Arial
 feedback.Text = ""
 feedback.TextColor3 = Color3.fromRGB(31, 72, 102)
 feedback.TextSize = 13
 feedback.TextWrapped = true
 feedback.Parent = modal
+
+classUi.ok = Instance.new("TextButton")
+classUi.ok.Position = UDim2.new(0, 18, 1, -50)
+classUi.ok.Size = UDim2.new(1, -36, 0, 36)
+classUi.ok.BackgroundColor3 = Color3.fromRGB(55, 175, 211)
+classUi.ok.Font = Enum.Font.GothamBold
+classUi.ok.Text = "OK"
+classUi.ok.TextColor3 = Color3.new(1, 1, 1)
+classUi.ok.TextSize = 14
+classUi.ok.Visible = false
+classUi.ok.Parent = modal
+round(classUi.ok, 7)
+
+-- The class activity keeps its Legacy desktop composition, but reflows below
+-- the height at which that composition would leave the screen. Answer rows
+-- remain full-size touch targets and become vertically scrollable instead.
+classUi.applyResponsiveLayout = function()
+    local camera = Workspace.CurrentCamera
+    if not camera then return end
+
+    local viewport = camera.ViewportSize
+    if viewport.X <= 0 or viewport.Y <= 0 then return end
+
+    if viewport.Y < 440 then
+        local modalWidth
+        local modalX
+        if viewport.X < 386 then
+            modalWidth = math.max(280, math.min(540, viewport.X - 20))
+            modalX = 0.5
+        else
+            modalWidth = math.max(300, math.min(540, viewport.X - 86))
+            modalX = 0.43
+        end
+        local modalHeight = math.max(250, math.min(390, viewport.Y - 20))
+
+        modal.Position = UDim2.fromScale(modalX, 0.5)
+        modal.Size = UDim2.fromOffset(modalWidth, modalHeight)
+        classUi.header.Size = UDim2.new(1, 0, 0, 40)
+        if modalWidth < 340 then
+            classUi.title.Position = UDim2.new(0, 46, 0, 0)
+            classUi.title.Size = UDim2.new(0.44, 0, 1, 0)
+            classUi.title.TextSize = 11
+            classUi.title.TextTruncate = Enum.TextTruncate.AtEnd
+            classUi.round.Position = UDim2.new(0.62, 0, 0, 0)
+            classUi.round.Size = UDim2.new(0.18, 0, 1, 0)
+        else
+            classUi.title.Position = UDim2.new(0, 54, 0, 0)
+            classUi.title.Size = UDim2.new(0.52, 0, 1, 0)
+            classUi.title.TextSize = 13
+            classUi.title.TextTruncate = Enum.TextTruncate.None
+            classUi.round.Position = UDim2.new(0.66, 0, 0, 0)
+            classUi.round.Size = UDim2.new(0.2, 0, 1, 0)
+        end
+        classUi.round.TextSize = 10
+        classUi.leave.Position = UDim2.new(1, -6, 0.5, 0)
+        classUi.leave.Size = UDim2.fromOffset(38, 38)
+
+        question.Position = UDim2.new(0, 12, 0, 48)
+        question.Size = UDim2.new(1, -24, 0, classUi.ok.Visible and 64 or 52)
+        question.TextSize = 14
+        layout.Padding = UDim.new(0, 6)
+        feedback.TextSize = 12
+
+        if classUi.ok.Visible then
+            choices.Visible = false
+            feedback.Position = UDim2.new(0, 12, 0, 120)
+            feedback.Size = UDim2.new(
+                1,
+                -24,
+                0,
+                math.max(68, math.min(120, modalHeight - 178))
+            )
+            classUi.ok.Position = UDim2.new(0, 12, 1, -48)
+            classUi.ok.Size = UDim2.new(1, -24, 0, 38)
+        else
+            choices.Visible = true
+            choices.Position = UDim2.new(0, 12, 0, 106)
+            choices.Size = UDim2.new(1, -24, 0, math.max(72, modalHeight - 170))
+            feedback.Position = UDim2.new(0, 12, 1, -56)
+            feedback.Size = UDim2.new(1, -24, 0, 44)
+            classUi.ok.Position = UDim2.new(0, 12, 1, -48)
+            classUi.ok.Size = UDim2.new(1, -24, 0, 38)
+        end
+    else
+        modal.Position = UDim2.fromScale(0.45, 0.55)
+        modal.Size = UDim2.new(0.9, 0, 0, 390)
+        classUi.header.Size = UDim2.new(1, 0, 0, 44)
+        classUi.title.Position = UDim2.new(0, 76, 0, 0)
+        classUi.title.Size = UDim2.new(0.52, 0, 1, 0)
+        classUi.title.TextSize = 16
+        classUi.title.TextTruncate = Enum.TextTruncate.None
+        classUi.round.Position = UDim2.new(0.64, 0, 0, 0)
+        classUi.round.Size = UDim2.new(0.25, 0, 1, 0)
+        classUi.round.TextSize = 12
+        classUi.leave.Position = UDim2.new(1, -8, 0.5, 0)
+        classUi.leave.Size = UDim2.fromOffset(30, 30)
+        question.Position = UDim2.new(0, 18, 0, 56)
+        question.Size = UDim2.new(1, -36, 0, 64)
+        question.TextSize = 19
+        layout.Padding = UDim.new(0, 8)
+        feedback.TextSize = 13
+        classUi.ok.Position = UDim2.new(0, 18, 1, -50)
+        classUi.ok.Size = UDim2.new(1, -36, 0, 36)
+
+        if classUi.ok.Visible then
+            choices.Visible = false
+            feedback.Position = UDim2.new(0, 18, 0, 184)
+            feedback.Size = UDim2.new(1, -36, 0, 120)
+        else
+            choices.Visible = true
+            choices.Position = UDim2.new(0, 18, 0, 126)
+            choices.Size = UDim2.new(1, -36, 0, 188)
+            feedback.Position = UDim2.new(0, 18, 1, -72)
+            feedback.Size = UDim2.new(1, -36, 0, 58)
+        end
+    end
+
+    local choiceRightInset = viewport.Y < 440 and -6 or 0
+    for _, child in ipairs(choices:GetChildren()) do
+        if child:IsA("TextButton") then
+            child.Size = UDim2.new(1, choiceRightInset, 0, 40)
+        end
+    end
+end
+
+classUi.bindViewport = function(camera)
+    if classUi.viewportConnection then
+        classUi.viewportConnection:Disconnect()
+        classUi.viewportConnection = nil
+    end
+    if camera then
+        classUi.viewportConnection = camera:GetPropertyChangedSignal("ViewportSize")
+            :Connect(classUi.applyResponsiveLayout)
+    end
+    classUi.applyResponsiveLayout()
+end
+
+classUi.cameraConnection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    classUi.bindViewport(Workspace.CurrentCamera)
+end)
+classUi.bindViewport(Workspace.CurrentCamera)
 
 local latestClassState = nil
 local activeClassKey = nil
@@ -551,7 +766,8 @@ local function formatLegacyClock(state)
     local secondsRemaining = tonumber(state.secondsRemaining) or SchoolConfig.PERIOD_SECONDS
     local elapsedInPeriod = math.max(0, SchoolConfig.PERIOD_SECONDS - secondsRemaining)
     local elapsedDay = ((periodIndex - 1) * SchoolConfig.PERIOD_SECONDS) + elapsedInPeriod
-    local totalDay = math.max(1, #SchoolConfig.Periods * SchoolConfig.PERIOD_SECONDS)
+    local periodCount = tonumber(state.periodCount) or #SchoolConfig.Periods
+    local totalDay = math.max(1, periodCount * SchoolConfig.PERIOD_SECONDS)
     local minutesFromSeven = math.floor((elapsedDay / totalDay) * (8 * 60))
     local absoluteMinutes = (7 * 60) + minutesFromSeven
     local hour24 = math.floor(absoluteMinutes / 60) % 24
@@ -566,6 +782,7 @@ end
 local function setPoints(value)
     if type(value) ~= "number" then return end
     points = value
+    player:SetAttribute("SchoolPoints", points)
     pointsLabel.Text = "Points: " .. tostring(points)
 end
 
@@ -597,13 +814,29 @@ local function showActivity(response)
     pendingProgression = nil
     if not activeActivity then return end
 
-    question.Text = tostring(activeActivity.subject or "Class") .. "\n" .. tostring(activeActivity.prompt)
+    local theme = classUi.themes[activeActivity.subject] or {
+        title = tostring(activeActivity.subject or "CLASS CHALLENGE"):upper(),
+        color = LEGACY_BLUE,
+    }
+    classUi.header.BackgroundColor3 = theme.color
+    classUi.title.Text = theme.title
+    classUi.round.Text = string.format(
+        "ROUND %d / %d",
+        tonumber(response.round) or 1,
+        tonumber(response.totalRounds) or 1
+    )
+    classUi.ok.Visible = false
+    choices.Visible = true
+    feedback.Position = UDim2.new(0, 18, 1, -72)
+    feedback.Size = UDim2.new(1, -36, 0, 58)
+    feedback.TextYAlignment = Enum.TextYAlignment.Center
+    question.Text = tostring(activeActivity.prompt)
     feedback.Text = ""
     clearChoices()
 
     for index, choiceText in ipairs(activeActivity.choices or {}) do
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 48)
+        button.Size = UDim2.new(1, 0, 0, 40)
         button.BackgroundColor3 = LEGACY_BUTTON
         button.Font = Enum.Font.ArialBold
         button.Text = tostring(index) .. ".  " .. tostring(choiceText)
@@ -658,10 +891,38 @@ local function showActivity(response)
             end
 
             if result.classCompleted or result.completionAlreadyRecorded or result.progressionCommitted then
-                feedback.Text = "Class complete! Progress saved. Points: " .. tostring(points)
                 activeActivity = nil
-                task.delay(1.4, function()
-                    modal.Visible = false
+                clearChoices()
+                choices.Visible = false
+                classUi.round.Text = "COMPLETE"
+                question.Text = string.format(
+                    "%s COMPLETE\nFINAL GRADE: %s",
+                    theme.title,
+                    tostring(result.grade or "PASS")
+                )
+                feedback.Position = UDim2.new(0, 18, 0, 184)
+                feedback.Size = UDim2.new(1, -36, 0, 120)
+                feedback.TextYAlignment = Enum.TextYAlignment.Top
+                feedback.Text = string.format(
+                    "%d of %d challenges correct  •  +%d school points\nProgress saved • Total points: %d",
+                    tonumber(result.correctCount) or (result.correct and 1 or 0),
+                    tonumber(result.roundCount) or 1,
+                    tonumber(result.awardedPoints) or 0,
+                    points
+                )
+                classUi.ok.Visible = true
+                classUi.applyResponsiveLayout()
+            elseif result.nextActivity then
+                feedback.Text = tostring(result.feedback or "Round complete!")
+                busy = true
+                task.delay(0.8, function()
+                    showActivity({
+                        classKey = activeClassKey,
+                        activity = result.nextActivity,
+                        round = result.round,
+                        totalRounds = result.totalRounds,
+                    })
+                    busy = false
                 end)
             elseif result.completed then
                 feedback.Text = tostring(result.explanation or result.feedback or "Activity complete.")
@@ -677,8 +938,37 @@ local function showActivity(response)
         end)
     end
 
+    classUi.applyResponsiveLayout()
     modal.Visible = true
 end
+
+classUi.ok.Activated:Connect(function()
+    modal.Visible = false
+end)
+
+classUi.leave.Activated:Connect(function()
+    if busy then return end
+    busy = true
+    local ok, result = pcall(function()
+        leaveClass:InvokeServer()
+    end)
+    busy = false
+    if not ok or type(result) ~= "table" then
+        feedback.Text = "Could not leave class. Try again."
+        return
+    end
+    if result.accepted == false then
+        if result.code == "progression_pending" then
+            feedback.Text = "Progress is still saving. Retry the same answer before leaving."
+        else
+            feedback.Text = tostring(result.message or result.code or "Could not leave class.")
+        end
+        return
+    end
+    activeActivity = nil
+    modal.Visible = false
+    statusLabel.Text = "Back in free roam."
+end)
 
 action.Activated:Connect(function()
     if busy or not latestClassState then return end
@@ -877,15 +1167,15 @@ local travelStatus = addPanelLabel(
     false
 )
 local destinationSpecs = {
-    { key = "CurrentClass", label = "CURRENT CLASS", color = Color3.fromRGB(57, 126, 168) },
-    { key = "SchoolEntrance", label = "PIP HIGH", color = Color3.fromRGB(199, 62, 67) },
-    { key = "TownCenter", label = "TOWN CENTER", color = Color3.fromRGB(68, 152, 185) },
-    { key = "Cafe", label = "CORNER CAFE", color = Color3.fromRGB(194, 129, 58) },
-    { key = "StyleShop", label = "STYLE SHOP", color = Color3.fromRGB(151, 92, 173) },
-    { key = "AutoShop", label = "AUTO SHOP", color = Color3.fromRGB(74, 105, 142) },
-    { key = "Market", label = "MARKET", color = Color3.fromRGB(83, 161, 104) },
-    { key = "Neighborhood", label = "NEIGHBORHOOD", color = Color3.fromRGB(187, 99, 83) },
-    { key = "TownPark", label = "TOWN PARK", color = Color3.fromRGB(75, 144, 91) },
+    { key = "CurrentClass", label = "CURRENT CLASS", badge = "NOW", color = Color3.fromRGB(57, 126, 168) },
+    { key = "SchoolEntrance", label = "PIP HIGH", badge = "PH", color = Color3.fromRGB(199, 62, 67) },
+    { key = "TownCenter", label = "TOWN CENTER", badge = "TC", color = Color3.fromRGB(68, 152, 185) },
+    { key = "Cafe", label = "CORNER CAFE", badge = "CF", color = Color3.fromRGB(194, 129, 58) },
+    { key = "StyleShop", label = "STYLE SHOP", badge = "ST", color = Color3.fromRGB(151, 92, 173) },
+    { key = "AutoShop", label = "AUTO SHOP", badge = "AU", color = Color3.fromRGB(74, 105, 142) },
+    { key = "Market", label = "MARKET", badge = "MK", color = Color3.fromRGB(83, 161, 104) },
+    { key = "Neighborhood", label = "NEIGHBORHOOD", badge = "HM", color = Color3.fromRGB(187, 99, 83) },
+    { key = "TownPark", label = "TOWN PARK", badge = "PK", color = Color3.fromRGB(75, 144, 91) },
 }
 for index, spec in ipairs(destinationSpecs) do
     local tile = Instance.new("TextButton")
@@ -897,11 +1187,37 @@ for index, spec in ipairs(destinationSpecs) do
     tile.TextColor3 = Color3.fromRGB(255, 255, 255)
     tile.TextSize = 12
     tile.TextWrapped = true
+    tile.TextXAlignment = Enum.TextXAlignment.Left
+    tile.TextYAlignment = Enum.TextYAlignment.Bottom
     tile.ZIndex = 23
     tile:SetAttribute("DestinationKey", spec.key)
     tile:SetAttribute("UsesOriginalGeneratedArtwork", true)
     tile.Parent = travelGrid
     round(tile, 9)
+    local tilePadding = Instance.new("UIPadding")
+    tilePadding.PaddingLeft = UDim.new(0, 9)
+    tilePadding.PaddingBottom = UDim.new(0, 6)
+    tilePadding.Parent = tile
+    local tileGradient = Instance.new("UIGradient")
+    tileGradient.Color = ColorSequence.new(
+        spec.color:Lerp(Color3.new(1, 1, 1), 0.18),
+        spec.color:Lerp(Color3.new(0, 0, 0), 0.12)
+    )
+    tileGradient.Rotation = 90
+    tileGradient.Parent = tile
+    local badge = Instance.new("TextLabel")
+    badge.Name = "DestinationBadge"
+    badge.Position = UDim2.fromOffset(8, 7)
+    badge.Size = UDim2.fromOffset(spec.badge == "NOW" and 38 or 28, 22)
+    badge.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    badge.BackgroundTransparency = 0.78
+    badge.Font = Enum.Font.GothamBold
+    badge.Text = spec.badge
+    badge.TextColor3 = Color3.fromRGB(255, 255, 255)
+    badge.TextSize = 10
+    badge.ZIndex = 24
+    badge.Parent = tile
+    round(badge, 6)
     tile.Activated:Connect(function()
         if busy then return end
         busy = true
@@ -937,6 +1253,41 @@ addPanelAction(bagBody, "ClosetShortcut", "AVATAR CLOSET", UDim2.new(0, 10, 0, 8
 end)
 addPanelAction(bagBody, "HouseShortcut", "HOUSE ITEMS", UDim2.new(0.53, 0, 0, 86), UDim2.new(0.47, -10, 0, 52), Color3.fromRGB(83, 188, 77), function()
     openFeaturePanel("house", "backpack_link")
+end)
+
+local jobsPanel, jobsBody = makeFeaturePanel("jobs", "AFTER-SCHOOL JOBS")
+addPanelLabel(
+    jobsBody,
+    "JobsCopy",
+    "Earn play-cash through short, replayable shifts. Travel to a workplace, then use its on-site controls.",
+    UDim2.fromOffset(10, 8),
+    UDim2.new(1, -20, 0, 66),
+    15,
+    false
+)
+addPanelAction(jobsBody, "CafeJobShortcut", "CORNER CAFE  •  $25", UDim2.new(0, 10, 0, 82), UDim2.new(1, -20, 0, 52), Color3.fromRGB(194, 129, 58), function()
+    if busy then return end
+    busy = true
+    local ok, response = pcall(function()
+        return requestTravel:InvokeServer("Cafe")
+    end)
+    busy = false
+    if ok and type(response) == "table" and response.accepted == true then
+        statusLabel.Text = "Traveling to the Corner Cafe"
+        closeFeaturePanels("job_travel")
+    end
+end)
+addPanelAction(jobsBody, "MarketJobShortcut", "MARKET STOCK  •  $45", UDim2.new(0, 10, 0, 146), UDim2.new(1, -20, 0, 52), Color3.fromRGB(83, 161, 104), function()
+    if busy then return end
+    busy = true
+    local ok, response = pcall(function()
+        return requestTravel:InvokeServer("Market")
+    end)
+    busy = false
+    if ok and type(response) == "table" and response.accepted == true then
+        statusLabel.Text = "Traveling to the Market stock station"
+        closeFeaturePanels("job_travel")
+    end
 end)
 
 local phonePanel, phoneBody = makeFeaturePanel("phone", "PHONE")
@@ -1044,7 +1395,7 @@ if outfitPanel then
     -- otherwise the panel background covers its own controls.
     outfitPanel.ZIndex = 1
     local outfitConstraint = Instance.new("UISizeConstraint")
-    outfitConstraint.MinSize = Vector2.new(330, 260)
+    outfitConstraint.MinSize = Vector2.new(280, 260)
     outfitConstraint.MaxSize = Vector2.new(560, 430)
     outfitConstraint.Parent = outfitPanel
     local outfitClose = Instance.new("TextButton")
@@ -1095,7 +1446,7 @@ quickSlotButtons[1].Activated:Connect(function()
     toggleFeaturePanel("bag", "quick_slot")
 end)
 quickSlotButtons[2].Activated:Connect(function()
-    toggleFeaturePanel("items", "quick_slot")
+    toggleFeaturePanel("jobs", "quick_slot")
 end)
 quickSlotButtons[3].Activated:Connect(function()
     toggleFeaturePanel("phone", "quick_slot")
@@ -1613,10 +1964,13 @@ local function bindVehicleControls()
     ContextActionService:SetTitle(VEHICLE_LEFT, "LEFT")
     ContextActionService:SetTitle(VEHICLE_RIGHT, "RIGHT")
 
-    ContextActionService:SetPosition(VEHICLE_FORWARD, UDim2.new(0, 80, 1, -190))
-    ContextActionService:SetPosition(VEHICLE_REVERSE, UDim2.new(0, 80, 1, -70))
-    ContextActionService:SetPosition(VEHICLE_LEFT, UDim2.new(0, 20, 1, -130))
-    ContextActionService:SetPosition(VEHICLE_RIGHT, UDim2.new(0, 140, 1, -130))
+    -- Keep the four touch buttons in the center lane.  Roblox reserves the
+    -- lower corners for its movement stick and camera controls, so placing
+    -- drive controls there makes steering unreliable on a phone.
+    ContextActionService:SetPosition(VEHICLE_FORWARD, UDim2.new(0.5, -30, 1, -220))
+    ContextActionService:SetPosition(VEHICLE_REVERSE, UDim2.new(0.5, -30, 1, -96))
+    ContextActionService:SetPosition(VEHICLE_LEFT, UDim2.new(0.5, -92, 1, -158))
+    ContextActionService:SetPosition(VEHICLE_RIGHT, UDim2.new(0.5, 32, 1, -158))
 
     sendVehicleControls()
 end
@@ -1664,22 +2018,53 @@ local function applyVehicleState(state)
         and featureController:snapshot().active == nil
     actionRail.Visible = not dealershipOpen
     quickBar.Visible = not dealershipOpen
+    -- Driving gets a dedicated, unobstructed control mode.  Hiding the
+    -- free-roam HUD leaves the center lane clear for the touch controls above.
+    if state.driving == true then
+        actionRail.Visible = false
+        quickBar.Visible = false
+    end
     vehicleShowroom.Visible = dealershipOpen
     vehicleClose.Visible = dealershipOpen
 
     if dealershipOpen then
+        local camera = Workspace.CurrentCamera
+        local viewport = camera and camera.ViewportSize or Vector2.new(909, 483)
+        local compactDealer = viewport.X < 620 or viewport.Y < 440
+
         vehicleCard.AnchorPoint = Vector2.new(0.5, 0.5)
-        vehicleCard.Position = UDim2.fromScale(0.45, 0.52)
-        vehicleCard.Size = UDim2.new(0.72, 0, 0.64, 0)
-        vehicleTitle.Size = UDim2.new(1, 0, 0, 46)
+        if compactDealer then
+            vehicleCard.Position = UDim2.fromScale(0.5, 0.5)
+            vehicleCard.Size = UDim2.fromOffset(
+                math.max(280, math.min(560, viewport.X - 24)),
+                math.max(250, math.min(380, viewport.Y - 16))
+            )
+            vehicleTitle.Size = UDim2.new(1, 0, 0, 40)
+            vehicleTitle.TextSize = 15
+        else
+            vehicleCard.Position = UDim2.fromScale(0.45, 0.52)
+            vehicleCard.Size = UDim2.new(0.72, 0, 0.64, 0)
+            vehicleTitle.Size = UDim2.new(1, 0, 0, 46)
+            vehicleTitle.TextSize = 18
+        end
         vehicleTitle.Font = Enum.Font.GothamBold
-        vehicleTitle.TextSize = 18
-        vehicleStatus.Position = UDim2.new(0, 28, 0, 68)
-        vehicleStatus.Size = UDim2.new(0.4, 0, 0, 54)
+        -- The preview/details area ends above a dedicated status/action lane;
+        -- this prevents the dealer CTA from covering the vehicle details.
+        vehicleShowroom.Position = UDim2.fromOffset(14, 54)
+        vehicleShowroom.Size = UDim2.new(1, -28, 1, -150)
+        local browseDetails = vehicleShowroom:FindFirstChild("BrowseDetails")
+        if browseDetails and browseDetails:IsA("TextLabel") then
+            browseDetails.TextSize = compactDealer and 11 or 14
+        end
+        vehicleStatus.Position = UDim2.new(0, 18, 1, -96)
+        vehicleStatus.Size = UDim2.new(1, -36, 0, 32)
         vehicleStatus.Font = Enum.Font.Gotham
-        vehicleAction.Position = UDim2.new(0.53, 0, 1, -66)
-        vehicleAction.Size = UDim2.new(0.43, 0, 0, 48)
+        vehicleStatus.TextSize = compactDealer and 11 or 13
+        vehicleStatus.TextYAlignment = Enum.TextYAlignment.Center
+        vehicleAction.Position = UDim2.new(0, 18, 1, -52)
+        vehicleAction.Size = UDim2.new(1, -36, 0, 44)
         vehicleAction.Font = Enum.Font.GothamBold
+        vehicleAction.TextSize = compactDealer and 12 or 14
     else
         vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
         vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
@@ -1687,12 +2072,17 @@ local function applyVehicleState(state)
         vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
         vehicleTitle.Font = Enum.Font.ArialBold
         vehicleTitle.TextSize = 14
+        vehicleShowroom.Position = UDim2.fromOffset(14, 54)
+        vehicleShowroom.Size = UDim2.new(1, -28, 1, -70)
         vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
         vehicleStatus.Size = UDim2.new(1, -20, 0, 48)
         vehicleStatus.Font = Enum.Font.Arial
+        vehicleStatus.TextSize = 13
+        vehicleStatus.TextYAlignment = Enum.TextYAlignment.Top
         vehicleAction.Position = UDim2.new(0, 8, 1, -46)
         vehicleAction.Size = UDim2.new(1, -16, 0, 38)
         vehicleAction.Font = Enum.Font.ArialBold
+        vehicleAction.TextSize = 14
     end
 
     if state.driving == true then
@@ -2138,15 +2528,19 @@ end)
 local function mountHousingEditor()
 editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
-editorPanel.AnchorPoint = Vector2.new(0, 1)
-editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
-editorPanel.Size = UDim2.new(0, 330, 0, 346)
+editorPanel.AnchorPoint = Vector2.new(0.5, 1)
+editorPanel.Position = UDim2.new(0.5, -24, 1, -(auxiliaryPanelBottomMargin + 66))
+editorPanel.Size = UDim2.new(1, -32, 0, 346)
 editorPanel.BackgroundColor3 = LEGACY_PANEL
 editorPanel.BackgroundTransparency = 0.02
 editorPanel.Visible = false
 editorPanel:SetAttribute("ReferenceExactLayout", false)
-editorPanel:SetAttribute("ReferenceCoverage", "verified-labels-only")
+editorPanel:SetAttribute("ReferenceCoverage", "original-functional-catalog")
 editorPanel.Parent = gui
+local editorSizeConstraint = Instance.new("UISizeConstraint")
+editorSizeConstraint.MinSize = Vector2.new(240, 260)
+editorSizeConstraint.MaxSize = Vector2.new(330, 346)
+editorSizeConstraint.Parent = editorPanel
 round(editorPanel, 2)
 outline(editorPanel, 2)
 
@@ -2165,16 +2559,20 @@ editorCategories.BackgroundTransparency = 1
 editorCategories.Position = UDim2.new(0, 10, 0, 34)
 editorCategories.Size = UDim2.new(1, -20, 0, 20)
 editorCategories.Font = Enum.Font.ArialBold
-editorCategories.Text = "Utilities   |   Other"
+editorCategories.Text = "Seating  •  Tables  •  Decor  •  Lights  •  Storage  •  Beds"
 editorCategories.TextColor3 = LEGACY_BLUE_DARK
 editorCategories.TextSize = 12
 editorCategories.TextXAlignment = Enum.TextXAlignment.Left
 editorCategories.Parent = editorPanel
 
-local editorCatalog = Instance.new("Frame")
+local editorCatalog = Instance.new("ScrollingFrame")
 editorCatalog.BackgroundTransparency = 1
 editorCatalog.Position = UDim2.new(0, 10, 0, 58)
-editorCatalog.Size = UDim2.new(1, -20, 0, 82)
+editorCatalog.Size = UDim2.new(1, -20, 0, 98)
+editorCatalog.AutomaticCanvasSize = Enum.AutomaticSize.Y
+editorCatalog.CanvasSize = UDim2.fromOffset(0, 0)
+editorCatalog.ScrollBarThickness = 5
+editorCatalog.BorderSizePixel = 0
 editorCatalog.Parent = editorPanel
 
 local editorCatalogLayout = Instance.new("UIListLayout")
@@ -2183,11 +2581,11 @@ editorCatalogLayout.Parent = editorCatalog
 
 local editorStatus = Instance.new("TextLabel")
 editorStatus.BackgroundTransparency = 1
-editorStatus.Position = UDim2.new(0, 10, 0, 144)
+editorStatus.Position = UDim2.new(0, 10, 0, 160)
 editorStatus.Size = UDim2.new(1, -20, 0, 38)
 editorStatus.Font = Enum.Font.Arial
 editorStatus.Text = ""
-editorStatus.Visible = false
+editorStatus.Visible = true
 editorStatus.TextColor3 = LEGACY_BLUE_DARK
 editorStatus.TextSize = 12
 editorStatus.TextWrapped = true
@@ -2197,10 +2595,11 @@ editorStatus.Parent = editorPanel
 
 local editorActions = Instance.new("Frame")
 editorActions.BackgroundTransparency = 1
-editorActions.Position = UDim2.new(0, 10, 0, 188)
+editorActions.Position = UDim2.new(0, 10, 0, 204)
 editorActions.Size = UDim2.new(1, -20, 0, 112)
-editorActions.Visible = false
+editorActions.Visible = true
 editorActions:SetAttribute("ReferenceExact", false)
+editorActions:SetAttribute("OriginalControls", true)
 editorActions.Parent = editorPanel
 
 local editorGrid = Instance.new("UIGridLayout")
@@ -2222,13 +2621,17 @@ local function editorButton(name, label)
     return button
 end
 
-local buyFurni = editorButton("BuyFurniture", "")
-local placeFurni = editorButton("PlaceFurniture", "")
-local moveFurni = editorButton("MoveFurniture", "")
-local rotateFurni = editorButton("RotateFurniture", "")
-local removeFurni = editorButton("RemoveFurniture", "")
-local sellFurni = editorButton("SellFurniture", "")
-local paintFurni = editorButton("PaintFurniture", "")
+local buyFurni = editorButton("BuyFurniture", "BUY +1")
+local placeFurni = editorButton("PlaceFurniture", "PLACE")
+local moveFurni = editorButton("MoveFurniture", "MOVE")
+local rotateFurni = editorButton("RotateFurniture", "ROTATE")
+local removeFurni = editorButton("RemoveFurniture", "REMOVE")
+local sellFurni = editorButton("SellFurniture", "SELL")
+local paintFurni = editorButton("PaintFurniture", "PAINT")
+-- The editor deliberately owns its own save control. On compact layouts the
+-- catalog can overlap the House panel, so a player must never lose the way
+-- to leave edit mode and preserve their changes.
+local saveHouseEdit = editorButton("SaveHouse", "SAVE HOUSE")
 
 local hideWallsButton = Instance.new("TextButton")
 hideWallsButton.Name = "HideWalls"
@@ -2242,6 +2645,90 @@ hideWallsButton.TextSize = 11
 hideWallsButton.Parent = editorPanel
 round(hideWallsButton, 2)
 outline(hideWallsButton, 1)
+
+-- On a short phone screen, keep every editor action inside the viewport and
+-- leave a right-hand lane to the underlying House panel's Save/Close controls.
+-- Taller desktop windows retain the verified two-column composition above.
+local editorViewportConnection = nil
+local function applyEditorResponsiveLayout()
+    local camera = Workspace.CurrentCamera
+    if not camera then return end
+
+    local viewport = camera.ViewportSize
+    if viewport.X <= 0 or viewport.Y <= 0 then return end
+
+    local compact = viewport.Y < 380
+        or viewport.X < 420
+        or (UserInputService.TouchEnabled and viewport.Y < 560)
+    if compact then
+        local portrait = viewport.Y >= viewport.X
+        local panelWidth = portrait
+            and math.max(240, math.min(280, viewport.X - 80))
+            or math.max(260, math.min(330, viewport.X - 212))
+        local panelHeight = math.max(260, math.min(320, viewport.Y - 16))
+        local catalogHeight = math.max(48, math.min(72, panelHeight - 220))
+        local statusY = 52 + catalogHeight + 4
+        local actionsY = statusY + 34
+
+        editorPanel.AnchorPoint = Vector2.new(0.5, 0.5)
+        editorPanel.Position = UDim2.fromOffset(8 + (panelWidth / 2), viewport.Y / 2)
+        editorPanel.Size = UDim2.fromOffset(panelWidth, panelHeight)
+        editorTitle.Size = UDim2.new(1, 0, 0, 28)
+        editorCategories.Position = UDim2.new(0, 10, 0, 32)
+        editorCategories.Size = UDim2.new(1, -20, 0, 16)
+        editorCategories.TextScaled = true
+        editorCatalog.Position = UDim2.new(0, 10, 0, 52)
+        editorCatalog.Size = UDim2.new(1, -20, 0, catalogHeight)
+        editorCatalog.ScrollBarThickness = 6
+        editorStatus.Position = UDim2.new(0, 10, 0, statusY)
+        editorStatus.Size = UDim2.new(1, -20, 0, 30)
+        editorStatus.TextSize = 11
+        editorActions.Position = UDim2.new(0, 10, 0, actionsY)
+        editorActions.Size = UDim2.new(1, -20, 0, 76)
+        editorGrid.CellSize = UDim2.new(0.25, -4, 0, 36)
+        editorGrid.CellPadding = UDim2.new(0, 4, 0, 4)
+        hideWallsButton.Position = UDim2.new(0, 10, 1, -42)
+        hideWallsButton.Size = UDim2.new(1, -20, 0, 34)
+    else
+        editorPanel.AnchorPoint = Vector2.new(0.5, 1)
+        editorPanel.Position = UDim2.new(0.5, -24, 1, -(auxiliaryPanelBottomMargin + 66))
+        editorPanel.Size = UDim2.new(1, -32, 0, 346)
+        editorTitle.Size = UDim2.new(1, 0, 0, 28)
+        editorCategories.Position = UDim2.new(0, 10, 0, 34)
+        editorCategories.Size = UDim2.new(1, -20, 0, 20)
+        editorCategories.TextScaled = false
+        editorCategories.TextSize = 12
+        editorCatalog.Position = UDim2.new(0, 10, 0, 58)
+        editorCatalog.Size = UDim2.new(1, -20, 0, 98)
+        editorCatalog.ScrollBarThickness = 5
+        editorStatus.Position = UDim2.new(0, 10, 0, 160)
+        editorStatus.Size = UDim2.new(1, -20, 0, 38)
+        editorStatus.TextSize = 12
+        editorActions.Position = UDim2.new(0, 10, 0, 204)
+        editorActions.Size = UDim2.new(1, -20, 0, 112)
+        editorGrid.CellSize = UDim2.new(0, 96, 0, 32)
+        editorGrid.CellPadding = UDim2.new(0, 5, 0, 5)
+        hideWallsButton.Position = UDim2.new(0, 10, 1, -40)
+        hideWallsButton.Size = UDim2.new(1, -20, 0, 30)
+    end
+end
+
+local function bindEditorViewport(camera)
+    if editorViewportConnection then
+        editorViewportConnection:Disconnect()
+        editorViewportConnection = nil
+    end
+    if camera then
+        editorViewportConnection = camera:GetPropertyChangedSignal("ViewportSize")
+            :Connect(applyEditorResponsiveLayout)
+    end
+    applyEditorResponsiveLayout()
+end
+
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    bindEditorViewport(Workspace.CurrentCamera)
+end)
+bindEditorViewport(Workspace.CurrentCamera)
 
 local latestEditorState = nil
 local selectedFurnitureItemId = nil
@@ -2271,7 +2758,8 @@ end
 
 local function catalogById(state, itemId)
     for _, item in ipairs((state and state.catalog) or {}) do
-        if item.itemId == itemId and item.referenceExact == true then
+        if item.itemId == itemId
+            and (item.originalContent == true or item.referenceExact == true) then
             return item
         end
     end
@@ -2280,7 +2768,7 @@ end
 
 local function firstExactCatalogItemId(state)
     for _, item in ipairs((state and state.catalog) or {}) do
-        if item.referenceExact == true then
+        if item.originalContent == true or item.referenceExact == true then
             return item.itemId
         end
     end
@@ -2295,7 +2783,9 @@ local function editorRequestId(key)
 end
 
 local function finishEditorRequest(key, response)
-    if type(response) ~= "table" or response.retryable ~= true then
+    -- A missing response is transport-uncertain: retain the same idempotency
+    -- key so a retry cannot double-charge or duplicate furniture.
+    if type(response) == "table" and response.retryable ~= true then
         pendingEditorRequests[key] = nil
     end
 end
@@ -2321,10 +2811,11 @@ local function applyEditorState(state)
     end
 
     clearEditorCatalogButtons()
-    for _, item in ipairs(state.catalog or {}) do
-        if item.referenceExact == true then
+    for itemIndex, item in ipairs(state.catalog or {}) do
+        if item.originalContent == true or item.referenceExact == true then
         local button = Instance.new("TextButton")
         button.Name = "Catalog_" .. tostring(item.itemId)
+        button.LayoutOrder = itemIndex
         button.Size = UDim2.new(1, 0, 0, 36)
         button.BackgroundColor3 = item.itemId == selectedFurnitureItemId
             and Color3.fromRGB(210, 225, 240)
@@ -2358,7 +2849,7 @@ local function applyEditorState(state)
         .. tostring(selected and inventoryQuantity(state, selected.itemId) or 0)
         .. placementText
 
-    hideWallsButton.Text = "Hide Walls"
+    hideWallsButton.Text = state.hideWalls == true and "SHOW WALLS" or "HIDE WALLS"
 end
 
 local function refreshHousingEditor()
@@ -2391,6 +2882,12 @@ local function handleEditorResponse(key, ok, response, successText)
         if response.placementId then selectedPlacementId = response.placementId end
         applyEditorState(response)
         editorStatus.Text = successText
+    elseif response.code == "placement_limit_reached" then
+        editorStatus.Text = "Your house is full. Remove an item before placing another."
+    elseif response.code == "insufficient_funds" then
+        editorStatus.Text = "Earn more play-cash before buying this item."
+    elseif response.code == "insufficient_inventory" then
+        editorStatus.Text = "Buy this item before placing or selling it."
     else
         editorStatus.Text = tostring(response.code or response.error or "Editor action unavailable.")
     end
@@ -2499,6 +2996,28 @@ paintFurni.Activated:Connect(function()
     handleEditorResponse(key, ok, response, "Furniture paint updated.")
 end)
 
+saveHouseEdit.Activated:Connect(function()
+    if editorBusy or not latestHousingState or latestHousingState.editing ~= true then
+        return
+    end
+
+    editorBusy = true
+    saveHouseEdit.Active = false
+    local ok, response = pcall(function()
+        return setHouseEditMode:InvokeServer(false)
+    end)
+    editorBusy = false
+    saveHouseEdit.Active = true
+
+    if ok and type(response) == "table" and response.accepted == true then
+        setHousingMessage("House saved.")
+        applyHousingState(response)
+        editorPanel.Visible = false
+    else
+        editorStatus.Text = "Could not save house right now."
+    end
+end)
+
 hideWallsButton.Activated:Connect(function()
     if editorBusy or not latestEditorState then return end
     editorBusy = true
@@ -2513,7 +3032,7 @@ end)
 task.spawn(function()
     while gui.Parent do
         refreshHousingEditor()
-        task.wait(0.75)
+        task.wait(2.0)
     end
 end)
 end

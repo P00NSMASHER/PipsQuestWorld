@@ -3,6 +3,11 @@
 
 local ResponsiveHudLayout = {}
 
+local MIN_LANDSCAPE_WIDTH = 480
+local MIN_LANDSCAPE_HEIGHT = 300
+local MIN_PORTRAIT_WIDTH = 320
+local MIN_PORTRAIT_HEIGHT = 480
+
 local function clamp(value, minimum, maximum)
     return math.max(minimum, math.min(maximum, value))
 end
@@ -47,7 +52,15 @@ function ResponsiveHudLayout.isSupportedViewport(viewport)
 
     local width = tonumber(viewport.width)
     local height = tonumber(viewport.height)
-    return width ~= nil and height ~= nil and width >= 480 and height >= 300
+    if width == nil or height == nil then
+        return false
+    end
+
+    local landscapeSupported = width >= MIN_LANDSCAPE_WIDTH
+        and height >= MIN_LANDSCAPE_HEIGHT
+    local portraitSupported = width >= MIN_PORTRAIT_WIDTH
+        and height >= MIN_PORTRAIT_HEIGHT
+    return landscapeSupported or portraitSupported
 end
 
 -- Thumbstick and right-side camera/action touch regions used by Roblox on mobile.
@@ -74,10 +87,11 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     local height = assert(tonumber(viewport.height), "viewport height required")
     assert(
         ResponsiveHudLayout.isSupportedViewport(viewport),
-        "viewport below supported landscape bounds"
+        "viewport below supported phone bounds"
     )
 
     local safeInsets = normalizeInsets(insets)
+    local activeExclusionZones = exclusionZones or {}
     local safe = rect(
         safeInsets.left,
         safeInsets.top,
@@ -106,8 +120,26 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
         safe.y + math.floor(height * 0.1884 + 0.5),
         statusY + statusHeight + groupGap
     )
+    local isPortrait = height > width
     local quickX = safe.x + ((safe.width - quickWidth) / 2)
     local quickY = safe.bottom - outerGap - quickHeight
+
+    -- On portrait touch devices the bottom-center bar can intersect both
+    -- Roblox thumb regions. Lift it above those regions and center it in the
+    -- space to the left of the action rail. This keeps all four slots usable
+    -- without moving or shrinking the platform controls.
+    if isPortrait and #activeExclusionZones > 0 then
+        local nearestZoneTop = safe.bottom
+        for _, zone in ipairs(activeExclusionZones) do
+            if zone.y < nearestZoneTop then
+                nearestZoneTop = zone.y
+            end
+        end
+        quickY = math.min(quickY, nearestZoneTop - outerGap - quickHeight)
+
+        local quickRegionRight = railX - groupGap
+        quickX = safe.x + ((quickRegionRight - safe.x - quickWidth) / 2)
+    end
 
     local layout = {
         viewport = rect(0, 0, width, height),
@@ -115,7 +147,7 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
         status = rect(statusX, statusY, statusWidth, statusHeight),
         rail = rect(railX, railY, railWidth, railHeight),
         quick = rect(quickX, quickY, quickWidth, quickHeight),
-        exclusionZones = exclusionZones or {},
+        exclusionZones = activeExclusionZones,
         railGap = clamp(math.floor(railHeight * 0.022 + 0.5), 4, 6),
         quickGap = clamp(math.floor(quickWidth * 0.026 + 0.5), 5, 7),
     }

@@ -48,6 +48,12 @@
         },
         "FeaturePanelController": {
           "$path": "src/shared/FeaturePanelController.lua"
+        },
+        "DailySchedule": {
+          "$path": "src/shared/DailySchedule.lua"
+        },
+        "SchoolLightingProfile": {
+          "$path": "src/shared/SchoolLightingProfile.lua"
         }
       }
     },
@@ -60,6 +66,9 @@
         },
         "FoundationBootstrap": {
           "$path": "src/server/FoundationBootstrap.server.lua"
+        },
+        "SchoolLightingService": {
+          "$path": "src/server/SchoolLightingService.server.lua"
         },
         "EducationEngine": {
           "$path": "src/server/EducationEngine.lua"
@@ -100,17 +109,41 @@
         "ShoppingPurchase": {
           "$path": "src/server/ShoppingPurchase.server.lua"
         },
+        "StyleShopCatalog": {
+          "$path": "src/server/StyleShopCatalog.lua"
+        },
+        "StyleShopController": {
+          "$path": "src/server/StyleShopController.lua"
+        },
+        "StyleShopService": {
+          "$path": "src/server/StyleShopService.server.lua"
+        },
         "ClassEducation": {
           "$path": "src/server/ClassEducation.server.lua"
         },
         "EconomyRepository": {
           "$path": "src/server/EconomyRepository.lua"
         },
+        "EconomyRuntime": {
+          "$path": "src/server/EconomyRuntime.lua"
+        },
         "CafeJobController": {
           "$path": "src/server/CafeJobController.lua"
         },
         "CafeJob": {
           "$path": "src/server/CafeJob.server.lua"
+        },
+        "MarketStockJobController": {
+          "$path": "src/server/MarketStockJobController.lua"
+        },
+        "MarketStockJob": {
+          "$path": "src/server/MarketStockJob.server.lua"
+        },
+        "PEDodgeballController": {
+          "$path": "src/server/PEDodgeballController.lua"
+        },
+        "PEDodgeballDrill": {
+          "$path": "src/server/PEDodgeballDrill.server.lua"
         },
         "VehicleLifecycle": {
           "$path": "src/server/VehicleLifecycle.lua"
@@ -120,6 +153,9 @@
         },
         "VehicleInput": {
           "$path": "src/server/VehicleInput.lua"
+        },
+        "VehicleDynamics": {
+          "$path": "src/server/VehicleDynamics.lua"
         },
         "HousingLifecycle": {
           "$path": "src/server/HousingLifecycle.lua"
@@ -141,6 +177,18 @@
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
           "$path": "src/client/CanonicalSchoolClient.client.lua"
+        },
+        "StyleShopCatalog": {
+          "$path": "src/client/StyleShopCatalog.client.lua"
+        },
+        "LifestyleInventory": {
+          "$path": "src/client/LifestyleInventory.client.lua"
+        },
+        "MarketStockJobClient": {
+          "$path": "src/client/MarketStockJob.client.lua"
+        },
+        "PEDodgeballDrill": {
+          "$path": "src/client/PEDodgeballDrill.client.lua"
         }
       }
     }

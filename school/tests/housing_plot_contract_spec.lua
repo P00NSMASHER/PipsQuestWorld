@@ -29,7 +29,8 @@ for index, plot in ipairs(plots) do
     assert(not coordinates[key], "duplicate house origin " .. key)
     coordinates[key] = true
 
-    assert(plot.teleportPosition.Z < plot.doorPosition.Z, "teleport anchor must remain road-side of door")
+    assert(plot.teleportPosition.Z > plot.doorPosition.Z, "teleport anchor must land inside the front door")
+    assert(plot.teleportPosition.Z < plot.houseOrigin.Z, "teleport anchor must stay inside the front half")
 end
 
 local neighborhood = assert(SchoolConfig.WorldLocations.Neighborhood, "Neighborhood location missing")
@@ -46,6 +47,10 @@ assert(source:find('housingPlotsFolder.Name = "HousingPlots"', 1, true), "Housin
 assert(source:find('makeAnchor("HouseOrigin"', 1, true), "HouseOrigin anchor missing")
 assert(source:find('makeAnchor("DoorAnchor"', 1, true), "DoorAnchor missing")
 assert(source:find('makeAnchor("TeleportAnchor"', 1, true), "TeleportAnchor missing")
+assert(source:find('"HouseWallFrontLeft"', 1, true), "enterable front wall segment missing")
+assert(source:find('"HouseWallFrontRight"', 1, true), "enterable front wall segment missing")
+assert(source:find('"HouseFloor"', 1, true), "walkable interior floor missing")
+assert(not source:find('"HouseBody"', 1, true), "solid house body blocks the interior")
 assert(not source:find("ipairs({-180, -120, -60, 60, 120, 180})", 1, true),
     "hard-coded legacy decorative house loop still present")
 

@@ -5,6 +5,7 @@
 
 local StudioStore = {}
 StudioStore.__index = StudioStore
+local sharedByNamespace = {}
 
 local function clone(value)
     if type(value) ~= "table" then
@@ -21,6 +22,17 @@ function StudioStore.new(backing)
     return setmetatable({
         _backing = backing or {},
     }, StudioStore)
+end
+
+function StudioStore.shared(namespace)
+    assert(type(namespace) == "string" and namespace ~= "", "namespace must be a non-empty string")
+    local existing = sharedByNamespace[namespace]
+    if existing then
+        return existing
+    end
+    local store = StudioStore.new()
+    sharedByNamespace[namespace] = store
+    return store
 end
 
 function StudioStore:read(playerId)

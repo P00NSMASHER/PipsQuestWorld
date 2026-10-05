@@ -84,7 +84,10 @@ local productionEditor = Editor.new({
     economyRepositoryFactory = economyFactory,
     authorize = authorize,
 })
-eq(#productionEditor:getCatalog(), 0, "production catalog must stay empty until exact furniture provenance is verified")
+local productionCatalog = productionEditor:getCatalog()
+eq(#productionCatalog, 8, "production original furniture catalog size")
+eq(productionCatalog[1].itemId, "study-chair", "starter furniture ordering")
+eq(productionCatalog[1].originalContent, true, "starter furniture provenance")
 
 local TEST_CATALOG = {
     {
@@ -130,6 +133,14 @@ local notEditing = editor:purchase(101, "test-other-v1", "not-editing")
 eq(notEditing.accepted, false, "non-edit purchase accepted")
 eq(notEditing.code, "edit_mode_required", "non-edit purchase code")
 auth[101].editing = true
+
+local oversizedRequest = editor:purchase(101, "test-other-v1", string.rep("x", 81))
+eq(oversizedRequest.accepted, false, "oversized request id accepted")
+eq(oversizedRequest.code, "invalid_request_id", "oversized request id code")
+
+local malformedRequest = editor:purchase(101, "test-other-v1", "bad request id")
+eq(malformedRequest.accepted, false, "malformed request id accepted")
+eq(malformedRequest.code, "invalid_request_id", "malformed request id code")
 
 local bought = editor:purchase(101, "test-other-v1", "buy-1")
 eq(bought.accepted, true, "buy rejected")
@@ -210,5 +221,33 @@ eq(economyState[101].balance, 86, "rejoin economy balance")
 local outside = editor:move(101, reopened.placements[1].placementId, { x = 99, y = 0, z = 0, rotation = 0 }, "outside")
 eq(outside.accepted, false, "out-of-bounds move accepted")
 eq(outside.code, "invalid_transform", "out-of-bounds code")
+
+auth[303] = { owned = true, editing = true, plotId = "plot-03" }
+local limitedEditor = Editor.new({
+    layoutRepositoryFactory = layoutFactory,
+    economyRepositoryFactory = economyFactory,
+    authorize = authorize,
+    catalog = TEST_CATALOG,
+    allowUnverifiedTestCatalog = true,
+    maxPlacements = 1,
+})
+eq(limitedEditor:purchase(303, "test-other-v1", "limit-buy-a").accepted, true, "limit first buy")
+eq(limitedEditor:purchase(303, "test-utility-v1", "limit-buy-b").accepted, true, "limit second buy")
+eq(
+    limitedEditor:place(303, "test-other-v1", { x = 0, y = 0, z = 0, rotation = 0 }, "limit-place-a").accepted,
+    true,
+    "limit first placement"
+)
+local limited = limitedEditor:place(
+    303,
+    "test-utility-v1",
+    { x = 3, y = 0, z = 0, rotation = 0 },
+    "limit-place-b"
+)
+eq(limited.accepted, false, "placement limit accepted excess furniture")
+eq(limited.code, "placement_limit_reached", "placement limit code")
+local limitedState = limitedEditor:getState(303)
+eq(#limitedState.placements, 1, "placement limit world count")
+eq(limitedState.inventory[1].quantity, 1, "placement limit preserves unplaced inventory")
 
 print("HIGH_SCHOOL_HOUSING_EDITOR_CONTROLLER_PASS")

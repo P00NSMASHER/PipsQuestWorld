@@ -2,45 +2,27 @@
 -- Runtime adapter for the assigned Pip High cafe-job slice.
 -- Foundation owns the cafe location; EconomyRepository owns money/persistence semantics.
 
-local DataStoreService = game:GetService("DataStoreService")
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
-local Workspace = game:GetService("Workspace")
 
 local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local CafeJobController = require(schoolFoundation:WaitForChild("CafeJobController"))
-local EconomyRepository = require(schoolFoundation:WaitForChild("EconomyRepository"))
-local VersionedDataStore = require(schoolFoundation:WaitForChild("ProgressionDataStore"))
+local EconomyRuntime = require(schoolFoundation:WaitForChild("EconomyRuntime"))
 
 local CAFE_RADIUS = 34
 local CAFE_WAGE = 25
 local cafe = assert(SchoolConfig.WorldLocations.Cafe, "Foundation Cafe location is required")
 
-local function createEconomyStore()
-    if RunService:IsStudio() and game.GameId == 0 then
-        local StudioStore = require(schoolFoundation:WaitForChild("ProgressionStudioStore"))
-        Workspace:SetAttribute("EconomyPersistenceMode", "StudioMemoryUnpublished")
-        return StudioStore.new()
-    end
-
-    Workspace:SetAttribute("EconomyPersistenceMode", "DataStore")
-    return VersionedDataStore.new(
-        DataStoreService:GetDataStore("PipHighEconomyV1")
-    )
-end
-
-local economyStore = createEconomyStore()
 local controller = CafeJobController.new({
     wage = CAFE_WAGE,
     shiftIdFactory = function(playerId)
         return tostring(playerId) .. ":" .. HttpService:GenerateGUID(false)
     end,
     repositoryFactory = function(playerId)
-        return EconomyRepository.open(economyStore, playerId)
+        return EconomyRuntime.open(playerId, false)
     end,
 })
 

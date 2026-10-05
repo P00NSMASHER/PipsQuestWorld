@@ -60,7 +60,7 @@ local blockedLeave, blockedLeaveStatus = coordinator:leave("101", "requested")
 eq(blockedLeaveStatus, "progression_pending", "pending leave status")
 eq(blockedLeave.returnToFreeRoam, false, "pending leave escaped to free roam")
 
-local blockedEnter, blockedEnterStatus = coordinator:enter("101", "1:3:ela", "ELA", 1)
+local blockedEnter, blockedEnterStatus = coordinator:enter("101", "1:3:art", "Art", 1)
 eq(blockedEnterStatus, "progression_pending", "pending enter status")
 eq(blockedEnter.accepted, false, "pending progression allowed another class")
 

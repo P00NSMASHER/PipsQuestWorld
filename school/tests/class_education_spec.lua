@@ -84,10 +84,10 @@ local reenter, reenterStatus = controller:enter("player-1", "1:2:math", "Math", 
 assertEqual(reenterStatus, "rejected", "completed class allowed re-entry")
 assertEqual(reenter.code, "already_completed", "completed class re-entry code")
 
-local science = assert(controller:enter("player-1", "1:4:science", "Science", 1))
+local science = assert(controller:enter("player-1", "1:4:science_engineering", "ScienceEngineering", 1))
 assertEqual(science.accepted, true, "second class entry failed")
 local scienceWrong = assert(controller:submit(
-    "player-1", "1:4:science", science.activity.id, "science-before-leave", 2
+    "player-1", "1:4:science_engineering", science.activity.id, "science-before-leave", 2
 ))
 assertEqual(scienceWrong.completed, false, "science wrong answer should remain recoverable")
 local left, leftStatus = controller:leave("player-1", "period_changed")
@@ -95,10 +95,10 @@ assertEqual(leftStatus, "left", "period exit status")
 assertEqual(left.returnToFreeRoam, true, "period exit did not return to free roam")
 assertEqual(controller:getPlayerSnapshot("player-1").active, nil, "period exit left class active")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "period exit fabricated completion")
-assertEqual(controller:isCompleted("player-1", "1:4:science"), false, "incomplete class was marked complete")
+assertEqual(controller:isCompleted("player-1", "1:4:science_engineering"), false, "incomplete class was marked complete")
 
 local staleAfterLeave, staleAfterLeaveStatus = controller:submit(
-    "player-1", "1:4:science", science.activity.id, "science-before-leave", 2
+    "player-1", "1:4:science_engineering", science.activity.id, "science-before-leave", 2
 )
 assertEqual(staleAfterLeaveStatus, "duplicate", "post-leave stale submission status")
 assertEqual(staleAfterLeave.accepted, false, "post-leave stale submission was accepted")
@@ -107,12 +107,17 @@ assertEqual(staleAfterLeave.returnToFreeRoam, true, "post-leave stale submission
 assertEqual(controller:getPlayerSnapshot("player-1").active, nil, "post-leave stale submission restored class activity")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "post-leave stale submission changed completion count")
 
-local scienceReentry, scienceReentryStatus = controller:enter("player-1", "1:4:science", "Science", 1)
+local scienceReentry, scienceReentryStatus = controller:enter(
+    "player-1",
+    "1:4:science_engineering",
+    "ScienceEngineering",
+    1
+)
 assertEqual(scienceReentryStatus, "entered", "incomplete class could not be re-entered")
 assertEqual(scienceReentry.accepted, true, "re-entry after free-roam exit was rejected")
 assertEqual(scienceReentry.activity.id, science.activity.id, "re-entry did not restore the deterministic class activity")
 local staleReplay, staleReplayStatus = controller:submit(
-    "player-1", "1:4:science", scienceReentry.activity.id, "science-before-leave", 2
+    "player-1", "1:4:science_engineering", scienceReentry.activity.id, "science-before-leave", 2
 )
 assertEqual(staleReplayStatus, "duplicate", "cross-session stale submission status")
 assertEqual(staleReplay.accepted, false, "cross-session stale submission was accepted")
@@ -123,10 +128,10 @@ assertEqual(leftAgainStatus, "left", "re-entered class could not return to free 
 assertEqual(leftAgain.returnToFreeRoam, true, "re-entered class exit did not return to free roam")
 assertEqual(controller:getPlayerSnapshot("player-1").completionCount, 1, "re-entry fabricated completion")
 
-local ela = assert(controller:enter("player-2", "1:3:ela", "ELA", 1))
-local firstWrong = assert(controller:submit("player-2", "1:3:ela", ela.activity.id, "p2-1", 2))
+local ela = assert(controller:enter("player-2", "1:3:art", "Art", 1))
+local firstWrong = assert(controller:submit("player-2", "1:3:art", ela.activity.id, "p2-1", 2))
 assertEqual(firstWrong.completed, false, "first wrong attempt should not soft-lock or finish")
-local secondWrong = assert(controller:submit("player-2", "1:3:ela", ela.activity.id, "p2-2", 2))
+local secondWrong = assert(controller:submit("player-2", "1:3:art", ela.activity.id, "p2-2", 2))
 assertEqual(secondWrong.correct, false, "second wrong answer unexpectedly correct")
 assertEqual(secondWrong.completed, true, "max-attempt recovery did not resolve")
 assertEqual(type(secondWrong.explanation), "string", "modeled answer explanation missing")

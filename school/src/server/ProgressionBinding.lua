@@ -10,6 +10,14 @@ local function isInteger(value)
 end
 
 local function pointsFor(response)
+    if type(response.scorePercent) == "number"
+        and type(response.roundCount) == "number"
+        and response.roundCount > 1 then
+        if response.scorePercent >= 90 then return 50 end
+        if response.scorePercent >= 80 then return 40 end
+        if response.scorePercent >= 70 then return 30 end
+        return 20
+    end
     if response.correct == true then
         if response.attempts == 1 then
             return 25
@@ -56,11 +64,12 @@ function ProgressionBinding:consume(playerId, classKey, submissionId, classRespo
         }
     end
 
+    local awardedPoints = pointsFor(classResponse)
     local receipt = self._repository:record({
         completionId = tostring(playerId) .. "|" .. classKey,
         playerId = playerId,
         classId = classKey,
-        points = pointsFor(classResponse),
+        points = awardedPoints,
         attempts = classResponse.attempts,
         correct = classResponse.correct,
     })
@@ -73,6 +82,7 @@ function ProgressionBinding:consume(playerId, classKey, submissionId, classRespo
         progressionStatus = receipt.status,
         progressionError = receipt.error,
         state = receipt.state,
+        awardedPoints = committed and awardedPoints or nil,
         returnToFreeRoam = committed and classResponse.returnToFreeRoam == true,
         code = committed and "progression_committed" or "progression_commit_failed",
     }

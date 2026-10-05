@@ -12,12 +12,12 @@ local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChi
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local VehicleLifecycle = require(schoolFoundation:WaitForChild("VehicleLifecycle"))
 local VehicleInput = require(schoolFoundation:WaitForChild("VehicleInput"))
+local VehicleDynamics = require(schoolFoundation:WaitForChild("VehicleDynamics"))
 
 local SPAWN_RADIUS = 72
-local VEHICLE_SPEED = 42
-local TURN_RATE = math.rad(95)
 local CONTROL_TIMEOUT = 0.35
 local VEHICLE_ID = "starter-sedan"
+local VEHICLE_HANDLING = VehicleDynamics.DEFAULTS
 
 local function getOrCreateFolder(parent, name)
     local existing = parent:FindFirstChild(name)
@@ -106,6 +106,67 @@ local function addPart(model, name, size, cframe, color, className)
     return part
 end
 
+local function weldAssembly(body, model)
+    for _, descendant in ipairs(model:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            if descendant ~= body then
+                local weld = Instance.new("WeldConstraint")
+                weld.Name = "BodyWeld"
+                weld.Part0 = body
+                weld.Part1 = descendant
+                weld.Parent = descendant
+                descendant.Massless = true
+            else
+                descendant.Massless = false
+            end
+            descendant.Anchored = false
+        end
+    end
+end
+
+local function setServerOwnership(body)
+    if not body or not body.Parent or body.Anchored then
+        return false, "vehicle body is not an active unanchored part"
+    end
+
+    -- A seated character can otherwise cause Roblox to hand the assembly to the
+    -- driver's client. Keeping ownership on the server makes remote input intent,
+    -- validation, timeouts, and the physics actuators the sole movement authority.
+    local ok, ownershipError = pcall(function()
+        local canSet, reason = body:CanSetNetworkOwnership()
+        assert(canSet, reason or "vehicle network ownership is unavailable")
+        body:SetNetworkOwner(nil)
+    end)
+    return ok, ownershipError
+end
+
+local function addActuators(body, headingYaw)
+    local attachment = Instance.new("Attachment")
+    attachment.Name = "DriveAttachment"
+    attachment.Parent = body
+
+    local driveForce = Instance.new("VectorForce")
+    driveForce.Name = "ServerDriveForce"
+    driveForce.Attachment0 = attachment
+    driveForce.ApplyAtCenterOfMass = true
+    driveForce.RelativeTo = Enum.ActuatorRelativeTo.World
+    driveForce.Force = Vector3.zero
+    driveForce.Parent = body
+
+    local upright = Instance.new("AlignOrientation")
+    upright.Name = "ServerSteering"
+    upright.Attachment0 = attachment
+    upright.Mode = Enum.OrientationAlignmentMode.OneAttachment
+    upright.CFrame = CFrame.Angles(0, headingYaw, 0)
+    upright.MaxAngularVelocity = math.rad(160)
+    upright.MaxTorque = 200000
+    upright.Responsiveness = 18
+    upright.RigidityEnabled = false
+    upright.Parent = body
+
+    return driveForce, upright
+end
+
 local function buildVehicle(player, token)
     local model = Instance.new("Model")
     model.Name = "StarterSedan_" .. tostring(player.UserId)
@@ -122,6 +183,7 @@ local function buildVehicle(player, token)
         Color3.fromRGB(67, 111, 168)
     )
     body.CanCollide = true
+    body.CustomPhysicalProperties = PhysicalProperties.new(1.2, 0.35, 0.15, 1, 1)
 
     local hood = addPart(
         model,
@@ -152,11 +214,12 @@ local function buildVehicle(player, token)
         "VehicleSeat"
     )
     seat.CanCollide = true
-    seat.MaxSpeed = VEHICLE_SPEED
+    seat.MaxSpeed = VEHICLE_HANDLING.maxForwardSpeed
     seat.Torque = 0
     seat.TurnSpeed = 0
+    seat.HeadsUpDisplay = false
 
-    for _, wheelSpec in ipairs({
+    for wheelIndex, wheelSpec in ipairs({
         { -3.6, -1.0, -3.2 },
         { 3.6, -1.0, -3.2 },
         { -3.6, -1.0, 3.2 },
@@ -164,21 +227,59 @@ local function buildVehicle(player, token)
     }) do
         local wheel = addPart(
             model,
-            "Wheel",
+            "Wheel" .. tostring(wheelIndex),
             Vector3.new(1.2, 2.5, 2.5),
-            baseCFrame
-                * CFrame.new(wheelSpec[1], wheelSpec[2], wheelSpec[3])
-                * CFrame.Angles(0, 0, math.rad(90)),
+            baseCFrame * CFrame.new(wheelSpec[1], wheelSpec[2], wheelSpec[3]),
             Color3.fromRGB(32, 34, 40)
         )
         wheel.Shape = Enum.PartType.Cylinder
-        wheel.CanCollide = false
+        wheel.CanCollide = true
+        -- The force-based arcade chassis supplies its own lateral grip. Low tire
+        -- friction lets the welded primitive wheels travel with the body
+        -- without static friction overpowering the bounded drive acceleration.
+        wheel.CustomPhysicalProperties = PhysicalProperties.new(0.8, 0.08, 0.1, 1, 1)
+    end
+
+    for lightIndex, lightSpec in ipairs({
+        { x = -2.35, y = 0.45, z = -5.55, color = Color3.fromRGB(255, 239, 178), name = "Headlight" },
+        { x = 2.35, y = 0.45, z = -5.55, color = Color3.fromRGB(255, 239, 178), name = "Headlight" },
+        { x = -2.35, y = 0.35, z = 5.55, color = Color3.fromRGB(207, 57, 62), name = "TailLight" },
+        { x = 2.35, y = 0.35, z = 5.55, color = Color3.fromRGB(207, 57, 62), name = "TailLight" },
+    }) do
+        local light = addPart(
+            model,
+            lightSpec.name .. tostring(lightIndex),
+            Vector3.new(1.35, 0.6, 0.24),
+            baseCFrame * CFrame.new(lightSpec.x, lightSpec.y, lightSpec.z),
+            lightSpec.color
+        )
+        light.Material = Enum.Material.Neon
+        light.CanCollide = false
+    end
+
+    for bumperIndex, zOffset in ipairs({ -5.72, 5.72 }) do
+        local bumper = addPart(
+            model,
+            "Bumper" .. tostring(bumperIndex),
+            Vector3.new(7.2, 0.42, 0.34),
+            baseCFrame * CFrame.new(0, -0.38, zOffset),
+            Color3.fromRGB(47, 53, 63)
+        )
+        bumper.Material = Enum.Material.Metal
+        bumper.CanCollide = false
     end
 
     model.PrimaryPart = body
     model.Parent = vehicleFolder
+    local driveForce, upright = addActuators(body, spawnYaw)
+    weldAssembly(body, model)
+    local ownsServer, ownershipError = setServerOwnership(body)
+    if not ownsServer then
+        model:Destroy()
+        error("vehicle_server_ownership_failed: " .. tostring(ownershipError))
+    end
 
-    return model, seat
+    return model, seat, body, driveForce, upright
 end
 
 local function ejectSeat(seat)
@@ -195,6 +296,9 @@ local function destroyRuntime(playerId)
     end
 
     ejectSeat(runtime.seat)
+    if runtime.driveForce then
+        runtime.driveForce.Force = Vector3.zero
+    end
     if runtime.model and runtime.model.Parent then
         runtime.model:Destroy()
     end
@@ -250,9 +354,8 @@ spawnRemote.OnServerInvoke = function(player)
         }
     end
 
-    local ok, modelOrError, seat = pcall(function()
-        local model, driverSeat = buildVehicle(player, reservation.state.token)
-        return model, driverSeat
+    local ok, modelOrError, seat, body, driveForce, upright = pcall(function()
+        return buildVehicle(player, reservation.state.token)
     end)
     if not ok then
         lifecycle:despawn(playerKey(player), reservation.state.token)
@@ -268,9 +371,11 @@ spawnRemote.OnServerInvoke = function(player)
     runtimeByPlayerId[player.UserId] = {
         model = model,
         seat = seat,
+        body = body,
+        driveForce = driveForce,
+        upright = upright,
         token = reservation.state.token,
-        position = spawnPosition,
-        yaw = spawnYaw,
+        headingYaw = spawnYaw,
         throttle = 0,
         steer = 0,
         lastControlAt = 0,
@@ -281,13 +386,16 @@ spawnRemote.OnServerInvoke = function(player)
         local occupant = seat.Occupant
         if not occupant then
             clearControls(runtime)
+            setServerOwnership(body)
             return
         end
         local occupantPlayer = Players:GetPlayerFromCharacter(occupant.Parent)
         if occupantPlayer ~= player then
             clearControls(runtime)
             occupant.Sit = false
+            return
         end
+        setServerOwnership(body)
     end)
 
     local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
@@ -353,10 +461,9 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 RunService.Heartbeat:Connect(function(dt)
-    local boundedDt = math.min(dt, 0.1)
-
     for playerId, runtime in pairs(runtimeByPlayerId) do
         if not runtime.model or not runtime.model.Parent then
+            lifecycle:despawn(tostring(playerId), runtime.token)
             runtimeByPlayerId[playerId] = nil
             continue
         end
@@ -364,19 +471,20 @@ RunService.Heartbeat:Connect(function(dt)
         local seat = runtime.seat
         local occupant = seat and seat.Occupant
         local owner = Players:GetPlayerByUserId(playerId)
-        if not owner or not occupant then
-            continue
-        end
-
-        local occupantPlayer = Players:GetPlayerFromCharacter(occupant.Parent)
-        if occupantPlayer ~= owner then
-            occupant.Sit = false
-            continue
+        local ownerIsDriving = false
+        if owner and occupant then
+            local occupantPlayer = Players:GetPlayerFromCharacter(occupant.Parent)
+            if occupantPlayer == owner then
+                ownerIsDriving = true
+            else
+                occupant.Sit = false
+            end
         end
 
         local throttle = runtime.throttle or 0
         local steer = runtime.steer or 0
-        if runtime.lastControlAt == 0
+        if not ownerIsDriving
+            or runtime.lastControlAt == 0
             or os.clock() - runtime.lastControlAt > CONTROL_TIMEOUT then
             throttle = 0
             steer = 0
@@ -384,19 +492,33 @@ RunService.Heartbeat:Connect(function(dt)
             runtime.steer = 0
         end
 
-        if math.abs(steer) > 0.01 then
-            local turnScale = math.abs(throttle) > 0.01 and 1 or 0.45
-            runtime.yaw -= steer * TURN_RATE * boundedDt * turnScale
+        local body = runtime.body
+        if not body or not body.Parent then
+            lifecycle:despawn(tostring(playerId), runtime.token)
+            destroyRuntime(playerId)
+            continue
         end
 
-        if math.abs(throttle) > 0.01 then
-            local heading = CFrame.Angles(0, runtime.yaw, 0).LookVector
-            runtime.position += heading * throttle * VEHICLE_SPEED * boundedDt
-        end
+        local orientation = CFrame.Angles(0, runtime.headingYaw, 0)
+        local heading = orientation.LookVector
+        local right = orientation.RightVector
+        local velocity = body.AssemblyLinearVelocity
+        local step = VehicleDynamics.step(VEHICLE_HANDLING, {
+            forwardSpeed = velocity:Dot(heading),
+            lateralSpeed = velocity:Dot(right),
+            headingYaw = runtime.headingYaw,
+        }, {
+            throttle = throttle,
+            steer = steer,
+        }, dt)
 
-        runtime.model:PivotTo(
-            CFrame.new(runtime.position)
-                * CFrame.Angles(0, runtime.yaw, 0)
-        )
+        runtime.headingYaw = step.headingYaw
+        local assemblyMass = body.AssemblyMass
+        local planarForce = (
+            heading * step.forwardAcceleration
+            + right * step.lateralAcceleration
+        ) * assemblyMass
+        runtime.driveForce.Force = Vector3.new(planarForce.X, 0, planarForce.Z)
+        runtime.upright.CFrame = CFrame.Angles(0, runtime.headingYaw, 0)
     end
 end)

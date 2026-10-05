@@ -5,6 +5,8 @@
 local ClassSessionController = {}
 ClassSessionController.__index = ClassSessionController
 
+local DEFAULT_ACTIVITIES_PER_CLASS = 1
+
 local function clone(value)
     if type(value) ~= "table" then
         return value
@@ -18,6 +20,18 @@ end
 
 local function assertKey(value, name)
     assert(type(value) == "string" and value ~= "", name .. " must be a non-empty string")
+end
+
+local function isInteger(value)
+    return type(value) == "number" and value == math.floor(value)
+end
+
+local function gradeFor(scorePercent)
+    if scorePercent >= 90 then return "A" end
+    if scorePercent >= 80 then return "B" end
+    if scorePercent >= 70 then return "C" end
+    if scorePercent >= 60 then return "D" end
+    return "F"
 end
 
 local function stateFor(self, playerKey)
@@ -35,11 +49,15 @@ local function stateFor(self, playerKey)
     return state
 end
 
-function ClassSessionController.new(engine)
+function ClassSessionController.new(engine, options)
     assert(type(engine) == "table", "engine is required")
+    options = options or {}
+    local activitiesPerClass = options.activitiesPerClass or DEFAULT_ACTIVITIES_PER_CLASS
+    assert(isInteger(activitiesPerClass) and activitiesPerClass >= 1, "activitiesPerClass must be a positive integer")
     return setmetatable({
         _engine = engine,
         _players = {},
+        _activitiesPerClass = activitiesPerClass,
     }, ClassSessionController)
 end
 
@@ -52,6 +70,8 @@ function ClassSessionController:getPlayerSnapshot(playerKey)
             classKey = state.active.classKey,
             subject = state.active.subject,
             activity = clone(state.active.activity),
+            round = state.active.completedActivities + 1,
+            totalRounds = self._activitiesPerClass,
         }
     end
     return {
@@ -88,6 +108,8 @@ function ClassSessionController:enter(playerKey, classKey, subject, initialDiffi
                 code = "already_active",
                 classKey = classKey,
                 activity = clone(state.active.activity),
+                round = state.active.completedActivities + 1,
+                totalRounds = self._activitiesPerClass,
             }, "active"
         end
         return {
@@ -118,6 +140,10 @@ function ClassSessionController:enter(playerKey, classKey, subject, initialDiffi
         subject = subject,
         sessionId = sessionId,
         activity = activity,
+        completedActivities = 0,
+        correctActivities = 0,
+        totalAttempts = 0,
+        scoreTotal = 0,
     }
 
     return {
@@ -125,6 +151,8 @@ function ClassSessionController:enter(playerKey, classKey, subject, initialDiffi
         code = "entered",
         classKey = classKey,
         activity = clone(activity),
+        round = 1,
+        totalRounds = self._activitiesPerClass,
     }, "entered"
 end
 
@@ -192,16 +220,53 @@ function ClassSessionController:submit(playerKey, classKey, activityId, submissi
     response.classKey = classKey
     response.classCompleted = false
     response.returnToFreeRoam = false
+    response.round = active.completedActivities + 1
+    response.totalRounds = self._activitiesPerClass
 
     if response.accepted and response.completed then
-        if not state.completed[classKey] then
-            state.completed[classKey] = true
-            state.completionCount = state.completionCount + 1
-            response.classCompleted = true
+        active.completedActivities = active.completedActivities + 1
+        active.totalAttempts = active.totalAttempts + response.attempts
+        if response.correct then
+            active.correctActivities = active.correctActivities + 1
         end
-        response.returnToFreeRoam = true
-        self._engine:closeSession(active.sessionId)
-        state.active = nil
+        if response.correct then
+            -- A hint-assisted second try receives partial mastery credit; an
+            -- independent first try receives full credit.
+            active.scoreTotal = active.scoreTotal + (response.attempts == 1 and 100 or 60)
+        end
+
+        if active.completedActivities < self._activitiesPerClass then
+            local nextActivity = self._engine:nextActivity(active.sessionId)
+            if nextActivity then
+                active.activity = nextActivity
+                response.roundCompleted = true
+                response.nextActivity = clone(nextActivity)
+                response.round = active.completedActivities + 1
+                response.completed = false
+            end
+        end
+
+        if response.nextActivity == nil then
+            local roundCount = active.completedActivities
+            local scorePercent = math.floor(active.scoreTotal / math.max(1, roundCount) + 0.5)
+            response.roundCount = roundCount
+            response.correctCount = active.correctActivities
+            response.scorePercent = scorePercent
+            response.grade = gradeFor(scorePercent)
+            response.attempts = active.totalAttempts
+            response.correct = active.correctActivities == roundCount
+        end
+
+        if response.nextActivity == nil then
+            if not state.completed[classKey] then
+                state.completed[classKey] = true
+                state.completionCount = state.completionCount + 1
+                response.classCompleted = true
+            end
+            response.returnToFreeRoam = true
+            self._engine:closeSession(active.sessionId)
+            state.active = nil
+        end
     end
 
     if response.accepted then

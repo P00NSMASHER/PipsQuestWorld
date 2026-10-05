@@ -9,6 +9,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Workspace = game:GetService("Workspace")
 
 local SchoolConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SchoolConfig"))
+local DailySchedule = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("DailySchedule"))
 local schoolFoundation = ServerScriptService:WaitForChild("SchoolFoundation")
 local EducationEngine = require(schoolFoundation:WaitForChild("EducationEngine"))
 local ClassSessionController = require(schoolFoundation:WaitForChild("ClassSessionController"))
@@ -22,7 +23,9 @@ local engine = EducationEngine.new(catalog, {
     maxAttempts = 2,
     maxDifficultyJump = 1,
 })
-local classController = ClassSessionController.new(engine)
+local classController = ClassSessionController.new(engine, {
+    activitiesPerClass = 3,
+})
 local progressionStore = ProgressionPersistence.get()
 local coordinator = ClassProgressionCoordinator.new(classController, function(playerId)
     local repository, openError = ProgressionRepository.open(progressionStore, playerId)
@@ -31,13 +34,6 @@ local coordinator = ClassProgressionCoordinator.new(classController, function(pl
     end
     return ProgressionBinding.new(repository)
 end)
-
-local subjectByPeriodId = {
-    math = "Math",
-    ela = "ELA",
-    science = "Science",
-    social = "SocialStudies",
-}
 
 local function getOrCreateFolder(parent, name)
     local existing = parent:FindFirstChild(name)
@@ -72,23 +68,26 @@ local submitAnswer = getOrCreateRemoteFunction(classRemoteFolder, "SubmitAnswer"
 local leaveClass = getOrCreateRemoteFunction(classRemoteFolder, "LeaveClass")
 
 local foundationEvents = ServerScriptService:WaitForChild(SchoolConfig.Interfaces.serverEventFolder)
-local periodChanged = foundationEvents:WaitForChild(SchoolConfig.Interfaces.periodChanged)
 local sessionEnded = foundationEvents:WaitForChild(SchoolConfig.Interfaces.sessionEnded)
 
 local function readSchedule()
     local schoolDay = Workspace:GetAttribute("SchoolDay")
+    local scheduleEpoch = Workspace:GetAttribute("SchoolScheduleEpoch")
     local periodIndex = Workspace:GetAttribute("SchoolPeriodIndex")
     local periodId = Workspace:GetAttribute("SchoolPeriodId")
     local room = Workspace:GetAttribute("SchoolPeriodRoom")
 
     if type(schoolDay) ~= "number"
+        or type(scheduleEpoch) ~= "string"
+        or scheduleEpoch == ""
         or type(periodIndex) ~= "number"
         or type(periodId) ~= "string"
         or type(room) ~= "string" then
         return nil
     end
 
-    local period = SchoolConfig.Periods[periodIndex]
+    local periods = DailySchedule.forDay(schoolDay)
+    local period = periods[periodIndex]
     if not period or period.id ~= periodId or period.room ~= room then
         return nil
     end
@@ -105,8 +104,8 @@ local function readSchedule()
         periodLabel = period.label,
         room = room,
         roomDisplayName = roomConfig.displayName,
-        subject = subjectByPeriodId[periodId],
-        classKey = tostring(schoolDay) .. ":" .. tostring(periodIndex) .. ":" .. periodId,
+        subject = period.subject,
+        classKey = scheduleEpoch .. ":" .. tostring(schoolDay) .. ":" .. tostring(periodIndex) .. ":" .. periodId,
     }
 end
 
@@ -253,6 +252,21 @@ submitAnswer.OnServerInvoke = function(player, classKey, activityId, submissionI
             }
         end
     else
+        local active = coordinator:getPlayerSnapshot(key).active
+        -- Entry is validated against the current schedule and classroom. Once
+        -- admitted, a student may finish the short activity even if the bell
+        -- rings while the answer panel is open.
+        if active and active.classKey == classKey then
+            return coordinator:submit(
+                player.UserId,
+                key,
+                classKey,
+                activityId,
+                submissionId,
+                choiceIndex
+            )
+        end
+
         local schedule = readSchedule()
         if not schedule or schedule.classKey ~= classKey then
             coordinator:leave(key, "period_changed")
@@ -287,11 +301,8 @@ leaveClass.OnServerInvoke = function(player)
     return coordinator:leave(playerKey(player), "requested")
 end
 
-periodChanged.Event:Connect(function()
-    for _, player in ipairs(Players:GetPlayers()) do
-        coordinator:leave(playerKey(player), "period_changed")
-    end
-end)
+-- Active lessons receive a completion grace window across the bell. The
+-- controller still clears them on explicit leave or when the player exits.
 
 sessionEnded.Event:Connect(function(player)
     coordinator:leave(playerKey(player), "session_ended")

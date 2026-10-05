@@ -5,12 +5,95 @@
 
 local Controller = {}
 Controller.__index = Controller
+local DEFAULT_MAX_PLACEMENTS = 32
 
--- Production catalog remains empty until exact furniture items/assets are
--- independently verified by Content QA. Tests inject non-production catalog
--- entries explicitly so behavior coverage remains complete without presenting
--- invented furniture as Legacy-exact.
-local CATALOG = {}
+-- Original Pip High furniture. These entries intentionally use generated
+-- primitive geometry and do not copy another game's protected models.
+local CATALOG = {
+    {
+        itemId = "study-chair",
+        displayName = "Study Chair",
+        category = "Seating",
+        price = 10,
+        sellPrice = 5,
+        geometry = "chair",
+        originalContent = true,
+    },
+    {
+        itemId = "study-table",
+        displayName = "Study Table",
+        category = "Tables",
+        price = 18,
+        sellPrice = 9,
+        geometry = "table",
+        originalContent = true,
+    },
+    {
+        itemId = "cozy-sofa",
+        displayName = "Cozy Sofa",
+        category = "Seating",
+        price = 35,
+        sellPrice = 17,
+        geometry = "sofa",
+        originalContent = true,
+    },
+    {
+        itemId = "floor-lamp",
+        displayName = "Floor Lamp",
+        category = "Lights",
+        price = 15,
+        sellPrice = 7,
+        geometry = "lamp",
+        originalContent = true,
+    },
+    {
+        itemId = "leafy-plant",
+        displayName = "Leafy Plant",
+        category = "Decor",
+        price = 12,
+        sellPrice = 6,
+        geometry = "plant",
+        originalContent = true,
+    },
+    {
+        itemId = "woven-rug",
+        displayName = "Woven Rug",
+        category = "Decor",
+        price = 10,
+        sellPrice = 5,
+        geometry = "rug",
+        originalContent = true,
+    },
+    {
+        itemId = "bookcase",
+        displayName = "Bookcase",
+        category = "Storage",
+        price = 24,
+        sellPrice = 12,
+        geometry = "shelf",
+        originalContent = true,
+    },
+    {
+        itemId = "single-bed",
+        displayName = "Single Bed",
+        category = "Beds",
+        price = 30,
+        sellPrice = 15,
+        geometry = "bed",
+        originalContent = true,
+    },
+}
+
+local ALLOWED_CATEGORIES = {
+    Utilities = true,
+    Other = true,
+    Seating = true,
+    Tables = true,
+    Lights = true,
+    Decor = true,
+    Storage = true,
+    Beds = true,
+}
 
 local PAINTS = {
     ["default"] = true,
@@ -88,8 +171,13 @@ function Controller.new(options)
     for index, entry in ipairs(catalog) do
         assert(nonEmpty(entry.itemId), "catalog itemId is required")
         assert(nonEmpty(entry.displayName), "catalog displayName is required")
-        assert(entry.referenceExact == true or allowUnverifiedTestCatalog, "catalog entries must carry verified reference provenance")
-        assert(entry.category == "Utilities" or entry.category == "Other", "catalog category must be verified")
+        assert(
+            entry.originalContent == true
+                or entry.referenceExact == true
+                or allowUnverifiedTestCatalog,
+            "catalog entries must carry original or verified provenance"
+        )
+        assert(ALLOWED_CATEGORIES[entry.category] == true, "catalog category is unsupported")
         assert(isInteger(entry.price) and entry.price >= 0, "catalog price must be a nonnegative integer")
         assert(isInteger(entry.sellPrice) and entry.sellPrice >= 0, "catalog sellPrice must be a nonnegative integer")
         assert(entry.sellPrice <= entry.price, "sellPrice must not exceed price")
@@ -97,6 +185,9 @@ function Controller.new(options)
         catalogById[entry.itemId] = copy(entry)
         publicCatalog[index] = copy(entry)
     end
+
+    local maxPlacements = options.maxPlacements or DEFAULT_MAX_PLACEMENTS
+    assert(isInteger(maxPlacements) and maxPlacements >= 1 and maxPlacements <= 64, "maxPlacements must be 1-64")
 
     return setmetatable({
         _layoutRepositoryFactory = options.layoutRepositoryFactory,
@@ -108,6 +199,7 @@ function Controller.new(options)
         _maxZ = options.maxZ or 12,
         _minY = options.minY or 0,
         _maxY = options.maxY or 8,
+        _maxPlacements = maxPlacements,
     }, Controller)
 end
 
@@ -181,7 +273,10 @@ function Controller:getState(playerId)
 end
 
 function Controller:_validateRequest(requestId)
-    return nonEmpty(requestId)
+    return type(requestId) == "string"
+        and #requestId >= 1
+        and #requestId <= 80
+        and string.match(requestId, "^[%w_%-]+$") ~= nil
 end
 
 function Controller:_validateTransform(transform)
@@ -272,6 +367,17 @@ function Controller:place(playerId, itemId, transform, requestId)
     local layout, layoutError = self:_layout(playerId)
     if not layout then return { accepted = false, code = "layout_unavailable", error = layoutError, retryable = true } end
 
+    local placementId = "furni:" .. tostring(playerId) .. ":" .. requestId
+    local before = layout:getState()
+    if #(before.placements or {}) >= self._maxPlacements
+        and not findPlacement(before, placementId) then
+        return {
+            accepted = false,
+            code = "placement_limit_reached",
+            placementLimit = self._maxPlacements,
+        }
+    end
+
     local consume = layout:commit({
         operationId = "housing:furni:consume:" .. requestId,
         kind = "remove_inventory",
@@ -287,7 +393,6 @@ function Controller:place(playerId, itemId, transform, requestId)
         }
     end
 
-    local placementId = "furni:" .. tostring(playerId) .. ":" .. requestId
     local placed = layout:commit({
         operationId = "housing:furni:place:" .. requestId,
         kind = "place_furniture",
@@ -549,5 +654,7 @@ function Controller:setHouseStyle(playerId, styleId, requestId)
     response.code = "style_changed"
     return response
 end
+
+Controller.DEFAULT_MAX_PLACEMENTS = DEFAULT_MAX_PLACEMENTS
 
 return Controller

@@ -123,6 +123,7 @@ function Coordinator:submit(playerId, playerKey, classKey, activityId, submissio
     response.progressionCommitted = true
     response.progressionStatus = progression.progressionStatus
     response.progressionState = progression.state
+    response.awardedPoints = progression.awardedPoints
     response.returnToFreeRoam = progression.returnToFreeRoam
     return response, classStatus
 end
