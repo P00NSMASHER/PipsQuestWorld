@@ -185,6 +185,28 @@ function ResponsiveHudLayout.computeAuxiliaryPanels(layout)
     }
 end
 
+function ResponsiveHudLayout.computeUtilityGrid(layout)
+    assert(type(layout) == "table" and layout.rail and layout.quick, "complete HUD layout required")
+    local utilityGap = layout.railGap
+    local tileSize = math.floor((layout.rail.width - utilityGap) / 2)
+    local height = (tileSize * 3) + (utilityGap * 2)
+    local y = layout.rail.bottom + utilityGap
+    local limit = layout.quick.y - utilityGap
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        limit = math.min(limit, zone.y - utilityGap)
+    end
+
+    local grid = rect(layout.rail.x, y, layout.rail.width, height)
+    grid.gap = utilityGap
+    grid.tileSize = tileSize
+    grid.columns = 2
+    grid.rows = 3
+    grid.visible = grid.bottom <= limit
+    grid.limit = limit
+    return grid
+end
+
 function ResponsiveHudLayout.computeCenteredModal(layout, baseSize)
     assert(type(layout) == "table" and layout.safe and layout.viewport, "complete HUD layout required")
     assert(type(baseSize) == "table", "baseSize table required")
