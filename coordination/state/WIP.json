@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 67,
+  "schemaVersion": 68,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T18:12:30Z",
+  "observedAt": "2026-10-05T18:18:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
@@ -15,20 +15,21 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": null,
+    "producerBranch": "rebuild/high-school-avatar-panel-safe-layout-c7d5e36-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Roblox High School Class & Education",
-      "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "ARMED_PREP_ONLY__REBASED_TO_C7D5E36__PRODUCT_SLOT_BLOCKED_UNTIL_FULL_P1_SMOKE_AND_PACKAGE",
+      "owner": "Pip High Free Roam",
+      "scope": "P1_AVATAR_PANEL_SAFE_LAYOUT_REPAIR",
+      "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_LAYOUT_DEFECT",
       "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "pr": null,
-      "headSha": null
+      "headSha": null,
+      "defectId": "P1_AVATAR_PANEL_CONTENT_OVERFLOW"
     },
     "supersededCandidates": [
       {
@@ -43,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical c7d5e36 + frozen support PR150 consume 2/3. P1 CafeCard repair is integrated. Do not open P2 product code until exact-canonical runtime Smoke PASS and deterministic c7d5e36 Package complete.",
+    "rule": "WIP_CAP_3_FULL: exact canonical c7d5e36 + frozen support PR150 + one narrow Avatar panel layout repair consume 3/3. No P2 producer may open until this source defect is repaired through CI/QA/Integration and full runtime Smoke/Package pass.",
     "recentlyIntegrated": {
       "pr": 245,
       "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
@@ -52,7 +53,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_REBOUND_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_ONLY_BLOCKER__P2_ARMED_C7D5E36__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_SOURCE_PROVEN_AVATAR_PANEL_CONTENT_OVERFLOW__NARROW_REPAIR_RESERVED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -110,17 +111,17 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "P1_SOURCE_REPAIR_COMPLETE__WAIT_RUNTIME_SMOKE__NO_PRODUCT_WRITE",
+      "mode": "SOLE_P1_REPAIR_RESERVED__AVATAR_PANEL_SAFE_LAYOUT",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-      "branch": null,
-      "candidatePr": 245,
-      "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-      "latestOutput": "PR245 repaired CafeCard mobile safe-area/touch-zone overflow and merged to canonical c7d5e36 after exact-head QA; all three post-merge guards are green.",
-      "objective": "No further P1 product write unless runtime Smoke exposes a concrete defect. Keep P3-P6 readiness stable.",
-      "owned": "bounded P1 Free Roam presentation repair only",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "Concrete Smoke defect or later Control Tower activation.",
-      "handoff": "Roblox High School Integration Smoke"
+      "branch": "rebuild/high-school-avatar-panel-safe-layout-c7d5e36-v1",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "Static audit found LegacyOutfitEntry panel height 262 while nine verified 20px labels begin at y=210 and extend through y=390. The canonical FeaturePanelBack occupies y=226..256, overlapping Wear/Save/Hat1 content. On iPhone, overflowing content reaches well beyond safe bottom. The internal top-right Custom Outfits entry also extends beyond mobile safe-right until the Avatar rail path hides it.",
+      "objective": "Make the smallest presentation-only repair: contain the full outfit content and close/back controls inside desktop/iPhone/iPad safe bounds, hide the redundant internal entry in the canonical rail-mounted runtime, add mutation-sensitive geometry/source coverage, and preserve outfit/progression/shopping server semantics.",
+      "owned": "bounded P1 Avatar presentation geometry only",
+      "dependency": "None; source defect is deterministic and cloud-fixable.",
+      "exit": "Changed exact product head with all three guards green.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
       "mode": "P1_REPAIR_QA_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
@@ -147,40 +148,40 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__REBOUND_TO_C7D5E36__DEVICE_OFFLINE",
+      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_AVATAR_PANEL_REPAIR",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": 245,
       "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-      "latestOutput": "PR247 rebounded Smoke receipt, runtime contract and execution plan to c7d5e36 with CafeCard + ClassActivityModal live checks.",
-      "objective": "When the authorized device is online, execute the exact c7d5e36 runbook; do not promote headless evidence into runtime PASS.",
+      "latestOutput": "PR250 now requires Avatar, CafeCard and ClassActivityModal rendered evidence; static audit found Avatar panel content/control overflow before laptop execution.",
+      "objective": "Do not consume local runtime time on known-bad Avatar layout. Rebind the prepared c7d5e36 runbook only after the narrow Avatar repair passes QA and Integration.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "ONLINE_LAPTOP availability.",
-      "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
+      "dependency": "Avatar panel repair -> exact CI -> QA -> Integration.",
+      "exit": "Repaired integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_READY_C7D5E36__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+      "mode": "PREFLIGHT_STALE_ON_PENDING_AVATAR_LAYOUT_REPAIR__DO_NOT_PACKAGE_C7D5E36",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR248 merged deterministic package preflight for c7d5e36: root tree 48f1b15a, school tree e5f70c8d, 72 entries, reserved artifact identity; package not emitted.",
-      "objective": "After exact-canonical Smoke PASS, reread canonical/Smoke and revalidate tree identities, then emit deterministic c7d5e36 package. Preserve prior 4323049 package until then.",
+      "latestOutput": "PR248 preflight is now historical only because Avatar panel content/control overflow is source-proven.",
+      "objective": "Do not package c7d5e36. Recompute deterministic package identity after the narrow repair integrates and full Smoke passes.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
-      "exit": "Smoke PASS or canonical-head change.",
+      "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
+      "exit": "Full Smoke PASS on repaired canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA67_P1_SOURCE_STATIC_COMPLETE__SMOKE_LOCAL_ONLY_HOLD__P2_ARMED_C7D5E36__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA68_SOURCE_DEFECT_FOUND__SOLE_P1_AVATAR_LAYOUT_REPAIR_RESERVED",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR245 repair integrated; PR246 Integration, PR247 Smoke rebind, and PR248 Release preflight merged. P2 activation manifest rebased to c7d5e36 with unchanged server authorities.",
-      "objective": "Keep product WIP at 2/3. Execute exact-canonical runtime Smoke when device is available, then package c7d5e36 and release exactly one P2 producer.",
+      "latestOutput": "Static audit caught P1_AVATAR_PANEL_CONTENT_OVERFLOW before laptop runtime. Verified outfit labels extend 128px beyond the current panel and overlap the injected Back control; internal entry also violates mobile safe-right before being hidden.",
+      "objective": "Run one narrow cloud-fixable Avatar layout repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "P1 Smoke PASS/defect, Package, canonical change, or local-device availability change.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Free Roam repair.",
+      "exit": "Changed repair head or concrete new defect.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -363,21 +364,21 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "P1_RUNTIME_ACCEPTANCE_ON_CAFE_CARD_REPAIRED_CANONICAL",
-    "owner": "Roblox High School Integration Smoke",
+    "id": "P1_AVATAR_PANEL_CONTENT_OVERFLOW",
+    "owner": "Pip High Free Roam",
     "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "evidence": "PR245 CafeCard source repair passed QA and integrated; PR247 rebound Smoke; PR248 pins package preflight.",
+    "evidence": "LegacyOutfitEntry panel is 286x262. Nine verified labels are positioned from y=210 through y=370 with 20px height, so final content bottom is 390. Canonical FeaturePanelBack occupies panel y=226..256 and overlaps verified content. The internal entry is x=708..840 on iPhone vs safe right 805 and x=880..1012 on iPad vs safe right 1000 until hidden by the rail path.",
     "acceptanceCriteria": [
-      "Rendered comparable-FOV captures on desktop/iPhone/iPad",
-      "Physical spawn/entrance/atrium/corridor/stair traversal",
-      "Live Shop/Travel/Avatar/House/Housing Editor interaction",
-      "Live ClassActivityModal interaction and safe-area containment",
-      "Live CafeCard interaction and right touch-zone clearance",
-      "Save/rejoin restoration on exact canonical"
+      "Full outfit panel content plus canonical close/back controls fits inside desktop 909x483, iPhone 852x393 and iPad 1024x768 safe rectangles",
+      "No verified label/control overlap after canonical scaling",
+      "Redundant internal entry is hidden in canonical rail-mounted runtime before user interaction",
+      "Mutation-sensitive tests reject the old 262px content container and fixed unsafe internal-entry behavior",
+      "Outfit save/wear/filter/progression/shopping authorities unchanged",
+      "All three exact-head guards green before QA"
     ],
-    "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING",
-    "blocker": "LOCAL_ONLY_REQUIRED runtime/device evidence",
-    "nextHandoff": "Roblox High School Integration Smoke"
+    "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
+    "blocker": null,
+    "nextHandoff": "Pip High Free Roam -> QA"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
