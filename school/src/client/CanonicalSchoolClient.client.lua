@@ -1573,15 +1573,13 @@ local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
 houseIcon.LayoutOrder = 3
 houseIcon.Size = UDim2.fromOffset(52, 52)
-houseIcon.BackgroundColor3 = Color3.fromRGB(83, 188, 77)
-houseIcon.Font = Enum.Font.ArialBold
+houseIcon.BackgroundColor3 = Rhs2UiStyle.Palette.HouseGreen
+houseIcon.Font = Rhs2UiStyle.Font.Bold
 houseIcon.Text = "HOUSE"
-houseIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseIcon.TextColor3 = Rhs2UiStyle.Palette.White
 houseIcon.TextSize = 12
 houseIcon.Parent = actionRail
-round(houseIcon, 10)
-local houseRailStroke = outline(houseIcon, 2)
-houseRailStroke.Color = Color3.fromRGB(255, 255, 255)
+Rhs2UiStyle.applyPrimaryRailButton(houseIcon, Rhs2UiStyle.Palette.HouseGreen)
 applyResponsiveHudLayout()
 
 housePanel = Instance.new("Frame")
@@ -1589,61 +1587,59 @@ housePanel.Name = "LegacyHousePanel"
 housePanel.AnchorPoint = Vector2.new(0, 0)
 housePanel.Position = UDim2.fromOffset(0, 0)
 housePanel.Size = UDim2.new(0, 248, 0, 292)
-housePanel.BackgroundColor3 = LEGACY_PANEL
-housePanel.BackgroundTransparency = 0.02
+housePanel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+housePanel.BackgroundTransparency = 0
 housePanel.Visible = false
 housePanel.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(housePanel)
 housePanelScale = Instance.new("UIScale")
 housePanelScale.Name = "ResponsiveScale"
 housePanelScale.Scale = 1
 housePanelScale.Parent = housePanel
-round(housePanel, 2)
-outline(housePanel, 2)
-
 local houseTitle = Instance.new("TextLabel")
-houseTitle.BackgroundColor3 = LEGACY_BLUE
+houseTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 houseTitle.BorderSizePixel = 0
 houseTitle.Size = UDim2.new(1, 0, 0, 28)
-houseTitle.Font = Enum.Font.ArialBold
+houseTitle.Font = Rhs2UiStyle.Font.Bold
 houseTitle.Text = "House"
-houseTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseTitle.TextColor3 = Rhs2UiStyle.Palette.White
 houseTitle.TextSize = 15
 houseTitle.Parent = housePanel
+Rhs2UiStyle.applyHeader(houseTitle)
 
 local houseClose = Instance.new("TextButton")
 houseClose.Name = "HouseClose"
 houseClose.AnchorPoint = Vector2.new(1, 0)
 houseClose.Position = UDim2.new(1, -3, 0, 2)
 houseClose.Size = UDim2.fromOffset(26, 24)
-houseClose.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-houseClose.Font = Enum.Font.ArialBold
-houseClose.Text = "X"
-houseClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseClose.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+houseClose.Font = Rhs2UiStyle.Font.Bold
+houseClose.Text = "×"
+houseClose.TextColor3 = Rhs2UiStyle.Palette.White
 houseClose.TextSize = 13
 houseClose.Parent = housePanel
-round(houseClose, 2)
+Rhs2UiStyle.applyCloseButton(houseClose)
 
 local houseBack = Instance.new("TextButton")
 houseBack.Name = "HouseBack"
 houseBack.AnchorPoint = Vector2.new(0.5, 1)
 houseBack.Position = UDim2.new(0.5, 0, 1, -5)
 houseBack.Size = UDim2.new(1, -20, 0, 30)
-houseBack.BackgroundColor3 = LEGACY_BUTTON
-houseBack.Font = Enum.Font.ArialBold
-houseBack.Text = "BACK"
-houseBack.TextColor3 = LEGACY_BLUE_DARK
+houseBack.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+houseBack.Font = Rhs2UiStyle.Font.Bold
+houseBack.Text = "↩  BACK"
+houseBack.TextColor3 = Rhs2UiStyle.Palette.White
 houseBack.TextSize = 12
 houseBack.Parent = housePanel
-round(houseBack, 2)
-outline(houseBack, 1)
+Rhs2UiStyle.applyTab(houseBack, false)
 
 local houseStatus = Instance.new("TextLabel")
 houseStatus.BackgroundTransparency = 1
 houseStatus.Position = UDim2.new(0, 10, 0, 36)
 houseStatus.Size = UDim2.new(1, -20, 0, 52)
-houseStatus.Font = Enum.Font.Arial
+houseStatus.Font = Rhs2UiStyle.Font.Regular
 houseStatus.Text = "Loading house..."
-houseStatus.TextColor3 = LEGACY_BLUE_DARK
+houseStatus.TextColor3 = Rhs2UiStyle.Palette.White
 houseStatus.TextSize = 13
 houseStatus.TextWrapped = true
 houseStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1654,36 +1650,34 @@ local housePrimary = Instance.new("TextButton")
 housePrimary.Name = "HousePrimaryAction"
 housePrimary.Position = UDim2.new(0, 10, 0, 94)
 housePrimary.Size = UDim2.new(1, -20, 0, 38)
-housePrimary.BackgroundColor3 = LEGACY_BUTTON
-housePrimary.Font = Enum.Font.ArialBold
+housePrimary.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+housePrimary.Font = Rhs2UiStyle.Font.Bold
 housePrimary.Text = "BUY HOUSE  •  $50"
-housePrimary.TextColor3 = LEGACY_BLUE_DARK
+housePrimary.TextColor3 = Rhs2UiStyle.Palette.White
 housePrimary.TextSize = 13
 housePrimary.Parent = housePanel
-round(housePrimary, 2)
-outline(housePrimary, 1)
+Rhs2UiStyle.applyTab(housePrimary, true)
 
 local houseEdit = Instance.new("TextButton")
 houseEdit.Name = "HouseEditAction"
 houseEdit.Position = UDim2.new(0, 10, 0, 138)
 houseEdit.Size = UDim2.new(1, -20, 0, 38)
-houseEdit.BackgroundColor3 = LEGACY_BUTTON
-houseEdit.Font = Enum.Font.ArialBold
+houseEdit.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+houseEdit.Font = Rhs2UiStyle.Font.Bold
 houseEdit.Text = "EDIT HOUSE"
-houseEdit.TextColor3 = LEGACY_BLUE_DARK
+houseEdit.TextColor3 = Rhs2UiStyle.Palette.White
 houseEdit.TextSize = 13
 houseEdit.Visible = false
 houseEdit.Parent = housePanel
-round(houseEdit, 2)
-outline(houseEdit, 1)
+Rhs2UiStyle.applyTab(houseEdit, false)
 
 local houseColorLabel = Instance.new("TextLabel")
 houseColorLabel.BackgroundTransparency = 1
 houseColorLabel.Position = UDim2.new(0, 10, 0, 181)
 houseColorLabel.Size = UDim2.new(1, -20, 0, 18)
-houseColorLabel.Font = Enum.Font.ArialBold
+houseColorLabel.Font = Rhs2UiStyle.Font.Bold
 houseColorLabel.Text = "HOUSE COLOR"
-houseColorLabel.TextColor3 = LEGACY_BLUE_DARK
+houseColorLabel.TextColor3 = Rhs2UiStyle.Palette.White
 houseColorLabel.TextSize = 12
 houseColorLabel.TextXAlignment = Enum.TextXAlignment.Left
 houseColorLabel.Visible = false
