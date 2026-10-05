@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "lane": "Roblox High School Integration Smoke",
   "owner": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-04T19:58:25.867Z",
-  "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING",
+  "recordedAt": "2026-10-05T15:47:38Z",
+  "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-  "milestone": "PR170_CORE_CLIENT_STARTUP_REPAIR_POST_INTEGRATION_SMOKE",
+  "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "milestone": "P1_MENU_INTERACTION_MOBILE_GEOMETRY_POST_INTEGRATION_SMOKE",
   "referenceClipTime": [
     "A@00:05 school frontage/spawn approach",
     "A@00:25 bright atrium/central display",
@@ -17,49 +17,46 @@
     "A/B/C recurring compact right icon rail, top-right balances/status, and bottom item slots"
   ],
   "acceptanceCriteria": [
-    "Consume Integration receipt schema 12 only when its exact integration SHA equals the live canonical.",
+    "Consume Integration receipt schema 13 only when its exact integration SHA equals the live canonical.",
     "Require Foundation, Class/Education, and Progression push guards successful on the exact live canonical.",
-    "Require LegacyOutfitEntry.lua to parse and its canonical client mount contract to pass on that exact SHA.",
-    "Exercise cloud-safe contracts for spawn/entrance/connected interior, class/free roam, menus, progression restore, and save/rejoin semantics as implemented.",
-    "Keep Roblox runtime, rendered camera, live DataStore rejoin, and iPhone/iPad touch checks pending unless actually executed.",
-    "Do not represent headless success as RHS2 visual parity."
+    "Require feature-panel controller, responsive auxiliary geometry, HUD mount, authority boundaries, and deterministic repository tests to remain green on that exact SHA.",
+    "Do not classify static, compiler, headless, or source-inspection evidence as rendered/device/traversal/save-rejoin PASS.",
+    "Execute the PR214 runtime capture contract on desktop, iPhone landscape, and iPad landscape before declaring full Smoke PASS."
   ],
   "outputLocation": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-  "blocker": null,
+  "blocker": "LOCAL_ONLY_REQUIRED: timestamp-matched rendered/device/traversal/save-rejoin smoke for exact canonical 39911a has not been executed.",
   "integrationEvidence": {
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "receiptSchema": 12,
-    "receiptBlob": "7f3764602be17d1b6a645efa5a4e271b8677a2fe",
+    "receiptSchema": 13,
+    "receiptMergeSha": "83798b16beeae04d85e2d40bb427182f8ec01c7e",
+    "receiptPr": 224,
     "result": "PASS_INTEGRATED_EXACT_HEAD",
-    "producerPr": 170,
-    "approvedCandidateSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
-    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "qa": "PR 170 review 5407562971 PASS_EXACT_HEAD"
+    "producerPr": 214,
+    "approvedCandidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "qa": "PR 214 review 5417072888 PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_AUXILIARY_GEOMETRY_CONTRACT"
   },
   "exactCanonicalPushCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37225838208,
-      "jobId": 111505179512,
+      "runId": 37334868469,
       "event": "push",
       "conclusion": "success",
-      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37225838207,
-      "jobId": 111505179374,
+      "runId": 37334868501,
       "event": "push",
       "conclusion": "success",
-      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37225838221,
-      "jobId": 111505179586,
+      "runId": 37334868472,
       "event": "push",
       "conclusion": "success",
-      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     }
   ],
   "exactHeadOutputs": [
@@ -67,129 +64,59 @@
     "EDUCATION_ENGINE_DETERMINISTIC_TESTS_OK",
     "CLASS_EDUCATION_DETERMINISTIC_TESTS_OK",
     "HIGH_SCHOOL_PROGRESSION_REPOSITORY_PASS",
-    "HIGH_SCHOOL_VEHICLE_LIFECYCLE_PASS",
-    "HIGH_SCHOOL_VEHICLE_INPUT_PASS",
-    "HIGH_SCHOOL_AVATAR_CUSTOMIZATION_RUNTIME_MOUNT_PASS",
-    "HIGH_SCHOOL_LEGACY_HUD_CONTRACT_PASS",
-    "HIGH_SCHOOL_HOUSING_LIFECYCLE_PASS",
-    "HIGH_SCHOOL_HOUSING_UI_CONTRACT_PASS",
-    "HIGH_SCHOOL_HOUSING_LAYOUT_REPOSITORY_PASS",
-    "HIGH_SCHOOL_PROGRESSION_BINDING_PASS",
-    "HIGH_SCHOOL_CLASS_PROGRESSION_INTEGRATION_PASS"
+    "HIGH_SCHOOL_FEATURE_PANEL_CONTROLLER_PASS",
+    "HIGH_SCHOOL_COMPACT_HUD_CONTRACT_PASS",
+    "RESPONSIVE_HUD_LAYOUT_CONTRACT_PASS"
   ],
   "smokeChecks": {
     "canonicalIdentity": "PASS_EXACT_HEAD",
     "sourceRootIsolation": "PASS_EXACT_HEAD",
-    "clientStartupModuleParse": "PASS_CLOUD_COMPILER_EXACT_HEAD",
+    "featurePanelController": "PASS_DETERMINISTIC_CONTRACT",
+    "auxiliaryPanelGeometry": "PASS_DESKTOP_IPHONE_IPAD_STATIC_GEOMETRY_CONTRACT",
+    "authorityContinuity": "PASS_STATIC_CONTRACT",
     "hudMount": "PASS_HEADLESS_CONTRACT__RENDERED_PENDING",
-    "spawnToEntrance": "PASS_STATIC_WIRING_AS_IMPLEMENTED__RUNTIME_PENDING",
-    "entranceToAtrium": "PASS_STATIC_CONNECTED_INTERIOR_AS_IMPLEMENTED__RHS2_PARITY_OPEN",
+    "spawnToEntrance": "RUNTIME_PENDING",
+    "entranceToAtrium": "RUNTIME_PENDING",
+    "physicalStairTraversal": "LOCAL_ONLY_REQUIRED",
     "classFreeRoam": "PASS_DETERMINISTIC_CONTRACT__RUNTIME_PENDING",
-    "menus": "PASS_HEADLESS_HUD_HOUSING_AVATAR_SHOPPING_CONTRACTS__RUNTIME_PENDING",
-    "saveRejoin": "PASS_HEADLESS_REPOSITORY_RESTORE_SEMANTICS__LIVE_DATASTORE_REJOIN_PENDING",
-    "renderedVisualComparison": "RENDERED_PENDING",
+    "menus": "PASS_HEADLESS_INTERACTION_CONTRACT__LIVE_TOUCH_PENDING",
+    "saveRejoin": "PASS_HEADLESS_RESTORE_SEMANTICS__LIVE_REJOIN_PENDING",
+    "renderedVisualComparison": "LOCAL_ONLY_REQUIRED",
     "deviceTouchObstruction": "LOCAL_ONLY_REQUIRED"
   },
-  "knownNonblockingP1Gaps": [
-    {
-      "id": "SPAWN_ENTRY_MAT_AABB_OVERLAP",
-      "evidence": "Foundation PR 179; MainSpawn overlaps the collidable EntryMat and remains inside the lobby.",
-      "disposition": "P1 producer must relocate the singular spawn and add the route contract; this does not invalidate the PR 170 startup repair smoke."
-    },
-    {
-      "id": "RHS2_VISIBLE_BASELINE_NOT_IMPLEMENTED",
-      "evidence": "Current canonical has a front lobby and central hall, not a rendered-verified RHS2 frontage/atrium/corridor/HUD match.",
-      "disposition": "Remain open for the reserved P1 producer; no parity claim."
-    }
-  ],
+  "knownNonblockingP1Gaps": [],
   "runtimeComparisonPlan": {
-    "planVersion": 2,
-    "timingCaution": "Reference playback visibly contains 2x segments; do not infer original movement speed or animation timing without correction.",
-    "referenceTransport": "Persistent A/B/C identities remain authoritative; byte materialization retried and returned transient HTTP 502 for all three clips. Content QA owns retry continuity.",
-    "orderedFlow": [
-      "spawn",
-      "school entrance",
-      "bright atrium",
-      "broad corridor/staircase",
-      "class/free roam",
-      "house/avatar/vehicle/cafe menus as implemented",
-      "save/rejoin restores committed state"
+    "planVersion": 3,
+    "contract": "coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json",
+    "exactSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "LOCAL_ONLY_REQUIRED",
+    "requiredProfiles": [
+      "desktop 909x483",
+      "iPhone landscape 852x393",
+      "iPad landscape 1024x768"
     ],
-    "cameraCheckpoints": [
-      {
-        "reference": "A@00:05",
-        "target": "frontage/crest/stairs/red-white-blue entrance silhouette",
-        "capture": "same aspect ratio and comparable FOV; record camera position/yaw/pitch/FOV",
-        "status": "RENDERED_PENDING"
-      },
-      {
-        "reference": "A@00:25",
-        "target": "bright atrium/circular central display/ceiling-light rhythm",
-        "capture": "center display and record left/right circulation clearance",
-        "status": "RENDERED_PENDING"
-      },
-      {
-        "reference": "A@00:45",
-        "target": "broad corridor/staircase sightline",
-        "capture": "align hall axis and preserve staircase visibility",
-        "status": "RENDERED_PENDING"
-      },
-      {
-        "reference": "A@02:05",
-        "target": "stairwell with recurring inventory/HUD composition",
-        "capture": "menu closed and item-slot baseline",
-        "status": "RENDERED_PENDING"
-      }
+    "requiredChecks": [
+      "A@00:05/00:25/00:45/02:05 comparable-FOV rendered captures",
+      "spawn -> entrance -> atrium -> corridor -> stair up/down physical traversal",
+      "Shop/Travel/Avatar/House/Housing Editor live interaction and obstruction checks",
+      "save/rejoin restoration"
     ],
-    "obstructionHarnessGapClosed": {
-      "priorGap": "The prior plan named obstruction checks but did not define capture measurements.",
-      "exactBaseline": "Canonical LegacySchoolMenu is bottom-left, 236x184, with touch bottom margin 112; this is a known large free-roam obstruction baseline.",
-      "captureProtocol": [
-        "For each iPhone/iPad viewport, record viewport pixels, safe insets, orientation, and Roblox touch-control bounds.",
-        "Record normalized bounding boxes for right icon rail, top-right status/balances, bottom item slots, every open modal, movement controls, and jump control.",
-        "Capture menu-closed spawn/atrium/corridor frames plus one frame for each implemented menu.",
-        "Fail obstruction review if any Pip High control overlaps Roblox movement/jump/gesture regions or if menu-closed UI blocks the central navigation sightline.",
-        "Keep visual matching and reachability pending until an actual target-device capture exists."
-      ],
-      "status": "MEASUREMENT_PROTOCOL_PINNED__EXECUTION_PENDING"
-    },
-    "deviceProfiles": [
-      {
-        "profile": "iPhone landscape",
-        "checks": [
-          "right rail clears safe inset and jump controls",
-          "bottom slots clear movement/gesture regions",
-          "top-right balances/status clears display inset",
-          "menu-closed central view remains unobstructed"
-        ],
-        "status": "LOCAL_ONLY_REQUIRED"
-      },
-      {
-        "profile": "iPad landscape",
-        "checks": [
-          "right rail remains compact and reachable",
-          "bottom controls do not collide with House/Avatar/class menus",
-          "central atrium/corridor view remains unobstructed",
-          "safe-area behavior survives resize/orientation"
-        ],
-        "status": "LOCAL_ONLY_REQUIRED"
-      }
-    ]
+    "timingCaution": "Reference playback contains 2x segments; do not infer original movement or animation speed without correction."
   },
-  "releasePackageEligible": true,
-  "releasePackageCondition": "Release/Package may consume only exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe and must carry rendered/device checks as pending; this receipt does not authorize Roblox publication.",
+  "releasePackageEligible": false,
+  "releasePackageCondition": "Blocked until the runtime capture contract reaches full Smoke PASS on exact canonical 39911a; deterministic source packaging must not close rendered/device/traversal gaps.",
   "nextHandoff": {
-    "owner": "Roblox High School Release & Package Gate",
-    "exactSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "instruction": "Create the deterministic source package only for this exact SHA, bind tree identity, do not publish Roblox, and preserve RHS2 rendered/device comparison as pending."
+    "owner": "Roblox High School Integration Smoke",
+    "exactSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "instruction": "Run the local-only PR214 runtime capture contract when the authorized local GUI/device path is available. Until then preserve exact-head cloud evidence and do not advance Release/Package."
   },
   "localOnlyRequired": [
     {
       "id": "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
-      "exactSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "exactSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "check": "Timestamp-matched A@00:05/00:25/00:45/02:05 camera captures plus iPhone/iPad obstruction measurements for spawn, entrance, interior, menus, and save/rejoin.",
+      "check": "Timestamp-matched rendered captures, physical traversal, implemented menu interaction, iPhone/iPad obstruction measurements, and save/rejoin on the exact integrated canonical.",
       "reason": "Static/compiler/headless contracts cannot establish Roblox rendering, camera composition, physical collision response, touch hit targets, safe areas, or live DataStore rejoin."
     }
   ],
