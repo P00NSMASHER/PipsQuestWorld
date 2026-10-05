@@ -1,62 +1,63 @@
 {
-  "schemaVersion": 20,
+  "schemaVersion": 21,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+  "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_DEFECT_ACTIVE__OUTFIT_PANEL_SAFE_AREA",
-  "parentCertifiedSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "parentCertifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
   "repair": {
-    "pr": 245,
-    "branch": "rebuild/high-school-cafe-card-safe-area-4782aa-v1",
-    "sha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-    "scope": "CafeCard responsive safe-area/touch-zone repair"
+    "pr": 252,
+    "branch": "rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
+    "sha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
+    "scope": "OutfitInputs responsive content/safe-area repair and canonical internal-entry suppression"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37353456737,
+      "runId": 37357739121,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37353456762,
+      "runId": 37357739040,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37353456888,
+      "runId": 37357738962,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-    "evidence": "PR245 review 5418699307"
+    "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
+    "evidence": "PR252 review 5419048558"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD",
-    "mergedPr": 245,
-    "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-    "certifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "receiptPr": 246
+    "mergedPr": 252,
+    "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
+    "certifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "receiptPr": 253
   },
   "integrationSmoke": {
-    "result": "BLOCKED_SOURCE_DEFECT__OUTFIT_PANEL_SAFE_AREA",
-    "certifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "certifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptPr": 247,
+    "receiptPr": 254,
     "releasePackageEligible": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
       "PHYSICAL_TRAVERSAL_AND_SAVE_REJOIN",
+      "OUTFIT_INPUTS_LIVE_DEVICE_CHECK",
       "CLASS_ACTIVITY_MODAL_LIVE_DEVICE_CHECK",
       "CAFE_CARD_LIVE_DEVICE_TOUCH_CLEARANCE"
     ]
@@ -112,24 +113,18 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_OUTFIT_PANEL_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
+  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_57AD515",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "currentCanonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "currentPreflight": "coordination/release-packages/pip-high-school-c7d5e36-package-readiness-v1.json",
-    "reservedArtifact": "pip-high-school-c7d5e36-source-tree-e5f70c8d",
-    "reservedArtifactId": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2:e5f70c8db500f77f29e4fa9a3e9b6688750fd6c2",
-    "robloxPublished": false,
-    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
+    "currentCanonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "currentPreflight": "coordination/release-packages/pip-high-school-57ad515-package-readiness-v1.json",
+    "reservedArtifact": "pip-high-school-57ad515-source-tree-1faefa87",
+    "reservedArtifactId": "57ad515a5905d697417db688a1cc42d4452642b8:1faefa874371a5bde209addb1bc3289bb049df23",
+    "robloxPublished": false
   },
-  "currentSourceDefect": {
-    "id": "P1_OUTFIT_PANEL_SAFE_AREA",
-    "evidence": "OutfitInputs content exceeds its declared panel and mobile safe bottom; canonical internal outfit entry also exceeds mobile safe right.",
-    "reservedBranch": "rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
-    "status": "REPAIR_RESERVED"
-  }
+  "currentSourceDefect": null
 }
