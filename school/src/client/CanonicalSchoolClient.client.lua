@@ -776,7 +776,7 @@ shopDetails.Parent = shopBody
 Rhs2UiStyle.applyDarkRow(shopDetails)
 
 local travelBody
-travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
+travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "Travel")
 travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")
 applyResponsiveHudLayout()
 
