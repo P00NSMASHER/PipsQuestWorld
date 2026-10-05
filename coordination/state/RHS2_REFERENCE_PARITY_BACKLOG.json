@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T19:04:00Z",
+  "observedAt": "2026-10-05T19:24:00Z",
   "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,8 +141,8 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "INTEGRATED__SOURCE_STATIC_QA_PASS__RUNTIME_SMOKE_PENDING",
-      "owner": "Roblox High School Integration Smoke",
+      "status": "SOURCE_REPAIR_ACTIVE__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
+      "owner": "Pip High Free Roam",
       "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
       "referenceClipTime": [
         "A@00:05",
@@ -160,8 +160,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "rebuild/high-school-foundation@bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c; PR260 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live Shop/Travel/Avatar/Outfit/Class/Cafe/House interaction and save/rejoin remain unexecuted.",
-      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
+      "blocker": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP: fixed LegacyVehiclePanel overlaps the desktop quick bar.",
+      "nextHandoff": "Free Roam repair -> exact guards -> QA -> Integration -> rebind Smoke.",
       "branch": null,
       "pr": 258,
       "headSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
@@ -312,9 +312,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37359520177_37359520100_37359520019",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5419216675",
     "p1IntegrationStatus": "MERGED_TO_BFC035F__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__REBOUND_TO_BFC035F__PR260",
-    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR261",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_BFC035F__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
+    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
+    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P1_NARROW_VEHICLE_CARD_CLEARANCE_REPAIR_RESERVED"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,7 +406,26 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [],
+  "openDefects": [
+    {
+      "id": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
+      "owner": "Pip High Free Roam",
+      "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+      "status": "SOLE_PRODUCT_REPAIR_RESERVED",
+      "evidence": "Vehicle card x=324.5..584.5,y=339..471 overlaps desktop quick x=329.5..579.5,y=421..477.",
+      "acceptanceCriteria": [
+        "Safe containment desktop/iPhone/iPad",
+        "No HUD group overlap",
+        "No touch exclusion overlap",
+        "Centered contextual presentation preserved",
+        "No vehicle server authority changes",
+        "All three exact-head guards green"
+      ],
+      "outputLocation": "future PR on rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract"
+    }
+  ],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",

@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 71,
+  "schemaVersion": 72,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T19:03:30Z",
+  "observedAt": "2026-10-05T19:24:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
@@ -15,20 +15,21 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": null,
+    "producerBranch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Roblox High School Class & Education",
-      "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "ARMED_PREP_ONLY__REBASED_TO_BFC035F__PRODUCT_SLOT_BLOCKED_UNTIL_FULL_P1_SMOKE_AND_PACKAGE",
+      "owner": "Pip High Free Roam",
+      "scope": "P1_VEHICLE_CARD_HUD_CLEARANCE_REPAIR",
+      "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_DESKTOP_DEFECT",
       "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
       "pr": null,
-      "headSha": null
+      "headSha": null,
+      "defectId": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP"
     },
     "supersededCandidates": [
       {
@@ -43,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical bfc035f + frozen support PR150 consume 2/3. P1 Shop/Travel modal repair is integrated. Do not open P2 product code until exact-canonical runtime Smoke PASS and deterministic bfc035f Package complete.",
+    "rule": "WIP_CAP_3_FULL: exact canonical bfc035f + frozen support PR150 + one narrow P1 LegacyVehiclePanel clearance repair reservation consume 3/3. No P2 producer may open until this repair clears CI/QA/Integration and full runtime Smoke/Package pass.",
     "recentlyIntegrated": {
       "pr": 258,
       "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
@@ -52,7 +53,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_REBOUND_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_ONLY_BLOCKER__P2_ARMED_BFC035F__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_SOURCE_PROVEN_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP__NARROW_REPAIR_RESERVED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -110,17 +111,17 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "P1_SOURCE_REPAIR_COMPLETE__WAIT_RUNTIME_SMOKE__NO_PRODUCT_WRITE",
+      "mode": "SOLE_P1_REPAIR_RESERVED__VEHICLE_CARD_CLEARANCE",
       "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "branch": null,
-      "candidatePr": 258,
-      "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "PR258 repaired Shop/Travel surrounding-HUD and mobile touch-zone overlap, passed exact-head QA, and merged to canonical bfc035f; all three post-merge guards are green.",
-      "objective": "No further P1 product write unless runtime Smoke or static audit exposes a concrete defect. Keep later-slice readiness stable.",
+      "branch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "Static geometry audit found LegacyVehiclePanel fixed bottom-center at 260x132 with a 12px desktop bottom margin. On the 909x483 reference desktop it spans x=324.5..584.5, y=339..471 while the quick bar spans x=329.5..579.5, y=421..477, causing a large direct overlap. Touch fixtures are currently clear because the 112px mobile bottom margin lifts the panel above the touch zones.",
+      "objective": "Make the smallest responsive vehicle-card repair so LegacyVehiclePanel remains centered, safe and clear of the quick bar/HUD and touch zones on desktop 909x483, iPhone 852x393 and iPad 1024x768. Add mutation-sensitive pure geometry coverage; preserve vehicle lifecycle/input/server authority.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "Concrete Smoke/source defect or later Control Tower activation.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "None; source defect is deterministic and cloud-fixable.",
+      "exit": "Changed exact product head with all three guards green.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
       "mode": "P1_REPAIR_QA_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
@@ -147,40 +148,40 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__REBOUND_TO_BFC035F__DEVICE_OFFLINE",
+      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_VEHICLE_CARD_REPAIR",
       "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
       "candidatePr": 258,
       "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "PR260 rebound Smoke receipt, runtime contract and execution plan to bfc035f with Shop/Travel surrounding-HUD/touch checks plus prior Avatar/Cafe/Class/House checks.",
-      "objective": "When authorized device is online, execute exact bfc035f runbook; do not promote headless evidence into runtime PASS.",
+      "latestOutput": "Exact bfc035f runtime plan is ready, but static audit found LegacyVehiclePanel overlapping the desktop quick bar before runtime execution.",
+      "objective": "Do not consume laptop/runtime evidence on known-bad vehicle-card geometry. Rebind only after the narrow repair passes QA and Integration.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "ONLINE_LAPTOP availability.",
-      "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
+      "dependency": "Vehicle-card repair -> exact CI -> QA -> Integration.",
+      "exit": "Repaired integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_READY_BFC035F__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+      "mode": "PREFLIGHT_STALE_ON_PENDING_VEHICLE_CARD_SOURCE_REPAIR__DO_NOT_PACKAGE_BFC035F",
       "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR261 merged deterministic package preflight for bfc035f: root tree a31bc1ee, school tree 95338f2a, 72 entries, reserved artifact identity; package not emitted.",
-      "objective": "After exact-canonical Smoke PASS, reread canonical/Smoke and revalidate tree identities, then emit deterministic bfc035f package. Preserve prior 4323049 package until then.",
+      "latestOutput": "PR261 package preflight is historical only because LegacyVehiclePanel has a deterministic desktop quick-bar overlap defect.",
+      "objective": "Do not package bfc035f. Recompute deterministic package identity after the narrow repair integrates and full Smoke passes.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
-      "exit": "Smoke PASS or canonical-head change.",
+      "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
+      "exit": "Full Smoke PASS on repaired canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA71_P1_SOURCE_STATIC_COMPLETE__SMOKE_LOCAL_ONLY_HOLD__P2_ARMED_BFC035F__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA72_SOURCE_DEFECT_FOUND__SOLE_P1_VEHICLE_CARD_REPAIR_RESERVED",
       "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR258 repair integrated; PR259 Integration, PR260 Smoke rebind, and PR261 Release preflight merged. P2 activation manifest rebased to bfc035f with unchanged server authorities.",
-      "objective": "Keep product WIP at 2/3. Continue cloud-safe source audit; when device is available execute exact-canonical runtime Smoke, then package bfc035f and release exactly one P2 producer.",
+      "latestOutput": "Static audit caught P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP before laptop use: LegacyVehiclePanel overlaps almost the full desktop quick bar across y=421..471.",
+      "objective": "Run one narrow cloud-fixable vehicle-card clearance repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "P1 Smoke PASS/defect, new source-proven defect, Package, canonical change, or local-device availability change.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Free Roam repair.",
+      "exit": "Changed repair head or concrete new defect.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -363,23 +364,22 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "P1_RUNTIME_ACCEPTANCE_ON_FEATURE_MODAL_REPAIRED_CANONICAL",
-    "owner": "Roblox High School Integration Smoke",
+    "id": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
+    "owner": "Pip High Free Roam",
     "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-    "evidence": "PR258 Shop/Travel source repair passed QA and integrated; PR260 rebound Smoke; PR261 pins package preflight.",
+    "evidence": "LegacyVehiclePanel AnchorPoint(0.5,1), Position(0.5,0,1,-12 desktop), Size 260x132 => desktop bounds x=324.5..584.5,y=339..471. Responsive quick bar bounds x=329.5..579.5,y=421..477, so the surfaces overlap directly.",
     "acceptanceCriteria": [
-      "Rendered comparable-FOV captures on desktop/iPhone/iPad",
-      "Physical spawn/entrance/atrium/corridor/stair traversal",
-      "Live Shop/Travel surrounding-HUD and touch-zone clearance",
-      "Live Avatar/OutfitInputs full-content/safe-area interaction",
-      "Live House/Housing Editor interaction",
-      "Live ClassActivityModal interaction/safe-area containment",
-      "Live CafeCard interaction/right touch-zone clearance",
-      "Save/rejoin restoration on exact canonical"
+      "Vehicle card contained in safe rectangles on desktop 909x483, iPhone 852x393 and iPad 1024x768",
+      "No overlap with status, rail or quick HUD groups",
+      "No overlap with mobile movement/camera exclusion zones",
+      "Keep centered contextual-card presentation and reachable action controls",
+      "Vehicle lifecycle/input/spawn/server authority unchanged",
+      "Mutation-sensitive tests reject old desktop fixed-bottom geometry and one-pixel HUD/touch overlap",
+      "All three exact-head guards green before QA"
     ],
-    "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING",
-    "blocker": "LOCAL_ONLY_REQUIRED runtime/device evidence",
-    "nextHandoff": "Roblox High School Integration Smoke"
+    "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
+    "blocker": null,
+    "nextHandoff": "Pip High Free Roam -> QA"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
