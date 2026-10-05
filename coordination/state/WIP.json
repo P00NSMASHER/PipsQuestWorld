@@ -348,7 +348,7 @@
     "owner": "Pip High Free Roam",
     "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
     "referenceClipTime": "B@00:45; C@00:05-00:08; A/B/C recurring rail/status/quick slots",
-    "evidence": "PR188 review 5408709183 fails interaction source contract on 3cde55e; the later 3cde55e->ab8dfa8 delta changes only responsive-HUD geometry/tests and does not repair panel interactions; PR188 merged to tree-equivalent canonical 5fd5c05; Smoke PR212 holds Package.",
+    "evidence": "PR188 review node PRR_kwDOU0Wcsc8AAAABQmKuPw fails the interaction source contract on 3cde55e; the later 3cde55e->ab8dfa8 delta changes only responsive-HUD geometry/tests and does not repair panel interactions; PR188 merged to tree-equivalent canonical 5fd5c05; Smoke PR212 holds Package.",
     "acceptanceCriteria": [
       "Create one fresh producer branch from exact canonical 5fd5c05",
       "One active feature-panel controller with activation, explicit close/back and repeat-open idempotency",
