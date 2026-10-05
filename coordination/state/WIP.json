@@ -18,18 +18,18 @@
     "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": "rebuild/high-school-avatar-panel-safe-layout-c7d5e36-v1",
+    "producerBranch": "rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
-      "scope": "P1_AVATAR_PANEL_SAFE_LAYOUT_REPAIR",
+      "scope": "P1_OUTFIT_PANEL_SAFE_AREA_REPAIR",
       "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_LAYOUT_DEFECT",
       "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "pr": null,
       "headSha": null,
-      "defectId": "P1_AVATAR_PANEL_CONTENT_OVERFLOW"
+      "defectId": "P1_OUTFIT_PANEL_SAFE_AREA"
     },
     "supersededCandidates": [
       {
@@ -44,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_FULL: exact canonical c7d5e36 + frozen support PR150 + one narrow Avatar panel layout repair consume 3/3. No P2 producer may open until this source defect is repaired through CI/QA/Integration and full runtime Smoke/Package pass.",
+    "rule": "WIP_CAP_3_FULL: exact canonical c7d5e36 + frozen support PR150 + one narrow P1 OutfitInputs safe-area repair reservation consume 3/3. No P2 producer may open until this repair clears CI/QA/Integration and full runtime Smoke/Package pass.",
     "recentlyIntegrated": {
       "pr": 245,
       "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
@@ -53,7 +53,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_REBOUND_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_SOURCE_PROVEN_AVATAR_PANEL_CONTENT_OVERFLOW__NARROW_REPAIR_RESERVED",
+  "currentMilestone": "P1_SOURCE_PROVEN_OUTFIT_PANEL_SAFE_AREA_DEFECT__NARROW_REPAIR_RESERVED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -111,13 +111,13 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "SOLE_P1_REPAIR_RESERVED__AVATAR_PANEL_SAFE_LAYOUT",
+      "mode": "SOLE_P1_REPAIR_RESERVED__OUTFIT_PANEL_SAFE_AREA",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-      "branch": "rebuild/high-school-avatar-panel-safe-layout-c7d5e36-v1",
+      "branch": "rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "Static audit found LegacyOutfitEntry panel height 262 while nine verified 20px labels begin at y=210 and extend through y=390. The canonical FeaturePanelBack occupies y=226..256, overlapping Wear/Save/Hat1 content. On iPhone, overflowing content reaches well beyond safe bottom. The internal top-right Custom Outfits entry also extends beyond mobile safe-right until the Avatar rail path hides it.",
-      "objective": "Make the smallest presentation-only repair: contain the full outfit content and close/back controls inside desktop/iPhone/iPad safe bounds, hide the redundant internal entry in the canonical rail-mounted runtime, add mutation-sensitive geometry/source coverage, and preserve outfit/progression/shopping server semantics.",
+      "latestOutput": "Static audit found OutfitInputs declared 286x262 while its verified action/input labels extend to y=390 relative to the panel. The last label overflows the desktop viewport and the iPhone safe bottom. OutfitEntryInternal also extends past iPhone/iPad safe right before the canonical rail hides it.",
+      "objective": "Make the smallest responsive avatar/outfit presentation repair: fit full verified content in a safe centered base panel, hide the redundant internal entry immediately in the canonical shell, and add mutation-sensitive desktop/iPhone/iPad coverage. Preserve outfit filtering, save/wear, progression persistence, and verified labels/hierarchy.",
       "owned": "bounded P1 Avatar presentation geometry only",
       "dependency": "None; source defect is deterministic and cloud-fixable.",
       "exit": "Changed exact product head with all three guards green.",
@@ -148,23 +148,23 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_AVATAR_PANEL_REPAIR",
+      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_OUTFIT_PANEL_REPAIR",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": 245,
       "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-      "latestOutput": "PR250 now requires Avatar, CafeCard and ClassActivityModal rendered evidence; static audit found Avatar panel content/control overflow before laptop execution.",
-      "objective": "Do not consume local runtime time on known-bad Avatar layout. Rebind the prepared c7d5e36 runbook only after the narrow Avatar repair passes QA and Integration.",
+      "latestOutput": "Exact c7d5e36 runtime plan is ready, but static audit found OutfitInputs content overflow and internal-entry safe-right leakage before runtime execution.",
+      "objective": "Do not consume laptop/runtime evidence on known-bad avatar/outfit geometry. Rebind only after the narrow repair passes QA and Integration.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "Avatar panel repair -> exact CI -> QA -> Integration.",
+      "dependency": "Outfit panel repair -> exact CI -> QA -> Integration.",
       "exit": "Repaired integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_STALE_ON_PENDING_AVATAR_LAYOUT_REPAIR__DO_NOT_PACKAGE_C7D5E36",
+      "mode": "PREFLIGHT_STALE_ON_PENDING_OUTFIT_PANEL_SOURCE_REPAIR__DO_NOT_PACKAGE_C7D5E36",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR248 preflight is now historical only because Avatar panel content/control overflow is source-proven.",
+      "latestOutput": "PR248 package preflight is historical only because OutfitInputs has a deterministic source-proven safe-area/content-overflow defect.",
       "objective": "Do not package c7d5e36. Recompute deterministic package identity after the narrow repair integrates and full Smoke passes.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
       "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
@@ -172,12 +172,12 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA68_SOURCE_DEFECT_FOUND__SOLE_P1_AVATAR_LAYOUT_REPAIR_RESERVED",
+      "mode": "SCHEMA68_SOURCE_DEFECT_FOUND__SOLE_P1_OUTFIT_REPAIR_RESERVED",
       "base": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "Static audit caught P1_AVATAR_PANEL_CONTENT_OVERFLOW before laptop runtime. Verified outfit labels extend 128px beyond the current panel and overlap the injected Back control; internal entry also violates mobile safe-right before being hidden.",
-      "objective": "Run one narrow cloud-fixable Avatar layout repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
+      "latestOutput": "Static audit caught P1_OUTFIT_PANEL_SAFE_AREA before laptop use: verified labels extend to y=390 inside a 262px panel, overflowing desktop/iPhone; OutfitEntryInternal leaks past mobile safe right.",
+      "objective": "Run one narrow cloud-fixable outfit presentation repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "Free Roam repair.",
       "exit": "Changed repair head or concrete new defect.",
@@ -364,16 +364,15 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "P1_AVATAR_PANEL_CONTENT_OVERFLOW",
+    "id": "P1_OUTFIT_PANEL_SAFE_AREA",
     "owner": "Pip High Free Roam",
     "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "evidence": "LegacyOutfitEntry panel is 286x262. Nine verified labels are positioned from y=210 through y=370 with 20px height, so final content bottom is 390. Canonical FeaturePanelBack occupies panel y=226..256 and overlaps verified content. The internal entry is x=708..840 on iPhone vs safe right 805 and x=880..1012 on iPad vs safe right 1000 until hidden by the rail path.",
+    "evidence": "LegacyOutfitEntry OutfitInputs is 286x262 centered, while nine verified labels start at y=210 with 20px spacing and the last ends at y=390. On desktop 909x483 the last content reaches ~500.5; on iPhone 852x393 it reaches ~455.5 vs safe bottom 372. OutfitEntryInternal right edge is 840 vs iPhone safe right 805 and 1012 vs iPad safe right 1000.",
     "acceptanceCriteria": [
-      "Full outfit panel content plus canonical close/back controls fits inside desktop 909x483, iPhone 852x393 and iPad 1024x768 safe rectangles",
-      "No verified label/control overlap after canonical scaling",
-      "Redundant internal entry is hidden in canonical rail-mounted runtime before user interaction",
-      "Mutation-sensitive tests reject the old 262px content container and fixed unsafe internal-entry behavior",
-      "Outfit save/wear/filter/progression/shopping authorities unchanged",
+      "Full verified OutfitInputs content contained on desktop 909x483, iPhone 852x393 and iPad 1024x768",
+      "Canonical shell hides redundant OutfitEntryInternal immediately; Avatar rail remains the visible entry",
+      "One responsive UIScale/position binding, with mutation-sensitive tests rejecting old 262px panel/content overflow and mobile entry leakage",
+      "Verified labels, hierarchy, 12-slot/3-hat baseline, filtering/save/wear/persistence semantics unchanged",
       "All three exact-head guards green before QA"
     ],
     "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
