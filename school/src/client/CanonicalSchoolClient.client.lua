@@ -894,25 +894,24 @@ local function ensureOutfitPanelControls(panel)
     close.AnchorPoint = Vector2.new(1, 0)
     close.Position = UDim2.new(1, -4, 0, 4)
     close.Size = UDim2.fromOffset(28, 28)
-    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-    close.Font = Enum.Font.ArialBold
-    close.Text = "X"
-    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    close.Font = Rhs2UiStyle.Font.Bold
+    close.Text = "×"
+    close.TextColor3 = Rhs2UiStyle.Palette.White
     close.Parent = panel
-    round(close, 3)
+    Rhs2UiStyle.applyCloseButton(close)
 
     local back = Instance.new("TextButton")
     back.Name = "FeaturePanelBack"
     back.AnchorPoint = Vector2.new(0.5, 1)
     back.Position = UDim2.new(0.5, 0, 1, -6)
     back.Size = UDim2.new(1, -12, 0, 30)
-    back.BackgroundColor3 = LEGACY_BUTTON
-    back.Font = Enum.Font.ArialBold
-    back.Text = "BACK"
-    back.TextColor3 = LEGACY_BLUE_DARK
+    back.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+    back.Font = Rhs2UiStyle.Font.Bold
+    back.Text = "↩  BACK"
+    back.TextColor3 = Rhs2UiStyle.Palette.White
     back.Parent = panel
-    round(back, 2)
-    outline(back, 1)
+    Rhs2UiStyle.applyTab(back, false)
 
     close.Activated:Connect(function()
         featurePanels:close("explicit_close")
