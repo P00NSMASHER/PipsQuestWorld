@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School QA & Contract / Content QA",
+  "createdAt": "2026-10-05T19:54:00Z",
+  "status": "LOCKED_REFERENCE_ACCEPTANCE_MATRIX",
+  "referenceViewport": {
+    "width": 1112,
+    "height": 512,
+    "note": "Normalized geometry is derived from visible captured frames. It is an evaluation target, not a universal hard-coded viewport."
+  },
+  "frames": [
+    {
+      "id": "A_0005",
+      "source": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "time": "00:05",
+      "role": "persistent free-roam HUD",
+      "observedGeometry": {
+        "topStatus": {
+          "x": [
+            0.78,
+            0.91
+          ],
+          "y": [
+            0,
+            0.2
+          ],
+          "note": "compact stacked top-right utility/status block"
+        },
+        "primaryRail": {
+          "x": [
+            0.86,
+            0.91
+          ],
+          "y": [
+            0.18,
+            0.66
+          ],
+          "note": "four large colored rounded primary actions"
+        },
+        "utilityRail": {
+          "x": [
+            0.86,
+            0.91
+          ],
+          "y": [
+            0.65,
+            0.82
+          ],
+          "note": "smaller colorful utility tiles below primary rail"
+        },
+        "quickBar": {
+          "x": [
+            0.41,
+            0.64
+          ],
+          "y": [
+            0.88,
+            0.995
+          ],
+          "note": "four separated bottom-center slots"
+        }
+      },
+      "mustMatch": [
+        "No large permanent central free-roam panel.",
+        "Top-right status is dark stacked chrome with bright accent rows, not one pale card.",
+        "Four primary right-rail actions remain visually large and color-distinct.",
+        "Bottom quick items are discrete glossy rounded slots, not a flat toolbar.",
+        "World view remains dominant."
+      ]
+    },
+    {
+      "id": "C_0005",
+      "source": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "time": "00:05",
+      "role": "Travel modal",
+      "observedGeometry": {
+        "modal": {
+          "x": [
+            0.26,
+            0.74
+          ],
+          "y": [
+            0.18,
+            0.87
+          ]
+        },
+        "headerBlue": {
+          "x": [
+            0.26,
+            0.64
+          ],
+          "y": [
+            0.18,
+            0.27
+          ],
+          "note": "bright blue band with angled right edge"
+        },
+        "close": {
+          "x": [
+            0.7,
+            0.73
+          ],
+          "y": [
+            0.19,
+            0.27
+          ],
+          "shape": "outlined circle"
+        },
+        "tabs": {
+          "x": [
+            0.39,
+            0.61
+          ],
+          "y": [
+            0.27,
+            0.32
+          ],
+          "note": "gold active tab + deep-blue inactive tab"
+        },
+        "grid": {
+          "x": [
+            0.27,
+            0.72
+          ],
+          "y": [
+            0.32,
+            0.82
+          ],
+          "columns": 3
+        },
+        "retainedHud": {
+          "status": true,
+          "primaryRail": true,
+          "quickBar": true
+        }
+      },
+      "mustMatch": [
+        "Dark navy body.",
+        "Bright blue title/header band with white Travel title.",
+        "Close control clearly reachable at modal top-right.",
+        "Gold active tab and blue inactive tab immediately below header.",
+        "Destination cards read as image-card tiles with dark label strips.",
+        "Persistent status/rail/quick HUD remains visible around the panel."
+      ],
+      "authorityTolerance": [
+        "The canonical implementation may expose fewer interactive destination cards than the reference because server-approved destination authority is intentionally narrower.",
+        "Non-authorized destinations must not become functional merely for visual density."
+      ]
+    },
+    {
+      "id": "B_0045",
+      "source": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "time": "00:45",
+      "role": "dealership / dominant shop family",
+      "observedGeometry": {
+        "previewStage": {
+          "x": [
+            0.09,
+            0.42
+          ],
+          "y": [
+            0.08,
+            0.96
+          ]
+        },
+        "selectCallout": {
+          "x": [
+            0.11,
+            0.4
+          ],
+          "y": [
+            0.08,
+            0.19
+          ]
+        },
+        "shopSurface": {
+          "x": [
+            0.42,
+            0.91
+          ],
+          "y": [
+            0.05,
+            0.99
+          ]
+        },
+        "titleBand": {
+          "x": [
+            0.42,
+            0.81
+          ],
+          "y": [
+            0.05,
+            0.14
+          ]
+        },
+        "tabs": {
+          "x": [
+            0.42,
+            0.91
+          ],
+          "y": [
+            0.18,
+            0.24
+          ]
+        },
+        "searchSort": {
+          "x": [
+            0.42,
+            0.91
+          ],
+          "y": [
+            0.24,
+            0.3
+          ]
+        },
+        "itemGrid": {
+          "x": [
+            0.42,
+            0.91
+          ],
+          "y": [
+            0.29,
+            0.91
+          ]
+        },
+        "balances": {
+          "x": [
+            0.42,
+            0.72
+          ],
+          "y": [
+            0.92,
+            0.995
+          ]
+        }
+      },
+      "mustMatch": [
+        "Dominant blue shop family may replace the ordinary free-roam rail.",
+        "Left preview and right browse/details areas are visually distinct.",
+        "Header/tabs/search/sort/card grid form a coherent saturated-blue interface.",
+        "Selected/active tabs use gold accent.",
+        "Close control is white outlined on dark navy.",
+        "Never populate fake products or prices."
+      ]
+    },
+    {
+      "id": "C_0065",
+      "source": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "time": "01:05",
+      "role": "job/result modal family",
+      "observedGeometry": {
+        "modal": {
+          "x": [
+            0.32,
+            0.68
+          ],
+          "y": [
+            0.17,
+            0.88
+          ]
+        },
+        "purpleHeader": {
+          "x": [
+            0.32,
+            0.68
+          ],
+          "y": [
+            0.17,
+            0.26
+          ]
+        },
+        "whiteBody": {
+          "x": [
+            0.32,
+            0.68
+          ],
+          "y": [
+            0.26,
+            0.87
+          ]
+        },
+        "performance": {
+          "x": [
+            0.37,
+            0.63
+          ],
+          "y": [
+            0.38,
+            0.5
+          ]
+        },
+        "earnings": {
+          "x": [
+            0.4,
+            0.6
+          ],
+          "y": [
+            0.54,
+            0.62
+          ]
+        },
+        "progress": {
+          "x": [
+            0.37,
+            0.63
+          ],
+          "y": [
+            0.61,
+            0.67
+          ]
+        },
+        "primaryOk": {
+          "x": [
+            0.45,
+            0.55
+          ],
+          "y": [
+            0.79,
+            0.85
+          ]
+        },
+        "retainedHud": {
+          "status": true,
+          "primaryRail": true,
+          "quickBar": true
+        }
+      },
+      "mustMatch": [
+        "Purple patterned header with white title and close/back family.",
+        "White content body with dark bold hierarchy.",
+        "Gold performance meter.",
+        "Purple progression treatment.",
+        "Bright green rounded OK action.",
+        "Compact edge HUD remains visible around the result surface."
+      ]
+    }
+  ],
+  "globalVisualRules": [
+    "Primary UI font family should be Gotham/GothamBold/GothamMedium or closest Roblox built-in rounded modern sans, not Arial-heavy legacy presentation.",
+    "Primary panel body language is dark navy with saturated blue, gold and purple accents.",
+    "White strokes/highlights and subtle dark shadowing provide glossy RHS2 tile depth.",
+    "Rounded controls are medium-radius, not pill-heavy and not square-flat.",
+    "Persistent free-roam UI is edge-anchored and compact.",
+    "Modal hierarchy is visually obvious: header -> tabs/summary -> content -> close/back/dismiss."
+  ],
+  "regressionRejects": [
+    "Primary persistent status root rendered as pale LEGACY_PANEL.",
+    "Travel rendered as one pale generic panel with only a large text button.",
+    "Primary rail buttons rendered as unstyled text-only rectangles.",
+    "Quick slots rendered as unoutlined flat rectangles.",
+    "Any large permanent free-roam panel covering the center sightline.",
+    "A visual-parity PR changing ClassSessionController, ProgressionRepository, EconomyRepository, VehicleLifecycle, HousingLifecycle, ShoppingPurchaseController or other server authority modules.",
+    "Any unverified icon, destination, price, gem/weather value, catalog item or hidden UI hierarchy introduced solely for appearance."
+  ],
+  "deviceAcceptance": [
+    {
+      "profile": "desktop_reference",
+      "viewport": "909x483",
+      "required": "Composition close to the reference while retaining the repository's normalized safe geometry."
+    },
+    {
+      "profile": "iphone_landscape",
+      "viewport": "852x393",
+      "required": "Same visual hierarchy with scaled/reflowed controls; no left movement or right camera/action touch obstruction."
+    },
+    {
+      "profile": "ipad_landscape",
+      "viewport": "1024x768",
+      "required": "Same hierarchy at larger native scale; no stretched oversized panels or dead center obstruction."
+    }
+  ],
+  "parityStatusRule": "Static contracts may certify structure/style intent only. The final label 'exact RHS2 visual parity' requires actual rendered captures compared against these frames at comparable aspect/FOV and device metadata.",
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
