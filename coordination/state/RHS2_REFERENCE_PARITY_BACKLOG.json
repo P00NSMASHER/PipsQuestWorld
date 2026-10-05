@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 20,
+  "schemaVersion": 21,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T18:13:00Z",
+  "observedAt": "2026-10-05T18:18:00Z",
   "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,8 +141,8 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "INTEGRATED__SOURCE_STATIC_QA_PASS__RUNTIME_SMOKE_PENDING",
-      "owner": "Roblox High School Integration Smoke",
+      "status": "SOURCE_REPAIR_ACTIVE__OUTFIT_PANEL_SAFE_AREA",
+      "owner": "Pip High Free Roam",
       "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "A@00:05",
@@ -160,8 +160,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "rebuild/high-school-foundation@c7d5e36ef7d1878af2db01db7331a58ba63d50c2; PR247 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live class/modal/feature-panel/CafeCard interaction and save/rejoin remain unexecuted.",
-      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
+      "blocker": "P1_OUTFIT_PANEL_SAFE_AREA: OutfitInputs content overflows desktop/iPhone safe bounds and internal outfit entry leaks past mobile safe right.",
+      "nextHandoff": "Free Roam repair -> exact guards -> QA -> Integration -> rebind Smoke.",
       "branch": null,
       "pr": 245,
       "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
@@ -312,9 +312,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37353294718_37353294883_37353294740",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5418699307",
     "p1IntegrationStatus": "MERGED_TO_C7D5E36__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__REBOUND_TO_C7D5E36__PR247",
-    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR248",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_C7D5E36__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
+    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__OUTFIT_PANEL_SAFE_AREA",
+    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P1_NARROW_OUTFIT_PANEL_SAFE_AREA_REPAIR_RESERVED"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,7 +406,25 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [],
+  "openDefects": [
+    {
+      "id": "P1_OUTFIT_PANEL_SAFE_AREA",
+      "owner": "Pip High Free Roam",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+      "status": "SOLE_PRODUCT_REPAIR_RESERVED",
+      "evidence": "OutfitInputs declared 286x262 while verified content reaches y=390; mobile internal entry right edge exceeds safe right.",
+      "acceptanceCriteria": [
+        "Responsive safe containment desktop/iPhone/iPad",
+        "Verified content fully inside panel",
+        "Internal entry hidden immediately in canonical shell",
+        "No outfit/persistence authority changes",
+        "All three exact-head guards green"
+      ],
+      "outputLocation": "future PR on rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract"
+    }
+  ],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
