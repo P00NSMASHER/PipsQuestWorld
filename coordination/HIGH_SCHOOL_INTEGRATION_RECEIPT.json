@@ -1,60 +1,60 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "lane": "Roblox High School Integration Director",
   "owner": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-05T21:20:00Z",
+  "recordedAt": "2026-10-05T21:54:00Z",
   "result": "PASS_INTEGRATED_EXACT_HEAD",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-  "inputBaseSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-  "integrationSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-  "milestone": "P1_VEHICLE_CARD_HUD_CLEARANCE_REPAIR",
-  "producerPr": 264,
-  "referenceClipTime": "A@00:05 persistent HUD / vehicle compact-card clearance; repair is geometry-only and does not certify rendered parity.",
+  "inputSha": "89cbb0a41b778b854b18b1382af4037596766570",
+  "inputBaseSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "integrationSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "milestone": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
+  "producerPr": 274,
+  "referenceClipTime": "A@00:05 persistent HUD; C@00:05 Travel; B@00:45 shop/dealership family; additional A/B/C locked UI reference states.",
   "acceptanceCriteria": [
-    "Consume only PR264 head d2f51131ef5a1045dc00ec253d1b471686185e89 on base bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c.",
+    "Consume only PR274 head 89cbb0a41b778b854b18b1382af4037596766570 on base 7446d375e51e6af8013b9c25e3731e6a1ffbe635.",
     "Require independent QA authorization on the exact candidate head.",
-    "Require Foundation, Class/Education and Progression pull-request guards green on that exact head.",
-    "Require protected merge to exact live canonical 7446d375e51e6af8013b9c25e3731e6a1ffbe635 with no Integration-authored product edits.",
-    "Require all three push guards green on exact integrated canonical 7446d375 before downstream product merge.",
-    "Keep rendered/device/traversal/save-rejoin evidence pending for final UI-polished Smoke."
+    "Require Foundation, Class/Education and Progression PR guards green on the exact candidate head.",
+    "Require protected merge to exact live canonical 04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb with identical candidate/canonical trees.",
+    "Require all three push guards green on exact integrated canonical 04f4e5 before Smoke.",
+    "Keep exact visual parity pending until rendered desktop/iPhone/iPad comparison on this same canonical."
   ],
   "outputLocation": {
-    "product": "rebuild/high-school-foundation@7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "product": "rebuild/high-school-foundation@04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "producerPr": 264
+    "producerPr": 274
   },
-  "blocker": "NONE_FOR_VEHICLE_INTEGRATION; final runtime/rendered/device/traversal/save-rejoin remains deferred behind required UI-polish Integration.",
-  "nextHandoff": "Pip High Free Roam / UI Visual Parity PR274",
+  "blocker": "NONE_FOR_CLOUD_INTEGRATION; final rendered/device/traversal/save-rejoin Smoke remains LOCAL_ONLY_REQUIRED.",
+  "nextHandoff": "Roblox High School Integration Smoke",
   "preMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37363499172,
+      "runId": 37378447242,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "d2f51131ef5a1045dc00ec253d1b471686185e89"
+      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37363499168,
+      "runId": 37378447133,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "d2f51131ef5a1045dc00ec253d1b471686185e89"
+      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37363499184,
+      "runId": 37378447106,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "d2f51131ef5a1045dc00ec253d1b471686185e89"
+      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
     }
   ],
   "independentQa": {
-    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_VEHICLE_CARD_CLEARANCE_CONTRACT__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
-    "evidence": "PR264 review 5419550318",
-    "headSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_RHS2_UI_VISUAL_CONTRACT__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
+    "evidence": "PR274 review 5421030661",
+    "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
     "runtime": "NOT_RUNTIME_TESTED",
     "visual": "PENDING_RENDERED",
     "device": "STATIC_GEOMETRY_PASS__LIVE_DEVICE_PENDING"
@@ -62,32 +62,36 @@
   "postMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37363665326,
+      "runId": 37378786669,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "runAttempt": 7
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37363665377,
+      "runId": 37378786670,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "runAttempt": 1
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37363665343,
+      "runId": 37378786810,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "runAttempt": 2
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     }
   ],
   "changedPaths": [
+    ".github/workflows/school-pivot-ci.yml",
+    ".github/workflows/high-school-class-education-ci.yml",
+    ".github/workflows/high-school-progression-ci.yml",
+    "school/default.project.json",
     "school/src/client/CanonicalSchoolClient.client.lua",
+    "school/src/shared/LegacyOutfitEntry.lua",
     "school/src/shared/ResponsiveHudLayout.lua",
+    "school/src/shared/Rhs2UiStyle.lua",
+    "school/tests/avatar_customization_entry_spec.lua",
     "school/tests/legacy_hud_contract_spec.lua",
     "school/tests/responsive_hud_layout_spec.lua"
   ],
@@ -95,40 +99,52 @@
     "prMerged": true,
     "expectedHeadEnforced": true,
     "canonicalIdenticalToIntegrationSha": true,
-    "candidateRootTree": "168bcda2c8b72e0ac37c55683c7772107e2d470c",
-    "canonicalRootTree": "168bcda2c8b72e0ac37c55683c7772107e2d470c",
-    "candidateSchoolTree": "74b04377881b2410c331b520b2028b69b4e55fe8",
-    "canonicalSchoolTree": "74b04377881b2410c331b520b2028b69b4e55fe8",
+    "candidateRootTree": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
+    "canonicalRootTree": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
+    "candidateSchoolTree": "908595866f4671595c47f3890e2fadd877f748e5",
+    "canonicalSchoolTree": "908595866f4671595c47f3890e2fadd877f748e5",
     "sourceEditedByIntegration": false,
     "productPathsWithinPolicy": true,
     "secondRuntimeRootIntroduced": false,
-    "spawnClockLightingAuthorityChanged": false,
+    "serverAuthorityModulesChanged": false,
     "classAuthorityChanged": false,
     "progressionPersistenceAuthorityChanged": false,
+    "travelAuthorityChanged": false,
+    "shoppingAuthorityChanged": false,
+    "housingAuthorityChanged": false,
     "vehicleAuthorityChanged": false,
-    "retiredRuntimeConsumed": false,
+    "economyAuthorityChanged": false,
+    "workflowGuardsWeakened": false,
+    "workflowConcurrencyOnlyCancelsStaleSameGroupRuns": true,
     "spendingOrPublicationPerformed": false,
     "automationScheduleChanged": false
   },
   "nextSliceIntegrationSeams": {
-    "reservedOwner": "Pip High Free Roam / UI Visual Parity",
-    "activation": "PR274 may proceed to protected merge only after its own exact-head CI and independent QA pass.",
-    "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-    "authorityBaseline": "Vehicle-card repair changed responsive client geometry/tests only; all server authorities remain unchanged.",
+    "reservedOwner": "Roblox High School Integration Smoke",
+    "activation": "Run final exact-canonical rendered/device/traversal/save-rejoin Smoke on 04f4e5 before packaging or P2 activation.",
+    "scope": "P1_FINAL_RUNTIME_VISUAL_ACCEPTANCE",
+    "authorityBaseline": "PR274 changed presentation/layout/tests and workflow queue hygiene only; gameplay/server authorities remain unchanged.",
     "frozenSurfaces": [
-      "school/src/shared/ResponsiveHudLayout.lua vehicle bottom-centered safe-card geometry",
-      "school/tests/responsive_hud_layout_spec.lua vehicle mutation-sensitive coverage"
+      "RHS2 persistent HUD/status/right rail/quickbar",
+      "six-tile inert utility grid",
+      "Travel/Shop feature chrome and 530x354 nominal footprint",
+      "House/Housing Editor",
+      "Avatar/Outfit",
+      "ClassActivityModal",
+      "CafeCard",
+      "LegacyVehiclePanel"
     ],
     "orderedHandoff": [
-      "Finish PR274 exact-head CI/QA.",
-      "Protected-merge the exact approved PR274 head to canonical.",
-      "Require all three push guards on the UI-polished canonical.",
-      "Run final rendered/device/traversal/save-rejoin Smoke and deterministic Package."
+      "Smoke binds runtime evidence to exact canonical 04f4e5.",
+      "Capture desktop 909x483, iPhone 852x393 and iPad 1024x768 evidence.",
+      "Run traversal, feature interaction and save/rejoin evidence.",
+      "Run visual-diff triage against locked RHS2 frames.",
+      "Only after full Smoke PASS emit deterministic package and release P2."
     ]
   },
   "handoff": {
-    "nextOwner": "Pip High Free Roam / UI Visual Parity",
-    "exactSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "instruction": "Predecessor Integration is certified. Continue PR274 from exact base 7446d375; do not merge until PR274 same-SHA CI and independent QA are green."
+    "nextOwner": "Roblox High School Integration Smoke",
+    "exactSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "instruction": "Consume only exact canonical 04f4e5. Rendered/device/traversal/save-rejoin and visual comparison remain pending; do not claim exact visual parity until those are executed."
   }
 }
