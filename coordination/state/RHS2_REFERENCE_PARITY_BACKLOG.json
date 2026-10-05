@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:57:00Z",
+  "observedAt": "2026-10-05T18:00:00Z",
   "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,8 +141,8 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "INTEGRATED__SOURCE_STATIC_QA_PASS__RUNTIME_SMOKE_PENDING",
-      "owner": "Roblox High School Integration Smoke",
+      "status": "SOURCE_REPAIR_ACTIVE__CAFE_CARD_MOBILE_SAFE_AREA",
+      "owner": "Pip High Free Roam",
       "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
       "referenceClipTime": [
         "A@00:05",
@@ -160,8 +160,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "rebuild/high-school-foundation@4782aa655cd2d0340cc93ce7b8dd53604963f225; PR241 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live class/modal/feature-panel interaction and save/rejoin remain unexecuted.",
-      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
+      "blocker": "P1_CAFE_CARD_MOBILE_SAFE_AREA: CafeCard exceeds mobile safe-right bounds and overlaps the right touch exclusion zone on iPhone/iPad fixtures.",
+      "nextHandoff": "Free Roam repair -> all three exact-head guards -> QA -> Integration -> rebind Smoke plan.",
       "branch": null,
       "pr": 239,
       "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
@@ -312,9 +312,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37349863471_37349863498_37349863470",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5418408503",
     "p1IntegrationStatus": "MERGED_TO_4782AA__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__REBOUND_TO_4782AA__PR241",
-    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR242",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_4782AA__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
+    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__CAFE_CARD_MOBILE_SAFE_AREA",
+    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P1_NARROW_CAFE_CARD_SAFE_AREA_REPAIR_RESERVED"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,12 +406,30 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [],
+  "openDefects": [
+    {
+      "id": "P1_CAFE_CARD_MOBILE_SAFE_AREA",
+      "owner": "Pip High Free Roam",
+      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "status": "SOLE_PRODUCT_REPAIR_RESERVED",
+      "evidence": "CafeCard fixed geometry is x=580..840 on iPhone 852x393 vs safe right 805 and x ending 1012 on iPad vs safe right 1000; it also intersects the right touch exclusion zone on both fixtures.",
+      "acceptanceCriteria": [
+        "Safe containment on desktop/iPhone/iPad",
+        "No movement/camera-zone overlap on touch fixtures",
+        "Mutation-sensitive regression coverage",
+        "All three exact-head guards green",
+        "No cafe/economy/persistence authority changes"
+      ],
+      "outputLocation": "future PR on rebuild/high-school-cafe-card-safe-area-4782aa-v1",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract"
+    }
+  ],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
       "owner": "Roblox High School Integration Smoke",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "FUTURE_REPAIRED_CANONICAL",
       "referenceClipTime": "A@00:05/00:25/00:45/02:05, C@00:05-00:08, recurring HUD and class/free-roam interaction",
       "acceptanceCriteria": [
         "Execute the exact 4782aa local Smoke plan",
@@ -422,7 +440,7 @@
         "Save/rejoin restoration"
       ],
       "outputLocation": "coordination/smoke/runtime-evidence/4782aa655cd2d0340cc93ce7b8dd53604963f225/capture-receipt.json",
-      "blocker": "LOCAL_ONLY_REQUIRED authorized Roblox Studio/device path.",
+      "blocker": "CafeCard source repair -> exact CI -> QA -> Integration before runtime Smoke.",
       "nextHandoff": "Roblox High School Release & Package Gate"
     },
     {
