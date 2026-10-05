@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 61,
+  "schemaVersion": 62,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:25:00Z",
+  "observedAt": "2026-10-05T17:28:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -52,7 +52,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__LOCAL_EXECUTION_PLAN_READY__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -147,15 +147,15 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__EXACT_CANONICAL_39911A",
+      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__EXECUTION_PLAN_READY__DEVICE_OFFLINE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": 214,
       "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
-      "latestOutput": "PR225 binds the runtime capture contract to canonical 39911a; cloud-safe exact-head checks pass; rendered/device/traversal/save-rejoin remain unexecuted.",
-      "objective": "Execute the PR214 runtime capture contract on desktop, iPhone landscape and iPad landscape when the authorized local GUI/device path is available. Do not convert headless evidence into runtime PASS.",
+      "latestOutput": "PR234 merged PR214_39911A_LOCAL_SMOKE_EXECUTION_PLAN.json with exact capture order, evidence paths, validator handoff and hard-stop conditions. PAAM-L044 remains offline.",
+      "objective": "When the authorized laptop returns online, acquire the exact-canonical lease and execute the prepared runbook without rediscovery. Until then do not claim rendered/device/traversal/save-rejoin PASS.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "LOCAL_ONLY_REQUIRED authorized runtime path.",
-      "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
+      "dependency": "ONLINE_LAPTOP availability.",
+      "exit": "Full exact-canonical Smoke PASS or one concrete runtime defect.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
@@ -171,11 +171,11 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA61_P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA62_P1_RUNTIME_SMOKE_ONLY_BLOCKER__LOCAL_RUNBOOK_READY__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "P2 prep PR227/228, Release preflight PR230, and P3-P6 readiness PR232 are merged. Future slice contracts are current-lineage-bound; P1 runtime Smoke remains the only active blocking gate.",
+      "latestOutput": "PR234 local Smoke execution plan merged; P2-P6 prep and 39911a Release preflight already ready. Historical PR176 is now superseded by PR232 and closed; only PR150 and PR200 remain open as intentional reference evidence.",
       "objective": "Keep product WIP at 2/3, preserve all prepared slices, and release exactly one producer only after P1 full runtime Smoke and deterministic Package.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
@@ -1016,19 +1016,25 @@
       203,
       206,
       208,
-      222
+      222,
+      176
     ],
     "retainedReferencePrs": [
       150,
-      176,
       200
     ],
-    "reason": "Close stale/superseded coordination gates while preserving still-useful durable reference/source evidence."
+    "reason": "Superseded coordination PRs are closed; PR150 remains the frozen authorized avatar/shopping support fixture and PR200 remains the full reference-pack source."
   },
   "futureSliceReadiness": {
     "mergedPr": 232,
     "artifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
     "status": "P3_P6_PREP_READY__NO_PRODUCT_WRITE",
     "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+  },
+  "smokeExecutionPlan": {
+    "mergedPr": 234,
+    "artifact": "coordination/smoke/PR214_39911A_LOCAL_SMOKE_EXECUTION_PLAN.json",
+    "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "READY__WAIT_ONLINE_LAPTOP"
   }
 }
