@@ -311,8 +311,8 @@ local function applyResponsiveHudLayout()
         return
     end
     local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {
-        width = 560,
-        height = 390,
+        width = 530,
+        height = 354,
     })
     local featureModalValid, featureModalReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)
     if not featureModalValid then
@@ -709,7 +709,7 @@ local function makeFeaturePanel(name, heading)
     panel.Name = name
     panel.AnchorPoint = Vector2.new(0, 0)
     panel.Position = UDim2.fromOffset(0, 0)
-    panel.Size = UDim2.fromOffset(560, 390)
+    panel.Size = UDim2.fromOffset(530, 354)
     panel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
     panel.BackgroundTransparency = 0
     panel.Visible = false
