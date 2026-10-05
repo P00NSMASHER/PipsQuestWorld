@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 31,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "P1_VEHICLE_REPAIR_FULLY_INTEGRATED__UI_VISUAL_PARITY_PR274_ACTIVE__FINAL_RUNTIME_ACCEPTANCE_PENDING",
-  "currentPlayableEvidence": "Canonical 7446d375 is fully Integration-certified for PR264. Required UI-polish PR274 is active at exact head 89cbb0a41b778b854b18b1382af4037596766570 with exact-head CI running. Reference geometry now covers the aligned persistent HUD, six-tile utility grid, Travel footprint, and shared RHS2 styling across current P1 surfaces. Rendered/device parity remains pending.",
-  "runtimeValidatedThrough": "No final live runtime claim on the UI-polished build yet; final Smoke waits for PR274 Integration.",
-  "headlessExactHeadValidatedThrough": "Canonical 7446d375: all three push guards green and Integration certified. PR274 89cbb: preaudit PASS, exact-head CI in progress.",
+  "currentPlayableStage": "P1_UI_VISUAL_PARITY_INTEGRATED__FINAL_RENDERED_DEVICE_ACCEPTANCE_PENDING",
+  "currentPlayableEvidence": "PR274 exact head 89cbb passed all three PR guards and independent QA, merged to canonical 04f4e5, and all three exact-canonical push guards passed. Static/reference contracts now cover the RHS2 visual system and responsive geometry. Exact visual/runtime parity is not yet claimed because rendered device/traversal/save-rejoin evidence is still local-only and unexecuted.",
+  "runtimeValidatedThrough": "No final live Roblox Studio/device runtime claim on 04f4e5. PR287 binds final local-only Smoke to this exact canonical.",
+  "headlessExactHeadValidatedThrough": "04f4e5: all three push guards PASS; UI/static/reference contracts PASS; Integration PASS.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,23 +16,19 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "PR274 exact-head CI green -> same-SHA QA -> protected merge -> exact-canonical push CI -> rendered desktop/iPhone/iPad/traversal/save-rejoin Smoke -> Package -> P2.",
+  "nextMilestone": "Execute exact 04f4e5 rendered/device/traversal/save-rejoin Smoke -> deterministic Package -> activate armed P2 Classroom/Free Roam.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "milestone": "P1_VEHICLE_CARD_FULLY_INTEGRATED",
-    "headlessStatus": "ALL_THREE_PUSH_GUARDS_GREEN__INTEGRATION_PASS",
-    "runtimeStatus": "FINAL_SMOKE_DEFERRED_BEHIND_UI_POLISH"
+    "sha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "milestone": "P1_UI_VISUAL_PARITY_INTEGRATED",
+    "headlessStatus": "CI_QA_INTEGRATION_CLOUD_SAFE_PASS",
+    "runtimeStatus": "LOCAL_ONLY_REQUIRED__FINAL_SMOKE_HOLD"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
     "placeId": "87245440673982",
     "publishAuthorized": false
   },
-  "activeUiPolishCandidate": {
-    "pr": 274,
-    "sha": "89cbb0a41b778b854b18b1382af4037596766570",
-    "status": "ACTIVE__EXACT_HEAD_CI_IN_PROGRESS__PREAUDIT_PASS__RENDERED_PENDING"
-  }
+  "activeUiPolishCandidate": null
 }
