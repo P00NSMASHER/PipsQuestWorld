@@ -46,6 +46,9 @@
         "ResponsiveHudLayout": {
           "$path": "src/shared/ResponsiveHudLayout.lua"
         },
+        "Rhs2UiStyle": {
+          "$path": "src/shared/Rhs2UiStyle.lua"
+        },
         "FeaturePanelController": {
           "$path": "src/shared/FeaturePanelController.lua"
         }

@@ -58,6 +58,19 @@ for _, fixture in ipairs(fixtures) do
     assert(not ResponsiveHudLayout.overlaps(layout.status, layout.quick), fixture.name .. ": status/quick overlap")
     assert(not ResponsiveHudLayout.overlaps(layout.rail, layout.quick), fixture.name .. ": rail/quick overlap")
 
+    local utilityGrid = ResponsiveHudLayout.computeUtilityGrid(layout)
+    assert(utilityGrid.columns == 2 and utilityGrid.rows == 3, fixture.name .. ": utility grid must remain 2x3")
+    assert(utilityGrid.x == layout.rail.x, fixture.name .. ": utility grid must align with primary rail")
+    assert(utilityGrid.y == layout.rail.bottom + layout.railGap, fixture.name .. ": utility grid must begin below primary rail")
+    if utilityGrid.visible then
+        assert(ResponsiveHudLayout.contains(layout.safe, utilityGrid), fixture.name .. ": visible utility grid outside safe area")
+        assert(not ResponsiveHudLayout.overlaps(utilityGrid, layout.quick), fixture.name .. ": visible utility grid overlaps quick bar")
+        for index, exclusion in ipairs(fixture.zones) do
+            assert(not ResponsiveHudLayout.overlaps(utilityGrid, exclusion), fixture.name .. ": visible utility grid overlaps touch zone " .. index)
+        end
+    end
+    layout.utilityGrid = utilityGrid
+
     local auxiliary = ResponsiveHudLayout.computeAuxiliaryPanels(layout)
     local auxiliaryValid, auxiliaryReason = ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
     assert(auxiliaryValid, fixture.name .. ": " .. tostring(auxiliaryReason))
@@ -75,7 +88,7 @@ for _, fixture in ipairs(fixtures) do
     assert(ResponsiveHudLayout.contains(layout.safe, outfitModal), fixture.name .. ": outfit modal outside safe area")
     layout.outfitModal = outfitModal
 
-    local featureModal = ResponsiveHudLayout.computeInteractionModal(layout, { width = 560, height = 390 })
+    local featureModal = ResponsiveHudLayout.computeInteractionModal(layout, { width = 530, height = 354 })
     local featureValid, featureReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModal)
     assert(featureValid, fixture.name .. ": " .. tostring(featureReason))
     assert(ResponsiveHudLayout.contains(layout.safe, featureModal), fixture.name .. ": feature modal outside safe area")
@@ -146,6 +159,16 @@ approxBetween(nominal.rail.width / 909, 0.045, 0.065, "nominal rail width")
 approxBetween(nominal.rail.height / 483, 0.40, 0.48, "nominal rail height")
 approxBetween(nominal.quick.width / 909, 0.24, 0.30, "nominal quick width")
 approxBetween(nominal.quick.height / 483, 0.09, 0.13, "nominal quick height")
+assert(nominal.status.right == nominal.rail.right, "RHS2 status stack and primary rail share right edge")
+assert(math.abs(nominal.status.x - 785) <= 3, "desktop status stack matches locked RHS2 right-side anchor")
+assert(nominal.railButtonSize == 49, "desktop primary rail buttons match locked RHS2 footprint")
+assert(nominal.railButtonSize == nominal.rail.width, "desktop primary rail buttons fill the rail width")
+assert(nominal.utilityGrid.visible, "desktop utility grid should be visible")
+assert(nominal.utilityGrid.tileSize == 22, "desktop utility tiles match locked RHS2 footprint")
+assert(nominal.utilityGrid.width == nominal.rail.width, "desktop utility grid fills primary rail width")
+assert(nominal.utilityGrid.height == 76, "desktop utility grid matches three-row footprint")
+assert(math.abs(nominal.quick.x - 360) <= 4, "desktop quickbar matches locked RHS2 horizontal reference")
+assert(nominal.quick.bottom == 477, "desktop quickbar keeps locked vertical reference")
 
 local iphone = layouts["iphone-landscape-852x393"]
 local ipad = layouts["ipad-landscape-1024x768"]
@@ -166,6 +189,10 @@ assert(iphone.outfitModal.scale < 1, "iPhone outfit modal must reflow")
 assert(iphone.outfitModal.y >= iphone.safe.y, "iPhone outfit modal clears safe top")
 assert(iphone.outfitModal.bottom <= iphone.safe.bottom, "iPhone outfit modal clears safe bottom")
 assert(nominal.featureModal.scale == 1, "desktop feature modal keeps native scale")
+assert(math.abs(nominal.featureModal.x - 189) <= 3, "desktop feature modal must match locked RHS2 horizontal reference")
+assert(math.abs(nominal.featureModal.y - 64) <= 8, "desktop feature modal must match locked RHS2 vertical reference")
+assert(nominal.featureModal.width == 530, "desktop feature modal matches locked RHS2 width")
+assert(nominal.featureModal.height == 354, "desktop feature modal matches locked RHS2 height")
 assert(ipad.featureModal.scale == 1, "iPad feature modal keeps native scale")
 assert(iphone.featureModal.scale < 1, "iPhone feature modal must reflow into central touch corridor")
 assert(iphone.featureModal.right <= iphone.exclusionZones[2].x, "iPhone feature modal clears right touch zone")
@@ -185,6 +212,13 @@ assert(iphone.status.width ~= ipad.status.width, "status width must reflow by vi
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
 assert(iphone.quick.y ~= ipad.quick.y, "quick bar must follow safe bottom")
+assert(iphone.status.right == iphone.rail.right, "iPhone status/rail right-edge alignment")
+assert(ipad.status.right == ipad.rail.right, "iPad status/rail right-edge alignment")
+assert(iphone.quick.right < iphone.exclusionZones[2].x, "iPhone right-shifted quickbar clears camera/action zone")
+assert(iphone.quick.x > iphone.exclusionZones[1].right, "iPhone right-shifted quickbar clears movement zone")
+assert(ipad.quick.right < ipad.exclusionZones[2].x, "iPad right-shifted quickbar clears camera/action zone")
+assert(not iphone.utilityGrid.visible, "iPhone hides inert utility grid when touch zones consume the space")
+assert(ipad.utilityGrid.visible, "iPad keeps the reference utility grid visible")
 
 local badStatus = ResponsiveHudLayout.compute(
     { width = 909, height = 483 },
@@ -239,7 +273,9 @@ local legacyFeatureDesktop = zone(
     560,
     483 * 0.76
 )
-assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.status), "legacy desktop feature modal must overlap status")
+-- The reference-aligned status stack now sits above the rail at the far right,
+-- so the legacy desktop feature modal no longer collides with status. It is
+-- still invalid because it directly overlaps the bottom quick bar.
 assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.quick), "legacy desktop feature modal must overlap quick bar")
 
 local legacyFeatureIphone = zone(
@@ -369,7 +405,10 @@ for _, fragment in ipairs({
     'ResponsiveHudLayout.computeCenteredModal(layout, {',
     'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
     'local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {',
+    'width = 530,',
+    'height = 354,',
     'ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)',
+    'panel.Size = UDim2.fromOffset(530, 354)',
     'shopPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',
     'shopPanelScale.Scale = featureModalLayout.scale',
     'travelPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',

@@ -17,6 +17,10 @@ on:
       - "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
       - ".github/workflows/high-school-class-education-ci.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

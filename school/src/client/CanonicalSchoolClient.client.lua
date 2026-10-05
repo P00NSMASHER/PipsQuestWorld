@@ -11,6 +11,7 @@ local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
 local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
+local Rhs2UiStyle = require(shared:WaitForChild("Rhs2UiStyle"))
 local FeaturePanelController = require(shared:WaitForChild("FeaturePanelController"))
 
 local player = Players.LocalPlayer
@@ -37,10 +38,6 @@ gui.Parent = playerGui
 
 local featurePanels = FeaturePanelController.new()
 
-local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
-local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
-local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
-local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
 local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
@@ -52,7 +49,7 @@ end
 local function outline(target, thickness)
     local stroke = Instance.new("UIStroke")
     stroke.Thickness = thickness or 1
-    stroke.Color = LEGACY_BLUE
+    stroke.Color = Rhs2UiStyle.Palette.HeaderBlue
     stroke.Parent = target
     return stroke
 end
@@ -63,18 +60,17 @@ card.Name = "CompactSchoolStatus"
 card.AnchorPoint = Vector2.new(0, 0)
 card.Position = UDim2.fromOffset(0, 0)
 card.Size = UDim2.fromOffset(118, 70)
-card.BackgroundColor3 = LEGACY_PANEL
-card.BackgroundTransparency = 0.02
+card.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+card.BackgroundTransparency = 0
 card.Parent = gui
-round(card, 2)
-outline(card, 2)
+Rhs2UiStyle.applyPrimaryPanel(card)
 
 local title = Instance.new("TextLabel")
 title.BackgroundTransparency = 0
-title.BackgroundColor3 = LEGACY_BLUE
+title.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
 title.Position = UDim2.new(0, 0, 0, 0)
 title.Size = UDim2.new(1, 0, 0, 24)
-title.Font = Enum.Font.ArialBold
+title.Font = Rhs2UiStyle.Font.Bold
 title.Text = "SCHOOL DAY"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 15
@@ -82,53 +78,58 @@ title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
-pointsLabel.BackgroundTransparency = 1
+pointsLabel.BackgroundTransparency = 0
+pointsLabel.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 pointsLabel.Position = UDim2.new(0, 10, 0, 82)
 pointsLabel.Size = UDim2.new(0, 82, 0, 28)
-pointsLabel.Font = Enum.Font.ArialBold
+pointsLabel.Font = Rhs2UiStyle.Font.Bold
 pointsLabel.Text = "Points: 0"
-pointsLabel.TextColor3 = LEGACY_BLUE_DARK
+pointsLabel.TextColor3 = Rhs2UiStyle.Palette.White
 pointsLabel.TextSize = 13
 pointsLabel.TextXAlignment = Enum.TextXAlignment.Left
 pointsLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(pointsLabel)
+pointsLabel.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
 periodLabel.Position = UDim2.new(0, 9, 0, 29)
 periodLabel.Size = UDim2.new(1, -18, 0, 32)
-periodLabel.Font = Enum.Font.ArialBold
+periodLabel.Font = Rhs2UiStyle.Font.Medium
 periodLabel.Text = "Loading school day..."
-periodLabel.TextColor3 = LEGACY_BLUE_DARK
+periodLabel.TextColor3 = Rhs2UiStyle.Palette.White
 periodLabel.TextSize = 13
 periodLabel.TextWrapped = true
 periodLabel.TextXAlignment = Enum.TextXAlignment.Left
 periodLabel.TextYAlignment = Enum.TextYAlignment.Top
 periodLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(periodLabel)
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.BackgroundTransparency = 1
 statusLabel.Position = UDim2.new(0, 9, 0, 61)
 statusLabel.Size = UDim2.new(1, -18, 0, 22)
-statusLabel.Font = Enum.Font.Arial
+statusLabel.Font = Rhs2UiStyle.Font.Regular
 statusLabel.Text = "Connecting..."
-statusLabel.TextColor3 = Color3.fromRGB(31, 72, 102)
+statusLabel.TextColor3 = Rhs2UiStyle.Palette.White
 statusLabel.TextSize = 11
 statusLabel.TextWrapped = true
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.TextYAlignment = Enum.TextYAlignment.Top
 statusLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(statusLabel)
 
 local action = Instance.new("TextButton")
 action.Position = UDim2.new(0, 96, 0, 87)
 action.Size = UDim2.new(1, -104, 0, 27)
-action.BackgroundColor3 = LEGACY_BUTTON
-action.Font = Enum.Font.ArialBold
+action.BackgroundColor3 = Rhs2UiStyle.Palette.ProgressPurple
+action.Font = Rhs2UiStyle.Font.Bold
 action.Text = "CHECKING CLASS..."
-action.TextColor3 = LEGACY_BLUE_DARK
+action.TextColor3 = Rhs2UiStyle.Palette.White
 action.TextSize = 13
 action.Parent = card
-round(action, 2)
-outline(action, 1)
+Rhs2UiStyle.applyDarkRow(action)
+action.BackgroundColor3 = Rhs2UiStyle.Palette.ProgressPurple
 
 local actionRail = Instance.new("Frame")
 actionRail.Name = "RHS2ActionRail"
@@ -150,21 +151,59 @@ local function makeRailButton(name, label, color, order)
     button.LayoutOrder = order
     button.Size = UDim2.fromOffset(52, 52)
     button.BackgroundColor3 = color
-    button.Font = Enum.Font.ArialBold
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = label
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextColor3 = Rhs2UiStyle.Palette.White
     button.TextSize = 12
     button.TextWrapped = true
     button.Parent = actionRail
-    round(button, 10)
-    local railStroke = outline(button, 2)
-    railStroke.Color = Color3.fromRGB(255, 255, 255)
+    Rhs2UiStyle.applyPrimaryRailButton(button, color)
     return button
 end
 
 local shopRailButton = makeRailButton("RailShop", "SHOP", Color3.fromRGB(220, 66, 66), 1)
 local avatarRailButton = makeRailButton("RailAvatar", "AVATAR", Color3.fromRGB(54, 174, 221), 2)
 local travelRailButton = makeRailButton("RailTravel", "TRAVEL", Color3.fromRGB(235, 177, 49), 4)
+
+-- Reference A also carries a small colorful utility strip below the four
+-- primary rail actions. Exact semantics/assets are unverified, so these are
+-- deliberately inert visual slots rather than invented gameplay controls.
+local utilityRail = Instance.new("Frame")
+utilityRail.Name = "RHS2UtilityRail"
+utilityRail.AnchorPoint = Vector2.new(0, 0)
+utilityRail.Position = UDim2.fromOffset(0, 0)
+utilityRail.Size = UDim2.fromOffset(48, 14)
+utilityRail.BackgroundTransparency = 1
+utilityRail:SetAttribute("ReferenceExactTileCount", 6)
+utilityRail:SetAttribute("ReferenceSemanticsVerified", false)
+utilityRail.Parent = gui
+
+local utilityLayout = Instance.new("UIGridLayout")
+utilityLayout.FillDirection = Enum.FillDirection.Horizontal
+utilityLayout.FillDirectionMaxCells = 2
+utilityLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+utilityLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+utilityLayout.CellPadding = UDim2.fromOffset(3, 3)
+utilityLayout.CellSize = UDim2.fromOffset(20, 20)
+utilityLayout.SortOrder = Enum.SortOrder.LayoutOrder
+utilityLayout.Parent = utilityRail
+
+for index, color in ipairs({
+    Rhs2UiStyle.Palette.AvatarCyan,
+    Rhs2UiStyle.Palette.TravelGold,
+    Color3.fromRGB(218, 113, 201),
+    Rhs2UiStyle.Palette.ProgressPurple,
+    Color3.fromRGB(139, 159, 186),
+    Rhs2UiStyle.Palette.ShopRed,
+}) do
+    local slot = Instance.new("Frame")
+    slot.Name = "UtilitySlot" .. tostring(index)
+    slot.LayoutOrder = index
+    slot.Size = UDim2.fromOffset(20, 20)
+    slot.BackgroundColor3 = color
+    slot.Parent = utilityRail
+    Rhs2UiStyle.applyQuickSlot(slot, color)
+end
 
 local quickBar = Instance.new("Frame")
 quickBar.Name = "RHS2QuickBar"
@@ -190,14 +229,12 @@ for index, slot in ipairs({
     quickSlot.Name = "QuickSlot" .. tostring(index)
     quickSlot.Size = UDim2.fromOffset(52, 52)
     quickSlot.BackgroundColor3 = slot.color
-    quickSlot.Font = Enum.Font.ArialBold
+    quickSlot.Font = Rhs2UiStyle.Font.Bold
     quickSlot.Text = slot.label
     quickSlot.TextColor3 = Color3.fromRGB(255, 255, 255)
     quickSlot.TextSize = 10
     quickSlot.Parent = quickBar
-    round(quickSlot, 10)
-    local quickStroke = outline(quickSlot, 2)
-    quickStroke.Color = Color3.fromRGB(236, 243, 250)
+    Rhs2UiStyle.applyQuickSlot(quickSlot, slot.color)
 end
 
 local currentHudLayout = nil
@@ -283,8 +320,8 @@ local function applyResponsiveHudLayout()
         return
     end
     local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {
-        width = 560,
-        height = 390,
+        width = 530,
+        height = 354,
     })
     local featureModalValid, featureModalReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)
     if not featureModalValid then
@@ -378,6 +415,13 @@ local function applyResponsiveHudLayout()
         end
     end
 
+    local utilityGrid = ResponsiveHudLayout.computeUtilityGrid(layout)
+    utilityRail.Position = UDim2.fromOffset(utilityGrid.x, utilityGrid.y)
+    utilityRail.Size = UDim2.fromOffset(utilityGrid.width, utilityGrid.height)
+    utilityRail.Visible = utilityGrid.visible
+    utilityLayout.CellPadding = UDim2.fromOffset(utilityGrid.gap, utilityGrid.gap)
+    utilityLayout.CellSize = UDim2.fromOffset(utilityGrid.tileSize, utilityGrid.tileSize)
+
     quickLayout.Padding = UDim.new(0, layout.quickGap)
     for _, child in ipairs(quickBar:GetChildren()) do
         if child:IsA("GuiObject") and child.Name:match("^QuickSlot") then
@@ -407,24 +451,23 @@ modal.Name = "ClassActivityModal"
 modal.AnchorPoint = Vector2.new(0, 0)
 modal.Position = UDim2.fromOffset(0, 0)
 modal.Size = UDim2.fromOffset(540, 390)
-modal.BackgroundColor3 = LEGACY_PANEL
+modal.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
 modal.Visible = false
 modal.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(modal)
 modalScale = Instance.new("UIScale")
 modalScale.Name = "ResponsiveScale"
 modalScale.Scale = 1
 modalScale.Parent = modal
-round(modal, 2)
-outline(modal, 2)
 applyResponsiveHudLayout()
 
 local question = Instance.new("TextLabel")
 question.BackgroundTransparency = 1
 question.Position = UDim2.new(0, 18, 0, 16)
 question.Size = UDim2.new(1, -36, 0, 92)
-question.Font = Enum.Font.ArialBold
+question.Font = Rhs2UiStyle.Font.Bold
 question.Text = ""
-question.TextColor3 = LEGACY_BLUE_DARK
+question.TextColor3 = Rhs2UiStyle.Palette.White
 question.TextSize = 19
 question.TextWrapped = true
 question.TextYAlignment = Enum.TextYAlignment.Top
@@ -444,9 +487,9 @@ local feedback = Instance.new("TextLabel")
 feedback.BackgroundTransparency = 1
 feedback.Position = UDim2.new(0, 18, 1, -50)
 feedback.Size = UDim2.new(1, -36, 0, 38)
-feedback.Font = Enum.Font.Arial
+feedback.Font = Rhs2UiStyle.Font.Regular
 feedback.Text = ""
-feedback.TextColor3 = Color3.fromRGB(31, 72, 102)
+feedback.TextColor3 = Rhs2UiStyle.Palette.White
 feedback.TextSize = 13
 feedback.TextWrapped = true
 feedback.Parent = modal
@@ -518,15 +561,14 @@ local function showActivity(response)
     for index, choiceText in ipairs(activeActivity.choices or {}) do
         local button = Instance.new("TextButton")
         button.Size = UDim2.new(1, 0, 0, 48)
-        button.BackgroundColor3 = LEGACY_BUTTON
-        button.Font = Enum.Font.ArialBold
+        button.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+        button.Font = Rhs2UiStyle.Font.Bold
         button.Text = tostring(index) .. ".  " .. tostring(choiceText)
-        button.TextColor3 = LEGACY_BLUE_DARK
+        button.TextColor3 = Rhs2UiStyle.Palette.White
         button.TextSize = 15
         button.TextWrapped = true
         button.Parent = choices
-        round(button, 2)
-        outline(button, 1)
+        Rhs2UiStyle.applyTab(button, false)
 
         button.Activated:Connect(function()
             if busy or not activeActivity or not activeClassKey then return end
@@ -667,62 +709,72 @@ local function makeFeaturePanel(name, heading)
     panel.Name = name
     panel.AnchorPoint = Vector2.new(0, 0)
     panel.Position = UDim2.fromOffset(0, 0)
-    panel.Size = UDim2.fromOffset(560, 390)
-    panel.BackgroundColor3 = LEGACY_PANEL
-    panel.BackgroundTransparency = 0.02
+    panel.Size = UDim2.fromOffset(530, 354)
+    panel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    panel.BackgroundTransparency = 0
     panel.Visible = false
     panel.Parent = gui
+    Rhs2UiStyle.applyPrimaryPanel(panel)
     local panelScale = Instance.new("UIScale")
     panelScale.Name = "ResponsiveScale"
     panelScale.Scale = 1
     panelScale.Parent = panel
-    round(panel, 4)
-    outline(panel, 2)
-
     local header = Instance.new("TextLabel")
     header.Name = "Heading"
-    header.BackgroundColor3 = LEGACY_BLUE
+    header.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
     header.BorderSizePixel = 0
-    header.Size = UDim2.new(1, 0, 0, 38)
-    header.Font = Enum.Font.ArialBold
-    header.Text = heading
-    header.TextColor3 = Color3.fromRGB(255, 255, 255)
-    header.TextSize = 17
+    header.Size = UDim2.new(0.78, 0, 0, 46)
+    header.Font = Rhs2UiStyle.Font.Bold
+    header.Text = "  " .. heading
+    header.TextColor3 = Rhs2UiStyle.Palette.White
+    header.TextSize = 20
+    header.TextXAlignment = Enum.TextXAlignment.Left
     header.Parent = panel
+    Rhs2UiStyle.applyHeader(header)
+
+    local headerTail = Instance.new("Frame")
+    headerTail.Name = "HeaderTail"
+    headerTail.AnchorPoint = Vector2.new(0.5, 0.5)
+    headerTail.Position = UDim2.new(0.78, -8, 0, 23)
+    headerTail.Size = UDim2.fromOffset(32, 32)
+    headerTail.Rotation = 45
+    headerTail.BorderSizePixel = 0
+    headerTail.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+    headerTail.Parent = panel
+    Rhs2UiStyle.applyHeader(headerTail)
 
     local close = Instance.new("TextButton")
     close.Name = "Close"
     close.AnchorPoint = Vector2.new(1, 0)
-    close.Position = UDim2.new(1, -5, 0, 4)
+    close.Position = UDim2.new(1, -10, 0, 8)
     close.Size = UDim2.fromOffset(30, 30)
-    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-    close.Font = Enum.Font.ArialBold
-    close.Text = "X"
-    close.TextColor3 = Color3.fromRGB(255, 255, 255)
-    close.TextSize = 15
+    close.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    close.Font = Rhs2UiStyle.Font.Bold
+    close.Text = "×"
+    close.TextColor3 = Rhs2UiStyle.Palette.White
+    close.TextSize = 19
     close.Parent = panel
-    round(close, 4)
+    Rhs2UiStyle.applyCloseButton(close)
 
     local body = Instance.new("Frame")
     body.Name = "Body"
     body.BackgroundTransparency = 1
-    body.Position = UDim2.fromOffset(12, 48)
-    body.Size = UDim2.new(1, -24, 1, -100)
+    body.Position = UDim2.fromOffset(12, 58)
+    body.Size = UDim2.new(1, -24, 1, -70)
     body.Parent = panel
 
     local back = Instance.new("TextButton")
     back.Name = "Back"
-    back.AnchorPoint = Vector2.new(0.5, 1)
-    back.Position = UDim2.new(0.5, 0, 1, -10)
-    back.Size = UDim2.new(1, -24, 0, 36)
-    back.BackgroundColor3 = LEGACY_BUTTON
-    back.Font = Enum.Font.ArialBold
-    back.Text = "BACK"
-    back.TextColor3 = LEGACY_BLUE_DARK
-    back.TextSize = 13
+    back.AnchorPoint = Vector2.new(1, 0)
+    back.Position = UDim2.new(1, -48, 0, 8)
+    back.Size = UDim2.fromOffset(30, 30)
+    back.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    back.Font = Rhs2UiStyle.Font.Bold
+    back.Text = "↩"
+    back.TextColor3 = Rhs2UiStyle.Palette.White
+    back.TextSize = 18
     back.Parent = panel
-    round(back, 2)
-    outline(back, 1)
+    Rhs2UiStyle.applyCloseButton(back)
 
     close.Activated:Connect(function()
         featurePanels:close("explicit_close")
@@ -740,69 +792,109 @@ shopPanel:SetAttribute("CatalogAuthority", "server-only")
 
 local shopBrowse = Instance.new("TextLabel")
 shopBrowse.Name = "Browse"
-shopBrowse.BackgroundColor3 = LEGACY_BUTTON
+shopBrowse.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 shopBrowse.Size = UDim2.new(0.42, -5, 1, 0)
-shopBrowse.Font = Enum.Font.ArialBold
+shopBrowse.Font = Rhs2UiStyle.Font.Bold
 shopBrowse.Text = "BROWSE\n\nClothing Display"
-shopBrowse.TextColor3 = LEGACY_BLUE_DARK
+shopBrowse.TextColor3 = Rhs2UiStyle.Palette.White
 shopBrowse.TextSize = 14
 shopBrowse.TextWrapped = true
 shopBrowse.Parent = shopBody
-round(shopBrowse, 2)
-outline(shopBrowse, 1)
+Rhs2UiStyle.applyDarkRow(shopBrowse)
+shopBrowse.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 
 local shopDetails = Instance.new("TextLabel")
 shopDetails.Name = "Details"
 shopDetails.Position = UDim2.new(0.42, 7, 0, 0)
 shopDetails.Size = UDim2.new(0.58, -7, 1, 0)
-shopDetails.BackgroundColor3 = LEGACY_BUTTON
-shopDetails.Font = Enum.Font.Arial
+shopDetails.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+shopDetails.Font = Rhs2UiStyle.Font.Regular
 shopDetails.Text = "DETAILS\n\nNo verified clothing items are available yet."
-shopDetails.TextColor3 = LEGACY_BLUE_DARK
+shopDetails.TextColor3 = Rhs2UiStyle.Palette.White
 shopDetails.TextSize = 13
 shopDetails.TextWrapped = true
 shopDetails.Parent = shopBody
-round(shopDetails, 2)
-outline(shopDetails, 1)
+Rhs2UiStyle.applyDarkRow(shopDetails)
 
 local travelBody
-travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
+travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "Travel")
 travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")
 applyResponsiveHudLayout()
 
-local travelPrompt = Instance.new("TextLabel")
-travelPrompt.Name = "Prompt"
-travelPrompt.BackgroundTransparency = 1
-travelPrompt.Size = UDim2.new(1, 0, 0, 42)
-travelPrompt.Font = Enum.Font.ArialBold
-travelPrompt.Text = "CURRENT SCHOOL DESTINATION"
-travelPrompt.TextColor3 = LEGACY_BLUE_DARK
-travelPrompt.TextSize = 14
-travelPrompt.Parent = travelBody
+local travelLocationsTab = Instance.new("TextButton")
+travelLocationsTab.Name = "LocationsTab"
+travelLocationsTab.Position = UDim2.fromOffset(120, 0)
+travelLocationsTab.Size = UDim2.fromOffset(116, 32)
+travelLocationsTab.Text = "Locations"
+travelLocationsTab.TextSize = 14
+travelLocationsTab.Active = false
+travelLocationsTab.Parent = travelBody
+Rhs2UiStyle.applyTab(travelLocationsTab, true)
+
+local travelServersTab = Instance.new("TextButton")
+travelServersTab.Name = "ServersTab"
+travelServersTab.Position = UDim2.fromOffset(242, 0)
+travelServersTab.Size = UDim2.fromOffset(116, 32)
+travelServersTab.Text = "Servers"
+travelServersTab.TextSize = 14
+travelServersTab.Active = false
+travelServersTab.AutoButtonColor = false
+travelServersTab.Parent = travelBody
+Rhs2UiStyle.applyTab(travelServersTab, false)
+
+local travelGrid = Instance.new("Frame")
+travelGrid.Name = "TravelDestinationGrid"
+travelGrid.BackgroundTransparency = 1
+travelGrid.Position = UDim2.fromOffset(0, 42)
+travelGrid.Size = UDim2.new(1, 0, 0, 178)
+travelGrid.Parent = travelBody
+
+local travelGridLayout = Instance.new("UIGridLayout")
+travelGridLayout.CellSize = UDim2.new(0.32, -4, 0, 82)
+travelGridLayout.CellPadding = UDim2.new(0.02, 0, 0, 10)
+travelGridLayout.FillDirectionMaxCells = 3
+travelGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+travelGridLayout.Parent = travelGrid
 
 local travelDestination = Instance.new("TextButton")
 travelDestination.Name = "ServerCurrentRoom"
-travelDestination.Position = UDim2.new(0, 0, 0, 48)
-travelDestination.Size = UDim2.new(1, 0, 0, 72)
-travelDestination.BackgroundColor3 = LEGACY_BUTTON
-travelDestination.Font = Enum.Font.ArialBold
+travelDestination.LayoutOrder = 1
+travelDestination.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+travelDestination.Font = Rhs2UiStyle.Font.Bold
 travelDestination.Text = "CHECKING CURRENT CLASS..."
-travelDestination.TextColor3 = LEGACY_BLUE_DARK
-travelDestination.TextSize = 15
+travelDestination.TextColor3 = Rhs2UiStyle.Palette.White
+travelDestination.TextSize = 14
 travelDestination.TextWrapped = true
-travelDestination.Parent = travelBody
-round(travelDestination, 2)
-outline(travelDestination, 1)
+travelDestination.Parent = travelGrid
+Rhs2UiStyle.applyDarkRow(travelDestination)
+travelDestination.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+local travelDestinationStroke = outline(travelDestination, 2)
+travelDestinationStroke.Color = Rhs2UiStyle.Palette.HeaderBlue
+
+for index = 2, 6 do
+    local placeholder = Instance.new("TextLabel")
+    placeholder.Name = "UnavailableDestination" .. tostring(index)
+    placeholder.LayoutOrder = index
+    placeholder.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    placeholder.Font = Rhs2UiStyle.Font.Medium
+    placeholder.Text = "UNAVAILABLE"
+    placeholder.TextColor3 = Color3.fromRGB(145, 163, 194)
+    placeholder.TextSize = 11
+    placeholder.Parent = travelGrid
+    Rhs2UiStyle.applyDarkRow(placeholder)
+    local placeholderStroke = outline(placeholder, 1)
+    placeholderStroke.Color = Rhs2UiStyle.Palette.TabBlue
+end
 
 local travelStatus = Instance.new("TextLabel")
 travelStatus.Name = "TravelStatus"
 travelStatus.BackgroundTransparency = 1
-travelStatus.Position = UDim2.new(0, 0, 0, 126)
-travelStatus.Size = UDim2.new(1, 0, 1, -126)
-travelStatus.Font = Enum.Font.Arial
+travelStatus.Position = UDim2.new(0, 0, 0, 228)
+travelStatus.Size = UDim2.new(1, 0, 1, -228)
+travelStatus.Font = Rhs2UiStyle.Font.Regular
 travelStatus.Text = "Select the server-provided current room to travel."
-travelStatus.TextColor3 = LEGACY_BLUE_DARK
-travelStatus.TextSize = 13
+travelStatus.TextColor3 = Rhs2UiStyle.Palette.White
+travelStatus.TextSize = 12
 travelStatus.TextWrapped = true
 travelStatus.Parent = travelBody
 
@@ -812,10 +904,10 @@ local function refreshTravelDestination()
     travelDestination.Active = available
     travelDestination.AutoButtonColor = available
     if available then
-        travelDestination.Text = tostring(roomName)
-        travelStatus.Text = "Select the current class room to travel."
+        travelDestination.Text = tostring(roomName) .. "\nCURRENT CLASS"
+        travelStatus.Text = "Current class is the only server-authorized destination in this build."
     else
-        travelDestination.Text = "NO CURRENT CLASS DESTINATION"
+        travelDestination.Text = "NO CURRENT CLASS\nUNAVAILABLE"
         travelStatus.Text = "Travel is unavailable outside a scheduled class."
     end
 end
@@ -843,25 +935,24 @@ local function ensureOutfitPanelControls(panel)
     close.AnchorPoint = Vector2.new(1, 0)
     close.Position = UDim2.new(1, -4, 0, 4)
     close.Size = UDim2.fromOffset(28, 28)
-    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-    close.Font = Enum.Font.ArialBold
-    close.Text = "X"
-    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    close.Font = Rhs2UiStyle.Font.Bold
+    close.Text = "×"
+    close.TextColor3 = Rhs2UiStyle.Palette.White
     close.Parent = panel
-    round(close, 3)
+    Rhs2UiStyle.applyCloseButton(close)
 
     local back = Instance.new("TextButton")
     back.Name = "FeaturePanelBack"
     back.AnchorPoint = Vector2.new(0.5, 1)
     back.Position = UDim2.new(0.5, 0, 1, -6)
     back.Size = UDim2.new(1, -12, 0, 30)
-    back.BackgroundColor3 = LEGACY_BUTTON
-    back.Font = Enum.Font.ArialBold
-    back.Text = "BACK"
-    back.TextColor3 = LEGACY_BLUE_DARK
+    back.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+    back.Font = Rhs2UiStyle.Font.Bold
+    back.Text = "↩  BACK"
+    back.TextColor3 = Rhs2UiStyle.Palette.White
     back.Parent = panel
-    round(back, 2)
-    outline(back, 1)
+    Rhs2UiStyle.applyTab(back, false)
 
     close.Activated:Connect(function()
         featurePanels:close("explicit_close")
@@ -949,12 +1040,8 @@ task.spawn(function()
 
         if okState and type(state) == "table" then
             local timeText, weekday = formatLegacyClock(state)
-            periodLabel.Text = string.format(
-                "%s  %s\n%s",
-                timeText,
-                weekday,
-                tostring(state.periodLabel)
-            )
+            title.Text = string.format("%s  %s", string.upper(string.sub(weekday, 1, 3)), timeText)
+            periodLabel.Text = tostring(state.periodLabel)
         end
 
         if okClass and type(classState) == "table" then
@@ -1009,16 +1096,15 @@ cafeCard.Name = "LegacyCafePanel"
 cafeCard.AnchorPoint = Vector2.new(0, 0)
 cafeCard.Position = UDim2.fromOffset(0, 0)
 cafeCard.Size = UDim2.new(0, 260, 0, 150)
-cafeCard.BackgroundColor3 = LEGACY_PANEL
-cafeCard.BackgroundTransparency = 0.02
+cafeCard.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+cafeCard.BackgroundTransparency = 0
 cafeCard.Visible = false
 cafeCard.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(cafeCard)
 cafeCardScale = Instance.new("UIScale")
 cafeCardScale.Name = "ResponsiveScale"
 cafeCardScale.Scale = 1
 cafeCardScale.Parent = cafeCard
-round(cafeCard, 2)
-outline(cafeCard, 2)
 
 local cafeSizeConstraint = Instance.new("UISizeConstraint")
 cafeSizeConstraint.MinSize = Vector2.new(260, 150)
@@ -1028,23 +1114,24 @@ applyResponsiveHudLayout()
 
 local cafeTitle = Instance.new("TextLabel")
 cafeTitle.BackgroundTransparency = 0
-cafeTitle.BackgroundColor3 = LEGACY_BLUE
+cafeTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 cafeTitle.Position = UDim2.new(0, 0, 0, 0)
 cafeTitle.Size = UDim2.new(1, 0, 0, 26)
-cafeTitle.Font = Enum.Font.ArialBold
+cafeTitle.Font = Rhs2UiStyle.Font.Bold
 cafeTitle.Text = "Corner Cafe"
-cafeTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+cafeTitle.TextColor3 = Rhs2UiStyle.Palette.White
 cafeTitle.TextSize = 14
 cafeTitle.TextXAlignment = Enum.TextXAlignment.Center
 cafeTitle.Parent = cafeCard
+Rhs2UiStyle.applyHeader(cafeTitle)
 
 local cafeStatus = Instance.new("TextLabel")
 cafeStatus.BackgroundTransparency = 1
 cafeStatus.Position = UDim2.new(0, 10, 0, 34)
 cafeStatus.Size = UDim2.new(1, -20, 0, 48)
-cafeStatus.Font = Enum.Font.Arial
+cafeStatus.Font = Rhs2UiStyle.Font.Regular
 cafeStatus.Text = "Start a short cafe shift and serve one order."
-cafeStatus.TextColor3 = LEGACY_BLUE_DARK
+cafeStatus.TextColor3 = Rhs2UiStyle.Palette.White
 cafeStatus.TextSize = 13
 cafeStatus.TextWrapped = true
 cafeStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1054,23 +1141,22 @@ cafeStatus.Parent = cafeCard
 local cafeAction = Instance.new("TextButton")
 cafeAction.Position = UDim2.new(0, 8, 1, -48)
 cafeAction.Size = UDim2.new(1, -16, 0, 40)
-cafeAction.BackgroundColor3 = LEGACY_BUTTON
-cafeAction.Font = Enum.Font.ArialBold
+cafeAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+cafeAction.Font = Rhs2UiStyle.Font.Bold
 cafeAction.Text = "START SHIFT"
-cafeAction.TextColor3 = LEGACY_BLUE_DARK
+cafeAction.TextColor3 = Rhs2UiStyle.Palette.White
 cafeAction.TextSize = 14
 cafeAction.Parent = cafeCard
-round(cafeAction, 2)
-outline(cafeAction, 1)
+Rhs2UiStyle.applyTab(cafeAction, true)
 
 local cafeLeave = Instance.new("TextButton")
 cafeLeave.AnchorPoint = Vector2.new(1, 0)
 cafeLeave.Position = UDim2.new(1, -8, 0, 28)
 cafeLeave.Size = UDim2.new(0, 82, 0, 30)
 cafeLeave.BackgroundTransparency = 1
-cafeLeave.Font = Enum.Font.Arial
+cafeLeave.Font = Rhs2UiStyle.Font.Medium
 cafeLeave.Text = "LEAVE JOB"
-cafeLeave.TextColor3 = LEGACY_BLUE_DARK
+cafeLeave.TextColor3 = Rhs2UiStyle.Palette.White
 cafeLeave.TextSize = 11
 cafeLeave.Visible = false
 cafeLeave.Parent = cafeCard
@@ -1221,37 +1307,37 @@ vehicleCard.Name = "LegacyVehiclePanel"
 vehicleCard.AnchorPoint = Vector2.new(0, 0)
 vehicleCard.Position = UDim2.fromOffset(0, 0)
 vehicleCard.Size = UDim2.new(0, 260, 0, 132)
-vehicleCard.BackgroundColor3 = LEGACY_PANEL
-vehicleCard.BackgroundTransparency = 0.02
+vehicleCard.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+vehicleCard.BackgroundTransparency = 0
 vehicleCard.Visible = false
 vehicleCard.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(vehicleCard)
 vehicleCardScale = Instance.new("UIScale")
 vehicleCardScale.Name = "ResponsiveScale"
 vehicleCardScale.Scale = 1
 vehicleCardScale.Parent = vehicleCard
-round(vehicleCard, 2)
-outline(vehicleCard, 2)
 applyResponsiveHudLayout()
 
 local vehicleTitle = Instance.new("TextLabel")
 vehicleTitle.BackgroundTransparency = 0
-vehicleTitle.BackgroundColor3 = LEGACY_BLUE
+vehicleTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 vehicleTitle.Position = UDim2.new(0, 0, 0, 0)
 vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
-vehicleTitle.Font = Enum.Font.ArialBold
+vehicleTitle.Font = Rhs2UiStyle.Font.Bold
 vehicleTitle.Text = "Auto Shop"
-vehicleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+vehicleTitle.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleTitle.TextSize = 14
 vehicleTitle.TextXAlignment = Enum.TextXAlignment.Center
 vehicleTitle.Parent = vehicleCard
+Rhs2UiStyle.applyHeader(vehicleTitle)
 
 local vehicleStatus = Instance.new("TextLabel")
 vehicleStatus.BackgroundTransparency = 1
 vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
 vehicleStatus.Size = UDim2.new(1, -20, 0, 38)
-vehicleStatus.Font = Enum.Font.Arial
+vehicleStatus.Font = Rhs2UiStyle.Font.Regular
 vehicleStatus.Text = "Spawn the starter car."
-vehicleStatus.TextColor3 = LEGACY_BLUE_DARK
+vehicleStatus.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleStatus.TextSize = 13
 vehicleStatus.TextWrapped = true
 vehicleStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1261,14 +1347,13 @@ vehicleStatus.Parent = vehicleCard
 local vehicleAction = Instance.new("TextButton")
 vehicleAction.Position = UDim2.new(0, 8, 1, -46)
 vehicleAction.Size = UDim2.new(1, -16, 0, 38)
-vehicleAction.BackgroundColor3 = LEGACY_BUTTON
-vehicleAction.Font = Enum.Font.ArialBold
+vehicleAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+vehicleAction.Font = Rhs2UiStyle.Font.Bold
 vehicleAction.Text = "SPAWN STARTER CAR"
-vehicleAction.TextColor3 = LEGACY_BLUE_DARK
+vehicleAction.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleAction.TextSize = 14
 vehicleAction.Parent = vehicleCard
-round(vehicleAction, 2)
-outline(vehicleAction, 1)
+Rhs2UiStyle.applyTab(vehicleAction, true)
 
 local latestVehicleState = nil
 local vehicleBusy = false
@@ -1537,15 +1622,13 @@ local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
 houseIcon.LayoutOrder = 3
 houseIcon.Size = UDim2.fromOffset(52, 52)
-houseIcon.BackgroundColor3 = Color3.fromRGB(83, 188, 77)
-houseIcon.Font = Enum.Font.ArialBold
+houseIcon.BackgroundColor3 = Rhs2UiStyle.Palette.HouseGreen
+houseIcon.Font = Rhs2UiStyle.Font.Bold
 houseIcon.Text = "HOUSE"
-houseIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseIcon.TextColor3 = Rhs2UiStyle.Palette.White
 houseIcon.TextSize = 12
 houseIcon.Parent = actionRail
-round(houseIcon, 10)
-local houseRailStroke = outline(houseIcon, 2)
-houseRailStroke.Color = Color3.fromRGB(255, 255, 255)
+Rhs2UiStyle.applyPrimaryRailButton(houseIcon, Rhs2UiStyle.Palette.HouseGreen)
 applyResponsiveHudLayout()
 
 housePanel = Instance.new("Frame")
@@ -1553,61 +1636,74 @@ housePanel.Name = "LegacyHousePanel"
 housePanel.AnchorPoint = Vector2.new(0, 0)
 housePanel.Position = UDim2.fromOffset(0, 0)
 housePanel.Size = UDim2.new(0, 248, 0, 292)
-housePanel.BackgroundColor3 = LEGACY_PANEL
-housePanel.BackgroundTransparency = 0.02
+housePanel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+housePanel.BackgroundTransparency = 0
 housePanel.Visible = false
 housePanel.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(housePanel)
 housePanelScale = Instance.new("UIScale")
 housePanelScale.Name = "ResponsiveScale"
 housePanelScale.Scale = 1
 housePanelScale.Parent = housePanel
-round(housePanel, 2)
-outline(housePanel, 2)
-
 local houseTitle = Instance.new("TextLabel")
-houseTitle.BackgroundColor3 = LEGACY_BLUE
+houseTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 houseTitle.BorderSizePixel = 0
-houseTitle.Size = UDim2.new(1, 0, 0, 28)
-houseTitle.Font = Enum.Font.ArialBold
+houseTitle.Size = UDim2.new(0.78, 0, 0, 28)
+houseTitle.Font = Rhs2UiStyle.Font.Bold
 houseTitle.Text = "House"
-houseTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseTitle.TextColor3 = Rhs2UiStyle.Palette.White
 houseTitle.TextSize = 15
+houseTitle.TextXAlignment = Enum.TextXAlignment.Left
 houseTitle.Parent = housePanel
+local houseTitlePadding = Instance.new("UIPadding")
+houseTitlePadding.PaddingLeft = UDim.new(0, 8)
+houseTitlePadding.Parent = houseTitle
+Rhs2UiStyle.applyHeader(houseTitle)
+
+local houseHeaderTail = Instance.new("Frame")
+houseHeaderTail.Name = "HouseHeaderTail"
+houseHeaderTail.AnchorPoint = Vector2.new(0.5, 0.5)
+houseHeaderTail.Position = UDim2.new(0.78, -5, 0, 14)
+houseHeaderTail.Size = UDim2.fromOffset(20, 20)
+houseHeaderTail.Rotation = 45
+houseHeaderTail.BorderSizePixel = 0
+houseHeaderTail.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+houseHeaderTail.Parent = housePanel
+Rhs2UiStyle.applyHeader(houseHeaderTail)
 
 local houseClose = Instance.new("TextButton")
 houseClose.Name = "HouseClose"
 houseClose.AnchorPoint = Vector2.new(1, 0)
 houseClose.Position = UDim2.new(1, -3, 0, 2)
 houseClose.Size = UDim2.fromOffset(26, 24)
-houseClose.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-houseClose.Font = Enum.Font.ArialBold
-houseClose.Text = "X"
-houseClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseClose.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+houseClose.Font = Rhs2UiStyle.Font.Bold
+houseClose.Text = "×"
+houseClose.TextColor3 = Rhs2UiStyle.Palette.White
 houseClose.TextSize = 13
 houseClose.Parent = housePanel
-round(houseClose, 2)
+Rhs2UiStyle.applyCloseButton(houseClose)
 
 local houseBack = Instance.new("TextButton")
 houseBack.Name = "HouseBack"
 houseBack.AnchorPoint = Vector2.new(0.5, 1)
 houseBack.Position = UDim2.new(0.5, 0, 1, -5)
 houseBack.Size = UDim2.new(1, -20, 0, 30)
-houseBack.BackgroundColor3 = LEGACY_BUTTON
-houseBack.Font = Enum.Font.ArialBold
-houseBack.Text = "BACK"
-houseBack.TextColor3 = LEGACY_BLUE_DARK
+houseBack.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+houseBack.Font = Rhs2UiStyle.Font.Bold
+houseBack.Text = "↩  BACK"
+houseBack.TextColor3 = Rhs2UiStyle.Palette.White
 houseBack.TextSize = 12
 houseBack.Parent = housePanel
-round(houseBack, 2)
-outline(houseBack, 1)
+Rhs2UiStyle.applyTab(houseBack, false)
 
 local houseStatus = Instance.new("TextLabel")
 houseStatus.BackgroundTransparency = 1
 houseStatus.Position = UDim2.new(0, 10, 0, 36)
 houseStatus.Size = UDim2.new(1, -20, 0, 52)
-houseStatus.Font = Enum.Font.Arial
+houseStatus.Font = Rhs2UiStyle.Font.Regular
 houseStatus.Text = "Loading house..."
-houseStatus.TextColor3 = LEGACY_BLUE_DARK
+houseStatus.TextColor3 = Rhs2UiStyle.Palette.White
 houseStatus.TextSize = 13
 houseStatus.TextWrapped = true
 houseStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1618,36 +1714,34 @@ local housePrimary = Instance.new("TextButton")
 housePrimary.Name = "HousePrimaryAction"
 housePrimary.Position = UDim2.new(0, 10, 0, 94)
 housePrimary.Size = UDim2.new(1, -20, 0, 38)
-housePrimary.BackgroundColor3 = LEGACY_BUTTON
-housePrimary.Font = Enum.Font.ArialBold
+housePrimary.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+housePrimary.Font = Rhs2UiStyle.Font.Bold
 housePrimary.Text = "BUY HOUSE  •  $50"
-housePrimary.TextColor3 = LEGACY_BLUE_DARK
+housePrimary.TextColor3 = Rhs2UiStyle.Palette.White
 housePrimary.TextSize = 13
 housePrimary.Parent = housePanel
-round(housePrimary, 2)
-outline(housePrimary, 1)
+Rhs2UiStyle.applyTab(housePrimary, true)
 
 local houseEdit = Instance.new("TextButton")
 houseEdit.Name = "HouseEditAction"
 houseEdit.Position = UDim2.new(0, 10, 0, 138)
 houseEdit.Size = UDim2.new(1, -20, 0, 38)
-houseEdit.BackgroundColor3 = LEGACY_BUTTON
-houseEdit.Font = Enum.Font.ArialBold
+houseEdit.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+houseEdit.Font = Rhs2UiStyle.Font.Bold
 houseEdit.Text = "EDIT HOUSE"
-houseEdit.TextColor3 = LEGACY_BLUE_DARK
+houseEdit.TextColor3 = Rhs2UiStyle.Palette.White
 houseEdit.TextSize = 13
 houseEdit.Visible = false
 houseEdit.Parent = housePanel
-round(houseEdit, 2)
-outline(houseEdit, 1)
+Rhs2UiStyle.applyTab(houseEdit, false)
 
 local houseColorLabel = Instance.new("TextLabel")
 houseColorLabel.BackgroundTransparency = 1
 houseColorLabel.Position = UDim2.new(0, 10, 0, 181)
 houseColorLabel.Size = UDim2.new(1, -20, 0, 18)
-houseColorLabel.Font = Enum.Font.ArialBold
+houseColorLabel.Font = Rhs2UiStyle.Font.Bold
 houseColorLabel.Text = "HOUSE COLOR"
-houseColorLabel.TextColor3 = LEGACY_BLUE_DARK
+houseColorLabel.TextColor3 = Rhs2UiStyle.Palette.White
 houseColorLabel.TextSize = 12
 houseColorLabel.TextXAlignment = Enum.TextXAlignment.Left
 houseColorLabel.Visible = false
@@ -1735,9 +1829,9 @@ for _, spec in ipairs(HOUSE_STYLES) do
     button.Name = "HouseColor_" .. spec.id
     button.Size = UDim2.new(0, 50, 1, 0)
     button.BackgroundColor3 = spec.color
-    button.Font = Enum.Font.ArialBold
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = spec.label
-    button.TextColor3 = Color3.fromRGB(35, 55, 69)
+    button.TextColor3 = Rhs2UiStyle.Palette.Ink
     button.TextSize = 10
     button.Parent = colorRow
     round(button, 2)
@@ -1890,37 +1984,37 @@ editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 0)
 editorPanel.Position = UDim2.fromOffset(0, 0)
 editorPanel.Size = UDim2.new(0, 330, 0, 346)
-editorPanel.BackgroundColor3 = LEGACY_PANEL
-editorPanel.BackgroundTransparency = 0.02
+editorPanel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+editorPanel.BackgroundTransparency = 0
 editorPanel.Visible = false
 editorPanel:SetAttribute("ReferenceExactLayout", false)
 editorPanel:SetAttribute("ReferenceCoverage", "verified-labels-only")
 editorPanel.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(editorPanel)
 editorPanelScale = Instance.new("UIScale")
 editorPanelScale.Name = "ResponsiveScale"
 editorPanelScale.Scale = 1
 editorPanelScale.Parent = editorPanel
-round(editorPanel, 2)
-outline(editorPanel, 2)
 applyResponsiveHudLayout()
 
 local editorTitle = Instance.new("TextLabel")
-editorTitle.BackgroundColor3 = LEGACY_BLUE
+editorTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 editorTitle.BorderSizePixel = 0
 editorTitle.Size = UDim2.new(1, 0, 0, 28)
-editorTitle.Font = Enum.Font.ArialBold
+editorTitle.Font = Rhs2UiStyle.Font.Bold
 editorTitle.Text = "Add Furni"
-editorTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+editorTitle.TextColor3 = Rhs2UiStyle.Palette.White
 editorTitle.TextSize = 15
 editorTitle.Parent = editorPanel
+Rhs2UiStyle.applyHeader(editorTitle)
 
 local editorCategories = Instance.new("TextLabel")
 editorCategories.BackgroundTransparency = 1
 editorCategories.Position = UDim2.new(0, 10, 0, 34)
 editorCategories.Size = UDim2.new(1, -20, 0, 20)
-editorCategories.Font = Enum.Font.ArialBold
+editorCategories.Font = Rhs2UiStyle.Font.Bold
 editorCategories.Text = "Utilities   |   Other"
-editorCategories.TextColor3 = LEGACY_BLUE_DARK
+editorCategories.TextColor3 = Rhs2UiStyle.Palette.White
 editorCategories.TextSize = 12
 editorCategories.TextXAlignment = Enum.TextXAlignment.Left
 editorCategories.Parent = editorPanel
@@ -1939,10 +2033,10 @@ local editorStatus = Instance.new("TextLabel")
 editorStatus.BackgroundTransparency = 1
 editorStatus.Position = UDim2.new(0, 10, 0, 144)
 editorStatus.Size = UDim2.new(1, -20, 0, 38)
-editorStatus.Font = Enum.Font.Arial
+editorStatus.Font = Rhs2UiStyle.Font.Regular
 editorStatus.Text = ""
 editorStatus.Visible = false
-editorStatus.TextColor3 = LEGACY_BLUE_DARK
+editorStatus.TextColor3 = Rhs2UiStyle.Palette.White
 editorStatus.TextSize = 12
 editorStatus.TextWrapped = true
 editorStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1965,14 +2059,13 @@ editorGrid.Parent = editorActions
 local function editorButton(name, label)
     local button = Instance.new("TextButton")
     button.Name = name
-    button.BackgroundColor3 = LEGACY_BUTTON
-    button.Font = Enum.Font.ArialBold
+    button.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = label
-    button.TextColor3 = LEGACY_BLUE_DARK
+    button.TextColor3 = Rhs2UiStyle.Palette.White
     button.TextSize = 11
     button.Parent = editorActions
-    round(button, 2)
-    outline(button, 1)
+    Rhs2UiStyle.applyTab(button, false)
     return button
 end
 
@@ -1988,14 +2081,13 @@ local hideWallsButton = Instance.new("TextButton")
 hideWallsButton.Name = "HideWalls"
 hideWallsButton.Position = UDim2.new(0, 10, 1, -40)
 hideWallsButton.Size = UDim2.new(1, -20, 0, 30)
-hideWallsButton.BackgroundColor3 = LEGACY_BUTTON
-hideWallsButton.Font = Enum.Font.ArialBold
+hideWallsButton.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+hideWallsButton.Font = Rhs2UiStyle.Font.Bold
 hideWallsButton.Text = "Hide Walls"
-hideWallsButton.TextColor3 = LEGACY_BLUE_DARK
+hideWallsButton.TextColor3 = Rhs2UiStyle.Palette.White
 hideWallsButton.TextSize = 11
 hideWallsButton.Parent = editorPanel
-round(hideWallsButton, 2)
-outline(hideWallsButton, 1)
+Rhs2UiStyle.applyTab(hideWallsButton, false)
 
 local latestEditorState = nil
 local selectedFurnitureItemId = nil
@@ -2081,10 +2173,10 @@ local function applyEditorState(state)
         button.Name = "Catalog_" .. tostring(item.itemId)
         button.Size = UDim2.new(1, 0, 0, 36)
         button.BackgroundColor3 = item.itemId == selectedFurnitureItemId
-            and Color3.fromRGB(210, 225, 240)
-            or LEGACY_BUTTON
-        button.Font = Enum.Font.ArialBold
-        button.TextColor3 = LEGACY_BLUE_DARK
+            and Rhs2UiStyle.Palette.ActiveGold
+            or Rhs2UiStyle.Palette.TabBlue
+        button.Font = Rhs2UiStyle.Font.Bold
+        button.TextColor3 = Rhs2UiStyle.Palette.White
         button.TextSize = 11
         button.TextXAlignment = Enum.TextXAlignment.Left
         button.Text = string.format(
@@ -2095,8 +2187,7 @@ local function applyEditorState(state)
             inventoryQuantity(state, item.itemId)
         )
         button.Parent = editorCatalog
-        round(button, 2)
-        outline(button, 1)
+        Rhs2UiStyle.applyTab(button, item.itemId == selectedFurnitureItemId)
         button.Activated:Connect(function()
             selectedFurnitureItemId = item.itemId
             applyEditorState(latestEditorState)

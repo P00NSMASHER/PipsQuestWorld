@@ -87,13 +87,22 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     local quickHeight = clamp(math.floor(height * 0.1159 + 0.5), 48, 58)
 
     local railX = safe.right - outerGap - railWidth
-    local statusX = railX - groupGap - statusWidth
+    -- Reference A aligns the compact status stack above the primary rail so
+    -- both groups share a common right edge.
+    local statusX = safe.right - outerGap - statusWidth
     local statusY = safe.y + outerGap
     local railY = math.max(
         safe.y + math.floor(height * 0.1884 + 0.5),
         statusY + statusHeight + groupGap
     )
-    local quickX = safe.x + ((safe.width - quickWidth) / 2)
+    -- Reference A places the four-slot quick group slightly right of the
+    -- gameplay center. Preserve that offset while still clamping to safe bounds.
+    local quickOffset = clamp(math.floor(width * 0.033 + 0.5), 24, 36)
+    local quickX = clamp(
+        safe.x + ((safe.width - quickWidth) / 2) + quickOffset,
+        safe.x,
+        safe.right - quickWidth
+    )
     local quickY = safe.bottom - outerGap - quickHeight
 
     local layout = {
@@ -108,7 +117,7 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     }
 
     layout.railButtonSize = math.min(
-        railWidth - 4,
+        railWidth,
         math.floor((railHeight - (layout.railGap * 3)) / 4)
     )
     layout.quickSlotSize = math.min(
@@ -176,6 +185,28 @@ function ResponsiveHudLayout.computeAuxiliaryPanels(layout)
     }
 end
 
+function ResponsiveHudLayout.computeUtilityGrid(layout)
+    assert(type(layout) == "table" and layout.rail and layout.quick, "complete HUD layout required")
+    local utilityGap = layout.railGap
+    local tileSize = math.floor((layout.rail.width - utilityGap) / 2)
+    local height = (tileSize * 3) + (utilityGap * 2)
+    local y = layout.rail.bottom + utilityGap
+    local limit = layout.quick.y - utilityGap
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        limit = math.min(limit, zone.y - utilityGap)
+    end
+
+    local grid = rect(layout.rail.x, y, layout.rail.width, height)
+    grid.gap = utilityGap
+    grid.tileSize = tileSize
+    grid.columns = 2
+    grid.rows = 3
+    grid.visible = grid.bottom <= limit
+    grid.limit = limit
+    return grid
+end
+
 function ResponsiveHudLayout.computeCenteredModal(layout, baseSize)
     assert(type(layout) == "table" and layout.safe and layout.viewport, "complete HUD layout required")
     assert(type(baseSize) == "table", "baseSize table required")
@@ -232,9 +263,9 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
     local viewport = layout.viewport
     local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
     local leftLimit = safe.x + gap
-    local rightLimit = math.min(layout.status.x, layout.rail.x) - gap
+    local rightLimit = math.min(layout.status.x, layout.rail.x)
     local topLimit = safe.y + gap
-    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y)
     local centerX = safe.x + (safe.width / 2)
 
     for _, zone in ipairs(layout.exclusionZones or {}) do
@@ -243,7 +274,7 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
         elseif zone.x >= centerX then
             rightLimit = math.min(rightLimit, zone.x)
         else
-            bottomLimit = math.min(bottomLimit, zone.y - gap)
+            bottomLimit = math.min(bottomLimit, zone.y)
         end
     end
 
@@ -256,12 +287,11 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
 
     local width = baseWidth * scale
     local height = baseHeight * scale
-    local modal = rect(
-        leftLimit + ((availableWidth - width) / 2),
-        topLimit + ((availableHeight - height) / 2),
-        width,
-        height
-    )
+    local centeredX = safe.x + ((safe.width - width) / 2)
+    local centeredY = safe.y + ((safe.height - height) / 2)
+    local x = clamp(centeredX, leftLimit, rightLimit - width)
+    local y = clamp(centeredY, topLimit, bottomLimit - height)
+    local modal = rect(x, y, width, height)
     modal.scale = scale
     modal.gap = gap
     modal.baseWidth = baseWidth
