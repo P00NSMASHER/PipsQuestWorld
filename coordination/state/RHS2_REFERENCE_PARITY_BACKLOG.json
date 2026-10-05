@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:31:00Z",
+  "observedAt": "2026-10-05T17:33:00Z",
   "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,8 +141,8 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "INTEGRATED__CLOUD_SAFE_PASS__RUNTIME_SMOKE_PENDING",
-      "owner": "Roblox High School Integration Smoke",
+      "status": "SOURCE_REPAIR_ACTIVE__CLASS_MODAL_IPHONE_SAFE_AREA",
+      "owner": "Pip High Free Roam",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
         "A@00:05",
@@ -160,8 +160,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "rebuild/high-school-foundation@39911a193ba6e76379c52ce67cb60bbc912bf279; PR225 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live menu interaction, and save/rejoin remain unexecuted.",
-      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
+      "blocker": "P1_CLASS_MODAL_IPHONE_SAFE_AREA: current class activity modal extends ~39.15px beyond the iPhone fixture safe bottom. Narrow responsive repair required before runtime Smoke.",
+      "nextHandoff": "Free Roam repair -> all three exact-head guards -> QA -> Integration -> rebind Smoke plan.",
       "branch": null,
       "pr": 214,
       "headSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
@@ -170,7 +170,7 @@
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
-      "status": "PREP_READY__ACTIVATION_MANIFEST_ARMED__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
+      "status": "PREP_READY__ACTIVATION_MANIFEST_ARMED__BLOCKED_BY_P1_SOURCE_REPAIR_RUNTIME_SMOKE_PACKAGE",
       "owner": "Roblox High School Class & Education",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
@@ -191,7 +191,7 @@
         "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json (PR219)",
         "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json (PR236)"
       ],
-      "blocker": "P1 exact-canonical runtime Smoke and deterministic Package. When those pass, Control Tower may apply PR236 activation conditions and open exactly one P2 producer.",
+      "blocker": "P1 class-modal source repair, exact QA/Integration, full runtime Smoke and deterministic Package.",
       "nextHandoff": "Control Tower validates the armed activation manifest after P1 Package."
     },
     {
@@ -312,9 +312,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37308641468_37308641508_37308641830",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5417072888",
     "p1IntegrationStatus": "MERGED_TO_39911A__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__PAAM_L044_OFFLINE_CURRENT_POLL__PR225",
-    "p1PackageStatus": "BLOCKED_FULL_RUNTIME_SMOKE",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_PREP_READY__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
+    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__CLASS_MODAL_IPHONE_SAFE_AREA",
+    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P1_NARROW_CLASS_MODAL_SAFE_AREA_REPAIR_RESERVED"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,7 +406,26 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [],
+  "openDefects": [
+    {
+      "id": "P1_CLASS_MODAL_IPHONE_SAFE_AREA",
+      "owner": "Pip High Free Roam",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "referenceClipTime": "current canonical class/free-roam runtime surface; device acceptance uses repository iPhone 852x393 fixture",
+      "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
+      "evidence": "Fixed 390px modal centered at 55% viewport yields bottom 411.15 vs safe bottom 372 on iPhone 852x393.",
+      "acceptanceCriteria": [
+        "Class activity modal is fully contained in safe rectangles for desktop 909x483, iPhone 852x393 and iPad 1024x768.",
+        "Contents, answer buttons and feedback remain uniformly scaled/readable.",
+        "Mutation-sensitive test rejects the old iPhone geometry.",
+        "All three exact-head guards pass.",
+        "Independent QA authorizes the same changed SHA before Integration."
+      ],
+      "outputLocation": "future P1 repair PR",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract"
+    }
+  ],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
