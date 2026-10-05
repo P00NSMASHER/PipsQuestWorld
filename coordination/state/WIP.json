@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 74,
+  "schemaVersion": 75,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T20:15:00Z",
+  "observedAt": "2026-10-05T20:34:30Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
@@ -17,7 +17,7 @@
     "cap": 3,
     "countIncludingBase": 3,
     "producerPr": 274,
-    "producerSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+    "producerSha": "f459710aba7456876a709598ee662042c4abd0c8",
     "producerBranch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
@@ -25,10 +25,10 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam / UI Visual Parity",
       "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_F459__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
       "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "pr": 274,
-      "headSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+      "headSha": "f459710aba7456876a709598ee662042c4abd0c8",
       "mergePrerequisite": "Protected vehicle-card Integration must bind PR264 to exact canonical 7446d375 after Foundation push rerun 37363665326 succeeds."
     },
     "supersededCandidates": [
@@ -53,7 +53,7 @@
       "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
     }
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_PRODUCER_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT__MERGE_BLOCKED",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_F459_ACTIVE__ALL_CURRENT_P1_CLIENT_SURFACES_STYLED__CI_QUEUED__VEHICLE_INTEGRATION_RUNNER_WAIT",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -111,28 +111,28 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__MERGE_BLOCKED",
+      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_F459__MERGE_BLOCKED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
       "candidatePr": 274,
-      "candidateSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
-      "latestOutput": "PR274 implements shared RHS2 visual tokens, persistent status/rail/quickbar polish, Travel tab/card-grid chrome, Shop chrome, and House common chrome. It is open for exact-head CI/QA only; merge is blocked until vehicle Integration is certified.",
-      "objective": "Drive PR274 to all-three exact-head green and independent visual/static QA without widening product scope. Preserve every authority and responsive geometry seam.",
+      "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
+      "latestOutput": "PR274 exact head f459 now applies shared RHS2 navy/blue/gold/purple/Gotham presentation across persistent HUD, Shop/Travel/House/Outfit, ClassActivityModal, CafeCard, LegacyVehiclePanel and HousingEditor. Canonical client no longer contains pale LEGACY_PANEL/LEGACY_BUTTON tokens or Arial presentation paths.",
+      "objective": "Hold product scope stable. Drive exact head f459 through all three PR guards and independent visual/static QA. Do not widen server semantics or invent icon/data/catalog authority.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "PR274 CI; merge additionally depends on vehicle Integration.",
+      "dependency": "PR274 exact-head CI; merge additionally depends on vehicle Integration.",
       "exit": "Exact-head CI/QA pass or concrete defect.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "WAIT_UI_POLISH_EXACT_HEAD_CI__REFERENCE_MATRIX_LOCKED",
+      "mode": "WAIT_UI_POLISH_EXACT_HEAD_F459_CI__REFERENCE_MATRIX_LOCKED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 274,
-      "candidateSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
-      "latestOutput": "UI visual reference spec, implementation map, acceptance matrix, proposed style/test contracts and visual-diff harness are merged. PR274 is the sole candidate.",
-      "objective": "After all three PR274 guards pass, review exact-head visual static contract, source authority boundaries, reference hierarchy and mutation-sensitive responsive tests. Keep rendered parity PENDING.",
+      "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
+      "latestOutput": "Visual reference spec, implementation map, acceptance matrix, style proposal, static-contract proposal, diff harness and additional UI states are locked. f459 also enforces no pale legacy primary surfaces and no Arial in the canonical client.",
+      "objective": "When all three f459 guards pass, perform exact-head static visual/reference/authority QA. Keep rendered parity PENDING until actual desktop/iPhone/iPad captures.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
       "dependency": "PR274 exact-head CI.",
-      "exit": "QA PASS/defect on exact candidate.",
+      "exit": "QA PASS/defect on exact f459.",
       "handoff": "Roblox High School Integration"
     },
     "Integration": {
@@ -172,15 +172,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA74_UI_PRODUCER_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT",
+      "mode": "SCHEMA75_UI_HEAD_F459_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR274 is now the sole UI visual-parity product producer. Vehicle canonical still waits only on Foundation push rerun 37363665326; Class/Progression are green. UI producer merge remains blocked until that Integration gate closes.",
-      "objective": "Keep PR274 advancing through CI/QA in parallel, prevent any second product producer, certify vehicle Integration when Foundation runner succeeds, then permit PR274 protected merge if its own QA is green.",
+      "latestOutput": "PR274 advanced to exact head f459 with visual-system coverage across all currently active P1 client surfaces. Exact-head CI is queued. Vehicle canonical still waits only on Foundation runner attempt4; Class/Progression are green.",
+      "objective": "Keep f459 as the sole producer, prevent scope drift, certify vehicle Integration when Foundation runner succeeds, then permit PR274 protected merge only if f459 QA is green.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Vehicle Foundation push rerun + PR274 CI.",
-      "exit": "Vehicle Integration certified, PR274 QA defect/pass, or canonical change.",
+      "dependency": "Vehicle Foundation rerun + PR274 exact-head CI.",
+      "exit": "Vehicle Integration certified, PR274 QA pass/defect, or canonical change.",
       "handoff": "Roblox High School Integration / QA"
     }
   },
@@ -1072,6 +1072,23 @@
     "directive": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
     "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
-    "status": "READY_FOR_PRODUCT_ACTIVATION_AFTER_VEHICLE_INTEGRATION"
+    "status": "ACTIVE_EXACT_HEAD__STATIC_STYLE_COMPLETE__CI_QUEUED__RENDERED_PENDING",
+    "candidatePr": 274,
+    "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
+    "currentCoverage": [
+      "persistent status/action rail/quickbar",
+      "Shop/Travel common modal shell",
+      "House and HousingEditor",
+      "Avatar/Outfit",
+      "ClassActivityModal",
+      "CafeCard",
+      "LegacyVehiclePanel"
+    ],
+    "regressionLocks": [
+      "no LEGACY_PANEL or LEGACY_BUTTON token in canonical client",
+      "no Enum.Font.Arial* in canonical client",
+      "unverified Travel Servers and placeholder destinations remain inert",
+      "server authority modules untouched"
+    ]
   }
 }
