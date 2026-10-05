@@ -26,6 +26,7 @@ end
 has(project, '"ShoppingPurchaseController"', "shopping controller project mapping")
 has(project, '"ShoppingPurchase"', "shopping service project mapping")
 has(project, '"LegacyShoppingBoundary"', "shopping client boundary mapping")
+has(project, '"FeaturePanelController"', "feature panel controller mapping")
 has(service, 'local SERVER_CATALOG = {}', "authorized product catalog starts empty")
 has(service, 'purchasePermanentItem.Name = "PurchasePermanentItem"', "verified purchase remote")
 has(service, 'MarketplaceService.PromptPurchaseFinished:Connect', "server purchase confirmation callback")
@@ -43,6 +44,8 @@ has(clientBoundary, 'purchasePermanentItem.OnClientInvoke = function(message)', 
 has(clientBoundary, 'function api.consumeServerConfirmation()', "server confirmation remains server-authored")
 has(canonicalClient, 'require(shared:WaitForChild("LegacyShoppingBoundary"))', "canonical client requires shopping boundary")
 has(canonicalClient, 'local shoppingBoundary = LegacyShoppingBoundary()', "canonical client mounts shopping boundary")
+has(canonicalClient, 'makeFeaturePanel("shop", "STYLE SHOP")', "shop opens a real feature surface")
+has(canonicalClient, 'openFeaturePanel("avatar", "shop_link")', "shop-to-closet navigation")
 
 lacks(service, "FireAllClients", "purchase success must never broadcast")
 lacks(service, "GetPlayers(", "purchase success must not iterate recipients")

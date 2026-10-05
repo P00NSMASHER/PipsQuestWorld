@@ -152,12 +152,43 @@ stateSnapshot.OnServerInvoke = function()
     return snapshot(os.clock())
 end
 
-requestTravel.OnServerInvoke = function(player)
-    local roomSpawn = getCurrentRoomSpawn()
+requestTravel.OnServerInvoke = function(player, destinationKey)
     local character = player.Character
     local root = character and character:FindFirstChild("HumanoidRootPart")
 
-    if not roomSpawn or not root or not root:IsA("BasePart") then
+    if not root or not root:IsA("BasePart") then
+        return {
+            accepted = false,
+            code = "travel_unavailable",
+        }
+    end
+
+    if destinationKey ~= nil and destinationKey ~= "CurrentClass" then
+        if type(destinationKey) ~= "string" then
+            return {
+                accepted = false,
+                code = "invalid_destination",
+            }
+        end
+
+        local destination = SchoolConfig.WorldLocations[destinationKey]
+        if not destination then
+            return {
+                accepted = false,
+                code = "unknown_destination",
+            }
+        end
+
+        character:PivotTo(CFrame.new(destination.position + SchoolConfig.TRAVEL_OFFSET))
+        return {
+            accepted = true,
+            destination = destinationKey,
+            destinationDisplayName = destination.displayName,
+        }
+    end
+
+    local roomSpawn = getCurrentRoomSpawn()
+    if not roomSpawn then
         return {
             accepted = false,
             code = "travel_unavailable",
@@ -168,6 +199,8 @@ requestTravel.OnServerInvoke = function(player)
     local period = currentPeriod()
     return {
         accepted = true,
+        destination = "CurrentClass",
+        destinationDisplayName = period.label,
         periodId = period.id,
         room = period.room,
     }

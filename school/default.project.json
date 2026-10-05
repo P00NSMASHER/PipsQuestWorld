@@ -45,6 +45,9 @@
         },
         "ResponsiveHudLayout": {
           "$path": "src/shared/ResponsiveHudLayout.lua"
+        },
+        "FeaturePanelController": {
+          "$path": "src/shared/FeaturePanelController.lua"
         }
       }
     },

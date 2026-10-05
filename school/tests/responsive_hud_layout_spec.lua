@@ -1,5 +1,22 @@
 local ResponsiveHudLayout = assert(loadfile("school/src/shared/ResponsiveHudLayout.lua"))()
 
+assert(
+    ResponsiveHudLayout.isSupportedViewport({ width = 480, height = 300 }),
+    "minimum landscape viewport must be supported"
+)
+assert(
+    not ResponsiveHudLayout.isSupportedViewport({ width = 1, height = 1 }),
+    "transient startup viewport must be rejected without reaching compute"
+)
+assert(
+    not ResponsiveHudLayout.isSupportedViewport({ width = 852, height = 280 }),
+    "short landscape viewport must remain unsupported"
+)
+assert(
+    not ResponsiveHudLayout.isSupportedViewport(nil),
+    "missing viewport must be rejected safely"
+)
+
 local function approxBetween(value, minimum, maximum, label)
     if value < minimum or value > maximum then
         error(string.format("%s: %.4f outside [%.4f, %.4f]", label, value, minimum, maximum), 2)

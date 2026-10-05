@@ -7,6 +7,21 @@ _G.Vector3 = {
 }
 
 local SchoolConfig = assert(loadfile("school/src/shared/SchoolConfig.lua"))()
+
+for _, destinationKey in ipairs({
+    "SchoolEntrance",
+    "TownCenter",
+    "Cafe",
+    "StyleShop",
+    "AutoShop",
+    "Market",
+    "Neighborhood",
+    "TownPark",
+}) do
+    local destination = assert(SchoolConfig.WorldLocations[destinationKey], destinationKey .. " travel destination missing")
+    assert(destination.position ~= nil, destinationKey .. " travel position missing")
+    assert(type(destination.displayName) == "string" and destination.displayName ~= "", destinationKey .. " display name missing")
+end
 _G.Vector3 = previousVector3
 
 local function eq(actual, expected, label)
@@ -30,6 +45,20 @@ eq(seam.headingDegrees, 90, "road heading")
 local campusFile = assert(io.open("school/src/server/CampusBuilder.server.lua", "r"))
 local campusSource = campusFile:read("*a")
 campusFile:close()
+
+local runtimeFile = assert(io.open("school/src/server/FoundationBootstrap.server.lua", "r"))
+local runtimeSource = runtimeFile:read("*a")
+runtimeFile:close()
+
+for _, fragment in ipairs({
+    'requestTravel.OnServerInvoke = function(player, destinationKey)',
+    'local destination = SchoolConfig.WorldLocations[destinationKey]',
+    'code = "unknown_destination"',
+    'character:PivotTo(CFrame.new(destination.position + SchoolConfig.TRAVEL_OFFSET))',
+    'destination = "CurrentClass"',
+}) do
+    assert(runtimeSource:find(fragment, 1, true), "missing server-authoritative travel seam: " .. fragment)
+end
 
 assert(campusSource:find('makePart%("TownMainStreet"', 1), "CampusBuilder must provide TownMainStreet")
 assert(campusSource:find('buildStorefront%("AutoShop"', 1), "CampusBuilder must provide AutoShop")

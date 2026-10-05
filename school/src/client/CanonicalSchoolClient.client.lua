@@ -5,16 +5,26 @@ local ContextActionService = game:GetService("ContextActionService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local GuiService = game:GetService("GuiService")
+local StarterGui = game:GetService("StarterGui")
 
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
 local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
+local FeaturePanelController = require(shared:WaitForChild("FeaturePanelController"))
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-LegacyOutfitEntry(player, UserInputService)
+
+-- Pip High owns the compact top-right status surface. Roblox's stock player
+-- list occupies the same space and can cover the status action and panel close
+-- buttons, so keep that CoreGui surface disabled for this experience.
+pcall(function()
+    StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, false)
+end)
+
+local outfitSurface = LegacyOutfitEntry(player, UserInputService)
 local shoppingBoundary = LegacyShoppingBoundary()
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
 local stateSnapshot = root:WaitForChild("StateSnapshot")
@@ -176,13 +186,14 @@ quickLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 quickLayout.Padding = UDim.new(0, 7)
 quickLayout.Parent = quickBar
 
+local quickSlotButtons = {}
 for index, slot in ipairs({
     { label = "BAG", color = Color3.fromRGB(56, 177, 220) },
     { label = "", color = Color3.fromRGB(36, 45, 77) },
     { label = "PHONE", color = Color3.fromRGB(68, 195, 80) },
     { label = "ITEMS", color = Color3.fromRGB(210, 83, 188) },
 }) do
-    local quickSlot = Instance.new("TextLabel")
+    local quickSlot = Instance.new("TextButton")
     quickSlot.Name = "QuickSlot" .. tostring(index)
     quickSlot.Size = UDim2.fromOffset(52, 52)
     quickSlot.BackgroundColor3 = slot.color
@@ -194,7 +205,179 @@ for index, slot in ipairs({
     round(quickSlot, 10)
     local quickStroke = outline(quickSlot, 2)
     quickStroke.Color = Color3.fromRGB(236, 243, 250)
+    quickSlotButtons[index] = quickSlot
 end
+
+local featureController = FeaturePanelController.new({
+    "shop",
+    "avatar",
+    "travel",
+    "house",
+    "bag",
+    "phone",
+    "items",
+    "job_result",
+})
+local featurePanels = {}
+local educationModal = nil
+
+local function registerFeaturePanel(name, panel, onOpen, onClose)
+    featurePanels[name] = {
+        panel = panel,
+        onOpen = onOpen,
+        onClose = onClose,
+    }
+    panel.Visible = false
+end
+
+local function renderFeaturePanels(snapshot)
+    for name, descriptor in pairs(featurePanels) do
+        local shouldShow = snapshot.active == name
+        local wasVisible = descriptor.panel.Visible
+        descriptor.panel.Visible = shouldShow
+        if shouldShow and not wasVisible and descriptor.onOpen then
+            descriptor.onOpen()
+        elseif wasVisible and not shouldShow and descriptor.onClose then
+            descriptor.onClose()
+        end
+    end
+    gui:SetAttribute("ActiveFeaturePanel", snapshot.active or "")
+end
+
+local function closeFeaturePanels(reason)
+    local result = featureController:reset(reason or "close_all")
+    renderFeaturePanels(result)
+    return result
+end
+
+local function openFeaturePanel(name, reason)
+    if educationModal and educationModal.Visible then
+        closeFeaturePanels("education_modal_active")
+        statusLabel.Text = "Finish or leave the current class activity first."
+        return { accepted = false, code = "education_modal_active" }
+    end
+
+    local result = featureController:open(name, reason or "feature_link")
+    renderFeaturePanels(result)
+    return result
+end
+
+local function toggleFeaturePanel(name, reason)
+    if educationModal and educationModal.Visible then
+        closeFeaturePanels("education_modal_active")
+        statusLabel.Text = "Finish or leave the current class activity first."
+        return { accepted = false, code = "education_modal_active" }
+    end
+
+    local result = featureController:toggle(name, reason or "rail")
+    renderFeaturePanels(result)
+    return result
+end
+
+local function makeFeaturePanel(name, heading)
+    local panel = Instance.new("Frame")
+    panel.Name = "FeaturePanel_" .. name
+    panel.AnchorPoint = Vector2.new(0.5, 0.5)
+    -- Leave a stable lane for the compact status card and right action rail.
+    panel.Position = UDim2.fromScale(0.45, 0.52)
+    panel.Size = UDim2.new(0.78, 0, 0.72, 0)
+    panel.BackgroundColor3 = Color3.fromRGB(229, 241, 249)
+    panel.BackgroundTransparency = 0.02
+    panel.ZIndex = 20
+    panel.Parent = gui
+    round(panel, 10)
+    local panelStroke = outline(panel, 2)
+    panelStroke.Color = Color3.fromRGB(255, 255, 255)
+
+    local sizeConstraint = Instance.new("UISizeConstraint")
+    sizeConstraint.MinSize = Vector2.new(330, 220)
+    sizeConstraint.MaxSize = Vector2.new(560, 360)
+    sizeConstraint.Parent = panel
+
+    local header = Instance.new("Frame")
+    header.Name = "Header"
+    header.Size = UDim2.new(1, 0, 0, 46)
+    header.BackgroundColor3 = LEGACY_BLUE
+    header.BorderSizePixel = 0
+    header.ZIndex = 21
+    header.Parent = panel
+    round(header, 10)
+
+    local headerMask = Instance.new("Frame")
+    headerMask.Name = "HeaderBottomMask"
+    headerMask.Position = UDim2.new(0, 0, 1, -10)
+    headerMask.Size = UDim2.new(1, 0, 0, 10)
+    headerMask.BackgroundColor3 = LEGACY_BLUE
+    headerMask.BorderSizePixel = 0
+    headerMask.ZIndex = 21
+    headerMask.Parent = header
+
+    local headingLabel = Instance.new("TextLabel")
+    headingLabel.Name = "Heading"
+    headingLabel.BackgroundTransparency = 1
+    headingLabel.Position = UDim2.fromOffset(16, 0)
+    headingLabel.Size = UDim2.new(1, -70, 1, 0)
+    headingLabel.Font = Enum.Font.GothamBold
+    headingLabel.Text = heading
+    headingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    headingLabel.TextSize = 20
+    headingLabel.TextXAlignment = Enum.TextXAlignment.Left
+    headingLabel.ZIndex = 22
+    headingLabel.Parent = header
+
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "Close"
+    closeButton.AnchorPoint = Vector2.new(1, 0.5)
+    closeButton.Position = UDim2.new(1, -8, 0.5, 0)
+    closeButton.Size = UDim2.fromOffset(34, 34)
+    closeButton.BackgroundColor3 = Color3.fromRGB(216, 72, 72)
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.Text = "X"
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.TextSize = 16
+    closeButton.ZIndex = 22
+    closeButton.Parent = header
+    round(closeButton, 8)
+
+    local body = Instance.new("Frame")
+    body.Name = "Body"
+    body.BackgroundTransparency = 1
+    body.Position = UDim2.fromOffset(14, 58)
+    body.Size = UDim2.new(1, -28, 1, -72)
+    body.ZIndex = 21
+    body.Parent = panel
+
+    closeButton.Activated:Connect(function()
+        closeFeaturePanels("close_button")
+    end)
+    registerFeaturePanel(name, panel)
+    return panel, body
+end
+
+ContextActionService:BindActionAtPriority(
+    "ClosePipHighFeaturePanel",
+    function(_, inputState)
+        if inputState ~= Enum.UserInputState.Begin then
+            return Enum.ContextActionResult.Pass
+        end
+        if featureController:snapshot().active == nil then
+            return Enum.ContextActionResult.Pass
+        end
+        closeFeaturePanels("back")
+        return Enum.ContextActionResult.Sink
+    end,
+    false,
+    3000,
+    Enum.KeyCode.Escape,
+    Enum.KeyCode.ButtonB
+)
+
+player.CharacterAdded:Connect(function()
+    closeFeaturePanels("respawn")
+    if educationModal then
+        educationModal.Visible = false
+    end
+end)
 
 local currentHudLayout = nil
 local viewportConnection = nil
@@ -217,6 +400,17 @@ local function applyResponsiveHudLayout()
     end
 
     local viewport = camera.ViewportSize
+    if not ResponsiveHudLayout.isSupportedViewport({
+        width = viewport.X,
+        height = viewport.Y,
+    }) then
+        -- Studio and device rotation can briefly expose a 1x1 camera. The
+        -- viewport-change connection established by bindViewport will retry
+        -- as soon as Roblox reports usable dimensions; never abort this
+        -- LocalScript and strand every interaction that is mounted below.
+        return
+    end
+
     local insets = { left = 0, top = 0, right = 0, bottom = 0 }
     local insetOk, topLeftInset, bottomRightInset = pcall(function()
         return GuiService:GetGuiInset()
@@ -294,9 +488,10 @@ Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
 end)
 bindViewport(Workspace.CurrentCamera)
 
-local modal = Instance.new("Frame")
+educationModal = Instance.new("Frame")
+local modal = educationModal
 modal.AnchorPoint = Vector2.new(0.5, 0.5)
-modal.Position = UDim2.fromScale(0.5, 0.55)
+modal.Position = UDim2.fromScale(0.45, 0.55)
 modal.Size = UDim2.new(0.9, 0, 0, 390)
 modal.BackgroundColor3 = LEGACY_PANEL
 modal.Visible = false
@@ -396,6 +591,7 @@ local function clearChoices()
 end
 
 local function showActivity(response)
+    closeFeaturePanels("class_activity")
     activeClassKey = response.classKey or (latestClassState and latestClassState.classKey)
     activeActivity = response.activity
     pendingProgression = nil
@@ -532,6 +728,12 @@ action.Activated:Connect(function()
 end)
 
 local function findOutfitPanel()
+    if outfitSurface and outfitSurface.panel then
+        if outfitSurface.entry then
+            outfitSurface.entry.Visible = false
+        end
+        return outfitSurface.panel
+    end
     for _, guiName in ipairs({ "Outfits", "OutfitsMobile", "OutfitsConsole" }) do
         local outfitGui = playerGui:FindFirstChild(guiName)
         if outfitGui then
@@ -548,35 +750,359 @@ local function findOutfitPanel()
     return nil
 end
 
+local function addPanelLabel(parent, name, text, position, size, textSize, bold)
+    local label = Instance.new("TextLabel")
+    label.Name = name
+    label.BackgroundTransparency = 1
+    label.Position = position
+    label.Size = size
+    label.Font = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+    label.Text = text
+    label.TextColor3 = LEGACY_BLUE_DARK
+    label.TextSize = textSize or 15
+    label.TextWrapped = true
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextYAlignment = Enum.TextYAlignment.Top
+    label.ZIndex = 22
+    label.Parent = parent
+    return label
+end
+
+local function addPanelAction(parent, name, text, position, size, color, callback)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Position = position
+    button.Size = size
+    button.BackgroundColor3 = color or LEGACY_BUTTON
+    button.Font = Enum.Font.GothamBold
+    button.Text = text
+    button.TextColor3 = color and Color3.fromRGB(255, 255, 255) or LEGACY_BLUE_DARK
+    button.TextSize = 14
+    button.TextWrapped = true
+    button.ZIndex = 22
+    button.Parent = parent
+    round(button, 8)
+    local buttonStroke = outline(button, 1)
+    buttonStroke.Color = Color3.fromRGB(255, 255, 255)
+    button.Activated:Connect(callback)
+    return button
+end
+
+local shopPanel, shopBody = makeFeaturePanel("shop", "STYLE SHOP")
+local shopStatus = addPanelLabel(
+    shopBody,
+    "Status",
+    "Visit the Style Shop, then open your closet to manage saved outfits.",
+    UDim2.fromOffset(8, 6),
+    UDim2.new(1, -16, 0, 70),
+    16,
+    false
+)
+addPanelAction(
+    shopBody,
+    "VisitStyleShop",
+    "VISIT STYLE SHOP",
+    UDim2.new(0, 8, 0, 86),
+    UDim2.new(0.48, -12, 0, 54),
+    Color3.fromRGB(220, 66, 66),
+    function()
+        if busy then return end
+        busy = true
+        local ok, response = pcall(function()
+            return requestTravel:InvokeServer("StyleShop")
+        end)
+        busy = false
+        if ok and type(response) == "table" and response.accepted == true then
+            shopStatus.Text = "Welcome to the Style Shop."
+            statusLabel.Text = "Traveling to Style Shop"
+            task.delay(0.25, function()
+                closeFeaturePanels("travel_complete")
+            end)
+        else
+            shopStatus.Text = "The Style Shop route is unavailable right now."
+        end
+    end
+)
+addPanelAction(
+    shopBody,
+    "OpenCloset",
+    "OPEN AVATAR CLOSET",
+    UDim2.new(0.52, 4, 0, 86),
+    UDim2.new(0.48, -12, 0, 54),
+    Color3.fromRGB(54, 174, 221),
+    function()
+        openFeaturePanel("avatar", "shop_link")
+    end
+)
+addPanelLabel(
+    shopBody,
+    "CatalogNotice",
+    "Only server-authorized clothing can appear here. No automatic purchases or hidden charges are performed.",
+    UDim2.new(0, 8, 1, -64),
+    UDim2.new(1, -16, 0, 54),
+    12,
+    false
+)
+
+local travelPanel, travelBody = makeFeaturePanel("travel", "TRAVEL")
+addPanelLabel(
+    travelBody,
+    "Instruction",
+    "Choose a destination",
+    UDim2.fromOffset(8, 0),
+    UDim2.new(1, -16, 0, 28),
+    16,
+    true
+)
+local travelGrid = Instance.new("Frame")
+travelGrid.Name = "DestinationTiles"
+travelGrid.BackgroundTransparency = 1
+travelGrid.Position = UDim2.fromOffset(6, 32)
+travelGrid.Size = UDim2.new(1, -12, 1, -66)
+travelGrid.ZIndex = 22
+travelGrid.Parent = travelBody
+local destinationLayout = Instance.new("UIGridLayout")
+destinationLayout.CellPadding = UDim2.fromOffset(8, 8)
+destinationLayout.CellSize = UDim2.new(0.333, -6, 0.333, -6)
+destinationLayout.FillDirectionMaxCells = 3
+destinationLayout.SortOrder = Enum.SortOrder.LayoutOrder
+destinationLayout.Parent = travelGrid
+local travelStatus = addPanelLabel(
+    travelBody,
+    "TravelStatus",
+    "",
+    UDim2.new(0, 8, 1, -26),
+    UDim2.new(1, -16, 0, 24),
+    12,
+    false
+)
+local destinationSpecs = {
+    { key = "CurrentClass", label = "CURRENT CLASS", color = Color3.fromRGB(57, 126, 168) },
+    { key = "SchoolEntrance", label = "PIP HIGH", color = Color3.fromRGB(199, 62, 67) },
+    { key = "TownCenter", label = "TOWN CENTER", color = Color3.fromRGB(68, 152, 185) },
+    { key = "Cafe", label = "CORNER CAFE", color = Color3.fromRGB(194, 129, 58) },
+    { key = "StyleShop", label = "STYLE SHOP", color = Color3.fromRGB(151, 92, 173) },
+    { key = "AutoShop", label = "AUTO SHOP", color = Color3.fromRGB(74, 105, 142) },
+    { key = "Market", label = "MARKET", color = Color3.fromRGB(83, 161, 104) },
+    { key = "Neighborhood", label = "NEIGHBORHOOD", color = Color3.fromRGB(187, 99, 83) },
+    { key = "TownPark", label = "TOWN PARK", color = Color3.fromRGB(75, 144, 91) },
+}
+for index, spec in ipairs(destinationSpecs) do
+    local tile = Instance.new("TextButton")
+    tile.Name = "Destination_" .. spec.key
+    tile.LayoutOrder = index
+    tile.BackgroundColor3 = spec.color
+    tile.Font = Enum.Font.GothamBold
+    tile.Text = spec.label
+    tile.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tile.TextSize = 12
+    tile.TextWrapped = true
+    tile.ZIndex = 23
+    tile:SetAttribute("DestinationKey", spec.key)
+    tile:SetAttribute("UsesOriginalGeneratedArtwork", true)
+    tile.Parent = travelGrid
+    round(tile, 9)
+    tile.Activated:Connect(function()
+        if busy then return end
+        busy = true
+        travelStatus.Text = "Traveling..."
+        local ok, response = pcall(function()
+            return requestTravel:InvokeServer(spec.key)
+        end)
+        busy = false
+        if ok and type(response) == "table" and response.accepted == true then
+            local destinationName = response.destinationDisplayName or spec.label
+            statusLabel.Text = "Traveling to " .. tostring(destinationName)
+            task.delay(0.2, function()
+                closeFeaturePanels("travel_complete")
+            end)
+        else
+            travelStatus.Text = "That destination is unavailable. Try again."
+        end
+    end)
+end
+
+local bagPanel, bagBody = makeFeaturePanel("bag", "BACKPACK")
+addPanelLabel(
+    bagBody,
+    "BackpackCopy",
+    "Your saved outfits, house furniture, and equipped vehicle stay in their verified feature menus.",
+    UDim2.fromOffset(10, 8),
+    UDim2.new(1, -20, 0, 68),
+    16,
+    false
+)
+addPanelAction(bagBody, "ClosetShortcut", "AVATAR CLOSET", UDim2.new(0, 10, 0, 86), UDim2.new(0.47, -10, 0, 52), Color3.fromRGB(54, 174, 221), function()
+    openFeaturePanel("avatar", "backpack_link")
+end)
+addPanelAction(bagBody, "HouseShortcut", "HOUSE ITEMS", UDim2.new(0.53, 0, 0, 86), UDim2.new(0.47, -10, 0, 52), Color3.fromRGB(83, 188, 77), function()
+    openFeaturePanel("house", "backpack_link")
+end)
+
+local phonePanel, phoneBody = makeFeaturePanel("phone", "PHONE")
+addPanelLabel(phoneBody, "PhoneCopy", "Quick access", UDim2.fromOffset(10, 6), UDim2.new(1, -20, 0, 30), 16, true)
+for index, spec in ipairs({
+    { key = "travel", label = "TRAVEL", color = Color3.fromRGB(235, 177, 49) },
+    { key = "avatar", label = "AVATAR", color = Color3.fromRGB(54, 174, 221) },
+    { key = "house", label = "HOUSE", color = Color3.fromRGB(83, 188, 77) },
+    { key = "shop", label = "SHOP", color = Color3.fromRGB(220, 66, 66) },
+}) do
+    local column = (index - 1) % 2
+    local row = math.floor((index - 1) / 2)
+    addPanelAction(
+        phoneBody,
+        "Phone_" .. spec.key,
+        spec.label,
+        UDim2.new(column * 0.5, 10 - (column * 2), 0, 48 + (row * 68)),
+        UDim2.new(0.5, -18, 0, 56),
+        spec.color,
+        function()
+            openFeaturePanel(spec.key, "phone_link")
+        end
+    )
+end
+
+local itemsPanel, itemsBody = makeFeaturePanel("items", "ITEMS")
+addPanelLabel(
+    itemsBody,
+    "ItemsCopy",
+    "No quick item is equipped. Furniture can be placed from Edit House mode; vehicles are managed at the Auto Shop.",
+    UDim2.fromOffset(10, 8),
+    UDim2.new(1, -20, 0, 82),
+    16,
+    false
+)
+addPanelAction(itemsBody, "TravelAutoShop", "GO TO AUTO SHOP", UDim2.new(0, 10, 0, 100), UDim2.new(1, -20, 0, 52), Color3.fromRGB(74, 105, 142), function()
+    if busy then return end
+    busy = true
+    local ok, response = pcall(function()
+        return requestTravel:InvokeServer("AutoShop")
+    end)
+    busy = false
+    if ok and type(response) == "table" and response.accepted == true then
+        statusLabel.Text = "Traveling to Auto Shop"
+        closeFeaturePanels("travel_complete")
+    end
+end)
+
+local jobResultPanel, jobResultBody = makeFeaturePanel("job_result", "SHIFT COMPLETE")
+local jobResultSummary = addPanelLabel(
+    jobResultBody,
+    "Performance",
+    "ORDER SERVED",
+    UDim2.fromOffset(10, 4),
+    UDim2.new(1, -20, 0, 42),
+    20,
+    true
+)
+local jobResultDetails = addPanelLabel(
+    jobResultBody,
+    "Rewards",
+    "",
+    UDim2.fromOffset(10, 54),
+    UDim2.new(1, -20, 0, 116),
+    15,
+    false
+)
+addPanelAction(
+    jobResultBody,
+    "DismissResult",
+    "OK",
+    UDim2.new(0, 10, 1, -58),
+    UDim2.new(1, -20, 0, 48),
+    Color3.fromRGB(54, 174, 221),
+    function()
+        closeFeaturePanels("job_result_ok")
+    end
+)
+
+local function showCafeJobResult(response)
+    local wage = tonumber(response and response.wage) or 25
+    local balance = response and response.economyState and response.economyState.balance
+    jobResultSummary.Text = "ORDER SERVED  •  GREAT WORK!"
+    jobResultDetails.Text = string.format(
+        "EARNINGS\n+$%d%s\n\nSCHOOL POINTS\n%d\n\nBONUS GIFT\nNone this shift",
+        wage,
+        type(balance) == "number" and ("  •  Balance $" .. tostring(balance)) or "",
+        points
+    )
+    openFeaturePanel("job_result", "cafe_complete")
+end
+
+local outfitPanel = findOutfitPanel()
+if outfitPanel then
+    local outfitGui = outfitPanel:FindFirstAncestorOfClass("ScreenGui")
+    if outfitGui then
+        outfitGui.DisplayOrder = 20
+    end
+    outfitPanel.AnchorPoint = Vector2.new(0.5, 0.5)
+    outfitPanel.Position = UDim2.fromScale(0.45, 0.52)
+    outfitPanel.Size = UDim2.new(0.78, 0, 0.72, 0)
+    outfitPanel.BackgroundColor3 = Color3.fromRGB(229, 241, 249)
+    -- The legacy outfit controls use their default child ZIndex. Keep the
+    -- panel itself at the default layer and raise the ScreenGui instead;
+    -- otherwise the panel background covers its own controls.
+    outfitPanel.ZIndex = 1
+    local outfitConstraint = Instance.new("UISizeConstraint")
+    outfitConstraint.MinSize = Vector2.new(330, 260)
+    outfitConstraint.MaxSize = Vector2.new(560, 430)
+    outfitConstraint.Parent = outfitPanel
+    local outfitClose = Instance.new("TextButton")
+    outfitClose.Name = "Close"
+    outfitClose.AnchorPoint = Vector2.new(1, 0)
+    outfitClose.Position = UDim2.new(1, -8, 0, 8)
+    outfitClose.Size = UDim2.fromOffset(34, 34)
+    outfitClose.BackgroundColor3 = Color3.fromRGB(216, 72, 72)
+    outfitClose.Font = Enum.Font.GothamBold
+    outfitClose.Text = "X"
+    outfitClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+    outfitClose.TextSize = 16
+    outfitClose.ZIndex = 30
+    outfitClose.Parent = outfitPanel
+    round(outfitClose, 8)
+    outfitClose.Activated:Connect(function()
+        closeFeaturePanels("avatar_close")
+    end)
+    registerFeaturePanel("avatar", outfitPanel, function()
+        if outfitSurface and outfitSurface.refresh then
+            outfitSurface.refresh()
+        end
+    end)
+end
+
 shopRailButton.Activated:Connect(function()
     local confirmation = shoppingBoundary.consumeServerConfirmation()
-    statusLabel.Text = confirmation or "Visit the Style Shop to browse verified items."
+    if confirmation then
+        shopStatus.Text = confirmation
+    end
+    toggleFeaturePanel("shop", "rail")
 end)
 
 avatarRailButton.Activated:Connect(function()
-    local outfitPanel = findOutfitPanel()
-    if outfitPanel then
-        outfitPanel.Visible = not outfitPanel.Visible
+    if findOutfitPanel() then
+        toggleFeaturePanel("avatar", "rail")
     else
         statusLabel.Text = "Avatar controls are still loading."
     end
 end)
 
 travelRailButton.Activated:Connect(function()
-    if busy then return end
-    busy = true
-    local ok, response = pcall(function()
-        return requestTravel:InvokeServer()
-    end)
-    busy = false
-    if ok and type(response) == "table" and response.accepted == true then
-        statusLabel.Text = "Traveling to " .. tostring(response.destination or response.roomDisplayName or "school")
-    else
-        statusLabel.Text = "Travel becomes available with the next destination."
-    end
+    travelStatus.Text = ""
+    toggleFeaturePanel("travel", "rail")
 end)
 
-findOutfitPanel()
+quickSlotButtons[1].Activated:Connect(function()
+    toggleFeaturePanel("bag", "quick_slot")
+end)
+quickSlotButtons[2].Activated:Connect(function()
+    toggleFeaturePanel("items", "quick_slot")
+end)
+quickSlotButtons[3].Activated:Connect(function()
+    toggleFeaturePanel("phone", "quick_slot")
+end)
+quickSlotButtons[4].Activated:Connect(function()
+    toggleFeaturePanel("items", "quick_slot")
+end)
 
 task.spawn(function()
     while gui.Parent do
@@ -699,14 +1225,14 @@ round(cafeAction, 2)
 outline(cafeAction, 1)
 
 local cafeLeave = Instance.new("TextButton")
-cafeLeave.AnchorPoint = Vector2.new(1, 0)
-cafeLeave.Position = UDim2.new(1, -8, 0, 28)
-cafeLeave.Size = UDim2.new(0, 82, 0, 30)
+cafeLeave.AnchorPoint = Vector2.new(1, 0.5)
+cafeLeave.Position = UDim2.new(1, -6, 0, 13)
+cafeLeave.Size = UDim2.new(0, 72, 0, 20)
 cafeLeave.BackgroundTransparency = 1
 cafeLeave.Font = Enum.Font.Arial
 cafeLeave.Text = "LEAVE JOB"
-cafeLeave.TextColor3 = LEGACY_BLUE_DARK
-cafeLeave.TextSize = 11
+cafeLeave.TextColor3 = Color3.fromRGB(255, 255, 255)
+cafeLeave.TextSize = 9
 cafeLeave.Visible = false
 cafeLeave.Parent = cafeCard
 
@@ -727,7 +1253,8 @@ local function applyCafeState(state)
     latestCafeJob = state
     local active = state.active == true
     local atCafe = state.atCafe == true
-    cafeCard.Visible = active or atCafe
+    cafeCard.Visible = (active or atCafe)
+        and featureController:snapshot().active == nil
     cafeLeave.Visible = active
 
     if active then
@@ -750,7 +1277,7 @@ local function refreshCafeJob()
     if ok and type(response) == "table" then
         applyCafeState(response)
     elseif latestCafeJob ~= nil and latestCafeJob.active == true then
-        cafeCard.Visible = true
+        cafeCard.Visible = featureController:snapshot().active == nil
         cafeStatus.Text = "Cafe job service is unavailable."
     end
 end
@@ -808,6 +1335,7 @@ cafeAction.Activated:Connect(function()
         setCafeMessage(
             "Shift complete! +$" .. tostring(response.wage or 25) .. balanceText
         )
+        showCafeJobResult(response)
     elseif response.code == "shift_started"
         or response.code == "shift_already_active" then
         setCafeMessage("Shift started. Serve the waiting order.")
@@ -853,15 +1381,85 @@ local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 
 local vehicleCard = Instance.new("Frame")
 vehicleCard.Name = "LegacyVehiclePanel"
-vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
-vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
-vehicleCard.Size = UDim2.new(0, 260, 0, 132)
+vehicleCard.AnchorPoint = Vector2.new(0.5, 0.5)
+vehicleCard.Position = UDim2.fromScale(0.45, 0.52)
+vehicleCard.Size = UDim2.new(0.72, 0, 0.64, 0)
 vehicleCard.BackgroundColor3 = LEGACY_PANEL
 vehicleCard.BackgroundTransparency = 0.02
 vehicleCard.Visible = false
 vehicleCard.Parent = gui
 round(vehicleCard, 2)
 outline(vehicleCard, 2)
+
+local vehicleShowroom = (function()
+    local surface = Instance.new("Frame")
+    surface.Name = "DealerView"
+    surface.BackgroundTransparency = 1
+    surface.Position = UDim2.fromOffset(14, 54)
+    surface.Size = UDim2.new(1, -28, 1, -70)
+    surface.Parent = vehicleCard
+
+    local preview = Instance.new("Frame")
+    preview.Name = "VehiclePreview"
+    preview.Size = UDim2.new(0.49, -6, 1, 0)
+    preview.BackgroundColor3 = Color3.fromRGB(241, 246, 250)
+    preview.Parent = surface
+    round(preview, 8)
+
+    local floor = Instance.new("Frame")
+    floor.AnchorPoint = Vector2.new(0.5, 1)
+    floor.Position = UDim2.fromScale(0.5, 0.9)
+    floor.Size = UDim2.new(0.86, 0, 0, 10)
+    floor.BackgroundColor3 = Color3.fromRGB(185, 204, 216)
+    floor.BorderSizePixel = 0
+    floor.Parent = preview
+    round(floor, 5)
+
+    local carBody = Instance.new("Frame")
+    carBody.AnchorPoint = Vector2.new(0.5, 0.5)
+    carBody.Position = UDim2.fromScale(0.5, 0.64)
+    carBody.Size = UDim2.new(0.68, 0, 0, 48)
+    carBody.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
+    carBody.BorderSizePixel = 0
+    carBody.Parent = preview
+    round(carBody, 12)
+
+    local roof = Instance.new("Frame")
+    roof.AnchorPoint = Vector2.new(0.5, 1)
+    roof.Position = UDim2.fromScale(0.5, 0.18)
+    roof.Size = UDim2.new(0.48, 0, 0, 28)
+    roof.BackgroundColor3 = Color3.fromRGB(57, 126, 168)
+    roof.BorderSizePixel = 0
+    roof.Parent = carBody
+    round(roof, 8)
+
+    for _, xScale in ipairs({ 0.22, 0.78 }) do
+        local wheel = Instance.new("Frame")
+        wheel.AnchorPoint = Vector2.new(0.5, 0.5)
+        wheel.Position = UDim2.fromScale(xScale, 0.96)
+        wheel.Size = UDim2.fromOffset(24, 24)
+        wheel.BackgroundColor3 = Color3.fromRGB(35, 44, 53)
+        wheel.BorderSizePixel = 0
+        wheel.Parent = carBody
+        round(wheel, 12)
+    end
+
+    local details = Instance.new("TextLabel")
+    details.Name = "BrowseDetails"
+    details.Position = UDim2.new(0.51, 6, 0, 0)
+    details.Size = UDim2.new(0.49, -6, 1, 0)
+    details.BackgroundColor3 = Color3.fromRGB(57, 126, 168)
+    details.Font = Enum.Font.Gotham
+    details.Text = "BROWSE VEHICLES\n\nSTARTER CAR\nReliable town runabout\n\nPRICE\nFREE"
+    details.TextColor3 = Color3.fromRGB(255, 255, 255)
+    details.TextSize = 14
+    details.TextWrapped = true
+    details.TextYAlignment = Enum.TextYAlignment.Top
+    details.Parent = surface
+    round(details, 8)
+
+    return surface
+end)()
 
 local vehicleTitle = Instance.new("TextLabel")
 vehicleTitle.BackgroundTransparency = 0
@@ -874,6 +1472,19 @@ vehicleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 vehicleTitle.TextSize = 14
 vehicleTitle.TextXAlignment = Enum.TextXAlignment.Center
 vehicleTitle.Parent = vehicleCard
+
+local vehicleClose = Instance.new("TextButton")
+vehicleClose.Name = "CloseDealer"
+vehicleClose.AnchorPoint = Vector2.new(1, 0.5)
+vehicleClose.Position = UDim2.new(1, -7, 0, 23)
+vehicleClose.Size = UDim2.fromOffset(34, 34)
+vehicleClose.BackgroundColor3 = Color3.fromRGB(216, 72, 72)
+vehicleClose.Font = Enum.Font.GothamBold
+vehicleClose.Text = "X"
+vehicleClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+vehicleClose.TextSize = 16
+vehicleClose.Parent = vehicleCard
+round(vehicleClose, 8)
 
 local vehicleStatus = Instance.new("TextLabel")
 vehicleStatus.BackgroundTransparency = 1
@@ -903,6 +1514,7 @@ outline(vehicleAction, 1)
 local latestVehicleState = nil
 local vehicleBusy = false
 local vehicleMessageUntil = 0
+local vehicleShopDismissed = false
 
 local VEHICLE_FORWARD = "PipHighVehicleForward"
 local VEHICLE_REVERSE = "PipHighVehicleReverse"
@@ -1029,13 +1641,59 @@ local function setVehicleMessage(text)
     vehicleMessageUntil = os.clock() + 2.6
 end
 
+vehicleClose.Activated:Connect(function()
+    vehicleShopDismissed = true
+    vehicleCard.Visible = false
+    actionRail.Visible = true
+    quickBar.Visible = true
+end)
+
 local function applyVehicleState(state)
     if type(state) ~= "table" then
         return
     end
 
     latestVehicleState = state
-    vehicleCard.Visible = state.active == true or state.atAutoShop == true
+    if state.atAutoShop ~= true then
+        vehicleShopDismissed = false
+    end
+    local dealershipOpen = state.atAutoShop == true
+        and state.active ~= true
+        and vehicleShopDismissed ~= true
+    vehicleCard.Visible = (state.active == true or dealershipOpen)
+        and featureController:snapshot().active == nil
+    actionRail.Visible = not dealershipOpen
+    quickBar.Visible = not dealershipOpen
+    vehicleShowroom.Visible = dealershipOpen
+    vehicleClose.Visible = dealershipOpen
+
+    if dealershipOpen then
+        vehicleCard.AnchorPoint = Vector2.new(0.5, 0.5)
+        vehicleCard.Position = UDim2.fromScale(0.45, 0.52)
+        vehicleCard.Size = UDim2.new(0.72, 0, 0.64, 0)
+        vehicleTitle.Size = UDim2.new(1, 0, 0, 46)
+        vehicleTitle.Font = Enum.Font.GothamBold
+        vehicleTitle.TextSize = 18
+        vehicleStatus.Position = UDim2.new(0, 28, 0, 68)
+        vehicleStatus.Size = UDim2.new(0.4, 0, 0, 54)
+        vehicleStatus.Font = Enum.Font.Gotham
+        vehicleAction.Position = UDim2.new(0.53, 0, 1, -66)
+        vehicleAction.Size = UDim2.new(0.43, 0, 0, 48)
+        vehicleAction.Font = Enum.Font.GothamBold
+    else
+        vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
+        vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
+        vehicleCard.Size = UDim2.fromOffset(300, 148)
+        vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
+        vehicleTitle.Font = Enum.Font.ArialBold
+        vehicleTitle.TextSize = 14
+        vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
+        vehicleStatus.Size = UDim2.new(1, -20, 0, 48)
+        vehicleStatus.Font = Enum.Font.Arial
+        vehicleAction.Position = UDim2.new(0, 8, 1, -46)
+        vehicleAction.Size = UDim2.new(1, -16, 0, 38)
+        vehicleAction.Font = Enum.Font.ArialBold
+    end
 
     if state.driving == true then
         bindVehicleControls()
@@ -1057,7 +1715,9 @@ local function applyVehicleState(state)
         vehicleTitle.Text = tostring(state.autoShopDisplayName or "AUTO SHOP"):upper()
         vehicleAction.Text = "SPAWN STARTER CAR"
         if os.clock() >= vehicleMessageUntil then
-            vehicleStatus.Text = "Spawn the starter car and drive around town."
+            vehicleStatus.Text = dealershipOpen
+                and "Preview the free starter car, then spawn it on the street."
+                or "Spawn the starter car and drive around town."
         end
     end
 end
@@ -1069,7 +1729,7 @@ local function refreshVehicle()
     if ok and type(state) == "table" then
         applyVehicleState(state)
     elseif latestVehicleState and latestVehicleState.active == true then
-        vehicleCard.Visible = true
+        vehicleCard.Visible = featureController:snapshot().active == nil
         vehicleStatus.Text = "Vehicle service unavailable."
     end
 end
@@ -1180,9 +1840,9 @@ applyResponsiveHudLayout()
 
 local housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
-housePanel.AnchorPoint = Vector2.new(0, 1)
-housePanel.Position = UDim2.new(0, 256, 1, -(auxiliaryPanelBottomMargin + 66))
-housePanel.Size = UDim2.new(0, 248, 0, 252)
+housePanel.AnchorPoint = Vector2.new(0.5, 0.5)
+housePanel.Position = UDim2.fromScale(0.5, 0.52)
+housePanel.Size = UDim2.fromOffset(300, 280)
 housePanel.BackgroundColor3 = LEGACY_PANEL
 housePanel.BackgroundTransparency = 0.02
 housePanel.Visible = false
@@ -1193,12 +1853,30 @@ outline(housePanel, 2)
 local houseTitle = Instance.new("TextLabel")
 houseTitle.BackgroundColor3 = LEGACY_BLUE
 houseTitle.BorderSizePixel = 0
-houseTitle.Size = UDim2.new(1, 0, 0, 28)
+houseTitle.Size = UDim2.new(1, 0, 0, 36)
 houseTitle.Font = Enum.Font.ArialBold
 houseTitle.Text = "House"
 houseTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 houseTitle.TextSize = 15
 houseTitle.Parent = housePanel
+
+local houseClose = Instance.new("TextButton")
+houseClose.Name = "Close"
+houseClose.AnchorPoint = Vector2.new(1, 0.5)
+houseClose.Position = UDim2.new(1, -6, 0, 18)
+houseClose.Size = UDim2.fromOffset(28, 28)
+houseClose.BackgroundColor3 = Color3.fromRGB(216, 72, 72)
+houseClose.Font = Enum.Font.GothamBold
+houseClose.Text = "X"
+houseClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseClose.TextSize = 14
+houseClose.Parent = housePanel
+round(houseClose, 7)
+houseClose.Activated:Connect(function()
+    closeFeaturePanels("house_close")
+end)
+
+local editorPanel = nil
 
 local houseStatus = Instance.new("TextLabel")
 houseStatus.BackgroundTransparency = 1
@@ -1363,11 +2041,14 @@ for _, spec in ipairs(HOUSE_STYLES) do
     end)
 end
 
-houseIcon.Activated:Connect(function()
-    housePanel.Visible = not housePanel.Visible
-    if housePanel.Visible then
-        refreshHousing()
+registerFeaturePanel("house", housePanel, refreshHousing, function()
+    if editorPanel then
+        editorPanel.Visible = false
     end
+end)
+
+houseIcon.Activated:Connect(function()
+    toggleFeaturePanel("house", "rail")
 end)
 
 housePrimary.Activated:Connect(function()
@@ -1452,7 +2133,10 @@ end)
 
 -- Housing Editor V2. Visible only while the owner is in Edit House mode.
 -- Exact verified Legacy labels retained: Add Furni, Hide Walls, Utilities, Other.
-local editorPanel = Instance.new("Frame")
+-- Keep the editor in its own function scope so the main client bootstrap stays
+-- comfortably below Luau's 200-local register limit.
+local function mountHousingEditor()
+editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 1)
 editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
@@ -1832,3 +2516,6 @@ task.spawn(function()
         task.wait(0.75)
     end
 end)
+end
+
+mountHousingEditor()
