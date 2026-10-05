@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 2,
+  "lane": "Roblox High School Class & Education",
+  "owner": "Roblox High School Class & Education",
+  "observedAt": "2026-10-05T01:14:26Z",
+  "result": "PASS_TEMPORAL_ACTIVITY_SEQUENCE_VERIFIED__PRODUCT_WORK_DEFERRED",
+  "input": {
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "currentProducerPr": 214,
+    "currentProducerExactHead": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
+    "wipMode": "EVIDENCE_PREP_ONLY",
+    "productProducerAuthorized": false
+  },
+  "sourceVerification": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "sizeBytes": 101853818,
+      "dimensions": "1112x512",
+      "frameRate": "30/1",
+      "durationSeconds": 141.533333,
+      "materialization": "PASS_CURRENT_RUN"
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "dimensions": "1112x512",
+      "frameRate": "30/1",
+      "durationSeconds": 92,
+      "materialization": "PASS_CURRENT_RUN"
+    }
+  },
+  "temporalEvidence": {
+    "A_gym_dodgeball": {
+      "requestedWindow": "A@01:05-01:45",
+      "auxiliaryContext": [
+        "A@01:00-01:04",
+        "A@01:50"
+      ],
+      "sequence": [
+        {
+          "clipTime": "A@01:00",
+          "frameSha256": "2f623974eeb78076f54445fb79111551cd3c64e8eddd681139116a1d13dc6d1e",
+          "state": "FREE_ROAM",
+          "observed": "Avatar is outside the school with compact edge HUD."
+        },
+        {
+          "clipTime": "A@01:04",
+          "frameSha256": "eb5314038688f78930fd6f81234b352fa3200c4c0a49b9a77b463a879ff99d92",
+          "state": "ROOM_PRESENT",
+          "observed": "Avatar is inside the red/white gym; compact free-roam HUD remains."
+        },
+        {
+          "clipTime": "A@01:26",
+          "frameSha256": "b0bc5e140b974d4dea3e3770d9e1b7519438ef8743c0c2959d3155f792c3ca9f",
+          "state": "ENTRY_CUE",
+          "observed": "Centered notebook-style cue states that dodgeball is about to begin; activity HUD shows zero points, three hearts and a ball count."
+        },
+        {
+          "clipTime": "A@01:28",
+          "frameSha256": "bba02260722b759df6101f2ea964597dee8b53cc0cf98877b848a5f9a48955cf",
+          "state": "ROUND_INSTRUCTIONS",
+          "observed": "Centered round card identifies an elimination round and last-team-standing objective; baseline activity HUD remains visible."
+        },
+        {
+          "clipTime": "A@01:30",
+          "frameSha256": "465c28bb65806b353b2a380cbea2680cd3e157752e55be6dc2197c10ab23c569",
+          "state": "ACTIVE_PLAY_START",
+          "observed": "Instruction card is gone; avatar and other players move in the gym with activity HUD visible."
+        },
+        {
+          "clipTime": "A@01:32",
+          "frameSha256": "69ad462cb79702f68e4f5c2192ac30faf5f8693fe6cfbf8a207e698cee689b26",
+          "state": "ACTIVE_PLAY",
+          "observed": "Multiple players and a large ball are visible; top red/blue counts and central countdown are present; bottom points/hearts/ball count have changed."
+        },
+        {
+          "clipTime": "A@01:40",
+          "frameSha256": "33aee77f7e0f116348e45141f7573fc9e197e5e1200523728c90082d6a86048e",
+          "state": "SCORING_FEEDBACK",
+          "observed": "A knockout message is visible and the points presentation reads 5; team/countdown and lives/ball indicators remain."
+        },
+        {
+          "clipTime": "A@01:42",
+          "frameSha256": "4060793c2383ec1864445af521dc26ea1ffac393a983b353154f9a570af1f2c9",
+          "state": "SCORING_FEEDBACK",
+          "observed": "A floating +20 is visible; points and heart state differ from the prior sample."
+        },
+        {
+          "clipTime": "A@01:44",
+          "frameSha256": "b5d113de3f507ce4dfc21a96521eee71217257d495d065691dc4af3e9aeff45d",
+          "state": "SCORING_FEEDBACK",
+          "observed": "A floating +10 is visible; top team counts, countdown, points and ball count are present."
+        },
+        {
+          "clipTime": "A@01:50",
+          "frameSha256": "0c37b78e565e0be6e3181d675e7d487a712148bda73743217a9ae644f0de6853",
+          "state": "COMPLETION_CUE_AUXILIARY",
+          "observed": "Immediately after the requested window, a centered Finish card appears with the countdown at zero. No report card, reward grant or return-to-roam is established by this frame."
+        }
+      ],
+      "exclusions": [
+        "A@01:22 is an off-game webpage visible in the recording and is not a product state.",
+        "The requested A window does not show a verified return-to-roam transition.",
+        "Visible 2x playback prevents original timing or animation-speed claims."
+      ]
+    },
+    "B_classroom_completion": {
+      "window": "B@00:00-00:15",
+      "sequence": [
+        {
+          "clipTime": "B@00:00",
+          "frameSha256": "aa7c2c27abb5346037db534effd0822777dbcff2a9c4595990fa902ab7b88110",
+          "state": "COMPLETION_SUMMARY",
+          "observed": "A Report Card surface for Science - Bot Building is open with grade, score, team and player result rows plus a visible close control."
+        },
+        {
+          "clipTime": "B@00:03",
+          "frameSha256": "dab30f1da96f9e1c5691aa53317c6253a13ed29e0e2103b692d1491a14920554",
+          "state": "POST_COMPLETION_FEEDBACK",
+          "observed": "Report Card is closed; classroom and compact HUD are restored; a floating +45 coin presentation is visible."
+        },
+        {
+          "clipTime": "B@00:06",
+          "frameSha256": "a871168821f269c99f5d132ae1eb5cf937cc271e761b618636b4620c1b525864",
+          "state": "POST_COMPLETION_FEEDBACK",
+          "observed": "A floating +540 XP presentation is visible in the classroom."
+        },
+        {
+          "clipTime": "B@00:09",
+          "frameSha256": "dd4d9f202d2a19fe9233bca023ef93139f2466cab5ee7eeb0add0810d5db917f",
+          "state": "RETURN_TO_ROAM",
+          "observed": "Avatar is at the classroom exit with compact rail and bottom shortcuts visible."
+        },
+        {
+          "clipTime": "B@00:15",
+          "frameSha256": "d706bf763d859e12fe4d68fd54c47cf487695a95f09668d3afd231ea6ab89ee9",
+          "state": "FREE_ROAM",
+          "observed": "Avatar is outdoors after an intervening loading frame; compact edge HUD and movement view are restored."
+        }
+      ]
+    },
+    "B_activity_room": {
+      "window": "B@01:03-01:31",
+      "sequence": [
+        {
+          "clipTime": "B@01:03",
+          "frameSha256": "f6502d1ee8d40592f8014858fb2f1a482e14c1674f0b5f3d680bf80e19a8a5c6",
+          "state": "LOCATION_TRANSITION",
+          "observed": "A dark transition frame with school crest is visible."
+        },
+        {
+          "clipTime": "B@01:04",
+          "frameSha256": "fa5daa77029d32d3ae227eed393a595817cb87e16e51eb1e4b2096856f475a0a",
+          "state": "ROOM_PRESENT",
+          "observed": "Avatar is in a wood-floor activity room with compact free-roam HUD."
+        },
+        {
+          "clipTime": "B@01:08",
+          "frameSha256": "a3f616060120546e97e2aef201e210875ea6962f1096513308c2503f1775c9ea",
+          "state": "ENTRY_INSTRUCTIONS",
+          "observed": "A centered Dance-Off instruction card explains rhythm input; four input prompts are visible."
+        },
+        {
+          "clipTime": "B@01:10",
+          "frameSha256": "1effaf15dda4837f25f358b1bb63863d900efb0aadd8cc64ec9fcc990449ad86",
+          "state": "ACTIVE_PLAY_START",
+          "observed": "Four note lanes are visible with multiplier x1 and score 0."
+        },
+        {
+          "clipTime": "B@01:12",
+          "frameSha256": "e7f7e80b12fcce2dda96f05e73edadefcda3ffe0d78750bb832b8dec054458cf",
+          "state": "SCORING_FEEDBACK",
+          "observed": "Notes are in the lanes; +20, a note-streak value, multiplier x2 and score 800 are visible. These are sampled outputs, not a formula."
+        },
+        {
+          "clipTime": "B@01:19",
+          "frameSha256": "c49a5c572a99799ccc7bcbb999b0984a672c05775cb8e502b7bcedec965dba40",
+          "state": "COMPLETION_SUMMARY",
+          "observed": "Dance Report Card is open with grade B+, score 28,290, accuracy 87.9%, player rows and visible close."
+        },
+        {
+          "clipTime": "B@01:20",
+          "frameSha256": "dd3283dd1346645b900514fa9104e52b9e397a4c2c95f4bf5350f36bfaa30dda",
+          "state": "POST_COMPLETION_RETURN",
+          "observed": "Report Card is gone; activity room, compact HUD and a floating +41 coin presentation are visible."
+        },
+        {
+          "clipTime": "B@01:21",
+          "frameSha256": "e31821ac5cf21cbb38052ef604e3d3ca10d3f7d20c5f3fee7640c6dd315a9f10",
+          "state": "ROOM_ROAM",
+          "observed": "Avatar moves toward the activity-room exit with compact HUD restored."
+        },
+        {
+          "clipTime": "B@01:26",
+          "frameSha256": "f8fc3f0901182c5f328f6076358e4e042b0ff40ca315461829af317f9e553e45",
+          "state": "NEXT_ACTIVITY_ENTRY",
+          "observed": "A Cook-Off instruction card replaces room roam and presents an ingredient-to-pot objective."
+        },
+        {
+          "clipTime": "B@01:28",
+          "frameSha256": "e621019aff18b5650584f234dc0198a33b81c7f2a5fd42a2ff8c3c47f5d08727",
+          "state": "NEXT_ACTIVITY_ACTIVE",
+          "observed": "Cook-Off play shows an ingredient list, countdown, point display and bring-to-pot prompt."
+        },
+        {
+          "clipTime": "B@01:31",
+          "frameSha256": "1c56c4d0b6d31c4a3187e09ec3616f4899a83764566e5133b52d9a499248e125",
+          "state": "NEXT_ACTIVITY_COMPLETION",
+          "observed": "Cooking Report Card is open with recipe/ingredient/score result columns and visible close."
+        }
+      ],
+      "limitation": "The footage does not prove whether Dance-Off and Cook-Off share one server class session or are separate activities; implement neither assumption without runtime contract evidence."
+    }
+  },
+  "observableStateContract": [
+    {
+      "state": "FREE_ROAM_ELIGIBLE",
+      "authority": "Foundation schedule and server room/location checks",
+      "acceptance": [
+        "Exactly one Foundation schedule remains the day/period authority.",
+        "Class availability is server-derived; clients do not create session state.",
+        "Compact HUD and movement/camera access remain available before activity entry."
+      ]
+    },
+    {
+      "state": "ENTRY_INSTRUCTIONS",
+      "authority": "ClassSessionController via the ClassEducation server adapter",
+      "acceptance": [
+        "A visible entry cue or instruction surface separates room roam from active play.",
+        "Entry binds to the current authoritative period, room and one session.",
+        "Re-entry to the same active session is idempotent; a second concurrent class session is rejected."
+      ]
+    },
+    {
+      "state": "ACTIVE_PLAY",
+      "authority": "ClassSessionController owns ephemeral activity state",
+      "acceptance": [
+        "First parity work is a bounded observable gym/dodgeball activity; do not add custom curriculum.",
+        "Objective, controls and active HUD are readable without obscuring required play space.",
+        "Client input proposes an action; the server returns authoritative state and presentation values."
+      ]
+    },
+    {
+      "state": "SCORING_FEEDBACK",
+      "authority": "Server activity semantics with read-only client presentation",
+      "acceptance": [
+        "Immediate event feedback is visibly distinct from persistent round totals.",
+        "Points, lives, team counts, streaks, multipliers, countdowns and rewards are not inferred from frame-to-frame arithmetic.",
+        "Duplicate input identifiers cannot award or apply the same event twice."
+      ]
+    },
+    {
+      "state": "COMPLETION_SUMMARY",
+      "authority": "ClassProgressionCoordinator and ProgressionBinding",
+      "acceptance": [
+        "A single result/Report Card surface appears only after authoritative completion.",
+        "Completion commits exactly once; retries reuse the existing receipt and cannot duplicate progression.",
+        "A failed durable commit remains pending and cannot falsely release or reward."
+      ]
+    },
+    {
+      "state": "RETURN_TO_FREE_ROAM",
+      "authority": "ClassSessionController leave or committed completion response",
+      "acceptance": [
+        "Closing the result restores the room/world, compact edge HUD and movement/camera access.",
+        "Reward/XP presentation is downstream of the committed result and does not itself confer authority.",
+        "Explicit leave or period/session end clears one ephemeral activity session without fabricating completion."
+      ]
+    }
+  ],
+  "observationInferenceLedger": {
+    "verified": [
+      "A shows gym roam, a dodgeball start cue, round instructions, active play, changing server-presented HUD, event feedback and a Finish cue.",
+      "B shows a classroom Report Card followed by separate coin and XP feedback, exit movement and outdoor roam.",
+      "B shows a wood-floor Dance-Off instruction, active note-lane play, scoring feedback, Report Card, room-roam restoration, then a Cook-Off entry/play/result sequence."
+    ],
+    "unknown": [
+      "Exact triggers for room transport or activity selection.",
+      "Whether consecutive activity-room games share one class session.",
+      "Any scoring, streak, grade, reward or XP formula.",
+      "The authoritative meaning of every visible HUD icon.",
+      "Audio cues and animation timing."
+    ],
+    "prohibited": [
+      "Do not infer original timing or movement speed from visible 2x playback.",
+      "Do not infer hidden activity IDs, remotes, UI hierarchy or persistence semantics.",
+      "Do not treat the current text-question catalog as RHS2 gym/activity parity."
+    ],
+    "audioReview": "NOT_PERFORMED"
+  },
+  "currentCandidateAssessment": {
+    "pr": 214,
+    "exactHead": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
+    "classAuthorityFilesUnchanged": true,
+    "authorityFiles": [
+      {
+        "path": "school/src/server/ClassSessionController.lua",
+        "blobSha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+        "role": "single ephemeral class/session authority"
+      },
+      {
+        "path": "school/src/server/ClassEducation.server.lua",
+        "blobSha": "034eb06201c6e86ad553fbe088f0fbe61a3a76cc",
+        "role": "server adapter bound to Foundation schedule and room"
+      },
+      {
+        "path": "school/src/server/ClassProgressionCoordinator.lua",
+        "blobSha": "2115e20f81eae95bed1b7b15785394f952e1d6d8",
+        "role": "exactly-once progression handoff and pending gate"
+      },
+      {
+        "path": "school/src/server/ClassActivityCatalog.lua",
+        "blobSha": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+        "role": "current text-question catalog; not footage parity"
+      }
+    ],
+    "regressionFiles": [
+      {
+        "path": "school/tests/class_education_spec.lua",
+        "blobSha": "3b7e318bcfcc32e586267e654a64a5c3266b7181"
+      },
+      {
+        "path": "school/tests/class_progression_integration_spec.lua",
+        "blobSha": "d33ef33b9059efef6efd38461f76cc1a218287c1"
+      }
+    ],
+    "exactHeadCi": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37247220569,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37247220604,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37247220568,
+        "conclusion": "success"
+      }
+    ],
+    "status": "PASS_CLASS_AUTHORITY_CONTINUITY__NO_CLASS_PRODUCT_WRITE"
+  },
+  "handoffs": {
+    "producer": {
+      "owner": "Future Control-Tower-assigned class producer",
+      "acceptance": "Implement the bounded gym/dodgeball state flow behind existing ClassSessionController and ClassProgressionCoordinator seams after P1 is integrated; do not add schedule, session, reward or persistence authorities."
+    },
+    "qa": {
+      "owner": "Roblox High School QA & Contract",
+      "acceptance": [
+        "Bind runtime evidence to the exact future class producer head.",
+        "Capture room roam, entry instructions, active play, at least one event feedback, completion summary and restored free roam as separate checkpoints.",
+        "Exercise duplicate action and duplicate completion identifiers.",
+        "Maintain separate functional, visual, interaction and device statuses."
+      ]
+    }
+  },
+  "priorArtifact": {
+    "pr": 202,
+    "head": "6a471ba24a80bbc1b96fbfeccb609970b5cb605d",
+    "path": "coordination/reference-extraction/class_activity_rhs2_contract_728d62b.json",
+    "disposition": "SUPERSEDED_FOR_TEMPORAL_EVIDENCE_ONLY__HISTORICAL_EVIDENCE_PRESERVED"
+  },
+  "outputLocation": "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json",
+  "blocker": "Class product work remains blocked until the P1 interaction repair completes CI -> same-SHA QA -> Integration -> Smoke -> Package and Control Tower assigns the sole producer. Rendered/device parity remains unverified.",
+  "nextHandoff": "QA consumes this temporal contract for current authority continuity and future runtime checkpoints; Control Tower activates one class producer only after compliant P1 packaging.",
+  "rawVideosCommitted": false,
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
