@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Content QA / UI Visual Parity",
+  "createdAt": "2026-10-05T20:49:00Z",
+  "status": "COMPRESSION_TOLERANT_PIXEL_MEASUREMENTS__NOT_HIDDEN_ORIGINAL_CONSTANTS",
+  "purpose": "Lock sampled visible color clusters from the authorized RHS2 recordings so future UI polish does not drift away from the footage. These are measurements of compressed rendered frames, not claims about original source RGB values.",
+  "sources": [
+    {
+      "frame": "A@00:05",
+      "file": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "dimensions": "1112x512"
+    },
+    {
+      "frame": "B@00:45",
+      "file": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "dimensions": "1112x512"
+    },
+    {
+      "frame": "C@00:05",
+      "file": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "dimensions": "1112x512"
+    },
+    {
+      "frame": "C@01:05",
+      "file": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "dimensions": "1112x512"
+    }
+  ],
+  "measuredFamilies": [
+    {
+      "id": "SHELL_NAVY",
+      "visibleClusters": [
+        [
+          23,
+          30,
+          52
+        ],
+        [
+          23,
+          30,
+          53
+        ],
+        [
+          18,
+          24,
+          41
+        ]
+      ],
+      "target": [
+        23,
+        30,
+        52
+      ],
+      "source": "C@00:05 Travel body / B@00:45 shop shell",
+      "tolerance": "±5 per channel for implementation target"
+    },
+    {
+      "id": "HEADER_BLUE",
+      "visibleClusters": [
+        [
+          0,
+          103,
+          239
+        ],
+        [
+          0,
+          109,
+          241
+        ],
+        [
+          0,
+          101,
+          238
+        ]
+      ],
+      "target": [
+        0,
+        104,
+        240
+      ],
+      "source": "C@00:05 Travel header",
+      "tolerance": "±8 per channel"
+    },
+    {
+      "id": "TAB_BLUE",
+      "visibleClusters": [
+        [
+          0,
+          72,
+          183
+        ],
+        [
+          1,
+          70,
+          182
+        ],
+        [
+          9,
+          68,
+          167
+        ]
+      ],
+      "target": [
+        0,
+        72,
+        180
+      ],
+      "source": "C@00:05 inactive Travel tab",
+      "tolerance": "±10 per channel"
+    },
+    {
+      "id": "ACTIVE_GOLD",
+      "visibleClusters": [
+        [
+          243,
+          177,
+          27
+        ],
+        [
+          243,
+          178,
+          27
+        ],
+        [
+          180,
+          136,
+          51
+        ]
+      ],
+      "target": [
+        243,
+        177,
+        27
+      ],
+      "source": "C@00:05 active Travel tab",
+      "tolerance": "±10 per channel on primary fill"
+    },
+    {
+      "id": "RESULT_PURPLE",
+      "visibleClusters": [
+        [
+          164,
+          70,
+          226
+        ],
+        [
+          165,
+          76,
+          222
+        ],
+        [
+          162,
+          70,
+          225
+        ]
+      ],
+      "target": [
+        164,
+        70,
+        226
+      ],
+      "source": "C@01:05 job-result header",
+      "tolerance": "±10 per channel"
+    },
+    {
+      "id": "DEALERSHIP_DARK_BLUE",
+      "visibleClusters": [
+        [
+          2,
+          47,
+          114
+        ],
+        [
+          2,
+          38,
+          89
+        ],
+        [
+          14,
+          39,
+          84
+        ]
+      ],
+      "target": [
+        2,
+        47,
+        114
+      ],
+      "source": "B@00:45 dealership/shop family",
+      "tolerance": "±12 per channel"
+    },
+    {
+      "id": "DEALERSHIP_CYAN",
+      "visibleClusters": [
+        [
+          26,
+          152,
+          229
+        ],
+        [
+          39,
+          210,
+          246
+        ]
+      ],
+      "target": [
+        26,
+        152,
+        229
+      ],
+      "source": "B@00:45 card / accent family",
+      "tolerance": "broad because thumbnails/highlights vary"
+    }
+  ],
+  "implementationCheck": {
+    "currentStyleModule": "school/src/shared/Rhs2UiStyle.lua on PR274",
+    "currentTokensAtCandidate": {
+      "ShellNavy": [
+        20,
+        28,
+        52
+      ],
+      "HeaderBlue": [
+        0,
+        104,
+        240
+      ],
+      "TabBlue": [
+        0,
+        72,
+        180
+      ],
+      "ActiveGold": [
+        244,
+        176,
+        20
+      ],
+      "ProgressPurple": [
+        180,
+        52,
+        236
+      ]
+    },
+    "conclusion": "Current PR274 core ShellNavy/HeaderBlue/TabBlue/ActiveGold targets are already within the sampled frame tolerance. Do not churn the frozen candidate solely for single-digit compression differences. Future result-modal work should prefer a distinct ResultPurple family around the measured C@01:05 cluster rather than reusing one generic purple for every surface."
+  },
+  "rules": [
+    "Do not label measured colors as exact original constants.",
+    "Do not change a green/frozen product candidate solely to chase compression noise.",
+    "Use measured families to prevent future workers from reverting to pale generic panels or materially different hues.",
+    "Rendered visual review outranks raw RGB similarity when hierarchy, spacing, typography or controls differ."
+  ],
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
