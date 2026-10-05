@@ -1,59 +1,62 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
+  "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "sourceRoot": "school/**",
-  "status": "PACKAGE_CHECKPOINT_COMPLETE__NEXT_PARITY_SLICE_ASSIGNED",
-  "parentCertifiedSha": "db0a700fd1a65b3648abc06353f8250adfab1bbb",
+  "status": "P1_INTEGRATED_CLOUD_SAFE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "parentCertifiedSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
   "repair": {
-    "pr": 64,
-    "branch": "fix/economy-operation-order-rejoin-2ab1584",
-    "sha": "03ea7f172d8bc898b687644f416803851220437f",
-    "scope": "economy durable operation ordering/rejoin"
+    "pr": 214,
+    "branch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
+    "sha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "scope": "feature-panel interaction flow plus mobile House/Housing Editor responsive geometry"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37117473969,
+      "runId": 37334868469,
       "event": "push",
       "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37117473982,
+      "runId": 37334868501,
       "event": "push",
       "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37117473978,
+      "runId": 37334868472,
       "event": "push",
       "conclusion": "success",
-      "headSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "evidence": "PR 128 comment 5968415251"
+    "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "evidence": "PR 214 review 5417072888"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD",
-    "mergedPr": 128,
-    "candidateSha": "c7d7e774c70267c3c384d428280b613d59742857",
-    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662"
+    "mergedPr": 214,
+    "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "certifiedSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "receiptPr": 224
   },
   "integrationSmoke": {
-    "result": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_LOCAL_ONLY_REQUIRED",
-    "certifiedSha": "00df979add2b5d0e961205b62cf88340c56ee662",
+    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "certifiedSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "releasePackageEligible": true,
+    "receiptPr": 225,
+    "releasePackageEligible": false,
     "localOnlyRequired": [
-      "CURRENT_RUNTIME_INTERACTION_SMOKE"
+      "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
+      "PHYSICAL_STAIR_TRAVERSAL_AND_SAVE_REJOIN"
     ]
   },
   "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
@@ -107,12 +110,14 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "AVATAR_CUSTOMIZATION_SHOPPING",
+  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED",
   "releasePackage": {
-    "result": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
-    "artifact": "pip-high-school-00df979-source-tree-dea093c1",
-    "gitTreeSha": "dea093c10cfc0212bf28bb7933ca0b87e3bdee6b",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_INELIGIBLE",
+    "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
+    "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "currentCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
     "robloxPublished": false
   }
 }

@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 57,
+  "schemaVersion": 58,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T04:01:54Z",
+  "observedAt": "2026-10-05T15:49:39Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "guards": "CANONICAL_UNCHANGED__PR214_BAA6A24_ALL_THREE_PULL_REQUEST_GUARDS_GREEN__QA_HOLD__NO_INTEGRATION"
+    "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "guards": "POST_MERGE_PUSH_CI_GREEN__P1_CLOUD_SAFE_INTEGRATED__SMOKE_LOCAL_ONLY_REQUIRED__PACKAGE_BLOCKED"
   },
   "target": {
     "universeId": "10768955678",
@@ -15,20 +15,20 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 3,
-    "producerPr": 214,
-    "producerSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "producerBranch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
+    "countIncludingBase": 2,
+    "producerPr": null,
+    "producerSha": null,
+    "producerBranch": null,
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Pip High Free Roam",
-      "scope": "P1_INTERACTION_REPAIR_ON_INTEGRATED_SPAWN_SCHOOL_HUD",
-      "status": "ACTIVE_SOLE_PRODUCER__QA_MOBILE_SAFE_AREA_REPAIR_REQUIRED__NO_SECOND_PRODUCER",
-      "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "pr": 214,
-      "headSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8"
+      "owner": "Roblox High School Class & Education",
+      "scope": "P2_CLASSROOM_FREE_ROAM",
+      "status": "EVIDENCE_PREP_ONLY__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "pr": null,
+      "headSha": null
     },
     "supersededCandidates": [
       {
@@ -43,16 +43,16 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_FULL: exact canonical 5fd5c05 + frozen support PR150 + sole mutable product PR214 consume 3/3. Free Roam alone may repair QA-MOBILE-HOUSE-AUX-PANELS-OUTSIDE-SAFE-AREA on the existing PR214 branch; no second producer.",
+    "rule": "WIP_CAP_3: exact canonical 39911a + frozen support PR150 consume 2/3. No new product producer may start while P1 exact-canonical runtime Smoke is LOCAL_ONLY_REQUIRED and Package is blocked. P2 Class/Education may perform evidence/interface prep only.",
     "recentlyIntegrated": {
-      "pr": 188,
-      "candidateSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
-      "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "mergedAt": "2026-10-04T23:47:08Z",
-      "status": "MERGED_TREE_EQUIVALENT__NO_SAME_SHA_QA_AUTHORIZATION__SMOKE_HOLD_PR212__PACKAGE_BLOCKED"
+      "pr": 214,
+      "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+      "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "mergedAt": "2026-10-05T15:41:31Z",
+      "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_PR214_BAA6A24__CI_GREEN__QA_HOLD_MOBILE_AUX_PANEL_BOUNDS__INTEGRATION_BLOCKED",
+  "currentMilestone": "P1_PR214_INTEGRATED__CLOUD_SAFE_GREEN__RUNTIME_SMOKE_LOCAL_ONLY_REQUIRED__PACKAGE_BLOCKED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -62,125 +62,125 @@
   },
   "directives": {
     "Foundation": {
-      "mode": "EVIDENCE_COMPLETE__PR217_MERGED__WAIT_CHANGED_PR214_HEAD__NO_PRODUCT_WRITE",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR217 head 934c961 merged as 5f18c03; entrance/atrium environment authority and safe navigation specification pinned",
-      "objective": "On the next changed PR214 head, verify one world/clock/spawn/environment authority and no entrance/atrium navigation drift.",
+      "mode": "WAIT_P1_RUNTIME_SMOKE__AUTHORITY_CONTINUITY_ONLY__NO_PRODUCT_WRITE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR214 merged to canonical 39911a; all three exact-canonical push guards green.",
+      "objective": "Preserve the unique world/clock/spawn/environment authority while Smoke executes the exact-canonical runtime gate.",
       "owned": "world/clock/location/spawn/environment authority",
-      "dependency": "Free Roam repairs PR214 mobile auxiliary-panel geometry.",
-      "exit": "Changed PR214 head or a concrete authority defect.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "P1 runtime Smoke.",
+      "exit": "Concrete authority defect or P1 Smoke completion.",
+      "handoff": "Roblox High School Control Tower"
     },
     "ClassEducation": {
-      "mode": "EVIDENCE_COMPLETE__PR219_MERGED__WAIT_P1_PIPELINE__NO_PRODUCT_WRITE",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR219 head c857941 merged as 6f3a2e9; A/B activity-state transitions and 2x timing limits pinned",
-      "objective": "Preserve the merged activity transition evidence and unique class/session authorities; do not start classroom product work before P1 completes.",
+      "mode": "P2_EVIDENCE_PREP_ACTIVE__NO_PRODUCT_WRITE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "P1 integrated; P2 classroom/free-roam is next priority after Smoke/Package.",
+      "objective": "Prepare one evidence-backed classroom/free-roam transition contract against the existing school clock/class/session seams. Do not create product code until Control Tower releases the producer slot after P1 Smoke and Package.",
       "owned": "class/session/activity authority",
-      "dependency": "PR214 repair -> exact CI -> same-SHA QA -> Integration -> Smoke -> Package.",
-      "exit": "Control Tower activates P2 after compliant P1 package.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "P1 runtime Smoke -> Release/Package.",
+      "exit": "Evidence contract ready or P1 Package completes.",
+      "handoff": "Roblox High School Control Tower"
     },
     "ContentQA": {
-      "mode": "REFERENCE_ACCESS_VERIFIED__PR218_MERGED__NO_PRODUCT_WRITE",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR218 head 85dc996 merged as 4da262d; A/B/C Library identities, current byte hashes, priority frame hashes and PR214 lineage pinned",
-      "objective": "Preserve A/B/C evidence identities, hashes, timestamps and 2x caution; refresh only if a material reference or candidate-lineage change occurs.",
+      "mode": "P2_REFERENCE_PREP_ACTIVE__NO_PRODUCT_WRITE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "A/B/C reference identities remain pinned; P1 source integration complete.",
+      "objective": "Prepare only the reference checkpoints needed for P2 classroom/free-roam; preserve exact observed/inferred boundaries and 2x timing caution.",
       "owned": "authorized reference fixtures, metadata, provenance and deterministic validators",
-      "dependency": "None for shared reference access; rendered/runtime comparison remains QA/Smoke work.",
-      "exit": "Material reference change or changed PR214 head requiring lineage refresh.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "None for evidence prep; product activation waits on P1 Package.",
+      "exit": "P2 reference handoff ready or material reference change.",
+      "handoff": "Roblox High School Class & Education"
     },
     "ProgressionMobile": {
-      "mode": "EVIDENCE_COMPLETE__PR220_MERGED__WAIT_FREE_ROAM_REPAIR",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR220 head 57258e2 merged as 4bac8af; PR214 authority continuity passes and iPhone House/Housing Editor safe-area failure is pinned",
-      "objective": "Audit the changed PR214 repair for safe-area containment, movement/camera-zone clearance, read-only state and no automatic spend.",
+      "mode": "P2_STATE_SEAM_PREP__NO_PRODUCT_WRITE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR214 responsive auxiliary geometry is integrated and source/headless validated.",
+      "objective": "Audit the existing class/free-roam progression/read-only state seams needed by P2 without changing product code or authority.",
       "owned": "durable progression/economy/ownership/mobile read-only state",
-      "dependency": "Free Roam changes PR214 exact head.",
-      "exit": "Changed head or exact rendered device evidence.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "P1 runtime Smoke/Package for producer activation.",
+      "exit": "P2 seam handoff ready or P1 Smoke defect.",
+      "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "SOLE_PRODUCER_ACTIVE__QA_CHANGES_REQUIRED",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "branch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR214 exact head baa6a24; Foundation 37247220569, Class 37247220604 and Progression 37247220568 succeeded; QA review 5409272483 requires mobile auxiliary-panel repair",
-      "objective": "On the existing PR214 branch, repair LegacyHousePanel and LegacyHousingEditorV2 for desktop, iPhone 852x393 and iPad 1024x768 safe bounds; avoid movement/camera exclusions; add mutation-sensitive geometry tests; rerun all three guards.",
+      "mode": "WAIT_P1_RUNTIME_SMOKE__EVIDENCE_PREP_ONLY",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "branch": null,
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR214 head 7f1779f passed QA and merged to canonical 39911a.",
+      "objective": "Do not open a new product producer. Preserve the dealership/housing/avatar/jobs prep contracts and respond only to concrete P1 runtime defects.",
       "owned": "bounded P1 interaction repair on integrated spawn/entrance/atrium/corridor + compact HUD baseline",
-      "dependency": "None; this is the sole actionable product owner.",
-      "exit": "Changed exact PR214 head with all three guards green.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Integration Smoke.",
+      "exit": "P1 Smoke defect assigned to Free Roam or Control Tower releases a later product slice.",
+      "handoff": "Roblox High School Control Tower"
     },
     "QA": {
-      "mode": "HOLD_CHANGES_REQUIRED__EXACT_BAA6A24",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mode": "P1_EXACT_HEAD_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "Review 5409272483 on baa6a24: functional static PASS, interaction static-only, visual/device FAIL for iPhone House and Housing Editor bounds",
-      "objective": "Review only the next changed PR214 head; require mutation-sensitive desktop/iPhone/iPad auxiliary-panel geometry tests plus all three green guards, then authorize Integration only on that same SHA.",
+      "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+      "latestOutput": "Review 5417072888 authorized exact head 7f1779f for protected Integration after the mobile auxiliary geometry repair.",
+      "objective": "No new source review unless Smoke finds a concrete defect or canonical changes.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "Free Roam changes PR214 exact head.",
-      "exit": "Explicit same-SHA QA PASS or one new concrete defect.",
-      "handoff": "Roblox High School Integration Director"
+      "dependency": "Integration Smoke runtime evidence.",
+      "exit": "Concrete Smoke defect or new candidate.",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "Integration": {
-      "mode": "BLOCKED_QA_HOLD__DO_NOT_MERGE_PR214",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mode": "P1_INTEGRATED_COMPLETE__NO_PRODUCT_WRITE",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "Readiness branch coordination/integration-pr214-qa-reject-baa6a24-v1 at 31f540b records the QA reject; no integration PR and no product merge",
-      "objective": "Do not merge baa6a24. Recheck and integrate only a future PR214 head with all three green guards and explicit independent QA on that same SHA.",
+      "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+      "latestOutput": "PR214 merged to canonical 39911a; Integration receipt schema13 merged in PR224; post-merge push guards all green.",
+      "objective": "Hold exact integrated lineage stable while Smoke runs.",
       "owned": "protected mechanical integration/readiness only",
-      "dependency": "Changed PR214 repair head + exact-head CI + same-SHA QA authorization.",
-      "exit": "Same-SHA QA authorization.",
+      "dependency": "None.",
+      "exit": "Smoke defect requiring a new candidate or P1 Smoke completion.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "BLOCKED_PRE_INTEGRATION__RUNTIME_CONTRACT_PR221_MERGED",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__EXACT_CANONICAL_39911A",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "PR221 head c9ebbfd merged as bec0747; machine-readable desktop/iPhone/iPad capture contract and validator reject static/headless evidence as rendered PASS",
-      "objective": "Execute the exact runtime capture contract only after a compliant protected Integration handoff; keep rendered/device/traversal/save-rejoin pending now.",
+      "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+      "latestOutput": "PR225 binds the runtime capture contract to canonical 39911a; cloud-safe exact-head checks pass; rendered/device/traversal/save-rejoin remain unexecuted.",
+      "objective": "Execute the PR214 runtime capture contract on desktop, iPhone landscape and iPad landscape when the authorized local GUI/device path is available. Do not convert headless evidence into runtime PASS.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "Repaired same-SHA QA -> protected Integration.",
-      "exit": "Exact compliant integrated canonical with post-merge guard evidence.",
+      "dependency": "LOCAL_ONLY_REQUIRED authorized runtime path.",
+      "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "BLOCKED__PRIOR_PACKAGE_PRESERVED__WAIT_SMOKE",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mode": "BLOCKED__WAIT_FULL_P1_RUNTIME_SMOKE_PASS",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "Prior deterministic package at 4323049 preserved; PR206 evidence remains open; canonical 5fd5c05 is ineligible",
-      "objective": "Do not package 5fd5c05 or PR214. Package only the future exact repaired canonical after CI -> QA -> Integration -> Smoke.",
+      "latestOutput": "Prior deterministic package 4323049 preserved; current canonical 39911a is not package-eligible because PR225 Smoke is HOLD_LOCAL_ONLY_REQUIRED.",
+      "objective": "Do not package 39911a until Smoke reaches full PASS on this exact canonical. Preserve prior package.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Exact repaired Smoke PASS.",
-      "exit": "Smoke-passed exact repaired canonical.",
+      "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
+      "exit": "Smoke PASS.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA57_PR214_QA_MOBILE_HOLD__ONE_PRODUCER",
-      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "candidatePr": 214,
-      "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "Schema57 reconciled against live PR214 baa6a24, exact-head CI and QA review 5409272483; PR217-PR221 coordination evidence remains merged",
-      "objective": "Keep PR214 as the sole product producer, direct its one mobile safe-area repair, and preserve CI -> same-SHA QA -> Integration -> Smoke -> Package.",
+      "mode": "SCHEMA58_P1_INTEGRATED__SMOKE_LOCAL_ONLY_HOLD__P2_PREP_ONLY",
+      "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR214 integrated; PR224 Integration receipt and PR225 Smoke hold merged; exact-canonical push CI green.",
+      "objective": "Keep product WIP frozen at 2/3, coordinate P2 evidence prep, and release the next producer only after P1 runtime Smoke and Package complete.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Free Roam changes PR214 exact head.",
-      "exit": "Changed PR214 head or exact same-SHA QA decision.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Integration Smoke.",
+      "exit": "P1 Smoke PASS/defect or canonical change.",
+      "handoff": "Roblox High School Integration Smoke"
     }
   },
   "connectorReliability": {
@@ -201,33 +201,33 @@
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
     "pr": 214,
-    "candidate": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "status": "HOLD_CHANGES_REQUIRED_EXACT_HEAD",
-    "evidence": "PR214 review 5409272483 submitted 2026-10-05T01:40:07Z; all three guards green; iPhone auxiliary-panel static geometry fails.",
-    "reason": "LegacyHousePanel top is -77 versus safe top 12; LegacyHousingEditorV2 top is -131 and right 842 versus safe right 805 on the 852x393 fixture."
+    "candidate": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "status": "PASS_EXACT_HEAD__AUTHORIZED_FOR_PROTECTED_INTEGRATION",
+    "evidence": "PR214 review 5417072888; all three exact-head guards green; responsive auxiliary geometry contract passes desktop/iPhone/iPad static fixtures.",
+    "reason": "Prior mobile safe-area defect repaired; rendered/device runtime remains outside static QA."
   },
   "integrationResult": {
     "pr": 214,
-    "candidate": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "status": "BLOCKED_QA_HOLD__NOT_MERGED",
-    "receipt": "coordination/integration/PR214_BAA6A24_QA_REJECTED_MOBILE_SAFE_BOUNDS_HOLD.md",
-    "receiptBranch": "coordination/integration-pr214-qa-reject-baa6a24-v1",
-    "receiptHead": "31f540b88e84af750da61cb5a427486153cd6b4f"
+    "candidate": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "MERGED__POST_MERGE_PUSH_CI_GREEN",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
+    "receiptPr": 224,
+    "receiptMergeCommit": "83798b16beeae04d85e2d40bb427182f8ec01c7e"
   },
   "smokeResult": {
-    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "status": "BLOCKED_PRE_INTEGRATION__RUNTIME_RENDERED_DEVICE_PENDING",
-    "receipt": "coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json",
-    "receiptPr": 221,
-    "receiptMergeCommit": "bec07479126adb6983190abacef2bcb36b5c88ac",
-    "blocker": "PR214 baa6a24 is QA-held and has not been integrated; runtime/rendered/device/traversal/save-rejoin are unexecuted.",
-    "renderedDeviceStatus": "PENDING__STATIC_OR_HEADLESS_RESULTS_CANNOT_CLOSE_VISUAL_PARITY",
-    "nextAction": "Free Roam repair on PR214 -> exact CI -> independent same-SHA QA -> Integration -> Smoke."
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+    "receiptPr": 225,
+    "receiptMergeCommit": "72e9065857b357a90de4f927e7d6c5668f509b41",
+    "blocker": "Rendered desktop/iPhone/iPad comparison, physical traversal, live menu interaction, and save/rejoin remain unexecuted on the exact canonical.",
+    "renderedDeviceStatus": "LOCAL_ONLY_REQUIRED",
+    "nextAction": "Execute the PR214 runtime capture contract when the authorized local GUI/device path is available."
   },
   "packageResult": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PRIOR_PACKAGE_PRESERVED__CURRENT_5FD5C05_INELIGIBLE",
+    "status": "PRIOR_PACKAGE_PRESERVED__CURRENT_39911A_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
     "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
@@ -235,23 +235,18 @@
     "recursiveEntryCount": 68,
     "recursiveTreeTruncated": false,
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
-    "priorReceiptSha": "23cc398bd7ae3232835a0fee1d5ab32abb8a315b",
-    "priorArtifact": "pip-high-school-23cc398-source-tree-284f86df",
+    "currentCanonical": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "currentCanonicalEligibility": "BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
     "robloxPublished": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE"
-    ],
-    "receiptPr": 183,
-    "receiptHead": "52587de61ddca0f4703537b9c4687774935a1276",
-    "receiptMergeCommit": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d",
-    "currentCanonical": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "currentCanonicalEligibility": "BLOCKED_ON_INTERACTION_REPAIR__SAME_SHA_QA__INTEGRATION__SMOKE"
+    ]
   },
   "branchReadiness": {
     "canonical": {
       "branch": "rebuild/high-school-foundation",
-      "headSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "status": "UNCHANGED__PR214_QA_HOLD__SMOKE_AND_PACKAGE_BLOCKED"
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "status": "INTEGRATED__ALL_THREE_PUSH_GUARDS_GREEN__SMOKE_LOCAL_ONLY_HOLD"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
@@ -259,11 +254,11 @@
       "status": "GREEN_SUPPORT_EVIDENCE__FROZEN"
     },
     "producer": {
-      "pr": 214,
-      "branch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
-      "baseSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-      "headSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "status": "SOLE_ACTIVE_PRODUCER__CI_GREEN__QA_CHANGES_REQUIRED"
+      "pr": null,
+      "branch": null,
+      "baseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "headSha": null,
+      "status": "NO_ACTIVE_PRODUCT_PRODUCER__P2_EVIDENCE_PREP_ONLY"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -288,34 +283,50 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "P1_INTERACTION_REPAIR_ON_5FD5C05__THEN_P2_CLASSROOM_FREE_ROAM",
+  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
   "candidateExactHeadCi": {
     "pr": 214,
-    "headSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "status": "PASS_ALL_THREE_PULL_REQUEST__QA_HOLD_MOBILE_AUX_PANEL_BOUNDS",
+    "headSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "status": "PASS_ALL_THREE_PULL_REQUEST__QA_PASS",
     "runs": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37247220569,
+        "runId": 37308641468,
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37247220604,
+        "runId": 37308641508,
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37247220568,
+        "runId": 37308641830,
         "conclusion": "success"
       }
     ]
   },
   "canonicalExactHeadCi": {
-    "headSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "status": "POST_MERGE_PUSH_GUARD_EVIDENCE_UNOBSERVED__CANDIDATE_TREE_EQUIVALENCE_ONLY",
-    "runs": [],
-    "coverageGap": "Connector evidence proves canonical equals the ab8dfa8 product tree and candidate pull-request guards were green; it does not expose post-merge push runs. Runtime/rendered/device evidence remains pending."
+    "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "PASS_ALL_THREE_PUSH",
+    "runs": [
+      {
+        "workflow": "High School Foundation Static Guards",
+        "runId": 37334868469,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Class Education Guards",
+        "runId": 37334868501,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "High School Progression Guards",
+        "runId": 37334868472,
+        "conclusion": "success"
+      }
+    ],
+    "coverageGap": "Static/headless exact-head CI does not establish rendered/device/traversal/save-rejoin behavior."
   },
   "shoppingReference": {
     "supportPr": 150,
@@ -344,23 +355,21 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "PR188_MENU_INTERACTION_FLOW_GAP_ON_CANONICAL_5FD5C05",
-    "owner": "Pip High Free Roam",
-    "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
-    "referenceClipTime": "B@00:45; C@00:05-00:08; A/B/C recurring rail/status/quick slots",
-    "evidence": "PR188 review node PRR_kwDOU0Wcsc8AAAABQmKuPw fails the interaction source contract on 3cde55e; the later 3cde55e->ab8dfa8 delta changes only responsive-HUD geometry/tests and does not repair panel interactions; PR188 merged to tree-equivalent canonical 5fd5c05; Smoke PR212 holds Package.",
+    "id": "P1_PR214_MENU_INTERACTION_AND_MOBILE_GEOMETRY",
+    "owner": "Roblox High School Integration Smoke",
+    "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "referenceClipTime": "A@00:05/00:25/00:45/02:05; C@00:05-00:08; recurring A/B/C HUD",
+    "evidence": "PR214 final head 7f1779f passed QA review 5417072888 and merged to canonical 39911a; post-merge push CI all green; PR225 pins runtime capture hold.",
     "acceptanceCriteria": [
-      "Create one fresh producer branch from exact canonical 5fd5c05",
-      "One active feature-panel controller with activation, explicit close/back and repeat-open idempotency",
-      "Denial, unavailable backing UI, respawn and rejoin restore a deterministic neutral state",
-      "Quick slots are activatable only through existing semantics; no invented items, spend or persistence",
-      "Travel presents evidence-backed selection before the existing server RequestTravel boundary",
-      "Preserve ResponsiveHudLayout safe-area/touch exclusion coverage and every unique server authority",
-      "All three exact-head guards pass; independent QA explicitly authorizes the same SHA"
+      "Rendered comparable-FOV captures on desktop, iPhone landscape and iPad landscape",
+      "Physical spawn/entrance/atrium/corridor/stair traversal",
+      "Live Shop/Travel/Avatar/House/Housing Editor interaction and obstruction checks",
+      "Save/rejoin restoration on exact canonical",
+      "No automatic spend, publication, or authority duplication"
     ],
-    "outputLocation": "future Free Roam repair PR under school/** plus exact-head QA receipt",
-    "blocker": "No repaired descendant of canonical 5fd5c05 exists yet.",
-    "nextHandoff": "Pip High Free Roam -> CI -> Roblox High School QA & Contract"
+    "status": "SOURCE_AND_STATIC_COMPLETE__INTEGRATED__RUNTIME_SMOKE_PENDING",
+    "blocker": "LOCAL_ONLY_REQUIRED runtime/device evidence",
+    "nextHandoff": "Roblox High School Integration Smoke"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
