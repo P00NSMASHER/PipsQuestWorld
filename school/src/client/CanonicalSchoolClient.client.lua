@@ -11,6 +11,7 @@ local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
 local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
+local FeaturePanelController = require(shared:WaitForChild("FeaturePanelController"))
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -32,6 +33,8 @@ gui.ResetOnSpawn = false
 gui.DisplayOrder = 10
 gui.IgnoreGuiInset = true
 gui.Parent = playerGui
+
+local featurePanels = FeaturePanelController.new()
 
 local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
@@ -177,10 +180,10 @@ quickLayout.Padding = UDim.new(0, 7)
 quickLayout.Parent = quickBar
 
 for index, slot in ipairs({
-    { label = "BAG", color = Color3.fromRGB(56, 177, 220) },
+    { label = "", color = Color3.fromRGB(56, 177, 220) },
     { label = "", color = Color3.fromRGB(36, 45, 77) },
-    { label = "PHONE", color = Color3.fromRGB(68, 195, 80) },
-    { label = "ITEMS", color = Color3.fromRGB(210, 83, 188) },
+    { label = "", color = Color3.fromRGB(68, 195, 80) },
+    { label = "", color = Color3.fromRGB(210, 83, 188) },
 }) do
     local quickSlot = Instance.new("TextLabel")
     quickSlot.Name = "QuickSlot" .. tostring(index)
@@ -548,31 +551,279 @@ local function findOutfitPanel()
     return nil
 end
 
+local function railInputKind()
+    return UserInputService.TouchEnabled and "touch" or "mouse"
+end
+
+local function makeFeaturePanel(name, heading)
+    local panel = Instance.new("Frame")
+    panel.Name = name
+    panel.AnchorPoint = Vector2.new(0.5, 0.5)
+    panel.Position = UDim2.fromScale(0.5, 0.5)
+    panel.Size = UDim2.new(0.82, 0, 0.76, 0)
+    panel.BackgroundColor3 = LEGACY_PANEL
+    panel.BackgroundTransparency = 0.02
+    panel.Visible = false
+    panel.Parent = gui
+    round(panel, 4)
+    outline(panel, 2)
+
+    local panelConstraint = Instance.new("UISizeConstraint")
+    panelConstraint.MinSize = Vector2.new(286, 250)
+    panelConstraint.MaxSize = Vector2.new(560, 390)
+    panelConstraint.Parent = panel
+
+    local header = Instance.new("TextLabel")
+    header.Name = "Heading"
+    header.BackgroundColor3 = LEGACY_BLUE
+    header.BorderSizePixel = 0
+    header.Size = UDim2.new(1, 0, 0, 38)
+    header.Font = Enum.Font.ArialBold
+    header.Text = heading
+    header.TextColor3 = Color3.fromRGB(255, 255, 255)
+    header.TextSize = 17
+    header.Parent = panel
+
+    local close = Instance.new("TextButton")
+    close.Name = "Close"
+    close.AnchorPoint = Vector2.new(1, 0)
+    close.Position = UDim2.new(1, -5, 0, 4)
+    close.Size = UDim2.fromOffset(30, 30)
+    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
+    close.Font = Enum.Font.ArialBold
+    close.Text = "X"
+    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.TextSize = 15
+    close.Parent = panel
+    round(close, 4)
+
+    local body = Instance.new("Frame")
+    body.Name = "Body"
+    body.BackgroundTransparency = 1
+    body.Position = UDim2.fromOffset(12, 48)
+    body.Size = UDim2.new(1, -24, 1, -100)
+    body.Parent = panel
+
+    local back = Instance.new("TextButton")
+    back.Name = "Back"
+    back.AnchorPoint = Vector2.new(0.5, 1)
+    back.Position = UDim2.new(0.5, 0, 1, -10)
+    back.Size = UDim2.new(1, -24, 0, 36)
+    back.BackgroundColor3 = LEGACY_BUTTON
+    back.Font = Enum.Font.ArialBold
+    back.Text = "BACK"
+    back.TextColor3 = LEGACY_BLUE_DARK
+    back.TextSize = 13
+    back.Parent = panel
+    round(back, 2)
+    outline(back, 1)
+
+    close.Activated:Connect(function()
+        featurePanels:close("explicit_close")
+    end)
+    back.Activated:Connect(function()
+        featurePanels:close("explicit_back")
+    end)
+
+    return panel, body
+end
+
+local shopPanel, shopBody = makeFeaturePanel("VerifiedStyleShopPanel", "STYLE SHOP")
+shopPanel:SetAttribute("CatalogAuthority", "server-only")
+
+local shopBrowse = Instance.new("TextLabel")
+shopBrowse.Name = "Browse"
+shopBrowse.BackgroundColor3 = LEGACY_BUTTON
+shopBrowse.Size = UDim2.new(0.42, -5, 1, 0)
+shopBrowse.Font = Enum.Font.ArialBold
+shopBrowse.Text = "BROWSE\n\nClothing Display"
+shopBrowse.TextColor3 = LEGACY_BLUE_DARK
+shopBrowse.TextSize = 14
+shopBrowse.TextWrapped = true
+shopBrowse.Parent = shopBody
+round(shopBrowse, 2)
+outline(shopBrowse, 1)
+
+local shopDetails = Instance.new("TextLabel")
+shopDetails.Name = "Details"
+shopDetails.Position = UDim2.new(0.42, 7, 0, 0)
+shopDetails.Size = UDim2.new(0.58, -7, 1, 0)
+shopDetails.BackgroundColor3 = LEGACY_BUTTON
+shopDetails.Font = Enum.Font.Arial
+shopDetails.Text = "DETAILS\n\nNo verified clothing items are available yet."
+shopDetails.TextColor3 = LEGACY_BLUE_DARK
+shopDetails.TextSize = 13
+shopDetails.TextWrapped = true
+shopDetails.Parent = shopBody
+round(shopDetails, 2)
+outline(shopDetails, 1)
+
+local travelPanel, travelBody = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
+travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")
+
+local travelPrompt = Instance.new("TextLabel")
+travelPrompt.Name = "Prompt"
+travelPrompt.BackgroundTransparency = 1
+travelPrompt.Size = UDim2.new(1, 0, 0, 42)
+travelPrompt.Font = Enum.Font.ArialBold
+travelPrompt.Text = "CURRENT SCHOOL DESTINATION"
+travelPrompt.TextColor3 = LEGACY_BLUE_DARK
+travelPrompt.TextSize = 14
+travelPrompt.Parent = travelBody
+
+local travelDestination = Instance.new("TextButton")
+travelDestination.Name = "ServerCurrentRoom"
+travelDestination.Position = UDim2.new(0, 0, 0, 48)
+travelDestination.Size = UDim2.new(1, 0, 0, 72)
+travelDestination.BackgroundColor3 = LEGACY_BUTTON
+travelDestination.Font = Enum.Font.ArialBold
+travelDestination.Text = "CHECKING CURRENT CLASS..."
+travelDestination.TextColor3 = LEGACY_BLUE_DARK
+travelDestination.TextSize = 15
+travelDestination.TextWrapped = true
+travelDestination.Parent = travelBody
+round(travelDestination, 2)
+outline(travelDestination, 1)
+
+local travelStatus = Instance.new("TextLabel")
+travelStatus.Name = "TravelStatus"
+travelStatus.BackgroundTransparency = 1
+travelStatus.Position = UDim2.new(0, 0, 0, 126)
+travelStatus.Size = UDim2.new(1, 0, 1, -126)
+travelStatus.Font = Enum.Font.Arial
+travelStatus.Text = "Select the server-provided current room to travel."
+travelStatus.TextColor3 = LEGACY_BLUE_DARK
+travelStatus.TextSize = 13
+travelStatus.TextWrapped = true
+travelStatus.Parent = travelBody
+
+local function refreshTravelDestination()
+    local roomName = latestClassState and latestClassState.roomDisplayName
+    local available = latestClassState ~= nil and latestClassState.academic == true and roomName ~= nil
+    travelDestination.Active = available
+    travelDestination.AutoButtonColor = available
+    if available then
+        travelDestination.Text = tostring(roomName)
+        travelStatus.Text = "Select the current class room to travel."
+    else
+        travelDestination.Text = "NO CURRENT CLASS DESTINATION"
+        travelStatus.Text = "Travel is unavailable outside a scheduled class."
+    end
+end
+
+featurePanels:register("shop", {
+    show = function()
+        local confirmation = shoppingBoundary.consumeServerConfirmation()
+        shopDetails.Text = confirmation and ("DETAILS\n\n" .. confirmation)
+            or "DETAILS\n\nNo verified clothing items are available yet."
+        shopPanel.Visible = true
+        return true
+    end,
+    hide = function()
+        shopPanel.Visible = false
+    end,
+})
+
+local function ensureOutfitPanelControls(panel)
+    if panel:FindFirstChild("FeaturePanelClose") then
+        return
+    end
+
+    local close = Instance.new("TextButton")
+    close.Name = "FeaturePanelClose"
+    close.AnchorPoint = Vector2.new(1, 0)
+    close.Position = UDim2.new(1, -4, 0, 4)
+    close.Size = UDim2.fromOffset(28, 28)
+    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
+    close.Font = Enum.Font.ArialBold
+    close.Text = "X"
+    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.Parent = panel
+    round(close, 3)
+
+    local back = Instance.new("TextButton")
+    back.Name = "FeaturePanelBack"
+    back.AnchorPoint = Vector2.new(0.5, 1)
+    back.Position = UDim2.new(0.5, 0, 1, -6)
+    back.Size = UDim2.new(1, -12, 0, 30)
+    back.BackgroundColor3 = LEGACY_BUTTON
+    back.Font = Enum.Font.ArialBold
+    back.Text = "BACK"
+    back.TextColor3 = LEGACY_BLUE_DARK
+    back.Parent = panel
+    round(back, 2)
+    outline(back, 1)
+
+    close.Activated:Connect(function()
+        featurePanels:close("explicit_close")
+    end)
+    back.Activated:Connect(function()
+        featurePanels:close("explicit_back")
+    end)
+end
+
+featurePanels:register("avatar", {
+    show = function()
+        local outfitPanel = findOutfitPanel()
+        if not outfitPanel then
+            statusLabel.Text = "Avatar controls are still loading."
+            return false
+        end
+        ensureOutfitPanelControls(outfitPanel)
+        outfitPanel.Visible = true
+        return true
+    end,
+    hide = function()
+        local outfitPanel = findOutfitPanel()
+        if outfitPanel then
+            outfitPanel.Visible = false
+        end
+    end,
+})
+
+featurePanels:register("travel", {
+    show = function()
+        refreshTravelDestination()
+        travelPanel.Visible = true
+        return true
+    end,
+    hide = function()
+        travelPanel.Visible = false
+    end,
+})
+
 shopRailButton.Activated:Connect(function()
-    local confirmation = shoppingBoundary.consumeServerConfirmation()
-    statusLabel.Text = confirmation or "Visit the Style Shop to browse verified items."
+    featurePanels:activate("shop", railInputKind())
 end)
 
 avatarRailButton.Activated:Connect(function()
-    local outfitPanel = findOutfitPanel()
-    if outfitPanel then
-        outfitPanel.Visible = not outfitPanel.Visible
-    else
-        statusLabel.Text = "Avatar controls are still loading."
-    end
+    featurePanels:activate("avatar", railInputKind())
 end)
 
 travelRailButton.Activated:Connect(function()
-    if busy then return end
+    featurePanels:activate("travel", railInputKind())
+end)
+
+travelDestination.Activated:Connect(function()
+    if busy or travelDestination.Active ~= true then return end
     busy = true
+    travelDestination.Active = false
+    travelStatus.Text = "Requesting travel..."
     local ok, response = pcall(function()
+        -- The existing server boundary accepts no destination argument and owns
+        -- the only supported destination: the current scheduled class room.
         return requestTravel:InvokeServer()
     end)
     busy = false
     if ok and type(response) == "table" and response.accepted == true then
-        statusLabel.Text = "Traveling to " .. tostring(response.destination or response.roomDisplayName or "school")
+        statusLabel.Text = "Traveling to " .. tostring(
+            (latestClassState and latestClassState.roomDisplayName) or response.room or "current class"
+        )
+        featurePanels:close("travel_accepted")
     else
-        statusLabel.Text = "Travel becomes available with the next destination."
+        featurePanels:restore("travel", "travel_denied")
+        travelStatus.Text = "Travel is unavailable. You stayed in place; try again."
+        refreshTravelDestination()
     end
 end)
 
@@ -1162,6 +1413,7 @@ local removeFurniture = housingRoot:WaitForChild("RemoveFurniture")
 local sellFurniture = housingRoot:WaitForChild("SellFurniture")
 local paintFurniture = housingRoot:WaitForChild("PaintFurniture")
 local setHousingWalls = housingRoot:WaitForChild("SetHideWalls")
+local editorPanel
 
 local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
@@ -1182,7 +1434,7 @@ local housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
 housePanel.AnchorPoint = Vector2.new(0, 1)
 housePanel.Position = UDim2.new(0, 256, 1, -(auxiliaryPanelBottomMargin + 66))
-housePanel.Size = UDim2.new(0, 248, 0, 252)
+housePanel.Size = UDim2.new(0, 248, 0, 292)
 housePanel.BackgroundColor3 = LEGACY_PANEL
 housePanel.BackgroundTransparency = 0.02
 housePanel.Visible = false
@@ -1199,6 +1451,33 @@ houseTitle.Text = "House"
 houseTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 houseTitle.TextSize = 15
 houseTitle.Parent = housePanel
+
+local houseClose = Instance.new("TextButton")
+houseClose.Name = "HouseClose"
+houseClose.AnchorPoint = Vector2.new(1, 0)
+houseClose.Position = UDim2.new(1, -3, 0, 2)
+houseClose.Size = UDim2.fromOffset(26, 24)
+houseClose.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
+houseClose.Font = Enum.Font.ArialBold
+houseClose.Text = "X"
+houseClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+houseClose.TextSize = 13
+houseClose.Parent = housePanel
+round(houseClose, 2)
+
+local houseBack = Instance.new("TextButton")
+houseBack.Name = "HouseBack"
+houseBack.AnchorPoint = Vector2.new(0.5, 1)
+houseBack.Position = UDim2.new(0.5, 0, 1, -5)
+houseBack.Size = UDim2.new(1, -20, 0, 30)
+houseBack.BackgroundColor3 = LEGACY_BUTTON
+houseBack.Font = Enum.Font.ArialBold
+houseBack.Text = "BACK"
+houseBack.TextColor3 = LEGACY_BLUE_DARK
+houseBack.TextSize = 12
+houseBack.Parent = housePanel
+round(houseBack, 2)
+outline(houseBack, 1)
 
 local houseStatus = Instance.new("TextLabel")
 houseStatus.BackgroundTransparency = 1
@@ -1363,11 +1642,43 @@ for _, spec in ipairs(HOUSE_STYLES) do
     end)
 end
 
-houseIcon.Activated:Connect(function()
-    housePanel.Visible = not housePanel.Visible
-    if housePanel.Visible then
+featurePanels:register("house", {
+    show = function()
+        housePanel.Visible = true
         refreshHousing()
+        return true
+    end,
+    hide = function()
+        housePanel.Visible = false
+        if editorPanel then
+            editorPanel.Visible = false
+        end
+    end,
+})
+
+houseIcon.Activated:Connect(function()
+    featurePanels:activate("house", railInputKind())
+end)
+
+houseClose.Activated:Connect(function()
+    featurePanels:close("explicit_close")
+end)
+
+houseBack.Activated:Connect(function()
+    featurePanels:close("explicit_back")
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed or featurePanels:activeId() == nil then
+        return
     end
+    if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.ButtonB then
+        featurePanels:close("input_back")
+    end
+end)
+
+player.CharacterAdded:Connect(function()
+    featurePanels:reset("respawn")
 end)
 
 housePrimary.Activated:Connect(function()
@@ -1452,7 +1763,7 @@ end)
 
 -- Housing Editor V2. Visible only while the owner is in Edit House mode.
 -- Exact verified Legacy labels retained: Add Furni, Hide Walls, Utilities, Other.
-local editorPanel = Instance.new("Frame")
+editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 1)
 editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
