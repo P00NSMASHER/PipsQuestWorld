@@ -691,6 +691,17 @@ local function makeFeaturePanel(name, heading)
     header.Parent = panel
     Rhs2UiStyle.applyHeader(header)
 
+    local headerTail = Instance.new("Frame")
+    headerTail.Name = "HeaderTail"
+    headerTail.AnchorPoint = Vector2.new(0.5, 0.5)
+    headerTail.Position = UDim2.new(0.78, -8, 0, 23)
+    headerTail.Size = UDim2.fromOffset(32, 32)
+    headerTail.Rotation = 45
+    headerTail.BorderSizePixel = 0
+    headerTail.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+    headerTail.Parent = panel
+    Rhs2UiStyle.applyHeader(headerTail)
+
     local close = Instance.new("TextButton")
     close.Name = "Close"
     close.AnchorPoint = Vector2.new(1, 0)
