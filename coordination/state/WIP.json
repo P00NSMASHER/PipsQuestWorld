@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 58,
+  "schemaVersion": 59,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T15:49:39Z",
+  "observedAt": "2026-10-05T16:51:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -25,7 +25,7 @@
     "nextProducerReservation": {
       "owner": "Roblox High School Class & Education",
       "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "EVIDENCE_PREP_ONLY__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
+      "status": "PREP_READY__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "pr": null,
       "headSha": null
@@ -43,7 +43,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical 39911a + frozen support PR150 consume 2/3. No new product producer may start while P1 exact-canonical runtime Smoke is LOCAL_ONLY_REQUIRED and Package is blocked. P2 Class/Education may perform evidence/interface prep only.",
+    "rule": "WIP_CAP_3: exact canonical 39911a + frozen support PR150 consume 2/3. P2 preparation is complete, but the third product slot remains intentionally unopened until P1 exact-canonical runtime Smoke and deterministic Package pass.",
     "recentlyIntegrated": {
       "pr": 214,
       "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
@@ -74,39 +74,39 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ClassEducation": {
-      "mode": "P2_EVIDENCE_PREP_ACTIVE__NO_PRODUCT_WRITE",
+      "mode": "P2_EVIDENCE_PREP_COMPLETE__WAIT_P1_PACKAGE__NO_PRODUCT_WRITE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "P1 integrated; P2 classroom/free-roam is next priority after Smoke/Package.",
-      "objective": "Prepare one evidence-backed classroom/free-roam transition contract against the existing school clock/class/session seams. Do not create product code until Control Tower releases the producer slot after P1 Smoke and Package.",
+      "latestOutput": "PR227 merged: classroom_free_roam_p2_contract_39911a.json binds verified activity transitions to unchanged ClassSessionController/ClassEducation/ClassProgression seams.",
+      "objective": "Hold the prepared P2 contract stable. Do not open product code until P1 full runtime Smoke and deterministic Package release the producer slot.",
       "owned": "class/session/activity authority",
       "dependency": "P1 runtime Smoke -> Release/Package.",
-      "exit": "Evidence contract ready or P1 Package completes.",
+      "exit": "P1 Package completes or a material reference/authority change invalidates the prep contract.",
       "handoff": "Roblox High School Control Tower"
     },
     "ContentQA": {
-      "mode": "P2_REFERENCE_PREP_ACTIVE__NO_PRODUCT_WRITE",
+      "mode": "P2_REFERENCE_PREP_COMPLETE__WAIT_MATERIAL_REFERENCE_CHANGE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "A/B/C reference identities remain pinned; P1 source integration complete.",
-      "objective": "Prepare only the reference checkpoints needed for P2 classroom/free-roam; preserve exact observed/inferred boundaries and 2x timing caution.",
+      "latestOutput": "PR219 temporal A/B activity evidence and PR218 reference lineage are consumed by PR227; frame checkpoints and 2x timing limits are already sufficient for the bounded P2 contract.",
+      "objective": "No further reference churn. Refresh only if a material reference changes or future producer scope exceeds the pinned classroom/activity checkpoints.",
       "owned": "authorized reference fixtures, metadata, provenance and deterministic validators",
-      "dependency": "None for evidence prep; product activation waits on P1 Package.",
-      "exit": "P2 reference handoff ready or material reference change.",
+      "dependency": "None.",
+      "exit": "Material reference change or activated producer requests a new bounded checkpoint.",
       "handoff": "Roblox High School Class & Education"
     },
     "ProgressionMobile": {
-      "mode": "P2_STATE_SEAM_PREP__NO_PRODUCT_WRITE",
+      "mode": "P2_STATE_SEAM_PREP_COMPLETE__WAIT_P1_PACKAGE__NO_PRODUCT_WRITE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR214 responsive auxiliary geometry is integrated and source/headless validated.",
-      "objective": "Audit the existing class/free-roam progression/read-only state seams needed by P2 without changing product code or authority.",
+      "latestOutput": "PR228 merged: p2_progression_mobile_seam_39911a.json pins exactly-once durable completion, read-only client state, mobile-safe presentation, and ephemeral-score versus durable-points separation.",
+      "objective": "Hold the prepared progression/mobile seam stable. Respond only to a P1 Smoke defect or material P2 authority change.",
       "owned": "durable progression/economy/ownership/mobile read-only state",
-      "dependency": "P1 runtime Smoke/Package for producer activation.",
-      "exit": "P2 seam handoff ready or P1 Smoke defect.",
+      "dependency": "P1 runtime Smoke -> Release/Package.",
+      "exit": "P1 Package completes or material progression/mobile seam change.",
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
@@ -171,15 +171,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA58_P1_INTEGRATED__SMOKE_LOCAL_ONLY_HOLD__P2_PREP_ONLY",
+      "mode": "SCHEMA59_P1_RUNTIME_SMOKE_OFFLINE_HOLD__P2_PREP_READY",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR214 integrated; PR224 Integration receipt and PR225 Smoke hold merged; exact-canonical push CI green.",
-      "objective": "Keep product WIP frozen at 2/3, coordinate P2 evidence prep, and release the next producer only after P1 runtime Smoke and Package complete.",
+      "latestOutput": "P2 Class/Education prep PR227 and Progression/Mobile seam PR228 merged; Content QA temporal/reference evidence is already sufficient. PAAM-L044 is offline, so P1 exact-canonical runtime Smoke remains LOCAL_ONLY_REQUIRED.",
+      "objective": "Keep product WIP at 2/3, preserve P2 prep as ready, and release exactly one P2 producer only after P1 full runtime Smoke and deterministic Package complete.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Integration Smoke.",
-      "exit": "P1 Smoke PASS/defect or canonical change.",
+      "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
+      "exit": "P1 Smoke PASS/defect, P1 Package, canonical change, or local device availability change.",
       "handoff": "Roblox High School Integration Smoke"
     }
   },
@@ -283,7 +283,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
+  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__PREP_READY__ACTIVATE_AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
   "candidateExactHeadCi": {
     "pr": 214,
     "headSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
