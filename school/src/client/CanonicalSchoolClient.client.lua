@@ -669,61 +669,60 @@ local function makeFeaturePanel(name, heading)
     panel.AnchorPoint = Vector2.new(0, 0)
     panel.Position = UDim2.fromOffset(0, 0)
     panel.Size = UDim2.fromOffset(560, 390)
-    panel.BackgroundColor3 = LEGACY_PANEL
-    panel.BackgroundTransparency = 0.02
+    panel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    panel.BackgroundTransparency = 0
     panel.Visible = false
     panel.Parent = gui
+    Rhs2UiStyle.applyPrimaryPanel(panel)
     local panelScale = Instance.new("UIScale")
     panelScale.Name = "ResponsiveScale"
     panelScale.Scale = 1
     panelScale.Parent = panel
-    round(panel, 4)
-    outline(panel, 2)
-
     local header = Instance.new("TextLabel")
     header.Name = "Heading"
-    header.BackgroundColor3 = LEGACY_BLUE
+    header.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
     header.BorderSizePixel = 0
-    header.Size = UDim2.new(1, 0, 0, 38)
-    header.Font = Enum.Font.ArialBold
-    header.Text = heading
-    header.TextColor3 = Color3.fromRGB(255, 255, 255)
-    header.TextSize = 17
+    header.Size = UDim2.new(0.78, 0, 0, 46)
+    header.Font = Rhs2UiStyle.Font.Bold
+    header.Text = "  " .. heading
+    header.TextColor3 = Rhs2UiStyle.Palette.White
+    header.TextSize = 20
+    header.TextXAlignment = Enum.TextXAlignment.Left
     header.Parent = panel
+    Rhs2UiStyle.applyHeader(header)
 
     local close = Instance.new("TextButton")
     close.Name = "Close"
     close.AnchorPoint = Vector2.new(1, 0)
-    close.Position = UDim2.new(1, -5, 0, 4)
+    close.Position = UDim2.new(1, -10, 0, 8)
     close.Size = UDim2.fromOffset(30, 30)
-    close.BackgroundColor3 = Color3.fromRGB(220, 66, 66)
-    close.Font = Enum.Font.ArialBold
-    close.Text = "X"
-    close.TextColor3 = Color3.fromRGB(255, 255, 255)
-    close.TextSize = 15
+    close.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    close.Font = Rhs2UiStyle.Font.Bold
+    close.Text = "×"
+    close.TextColor3 = Rhs2UiStyle.Palette.White
+    close.TextSize = 19
     close.Parent = panel
-    round(close, 4)
+    Rhs2UiStyle.applyCloseButton(close)
 
     local body = Instance.new("Frame")
     body.Name = "Body"
     body.BackgroundTransparency = 1
-    body.Position = UDim2.fromOffset(12, 48)
-    body.Size = UDim2.new(1, -24, 1, -100)
+    body.Position = UDim2.fromOffset(12, 58)
+    body.Size = UDim2.new(1, -24, 1, -70)
     body.Parent = panel
 
     local back = Instance.new("TextButton")
     back.Name = "Back"
-    back.AnchorPoint = Vector2.new(0.5, 1)
-    back.Position = UDim2.new(0.5, 0, 1, -10)
-    back.Size = UDim2.new(1, -24, 0, 36)
-    back.BackgroundColor3 = LEGACY_BUTTON
-    back.Font = Enum.Font.ArialBold
-    back.Text = "BACK"
-    back.TextColor3 = LEGACY_BLUE_DARK
-    back.TextSize = 13
+    back.AnchorPoint = Vector2.new(1, 0)
+    back.Position = UDim2.new(1, -48, 0, 8)
+    back.Size = UDim2.fromOffset(30, 30)
+    back.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    back.Font = Rhs2UiStyle.Font.Bold
+    back.Text = "↩"
+    back.TextColor3 = Rhs2UiStyle.Palette.White
+    back.TextSize = 18
     back.Parent = panel
-    round(back, 2)
-    outline(back, 1)
+    Rhs2UiStyle.applyCloseButton(back)
 
     close.Activated:Connect(function()
         featurePanels:close("explicit_close")
@@ -741,69 +740,109 @@ shopPanel:SetAttribute("CatalogAuthority", "server-only")
 
 local shopBrowse = Instance.new("TextLabel")
 shopBrowse.Name = "Browse"
-shopBrowse.BackgroundColor3 = LEGACY_BUTTON
+shopBrowse.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 shopBrowse.Size = UDim2.new(0.42, -5, 1, 0)
-shopBrowse.Font = Enum.Font.ArialBold
+shopBrowse.Font = Rhs2UiStyle.Font.Bold
 shopBrowse.Text = "BROWSE\n\nClothing Display"
-shopBrowse.TextColor3 = LEGACY_BLUE_DARK
+shopBrowse.TextColor3 = Rhs2UiStyle.Palette.White
 shopBrowse.TextSize = 14
 shopBrowse.TextWrapped = true
 shopBrowse.Parent = shopBody
-round(shopBrowse, 2)
-outline(shopBrowse, 1)
+Rhs2UiStyle.applyDarkRow(shopBrowse)
+shopBrowse.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 
 local shopDetails = Instance.new("TextLabel")
 shopDetails.Name = "Details"
 shopDetails.Position = UDim2.new(0.42, 7, 0, 0)
 shopDetails.Size = UDim2.new(0.58, -7, 1, 0)
-shopDetails.BackgroundColor3 = LEGACY_BUTTON
-shopDetails.Font = Enum.Font.Arial
+shopDetails.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+shopDetails.Font = Rhs2UiStyle.Font.Regular
 shopDetails.Text = "DETAILS\n\nNo verified clothing items are available yet."
-shopDetails.TextColor3 = LEGACY_BLUE_DARK
+shopDetails.TextColor3 = Rhs2UiStyle.Palette.White
 shopDetails.TextSize = 13
 shopDetails.TextWrapped = true
 shopDetails.Parent = shopBody
-round(shopDetails, 2)
-outline(shopDetails, 1)
+Rhs2UiStyle.applyDarkRow(shopDetails)
 
 local travelBody
 travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
 travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")
 applyResponsiveHudLayout()
 
-local travelPrompt = Instance.new("TextLabel")
-travelPrompt.Name = "Prompt"
-travelPrompt.BackgroundTransparency = 1
-travelPrompt.Size = UDim2.new(1, 0, 0, 42)
-travelPrompt.Font = Enum.Font.ArialBold
-travelPrompt.Text = "CURRENT SCHOOL DESTINATION"
-travelPrompt.TextColor3 = LEGACY_BLUE_DARK
-travelPrompt.TextSize = 14
-travelPrompt.Parent = travelBody
+local travelLocationsTab = Instance.new("TextButton")
+travelLocationsTab.Name = "LocationsTab"
+travelLocationsTab.Position = UDim2.fromOffset(120, 0)
+travelLocationsTab.Size = UDim2.fromOffset(116, 32)
+travelLocationsTab.Text = "Locations"
+travelLocationsTab.TextSize = 14
+travelLocationsTab.Active = false
+travelLocationsTab.Parent = travelBody
+Rhs2UiStyle.applyTab(travelLocationsTab, true)
+
+local travelServersTab = Instance.new("TextButton")
+travelServersTab.Name = "ServersTab"
+travelServersTab.Position = UDim2.fromOffset(242, 0)
+travelServersTab.Size = UDim2.fromOffset(116, 32)
+travelServersTab.Text = "Servers"
+travelServersTab.TextSize = 14
+travelServersTab.Active = false
+travelServersTab.AutoButtonColor = false
+travelServersTab.Parent = travelBody
+Rhs2UiStyle.applyTab(travelServersTab, false)
+
+local travelGrid = Instance.new("Frame")
+travelGrid.Name = "TravelDestinationGrid"
+travelGrid.BackgroundTransparency = 1
+travelGrid.Position = UDim2.fromOffset(0, 42)
+travelGrid.Size = UDim2.new(1, 0, 0, 178)
+travelGrid.Parent = travelBody
+
+local travelGridLayout = Instance.new("UIGridLayout")
+travelGridLayout.CellSize = UDim2.new(0.32, -4, 0, 82)
+travelGridLayout.CellPadding = UDim2.new(0.02, 0, 0, 10)
+travelGridLayout.FillDirectionMaxCells = 3
+travelGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+travelGridLayout.Parent = travelGrid
 
 local travelDestination = Instance.new("TextButton")
 travelDestination.Name = "ServerCurrentRoom"
-travelDestination.Position = UDim2.new(0, 0, 0, 48)
-travelDestination.Size = UDim2.new(1, 0, 0, 72)
-travelDestination.BackgroundColor3 = LEGACY_BUTTON
-travelDestination.Font = Enum.Font.ArialBold
+travelDestination.LayoutOrder = 1
+travelDestination.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+travelDestination.Font = Rhs2UiStyle.Font.Bold
 travelDestination.Text = "CHECKING CURRENT CLASS..."
-travelDestination.TextColor3 = LEGACY_BLUE_DARK
-travelDestination.TextSize = 15
+travelDestination.TextColor3 = Rhs2UiStyle.Palette.White
+travelDestination.TextSize = 14
 travelDestination.TextWrapped = true
-travelDestination.Parent = travelBody
-round(travelDestination, 2)
-outline(travelDestination, 1)
+travelDestination.Parent = travelGrid
+Rhs2UiStyle.applyDarkRow(travelDestination)
+travelDestination.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+local travelDestinationStroke = outline(travelDestination, 2)
+travelDestinationStroke.Color = Rhs2UiStyle.Palette.HeaderBlue
+
+for index = 2, 6 do
+    local placeholder = Instance.new("TextLabel")
+    placeholder.Name = "UnavailableDestination" .. tostring(index)
+    placeholder.LayoutOrder = index
+    placeholder.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+    placeholder.Font = Rhs2UiStyle.Font.Medium
+    placeholder.Text = "UNAVAILABLE"
+    placeholder.TextColor3 = Color3.fromRGB(145, 163, 194)
+    placeholder.TextSize = 11
+    placeholder.Parent = travelGrid
+    Rhs2UiStyle.applyDarkRow(placeholder)
+    local placeholderStroke = outline(placeholder, 1)
+    placeholderStroke.Color = Rhs2UiStyle.Palette.TabBlue
+end
 
 local travelStatus = Instance.new("TextLabel")
 travelStatus.Name = "TravelStatus"
 travelStatus.BackgroundTransparency = 1
-travelStatus.Position = UDim2.new(0, 0, 0, 126)
-travelStatus.Size = UDim2.new(1, 0, 1, -126)
-travelStatus.Font = Enum.Font.Arial
+travelStatus.Position = UDim2.new(0, 0, 0, 228)
+travelStatus.Size = UDim2.new(1, 0, 1, -228)
+travelStatus.Font = Rhs2UiStyle.Font.Regular
 travelStatus.Text = "Select the server-provided current room to travel."
-travelStatus.TextColor3 = LEGACY_BLUE_DARK
-travelStatus.TextSize = 13
+travelStatus.TextColor3 = Rhs2UiStyle.Palette.White
+travelStatus.TextSize = 12
 travelStatus.TextWrapped = true
 travelStatus.Parent = travelBody
 
@@ -813,10 +852,10 @@ local function refreshTravelDestination()
     travelDestination.Active = available
     travelDestination.AutoButtonColor = available
     if available then
-        travelDestination.Text = tostring(roomName)
-        travelStatus.Text = "Select the current class room to travel."
+        travelDestination.Text = tostring(roomName) .. "\nCURRENT CLASS"
+        travelStatus.Text = "Current class is the only server-authorized destination in this build."
     else
-        travelDestination.Text = "NO CURRENT CLASS DESTINATION"
+        travelDestination.Text = "NO CURRENT CLASS\nUNAVAILABLE"
         travelStatus.Text = "Travel is unavailable outside a scheduled class."
     end
 end
