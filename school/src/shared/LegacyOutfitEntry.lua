@@ -29,6 +29,7 @@ end
 local gui = Instance.new("ScreenGui")
 gui.Name = exactGuiName()
 gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
 gui:SetAttribute("ReferenceExactIdentity", true)
 gui:SetAttribute("ReferenceExactLayout", false)
 gui.Parent = playerGui
@@ -44,12 +45,18 @@ entry.Parent = gui
 
 local panel = Instance.new("Frame")
 panel.Name = "OutfitInputs"
-panel.Size = UDim2.fromOffset(286, 262)
-panel.Position = UDim2.new(0.5, -143, 0.5, -131)
+panel.Size = UDim2.fromOffset(286, 400)
+panel.Position = UDim2.fromOffset(0, 0)
 panel.Visible = false
+panel.ClipsDescendants = true
 panel:SetAttribute("ReferenceExactHierarchy", true)
 panel:SetAttribute("ReferenceExactLayout", false)
 panel.Parent = gui
+
+local panelScale = Instance.new("UIScale")
+panelScale.Name = "ResponsiveScale"
+panelScale.Scale = 1
+panelScale.Parent = panel
 
 local title = Instance.new("TextLabel")
 title.Name = "OutfitName"
@@ -274,6 +281,13 @@ entry.Activated:Connect(function()
     panel.Visible = not panel.Visible
     if panel.Visible then refreshPage(baseSlot.Value) end
 end)
+
+return {
+    gui = gui,
+    entry = entry,
+    panel = panel,
+    panelScale = panelScale,
+}
 
 end
 
