@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "HOUSING_EDITOR_V2_PACKAGED__AVATAR_CUSTOMIZATION_NEXT",
-  "currentPlayableEvidence": "Housing Editor V2 canonical 00df979add2b5d0e961205b62cf88340c56ee662 passed exact-head CI and cloud-safe Smoke and is checkpointed as deterministic source-tree package pip-high-school-00df979-source-tree-dea093c1 (school tree dea093c10cfc0212bf28bb7933ca0b87e3bdee6b). Roblox was not published. The next active parity slice is avatar/customization/shopping.",
-  "runtimeValidatedThrough": "No new Studio/runtime claim is added by 68c4b3f. Previously certified baseline behavior remains inherited from unchanged lineage; vehicle runtime remains explicitly LOCAL_ONLY_REQUIRED.",
-  "headlessExactHeadValidatedThrough": "00df979: all three push guards PASS and Integration Smoke cloud-safe PASS.",
+  "currentPlayableStage": "P1_MENU_INTERACTION_AND_MOBILE_GEOMETRY_INTEGRATED__RUNTIME_ACCEPTANCE_PENDING",
+  "currentPlayableEvidence": "PR214 exact head 7f1779fbe5a7143c596160e334e8e2444f20b6a0 passed independent QA and merged to canonical 39911a193ba6e76379c52ce67cb60bbc912bf279. All three exact-canonical push guards passed. One-active-panel interaction, explicit close/back, denial/respawn restoration, and desktop/iPhone/iPad auxiliary geometry are source/headless validated. Rendered/device traversal and save/rejoin remain unexecuted, so exact visual/runtime parity is not claimed.",
+  "runtimeValidatedThrough": "No new live Roblox Studio/device runtime claim on canonical 39911a. PR225 records LOCAL_ONLY_REQUIRED rendered/device/traversal/save-rejoin smoke.",
+  "headlessExactHeadValidatedThrough": "39911a: all three push guards PASS; feature-panel and responsive geometry contracts PASS.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Avatar/customization/shopping V1 from exact canonical 00df979 with Content QA reference support and Free Roam runtime ownership.",
+  "nextMilestone": "Complete exact-canonical P1 rendered/device/traversal/save-rejoin Smoke, then deterministic Package, then activate P2_CLASSROOM_FREE_ROAM.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "00df979add2b5d0e961205b62cf88340c56ee662",
-    "milestone": "HOUSING_EDITOR_V2_PACKAGED",
-    "headlessStatus": "CI_QA_INTEGRATION_SMOKE_PACKAGE_PASS",
-    "runtimeStatus": "LOCAL_ONLY_INTERACTION_CHECKS_DEFERRED_NONBLOCKING"
+    "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "milestone": "P1_MENU_INTERACTION_MOBILE_GEOMETRY_INTEGRATED",
+    "headlessStatus": "CI_QA_INTEGRATION_CLOUD_SAFE_PASS",
+    "runtimeStatus": "LOCAL_ONLY_REQUIRED__SMOKE_HOLD"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
