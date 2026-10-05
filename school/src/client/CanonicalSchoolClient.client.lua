@@ -15,7 +15,8 @@ local FeaturePanelController = require(shared:WaitForChild("FeaturePanelControll
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-LegacyOutfitEntry(player, UserInputService)
+local legacyOutfitSurface = LegacyOutfitEntry(player, UserInputService)
+legacyOutfitSurface.entry.Visible = false
 local shoppingBoundary = LegacyShoppingBoundary()
 local root = ReplicatedStorage:WaitForChild("SchoolFoundation")
 local stateSnapshot = root:WaitForChild("StateSnapshot")
@@ -207,6 +208,8 @@ local housePanelScale
 local editorPanelScale
 local modal
 local modalScale
+local outfitPanel = legacyOutfitSurface.panel
+local outfitPanelScale = legacyOutfitSurface.panelScale
 local cafeCard
 local cafeCardScale
 
@@ -264,6 +267,15 @@ local function applyResponsiveHudLayout()
         warn("Class modal layout rejected: " .. tostring(classModalReason))
         return
     end
+    local outfitModalLayout = ResponsiveHudLayout.computeCenteredModal(layout, {
+        width = 286,
+        height = 400,
+    })
+    local outfitModalValid, outfitModalReason = ResponsiveHudLayout.validateCenteredModal(layout, outfitModalLayout)
+    if not outfitModalValid then
+        warn("Outfit modal layout rejected: " .. tostring(outfitModalReason))
+        return
+    end
     local cafeCardLayout = ResponsiveHudLayout.computeSafeFloatingCard(layout, {
         width = 260,
         height = 150,
@@ -285,6 +297,11 @@ local function applyResponsiveHudLayout()
     if modal and modalScale then
         modal.Position = UDim2.fromOffset(classModalLayout.x, classModalLayout.y)
         modalScale.Scale = classModalLayout.scale
+    end
+
+    if outfitPanel and outfitPanelScale then
+        outfitPanel.Position = UDim2.fromOffset(outfitModalLayout.x, outfitModalLayout.y)
+        outfitPanelScale.Scale = outfitModalLayout.scale
     end
 
     if cafeCard and cafeCardScale then
