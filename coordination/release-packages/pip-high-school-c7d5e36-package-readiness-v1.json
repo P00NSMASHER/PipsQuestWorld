@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "owner": "Roblox High School Release & Package Gate",
+  "observedAt": "2026-10-05T18:10:30Z",
+  "result": "PREFLIGHT_READY__PACKAGE_BLOCKED_ON_FULL_RUNTIME_SMOKE",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "rootTreeSha": "48f1b15a6e173c57427e7b96f275d3d1bbf9856f",
+    "schoolTreeSha": "e5f70c8db500f77f29e4fa9a3e9b6688750fd6c2",
+    "recursiveEntryCount": 72,
+    "recursiveTreeTruncated": false
+  },
+  "producerLineage": {
+    "pr": 245,
+    "approvedCandidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "qaEvidence": "PR245 review 5418699307",
+    "integrationReceiptPr": 246,
+    "integrationReceiptMerge": "d3f5ba2cd700a8e909d7954b90bd6e9c25d44f20",
+    "smokeReceiptPr": 247,
+    "smokeReceiptMerge": "82d12f70dfffb7acde9b42ca0468b11db6aee786"
+  },
+  "exactCanonicalPushCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37353456737,
+      "conclusion": "success",
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37353456762,
+      "conclusion": "success",
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37353456888,
+      "conclusion": "success",
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+    }
+  ],
+  "packageIdentityWhenEligible": {
+    "artifactName": "pip-high-school-c7d5e36-source-tree-e5f70c8d",
+    "artifactId": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2:e5f70c8db500f77f29e4fa9a3e9b6688750fd6c2",
+    "type": "deterministic_git_source_tree_checkpoint",
+    "reproducibilityRule": "Exact canonical commit SHA plus exact school/** Git tree SHA.",
+    "status": "RESERVED_NOT_EMITTED"
+  },
+  "blockers": [
+    {
+      "id": "P1_RUNTIME_RENDERED_DEVICE_SMOKE",
+      "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "LOCAL_ONLY_REQUIRED",
+      "evidence": "PR247; coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json; coordination/smoke/PR245_C7D5E36_LOCAL_SMOKE_EXECUTION_PLAN.json",
+      "currentLocalStatus": "PAAM-L044 offline on last current-run poll",
+      "requiredBeforePackage": [
+        "desktop 909x483 rendered captures",
+        "iPhone landscape 852x393 rendered/touch captures including ClassActivityModal and CafeCard",
+        "iPad landscape 1024x768 rendered/touch captures including ClassActivityModal and CafeCard",
+        "spawn -> entrance -> atrium -> corridor -> stair up/down physical traversal",
+        "live Shop/Travel/Avatar/House/Housing Editor interaction",
+        "live class/free-roam modal interaction and restoration",
+        "live CafeCard interaction and right touch-zone clearance",
+        "save/rejoin restoration on exact canonical"
+      ]
+    }
+  ],
+  "packageGate": {
+    "eligible": false,
+    "unlockCondition": "Integration Smoke reaches full PASS on exact canonical c7d5e36 with runtimeExecuted=true and renderedParityEstablished=true.",
+    "staleHeadRule": "Any canonical-head change invalidates this preflight and requires recomputing root/school tree identity and exact-head CI evidence.",
+    "noFalsePassRule": "Cloud-safe/static/headless results may not substitute for the runtime/device gate."
+  },
+  "postUnlockActions": [
+    "Reread live canonical and require it still equals c7d5e36.",
+    "Reread Integration Smoke receipt and require full PASS on c7d5e36.",
+    "Recompute root and school tree SHAs and require 48f1b15a / e5f70c8d identities unchanged.",
+    "Emit deterministic package checkpoint using the reserved artifact identity.",
+    "Update Release receipt and Control Tower state.",
+    "Reconcile the armed P2 activation manifest to this packaged canonical, then release exactly one P2 producer slot."
+  ],
+  "supersedes": {
+    "priorPreflight": "coordination/release-packages/pip-high-school-4782aa-package-readiness-v1.json",
+    "reason": "Canonical advanced through the narrow CafeCard mobile safe-area repair."
+  },
+  "priorPackage": {
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
+    "status": "PRESERVED_UNTIL_C7D5E36_ELIGIBLE"
+  },
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
