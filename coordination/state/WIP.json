@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 73,
+  "schemaVersion": 74,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T19:56:00Z",
+  "observedAt": "2026-10-05T20:15:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
@@ -15,25 +15,21 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
-    "producerPr": null,
-    "producerSha": null,
-    "producerBranch": null,
+    "countIncludingBase": 3,
+    "producerPr": 274,
+    "producerSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+    "producerBranch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Pip High Free Roam",
+      "owner": "Pip High Free Roam / UI Visual Parity",
       "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "status": "QUEUED_AFTER_VEHICLE_INTEGRATION__REFERENCE_AND_IMPLEMENTATION_MAP_LOCKED",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
       "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "pr": null,
-      "headSha": null,
-      "prerequisites": [
-        "Foundation push rerun 37363665326 succeeds on exact canonical 7446d375.",
-        "Protected Integration receipt binds PR264 candidate d2f51131 to exact canonical 7446d375.",
-        "No newer canonical product head supersedes 7446d375."
-      ]
+      "pr": 274,
+      "headSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+      "mergePrerequisite": "Protected vehicle-card Integration must bind PR264 to exact canonical 7446d375 after Foundation push rerun 37363665326 succeeds."
     },
     "supersededCandidates": [
       {
@@ -48,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical 7446d375 + frozen support PR150 consume 2/3. Vehicle-card product repair is merged but Integration is waiting on one exact-canonical Foundation push rerun. The next and only product slot is reserved for RHS2 UI visual-parity polish after Integration; P2 stays blocked behind polish + final Smoke + Package.",
+    "rule": "WIP_CAP_3_FULL: exact canonical 7446d375 + frozen support PR150 + sole UI visual-parity producer PR274 consume 3/3. PR274 may run CI/QA while the vehicle Integration gate waits on Foundation runner infrastructure, but PR274 MUST NOT merge before the vehicle Integration receipt is certified.",
     "recentlyIntegrated": {
       "pr": 264,
       "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
@@ -57,7 +53,7 @@
       "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
     }
   },
-  "currentMilestone": "P1_VEHICLE_REPAIR_MERGED__WAIT_FOUNDATION_PUSH_RERUN__RHS2_UI_POLISH_NEXT_MANDATORY",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_PRODUCER_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT__MERGE_BLOCKED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -115,28 +111,28 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "WAIT_VEHICLE_INTEGRATION__UI_POLISH_NEXT_RESERVED",
+      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__MERGE_BLOCKED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "branch": null,
-      "candidatePr": 264,
-      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-      "latestOutput": "PR264 vehicle-card clearance repair merged to canonical 7446d375 and exact-head QA passed. UI parity spec PR265, directive PR266, implementation map PR267 and acceptance matrix PR268 are merged.",
-      "objective": "Do not open product code yet. As soon as vehicle Integration is certified, open exactly one RHS2 UI visual-parity polish branch from the certified canonical and implement the locked HUD/Travel/Shop style contract.",
+      "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
+      "candidatePr": 274,
+      "candidateSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+      "latestOutput": "PR274 implements shared RHS2 visual tokens, persistent status/rail/quickbar polish, Travel tab/card-grid chrome, Shop chrome, and House common chrome. It is open for exact-head CI/QA only; merge is blocked until vehicle Integration is certified.",
+      "objective": "Drive PR274 to all-three exact-head green and independent visual/static QA without widening product scope. Preserve every authority and responsive geometry seam.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "Foundation exact-canonical push rerun -> Integration.",
-      "exit": "Vehicle Integration certified or new canonical defect.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "PR274 CI; merge additionally depends on vehicle Integration.",
+      "exit": "Exact-head CI/QA pass or concrete defect.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "VEHICLE_QA_COMPLETE__UI_VISUAL_QA_SPEC_READY",
+      "mode": "WAIT_UI_POLISH_EXACT_HEAD_CI__REFERENCE_MATRIX_LOCKED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "candidatePr": 264,
-      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-      "latestOutput": "PR264 exact-head QA passed review 5419550318. RHS2 visual spec/implementation map/acceptance matrix are locked for the upcoming UI polish candidate.",
-      "objective": "After UI polish candidate exists, perform exact-head static visual contract QA plus standard authority/regression review. Rendered parity remains separate.",
+      "candidatePr": 274,
+      "candidateSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+      "latestOutput": "UI visual reference spec, implementation map, acceptance matrix, proposed style/test contracts and visual-diff harness are merged. PR274 is the sole candidate.",
+      "objective": "After all three PR274 guards pass, review exact-head visual static contract, source authority boundaries, reference hierarchy and mutation-sensitive responsive tests. Keep rendered parity PENDING.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "UI polish product candidate.",
-      "exit": "New UI candidate or concrete static defect.",
+      "dependency": "PR274 exact-head CI.",
+      "exit": "QA PASS/defect on exact candidate.",
       "handoff": "Roblox High School Integration"
     },
     "Integration": {
@@ -176,16 +172,16 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA73_VEHICLE_CANONICAL_WAIT_FOUNDATION_RERUN__RHS2_UI_POLISH_QUEUED",
+      "mode": "SCHEMA74_UI_PRODUCER_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR264 is merged and two of three exact-canonical push lanes are green. Foundation push rerun remains queued. UI parity spec PR265, directive PR266, implementation map PR267 and acceptance matrix PR268 are merged and authoritative.",
-      "objective": "Finish vehicle Integration truthfully, then immediately release the sole product slot to P1_RHS2_UI_VISUAL_PARITY_POLISH before final Smoke. Keep P2 blocked.",
+      "latestOutput": "PR274 is now the sole UI visual-parity product producer. Vehicle canonical still waits only on Foundation push rerun 37363665326; Class/Progression are green. UI producer merge remains blocked until that Integration gate closes.",
+      "objective": "Keep PR274 advancing through CI/QA in parallel, prevent any second product producer, certify vehicle Integration when Foundation runner succeeds, then permit PR274 protected merge if its own QA is green.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Foundation push rerun 37363665326.",
-      "exit": "Vehicle Integration certified, guard failure, or canonical change.",
-      "handoff": "Roblox High School Integration"
+      "dependency": "Vehicle Foundation push rerun + PR274 CI.",
+      "exit": "Vehicle Integration certified, PR274 QA defect/pass, or canonical change.",
+      "handoff": "Roblox High School Integration / QA"
     }
   },
   "connectorReliability": {
@@ -296,7 +292,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "P1_RHS2_UI_VISUAL_PARITY_POLISH__THEN_FINAL_RUNTIME_SMOKE_AND_PACKAGE__THEN_P2",
+  "nextPriorityAfterCurrent": "PR274_UI_POLISH_QA__THEN_PROTECTED_INTEGRATION__THEN_FINAL_RENDERED_SMOKE_PACKAGE__THEN_P2",
   "candidateExactHeadCi": {
     "pr": 258,
     "headSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",

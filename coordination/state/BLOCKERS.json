@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 32,
+  "schemaVersion": 33,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "currentBlockers": [
@@ -8,32 +8,32 @@
       "owner": "Roblox High School Integration",
       "type": "CI_RUNNER_PENDING",
       "exactSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "status": "FOUNDATION_RERUN_QUEUED__CLASS_AND_PROGRESSION_GREEN",
-      "evidence": "Foundation 37363665326 attempt2 queued; Class 37363665377 success; Progression 37363665343 attempt2 success.",
-      "reason": "Protected Integration requires all three push guards green on the exact merged canonical. The prior Foundation/Progression cancellations were runner/infrastructure outcomes, not product-test failures; both were rerun."
+      "status": "FOUNDATION_RERUN_ATTEMPT3_QUEUED__CLASS_AND_PROGRESSION_GREEN",
+      "evidence": "Foundation 37363665326 attempt3 queued; Class 37363665377 success; Progression 37363665343 attempt2 success.",
+      "reason": "Vehicle Integration may not be certified until all three exact-canonical push guards are green."
     },
     {
-      "id": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "owner": "Pip High Free Roam",
-      "type": "MANDATORY_PRODUCT_GATE",
-      "exactSha": "FUTURE_CERTIFIED_VEHICLE_CANONICAL",
-      "status": "QUEUED_AFTER_VEHICLE_INTEGRATION",
-      "evidence": "PR265 visual spec; PR266 Control Tower directive; PR267 source implementation map; PR268 visual acceptance matrix.",
-      "reason": "Final P1 runtime/release cannot proceed until primary HUD/Travel/Shop chrome is brought to the footage-locked RHS2 visual system."
+      "id": "P1_UI_POLISH_MERGE_ORDER",
+      "owner": "Roblox High School Control Tower",
+      "type": "PIPELINE_ORDER",
+      "exactSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
+      "status": "PR274_ACTIVE__CI_QA_ALLOWED__MERGE_BLOCKED",
+      "evidence": "PR274 exact product candidate on base 7446d375; UI spec PR265, directive PR266, implementation map PR267, acceptance PR268, style proposal PR270, static test proposal PR271, diff harness PR272 and additional states PR273 are locked.",
+      "reason": "PR274 can be prepared and QA'd in parallel but must not merge before the preceding vehicle Integration receipt is certified."
     },
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
       "exactSha": "FUTURE_UI_POLISHED_CANONICAL",
-      "status": "DEFERRED_BEHIND_UI_POLISH",
-      "evidence": "Existing Smoke contract/runbooks retained.",
-      "reason": "Rendered/device/traversal/save-rejoin evidence must be collected on the final UI-polished P1 canonical, not an intermediate head."
+      "status": "DEFERRED_BEHIND_PR274_INTEGRATION",
+      "evidence": "Runtime contracts preserved; visual-diff harness now prepared.",
+      "reason": "Final rendered/device/traversal/save-rejoin evidence belongs on the UI-polished canonical."
     }
   ],
-  "gateStatus": "P1_VEHICLE_INTEGRATION_WAIT_CI__RHS2_UI_POLISH_NEXT_MANDATORY__FINAL_SMOKE_DEFERRED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "FOUNDATION_PUSH_GREEN__INTEGRATE_7446D375__OPEN_ONE_RHS2_UI_POLISH_PRODUCER",
+  "gateStatus": "PR274_UI_POLISH_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT__FINAL_SMOKE_DEFERRED",
+  "nextProducer": "NONE_WIP_CAP_FULL",
+  "nextObjective": "GREEN_PR274_CI_QA__GREEN_VEHICLE_FOUNDATION_RERUN__CERTIFY_VEHICLE_INTEGRATION__THEN_MERGE_PR274_IF_AUTHORIZED",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
