@@ -174,6 +174,8 @@ utilityRail.AnchorPoint = Vector2.new(0, 0)
 utilityRail.Position = UDim2.fromOffset(0, 0)
 utilityRail.Size = UDim2.fromOffset(48, 14)
 utilityRail.BackgroundTransparency = 1
+utilityRail:SetAttribute("ReferenceExactTileCount", 6)
+utilityRail:SetAttribute("ReferenceSemanticsVerified", false)
 utilityRail.Parent = gui
 
 local utilityLayout = Instance.new("UIGridLayout")
