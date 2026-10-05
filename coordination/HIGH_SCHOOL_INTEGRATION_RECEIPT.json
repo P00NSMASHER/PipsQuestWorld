@@ -1,60 +1,60 @@
 {
-  "schemaVersion": 14,
+  "schemaVersion": 15,
   "lane": "Roblox High School Integration Director",
   "owner": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-05T17:40:00Z",
+  "recordedAt": "2026-10-05T18:07:00Z",
   "result": "PASS_INTEGRATED_EXACT_HEAD",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-  "inputBaseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-  "integrationSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-  "milestone": "P1_CLASS_ACTIVITY_MODAL_IPHONE_SAFE_AREA_REPAIR",
-  "producerPr": 239,
-  "referenceClipTime": "P1 class/free-roam device gate; repair is geometry-only and certifies no rendered parity.",
+  "inputSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+  "inputBaseSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+  "integrationSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+  "milestone": "P1_CAFE_CARD_MOBILE_SAFE_AREA_REPAIR",
+  "producerPr": 245,
+  "referenceClipTime": "P1 mobile implemented-menu obstruction gate; geometry-only repair, no rendered parity claim.",
   "acceptanceCriteria": [
-    "Consume only PR239 head fdee2ca32017ec01d0d42c2142a57bb48e926140 on base 39911a193ba6e76379c52ce67cb60bbc912bf279.",
-    "Require independent QA authorization on that exact head.",
-    "Require Foundation, Class/Education and Progression PR guards green on that exact head.",
-    "Require merge to exact live canonical 4782aa655cd2d0340cc93ce7b8dd53604963f225 with no Integration-authored product edits.",
-    "Require all three push guards green on exact integrated canonical 4782aa before Smoke.",
+    "Consume only PR245 head effc2d760798f933709cfd0f8c85e547e9f47984 on base 4782aa655cd2d0340cc93ce7b8dd53604963f225.",
+    "Require independent QA authorization on the same exact head.",
+    "Require Foundation, Class/Education and Progression PR guards green on that head.",
+    "Require merge to exact live canonical c7d5e36ef7d1878af2db01db7331a58ba63d50c2 with no Integration-authored product edits.",
+    "Require all three push guards green on exact integrated canonical c7d5e36 before Smoke.",
     "Keep rendered/device/traversal/save-rejoin evidence pending for Smoke."
   ],
   "outputLocation": {
-    "product": "rebuild/high-school-foundation@4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "product": "rebuild/high-school-foundation@c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "producerPr": 239
+    "producerPr": 245
   },
   "blocker": "NONE_FOR_CLOUD_INTEGRATION; runtime/rendered/device/traversal/save-rejoin remain pending for Smoke.",
   "nextHandoff": "Roblox High School Integration Smoke",
   "preMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37349863471,
+      "runId": 37353294718,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140"
+      "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37349863498,
+      "runId": 37353294883,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140"
+      "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37349863470,
+      "runId": 37353294740,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140"
+      "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984"
     }
   ],
   "independentQa": {
-    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_CLASS_MODAL_SAFE_AREA_CONTRACT__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
-    "evidence": "PR239 review 5418408503",
-    "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
+    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_CAFE_CARD_SAFE_AREA_CONTRACT__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
+    "evidence": "PR245 review 5418699307",
+    "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
     "runtime": "NOT_RUNTIME_TESTED",
     "visual": "PENDING_RENDERED",
     "device": "STATIC_GEOMETRY_PASS__LIVE_DEVICE_PENDING"
@@ -62,24 +62,24 @@
   "postMergeExactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37350019975,
+      "runId": 37353456737,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37350019956,
+      "runId": 37353456762,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37350019941,
+      "runId": 37353456888,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     }
   ],
   "changedPaths": [
@@ -98,28 +98,29 @@
     "spawnClockLightingAuthorityChanged": false,
     "classAuthorityChanged": false,
     "progressionPersistenceAuthorityChanged": false,
+    "cafeEconomyAuthorityChanged": false,
     "retiredRuntimeConsumed": false,
     "spendingOrPublicationPerformed": false,
     "automationScheduleChanged": false
   },
   "nextSliceIntegrationSeams": {
     "reservedOwner": "Roblox High School Class & Education",
-    "activation": "Only after Smoke and deterministic Package consume exact canonical 4782aa and Control Tower releases the product slot.",
+    "activation": "Only after Smoke and deterministic Package consume exact canonical c7d5e36 and Control Tower releases the product slot.",
     "scope": "P2_CLASSROOM_FREE_ROAM",
-    "authorityBaseline": "PR239 changed only class modal responsive geometry/client binding/tests; server class/progression authorities are unchanged.",
+    "authorityBaseline": "PR245 changed only CafeCard responsive geometry/client binding/tests; server class/progression/cafe/economy authorities are unchanged.",
     "frozenSurfaces": [
-      "school/src/shared/ResponsiveHudLayout.lua class modal safe-area geometry",
-      "school/tests/responsive_hud_layout_spec.lua mutation-sensitive class modal coverage"
+      "school/src/shared/ResponsiveHudLayout.lua safe floating-card geometry",
+      "school/tests/responsive_hud_layout_spec.lua CafeCard mutation-sensitive coverage"
     ],
     "orderedHandoff": [
-      "Smoke rebinds the prepared exact-runtime plan to canonical 4782aa.",
+      "Smoke rebinds the prepared runtime plan to canonical c7d5e36.",
       "Release/Package recomputes deterministic tree identity and packages only after full Smoke PASS.",
-      "Control Tower reconciles P2 activation manifest to the packaged canonical before opening one producer."
+      "Control Tower reconciles the armed P2 activation manifest to the packaged canonical before opening one producer."
     ]
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "instruction": "Consume only exact canonical 4782aa. Rebind the existing runtime capture/runbook evidence to this SHA, keep rendered/device/traversal/save-rejoin pending unless actually executed, and stop on any canonical-head change."
+    "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "instruction": "Consume only exact canonical c7d5e36. Rebind runtime capture/runbook evidence to this SHA, keep rendered/device/traversal/save-rejoin pending unless actually executed, and stop on any canonical-head change."
   }
 }
