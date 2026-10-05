@@ -176,21 +176,28 @@ utilityRail.Size = UDim2.fromOffset(48, 14)
 utilityRail.BackgroundTransparency = 1
 utilityRail.Parent = gui
 
-local utilityLayout = Instance.new("UIListLayout")
+local utilityLayout = Instance.new("UIGridLayout")
 utilityLayout.FillDirection = Enum.FillDirection.Horizontal
+utilityLayout.FillDirectionMaxCells = 2
 utilityLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-utilityLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-utilityLayout.Padding = UDim.new(0, 3)
+utilityLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+utilityLayout.CellPadding = UDim2.fromOffset(3, 3)
+utilityLayout.CellSize = UDim2.fromOffset(20, 20)
+utilityLayout.SortOrder = Enum.SortOrder.LayoutOrder
 utilityLayout.Parent = utilityRail
 
 for index, color in ipairs({
-    Rhs2UiStyle.Palette.ProgressPurple,
-    Rhs2UiStyle.Palette.HeaderBlue,
     Rhs2UiStyle.Palette.AvatarCyan,
+    Rhs2UiStyle.Palette.TravelGold,
+    Color3.fromRGB(218, 113, 201),
+    Rhs2UiStyle.Palette.ProgressPurple,
+    Color3.fromRGB(139, 159, 186),
+    Rhs2UiStyle.Palette.ShopRed,
 }) do
     local slot = Instance.new("Frame")
     slot.Name = "UtilitySlot" .. tostring(index)
-    slot.Size = UDim2.fromOffset(12, 12)
+    slot.LayoutOrder = index
+    slot.Size = UDim2.fromOffset(20, 20)
     slot.BackgroundColor3 = color
     slot.Parent = utilityRail
     Rhs2UiStyle.applyQuickSlot(slot, color)
@@ -406,21 +413,19 @@ local function applyResponsiveHudLayout()
         end
     end
 
-    local utilitySize = math.max(10, math.floor((layout.rail.width - (layout.railGap * 2)) / 3))
-    local utilityY = layout.rail.bottom + layout.railGap
-    local utilityLimit = layout.quick.y - layout.railGap
+    local utilityGap = layout.railGap
+    local utilityTileSize = math.floor((layout.rail.width - utilityGap) / 2)
+    local utilityHeight = (utilityTileSize * 3) + (utilityGap * 2)
+    local utilityY = layout.rail.bottom + utilityGap
+    local utilityLimit = layout.quick.y - utilityGap
     for _, zone in ipairs(layout.exclusionZones or {}) do
-        utilityLimit = math.min(utilityLimit, zone.y - layout.railGap)
+        utilityLimit = math.min(utilityLimit, zone.y - utilityGap)
     end
     utilityRail.Position = UDim2.fromOffset(layout.rail.x, utilityY)
-    utilityRail.Size = UDim2.fromOffset(layout.rail.width, utilitySize)
-    utilityRail.Visible = utilityY + utilitySize <= utilityLimit
-    utilityLayout.Padding = UDim.new(0, layout.railGap)
-    for _, child in ipairs(utilityRail:GetChildren()) do
-        if child:IsA("Frame") and child.Name:match("^UtilitySlot") then
-            child.Size = UDim2.fromOffset(utilitySize, utilitySize)
-        end
-    end
+    utilityRail.Size = UDim2.fromOffset(layout.rail.width, utilityHeight)
+    utilityRail.Visible = utilityY + utilityHeight <= utilityLimit
+    utilityLayout.CellPadding = UDim2.fromOffset(utilityGap, utilityGap)
+    utilityLayout.CellSize = UDim2.fromOffset(utilityTileSize, utilityTileSize)
 
     quickLayout.Padding = UDim.new(0, layout.quickGap)
     for _, child in ipairs(quickBar:GetChildren()) do
