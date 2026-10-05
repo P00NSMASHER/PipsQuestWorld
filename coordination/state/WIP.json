@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 69,
+  "schemaVersion": 70,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T18:46:30Z",
+  "observedAt": "2026-10-05T18:49:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
@@ -15,20 +15,21 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": null,
+    "producerBranch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Roblox High School Class & Education",
-      "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "ARMED_PREP_ONLY__REBASED_TO_57AD515__PRODUCT_SLOT_BLOCKED_UNTIL_FULL_P1_SMOKE_AND_PACKAGE",
+      "owner": "Pip High Free Roam",
+      "scope": "P1_FEATURE_MODAL_HUD_CLEARANCE_REPAIR",
+      "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_LAYOUT_DEFECT",
       "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
       "pr": null,
-      "headSha": null
+      "headSha": null,
+      "defectId": "P1_FEATURE_MODAL_HUD_CLEARANCE"
     },
     "supersededCandidates": [
       {
@@ -43,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical 57ad515 + frozen support PR150 consume 2/3. P1 OutfitInputs repair is integrated. Do not open P2 product code until exact-canonical runtime Smoke PASS and deterministic 57ad515 Package complete.",
+    "rule": "WIP_CAP_3_FULL: exact canonical 57ad515 + frozen support PR150 + one narrow P1 feature-modal clearance repair reservation consume 3/3. No P2 producer may open until this repair clears CI/QA/Integration and full runtime Smoke/Package pass.",
     "recentlyIntegrated": {
       "pr": 252,
       "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
@@ -52,7 +53,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_REBOUND_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_ONLY_BLOCKER__P2_ARMED_57AD515__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_SOURCE_PROVEN_FEATURE_MODAL_HUD_CLEARANCE_DEFECT__NARROW_REPAIR_RESERVED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -110,17 +111,17 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "P1_SOURCE_REPAIR_COMPLETE__WAIT_RUNTIME_SMOKE__NO_PRODUCT_WRITE",
+      "mode": "SOLE_P1_REPAIR_RESERVED__FEATURE_MODAL_HUD_CLEARANCE",
       "base": "57ad515a5905d697417db688a1cc42d4452642b8",
-      "branch": null,
-      "candidatePr": 252,
-      "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
-      "latestOutput": "PR252 repaired OutfitInputs content/safe-area overflow and canonical internal-entry leakage, passed exact-head QA, and merged to canonical 57ad515; all three post-merge guards are green.",
-      "objective": "No further P1 product write unless runtime Smoke exposes a concrete defect. Keep P3-P6 readiness stable.",
+      "branch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "Static audit found the shared Shop/Travel feature-panel geometry overlaps HUD on reference desktop and iPhone. Desktop panel bounds ~174.5..734.5 x 57.96..425.04 overlap status starting x=728 and quick bar starting y=421. iPhone panel bounds 146..706 x 47.16..345.84 overlap status 627..745 x 18..88, quick bar 309..543 x 318..366, and both bottom touch exclusion zones. Reference Travel evidence shows status, right rail and bottom shortcuts remain visible around the panel.",
+      "objective": "Make the smallest responsive interaction-modal repair so Shop/Travel panels remain inside safe bounds, avoid status/rail/quick HUD and clear mobile movement/camera exclusion zones on desktop/iPhone/iPad fixtures. Preserve feature-panel controller, travel/server/shopping authority and observed close/back semantics.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "Concrete Smoke defect or later Control Tower activation.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "None; source defect is deterministic and cloud-fixable.",
+      "exit": "Changed exact product head with all three guards green.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
       "mode": "P1_REPAIR_QA_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
@@ -147,40 +148,40 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__REBOUND_TO_57AD515__DEVICE_OFFLINE",
+      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_FEATURE_MODAL_CLEARANCE_REPAIR",
       "base": "57ad515a5905d697417db688a1cc42d4452642b8",
       "candidatePr": 252,
       "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
-      "latestOutput": "PR254 rebounded Smoke receipt, runtime contract and execution plan to 57ad515 with Avatar/OutfitInputs + CafeCard + ClassActivityModal live checks.",
-      "objective": "When the authorized device is online, execute the exact 57ad515 runbook; do not promote headless evidence into runtime PASS.",
+      "latestOutput": "Exact 57ad515 runtime plan is ready, but static audit found Shop/Travel feature panels overlap HUD and mobile touch exclusion zones before runtime execution.",
+      "objective": "Do not consume laptop/runtime evidence on known-bad feature-panel geometry. Rebind only after the narrow repair passes QA and Integration.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "ONLINE_LAPTOP availability.",
-      "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
+      "dependency": "Feature-modal repair -> exact CI -> QA -> Integration.",
+      "exit": "Repaired integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_READY_57AD515__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+      "mode": "PREFLIGHT_STALE_ON_PENDING_FEATURE_MODAL_SOURCE_REPAIR__DO_NOT_PACKAGE_57AD515",
       "base": "57ad515a5905d697417db688a1cc42d4452642b8",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR255 merged deterministic package preflight for 57ad515: root tree 8e1e6acc, school tree 1faefa87, 72 entries, reserved artifact identity; package not emitted.",
-      "objective": "After exact-canonical Smoke PASS, reread canonical/Smoke and revalidate tree identities, then emit deterministic 57ad515 package. Preserve prior 4323049 package until then.",
+      "latestOutput": "PR255 package preflight is historical only because shared Shop/Travel modal geometry has a deterministic HUD/touch-zone overlap defect.",
+      "objective": "Do not package 57ad515. Recompute deterministic package identity after the narrow repair integrates and full Smoke passes.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
-      "exit": "Smoke PASS or canonical-head change.",
+      "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
+      "exit": "Full Smoke PASS on repaired canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA69_P1_SOURCE_STATIC_COMPLETE__SMOKE_LOCAL_ONLY_HOLD__P2_ARMED_57AD515__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA70_SOURCE_DEFECT_FOUND__SOLE_P1_FEATURE_MODAL_REPAIR_RESERVED",
       "base": "57ad515a5905d697417db688a1cc42d4452642b8",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR252 repair integrated; PR253 Integration, PR254 Smoke rebind, and PR255 Release preflight merged. P2 activation manifest rebased to 57ad515 with unchanged server authorities.",
-      "objective": "Keep product WIP at 2/3. Execute exact-canonical runtime Smoke when device is available, then package 57ad515 and release exactly one P2 producer.",
+      "latestOutput": "Static audit caught P1_FEATURE_MODAL_HUD_CLEARANCE before laptop use: shared Shop/Travel panel overlaps status/quick on desktop and status/quick/touch zones on iPhone.",
+      "objective": "Run one narrow cloud-fixable feature-modal clearance repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Integration Smoke runtime/device evidence.",
-      "exit": "P1 Smoke PASS/defect, Package, canonical change, or local-device availability change.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Free Roam repair.",
+      "exit": "Changed repair head or concrete new defect.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -363,22 +364,23 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "P1_RUNTIME_ACCEPTANCE_ON_OUTFIT_REPAIRED_CANONICAL",
-    "owner": "Roblox High School Integration Smoke",
+    "id": "P1_FEATURE_MODAL_HUD_CLEARANCE",
+    "owner": "Pip High Free Roam",
     "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
-    "evidence": "PR252 OutfitInputs source repair passed QA and integrated; PR254 rebound Smoke; PR255 pins package preflight.",
+    "referenceClipTime": "C@00:05 Travel panel with right rail, top-right status and bottom shortcuts visible",
+    "evidence": "Current shared panel uses Size 0.82x0.76 with UISizeConstraint max 560x390 at screen center. Desktop actual 560x367.08 overlaps status by ~6.5px horizontally/19px vertically and quick bar by ~4px. iPhone actual 560x298.68 overlaps status, quick bar, and both touch exclusion zones.",
     "acceptanceCriteria": [
-      "Rendered comparable-FOV captures on desktop/iPhone/iPad",
-      "Physical spawn/entrance/atrium/corridor/stair traversal",
-      "Live Shop/Travel/Avatar/House/Housing Editor interaction",
-      "Live OutfitInputs full-content/safe-area interaction with internal entry hidden",
-      "Live ClassActivityModal interaction and safe-area containment",
-      "Live CafeCard interaction and right touch-zone clearance",
-      "Save/rejoin restoration on exact canonical"
+      "Shop/Travel panels contained in safe bounds on desktop 909x483, iPhone 852x393 and iPad 1024x768",
+      "No overlap with status, rail or quick HUD groups",
+      "No overlap with mobile movement/camera exclusion zones",
+      "Explicit close/back and one-active-panel controller semantics preserved",
+      "Travel/shopping/class/server authorities unchanged",
+      "Mutation-sensitive tests reject old desktop/iPhone overlap geometry",
+      "All three exact-head guards green before QA"
     ],
-    "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING",
-    "blocker": "LOCAL_ONLY_REQUIRED runtime/device evidence",
-    "nextHandoff": "Roblox High School Integration Smoke"
+    "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
+    "blocker": null,
+    "nextHandoff": "Pip High Free Roam -> QA"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
