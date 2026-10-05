@@ -37,7 +37,7 @@
     "Use only the exact canonical SHA handed off by protected Integration after same-SHA QA approval.",
     "Capture all four A checkpoints on desktop, iPhone landscape, and iPad landscape with viewport, safe insets, FOV, and camera transform.",
     "Exercise spawn through entrance, atrium, corridor, stairs, class/free roam, implemented feature panels, CafeCard, ClassActivityModal, and save/rejoin.",
-    "Record control bounds for Shop, Travel, Avatar, House, Housing Editor, CafeCard and ClassActivityModal on iPhone and iPad.",
+    "Record rendered/device evidence for Shop, Travel, Avatar, House, Housing Editor, ClassActivityModal and CafeCard.",
     "Never classify static, compiler, headless, or source-inspection evidence as rendered/device PASS."
   ],
   "outputLocation": "coordination/smoke/runtime-evidence/<integrated-canonical-sha>/capture-receipt.json",
@@ -256,6 +256,16 @@
     },
     {
       "id": "housing_editor",
+      "status": "PENDING",
+      "evidence": null
+    },
+    {
+      "id": "class_activity_modal",
+      "status": "PENDING",
+      "evidence": null
+    },
+    {
+      "id": "cafe",
       "status": "PENDING",
       "evidence": null
     }
