@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 62,
+  "schemaVersion": 63,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:28:00Z",
+  "observedAt": "2026-10-05T17:31:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -25,10 +25,12 @@
     "nextProducerReservation": {
       "owner": "Roblox High School Class & Education",
       "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "PREP_READY__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
+      "status": "ACTIVATION_MANIFEST_ARMED__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "pr": null,
-      "headSha": null
+      "headSha": null,
+      "activationManifest": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
+      "activationManifestPr": 236
     },
     "supersededCandidates": [
       {
@@ -52,7 +54,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__LOCAL_EXECUTION_PLAN_READY__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ACTIVATION_ARMED__P3_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -74,15 +76,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ClassEducation": {
-      "mode": "P2_EVIDENCE_PREP_COMPLETE__WAIT_P1_PACKAGE__NO_PRODUCT_WRITE",
+      "mode": "P2_ACTIVATION_MANIFEST_ARMED__WAIT_P1_PACKAGE__NO_PRODUCT_WRITE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR227 merged: classroom_free_roam_p2_contract_39911a.json binds verified activity transitions to unchanged ClassSessionController/ClassEducation/ClassProgression seams.",
-      "objective": "Hold the prepared P2 contract stable. Do not open product code until P1 full runtime Smoke and deterministic Package release the producer slot.",
+      "latestOutput": "PR236 merged coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json with exact activation gates, authority freeze, deterministic tests and QA runtime checkpoints.",
+      "objective": "Hold the P2 activation manifest stable. Open exactly one product producer only after P1 full runtime Smoke and deterministic Package satisfy every activation condition.",
       "owned": "class/session/activity authority",
       "dependency": "P1 runtime Smoke -> Release/Package.",
-      "exit": "P1 Package completes or a material reference/authority change invalidates the prep contract.",
+      "exit": "P1 Package completes or activation manifest becomes stale due to canonical/authority change.",
       "handoff": "Roblox High School Control Tower"
     },
     "ContentQA": {
@@ -171,12 +173,12 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA62_P1_RUNTIME_SMOKE_ONLY_BLOCKER__LOCAL_RUNBOOK_READY__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA63_P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ACTIVATION_ARMED__P3_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR234 local Smoke execution plan merged; P2-P6 prep and 39911a Release preflight already ready. Historical PR176 is now superseded by PR232 and closed; only PR150 and PR200 remain open as intentional reference evidence.",
-      "objective": "Keep product WIP at 2/3, preserve all prepared slices, and release exactly one producer only after P1 full runtime Smoke and deterministic Package.",
+      "latestOutput": "PR236 armed the P2 producer activation manifest without creating a product branch. Local Smoke runbook PR234, Release preflight PR230, P2 prep PR227/228 and P3-P6 readiness PR232 are all merged.",
+      "objective": "When P1 full runtime Smoke and deterministic Package pass, validate the armed P2 conditions and create exactly one Class & Education producer from the certified packaged canonical. Until then keep product WIP at 2/3.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
       "exit": "P1 Smoke PASS/defect, Package, canonical change, or local-device availability change.",
@@ -1036,5 +1038,12 @@
     "artifact": "coordination/smoke/PR214_39911A_LOCAL_SMOKE_EXECUTION_PLAN.json",
     "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
     "status": "READY__WAIT_ONLINE_LAPTOP"
+  },
+  "p2ActivationManifest": {
+    "mergedPr": 236,
+    "artifact": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
+    "expectedBaseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "ARMED_PREP_ONLY__NOT_ACTIVATED",
+    "proposedProducerBranch": "rebuild/high-school-classroom-free-roam-39911a-v1"
   }
 }
