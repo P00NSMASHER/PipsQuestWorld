@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "currentBlockers": [
@@ -16,16 +16,16 @@
       "id": "P1_UI_POLISH_EXACT_HEAD_CI",
       "owner": "Pip High Free Roam / UI Visual Parity",
       "type": "CI_PENDING",
-      "exactSha": "fded42b6b6df4191382055f13c068fa7e61a7295",
-      "status": "ALL_THREE_PR_GUARDS_QUEUED__PREAUDIT_PASS",
-      "evidence": "PR274 current exact head fded; independent pre-audit review 5420596461.",
-      "reason": "Final exact-head QA waits for all three PR guards."
+      "exactSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935",
+      "status": "ALL_THREE_PR_GUARDS_QUEUED__REFERENCE_HIERARCHY_ALIGNED",
+      "evidence": "PR274 exact head 4b437; six-tile utility-grid reference correction complete.",
+      "reason": "Independent exact-head QA waits for all three PR guards."
     },
     {
       "id": "P1_UI_POLISH_MERGE_ORDER",
       "owner": "Roblox High School Control Tower",
       "type": "PIPELINE_ORDER",
-      "exactSha": "fded42b6b6df4191382055f13c068fa7e61a7295",
+      "exactSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935",
       "status": "CI_QA_ALLOWED__MERGE_BLOCKED_BEHIND_VEHICLE_INTEGRATION",
       "reason": "PR274 must not merge before predecessor vehicle Integration is certified."
     },
@@ -38,9 +38,9 @@
       "reason": "Final rendered/device/traversal/save-rejoin evidence belongs on the UI-polished canonical."
     }
   ],
-  "gateStatus": "PR274_FDED_REFERENCE_ALIGNED__CI_QUEUED__VEHICLE_FOUNDATION_ATTEMPT6__FINAL_SMOKE_DEFERRED",
-  "nextProducer": "NONE__PR274_FDED_IS_SOLE_ACTIVE_PRODUCT_PRODUCER",
-  "nextObjective": "LET_FDED_CI_SETTLE__QA_FDED__CERTIFY_PREDECESSOR_INTEGRATION__THEN_PROTECTED_UI_MERGE",
+  "gateStatus": "PR274_4B437_REFERENCE_HIERARCHY_ALIGNED__CI_QUEUED__VEHICLE_FOUNDATION_ATTEMPT6__FINAL_SMOKE_DEFERRED",
+  "nextProducer": "NONE__PR274_4B437_IS_SOLE_ACTIVE_PRODUCT_PRODUCER",
+  "nextObjective": "LET_4B437_CI_SETTLE__QA_4B437__CERTIFY_PREDECESSOR_INTEGRATION__THEN_PROTECTED_UI_MERGE",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
