@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 59,
+  "schemaVersion": 60,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T16:51:00Z",
+  "observedAt": "2026-10-05T17:20:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -52,7 +52,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_PR214_INTEGRATED__CLOUD_SAFE_GREEN__RUNTIME_SMOKE_LOCAL_ONLY_REQUIRED__PACKAGE_BLOCKED",
+  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_PREP_READY__RELEASE_PREFLIGHT_READY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -159,24 +159,24 @@
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "BLOCKED__WAIT_FULL_P1_RUNTIME_SMOKE_PASS",
+      "mode": "PREFLIGHT_READY__BLOCKED_ON_FULL_P1_RUNTIME_SMOKE_PASS",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "Prior deterministic package 4323049 preserved; current canonical 39911a is not package-eligible because PR225 Smoke is HOLD_LOCAL_ONLY_REQUIRED.",
-      "objective": "Do not package 39911a until Smoke reaches full PASS on this exact canonical. Preserve prior package.",
+      "latestOutput": "PR230 merged package readiness for canonical 39911a: root tree 24719f12, school tree 56e8089f, 72 entries, reserved deterministic artifact identity; package not emitted.",
+      "objective": "When exact-canonical Smoke reaches full PASS, reread canonical and Smoke, revalidate root/school tree identities, then emit the deterministic 39911a package checkpoint immediately. Until then preserve the prior 4323049 package.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
       "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
-      "exit": "Smoke PASS.",
+      "exit": "Smoke PASS or canonical-head change.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA59_P1_RUNTIME_SMOKE_OFFLINE_HOLD__P2_PREP_READY",
+      "mode": "SCHEMA60_P1_RUNTIME_SMOKE_OFFLINE_HOLD__P2_PREP_READY__RELEASE_PREFLIGHT_READY",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "P2 Class/Education prep PR227 and Progression/Mobile seam PR228 merged; Content QA temporal/reference evidence is already sufficient. PAAM-L044 is offline, so P1 exact-canonical runtime Smoke remains LOCAL_ONLY_REQUIRED.",
-      "objective": "Keep product WIP at 2/3, preserve P2 prep as ready, and release exactly one P2 producer only after P1 full runtime Smoke and deterministic Package complete.",
+      "latestOutput": "P2 prep PR227/228 merged, Release preflight PR230 merged, and stale historical coordination PRs 202/203/206/208/222 closed. PAAM-L044 remains offline; P1 runtime Smoke is the only blocking gate.",
+      "objective": "Keep product WIP at 2/3, preserve P2 prep and 39911a Release preflight, and release exactly one P2 producer only after full P1 runtime Smoke and deterministic Package complete.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
       "exit": "P1 Smoke PASS/defect, P1 Package, canonical change, or local device availability change.",
@@ -227,7 +227,7 @@
   },
   "packageResult": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PRIOR_PACKAGE_PRESERVED__CURRENT_39911A_INELIGIBLE",
+    "status": "PRIOR_PACKAGE_PRESERVED__39911A_PREFLIGHT_READY__CURRENT_39911A_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
     "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
@@ -236,11 +236,19 @@
     "recursiveTreeTruncated": false,
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "currentCanonical": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "currentCanonicalEligibility": "BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+    "currentCanonicalEligibility": "PREFLIGHT_READY__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
     "robloxPublished": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE"
-    ]
+    ],
+    "reservedCurrentArtifact": "pip-high-school-39911a-source-tree-56e8089f",
+    "reservedCurrentArtifactId": "39911a193ba6e76379c52ce67cb60bbc912bf279:56e8089f33e0500b48018eacc653b63120ff01c2",
+    "reservedCurrentSchoolTreeGitSha": "56e8089f33e0500b48018eacc653b63120ff01c2",
+    "reservedCurrentRootCommitTreeSha": "24719f12e78ff0773886a5fd01512d8d312a16d7",
+    "reservedCurrentEntryCount": 72,
+    "reservedCurrentTreeTruncated": false,
+    "preflight": "coordination/release-packages/pip-high-school-39911a-package-readiness-v1.json",
+    "preflightPr": 230
   },
   "branchReadiness": {
     "canonical": {
@@ -283,7 +291,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__PREP_READY__ACTIVATE_AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
+  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__PREP_READY__ACTIVATE_IMMEDIATELY_AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
   "candidateExactHeadCi": {
     "pr": 214,
     "headSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
@@ -1001,5 +1009,20 @@
     "PR214_CLASS_ACTIVITY_TEMPORAL_TRANSITIONS_PR219",
     "PR214_MOBILE_AUX_PANEL_SAFE_BOUNDS_DEFECT_PINNED_PR220",
     "PR214_RUNTIME_CAPTURE_CONTRACT_AND_FALSE_PASS_GUARD_PR221"
-  ]
+  ],
+  "cleanup": {
+    "closedHistoricalCoordinationPrs": [
+      202,
+      203,
+      206,
+      208,
+      222
+    ],
+    "retainedReferencePrs": [
+      150,
+      176,
+      200
+    ],
+    "reason": "Close stale/superseded coordination gates while preserving still-useful durable reference/source evidence."
+  }
 }
