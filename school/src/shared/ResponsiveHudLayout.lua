@@ -176,6 +176,48 @@ function ResponsiveHudLayout.computeAuxiliaryPanels(layout)
     }
 end
 
+function ResponsiveHudLayout.computeCenteredModal(layout, baseSize)
+    assert(type(layout) == "table" and layout.safe and layout.viewport, "complete HUD layout required")
+    assert(type(baseSize) == "table", "baseSize table required")
+    local baseWidth = assert(tonumber(baseSize.width), "modal width required")
+    local baseHeight = assert(tonumber(baseSize.height), "modal height required")
+    assert(baseWidth > 0 and baseHeight > 0, "modal dimensions must be positive")
+
+    local safe = layout.safe
+    local viewport = layout.viewport
+    local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
+    local availableWidth = safe.width - (gap * 2)
+    local availableHeight = safe.height - (gap * 2)
+    assert(availableWidth > 0 and availableHeight > 0, "no safe room for centered modal")
+
+    local scale = math.min(1, availableWidth / baseWidth, availableHeight / baseHeight)
+    assert(scale > 0, "centered modal scale must be positive")
+
+    local width = baseWidth * scale
+    local height = baseHeight * scale
+    local modal = rect(
+        safe.x + ((safe.width - width) / 2),
+        safe.y + ((safe.height - height) / 2),
+        width,
+        height
+    )
+    modal.scale = scale
+    modal.gap = gap
+    modal.baseWidth = baseWidth
+    modal.baseHeight = baseHeight
+    return modal
+end
+
+function ResponsiveHudLayout.validateCenteredModal(layout, modal)
+    if not modal or not modal.scale or modal.scale <= 0 or modal.scale > 1 then
+        return false, "centered modal has invalid scale"
+    end
+    if not ResponsiveHudLayout.contains(layout.safe, modal) then
+        return false, "centered modal leaves safe bounds"
+    end
+    return true
+end
+
 function ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
     for _, pair in ipairs({
         { name = "house panel", value = auxiliary.house },
