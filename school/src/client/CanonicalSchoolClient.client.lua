@@ -1650,11 +1650,14 @@ houseTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 houseTitle.BorderSizePixel = 0
 houseTitle.Size = UDim2.new(0.78, 0, 0, 28)
 houseTitle.Font = Rhs2UiStyle.Font.Bold
-houseTitle.Text = "  House"
+houseTitle.Text = "House"
 houseTitle.TextColor3 = Rhs2UiStyle.Palette.White
 houseTitle.TextSize = 15
 houseTitle.TextXAlignment = Enum.TextXAlignment.Left
 houseTitle.Parent = housePanel
+local houseTitlePadding = Instance.new("UIPadding")
+houseTitlePadding.PaddingLeft = UDim.new(0, 8)
+houseTitlePadding.Parent = houseTitle
 Rhs2UiStyle.applyHeader(houseTitle)
 
 local houseHeaderTail = Instance.new("Frame")
