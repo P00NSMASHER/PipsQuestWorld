@@ -218,6 +218,81 @@ function ResponsiveHudLayout.validateCenteredModal(layout, modal)
     return true
 end
 
+-- Feature modals such as Travel and Shop preserve the compact HUD around them.
+-- On touch devices the modal also stays in the central corridor between the
+-- left movement and right camera/action exclusion regions.
+function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
+    assert(type(layout) == "table" and layout.safe and layout.viewport and layout.status and layout.rail and layout.quick, "complete HUD layout required")
+    assert(type(baseSize) == "table", "baseSize table required")
+    local baseWidth = assert(tonumber(baseSize.width), "modal width required")
+    local baseHeight = assert(tonumber(baseSize.height), "modal height required")
+    assert(baseWidth > 0 and baseHeight > 0, "modal dimensions must be positive")
+
+    local safe = layout.safe
+    local viewport = layout.viewport
+    local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
+    local leftLimit = safe.x + gap
+    local rightLimit = math.min(layout.status.x, layout.rail.x) - gap
+    local topLimit = safe.y + gap
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+    local centerX = safe.x + (safe.width / 2)
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        if zone.right <= centerX then
+            leftLimit = math.max(leftLimit, zone.right)
+        elseif zone.x >= centerX then
+            rightLimit = math.min(rightLimit, zone.x)
+        else
+            bottomLimit = math.min(bottomLimit, zone.y - gap)
+        end
+    end
+
+    local availableWidth = rightLimit - leftLimit
+    local availableHeight = bottomLimit - topLimit
+    assert(availableWidth > 0 and availableHeight > 0, "no safe room for interaction modal")
+
+    local scale = math.min(1, availableWidth / baseWidth, availableHeight / baseHeight)
+    assert(scale > 0, "interaction modal scale must be positive")
+
+    local width = baseWidth * scale
+    local height = baseHeight * scale
+    local modal = rect(
+        leftLimit + ((availableWidth - width) / 2),
+        topLimit + ((availableHeight - height) / 2),
+        width,
+        height
+    )
+    modal.scale = scale
+    modal.gap = gap
+    modal.baseWidth = baseWidth
+    modal.baseHeight = baseHeight
+    return modal
+end
+
+function ResponsiveHudLayout.validateInteractionModal(layout, modal)
+    if not modal or not modal.scale or modal.scale <= 0 or modal.scale > 1 then
+        return false, "interaction modal has invalid scale"
+    end
+    if not ResponsiveHudLayout.contains(layout.safe, modal) then
+        return false, "interaction modal leaves safe bounds"
+    end
+    for _, pair in ipairs({
+        { name = "status", value = layout.status },
+        { name = "rail", value = layout.rail },
+        { name = "quick", value = layout.quick },
+    }) do
+        if ResponsiveHudLayout.overlaps(modal, pair.value) then
+            return false, "interaction modal overlaps " .. pair.name
+        end
+    end
+    for index, zone in ipairs(layout.exclusionZones or {}) do
+        if ResponsiveHudLayout.overlaps(modal, zone) then
+            return false, "interaction modal overlaps exclusion zone " .. tostring(index)
+        end
+    end
+    return true
+end
+
 -- Compact contextual cards such as the Cafe job surface stay inside the
 -- navigation-safe region left of the status/rail and above quick/touch zones.
 function ResponsiveHudLayout.computeSafeFloatingCard(layout, baseSize)

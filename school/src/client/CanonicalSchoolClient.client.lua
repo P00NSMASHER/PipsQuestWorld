@@ -210,6 +210,10 @@ local modal
 local modalScale
 local outfitPanel = legacyOutfitSurface.panel
 local outfitPanelScale = legacyOutfitSurface.panelScale
+local shopPanel
+local shopPanelScale
+local travelPanel
+local travelPanelScale
 local cafeCard
 local cafeCardScale
 
@@ -276,6 +280,15 @@ local function applyResponsiveHudLayout()
         warn("Outfit modal layout rejected: " .. tostring(outfitModalReason))
         return
     end
+    local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {
+        width = 560,
+        height = 390,
+    })
+    local featureModalValid, featureModalReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)
+    if not featureModalValid then
+        warn("Feature modal layout rejected: " .. tostring(featureModalReason))
+        return
+    end
     local cafeCardLayout = ResponsiveHudLayout.computeSafeFloatingCard(layout, {
         width = 260,
         height = 150,
@@ -302,6 +315,15 @@ local function applyResponsiveHudLayout()
     if outfitPanel and outfitPanelScale then
         outfitPanel.Position = UDim2.fromOffset(outfitModalLayout.x, outfitModalLayout.y)
         outfitPanelScale.Scale = outfitModalLayout.scale
+    end
+
+    if shopPanel and shopPanelScale then
+        shopPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)
+        shopPanelScale.Scale = featureModalLayout.scale
+    end
+    if travelPanel and travelPanelScale then
+        travelPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)
+        travelPanelScale.Scale = featureModalLayout.scale
     end
 
     if cafeCard and cafeCardScale then
@@ -628,20 +650,19 @@ end
 local function makeFeaturePanel(name, heading)
     local panel = Instance.new("Frame")
     panel.Name = name
-    panel.AnchorPoint = Vector2.new(0.5, 0.5)
-    panel.Position = UDim2.fromScale(0.5, 0.5)
-    panel.Size = UDim2.new(0.82, 0, 0.76, 0)
+    panel.AnchorPoint = Vector2.new(0, 0)
+    panel.Position = UDim2.fromOffset(0, 0)
+    panel.Size = UDim2.fromOffset(560, 390)
     panel.BackgroundColor3 = LEGACY_PANEL
     panel.BackgroundTransparency = 0.02
     panel.Visible = false
     panel.Parent = gui
+    local panelScale = Instance.new("UIScale")
+    panelScale.Name = "ResponsiveScale"
+    panelScale.Scale = 1
+    panelScale.Parent = panel
     round(panel, 4)
     outline(panel, 2)
-
-    local panelConstraint = Instance.new("UISizeConstraint")
-    panelConstraint.MinSize = Vector2.new(286, 250)
-    panelConstraint.MaxSize = Vector2.new(560, 390)
-    panelConstraint.Parent = panel
 
     local header = Instance.new("TextLabel")
     header.Name = "Heading"
@@ -695,10 +716,11 @@ local function makeFeaturePanel(name, heading)
         featurePanels:close("explicit_back")
     end)
 
-    return panel, body
+    return panel, body, panelScale
 end
 
-local shopPanel, shopBody = makeFeaturePanel("VerifiedStyleShopPanel", "STYLE SHOP")
+local shopBody
+shopPanel, shopBody, shopPanelScale = makeFeaturePanel("VerifiedStyleShopPanel", "STYLE SHOP")
 shopPanel:SetAttribute("CatalogAuthority", "server-only")
 
 local shopBrowse = Instance.new("TextLabel")
@@ -728,8 +750,10 @@ shopDetails.Parent = shopBody
 round(shopDetails, 2)
 outline(shopDetails, 1)
 
-local travelPanel, travelBody = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
+local travelBody
+travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")
 travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")
+applyResponsiveHudLayout()
 
 local travelPrompt = Instance.new("TextLabel")
 travelPrompt.Name = "Prompt"
