@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 55,
+  "schemaVersion": 56,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-04T23:13:13Z",
+  "observedAt": "2026-10-04T23:57:23Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "guards": "PASS_EXACT_HEAD_PUSH__FOUNDATION_37225838208__CLASS_37225838207__PROGRESSION_37225838221"
+    "sha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "guards": "TREE_EQUALS_AB8DFA8__CANDIDATE_PR_GUARDS_GREEN__POST_MERGE_PUSH_GUARD_EVIDENCE_UNOBSERVED"
   },
   "target": {
     "universeId": "10768955678",
@@ -15,20 +15,20 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 3,
-    "producerPr": 188,
-    "producerSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-    "producerBranch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
+    "countIncludingBase": 2,
+    "producerPr": null,
+    "producerSha": null,
+    "producerBranch": null,
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
-      "scope": "P1_SPAWN_SCHOOL_HUD",
-      "status": "REPAIRED_CHANGED_HEAD_GREEN__FROZEN_FOR_INDEPENDENT_QA__NO_SECOND_PRODUCER",
-      "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "pr": 188,
-      "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3"
+      "scope": "P1_INTERACTION_REPAIR_ON_INTEGRATED_SPAWN_SCHOOL_HUD",
+      "status": "RESERVED_SINGLE_PRODUCER_SLOT__FRESH_CANONICAL_DESCENDANT_REQUIRED__NO_SECOND_PRODUCER",
+      "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "pr": null,
+      "headSha": null
     },
     "supersededCandidates": [
       {
@@ -43,147 +43,144 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_FULL: canonical + frozen support PR150 + sole producer PR188. Exact changed head 3cde55e is one commit ahead of 728d62b, modifies only CampusBuilder.server.lua and foundation_world_contract_spec.lua for the stair-flight repair, and has all three exact-head guards green. Product writes freeze while independent QA reviews this exact SHA; Integration remains unauthorized.",
+    "rule": "WIP_CAP_3_AVAILABLE_ONE_SLOT: exact canonical 5fd5c05 + frozen support PR150 consume 2/3. PR188 is integrated and no longer WIP. Exactly one fresh Free Roam producer may repair PR188_MENU_INTERACTION_FLOW_GAP from canonical 5fd5c05; every other lane remains evidence/readiness only.",
     "recentlyIntegrated": {
-      "pr": 170,
-      "candidateSha": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
-      "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "mergedAt": "2026-10-04T18:48:17Z",
-      "status": "INTEGRATED__FORMAL_QA_PASS__ALL_THREE_EXACT_PUSH_GUARDS_PASS__SMOKE_NEXT"
+      "pr": 188,
+      "candidateSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+      "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mergedAt": "2026-10-04T23:47:08Z",
+      "status": "MERGED_TREE_EQUIVALENT__NO_SAME_SHA_QA_AUTHORIZATION__SMOKE_HOLD_PR212__PACKAGE_BLOCKED"
     }
   },
-  "currentMilestone": "P1_PR188_3CDE55E_REPAIR_GREEN__INDEPENDENT_QA_PENDING",
+  "currentMilestone": "P1_CANONICAL_5FD5C05__INTERACTION_REPAIR_REQUIRED__SMOKE_HOLD__PACKAGE_BLOCKED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
-    "verifiedAt": "2026-10-04T23:13:13Z",
+    "verifiedAt": "2026-10-04T23:57:23Z",
     "status": "PASS_CARRY_FORWARD__TEN_EXISTING_TASKS_ENABLED__NAMES_AND_SCHEDULES_UNCHANGED__NO_MUTATION",
     "mutation": "NONE"
   },
   "directives": {
     "Foundation": {
-      "mode": "REPAIRED_HEAD_AUDITED__WAIT_INDEPENDENT_QA",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "branch": "coordination/foundation-pr188-728d62b-world-gap-v1",
-      "latestOutput": "PR207 merged at 2f3675c79c8fbec15d1a0b601395ae672456cd97; exact 3cde55e authority/geometry audit",
-      "objective": "Preserve the exact 3cde55e authority PASS and bounded stair-repair audit. Do not duplicate product work; re-audit only a future changed head or concrete QA defect.",
+      "mode": "POST_INTEGRATION_AUTHORITY_WATCH__NO_PRODUCT_WRITE",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR207 merged at 2f3675c; authority/stair repair audit remains applicable to the integrated tree",
+      "objective": "Preserve one world/clock/spawn/environment authority on 5fd5c05; inspect only a future interaction-repair head for authority drift.",
       "owned": "world/clock/location/spawn/environment authority",
-      "dependency": "Independent QA verdict on exact 3cde55e.",
-      "exit": "Exact-head QA verdict or a new authority defect.",
+      "dependency": "Fresh sole-producer interaction repair head from canonical 5fd5c05.",
+      "exit": "Changed repair head or concrete authority defect.",
       "handoff": "Roblox High School QA & Contract"
     },
     "ClassEducation": {
-      "mode": "EVIDENCE_PREP__PR202_OPEN",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "PR202 open at 6a471ba24a80bbc1b96fbfeccb609970b5cb605d; exact 3cde55e Class guard 37242078873 succeeded",
-      "objective": "Preserve the A@01:05-01:45/B@00:05/01:05 activity state contract and existing single class/session/progression authorities. No classroom product work before P1.",
+      "mode": "EVIDENCE_PREP__PR202_OPEN__NO_PRODUCT_WRITE",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR202 open at 6a471ba; activity-state contract preserved",
+      "objective": "Preserve A@01:05-01:45/B@00:05/01:05 activity contract and unique class/session authority; do not start classroom product work before the integrated P1 interaction repair completes the pipeline.",
       "owned": "class/session/activity authority",
-      "dependency": "P1 exact 3cde55e completes QA -> Integration -> Smoke -> Package.",
-      "exit": "Control Tower activates the next classroom producer or materially new evidence appears.",
+      "dependency": "P1 interaction repair -> exact CI -> QA -> Integration -> Smoke -> Package.",
+      "exit": "Control Tower activates P2 after compliant P1 package.",
       "handoff": "Roblox High School QA & Contract"
     },
     "ContentQA": {
-      "mode": "REFERENCE_OWNER__PR200_BOUND_728D62B__ACCESS_CURRENT",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "PR200 open at b40d677c3c821da3400e0b31ce1ccef4a080269e remains bound to prior 728d62b; durable A/B/C hashes remain current",
-      "objective": "Preserve exact A/B/C hashes, timestamp ledger and 2x caution. Refresh candidate linkage only if lane policy requires it; raw videos remain uncommitted and access is not a pipeline blocker.",
+      "mode": "REFERENCE_OWNER__ACCESS_CURRENT__CANDIDATE_LINKAGE_STALE",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR200 remains open with durable A/B/C byte hashes; raw references remain accessible",
+      "objective": "Preserve A/B/C hashes, timestamp ledger and 2x caution; refresh lineage only for the future repair head if materially required.",
       "owned": "authorized reference fixtures, metadata, provenance and deterministic validators",
-      "dependency": "Rendered/runtime/device comparison remains QA/Smoke work, not an access blocker.",
-      "exit": "Merge PR200 through Content QA policy or refresh only after material reference/candidate change.",
+      "dependency": "None for shared reference access; rendered/runtime comparison remains QA/Smoke work.",
+      "exit": "Material reference change or changed candidate requiring linkage.",
       "handoff": "Roblox High School QA & Contract"
     },
     "ProgressionMobile": {
-      "mode": "EXACT_3CDE55E_PROGRESS_GUARD_GREEN__RENDERED_PENDING",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "PR196 open at 3cd5f9dcc61fa06fd50f431c32ce0dd1a963601f is historical for 3aad19e; exact 3cde55e Progression guard 37242078844 succeeded",
-      "objective": "Do not duplicate the stair repair. Preserve authority continuity and await independent QA; keep rendered iPhone/iPad evidence pending.",
+      "mode": "AUTHORITY_CONTINUITY_PREP__RENDERED_PENDING",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR208 merged evidence and ab8dfa8 Progression pull-request guard 37244424662 succeeded",
+      "objective": "Protect read-only client state, server economy/persistence authority, responsive HUD and no automatic spend on the future repair head.",
       "owned": "durable progression/economy/ownership/mobile read-only state",
-      "dependency": "Independent exact-head QA and later rendered target-device execution.",
-      "exit": "Exact-head QA verdict or exact rendered device evidence.",
+      "dependency": "Fresh single-producer interaction repair head.",
+      "exit": "Changed head or exact rendered device evidence.",
       "handoff": "Roblox High School QA & Contract"
     },
     "FreeRoam": {
-      "mode": "REPAIR_COMPLETE__EXACT_HEAD_FROZEN_FOR_INDEPENDENT_QA",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "PR188 open/mergeable at exact 3cde55e; one-commit repair from 728d62b touches only CampusBuilder.server.lua and foundation_world_contract_spec.lua; all three guards green",
-      "objective": "Freeze product writes. The stair-flight rails/bands and distinct static contract are present; await independent QA on exact 3cde55e and repair only a concrete same-head defect.",
-      "owned": "reference-matched spawn -> entrance -> atrium/corridor + compact recurring HUD only",
-      "dependency": "Independent QA has not yet reviewed exact 3cde55e.",
-      "exit": "Independent exact-head QA verdict.",
+      "mode": "SOLE_PRODUCER_RESERVED__FRESH_BRANCH_REQUIRED",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "branch": null,
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR188 merged at candidate ab8dfa8 into canonical 5fd5c05; interaction source defect remains",
+      "objective": "Create one fresh branch from exact canonical 5fd5c05 and repair only PR188_MENU_INTERACTION_FLOW_GAP: one active feature-panel controller, explicit close/back, repeat-open idempotency, denial/respawn restoration and deterministic desktop/touch coverage while preserving responsive HUD and all server authorities.",
+      "owned": "bounded P1 interaction repair on integrated spawn/entrance/atrium/corridor + compact HUD baseline",
+      "dependency": "None; one WIP slot is reserved to this lane.",
+      "exit": "Changed exact head with all three guards green.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "CHANGED_HEAD_READY__INDEPENDENT_EXACT_HEAD_REVIEW_REQUIRED",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "branch": "coordination/qa-pr188-exact-head-728d62b-v1",
-      "latestOutput": "PR203/review 5408581109 is bound to prior 728d62b and is stale for current 3cde55e",
-      "objective": "Review exact 3cde55e now: verify the two-file stair-flight repair, all three green guards, source-contract names/clearance, and keep comparable-FOV/rendered/traversal/device states separate.",
+      "mode": "WAIT_CHANGED_REPAIR_HEAD__PRIOR_SOURCE_FAIL_PRESERVED",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR188 review 5408709183 on 3cde55e: world/HUD static PASS, interaction source FAIL, rendered/traversal/device HOLD",
+      "objective": "Review only the future exact repair head. Require the interaction controller contract, preserved world/HUD repairs and all three exact-head guards; keep rendered/device/traversal evidence separate.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "None for static exact-head review; rendered/runtime/device evidence may remain pending.",
-      "exit": "Exact-head QA authorization or one concrete defect on 3cde55e.",
-      "handoff": "Integration only after same-SHA QA authorization"
+      "dependency": "Free Roam changed repair head.",
+      "exit": "Exact-head QA authorization or one concrete defect.",
+      "handoff": "Integration only after explicit same-SHA authorization"
     },
     "Integration": {
-      "mode": "BLOCKED_PENDING_SAME_SHA_QA__SEAMS_PINNED_PR204",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "PR204 merged at 9d7ff530b9830eb507f0680be647eda1670971c4; repaired candidate is exact 3cde55e",
-      "objective": "Integrate only exact 3cde55e if independent QA explicitly authorizes that same SHA and all three guards remain green.",
+      "mode": "BLOCKED_PENDING_CHANGED_HEAD_CI_AND_SAME_SHA_QA",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR211 merged at a462e92 with menu-flow seams; PR188 later merged as 5fd5c05 without same-SHA QA",
+      "objective": "Do not consume canonical 5fd5c05 as a QA-approved product result. Integrate only a future repair SHA with all three green guards and explicit independent QA on that same SHA.",
       "owned": "protected mechanical integration/readiness only",
-      "dependency": "No independent QA authorization exists yet for exact 3cde55e.",
-      "exit": "Same-SHA QA authorization on 3cde55e.",
+      "dependency": "Fresh repair PR + exact-head CI + same-SHA QA authorization.",
+      "exit": "Same-SHA QA authorization.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "WAIT_QA_APPROVED_INTEGRATED_3CDE55E__HARNESS_PINNED",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "mode": "HOLD_EXACT_CANONICAL_5FD5C05__PANEL_ORACLE_PINNED_PR212",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
       "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "branch": "coordination/smoke-pr188-728d62b-runtime-harness-v1",
-      "latestOutput": "PR198 merged at fd564b0a4dbad26007958c0633addc7b679fecf1",
-      "objective": "Preserve merged PR198 harness. Execute only on exact post-integration canonical derived from QA-approved 3cde55e; never promote headless results to rendered PASS.",
+      "candidateSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+      "latestOutput": "PR212 merged at 1ef9001; exact canonical tree-equivalence hold and panel-transaction oracle",
+      "objective": "Do not issue Smoke PASS on 5fd5c05. Preserve PR198/PR212 harnesses and execute only after a compliant repaired integration handoff; never promote static/headless evidence to rendered PASS.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "Same-SHA QA authorization then protected Integration.",
-      "exit": "Smoke exact integrated canonical with rendered/device states separated.",
+      "dependency": "Repaired same-SHA QA -> protected Integration; rendered/device/runtime access remains pending.",
+      "exit": "Exact compliant integrated canonical with post-merge guard evidence.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "WAIT_REPAIRED_SMOKE_PASS__PR186_CLOSED_UNMERGED",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "candidatePr": 186,
-      "candidateSha": "5eaec2059a08467a9ab17851d6fe9b08b012c5bb",
-      "latestOutput": "PR186 closed unmerged at 5eaec2059a08467a9ab17851d6fe9b08b012c5bb; prior deterministic package remains preserved",
-      "objective": "Preserve prior deterministic package and manifest. Package only a future PR188-derived canonical after exact QA, Integration and Smoke.",
+      "mode": "BLOCKED__PRIOR_PACKAGE_PRESERVED",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "candidatePr": null,
+      "candidateSha": null,
+      "latestOutput": "PR206 manifest evidence plus prior deterministic package at 4323049 remain preserved",
+      "objective": "Do not package canonical 5fd5c05 while Smoke is HOLD. Package only a future exact repaired canonical after CI -> QA -> Integration -> Smoke.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Exact 3cde55e has not completed same-SHA QA, Integration and Smoke.",
-      "exit": "Exact integrated Smoke-PASS canonical available.",
+      "dependency": "Exact repaired Smoke PASS.",
+      "exit": "Smoke-passed exact repaired canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "COORDINATE_EXACT_HEAD_QA_HANDOFF",
-      "base": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "mode": "RECONCILE_UNAPPROVED_PR188_MERGE__ACTIVATE_ONE_REPAIR_PRODUCER",
+      "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
       "candidatePr": 188,
-      "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "latestOutput": "Schema 55 reconciliation on coordination/control-tower-schema55-pr188-repair-qa-v2",
-      "objective": "Enforce WIP cap 3; freeze sole producer PR188 at exact 3cde55e; route independent QA on the same SHA; keep all other lanes on nonconflicting evidence/readiness; preserve QA -> Integration -> Smoke -> Package.",
+      "candidateSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+      "latestOutput": "Schema 56 reconciliation on coordination/control-tower-schema56-pr188-merged-hold-v1",
+      "objective": "Record live canonical 5fd5c05, preserve PR212 Smoke HOLD, free the integrated producer slot, reserve exactly one fresh Free Roam interaction-repair producer, and re-establish CI -> same-SHA QA -> Integration -> Smoke -> Package without reverting or weakening gates.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Independent QA verdict on exact 3cde55e.",
-      "exit": "Same-SHA QA verdict or PR188 head changes.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Free Roam creates the bounded repair head.",
+      "exit": "Changed repair head or exact post-merge guard evidence.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -210,29 +207,27 @@
     "reason": "One-line syntax closure and exact compiler/mount guard accepted on the consumed head."
   },
   "integrationResult": {
-    "pr": 170,
-    "candidate": "dfbbb5e2c52930beae7ebaea66d9ab5019c8914f",
-    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PASS_INTEGRATED_EXACT_HEAD__ALL_THREE_PUSH_GUARDS_PASS",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "receiptPr": 177,
-    "receiptMergeCommit": "b0a5bb53fea79dd4f838b771b9ca8776e5eebff6"
+    "pr": 188,
+    "candidate": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "status": "MERGED_TREE_EQUIVALENT__SAME_SHA_QA_ABSENT__NOT_A_COMPLIANT_PIPELINE_PASS",
+    "receipt": "coordination/integration/PR188_AB8DFA8_QA_HOLD_AND_MENU_SEAMS.md",
+    "receiptPr": 211,
+    "receiptMergeCommit": "a462e92f4e238a99fedc4ad8d521bb5c89a0a2ed"
   },
   "smokeResult": {
-    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PASS_CLOUD_SAFE_EXACT_HEAD_WITH_RENDERED_PENDING",
-    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptSchema": 15,
-    "receiptBlob": "007c31cafaa72c536f5e804473c7cf3f2851d317",
-    "receiptPr": 181,
-    "receiptMergeCommit": "a13fbde8bdd1f720f956621d1062b0cf24b57799",
-    "blocker": null,
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "status": "HOLD_EXACT_CANONICAL__TREE_EQUIVALENCE_ONLY__QA_AND_POST_MERGE_GUARDS_ABSENT__RUNTIME_RENDERED_DEVICE_PENDING",
+    "receipt": "coordination/smoke/PR188_5FD5C05_POST_INTEGRATION_SMOKE_HOLD.md",
+    "receiptPr": 212,
+    "receiptMergeCommit": "1ef9001b7b734b53214e776ae4e294d95ba68237",
+    "blocker": "PR188_MENU_INTERACTION_FLOW_GAP remains; no same-SHA QA; post-merge push guard evidence unobserved; runtime/rendered/device/traversal/save-rejoin pending.",
     "renderedDeviceStatus": "PENDING__STATIC_OR_HEADLESS_RESULTS_CANNOT_CLOSE_VISUAL_PARITY",
-    "nextAction": "Release & Package consumes only exact canonical 43230492964ea637f69747e25a3e72d6cb268ebe."
+    "nextAction": "Free Roam repair -> exact CI -> independent QA -> Integration -> Smoke."
   },
   "packageResult": {
     "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PACKAGE_COMPLETE_DETERMINISTIC_SOURCE_TREE",
+    "status": "PRIOR_PACKAGE_PRESERVED__CURRENT_5FD5C05_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "artifactId": "43230492964ea637f69747e25a3e72d6cb268ebe:836ffa7df77240e5980fe79727436a446880cf90",
     "schoolTreeGitSha": "836ffa7df77240e5980fe79727436a446880cf90",
@@ -248,13 +243,15 @@
     ],
     "receiptPr": 183,
     "receiptHead": "52587de61ddca0f4703537b9c4687774935a1276",
-    "receiptMergeCommit": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d"
+    "receiptMergeCommit": "3e62b2e22646197e06b3c69e54fb0ea1f992b94d",
+    "currentCanonical": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "currentCanonicalEligibility": "BLOCKED_ON_INTERACTION_REPAIR__SAME_SHA_QA__INTEGRATION__SMOKE"
   },
   "branchReadiness": {
     "canonical": {
       "branch": "rebuild/high-school-foundation",
-      "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "status": "ALL_THREE_EXACT_PUSH_GUARDS__SMOKE_PASS__PACKAGE_COMPLETE"
+      "headSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "status": "TREE_EQUALS_AB8DFA8__SMOKE_HOLD__PACKAGE_BLOCKED"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
@@ -262,11 +259,11 @@
       "status": "GREEN_SUPPORT_EVIDENCE__FROZEN"
     },
     "producer": {
-      "pr": 188,
-      "branch": "rebuild/high-school-p1-spawn-school-hud-4323049-v1",
-      "baseSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-      "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-      "status": "REPAIR_GREEN_ALL_THREE_GUARDS__INDEPENDENT_QA_PENDING__INTEGRATION_BLOCKED"
+      "pr": null,
+      "branch": null,
+      "baseSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "headSha": null,
+      "status": "SOLE_REPAIR_SLOT_RESERVED_TO_FREE_ROAM__FRESH_BRANCH_REQUIRED"
     },
     "qaSuperseded": {
       "branch": "qa/avatar-customization-authority-c4df87d-v1",
@@ -291,50 +288,34 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "SPAWN_SCHOOL_ENTRANCE_ATRIUM_CORRIDOR_COMPACT_HUD__P1_QA_PIPELINE",
+  "nextPriorityAfterCurrent": "P1_INTERACTION_REPAIR_ON_5FD5C05__THEN_P2_CLASSROOM_FREE_ROAM",
   "candidateExactHeadCi": {
     "pr": 188,
-    "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-    "status": "PASS_ALL_THREE__INDEPENDENT_QA_PENDING",
+    "headSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+    "status": "PASS_ALL_THREE_PULL_REQUEST__TREE_MERGED_WITHOUT_SAME_SHA_QA",
     "runs": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37242078845,
+        "runId": 37244424637,
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37242078873,
+        "runId": 37244424628,
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37242078844,
+        "runId": 37244424662,
         "conclusion": "success"
       }
     ]
   },
   "canonicalExactHeadCi": {
-    "headSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "status": "PASS_ALL_THREE_PUSH",
-    "runs": [
-      {
-        "workflow": "High School Foundation Static Guards",
-        "runId": 37225838208,
-        "conclusion": "success"
-      },
-      {
-        "workflow": "High School Class Education Guards",
-        "runId": 37225838207,
-        "conclusion": "success"
-      },
-      {
-        "workflow": "High School Progression Guards",
-        "runId": 37225838221,
-        "conclusion": "success"
-      }
-    ],
-    "coverageGap": "LegacyOutfitEntry parse/mount gap is now closed by the exact Progression push step; rendered/runtime/device evidence remains pending."
+    "headSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "status": "POST_MERGE_PUSH_GUARD_EVIDENCE_UNOBSERVED__CANDIDATE_TREE_EQUIVALENCE_ONLY",
+    "runs": [],
+    "coverageGap": "Connector evidence proves canonical equals the ab8dfa8 product tree and candidate pull-request guards were green; it does not expose post-merge push runs. Runtime/rendered/device evidence remains pending."
   },
   "shoppingReference": {
     "supportPr": 150,
@@ -363,37 +344,39 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "PR188_REPAIRED_EXACT_HEAD_QA_GATE",
-    "owner": "Roblox High School QA & Contract",
-    "inputSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-    "referenceClipTime": "A@00:45 and A@02:05",
-    "evidence": "PR188 compare 728d62b...3cde55e ahead by one with only CampusBuilder.server.lua and foundation_world_contract_spec.lua; all three exact-head guards green; Foundation PR207 merged at 2f3675c; prior QA review 5408581109 is stale",
+    "id": "PR188_MENU_INTERACTION_FLOW_GAP_ON_CANONICAL_5FD5C05",
+    "owner": "Pip High Free Roam",
+    "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "referenceClipTime": "B@00:45; C@00:05-00:08; A/B/C recurring rail/status/quick slots",
+    "evidence": "PR188 review 5408709183 fails interaction source contract on 3cde55e; the later 3cde55e->ab8dfa8 delta changes only responsive-HUD geometry/tests and does not repair panel interactions; PR188 merged to tree-equivalent canonical 5fd5c05; Smoke PR212 holds Package.",
     "acceptanceCriteria": [
-      "Independent QA binds its verdict to exact 3cde55e",
-      "Verify two flight-side blue rails, eight posts, four stair-local red/blue bands and distinct transverse landing rail",
-      "Preserve unique server authorities and every existing gate",
-      "Keep rendered, interaction and device states pending unless actually executed",
-      "Authorize Integration only on the same exact SHA"
+      "Create one fresh producer branch from exact canonical 5fd5c05",
+      "One active feature-panel controller with activation, explicit close/back and repeat-open idempotency",
+      "Denial, unavailable backing UI, respawn and rejoin restore a deterministic neutral state",
+      "Quick slots are activatable only through existing semantics; no invented items, spend or persistence",
+      "Travel presents evidence-backed selection before the existing server RequestTravel boundary",
+      "Preserve ResponsiveHudLayout safe-area/touch exclusion coverage and every unique server authority",
+      "All three exact-head guards pass; independent QA explicitly authorizes the same SHA"
     ],
-    "outputLocation": "PR188 exact head 3cde55e plus exact-head QA review/receipt",
-    "blocker": "No independent QA verdict is bound to exact 3cde55e.",
-    "nextHandoff": "Roblox High School QA & Contract -> Integration"
+    "outputLocation": "future Free Roam repair PR under school/** plus exact-head QA receipt",
+    "blocker": "No repaired descendant of canonical 5fd5c05 exists yet.",
+    "nextHandoff": "Pip High Free Roam -> CI -> Roblox High School QA & Contract"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "schemaVersion": 10,
-    "observedAt": "2026-10-04T23:13:13Z",
-    "status": "REFERENCE_ACCESS_CURRENT__P1_REPAIR_GREEN__EXACT_HEAD_QA_PENDING"
+    "schemaVersion": 11,
+    "observedAt": "2026-10-04T23:57:23Z",
+    "status": "REFERENCE_ACCESS_CURRENT__CANONICAL_5FD5C05__INTERACTION_REPAIR_REQUIRED__SMOKE_HOLD"
   },
   "nextProducerReservation": {
     "owner": "Pip High Free Roam",
-    "scope": "P1_SPAWN_SCHOOL_HUD",
-    "status": "ACTIVE_EXISTING_PRODUCER__REPAIR_COMPLETE__FROZEN_FOR_EXACT_HEAD_QA__NO_SECOND_PRODUCER",
-    "inputSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "pr": 188,
-    "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3"
+    "scope": "P1_INTERACTION_REPAIR_ON_INTEGRATED_VISIBLE_BASELINE",
+    "status": "RESERVED_SINGLE_PRODUCER__FRESH_BRANCH_FROM_5FD5C05__NO_SECOND_PRODUCER",
+    "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "pr": null,
+    "headSha": null
   },
-  "priorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM_AFTER_P1_QA_INTEGRATION_SMOKE_PACKAGE",
+  "priorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM_AFTER_P1_REPAIR_QA_INTEGRATION_SMOKE_PACKAGE",
   "distinctReferenceGapsClosed": {
     "evidence": [
       "THREE_PERSISTENT_LIBRARY_VIDEO_IDS_RECORDED",
@@ -410,10 +393,12 @@
       "REFERENCE_ACCESS_REVERIFIED_CURRENT_LIBRARY_BYTES_2026-10-04T22:53Z",
       "PR188_EXACT_HEAD_QA_DECISION_BOUND_728D62B",
       "PR188_STAIR_FLIGHT_SOURCE_GAP_PINNED_A0205",
-      "PR188_INTEGRATION_REPAIR_SEAMS_PINNED_PR204"
+      "PR188_INTEGRATION_REPAIR_SEAMS_PINNED_PR204",
+      "PR188_TREE_MERGED_AS_CANONICAL_5FD5C05",
+      "SMOKE_PANEL_TRANSACTION_ORACLE_PINNED_PR212"
     ],
     "productParity": [],
-    "rule": "Evidence access/annotation and startup repair are not product parity. Product gaps close only with exact-SHA implementation, independent QA and rendered/device comparison."
+    "rule": "Source/static evidence, integration and harness preparation are not rendered product parity. Product gaps close only with compliant exact-SHA gates plus rendered/device comparison."
   },
   "changedHeadsSinceSchema44": [
     {
@@ -451,12 +436,12 @@
     "ControlTower": {
       "enabled": true,
       "lastOutput": {
-        "branch": "coordination/control-tower-schema55-pr188-repair-qa-v2",
-        "summary": "schema55 and backlog10 route exact 3cde55e to independent QA"
+        "branch": "coordination/control-tower-schema56-pr188-merged-hold-v1",
+        "summary": "schema56/backlog11 reconcile canonical 5fd5c05, Smoke HOLD and one repair reservation"
       },
       "blockedSince": null,
-      "nextAction": "Merge schema55 coordination update; monitor exact-head QA.",
-      "referenceGapsClosed": 16
+      "nextAction": "Merge coordination update; hand sole repair slot to Free Roam.",
+      "referenceGapsClosed": 18
     },
     "Foundation": {
       "enabled": true,
@@ -464,11 +449,11 @@
         "pr": 207,
         "sha": "5f480281a42832874f6e42e3e4eaa0462672b4fa",
         "mergeCommit": "2f3675c79c8fbec15d1a0b601395ae672456cd97",
-        "summary": "exact 3cde55e static authority and stair-repair audit"
+        "summary": "3cde55e authority/stair audit applicable to integrated tree"
       },
-      "blockedSince": "2026-10-04T23:08:37Z",
-      "blockedAgeHoursAtObservation": 0.08,
-      "nextAction": "Wait same-SHA QA; re-audit only future changed head or concrete defect.",
+      "blockedSince": "2026-10-04T23:57:23Z",
+      "blockedAgeHoursAtObservation": 0,
+      "nextAction": "Wait changed repair head; re-audit authority only.",
       "referenceGapsClosed": 5
     },
     "ClassEducation": {
@@ -479,8 +464,8 @@
         "summary": "activity state contract; open"
       },
       "blockedSince": "2026-10-04T20:48:20Z",
-      "blockedAgeHoursAtObservation": 2.42,
-      "nextAction": "Preserve PR202 activity contract; no classroom product work before P1 completes.",
+      "blockedAgeHoursAtObservation": 3.15,
+      "nextAction": "Preserve evidence; no P2 product work before P1 repaired pipeline.",
       "referenceGapsClosed": 1
     },
     "ContentQA": {
@@ -488,84 +473,86 @@
       "lastOutput": {
         "pr": 200,
         "sha": "b40d677c3c821da3400e0b31ce1ccef4a080269e",
-        "summary": "exact 728d62b reference pack refresh; A/B/C current bytes and hashes reverified"
+        "summary": "durable A/B/C hashes and timestamp pack"
       },
       "blockedSince": null,
-      "nextAction": "Preserve A/B/C durable hashes; refresh candidate linkage only if materially required.",
+      "nextAction": "Preserve access; refresh linkage only for material changed-head need.",
       "referenceGapsClosed": 3
     },
     "ProgressionMobile": {
       "enabled": true,
       "lastOutput": {
-        "pr": 196,
-        "sha": "3cd5f9dcc61fa06fd50f431c32ce0dd1a963601f",
-        "summary": "3aad19e HUD risk artifact; static risk resolved on 728d62b"
+        "pr": 208,
+        "sha": "a0d8911a42b8457559813b24c85d35ed5c2b569c",
+        "summary": "HUD/modal authority and interaction contract"
       },
-      "blockedSince": "2026-10-04T23:00:55Z",
-      "blockedAgeHoursAtObservation": 0.21,
-      "nextAction": "Preserve authority continuity; rendered device evidence remains pending.",
-      "referenceGapsClosed": 1
+      "blockedSince": "2026-10-04T23:57:23Z",
+      "blockedAgeHoursAtObservation": 0,
+      "nextAction": "Audit future repair head for responsive HUD and authority continuity.",
+      "referenceGapsClosed": 2
     },
     "FreeRoam": {
       "enabled": true,
       "lastOutput": {
         "pr": 188,
-        "sha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-        "summary": "bounded stair-flight rails/bands repair; exact three-guard green head frozen for QA"
+        "sha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+        "mergeCommit": "5fd5c0539229b629eda865e574539990d6e17b5b",
+        "summary": "visible P1 tree integrated; interaction defect remains"
       },
-      "blockedSince": "2026-10-04T23:00:55Z",
-      "blockedAgeHoursAtObservation": 0.21,
-      "nextAction": "Freeze product writes; respond only to concrete exact-head QA defect.",
+      "blockedSince": null,
+      "blockedAgeHoursAtObservation": 0,
+      "nextAction": "Create one fresh branch from 5fd5c05 and repair interaction flow only.",
       "referenceGapsClosed": 3
     },
     "QA": {
       "enabled": true,
       "lastOutput": {
-        "pr": 203,
-        "sha": "82cf4835ef67a1f8fa061f7bd0f45f55a79ffcdc",
-        "summary": "exact-head static pass, visual source failure, interaction/device hold"
+        "pr": 188,
+        "review": 5408709183,
+        "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+        "summary": "world/HUD static PASS; interaction source FAIL; rendered/device/traversal HOLD"
       },
-      "blockedSince": null,
+      "blockedSince": "2026-10-04T23:57:23Z",
       "blockedAgeHoursAtObservation": 0,
-      "nextAction": "Review exact 3cde55e now; prior review 5408581109 is stale.",
-      "referenceGapsClosed": 3
+      "nextAction": "Wait changed repair head, then perform independent exact-SHA review.",
+      "referenceGapsClosed": 4
     },
     "Integration": {
       "enabled": true,
       "lastOutput": {
-        "pr": 204,
-        "sha": "ba5aa6c87e4b4c700b8bb413652da1b85537b02b",
-        "mergeCommit": "9d7ff530b9830eb507f0680be647eda1670971c4",
-        "summary": "QA hold and two-file repair seam inventory"
+        "pr": 211,
+        "sha": "78e6694025b22bfa3c7b1dd2d13c343a66142c77",
+        "mergeCommit": "a462e92f4e238a99fedc4ad8d521bb5c89a0a2ed",
+        "summary": "ab8dfa8 QA hold and protected menu seams"
       },
-      "blockedSince": "2026-10-04T23:00:55Z",
-      "blockedAgeHoursAtObservation": 0.21,
-      "nextAction": "Wait same-SHA QA authorization; then merge exact expected head mechanically.",
-      "referenceGapsClosed": 3
+      "blockedSince": "2026-10-04T23:57:23Z",
+      "blockedAgeHoursAtObservation": 0,
+      "nextAction": "Wait repaired head CI and explicit same-SHA QA; no stale merge.",
+      "referenceGapsClosed": 4
     },
     "Smoke": {
       "enabled": true,
       "lastOutput": {
-        "pr": 198,
-        "sha": "27249a78d2f57feb29a139440c5f4aa44312d556",
-        "mergeCommit": "fd564b0a4dbad26007958c0633addc7b679fecf1",
-        "summary": "exact 728d62b runtime/device harness plan"
+        "pr": 212,
+        "sha": "03473f5bacde5c8b50f7bd299fea5bebd1f7465b",
+        "mergeCommit": "1ef9001b7b734b53214e776ae4e294d95ba68237",
+        "summary": "exact 5fd5c05 Smoke HOLD and panel-transaction oracle"
       },
-      "blockedSince": "2026-10-04T23:00:55Z",
-      "blockedAgeHoursAtObservation": 0.21,
-      "nextAction": "Execute PR198 harness only on exact integrated canonical derived from 3cde55e.",
-      "referenceGapsClosed": 3
+      "blockedSince": "2026-10-04T23:47:08Z",
+      "blockedAgeHoursAtObservation": 0.17,
+      "nextAction": "Preserve HOLD; execute on next compliant integrated canonical only.",
+      "referenceGapsClosed": 4
     },
     "ReleasePackage": {
       "enabled": true,
       "lastOutput": {
-        "pr": 186,
-        "sha": "5eaec2059a08467a9ab17851d6fe9b08b012c5bb",
-        "summary": "reference manifest closed unmerged; prior deterministic package preserved"
+        "pr": 206,
+        "sha": "6e5872cceee49e136bbdb8997f4b9a3f8a37aafe",
+        "summary": "reference delivery manifest; prior package preserved"
       },
-      "blockedSince": "2026-10-04T20:48:20Z",
-      "blockedAgeHoursAtObservation": 2.42,
-      "nextAction": "Package only after exact QA -> Integration -> Smoke.",
+      "blockedSince": "2026-10-04T23:47:08Z",
+      "blockedAgeHoursAtObservation": 0.17,
+      "nextAction": "Do not package 5fd5c05; wait repaired Smoke PASS.",
       "referenceGapsClosed": 0
     }
   },
@@ -701,13 +688,14 @@
   ],
   "p1CandidateGate": {
     "pr": 188,
-    "headSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
-    "ci": "PASS_ALL_THREE_EXACT_HEAD__37242078845_37242078873_37242078844",
-    "qa": "REQUIRED_ON_EXACT_3CDE55E__PRIOR_728D62B_REVIEW_STALE",
-    "integration": "NOT_AUTHORIZED",
-    "smoke": "WAIT_QA_APPROVED_INTEGRATED_CANONICAL",
-    "package": "WAIT_SMOKE",
-    "soleProducer": "Pip High Free Roam__FROZEN_PENDING_QA"
+    "headSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "ci": "PASS_ALL_THREE_PULL_REQUEST__POST_MERGE_PUSH_UNOBSERVED",
+    "qa": "NO_SAME_SHA_AUTHORIZATION__INTERACTION_SOURCE_FAIL_PERSISTS",
+    "integration": "MERGED_OUT_OF_ORDER__NOT_COMPLIANT_PIPELINE_PASS",
+    "smoke": "HOLD_PR212",
+    "package": "BLOCKED",
+    "soleProducer": "Pip High Free Roam__FRESH_REPAIR_BRANCH_RESERVED"
   },
   "changedHeadsSinceSchema51": [
     {
@@ -725,13 +713,12 @@
   ],
   "qaP1Result": {
     "pr": 188,
-    "candidate": "728d62b909bf8d8b7bd9d0466f3fb18c80ebb895",
-    "status": "STALE_FOR_CHANGED_HEAD_3CDE55E__PRIOR_VISUAL_SOURCE_FAIL",
-    "review": 5408581109,
-    "receiptPr": 203,
-    "receiptHead": "82cf4835ef67a1f8fa061f7bd0f45f55a79ffcdc",
+    "candidate": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+    "status": "PASS_WORLD_HUD_STATIC__FAIL_INTERACTION_SOURCE__HOLD_RENDERED_VISUAL_TRAVERSAL_DEVICE",
+    "review": 5408709183,
     "integrationAuthorized": false,
-    "blocker": "Independent QA required on exact 3cde55e"
+    "applicability": "The later ab8dfa8 delta is responsive-HUD-only and does not repair the failed interaction source contract.",
+    "blocker": "Repair PR188_MENU_INTERACTION_FLOW_GAP on a fresh canonical descendant and obtain same-SHA QA."
   },
   "changedHeadsSinceSchema52": [
     {
@@ -867,6 +854,37 @@
       "pr": 186,
       "headSha": "5eaec2059a08467a9ab17851d6fe9b08b012c5bb",
       "state": "CLOSED_UNMERGED__PRIOR_PACKAGE_PRESERVED"
+    }
+  ],
+  "changedHeadsSinceSchema55": [
+    {
+      "lane": "ProductProducer",
+      "pr": 188,
+      "from": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
+      "to": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
+      "state": "MERGED",
+      "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "mergedAt": "2026-10-04T23:47:08Z"
+    },
+    {
+      "lane": "Integration",
+      "pr": 211,
+      "headSha": "78e6694025b22bfa3c7b1dd2d13c343a66142c77",
+      "state": "MERGED_COORDINATION_HOLD",
+      "mergeCommit": "a462e92f4e238a99fedc4ad8d521bb5c89a0a2ed"
+    },
+    {
+      "lane": "Smoke",
+      "pr": 212,
+      "headSha": "03473f5bacde5c8b50f7bd299fea5bebd1f7465b",
+      "state": "MERGED_COORDINATION_HOLD",
+      "mergeCommit": "1ef9001b7b734b53214e776ae4e294d95ba68237"
+    },
+    {
+      "lane": "Canonical",
+      "from": "43230492964ea637f69747e25a3e72d6cb268ebe",
+      "to": "5fd5c0539229b629eda865e574539990d6e17b5b",
+      "state": "LIVE"
     }
   ]
 }
