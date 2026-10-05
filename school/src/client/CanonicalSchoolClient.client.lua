@@ -11,6 +11,7 @@ local SchoolConfig = require(shared:WaitForChild("SchoolConfig"))
 local LegacyOutfitEntry = require(shared:WaitForChild("LegacyOutfitEntry"))
 local LegacyShoppingBoundary = require(shared:WaitForChild("LegacyShoppingBoundary"))
 local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))
+local Rhs2UiStyle = require(shared:WaitForChild("Rhs2UiStyle"))
 local FeaturePanelController = require(shared:WaitForChild("FeaturePanelController"))
 
 local player = Players.LocalPlayer
@@ -63,18 +64,17 @@ card.Name = "CompactSchoolStatus"
 card.AnchorPoint = Vector2.new(0, 0)
 card.Position = UDim2.fromOffset(0, 0)
 card.Size = UDim2.fromOffset(118, 70)
-card.BackgroundColor3 = LEGACY_PANEL
-card.BackgroundTransparency = 0.02
+card.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+card.BackgroundTransparency = 0
 card.Parent = gui
-round(card, 2)
-outline(card, 2)
+Rhs2UiStyle.applyPrimaryPanel(card)
 
 local title = Instance.new("TextLabel")
 title.BackgroundTransparency = 0
-title.BackgroundColor3 = LEGACY_BLUE
+title.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
 title.Position = UDim2.new(0, 0, 0, 0)
 title.Size = UDim2.new(1, 0, 0, 24)
-title.Font = Enum.Font.ArialBold
+title.Font = Rhs2UiStyle.Font.Bold
 title.Text = "SCHOOL DAY"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 15
@@ -82,53 +82,58 @@ title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = card
 
 local pointsLabel = Instance.new("TextLabel")
-pointsLabel.BackgroundTransparency = 1
+pointsLabel.BackgroundTransparency = 0
+pointsLabel.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 pointsLabel.Position = UDim2.new(0, 10, 0, 82)
 pointsLabel.Size = UDim2.new(0, 82, 0, 28)
-pointsLabel.Font = Enum.Font.ArialBold
+pointsLabel.Font = Rhs2UiStyle.Font.Bold
 pointsLabel.Text = "Points: 0"
-pointsLabel.TextColor3 = LEGACY_BLUE_DARK
+pointsLabel.TextColor3 = Rhs2UiStyle.Palette.White
 pointsLabel.TextSize = 13
 pointsLabel.TextXAlignment = Enum.TextXAlignment.Left
 pointsLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(pointsLabel)
+pointsLabel.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 
 local periodLabel = Instance.new("TextLabel")
 periodLabel.BackgroundTransparency = 1
 periodLabel.Position = UDim2.new(0, 9, 0, 29)
 periodLabel.Size = UDim2.new(1, -18, 0, 32)
-periodLabel.Font = Enum.Font.ArialBold
+periodLabel.Font = Rhs2UiStyle.Font.Medium
 periodLabel.Text = "Loading school day..."
-periodLabel.TextColor3 = LEGACY_BLUE_DARK
+periodLabel.TextColor3 = Rhs2UiStyle.Palette.White
 periodLabel.TextSize = 13
 periodLabel.TextWrapped = true
 periodLabel.TextXAlignment = Enum.TextXAlignment.Left
 periodLabel.TextYAlignment = Enum.TextYAlignment.Top
 periodLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(periodLabel)
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.BackgroundTransparency = 1
 statusLabel.Position = UDim2.new(0, 9, 0, 61)
 statusLabel.Size = UDim2.new(1, -18, 0, 22)
-statusLabel.Font = Enum.Font.Arial
+statusLabel.Font = Rhs2UiStyle.Font.Regular
 statusLabel.Text = "Connecting..."
-statusLabel.TextColor3 = Color3.fromRGB(31, 72, 102)
+statusLabel.TextColor3 = Rhs2UiStyle.Palette.White
 statusLabel.TextSize = 11
 statusLabel.TextWrapped = true
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.TextYAlignment = Enum.TextYAlignment.Top
 statusLabel.Parent = card
+Rhs2UiStyle.applyDarkRow(statusLabel)
 
 local action = Instance.new("TextButton")
 action.Position = UDim2.new(0, 96, 0, 87)
 action.Size = UDim2.new(1, -104, 0, 27)
-action.BackgroundColor3 = LEGACY_BUTTON
-action.Font = Enum.Font.ArialBold
+action.BackgroundColor3 = Rhs2UiStyle.Palette.ProgressPurple
+action.Font = Rhs2UiStyle.Font.Bold
 action.Text = "CHECKING CLASS..."
-action.TextColor3 = LEGACY_BLUE_DARK
+action.TextColor3 = Rhs2UiStyle.Palette.White
 action.TextSize = 13
 action.Parent = card
-round(action, 2)
-outline(action, 1)
+Rhs2UiStyle.applyDarkRow(action)
+action.BackgroundColor3 = Rhs2UiStyle.Palette.ProgressPurple
 
 local actionRail = Instance.new("Frame")
 actionRail.Name = "RHS2ActionRail"
@@ -150,15 +155,13 @@ local function makeRailButton(name, label, color, order)
     button.LayoutOrder = order
     button.Size = UDim2.fromOffset(52, 52)
     button.BackgroundColor3 = color
-    button.Font = Enum.Font.ArialBold
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = label
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextColor3 = Rhs2UiStyle.Palette.White
     button.TextSize = 12
     button.TextWrapped = true
     button.Parent = actionRail
-    round(button, 10)
-    local railStroke = outline(button, 2)
-    railStroke.Color = Color3.fromRGB(255, 255, 255)
+    Rhs2UiStyle.applyPrimaryRailButton(button, color)
     return button
 end
 
@@ -190,14 +193,12 @@ for index, slot in ipairs({
     quickSlot.Name = "QuickSlot" .. tostring(index)
     quickSlot.Size = UDim2.fromOffset(52, 52)
     quickSlot.BackgroundColor3 = slot.color
-    quickSlot.Font = Enum.Font.ArialBold
+    quickSlot.Font = Rhs2UiStyle.Font.Bold
     quickSlot.Text = slot.label
     quickSlot.TextColor3 = Color3.fromRGB(255, 255, 255)
     quickSlot.TextSize = 10
     quickSlot.Parent = quickBar
-    round(quickSlot, 10)
-    local quickStroke = outline(quickSlot, 2)
-    quickStroke.Color = Color3.fromRGB(236, 243, 250)
+    Rhs2UiStyle.applyQuickSlot(quickSlot, slot.color)
 end
 
 local currentHudLayout = nil
@@ -949,12 +950,8 @@ task.spawn(function()
 
         if okState and type(state) == "table" then
             local timeText, weekday = formatLegacyClock(state)
-            periodLabel.Text = string.format(
-                "%s  %s\n%s",
-                timeText,
-                weekday,
-                tostring(state.periodLabel)
-            )
+            title.Text = string.format("%s  %s", string.upper(string.sub(weekday, 1, 3)), timeText)
+            periodLabel.Text = tostring(state.periodLabel)
         end
 
         if okClass and type(classState) == "table" then
