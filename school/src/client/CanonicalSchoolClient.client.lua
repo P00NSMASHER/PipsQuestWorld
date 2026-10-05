@@ -165,6 +165,37 @@ local shopRailButton = makeRailButton("RailShop", "SHOP", Color3.fromRGB(220, 66
 local avatarRailButton = makeRailButton("RailAvatar", "AVATAR", Color3.fromRGB(54, 174, 221), 2)
 local travelRailButton = makeRailButton("RailTravel", "TRAVEL", Color3.fromRGB(235, 177, 49), 4)
 
+-- Reference A also carries a small colorful utility strip below the four
+-- primary rail actions. Exact semantics/assets are unverified, so these are
+-- deliberately inert visual slots rather than invented gameplay controls.
+local utilityRail = Instance.new("Frame")
+utilityRail.Name = "RHS2UtilityRail"
+utilityRail.AnchorPoint = Vector2.new(0, 0)
+utilityRail.Position = UDim2.fromOffset(0, 0)
+utilityRail.Size = UDim2.fromOffset(48, 14)
+utilityRail.BackgroundTransparency = 1
+utilityRail.Parent = gui
+
+local utilityLayout = Instance.new("UIListLayout")
+utilityLayout.FillDirection = Enum.FillDirection.Horizontal
+utilityLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+utilityLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+utilityLayout.Padding = UDim.new(0, 3)
+utilityLayout.Parent = utilityRail
+
+for index, color in ipairs({
+    Rhs2UiStyle.Palette.ProgressPurple,
+    Rhs2UiStyle.Palette.HeaderBlue,
+    Rhs2UiStyle.Palette.AvatarCyan,
+}) do
+    local slot = Instance.new("Frame")
+    slot.Name = "UtilitySlot" .. tostring(index)
+    slot.Size = UDim2.fromOffset(12, 12)
+    slot.BackgroundColor3 = color
+    slot.Parent = utilityRail
+    Rhs2UiStyle.applyQuickSlot(slot, color)
+end
+
 local quickBar = Instance.new("Frame")
 quickBar.Name = "RHS2QuickBar"
 quickBar.AnchorPoint = Vector2.new(0, 0)
@@ -372,6 +403,22 @@ local function applyResponsiveHudLayout()
     for _, child in ipairs(actionRail:GetChildren()) do
         if child:IsA("GuiButton") then
             child.Size = UDim2.fromOffset(layout.railButtonSize, layout.railButtonSize)
+        end
+    end
+
+    local utilitySize = math.max(10, math.floor((layout.rail.width - (layout.railGap * 2)) / 3))
+    local utilityY = layout.rail.bottom + layout.railGap
+    local utilityLimit = layout.quick.y - layout.railGap
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        utilityLimit = math.min(utilityLimit, zone.y - layout.railGap)
+    end
+    utilityRail.Position = UDim2.fromOffset(layout.rail.x, utilityY)
+    utilityRail.Size = UDim2.fromOffset(layout.rail.width, utilitySize)
+    utilityRail.Visible = utilityY + utilitySize <= utilityLimit
+    utilityLayout.Padding = UDim.new(0, layout.railGap)
+    for _, child in ipairs(utilityRail:GetChildren()) do
+        if child:IsA("Frame") and child.Name:match("^UtilitySlot") then
+            child.Size = UDim2.fromOffset(utilitySize, utilitySize)
         end
     end
 
