@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower / UI Visual Parity",
+  "createdAt": "2026-10-05T19:52:00Z",
+  "status": "IMPLEMENTATION_MAP_READY__WAIT_CURRENT_P1_VEHICLE_INTEGRATION_RECONCILIATION",
+  "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
+  "controlDirective": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
+  "targetProductBase": {
+    "currentCanonical": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "productBranchTemplate": "rebuild/high-school-rhs2-ui-parity-<certified-canonical>-v1",
+    "activationRule": "Open exactly one product branch only after the current vehicle-card canonical has all required push guards successful and the Integration receipt is rebound to that exact canonical."
+  },
+  "implementationOrder": [
+    {
+      "order": 1,
+      "id": "STYLE_TOKENS",
+      "file": "school/src/shared/Rhs2UiStyle.lua",
+      "action": "ADD",
+      "purpose": "Centralize visual tokens and presentation helpers so the RHS2 look is consistent rather than hand-painted differently in every panel.",
+      "requiredExports": [
+        "Palette",
+        "Typography",
+        "CornerRadius",
+        "Stroke",
+        "applyPrimaryPanel",
+        "applyHeader",
+        "applyPrimaryRailButton",
+        "applyQuickSlot",
+        "applyCloseButton",
+        "applyTab",
+        "applyWhiteResultSurface"
+      ],
+      "rules": [
+        "Use built-in Roblox fonts only; Gotham/GothamBold/GothamMedium family for primary surfaces.",
+        "Use navy/royal-blue/gold/purple/white families derived from visible reference footage.",
+        "Do not encode hidden original RGB claims; token comments must call values compression-tolerant targets.",
+        "No asset IDs in this module."
+      ]
+    },
+    {
+      "order": 2,
+      "id": "PERSISTENT_STATUS_STACK",
+      "file": "school/src/client/CanonicalSchoolClient.client.lua",
+      "sourceRegion": "CompactSchoolStatus construction near top of file",
+      "currentProblem": "Single pale LEGACY_PANEL school-day card does not visually resemble RHS2 top-right status.",
+      "targetHierarchy": [
+        "CompactSchoolStatus dark root",
+        "WeatherTimeRow narrow dark/navy strip",
+        "CoinRow blue/navy strip",
+        "GemRow blue/navy strip",
+        "LevelRow dark strip with purple progression bar"
+      ],
+      "dataBinding": [
+        "Use existing Foundation clock/day only where authoritative.",
+        "Continue displaying progression points only as progression/points unless an authoritative coin balance is specifically supplied.",
+        "Hide or neutralize weather/gem-specific values rather than inventing them.",
+        "Retain responsive status bounding box from ResponsiveHudLayout."
+      ],
+      "acceptance": [
+        "No pale-blue school-day card remains on primary RHS2 HUD.",
+        "Stack remains compact at top-right and clear of the action rail.",
+        "All labels use modern rounded bold typography and white/bright text."
+      ]
+    },
+    {
+      "order": 3,
+      "id": "PRIMARY_ACTION_RAIL",
+      "file": "school/src/client/CanonicalSchoolClient.client.lua",
+      "sourceRegion": "makeRailButton + RHS2ActionRail",
+      "currentProblem": "Plain text rectangles approximate color placement but not RHS2 button chrome.",
+      "target": [
+        "Four large rounded glossy tiles remain Shop red, Avatar cyan, House green, Travel gold.",
+        "Use stronger white border/highlight and subtle dark shadow.",
+        "Use icon-first composition when an already-authorized/verified icon exists; otherwise retain a clean text fallback and do not invent IDs.",
+        "Add small utility-tile cluster below primary rail as inert presentation placeholders only if static evidence contract allows it; no unverified click actions."
+      ],
+      "requiredLayout": [
+        "Right-edge vertical alignment retained.",
+        "Responsive button sizes retained from ResponsiveHudLayout.",
+        "No touch exclusion overlap."
+      ]
+    },
+    {
+      "order": 4,
+      "id": "QUICK_BAR",
+      "file": "school/src/client/CanonicalSchoolClient.client.lua",
+      "sourceRegion": "RHS2QuickBar QuickSlot1-4",
+      "currentProblem": "Flat colored squares lack RHS2 depth and border treatment.",
+      "target": [
+        "Separated rounded glossy tiles.",
+        "Cyan/dark/green/pink family retained from evidence.",
+        "White/light outer edge plus subtle dark shadow.",
+        "Optional inner highlight gradient using UIGradient.",
+        "No invented item art or inventory semantics."
+      ]
+    },
+    {
+      "order": 5,
+      "id": "TRAVEL_CHROME",
+      "file": "school/src/client/CanonicalSchoolClient.client.lua",
+      "sourceRegion": "makeFeaturePanel + CurrentClassTravelPanel",
+      "currentProblem": "Generic pale modal with one large button bears little visual resemblance to RHS2 Travel.",
+      "targetHierarchy": [
+        "Dark navy panel body.",
+        "Saturated royal-blue angled-style header band with white Travel title.",
+        "Visible circular outlined X close control.",
+        "Tab row: active gold Locations tab, inactive deep-blue Servers tab.",
+        "Destination-card area with at least one server-authorized active card and visually coherent disabled/placeholder cells only where explicitly labeled non-interactive.",
+        "Dark card label strips with centered white names."
+      ],
+      "authorityBoundary": [
+        "Only server-current-room destination remains actionable unless additional destinations are verified and server-authorized.",
+        "Disabled visual placeholders cannot invoke travel.",
+        "Existing RequestTravel no-destination server authority remains unchanged."
+      ],
+      "responsiveBoundary": [
+        "Reuse computeInteractionModal geometry.",
+        "Status, rail and quick bar stay visible around Travel.",
+        "Mobile touch corridor remains clear."
+      ]
+    },
+    {
+      "order": 6,
+      "id": "SHOP_CHROME",
+      "file": "school/src/client/CanonicalSchoolClient.client.lua",
+      "sourceRegion": "VerifiedStyleShopPanel",
+      "currentProblem": "Generic pale two-column Shop surface.",
+      "target": [
+        "Dark/navy base with vivid blue title region.",
+        "Panel hierarchy visually compatible with RHS2 dealership/shop family.",
+        "Clear selected/active state treatment using gold accent.",
+        "Retain honest empty-catalog messaging until verified catalog items exist.",
+        "Never create fake cards merely to fill the screen."
+      ]
+    },
+    {
+      "order": 7,
+      "id": "COMMON_MODAL_AFFORDANCES",
+      "files": [
+        "school/src/client/CanonicalSchoolClient.client.lua",
+        "school/src/shared/LegacyOutfitEntry.lua"
+      ],
+      "target": [
+        "Circular/rounded close buttons with white outline on dark/colored headers.",
+        "Back controls visually subordinate to primary content.",
+        "Consistent corner radius, stroke thickness, typography and active/pressed treatment.",
+        "House/Housing Editor/Avatar/Cafe/Vehicle presentation may adopt shared visual tokens without changing authority or layout semantics."
+      ]
+    },
+    {
+      "order": 8,
+      "id": "STATIC_VISUAL_CONTRACTS",
+      "files": [
+        "school/tests/rhs2_ui_visual_contract_spec.lua",
+        "school/tests/legacy_hud_contract_spec.lua",
+        "school/tests/responsive_hud_layout_spec.lua"
+      ],
+      "requiredAssertions": [
+        "Primary RHS2 surfaces use the shared Rhs2UiStyle module.",
+        "Gotham-family typography is used on primary persistent HUD and Travel shell.",
+        "Primary HUD no longer references LEGACY_PANEL as its visible surface background.",
+        "Travel has Header/Tabs/DestinationGrid/Close hierarchy.",
+        "Travel preserves computeInteractionModal responsive geometry.",
+        "Action rail still has exactly four primary large buttons in the observed color families.",
+        "Unknown utility slots are inert if present.",
+        "Quick bar remains four separated slots.",
+        "No large permanent free-roam panel.",
+        "No server authority modules changed in the polish PR.",
+        "All existing mobile safe-area mutation tests remain green."
+      ]
+    }
+  ],
+  "sourceLinesObservedAtMapCreation": {
+    "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "legacyColors": [
+      40,
+      41,
+      42,
+      43
+    ],
+    "statusStart": 62,
+    "makeRailButton": 147,
+    "quickBarStart": 169,
+    "classModalStart": 404,
+    "makeFeaturePanel": 665,
+    "shopStart": 738,
+    "travelStart": 769,
+    "cafeStart": 1008,
+    "vehicleStart": 1219,
+    "houseStart": 1552,
+    "housingEditorStart": 1889
+  },
+  "visualEvidencePriority": [
+    "A@00:05 for persistent HUD composition and primary rail/quick slots.",
+    "C@00:05 for Travel modal shell, header, tabs, close control, grid and surrounding HUD.",
+    "B@00:45 for viewport-dominant blue shop/dealership language.",
+    "C@01:05 for polished result-modal language used by future job/result surfaces."
+  ],
+  "qaSequence": [
+    "Exact product head: all three PR guards green.",
+    "Static visual-contract QA on the same exact head.",
+    "Protected Integration using expected head SHA.",
+    "All three exact-canonical push guards green.",
+    "Rendered desktop 909x483 comparison against reference key frames.",
+    "Rendered iPhone 852x393 and iPad 1024x768 comparison with safe-area/touch measurements.",
+    "Only rendered evidence can upgrade visual status from PENDING_RENDERED."
+  ],
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
