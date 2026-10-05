@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Progression & Mobile",
+  "owner": "Roblox High School Progression & Mobile",
+  "observedAt": "2026-10-05T16:50:00Z",
+  "result": "PASS_P2_PROGRESSION_MOBILE_SEAM_PREP__NO_PRODUCT_WRITE",
+  "input": {
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "classPrepPr": 227,
+    "classPrepArtifact": "coordination/reference-extraction/classroom_free_roam_p2_contract_39911a.json",
+    "wipMode": "STATE_SEAM_PREP_ONLY",
+    "productProducerAuthorized": false
+  },
+  "exactCanonicalSeams": {
+    "progressionBinding": {
+      "path": "school/src/server/ProgressionBinding.lua",
+      "blobSha": "979d63565a745d5674c4d2ba8181efd258d5169c",
+      "role": "Only server-authoritative class completion results are converted into durable progression.",
+      "currentCanonicalRule": "Progression points are currently derived from completion correctness/attempt count inside ProgressionBinding; this is existing Pip High progression semantics, not a verified RHS2 activity scoring formula."
+    },
+    "progressionRepository": {
+      "path": "school/src/server/ProgressionRepository.lua",
+      "blobSha": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+      "role": "Exactly-once progression repository with completion-id conflict detection and compare-and-swap persistence."
+    },
+    "persistenceProvider": {
+      "path": "school/src/server/ProgressionPersistence.lua",
+      "blobSha": "d68c87009a393c3bc8da959bd63cc5e1c9911838",
+      "role": "Single canonical durable adapter; live mode uses PipHighProgressionV1 and unpublished Studio uses the memory adapter."
+    },
+    "classProgressionTest": {
+      "path": "school/tests/class_progression_integration_spec.lua",
+      "blobSha": "d33ef33b9059efef6efd38461f76cc1a218287c1",
+      "guarantees": [
+        "failed durable save blocks return to free roam",
+        "pending completion blocks another class and explicit leave",
+        "retry reuses the original submission identity",
+        "post-commit replay is duplicate rather than a second award",
+        "rejoin restores one committed completion and points"
+      ]
+    },
+    "repositoryTest": {
+      "path": "school/tests/progression_repository_spec.lua",
+      "blobSha": "3616a9a73a3cf8f2f31d1b3d4436803f6d797581",
+      "guarantees": [
+        "duplicate completion id is idempotent when payload matches",
+        "conflicting payload under the same completion id is rejected",
+        "compare-and-swap retries preserve concurrent durable state",
+        "failed save does not mutate local committed state"
+      ]
+    },
+    "client": {
+      "path": "school/src/client/CanonicalSchoolClient.client.lua",
+      "blobSha": "68c74a0667b7657411c7d819a8659c6509c400d4",
+      "role": "Read-only presentation consumer for GetProgressionState and server-returned progressionState; no client progression write authority."
+    }
+  },
+  "p2Boundary": {
+    "durableProgression": [
+      "P2 activity presentation must not create a second persistence store or progression authority.",
+      "Completion remains gated by ClassProgressionCoordinator -> ProgressionBinding -> ProgressionRepository.",
+      "A failed durable commit keeps the player in progression-pending state and cannot show a successful return-to-free-roam outcome.",
+      "Save/rejoin acceptance remains exact-canonical runtime evidence, not inferred from headless tests."
+    ],
+    "ephemeralActivityScoring": [
+      "Observed dodgeball/dance/cook scores, lives, team counts, streaks, multipliers, grades and floating rewards are presentation evidence only.",
+      "P2 may carry server-returned ephemeral score/grade fields for presentation, but must not derive durable progression by reverse-engineering sampled footage values.",
+      "Do not reinterpret current Pip High 25/15/10 durable points as RHS2 minigame score semantics.",
+      "Any future change to durable progression amounts is a separate progression-scope decision requiring deterministic migration/idempotency coverage."
+    ],
+    "mobileReadOnly": [
+      "Class/activity HUD and Report Card presentation must stay within the same safe-area and movement/camera exclusion rules used by canonical responsive HUD work.",
+      "Client may display server-returned points, grade, score, rewards and completion state but cannot authorize or persist them.",
+      "Result dismissal must restore compact HUD and movement/camera state only after the server outcome permits returnToFreeRoam."
+    ]
+  },
+  "futureProducerAcceptance": [
+    "No second progression repository, persistence provider, reward writer or completion authority.",
+    "One durable completion id per authoritative classKey remains sufficient to suppress duplicate durable awards.",
+    "Activity action ids and completion ids are deterministic/idempotent and covered by mutation-sensitive tests.",
+    "Runtime failure injection proves no false Report Card success and no free-roam release before durable commit.",
+    "Rendered iPhone/iPad checks include the active activity HUD, completion summary, pending-save state and restored free roam.",
+    "Save/rejoin on the exact future producer canonical restores the committed result exactly once."
+  ],
+  "riskNotes": [
+    {
+      "id": "EPHEMERAL_SCORE_VS_DURABLE_POINTS",
+      "risk": "A future activity implementation could accidentally treat visible minigame score as durable Pip High progression.",
+      "mitigation": "Keep ephemeral activity score/grade in class-session response/presentation fields and feed only the canonical completion contract into ProgressionBinding unless an explicitly scoped progression change is approved."
+    },
+    {
+      "id": "FALSE_COMPLETION_ON_SAVE_FAILURE",
+      "risk": "A polished Report Card could visually imply success before the durable commit succeeds.",
+      "mitigation": "Pending persistence must render a distinct pending/retry state and keep returnToFreeRoam=false until the same completion identity commits."
+    },
+    {
+      "id": "MOBILE_MODAL_OBSTRUCTION",
+      "risk": "A classroom result/activity surface could regress the recently repaired iPhone safe-area and touch-control clearance.",
+      "mitigation": "Reuse responsive layout/exclusion helpers and require desktop/iPhone/iPad geometry plus rendered device evidence."
+    }
+  ],
+  "exactCanonicalCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37334868469,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37334868501,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37334868472,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    }
+  ],
+  "blocker": "P1 rendered/device/traversal/save-rejoin Smoke remains LOCAL_ONLY_REQUIRED on canonical 39911a; PAAM-L044 was offline on the current poll, so P1 Package and P2 product activation remain blocked.",
+  "nextHandoff": "Class & Education may consume this seam contract together with PR227. Control Tower activates product code only after P1 full Smoke PASS and deterministic Package.",
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
