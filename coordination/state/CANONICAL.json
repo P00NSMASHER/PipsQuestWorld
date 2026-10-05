@@ -1,62 +1,63 @@
 {
-  "schemaVersion": 22,
+  "schemaVersion": 23,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
+  "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_DEFECT_ACTIVE__FEATURE_MODAL_HUD_CLEARANCE",
-  "parentCertifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "parentCertifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "repair": {
-    "pr": 252,
-    "branch": "rebuild/high-school-outfit-panel-safe-area-c7d5e36-v1",
-    "sha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
-    "scope": "OutfitInputs responsive content/safe-area repair and canonical internal-entry suppression"
+    "pr": 258,
+    "branch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
+    "sha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
+    "scope": "Shop/Travel responsive HUD/touch-zone clearance repair"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37357739121,
+      "runId": 37359804157,
       "event": "push",
       "conclusion": "success",
-      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
+      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37357739040,
+      "runId": 37359804120,
       "event": "push",
       "conclusion": "success",
-      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
+      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37357738962,
+      "runId": 37359804739,
       "event": "push",
       "conclusion": "success",
-      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
+      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
-    "evidence": "PR252 review 5419048558"
+    "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
+    "evidence": "PR258 review 5419216675"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD",
-    "mergedPr": 252,
-    "candidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
-    "certifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
-    "receiptPr": 253
+    "mergedPr": 258,
+    "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
+    "certifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+    "receiptPr": 259
   },
   "integrationSmoke": {
-    "result": "BLOCKED_SOURCE_DEFECT__FEATURE_MODAL_HUD_CLEARANCE",
-    "certifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "certifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptPr": 254,
+    "receiptPr": 260,
     "releasePackageEligible": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
       "PHYSICAL_TRAVERSAL_AND_SAVE_REJOIN",
+      "SHOP_TRAVEL_LIVE_HUD_TOUCH_CLEARANCE",
       "OUTFIT_INPUTS_LIVE_DEVICE_CHECK",
       "CLASS_ACTIVITY_MODAL_LIVE_DEVICE_CHECK",
       "CAFE_CARD_LIVE_DEVICE_TOUCH_CLEARANCE"
@@ -113,24 +114,18 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_FEATURE_MODAL_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
+  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_BFC035F",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "currentCanonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
-    "currentPreflight": "coordination/release-packages/pip-high-school-57ad515-package-readiness-v1.json",
-    "reservedArtifact": "pip-high-school-57ad515-source-tree-1faefa87",
-    "reservedArtifactId": "57ad515a5905d697417db688a1cc42d4452642b8:1faefa874371a5bde209addb1bc3289bb049df23",
-    "robloxPublished": false,
-    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
+    "currentCanonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+    "currentPreflight": "coordination/release-packages/pip-high-school-bfc035f-package-readiness-v1.json",
+    "reservedArtifact": "pip-high-school-bfc035f-source-tree-95338f2a",
+    "reservedArtifactId": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c:95338f2afb1cca297a18e7a72c61f484382387bb",
+    "robloxPublished": false
   },
-  "currentSourceDefect": {
-    "id": "P1_FEATURE_MODAL_HUD_CLEARANCE",
-    "evidence": "Shared Shop/Travel modal overlaps desktop/iPhone HUD and iPhone touch exclusion zones despite reference Travel showing surrounding HUD visible.",
-    "reservedBranch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
-    "status": "REPAIR_RESERVED"
-  }
+  "currentSourceDefect": null
 }
