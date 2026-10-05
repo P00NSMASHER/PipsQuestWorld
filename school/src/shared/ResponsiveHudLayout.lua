@@ -232,9 +232,9 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
     local viewport = layout.viewport
     local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
     local leftLimit = safe.x + gap
-    local rightLimit = math.min(layout.status.x, layout.rail.x) - gap
+    local rightLimit = math.min(layout.status.x, layout.rail.x)
     local topLimit = safe.y + gap
-    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y)
     local centerX = safe.x + (safe.width / 2)
 
     for _, zone in ipairs(layout.exclusionZones or {}) do
@@ -243,7 +243,7 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
         elseif zone.x >= centerX then
             rightLimit = math.min(rightLimit, zone.x)
         else
-            bottomLimit = math.min(bottomLimit, zone.y - gap)
+            bottomLimit = math.min(bottomLimit, zone.y)
         end
     end
 
@@ -256,12 +256,11 @@ function ResponsiveHudLayout.computeInteractionModal(layout, baseSize)
 
     local width = baseWidth * scale
     local height = baseHeight * scale
-    local modal = rect(
-        leftLimit + ((availableWidth - width) / 2),
-        topLimit + ((availableHeight - height) / 2),
-        width,
-        height
-    )
+    local centeredX = safe.x + ((safe.width - width) / 2)
+    local centeredY = safe.y + ((safe.height - height) / 2)
+    local x = clamp(centeredX, leftLimit, rightLimit - width)
+    local y = clamp(centeredY, topLimit, bottomLimit - height)
+    local modal = rect(x, y, width, height)
     modal.scale = scale
     modal.gap = gap
     modal.baseWidth = baseWidth
