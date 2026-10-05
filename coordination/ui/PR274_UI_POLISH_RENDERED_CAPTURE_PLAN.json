@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Integration Smoke / QA",
+  "createdAt": "2026-10-05T20:43:00Z",
+  "status": "READY_FOR_FUTURE_UI_POLISHED_CANONICAL__NOT_EXECUTED",
+  "candidatePr": 274,
+  "candidateHead": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+  "candidateBase": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "activation": "Use only after PR274 passes all three exact-head guards, independent QA, protected Integration, and all three exact-canonical push guards. Rebind exactSha to the resulting integrated canonical before runtime execution.",
+  "referenceSources": [
+    {
+      "id": "A",
+      "name": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736"
+    },
+    {
+      "id": "B",
+      "name": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d"
+    },
+    {
+      "id": "C",
+      "name": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc"
+    }
+  ],
+  "deviceProfiles": [
+    {
+      "id": "desktop",
+      "viewport": {
+        "width": 909,
+        "height": 483
+      },
+      "safeInsets": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "id": "iphone_landscape",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "safeInsets": {
+        "left": 47,
+        "top": 12,
+        "right": 47,
+        "bottom": 21
+      }
+    },
+    {
+      "id": "ipad_landscape",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "safeInsets": {
+        "left": 24,
+        "top": 24,
+        "right": 24,
+        "bottom": 20
+      }
+    }
+  ],
+  "captureStates": [
+    {
+      "id": "FREE_ROAM_HUD",
+      "reference": "A@00:05",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Neutral free-roam world state with no feature modal open.",
+      "assert": [
+        "dark compact top-right status stack",
+        "four large primary right-rail actions in red/cyan/green/gold families",
+        "small inert utility strip below primary rail when geometry permits",
+        "four separated glossy bottom quick slots",
+        "no large permanent center panel",
+        "world sightline remains dominant",
+        "no pale legacy panel tokens or Arial typography visible"
+      ],
+      "evidence": [
+        "full-frame screenshot",
+        "status ROI",
+        "right-rail ROI",
+        "quickbar ROI",
+        "viewport/FOV metadata"
+      ]
+    },
+    {
+      "id": "TRAVEL_MODAL",
+      "reference": "C@00:05",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Open Travel through the canonical primary rail while a current class destination is available when possible.",
+      "assert": [
+        "dark navy body",
+        "bright royal-blue header with angled right treatment",
+        "white close/back controls",
+        "gold Locations tab and deep-blue inert Servers tab",
+        "three-column destination-card hierarchy",
+        "only server-current-room destination actionable",
+        "unverified cards explicitly unavailable/inert",
+        "persistent status/rail/quickbar visible around modal",
+        "modal clear of left movement and right camera/action exclusion zones"
+      ],
+      "evidence": [
+        "full-frame screenshot",
+        "Travel ROI",
+        "header/tabs ROI",
+        "touch-control bounds",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "SHOP_MODAL",
+      "reference": "B@00:45 visual family only",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Open Style Shop through canonical rail. Do not fabricate catalog items.",
+      "assert": [
+        "navy/royal-blue RHS2 shop-family chrome",
+        "clear browse/details hierarchy",
+        "empty-catalog messaging remains honest when catalog is empty",
+        "close/back controls match shared RHS2 affordance family",
+        "status/rail/quickbar behavior matches the canonical feature-panel mode",
+        "no fake products, prices or asset IDs"
+      ],
+      "evidence": [
+        "full-frame screenshot",
+        "panel ROI",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "AVATAR_OUTFIT",
+      "reference": "authorized Legacy outfit evidence plus RHS2 common chrome",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Open Avatar from the canonical primary rail.",
+      "assert": [
+        "one OutfitInputs surface",
+        "internal Custom Outfits entry remains hidden",
+        "Gotham-family typography and RHS2 navy/blue/gold shared chrome",
+        "all verified outfit fields and presented slots remain reachable",
+        "full content contained inside safe bounds",
+        "close/back restores compact HUD"
+      ],
+      "evidence": [
+        "full-frame screenshot",
+        "panel bounds",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "HOUSE_AND_EDITOR",
+      "reference": "B@00:50 housing family",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Open House and then Housing Editor through current authorized seams.",
+      "assert": [
+        "House uses dark navy + royal-blue common RHS2 chrome",
+        "Housing Editor uses shared RHS2 visual tokens rather than pale legacy presentation",
+        "both remain inside safe bounds",
+        "no movement/camera-zone obstruction",
+        "close/back and editor transitions preserve one-active-panel behavior"
+      ],
+      "evidence": [
+        "House screenshot",
+        "Editor screenshot",
+        "panel bounds",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "CAFE_CARD",
+      "reference": "RHS2 common compact-surface language; exact cafe visual parity not claimed",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Reach the cafe and open/trigger the canonical cafe job card.",
+      "assert": [
+        "navy/blue/gold shared RHS2 chrome",
+        "card clears quickbar/status/rail/touch zones",
+        "start/leave controls remain reachable",
+        "no duplicate handler or authority change"
+      ],
+      "evidence": [
+        "card screenshot",
+        "bounds",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "VEHICLE_CARD",
+      "reference": "RHS2 common compact-surface language; dealership visual family remains future P5",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Reach vehicle spawn surface and show LegacyVehiclePanel.",
+      "assert": [
+        "navy/blue/gold shared RHS2 chrome",
+        "card remains centered and clears quickbar",
+        "touch profiles clear left/right exclusion zones",
+        "vehicle spawn/input/server authority unchanged"
+      ],
+      "evidence": [
+        "card screenshot",
+        "bounds",
+        "interaction trace"
+      ]
+    },
+    {
+      "id": "CLASS_ACTIVITY_MODAL",
+      "reference": "RHS2 common class/activity visual language; exact minigame parity deferred to P2",
+      "requiredProfiles": [
+        "desktop",
+        "iphone_landscape",
+        "ipad_landscape"
+      ],
+      "setup": "Enter the authoritative current class and open the current activity surface.",
+      "assert": [
+        "RHS2 navy/blue/Gotham common chrome",
+        "full modal contained in safe bounds",
+        "answer controls reachable",
+        "no false successful completion before durable progression commit",
+        "return/leave restores compact HUD"
+      ],
+      "evidence": [
+        "modal screenshot",
+        "bounds",
+        "interaction trace"
+      ]
+    }
+  ],
+  "comparison": [
+    "Run coordination/ui/compare_rhs2_ui.py using the integrated-canonical captures and locked ROI manifest.",
+    "Treat numeric comparison as triage only.",
+    "Perform rendered visual review against A@00:05, C@00:05, B@00:45 and other locked reference states.",
+    "Record deviations by surface and device rather than collapsing them into one pass/fail."
+  ],
+  "passRule": "No exact RHS2 visual-parity claim until all required current P1 capture states have rendered/device evidence on the same integrated canonical and no critical visible mismatch remains. P2/P3/P5/P6 reference families stay future priorities rather than being falsely certified now.",
+  "exactParityClaimed": false,
+  "runtimeExecuted": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
