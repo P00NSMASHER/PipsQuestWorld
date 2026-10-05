@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 21,
+  "schemaVersion": 22,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "currentBlockers": [
@@ -9,13 +9,13 @@
       "type": "LOCAL_ONLY_REQUIRED",
       "exactSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "status": "BLOCKS_P1_PACKAGE_AND_NEXT_PRODUCT_PRODUCER",
-      "evidence": "PR #225 / coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json; ONLINE_LAPTOP lease outcome at coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
-      "reason": "Rendered desktop/iPhone/iPad captures, physical traversal, live menu interaction, and save/rejoin remain unexecuted. Current-run Desktop Commander poll found PAAM-L044 offline, so no Roblox Studio/runtime action could be attempted."
+      "evidence": "PR225 runtime contract; PR234 local execution plan; coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
+      "reason": "Rendered desktop/iPhone/iPad captures, physical traversal, live menu interaction, and save/rejoin remain unexecuted. The local execution plan is complete, but PAAM-L044 is offline on the current poll."
     }
   ],
-  "gateStatus": "P1_CLOUD_SAFE_INTEGRATED__P2_PREP_READY__PACKAGE_AND_PRODUCT_ACTIVATION_BLOCKED_ON_LOCAL_ONLY_SMOKE",
+  "gateStatus": "P1_CLOUD_SAFE_INTEGRATED__LOCAL_RUNBOOK_READY__PACKAGE_AND_PRODUCT_ACTIVATION_BLOCKED_ON_DEVICE_RUNTIME_SMOKE",
   "nextProducer": "Roblox High School Class & Education",
-  "nextObjective": "P2_CLASSROOM_FREE_ROAM_PREP_READY__ACTIVATE_PRODUCT_ONLY_AFTER_P1_SMOKE_AND_PACKAGE",
+  "nextObjective": "EXECUTE_PR214_39911A_LOCAL_SMOKE_PLAN_WHEN_PAAM_L044_ONLINE__THEN_PACKAGE__THEN_ACTIVATE_P2",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
