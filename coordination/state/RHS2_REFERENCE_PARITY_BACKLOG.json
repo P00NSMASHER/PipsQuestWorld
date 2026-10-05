@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 29,
+  "schemaVersion": 30,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T21:51:00Z",
-  "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "observedAt": "2026-10-05T21:58:30Z",
+  "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved repair owner, exact-SHA CI -> independent QA -> Integration -> Smoke -> Package, and no parity claim without rendered/device comparison.",
@@ -303,21 +303,21 @@
   "productParityGapsClosed": [],
   "lastReconciledAt": "2026-10-05T04:01:54Z",
   "pipeline": {
-    "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__FOUNDATION_ATTEMPT7__CLASS__PROGRESSION_ATTEMPT2",
+    "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__37378786669_37378786670_37378786810",
     "priorPackagedCanonical": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "priorPackageStatus": "PRESERVED",
     "p1CandidatePr": 264,
     "p1CandidateHead": "d2f51131ef5a1045dc00ec253d1b471686185e89",
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37363499172_37363499168_37363499184",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5419550318",
-    "p1IntegrationStatus": "PASS_INTEGRATED_EXACT_HEAD__PR264__RECEIPT_PR284",
-    "p1SmokeStatus": "DEFERRED_BEHIND_PR274_INTEGRATION",
-    "p1PackageStatus": "DEFERRED_BEHIND_UI_POLISH_AND_FINAL_SMOKE",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ONLY_AFTER_UI_POLISH_FINAL_SMOKE_AND_PACKAGE",
+    "p1IntegrationStatus": "PASS_INTEGRATED_EXACT_HEAD__PR274__RECEIPT_PR286",
+    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__BOUND_TO_04F4E5__PR287",
+    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR288",
+    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_04F4E5__ACTIVATE_AFTER_SMOKE_AND_PACKAGE",
     "p1UiPolishPr": 274,
     "p1UiPolishHead": "89cbb0a41b778b854b18b1382af4037596766570",
-    "p1UiPolishStatus": "ACTIVE__EXACT_HEAD_CI_IN_PROGRESS__PREAUDIT_PASS__RENDERED_PENDING"
+    "p1UiPolishStatus": "INTEGRATED__STATIC_QA_PASS__RENDERED_PENDING"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -412,38 +412,32 @@
   "openDefects": [],
   "remainingEvidenceGaps": [
     {
-      "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
+      "id": "P1_FINAL_RUNTIME_RENDERED_DEVICE_COMPARISON",
       "owner": "Roblox High School Integration Smoke",
-      "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "referenceClipTime": "A@00:05/00:25/00:45/02:05, C@00:05-00:08, recurring HUD and class/free-roam interaction",
+      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
       "acceptanceCriteria": [
-        "Execute exact bfc035f local Smoke plan",
-        "Physical spawn/entrance/atrium/corridor/stair traversal",
-        "Comparable-FOV rendered captures desktop/iPhone/iPad",
-        "Shop/Travel surrounding-HUD and mobile touch-zone clearance",
-        "Avatar/OutfitInputs full-content/safe-area interaction",
-        "House/Housing Editor live interaction",
-        "ClassActivityModal live safe-area/restoration",
-        "CafeCard live safe-area/touch-zone check",
-        "Save/rejoin restoration"
+        "desktop/iPhone/iPad rendered captures",
+        "Travel/free-roam comparison to locked frames",
+        "live feature interaction",
+        "physical traversal",
+        "save/rejoin restoration"
       ],
-      "outputLocation": "coordination/smoke/runtime-evidence/bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c/capture-receipt.json",
-      "blocker": "LOCAL_ONLY_REQUIRED authorized Roblox Studio/device path.",
+      "outputLocation": "coordination/smoke/runtime-evidence/04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb/capture-receipt.json",
+      "blocker": "LOCAL_ONLY_REQUIRED; PAAM-L044 offline.",
       "nextHandoff": "Roblox High School Release & Package Gate"
     },
     {
       "id": "P2_PRODUCT_ACTIVATION_GATE",
       "owner": "Roblox High School Control Tower",
-      "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "referenceClipTime": "A@01:04-01:50 and B@00:00-00:15/B@01:04-01:31",
+      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
       "acceptanceCriteria": [
-        "P1 exact-canonical runtime Smoke PASS",
-        "P1 deterministic bfc035f Package complete",
-        "Rebased P2 activation manifest remains current against packaged canonical",
+        "P1 final exact-canonical Smoke PASS",
+        "P1 deterministic 04f4e5 Package complete",
+        "P2 activation manifest current against packaged canonical",
         "Control Tower releases one producer slot"
       ],
       "outputLocation": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
-      "blocker": "P1 LOCAL_ONLY_REQUIRED runtime Smoke.",
+      "blocker": "Final P1 runtime Smoke.",
       "nextHandoff": "Roblox High School Class & Education"
     }
   ],
@@ -483,24 +477,16 @@
   },
   "uiVisualParityGate": {
     "priority": "P1_BEFORE_FINAL_SMOKE",
-    "owner": "Pip High Free Roam / UI Visual Parity",
-    "status": "ACTIVE_EXACT_HEAD_89CBB__PREDECESSOR_GATE_CLEARED",
+    "owner": "Roblox High School Integration Smoke",
+    "status": "STATIC_QA_INTEGRATION_COMPLETE__FINAL_RENDERED_DEVICE_EVIDENCE_PENDING",
     "pr": 274,
     "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "integratedCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
     "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
     "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
     "renderedCapturePlan": "coordination/ui/PR274_UI_POLISH_RENDERED_CAPTURE_PLAN.json",
-    "staticScope": [
-      "persistent HUD/status/right rail/quickbar",
-      "Shop/Travel common chrome",
-      "House/Housing Editor",
-      "Avatar/Outfit",
-      "ClassActivityModal",
-      "CafeCard",
-      "LegacyVehiclePanel",
-      "inert utility strip below primary rail"
-    ],
+    "smokeExecutionPlan": "coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json",
     "exactParityClaim": "PENDING_RENDERED"
   }
 }

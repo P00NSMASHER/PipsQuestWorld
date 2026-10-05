@@ -1,59 +1,63 @@
 {
-  "schemaVersion": 26,
+  "schemaVersion": 27,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "sha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
   "sourceRoot": "school/**",
-  "status": "P1_VEHICLE_REPAIR_FULLY_INTEGRATED__UI_VISUAL_PARITY_PR274_ACTIVE",
-  "parentCertifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+  "status": "P1_UI_VISUAL_PARITY_INTEGRATED__LOCAL_ONLY_FINAL_SMOKE_BLOCKS_PACKAGE",
+  "parentCertifiedSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "repair": {
-    "pr": 264,
-    "branch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
-    "sha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-    "scope": "LegacyVehiclePanel desktop quick-bar / target-device HUD clearance repair"
+    "pr": 274,
+    "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
+    "sha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "scope": "mandatory RHS2 UI visual-parity polish plus responsive reference alignment"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37363665326,
+      "runId": 37378786669,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "runAttempt": 7
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37363665377,
+      "runId": 37378786670,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635"
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37363665343,
+      "runId": 37378786810,
       "event": "push",
       "conclusion": "success",
-      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "runAttempt": 2
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-    "evidence": "PR264 review 5419550318"
+    "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "evidence": "PR274 review 5421030661"
   },
   "integration": {
-    "result": "PASS_INTEGRATED_EXACT_HEAD",
-    "mergedPr": 264,
-    "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-    "certifiedSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "receiptPr": 284
+    "result": "PASS_EXACT_HEAD",
+    "mergedPr": 274,
+    "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "certifiedSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "receiptPr": 286
   },
   "integrationSmoke": {
-    "result": "DEFERRED_BEHIND_PR274_INTEGRATION",
-    "certifiedSha": null,
-    "releasePackageEligible": false
+    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "certifiedSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+    "receiptPr": 287,
+    "releasePackageEligible": false,
+    "localOnlyRequired": [
+      "RHS2_FINAL_RENDERED_DEVICE_TOUCH_TRAVERSAL_SMOKE",
+      "SAVE_REJOIN"
+    ]
   },
   "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
   "vehicleIntegration": {
@@ -106,25 +110,16 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_PR274_HEAD_89CBB__CI_IN_PROGRESS",
+  "currentMilestone": "P1_FINAL_RUNTIME_SMOKE_REQUIRED_ON_UI_POLISHED_04F4E5",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__NEW_PACKAGE_DEFERRED_BEHIND_UI_POLISH_AND_FINAL_SMOKE",
-    "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
-    "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
-    "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
     "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "currentCanonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "currentPreflight": "coordination/release-packages/pip-high-school-bfc035f-package-readiness-v1.json",
-    "reservedArtifact": "pip-high-school-bfc035f-source-tree-95338f2a",
-    "reservedArtifactId": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c:95338f2afb1cca297a18e7a72c61f484382387bb",
-    "robloxPublished": false,
-    "currentPreflightStatus": "STALE_INTERMEDIATE_PREFLIGHT__DO_NOT_EMIT"
+    "currentCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "currentPreflight": "coordination/release-packages/pip-high-school-04f4e5-package-readiness-v1.json",
+    "reservedArtifact": "pip-high-school-04f4e5a-source-tree-90859586",
+    "reservedArtifactId": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb:908595866f4671595c47f3890e2fadd877f748e5",
+    "robloxPublished": false
   },
   "currentSourceDefect": null,
-  "currentProductProducer": {
-    "pr": 274,
-    "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
-    "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
-    "status": "ACTIVE__EXACT_HEAD_CI_IN_PROGRESS__PREDECESSOR_GATE_CLEARED"
-  }
+  "currentProductProducer": null
 }
