@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 13,
+  "schemaVersion": 14,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T15:49:39Z",
+  "observedAt": "2026-10-05T16:51:00Z",
   "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -170,7 +170,7 @@
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
-      "status": "EVIDENCE_PREP_ACTIVE__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
       "owner": "Roblox High School Class & Education",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
@@ -178,11 +178,20 @@
         "A@00:45"
       ],
       "acceptanceCriteria": [
-        "One classroom/free-roam transition contract with no second class or clock authority."
+        "Use one existing Foundation schedule and one existing ClassSessionController; do not introduce a second clock/session authority.",
+        "Preserve ClassProgressionCoordinator -> ProgressionBinding -> ProgressionRepository as the only durable completion path.",
+        "Implement one evidence-backed room -> instructions -> active play -> server feedback -> Report Card completion -> restored free-roam flow.",
+        "Keep observed minigame score/grade presentation separate from durable Pip High progression points.",
+        "Require deterministic duplicate-action/completion, persistence-failure/retry, leave/period-change and mobile geometry tests before QA.",
+        "Rendered desktop/iPhone/iPad and save/rejoin evidence remain separate runtime gates."
       ],
-      "outputLocation": "lane-owned evidence only until activated",
-      "blocker": "P1 full runtime Smoke and deterministic Package must complete before a P2 product producer is opened.",
-      "nextHandoff": "Control Tower after P1 Package."
+      "outputLocation": [
+        "coordination/reference-extraction/classroom_free_roam_p2_contract_39911a.json (PR227)",
+        "coordination/reference-extraction/p2_progression_mobile_seam_39911a.json (PR228)",
+        "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json (PR219)"
+      ],
+      "blocker": "P1 exact-canonical runtime Smoke and deterministic Package. Current-run PAAM-L044 poll is offline.",
+      "nextHandoff": "Control Tower activates exactly one Class & Education product producer after P1 Package."
     },
     {
       "id": "P3_HOUSING",
@@ -302,9 +311,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37308641468_37308641508_37308641830",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5417072888",
     "p1IntegrationStatus": "MERGED_TO_39911A__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS__PR225",
+    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__PAAM_L044_OFFLINE_CURRENT_POLL__PR225",
     "p1PackageStatus": "BLOCKED_FULL_RUNTIME_SMOKE",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_EVIDENCE_PREP_ONLY__NO_PRODUCT_WRITE_UNTIL_P1_PACKAGE"
+    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_PREP_READY__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -413,6 +422,21 @@
       "outputLocation": "coordination/smoke/runtime-evidence/39911a193ba6e76379c52ce67cb60bbc912bf279/capture-receipt.json",
       "blocker": "LOCAL_ONLY_REQUIRED authorized Roblox Studio/device path.",
       "nextHandoff": "Roblox High School Release & Package Gate"
+    },
+    {
+      "id": "P2_PRODUCT_ACTIVATION_GATE",
+      "owner": "Roblox High School Control Tower",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+      "referenceClipTime": "A@01:04-01:50 and B@00:00-00:15/B@01:04-01:31",
+      "acceptanceCriteria": [
+        "P1 exact-canonical runtime Smoke PASS",
+        "P1 deterministic Package complete",
+        "P2 prep contracts PR227/PR228 remain current against the packaged canonical",
+        "Control Tower releases one producer slot"
+      ],
+      "outputLocation": "future Control Tower activation state",
+      "blocker": "P1 LOCAL_ONLY_REQUIRED runtime smoke; PAAM-L044 offline on current poll.",
+      "nextHandoff": "Roblox High School Class & Education"
     }
   ],
   "distinctProductParityGapsClosed": [],
