@@ -75,6 +75,15 @@ for _, fixture in ipairs(fixtures) do
     assert(ResponsiveHudLayout.contains(layout.safe, outfitModal), fixture.name .. ": outfit modal outside safe area")
     layout.outfitModal = outfitModal
 
+    local featureModal = ResponsiveHudLayout.computeInteractionModal(layout, { width = 560, height = 390 })
+    local featureValid, featureReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModal)
+    assert(featureValid, fixture.name .. ": " .. tostring(featureReason))
+    assert(ResponsiveHudLayout.contains(layout.safe, featureModal), fixture.name .. ": feature modal outside safe area")
+    assert(not ResponsiveHudLayout.overlaps(featureModal, layout.status), fixture.name .. ": feature/status overlap")
+    assert(not ResponsiveHudLayout.overlaps(featureModal, layout.rail), fixture.name .. ": feature/rail overlap")
+    assert(not ResponsiveHudLayout.overlaps(featureModal, layout.quick), fixture.name .. ": feature/quick overlap")
+    layout.featureModal = featureModal
+
     local cafeCard = ResponsiveHudLayout.computeSafeFloatingCard(layout, { width = 260, height = 150 })
     local cafeValid, cafeReason = ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCard)
     assert(cafeValid, fixture.name .. ": " .. tostring(cafeReason))
@@ -96,6 +105,7 @@ for _, fixture in ipairs(fixtures) do
         assert(not ResponsiveHudLayout.overlaps(auxiliary.house, exclusion), fixture.name .. ": house/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(auxiliary.editor, exclusion), fixture.name .. ": editor/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(cafeCard, exclusion), fixture.name .. ": cafe/movement-camera overlap " .. index)
+        assert(not ResponsiveHudLayout.overlaps(featureModal, exclusion), fixture.name .. ": feature/movement-camera overlap " .. index)
         assert(ResponsiveHudLayout.contains(layout.safe, exclusion), fixture.name .. ": touch zone outside safe area")
         assert(not ResponsiveHudLayout.overlaps(layout.status, exclusion), fixture.name .. ": status/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(layout.rail, exclusion), fixture.name .. ": rail/movement-camera overlap " .. index)
@@ -145,6 +155,11 @@ assert(ipad.outfitModal.scale == 1, "iPad outfit modal keeps native scale")
 assert(iphone.outfitModal.scale < 1, "iPhone outfit modal must reflow")
 assert(iphone.outfitModal.y >= iphone.safe.y, "iPhone outfit modal clears safe top")
 assert(iphone.outfitModal.bottom <= iphone.safe.bottom, "iPhone outfit modal clears safe bottom")
+assert(nominal.featureModal.scale == 1, "desktop feature modal keeps native scale")
+assert(ipad.featureModal.scale == 1, "iPad feature modal keeps native scale")
+assert(iphone.featureModal.scale < 1, "iPhone feature modal must reflow into central touch corridor")
+assert(iphone.featureModal.right <= iphone.exclusionZones[2].x, "iPhone feature modal clears right touch zone")
+assert(iphone.featureModal.x >= iphone.exclusionZones[1].right, "iPhone feature modal clears left touch zone")
 assert(nominal.cafeCard.scale == 1, "desktop cafe card keeps native scale")
 assert(ipad.cafeCard.scale == 1, "iPad cafe card keeps native scale")
 assert(iphone.cafeCard.scale == 1, "iPhone cafe card fits without shrinking")
@@ -201,6 +216,36 @@ local badClassModal = zone(
 badClassModal.scale = iphone.classModal.scale
 local classMutationValid, classMutationReason = ResponsiveHudLayout.validateCenteredModal(iphone, badClassModal)
 assert(not classMutationValid and classMutationReason == "centered modal leaves safe bounds", "class modal geometry mutation must fail")
+
+local legacyFeatureDesktop = zone(
+    (909 - 560) / 2,
+    (483 - (483 * 0.76)) / 2,
+    560,
+    483 * 0.76
+)
+assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.status), "legacy desktop feature modal must overlap status")
+assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.quick), "legacy desktop feature modal must overlap quick bar")
+
+local legacyFeatureIphone = zone(
+    (852 - 560) / 2,
+    (393 - (393 * 0.76)) / 2,
+    560,
+    393 * 0.76
+)
+assert(ResponsiveHudLayout.overlaps(legacyFeatureIphone, iphone.status), "legacy iPhone feature modal must overlap status")
+assert(ResponsiveHudLayout.overlaps(legacyFeatureIphone, iphone.quick), "legacy iPhone feature modal must overlap quick bar")
+assert(ResponsiveHudLayout.overlaps(legacyFeatureIphone, iphone.exclusionZones[1]), "legacy iPhone feature modal must overlap left touch zone")
+assert(ResponsiveHudLayout.overlaps(legacyFeatureIphone, iphone.exclusionZones[2]), "legacy iPhone feature modal must overlap right touch zone")
+
+local badFeature = zone(
+    iphone.status.x - iphone.featureModal.width + 1,
+    iphone.featureModal.y,
+    iphone.featureModal.width,
+    iphone.featureModal.height
+)
+badFeature.scale = iphone.featureModal.scale
+local badFeatureValid, badFeatureReason = ResponsiveHudLayout.validateInteractionModal(iphone, badFeature)
+assert(not badFeatureValid and badFeatureReason == "interaction modal overlaps status", "feature modal HUD-overlap mutation must fail")
 
 local legacyOutfitPanelHeight = 262
 local verifiedOutfitContentBottom = 210 + (8 * 20) + 20
@@ -289,6 +334,12 @@ for _, fragment in ipairs({
     'ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)',
     'ResponsiveHudLayout.computeCenteredModal(layout, {',
     'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
+    'local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {',
+    'ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)',
+    'shopPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',
+    'shopPanelScale.Scale = featureModalLayout.scale',
+    'travelPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',
+    'travelPanelScale.Scale = featureModalLayout.scale',
     'local outfitModalLayout = ResponsiveHudLayout.computeCenteredModal(layout, {',
     'outfitPanel.Position = UDim2.fromOffset(outfitModalLayout.x, outfitModalLayout.y)',
     'outfitPanelScale.Scale = outfitModalLayout.scale',
@@ -307,6 +358,9 @@ for _, fragment in ipairs({
 }) do
     assert(clientSource:find(fragment, 1, true), "client missing responsive auxiliary binding: " .. fragment)
 end
+assert(not clientSource:find('panel.AnchorPoint = Vector2.new(0.5, 0.5)', 1, true), "fixed feature modal center-anchor regression")
+assert(not clientSource:find('panel.Size = UDim2.new(0.82, 0, 0.76, 0)', 1, true), "relative feature modal size regression")
+assert(not clientSource:find('panelConstraint.MaxSize = Vector2.new(560, 390)', 1, true), "feature panel size-constraint regression")
 assert(not clientSource:find('modal.Position = UDim2.fromScale(0.5, 0.55)', 1, true), "fixed class modal position regression")
 assert(not clientSource:find('modal.Size = UDim2.new(0.9, 0, 0, 390)', 1, true), "fixed class modal size regression")
 assert(not clientSource:find('cafeCard.AnchorPoint = Vector2.new(1, 1)', 1, true), "fixed cafe anchor regression")
