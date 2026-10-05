@@ -4,6 +4,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local Rhs2UiStyle = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Rhs2UiStyle"))
 
 local function mount(player, UserInputService)
 local playerGui = player:WaitForChild("PlayerGui")
@@ -52,6 +53,7 @@ panel.ClipsDescendants = true
 panel:SetAttribute("ReferenceExactHierarchy", true)
 panel:SetAttribute("ReferenceExactLayout", false)
 panel.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(panel)
 
 local panelScale = Instance.new("UIScale")
 panelScale.Name = "ResponsiveScale"
@@ -62,9 +64,12 @@ local title = Instance.new("TextLabel")
 title.Name = "OutfitName"
 title.Text = "Custom Outfits"
 title.Size = UDim2.new(1, 0, 0, 30)
-title.BackgroundTransparency = 1
+title.BackgroundTransparency = 0
+title.Font = Rhs2UiStyle.Font.Bold
+title.TextColor3 = Rhs2UiStyle.Palette.White
 title:SetAttribute("ReferenceExactLabel", true)
 title.Parent = panel
+Rhs2UiStyle.applyHeader(title)
 
 local slots = Instance.new("Frame")
 slots.Name = "OutfitSlots"
@@ -79,11 +84,15 @@ for index = 1, 12 do
     local slot = Instance.new("TextButton")
     slot.Name = "Slot" .. tostring(index)
     slot.Text = "Empty"
+    slot.Font = Rhs2UiStyle.Font.Medium
+    slot.TextColor3 = Rhs2UiStyle.Palette.White
+    slot.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
     slot.Size = UDim2.fromOffset(60, 24)
     slot.Position = UDim2.fromOffset(((index - 1) % 4) * 66, math.floor((index - 1) / 4) * 30)
     slot:SetAttribute("ReferenceExactEmptyLabel", true)
     slot:SetAttribute("ReferenceExactLayout", false)
     slot.Parent = slots
+    Rhs2UiStyle.applyTab(slot, false)
 end
 
 local pages = Instance.new("Frame")
@@ -110,6 +119,8 @@ local r6Warning = Instance.new("TextLabel")
 r6Warning.Name = "R6WarningInternal"
 r6Warning.Text = "[Morphs only work with R6]"
 r6Warning.BackgroundTransparency = 1
+r6Warning.Font = Rhs2UiStyle.Font.Medium
+r6Warning.TextColor3 = Rhs2UiStyle.Palette.White
 r6Warning.Size = UDim2.new(1, 0, 0, 24)
 r6Warning:SetAttribute("ReferenceExactLabel", true)
 r6Warning.Parent = morphs
@@ -133,13 +144,21 @@ for index, definition in ipairs(verifiedInputLabels) do
     local label = Instance.new(isAction and "TextButton" or "TextLabel")
     label.Name = definition.name
     label.Text = definition.text
-    label.BackgroundTransparency = 1
+    label.BackgroundTransparency = isAction and 0 or 1
+    label.Font = isAction and Rhs2UiStyle.Font.Bold or Rhs2UiStyle.Font.Medium
+    label.TextColor3 = Rhs2UiStyle.Palette.White
+    if isAction then
+        label.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+    end
     label.Size = UDim2.fromOffset(128, 20)
     label.Position = UDim2.fromOffset(8, 210 + ((index - 1) * 20))
     label:SetAttribute("ReferenceExactLabel", true)
     label:SetAttribute("ReferenceExactLayout", false)
     label.Parent = panel
-    if isAction then actionControls[definition.name] = label end
+    if isAction then
+        Rhs2UiStyle.applyTab(label, false)
+        actionControls[definition.name] = label
+    end
 end
 
 local fieldValues = {}
