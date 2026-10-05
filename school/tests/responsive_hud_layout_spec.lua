@@ -58,6 +58,19 @@ for _, fixture in ipairs(fixtures) do
     assert(not ResponsiveHudLayout.overlaps(layout.status, layout.quick), fixture.name .. ": status/quick overlap")
     assert(not ResponsiveHudLayout.overlaps(layout.rail, layout.quick), fixture.name .. ": rail/quick overlap")
 
+    local utilityGrid = ResponsiveHudLayout.computeUtilityGrid(layout)
+    assert(utilityGrid.columns == 2 and utilityGrid.rows == 3, fixture.name .. ": utility grid must remain 2x3")
+    assert(utilityGrid.x == layout.rail.x, fixture.name .. ": utility grid must align with primary rail")
+    assert(utilityGrid.y == layout.rail.bottom + layout.railGap, fixture.name .. ": utility grid must begin below primary rail")
+    if utilityGrid.visible then
+        assert(ResponsiveHudLayout.contains(layout.safe, utilityGrid), fixture.name .. ": visible utility grid outside safe area")
+        assert(not ResponsiveHudLayout.overlaps(utilityGrid, layout.quick), fixture.name .. ": visible utility grid overlaps quick bar")
+        for index, exclusion in ipairs(fixture.zones) do
+            assert(not ResponsiveHudLayout.overlaps(utilityGrid, exclusion), fixture.name .. ": visible utility grid overlaps touch zone " .. index)
+        end
+    end
+    layout.utilityGrid = utilityGrid
+
     local auxiliary = ResponsiveHudLayout.computeAuxiliaryPanels(layout)
     local auxiliaryValid, auxiliaryReason = ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
     assert(auxiliaryValid, fixture.name .. ": " .. tostring(auxiliaryReason))
@@ -150,6 +163,10 @@ assert(nominal.status.right == nominal.rail.right, "RHS2 status stack and primar
 assert(math.abs(nominal.status.x - 785) <= 3, "desktop status stack matches locked RHS2 right-side anchor")
 assert(nominal.railButtonSize == 49, "desktop primary rail buttons match locked RHS2 footprint")
 assert(nominal.railButtonSize == nominal.rail.width, "desktop primary rail buttons fill the rail width")
+assert(nominal.utilityGrid.visible, "desktop utility grid should be visible")
+assert(nominal.utilityGrid.tileSize == 22, "desktop utility tiles match locked RHS2 footprint")
+assert(nominal.utilityGrid.width == nominal.rail.width, "desktop utility grid fills primary rail width")
+assert(nominal.utilityGrid.height == 76, "desktop utility grid matches three-row footprint")
 assert(math.abs(nominal.quick.x - 360) <= 4, "desktop quickbar matches locked RHS2 horizontal reference")
 assert(nominal.quick.bottom == 477, "desktop quickbar keeps locked vertical reference")
 
@@ -200,6 +217,8 @@ assert(ipad.status.right == ipad.rail.right, "iPad status/rail right-edge alignm
 assert(iphone.quick.right < iphone.exclusionZones[2].x, "iPhone right-shifted quickbar clears camera/action zone")
 assert(iphone.quick.x > iphone.exclusionZones[1].right, "iPhone right-shifted quickbar clears movement zone")
 assert(ipad.quick.right < ipad.exclusionZones[2].x, "iPad right-shifted quickbar clears camera/action zone")
+assert(not iphone.utilityGrid.visible, "iPhone hides inert utility grid when touch zones consume the space")
+assert(ipad.utilityGrid.visible, "iPad keeps the reference utility grid visible")
 
 local badStatus = ResponsiveHudLayout.compute(
     { width = 909, height = 483 },
