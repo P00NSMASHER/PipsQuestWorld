@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 23,
+  "schemaVersion": 24,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
   "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "status": "P1_SOURCE_DEFECT_ACTIVE__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
   "parentCertifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "repair": {
     "pr": 258,
@@ -49,7 +49,7 @@
     "receiptPr": 259
   },
   "integrationSmoke": {
-    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "result": "BLOCKED_SOURCE_DEFECT__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
     "certifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
     "receiptPr": 260,
@@ -114,9 +114,9 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_BFC035F",
+  "currentMilestone": "P1_VEHICLE_CARD_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
@@ -125,7 +125,13 @@
     "currentPreflight": "coordination/release-packages/pip-high-school-bfc035f-package-readiness-v1.json",
     "reservedArtifact": "pip-high-school-bfc035f-source-tree-95338f2a",
     "reservedArtifactId": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c:95338f2afb1cca297a18e7a72c61f484382387bb",
-    "robloxPublished": false
+    "robloxPublished": false,
+    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
   },
-  "currentSourceDefect": null
+  "currentSourceDefect": {
+    "id": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
+    "evidence": "LegacyVehiclePanel fixed desktop bottom-center geometry overlaps the compact quick bar by roughly 50px vertically across nearly the entire bar width.",
+    "reservedBranch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
+    "status": "REPAIR_RESERVED"
+  }
 }
