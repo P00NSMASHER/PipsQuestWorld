@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Content QA / UI Visual Parity",
+  "createdAt": "2026-10-05T21:02:00Z",
+  "result": "PASS_TRAVEL_PANEL_PIXEL_FOOTPRINT_PINNED",
+  "source": {
+    "video": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+    "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+    "referenceClipTime": "C@00:05",
+    "frameDimensions": {
+      "width": 1112,
+      "height": 512
+    }
+  },
+  "nominalGameplayCrop": {
+    "x": 101,
+    "y": 29,
+    "width": 909,
+    "height": 483,
+    "note": "The captured video includes side/top presentation chrome; repository responsive contracts use the corresponding nominal 909×483 gameplay fixture."
+  },
+  "observedTravelSurfaceApprox": {
+    "sourceFrameBox": {
+      "left": 291,
+      "top": 93,
+      "right": 820,
+      "bottom": 447
+    },
+    "gameplaySpaceBox": {
+      "left": 190,
+      "top": 64,
+      "right": 719,
+      "bottom": 418
+    },
+    "widthApprox": 530,
+    "heightApprox": 354,
+    "centerApprox": {
+      "x": 454.5,
+      "y": 241
+    },
+    "evidenceNotes": [
+      "Bright blue Travel header spans approximately x292..707, y94..133 in the captured frame.",
+      "Dark-navy modal body and grid occupy the same centered surface through approximately x291..820.",
+      "The panel is centered in gameplay content, not centered inside the entire corridor left of the persistent HUD.",
+      "Persistent top-right status, right rail, and bottom quick slots remain visible around the modal."
+    ]
+  },
+  "defectFoundAtCandidate": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+  "priorGeometry": {
+    "baseSize": {
+      "width": 560,
+      "height": 390
+    },
+    "nominalComputedApprox": {
+      "left": 84,
+      "top": 16,
+      "right": 644,
+      "bottom": 406
+    },
+    "issue": "The prior computeInteractionModal centered within the whole left-of-HUD corridor, making the desktop modal visibly too far left and too wide/tall relative to C@00:05."
+  },
+  "repairCandidate": {
+    "headSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
+    "baseSize": {
+      "width": 530,
+      "height": 354
+    },
+    "algorithm": "Center on safe gameplay viewport first, then clamp to status/rail/quick/touch boundaries only when necessary.",
+    "nominalExpectedApprox": {
+      "left": 189,
+      "top": 64,
+      "width": 530,
+      "height": 354
+    },
+    "tests": "responsive_hud_layout_spec.lua pins nominal x/y within tolerance, exact 530×354 base size, and iPhone/iPad touch-corridor reflow."
+  },
+  "boundaries": [
+    "This is a rendered-frame measurement, not a claim about hidden original Roblox UI coordinates.",
+    "Travel authority remains server-current-room-only.",
+    "Servers tab and unverified destination cards remain inert/unavailable.",
+    "Exact parity remains pending final same-SHA rendered desktop/iPhone/iPad review."
+  ],
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
