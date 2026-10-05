@@ -119,6 +119,103 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     return layout
 end
 
+local AUXILIARY_BASE = {
+    house = { width = 248, height = 292 },
+    editor = { width = 330, height = 346 },
+}
+
+-- House and housing-editor surfaces share the same safe-area contract as the
+-- compact HUD. On short touch viewports they shrink uniformly through UIScale
+-- and stay above the movement/camera regions; larger fixtures retain 1:1 size.
+function ResponsiveHudLayout.computeAuxiliaryPanels(layout)
+    assert(type(layout) == "table", "layout table required")
+    assert(layout.safe and layout.viewport and layout.status and layout.rail and layout.quick, "complete HUD layout required")
+
+    local viewport = layout.viewport
+    local safe = layout.safe
+    local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
+    local topLimit = safe.y + gap
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        bottomLimit = math.min(bottomLimit, zone.y - gap)
+    end
+
+    local availableHeight = bottomLimit - topLimit
+    assert(availableHeight > 0, "no vertical room for auxiliary panels")
+
+    local houseScale = math.min(1, availableHeight / AUXILIARY_BASE.house.height)
+    local editorScale = math.min(1, availableHeight / AUXILIARY_BASE.editor.height)
+
+    local startX = safe.x + gap
+    local rightLimit = math.min(layout.status.x, layout.rail.x) - gap
+    local availableWidth = rightLimit - startX
+    assert(availableWidth > gap, "no horizontal room for auxiliary panels")
+
+    local houseWidth = AUXILIARY_BASE.house.width * houseScale
+    local editorWidth = AUXILIARY_BASE.editor.width * editorScale
+    if houseWidth + gap + editorWidth > availableWidth then
+        local widthScale = math.max(0, (availableWidth - gap) / (houseWidth + editorWidth))
+        houseScale = houseScale * widthScale
+        editorScale = editorScale * widthScale
+        houseWidth = AUXILIARY_BASE.house.width * houseScale
+        editorWidth = AUXILIARY_BASE.editor.width * editorScale
+    end
+
+    local houseHeight = AUXILIARY_BASE.house.height * houseScale
+    local editorHeight = AUXILIARY_BASE.editor.height * editorScale
+    local house = rect(startX, bottomLimit - houseHeight, houseWidth, houseHeight)
+    local editor = rect(house.right + gap, bottomLimit - editorHeight, editorWidth, editorHeight)
+    house.scale = houseScale
+    editor.scale = editorScale
+
+    return {
+        house = house,
+        editor = editor,
+        gap = gap,
+    }
+end
+
+function ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
+    for _, pair in ipairs({
+        { name = "house panel", value = auxiliary.house },
+        { name = "housing editor", value = auxiliary.editor },
+    }) do
+        if not pair.value or not pair.value.scale or pair.value.scale <= 0 or pair.value.scale > 1 then
+            return false, pair.name .. " has invalid scale"
+        end
+        if not ResponsiveHudLayout.contains(layout.safe, pair.value) then
+            return false, pair.name .. " leaves safe bounds"
+        end
+    end
+
+    if ResponsiveHudLayout.overlaps(auxiliary.house, auxiliary.editor) then
+        return false, "auxiliary panels overlap"
+    end
+
+    for _, panel in ipairs({
+        { name = "house panel", value = auxiliary.house },
+        { name = "housing editor", value = auxiliary.editor },
+    }) do
+        for _, hud in ipairs({
+            { name = "status", value = layout.status },
+            { name = "rail", value = layout.rail },
+            { name = "quick", value = layout.quick },
+        }) do
+            if ResponsiveHudLayout.overlaps(panel.value, hud.value) then
+                return false, panel.name .. " overlaps " .. hud.name
+            end
+        end
+        for index, zone in ipairs(layout.exclusionZones or {}) do
+            if ResponsiveHudLayout.overlaps(panel.value, zone) then
+                return false, panel.name .. " overlaps exclusion zone " .. tostring(index)
+            end
+        end
+    end
+
+    return true
+end
+
 function ResponsiveHudLayout.validate(layout)
     for _, pair in ipairs({
         { name = "status", value = layout.status },
