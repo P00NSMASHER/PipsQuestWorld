@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 80,
+  "schemaVersion": 81,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T21:15:30Z",
+  "observedAt": "2026-10-05T21:51:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "guards": "PR264_MERGED__CLASS_PUSH_GREEN__PROGRESSION_PUSH_GREEN_ATTEMPT2__FOUNDATION_PUSH_RERUN_QUEUED"
+    "guards": "PR264_FULLY_INTEGRATED__ALL_THREE_CANONICAL_PUSH_GUARDS_GREEN"
   },
   "target": {
     "universeId": "10768955678",
@@ -17,7 +17,7 @@
     "cap": 3,
     "countIncludingBase": 3,
     "producerPr": 274,
-    "producerSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935",
+    "producerSha": "89cbb0a41b778b854b18b1382af4037596766570",
     "producerBranch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
@@ -25,10 +25,11 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam / UI Visual Parity",
       "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_4B437__REFERENCE_HIERARCHY_ALIGNED__CI_QUEUED__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_89CBB__CI_IN_PROGRESS__PREDECESSOR_INTEGRATION_CLEARED",
       "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "pr": 274,
-      "headSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935"
+      "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
+      "mergePrerequisite": "All three exact-head PR guards plus independent QA on 89cbb."
     },
     "supersededCandidates": [
       {
@@ -43,16 +44,15 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_FULL: exact canonical 7446d375 + frozen support PR150 + sole UI visual-parity producer PR274 consume 3/3. PR274 may run CI/QA while the vehicle Integration gate waits on Foundation runner infrastructure, but PR274 MUST NOT merge before the vehicle Integration receipt is certified.",
+    "rule": "WIP_CAP_3_FULL: exact canonical 7446d375 + frozen support PR150 + sole UI producer PR274 consume 3/3. Predecessor vehicle Integration is certified. PR274 may merge only after all three exact-head guards and same-SHA independent QA pass.",
     "recentlyIntegrated": {
       "pr": 264,
       "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
       "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "mergedAt": "2026-10-05T19:28:52Z",
-      "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
+      "status": "FULLY_INTEGRATED__ALL_THREE_CANONICAL_PUSH_GUARDS_GREEN__RECEIPT_SCHEMA18_PR284"
     }
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_4B437_REFERENCE_HIERARCHY_ALIGNED__SIX_TILE_UTILITY_GRID__CI_QUEUED__VEHICLE_FOUNDATION_RUNNER_WAIT",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_PR274_HEAD_89CBB__PREDECESSOR_INTEGRATION_CLEARED__EXACT_HEAD_CI_IN_PROGRESS",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -110,52 +110,52 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_4B437__SCOPE_FROZEN",
+      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_89CBB__CI_IN_PROGRESS",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
       "candidatePr": 274,
-      "candidateSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935",
-      "latestOutput": "PR274 exact head 4b437 now includes the locked six-tile 2x3 inert utility grid beneath the four primary rail actions, in addition to aligned Travel footprint/centering, status-right alignment, quickbar offset, rail button footprint, and shared RHS2 visual styling across current P1 client surfaces.",
-      "objective": "Freeze product code at 4b437 unless exact-head CI/QA identifies a concrete defect.",
+      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+      "latestOutput": "PR274 exact head 89cbb preserves exact House label while retaining RHS2 header padding, after the reference-driven Travel/status/quick/rail/utility-grid alignment work. Predecessor vehicle Integration is fully certified.",
+      "objective": "Hold 89cbb stable and drive exact-head Foundation/Class/Progression guards plus independent QA. No further product edits unless CI/QA finds a concrete defect.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "PR274 exact-head CI; merge additionally depends on predecessor vehicle Integration.",
-      "exit": "Exact-head CI/QA pass or concrete defect.",
+      "dependency": "PR274 exact-head CI.",
+      "exit": "All three exact-head guards green and QA PASS, or concrete defect.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "WAIT_UI_POLISH_EXACT_HEAD_4B437_CI__REFERENCE_HIERARCHY_LOCKED",
+      "mode": "ACTIVE_EXACT_HEAD_89CBB_CI_WAIT__PREAUDIT_PASS",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 274,
-      "candidateSha": "4b437c8cc11c59cc744f6ecbb8521d1cb5ec8935",
-      "latestOutput": "Reference-image QA corrected the utility cluster to six inert tiles in a 2-column x 3-row hierarchy. Exact-head CI is queued; rendered parity remains pending same-SHA captures.",
-      "objective": "After all three b8ec guards pass, perform exact-head static visual/reference/authority QA. Keep exact visual parity PENDING_RENDERED until actual target-device captures.",
+      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+      "latestOutput": "Pre-audits confirm product changes are presentation/workflow-only, server authorities untouched, reference geometry substantially aligned, and exact visual parity still PENDING_RENDERED.",
+      "objective": "Once all three 89cbb guards pass, issue exact-head QA authorization. Then hand to protected Integration.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "All three exact-head PR guards.",
-      "exit": "QA PASS/defect on 4b437.",
+      "dependency": "PR274 89cbb exact-head CI.",
+      "exit": "QA PASS/defect.",
       "handoff": "Roblox High School Integration"
     },
     "Integration": {
-      "mode": "WAIT_ONE_EXACT_CANONICAL_FOUNDATION_PUSH_RERUN",
+      "mode": "PREDECESSOR_COMPLETE__WAIT_PR274_SAME_SHA_QA",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "candidatePr": 264,
-      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
-      "latestOutput": "PR264 merged. Class push 37363665377 success; Progression rerun 37363665343 attempt2 success; Foundation rerun 37363665326 attempt2 remains queued. Do not certify Integration until all three are green on 7446d375.",
-      "objective": "Bind PR264 to exact canonical 7446d375 once Foundation push rerun succeeds; no product edits.",
+      "candidatePr": 274,
+      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+      "latestOutput": "Vehicle-card predecessor PR264 fully certified on canonical 7446d375 in Integration receipt schema18/PR284. PR274 merge-order gate is cleared; only its own exact-head CI/QA remain.",
+      "objective": "Mechanically merge exactly the QA-authorized PR274 head after same-SHA CI/QA green; no Integration-authored product edits.",
       "owned": "protected mechanical integration/readiness only",
-      "dependency": "Foundation push rerun 37363665326.",
-      "exit": "All three exact-canonical push guards green or concrete failure.",
-      "handoff": "Pip High Free Roam visual-parity polish"
+      "dependency": "PR274 89cbb exact-head CI + QA.",
+      "exit": "UI-polished canonical integrated.",
+      "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "DEFERRED_BEHIND_REQUIRED_RHS2_UI_VISUAL_POLISH",
+      "mode": "DEFERRED_UNTIL_PR274_INTEGRATED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 258,
       "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "Runtime Smoke is intentionally not next: user-directed RHS2 UI visual polish is now a mandatory P1 product gate before final rendered/device acceptance.",
-      "objective": "Preserve prepared runtime contracts; rebind only after the UI-polished canonical integrates.",
+      "latestOutput": "Rendered/device/traversal/save-rejoin Smoke remains intentionally deferred until the UI-polished canonical integrates. Capture plan and visual-diff harness are ready.",
+      "objective": "Rebind final runtime evidence to the exact UI-polished canonical after Integration.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "Vehicle Integration -> RHS2 UI polish -> QA -> Integration.",
-      "exit": "UI-polished integrated canonical.",
+      "dependency": "PR274 Integration.",
+      "exit": "UI-polished canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
@@ -171,16 +171,16 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA80_UI_HEAD_4B437_ACTIVE__VEHICLE_FOUNDATION_RUNNER_ATTEMPT6",
+      "mode": "SCHEMA81_PR274_89CBB_ACTIVE__PREDECESSOR_INTEGRATION_CLEARED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR274 advanced to 4b437 after correcting the visible utility cluster to the six-tile 2x3 reference hierarchy. Its three exact-head guards are queued. Predecessor Foundation push attempt6 remains queued; Class/Progression are green.",
-      "objective": "Do not churn 4b437. Let CI settle, perform exact-head QA, and certify predecessor Integration when the Foundation runner executes successfully.",
+      "latestOutput": "Vehicle Integration is fully certified. PR274 exact head 89cbb is the sole producer; all three exact-head guards are running. CI concurrency was added to high-school workflows to cancel stale same-PR runs and reduce queue churn.",
+      "objective": "Do not churn 89cbb. Let exact-head CI settle, QA the same SHA, then protected-merge PR274 and move final Smoke onto the resulting canonical.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "PR274 4b437 CI + vehicle Foundation push attempt6.",
-      "exit": "Vehicle Integration certified, 4b437 QA pass/defect, or canonical change.",
-      "handoff": "Roblox High School Integration / QA"
+      "dependency": "PR274 exact-head CI/QA.",
+      "exit": "PR274 QA pass/defect or canonical change.",
+      "handoff": "Roblox High School QA & Contract"
     }
   },
   "connectorReliability": {
@@ -291,7 +291,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "PR274_UI_POLISH_QA__THEN_PROTECTED_INTEGRATION__THEN_FINAL_RENDERED_SMOKE_PACKAGE__THEN_P2",
+  "nextPriorityAfterCurrent": "QA_89CBB__PROTECTED_UI_MERGE__FINAL_RENDERED_DEVICE_SMOKE__PACKAGE__THEN_P2",
   "candidateExactHeadCi": {
     "pr": 258,
     "headSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
@@ -1071,9 +1071,9 @@
     "directive": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
     "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
-    "status": "ACTIVE_EXACT_HEAD__TRAVEL_REFERENCE_GEOMETRY_REPAIRED__CI_QUEUED__RENDERED_PENDING",
+    "status": "ACTIVE_EXACT_HEAD__CI_IN_PROGRESS__PREDECESSOR_GATE_CLEARED__RENDERED_PENDING",
     "candidatePr": 274,
-    "candidateSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
+    "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
     "currentCoverage": [
       "persistent status/action rail/quickbar",
       "Shop/Travel common modal shell",
