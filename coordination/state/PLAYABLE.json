@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "P1_SOURCE_DEFECT_ACTIVE__OUTFIT_PANEL_SAFE_AREA",
-  "currentPlayableEvidence": "Canonical c7d5e36 has green source/static CI and prior mobile repairs, but static audit found OutfitInputs content outside its declared panel and desktop/iPhone safe bounds plus internal outfit-entry mobile safe-right leakage. Runtime avatar/device acceptance is deferred until the narrow repair clears CI/QA/Integration.",
-  "runtimeValidatedThrough": "No live runtime claim on c7d5e36; runtime Smoke is blocked behind the source-proven OutfitInputs geometry defect.",
-  "headlessExactHeadValidatedThrough": "c7d5e36: all three push guards PASS, but that does not override the newly source-proven outfit presentation defect.",
+  "currentPlayableStage": "P1_MENU_INTERACTION_AUX_CLASS_CAFE_OUTFIT_GEOMETRY_REPAIRED__RUNTIME_ACCEPTANCE_PENDING",
+  "currentPlayableEvidence": "PR252 exact head 294d298e5c517f5a3e9f295dc97b2c5a981fbcd1 repaired OutfitInputs content/safe-area overflow and internal outfit-entry leakage, passed exact-head CI and independent QA, and merged to canonical 57ad515a5905d697417db688a1cc42d4452642b8. All three exact-canonical push guards passed. Feature-panel interaction, House/Housing Editor geometry, ClassActivityModal geometry, CafeCard safe/touch geometry, and OutfitInputs full-content geometry are source/headless validated. Rendered/device traversal, live interaction and save/rejoin remain unexecuted.",
+  "runtimeValidatedThrough": "No new live Roblox Studio/device runtime claim on canonical 57ad515. PR254 preserves LOCAL_ONLY_REQUIRED rendered/device/traversal/save-rejoin Smoke.",
+  "headlessExactHeadValidatedThrough": "57ad515: all three push guards PASS; feature-panel, auxiliary-panel, class-modal, CafeCard and OutfitInputs responsive geometry contracts PASS.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Repair OutfitInputs responsive content/safe geometry -> exact-head CI -> QA -> Integration -> rebind runtime Smoke -> deterministic Package -> activate armed P2.",
+  "nextMilestone": "Complete exact-canonical P1 rendered/device/traversal/OutfitInputs/ClassActivityModal/CafeCard/save-rejoin Smoke, emit deterministic 57ad515 Package, then activate armed P2_CLASSROOM_FREE_ROAM.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "milestone": "P1_OUTFIT_PANEL_SOURCE_REPAIR_REQUIRED",
-    "headlessStatus": "CI_GREEN_WITH_SOURCE_PROVEN_UI_GEOMETRY_DEFECT",
-    "runtimeStatus": "BLOCKED_BEHIND_SOURCE_REPAIR"
+    "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "milestone": "P1_OUTFIT_PANEL_SAFE_AREA_REPAIRED_AND_INTEGRATED",
+    "headlessStatus": "CI_QA_INTEGRATION_CLOUD_SAFE_PASS",
+    "runtimeStatus": "LOCAL_ONLY_REQUIRED__SMOKE_HOLD"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",

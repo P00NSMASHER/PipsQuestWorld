@@ -1,24 +1,24 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "owner": "Roblox High School Control Tower",
   "id": "P2_CLASSROOM_FREE_ROAM",
-  "preparedAt": "2026-10-05T18:12:00Z",
-  "status": "ARMED_PREP_ONLY__REBASED_TO_C7D5E36__NOT_ACTIVATED",
+  "preparedAt": "2026-10-05T18:46:00Z",
+  "status": "ARMED_PREP_ONLY__REBASED_TO_57AD515__NOT_ACTIVATED",
   "expectedBase": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "note": "Rebased from 4782aa after PR245. Class/Progression server authority blobs were re-read on c7d5e36 and are unchanged."
+    "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "note": "Rebased from c7d5e36 after PR252. Class/Progression server authority blobs are unchanged; repair touched outfit presentation/client/tests only."
   },
   "futureProducer": {
     "owner": "Roblox High School Class & Education",
-    "proposedBranch": "rebuild/high-school-classroom-free-roam-c7d5e36-v1",
+    "proposedBranch": "rebuild/high-school-classroom-free-roam-57ad515-v1",
     "productRoot": "school/**",
     "oneProducerOnly": true
   },
   "activationConditions": [
-    "Integration Smoke overallStatus is PASS on exact canonical c7d5e36 with runtimeExecuted=true and renderedParityEstablished=true.",
-    "Release/Package emits the reserved deterministic c7d5e36 source-tree checkpoint and Control Tower records it as current packaged canonical.",
-    "Live canonical still equals c7d5e36, or a newer packaged descendant is explicitly reconciled before activation.",
+    "Integration Smoke overallStatus is PASS on exact canonical 57ad515 with runtimeExecuted=true and renderedParityEstablished=true.",
+    "Release/Package emits the reserved deterministic 57ad515 source-tree checkpoint and Control Tower records it as current packaged canonical.",
+    "Live canonical still equals 57ad515, or a newer packaged descendant is explicitly reconciled before activation.",
     "No other product producer is active and WIP cap remains at or below 2/3 before opening this producer.",
     "PR227 classroom/free-roam contract and PR228 progression/mobile seam remain valid against the activation base."
   ],
@@ -111,21 +111,22 @@
     "Integration Smoke with functional/rendered/interaction/device/save-rejoin statuses separated",
     "deterministic Release/Package on the exact integrated canonical"
   ],
-  "activationAction": "Create exactly one producer branch from the then-certified packaged canonical c7d5e36 (or explicitly reconciled descendant) and set WIP producer fields only after all activationConditions pass.",
+  "activationAction": "Create exactly one producer branch from the then-certified packaged canonical 57ad515 (or explicitly reconciled descendant) and set WIP producer fields only after all activationConditions pass.",
   "productFilesChanged": false,
   "robloxPublished": false,
   "moneySpent": false,
   "taskStateChanged": false,
   "rebaseEvidence": {
-    "fromCanonical": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "toCanonical": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "producerPr": 245,
+    "fromCanonical": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "toCanonical": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "producerPr": 252,
     "changedPaths": [
       "school/src/client/CanonicalSchoolClient.client.lua",
-      "school/src/shared/ResponsiveHudLayout.lua",
-      "school/tests/legacy_hud_contract_spec.lua",
+      "school/src/shared/LegacyOutfitEntry.lua",
+      "school/tests/avatar_customization_entry_spec.lua",
+      "school/tests/avatar_customization_runtime_mount_spec.lua",
       "school/tests/responsive_hud_layout_spec.lua"
     ],
-    "authorityContinuity": "PASS_UNCHANGED_CLASS_PROGRESSION_CAFE_ECONOMY_SERVER_BLOBS"
+    "authorityContinuity": "PASS_UNCHANGED_CLASS_PROGRESSION_OUTFIT_PERSISTENCE_SHOPPING_SERVER_BLOBS"
   }
 }

@@ -1,30 +1,21 @@
 {
-  "schemaVersion": 27,
+  "schemaVersion": 28,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+  "canonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "currentBlockers": [
-    {
-      "id": "P1_OUTFIT_PANEL_SAFE_AREA",
-      "owner": "Pip High Free Roam",
-      "type": "SOURCE_PROVEN_PRODUCT_DEFECT",
-      "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-      "status": "SOLE_ACTIVE_PRODUCT_REPAIR",
-      "evidence": "OutfitInputs 286x262 contains verified labels extending through y=390; desktop/iPhone overflow. OutfitEntryInternal mobile right edge exceeds safe right.",
-      "reason": "Runtime Smoke explicitly includes Avatar interaction/device checks; repair the deterministic source defect before using scarce runtime evidence."
-    },
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "FUTURE_REPAIRED_CANONICAL",
-      "status": "BLOCKED_BEHIND_SOURCE_REPAIR",
-      "evidence": "PR247/PR250 runtime contract infrastructure",
-      "reason": "Runtime/device Smoke must rebind after the outfit presentation repair integrates."
+      "exactSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+      "status": "BLOCKS_P1_PACKAGE_AND_P2_PRODUCT_ACTIVATION",
+      "evidence": "PR254 Smoke rebind; coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json; coordination/smoke/PR252_57AD515_LOCAL_SMOKE_EXECUTION_PLAN.json",
+      "reason": "All currently source-proven mobile geometry defects are repaired and integrated. Remaining acceptance requires rendered desktop/iPhone/iPad captures, physical traversal, live feature-panel/OutfitInputs/ClassActivityModal/CafeCard interaction, and save/rejoin on exact canonical 57ad515. The authorized laptop remains offline on the last poll."
     }
   ],
-  "gateStatus": "P1_SOURCE_REPAIR_ACTIVE__RUNTIME_SMOKE_AND_PACKAGE_BLOCKED",
-  "nextProducer": "Pip High Free Roam",
-  "nextObjective": "REPAIR_OUTFIT_PANEL_SAFE_AREA__THEN_QA_INTEGRATION_SMOKE",
+  "gateStatus": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_ONLY_BLOCKER__PACKAGE_PREFLIGHT_READY",
+  "nextProducer": "Roblox High School Class & Education",
+  "nextObjective": "EXECUTE_57AD515_RUNTIME_SMOKE__THEN_EMIT_RESERVED_PACKAGE__THEN_ACTIVATE_ARMED_P2",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
