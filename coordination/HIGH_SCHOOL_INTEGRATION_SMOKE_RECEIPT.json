@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "lane": "Roblox High School Integration Smoke",
   "owner": "Roblox High School Integration Smoke",
-  "recordedAt": "2026-10-05T18:08:30Z",
+  "recordedAt": "2026-10-05T18:43:00Z",
   "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-  "milestone": "P1_CAFE_CARD_SAFE_AREA_REPAIR_POST_INTEGRATION_SMOKE",
+  "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+  "milestone": "P1_OUTFIT_PANEL_SAFE_AREA_REPAIR_POST_INTEGRATION_SMOKE",
   "referenceClipTime": [
     "A@00:05 school frontage/spawn approach",
     "A@00:25 bright atrium/central display",
@@ -17,46 +17,46 @@
     "A/B/C recurring compact right icon rail, top-right balances/status, and bottom item slots"
   ],
   "acceptanceCriteria": [
-    "Consume Integration receipt schema 15 only when its integration SHA equals live canonical c7d5e36.",
-    "Require Foundation, Class/Education, and Progression push guards successful on exact live canonical c7d5e36.",
-    "Require feature-panel, House/Housing Editor, ClassActivityModal, and CafeCard responsive geometry contracts to remain green on exact canonical c7d5e36.",
+    "Consume Integration receipt schema 16 only when its integration SHA equals live canonical 57ad515.",
+    "Require Foundation, Class/Education, and Progression push guards successful on exact live canonical 57ad515.",
+    "Require feature-panel, House/Housing Editor, ClassActivityModal, CafeCard, and OutfitInputs responsive geometry contracts to remain green on exact canonical 57ad515.",
     "Never classify static/compiler/headless/source evidence as rendered/device/traversal/save-rejoin PASS.",
     "Execute the rebound runtime capture plan on desktop, iPhone landscape and iPad landscape before full Smoke PASS."
   ],
   "outputLocation": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-  "blocker": "LOCAL_ONLY_REQUIRED: exact-canonical c7d5e36 rendered/device/traversal/save-rejoin evidence is not yet executed; PAAM-L044 remains offline on the last current-run poll.",
+  "blocker": "LOCAL_ONLY_REQUIRED: exact-canonical 57ad515 rendered/device/traversal/avatar/save-rejoin evidence is not yet executed; PAAM-L044 remains offline on the last current-run poll.",
   "integrationEvidence": {
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "receiptSchema": 15,
-    "receiptMergeSha": "d3f5ba2cd700a8e909d7954b90bd6e9c25d44f20",
-    "receiptPr": 246,
+    "receiptSchema": 16,
+    "receiptMergeSha": "55c21d70b0d9f139845170c427d7634a73427f99",
+    "receiptPr": 253,
     "result": "PASS_INTEGRATED_EXACT_HEAD",
-    "producerPr": 245,
-    "approvedCandidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
-    "canonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
-    "qa": "PR245 review 5418699307 PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_CAFE_CARD_SAFE_AREA_CONTRACT"
+    "producerPr": 252,
+    "approvedCandidateSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
+    "canonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+    "qa": "PR252 review 5419048558 PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_OUTFIT_PANEL_SAFE_AREA_CONTRACT"
   },
   "exactCanonicalPushCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37353456737,
+      "runId": 37357739121,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37353456762,
+      "runId": 37357739040,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37353456888,
+      "runId": 37357738962,
       "event": "push",
       "conclusion": "success",
-      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
+      "headSha": "57ad515a5905d697417db688a1cc42d4452642b8"
     }
   ],
   "exactHeadOutputs": [
@@ -75,6 +75,7 @@
     "auxiliaryPanelGeometry": "PASS_DESKTOP_IPHONE_IPAD_STATIC_GEOMETRY_CONTRACT",
     "classActivityModalGeometry": "PASS_DESKTOP_IPHONE_IPAD_STATIC_GEOMETRY_CONTRACT",
     "cafeCardGeometry": "PASS_DESKTOP_IPHONE_IPAD_SAFE_AND_TOUCH_ZONE_CONTRACT",
+    "outfitPanelGeometry": "PASS_DESKTOP_IPHONE_IPAD_STATIC_GEOMETRY_CONTRACT",
     "authorityContinuity": "PASS_STATIC_CONTRACT",
     "hudMount": "PASS_HEADLESS_CONTRACT__RENDERED_PENDING",
     "spawnToEntrance": "RUNTIME_PENDING",
@@ -82,6 +83,7 @@
     "physicalStairTraversal": "LOCAL_ONLY_REQUIRED",
     "classFreeRoam": "PASS_DETERMINISTIC_CONTRACT__RUNTIME_PENDING",
     "menus": "PASS_HEADLESS_INTERACTION_CONTRACT__LIVE_TOUCH_PENDING",
+    "avatarOutfit": "PASS_HEADLESS_GEOMETRY_AND_AUTHORITY_CONTRACT__LIVE_TOUCH_PENDING",
     "cafeMenu": "PASS_HEADLESS_GEOMETRY_CONTRACT__LIVE_TOUCH_PENDING",
     "saveRejoin": "PASS_HEADLESS_RESTORE_SEMANTICS__LIVE_REJOIN_PENDING",
     "renderedVisualComparison": "LOCAL_ONLY_REQUIRED",
@@ -89,10 +91,10 @@
   },
   "knownNonblockingP1Gaps": [],
   "runtimeComparisonPlan": {
-    "planVersion": 5,
+    "planVersion": 6,
     "contract": "coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json",
-    "executionPlan": "coordination/smoke/PR245_C7D5E36_LOCAL_SMOKE_EXECUTION_PLAN.json",
-    "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "executionPlan": "coordination/smoke/PR252_57AD515_LOCAL_SMOKE_EXECUTION_PLAN.json",
+    "exactSha": "57ad515a5905d697417db688a1cc42d4452642b8",
     "status": "LOCAL_ONLY_REQUIRED",
     "requiredProfiles": [
       "desktop 909x483",
@@ -103,6 +105,7 @@
       "A@00:05/00:25/00:45/02:05 comparable-FOV rendered captures",
       "spawn -> entrance -> atrium -> corridor -> stair up/down physical traversal",
       "Shop/Travel/Avatar/House/Housing Editor live interaction and obstruction checks",
+      "OutfitInputs full-content containment and canonical rail-only entry behavior",
       "ClassActivityModal live interaction/safe-area check",
       "CafeCard live safe-area/touch-zone check",
       "save/rejoin restoration"
@@ -110,19 +113,19 @@
     "timingCaution": "Reference playback contains 2x segments; do not infer original movement or animation speed without correction."
   },
   "releasePackageEligible": false,
-  "releasePackageCondition": "Blocked until exact-canonical runtime capture contract reaches full Smoke PASS on c7d5e36.",
+  "releasePackageCondition": "Blocked until exact-canonical runtime capture contract reaches full Smoke PASS on 57ad515.",
   "nextHandoff": {
     "owner": "Roblox High School Integration Smoke",
-    "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "exactSha": "57ad515a5905d697417db688a1cc42d4452642b8",
     "instruction": "Execute the rebound local Smoke plan when the authorized device is online. Until then preserve exact-head cloud evidence and do not advance Release/Package."
   },
   "localOnlyRequired": [
     {
       "id": "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
-      "exactSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+      "exactSha": "57ad515a5905d697417db688a1cc42d4452642b8",
       "universeId": "10768955678",
       "placeId": "87245440673982",
-      "check": "Rendered captures, physical traversal, class/modal/feature-panel/CafeCard interaction, iPhone/iPad obstruction measurements, and save/rejoin on exact integrated canonical.",
+      "check": "Rendered captures, physical traversal, class/modal/feature-panel/CafeCard/OutfitInputs interaction, iPhone/iPad obstruction measurements, and save/rejoin on exact integrated canonical.",
       "reason": "Static/compiler/headless contracts cannot establish Roblox rendering, camera composition, physical collision response, touch hit targets, safe areas, or live DataStore rejoin."
     }
   ],
