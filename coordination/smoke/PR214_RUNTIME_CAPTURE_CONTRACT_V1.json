@@ -3,12 +3,12 @@
   "owner": "Roblox High School Integration Smoke",
   "inputCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "producerCandidate": {
-    "pr": 252,
-    "sha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
+    "pr": 258,
+    "sha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
     "qaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION"
   },
-  "integratedCanonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
-  "testedCanonicalSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+  "integratedCanonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+  "testedCanonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
   "referenceSources": [
     {
       "clip": "A",
@@ -36,12 +36,12 @@
   "acceptanceCriteria": [
     "Use only the exact canonical SHA handed off by protected Integration after same-SHA QA approval.",
     "Capture all four A checkpoints on desktop, iPhone landscape, and iPad landscape with viewport, safe insets, FOV, and camera transform.",
-    "Exercise spawn through entrance, atrium, corridor, stairs, class/free roam, implemented feature panels, Avatar/OutfitInputs, CafeCard, ClassActivityModal, and save/rejoin.",
-    "Record rendered/device evidence for Shop, Travel, Avatar/OutfitInputs, House, Housing Editor, ClassActivityModal and CafeCard.",
+    "Exercise spawn through entrance, atrium, corridor, stairs, class/free roam, Shop/Travel, Avatar/OutfitInputs, House/Housing Editor, CafeCard, ClassActivityModal, and save/rejoin.",
+    "Record rendered/device evidence proving Shop/Travel preserve surrounding HUD and mobile touch zones.",
     "Never classify static, compiler, headless, or source-inspection evidence as rendered/device PASS."
   ],
   "outputLocation": "coordination/smoke/runtime-evidence/<integrated-canonical-sha>/capture-receipt.json",
-  "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad traversal, live avatar/outfit/class/modal/feature-panel/CafeCard interaction, and save/rejoin are still unexecuted on exact canonical 57ad515; PAAM-L044 is offline on the last poll.",
+  "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad traversal, live Shop/Travel/Avatar/OutfitInputs/ClassActivityModal/CafeCard/House/HousingEditor interaction, and save/rejoin are still unexecuted on exact canonical bfc035f; PAAM-L044 is offline on the last poll.",
   "nextHandoff": {
     "owner": "Roblox High School Release & Package Gate",
     "condition": "Only after this exact-canonical receipt validates with overallStatus PASS, runtimeExecuted=true, and renderedParityEstablished=true."
