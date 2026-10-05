@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 15,
+  "schemaVersion": 16,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:25:00Z",
+  "observedAt": "2026-10-05T17:31:00Z",
   "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -170,7 +170,7 @@
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
-      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
+      "status": "PREP_READY__ACTIVATION_MANIFEST_ARMED__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
       "owner": "Roblox High School Class & Education",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
@@ -188,10 +188,11 @@
       "outputLocation": [
         "coordination/reference-extraction/classroom_free_roam_p2_contract_39911a.json (PR227)",
         "coordination/reference-extraction/p2_progression_mobile_seam_39911a.json (PR228)",
-        "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json (PR219)"
+        "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json (PR219)",
+        "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json (PR236)"
       ],
-      "blocker": "P1 exact-canonical runtime Smoke and deterministic Package. Current-run PAAM-L044 poll is offline.",
-      "nextHandoff": "Control Tower activates exactly one Class & Education product producer after P1 Package."
+      "blocker": "P1 exact-canonical runtime Smoke and deterministic Package. When those pass, Control Tower may apply PR236 activation conditions and open exactly one P2 producer.",
+      "nextHandoff": "Control Tower validates the armed activation manifest after P1 Package."
     },
     {
       "id": "P3_HOUSING",
@@ -474,5 +475,12 @@
     "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
     "status": "P3_P6_PREP_READY__NO_PRODUCT_WRITE",
     "authorityRule": "Future product slices must reuse the pinned current canonical authorities and cannot invent hidden IDs/formulas/assets or open duplicate authorities."
+  },
+  "p2ActivationManifest": {
+    "artifact": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
+    "mergedPr": 236,
+    "expectedBaseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "ARMED_PREP_ONLY__NOT_ACTIVATED",
+    "proposedProducerBranch": "rebuild/high-school-classroom-free-roam-39911a-v1"
   }
 }
