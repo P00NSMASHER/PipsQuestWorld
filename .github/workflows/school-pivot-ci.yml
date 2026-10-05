@@ -26,6 +26,10 @@ on:
       - ".github/workflows/high-school-class-education-ci.yml"
       - ".github/workflows/high-school-progression-ci.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
