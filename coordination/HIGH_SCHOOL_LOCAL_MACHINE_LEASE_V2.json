@@ -1,19 +1,19 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "resource": "ONLINE_LAPTOP",
-  "availability": "OFFLINE",
-  "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "availability": "POLL_PENDING_AFTER_LEASE",
+  "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
   "canonicalRoot": "school/**",
   "lease": {
-    "status": "FREE",
-    "holderLane": null,
-    "purpose": null,
-    "canonicalSha": null,
-    "candidateSha": null,
-    "interactionMode": null,
-    "userAuthorizedPublish": null,
-    "claimedAt": null,
-    "expiresAt": null,
+    "status": "HELD",
+    "holderLane": "Roblox High School Integration Smoke",
+    "purpose": "Final P1 exact-canonical actual startup/rendered/device/traversal/save-rejoin smoke",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "interactionMode": "BACKGROUND_HEADLESS_PREFERRED__GUI_ONLY_IF_REQUIRED_FOR_ROBLOX_STUDIO_SMOKE",
+    "userAuthorizedPublish": false,
+    "claimedAt": "2026-10-05T23:55:00Z",
+    "expiresAt": "2026-10-06T00:15:00Z",
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
@@ -34,5 +34,5 @@
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
   },
-  "availabilityNote": "PAAM-L044 is offline. Lease released immediately. P1 exact-canonical runtime/device Smoke remains LOCAL_ONLY_REQUIRED on 39911a."
+  "availabilityNote": "Lease acquired for exact-canonical final P1 Smoke on 33a5a11. Poll PAAM-L044 after CAS claim; no Roblox publication or spend is authorized."
 }
