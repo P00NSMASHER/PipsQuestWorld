@@ -1977,6 +1977,9 @@ task.spawn(function()
 end)
 
 
+-- Keep editor-only locals in their own function frame. The canonical client
+-- otherwise exceeds Luau's per-function local-register limit at startup.
+local function mountHousingEditor()
 -- Housing Editor V2. Visible only while the owner is in Edit House mode.
 -- Exact verified Legacy labels retained: Add Furni, Hide Walls, Utilities, Other.
 editorPanel = Instance.new("Frame")
@@ -2196,7 +2199,7 @@ local function applyEditorState(state)
     end
 
     local selected = catalogById(state, selectedFurnitureItemId)
-    local placement = placementById(state, selectedPlacementId)
+    local placement = placementById(latestEditorState, selectedPlacementId)
     local itemText = selected and selected.displayName or "No furniture selected"
     local placementText = placement and (" • Selected placed " .. tostring(placement.itemId)) or ""
     editorStatus.Text = itemText .. " • Inventory x"
@@ -2361,3 +2364,7 @@ task.spawn(function()
         task.wait(0.75)
     end
 end)
+
+end
+
+mountHousingEditor()
