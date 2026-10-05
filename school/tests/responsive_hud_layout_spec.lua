@@ -252,7 +252,9 @@ local legacyFeatureDesktop = zone(
     560,
     483 * 0.76
 )
-assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.status), "legacy desktop feature modal must overlap status")
+-- The reference-aligned status stack now sits above the rail at the far right,
+-- so the legacy desktop feature modal no longer collides with status. It is
+-- still invalid because it directly overlaps the bottom quick bar.
 assert(ResponsiveHudLayout.overlaps(legacyFeatureDesktop, nominal.quick), "legacy desktop feature modal must overlap quick bar")
 
 local legacyFeatureIphone = zone(
