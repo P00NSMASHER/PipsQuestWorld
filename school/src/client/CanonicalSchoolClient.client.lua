@@ -38,10 +38,6 @@ gui.Parent = playerGui
 
 local featurePanels = FeaturePanelController.new()
 
-local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
-local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
-local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
-local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
 local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
@@ -53,7 +49,7 @@ end
 local function outline(target, thickness)
     local stroke = Instance.new("UIStroke")
     stroke.Thickness = thickness or 1
-    stroke.Color = LEGACY_BLUE
+    stroke.Color = Rhs2UiStyle.Palette.HeaderBlue
     stroke.Parent = target
     return stroke
 end
@@ -1783,9 +1779,9 @@ for _, spec in ipairs(HOUSE_STYLES) do
     button.Name = "HouseColor_" .. spec.id
     button.Size = UDim2.new(0, 50, 1, 0)
     button.BackgroundColor3 = spec.color
-    button.Font = Enum.Font.ArialBold
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = spec.label
-    button.TextColor3 = Color3.fromRGB(35, 55, 69)
+    button.TextColor3 = Rhs2UiStyle.Palette.Ink
     button.TextSize = 10
     button.Parent = colorRow
     round(button, 2)
@@ -2127,10 +2123,10 @@ local function applyEditorState(state)
         button.Name = "Catalog_" .. tostring(item.itemId)
         button.Size = UDim2.new(1, 0, 0, 36)
         button.BackgroundColor3 = item.itemId == selectedFurnitureItemId
-            and Color3.fromRGB(210, 225, 240)
-            or LEGACY_BUTTON
-        button.Font = Enum.Font.ArialBold
-        button.TextColor3 = LEGACY_BLUE_DARK
+            and Rhs2UiStyle.Palette.ActiveGold
+            or Rhs2UiStyle.Palette.TabBlue
+        button.Font = Rhs2UiStyle.Font.Bold
+        button.TextColor3 = Rhs2UiStyle.Palette.White
         button.TextSize = 11
         button.TextXAlignment = Enum.TextXAlignment.Left
         button.Text = string.format(
@@ -2141,8 +2137,7 @@ local function applyEditorState(state)
             inventoryQuantity(state, item.itemId)
         )
         button.Parent = editorCatalog
-        round(button, 2)
-        outline(button, 1)
+        Rhs2UiStyle.applyTab(button, item.itemId == selectedFurnitureItemId)
         button.Activated:Connect(function()
             selectedFurnitureItemId = item.itemId
             applyEditorState(latestEditorState)
