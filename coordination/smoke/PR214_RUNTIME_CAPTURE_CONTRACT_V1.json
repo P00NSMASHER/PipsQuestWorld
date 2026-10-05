@@ -3,12 +3,12 @@
   "owner": "Roblox High School Integration Smoke",
   "inputCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "producerCandidate": {
-    "pr": 274,
-    "sha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "pr": 292,
+    "sha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
     "qaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION"
   },
-  "integratedCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-  "testedCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "integratedCanonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+  "testedCanonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
   "referenceSources": [
     {
       "clip": "A",
@@ -34,17 +34,17 @@
     }
   ],
   "acceptanceCriteria": [
-    "Use only exact canonical 04f4e5 after same-SHA QA and Integration.",
-    "Capture locked RHS2 states on desktop 909x483, iPhone landscape 852x393 and iPad landscape 1024x768.",
-    "Exercise free-roam HUD, Travel, Shop, Avatar/Outfit, House/Housing Editor, CafeCard, VehicleCard, ClassActivityModal and save/rejoin.",
-    "Record viewport, safe inset, FOV/camera and control-bound evidence.",
-    "Never classify static/headless/source evidence or numeric visual-diff closeness as rendered-device PASS."
+    "Use only exact canonical 33a5a11 handed off after same-head compile/build + static QA approval.",
+    "Confirm actual Roblox client startup succeeds before any visual/traversal claim.",
+    "Capture all required reference checkpoints on desktop, iPhone landscape and iPad landscape with viewport/safe-inset/FOV/camera metadata.",
+    "Exercise movement/traversal, Shop, Travel, Avatar/Outfit, House/Housing Editor, CafeCard, VehicleCard, ClassActivityModal and save/rejoin.",
+    "Never classify Luau compile, Rojo build, headless/static, or source-inspection evidence as rendered/device/runtime PASS."
   ],
   "outputLocation": "coordination/smoke/runtime-evidence/<integrated-canonical-sha>/capture-receipt.json",
-  "blocker": "LOCAL_ONLY_REQUIRED: final RHS2 rendered/device/traversal/save-rejoin evidence is unexecuted on exact canonical 04f4e5.",
+  "blocker": "LOCAL_ONLY_REQUIRED: actual Roblox startup/rendered/device/traversal/feature-interaction/save-rejoin evidence is unexecuted on exact canonical 33a5a11.",
   "nextHandoff": {
     "owner": "Roblox High School Release & Package Gate",
-    "condition": "Only after this exact-canonical receipt validates with overallStatus PASS, runtimeExecuted=true, and renderedParityEstablished=true."
+    "condition": "Only after exact-canonical runtime receipt validates with overallStatus PASS, runtimeExecuted=true and renderedParityEstablished=true."
   },
   "runtimeExecuted": false,
   "renderedParityEstablished": false,

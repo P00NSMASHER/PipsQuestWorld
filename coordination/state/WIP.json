@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 82,
+  "schemaVersion": 83,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T21:58:30Z",
+  "observedAt": "2026-10-05T23:53:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "guards": "PR274_INTEGRATED__ALL_THREE_CANONICAL_PUSH_GUARDS_GREEN__FINAL_SMOKE_BOUND__PACKAGE_PREFLIGHT_READY"
+    "sha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "guards": "MAPPED_BUILD_FOUNDATION_CLASS_PROGRESSION_PUSH_GREEN__COMPILE_BUILD_REPAIR_INTEGRATED__FINAL_SMOKE_PENDING"
   },
   "target": {
     "universeId": "10768955678",
@@ -25,8 +25,8 @@
     "nextProducerReservation": {
       "owner": "Roblox High School Class & Education",
       "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "ARMED_PREP_ONLY__REBASED_TO_04F4E5__PRODUCT_SLOT_BLOCKED_UNTIL_FINAL_RUNTIME_SMOKE_AND_PACKAGE",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "status": "ARMED_PREP_ONLY__REBASED_TO_33A5A11__BLOCKED_UNTIL_FINAL_SMOKE_AND_PACKAGE",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "pr": null,
       "headSha": null
     },
@@ -43,15 +43,15 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical 04f4e5 + frozen support PR150 consume 2/3. P1 UI visual polish is fully integrated. Do not open P2 product code until final rendered/device/traversal/save-rejoin Smoke PASS and deterministic 04f4e5 Package complete.",
+    "rule": "WIP_CAP_3: exact canonical 33a5a11 + frozen support PR150 consume 2/3. UI polish and compile/build repair are fully integrated. Do not open P2 product code until final runtime Smoke PASS and deterministic 33a5a11 Package complete.",
     "recentlyIntegrated": {
-      "pr": 274,
-      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
-      "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "status": "FULLY_INTEGRATED__ALL_THREE_CANONICAL_PUSH_GUARDS_GREEN__RECEIPT_SCHEMA19_PR286"
+      "pr": 292,
+      "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+      "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "status": "FULLY_INTEGRATED__MAPPED_BUILD_PLUS_ALL_THREE_CANONICAL_GUARDS_GREEN__RECEIPT_SCHEMA20_PR293"
     }
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_INTEGRATED__FINAL_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ARMED_04F4E5__PACKAGE_PREFLIGHT_READY",
+  "currentMilestone": "P1_UI_POLISH_PLUS_COMPILE_BUILD_INTEGRATED__FINAL_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ARMED_33A5A11__PACKAGE_PREFLIGHT_READY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -109,36 +109,36 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "P1_UI_POLISH_INTEGRATED__NO_PRODUCT_WRITE",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "mode": "P1_UI_POLISH_AND_COMPILE_REPAIR_INTEGRATED__NO_PRODUCT_WRITE",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "branch": null,
-      "candidatePr": 274,
-      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
-      "latestOutput": "PR274 RHS2 UI polish passed all three exact-head guards, same-SHA QA, protected merge, and all three exact-canonical push guards. Canonical is 04f4e5.",
-      "objective": "No further P1 product write unless final runtime Smoke finds one concrete defect.",
+      "candidatePr": 292,
+      "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+      "latestOutput": "PR292 fixed the canonical client Luau local-register compilation failure without changing visible UI/gameplay authority, added the mapped compile/build gate, and merged to 33a5a11 with all four post-merge checks green.",
+      "objective": "No further P1 product write unless final runtime Smoke finds a concrete defect.",
       "owned": "bounded P1 Avatar presentation geometry only",
       "dependency": "Final Integration Smoke.",
       "exit": "Smoke defect or P2 activation.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "QA": {
-      "mode": "P1_UI_QA_COMPLETE__WAIT_RENDERED_RUNTIME_EVIDENCE",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "candidatePr": 274,
-      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
-      "latestOutput": "PR274 review 5421030661 authorized exact candidate; canonical push CI is fully green. Exact visual parity remains pending rendered device evidence.",
-      "objective": "Do not certify rendered parity from static evidence. Review actual captures when Smoke executes.",
+      "mode": "P1_CLOUD_QA_COMPLETE__WAIT_FINAL_RUNTIME_EVIDENCE",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "candidatePr": 292,
+      "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+      "latestOutput": "PR292 exact-head review 5422063015 passed. Mapped build + Foundation/Class/Progression are green on candidate and canonical. Exact visual parity/runtime remains pending actual device evidence.",
+      "objective": "Review only actual runtime/rendered/device evidence or a concrete defect; do not infer runtime from compile/build.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "Final rendered/device Smoke.",
-      "exit": "Rendered evidence or concrete visual defect.",
+      "dependency": "Final Integration Smoke.",
+      "exit": "Rendered/runtime evidence or defect.",
       "handoff": "Roblox High School Integration Smoke"
     },
     "Integration": {
-      "mode": "P1_UI_POLISH_INTEGRATED_COMPLETE__NO_PRODUCT_WRITE",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "candidatePr": 274,
-      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
-      "latestOutput": "Integration receipt schema19 merged in PR286. Candidate/canonical root and school trees are identical; all three push guards green.",
+      "mode": "P1_COMPILE_BUILD_REPAIR_INTEGRATED_COMPLETE__NO_PRODUCT_WRITE",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "candidatePr": 292,
+      "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+      "latestOutput": "Integration receipt schema20 merged in PR293. Candidate/canonical root and school trees are identical; all four canonical checks green.",
       "objective": "Hold exact integrated lineage stable during final Smoke.",
       "owned": "protected mechanical integration/readiness only",
       "dependency": "None.",
@@ -146,36 +146,36 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__BOUND_TO_04F4E5__DEVICE_OFFLINE",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "candidatePr": 274,
-      "candidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
-      "latestOutput": "PR287 binds final Smoke receipt, runtime contract and local execution plan to 04f4e5. Desktop Commander device PAAM-L044 is currently offline.",
-      "objective": "When authorized device is online, execute exact 04f4e5 rendered/device/traversal/save-rejoin plan and compare captures to locked RHS2 references.",
+      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__BOUND_TO_33A5A11__COMPILE_BUILD_GREEN",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "candidatePr": 292,
+      "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+      "latestOutput": "Smoke receipt schema22 and runtime contract rebound to 33a5a11; new PR292 exact-canonical local execution plan is ready. Mapped build confirms compile/place-construction readiness only.",
+      "objective": "When authorized device is online, execute actual startup, rendered desktop/iPhone/iPad, traversal, feature interaction and save/rejoin plan on exact 33a5a11.",
       "owned": "post-integration smoke evidence/harnesses only",
       "dependency": "ONLINE authorized device.",
       "exit": "Full exact-canonical Smoke PASS or one concrete defect.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_READY_04F4E5__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "mode": "PREFLIGHT_READY_33A5A11__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR288 merged deterministic package preflight for 04f4e5: root tree 9391797c, school tree 90859586, 73 entries; reserved package identity, not emitted.",
-      "objective": "After exact-canonical Smoke PASS, revalidate tree identities and emit deterministic 04f4e5 package.",
+      "latestOutput": "Deterministic 33a5a11 package preflight is prepared: root tree 9bb9306f, school tree 8873f39f, 73 entries; reserved artifact identity, not emitted.",
+      "objective": "After exact-canonical Smoke PASS, revalidate tree identities and emit deterministic 33a5a11 package.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
       "dependency": "Full exact-canonical final runtime Smoke PASS.",
       "exit": "Smoke PASS or canonical-head change.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA82_P1_UI_POLISH_INTEGRATED__FINAL_SMOKE_LOCAL_ONLY_HOLD__P2_ARMED_04F4E5__PACKAGE_PREFLIGHT_READY",
-      "base": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "mode": "SCHEMA83_COMPILE_BUILD_GREEN__FINAL_SMOKE_ONLY_BLOCKER__P2_ARMED_33A5A11__PACKAGE_PREFLIGHT_READY",
+      "base": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR274 Integration complete; PR287 final Smoke rebind and PR288 package preflight merged. P2 activation manifest rebased to 04f4e5. Local device PAAM-L044 offline.",
-      "objective": "Keep WIP at 2/3. Execute final exact-canonical runtime Smoke when device becomes available, package 04f4e5 on PASS, then release exactly one P2 producer.",
+      "latestOutput": "PR292 compile/register-limit repair and mapped build gate fully integrated; PR293 receipt merged. Smoke/Package/P2 state is rebound to 33a5a11.",
+      "objective": "Keep WIP at 2/3. Execute final runtime Smoke when device is available, package 33a5a11 on PASS, then release exactly one P2 producer.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "Integration Smoke runtime/device evidence.",
       "exit": "Final Smoke PASS/defect or device availability change.",
@@ -199,49 +199,49 @@
   },
   "nextPriorityAfterHousing": "AVATAR_CUSTOMIZATION_SHOPPING",
   "qaResult": {
-    "pr": 274,
-    "candidate": "89cbb0a41b778b854b18b1382af4037596766570",
-    "status": "PASS_EXACT_HEAD__AUTHORIZED_FOR_PROTECTED_INTEGRATION",
-    "evidence": "Review 5421030661; Foundation 37378447242, Class 37378447133, Progression 37378447106 green.",
-    "reason": "RHS2 UI static/reference contract passed; rendered exact parity remains pending final Smoke."
+    "pr": 292,
+    "candidate": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "status": "PASS_EXACT_HEAD__REGISTER_LIMIT_REPAIR__MAPPED_COMPILE_BUILD_GATE",
+    "evidence": "PR292 review 5422063015; all four candidate checks green."
   },
   "integrationResult": {
-    "pr": 274,
-    "candidate": "89cbb0a41b778b854b18b1382af4037596766570",
-    "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "status": "MERGED__POST_MERGE_PUSH_CI_GREEN",
+    "pr": 292,
+    "candidate": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "status": "MERGED__MAPPED_BUILD_PLUS_ALL_THREE_PUSH_GUARDS_GREEN",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "receiptPr": 286
+    "receiptPr": 293,
+    "receiptMergeCommit": "b10d0df0872dc19e2c0221169a82ead3d5068a95"
   },
   "smokeResult": {
-    "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "status": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "status": "HOLD_LOCAL_ONLY_REQUIRED__COMPILE_BUILD_EXACT_HEAD_PASS",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptPr": 287,
-    "blocker": "Rendered desktop/iPhone/iPad comparison, physical traversal, live feature interaction, and save/rejoin remain unexecuted.",
+    "blocker": "Actual Roblox startup/rendered desktop/iPhone/iPad comparison, traversal, live feature interaction and save/rejoin remain unexecuted.",
     "renderedDeviceStatus": "LOCAL_ONLY_REQUIRED",
-    "nextAction": "Execute coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json when authorized device is online."
+    "nextAction": "Execute coordination/smoke/PR292_33A5A11_LOCAL_SMOKE_EXECUTION_PLAN.json when authorized device is online."
   },
   "packageResult": {
-    "status": "PRIOR_PACKAGE_PRESERVED__04F4E5_PREFLIGHT_READY__CURRENT_04F4E5_INELIGIBLE",
+    "status": "PRIOR_PACKAGE_PRESERVED__33A5A11_PREFLIGHT_READY__CURRENT_33A5A11_INELIGIBLE",
     "priorCanonical": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "priorArtifact": "pip-high-school-4323049-source-tree-836ffa7d",
-    "currentCanonical": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "currentCanonical": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
     "currentCanonicalEligibility": "PREFLIGHT_READY__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
-    "reservedCurrentArtifact": "pip-high-school-04f4e5a-source-tree-90859586",
-    "reservedCurrentArtifactId": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb:908595866f4671595c47f3890e2fadd877f748e5",
-    "reservedCurrentSchoolTreeGitSha": "908595866f4671595c47f3890e2fadd877f748e5",
-    "reservedCurrentRootCommitTreeSha": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
+    "reservedCurrentArtifact": "pip-high-school-33a5a11-source-tree-8873f39f",
+    "reservedCurrentArtifactId": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17:8873f39f62dc27fe2a39a05983768a55a2ac11be",
+    "reservedCurrentSchoolTreeGitSha": "8873f39f62dc27fe2a39a05983768a55a2ac11be",
+    "reservedCurrentRootCommitTreeSha": "9bb9306fb7bdc0742aeb5d0289c7f641812e46ff",
     "reservedCurrentEntryCount": 73,
-    "preflight": "coordination/release-packages/pip-high-school-04f4e5-package-readiness-v1.json",
+    "preflight": "coordination/release-packages/pip-high-school-33a5a11-package-readiness-v1.json",
     "preflightPr": 288,
-    "robloxPublished": false
+    "robloxPublished": false,
+    "reservedCurrentTreeTruncated": false
   },
   "branchReadiness": {
     "canonical": {
       "branch": "rebuild/high-school-foundation",
-      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "status": "INTEGRATED__ALL_THREE_PUSH_GUARDS_GREEN__FINAL_SMOKE_LOCAL_ONLY_HOLD"
+      "headSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "status": "MAPPED_BUILD_PLUS_ALL_STATIC_GUARDS_GREEN__FINAL_SMOKE_HOLD"
     },
     "contentQa": {
       "branch": "support/high-school-avatar-customization-content-00df979",
@@ -251,7 +251,7 @@
     "producer": {
       "pr": null,
       "branch": null,
-      "baseSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "baseSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "headSha": null,
       "status": "NO_ACTIVE_PRODUCT_PRODUCER__P2_ARMED_PREP_ONLY"
     },
@@ -278,7 +278,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "FINAL_RUNTIME_RENDERED_DEVICE_SMOKE_04F4E5__THEN_PACKAGE__THEN_P2_CLASSROOM_FREE_ROAM",
+  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__ARMED_ON_33A5A11__ACTIVATE_AFTER_FINAL_RUNTIME_SMOKE_AND_PACKAGE",
   "candidateExactHeadCi": {
     "pr": 258,
     "headSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
@@ -350,22 +350,21 @@
     "spendAuthorized": false
   },
   "currentRepairGate": {
-    "id": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
-    "owner": "Pip High Free Roam",
-    "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-    "evidence": "LegacyVehiclePanel AnchorPoint(0.5,1), Position(0.5,0,1,-12 desktop), Size 260x132 => desktop bounds x=324.5..584.5,y=339..471. Responsive quick bar bounds x=329.5..579.5,y=421..477, so the surfaces overlap directly.",
+    "id": "P1_FINAL_RUNTIME_ACCEPTANCE_ON_COMPILE_BUILD_GREEN_CANONICAL",
+    "owner": "Roblox High School Integration Smoke",
+    "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "evidence": "PR292 compile/build repair + PR293 Integration receipt; all four exact-canonical checks green.",
     "acceptanceCriteria": [
-      "Vehicle card contained in safe rectangles on desktop 909x483, iPhone 852x393 and iPad 1024x768",
-      "No overlap with status, rail or quick HUD groups",
-      "No overlap with mobile movement/camera exclusion zones",
-      "Keep centered contextual-card presentation and reachable action controls",
-      "Vehicle lifecycle/input/spawn/server authority unchanged",
-      "Mutation-sensitive tests reject old desktop fixed-bottom geometry and one-pixel HUD/touch overlap",
-      "All three exact-head guards green before QA"
+      "Actual Roblox startup without client register-limit/compile failure",
+      "Rendered comparable-FOV desktop/iPhone/iPad captures",
+      "Physical spawn/entrance/atrium/corridor/stair traversal",
+      "Live Shop/Travel/Avatar/House/HousingEditor/Cafe/Vehicle/Class interactions",
+      "Save/rejoin restoration",
+      "Visual-diff triage against locked RHS2 references"
     ],
-    "status": "SOURCE_PROVEN__SOLE_REPAIR_RESERVED",
-    "blocker": null,
-    "nextHandoff": "Pip High Free Roam -> QA"
+    "status": "CLOUD_COMPILE_BUILD_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING",
+    "blocker": "LOCAL_ONLY_REQUIRED runtime/device evidence",
+    "nextHandoff": "Roblox High School Integration Smoke"
   },
   "referenceParityBacklog": {
     "path": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
@@ -1020,10 +1019,9 @@
     "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
   },
   "smokeExecutionPlan": {
-    "mergedPr": 287,
-    "artifact": "coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json",
-    "exactCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "status": "READY__DEVICE_OFFLINE"
+    "artifact": "coordination/smoke/PR292_33A5A11_LOCAL_SMOKE_EXECUTION_PLAN.json",
+    "exactCanonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "status": "READY__WAIT_DEVICE_AVAILABILITY"
   },
   "p2ActivationManifest": {
     "mergedPr": 236,

@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 31,
+  "schemaVersion": 32,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "P1_UI_VISUAL_PARITY_INTEGRATED__FINAL_RENDERED_DEVICE_ACCEPTANCE_PENDING",
-  "currentPlayableEvidence": "PR274 exact head 89cbb passed all three PR guards and independent QA, merged to canonical 04f4e5, and all three exact-canonical push guards passed. Static/reference contracts now cover the RHS2 visual system and responsive geometry. Exact visual/runtime parity is not yet claimed because rendered device/traversal/save-rejoin evidence is still local-only and unexecuted.",
-  "runtimeValidatedThrough": "No final live Roblox Studio/device runtime claim on 04f4e5. PR287 binds final local-only Smoke to this exact canonical.",
-  "headlessExactHeadValidatedThrough": "04f4e5: all three push guards PASS; UI/static/reference contracts PASS; Integration PASS.",
+  "currentPlayableStage": "P1_UI_VISUAL_PARITY_AND_COMPILE_BUILD_READY__FINAL_RUNTIME_ACCEPTANCE_PENDING",
+  "currentPlayableEvidence": "Canonical 33a5a11 preserves the integrated RHS2 UI-polished product while repairing the actual Luau client register-limit compilation failure. All 33 mapped runtime sources compile with pinned Luau, Rojo constructs the validation-only place, and Mapped Build + Foundation + Class/Education + Progression are green on exact canonical. This is not a live Roblox runtime claim.",
+  "runtimeValidatedThrough": "No new live Roblox Studio/device runtime claim on canonical 33a5a11. Actual startup/rendered/device/traversal/save-rejoin remains final Smoke evidence.",
+  "headlessExactHeadValidatedThrough": "33a5a11: mapped compile/build PASS plus Foundation/Class/Progression push guards PASS.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,13 +16,13 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Execute exact 04f4e5 rendered/device/traversal/save-rejoin Smoke -> deterministic Package -> activate armed P2 Classroom/Free Roam.",
+  "nextMilestone": "Execute actual exact-canonical startup/rendered/device/traversal/save-rejoin Smoke, emit deterministic 33a5a11 Package on PASS, then activate P2_CLASSROOM_FREE_ROAM.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "milestone": "P1_UI_VISUAL_PARITY_INTEGRATED",
-    "headlessStatus": "CI_QA_INTEGRATION_CLOUD_SAFE_PASS",
+    "sha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "milestone": "P1_UI_POLISHED_COMPILE_BUILD_GREEN",
+    "headlessStatus": "MAPPED_COMPILE_BUILD_PLUS_ALL_STATIC_GUARDS_GREEN",
     "runtimeStatus": "LOCAL_ONLY_REQUIRED__FINAL_SMOKE_HOLD"
   },
   "privateRobloxTarget": {
@@ -30,5 +30,9 @@
     "placeId": "87245440673982",
     "publishAuthorized": false
   },
-  "activeUiPolishCandidate": null
+  "activeUiPolishCandidate": {
+    "pr": 274,
+    "sha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "status": "MERGED_IN_PARENT_04F4E5__PRESERVED_THROUGH_PR292"
+  }
 }

@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 31,
+  "schemaVersion": 32,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T22:11:00Z",
-  "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "observedAt": "2026-10-05T23:54:00Z",
+  "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved repair owner, exact-SHA CI -> independent QA -> Integration -> Smoke -> Package, and no parity claim without rendered/device comparison.",
@@ -141,9 +141,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "UI_POLISH_INTEGRATED__STATIC_QA_PASS__FINAL_RENDERED_DEVICE_SMOKE_PENDING",
+      "status": "UI_POLISHED__COMPILE_BUILD_GREEN__FINAL_RUNTIME_SMOKE_PENDING",
       "owner": "Roblox High School Integration Smoke",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -159,20 +159,20 @@
         "Deterministic CI, independent QA, Integration, Smoke and Package bind to exact heads.",
         "Rendered target-device comparison remains required."
       ],
-      "outputLocation": "rebuild/high-school-foundation@04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb; PR287 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: final rendered desktop/iPhone/iPad comparison, physical traversal, live feature interaction, and save/rejoin on exact canonical 04f4e5.",
-      "nextHandoff": "Integration Smoke -> Release/Package on PASS.",
+      "outputLocation": "rebuild/high-school-foundation@33a5a11ba771e0bbfbc82ed40ce5417c772a2f17; Smoke receipt schema22",
+      "blocker": "LOCAL_ONLY_REQUIRED: actual startup/rendered/device/traversal/feature-interaction/save-rejoin evidence remains unexecuted.",
+      "nextHandoff": "Integration Smoke -> Release/Package.",
       "branch": null,
-      "pr": 274,
-      "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
+      "pr": 292,
+      "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
       "openDefect": null
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
-      "status": "PREP_READY__ACTIVATION_MANIFEST_REBASED_TO_04F4E5__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
+      "status": "PREP_READY__ACTIVATION_MANIFEST_REBASED_TO_33A5A11__PRODUCT_WRITE_BLOCKED_UNTIL_FINAL_SMOKE_AND_PACKAGE",
       "owner": "Roblox High School Class & Education",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "B@00:05",
         "A@00:45"
@@ -191,15 +191,15 @@
         "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json",
         "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json"
       ],
-      "blocker": "Final P1 exact-canonical runtime Smoke and deterministic 04f4e5 Package must complete before a P2 product producer is opened.",
-      "nextHandoff": "Control Tower validates the 04f4e5 activation manifest immediately after P1 Package."
+      "blocker": "Final exact-canonical runtime Smoke and deterministic 33a5a11 Package must complete before a P2 producer opens.",
+      "nextHandoff": "Control Tower activates one Class & Education producer after Package."
     },
     {
       "id": "P3_HOUSING",
       "priority": 3,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P2",
       "owner": "Pip High Free Roam",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "B@00:25",
         "B@00:55"
@@ -216,7 +216,7 @@
       "priority": 4,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P3",
       "owner": "Pip High Free Roam",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "A@00:15"
       ],
@@ -232,7 +232,7 @@
       "priority": 5,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "B@00:45-01:05"
       ],
@@ -248,7 +248,7 @@
       "priority": 6,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "referenceClipTime": [
         "C@00:25-01:05"
       ],
@@ -303,8 +303,8 @@
   "productParityGapsClosed": [],
   "lastReconciledAt": "2026-10-05T04:01:54Z",
   "pipeline": {
-    "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__37378786669_37378786670_37378786810",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "canonicalCiStatus": "MAPPED_BUILD_FOUNDATION_CLASS_PROGRESSION_PUSH_GREEN",
     "priorPackagedCanonical": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "priorPackageStatus": "PRESERVED",
     "p1VehicleRepairPr": 264,
@@ -313,10 +313,14 @@
     "p1UiPolishPr": 274,
     "p1UiPolishHead": "89cbb0a41b778b854b18b1382af4037596766570",
     "p1UiPolishQaStatus": "PASS_EXACT_HEAD__ALL_THREE_PR_GUARDS_GREEN",
-    "p1IntegrationStatus": "PASS_INTEGRATED_EXACT_HEAD__RECEIPT_PR286",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__BOUND_TO_04F4E5__PR287",
-    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR288",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_04F4E5__ACTIVATE_AFTER_SMOKE_AND_PACKAGE"
+    "p1IntegrationStatus": "MERGED_TO_33A5A11__ALL_FOUR_POST_MERGE_CHECKS_GREEN__PR293",
+    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__ACTUAL_RUNTIME_RENDERED_DEVICE_TRAVERSAL_SAVE_REJOIN",
+    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_33A5A11__AFTER_FINAL_SMOKE_AND_PACKAGE",
+    "p1CandidatePr": 292,
+    "p1CandidateHead": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "p1CandidateCiStatus": "PASS_MAPPED_BUILD_PLUS_ALL_THREE_STATIC_PULL_REQUEST_GUARDS",
+    "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5422063015"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -411,53 +415,54 @@
   "openDefects": [],
   "remainingEvidenceGaps": [
     {
-      "id": "P1_FINAL_RUNTIME_RENDERED_DEVICE_COMPARISON",
+      "id": "P1_FINAL_RUNTIME_RENDERED_DEVICE_ACCEPTANCE",
       "owner": "Roblox High School Integration Smoke",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "acceptanceCriteria": [
-        "desktop/iPhone/iPad rendered captures",
-        "Travel/free-roam comparison to locked frames",
-        "live feature interaction",
-        "physical traversal",
-        "save/rejoin restoration"
+        "Actual Roblox client startup succeeds",
+        "Comparable desktop/iPhone/iPad rendered captures",
+        "Physical spawn/entrance/atrium/corridor/stair traversal",
+        "Live Shop/Travel/Avatar/House/HousingEditor/Cafe/Vehicle/Class interaction",
+        "Save/rejoin restoration",
+        "Visual-diff triage against locked RHS2 references"
       ],
-      "outputLocation": "coordination/smoke/runtime-evidence/04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb/capture-receipt.json",
-      "blocker": "LOCAL_ONLY_REQUIRED; PAAM-L044 offline.",
+      "outputLocation": "coordination/smoke/runtime-evidence/33a5a11ba771e0bbfbc82ed40ce5417c772a2f17/capture-receipt.json",
+      "blocker": "LOCAL_ONLY_REQUIRED authorized Roblox Studio/device path.",
       "nextHandoff": "Roblox High School Release & Package Gate"
     },
     {
       "id": "P2_PRODUCT_ACTIVATION_GATE",
       "owner": "Roblox High School Control Tower",
-      "inputSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
       "acceptanceCriteria": [
-        "P1 final exact-canonical Smoke PASS",
-        "P1 deterministic 04f4e5 Package complete",
-        "P2 activation manifest current against packaged canonical",
+        "P1 final runtime Smoke PASS",
+        "P1 deterministic 33a5a11 Package complete",
+        "Rebased P2 activation manifest remains current against packaged canonical",
         "Control Tower releases one producer slot"
       ],
       "outputLocation": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
-      "blocker": "Final P1 runtime Smoke.",
+      "blocker": "P1 final runtime Smoke.",
       "nextHandoff": "Roblox High School Class & Education"
     }
   ],
   "distinctProductParityGapsClosed": [],
   "p1RepairResult": {
-    "pr": 258,
-    "priorHistoricalCanonical": "57ad515a5905d697417db688a1cc42d4452642b8",
-    "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-    "integratedCanonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+    "pr": 292,
+    "priorCanonical": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "integratedCanonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
     "acceptanceCriteria": [
-      "Shop/Travel preserve status/rail/quick HUD on desktop/iPhone/iPad",
-      "Shop/Travel clear mobile movement/camera exclusion zones",
-      "One active feature panel plus explicit close/back semantics preserved",
-      "Travel/shopping/class server authorities unchanged",
-      "All three exact-head and exact-canonical guards pass",
-      "Rendered/device/traversal/save-rejoin remains separate Smoke evidence"
+      "Canonical client compiles without Luau register-limit failure",
+      "All explicitly mapped runtime sources compile with pinned/hash-verified Luau",
+      "Rojo builds validation-only place with matching source-container count/source hashes",
+      "Foundation/Class/Progression remain green",
+      "No gameplay/server authority changes",
+      "Actual runtime/rendered/device/traversal/save-rejoin remains separate Smoke evidence"
     ],
-    "outputLocation": "PR258 final head 1ba2004; QA review 5419216675; canonical bfc035f; PR259 Integration; PR260 Smoke rebind; PR261 Release preflight.",
-    "blocker": "LOCAL_ONLY_REQUIRED runtime/device Smoke on exact canonical bfc035f.",
-    "nextHandoff": "Roblox High School Integration Smoke.",
-    "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING"
+    "outputLocation": "PR292 final head 313ae0e; QA review 5422063015; canonical 33a5a11; PR293 Integration.",
+    "blocker": "LOCAL_ONLY_REQUIRED final runtime/device Smoke on exact canonical 33a5a11.",
+    "nextHandoff": "Roblox High School Integration Smoke",
+    "status": "COMPILE_BUILD_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING"
   },
   "futureSliceReadiness": {
     "artifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
@@ -476,7 +481,7 @@
   "uiVisualParityGate": {
     "priority": "P1_BEFORE_FINAL_SMOKE",
     "owner": "Roblox High School Integration Smoke",
-    "status": "STATIC_QA_INTEGRATION_COMPLETE__FINAL_RENDERED_DEVICE_EVIDENCE_PENDING",
+    "status": "INTEGRATED_IN_CANONICAL_04F4E5__PRESERVED_THROUGH_COMPILE_REPAIR_33A5A11__RENDERED_ACCEPTANCE_PENDING",
     "pr": 274,
     "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
     "integratedCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
@@ -485,6 +490,7 @@
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
     "renderedCapturePlan": "coordination/ui/PR274_UI_POLISH_RENDERED_CAPTURE_PLAN.json",
     "smokeExecutionPlan": "coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json",
-    "exactParityClaim": "PENDING_RENDERED"
+    "exactParityClaim": "PENDING_RENDERED",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
   }
 }
