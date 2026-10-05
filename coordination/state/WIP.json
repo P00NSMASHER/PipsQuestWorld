@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 78,
+  "schemaVersion": 79,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T21:03:00Z",
+  "observedAt": "2026-10-05T21:14:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
@@ -17,7 +17,7 @@
     "cap": 3,
     "countIncludingBase": 3,
     "producerPr": 274,
-    "producerSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
+    "producerSha": "fded42b6b6df4191382055f13c068fa7e61a7295",
     "producerBranch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
@@ -25,11 +25,10 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam / UI Visual Parity",
       "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_B8EC__REFERENCE_GEOMETRY_REPAIRED__CI_QUEUED__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_FDED__REFERENCE_GEOMETRY_ALIGNED__CI_QUEUED__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
       "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "pr": 274,
-      "headSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
-      "mergePrerequisite": "Protected vehicle-card Integration must bind PR264 to exact canonical 7446d375 after Foundation push run succeeds."
+      "headSha": "fded42b6b6df4191382055f13c068fa7e61a7295"
     },
     "supersededCandidates": [
       {
@@ -53,7 +52,7 @@
       "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
     }
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_B8EC__TRAVEL_REFERENCE_FOOTPRINT_REPAIRED__CI_QUEUED__VEHICLE_FOUNDATION_ATTEMPT6",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_FDED_REFERENCE_GEOMETRY_ALIGNED__CI_QUEUED__VEHICLE_FOUNDATION_RUNNER_WAIT",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -111,28 +110,28 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_B8EC__CI_QUEUED__MERGE_BLOCKED",
+      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_FDED__SCOPE_FROZEN",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
       "candidatePr": 274,
-      "candidateSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
-      "latestOutput": "Reference-alignment QA found and repaired one concrete Travel geometry mismatch. C@00:05 measures approximately 530×354 centered in the nominal 909×483 gameplay crop; b8ec now centers 530×354 on the viewport first and clamps only for HUD/touch safety. All prior visual polish remains.",
-      "objective": "Hold b8ec stable and drive all three exact-head guards plus independent QA. No further product edits unless CI/QA finds another concrete defect.",
+      "candidateSha": "fded42b6b6df4191382055f13c068fa7e61a7295",
+      "latestOutput": "PR274 exact head fded now includes reference-aligned Travel footprint/centering, status-right alignment, quickbar offset and full rail-button footprint on top of the shared RHS2 visual system. Independent pre-audit passed; exact-head CI is queued.",
+      "objective": "Freeze product code at fded unless exact-head CI/QA finds a concrete defect.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "PR274 b8ec exact-head CI; merge additionally depends on vehicle Integration.",
+      "dependency": "PR274 exact-head CI; merge additionally depends on predecessor vehicle Integration.",
       "exit": "Exact-head CI/QA pass or concrete defect.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "WAIT_UI_POLISH_EXACT_HEAD_B8EC_CI__TRAVEL_PIXEL_FOOTPRINT_LOCKED",
+      "mode": "WAIT_UI_POLISH_EXACT_HEAD_FDED_CI__PREAUDIT_PASS",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 274,
-      "candidateSha": "b8ec7f09538b87d098efeb5a1aa95d9ef72fc8e3",
-      "latestOutput": "Travel pixel measurement artifact pins C@00:05 nominal gameplay-space box ≈x190..719,y64..418. Responsive tests pin b8ec nominal modal near x189/y64 with exact 530×354 base and retain iPhone/iPad safety reflow.",
+      "candidateSha": "fded42b6b6df4191382055f13c068fa7e61a7295",
+      "latestOutput": "PR274 review 5420596461 pre-audit PASS on exact fded; rendered parity remains pending same-SHA captures.",
       "objective": "After all three b8ec guards pass, perform exact-head static visual/reference/authority QA. Keep exact visual parity PENDING_RENDERED until actual target-device captures.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "PR274 b8ec exact-head CI.",
-      "exit": "QA PASS/defect on b8ec.",
+      "dependency": "All three exact-head PR guards.",
+      "exit": "QA PASS/defect on fded.",
       "handoff": "Roblox High School Integration"
     },
     "Integration": {
@@ -172,15 +171,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA78_UI_HEAD_B8EC_ACTIVE__VEHICLE_FOUNDATION_RERUN_ATTEMPT6",
+      "mode": "SCHEMA79_UI_HEAD_FDED_ACTIVE__VEHICLE_FOUNDATION_RUNNER_ATTEMPT6",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR274 advanced to exact head b8ec after a reference-proven Travel footprint repair. Its three PR guards are queued. Vehicle Foundation push was cancelled before steps again and rerun as attempt6; Class/Progression remain green.",
-      "objective": "Keep b8ec as sole producer, let exact-head CI settle, QA b8ec, and certify vehicle Integration when Foundation runner finally succeeds. Only then permit protected UI merge.",
+      "latestOutput": "PR274 advanced to fded after reference-geometry alignment and independent pre-audit. Its three exact-head guards are queued. Predecessor Foundation push attempt6 remains queued; Class/Progression are green.",
+      "objective": "Do not churn fded. Let CI settle, perform exact-head QA, and certify predecessor Integration when the Foundation runner finally executes successfully.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "PR274 b8ec CI + vehicle Foundation rerun attempt6.",
-      "exit": "Vehicle Integration certified, b8ec QA pass/defect, or canonical change.",
+      "dependency": "PR274 fded CI + vehicle Foundation push attempt6.",
+      "exit": "Vehicle Integration certified, fded QA pass/defect, or canonical change.",
       "handoff": "Roblox High School Integration / QA"
     }
   },
