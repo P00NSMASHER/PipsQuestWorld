@@ -3,6 +3,14 @@ local file = assert(io.open(path, "r"))
 local source = file:read("*a")
 file:close()
 
+local projectFile = assert(io.open("school/default.project.json", "r"))
+local project = projectFile:read("*a")
+projectFile:close()
+
+local styleFile = assert(io.open("school/src/shared/Rhs2UiStyle.lua", "r"))
+local styleSource = styleFile:read("*a")
+styleFile:close()
+
 local function has(fragment, label)
     if not source:find(fragment, 1, true) then
         error("missing compact HUD contract: " .. (label or fragment), 2)
@@ -15,9 +23,31 @@ local function lacks(fragment, label)
     end
 end
 
+local function hasStyle(fragment, label)
+    if not styleSource:find(fragment, 1, true) then
+        error("missing RHS2 visual style contract: " .. (label or fragment), 2)
+    end
+end
+
+local function projectHas(fragment, label)
+    if not project:find(fragment, 1, true) then
+        error("missing RHS2 project mapping: " .. (label or fragment), 2)
+    end
+end
+
 has('gui.Name = "RobloxHighSchoolLegacyUI"', "stable ScreenGui identity")
 has('gui.IgnoreGuiInset = true', "safe-area inset ownership")
 has('local ResponsiveHudLayout = require(shared:WaitForChild("ResponsiveHudLayout"))', "shared responsive layout contract")
+has('local Rhs2UiStyle = require(shared:WaitForChild("Rhs2UiStyle"))', "shared RHS2 visual style contract")
+projectHas('"Rhs2UiStyle"', "Rhs2UiStyle project node")
+projectHas('"$path": "src/shared/Rhs2UiStyle.lua"', "Rhs2UiStyle project source")
+hasStyle('ShellNavy = Color3.fromRGB(', "dark navy palette family")
+hasStyle('HeaderBlue = Color3.fromRGB(', "royal blue palette family")
+hasStyle('ActiveGold = Color3.fromRGB(', "gold active-tab family")
+hasStyle('ProgressPurple = Color3.fromRGB(', "purple progression family")
+hasStyle('Bold = Enum.Font.GothamBold', "Gotham bold typography")
+hasStyle('Medium = Enum.Font.GothamMedium', "Gotham medium typography")
+hasStyle('Regular = Enum.Font.Gotham', "Gotham regular typography")
 has('local FeaturePanelController = require(shared:WaitForChild("FeaturePanelController"))', "single feature-panel controller")
 has('card.Name = "CompactSchoolStatus"', "compact school status")
 has('card.AnchorPoint = Vector2.new(0, 0)', "geometry contract status anchor")
@@ -27,8 +57,11 @@ has('makeRailButton("RailShop", "SHOP"', "shop rail entry")
 has('makeRailButton("RailAvatar", "AVATAR"', "avatar rail entry")
 has('houseIcon.Parent = actionRail', "house rail entry")
 has('makeRailButton("RailTravel", "TRAVEL"', "travel rail entry")
+has('Rhs2UiStyle.applyPrimaryRailButton(button, color)', "RHS2 primary rail styling")
+has('Rhs2UiStyle.applyPrimaryRailButton(houseIcon, Rhs2UiStyle.Palette.HouseGreen)', "RHS2 House rail styling")
 has('quickBar.Name = "RHS2QuickBar"', "bottom quick slots")
 has('quickSlot.Name = "QuickSlot" .. tostring(index)', "quick-slot identity")
+has('Rhs2UiStyle.applyQuickSlot(quickSlot, slot.color)', "RHS2 quick-slot styling")
 has('local function applyResponsiveHudLayout()', "responsive HUD reflow")
 has('local camera = Workspace.CurrentCamera', "active viewport source")
 has('return GuiService:GetGuiInset()', "device safe-area source")
@@ -82,7 +115,17 @@ has('featurePanels:close("explicit_back")', "explicit back")
 has('featurePanels:restore("travel", "travel_denied")', "travel denial restoration")
 has('featurePanels:reset("respawn")', "respawn restoration")
 has('travelPanel:SetAttribute("DestinationAuthority", "server-current-room-only")', "travel destination authority boundary")
+has('travelLocationsTab.Name = "LocationsTab"', "Travel Locations tab")
+has('travelLocationsTab.Text = "Locations"', "Travel Locations label")
+has('travelServersTab.Name = "ServersTab"', "Travel Servers tab")
+has('travelServersTab.Text = "Servers"', "Travel Servers label")
+has('travelServersTab.Active = false', "unverified Servers tab remains inert")
+has('travelGrid.Name = "TravelDestinationGrid"', "Travel destination-grid hierarchy")
+has('placeholder.Text = "UNAVAILABLE"', "unverified Travel cards are explicitly unavailable")
 has('shopPanel:SetAttribute("CatalogAuthority", "server-only")', "shop catalog authority boundary")
+lacks('card.BackgroundColor3 = LEGACY_PANEL', "pale primary status surface")
+lacks('quickSlot.Font = Enum.Font.ArialBold', "Arial quick-slot typography")
+lacks('travelDestination.BackgroundColor3 = LEGACY_BUTTON', "generic pale Travel card")
 lacks('{ label = "BAG"', "unverified quick-slot bag semantics")
 lacks('{ label = "PHONE"', "unverified quick-slot phone semantics")
 lacks('{ label = "ITEMS"', "unverified quick-slot items semantics")
