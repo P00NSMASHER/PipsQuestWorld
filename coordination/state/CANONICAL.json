@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 21,
+  "schemaVersion": 22,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
   "sha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "status": "P1_SOURCE_DEFECT_ACTIVE__FEATURE_MODAL_HUD_CLEARANCE",
   "parentCertifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
   "repair": {
     "pr": 252,
@@ -49,7 +49,7 @@
     "receiptPr": 253
   },
   "integrationSmoke": {
-    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "result": "BLOCKED_SOURCE_DEFECT__FEATURE_MODAL_HUD_CLEARANCE",
     "certifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
     "receiptPr": 254,
@@ -113,9 +113,9 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_57AD515",
+  "currentMilestone": "P1_FEATURE_MODAL_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
@@ -124,7 +124,13 @@
     "currentPreflight": "coordination/release-packages/pip-high-school-57ad515-package-readiness-v1.json",
     "reservedArtifact": "pip-high-school-57ad515-source-tree-1faefa87",
     "reservedArtifactId": "57ad515a5905d697417db688a1cc42d4452642b8:1faefa874371a5bde209addb1bc3289bb049df23",
-    "robloxPublished": false
+    "robloxPublished": false,
+    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
   },
-  "currentSourceDefect": null
+  "currentSourceDefect": {
+    "id": "P1_FEATURE_MODAL_HUD_CLEARANCE",
+    "evidence": "Shared Shop/Travel modal overlaps desktop/iPhone HUD and iPhone touch exclusion zones despite reference Travel showing surrounding HUD visible.",
+    "reservedBranch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
+    "status": "REPAIR_RESERVED"
+  }
 }

@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 22,
+  "schemaVersion": 23,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T18:47:00Z",
+  "observedAt": "2026-10-05T18:49:00Z",
   "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -141,8 +141,8 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "INTEGRATED__SOURCE_STATIC_QA_PASS__RUNTIME_SMOKE_PENDING",
-      "owner": "Roblox High School Integration Smoke",
+      "status": "SOURCE_REPAIR_ACTIVE__FEATURE_MODAL_HUD_CLEARANCE",
+      "owner": "Pip High Free Roam",
       "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
       "referenceClipTime": [
         "A@00:05",
@@ -160,8 +160,8 @@
         "Rendered target-device comparison remains required."
       ],
       "outputLocation": "rebuild/high-school-foundation@57ad515a5905d697417db688a1cc42d4452642b8; PR254 Smoke receipt",
-      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live avatar/outfit/class/modal/feature-panel/CafeCard interaction and save/rejoin remain unexecuted.",
-      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
+      "blocker": "P1_FEATURE_MODAL_HUD_CLEARANCE: shared Shop/Travel panel overlaps surrounding HUD and iPhone touch zones.",
+      "nextHandoff": "Free Roam repair -> exact guards -> QA -> Integration -> rebind Smoke.",
       "branch": null,
       "pr": 252,
       "headSha": "294d298e5c517f5a3e9f295dc97b2c5a981fbcd1",
@@ -312,9 +312,9 @@
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37357568905_37357568878_37357568847",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5419048558",
     "p1IntegrationStatus": "MERGED_TO_57AD515__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__REBOUND_TO_57AD515__PR254",
-    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR255",
-    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_57AD515__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
+    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__FEATURE_MODAL_HUD_CLEARANCE",
+    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
+    "nextProducerActivation": "P1_NARROW_FEATURE_MODAL_HUD_CLEARANCE_REPAIR_RESERVED"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,7 +406,26 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [],
+  "openDefects": [
+    {
+      "id": "P1_FEATURE_MODAL_HUD_CLEARANCE",
+      "owner": "Pip High Free Roam",
+      "inputSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+      "status": "SOLE_PRODUCT_REPAIR_RESERVED",
+      "evidence": "Shared feature panel 560x367.08 on desktop overlaps status/quick; 560x298.68 on iPhone overlaps status/quick and both touch zones.",
+      "acceptanceCriteria": [
+        "Safe containment desktop/iPhone/iPad",
+        "No overlap status/rail/quick",
+        "No touch exclusion overlap",
+        "One-active-panel and close/back behavior preserved",
+        "No server authority changes",
+        "All three exact-head guards green"
+      ],
+      "outputLocation": "future PR on rebuild/high-school-feature-modal-clearance-57ad515-v1",
+      "blocker": null,
+      "nextHandoff": "Roblox High School QA & Contract"
+    }
+  ],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
