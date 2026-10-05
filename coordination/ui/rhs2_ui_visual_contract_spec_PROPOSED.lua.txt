@@ -1,0 +1,80 @@
+-- PROPOSED ONLY. Coordination/reference artifact.
+-- Future product branch should copy/adapt this into school/tests/rhs2_ui_visual_contract_spec.lua.
+local clientFile = assert(io.open("school/src/client/CanonicalSchoolClient.client.lua", "r"))
+local client = clientFile:read("*a")
+clientFile:close()
+
+local projectFile = assert(io.open("school/default.project.json", "r"))
+local project = projectFile:read("*a")
+projectFile:close()
+
+local styleFile = assert(io.open("school/src/shared/Rhs2UiStyle.lua", "r"))
+local style = styleFile:read("*a")
+styleFile:close()
+
+local function has(text, fragment, label)
+    if not text:find(fragment, 1, true) then
+        error("missing RHS2 visual contract: " .. (label or fragment), 2)
+    end
+end
+
+local function lacks(text, fragment, label)
+    if text:find(fragment, 1, true) then
+        error("RHS2 visual regression: " .. (label or fragment), 2)
+    end
+end
+
+has(project, '"Rhs2UiStyle"', "Rhs2UiStyle project mapping")
+has(project, '"$path": "src/shared/Rhs2UiStyle.lua"', "Rhs2UiStyle source path")
+has(client, 'local Rhs2UiStyle = require(shared:WaitForChild("Rhs2UiStyle"))', "canonical client style module")
+has(client, 'card.Name = "CompactSchoolStatus"', "persistent status identity")
+has(client, 'actionRail.Name = "RHS2ActionRail"', "persistent action rail identity")
+has(client, 'quickBar.Name = "RHS2QuickBar"', "persistent quickbar identity")
+has(client, 'makeRailButton("RailShop"', "Shop primary rail action")
+has(client, 'makeRailButton("RailAvatar"', "Avatar primary rail action")
+has(client, 'makeRailButton("RailTravel"', "Travel primary rail action")
+has(client, 'houseIcon.Name = "House"', "House primary action")
+has(client, 'travelPanel, travelBody, travelPanelScale = makeFeaturePanel("CurrentClassTravelPanel", "TRAVEL")', "Travel feature panel")
+has(client, 'featurePanels:register("travel"', "Travel controller registration")
+has(client, 'featurePanels:register("shop"', "Shop controller registration")
+has(client, 'featurePanels:register("avatar"', "Avatar controller registration")
+
+has(style, 'ShellNavy = Color3.fromRGB(', "dark navy panel family")
+has(style, 'HeaderBlue = Color3.fromRGB(', "royal blue header family")
+has(style, 'ActiveGold = Color3.fromRGB(', "gold active-tab family")
+has(style, 'ProgressPurple = Color3.fromRGB(', "purple progression family")
+has(style, 'Bold = Enum.Font.GothamBold', "Gotham bold typography")
+has(style, 'Medium = Enum.Font.GothamMedium', "Gotham medium typography")
+has(style, 'Regular = Enum.Font.Gotham', "Gotham regular typography")
+has(style, 'function Style.applyPrimaryRailButton', "primary rail style helper")
+has(style, 'function Style.applyQuickSlot', "quick slot style helper")
+has(style, 'function Style.applyCloseButton', "close control style helper")
+has(style, 'function Style.applyTab', "tab style helper")
+
+has(client, 'Rhs2UiStyle.applyPrimaryRailButton', "rail consumes RHS2 style")
+has(client, 'Rhs2UiStyle.applyQuickSlot', "quickbar consumes RHS2 style")
+has(client, 'Rhs2UiStyle.applyPrimaryPanel', "primary panel consumes RHS2 style")
+has(client, 'Rhs2UiStyle.applyHeader', "header consumes RHS2 style")
+has(client, 'Rhs2UiStyle.applyCloseButton', "close consumes RHS2 style")
+has(client, 'Rhs2UiStyle.applyTab', "Travel tabs consume RHS2 style")
+
+has(client, 'travelLocationsTab', "Travel Locations tab")
+has(client, 'travelServersTab', "Travel Servers tab")
+has(client, 'TravelDestinationGrid', "Travel destination-grid hierarchy")
+has(client, 'travelLocationsTab.Text = "Locations"', "Travel active Locations label")
+has(client, 'travelServersTab.Text = "Servers"', "Travel Servers label")
+has(client, 'travelServersTab.Active = false', "unverified Servers tab stays inert")
+
+-- The primary RHS2 shell should no longer use the legacy pale card styling.
+lacks(client, 'card.BackgroundColor3 = LEGACY_PANEL', "pale persistent status card")
+lacks(client, 'button.Font = Enum.Font.ArialBold', "Arial primary rail button")
+lacks(client, 'quickSlot.Font = Enum.Font.ArialBold', "Arial quick slot")
+lacks(client, 'travelPrompt.Font = Enum.Font.ArialBold', "Arial Travel shell")
+lacks(client, 'travelDestination.BackgroundColor3 = LEGACY_BUTTON', "generic pale Travel destination")
+
+-- Unknown visual data may not become fake gameplay state.
+lacks(client, 'gemBalance = 400', "invented gem balance")
+lacks(client, 'weather = "Sunny"', "invented weather state")
+lacks(client, 'rbxassetid://', "unverified hard-coded UI asset ID in canonical shell")
+
+print("RHS2_UI_VISUAL_STATIC_CONTRACT_PASS")
