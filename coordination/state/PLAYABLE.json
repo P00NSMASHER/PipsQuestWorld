@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 21,
+  "schemaVersion": 22,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "P1_MENU_INTERACTION_AUX_GEOMETRY_CLASS_MODAL_REPAIRED__RUNTIME_ACCEPTANCE_PENDING",
-  "currentPlayableEvidence": "PR239 exact head fdee2ca32017ec01d0d42c2142a57bb48e926140 repaired ClassActivityModal iPhone safe-area overflow, passed independent QA, and merged to canonical 4782aa655cd2d0340cc93ce7b8dd53604963f225. All three exact-canonical push guards passed. One-active-panel interaction, House/Housing Editor responsive geometry, and ClassActivityModal responsive containment are source/headless validated. Rendered/device traversal, live class/modal interaction and save/rejoin remain unexecuted, so runtime/visual parity is not claimed.",
-  "runtimeValidatedThrough": "No new live Roblox Studio/device runtime claim on canonical 4782aa. PR241 preserves LOCAL_ONLY_REQUIRED rendered/device/traversal/save-rejoin Smoke.",
-  "headlessExactHeadValidatedThrough": "4782aa: all three push guards PASS; feature-panel, auxiliary-panel and class-modal responsive geometry contracts PASS.",
+  "currentPlayableStage": "P1_SOURCE_DEFECT_ACTIVE__CAFE_CARD_MOBILE_SAFE_AREA",
+  "currentPlayableEvidence": "Canonical 4782aa has the repaired class modal and green exact-head CI, but static geometry audit found CafeCard outside mobile safe-right bounds and overlapping the right camera/action touch exclusion zone on iPhone/iPad fixtures. Runtime acceptance is therefore intentionally deferred until the narrow CafeCard source repair clears CI/QA/Integration.",
+  "runtimeValidatedThrough": "No live runtime claim on 4782aa; runtime Smoke is blocked behind the source-proven CafeCard geometry defect.",
+  "headlessExactHeadValidatedThrough": "4782aa: all three push guards PASS, but this does not override the newly source-proven CafeCard mobile safe-area defect.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,14 +16,14 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Complete exact-canonical P1 rendered/device/traversal/class-modal/save-rejoin Smoke, emit deterministic 4782aa Package, then activate armed P2_CLASSROOM_FREE_ROAM.",
+  "nextMilestone": "Repair CafeCard responsive mobile geometry -> exact-head CI -> QA -> Integration -> rebind runtime Smoke -> deterministic Package -> activate armed P2.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
     "sha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "milestone": "P1_CLASS_MODAL_SAFE_AREA_REPAIRED_AND_INTEGRATED",
-    "headlessStatus": "CI_QA_INTEGRATION_CLOUD_SAFE_PASS",
-    "runtimeStatus": "LOCAL_ONLY_REQUIRED__SMOKE_HOLD"
+    "milestone": "P1_CAFE_CARD_SOURCE_REPAIR_REQUIRED",
+    "headlessStatus": "CI_GREEN_WITH_SOURCE_PROVEN_UI_GEOMETRY_DEFECT",
+    "runtimeStatus": "BLOCKED_BEHIND_SOURCE_REPAIR"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
