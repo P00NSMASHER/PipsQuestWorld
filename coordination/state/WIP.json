@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 60,
+  "schemaVersion": 61,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:20:00Z",
+  "observedAt": "2026-10-05T17:25:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -52,7 +52,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_PREP_READY__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -110,16 +110,16 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "WAIT_P1_RUNTIME_SMOKE__EVIDENCE_PREP_ONLY",
+      "mode": "P3_P6_PREP_READY__WAIT_P1_P2__NO_PRODUCT_WRITE",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "branch": null,
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR214 head 7f1779f passed QA and merged to canonical 39911a.",
-      "objective": "Do not open a new product producer. Preserve the dealership/housing/avatar/jobs prep contracts and respond only to concrete P1 runtime defects.",
+      "latestOutput": "PR232 merged future_free_roam_slice_readiness_39911a.json, binding P3 Housing, P4 Avatar/Shopping, P5 Vehicles/Dealership, and P6 Jobs to current canonical authorities and verified reference evidence.",
+      "objective": "Hold P3-P6 prep stable; respond only to a material evidence/authority change or a Control Tower activation after earlier priorities clear.",
       "owned": "bounded P1 interaction repair on integrated spawn/entrance/atrium/corridor + compact HUD baseline",
-      "dependency": "Integration Smoke.",
-      "exit": "P1 Smoke defect assigned to Free Roam or Control Tower releases a later product slice.",
+      "dependency": "P1 runtime Smoke/Package and P2 completion pipeline.",
+      "exit": "Control Tower activates one future Free Roam slice or material evidence changes.",
       "handoff": "Roblox High School Control Tower"
     },
     "QA": {
@@ -171,15 +171,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA60_P1_RUNTIME_SMOKE_OFFLINE_HOLD__P2_PREP_READY__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA61_P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "P2 prep PR227/228 merged, Release preflight PR230 merged, and stale historical coordination PRs 202/203/206/208/222 closed. PAAM-L044 remains offline; P1 runtime Smoke is the only blocking gate.",
-      "objective": "Keep product WIP at 2/3, preserve P2 prep and 39911a Release preflight, and release exactly one P2 producer only after full P1 runtime Smoke and deterministic Package complete.",
+      "latestOutput": "P2 prep PR227/228, Release preflight PR230, and P3-P6 readiness PR232 are merged. Future slice contracts are current-lineage-bound; P1 runtime Smoke remains the only active blocking gate.",
+      "objective": "Keep product WIP at 2/3, preserve all prepared slices, and release exactly one producer only after P1 full runtime Smoke and deterministic Package.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
-      "exit": "P1 Smoke PASS/defect, P1 Package, canonical change, or local device availability change.",
+      "exit": "P1 Smoke PASS/defect, Package, canonical change, or local-device availability change.",
       "handoff": "Roblox High School Integration Smoke"
     }
   },
@@ -1024,5 +1024,11 @@
       200
     ],
     "reason": "Close stale/superseded coordination gates while preserving still-useful durable reference/source evidence."
+  },
+  "futureSliceReadiness": {
+    "mergedPr": 232,
+    "artifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
+    "status": "P3_P6_PREP_READY__NO_PRODUCT_WRITE",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
   }
 }

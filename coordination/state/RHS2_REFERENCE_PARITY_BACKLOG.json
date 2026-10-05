@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 14,
+  "schemaVersion": 15,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T16:51:00Z",
+  "observedAt": "2026-10-05T17:25:00Z",
   "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -196,9 +196,9 @@
     {
       "id": "P3_HOUSING",
       "priority": 3,
-      "status": "OPEN",
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P2",
       "owner": "Pip High Free Roam",
-      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
         "B@00:25",
         "B@00:55"
@@ -206,57 +206,57 @@
       "acceptanceCriteria": [
         "Doorway/interior transition and house grid behavior require rendered comparison."
       ],
-      "outputLocation": "future school/** producer branch",
-      "blocker": "Earlier priorities",
-      "nextHandoff": "Control Tower"
+      "outputLocation": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
+      "blocker": "P1 full runtime Smoke + Package, then P2 product/QA/Integration/Smoke/Package.",
+      "nextHandoff": "Control Tower activates one Free Roam producer after P2 package."
     },
     {
       "id": "P4_AVATAR",
       "priority": 4,
-      "status": "OPEN",
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P3",
       "owner": "Pip High Free Roam",
-      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
         "A@00:15"
       ],
       "acceptanceCriteria": [
         "Avatar/catalog presentation supported by evidence and authorized assets only."
       ],
-      "outputLocation": "future school/** producer branch",
-      "blocker": "Earlier priorities and asset provenance",
-      "nextHandoff": "Content QA"
+      "outputLocation": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json; PR150 frozen support evidence",
+      "blocker": "Earlier priorities; exact first-slice clothing asset IDs/full catalog remain explicit unknowns.",
+      "nextHandoff": "Content QA / Control Tower when P4 activates."
     },
     {
       "id": "P5_VEHICLES",
       "priority": 5,
-      "status": "OPEN",
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
         "B@00:45-01:05"
       ],
       "acceptanceCriteria": [
         "Dealership grid, preview/details and server authority close only with rendered/runtime evidence."
       ],
-      "outputLocation": "future school/** producer branch",
-      "blocker": "Earlier priorities",
-      "nextHandoff": "QA"
+      "outputLocation": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
+      "blocker": "Earlier priorities; dealership catalog/entitlement/purchase/preview/runtime values remain only partially evidenced.",
+      "nextHandoff": "Control Tower -> Free Roam when activated."
     },
     {
       "id": "P6_JOBS",
       "priority": 6,
-      "status": "OPEN",
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "FUTURE_ACTIVATED_CANONICAL_TBD",
+      "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "referenceClipTime": [
         "C@00:25-01:05"
       ],
       "acceptanceCriteria": [
         "Observable obstacle flow, progress/cancel and reward dialog; timing corrected for 2x segments."
       ],
-      "outputLocation": "future school/** producer branch",
-      "blocker": "Earlier priorities",
-      "nextHandoff": "QA"
+      "outputLocation": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
+      "blocker": "Earlier priorities; exact job IDs, obstacle/checkpoint semantics and reward formulas remain explicit unknowns.",
+      "nextHandoff": "Control Tower -> Free Roam when activated."
     }
   ],
   "supportAssignments": {
@@ -467,5 +467,12 @@
     "blocker": "LOCAL_ONLY_REQUIRED runtime/device Smoke on exact canonical 39911a.",
     "nextHandoff": "Roblox High School Integration Smoke.",
     "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING"
+  },
+  "futureSliceReadiness": {
+    "artifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
+    "mergedPr": 232,
+    "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "status": "P3_P6_PREP_READY__NO_PRODUCT_WRITE",
+    "authorityRule": "Future product slices must reuse the pinned current canonical authorities and cannot invent hidden IDs/formulas/assets or open duplicate authorities."
   }
 }
