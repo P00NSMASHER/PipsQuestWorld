@@ -1,7 +1,7 @@
 {
   "schemaVersion": 57,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T02:01:51.194Z",
+  "observedAt": "2026-10-05T04:01:54Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "5fd5c0539229b629eda865e574539990d6e17b5b",
@@ -175,7 +175,7 @@
       "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
       "candidatePr": 214,
       "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-      "latestOutput": "Merged Content QA PR218, Class PR219, Progression/Mobile PR220 and Smoke PR221 coordination evidence; schema57 reconciles PR214 QA hold",
+      "latestOutput": "Schema57 reconciled against live PR214 baa6a24, exact-head CI and QA review 5409272483; PR217-PR221 coordination evidence remains merged",
       "objective": "Keep PR214 as the sole product producer, direct its one mobile safe-area repair, and preserve CI -> same-SHA QA -> Integration -> Smoke -> Package.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
       "dependency": "Free Roam changes PR214 exact head.",
@@ -290,23 +290,23 @@
   },
   "nextPriorityAfterCurrent": "P1_INTERACTION_REPAIR_ON_5FD5C05__THEN_P2_CLASSROOM_FREE_ROAM",
   "candidateExactHeadCi": {
-    "pr": 188,
-    "headSha": "ab8dfa8c8c19a4eca47a196a447ea7652dd35ccf",
-    "status": "PASS_ALL_THREE_PULL_REQUEST__TREE_MERGED_WITHOUT_SAME_SHA_QA",
+    "pr": 214,
+    "headSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
+    "status": "PASS_ALL_THREE_PULL_REQUEST__QA_HOLD_MOBILE_AUX_PANEL_BOUNDS",
     "runs": [
       {
         "workflow": "High School Foundation Static Guards",
-        "runId": 37244424637,
+        "runId": 37247220569,
         "conclusion": "success"
       },
       {
         "workflow": "High School Class Education Guards",
-        "runId": 37244424628,
+        "runId": 37247220604,
         "conclusion": "success"
       },
       {
         "workflow": "High School Progression Guards",
-        "runId": 37244424662,
+        "runId": 37247220568,
         "conclusion": "success"
       }
     ]
@@ -889,7 +889,7 @@
     }
   ],
   "laneTracking": {
-    "observedAt": "2026-10-05T02:01:51.194Z",
+    "observedAt": "2026-10-05T04:01:54Z",
     "blockedAgeAnchor": {
       "qaHoldSince": "2026-10-05T01:40:07Z",
       "note": "Ages are point-in-time minutes at observedAt and must be recomputed on the next schema."
@@ -900,7 +900,7 @@
         "headSha": "934c961d5a3ed08fc452d44ac38cb0a197991ed2",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Inspect the next changed PR214 head for authority drift."
       },
       "ClassEducation": {
@@ -908,7 +908,7 @@
         "headSha": "c8579418d419c04d7caa3c61a3a7179930f61040",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Hold merged temporal evidence until P1 package."
       },
       "ContentQA": {
@@ -924,7 +924,7 @@
         "headSha": "57258e2fa74dec7a702e4f5e3b384902da57ecfe",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Audit the changed repair head for safe-area and authority continuity."
       },
       "FreeRoam": {
@@ -940,7 +940,7 @@
         "headSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Review only the changed repaired PR214 head."
       },
       "Integration": {
@@ -948,7 +948,7 @@
         "headSha": "31f540b88e84af750da61cb5a427486153cd6b4f",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Wait for exact-head QA authorization; do not merge baa6a24."
       },
       "Smoke": {
@@ -956,7 +956,7 @@
         "headSha": "c9ebbfd5e64f0df03d1a1b5b32ea627ec449a7f2",
         "changedSinceSchema56": true,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Execute contract only on exact integrated repaired canonical."
       },
       "ReleasePackage": {
@@ -964,7 +964,7 @@
         "headSha": "180363c794901d0144a08482ff52387724068710",
         "changedSinceSchema56": false,
         "dependencyWaitSince": "2026-10-05T01:40:07Z",
-        "blockedAgeMinutesAtObservation": 21,
+        "blockedAgeMinutesAtObservation": 142,
         "nextAction": "Wait for exact repaired Smoke PASS."
       },
       "ControlTower": {
