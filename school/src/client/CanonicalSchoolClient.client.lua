@@ -40,6 +40,7 @@ local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
 local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
 local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
+local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
