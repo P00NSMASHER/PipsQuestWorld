@@ -1,19 +1,19 @@
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "resource": "ONLINE_LAPTOP",
-  "availability": "UNKNOWN_NOT_POLLED_CURRENT_RUN",
-  "canonicalSha": "477fa61c15f7fefe7e70d6e7b5ddd03f78c21773",
+  "availability": "POLL_PENDING_AFTER_LEASE",
+  "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "canonicalRoot": "school/**",
   "lease": {
-    "status": "FREE",
-    "holderLane": null,
-    "purpose": null,
-    "canonicalSha": null,
-    "candidateSha": null,
-    "interactionMode": null,
-    "userAuthorizedPublish": null,
-    "claimedAt": null,
-    "expiresAt": null,
+    "status": "HELD",
+    "holderLane": "Roblox High School Integration Smoke",
+    "purpose": "P1 exact-canonical rendered/device/traversal/save-rejoin smoke",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "interactionMode": "BACKGROUND_HEADLESS_PREFERRED__GUI_ONLY_IF_REQUIRED_FOR_ROBLOX_STUDIO_SMOKE",
+    "userAuthorizedPublish": false,
+    "claimedAt": "2026-10-05T16:45:00Z",
+    "expiresAt": "2026-10-05T17:05:00Z",
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
@@ -34,5 +34,5 @@
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
   },
-  "availabilityNote": "Current run intentionally did not poll the laptop. Any future LOCAL_ONLY_REQUIRED Smoke must acquire this FREE lease against exact canonical 477fa61c15f7fefe7e70d6e7b5ddd03f78c21773."
+  "availabilityNote": "Lease acquired for exact-canonical P1 Integration Smoke. Poll ONLINE_LAPTOP only after this CAS claim; no Roblox publication or spend is authorized."
 }
