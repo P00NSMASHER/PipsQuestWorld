@@ -87,13 +87,22 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     local quickHeight = clamp(math.floor(height * 0.1159 + 0.5), 48, 58)
 
     local railX = safe.right - outerGap - railWidth
-    local statusX = railX - groupGap - statusWidth
+    -- Reference A aligns the compact status stack above the primary rail so
+    -- both groups share a common right edge.
+    local statusX = safe.right - outerGap - statusWidth
     local statusY = safe.y + outerGap
     local railY = math.max(
         safe.y + math.floor(height * 0.1884 + 0.5),
         statusY + statusHeight + groupGap
     )
-    local quickX = safe.x + ((safe.width - quickWidth) / 2)
+    -- Reference A places the four-slot quick group slightly right of the
+    -- gameplay center. Preserve that offset while still clamping to safe bounds.
+    local quickOffset = clamp(math.floor(width * 0.033 + 0.5), 24, 36)
+    local quickX = clamp(
+        safe.x + ((safe.width - quickWidth) / 2) + quickOffset,
+        safe.x,
+        safe.right - quickWidth
+    )
     local quickY = safe.bottom - outerGap - quickHeight
 
     local layout = {
