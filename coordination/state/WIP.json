@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 75,
+  "schemaVersion": 76,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T20:34:30Z",
+  "observedAt": "2026-10-05T20:41:30Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
@@ -17,7 +17,7 @@
     "cap": 3,
     "countIncludingBase": 3,
     "producerPr": 274,
-    "producerSha": "f459710aba7456876a709598ee662042c4abd0c8",
+    "producerSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
     "producerBranch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
@@ -25,11 +25,11 @@
     "nextProducerReservation": {
       "owner": "Pip High Free Roam / UI Visual Parity",
       "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_F459__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
+      "status": "ACTIVE_SOLE_PRODUCT_PRODUCER__EXACT_HEAD_F230__SCOPE_FROZEN__MERGE_BLOCKED_UNTIL_VEHICLE_INTEGRATION",
       "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "pr": 274,
-      "headSha": "f459710aba7456876a709598ee662042c4abd0c8",
-      "mergePrerequisite": "Protected vehicle-card Integration must bind PR264 to exact canonical 7446d375 after Foundation push rerun 37363665326 succeeds."
+      "headSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+      "mergePrerequisite": "Protected vehicle-card Integration must bind PR264 to exact canonical 7446d375 after Foundation push rerun succeeds."
     },
     "supersededCandidates": [
       {
@@ -53,7 +53,7 @@
       "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
     }
   },
-  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_F459_ACTIVE__ALL_CURRENT_P1_CLIENT_SURFACES_STYLED__CI_QUEUED__VEHICLE_INTEGRATION_RUNNER_WAIT",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_HEAD_F230_SCOPE_FROZEN__ALL_ACTIVE_P1_CLIENT_SURFACES_STYLED__UTILITY_STRIP_ADDED__CI_QUEUED__VEHICLE_INTEGRATION_RUNNER_WAIT",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -111,28 +111,28 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_F459__MERGE_BLOCKED",
+      "mode": "ACTIVE_SOLE_UI_VISUAL_PARITY_PRODUCER__EXACT_HEAD_F230__SCOPE_FROZEN__MERGE_BLOCKED",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
       "candidatePr": 274,
-      "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
-      "latestOutput": "PR274 exact head f459 now applies shared RHS2 navy/blue/gold/purple/Gotham presentation across persistent HUD, Shop/Travel/House/Outfit, ClassActivityModal, CafeCard, LegacyVehiclePanel and HousingEditor. Canonical client no longer contains pale LEGACY_PANEL/LEGACY_BUTTON tokens or Arial presentation paths.",
-      "objective": "Hold product scope stable. Drive exact head f459 through all three PR guards and independent visual/static QA. Do not widen server semantics or invent icon/data/catalog authority.",
+      "candidateSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+      "latestOutput": "PR274 exact head f230 completes current P1 visual polish: shared RHS2 tokens, navy/blue/gold/purple/Gotham presentation across active client surfaces, no pale legacy panel/button tokens or Arial typography, plus an inert small utility strip below the primary right rail that hides instead of entering quick/touch zones.",
+      "objective": "Freeze product scope at f230 and drive this exact head through all three PR guards and independent visual/static QA. No further product edits unless QA finds a concrete defect.",
       "owned": "bounded P1 Avatar presentation geometry only",
       "dependency": "PR274 exact-head CI; merge additionally depends on vehicle Integration.",
       "exit": "Exact-head CI/QA pass or concrete defect.",
       "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
-      "mode": "WAIT_UI_POLISH_EXACT_HEAD_F459_CI__REFERENCE_MATRIX_LOCKED",
+      "mode": "WAIT_UI_POLISH_EXACT_HEAD_F230_CI__SCOPE_FROZEN",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 274,
-      "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
-      "latestOutput": "Visual reference spec, implementation map, acceptance matrix, style proposal, static-contract proposal, diff harness and additional UI states are locked. f459 also enforces no pale legacy primary surfaces and no Arial in the canonical client.",
-      "objective": "When all three f459 guards pass, perform exact-head static visual/reference/authority QA. Keep rendered parity PENDING until actual desktop/iPhone/iPad captures.",
+      "candidateSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+      "latestOutput": "f230 is the frozen UI candidate. Static contracts now cover the inert utility strip, all active P1 surfaces, no pale legacy tokens, no Arial, responsive safe/touch geometry, authority boundaries, and inert unverified Travel cells.",
+      "objective": "When all three f230 guards pass, perform exact-head visual/static/reference/authority QA. Keep exact visual parity PENDING_RENDERED until desktop/iPhone/iPad captures.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
       "dependency": "PR274 exact-head CI.",
-      "exit": "QA PASS/defect on exact f459.",
+      "exit": "QA PASS/defect on f230.",
       "handoff": "Roblox High School Integration"
     },
     "Integration": {
@@ -172,15 +172,15 @@
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA75_UI_HEAD_F459_ACTIVE__VEHICLE_INTEGRATION_RUNNER_WAIT",
+      "mode": "SCHEMA76_UI_HEAD_F230_SCOPE_FROZEN__VEHICLE_FOUNDATION_RERUN_ATTEMPT5",
       "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR274 advanced to exact head f459 with visual-system coverage across all currently active P1 client surfaces. Exact-head CI is queued. Vehicle canonical still waits only on Foundation runner attempt4; Class/Progression are green.",
-      "objective": "Keep f459 as the sole producer, prevent scope drift, certify vehicle Integration when Foundation runner succeeds, then permit PR274 protected merge only if f459 QA is green.",
+      "latestOutput": "PR274 scope is frozen at exact head f230; its three PR guards are queued. Predecessor Foundation push was cancelled again before any steps and has been rerun as attempt5; Class/Progression remain green.",
+      "objective": "Do not churn the UI head. Let f230 CI settle, QA exact f230, and certify vehicle Integration when the Foundation runner finally executes successfully. Only then permit protected UI merge.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Vehicle Foundation rerun + PR274 exact-head CI.",
-      "exit": "Vehicle Integration certified, PR274 QA pass/defect, or canonical change.",
+      "dependency": "PR274 f230 CI + vehicle Foundation rerun attempt5.",
+      "exit": "Vehicle Integration certified, f230 QA pass/defect, or canonical change.",
       "handoff": "Roblox High School Integration / QA"
     }
   },
@@ -1072,9 +1072,9 @@
     "directive": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
     "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
-    "status": "ACTIVE_EXACT_HEAD__STATIC_STYLE_COMPLETE__CI_QUEUED__RENDERED_PENDING",
+    "status": "ACTIVE_EXACT_HEAD__SCOPE_FROZEN__STATIC_STYLE_COMPLETE__CI_QUEUED__RENDERED_PENDING",
     "candidatePr": 274,
-    "candidateSha": "f459710aba7456876a709598ee662042c4abd0c8",
+    "candidateSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
     "currentCoverage": [
       "persistent status/action rail/quickbar",
       "Shop/Travel common modal shell",
@@ -1089,6 +1089,8 @@
       "no Enum.Font.Arial* in canonical client",
       "unverified Travel Servers and placeholder destinations remain inert",
       "server authority modules untouched"
-    ]
+    ],
+    "scopeFrozen": true,
+    "utilityStrip": "Three inert reference-only tiles beneath the primary rail; dynamically hidden if they would enter quick/touch exclusion space."
   }
 }
