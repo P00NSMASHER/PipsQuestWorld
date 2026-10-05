@@ -127,7 +127,7 @@
       "base": "5fd5c0539229b629eda865e574539990d6e17b5b",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR188 review 5408709183 on 3cde55e: world/HUD static PASS, interaction source FAIL, rendered/traversal/device HOLD",
+      "latestOutput": "PR188 review node PRR_kwDOU0Wcsc8AAAABQmKuPw on 3cde55e: world/HUD static PASS, interaction source FAIL, rendered/traversal/device HOLD",
       "objective": "Review only the future exact repair head. Require the interaction controller contract, preserved world/HUD repairs and all three exact-head guards; keep rendered/device/traversal evidence separate.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
       "dependency": "Free Roam changed repair head.",
@@ -508,7 +508,8 @@
       "enabled": true,
       "lastOutput": {
         "pr": 188,
-        "review": 5408709183,
+        "reviewNode": "PRR_kwDOU0Wcsc8AAAABQmKuPw",
+        "submittedAt": "2026-10-04T23:29:19Z",
         "candidateSha": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
         "summary": "world/HUD static PASS; interaction source FAIL; rendered/device/traversal HOLD"
       },
@@ -715,10 +716,10 @@
     "pr": 188,
     "candidate": "3cde55e5a40f24dd2386b8b78757992f6d32bfb3",
     "status": "PASS_WORLD_HUD_STATIC__FAIL_INTERACTION_SOURCE__HOLD_RENDERED_VISUAL_TRAVERSAL_DEVICE",
-    "review": 5408709183,
     "integrationAuthorized": false,
     "applicability": "The later ab8dfa8 delta is responsive-HUD-only and does not repair the failed interaction source contract.",
-    "blocker": "Repair PR188_MENU_INTERACTION_FLOW_GAP on a fresh canonical descendant and obtain same-SHA QA."
+    "blocker": "Repair PR188_MENU_INTERACTION_FLOW_GAP on a fresh canonical descendant and obtain same-SHA QA.",
+    "reviewNode": "PRR_kwDOU0Wcsc8AAAABQmKuPw"
   },
   "changedHeadsSinceSchema52": [
     {
