@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T18:00:00Z",
-  "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+  "observedAt": "2026-10-05T18:13:00Z",
+  "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
     "acceptanceCriteria": "Stable sources, timestamped observable evidence, explicit unknowns, exactly one reserved repair owner, exact-SHA CI -> independent QA -> Integration -> Smoke -> Package, and no parity claim without rendered/device comparison.",
@@ -141,9 +141,9 @@
     {
       "id": "P1_SPAWN_SCHOOL_HUD",
       "priority": 1,
-      "status": "SOURCE_REPAIR_ACTIVE__CAFE_CARD_MOBILE_SAFE_AREA",
-      "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "status": "INTEGRATED__SOURCE_STATIC_QA_PASS__RUNTIME_SMOKE_PENDING",
+      "owner": "Roblox High School Integration Smoke",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "A@00:05",
         "A@00:25",
@@ -159,20 +159,20 @@
         "Deterministic CI, independent QA, Integration, Smoke and Package bind to exact heads.",
         "Rendered target-device comparison remains required."
       ],
-      "outputLocation": "rebuild/high-school-foundation@4782aa655cd2d0340cc93ce7b8dd53604963f225; PR241 Smoke receipt",
-      "blocker": "P1_CAFE_CARD_MOBILE_SAFE_AREA: CafeCard exceeds mobile safe-right bounds and overlaps the right touch exclusion zone on iPhone/iPad fixtures.",
-      "nextHandoff": "Free Roam repair -> all three exact-head guards -> QA -> Integration -> rebind Smoke plan.",
+      "outputLocation": "rebuild/high-school-foundation@c7d5e36ef7d1878af2db01db7331a58ba63d50c2; PR247 Smoke receipt",
+      "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad comparison, physical traversal, live class/modal/feature-panel/CafeCard interaction and save/rejoin remain unexecuted.",
+      "nextHandoff": "Integration Smoke runtime capture -> Release/Package.",
       "branch": null,
-      "pr": 239,
-      "headSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
+      "pr": 245,
+      "headSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
       "openDefect": null
     },
     {
       "id": "P2_CLASSROOM_FREE_ROAM",
       "priority": 2,
-      "status": "PREP_READY__ACTIVATION_MANIFEST_REBASED_TO_4782AA__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
+      "status": "PREP_READY__ACTIVATION_MANIFEST_REBASED_TO_C7D5E36__PRODUCT_WRITE_BLOCKED_UNTIL_P1_PACKAGE",
       "owner": "Roblox High School Class & Education",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "B@00:05",
         "A@00:45"
@@ -191,7 +191,7 @@
         "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json (PR219)",
         "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json (rebased to 4782aa)"
       ],
-      "blocker": "P1 exact-canonical runtime Smoke and deterministic 4782aa Package must complete before a P2 product producer is opened.",
+      "blocker": "P1 exact-canonical runtime Smoke and deterministic c7d5e36 Package must complete before a P2 product producer is opened.",
       "nextHandoff": "Control Tower validates the rebased activation manifest after P1 Package."
     },
     {
@@ -199,7 +199,7 @@
       "priority": 3,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P2",
       "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "B@00:25",
         "B@00:55"
@@ -216,7 +216,7 @@
       "priority": 4,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_P1_P3",
       "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "A@00:15"
       ],
@@ -232,7 +232,7 @@
       "priority": 5,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "B@00:45-01:05"
       ],
@@ -248,7 +248,7 @@
       "priority": 6,
       "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
       "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": [
         "C@00:25-01:05"
       ],
@@ -303,18 +303,18 @@
   "productParityGapsClosed": [],
   "lastReconciledAt": "2026-10-05T04:01:54Z",
   "pipeline": {
-    "canonicalSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__37350019975_37350019956_37350019941",
+    "canonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__37353456737_37353456762_37353456888",
     "priorPackagedCanonical": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "priorPackageStatus": "PRESERVED",
-    "p1CandidatePr": 239,
-    "p1CandidateHead": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-    "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37349863471_37349863498_37349863470",
-    "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5418408503",
-    "p1IntegrationStatus": "MERGED_TO_4782AA__POST_MERGE_CI_GREEN",
-    "p1SmokeStatus": "BLOCKED_SOURCE_DEFECT__CAFE_CARD_MOBILE_SAFE_AREA",
-    "p1PackageStatus": "BLOCKED_SOURCE_REPAIR_AND_FULL_RUNTIME_SMOKE",
-    "nextProducerActivation": "P1_NARROW_CAFE_CARD_SAFE_AREA_REPAIR_RESERVED"
+    "p1CandidatePr": 245,
+    "p1CandidateHead": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37353294718_37353294883_37353294740",
+    "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5418699307",
+    "p1IntegrationStatus": "MERGED_TO_C7D5E36__POST_MERGE_CI_GREEN",
+    "p1SmokeStatus": "HOLD_LOCAL_ONLY_REQUIRED__REBOUND_TO_C7D5E36__PR247",
+    "p1PackageStatus": "PREFLIGHT_READY__BLOCKED_FULL_RUNTIME_SMOKE__PR248",
+    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ARMED_ON_C7D5E36__PRODUCT_WRITE_ONLY_AFTER_P1_PACKAGE"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -406,51 +406,34 @@
       "integrationAuthorized": false
     }
   },
-  "openDefects": [
-    {
-      "id": "P1_CAFE_CARD_MOBILE_SAFE_AREA",
-      "owner": "Pip High Free Roam",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-      "status": "SOLE_PRODUCT_REPAIR_RESERVED",
-      "evidence": "CafeCard fixed geometry is x=580..840 on iPhone 852x393 vs safe right 805 and x ending 1012 on iPad vs safe right 1000; it also intersects the right touch exclusion zone on both fixtures.",
-      "acceptanceCriteria": [
-        "Safe containment on desktop/iPhone/iPad",
-        "No movement/camera-zone overlap on touch fixtures",
-        "Mutation-sensitive regression coverage",
-        "All three exact-head guards green",
-        "No cafe/economy/persistence authority changes"
-      ],
-      "outputLocation": "future PR on rebuild/high-school-cafe-card-safe-area-4782aa-v1",
-      "blocker": null,
-      "nextHandoff": "Roblox High School QA & Contract"
-    }
-  ],
+  "openDefects": [],
   "remainingEvidenceGaps": [
     {
       "id": "P1_RUNTIME_RENDERED_DEVICE_COMPARISON",
       "owner": "Roblox High School Integration Smoke",
-      "inputSha": "FUTURE_REPAIRED_CANONICAL",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": "A@00:05/00:25/00:45/02:05, C@00:05-00:08, recurring HUD and class/free-roam interaction",
       "acceptanceCriteria": [
-        "Execute the exact 4782aa local Smoke plan",
+        "Execute the exact c7d5e36 local Smoke plan",
         "Physical spawn/entrance/atrium/corridor/stair traversal",
         "Comparable-FOV rendered captures on desktop, iPhone landscape and iPad landscape",
         "Shop/Travel/Avatar/House/Housing Editor live interaction",
         "ClassActivityModal live safe-area and restoration check",
+        "CafeCard live safe-area/touch-zone check",
         "Save/rejoin restoration"
       ],
-      "outputLocation": "coordination/smoke/runtime-evidence/4782aa655cd2d0340cc93ce7b8dd53604963f225/capture-receipt.json",
-      "blocker": "CafeCard source repair -> exact CI -> QA -> Integration before runtime Smoke.",
+      "outputLocation": "coordination/smoke/runtime-evidence/c7d5e36ef7d1878af2db01db7331a58ba63d50c2/capture-receipt.json",
+      "blocker": "LOCAL_ONLY_REQUIRED authorized Roblox Studio/device path.",
       "nextHandoff": "Roblox High School Release & Package Gate"
     },
     {
       "id": "P2_PRODUCT_ACTIVATION_GATE",
       "owner": "Roblox High School Control Tower",
-      "inputSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+      "inputSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
       "referenceClipTime": "A@01:04-01:50 and B@00:00-00:15/B@01:04-01:31",
       "acceptanceCriteria": [
         "P1 exact-canonical runtime Smoke PASS",
-        "P1 deterministic 4782aa Package complete",
+        "P1 deterministic c7d5e36 Package complete",
         "Rebased P2 activation manifest remains current against packaged canonical",
         "Control Tower releases one producer slot"
       ],
@@ -461,29 +444,29 @@
   ],
   "distinctProductParityGapsClosed": [],
   "p1RepairResult": {
-    "pr": 239,
-    "priorHistoricalCanonical": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "candidateSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-    "integratedCanonicalSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "pr": 245,
+    "priorHistoricalCanonical": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "integratedCanonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
     "acceptanceCriteria": [
-      "ClassActivityModal remains inside desktop, iPhone 852x393 and iPad 1024x768 safe rectangles",
-      "Responsive modal geometry uses one UIScale binding and mutation-sensitive tests",
-      "Existing class/progression/server authorities remain unchanged",
+      "CafeCard remains within desktop, iPhone 852x393 and iPad 1024x768 safe rectangles",
+      "CafeCard clears movement/camera touch exclusion zones",
+      "Mutation-sensitive tests reject old fixed geometry, one-pixel safe-right overflow and touch-zone overlap",
+      "Cafe/economy/persistence server authorities remain unchanged",
       "All three exact-head PR guards and all three exact-canonical push guards pass",
-      "Independent same-SHA QA before Integration",
       "Rendered/device/traversal/save-rejoin remains separate Smoke evidence"
     ],
-    "outputLocation": "PR239 final head fdee2ca; QA review 5418408503; canonical 4782aa; PR240 Integration; PR241 Smoke rebind; PR242 Release preflight.",
-    "blocker": "LOCAL_ONLY_REQUIRED runtime/device Smoke on exact canonical 4782aa.",
+    "outputLocation": "PR245 final head effc2d; QA review 5418699307; canonical c7d5e36; PR246 Integration; PR247 Smoke rebind; PR248 Release preflight.",
+    "blocker": "LOCAL_ONLY_REQUIRED runtime/device Smoke on exact canonical c7d5e36.",
     "nextHandoff": "Roblox High School Integration Smoke.",
     "status": "SOURCE_STATIC_QA_INTEGRATION_COMPLETE__RUNTIME_SMOKE_PENDING"
   },
   "futureSliceReadiness": {
     "artifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json",
     "mergedPr": 232,
-    "exactCanonicalSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "status": "P3_P6_PREP_READY__AUTHORITY_CONTINUITY_PRESERVED_THROUGH_PR239__NO_PRODUCT_WRITE",
-    "authorityRule": "PR239 changed only client/shared responsive geometry and tests; existing Free Roam server authorities remain unchanged.",
+    "exactCanonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "status": "P3_P6_PREP_READY__AUTHORITY_CONTINUITY_PRESERVED_THROUGH_PR245__NO_PRODUCT_WRITE",
+    "authorityRule": "PR245 changed only client/shared responsive geometry and tests; existing Free Roam server authorities remain unchanged.",
     "basisArtifact": "coordination/reference-extraction/future_free_roam_slice_readiness_39911a.json"
   },
   "p2ActivationManifest": {
