@@ -63,6 +63,12 @@ for _, fixture in ipairs(fixtures) do
     assert(auxiliaryValid, fixture.name .. ": " .. tostring(auxiliaryReason))
     layout.auxiliary = auxiliary
 
+    local classModal = ResponsiveHudLayout.computeCenteredModal(layout, { width = 540, height = 390 })
+    local classModalValid, classModalReason = ResponsiveHudLayout.validateCenteredModal(layout, classModal)
+    assert(classModalValid, fixture.name .. ": " .. tostring(classModalReason))
+    assert(ResponsiveHudLayout.contains(layout.safe, classModal), fixture.name .. ": class modal outside safe area")
+    layout.classModal = classModal
+
     for _, panel in ipairs({ auxiliary.house, auxiliary.editor }) do
         assert(ResponsiveHudLayout.contains(layout.safe, panel), fixture.name .. ": auxiliary panel outside safe area")
         assert(not ResponsiveHudLayout.overlaps(panel, layout.status), fixture.name .. ": auxiliary/status overlap")
@@ -113,6 +119,11 @@ assert(iphone.auxiliary.house.scale < 1, "iPhone house panel must reflow")
 assert(iphone.auxiliary.editor.scale < 1, "iPhone housing editor must reflow")
 assert(iphone.auxiliary.house.y >= iphone.safe.y, "iPhone house panel safe-top clearance")
 assert(iphone.auxiliary.editor.y >= iphone.safe.y, "iPhone editor safe-top clearance")
+assert(nominal.classModal.scale == 1, "desktop class modal keeps native scale")
+assert(ipad.classModal.scale == 1, "iPad class modal keeps native scale")
+assert(iphone.classModal.scale < 1, "iPhone class modal must reflow")
+assert(iphone.classModal.y >= iphone.safe.y, "iPhone class modal clears safe top")
+assert(iphone.classModal.bottom <= iphone.safe.bottom, "iPhone class modal clears safe bottom")
 assert(iphone.status.width ~= ipad.status.width, "status width must reflow by viewport")
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
@@ -144,6 +155,26 @@ quickProbe.exclusionZones = {
 }
 local validQuick, quickReason = ResponsiveHudLayout.validate(quickProbe)
 assert(not validQuick and quickReason == "quick overlaps exclusion zone 1", "quick/control mutation must fail")
+
+local legacyClassWidth = 540
+local legacyClassHeight = 390
+local legacyClass = zone(
+    (852 - legacyClassWidth) / 2,
+    (393 * 0.55) - (legacyClassHeight / 2),
+    legacyClassWidth,
+    legacyClassHeight
+)
+assert(not ResponsiveHudLayout.contains(iphone.safe, legacyClass), "legacy fixed class modal geometry must fail iPhone safe bounds")
+
+local badClassModal = zone(
+    iphone.classModal.x,
+    iphone.safe.bottom - iphone.classModal.height + 1,
+    iphone.classModal.width,
+    iphone.classModal.height
+)
+badClassModal.scale = iphone.classModal.scale
+local classMutationValid, classMutationReason = ResponsiveHudLayout.validateCenteredModal(iphone, badClassModal)
+assert(not classMutationValid and classMutationReason == "centered modal leaves safe bounds", "class modal geometry mutation must fail")
 
 local legacyHouse = zone(256, 393 - (112 + 66) - 292, 248, 292)
 local legacyEditor = zone(512, 393 - (112 + 66) - 346, 330, 346)
@@ -182,6 +213,10 @@ clientFile:close()
 for _, fragment in ipairs({
     'ResponsiveHudLayout.computeAuxiliaryPanels(layout)',
     'ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)',
+    'ResponsiveHudLayout.computeCenteredModal(layout, {',
+    'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
+    'modalScale = Instance.new("UIScale")',
+    'modalScale.Scale = classModalLayout.scale',
     'housePanelScale = Instance.new("UIScale")',
     'editorPanelScale = Instance.new("UIScale")',
     'housePanelScale.Scale = auxiliaryPanels.house.scale',
@@ -189,6 +224,8 @@ for _, fragment in ipairs({
 }) do
     assert(clientSource:find(fragment, 1, true), "client missing responsive auxiliary binding: " .. fragment)
 end
+assert(not clientSource:find('modal.Position = UDim2.fromScale(0.5, 0.55)', 1, true), "fixed class modal position regression")
+assert(not clientSource:find('modal.Size = UDim2.new(0.9, 0, 0, 390)', 1, true), "fixed class modal size regression")
 assert(not clientSource:find('housePanel.Position = UDim2.new(0, 256', 1, true), "fixed house panel position regression")
 assert(not clientSource:find('editorPanel.Position = UDim2.new(0, 512', 1, true), "fixed housing editor position regression")
 

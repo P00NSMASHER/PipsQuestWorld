@@ -205,6 +205,8 @@ local housePanel
 local editorPanel
 local housePanelScale
 local editorPanelScale
+local modal
+local modalScale
 
 local function controlExclusionZones(viewportWidth, viewportHeight, insets)
     if not UserInputService.TouchEnabled then
@@ -251,6 +253,15 @@ local function applyResponsiveHudLayout()
         warn("Auxiliary HUD layout rejected: " .. tostring(auxiliaryReason))
         return
     end
+    local classModalLayout = ResponsiveHudLayout.computeCenteredModal(layout, {
+        width = 540,
+        height = 390,
+    })
+    local classModalValid, classModalReason = ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)
+    if not classModalValid then
+        warn("Class modal layout rejected: " .. tostring(classModalReason))
+        return
+    end
     currentHudLayout = layout
 
     card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
@@ -259,6 +270,11 @@ local function applyResponsiveHudLayout()
     actionRail.Size = UDim2.fromOffset(layout.rail.width, layout.rail.height)
     quickBar.Position = UDim2.fromOffset(layout.quick.x, layout.quick.y)
     quickBar.Size = UDim2.fromOffset(layout.quick.width, layout.quick.height)
+
+    if modal and modalScale then
+        modal.Position = UDim2.fromOffset(classModalLayout.x, classModalLayout.y)
+        modalScale.Scale = classModalLayout.scale
+    end
 
     if housePanel and housePanelScale then
         housePanel.Position = UDim2.fromOffset(auxiliaryPanels.house.x, auxiliaryPanels.house.y)
@@ -316,19 +332,21 @@ Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
 end)
 bindViewport(Workspace.CurrentCamera)
 
-local modal = Instance.new("Frame")
-modal.AnchorPoint = Vector2.new(0.5, 0.5)
-modal.Position = UDim2.fromScale(0.5, 0.55)
-modal.Size = UDim2.new(0.9, 0, 0, 390)
+modal = Instance.new("Frame")
+modal.Name = "ClassActivityModal"
+modal.AnchorPoint = Vector2.new(0, 0)
+modal.Position = UDim2.fromOffset(0, 0)
+modal.Size = UDim2.fromOffset(540, 390)
 modal.BackgroundColor3 = LEGACY_PANEL
 modal.Visible = false
 modal.Parent = gui
+modalScale = Instance.new("UIScale")
+modalScale.Name = "ResponsiveScale"
+modalScale.Scale = 1
+modalScale.Parent = modal
 round(modal, 2)
 outline(modal, 2)
-local constraint = Instance.new("UISizeConstraint")
-constraint.MinSize = Vector2.new(300, 360)
-constraint.MaxSize = Vector2.new(540, 430)
-constraint.Parent = modal
+applyResponsiveHudLayout()
 
 local question = Instance.new("TextLabel")
 question.BackgroundTransparency = 1
