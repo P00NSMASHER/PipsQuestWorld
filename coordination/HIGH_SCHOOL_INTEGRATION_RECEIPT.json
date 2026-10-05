@@ -1,150 +1,151 @@
 {
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "lane": "Roblox High School Integration Director",
   "owner": "Roblox High School Integration Director",
-  "recordedAt": "2026-10-05T21:54:00Z",
+  "recordedAt": "2026-10-05T23:48:30Z",
   "result": "PASS_INTEGRATED_EXACT_HEAD",
   "canonicalProduct": "Pip High",
   "canonicalSourceRoot": "school/**",
   "canonicalBranch": "rebuild/high-school-foundation",
-  "inputSha": "89cbb0a41b778b854b18b1382af4037596766570",
-  "inputBaseSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-  "integrationSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-  "milestone": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
-  "producerPr": 274,
-  "referenceClipTime": "A@00:05 persistent HUD; C@00:05 Travel; B@00:45 shop/dealership family; additional A/B/C locked UI reference states.",
+  "inputSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+  "inputBaseSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "integrationSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+  "milestone": "P1_CLIENT_COMPILE_REGISTER_LIMIT_REPAIR__MAPPED_BUILD_GATE",
+  "producerPr": 292,
+  "referenceClipTime": "No visual-reference semantic change. PR292 is a compile/build-readiness repair over the already integrated RHS2 UI-polished canonical.",
   "acceptanceCriteria": [
-    "Consume only PR274 head 89cbb0a41b778b854b18b1382af4037596766570 on base 7446d375e51e6af8013b9c25e3731e6a1ffbe635.",
-    "Require independent QA authorization on the exact candidate head.",
-    "Require Foundation, Class/Education and Progression PR guards green on the exact candidate head.",
-    "Require protected merge to exact live canonical 04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb with identical candidate/canonical trees.",
-    "Require all three push guards green on exact integrated canonical 04f4e5 before Smoke.",
-    "Keep exact visual parity pending until rendered desktop/iPhone/iPad comparison on this same canonical."
+    "Consume only PR292 head 313ae0ec5be540c1caeeaf251e841e3c7a27e14b on base 04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb.",
+    "Require independent same-head QA review.",
+    "Require Mapped Build, Foundation, Class/Education and Progression PR checks green on that exact head.",
+    "Require protected merge to exact canonical 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17 with identical candidate/canonical root and school trees.",
+    "Require all four post-merge checks green on exact canonical 33a5a11 before final runtime Smoke.",
+    "Keep rendered/device/traversal/save-rejoin and exact visual parity pending."
   ],
   "outputLocation": {
-    "product": "rebuild/high-school-foundation@04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "product": "rebuild/high-school-foundation@33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_RECEIPT.json",
-    "producerPr": 274
+    "producerPr": 292
   },
-  "blocker": "NONE_FOR_CLOUD_INTEGRATION; final rendered/device/traversal/save-rejoin Smoke remains LOCAL_ONLY_REQUIRED.",
+  "blocker": "NONE_FOR_CLOUD_INTEGRATION; final runtime/rendered/device/traversal/save-rejoin Smoke remains LOCAL_ONLY_REQUIRED.",
   "nextHandoff": "Roblox High School Integration Smoke",
   "preMergeExactHeadCi": [
     {
-      "workflow": "High School Foundation Static Guards",
-      "runId": 37378447242,
+      "workflow": "High School Mapped Build Preflight",
+      "runId": 37387001523,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
+      "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b"
+    },
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37387001063,
+      "event": "pull_request",
+      "conclusion": "success",
+      "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37378447133,
+      "runId": 37387001129,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
+      "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37378447106,
+      "runId": 37387001159,
       "event": "pull_request",
       "conclusion": "success",
-      "headSha": "89cbb0a41b778b854b18b1382af4037596766570"
+      "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b"
     }
   ],
   "independentQa": {
-    "status": "PASS_FUNCTIONAL_STATIC_EXACT_HEAD__PASS_RHS2_UI_VISUAL_CONTRACT__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
-    "evidence": "PR274 review 5421030661",
-    "headSha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "status": "PASS_EXACT_HEAD__REGISTER_LIMIT_REPAIR__MAPPED_COMPILE_BUILD_GATE__AUTHORIZED_FOR_PROTECTED_INTEGRATION_ON_THIS_SHA",
+    "evidence": "PR292 review 5422063015",
+    "headSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
     "runtime": "NOT_RUNTIME_TESTED",
-    "visual": "PENDING_RENDERED",
-    "device": "STATIC_GEOMETRY_PASS__LIVE_DEVICE_PENDING"
+    "visual": "UNCHANGED_FROM_PR274__PENDING_RENDERED",
+    "device": "LIVE_DEVICE_PENDING"
   },
   "postMergeExactHeadCi": [
     {
-      "workflow": "High School Foundation Static Guards",
-      "runId": 37378786669,
+      "workflow": "High School Mapped Build Preflight",
+      "runId": 37390479011,
       "event": "push",
       "conclusion": "success",
-      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+      "headSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
+    },
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37390479100,
+      "event": "push",
+      "conclusion": "success",
+      "headSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37378786670,
+      "runId": 37390479150,
       "event": "push",
       "conclusion": "success",
-      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+      "headSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37378786810,
+      "runId": 37390480532,
       "event": "push",
       "conclusion": "success",
-      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+      "headSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
     }
   ],
   "changedPaths": [
-    ".github/workflows/school-pivot-ci.yml",
-    ".github/workflows/high-school-class-education-ci.yml",
-    ".github/workflows/high-school-progression-ci.yml",
-    "school/default.project.json",
+    ".github/workflows/high-school-build-preflight.yml",
     "school/src/client/CanonicalSchoolClient.client.lua",
-    "school/src/shared/LegacyOutfitEntry.lua",
-    "school/src/shared/ResponsiveHudLayout.lua",
-    "school/src/shared/Rhs2UiStyle.lua",
-    "school/tests/avatar_customization_entry_spec.lua",
-    "school/tests/legacy_hud_contract_spec.lua",
-    "school/tests/responsive_hud_layout_spec.lua"
+    "scripts/verify-school-build.py"
   ],
   "integrationChecks": {
     "prMerged": true,
     "expectedHeadEnforced": true,
     "canonicalIdenticalToIntegrationSha": true,
-    "candidateRootTree": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
-    "canonicalRootTree": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
-    "candidateSchoolTree": "908595866f4671595c47f3890e2fadd877f748e5",
-    "canonicalSchoolTree": "908595866f4671595c47f3890e2fadd877f748e5",
+    "candidateRootTree": "9bb9306fb7bdc0742aeb5d0289c7f641812e46ff",
+    "canonicalRootTree": "9bb9306fb7bdc0742aeb5d0289c7f641812e46ff",
+    "candidateSchoolTree": "8873f39f62dc27fe2a39a05983768a55a2ac11be",
+    "canonicalSchoolTree": "8873f39f62dc27fe2a39a05983768a55a2ac11be",
     "sourceEditedByIntegration": false,
     "productPathsWithinPolicy": true,
-    "secondRuntimeRootIntroduced": false,
+    "mappedBuildGateAdded": true,
+    "mappedBuildGateWeakensExistingGuards": false,
+    "fullMappedSourceCompilationPass": true,
+    "validationOnlyRojoPlaceBuildPass": true,
+    "runtimeExecutedByBuildGate": false,
     "serverAuthorityModulesChanged": false,
     "classAuthorityChanged": false,
     "progressionPersistenceAuthorityChanged": false,
-    "travelAuthorityChanged": false,
-    "shoppingAuthorityChanged": false,
     "housingAuthorityChanged": false,
     "vehicleAuthorityChanged": false,
     "economyAuthorityChanged": false,
-    "workflowGuardsWeakened": false,
-    "workflowConcurrencyOnlyCancelsStaleSameGroupRuns": true,
     "spendingOrPublicationPerformed": false,
     "automationScheduleChanged": false
   },
   "nextSliceIntegrationSeams": {
     "reservedOwner": "Roblox High School Integration Smoke",
-    "activation": "Run final exact-canonical rendered/device/traversal/save-rejoin Smoke on 04f4e5 before packaging or P2 activation.",
+    "activation": "Run final rendered/device/traversal/save-rejoin Smoke on exact canonical 33a5a11 before packaging or P2 activation.",
     "scope": "P1_FINAL_RUNTIME_VISUAL_ACCEPTANCE",
-    "authorityBaseline": "PR274 changed presentation/layout/tests and workflow queue hygiene only; gameplay/server authorities remain unchanged.",
+    "authorityBaseline": "PR292 changes client function-frame structure plus read-only compile/build verification infrastructure; gameplay/server authorities are unchanged.",
     "frozenSurfaces": [
-      "RHS2 persistent HUD/status/right rail/quickbar",
-      "six-tile inert utility grid",
-      "Travel/Shop feature chrome and 530x354 nominal footprint",
-      "House/Housing Editor",
-      "Avatar/Outfit",
-      "ClassActivityModal",
-      "CafeCard",
-      "LegacyVehiclePanel"
+      "RHS2 UI visual-parity surfaces from PR274",
+      "Housing Editor visible hierarchy and callbacks",
+      "Mapped Build Preflight toolchain/diagnostics contract"
     ],
     "orderedHandoff": [
-      "Smoke binds runtime evidence to exact canonical 04f4e5.",
+      "Smoke rebinds runtime evidence to exact canonical 33a5a11.",
       "Capture desktop 909x483, iPhone 852x393 and iPad 1024x768 evidence.",
-      "Run traversal, feature interaction and save/rejoin evidence.",
+      "Run startup/movement/traversal/feature interaction/save-rejoin evidence.",
       "Run visual-diff triage against locked RHS2 frames.",
       "Only after full Smoke PASS emit deterministic package and release P2."
     ]
   },
   "handoff": {
     "nextOwner": "Roblox High School Integration Smoke",
-    "exactSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-    "instruction": "Consume only exact canonical 04f4e5. Rendered/device/traversal/save-rejoin and visual comparison remain pending; do not claim exact visual parity until those are executed."
+    "exactSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "instruction": "Consume only exact canonical 33a5a11. Compile/build is green, but rendered/device/traversal/save-rejoin and visual comparison remain pending."
   }
 }
