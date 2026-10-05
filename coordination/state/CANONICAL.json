@@ -1,63 +1,64 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+  "sha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_DEFECT_ACTIVE__CAFE_CARD_MOBILE_SAFE_AREA",
-  "parentCertifiedSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "parentCertifiedSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
   "repair": {
-    "pr": 239,
-    "branch": "rebuild/high-school-class-modal-safe-area-39911a-v1",
-    "sha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-    "scope": "ClassActivityModal responsive safe-area repair for desktop/iPhone/iPad"
+    "pr": 245,
+    "branch": "rebuild/high-school-cafe-card-safe-area-4782aa-v1",
+    "sha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "scope": "CafeCard responsive safe-area/touch-zone repair"
   },
   "exactHeadCi": [
     {
       "workflow": "High School Foundation Static Guards",
-      "runId": 37350019975,
+      "runId": 37353456737,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     },
     {
       "workflow": "High School Class Education Guards",
-      "runId": 37350019956,
+      "runId": 37353456762,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37350019941,
+      "runId": 37353456888,
       "event": "push",
       "conclusion": "success",
-      "headSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225"
+      "headSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2"
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-    "evidence": "PR239 review 5418408503"
+    "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "evidence": "PR245 review 5418699307"
   },
   "integration": {
     "result": "PASS_EXACT_HEAD",
-    "mergedPr": 239,
-    "candidateSha": "fdee2ca32017ec01d0d42c2142a57bb48e926140",
-    "certifiedSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "receiptPr": 240
+    "mergedPr": 245,
+    "candidateSha": "effc2d760798f933709cfd0f8c85e547e9f47984",
+    "certifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "receiptPr": 246
   },
   "integrationSmoke": {
-    "result": "BLOCKED_SOURCE_DEFECT__CAFE_CARD_MOBILE_SAFE_AREA",
-    "certifiedSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "certifiedSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptPr": 241,
+    "receiptPr": 247,
     "releasePackageEligible": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
       "PHYSICAL_TRAVERSAL_AND_SAVE_REJOIN",
-      "CLASS_ACTIVITY_MODAL_LIVE_DEVICE_CHECK"
+      "CLASS_ACTIVITY_MODAL_LIVE_DEVICE_CHECK",
+      "CAFE_CARD_LIVE_DEVICE_TOUCH_CLEARANCE"
     ]
   },
   "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
@@ -111,24 +112,18 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_CAFE_CARD_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
+  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_C7D5E36",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "currentCanonicalSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
-    "currentPreflight": "coordination/release-packages/pip-high-school-4782aa-package-readiness-v1.json",
-    "reservedArtifact": "pip-high-school-4782aa-source-tree-d05616b9",
-    "reservedArtifactId": "4782aa655cd2d0340cc93ce7b8dd53604963f225:d05616b9697cd83f6fd08bf2499ccff4b03e1f16",
-    "robloxPublished": false,
-    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
+    "currentCanonicalSha": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2",
+    "currentPreflight": "coordination/release-packages/pip-high-school-c7d5e36-package-readiness-v1.json",
+    "reservedArtifact": "pip-high-school-c7d5e36-source-tree-e5f70c8d",
+    "reservedArtifactId": "c7d5e36ef7d1878af2db01db7331a58ba63d50c2:e5f70c8db500f77f29e4fa9a3e9b6688750fd6c2",
+    "robloxPublished": false
   },
-  "currentSourceDefect": {
-    "id": "P1_CAFE_CARD_MOBILE_SAFE_AREA",
-    "evidence": "CafeCard exceeds mobile safe-right bounds and overlaps the right touch exclusion zone on the repository iPhone/iPad fixtures.",
-    "reservedBranch": "rebuild/high-school-cafe-card-safe-area-4782aa-v1",
-    "status": "REPAIR_RESERVED"
-  }
+  "currentSourceDefect": null
 }
