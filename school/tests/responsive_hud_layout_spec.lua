@@ -146,6 +146,10 @@ approxBetween(nominal.rail.width / 909, 0.045, 0.065, "nominal rail width")
 approxBetween(nominal.rail.height / 483, 0.40, 0.48, "nominal rail height")
 approxBetween(nominal.quick.width / 909, 0.24, 0.30, "nominal quick width")
 approxBetween(nominal.quick.height / 483, 0.09, 0.13, "nominal quick height")
+assert(nominal.status.right == nominal.rail.right, "RHS2 status stack and primary rail share right edge")
+assert(math.abs(nominal.status.x - 785) <= 3, "desktop status stack matches locked RHS2 right-side anchor")
+assert(math.abs(nominal.quick.x - 360) <= 4, "desktop quickbar matches locked RHS2 horizontal reference")
+assert(nominal.quick.bottom == 477, "desktop quickbar keeps locked vertical reference")
 
 local iphone = layouts["iphone-landscape-852x393"]
 local ipad = layouts["ipad-landscape-1024x768"]
@@ -189,6 +193,11 @@ assert(iphone.status.width ~= ipad.status.width, "status width must reflow by vi
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
 assert(iphone.quick.y ~= ipad.quick.y, "quick bar must follow safe bottom")
+assert(iphone.status.right == iphone.rail.right, "iPhone status/rail right-edge alignment")
+assert(ipad.status.right == ipad.rail.right, "iPad status/rail right-edge alignment")
+assert(iphone.quick.right < iphone.exclusionZones[2].x, "iPhone right-shifted quickbar clears camera/action zone")
+assert(iphone.quick.x > iphone.exclusionZones[1].right, "iPhone right-shifted quickbar clears movement zone")
+assert(ipad.quick.right < ipad.exclusionZones[2].x, "iPad right-shifted quickbar clears camera/action zone")
 
 local badStatus = ResponsiveHudLayout.compute(
     { width = 909, height = 483 },
