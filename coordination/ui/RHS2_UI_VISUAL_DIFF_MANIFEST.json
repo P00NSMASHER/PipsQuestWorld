@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School QA & Contract",
+  "createdAt": "2026-10-05T20:01:00Z",
+  "status": "LOCAL_VISUAL_DIFF_PREP_READY__NOT_A_PARITY_CERTIFICATE",
+  "purpose": "Provide repeatable ROI-based comparison between authorized RHS2 reference frames and future rendered captures. Metrics are triage evidence only; exact visual parity still requires rendered human/vision review at comparable aspect/FOV.",
+  "referenceViewport": {
+    "width": 1112,
+    "height": 512
+  },
+  "regions": [
+    {
+      "id": "A_FREE_ROAM_STATUS",
+      "frame": "A_0005",
+      "referenceTime": "A@00:05",
+      "box": [
+        0.775,
+        0,
+        0.915,
+        0.205
+      ],
+      "priority": "HIGH",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Top-right stacked status/weather/day/time/balance/level family."
+    },
+    {
+      "id": "A_FREE_ROAM_PRIMARY_RAIL",
+      "frame": "A_0005",
+      "referenceTime": "A@00:05",
+      "box": [
+        0.855,
+        0.17,
+        0.915,
+        0.675
+      ],
+      "priority": "HIGH",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Four large primary right-rail actions plus immediate utility cluster."
+    },
+    {
+      "id": "A_FREE_ROAM_QUICKBAR",
+      "frame": "A_0005",
+      "referenceTime": "A@00:05",
+      "box": [
+        0.405,
+        0.865,
+        0.65,
+        1
+      ],
+      "priority": "HIGH",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Separated glossy bottom-center quick slots."
+    },
+    {
+      "id": "C_TRAVEL_PANEL",
+      "frame": "C_0005",
+      "referenceTime": "C@00:05",
+      "box": [
+        0.255,
+        0.17,
+        0.745,
+        0.88
+      ],
+      "priority": "CRITICAL",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Travel navy shell, blue header, tabs, close affordance and destination-card grid."
+    },
+    {
+      "id": "C_TRAVEL_HEADER_TABS",
+      "frame": "C_0005",
+      "referenceTime": "C@00:05",
+      "box": [
+        0.255,
+        0.17,
+        0.745,
+        0.335
+      ],
+      "priority": "CRITICAL",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Header silhouette, title, circular close, gold/blue tabs."
+    },
+    {
+      "id": "B_DEALERSHIP",
+      "frame": "B_0045",
+      "referenceTime": "B@00:45",
+      "box": [
+        0.415,
+        0.04,
+        0.915,
+        0.995
+      ],
+      "priority": "FUTURE_P5",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Viewport-dominant dealership/shop visual family."
+    },
+    {
+      "id": "C_JOB_RESULT",
+      "frame": "C_0065",
+      "referenceTime": "C@01:05",
+      "box": [
+        0.315,
+        0.165,
+        0.69,
+        0.89
+      ],
+      "priority": "FUTURE_P6",
+      "compare": [
+        "rgb_mae",
+        "edge_mae",
+        "phash"
+      ],
+      "note": "Purple-header white-body result modal family."
+    }
+  ],
+  "thresholds": {
+    "note": "Starting triage thresholds only. They are not proof of exact parity and should be tuned after first real capture set.",
+    "rgbMaeWarn": 45,
+    "edgeMaeWarn": 55,
+    "pHashHammingWarn": 18
+  },
+  "captureRequirements": [
+    "Capture exact product SHA and device profile with timestamp.",
+    "Use comparable gameplay state and camera/FOV before comparing.",
+    "Do not compare a 2x-reference segment for animation/movement timing.",
+    "Preserve original PNG/JPEG evidence and write comparison JSON beside it.",
+    "A low numeric error does not override a visible semantic mismatch or missing control."
+  ],
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
