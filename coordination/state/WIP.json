@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 72,
+  "schemaVersion": 73,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T19:24:00Z",
+  "observedAt": "2026-10-05T19:56:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-    "guards": "POST_MERGE_PUSH_CI_GREEN__P1_FEATURE_MODAL_REPAIR_INTEGRATED__SMOKE_REBOUND__PACKAGE_PREFLIGHT_READY"
+    "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "guards": "PR264_MERGED__CLASS_PUSH_GREEN__PROGRESSION_PUSH_GREEN_ATTEMPT2__FOUNDATION_PUSH_RERUN_QUEUED"
   },
   "target": {
     "universeId": "10768955678",
@@ -15,21 +15,25 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 3,
+    "countIncludingBase": 2,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
+    "producerBranch": null,
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
       "owner": "Pip High Free Roam",
-      "scope": "P1_VEHICLE_CARD_HUD_CLEARANCE_REPAIR",
-      "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_DESKTOP_DEFECT",
-      "inputSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+      "scope": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
+      "status": "QUEUED_AFTER_VEHICLE_INTEGRATION__REFERENCE_AND_IMPLEMENTATION_MAP_LOCKED",
+      "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "pr": null,
       "headSha": null,
-      "defectId": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP"
+      "prerequisites": [
+        "Foundation push rerun 37363665326 succeeds on exact canonical 7446d375.",
+        "Protected Integration receipt binds PR264 candidate d2f51131 to exact canonical 7446d375.",
+        "No newer canonical product head supersedes 7446d375."
+      ]
     },
     "supersededCandidates": [
       {
@@ -44,16 +48,16 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3_FULL: exact canonical bfc035f + frozen support PR150 + one narrow P1 LegacyVehiclePanel clearance repair reservation consume 3/3. No P2 producer may open until this repair clears CI/QA/Integration and full runtime Smoke/Package pass.",
+    "rule": "WIP_CAP_3: exact canonical 7446d375 + frozen support PR150 consume 2/3. Vehicle-card product repair is merged but Integration is waiting on one exact-canonical Foundation push rerun. The next and only product slot is reserved for RHS2 UI visual-parity polish after Integration; P2 stays blocked behind polish + final Smoke + Package.",
     "recentlyIntegrated": {
-      "pr": 258,
-      "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "canonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "mergedAt": "2026-10-05T18:56:54Z",
-      "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_REBOUND_LOCAL_ONLY_REQUIRED"
+      "pr": 264,
+      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+      "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "mergedAt": "2026-10-05T19:28:52Z",
+      "status": "MERGED__PR_GUARDS_GREEN__CANONICAL_CLASS_AND_PROGRESSION_GREEN__FOUNDATION_RERUN_QUEUED"
     }
   },
-  "currentMilestone": "P1_SOURCE_PROVEN_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP__NARROW_REPAIR_RESERVED",
+  "currentMilestone": "P1_VEHICLE_REPAIR_MERGED__WAIT_FOUNDATION_PUSH_RERUN__RHS2_UI_POLISH_NEXT_MANDATORY",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -111,77 +115,77 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "SOLE_P1_REPAIR_RESERVED__VEHICLE_CARD_CLEARANCE",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "branch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
-      "candidatePr": null,
-      "candidateSha": null,
-      "latestOutput": "Static geometry audit found LegacyVehiclePanel fixed bottom-center at 260x132 with a 12px desktop bottom margin. On the 909x483 reference desktop it spans x=324.5..584.5, y=339..471 while the quick bar spans x=329.5..579.5, y=421..477, causing a large direct overlap. Touch fixtures are currently clear because the 112px mobile bottom margin lifts the panel above the touch zones.",
-      "objective": "Make the smallest responsive vehicle-card repair so LegacyVehiclePanel remains centered, safe and clear of the quick bar/HUD and touch zones on desktop 909x483, iPhone 852x393 and iPad 1024x768. Add mutation-sensitive pure geometry coverage; preserve vehicle lifecycle/input/server authority.",
+      "mode": "WAIT_VEHICLE_INTEGRATION__UI_POLISH_NEXT_RESERVED",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "branch": null,
+      "candidatePr": 264,
+      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+      "latestOutput": "PR264 vehicle-card clearance repair merged to canonical 7446d375 and exact-head QA passed. UI parity spec PR265, directive PR266, implementation map PR267 and acceptance matrix PR268 are merged.",
+      "objective": "Do not open product code yet. As soon as vehicle Integration is certified, open exactly one RHS2 UI visual-parity polish branch from the certified canonical and implement the locked HUD/Travel/Shop style contract.",
       "owned": "bounded P1 Avatar presentation geometry only",
-      "dependency": "None; source defect is deterministic and cloud-fixable.",
-      "exit": "Changed exact product head with all three guards green.",
-      "handoff": "Roblox High School QA & Contract"
+      "dependency": "Foundation exact-canonical push rerun -> Integration.",
+      "exit": "Vehicle Integration certified or new canonical defect.",
+      "handoff": "Pip High Free Roam"
     },
     "QA": {
-      "mode": "P1_REPAIR_QA_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "candidatePr": 258,
-      "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "PR258 review 5419216675 authorized the exact Shop/Travel clearance head for Integration; desktop/iPhone/iPad HUD/touch geometry contract passes.",
-      "objective": "No new source review unless Smoke/static audit finds a concrete defect or canonical changes.",
+      "mode": "VEHICLE_QA_COMPLETE__UI_VISUAL_QA_SPEC_READY",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "candidatePr": 264,
+      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+      "latestOutput": "PR264 exact-head QA passed review 5419550318. RHS2 visual spec/implementation map/acceptance matrix are locked for the upcoming UI polish candidate.",
+      "objective": "After UI polish candidate exists, perform exact-head static visual contract QA plus standard authority/regression review. Rendered parity remains separate.",
       "owned": "QA contracts, validators, receipts and adversarial authority/provenance checks",
-      "dependency": "Integration Smoke runtime evidence.",
-      "exit": "Concrete defect or new candidate.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "UI polish product candidate.",
+      "exit": "New UI candidate or concrete static defect.",
+      "handoff": "Roblox High School Integration"
     },
     "Integration": {
-      "mode": "P1_REPAIR_INTEGRATED_COMPLETE__NO_PRODUCT_WRITE",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-      "candidatePr": 258,
-      "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "PR258 merged to canonical bfc035f; Integration receipt schema17 merged in PR259; all three post-merge push guards green.",
-      "objective": "Hold exact integrated lineage stable while Smoke runs.",
+      "mode": "WAIT_ONE_EXACT_CANONICAL_FOUNDATION_PUSH_RERUN",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "candidatePr": 264,
+      "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+      "latestOutput": "PR264 merged. Class push 37363665377 success; Progression rerun 37363665343 attempt2 success; Foundation rerun 37363665326 attempt2 remains queued. Do not certify Integration until all three are green on 7446d375.",
+      "objective": "Bind PR264 to exact canonical 7446d375 once Foundation push rerun succeeds; no product edits.",
       "owned": "protected mechanical integration/readiness only",
-      "dependency": "None.",
-      "exit": "Smoke/source defect requiring a new candidate or full P1 Smoke completion.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Foundation push rerun 37363665326.",
+      "exit": "All three exact-canonical push guards green or concrete failure.",
+      "handoff": "Pip High Free Roam visual-parity polish"
     },
     "Smoke": {
-      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_VEHICLE_CARD_REPAIR",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+      "mode": "DEFERRED_BEHIND_REQUIRED_RHS2_UI_VISUAL_POLISH",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": 258,
       "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-      "latestOutput": "Exact bfc035f runtime plan is ready, but static audit found LegacyVehiclePanel overlapping the desktop quick bar before runtime execution.",
-      "objective": "Do not consume laptop/runtime evidence on known-bad vehicle-card geometry. Rebind only after the narrow repair passes QA and Integration.",
+      "latestOutput": "Runtime Smoke is intentionally not next: user-directed RHS2 UI visual polish is now a mandatory P1 product gate before final rendered/device acceptance.",
+      "objective": "Preserve prepared runtime contracts; rebind only after the UI-polished canonical integrates.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "Vehicle-card repair -> exact CI -> QA -> Integration.",
-      "exit": "Repaired integrated canonical.",
+      "dependency": "Vehicle Integration -> RHS2 UI polish -> QA -> Integration.",
+      "exit": "UI-polished integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_STALE_ON_PENDING_VEHICLE_CARD_SOURCE_REPAIR__DO_NOT_PACKAGE_BFC035F",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+      "mode": "DEFERRED_BEHIND_RHS2_UI_POLISH_AND_FINAL_RUNTIME_SMOKE",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR261 package preflight is historical only because LegacyVehiclePanel has a deterministic desktop quick-bar overlap defect.",
-      "objective": "Do not package bfc035f. Recompute deterministic package identity after the narrow repair integrates and full Smoke passes.",
+      "latestOutput": "Prior package remains preserved. All earlier preflights are superseded by vehicle repair plus mandatory RHS2 UI polish.",
+      "objective": "Do not emit a new package until the UI-polished canonical passes final rendered/device/traversal/save-rejoin Smoke.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
-      "exit": "Full Smoke PASS on repaired canonical.",
+      "dependency": "UI polish Integration -> final Smoke.",
+      "exit": "Full Smoke PASS on UI-polished canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA72_SOURCE_DEFECT_FOUND__SOLE_P1_VEHICLE_CARD_REPAIR_RESERVED",
-      "base": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+      "mode": "SCHEMA73_VEHICLE_CANONICAL_WAIT_FOUNDATION_RERUN__RHS2_UI_POLISH_QUEUED",
+      "base": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "Static audit caught P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP before laptop use: LegacyVehiclePanel overlaps almost the full desktop quick bar across y=421..471.",
-      "objective": "Run one narrow cloud-fixable vehicle-card clearance repair, then exact-head CI -> QA -> Integration -> rebind runtime Smoke -> Package. Keep P2 armed but blocked.",
+      "latestOutput": "PR264 is merged and two of three exact-canonical push lanes are green. Foundation push rerun remains queued. UI parity spec PR265, directive PR266, implementation map PR267 and acceptance matrix PR268 are merged and authoritative.",
+      "objective": "Finish vehicle Integration truthfully, then immediately release the sole product slot to P1_RHS2_UI_VISUAL_PARITY_POLISH before final Smoke. Keep P2 blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "Free Roam repair.",
-      "exit": "Changed repair head or concrete new defect.",
-      "handoff": "Pip High Free Roam"
+      "dependency": "Foundation push rerun 37363665326.",
+      "exit": "Vehicle Integration certified, guard failure, or canonical change.",
+      "handoff": "Roblox High School Integration"
     }
   },
   "connectorReliability": {
@@ -292,7 +296,7 @@
     "cloudArtifactMaterialization": "PASS",
     "status": "AVAILABLE_TO_ALL_CANONICAL_WORKERS__PINNED_PROVENANCE__RAW_UTF8_FAILURE_NOT_A_BLOCKER"
   },
-  "nextPriorityAfterCurrent": "P2_CLASSROOM_FREE_ROAM__ARMED_ON_BFC035F__ACTIVATE_AFTER_P1_RUNTIME_SMOKE_AND_PACKAGE",
+  "nextPriorityAfterCurrent": "P1_RHS2_UI_VISUAL_PARITY_POLISH__THEN_FINAL_RUNTIME_SMOKE_AND_PACKAGE__THEN_P2",
   "candidateExactHeadCi": {
     "pr": 258,
     "headSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
@@ -1066,5 +1070,12 @@
       "overflowBottom": 39.15
     },
     "status": "SOURCE_PROVEN__REPAIR_RESERVED"
+  },
+  "uiVisualParity": {
+    "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
+    "directive": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
+    "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
+    "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
+    "status": "READY_FOR_PRODUCT_ACTIVATION_AFTER_VEHICLE_INTEGRATION"
   }
 }
