@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "createdAt": "2026-10-05T19:46:00Z",
+  "directive": "P1_RHS2_UI_VISUAL_PARITY_POLISH_REQUIRED_BEFORE_FINAL_RUNTIME_SMOKE",
+  "userPriority": "The UI must be polished and visually match the authorized RHS2 reference as closely as the available evidence permits.",
+  "currentCanonicalObserved": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "currentPipelineNote": "Vehicle-card repair PR264 is merged to canonical. Its exact-canonical Foundation/Progression push jobs were cancelled by runner/infrastructure behavior and were explicitly rerun; do not treat cancelled jobs as product failures or certify Integration until reruns complete successfully.",
+  "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
+  "sequencingRule": [
+    "Finish exact-canonical post-merge validation and protected Integration for the current vehicle-card repair.",
+    "Before final P1 runtime Smoke, open exactly one visual-parity polish producer from the then-certified canonical.",
+    "The visual-parity producer consumes the locked RHS2 UI spec and may change presentation only; it must not create or move server authority.",
+    "After the polish candidate passes all three exact-head guards and independent QA, integrate it mechanically.",
+    "Only then run the final exact-canonical rendered/device/traversal/save-rejoin Smoke and deterministic Package.",
+    "P2 Classroom / Free Roam remains armed but blocked until this UI-polish gate plus final P1 Smoke/Package complete."
+  ],
+  "productScope": {
+    "owner": "Pip High Free Roam",
+    "id": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
+    "proposedBranchPattern": "rebuild/high-school-rhs2-ui-parity-<certified-sha>-v1",
+    "presentationSurfaces": [
+      "persistent top-right status stack",
+      "four large right-rail primary actions",
+      "small right-rail utility-tile cluster",
+      "bottom-center quick slots",
+      "Travel modal shell/header/tabs/card composition",
+      "Shop modal shell/chrome where currently implemented",
+      "common modal close/back affordances",
+      "shared typography, borders, gradients, shadows and rounded surfaces"
+    ],
+    "mustPreserve": [
+      "FeaturePanelController one-active-panel semantics",
+      "Foundation clock/location authority",
+      "ClassEducation and progression authorities",
+      "Travel server-current-room authority",
+      "shopping server authority",
+      "vehicle/housing/cafe/economy/persistence authorities",
+      "all previously repaired desktop/iPhone/iPad safe-area and touch-zone contracts"
+    ],
+    "forbidden": [
+      "inventing icon asset IDs",
+      "inventing weather or gem balances",
+      "renaming progression points to coins unless an authoritative coin value exists",
+      "inventing destinations/catalog items/remotes",
+      "claiming exact RGB constants from compressed video",
+      "claiming exact visual parity without rendered comparison"
+    ]
+  },
+  "visualAcceptance": [
+    "Primary UI no longer looks like generic pale legacy panels with Arial-heavy typography.",
+    "Free roam uses dark compact top-right status, glossy colored right rail and separated glossy bottom quick slots matching the visible RHS2 composition.",
+    "Travel uses dark navy body, saturated royal-blue header, gold active tab, deep-blue inactive tab, visible close control and card-grid composition while retaining surrounding HUD.",
+    "Shop/Travel/Avatar/House/Housing Editor retain deterministic open/close/back behavior and all responsive clearance contracts.",
+    "Dealership and job-result future slices consume the same visual system when their product priorities activate.",
+    "Desktop 909x483, iPhone 852x393 and iPad 1024x768 static geometry remains green.",
+    "Final visual status stays PENDING_RENDERED until actual comparable-FOV captures exist."
+  ],
+  "staticQaRequired": [
+    "visual-style module/source-root contract",
+    "Gotham-family or closest verified built-in typography contract on primary RHS2 surfaces",
+    "navy/royal-blue/gold/purple palette-family contract",
+    "Travel header/tab hierarchy contract",
+    "right rail large-primary plus inert-unknown-utility-slot hierarchy contract",
+    "quickbar separated rounded slot contract",
+    "no large permanent free-roam panel contract",
+    "no authority or persistence seam changes"
+  ],
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
