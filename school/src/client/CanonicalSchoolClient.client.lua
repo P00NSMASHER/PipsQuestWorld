@@ -415,19 +415,12 @@ local function applyResponsiveHudLayout()
         end
     end
 
-    local utilityGap = layout.railGap
-    local utilityTileSize = math.floor((layout.rail.width - utilityGap) / 2)
-    local utilityHeight = (utilityTileSize * 3) + (utilityGap * 2)
-    local utilityY = layout.rail.bottom + utilityGap
-    local utilityLimit = layout.quick.y - utilityGap
-    for _, zone in ipairs(layout.exclusionZones or {}) do
-        utilityLimit = math.min(utilityLimit, zone.y - utilityGap)
-    end
-    utilityRail.Position = UDim2.fromOffset(layout.rail.x, utilityY)
-    utilityRail.Size = UDim2.fromOffset(layout.rail.width, utilityHeight)
-    utilityRail.Visible = utilityY + utilityHeight <= utilityLimit
-    utilityLayout.CellPadding = UDim2.fromOffset(utilityGap, utilityGap)
-    utilityLayout.CellSize = UDim2.fromOffset(utilityTileSize, utilityTileSize)
+    local utilityGrid = ResponsiveHudLayout.computeUtilityGrid(layout)
+    utilityRail.Position = UDim2.fromOffset(utilityGrid.x, utilityGrid.y)
+    utilityRail.Size = UDim2.fromOffset(utilityGrid.width, utilityGrid.height)
+    utilityRail.Visible = utilityGrid.visible
+    utilityLayout.CellPadding = UDim2.fromOffset(utilityGrid.gap, utilityGrid.gap)
+    utilityLayout.CellSize = UDim2.fromOffset(utilityGrid.tileSize, utilityGrid.tileSize)
 
     quickLayout.Padding = UDim.new(0, layout.quickGap)
     for _, child in ipairs(quickBar:GetChildren()) do
