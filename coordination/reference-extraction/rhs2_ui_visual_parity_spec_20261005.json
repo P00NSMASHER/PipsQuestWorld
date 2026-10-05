@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower / Content QA",
+  "createdAt": "2026-10-05T19:41:00Z",
+  "status": "REFERENCE_LOCKED__PRODUCT_APPLY_PENDING_CURRENT_P1_REPAIR_PIPELINE",
+  "goal": "Drive the canonical school UI toward the authorized RHS2 visual reference while keeping functional, visual, device, and runtime evidence separate. This document records only visible evidence and bounded implementation rules; it does not invent hidden asset IDs, remotes, catalog data, or server semantics.",
+  "sourceEvidence": {
+    "videos": [
+      {
+        "id": "A",
+        "name": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+        "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+        "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+        "dimensions": "1112x512"
+      },
+      {
+        "id": "B",
+        "name": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+        "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+        "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+        "dimensions": "1112x512"
+      },
+      {
+        "id": "C",
+        "name": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+        "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+        "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+        "dimensions": "1112x512"
+      }
+    ],
+    "keyFrames": [
+      {
+        "id": "A_0005",
+        "time": "A@00:05",
+        "purpose": "free-roam HUD + school exterior"
+      },
+      {
+        "id": "A_0025",
+        "time": "A@00:25",
+        "purpose": "atrium + persistent HUD"
+      },
+      {
+        "id": "A_0045",
+        "time": "A@00:45",
+        "purpose": "corridor + persistent HUD"
+      },
+      {
+        "id": "A_0125",
+        "time": "A@02:05",
+        "purpose": "stairs + bottom shortcut/item stack"
+      },
+      {
+        "id": "B_0045",
+        "time": "B@00:45",
+        "purpose": "viewport-dominant dealership"
+      },
+      {
+        "id": "C_0005",
+        "time": "C@00:05",
+        "purpose": "Travel modal with compact HUD retained"
+      },
+      {
+        "id": "C_0065",
+        "time": "C@01:05",
+        "purpose": "job result modal with compact HUD retained"
+      },
+      {
+        "id": "C_0070",
+        "time": "C@01:10",
+        "purpose": "modal dismissed -> free roam"
+      }
+    ]
+  },
+  "currentCanonicalAtSpecTime": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+  "visualSystem": {
+    "evidenceBoundary": "Color values below are compression-tolerant implementation targets sampled from visible frames, not claims of original hidden RGB constants.",
+    "approximatePalette": {
+      "shellNavy": {
+        "rgb": [
+          20,
+          28,
+          52
+        ],
+        "use": "panel body/status bars/top utility chrome"
+      },
+      "rhsBlue": {
+        "rgb": [
+          0,
+          104,
+          240
+        ],
+        "use": "primary panel headers / major blue surfaces"
+      },
+      "tabBlue": {
+        "rgb": [
+          0,
+          72,
+          180
+        ],
+        "use": "inactive tab and secondary blue controls"
+      },
+      "activeGold": {
+        "rgb": [
+          244,
+          176,
+          20
+        ],
+        "use": "active tabs / coin-family accents"
+      },
+      "levelPurple": {
+        "rgb": [
+          180,
+          52,
+          236
+        ],
+        "use": "level/progression accent"
+      },
+      "white": {
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "use": "primary type / outlines"
+      },
+      "greenAction": {
+        "rgb": [
+          54,
+          195,
+          80
+        ],
+        "use": "positive dismissal/action button family"
+      }
+    },
+    "typography": {
+      "rule": "Replace generic Arial-heavy presentation with the closest Roblox built-in rounded/modern bold sans treatment consistent with the reference. Prefer Gotham/GothamBold/GothamMedium where available. Preserve exact verified strings when a text fixture exists.",
+      "title": "bold white, high contrast",
+      "labels": "bold/semibold white over dark or colored strips",
+      "body": "dark text on white result surfaces; white text on navy/blue feature surfaces"
+    },
+    "surfaceLanguage": [
+      "Dark navy base panels with saturated royal-blue header bands.",
+      "Rounded rectangular controls with restrained corner radius, light outline/highlight, and stronger colored active states.",
+      "Compact edge HUD stays visually separate from world center.",
+      "No large permanent free-roam panel.",
+      "Large feature panels use layered sections/tabs rather than a generic pale-blue card."
+    ]
+  },
+  "persistentFreeRoamHud": {
+    "reference": [
+      "A@00:05",
+      "A@00:25",
+      "A@00:45",
+      "A@02:05",
+      "C@01:10"
+    ],
+    "geometry": {
+      "statusWidthRatio": "~0.13 of nominal 909px content width",
+      "actionRailWidthRatio": "~0.054",
+      "quickBarWidthRatio": "~0.275",
+      "placement": "status top-right immediately left/above the right rail; action rail right edge; shortcuts bottom center"
+    },
+    "requiredVisuals": [
+      "Top-right status is a compact dark stack, not a pale school-day card.",
+      "Visible reference stack contains a thin weather/day/time row, a coin-style row, a gem-style row, and a purple level/progress strip.",
+      "Right action rail shows four large glossy rounded tiles: Shop red, Avatar cyan, House green, Travel gold.",
+      "Below the four large rail entries, the reference shows smaller colorful utility tiles; until exact semantics/assets are verified, use inert/reference-only placeholders rather than inventing actions.",
+      "Bottom quick bar shows four separated glossy rounded slots with cyan/dark/green/pink families and visible item art in the reference.",
+      "Central gameplay sightline stays clear."
+    ],
+    "dataRules": [
+      "Clock/day may use Foundation-owned school clock values already available to the client.",
+      "Do not label progression points as coins or invent gem balances without an authoritative server value.",
+      "Do not invent weather state. Hide/neutralize unowned data rather than fabricate live values.",
+      "Unknown icon asset IDs remain explicit evidence gaps."
+    ]
+  },
+  "travelModal": {
+    "reference": "C@00:05",
+    "visualContract": [
+      "Large dark-navy modal offset toward center-left while compact edge HUD remains visible.",
+      "Bright royal-blue header band with white 'Travel' title and angled/right-ended visual treatment.",
+      "Circular/outlined close control in the top-right of the modal.",
+      "Two-tab row immediately below header; active tab gold/yellow, inactive tab deep blue.",
+      "Destination area is a multi-column image-card grid; cards use dark/blue framing and a black/dark label strip with centered white text.",
+      "Background gameplay remains visible around the panel."
+    ],
+    "authorityRule": "Only server-approved destinations may be interactive. Additional observed tiles can be visually represented only when their asset/destination authority is verified."
+  },
+  "dealership": {
+    "reference": "B@00:45",
+    "visualContract": [
+      "Viewport-dominant state replaces/occludes the ordinary free-roam right rail.",
+      "Left preview stage remains visible with a large royal-blue 'Select an Item' callout and lower instructional text.",
+      "Right side uses bright blue shop chrome with title/subtitle, All/Vehicles/Skins tabs, search, sort, detail area and card grid.",
+      "Vehicle grid cards use saturated cyan/blue backgrounds, vehicle image, name and price/status footer.",
+      "Balances appear in two large blue strips along the bottom of the shop area.",
+      "Close control is a white outlined circle on dark navy."
+    ],
+    "authorityRule": "Preview/search/sort/card selection are presentation. Purchase/ownership/spawn remain server-authoritative."
+  },
+  "resultModal": {
+    "reference": "C@01:05",
+    "visualContract": [
+      "Centered medium modal leaves compact status, rail and quick bar visible.",
+      "Header is vivid purple with subtle dotted/bubble texture; white title at left, white back/close controls at right.",
+      "Main body is white.",
+      "Job name/performance hierarchy uses dark bold type.",
+      "Performance meter is a rounded grey track with bright gold fill and orange result caption.",
+      "Earnings row separates coin amount and purple XP amount.",
+      "Level/progress strip uses dark outer track and vivid purple fill.",
+      "Primary dismissal is a centered bright green rounded button with white OK text."
+    ]
+  },
+  "visualStates": {
+    "freeRoam": "world-dominant; only compact edge HUD and quick slots visible",
+    "compactModal": "Travel/job-result family retains edge HUD",
+    "dominantFeature": "dealership family may replace ordinary rail while active",
+    "closed": "closing/dismissing any modal deterministically restores the same compact HUD state"
+  },
+  "productAuditFindings": [
+    {
+      "id": "UI_STYLE_GENERIC_LEGACY",
+      "severity": "HIGH_VISUAL_PARITY",
+      "current": "Canonical client still uses LEGACY_BLUE/LEGACY_PANEL pale-blue cards and Arial/ArialBold broadly.",
+      "target": "Adopt the locked RHS2 visual system above with navy/royal-blue/gold/purple surfaces and modern rounded bold typography."
+    },
+    {
+      "id": "STATUS_STACK_NOT_RHS2_SHAPE",
+      "severity": "HIGH_VISUAL_PARITY",
+      "current": "CompactSchoolStatus is a single pale school-day card.",
+      "target": "Convert to the observed stacked top-right status composition while preserving authoritative data ownership."
+    },
+    {
+      "id": "RAIL_MISSING_REFERENCE_CHROME",
+      "severity": "MEDIUM_VISUAL_PARITY",
+      "current": "Primary rail uses plain text buttons and lacks the observed small utility-tile cluster.",
+      "target": "Apply glossy/outlined RHS2 rail treatment. Keep unknown small-tile semantics inert until verified."
+    },
+    {
+      "id": "TRAVEL_SURFACE_TOO_GENERIC",
+      "severity": "HIGH_VISUAL_PARITY",
+      "current": "Travel uses a generic light panel with one text destination.",
+      "target": "Adopt dark navy + royal-blue header + gold/blue tabs + destination-card composition while retaining current server-current-room authority."
+    },
+    {
+      "id": "QUICKBAR_TOO_FLAT",
+      "severity": "MEDIUM_VISUAL_PARITY",
+      "current": "Four flat colored slots approximate placement but not the observed glossy bordered RHS2 tiles.",
+      "target": "Add border/highlight/shadow/rounding treatment without inventing item semantics or asset IDs."
+    }
+  ],
+  "nextProductSlice": {
+    "owner": "Pip High Free Roam",
+    "proposedId": "P1_RHS2_UI_VISUAL_PARITY_POLISH",
+    "activation": "Only after the current vehicle-card repair is fully reconciled through exact-canonical push CI, Integration, Smoke rebind, and Control Tower releases the sole product slot.",
+    "boundedScope": [
+      "Add one shared RHS2 visual-style helper/module.",
+      "Restyle persistent status, main action rail and quick slots to the locked visual contract.",
+      "Restyle Travel/Shop shell chrome to the locked navy/blue/gold treatment while preserving current authority semantics.",
+      "Add screenshot-independent static contracts for font family, palette family, surface hierarchy, modal close affordance, HUD retention and no-large-panel free-roam state.",
+      "Do not invent missing icon asset IDs, destination IDs, balances, weather, gems, catalogs, or hidden UI hierarchy."
+    ]
+  },
+  "acceptance": [
+    "Static UI contract rejects regression to the pale LEGACY_PANEL/Arial look for the primary RHS2 surfaces.",
+    "Free roam has no large central permanent panel.",
+    "Status/action/quick placement remains responsive and safe on desktop 909x483, iPhone 852x393 and iPad 1024x768.",
+    "Travel retains status/rail/quick around the modal; dealership remains allowed to be viewport-dominant.",
+    "Rendered comparison at comparable FOV is still required before claiming exact RHS2 visual parity."
+  ],
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
