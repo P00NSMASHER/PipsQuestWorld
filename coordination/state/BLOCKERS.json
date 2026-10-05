@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 34,
+  "schemaVersion": 35,
   "owner": "Roblox High School Control Tower",
   "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "currentBlockers": [
@@ -8,26 +8,26 @@
       "owner": "Roblox High School Integration",
       "type": "CI_RUNNER_PENDING",
       "exactSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-      "status": "FOUNDATION_RERUN_ATTEMPT4_QUEUED__CLASS_AND_PROGRESSION_GREEN",
-      "evidence": "Foundation 37363665326 attempt4 queued; Class 37363665377 success; Progression 37363665343 attempt2 success.",
+      "status": "FOUNDATION_RERUN_ATTEMPT5_QUEUED__CLASS_AND_PROGRESSION_GREEN",
+      "evidence": "Foundation 37363665326 rerun attempt5 queued after attempt4 was cancelled before any steps; Class 37363665377 success; Progression 37363665343 attempt2 success.",
       "reason": "Vehicle Integration may not be certified until all three exact-canonical push guards are green."
     },
     {
       "id": "P1_UI_POLISH_EXACT_HEAD_CI",
       "owner": "Pip High Free Roam / UI Visual Parity",
       "type": "CI_PENDING",
-      "exactSha": "f459710aba7456876a709598ee662042c4abd0c8",
-      "status": "ALL_THREE_PR_GUARDS_QUEUED",
-      "evidence": "Foundation 37370528188; Class/Education 37370528189; Progression 37370528195.",
-      "reason": "Independent QA is exact-head and waits for the three PR guards."
+      "exactSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+      "status": "ALL_THREE_PR_GUARDS_QUEUED__SCOPE_FROZEN",
+      "evidence": "Foundation 37371235852; Class/Education 37371235857; Progression 37371235863.",
+      "reason": "Independent QA is exact-head and waits for the three PR guards. Product scope is frozen to prevent CI churn."
     },
     {
       "id": "P1_UI_POLISH_MERGE_ORDER",
       "owner": "Roblox High School Control Tower",
       "type": "PIPELINE_ORDER",
-      "exactSha": "f459710aba7456876a709598ee662042c4abd0c8",
+      "exactSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
       "status": "CI_QA_ALLOWED__MERGE_BLOCKED_BEHIND_VEHICLE_INTEGRATION",
-      "evidence": "PR274 on exact base 7446d375; locked reference/spec/acceptance artifacts; current client has no pale legacy tokens or Arial presentation.",
+      "evidence": "PR274 exact base 7446d375; all current P1 client visual surfaces styled; pale legacy tokens and Arial removed; inert utility strip added with safe/touch hide rule.",
       "reason": "PR274 must not merge before the predecessor vehicle-card Integration receipt is certified."
     },
     {
@@ -36,13 +36,13 @@
       "type": "LOCAL_ONLY_REQUIRED",
       "exactSha": "FUTURE_UI_POLISHED_CANONICAL",
       "status": "DEFERRED_BEHIND_PR274_INTEGRATION",
-      "evidence": "Runtime capture contract and visual-diff harness preserved.",
+      "evidence": "Runtime capture contract, reference acceptance matrix, and visual-diff harness preserved.",
       "reason": "Final rendered/device/traversal/save-rejoin evidence belongs on the UI-polished canonical."
     }
   ],
-  "gateStatus": "PR274_F459_UI_POLISH_ACTIVE__CI_QUEUED__VEHICLE_INTEGRATION_RUNNER_WAIT__FINAL_SMOKE_DEFERRED",
-  "nextProducer": "NONE__PR274_IS_SOLE_ACTIVE_PRODUCER",
-  "nextObjective": "GET_F459_ALL_THREE_PR_GUARDS_GREEN__QA_F459__CERTIFY_VEHICLE_INTEGRATION__THEN_PROTECTED_UI_MERGE",
+  "gateStatus": "PR274_F230_UI_POLISH_SCOPE_FROZEN__CI_QUEUED__VEHICLE_FOUNDATION_ATTEMPT5__FINAL_SMOKE_DEFERRED",
+  "nextProducer": "NONE__PR274_F230_IS_SOLE_FROZEN_PRODUCT_PRODUCER",
+  "nextObjective": "LET_F230_CI_SETTLE__QA_F230__CERTIFY_VEHICLE_INTEGRATION__THEN_PROTECTED_UI_MERGE",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
