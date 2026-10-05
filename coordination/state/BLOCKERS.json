@@ -1,21 +1,21 @@
 {
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "owner": "Roblox High School Control Tower",
-  "canonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
   "currentBlockers": [
     {
       "id": "P1_FINAL_RUNTIME_RENDERED_DEVICE_SMOKE",
       "owner": "Roblox High School Integration Smoke",
       "type": "LOCAL_ONLY_REQUIRED",
-      "exactSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
-      "status": "BLOCKS_PACKAGE_AND_P2_ACTIVATION__DEVICE_OFFLINE",
-      "evidence": "PR287 Smoke rebind; coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json; Desktop Commander PAAM-L044 offline, last seen 20h ago.",
-      "reason": "All cloud/source/static/QA/Integration gates are complete. Remaining acceptance requires real rendered desktop/iPhone/iPad evidence, physical traversal, live feature interaction, and save/rejoin on exact canonical."
+      "exactSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "status": "BLOCKS_PACKAGE_AND_P2_ACTIVATION",
+      "evidence": "Integration receipt schema20 / PR293; Smoke receipt schema22; coordination/smoke/PR292_33A5A11_LOCAL_SMOKE_EXECUTION_PLAN.json",
+      "reason": "Compile/build and all static guards are green. Remaining acceptance requires actual Roblox startup, rendered desktop/iPhone/iPad evidence, physical traversal, live feature interaction, and save/rejoin on exact canonical 33a5a11."
     }
   ],
-  "gateStatus": "P1_UI_POLISH_INTEGRATED__FINAL_RUNTIME_SMOKE_ONLY_BLOCKER__PACKAGE_PREFLIGHT_READY",
+  "gateStatus": "P1_COMPILE_BUILD_STATIC_QA_INTEGRATION_COMPLETE__FINAL_RUNTIME_SMOKE_ONLY_BLOCKER__PACKAGE_PREFLIGHT_READY",
   "nextProducer": "Roblox High School Class & Education",
-  "nextObjective": "EXECUTE_04F4E5_FINAL_SMOKE__EMIT_RESERVED_PACKAGE__ACTIVATE_P2",
+  "nextObjective": "EXECUTE_33A5A11_FINAL_RUNTIME_SMOKE__THEN_EMIT_RESERVED_PACKAGE__THEN_ACTIVATE_P2",
   "deferredRuntimeEvidence": [],
   "staleBlockerRule": "A blocker or LOCAL_ONLY_REQUIRED receipt bound to a non-current canonical SHA cannot gate current cloud-safe work unless independently reproduced on the live head.",
   "waitingWriteClassification": "CONNECTOR_SAFETY_DENIAL is object/action/payload-specific and never a global GitHub blocker."
