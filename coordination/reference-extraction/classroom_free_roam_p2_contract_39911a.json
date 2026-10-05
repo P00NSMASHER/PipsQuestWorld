@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Class & Education",
+  "owner": "Roblox High School Class & Education",
+  "observedAt": "2026-10-05T16:47:00Z",
+  "result": "PASS_P2_CLASSROOM_FREE_ROAM_PREP__PRODUCT_WRITE_BLOCKED_PENDING_P1_RUNTIME_SMOKE_AND_PACKAGE",
+  "input": {
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "p1ProducerPr": 214,
+    "p1ProducerHead": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "p1IntegrationReceiptPr": 224,
+    "p1SmokeReceiptPr": 225,
+    "wipMode": "EVIDENCE_PREP_ONLY",
+    "productProducerAuthorized": false
+  },
+  "inheritedReferenceEvidence": {
+    "sourceArtifact": "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json",
+    "sourcePr": 219,
+    "materializationStatus": "PASS",
+    "verifiedSequences": [
+      {
+        "id": "GYM_DODGEBALL",
+        "checkpoints": [
+          "A@01:04 ROOM_PRESENT",
+          "A@01:26 ENTRY_CUE",
+          "A@01:28 ROUND_INSTRUCTIONS",
+          "A@01:30 ACTIVE_PLAY_START",
+          "A@01:32 ACTIVE_PLAY",
+          "A@01:40/A@01:42/A@01:44 SCORING_FEEDBACK",
+          "A@01:50 COMPLETION_CUE_AUXILIARY"
+        ],
+        "limitation": "No exact scoring formula, hidden activity identifier, reward formula, original timing, or verified return-to-roam is inferred."
+      },
+      {
+        "id": "CLASSROOM_REPORT_CARD_RETURN",
+        "checkpoints": [
+          "B@00:00 COMPLETION_SUMMARY",
+          "B@00:03 POST_COMPLETION_FEEDBACK",
+          "B@00:06 POST_COMPLETION_FEEDBACK",
+          "B@00:09 RETURN_TO_ROAM",
+          "B@00:15 FREE_ROAM"
+        ],
+        "limitation": "Visible coin/XP values are sampled presentation values and do not define reward formulas."
+      },
+      {
+        "id": "ACTIVITY_ROOM_DANCE_COOK",
+        "checkpoints": [
+          "B@01:04 ROOM_PRESENT",
+          "B@01:08 ENTRY_INSTRUCTIONS",
+          "B@01:10 ACTIVE_PLAY_START",
+          "B@01:12 SCORING_FEEDBACK",
+          "B@01:19 COMPLETION_SUMMARY",
+          "B@01:20 POST_COMPLETION_RETURN",
+          "B@01:21 ROOM_ROAM",
+          "B@01:26 NEXT_ACTIVITY_ENTRY",
+          "B@01:28 NEXT_ACTIVITY_ACTIVE",
+          "B@01:31 NEXT_ACTIVITY_COMPLETION"
+        ],
+        "limitation": "Footage does not prove whether consecutive activities share a single server class session."
+      }
+    ],
+    "playbackCaution": "Visible 2x playback segments prohibit inferring original movement speed, animation timing, or countdown duration."
+  },
+  "exactCanonicalAuthorityContinuity": {
+    "status": "PASS_UNCHANGED_FROM_P1_REFERENCE_LINEAGE",
+    "files": [
+      {
+        "path": "school/src/server/ClassSessionController.lua",
+        "blobSha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+        "role": "single ephemeral class/session authority",
+        "requiredSemantics": [
+          "same-class re-entry is idempotent",
+          "second concurrent class is rejected",
+          "submission ids are idempotent",
+          "leave clears one ephemeral session",
+          "completion is recorded once"
+        ]
+      },
+      {
+        "path": "school/src/server/ClassEducation.server.lua",
+        "blobSha": "034eb06201c6e86ad553fbe088f0fbe61a3a76cc",
+        "role": "server adapter consuming Foundation schedule, room, attendance and class remotes",
+        "requiredSemantics": [
+          "schedule is read from Foundation-owned Workspace state",
+          "room attendance is server-checked",
+          "client cannot create class availability",
+          "period/session end clears class state"
+        ]
+      },
+      {
+        "path": "school/src/server/ClassProgressionCoordinator.lua",
+        "blobSha": "2115e20f81eae95bed1b7b15785394f952e1d6d8",
+        "role": "exactly-once durable progression handoff",
+        "requiredSemantics": [
+          "failed progression commit blocks false return-to-roam",
+          "retry reuses the same completion identity",
+          "duplicate completion cannot duplicate progression"
+        ]
+      },
+      {
+        "path": "school/src/server/ClassActivityCatalog.lua",
+        "blobSha": "29c28446a15a24c9532fc6c7ab7f9db75c5353cd",
+        "role": "current server-only text-question catalog",
+        "disposition": "legacy current implementation surface only; not the player-facing RHS2 activity parity target"
+      }
+    ],
+    "regressionFiles": [
+      {
+        "path": "school/tests/class_education_spec.lua",
+        "blobSha": "3b7e318bcfcc32e586267e654a64a5c3266b7181"
+      },
+      {
+        "path": "school/tests/class_progression_integration_spec.lua",
+        "blobSha": "d33ef33b9059efef6efd38461f76cc1a218287c1"
+      }
+    ]
+  },
+  "currentPlayerFacingGap": {
+    "clientPath": "school/src/client/CanonicalSchoolClient.client.lua",
+    "currentBehavior": [
+      "EnterClass opens a generic question modal from ClassActivityCatalog.",
+      "SubmitAnswer sends a choice index through the existing ClassEducation server boundary.",
+      "Completion currently displays generic text and auto-hides the modal.",
+      "LeaveClass returns the player to free roam through the existing server authority."
+    ],
+    "parityGap": [
+      "Current generic text-question modal does not match observed in-world gym/activity presentation.",
+      "Current completion feedback does not provide the observed Report Card-style completion surface.",
+      "Current client does not expose the observed explicit entry-instruction -> active-play -> scoring-feedback -> completion-summary presentation sequence.",
+      "No rendered target-device evidence currently proves classroom/free-roam transitions."
+    ]
+  },
+  "futureP2ProductContract": {
+    "id": "P2_CLASSROOM_FREE_ROAM",
+    "activation": "Only after exact-canonical P1 runtime Smoke PASS and deterministic P1 Package release the sole producer slot.",
+    "boundedGoal": "Implement one evidence-backed classroom/activity entry-to-return flow behind existing ClassSessionController and ClassProgressionCoordinator authorities, without creating a second school clock, class session, reward, or persistence authority.",
+    "firstObservableSlice": [
+      "Player is in the authoritative current class/activity room with compact free-roam HUD.",
+      "Server-approved entry displays a distinct instruction/cue state.",
+      "One bounded in-world activity state becomes active.",
+      "At least one server-returned event-feedback state is visibly distinct from the persistent activity state.",
+      "Authoritative completion produces one Report Card-style completion summary.",
+      "Closing/acknowledging completion restores room/world free roam and compact edge HUD.",
+      "Durable completion and any downstream reward presentation occur exactly once."
+    ],
+    "implementationBoundaries": [
+      "Reuse ClassEducation remotes or extend the existing ClassEducation namespace; do not add a parallel class service.",
+      "Reuse ClassSessionController as the sole ephemeral activity/session owner.",
+      "Reuse ClassProgressionCoordinator and ProgressionBinding for durable completion.",
+      "Foundation remains the sole schedule/period/room authority.",
+      "Client presentation is read-only for score, grade, progression and reward values.",
+      "Do not invent activity IDs, scoring formulas, reward formulas, timing, catalog assets, hidden UI hierarchy or destination semantics from footage."
+    ],
+    "sourceChangeShapeWhenActivated": [
+      "Prefer a small activity-presentation adapter behind existing server session seams rather than replacing the class stack.",
+      "Keep the existing text-question catalog available only if still required by tests or fallback behavior; do not label it RHS2 parity.",
+      "Add deterministic tests for state transitions, duplicate actions, duplicate completion, leave, period change, progression failure/retry and free-roam restoration.",
+      "Add client contract tests proving one activity surface, explicit close/acknowledge behavior and restoration of compact HUD/input."
+    ]
+  },
+  "qaContract": {
+    "functional": [
+      "entry binds to current Foundation classKey and room",
+      "same session re-entry is idempotent",
+      "second session is rejected",
+      "duplicate action identifiers cannot apply twice",
+      "completion commits once",
+      "failed durable progression blocks false completion release",
+      "leave and period/session end clear incomplete activity without fabricating completion"
+    ],
+    "renderedRuntime": [
+      "capture room-present, instructions, active play, event feedback, completion summary and restored free roam as separate exact-head checkpoints",
+      "verify movement/camera are restored after completion or leave",
+      "verify compact HUD does not obscure required activity controls",
+      "capture desktop, iPhone landscape and iPad landscape",
+      "keep timing comparisons qualitative unless 2x playback is corrected"
+    ],
+    "evidenceSeparation": "Functional/static, rendered visual, live interaction, device and save/rejoin statuses remain separate."
+  },
+  "exactCanonicalCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37334868469,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37334868501,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37334868472,
+      "conclusion": "success",
+      "headSha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+    }
+  ],
+  "blocker": "P1 exact-canonical rendered/device/traversal/save-rejoin Smoke is LOCAL_ONLY_REQUIRED and PAAM-L044 is currently offline; P1 Package and a P2 product producer are therefore not yet authorized.",
+  "nextHandoff": "Control Tower retains P2 as evidence-prep only. When P1 Smoke and Package pass, activate exactly one Class & Education producer from canonical 39911a or the then-current packaged descendant.",
+  "productFilesChanged": false,
+  "rawVideosCommitted": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
