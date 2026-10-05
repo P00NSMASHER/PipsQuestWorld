@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Integration Smoke",
+  "createdAt": "2026-10-05T21:56:00Z",
+  "result": "EXECUTION_PLAN_READY__LOCAL_ONLY_REQUIRED",
+  "exactCanonicalSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "producerPr": 274,
+  "producerHead": "89cbb0a41b778b854b18b1382af4037596766570",
+  "universeId": "10768955678",
+  "placeId": "87245440673982",
+  "prerequisites": [
+    "Reread rebuild/high-school-foundation and require exact head 04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb.",
+    "Acquire the authorized local-machine lease before Roblox Studio/device work.",
+    "Require the authorized device to report Online before any local call.",
+    "Do not publish Roblox, spend money, mutate automations, or use the laptop for routine GitHub work."
+  ],
+  "referenceContracts": [
+    "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
+    "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
+    "coordination/reference-extraction/rhs2_travel_panel_pixel_measurement_20261005.json",
+    "coordination/reference-extraction/rhs2_ui_palette_measurements_20261005.json",
+    "coordination/ui/RHS2_UI_VISUAL_DIFF_MANIFEST.json",
+    "coordination/ui/PR274_UI_POLISH_RENDERED_CAPTURE_PLAN.json"
+  ],
+  "evidenceRoot": "coordination/smoke/runtime-evidence/04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+  "orderedExecution": [
+    {
+      "id": "IDENTITY_AND_STARTUP",
+      "checks": [
+        "Open/test only exact canonical 04f4e5 source.",
+        "Record actual Roblox place/universe identity and runtime source identity.",
+        "Confirm one canonical client/HUD mount and no startup error.",
+        "Confirm Rhs2UiStyle, responsive layout, Travel/Shop, House/Editor, Outfit, ClassActivity, Cafe and Vehicle surfaces mount once."
+      ]
+    },
+    {
+      "id": "DESKTOP_RENDERED_REFERENCE",
+      "profile": "909x483",
+      "checks": [
+        "Capture neutral free-roam comparable to A@00:05.",
+        "Verify status/rail share right edge; primary rail buttons fill rail width.",
+        "Verify six-tile 2x3 utility grid below primary actions.",
+        "Verify quick group near locked x≈360 and clears center sightline.",
+        "Open Travel and capture comparable to C@00:05; verify nominal 530x354 footprint near x≈190,y≈64.",
+        "Open Shop, Avatar/Outfit, House/Housing Editor, CafeCard, VehicleCard and ClassActivityModal and capture each."
+      ]
+    },
+    {
+      "id": "IPHONE_RENDERED_TOUCH",
+      "profile": "852x393 landscape",
+      "checks": [
+        "Capture free-roam HUD and Travel.",
+        "Verify persistent HUD, Travel/Shop and auxiliary surfaces stay within safe bounds.",
+        "Verify quick bar, modal and utility-grid visibility rules clear movement/camera exclusion zones.",
+        "Exercise close/back, Travel denial/restoration, Avatar/Outfit, House/Editor, Cafe, Vehicle and ClassActivity controls."
+      ]
+    },
+    {
+      "id": "IPAD_RENDERED_TOUCH",
+      "profile": "1024x768 landscape",
+      "checks": [
+        "Capture free-roam HUD and Travel.",
+        "Verify same visual hierarchy at native/appropriate scale without oversized center obstruction.",
+        "Verify six-tile utility grid visibility and all feature panels remain reachable.",
+        "Exercise the same interaction matrix as iPhone."
+      ]
+    },
+    {
+      "id": "PHYSICAL_TRAVERSAL",
+      "checks": [
+        "spawn -> entrance -> atrium -> corridor -> stairs up/down",
+        "movement/camera remain usable with no HUD or modal obstruction",
+        "record any collision/camera defect with exact location and screenshot"
+      ]
+    },
+    {
+      "id": "SAVE_REJOIN",
+      "checks": [
+        "Perform one authoritative state change already covered by existing persistence seams.",
+        "Leave/rejoin exact canonical session.",
+        "Verify restored state matches server-authoritative persisted result.",
+        "Do not treat headless restore semantics as live rejoin evidence."
+      ]
+    },
+    {
+      "id": "VISUAL_DIFF_AND_HANDOFF",
+      "checks": [
+        "Run coordination/ui/compare_rhs2_ui.py against captured free-roam/Travel states and locked reference frames.",
+        "Use numeric output for triage only; conduct rendered visual review.",
+        "Populate PR214_RUNTIME_CAPTURE_CONTRACT_V1.json only with observed evidence.",
+        "Require runtimeExecuted=true, renderedParityEstablished=true and overallStatus=PASS before Release/Package.",
+        "If one concrete defect appears, stop and return only that defect to a single producer."
+      ]
+    }
+  ],
+  "hardStops": [
+    "Canonical head changed from 04f4e5.",
+    "Authorized local device unavailable/offline.",
+    "Any source/runtime identity mismatch.",
+    "Any request to publish or spend without explicit current authorization.",
+    "Any attempt to substitute static/headless evidence for rendered/device PASS."
+  ],
+  "status": "READY__WAIT_DEVICE_AVAILABILITY",
+  "runtimeExecuted": false,
+  "renderedParityEstablished": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
