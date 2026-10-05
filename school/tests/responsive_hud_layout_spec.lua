@@ -58,7 +58,22 @@ for _, fixture in ipairs(fixtures) do
     assert(not ResponsiveHudLayout.overlaps(layout.status, layout.quick), fixture.name .. ": status/quick overlap")
     assert(not ResponsiveHudLayout.overlaps(layout.rail, layout.quick), fixture.name .. ": rail/quick overlap")
 
+    local auxiliary = ResponsiveHudLayout.computeAuxiliaryPanels(layout)
+    local auxiliaryValid, auxiliaryReason = ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
+    assert(auxiliaryValid, fixture.name .. ": " .. tostring(auxiliaryReason))
+    layout.auxiliary = auxiliary
+
+    for _, panel in ipairs({ auxiliary.house, auxiliary.editor }) do
+        assert(ResponsiveHudLayout.contains(layout.safe, panel), fixture.name .. ": auxiliary panel outside safe area")
+        assert(not ResponsiveHudLayout.overlaps(panel, layout.status), fixture.name .. ": auxiliary/status overlap")
+        assert(not ResponsiveHudLayout.overlaps(panel, layout.rail), fixture.name .. ": auxiliary/rail overlap")
+        assert(not ResponsiveHudLayout.overlaps(panel, layout.quick), fixture.name .. ": auxiliary/quick overlap")
+    end
+    assert(not ResponsiveHudLayout.overlaps(auxiliary.house, auxiliary.editor), fixture.name .. ": auxiliary panels overlap")
+
     for index, exclusion in ipairs(fixture.zones) do
+        assert(not ResponsiveHudLayout.overlaps(auxiliary.house, exclusion), fixture.name .. ": house/movement-camera overlap " .. index)
+        assert(not ResponsiveHudLayout.overlaps(auxiliary.editor, exclusion), fixture.name .. ": editor/movement-camera overlap " .. index)
         assert(ResponsiveHudLayout.contains(layout.safe, exclusion), fixture.name .. ": touch zone outside safe area")
         assert(not ResponsiveHudLayout.overlaps(layout.status, exclusion), fixture.name .. ": status/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(layout.rail, exclusion), fixture.name .. ": rail/movement-camera overlap " .. index)
@@ -92,6 +107,12 @@ approxBetween(nominal.quick.height / 483, 0.09, 0.13, "nominal quick height")
 
 local iphone = layouts["iphone-landscape-852x393"]
 local ipad = layouts["ipad-landscape-1024x768"]
+assert(nominal.auxiliary.house.scale == 1 and nominal.auxiliary.editor.scale == 1, "desktop auxiliary panels keep native scale")
+assert(ipad.auxiliary.house.scale == 1 and ipad.auxiliary.editor.scale == 1, "iPad auxiliary panels keep native scale")
+assert(iphone.auxiliary.house.scale < 1, "iPhone house panel must reflow")
+assert(iphone.auxiliary.editor.scale < 1, "iPhone housing editor must reflow")
+assert(iphone.auxiliary.house.y >= iphone.safe.y, "iPhone house panel safe-top clearance")
+assert(iphone.auxiliary.editor.y >= iphone.safe.y, "iPhone editor safe-top clearance")
 assert(iphone.status.width ~= ipad.status.width, "status width must reflow by viewport")
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
@@ -123,5 +144,52 @@ quickProbe.exclusionZones = {
 }
 local validQuick, quickReason = ResponsiveHudLayout.validate(quickProbe)
 assert(not validQuick and quickReason == "quick overlaps exclusion zone 1", "quick/control mutation must fail")
+
+local legacyHouse = zone(256, 393 - (112 + 66) - 292, 248, 292)
+local legacyEditor = zone(512, 393 - (112 + 66) - 346, 330, 346)
+assert(not ResponsiveHudLayout.contains(iphone.safe, legacyHouse), "legacy fixed house geometry must fail iPhone safe bounds")
+assert(not ResponsiveHudLayout.contains(iphone.safe, legacyEditor), "legacy fixed editor geometry must fail iPhone safe bounds")
+
+local badHouse = zone(
+    iphone.safe.x - 1,
+    iphone.auxiliary.house.y,
+    iphone.auxiliary.house.width,
+    iphone.auxiliary.house.height
+)
+badHouse.scale = iphone.auxiliary.house.scale
+local houseMutationValid, houseMutationReason = ResponsiveHudLayout.validateAuxiliaryPanels(iphone, {
+    house = badHouse,
+    editor = iphone.auxiliary.editor,
+})
+assert(not houseMutationValid and houseMutationReason == "house panel leaves safe bounds", "house geometry mutation must fail")
+
+local badEditor = zone(
+    iphone.safe.right - iphone.auxiliary.editor.width + 1,
+    iphone.auxiliary.editor.y,
+    iphone.auxiliary.editor.width,
+    iphone.auxiliary.editor.height
+)
+badEditor.scale = iphone.auxiliary.editor.scale
+local editorMutationValid, editorMutationReason = ResponsiveHudLayout.validateAuxiliaryPanels(iphone, {
+    house = iphone.auxiliary.house,
+    editor = badEditor,
+})
+assert(not editorMutationValid and editorMutationReason == "housing editor leaves safe bounds", "editor geometry mutation must fail")
+
+local clientFile = assert(io.open("school/src/client/CanonicalSchoolClient.client.lua", "r"))
+local clientSource = clientFile:read("*a")
+clientFile:close()
+for _, fragment in ipairs({
+    'ResponsiveHudLayout.computeAuxiliaryPanels(layout)',
+    'ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)',
+    'housePanelScale = Instance.new("UIScale")',
+    'editorPanelScale = Instance.new("UIScale")',
+    'housePanelScale.Scale = auxiliaryPanels.house.scale',
+    'editorPanelScale.Scale = auxiliaryPanels.editor.scale',
+}) do
+    assert(clientSource:find(fragment, 1, true), "client missing responsive auxiliary binding: " .. fragment)
+end
+assert(not clientSource:find('housePanel.Position = UDim2.new(0, 256', 1, true), "fixed house panel position regression")
+assert(not clientSource:find('editorPanel.Position = UDim2.new(0, 512', 1, true), "fixed housing editor position regression")
 
 print("RESPONSIVE_HUD_LAYOUT_CONTRACT_PASS")
