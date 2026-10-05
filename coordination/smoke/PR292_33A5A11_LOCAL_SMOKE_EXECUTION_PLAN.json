@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "owner": "Roblox High School Integration Smoke",
+  "createdAt": "2026-10-05T23:51:00Z",
+  "result": "EXECUTION_PLAN_READY__LOCAL_ONLY_REQUIRED",
+  "exactCanonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+  "producerPr": 292,
+  "producerHead": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+  "universeId": "10768955678",
+  "placeId": "87245440673982",
+  "prerequisites": [
+    "Reread rebuild/high-school-foundation and require exact head 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17.",
+    "Require mapped build, Foundation, Class/Education and Progression push checks green on exact 33a5a11.",
+    "Acquire the local-machine lease for Integration Smoke against exact canonical 33a5a11.",
+    "Require the authorized Desktop Commander device to report Online before any local action.",
+    "Do not publish Roblox, spend money, mutate automations, or use the laptop for routine GitHub work."
+  ],
+  "referenceContracts": [
+    "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
+    "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
+    "coordination/reference-extraction/rhs2_travel_panel_pixel_measurement_20261005.json",
+    "coordination/reference-extraction/rhs2_ui_palette_measurements_20261005.json",
+    "coordination/ui/RHS2_UI_VISUAL_DIFF_MANIFEST.json",
+    "coordination/ui/PR274_UI_POLISH_RENDERED_CAPTURE_PLAN.json"
+  ],
+  "evidenceRoot": "coordination/smoke/runtime-evidence/33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+  "orderedExecution": [
+    {
+      "step": 1,
+      "id": "ACTUAL_STARTUP_AND_IDENTITY",
+      "checks": [
+        "Open/test only exact canonical 33a5a11 source.",
+        "Record universe/place identity and exact runtime source identity.",
+        "Confirm actual Roblox client starts without the previously discovered local-register compilation failure.",
+        "Confirm one canonical ScreenGui/client mount and no startup error."
+      ],
+      "failRule": "Any startup/compiler/runtime mount error is a Smoke defect and blocks all downstream visual claims."
+    },
+    {
+      "step": 2,
+      "id": "DESKTOP_REFERENCE_RENDER",
+      "profile": "desktop",
+      "viewport": {
+        "width": 909,
+        "height": 483
+      },
+      "checks": [
+        "Capture A@00:05 comparable free-roam HUD.",
+        "Capture C@00:05 comparable Travel surface.",
+        "Confirm status/right-rail/quickbar geometry and six-tile utility-grid behavior match the locked reference contract.",
+        "Run Shop/Travel/Avatar/House/HousingEditor/Cafe/Vehicle/ClassActivity interaction on desktop."
+      ]
+    },
+    {
+      "step": 3,
+      "id": "IPHONE_LANDSCAPE_RENDER_TOUCH",
+      "profile": "iphone_landscape",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "safeInsets": {
+        "left": 47,
+        "top": 12,
+        "right": 47,
+        "bottom": 21
+      },
+      "checks": [
+        "Capture free-roam HUD and Travel.",
+        "Verify movement and camera/action touch zones remain usable.",
+        "Verify the utility grid hides when its six-tile footprint would enter touch/quick space.",
+        "Verify all active P1 panels and compact cards remain inside safe bounds with reachable controls."
+      ]
+    },
+    {
+      "step": 4,
+      "id": "IPAD_LANDSCAPE_RENDER_TOUCH",
+      "profile": "ipad_landscape",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "safeInsets": {
+        "left": 24,
+        "top": 24,
+        "right": 24,
+        "bottom": 20
+      },
+      "checks": [
+        "Capture free-roam HUD and Travel.",
+        "Verify native-scale/reflow behavior does not create oversized central obstruction.",
+        "Verify the six-tile utility grid remains visible when safe space permits.",
+        "Verify all active P1 panels/cards remain safe and usable."
+      ]
+    },
+    {
+      "step": 5,
+      "id": "PHYSICAL_ROUTE",
+      "checks": [
+        "spawn -> entrance -> atrium -> left/right atrium movement",
+        "corridor traversal",
+        "stair up/down physical traversal",
+        "class/free-roam transition",
+        "movement/camera restoration after feature panels"
+      ]
+    },
+    {
+      "step": 6,
+      "id": "FEATURE_INTERACTIONS",
+      "checks": [
+        "Shop open/switch/close/back and honest empty-catalog state",
+        "Travel current-room-only action, inert Servers/unavailable cards, denial restoration",
+        "Avatar/Outfit full-content containment and rail-only entry",
+        "House and Housing Editor entry/exit and responsive layout",
+        "CafeCard start/leave interaction",
+        "VehicleCard/spawn interaction and quickbar clearance",
+        "ClassActivityModal answer/leave/completion behavior"
+      ]
+    },
+    {
+      "step": 7,
+      "id": "SAVE_REJOIN",
+      "checks": [
+        "Exercise one committed canonical durable state.",
+        "Leave and rejoin the same player identity.",
+        "Require exact observed restoration once, with no duplicate durable award."
+      ]
+    },
+    {
+      "step": 8,
+      "id": "VISUAL_DIFF_AND_HANDOFF",
+      "checks": [
+        "Run coordination/ui/compare_rhs2_ui.py using same-canonical captures and locked ROI manifest.",
+        "Treat numeric comparison as triage only.",
+        "Populate PR214_RUNTIME_CAPTURE_CONTRACT_V1.json only with evidence actually observed.",
+        "Run the runtime capture validator and require SMOKE_RUNTIME_CAPTURE_CONTRACT_OK.",
+        "Only then set runtimeExecuted=true, renderedParityEstablished=true and overallStatus=PASS.",
+        "Hand exact canonical 33a5a11 to Release/Package."
+      ]
+    }
+  ],
+  "hardStops": [
+    "Canonical head changes from 33a5a11.",
+    "Authorized device is offline or lease unavailable.",
+    "Roblox publication becomes necessary for a check.",
+    "A spend/credential expansion would be required.",
+    "Only static/compile/headless evidence exists for a runtime/rendered requirement."
+  ],
+  "status": "READY__WAIT_DEVICE_AVAILABILITY",
+  "runtimeExecuted": false,
+  "renderedParityEstablished": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
