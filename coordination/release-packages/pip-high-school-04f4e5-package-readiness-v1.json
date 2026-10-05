@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "owner": "Roblox High School Release & Package Gate",
+  "observedAt": "2026-10-05T21:57:00Z",
+  "result": "PREFLIGHT_READY__PACKAGE_BLOCKED_ON_FULL_RUNTIME_SMOKE",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+    "rootTreeSha": "9391797c79a7bafc0eb9a7d8a3546163ccfdcd07",
+    "schoolTreeSha": "908595866f4671595c47f3890e2fadd877f748e5",
+    "recursiveEntryCount": 73,
+    "recursiveTreeTruncated": false
+  },
+  "producerLineage": {
+    "pr": 274,
+    "approvedCandidateSha": "89cbb0a41b778b854b18b1382af4037596766570",
+    "qaEvidence": "PR274 review 5421030661",
+    "integrationReceiptPr": 286,
+    "smokeReceiptPr": 287
+  },
+  "exactCanonicalPushCi": [
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37378786669,
+      "conclusion": "success",
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+    },
+    {
+      "workflow": "High School Class Education Guards",
+      "runId": 37378786670,
+      "conclusion": "success",
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+    },
+    {
+      "workflow": "High School Progression Guards",
+      "runId": 37378786810,
+      "conclusion": "success",
+      "headSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb"
+    }
+  ],
+  "packageIdentityWhenEligible": {
+    "artifactName": "pip-high-school-04f4e5a-source-tree-90859586",
+    "artifactId": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb:908595866f4671595c47f3890e2fadd877f748e5",
+    "type": "deterministic_git_source_tree_checkpoint",
+    "reproducibilityRule": "Exact canonical commit SHA plus exact school/** Git tree SHA.",
+    "status": "RESERVED_NOT_EMITTED"
+  },
+  "blockers": [
+    {
+      "id": "P1_FINAL_RUNTIME_RENDERED_DEVICE_SMOKE",
+      "exactSha": "04f4e5aa01ac763a8af2f4f440a47a06d1ee56fb",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "LOCAL_ONLY_REQUIRED",
+      "evidence": "PR287; coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json; coordination/smoke/PR274_04F4E5_LOCAL_SMOKE_EXECUTION_PLAN.json",
+      "requiredBeforePackage": [
+        "desktop 909x483 rendered free-roam and Travel captures",
+        "iPhone 852x393 and iPad 1024x768 rendered/touch captures",
+        "live Shop/Travel/Avatar/House/Housing Editor/ClassActivity/Cafe/Vehicle interactions",
+        "spawn -> entrance -> atrium -> corridor -> stair up/down traversal",
+        "save/rejoin restoration",
+        "visual-diff triage and rendered human/vision review against locked RHS2 frames"
+      ]
+    }
+  ],
+  "packageGate": {
+    "eligible": false,
+    "unlockCondition": "Integration Smoke reaches full PASS on exact canonical 04f4e5 with runtimeExecuted=true and renderedParityEstablished=true.",
+    "staleHeadRule": "Any canonical-head change invalidates this preflight and requires recomputing tree identity and exact-head evidence.",
+    "noFalsePassRule": "Static/headless/source evidence and numeric image similarity may not substitute for rendered/device runtime PASS."
+  },
+  "postUnlockActions": [
+    "Reread live canonical and require exact 04f4e5.",
+    "Reread Integration Smoke receipt and require full PASS on 04f4e5.",
+    "Recompute root and school tree SHAs and require 9391797c / 90859586 identities unchanged.",
+    "Emit deterministic package checkpoint using reserved artifact identity.",
+    "Update Release receipt and Control Tower state.",
+    "Reconcile and activate exactly one P2 Classroom/Free Roam producer."
+  ],
+  "supersedes": {
+    "priorPreflight": "coordination/release-packages/pip-high-school-bfc035f-package-readiness-v1.json",
+    "reason": "Canonical advanced through vehicle repair and mandatory RHS2 UI visual-parity polish."
+  },
+  "priorPackage": {
+    "canonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
+    "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
+    "status": "PRESERVED_UNTIL_04F4E5_ELIGIBLE"
+  },
+  "exactVisualParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
