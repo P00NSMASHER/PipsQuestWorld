@@ -1,66 +1,68 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
-  "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+  "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_DEFECT_ACTIVE__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
-  "parentCertifiedSha": "57ad515a5905d697417db688a1cc42d4452642b8",
+  "status": "P1_VEHICLE_REPAIR_MERGED__PREMERGE_QA_GREEN__CANONICAL_FOUNDATION_PUSH_RERUN_PENDING__UI_POLISH_ACTIVE",
+  "parentCertifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
   "repair": {
-    "pr": 258,
-    "branch": "rebuild/high-school-feature-modal-clearance-57ad515-v1",
-    "sha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-    "scope": "Shop/Travel responsive HUD/touch-zone clearance repair"
+    "pr": 264,
+    "branch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
+    "sha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+    "scope": "LegacyVehiclePanel desktop quick-bar / target-device HUD clearance repair"
   },
   "exactHeadCi": [
     {
-      "workflow": "High School Foundation Static Guards",
-      "runId": 37359804157,
-      "event": "push",
-      "conclusion": "success",
-      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
-    },
-    {
       "workflow": "High School Class Education Guards",
-      "runId": 37359804120,
+      "runId": 37363665377,
       "event": "push",
       "conclusion": "success",
-      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
+      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635"
     },
     {
       "workflow": "High School Progression Guards",
-      "runId": 37359804739,
+      "runId": 37363665343,
       "event": "push",
       "conclusion": "success",
-      "headSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c"
+      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "runAttempt": 2
+    },
+    {
+      "workflow": "High School Foundation Static Guards",
+      "runId": 37363665326,
+      "event": "push",
+      "conclusion": "PENDING_RUNNER",
+      "headSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+      "runAttempt": 5
     }
   ],
   "qaContract": {
     "result": "PASS_EXACT_HEAD",
-    "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-    "evidence": "PR258 review 5419216675"
+    "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+    "evidence": "PR264 review 5419550318"
   },
   "integration": {
-    "result": "PASS_EXACT_HEAD",
-    "mergedPr": 258,
-    "candidateSha": "1ba2004be635e7f627d3dc933448a60bd0f648ec",
-    "certifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-    "receiptPr": 259
+    "result": "HOLD_RUNNER_PENDING",
+    "mergedPr": 264,
+    "candidateSha": "d2f51131ef5a1045dc00ec253d1b471686185e89",
+    "mergedCanonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "candidateRootTree": "168bcda2c8b72e0ac37c55683c7772107e2d470c",
+    "canonicalRootTree": "168bcda2c8b72e0ac37c55683c7772107e2d470c",
+    "candidateSchoolTree": "74b04377881b2410c331b520b2028b69b4e55fe8",
+    "canonicalSchoolTree": "74b04377881b2410c331b520b2028b69b4e55fe8",
+    "treeIdentity": "EXACT_TREE_IDENTITY_CONFIRMED",
+    "blocker": "Foundation push workflow has repeatedly been cancelled before executing any steps; attempt5 is pending. Class and Progression push guards are green."
   },
   "integrationSmoke": {
-    "result": "BLOCKED_SOURCE_DEFECT__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
-    "certifiedSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+    "result": "DEFERRED_BEHIND_REQUIRED_UI_VISUAL_PARITY_POLISH",
+    "certifiedSha": null,
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
-    "receiptPr": 260,
     "releasePackageEligible": false,
     "localOnlyRequired": [
-      "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE",
-      "PHYSICAL_TRAVERSAL_AND_SAVE_REJOIN",
-      "SHOP_TRAVEL_LIVE_HUD_TOUCH_CLEARANCE",
-      "OUTFIT_INPUTS_LIVE_DEVICE_CHECK",
-      "CLASS_ACTIVITY_MODAL_LIVE_DEVICE_CHECK",
-      "CAFE_CARD_LIVE_DEVICE_TOUCH_CLEARANCE"
+      "FINAL_UI_POLISHED_RENDERED_DEVICE_TOUCH_SMOKE",
+      "PHYSICAL_TRAVERSAL_AND_SAVE_REJOIN"
     ]
   },
   "exactHeadRule": "Live rebuild/high-school-foundation head and exact-head push CI are authoritative; SHA-mismatched state/receipts are stale.",
@@ -114,24 +116,25 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_VEHICLE_CARD_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
+  "currentMilestone": "P1_UI_VISUAL_PARITY_PR274_ACTIVE__VEHICLE_FOUNDATION_RUNNER_PENDING",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
+    "result": "PRIOR_PACKAGE_PRESERVED__NEW_PACKAGE_DEFERRED_BEHIND_UI_POLISH_AND_FINAL_SMOKE",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "packagedCanonicalSha": "43230492964ea637f69747e25a3e72d6cb268ebe",
-    "currentCanonicalSha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
+    "currentCanonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
     "currentPreflight": "coordination/release-packages/pip-high-school-bfc035f-package-readiness-v1.json",
     "reservedArtifact": "pip-high-school-bfc035f-source-tree-95338f2a",
     "reservedArtifactId": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c:95338f2afb1cca297a18e7a72c61f484382387bb",
     "robloxPublished": false,
-    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
+    "currentPreflightStatus": "STALE_INTERMEDIATE_PREFLIGHT__DO_NOT_EMIT"
   },
-  "currentSourceDefect": {
-    "id": "P1_VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
-    "evidence": "LegacyVehiclePanel fixed desktop bottom-center geometry overlaps the compact quick bar by roughly 50px vertically across nearly the entire bar width.",
-    "reservedBranch": "rebuild/high-school-vehicle-card-clearance-bfc035f-v1",
-    "status": "REPAIR_RESERVED"
+  "currentSourceDefect": null,
+  "currentProductProducer": {
+    "pr": 274,
+    "branch": "rebuild/high-school-rhs2-ui-parity-7446d37-v1",
+    "headSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+    "status": "ACTIVE_SCOPE_FROZEN__CI_QUEUED__MERGE_BLOCKED_BEHIND_VEHICLE_INTEGRATION"
   }
 }

@@ -1,12 +1,12 @@
 {
-  "schemaVersion": 28,
+  "schemaVersion": 29,
   "owner": "Roblox High School Control Tower",
   "parityTarget": "Exact player-facing parity with the authorized Roblox High School reference, rebuilt progressively with original/properly licensed code/assets inside school/** on the certified Pip High lineage.",
   "verticalSlice": "spawn -> authoritative school clock/period -> attend one class -> one server-authoritative activity -> exactly-once progression result -> return to free roam -> save/rejoin restores the committed result",
-  "currentPlayableStage": "P1_SOURCE_DEFECT_ACTIVE__VEHICLE_CARD_DESKTOP_QUICK_OVERLAP",
-  "currentPlayableEvidence": "Canonical bfc035f has green source/static CI and prior responsive repairs, but static audit found LegacyVehiclePanel overlapping the compact desktop quick bar. Runtime vehicle/device acceptance is deferred until the narrow repair clears CI/QA/Integration.",
-  "runtimeValidatedThrough": "No live runtime claim on bfc035f; runtime Smoke is blocked behind the source-proven vehicle-card geometry defect.",
-  "headlessExactHeadValidatedThrough": "bfc035f: all three push guards PASS, but that does not override the newly source-proven vehicle presentation defect.",
+  "currentPlayableStage": "P1_VEHICLE_REPAIR_MERGED__UI_VISUAL_PARITY_PRODUCER_ACTIVE__FINAL_RUNTIME_ACCEPTANCE_PENDING",
+  "currentPlayableEvidence": "Canonical product head is 7446d375e51e6af8013b9c25e3731e6a1ffbe635 after PR264 vehicle-card clearance repair. PR264 exact head d2f51131 passed all three pull-request guards and independent QA; canonical Class and Progression push guards are green. Foundation push attempts have been cancelled before any steps and attempt5 is pending. Required RHS2 UI visual polish is active in PR274 exact head f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e and must integrate before final rendered/device acceptance.",
+  "runtimeValidatedThrough": "No new live Roblox Studio/device runtime claim on 7446d375 or PR274. Final runtime acceptance is intentionally deferred until the UI-polished canonical integrates.",
+  "headlessExactHeadValidatedThrough": "PR264 candidate d2f51131: all three PR guards PASS and independent QA PASS. Canonical 7446d375: Class and Progression push guards PASS; Foundation push runner pending. PR274 f230: static visual scope frozen with CI queued.",
   "economyRuntimeValidatedInStudio": false,
   "cafeJobRuntimeValidatedInStudio": false,
   "completedParityStage": {
@@ -16,18 +16,23 @@
     "externallyObservableBehavior": "Player starts a cafe shift, completes one serve_order task, receives one idempotent durable wage, returns to free roam, and economy transaction history reopens in durable commit order.",
     "evidenceSha": "92691e009869ee9cd5d9306786502b157a5b6c84"
   },
-  "nextMilestone": "Repair LegacyVehiclePanel desktop quick-bar/HUD clearance -> exact-head CI -> QA -> Integration -> rebind runtime Smoke -> deterministic Package -> activate armed P2.",
+  "nextMilestone": "Finish vehicle Integration runner gate -> exact-head QA PR274 f230 -> protected UI merge -> all three push guards -> rendered desktop/iPhone/iPad/traversal/save-rejoin Smoke -> deterministic Package -> activate P2.",
   "publishingRule": "No Roblox publish without an explicit separate user instruction.",
   "activeCanonicalHead": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "bfc035fcc692cae3c9abb1bf466db3d0fa3cf39c",
-    "milestone": "P1_VEHICLE_CARD_SOURCE_REPAIR_REQUIRED",
-    "headlessStatus": "CI_GREEN_WITH_SOURCE_PROVEN_UI_GEOMETRY_DEFECT",
-    "runtimeStatus": "BLOCKED_BEHIND_SOURCE_REPAIR"
+    "sha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
+    "milestone": "P1_VEHICLE_CARD_REPAIRED__UI_POLISH_ACTIVE",
+    "headlessStatus": "CLASS_PROGRESSION_PUSH_GREEN__FOUNDATION_RUNNER_PENDING",
+    "runtimeStatus": "DEFERRED_BEHIND_UI_POLISH"
   },
   "privateRobloxTarget": {
     "universeId": "10768955678",
     "placeId": "87245440673982",
     "publishAuthorized": false
+  },
+  "activeUiPolishCandidate": {
+    "pr": 274,
+    "sha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+    "status": "ACTIVE_SCOPE_FROZEN__CI_QUEUED__RENDERED_PENDING"
   }
 }

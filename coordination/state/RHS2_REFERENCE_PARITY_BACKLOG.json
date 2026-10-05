@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 27,
+  "schemaVersion": 28,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T20:15:00Z",
+  "observedAt": "2026-10-05T20:46:00Z",
   "inputSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
   "artifact": {
     "referenceClipTime": "A@00:05,00:25,00:45,01:05-01:45,02:05; B@00:05,00:25,00:45,01:05,01:25; C@00:05,00:25-00:45,01:05,01:25,01:45",
@@ -304,20 +304,20 @@
   "lastReconciledAt": "2026-10-05T04:01:54Z",
   "pipeline": {
     "canonicalSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "canonicalCiStatus": "PASS_ALL_THREE_PUSH__37359804157_37359804120_37359804739",
+    "canonicalCiStatus": "CLASS_GREEN__PROGRESSION_GREEN__FOUNDATION_RUNNER_ATTEMPT5_PENDING",
     "priorPackagedCanonical": "43230492964ea637f69747e25a3e72d6cb268ebe",
     "priorPackageStatus": "PRESERVED",
     "p1CandidatePr": 264,
     "p1CandidateHead": "d2f51131ef5a1045dc00ec253d1b471686185e89",
     "p1CandidateCiStatus": "PASS_ALL_THREE_PULL_REQUEST__37363499172_37363499168_37363499184",
     "p1QaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION__REVIEW_5419550318",
-    "p1IntegrationStatus": "WAIT_FOUNDATION_PUSH_RERUN_ATTEMPT3__CLASS_GREEN__PROGRESSION_GREEN",
-    "p1SmokeStatus": "DEFERRED_BEHIND_UI_POLISH_INTEGRATION",
-    "p1PackageStatus": "DEFERRED_BEHIND_FINAL_UI_RENDERED_SMOKE",
-    "nextProducerActivation": "P1_RHS2_UI_VISUAL_PARITY_POLISH_AFTER_VEHICLE_INTEGRATION",
+    "p1IntegrationStatus": "MERGED_TO_7446D375__EXACT_TREE_IDENTITY_CONFIRMED__FOUNDATION_PUSH_RUNNER_PENDING",
+    "p1SmokeStatus": "DEFERRED_BEHIND_REQUIRED_UI_VISUAL_PARITY_POLISH",
+    "p1PackageStatus": "DEFERRED_BEHIND_UI_POLISH_AND_FINAL_SMOKE",
+    "nextProducerActivation": "P2_CLASSROOM_FREE_ROAM_ONLY_AFTER_UI_POLISH_FINAL_SMOKE_AND_PACKAGE",
     "p1UiPolishPr": 274,
-    "p1UiPolishHead": "cf72481f148e9a908d0be0f245362e5ca49a592b",
-    "p1UiPolishStatus": "ACTIVE_PRODUCT_PRODUCER__CI_QA_PENDING__MERGE_BLOCKED_ON_VEHICLE_INTEGRATION"
+    "p1UiPolishHead": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
+    "p1UiPolishStatus": "ACTIVE_SCOPE_FROZEN__ALL_CURRENT_P1_CLIENT_SURFACES_STYLED__ALL_THREE_PR_GUARDS_QUEUED__MERGE_BLOCKED_ON_VEHICLE_INTEGRATION"
   },
   "referenceAccess": {
     "owner": "Roblox High School Content QA",
@@ -484,17 +484,23 @@
   "uiVisualParityGate": {
     "priority": "P1_BEFORE_FINAL_SMOKE",
     "owner": "Pip High Free Roam / UI Visual Parity",
-    "status": "ACTIVE_PR274__CI_QA_PENDING",
+    "status": "ACTIVE_EXACT_HEAD_F230_SCOPE_FROZEN",
+    "pr": 274,
+    "headSha": "f2306f7a0e9cb7c6e36ea290bc98ad07e419e77e",
     "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
     "implementationMap": "coordination/ui/RHS2_UI_IMPLEMENTATION_MAP.json",
     "acceptanceMatrix": "coordination/ui/RHS2_UI_VISUAL_ACCEPTANCE_MATRIX.json",
-    "productGoal": "Restyle persistent status/rail/quickbar and Travel/Shop/common modal chrome to the visible RHS2 language while preserving authority and responsive contracts.",
-    "exactParityClaim": "PENDING_RENDERED",
-    "pr": 274,
-    "headSha": "cf72481f148e9a908d0be0f245362e5ca49a592b",
-    "baseSha": "7446d375e51e6af8013b9c25e3731e6a1ffbe635",
-    "mergeBlocker": "Vehicle-card protected Integration receipt not yet certified because Foundation push rerun is queued.",
-    "additionalReferenceStates": "coordination/reference-extraction/rhs2_ui_additional_reference_states_20261005.json",
-    "visualDiffManifest": "coordination/ui/RHS2_UI_VISUAL_DIFF_MANIFEST.json"
+    "renderedCapturePlan": "coordination/ui/PR274_UI_POLISH_RENDERED_CAPTURE_PLAN.json",
+    "staticScope": [
+      "persistent HUD/status/right rail/quickbar",
+      "Shop/Travel common chrome",
+      "House/Housing Editor",
+      "Avatar/Outfit",
+      "ClassActivityModal",
+      "CafeCard",
+      "LegacyVehiclePanel",
+      "inert utility strip below primary rail"
+    ],
+    "exactParityClaim": "PENDING_RENDERED"
   }
 }
