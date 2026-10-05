@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Control Tower / Free Roam readiness",
+  "owner": "Roblox High School Control Tower",
+  "observedAt": "2026-10-05T17:23:00Z",
+  "result": "PASS_FUTURE_FREE_ROAM_PREP__P3_P6_CURRENT_LINEAGE_BOUND__NO_PRODUCT_WRITE",
+  "canonical": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279"
+  },
+  "sourceEvidence": {
+    "freeRoamReferencePr": 176,
+    "freeRoamReferenceHead": "fb0eba03fc3644158010fdce7deb7428d434ccbf",
+    "avatarShoppingSupportPr": 150,
+    "avatarShoppingSupportHead": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+    "fullReferencePackPr": 200,
+    "note": "Historical evidence is preserved as reference only; all product activation is bound to the current canonical and future Control Tower assignment."
+  },
+  "slices": [
+    {
+      "id": "P3_HOUSING",
+      "priority": 3,
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
+      "reference": "B@00:14-00:35 and B@00:48-00:58",
+      "historicalContract": "coordination/reference/rhs2-housing-interaction-4323049/HANDOFF.md",
+      "currentAuthorities": [
+        {
+          "path": "school/src/server/HousingService.server.lua",
+          "blobSha": "4a5a8f17d3d01a0249280f2e0e9f46a72edae52f",
+          "role": "single runtime housing/property adapter; EconomyRepository remains durable money/ownership authority"
+        },
+        {
+          "path": "school/src/server/HousingLifecycle.lua",
+          "blobSha": "5e7360a33c6288f785f5809d8cd458524ffcf899",
+          "role": "single active-session plot lifecycle"
+        },
+        {
+          "path": "school/src/server/HousingEditorController.lua",
+          "blobSha": "6568be9d19063e0320bdae0fedd55439f9856405",
+          "role": "server-authoritative editor orchestration; production furniture catalog intentionally empty until verified"
+        },
+        {
+          "path": "school/src/server/HousingLayoutRepository.lua",
+          "blobSha": "eb20f798823c5430cd3aa7faaaed111edd98f235",
+          "role": "durable housing layout authority"
+        },
+        {
+          "path": "school/src/server/EconomyRepository.lua",
+          "blobSha": "ef06d4e29597b035767e10c1fd6b7313b331739f",
+          "role": "single durable money/ownership authority"
+        }
+      ],
+      "verifiedTarget": [
+        "Neighborhood doorway-to-interior continuity.",
+        "One centered Buy House browser with title/back/close and eight visible house cards.",
+        "Recurring compact HUD remains visible around the browser.",
+        "Browse/preview/close are side-effect free; purchase/ownership/plot assignment remain server-authoritative."
+      ],
+      "currentGaps": [
+        "Current canonical housing supports a starter-house/economy seam rather than the verified eight-card RHS2 presentation.",
+        "Production Housing Editor furniture catalog is intentionally empty pending independently verified items/assets.",
+        "Doorway/interior rendered continuity and target-device behavior remain runtime evidence gaps."
+      ],
+      "activationRule": "Only after P1 runtime Smoke + Package, P2 completion/package, and Control Tower explicitly assigns the next Free Roam producer."
+    },
+    {
+      "id": "P4_AVATAR_SHOPPING",
+      "priority": 4,
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
+      "reference": "Pinned authorized Legacy binary baseline plus current avatar/shopping reference fixtures",
+      "historicalContract": "PR150 frozen support evidence",
+      "currentAuthorities": [
+        {
+          "path": "school/src/server/OutfitOperationsController.lua",
+          "blobSha": "559eee7ea8d7363814d5645229392527cf05ba86",
+          "role": "server-authoritative outfit validation/filter/apply seam"
+        },
+        {
+          "path": "school/src/server/ShoppingPurchaseController.lua",
+          "blobSha": "fd1a4e3545f110dbf0d6342fb2891d94c76705e7",
+          "role": "server-known clothing purchase boundary; production catalog intentionally starts empty"
+        },
+        {
+          "path": "school/src/server/ProgressionRepository.lua",
+          "blobSha": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+          "role": "durable outfit storage authority"
+        }
+      ],
+      "verifiedTarget": [
+        "Pinned baseline has desktop/mobile/console outfit entry GUIs and 12 presented outfit slots.",
+        "Pinned baseline uses Hat1-Hat3, Shirt, Pants, Face, Package, RPName/RPDesc, RemoveShirt and OutfitName fields.",
+        "OutfitName/RPName/RPDesc are server-filtered identity fields.",
+        "Verified shopping seam includes BuyClothing, ShopGui, Clothing Display, ShirtID/PantsID, PurchasePermanentItem and ShirtTemplate/PantsTemplate.",
+        "Verified post-purchase success text is already pinned in the support fixture."
+      ],
+      "currentGaps": [
+        "Exact first-slice clothing asset IDs and full store catalog remain explicitly unknown.",
+        "Current production clothing catalog is intentionally empty rather than inventing asset IDs.",
+        "Later public nine-hat behavior must not overwrite the pinned three-hat baseline."
+      ],
+      "activationRule": "Only after P3 clears or Control Tower promotes this slice because a more critical regression is found."
+    },
+    {
+      "id": "P5_VEHICLES",
+      "priority": 5,
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
+      "reference": "B@00:36-00:46 dealership plus recurring free-roam HUD",
+      "historicalContract": "coordination/reference/rhs2-dealership-interaction-4323049/HANDOFF.md",
+      "currentAuthorities": [
+        {
+          "path": "school/src/server/VehicleLifecycle.lua",
+          "blobSha": "f8476cc74f7f51cbe203f0fdb60d476652fc93ab",
+          "role": "single one-active-vehicle-per-player lifecycle authority"
+        },
+        {
+          "path": "school/src/server/VehicleService.server.lua",
+          "blobSha": "54f12d7a7dfddcccc9fbaaa70317d6f2c10475a5",
+          "role": "canonical runtime vehicle adapter, spawn and control authority"
+        },
+        {
+          "path": "school/src/server/VehicleInput.lua",
+          "blobSha": "189f96a19d8ba7a9330f915a148a76e3a1b392c0",
+          "role": "server-owned vehicle input seam"
+        }
+      ],
+      "verifiedTarget": [
+        "Large split dealership surface with left preview stage and right catalog area.",
+        "Larry's Car Dealership title/subtitle, close, All/Vehicles/Skins tabs, search, Sort by: New and card grid.",
+        "RHS Fan Car details show STANDARD, Vehicle, Top Speed 60 and Acceleration 15 as visible reference values.",
+        "Preview/selection must never purchase or spawn; purchase/ownership/spawn remain server-authoritative."
+      ],
+      "currentGaps": [
+        "Current vehicle runtime is a starter-sedan implementation, not the verified dealership catalog experience.",
+        "Exact current catalog IDs, thumbnails, price/currency mappings, entitlements, skin compatibility and most vehicle stats remain unknown.",
+        "Rendered preview/camera, purchase confirmation and actual driving parity remain runtime evidence gaps."
+      ],
+      "activationRule": "Only after earlier parity slices clear and Control Tower assigns one Free Roam producer."
+    },
+    {
+      "id": "P6_JOBS",
+      "priority": 6,
+      "status": "PREP_READY__PRODUCT_WRITE_BLOCKED_BY_EARLIER_PRIORITIES",
+      "reference": "C@00:12-01:08 Umbra job entry, purple obstacle run, result card and Jobs menu",
+      "historicalContract": "coordination/reference/rhs2-jobs-interaction-4323049/HANDOFF.md",
+      "currentAuthorities": [
+        {
+          "path": "school/src/server/CafeJobController.lua",
+          "blobSha": "18948eb98f864e76685a807a2e5a9351ca521725",
+          "role": "existing single Free Roam job lifecycle example; EconomyRepository owns durable money"
+        },
+        {
+          "path": "school/src/server/CafeJob.server.lua",
+          "blobSha": "501ed91eaf46a5a21d9703a207b72026076a0649",
+          "role": "current runtime cafe-job adapter and proximity/remote boundary"
+        },
+        {
+          "path": "school/src/server/EconomyRepository.lua",
+          "blobSha": "ef06d4e29597b035767e10c1fd6b7313b331739f",
+          "role": "single durable job currency writer"
+        }
+      ],
+      "verifiedTarget": [
+        "Umbra venue dialogue entry through NPC Linkin.",
+        "Purple obstacle/collection activity with top progress/countdown grouping and visible Cancel Job.",
+        "Server-presented collection feedback and a completion card with performance/earnings/progression hierarchy.",
+        "Jobs menu with Easy/Medium/Hard presentation and Daily Shifts/Replay Ticket information."
+      ],
+      "currentGaps": [
+        "Exact job stable IDs, obstacle sequence, checkpoints, validation radii and failure/cancel policy remain unknown.",
+        "Visible +10, +66, +664 XP, promotion distance and difficulty modifiers are sampled presentation values, not verified formulas.",
+        "Current cafe job is not RHS2 Umbra parity and must not be stretched into claimed exact behavior."
+      ],
+      "activationRule": "Only after earlier parity slices clear and Control Tower assigns one Free Roam producer."
+    }
+  ],
+  "crossSliceRules": [
+    "Never introduce duplicate world, clock, economy, progression, persistence, vehicle, housing, outfit or job authorities.",
+    "Browsing, preview, search, sort, tabs and modal close/back are presentation-only unless a separately verified server action is invoked.",
+    "Stable server-known keys and idempotency tokens are required for durable mutations.",
+    "Unknown asset IDs, item IDs, destination coordinates, prices, currencies, formulas or hidden hierarchy remain explicit gaps rather than guessed constants.",
+    "Every future product candidate repeats exact-head deterministic CI -> independent QA -> protected Integration -> exact-canonical Smoke -> deterministic Package.",
+    "Rendered/device/traversal claims require actual runtime evidence; static/headless results never establish visual parity."
+  ],
+  "currentBlocker": "P1 exact-canonical runtime Smoke on 39911a remains LOCAL_ONLY_REQUIRED and PAAM-L044 is offline. P2 is prep-ready but not product-authorized; P3-P6 remain future prep only.",
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
