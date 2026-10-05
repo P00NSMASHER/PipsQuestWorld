@@ -216,6 +216,8 @@ local travelPanel
 local travelPanelScale
 local cafeCard
 local cafeCardScale
+local vehicleCard
+local vehicleCardScale
 
 local function controlExclusionZones(viewportWidth, viewportHeight, insets)
     if not UserInputService.TouchEnabled then
@@ -298,6 +300,15 @@ local function applyResponsiveHudLayout()
         warn("Cafe card layout rejected: " .. tostring(cafeCardReason))
         return
     end
+    local vehicleCardLayout = ResponsiveHudLayout.computeBottomCenteredCard(layout, {
+        width = 260,
+        height = 132,
+    })
+    local vehicleCardValid, vehicleCardReason = ResponsiveHudLayout.validateSafeFloatingCard(layout, vehicleCardLayout)
+    if not vehicleCardValid then
+        warn("Vehicle card layout rejected: " .. tostring(vehicleCardReason))
+        return
+    end
     currentHudLayout = layout
 
     card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
@@ -329,6 +340,10 @@ local function applyResponsiveHudLayout()
     if cafeCard and cafeCardScale then
         cafeCard.Position = UDim2.fromOffset(cafeCardLayout.x, cafeCardLayout.y)
         cafeCardScale.Scale = cafeCardLayout.scale
+    end
+    if vehicleCard and vehicleCardScale then
+        vehicleCard.Position = UDim2.fromOffset(vehicleCardLayout.x, vehicleCardLayout.y)
+        vehicleCardScale.Scale = vehicleCardLayout.scale
     end
 
     if housePanel and housePanelScale then
@@ -1201,17 +1216,22 @@ local spawnVehicle = vehicleRoot:WaitForChild("Spawn")
 local despawnVehicle = vehicleRoot:WaitForChild("Despawn")
 local setVehicleControls = vehicleRoot:WaitForChild("SetControls")
 
-local vehicleCard = Instance.new("Frame")
+vehicleCard = Instance.new("Frame")
 vehicleCard.Name = "LegacyVehiclePanel"
-vehicleCard.AnchorPoint = Vector2.new(0.5, 1)
-vehicleCard.Position = UDim2.new(0.5, 0, 1, -auxiliaryPanelBottomMargin)
+vehicleCard.AnchorPoint = Vector2.new(0, 0)
+vehicleCard.Position = UDim2.fromOffset(0, 0)
 vehicleCard.Size = UDim2.new(0, 260, 0, 132)
 vehicleCard.BackgroundColor3 = LEGACY_PANEL
 vehicleCard.BackgroundTransparency = 0.02
 vehicleCard.Visible = false
 vehicleCard.Parent = gui
+vehicleCardScale = Instance.new("UIScale")
+vehicleCardScale.Name = "ResponsiveScale"
+vehicleCardScale.Scale = 1
+vehicleCardScale.Parent = vehicleCard
 round(vehicleCard, 2)
 outline(vehicleCard, 2)
+applyResponsiveHudLayout()
 
 local vehicleTitle = Instance.new("TextLabel")
 vehicleTitle.BackgroundTransparency = 0
