@@ -69,6 +69,12 @@ for _, fixture in ipairs(fixtures) do
     assert(ResponsiveHudLayout.contains(layout.safe, classModal), fixture.name .. ": class modal outside safe area")
     layout.classModal = classModal
 
+    local outfitModal = ResponsiveHudLayout.computeCenteredModal(layout, { width = 286, height = 400 })
+    local outfitModalValid, outfitModalReason = ResponsiveHudLayout.validateCenteredModal(layout, outfitModal)
+    assert(outfitModalValid, fixture.name .. ": " .. tostring(outfitModalReason))
+    assert(ResponsiveHudLayout.contains(layout.safe, outfitModal), fixture.name .. ": outfit modal outside safe area")
+    layout.outfitModal = outfitModal
+
     local cafeCard = ResponsiveHudLayout.computeSafeFloatingCard(layout, { width = 260, height = 150 })
     local cafeValid, cafeReason = ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCard)
     assert(cafeValid, fixture.name .. ": " .. tostring(cafeReason))
@@ -134,6 +140,11 @@ assert(ipad.classModal.scale == 1, "iPad class modal keeps native scale")
 assert(iphone.classModal.scale < 1, "iPhone class modal must reflow")
 assert(iphone.classModal.y >= iphone.safe.y, "iPhone class modal clears safe top")
 assert(iphone.classModal.bottom <= iphone.safe.bottom, "iPhone class modal clears safe bottom")
+assert(nominal.outfitModal.scale == 1, "desktop outfit modal keeps native scale")
+assert(ipad.outfitModal.scale == 1, "iPad outfit modal keeps native scale")
+assert(iphone.outfitModal.scale < 1, "iPhone outfit modal must reflow")
+assert(iphone.outfitModal.y >= iphone.safe.y, "iPhone outfit modal clears safe top")
+assert(iphone.outfitModal.bottom <= iphone.safe.bottom, "iPhone outfit modal clears safe bottom")
 assert(nominal.cafeCard.scale == 1, "desktop cafe card keeps native scale")
 assert(ipad.cafeCard.scale == 1, "iPad cafe card keeps native scale")
 assert(iphone.cafeCard.scale == 1, "iPhone cafe card fits without shrinking")
@@ -190,6 +201,29 @@ local badClassModal = zone(
 badClassModal.scale = iphone.classModal.scale
 local classMutationValid, classMutationReason = ResponsiveHudLayout.validateCenteredModal(iphone, badClassModal)
 assert(not classMutationValid and classMutationReason == "centered modal leaves safe bounds", "class modal geometry mutation must fail")
+
+local legacyOutfitPanelHeight = 262
+local verifiedOutfitContentBottom = 210 + (8 * 20) + 20
+assert(verifiedOutfitContentBottom == 390, "verified outfit content bottom fixture")
+assert(verifiedOutfitContentBottom > legacyOutfitPanelHeight, "legacy outfit panel must be proven too short")
+
+local legacyOutfitDesktopTop = (483 * 0.5) - 131
+local legacyOutfitIphoneTop = (393 * 0.5) - 131
+assert(legacyOutfitDesktopTop + verifiedOutfitContentBottom > nominal.safe.bottom, "legacy outfit content must overflow desktop viewport")
+assert(legacyOutfitIphoneTop + verifiedOutfitContentBottom > iphone.safe.bottom, "legacy outfit content must overflow iPhone safe bottom")
+
+local badOutfit = zone(
+    iphone.outfitModal.x,
+    iphone.safe.bottom - iphone.outfitModal.height + 1,
+    iphone.outfitModal.width,
+    iphone.outfitModal.height
+)
+badOutfit.scale = iphone.outfitModal.scale
+local badOutfitValid, badOutfitReason = ResponsiveHudLayout.validateCenteredModal(iphone, badOutfit)
+assert(not badOutfitValid and badOutfitReason == "centered modal leaves safe bounds", "outfit modal safe-bottom mutation must fail")
+
+local legacyOutfitEntry = zone(852 - 144, 12, 132, 34)
+assert(not ResponsiveHudLayout.contains(iphone.safe, legacyOutfitEntry), "legacy outfit internal entry must fail iPhone safe-right bounds")
 
 local legacyCafe = zone(852 - 12 - 260, 393 - 112 - 150, 260, 150)
 assert(not ResponsiveHudLayout.contains(iphone.safe, legacyCafe), "legacy fixed cafe geometry must fail iPhone safe bounds")
@@ -255,6 +289,10 @@ for _, fragment in ipairs({
     'ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)',
     'ResponsiveHudLayout.computeCenteredModal(layout, {',
     'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
+    'local outfitModalLayout = ResponsiveHudLayout.computeCenteredModal(layout, {',
+    'outfitPanel.Position = UDim2.fromOffset(outfitModalLayout.x, outfitModalLayout.y)',
+    'outfitPanelScale.Scale = outfitModalLayout.scale',
+    'legacyOutfitSurface.entry.Visible = false',
     'ResponsiveHudLayout.computeSafeFloatingCard(layout, {',
     'ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCardLayout)',
     'modalScale = Instance.new("UIScale")',
