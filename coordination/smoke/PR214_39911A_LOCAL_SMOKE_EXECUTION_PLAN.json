@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Integration Smoke",
+  "owner": "Roblox High School Integration Smoke",
+  "createdAt": "2026-10-05T17:27:00Z",
+  "result": "EXECUTION_PLAN_READY__WAIT_ONLINE_LAPTOP",
+  "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "producerPr": 214,
+  "producerHead": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+  "target": {
+    "universeId": "10768955678",
+    "placeId": "87245440673982",
+    "publishAuthorized": false
+  },
+  "prerequisites": [
+    "Reread rebuild/high-school-foundation and require exact head 39911a193ba6e76379c52ce67cb60bbc912bf279.",
+    "Acquire coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json for Integration Smoke against exact canonical 39911a using compare-and-swap semantics.",
+    "Require the authorized Desktop Commander device to report Online before any local call.",
+    "Do not publish Roblox, spend money, mutate automations, or perform routine GitHub work through the laptop."
+  ],
+  "sourceContracts": {
+    "captureReceipt": "coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json",
+    "validator": "coordination/smoke/validate_runtime_capture_contract.py",
+    "smokeReceipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
+    "releasePreflight": "coordination/release-packages/pip-high-school-39911a-package-readiness-v1.json"
+  },
+  "evidenceRoot": "coordination/smoke/runtime-evidence/39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "orderedExecution": [
+    {
+      "step": 1,
+      "id": "IDENTITY_AND_STARTUP",
+      "checks": [
+        "Open/test only the exact canonical 39911a source.",
+        "Record the actual Roblox place/universe identity and runtime build/source identity.",
+        "Confirm one ScreenGui/client mount, one feature-panel controller, and no startup error before continuing."
+      ],
+      "failRule": "Stop immediately on canonical mismatch, startup error, duplicate runtime mount, or unexpected publication requirement."
+    },
+    {
+      "step": 2,
+      "id": "DESKTOP_RENDERED_CHECKPOINTS",
+      "profile": "desktop",
+      "viewport": {
+        "width": 909,
+        "height": 483
+      },
+      "captures": [
+        {
+          "id": "A_0005",
+          "reference": "A@00:05",
+          "target": "school frontage/spawn approach",
+          "evidencePath": "desktop/A_0005.png"
+        },
+        {
+          "id": "A_0025",
+          "reference": "A@00:25",
+          "target": "bright atrium/circular focal display",
+          "evidencePath": "desktop/A_0025.png"
+        },
+        {
+          "id": "A_0045",
+          "reference": "A@00:45",
+          "target": "broad corridor/staircase sightline",
+          "evidencePath": "desktop/A_0045.png"
+        },
+        {
+          "id": "A_0125",
+          "reference": "A@02:05",
+          "target": "stairwell/compact HUD composition",
+          "evidencePath": "desktop/A_0125.png"
+        }
+      ],
+      "requiredMetadata": [
+        "actual viewport",
+        "safe insets",
+        "FOV",
+        "camera position",
+        "yaw",
+        "pitch"
+      ],
+      "failRule": "A capture cannot PASS without rendered evidence and comparable FOV metadata."
+    },
+    {
+      "step": 3,
+      "id": "IPHONE_RENDERED_TOUCH_CHECKPOINTS",
+      "profile": "iphone_landscape",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "safeInsets": {
+        "left": 47,
+        "top": 12,
+        "right": 47,
+        "bottom": 21
+      },
+      "captures": [
+        {
+          "id": "A_0005",
+          "reference": "A@00:05",
+          "evidencePath": "iphone_landscape/A_0005.png"
+        },
+        {
+          "id": "A_0025",
+          "reference": "A@00:25",
+          "evidencePath": "iphone_landscape/A_0025.png"
+        },
+        {
+          "id": "A_0045",
+          "reference": "A@00:45",
+          "evidencePath": "iphone_landscape/A_0045.png"
+        },
+        {
+          "id": "A_0125",
+          "reference": "A@02:05",
+          "evidencePath": "iphone_landscape/A_0125.png"
+        }
+      ],
+      "requiredInteraction": [
+        "movement and camera controls remain usable",
+        "right rail and quick bar clear safe/system-control zones",
+        "House and Housing Editor remain inside safe bounds",
+        "all close/back controls remain reachable"
+      ]
+    },
+    {
+      "step": 4,
+      "id": "IPAD_RENDERED_TOUCH_CHECKPOINTS",
+      "profile": "ipad_landscape",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "safeInsets": {
+        "left": 24,
+        "top": 24,
+        "right": 24,
+        "bottom": 20
+      },
+      "captures": [
+        {
+          "id": "A_0005",
+          "reference": "A@00:05",
+          "evidencePath": "ipad_landscape/A_0005.png"
+        },
+        {
+          "id": "A_0025",
+          "reference": "A@00:25",
+          "evidencePath": "ipad_landscape/A_0025.png"
+        },
+        {
+          "id": "A_0045",
+          "reference": "A@00:45",
+          "evidencePath": "ipad_landscape/A_0045.png"
+        },
+        {
+          "id": "A_0125",
+          "reference": "A@02:05",
+          "evidencePath": "ipad_landscape/A_0125.png"
+        }
+      ],
+      "requiredInteraction": [
+        "HUD reflows without central-view obstruction",
+        "feature panels remain reachable",
+        "movement/camera controls remain clear",
+        "House/Housing Editor do not overlap HUD or each other"
+      ]
+    },
+    {
+      "step": 5,
+      "id": "PHYSICAL_ROUTE",
+      "checks": [
+        {
+          "id": "spawn",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/spawn.json"
+        },
+        {
+          "id": "entrance",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/entrance.json"
+        },
+        {
+          "id": "atrium_left",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/atrium_left.json"
+        },
+        {
+          "id": "atrium_right",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/atrium_right.json"
+        },
+        {
+          "id": "corridor",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/corridor.json"
+        },
+        {
+          "id": "stair_up",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/stair_up.json"
+        },
+        {
+          "id": "stair_down",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/stair_down.json"
+        },
+        {
+          "id": "class_free_roam",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/class_free_roam.json"
+        },
+        {
+          "id": "menus",
+          "evidenceKind": "RUNTIME_TRACE",
+          "path": "routes/menus.json"
+        }
+      ],
+      "failRule": "Any stuck/fall-through route, broken movement/camera restoration, or unreachable traversal is a Smoke defect, not a documentation gap."
+    },
+    {
+      "step": 6,
+      "id": "FEATURE_PANEL_INTERACTION",
+      "checks": [
+        {
+          "id": "shop",
+          "evidenceKind": "RENDERED_DEVICE_CAPTURE",
+          "path": "panels/shop.png"
+        },
+        {
+          "id": "travel",
+          "evidenceKind": "RENDERED_DEVICE_CAPTURE",
+          "path": "panels/travel.png"
+        },
+        {
+          "id": "avatar",
+          "evidenceKind": "RENDERED_DEVICE_CAPTURE",
+          "path": "panels/avatar.png"
+        },
+        {
+          "id": "house",
+          "evidenceKind": "RENDERED_DEVICE_CAPTURE",
+          "path": "panels/house.png"
+        },
+        {
+          "id": "housing_editor",
+          "evidenceKind": "RENDERED_DEVICE_CAPTURE",
+          "path": "panels/housing_editor.png"
+        }
+      ],
+      "transactionMatrix": [
+        "open one panel",
+        "switch to another panel and require the prior panel to hide",
+        "repeat-open the same panel and require deterministic close",
+        "exercise explicit close/back",
+        "exercise travel denial and require panel restoration with player position unchanged",
+        "respawn and require neutral panel state"
+      ]
+    },
+    {
+      "step": 7,
+      "id": "SAVE_REJOIN",
+      "evidenceKind": "LIVE_DATASTORE_REJOIN",
+      "evidencePath": "routes/save_rejoin.json",
+      "checks": [
+        "Create/observe a committed state supported by the current canonical.",
+        "Leave and rejoin using the same player identity.",
+        "Require observedRejoinMatch=true for the committed state.",
+        "Do not use unpublished-memory behavior as proof of live DataStore rejoin."
+      ]
+    },
+    {
+      "step": 8,
+      "id": "VALIDATE_AND_HANDOFF",
+      "checks": [
+        "Populate PR214_RUNTIME_CAPTURE_CONTRACT_V1.json with only evidence actually observed.",
+        "Run coordination/smoke/validate_runtime_capture_contract.py against the completed receipt.",
+        "Require SMOKE_RUNTIME_CAPTURE_CONTRACT_OK.",
+        "Only then set runtimeExecuted=true, renderedParityEstablished=true and overallStatus=PASS.",
+        "Merge the updated Smoke receipt through the normal GitHub branch/PR path.",
+        "Hand exact canonical 39911a to Release/Package."
+      ]
+    }
+  ],
+  "hardStops": [
+    "Canonical head changed from 39911a.",
+    "Desktop Commander device offline or lease unavailable.",
+    "Roblox publication becomes necessary for the check.",
+    "Any request to spend money or broaden credentials.",
+    "Static/headless evidence is the only evidence available for a runtime/rendered requirement."
+  ],
+  "currentDeviceStatus": "OFFLINE__PAAM_L044_LAST_CURRENT_RUN_POLL",
+  "status": "WAIT_ONLINE_LAPTOP",
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
