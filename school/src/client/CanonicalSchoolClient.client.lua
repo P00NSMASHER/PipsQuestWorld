@@ -40,7 +40,6 @@ local LEGACY_BLUE = Color3.fromRGB(48, 104, 148)
 local LEGACY_BLUE_DARK = Color3.fromRGB(22, 73, 112)
 local LEGACY_PANEL = Color3.fromRGB(193, 220, 238)
 local LEGACY_BUTTON = Color3.fromRGB(235, 245, 250)
-local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
 
 local function round(target, px)
     local corner = Instance.new("UICorner")
@@ -201,6 +200,10 @@ end
 
 local currentHudLayout = nil
 local viewportConnection = nil
+local housePanel
+local editorPanel
+local housePanelScale
+local editorPanelScale
 
 local function controlExclusionZones(viewportWidth, viewportHeight, insets)
     if not UserInputService.TouchEnabled then
@@ -241,6 +244,12 @@ local function applyResponsiveHudLayout()
         warn("Compact HUD layout rejected: " .. tostring(reason))
         return
     end
+    local auxiliaryPanels = ResponsiveHudLayout.computeAuxiliaryPanels(layout)
+    local auxiliaryValid, auxiliaryReason = ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)
+    if not auxiliaryValid then
+        warn("Auxiliary HUD layout rejected: " .. tostring(auxiliaryReason))
+        return
+    end
     currentHudLayout = layout
 
     card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
@@ -249,6 +258,15 @@ local function applyResponsiveHudLayout()
     actionRail.Size = UDim2.fromOffset(layout.rail.width, layout.rail.height)
     quickBar.Position = UDim2.fromOffset(layout.quick.x, layout.quick.y)
     quickBar.Size = UDim2.fromOffset(layout.quick.width, layout.quick.height)
+
+    if housePanel and housePanelScale then
+        housePanel.Position = UDim2.fromOffset(auxiliaryPanels.house.x, auxiliaryPanels.house.y)
+        housePanelScale.Scale = auxiliaryPanels.house.scale
+    end
+    if editorPanel and editorPanelScale then
+        editorPanel.Position = UDim2.fromOffset(auxiliaryPanels.editor.x, auxiliaryPanels.editor.y)
+        editorPanelScale.Scale = auxiliaryPanels.editor.scale
+    end
 
     title.Position = UDim2.fromOffset(0, 0)
     title.Size = UDim2.new(1, 0, 0, 17)
@@ -1413,7 +1431,6 @@ local removeFurniture = housingRoot:WaitForChild("RemoveFurniture")
 local sellFurniture = housingRoot:WaitForChild("SellFurniture")
 local paintFurniture = housingRoot:WaitForChild("PaintFurniture")
 local setHousingWalls = housingRoot:WaitForChild("SetHideWalls")
-local editorPanel
 
 local houseIcon = Instance.new("TextButton")
 houseIcon.Name = "LegacyHouseButton"
@@ -1430,15 +1447,19 @@ local houseRailStroke = outline(houseIcon, 2)
 houseRailStroke.Color = Color3.fromRGB(255, 255, 255)
 applyResponsiveHudLayout()
 
-local housePanel = Instance.new("Frame")
+housePanel = Instance.new("Frame")
 housePanel.Name = "LegacyHousePanel"
-housePanel.AnchorPoint = Vector2.new(0, 1)
-housePanel.Position = UDim2.new(0, 256, 1, -(auxiliaryPanelBottomMargin + 66))
+housePanel.AnchorPoint = Vector2.new(0, 0)
+housePanel.Position = UDim2.fromOffset(0, 0)
 housePanel.Size = UDim2.new(0, 248, 0, 292)
 housePanel.BackgroundColor3 = LEGACY_PANEL
 housePanel.BackgroundTransparency = 0.02
 housePanel.Visible = false
 housePanel.Parent = gui
+housePanelScale = Instance.new("UIScale")
+housePanelScale.Name = "ResponsiveScale"
+housePanelScale.Scale = 1
+housePanelScale.Parent = housePanel
 round(housePanel, 2)
 outline(housePanel, 2)
 
@@ -1765,8 +1786,8 @@ end)
 -- Exact verified Legacy labels retained: Add Furni, Hide Walls, Utilities, Other.
 editorPanel = Instance.new("Frame")
 editorPanel.Name = "LegacyHousingEditorV2"
-editorPanel.AnchorPoint = Vector2.new(0, 1)
-editorPanel.Position = UDim2.new(0, 512, 1, -(auxiliaryPanelBottomMargin + 66))
+editorPanel.AnchorPoint = Vector2.new(0, 0)
+editorPanel.Position = UDim2.fromOffset(0, 0)
 editorPanel.Size = UDim2.new(0, 330, 0, 346)
 editorPanel.BackgroundColor3 = LEGACY_PANEL
 editorPanel.BackgroundTransparency = 0.02
@@ -1774,8 +1795,13 @@ editorPanel.Visible = false
 editorPanel:SetAttribute("ReferenceExactLayout", false)
 editorPanel:SetAttribute("ReferenceCoverage", "verified-labels-only")
 editorPanel.Parent = gui
+editorPanelScale = Instance.new("UIScale")
+editorPanelScale.Name = "ResponsiveScale"
+editorPanelScale.Scale = 1
+editorPanelScale.Parent = editorPanel
 round(editorPanel, 2)
 outline(editorPanel, 2)
+applyResponsiveHudLayout()
 
 local editorTitle = Instance.new("TextLabel")
 editorTitle.BackgroundColor3 = LEGACY_BLUE
