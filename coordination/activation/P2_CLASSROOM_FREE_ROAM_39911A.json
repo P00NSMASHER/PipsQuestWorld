@@ -1,24 +1,24 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Control Tower",
   "id": "P2_CLASSROOM_FREE_ROAM",
-  "preparedAt": "2026-10-05T17:30:00Z",
-  "status": "ARMED_PREP_ONLY__NOT_ACTIVATED",
+  "preparedAt": "2026-10-05T17:55:00Z",
+  "status": "ARMED_PREP_ONLY__REBASED_TO_4782AA__NOT_ACTIVATED",
   "expectedBase": {
     "branch": "rebuild/high-school-foundation",
-    "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "note": "If canonical changes before activation, rebase the manifest only after verifying the Class/Progression authority blobs remain compatible."
+    "sha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "note": "Rebased from 39911a after PR239. Class/Progression authority blobs were re-read on 4782aa and are unchanged."
   },
   "futureProducer": {
     "owner": "Roblox High School Class & Education",
-    "proposedBranch": "rebuild/high-school-classroom-free-roam-39911a-v1",
+    "proposedBranch": "rebuild/high-school-classroom-free-roam-4782aa-v1",
     "productRoot": "school/**",
     "oneProducerOnly": true
   },
   "activationConditions": [
-    "Integration Smoke overallStatus is PASS on exact canonical 39911a with runtimeExecuted=true and renderedParityEstablished=true.",
-    "Release/Package emits the reserved deterministic 39911a source-tree checkpoint and Control Tower records it as current packaged canonical.",
-    "Live canonical still equals 39911a, or a newer packaged descendant is explicitly reconciled before activation.",
+    "Integration Smoke overallStatus is PASS on exact canonical 4782aa with runtimeExecuted=true and renderedParityEstablished=true.",
+    "Release/Package emits the reserved deterministic 4782aa source-tree checkpoint and Control Tower records it as current packaged canonical.",
+    "Live canonical still equals 4782aa, or a newer packaged descendant is explicitly reconciled before activation.",
     "No other product producer is active and WIP cap remains at or below 2/3 before opening this producer.",
     "PR227 classroom/free-roam contract and PR228 progression/mobile seam remain valid against the activation base."
   ],
@@ -31,7 +31,7 @@
     {
       "path": "school/src/server/ClassSessionController.lua",
       "blobSha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
-      "rule": "Remain the sole ephemeral class/session authority unless the producer changes this exact module intentionally within Class & Education ownership and preserves one-authority semantics."
+      "rule": "Remain the sole ephemeral class/session authority unless intentionally changed within Class & Education ownership while preserving one-authority semantics."
     },
     {
       "path": "school/src/server/ClassEducation.server.lua",
@@ -46,7 +46,7 @@
     {
       "path": "school/src/server/ProgressionBinding.lua",
       "blobSha": "979d63565a745d5674c4d2ba8181efd258d5169c",
-      "rule": "Durable progression remains a separate existing authority; minigame score/grade presentation cannot directly write persistence."
+      "rule": "Durable progression remains separate; minigame score/grade presentation cannot directly write persistence."
     },
     {
       "path": "school/src/server/ProgressionRepository.lua",
@@ -111,9 +111,21 @@
     "Integration Smoke with functional/rendered/interaction/device/save-rejoin statuses separated",
     "deterministic Release/Package on the exact integrated canonical"
   ],
-  "activationAction": "Create exactly one producer branch from the then-certified packaged canonical and set WIP producer fields only after all activationConditions pass.",
+  "activationAction": "Create exactly one producer branch from the then-certified packaged canonical 4782aa (or explicitly reconciled descendant) and set WIP producer fields only after all activationConditions pass.",
   "productFilesChanged": false,
   "robloxPublished": false,
   "moneySpent": false,
-  "taskStateChanged": false
+  "taskStateChanged": false,
+  "rebaseEvidence": {
+    "fromCanonical": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "toCanonical": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
+    "producerPr": 239,
+    "changedPaths": [
+      "school/src/client/CanonicalSchoolClient.client.lua",
+      "school/src/shared/ResponsiveHudLayout.lua",
+      "school/tests/legacy_hud_contract_spec.lua",
+      "school/tests/responsive_hud_layout_spec.lua"
+    ],
+    "authorityContinuity": "PASS_UNCHANGED_CLASS_AND_PROGRESSION_SERVER_BLOBS"
+  }
 }
