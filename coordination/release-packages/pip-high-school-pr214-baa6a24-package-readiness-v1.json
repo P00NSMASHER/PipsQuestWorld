@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Release & Package Gate",
+  "owner": "Roblox High School Release & Package Gate",
+  "recordedAt": "2026-10-05T02:04:47Z",
+  "result": "PACKAGE_HOLD__QA_MOBILE_GEOMETRY_FAIL__REFERENCE_DELIVERY_READY",
+  "input": {
+    "repository": "P00NSMASHER/PipsQuestWorld",
+    "coordinationBranch": "coordination/high-school-control-tower",
+    "coordinationSha": "4bac8aff5f38980131306f3476e7408a8e2ab837",
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "candidatePr": 214,
+    "candidateBranch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
+    "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8"
+  },
+  "sourceIdentity": {
+    "canonicalRootTreeSha": "02849978fc3adb6c021e59ed39a01f159f1a3369",
+    "canonicalSchoolTreeSha": "27879f6339bf3f689c997adf9c2cfeb87fcb98b0",
+    "candidateRootTreeSha": "4f8271aea3edbd8c428440425c79f6ee5c658f62",
+    "candidateSchoolTreeSha": "aa3e42ced69d0fb884533ebe2c8b53636773bff8",
+    "candidateStatus": "OPEN_MERGEABLE__NOT_PACKAGE_ELIGIBLE"
+  },
+  "gateEvidence": {
+    "ci": {
+      "status": "PASS_EXACT_HEAD",
+      "runs": [
+        {
+          "workflow": "High School Foundation Static Guards",
+          "runId": 37247220569,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Class Education Guards",
+          "runId": 37247220604,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Progression Guards",
+          "runId": 37247220568,
+          "conclusion": "success"
+        }
+      ]
+    },
+    "qa": {
+      "status": "HOLD_CHANGES_REQUIRED_EXACT_HEAD",
+      "reviewNode": "PRR_kwDOU0Wcsc8AAAABQmryow",
+      "submittedAt": "2026-10-05T01:40:07Z",
+      "functional": "PASS_STATIC",
+      "visual": "FAIL_STATIC_GEOMETRY",
+      "interaction": "PASS_STATIC_ONLY__NOT_RENDERED_TESTED",
+      "device": "FAIL_STATIC_IPHONE__DESKTOP_AND_IPAD_RENDERED_PENDING"
+    },
+    "integration": "BLOCKED_NO_SAME_SHA_QA_AUTHORIZATION",
+    "smoke": "NOT_RUN_NO_INTEGRATED_CANONICAL",
+    "package": "BLOCKED"
+  },
+  "referenceArtifactAccessibility": [
+    {
+      "owner": "Roblox High School Content QA",
+      "path": "coordination/reference-extraction/content_qa_rhs2_reference_lineage_pr214_baa6a24.json",
+      "blobSha": "1268b6ce24aa209f895c25ea34242dd062a06ecd",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "authorized A/B/C byte identities, timestamp frame hashes and observation-versus-inference ledger"
+    },
+    {
+      "owner": "Roblox High School Progression & Mobile",
+      "path": "coordination/reference-extraction/progression_mobile_pr214_geometry_contract_baa6a24.json",
+      "blobSha": "d68d4273f5db56a6f3f081f6ad190559e8742504",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "candidate-bound HUD/modal/device geometry acceptance and blocking mobile defects"
+    },
+    {
+      "owner": "Roblox High School Class & Education",
+      "path": "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json",
+      "blobSha": "1024eae06f67f74c3cee63f15500252a72c175c2",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "timestamp-bound classroom, activity and completion transitions"
+    },
+    {
+      "owner": "Roblox High School Foundation",
+      "path": "coordination/foundation/pr214-baa6a24-environment-authority-and-entrance-atrium-spec.md",
+      "blobSha": "74dc2a00603b77a47baca4668d4ef0c5f0c0e585",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "entrance, atrium and environment authority acceptance"
+    },
+    {
+      "owner": "Roblox High School Integration",
+      "path": "coordination/integration/PR214_BAA6A24_QA_WAIT_AND_CONFLICT_INVENTORY.md",
+      "blobSha": "93e4fddd5c6ff7efb7d5a96a1657b61bdd878c1f",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "ordered gate handoff and conflict inventory"
+    },
+    {
+      "owner": "Roblox High School Integration Smoke",
+      "path": "coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json",
+      "blobSha": "e4edd186684817d98a7dc5d00913a762d76316a9",
+      "access": "PASS_CURRENT_COORDINATION_HEAD",
+      "role": "exact-canonical desktop, iPhone and iPad runtime capture receipt schema"
+    }
+  ],
+  "referenceSources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "sizeBytes": 101853818,
+      "dimensions": "1112x512",
+      "durationSeconds": 141.533333
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "dimensions": "1112x512",
+      "durationSeconds": 92
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "sizeBytes": 87770778,
+      "dimensions": "1112x512",
+      "durationSeconds": 120.933333
+    }
+  },
+  "referenceClipTime": [
+    "A@00:05 school frontage",
+    "A@00:25 atrium",
+    "A@00:45 corridor/staircase",
+    "A@01:25 stairwell/inventory",
+    "B@00:05 classroom",
+    "B@00:45 dealership",
+    "B@01:05 activity room",
+    "C@00:05 Travel",
+    "C@01:05 job result",
+    "C@01:10 return to free roam"
+  ],
+  "deliveryGapFix": {
+    "problem": "The prior release manifest predates PR214 and points to stale PR188-era QA/reference artifacts.",
+    "resolution": "This manifest binds source identity, all current PR214 reference/acceptance artifacts and the exact QA HOLD to one candidate SHA without creating a package.",
+    "beforeEvidence": "Authorized reference frame identities are accessible through the Content QA artifact.",
+    "afterEvidence": "MISSING__NO_EXACT_INTEGRATED_CANONICAL_RENDERED_DESKTOP_IPHONE_IPAD_CAPTURE_RECEIPT",
+    "packageRule": "Do not package the candidate branch or current canonical. Recompute commit/root/school tree hashes only after protected Integration and exact-canonical Smoke PASS."
+  },
+  "knownGaps": [
+    {
+      "id": "QA_MOBILE_HOUSE_AUX_PANELS_OUTSIDE_SAFE_AREA",
+      "owner": "Pip High Free Roam",
+      "status": "BLOCKING_PRODUCT_DEFECT",
+      "reference": "C@00:05 recurring compact HUD and repository iPhone 852x393 fixture",
+      "acceptance": "House and Housing Editor panels, content and close/back controls remain within safe bounds and outside movement/camera zones on desktop, iPhone and iPad, with mutation-sensitive geometry coverage."
+    },
+    {
+      "id": "RHS2_RENDERED_DEVICE_INTERACTION_EVIDENCE",
+      "owner": "Roblox High School Integration Smoke",
+      "status": "PENDING_AFTER_REPAIR_QA_AND_INTEGRATION",
+      "reference": "A@00:05/00:25/00:45/01:25 and C@00:05",
+      "acceptance": "Exact integrated canonical has timestamp-bound desktop, iPhone and iPad captures plus traversal, panel restoration and save/rejoin evidence."
+    }
+  ],
+  "acceptanceCriteria": [
+    "Free Roam repairs both mobile auxiliary-panel geometry defects on the existing PR214 producer branch.",
+    "All three workflows pass on the changed exact head.",
+    "Independent QA explicitly authorizes that same head and keeps functional, visual, interaction and device statuses separate.",
+    "Protected Integration produces a new exact canonical SHA.",
+    "Smoke validates that exact canonical and produces the runtime capture receipt with honest device/rendered statuses.",
+    "Release recomputes exact commit, root-tree and school-tree identities and publishes only a deterministic source package receipt.",
+    "No raw reference video binaries are committed and no exact RHS2 parity, Roblox publication or spend is claimed."
+  ],
+  "outputLocation": "coordination/release-packages/pip-high-school-pr214-baa6a24-package-readiness-v1.json",
+  "blocker": "PR214 exact head baa6a24 is QA-held for blocking iPhone House and Housing Editor safe-area failures; no protected Integration or exact-canonical Smoke PASS exists.",
+  "nextHandoff": "Pip High Free Roam repairs PR214, then QA -> Integration -> Smoke -> Release & Package on the changed exact lineage.",
+  "packageCreated": false,
+  "rawVideosCommitted": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
