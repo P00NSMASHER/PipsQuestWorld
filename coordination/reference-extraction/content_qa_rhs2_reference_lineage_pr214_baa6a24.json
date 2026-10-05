@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "lane": "Roblox High School Content QA",
+  "owner": "Roblox High School Content QA",
+  "observedAt": "2026-10-05T01:08:28Z",
+  "result": "PASS_REFERENCE_BYTES_REMATERIALIZED_AND_PR214_LINEAGE_BOUND",
+  "input": {
+    "canonicalBranch": "rebuild/high-school-foundation",
+    "canonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "candidatePr": 214,
+    "candidateBranch": "rebuild/high-school-menu-interaction-flow-5fd5c05-v1",
+    "candidateSha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8"
+  },
+  "sources": {
+    "A": {
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "fileId": "file_00000000ce5c81f5a36a8e3d41862ca0",
+      "libraryVersion": 0,
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c",
+      "sizeBytes": 101853818,
+      "video": {
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "durationSeconds": 141.533333
+      },
+      "currentRunMaterialization": "PASS"
+    },
+    "B": {
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "fileId": "file_00000000896c81f5b6a0b386426ad86f",
+      "libraryVersion": 0,
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc",
+      "sizeBytes": 66390233,
+      "video": {
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "durationSeconds": 92
+      },
+      "currentRunMaterialization": "PASS"
+    },
+    "C": {
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "fileId": "file_00000000347c81f58f25a1e4ce718462",
+      "libraryVersion": 0,
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4",
+      "sizeBytes": 87770778,
+      "video": {
+        "width": 1112,
+        "height": 512,
+        "frameRate": "30/1",
+        "durationSeconds": 120.933333
+      },
+      "currentRunMaterialization": "PASS"
+    }
+  },
+  "timestampFrames": [
+    {
+      "clipTime": "A@00:05",
+      "sha256": "7cdb56f20ef716c572c0d908fb3729acc4d445096a14100f2f7b3f96896e2350",
+      "observed": "Centered exterior school entrance, broad central stairs, crest zone, red/white/blue massing, compact edge HUD."
+    },
+    {
+      "clipTime": "A@00:25",
+      "sha256": "ca33f057eb02723bbcded9d4c419937ba0ba9b03d9fdd363a7071ecb97d3a4ce",
+      "observed": "Bright atrium, low circular focal display, repeated ceiling lights, open circulation, compact edge HUD."
+    },
+    {
+      "clipTime": "A@00:45",
+      "sha256": "d6b263ea003c24a7c0abbdf80644efa95907581c8cde70e2e2a16dc6fc967ee0",
+      "observed": "Broad corridor with central traversal sightline and ascending circulation element; school palette and edge HUD persist."
+    },
+    {
+      "clipTime": "B@00:45",
+      "sha256": "40e4a7a93db20e303e335e76947dab62810db617c70f5c6bb4e13cd8bae2419e",
+      "observed": "Viewport-dominant blue dealership surface with left preview/details and right browse/card area; free-roam rail not visible."
+    },
+    {
+      "clipTime": "C@00:05",
+      "sha256": "38f374e850f7f81633cf7aa9e5a2f63d4fe9206b474d5982557d97c8fbd426af",
+      "observed": "Centered Travel panel with destination image tiles and visible close; right rail, top-right status and bottom shortcuts remain."
+    },
+    {
+      "clipTime": "C@01:05",
+      "sha256": "669a1504a365edb0116a5ca9b71922973ef8aff0a1a72b87d17e0a0bde90f085",
+      "observed": "Centered job-result card with performance, earnings, progress/reward content and visible OK; edge HUD persists."
+    },
+    {
+      "clipTime": "C@01:10",
+      "sha256": "a1b69b694e03ccac52c70fe05c083d811b5f2ab90625b523633212b05b3e911c",
+      "observed": "Result card dismissed; nighttime free roam and compact edge HUD visible."
+    }
+  ],
+  "observationInferenceLedger": {
+    "verified": [
+      "All three authorized clips rematerialized in this run and their bytes, size, dimensions, frame rate and duration match the pinned identities.",
+      "The seven priority timestamp frame hashes reproduced exactly.",
+      "C@00:05 supplies visible Travel panel/close/tiles evidence used by PR214.",
+      "Recurring A/B/C samples support the compact right rail, top-right read state and bottom shortcut placement contract.",
+      "B@00:45 supports a distinct viewport-dominant dealership presentation.",
+      "C@01:05 to C@01:10 supports visible result-to-roam restoration."
+    ],
+    "inferenceOnly": [
+      "Responsive rules and safe-area measurements require rendered target-device evidence.",
+      "Visible balances/status are presentation evidence, not proof of client or server authority.",
+      "A visible destination tile is not proof of a destination ID or teleport implementation."
+    ],
+    "prohibited": [
+      "Do not infer original movement speed or animation timing from visible 2x playback.",
+      "Do not infer asset IDs, exact RGB values, hidden UI hierarchy, scoring formulas, persistence behavior or audio.",
+      "Neighborhood, Outskirts and Forest visible rows at C@00:08 are not proven filters.",
+      "Player-authored nameplate text is not required product copy.",
+      "Static evidence cannot certify exact RHS2 parity."
+    ],
+    "audioReview": "NOT_PERFORMED"
+  },
+  "candidateAcceptance": {
+    "functionalStatic": {
+      "status": "PASS_EXACT_HEAD_CI",
+      "runs": [
+        {
+          "workflow": "High School Foundation Static Guards",
+          "runId": 37247220569,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Class Education Guards",
+          "runId": 37247220604,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "High School Progression Guards",
+          "runId": 37247220568,
+          "conclusion": "success"
+        }
+      ]
+    },
+    "sourceContract": [
+      "Only one large Shop, Avatar, House or Travel feature panel is active at once.",
+      "Every active surface has reachable explicit close/back behavior and repeat-open is idempotent.",
+      "Travel requires a visible selection before RequestTravel; denial restores the panel and leaves the player in place.",
+      "Respawn/reset returns feature panels to neutral.",
+      "Client presentation remains read-only for balances, ownership and progression; no automatic spend.",
+      "No unsupported destination IDs, filters, icon meanings or bottom-slot meanings are introduced."
+    ],
+    "renderedVisual": "PENDING",
+    "interactionRuntime": "PENDING_INDEPENDENT_QA",
+    "device": "PENDING_DESKTOP_IPHONE_IPAD",
+    "traversal": "PENDING"
+  },
+  "handoffs": {
+    "Foundation": "Verify PR214 preserves the single world/clock/location/spawn/environment authorities while the feature-panel controller is added.",
+    "ProgressionMobile": "Verify read-only balances/status, no automatic spend, clear movement/camera areas and desktop/iPhone/iPad safe-area captures.",
+    "FreeRoam": "Use C@00:05 for Travel open/close/tiles and recurring A/B/C HUD placement; preserve B@00:45 dealership and C@01:05-01:10 result restoration as later contracts.",
+    "QA": "Review exact PR214 head baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8; keep functional, visual, interaction, device and traversal statuses separate."
+  },
+  "priorEvidence": {
+    "fullPackPr": 200,
+    "fullPackHead": "b40d677c3c821da3400e0b31ce1ccef4a080269e",
+    "fullPackPath": "coordination/reference-extraction/content_qa_rhs2_reference_pack_4323049.json",
+    "progressionMobilePr": 208,
+    "frozenSupportPr": 150,
+    "frozenSupportHead": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
+    "frozenSupportMutation": "NONE"
+  },
+  "outputLocation": "coordination/reference-extraction/content_qa_rhs2_reference_lineage_pr214_baa6a24.json",
+  "blocker": "Independent same-SHA QA, rendered comparison, runtime interaction, device and traversal evidence remain pending; no exact-parity claim.",
+  "nextHandoff": "Roblox High School QA & Contract reviews PR214 exact head, then Integration only after explicit same-SHA authorization.",
+  "rawVideosCommitted": false,
+  "productFilesChanged": false,
+  "exactParityClaimed": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
