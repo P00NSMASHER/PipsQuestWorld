@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Control Tower",
+  "id": "P2_CLASSROOM_FREE_ROAM",
+  "preparedAt": "2026-10-05T17:30:00Z",
+  "status": "ARMED_PREP_ONLY__NOT_ACTIVATED",
+  "expectedBase": {
+    "branch": "rebuild/high-school-foundation",
+    "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "note": "If canonical changes before activation, rebase the manifest only after verifying the Class/Progression authority blobs remain compatible."
+  },
+  "futureProducer": {
+    "owner": "Roblox High School Class & Education",
+    "proposedBranch": "rebuild/high-school-classroom-free-roam-39911a-v1",
+    "productRoot": "school/**",
+    "oneProducerOnly": true
+  },
+  "activationConditions": [
+    "Integration Smoke overallStatus is PASS on exact canonical 39911a with runtimeExecuted=true and renderedParityEstablished=true.",
+    "Release/Package emits the reserved deterministic 39911a source-tree checkpoint and Control Tower records it as current packaged canonical.",
+    "Live canonical still equals 39911a, or a newer packaged descendant is explicitly reconciled before activation.",
+    "No other product producer is active and WIP cap remains at or below 2/3 before opening this producer.",
+    "PR227 classroom/free-roam contract and PR228 progression/mobile seam remain valid against the activation base."
+  ],
+  "consumedEvidence": [
+    "coordination/reference-extraction/classroom_free_roam_p2_contract_39911a.json",
+    "coordination/reference-extraction/p2_progression_mobile_seam_39911a.json",
+    "coordination/reference-extraction/class_activity_rhs2_temporal_contract_pr214_baa6a24.json"
+  ],
+  "authorityFreeze": [
+    {
+      "path": "school/src/server/ClassSessionController.lua",
+      "blobSha": "cca86641fcb4271378beecfca3ce74fa2460ea85",
+      "rule": "Remain the sole ephemeral class/session authority unless the producer changes this exact module intentionally within Class & Education ownership and preserves one-authority semantics."
+    },
+    {
+      "path": "school/src/server/ClassEducation.server.lua",
+      "blobSha": "034eb06201c6e86ad553fbe088f0fbe61a3a76cc",
+      "rule": "Remain the sole server adapter to Foundation schedule/room and ClassEducation remotes."
+    },
+    {
+      "path": "school/src/server/ClassProgressionCoordinator.lua",
+      "blobSha": "2115e20f81eae95bed1b7b15785394f952e1d6d8",
+      "rule": "Remain the only class-to-durable-progression coordinator."
+    },
+    {
+      "path": "school/src/server/ProgressionBinding.lua",
+      "blobSha": "979d63565a745d5674c4d2ba8181efd258d5169c",
+      "rule": "Durable progression remains a separate existing authority; minigame score/grade presentation cannot directly write persistence."
+    },
+    {
+      "path": "school/src/server/ProgressionRepository.lua",
+      "blobSha": "8ad864f24724ae007cfb53f0b8c7723295d41a44",
+      "rule": "No second progression repository or completion store."
+    }
+  ],
+  "boundedProductGoal": [
+    "Use the authoritative current class room/session to enter one evidence-backed activity presentation.",
+    "Expose a distinct instruction/entry state before active play.",
+    "Run one bounded in-world activity with server-returned event feedback.",
+    "Present one authoritative Report Card-style completion summary after server completion.",
+    "Restore room/world free roam, compact HUD and movement/camera after acknowledged completion or valid leave.",
+    "Persist completion exactly once and preserve retry/rejoin semantics."
+  ],
+  "requiredPresentationStates": [
+    "ROOM_PRESENT",
+    "ENTRY_INSTRUCTIONS",
+    "ACTIVE_PLAY",
+    "SCORING_FEEDBACK",
+    "COMPLETION_SUMMARY",
+    "RETURN_TO_FREE_ROAM"
+  ],
+  "producerRules": [
+    "Do not add another school clock, schedule, class/session, progression, reward, persistence, travel, spawn or economy authority.",
+    "Do not infer score, grade, reward, XP, timing, activity IDs, remote names or hidden UI hierarchy from sampled footage.",
+    "Observed activity score/grade fields remain ephemeral server-returned presentation unless a separately scoped durable-progression change is approved.",
+    "Do not treat the current generic text-question catalog as RHS2 activity parity.",
+    "Preserve P1 feature-panel/HUD responsive geometry and safe-area contracts.",
+    "Use stable action/completion identities so duplicate input and completion replay are deterministic and idempotent."
+  ],
+  "requiredDeterministicTests": [
+    "same class/session re-entry is idempotent",
+    "second concurrent class/session is rejected",
+    "duplicate activity action id cannot apply twice",
+    "invalid/stale/wrong-session action fails closed",
+    "leave and period/session end clear an incomplete activity without fabricating completion",
+    "completion signal is emitted once",
+    "failed durable commit shows pending state, blocks false Report Card success and blocks return to free roam",
+    "retry of the same completion identity commits exactly once",
+    "post-commit replay is duplicate and cannot re-award progression",
+    "save/rejoin restores one committed result",
+    "client contract preserves one activity surface and restores compact HUD/input",
+    "desktop/iPhone/iPad geometry checks keep activity/result surfaces inside safe bounds and outside movement/camera zones"
+  ],
+  "qaRuntimeCheckpoints": [
+    "room-present capture",
+    "instruction-state capture",
+    "active-play capture",
+    "server feedback capture",
+    "Report Card completion capture",
+    "restored free-roam capture",
+    "persistence-failure/retry runtime case",
+    "desktop/iPhone/iPad rendered/device interaction",
+    "save/rejoin exact-state match"
+  ],
+  "pipelineAfterProducer": [
+    "all three exact-head PR guards green",
+    "independent QA on the exact changed head",
+    "protected Integration with expected head SHA",
+    "all three exact-canonical push guards green",
+    "Integration Smoke with functional/rendered/interaction/device/save-rejoin statuses separated",
+    "deterministic Release/Package on the exact integrated canonical"
+  ],
+  "activationAction": "Create exactly one producer branch from the then-certified packaged canonical and set WIP producer fields only after all activationConditions pass.",
+  "productFilesChanged": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
