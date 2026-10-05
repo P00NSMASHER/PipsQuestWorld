@@ -218,6 +218,73 @@ function ResponsiveHudLayout.validateCenteredModal(layout, modal)
     return true
 end
 
+-- Compact contextual cards such as the Cafe job surface stay inside the
+-- navigation-safe region left of the status/rail and above quick/touch zones.
+function ResponsiveHudLayout.computeSafeFloatingCard(layout, baseSize)
+    assert(type(layout) == "table" and layout.safe and layout.viewport and layout.status and layout.rail and layout.quick, "complete HUD layout required")
+    assert(type(baseSize) == "table", "baseSize table required")
+    local baseWidth = assert(tonumber(baseSize.width), "card width required")
+    local baseHeight = assert(tonumber(baseSize.height), "card height required")
+    assert(baseWidth > 0 and baseHeight > 0, "card dimensions must be positive")
+
+    local safe = layout.safe
+    local viewport = layout.viewport
+    local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
+    local leftLimit = safe.x + gap
+    local rightLimit = math.min(layout.status.x, layout.rail.x) - gap
+    local topLimit = safe.y + gap
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        bottomLimit = math.min(bottomLimit, zone.y - gap)
+    end
+
+    local availableWidth = rightLimit - leftLimit
+    local availableHeight = bottomLimit - topLimit
+    assert(availableWidth > 0 and availableHeight > 0, "no safe room for floating card")
+
+    local scale = math.min(1, availableWidth / baseWidth, availableHeight / baseHeight)
+    assert(scale > 0, "floating card scale must be positive")
+
+    local width = baseWidth * scale
+    local height = baseHeight * scale
+    local card = rect(
+        rightLimit - width,
+        bottomLimit - height,
+        width,
+        height
+    )
+    card.scale = scale
+    card.gap = gap
+    card.baseWidth = baseWidth
+    card.baseHeight = baseHeight
+    return card
+end
+
+function ResponsiveHudLayout.validateSafeFloatingCard(layout, card)
+    if not card or not card.scale or card.scale <= 0 or card.scale > 1 then
+        return false, "floating card has invalid scale"
+    end
+    if not ResponsiveHudLayout.contains(layout.safe, card) then
+        return false, "floating card leaves safe bounds"
+    end
+    for _, pair in ipairs({
+        { name = "status", value = layout.status },
+        { name = "rail", value = layout.rail },
+        { name = "quick", value = layout.quick },
+    }) do
+        if ResponsiveHudLayout.overlaps(card, pair.value) then
+            return false, "floating card overlaps " .. pair.name
+        end
+    end
+    for index, zone in ipairs(layout.exclusionZones or {}) do
+        if ResponsiveHudLayout.overlaps(card, zone) then
+            return false, "floating card overlaps exclusion zone " .. tostring(index)
+        end
+    end
+    return true
+end
+
 function ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliary)
     for _, pair in ipairs({
         { name = "house panel", value = auxiliary.house },

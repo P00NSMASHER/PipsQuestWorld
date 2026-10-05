@@ -69,6 +69,15 @@ for _, fixture in ipairs(fixtures) do
     assert(ResponsiveHudLayout.contains(layout.safe, classModal), fixture.name .. ": class modal outside safe area")
     layout.classModal = classModal
 
+    local cafeCard = ResponsiveHudLayout.computeSafeFloatingCard(layout, { width = 260, height = 150 })
+    local cafeValid, cafeReason = ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCard)
+    assert(cafeValid, fixture.name .. ": " .. tostring(cafeReason))
+    assert(ResponsiveHudLayout.contains(layout.safe, cafeCard), fixture.name .. ": cafe card outside safe area")
+    assert(not ResponsiveHudLayout.overlaps(cafeCard, layout.status), fixture.name .. ": cafe/status overlap")
+    assert(not ResponsiveHudLayout.overlaps(cafeCard, layout.rail), fixture.name .. ": cafe/rail overlap")
+    assert(not ResponsiveHudLayout.overlaps(cafeCard, layout.quick), fixture.name .. ": cafe/quick overlap")
+    layout.cafeCard = cafeCard
+
     for _, panel in ipairs({ auxiliary.house, auxiliary.editor }) do
         assert(ResponsiveHudLayout.contains(layout.safe, panel), fixture.name .. ": auxiliary panel outside safe area")
         assert(not ResponsiveHudLayout.overlaps(panel, layout.status), fixture.name .. ": auxiliary/status overlap")
@@ -80,6 +89,7 @@ for _, fixture in ipairs(fixtures) do
     for index, exclusion in ipairs(fixture.zones) do
         assert(not ResponsiveHudLayout.overlaps(auxiliary.house, exclusion), fixture.name .. ": house/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(auxiliary.editor, exclusion), fixture.name .. ": editor/movement-camera overlap " .. index)
+        assert(not ResponsiveHudLayout.overlaps(cafeCard, exclusion), fixture.name .. ": cafe/movement-camera overlap " .. index)
         assert(ResponsiveHudLayout.contains(layout.safe, exclusion), fixture.name .. ": touch zone outside safe area")
         assert(not ResponsiveHudLayout.overlaps(layout.status, exclusion), fixture.name .. ": status/movement-camera overlap " .. index)
         assert(not ResponsiveHudLayout.overlaps(layout.rail, exclusion), fixture.name .. ": rail/movement-camera overlap " .. index)
@@ -124,6 +134,11 @@ assert(ipad.classModal.scale == 1, "iPad class modal keeps native scale")
 assert(iphone.classModal.scale < 1, "iPhone class modal must reflow")
 assert(iphone.classModal.y >= iphone.safe.y, "iPhone class modal clears safe top")
 assert(iphone.classModal.bottom <= iphone.safe.bottom, "iPhone class modal clears safe bottom")
+assert(nominal.cafeCard.scale == 1, "desktop cafe card keeps native scale")
+assert(ipad.cafeCard.scale == 1, "iPad cafe card keeps native scale")
+assert(iphone.cafeCard.scale == 1, "iPhone cafe card fits without shrinking")
+assert(iphone.cafeCard.right <= iphone.safe.right, "iPhone cafe card clears safe right")
+assert(ipad.cafeCard.right <= ipad.safe.right, "iPad cafe card clears safe right")
 assert(iphone.status.width ~= ipad.status.width, "status width must reflow by viewport")
 assert(iphone.status.height ~= ipad.status.height, "status height must reflow by viewport")
 assert(iphone.rail.height ~= ipad.rail.height, "rail height must reflow by viewport")
@@ -176,6 +191,31 @@ badClassModal.scale = iphone.classModal.scale
 local classMutationValid, classMutationReason = ResponsiveHudLayout.validateCenteredModal(iphone, badClassModal)
 assert(not classMutationValid and classMutationReason == "centered modal leaves safe bounds", "class modal geometry mutation must fail")
 
+local legacyCafe = zone(852 - 12 - 260, 393 - 112 - 150, 260, 150)
+assert(not ResponsiveHudLayout.contains(iphone.safe, legacyCafe), "legacy fixed cafe geometry must fail iPhone safe bounds")
+assert(ResponsiveHudLayout.overlaps(legacyCafe, iphone.exclusionZones[2]), "legacy fixed cafe geometry must overlap right touch zone")
+
+local badCafe = zone(
+    iphone.safe.right - iphone.cafeCard.width + 1,
+    iphone.cafeCard.y,
+    iphone.cafeCard.width,
+    iphone.cafeCard.height
+)
+badCafe.scale = iphone.cafeCard.scale
+local badCafeValid, badCafeReason = ResponsiveHudLayout.validateSafeFloatingCard(iphone, badCafe)
+assert(not badCafeValid and badCafeReason == "floating card leaves safe bounds", "cafe safe-right mutation must fail")
+
+local rightZone = iphone.exclusionZones[2]
+local badCafeTouch = zone(
+    iphone.cafeCard.x,
+    rightZone.y - iphone.cafeCard.height + 1,
+    iphone.cafeCard.width,
+    iphone.cafeCard.height
+)
+badCafeTouch.scale = iphone.cafeCard.scale
+local badCafeTouchValid, badCafeTouchReason = ResponsiveHudLayout.validateSafeFloatingCard(iphone, badCafeTouch)
+assert(not badCafeTouchValid and badCafeTouchReason == "floating card overlaps exclusion zone 2", "cafe touch-zone mutation must fail")
+
 local legacyHouse = zone(256, 393 - (112 + 66) - 292, 248, 292)
 local legacyEditor = zone(512, 393 - (112 + 66) - 346, 330, 346)
 assert(not ResponsiveHudLayout.contains(iphone.safe, legacyHouse), "legacy fixed house geometry must fail iPhone safe bounds")
@@ -215,8 +255,13 @@ for _, fragment in ipairs({
     'ResponsiveHudLayout.validateAuxiliaryPanels(layout, auxiliaryPanels)',
     'ResponsiveHudLayout.computeCenteredModal(layout, {',
     'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
+    'ResponsiveHudLayout.computeSafeFloatingCard(layout, {',
+    'ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCardLayout)',
     'modalScale = Instance.new("UIScale")',
     'modalScale.Scale = classModalLayout.scale',
+    'cafeCardScale = Instance.new("UIScale")',
+    'cafeCard.Position = UDim2.fromOffset(cafeCardLayout.x, cafeCardLayout.y)',
+    'cafeCardScale.Scale = cafeCardLayout.scale',
     'housePanelScale = Instance.new("UIScale")',
     'editorPanelScale = Instance.new("UIScale")',
     'housePanelScale.Scale = auxiliaryPanels.house.scale',
@@ -226,6 +271,9 @@ for _, fragment in ipairs({
 end
 assert(not clientSource:find('modal.Position = UDim2.fromScale(0.5, 0.55)', 1, true), "fixed class modal position regression")
 assert(not clientSource:find('modal.Size = UDim2.new(0.9, 0, 0, 390)', 1, true), "fixed class modal size regression")
+assert(not clientSource:find('cafeCard.AnchorPoint = Vector2.new(1, 1)', 1, true), "fixed cafe anchor regression")
+assert(not clientSource:find('cafeCard.Position = UDim2.new(1, -12, 1, -auxiliaryPanelBottomMargin)', 1, true), "fixed cafe position regression")
+assert(not clientSource:find('cafeSizeConstraint.MinSize = Vector2.new(270, 160)', 1, true), "cafe minimum-size regression")
 assert(not clientSource:find('housePanel.Position = UDim2.new(0, 256', 1, true), "fixed house panel position regression")
 assert(not clientSource:find('editorPanel.Position = UDim2.new(0, 512', 1, true), "fixed housing editor position regression")
 

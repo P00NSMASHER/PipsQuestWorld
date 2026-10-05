@@ -207,6 +207,8 @@ local housePanelScale
 local editorPanelScale
 local modal
 local modalScale
+local cafeCard
+local cafeCardScale
 
 local function controlExclusionZones(viewportWidth, viewportHeight, insets)
     if not UserInputService.TouchEnabled then
@@ -262,6 +264,15 @@ local function applyResponsiveHudLayout()
         warn("Class modal layout rejected: " .. tostring(classModalReason))
         return
     end
+    local cafeCardLayout = ResponsiveHudLayout.computeSafeFloatingCard(layout, {
+        width = 260,
+        height = 150,
+    })
+    local cafeCardValid, cafeCardReason = ResponsiveHudLayout.validateSafeFloatingCard(layout, cafeCardLayout)
+    if not cafeCardValid then
+        warn("Cafe card layout rejected: " .. tostring(cafeCardReason))
+        return
+    end
     currentHudLayout = layout
 
     card.Position = UDim2.fromOffset(layout.status.x, layout.status.y)
@@ -274,6 +285,11 @@ local function applyResponsiveHudLayout()
     if modal and modalScale then
         modal.Position = UDim2.fromOffset(classModalLayout.x, classModalLayout.y)
         modalScale.Scale = classModalLayout.scale
+    end
+
+    if cafeCard and cafeCardScale then
+        cafeCard.Position = UDim2.fromOffset(cafeCardLayout.x, cafeCardLayout.y)
+        cafeCardScale.Scale = cafeCardLayout.scale
     end
 
     if housePanel and housePanelScale then
@@ -932,22 +948,27 @@ local startCafeShift = cafeJobRoot:WaitForChild("StartShift")
 local completeCafeTask = cafeJobRoot:WaitForChild("CompleteTask")
 local leaveCafeShift = cafeJobRoot:WaitForChild("LeaveShift")
 
-local cafeCard = Instance.new("Frame")
+cafeCard = Instance.new("Frame")
 cafeCard.Name = "LegacyCafePanel"
-cafeCard.AnchorPoint = Vector2.new(1, 1)
-cafeCard.Position = UDim2.new(1, -12, 1, -auxiliaryPanelBottomMargin)
+cafeCard.AnchorPoint = Vector2.new(0, 0)
+cafeCard.Position = UDim2.fromOffset(0, 0)
 cafeCard.Size = UDim2.new(0, 260, 0, 150)
 cafeCard.BackgroundColor3 = LEGACY_PANEL
 cafeCard.BackgroundTransparency = 0.02
 cafeCard.Visible = false
 cafeCard.Parent = gui
+cafeCardScale = Instance.new("UIScale")
+cafeCardScale.Name = "ResponsiveScale"
+cafeCardScale.Scale = 1
+cafeCardScale.Parent = cafeCard
 round(cafeCard, 2)
 outline(cafeCard, 2)
 
 local cafeSizeConstraint = Instance.new("UISizeConstraint")
-cafeSizeConstraint.MinSize = Vector2.new(270, 160)
+cafeSizeConstraint.MinSize = Vector2.new(260, 150)
 cafeSizeConstraint.MaxSize = Vector2.new(330, 180)
 cafeSizeConstraint.Parent = cafeCard
+applyResponsiveHudLayout()
 
 local cafeTitle = Instance.new("TextLabel")
 cafeTitle.BackgroundTransparency = 0
