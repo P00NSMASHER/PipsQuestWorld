@@ -1609,13 +1609,25 @@ housePanelScale.Parent = housePanel
 local houseTitle = Instance.new("TextLabel")
 houseTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 houseTitle.BorderSizePixel = 0
-houseTitle.Size = UDim2.new(1, 0, 0, 28)
+houseTitle.Size = UDim2.new(0.78, 0, 0, 28)
 houseTitle.Font = Rhs2UiStyle.Font.Bold
-houseTitle.Text = "House"
+houseTitle.Text = "  Buy House"
 houseTitle.TextColor3 = Rhs2UiStyle.Palette.White
 houseTitle.TextSize = 15
+houseTitle.TextXAlignment = Enum.TextXAlignment.Left
 houseTitle.Parent = housePanel
 Rhs2UiStyle.applyHeader(houseTitle)
+
+local houseHeaderTail = Instance.new("Frame")
+houseHeaderTail.Name = "HouseHeaderTail"
+houseHeaderTail.AnchorPoint = Vector2.new(0.5, 0.5)
+houseHeaderTail.Position = UDim2.new(0.78, -5, 0, 14)
+houseHeaderTail.Size = UDim2.fromOffset(20, 20)
+houseHeaderTail.Rotation = 45
+houseHeaderTail.BorderSizePixel = 0
+houseHeaderTail.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+houseHeaderTail.Parent = housePanel
+Rhs2UiStyle.applyHeader(houseHeaderTail)
 
 local houseClose = Instance.new("TextButton")
 houseClose.Name = "HouseClose"
