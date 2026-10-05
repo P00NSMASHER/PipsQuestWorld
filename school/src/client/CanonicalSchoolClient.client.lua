@@ -408,24 +408,23 @@ modal.Name = "ClassActivityModal"
 modal.AnchorPoint = Vector2.new(0, 0)
 modal.Position = UDim2.fromOffset(0, 0)
 modal.Size = UDim2.fromOffset(540, 390)
-modal.BackgroundColor3 = LEGACY_PANEL
+modal.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
 modal.Visible = false
 modal.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(modal)
 modalScale = Instance.new("UIScale")
 modalScale.Name = "ResponsiveScale"
 modalScale.Scale = 1
 modalScale.Parent = modal
-round(modal, 2)
-outline(modal, 2)
 applyResponsiveHudLayout()
 
 local question = Instance.new("TextLabel")
 question.BackgroundTransparency = 1
 question.Position = UDim2.new(0, 18, 0, 16)
 question.Size = UDim2.new(1, -36, 0, 92)
-question.Font = Enum.Font.ArialBold
+question.Font = Rhs2UiStyle.Font.Bold
 question.Text = ""
-question.TextColor3 = LEGACY_BLUE_DARK
+question.TextColor3 = Rhs2UiStyle.Palette.White
 question.TextSize = 19
 question.TextWrapped = true
 question.TextYAlignment = Enum.TextYAlignment.Top
@@ -445,9 +444,9 @@ local feedback = Instance.new("TextLabel")
 feedback.BackgroundTransparency = 1
 feedback.Position = UDim2.new(0, 18, 1, -50)
 feedback.Size = UDim2.new(1, -36, 0, 38)
-feedback.Font = Enum.Font.Arial
+feedback.Font = Rhs2UiStyle.Font.Regular
 feedback.Text = ""
-feedback.TextColor3 = Color3.fromRGB(31, 72, 102)
+feedback.TextColor3 = Rhs2UiStyle.Palette.White
 feedback.TextSize = 13
 feedback.TextWrapped = true
 feedback.Parent = modal
@@ -519,15 +518,14 @@ local function showActivity(response)
     for index, choiceText in ipairs(activeActivity.choices or {}) do
         local button = Instance.new("TextButton")
         button.Size = UDim2.new(1, 0, 0, 48)
-        button.BackgroundColor3 = LEGACY_BUTTON
-        button.Font = Enum.Font.ArialBold
+        button.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+        button.Font = Rhs2UiStyle.Font.Bold
         button.Text = tostring(index) .. ".  " .. tostring(choiceText)
-        button.TextColor3 = LEGACY_BLUE_DARK
+        button.TextColor3 = Rhs2UiStyle.Palette.White
         button.TextSize = 15
         button.TextWrapped = true
         button.Parent = choices
-        round(button, 2)
-        outline(button, 1)
+        Rhs2UiStyle.applyTab(button, false)
 
         button.Activated:Connect(function()
             if busy or not activeActivity or not activeClassKey then return end
@@ -1055,16 +1053,15 @@ cafeCard.Name = "LegacyCafePanel"
 cafeCard.AnchorPoint = Vector2.new(0, 0)
 cafeCard.Position = UDim2.fromOffset(0, 0)
 cafeCard.Size = UDim2.new(0, 260, 0, 150)
-cafeCard.BackgroundColor3 = LEGACY_PANEL
-cafeCard.BackgroundTransparency = 0.02
+cafeCard.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+cafeCard.BackgroundTransparency = 0
 cafeCard.Visible = false
 cafeCard.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(cafeCard)
 cafeCardScale = Instance.new("UIScale")
 cafeCardScale.Name = "ResponsiveScale"
 cafeCardScale.Scale = 1
 cafeCardScale.Parent = cafeCard
-round(cafeCard, 2)
-outline(cafeCard, 2)
 
 local cafeSizeConstraint = Instance.new("UISizeConstraint")
 cafeSizeConstraint.MinSize = Vector2.new(260, 150)
@@ -1074,23 +1071,24 @@ applyResponsiveHudLayout()
 
 local cafeTitle = Instance.new("TextLabel")
 cafeTitle.BackgroundTransparency = 0
-cafeTitle.BackgroundColor3 = LEGACY_BLUE
+cafeTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 cafeTitle.Position = UDim2.new(0, 0, 0, 0)
 cafeTitle.Size = UDim2.new(1, 0, 0, 26)
-cafeTitle.Font = Enum.Font.ArialBold
+cafeTitle.Font = Rhs2UiStyle.Font.Bold
 cafeTitle.Text = "Corner Cafe"
-cafeTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+cafeTitle.TextColor3 = Rhs2UiStyle.Palette.White
 cafeTitle.TextSize = 14
 cafeTitle.TextXAlignment = Enum.TextXAlignment.Center
 cafeTitle.Parent = cafeCard
+Rhs2UiStyle.applyHeader(cafeTitle)
 
 local cafeStatus = Instance.new("TextLabel")
 cafeStatus.BackgroundTransparency = 1
 cafeStatus.Position = UDim2.new(0, 10, 0, 34)
 cafeStatus.Size = UDim2.new(1, -20, 0, 48)
-cafeStatus.Font = Enum.Font.Arial
+cafeStatus.Font = Rhs2UiStyle.Font.Regular
 cafeStatus.Text = "Start a short cafe shift and serve one order."
-cafeStatus.TextColor3 = LEGACY_BLUE_DARK
+cafeStatus.TextColor3 = Rhs2UiStyle.Palette.White
 cafeStatus.TextSize = 13
 cafeStatus.TextWrapped = true
 cafeStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1100,23 +1098,22 @@ cafeStatus.Parent = cafeCard
 local cafeAction = Instance.new("TextButton")
 cafeAction.Position = UDim2.new(0, 8, 1, -48)
 cafeAction.Size = UDim2.new(1, -16, 0, 40)
-cafeAction.BackgroundColor3 = LEGACY_BUTTON
-cafeAction.Font = Enum.Font.ArialBold
+cafeAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+cafeAction.Font = Rhs2UiStyle.Font.Bold
 cafeAction.Text = "START SHIFT"
-cafeAction.TextColor3 = LEGACY_BLUE_DARK
+cafeAction.TextColor3 = Rhs2UiStyle.Palette.White
 cafeAction.TextSize = 14
 cafeAction.Parent = cafeCard
-round(cafeAction, 2)
-outline(cafeAction, 1)
+Rhs2UiStyle.applyTab(cafeAction, true)
 
 local cafeLeave = Instance.new("TextButton")
 cafeLeave.AnchorPoint = Vector2.new(1, 0)
 cafeLeave.Position = UDim2.new(1, -8, 0, 28)
 cafeLeave.Size = UDim2.new(0, 82, 0, 30)
 cafeLeave.BackgroundTransparency = 1
-cafeLeave.Font = Enum.Font.Arial
+cafeLeave.Font = Rhs2UiStyle.Font.Medium
 cafeLeave.Text = "LEAVE JOB"
-cafeLeave.TextColor3 = LEGACY_BLUE_DARK
+cafeLeave.TextColor3 = Rhs2UiStyle.Palette.White
 cafeLeave.TextSize = 11
 cafeLeave.Visible = false
 cafeLeave.Parent = cafeCard
@@ -1267,37 +1264,37 @@ vehicleCard.Name = "LegacyVehiclePanel"
 vehicleCard.AnchorPoint = Vector2.new(0, 0)
 vehicleCard.Position = UDim2.fromOffset(0, 0)
 vehicleCard.Size = UDim2.new(0, 260, 0, 132)
-vehicleCard.BackgroundColor3 = LEGACY_PANEL
-vehicleCard.BackgroundTransparency = 0.02
+vehicleCard.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+vehicleCard.BackgroundTransparency = 0
 vehicleCard.Visible = false
 vehicleCard.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(vehicleCard)
 vehicleCardScale = Instance.new("UIScale")
 vehicleCardScale.Name = "ResponsiveScale"
 vehicleCardScale.Scale = 1
 vehicleCardScale.Parent = vehicleCard
-round(vehicleCard, 2)
-outline(vehicleCard, 2)
 applyResponsiveHudLayout()
 
 local vehicleTitle = Instance.new("TextLabel")
 vehicleTitle.BackgroundTransparency = 0
-vehicleTitle.BackgroundColor3 = LEGACY_BLUE
+vehicleTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 vehicleTitle.Position = UDim2.new(0, 0, 0, 0)
 vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
-vehicleTitle.Font = Enum.Font.ArialBold
+vehicleTitle.Font = Rhs2UiStyle.Font.Bold
 vehicleTitle.Text = "Auto Shop"
-vehicleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+vehicleTitle.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleTitle.TextSize = 14
 vehicleTitle.TextXAlignment = Enum.TextXAlignment.Center
 vehicleTitle.Parent = vehicleCard
+Rhs2UiStyle.applyHeader(vehicleTitle)
 
 local vehicleStatus = Instance.new("TextLabel")
 vehicleStatus.BackgroundTransparency = 1
 vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
 vehicleStatus.Size = UDim2.new(1, -20, 0, 38)
-vehicleStatus.Font = Enum.Font.Arial
+vehicleStatus.Font = Rhs2UiStyle.Font.Regular
 vehicleStatus.Text = "Spawn the starter car."
-vehicleStatus.TextColor3 = LEGACY_BLUE_DARK
+vehicleStatus.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleStatus.TextSize = 13
 vehicleStatus.TextWrapped = true
 vehicleStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -1307,14 +1304,13 @@ vehicleStatus.Parent = vehicleCard
 local vehicleAction = Instance.new("TextButton")
 vehicleAction.Position = UDim2.new(0, 8, 1, -46)
 vehicleAction.Size = UDim2.new(1, -16, 0, 38)
-vehicleAction.BackgroundColor3 = LEGACY_BUTTON
-vehicleAction.Font = Enum.Font.ArialBold
+vehicleAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+vehicleAction.Font = Rhs2UiStyle.Font.Bold
 vehicleAction.Text = "SPAWN STARTER CAR"
-vehicleAction.TextColor3 = LEGACY_BLUE_DARK
+vehicleAction.TextColor3 = Rhs2UiStyle.Palette.White
 vehicleAction.TextSize = 14
 vehicleAction.Parent = vehicleCard
-round(vehicleAction, 2)
-outline(vehicleAction, 1)
+Rhs2UiStyle.applyTab(vehicleAction, true)
 
 local latestVehicleState = nil
 local vehicleBusy = false
@@ -1942,37 +1938,37 @@ editorPanel.Name = "LegacyHousingEditorV2"
 editorPanel.AnchorPoint = Vector2.new(0, 0)
 editorPanel.Position = UDim2.fromOffset(0, 0)
 editorPanel.Size = UDim2.new(0, 330, 0, 346)
-editorPanel.BackgroundColor3 = LEGACY_PANEL
-editorPanel.BackgroundTransparency = 0.02
+editorPanel.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+editorPanel.BackgroundTransparency = 0
 editorPanel.Visible = false
 editorPanel:SetAttribute("ReferenceExactLayout", false)
 editorPanel:SetAttribute("ReferenceCoverage", "verified-labels-only")
 editorPanel.Parent = gui
+Rhs2UiStyle.applyPrimaryPanel(editorPanel)
 editorPanelScale = Instance.new("UIScale")
 editorPanelScale.Name = "ResponsiveScale"
 editorPanelScale.Scale = 1
 editorPanelScale.Parent = editorPanel
-round(editorPanel, 2)
-outline(editorPanel, 2)
 applyResponsiveHudLayout()
 
 local editorTitle = Instance.new("TextLabel")
-editorTitle.BackgroundColor3 = LEGACY_BLUE
+editorTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
 editorTitle.BorderSizePixel = 0
 editorTitle.Size = UDim2.new(1, 0, 0, 28)
-editorTitle.Font = Enum.Font.ArialBold
+editorTitle.Font = Rhs2UiStyle.Font.Bold
 editorTitle.Text = "Add Furni"
-editorTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+editorTitle.TextColor3 = Rhs2UiStyle.Palette.White
 editorTitle.TextSize = 15
 editorTitle.Parent = editorPanel
+Rhs2UiStyle.applyHeader(editorTitle)
 
 local editorCategories = Instance.new("TextLabel")
 editorCategories.BackgroundTransparency = 1
 editorCategories.Position = UDim2.new(0, 10, 0, 34)
 editorCategories.Size = UDim2.new(1, -20, 0, 20)
-editorCategories.Font = Enum.Font.ArialBold
+editorCategories.Font = Rhs2UiStyle.Font.Bold
 editorCategories.Text = "Utilities   |   Other"
-editorCategories.TextColor3 = LEGACY_BLUE_DARK
+editorCategories.TextColor3 = Rhs2UiStyle.Palette.White
 editorCategories.TextSize = 12
 editorCategories.TextXAlignment = Enum.TextXAlignment.Left
 editorCategories.Parent = editorPanel
@@ -1991,10 +1987,10 @@ local editorStatus = Instance.new("TextLabel")
 editorStatus.BackgroundTransparency = 1
 editorStatus.Position = UDim2.new(0, 10, 0, 144)
 editorStatus.Size = UDim2.new(1, -20, 0, 38)
-editorStatus.Font = Enum.Font.Arial
+editorStatus.Font = Rhs2UiStyle.Font.Regular
 editorStatus.Text = ""
 editorStatus.Visible = false
-editorStatus.TextColor3 = LEGACY_BLUE_DARK
+editorStatus.TextColor3 = Rhs2UiStyle.Palette.White
 editorStatus.TextSize = 12
 editorStatus.TextWrapped = true
 editorStatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -2017,14 +2013,13 @@ editorGrid.Parent = editorActions
 local function editorButton(name, label)
     local button = Instance.new("TextButton")
     button.Name = name
-    button.BackgroundColor3 = LEGACY_BUTTON
-    button.Font = Enum.Font.ArialBold
+    button.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+    button.Font = Rhs2UiStyle.Font.Bold
     button.Text = label
-    button.TextColor3 = LEGACY_BLUE_DARK
+    button.TextColor3 = Rhs2UiStyle.Palette.White
     button.TextSize = 11
     button.Parent = editorActions
-    round(button, 2)
-    outline(button, 1)
+    Rhs2UiStyle.applyTab(button, false)
     return button
 end
 
@@ -2040,14 +2035,13 @@ local hideWallsButton = Instance.new("TextButton")
 hideWallsButton.Name = "HideWalls"
 hideWallsButton.Position = UDim2.new(0, 10, 1, -40)
 hideWallsButton.Size = UDim2.new(1, -20, 0, 30)
-hideWallsButton.BackgroundColor3 = LEGACY_BUTTON
-hideWallsButton.Font = Enum.Font.ArialBold
+hideWallsButton.BackgroundColor3 = Rhs2UiStyle.Palette.TabBlue
+hideWallsButton.Font = Rhs2UiStyle.Font.Bold
 hideWallsButton.Text = "Hide Walls"
-hideWallsButton.TextColor3 = LEGACY_BLUE_DARK
+hideWallsButton.TextColor3 = Rhs2UiStyle.Palette.White
 hideWallsButton.TextSize = 11
 hideWallsButton.Parent = editorPanel
-round(hideWallsButton, 2)
-outline(hideWallsButton, 1)
+Rhs2UiStyle.applyTab(hideWallsButton, false)
 
 local latestEditorState = nil
 local selectedFurnitureItemId = nil
