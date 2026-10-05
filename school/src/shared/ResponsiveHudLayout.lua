@@ -336,6 +336,57 @@ function ResponsiveHudLayout.computeSafeFloatingCard(layout, baseSize)
     return card
 end
 
+-- Bottom-centered contextual surfaces such as the vehicle card remain visually
+-- centered while staying above the compact quick bar and, on touch devices,
+-- inside the corridor between movement and camera/action regions.
+function ResponsiveHudLayout.computeBottomCenteredCard(layout, baseSize)
+    assert(type(layout) == "table" and layout.safe and layout.viewport and layout.status and layout.rail and layout.quick, "complete HUD layout required")
+    assert(type(baseSize) == "table", "baseSize table required")
+    local baseWidth = assert(tonumber(baseSize.width), "card width required")
+    local baseHeight = assert(tonumber(baseSize.height), "card height required")
+    assert(baseWidth > 0 and baseHeight > 0, "card dimensions must be positive")
+
+    local safe = layout.safe
+    local viewport = layout.viewport
+    local gap = clamp(math.floor(math.min(viewport.width, viewport.height) * 0.02 + 0.5), 8, 12)
+    local centerX = safe.x + (safe.width / 2)
+    local leftLimit = safe.x + gap
+    local rightLimit = safe.right - gap
+    local topLimit = safe.y + gap
+    local bottomLimit = math.min(safe.bottom - gap, layout.quick.y - gap)
+
+    for _, zone in ipairs(layout.exclusionZones or {}) do
+        if zone.right <= centerX then
+            leftLimit = math.max(leftLimit, zone.right + gap)
+        elseif zone.x >= centerX then
+            rightLimit = math.min(rightLimit, zone.x - gap)
+        else
+            bottomLimit = math.min(bottomLimit, zone.y - gap)
+        end
+    end
+
+    local availableWidth = rightLimit - leftLimit
+    local availableHeight = bottomLimit - topLimit
+    assert(availableWidth > 0 and availableHeight > 0, "no safe room for bottom-centered card")
+
+    local scale = math.min(1, availableWidth / baseWidth, availableHeight / baseHeight)
+    assert(scale > 0, "bottom-centered card scale must be positive")
+
+    local width = baseWidth * scale
+    local height = baseHeight * scale
+    local card = rect(
+        leftLimit + ((availableWidth - width) / 2),
+        bottomLimit - height,
+        width,
+        height
+    )
+    card.scale = scale
+    card.gap = gap
+    card.baseWidth = baseWidth
+    card.baseHeight = baseHeight
+    return card
+end
+
 function ResponsiveHudLayout.validateSafeFloatingCard(layout, card)
     if not card or not card.scale or card.scale <= 0 or card.scale > 1 then
         return false, "floating card has invalid scale"
