@@ -51,6 +51,14 @@ jobs:
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau-compile rojo/rojo
           sha256sum luau.zip rojo.zip > "$RUNNER_TEMP/rhs2-build-validation/tool-archives.sha256"
+      - name: Preserve exact-source offline diagnosis bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git archive --format=tar.gz HEAD school scripts .github/workflows \
+            > "$RUNNER_TEMP/rhs2-build-validation/source-snapshot.tar.gz"
+          git rev-parse HEAD > "$RUNNER_TEMP/rhs2-build-validation/source-commit.txt"
+          cp "$RUNNER_TEMP/rhs2-tools/luau.zip" "$RUNNER_TEMP/rhs2-tools/rojo.zip" "$RUNNER_TEMP/rhs2-build-validation/"
       - name: Compile every mapped source and construct validation-only place
         shell: bash
         run: |
