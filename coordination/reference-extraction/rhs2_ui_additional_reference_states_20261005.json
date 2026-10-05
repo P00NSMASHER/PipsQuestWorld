@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "owner": "Roblox High School Content QA",
+  "createdAt": "2026-10-05T20:04:30Z",
+  "result": "PASS_ADDITIONAL_UI_REFERENCE_STATES_PINNED",
+  "sourceVideos": {
+    "A": {
+      "name": "ScreenRecording_10-04-2026 05-30-17_1.mp4",
+      "libraryFileId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
+      "sha256": "816e0c8bfbda263a7f948c15ad542ca33c4556f2b39e1bbbb8b12f5ec57cb83c"
+    },
+    "B": {
+      "name": "ScreenRecording_10-04-2026 05-33-23_1.mp4",
+      "libraryFileId": "libfile_427a25a0e78881919c3128e193b9df4d",
+      "sha256": "0ef1be23ec68fba595d85ba1e5a2f871793cb01d10bab3045545931e69b3bdcc"
+    },
+    "C": {
+      "name": "ScreenRecording_10-04-2026 05-33-23_1(1).mp4",
+      "libraryFileId": "libfile_a5903480efe88191a87e5f98ec9729bc",
+      "sha256": "e844a2f379211444fd9e348e6a6caf03bc408b9e5f83ee5fd52befdd25f100f4"
+    }
+  },
+  "timestampEvidence": [
+    {
+      "id": "A_0114_REPORT_CARD",
+      "referenceClipTime": "A@01:54",
+      "frameSha256": "a7d95ff182695d063b77226ec38d00ac6a63b28118da802c7dc6665e63900d7c",
+      "observed": [
+        "Large centered paper/report-card surface with off-white paper texture and a curled/folded lower-right sheet silhouette.",
+        "Top title 'Report Card' uses a coral/red accent and sits above a smaller class/activity subtitle.",
+        "Top-left paperclip decoration and top-right red bookmark-style close control are visible.",
+        "Large circular grade medallion appears at left of the summary region.",
+        "Score/KOs/Hits summary is grouped in a pale grey rectangle.",
+        "Lower section uses a simple table with Grade, Player Name, Score, KOs and Hits columns.",
+        "The result surface is substantially larger than the C@01:05 job result modal and temporarily dominates the center while world remains visible around the sheet."
+      ],
+      "notObserved": [
+        "Hidden table implementation",
+        "exact paper texture asset ID",
+        "server scoring formula",
+        "close-button remote/action semantics beyond visible dismissal affordance"
+      ],
+      "futureOwner": "Roblox High School Class & Education / UI Visual Parity"
+    },
+    {
+      "id": "B_0050_BUY_HOUSE",
+      "referenceClipTime": "B@00:50",
+      "frameSha256": "a3dee1e14f236abba883860ae2919d4d5b7b15f518f7c6a43f678b51531a328b",
+      "observed": [
+        "Centered dark-navy Buy House modal retains the persistent right rail, top-right status and bottom quick slots around it.",
+        "Bright royal-blue header band has an angled right edge and white 'Buy House' title.",
+        "Header right side contains a white back arrow and circular white-outlined close control.",
+        "Main content is a three-column house-card grid with eight visible house cards.",
+        "Each card has an image-dominant thumbnail, dark title strip, cyan/blue border, and price/footer using coin or gem visual currency iconography.",
+        "Unused lower-right grid space keeps a dark blue dotted/bubble panel texture rather than stretching cards.",
+        "Modal scale is smaller than the viewport-dominant dealership and similar in family to Travel."
+      ],
+      "notObserved": [
+        "Exact house asset IDs",
+        "verified purchase prices/currency mappings for canonical product",
+        "hidden ownership hierarchy",
+        "purchase confirmation behavior"
+      ],
+      "futureOwner": "Pip High Free Roam / P3 Housing"
+    },
+    {
+      "id": "C_0015_NPC_DIALOGUE",
+      "referenceClipTime": "C@00:15",
+      "frameSha256": "ba2221c2fda5f9e08f1a69f02f127998e31f0075e41066c56c58ba088a21c97b",
+      "observed": [
+        "Dialogue state is a wide lower-screen two-column dark-navy surface rather than a centered modal.",
+        "Left header strip is saturated royal blue with the NPC name in bold white.",
+        "Left body contains large white dialogue text.",
+        "Right side is a vertical stack of deep-blue response buttons with white text and small bright-blue triangular bullets/arrows.",
+        "A distinct lower Goodbye row is separated from the main response stack.",
+        "World/NPC remain visible above and behind the dialogue surface.",
+        "Persistent top-right status remains visible; the ordinary right primary rail is not visible in this sampled dialogue state."
+      ],
+      "notObserved": [
+        "Hidden dialogue tree implementation",
+        "response IDs",
+        "branching authority",
+        "typewriter/audio behavior"
+      ],
+      "futureOwner": "Pip High Free Roam / P6 Jobs and NPC interaction"
+    },
+    {
+      "id": "C_0020_ACTIVE_JOB_HUD",
+      "referenceClipTime": "C@00:20",
+      "frameSha256": "c226e3082a8b6798e4d7d24e7e36131cde89a42d63c0a4463fc34660df433088",
+      "observed": [
+        "Active job removes the bottom quick bar from the sampled state while retaining the right primary rail.",
+        "A circular timer sits near upper-left/upper-center with a large MM:SS style readout.",
+        "A narrow horizontal blue/purple progress meter occupies the upper-center area.",
+        "A bright red/orange 'Cancel Job' button is visible at upper-right beneath the top system bar.",
+        "The world remains dominant; no large center job panel is present during active play."
+      ],
+      "notObserved": [
+        "Exact timer source",
+        "job progress formula",
+        "cancel server semantics",
+        "whether quick bar is always hidden for every job"
+      ],
+      "futureOwner": "Pip High Free Roam / P6 Jobs"
+    }
+  ],
+  "visualFamilyRules": [
+    "Housing card-browser family shares Travel's dark navy + bright royal-blue angled header + persistent surrounding HUD.",
+    "Class Report Card is intentionally a paper/document visual family and should not be restyled as a generic navy modal.",
+    "NPC dialogue is a lower-screen conversation surface with world/NPC visible, not a centered modal.",
+    "Active minigame/job HUD should keep the center world view open and move timer/progress/cancel chrome to screen edges."
+  ],
+  "parityImplications": [
+    "Future housing implementation should use the pinned card-browser layout rather than a generic list or pale panel.",
+    "P2 classroom/free-roam completion should add a Report Card visual state consistent with A@01:54 after authoritative completion.",
+    "P6 job/NPC work should preserve the dialogue and active-job HUD families before the C@01:05 result modal.",
+    "The shared RHS2 style module may provide palette/typography helpers, but the distinct paper Report Card family must remain visually distinct."
+  ],
+  "exactParityClaimed": false,
+  "productFilesChanged": false,
+  "rawVideoCommitted": false,
+  "robloxPublished": false,
+  "moneySpent": false,
+  "taskStateChanged": false
+}
