@@ -4,16 +4,21 @@
   "inputCanonicalSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
   "producerCandidate": {
     "pr": 214,
-    "sha": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "qaStatus": "HOLD_CHANGES_REQUIRED"
+    "sha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "qaStatus": "PASS_AUTHORIZED_FOR_INTEGRATION"
   },
-  "integratedCanonicalSha": null,
-  "testedCanonicalSha": null,
+  "integratedCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+  "testedCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "referenceSources": [
     {
       "clip": "A",
       "libraryId": "libfile_94cb10b32d9c819186b9ad708b9d4736",
-      "checkpoints": ["00:05", "00:25", "00:45", "02:05"]
+      "checkpoints": [
+        "00:05",
+        "00:25",
+        "00:45",
+        "02:05"
+      ]
     },
     {
       "clip": "B",
@@ -23,7 +28,9 @@
     {
       "clip": "C",
       "libraryId": "libfile_a5903480efe88191a87e5f98ec9729bc",
-      "checkpoints": ["00:05"]
+      "checkpoints": [
+        "00:05"
+      ]
     }
   ],
   "acceptanceCriteria": [
@@ -34,66 +41,223 @@
     "Never classify static, compiler, headless, or source-inspection evidence as rendered/device PASS."
   ],
   "outputLocation": "coordination/smoke/runtime-evidence/<integrated-canonical-sha>/capture-receipt.json",
-  "blocker": "PR214 exact head baa6a24 is QA-held for mobile auxiliary-panel safe-area defects; no protected Integration handoff exists.",
+  "blocker": "LOCAL_ONLY_REQUIRED: rendered desktop/iPhone/iPad traversal, live menu interaction, and save/rejoin capture evidence are still unexecuted on exact canonical 39911a.",
   "nextHandoff": {
     "owner": "Roblox High School Release & Package Gate",
-    "condition": "Only after this receipt validates with overallStatus PASS on the exact integrated canonical."
+    "condition": "Only after this exact-canonical runtime receipt reaches overallStatus PASS with runtimeExecuted=true and renderedParityEstablished=true."
   },
   "runtimeExecuted": false,
   "renderedParityEstablished": false,
-  "overallStatus": "HOLD",
+  "overallStatus": "HOLD_LOCAL_ONLY_REQUIRED",
   "deviceProfiles": [
     {
       "id": "desktop",
-      "viewport": {"width": 909, "height": 483},
-      "safeInsets": {"left": 0, "top": 0, "right": 0, "bottom": 0},
+      "viewport": {
+        "width": 909,
+        "height": 483
+      },
+      "safeInsets": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
       "captures": [
-        {"id": "A_0005", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0025", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0045", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0125", "status": "PENDING", "fov": null, "camera": null, "evidence": null}
+        {
+          "id": "A_0005",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0025",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0045",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0125",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        }
       ]
     },
     {
       "id": "iphone_landscape",
-      "viewport": {"width": 852, "height": 393},
-      "safeInsets": {"left": 47, "top": 12, "right": 47, "bottom": 21},
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "safeInsets": {
+        "left": 47,
+        "top": 12,
+        "right": 47,
+        "bottom": 21
+      },
       "captures": [
-        {"id": "A_0005", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0025", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0045", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0125", "status": "PENDING", "fov": null, "camera": null, "evidence": null}
+        {
+          "id": "A_0005",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0025",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0045",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0125",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        }
       ]
     },
     {
       "id": "ipad_landscape",
-      "viewport": {"width": 1024, "height": 768},
-      "safeInsets": {"left": 24, "top": 24, "right": 24, "bottom": 20},
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "safeInsets": {
+        "left": 24,
+        "top": 24,
+        "right": 24,
+        "bottom": 20
+      },
       "captures": [
-        {"id": "A_0005", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0025", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0045", "status": "PENDING", "fov": null, "camera": null, "evidence": null},
-        {"id": "A_0125", "status": "PENDING", "fov": null, "camera": null, "evidence": null}
+        {
+          "id": "A_0005",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0025",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0045",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        },
+        {
+          "id": "A_0125",
+          "status": "PENDING_LOCAL_ONLY_REQUIRED",
+          "fov": null,
+          "camera": null,
+          "evidence": null
+        }
       ]
     }
   ],
   "routeChecks": [
-    {"id": "spawn", "status": "PENDING", "evidence": null},
-    {"id": "entrance", "status": "PENDING", "evidence": null},
-    {"id": "atrium_left", "status": "PENDING", "evidence": null},
-    {"id": "atrium_right", "status": "PENDING", "evidence": null},
-    {"id": "corridor", "status": "PENDING", "evidence": null},
-    {"id": "stair_up", "status": "PENDING", "evidence": null},
-    {"id": "stair_down", "status": "PENDING", "evidence": null},
-    {"id": "class_free_roam", "status": "PENDING", "evidence": null},
-    {"id": "menus", "status": "PENDING", "evidence": null},
-    {"id": "save_rejoin", "status": "PENDING", "evidence": null, "observedRejoinMatch": null}
+    {
+      "id": "spawn",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "entrance",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "atrium_left",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "atrium_right",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "corridor",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "stair_up",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "stair_down",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "class_free_roam",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "menus",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "save_rejoin",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null,
+      "observedRejoinMatch": null
+    }
   ],
   "panelChecks": [
-    {"id": "shop", "status": "PENDING", "evidence": null},
-    {"id": "travel", "status": "PENDING", "evidence": null},
-    {"id": "avatar", "status": "PENDING", "evidence": null},
-    {"id": "house", "status": "PENDING", "evidence": null},
-    {"id": "housing_editor", "status": "PENDING", "evidence": null}
+    {
+      "id": "shop",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "travel",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "avatar",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "house",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    },
+    {
+      "id": "housing_editor",
+      "status": "PENDING_LOCAL_ONLY_REQUIRED",
+      "evidence": null
+    }
   ]
 }
