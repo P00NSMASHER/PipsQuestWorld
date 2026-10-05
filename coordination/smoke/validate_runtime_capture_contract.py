@@ -35,7 +35,7 @@ REQUIRED_ROUTE = {
     "menus",
     "save_rejoin",
 }
-REQUIRED_PANELS = {"shop", "travel", "avatar", "house", "housing_editor"}
+REQUIRED_PANELS = {"shop", "travel", "avatar", "house", "housing_editor", "class_activity_modal", "cafe"}
 ALLOWED_STATUS = {"PENDING", "HOLD", "PASS", "FAIL"}
 FORBIDDEN_RENDERED_KINDS = {"STATIC", "HEADLESS", "COMPILER", "SOURCE_INSPECTION"}
 
@@ -190,6 +190,14 @@ def self_test(pending: dict) -> None:
     static_as_rendered = _synthetic_pass(pending)
     static_as_rendered["deviceProfiles"][0]["captures"][0]["evidence"]["kind"] = "HEADLESS"
     mutations.append(("headless evidence promoted to rendered", static_as_rendered))
+
+    missing_cafe = copy.deepcopy(pending)
+    missing_cafe["panelChecks"] = [c for c in missing_cafe["panelChecks"] if c["id"] != "cafe"]
+    mutations.append(("missing CafeCard runtime evidence slot", missing_cafe))
+
+    missing_class_modal = copy.deepcopy(pending)
+    missing_class_modal["panelChecks"] = [c for c in missing_class_modal["panelChecks"] if c["id"] != "class_activity_modal"]
+    mutations.append(("missing class activity modal runtime evidence slot", missing_class_modal))
 
     for label, mutation in mutations:
         try:
