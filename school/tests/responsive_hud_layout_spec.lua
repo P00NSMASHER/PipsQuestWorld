@@ -148,6 +148,8 @@ approxBetween(nominal.quick.width / 909, 0.24, 0.30, "nominal quick width")
 approxBetween(nominal.quick.height / 483, 0.09, 0.13, "nominal quick height")
 assert(nominal.status.right == nominal.rail.right, "RHS2 status stack and primary rail share right edge")
 assert(math.abs(nominal.status.x - 785) <= 3, "desktop status stack matches locked RHS2 right-side anchor")
+assert(nominal.railButtonSize == 49, "desktop primary rail buttons match locked RHS2 footprint")
+assert(nominal.railButtonSize == nominal.rail.width, "desktop primary rail buttons fill the rail width")
 assert(math.abs(nominal.quick.x - 360) <= 4, "desktop quickbar matches locked RHS2 horizontal reference")
 assert(nominal.quick.bottom == 477, "desktop quickbar keeps locked vertical reference")
 
