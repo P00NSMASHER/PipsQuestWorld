@@ -75,7 +75,7 @@ for _, fixture in ipairs(fixtures) do
     assert(ResponsiveHudLayout.contains(layout.safe, outfitModal), fixture.name .. ": outfit modal outside safe area")
     layout.outfitModal = outfitModal
 
-    local featureModal = ResponsiveHudLayout.computeInteractionModal(layout, { width = 560, height = 390 })
+    local featureModal = ResponsiveHudLayout.computeInteractionModal(layout, { width = 530, height = 354 })
     local featureValid, featureReason = ResponsiveHudLayout.validateInteractionModal(layout, featureModal)
     assert(featureValid, fixture.name .. ": " .. tostring(featureReason))
     assert(ResponsiveHudLayout.contains(layout.safe, featureModal), fixture.name .. ": feature modal outside safe area")
@@ -166,6 +166,10 @@ assert(iphone.outfitModal.scale < 1, "iPhone outfit modal must reflow")
 assert(iphone.outfitModal.y >= iphone.safe.y, "iPhone outfit modal clears safe top")
 assert(iphone.outfitModal.bottom <= iphone.safe.bottom, "iPhone outfit modal clears safe bottom")
 assert(nominal.featureModal.scale == 1, "desktop feature modal keeps native scale")
+assert(math.abs(nominal.featureModal.x - 189) <= 3, "desktop feature modal must match locked RHS2 horizontal reference")
+assert(math.abs(nominal.featureModal.y - 64) <= 8, "desktop feature modal must match locked RHS2 vertical reference")
+assert(nominal.featureModal.width == 530, "desktop feature modal matches locked RHS2 width")
+assert(nominal.featureModal.height == 354, "desktop feature modal matches locked RHS2 height")
 assert(ipad.featureModal.scale == 1, "iPad feature modal keeps native scale")
 assert(iphone.featureModal.scale < 1, "iPhone feature modal must reflow into central touch corridor")
 assert(iphone.featureModal.right <= iphone.exclusionZones[2].x, "iPhone feature modal clears right touch zone")
@@ -369,7 +373,10 @@ for _, fragment in ipairs({
     'ResponsiveHudLayout.computeCenteredModal(layout, {',
     'ResponsiveHudLayout.validateCenteredModal(layout, classModalLayout)',
     'local featureModalLayout = ResponsiveHudLayout.computeInteractionModal(layout, {',
+    'width = 530,',
+    'height = 354,',
     'ResponsiveHudLayout.validateInteractionModal(layout, featureModalLayout)',
+    'panel.Size = UDim2.fromOffset(530, 354)',
     'shopPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',
     'shopPanelScale.Scale = featureModalLayout.scale',
     'travelPanel.Position = UDim2.fromOffset(featureModalLayout.x, featureModalLayout.y)',
