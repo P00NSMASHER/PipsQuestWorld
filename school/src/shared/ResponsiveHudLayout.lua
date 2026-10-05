@@ -117,7 +117,7 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     }
 
     layout.railButtonSize = math.min(
-        railWidth - 4,
+        railWidth,
         math.floor((railHeight - (layout.railGap * 3)) / 4)
     )
     layout.quickSlotSize = math.min(
