@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 63,
+  "schemaVersion": 64,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T17:31:00Z",
+  "observedAt": "2026-10-05T17:33:00Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
@@ -15,22 +15,21 @@
   },
   "wip": {
     "cap": 3,
-    "countIncludingBase": 2,
+    "countIncludingBase": 3,
     "producerPr": null,
     "producerSha": null,
-    "producerBranch": null,
+    "producerBranch": "rebuild/high-school-class-modal-safe-area-39911a-v1",
     "supportPr": 150,
     "supportSha": "762e1d17e001635a8f0a8cc9bed66a36080ed68d",
     "supportBranch": "support/high-school-avatar-customization-content-00df979",
     "nextProducerReservation": {
-      "owner": "Roblox High School Class & Education",
-      "scope": "P2_CLASSROOM_FREE_ROAM",
-      "status": "ACTIVATION_MANIFEST_ARMED__PRODUCT_SLOT_NOT_RELEASED_UNTIL_P1_RUNTIME_SMOKE_AND_PACKAGE",
+      "owner": "Pip High Free Roam",
+      "scope": "P1_CLASS_ACTIVITY_MODAL_SAFE_AREA_REPAIR",
+      "status": "ACTIVE_SOLE_PRODUCT_REPAIR_RESERVATION__SOURCE_PROVEN_IPHONE_DEFECT",
       "inputSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "pr": null,
       "headSha": null,
-      "activationManifest": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
-      "activationManifestPr": 236
+      "defectId": "P1_CLASS_MODAL_IPHONE_SAFE_AREA"
     },
     "supersededCandidates": [
       {
@@ -45,7 +44,7 @@
         "status": "SUPERSEDED_HOUSING_SUPPORT__OPEN_DRAFT__NO_FURTHER_WRITES__NOT_ACTIVE_WIP"
       }
     ],
-    "rule": "WIP_CAP_3: exact canonical 39911a + frozen support PR150 consume 2/3. P2 preparation is complete, but the third product slot remains intentionally unopened until P1 exact-canonical runtime Smoke and deterministic Package pass.",
+    "rule": "WIP_CAP_3_FULL: exact canonical 39911a + frozen support PR150 + one narrow P1 class-modal safe-area repair reservation consume 3/3. No P2 producer may open until this defect is repaired, exact-head QA/Integration completes, and full runtime Smoke/Package pass.",
     "recentlyIntegrated": {
       "pr": 214,
       "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
@@ -54,7 +53,7 @@
       "status": "MERGED__POST_MERGE_PUSH_CI_GREEN__SMOKE_LOCAL_ONLY_REQUIRED"
     }
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ACTIVATION_ARMED__P3_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+  "currentMilestone": "P1_SOURCE_PROVEN_CLASS_MODAL_IPHONE_SAFE_AREA_DEFECT__NARROW_REPAIR_RESERVED",
   "automationAudit": {
     "coreExpectedIncludingTower": 10,
     "coreEnabledIncludingTower": 10,
@@ -112,17 +111,17 @@
       "handoff": "Roblox High School Class & Education"
     },
     "FreeRoam": {
-      "mode": "P3_P6_PREP_READY__WAIT_P1_P2__NO_PRODUCT_WRITE",
+      "mode": "SOLE_P1_REPAIR_RESERVED__CLASS_MODAL_SAFE_AREA",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-      "branch": null,
+      "branch": "rebuild/high-school-class-modal-safe-area-39911a-v1",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR232 merged future_free_roam_slice_readiness_39911a.json, binding P3 Housing, P4 Avatar/Shopping, P5 Vehicles/Dealership, and P6 Jobs to current canonical authorities and verified reference evidence.",
-      "objective": "Hold P3-P6 prep stable; respond only to a material evidence/authority change or a Control Tower activation after earlier priorities clear.",
+      "latestOutput": "Static audit found current class modal fixed 390px height at 55% viewport center. On iPhone 852x393 its rendered bottom is ~411.15 while safe bottom is 372, leaving ~39.15px outside the safe area.",
+      "objective": "Make the smallest responsive class-activity modal repair so the full modal and contents fit desktop 909x483, iPhone 852x393 and iPad 1024x768 safe bounds. Add mutation-sensitive pure geometry coverage; preserve class/progression/server authority semantics.",
       "owned": "bounded P1 interaction repair on integrated spawn/entrance/atrium/corridor + compact HUD baseline",
-      "dependency": "P1 runtime Smoke/Package and P2 completion pipeline.",
-      "exit": "Control Tower activates one future Free Roam slice or material evidence changes.",
-      "handoff": "Roblox High School Control Tower"
+      "dependency": "None; source defect is deterministic and cloud-fixable.",
+      "exit": "Changed exact product head with all three guards green.",
+      "handoff": "Roblox High School QA & Contract"
     },
     "QA": {
       "mode": "P1_EXACT_HEAD_PASS_COMPLETE__WAIT_RUNTIME_SMOKE",
@@ -149,40 +148,40 @@
       "handoff": "Roblox High School Integration Smoke"
     },
     "Smoke": {
-      "mode": "ACTIVE_LOCAL_ONLY_REQUIRED__EXECUTION_PLAN_READY__DEVICE_OFFLINE",
+      "mode": "BLOCKED_SOURCE_DEFECT__WAIT_CLASS_MODAL_REPAIR",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": 214,
       "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
-      "latestOutput": "PR234 merged PR214_39911A_LOCAL_SMOKE_EXECUTION_PLAN.json with exact capture order, evidence paths, validator handoff and hard-stop conditions. PAAM-L044 remains offline.",
-      "objective": "When the authorized laptop returns online, acquire the exact-canonical lease and execute the prepared runbook without rediscovery. Until then do not claim rendered/device/traversal/save-rejoin PASS.",
+      "latestOutput": "Local execution plan PR234 remains ready, but static audit found the current class activity modal leaves the iPhone safe area before runtime Smoke could run.",
+      "objective": "Do not execute/approve runtime Smoke on 39911a. Wait for the repaired exact canonical after QA and Integration, then rebind the prepared runbook to the new canonical.",
       "owned": "post-integration smoke evidence/harnesses only",
-      "dependency": "ONLINE_LAPTOP availability.",
-      "exit": "Full exact-canonical Smoke PASS or one concrete runtime defect.",
+      "dependency": "Narrow class-modal safe-area repair -> exact CI -> QA -> Integration.",
+      "exit": "Repaired integrated canonical.",
       "handoff": "Roblox High School Release & Package Gate"
     },
     "ReleasePackage": {
-      "mode": "PREFLIGHT_READY__BLOCKED_ON_FULL_P1_RUNTIME_SMOKE_PASS",
+      "mode": "PREFLIGHT_STALE_ON_PENDING_SOURCE_REPAIR__DO_NOT_PACKAGE_39911A",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR230 merged package readiness for canonical 39911a: root tree 24719f12, school tree 56e8089f, 72 entries, reserved deterministic artifact identity; package not emitted.",
-      "objective": "When exact-canonical Smoke reaches full PASS, reread canonical and Smoke, revalidate root/school tree identities, then emit the deterministic 39911a package checkpoint immediately. Until then preserve the prior 4323049 package.",
+      "latestOutput": "PR230 package preflight remains a historical 39911a identity only; the source-proven class-modal iPhone safe-area defect makes 39911a ineligible even before runtime Smoke.",
+      "objective": "Do not package 39911a. Recompute deterministic package identity only after the narrow repair is integrated and full Smoke passes.",
       "owned": "deterministic packaging, hashes, artifact continuity and release readiness",
-      "dependency": "Full exact-canonical P1 runtime Smoke PASS.",
-      "exit": "Smoke PASS or canonical-head change.",
+      "dependency": "Repair -> QA -> Integration -> full runtime Smoke.",
+      "exit": "Full Smoke PASS on repaired canonical.",
       "handoff": "Roblox High School Control Tower"
     },
     "ControlTower": {
-      "mode": "SCHEMA63_P1_RUNTIME_SMOKE_ONLY_BLOCKER__P2_ACTIVATION_ARMED__P3_P6_PREP_READY__RELEASE_PREFLIGHT_READY",
+      "mode": "SCHEMA64_SOURCE_DEFECT_FOUND__SOLE_P1_MODAL_REPAIR_RESERVED",
       "base": "39911a193ba6e76379c52ce67cb60bbc912bf279",
       "candidatePr": null,
       "candidateSha": null,
-      "latestOutput": "PR236 armed the P2 producer activation manifest without creating a product branch. Local Smoke runbook PR234, Release preflight PR230, P2 prep PR227/228 and P3-P6 readiness PR232 are all merged.",
-      "objective": "When P1 full runtime Smoke and deterministic Package pass, validate the armed P2 conditions and create exactly one Class & Education producer from the certified packaged canonical. Until then keep product WIP at 2/3.",
+      "latestOutput": "Static audit caught P1_CLASS_MODAL_IPHONE_SAFE_AREA before consuming laptop time. The class activity modal extends ~39px beyond iPhone safe bottom on the repository fixture.",
+      "objective": "Run one narrow cloud-fixable P1 repair, then exact-head CI -> QA -> Integration -> runtime Smoke -> Package. Keep P2 activation armed but blocked.",
       "owned": "coordination state/backlog, cap enforcement, ownership reconciliation and pipeline handoffs",
-      "dependency": "ONLINE_LAPTOP/Roblox runtime availability for Integration Smoke.",
-      "exit": "P1 Smoke PASS/defect, Package, canonical change, or local-device availability change.",
-      "handoff": "Roblox High School Integration Smoke"
+      "dependency": "Free Roam repair.",
+      "exit": "Changed repair head or concrete new defect.",
+      "handoff": "Pip High Free Roam"
     }
   },
   "connectorReliability": {
@@ -238,7 +237,7 @@
     "recursiveTreeTruncated": false,
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
     "currentCanonical": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "currentCanonicalEligibility": "PREFLIGHT_READY__BLOCKED_ON_FULL_RUNTIME_SMOKE_PASS",
+    "currentCanonicalEligibility": "INELIGIBLE__SOURCE_PROVEN_CLASS_MODAL_IPHONE_SAFE_AREA_DEFECT",
     "robloxPublished": false,
     "localOnlyRequired": [
       "RHS2_TIMESTAMP_MATCHED_RENDERED_DEVICE_TOUCH_SMOKE"
@@ -250,7 +249,8 @@
     "reservedCurrentEntryCount": 72,
     "reservedCurrentTreeTruncated": false,
     "preflight": "coordination/release-packages/pip-high-school-39911a-package-readiness-v1.json",
-    "preflightPr": 230
+    "preflightPr": 230,
+    "reservedCurrentArtifactStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
   },
   "branchReadiness": {
     "canonical": {
@@ -1043,7 +1043,28 @@
     "mergedPr": 236,
     "artifact": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
     "expectedBaseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "status": "ARMED_PREP_ONLY__NOT_ACTIVATED",
+    "status": "ARMED_PREP_ONLY__BLOCKED_BY_P1_SOURCE_REPAIR_AND_RUNTIME_SMOKE",
     "proposedProducerBranch": "rebuild/high-school-classroom-free-roam-39911a-v1"
+  },
+  "sourceDefect": {
+    "id": "P1_CLASS_MODAL_IPHONE_SAFE_AREA",
+    "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
+    "path": "school/src/client/CanonicalSchoolClient.client.lua",
+    "evidence": {
+      "viewport": "852x393",
+      "safeInsets": {
+        "left": 47,
+        "top": 12,
+        "right": 47,
+        "bottom": 21
+      },
+      "modalHeight": 390,
+      "modalVerticalCenterScale": 0.55,
+      "computedTop": 21.15,
+      "computedBottom": 411.15,
+      "safeBottom": 372,
+      "overflowBottom": 39.15
+    },
+    "status": "SOURCE_PROVEN__REPAIR_RESERVED"
   }
 }
