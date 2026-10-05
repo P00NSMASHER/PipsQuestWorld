@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 17,
+  "schemaVersion": 18,
   "owner": "Roblox High School Control Tower",
   "canonicalProduct": "Pip High",
   "branch": "rebuild/high-school-foundation",
   "sha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
   "sourceRoot": "school/**",
-  "status": "P1_SOURCE_STATIC_QA_INTEGRATION_COMPLETE__LOCAL_ONLY_SMOKE_BLOCKS_PACKAGE",
+  "status": "P1_SOURCE_DEFECT_ACTIVE__CAFE_CARD_MOBILE_SAFE_AREA",
   "parentCertifiedSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "repair": {
     "pr": 239,
@@ -49,7 +49,7 @@
     "receiptPr": 240
   },
   "integrationSmoke": {
-    "result": "HOLD_LOCAL_ONLY_REQUIRED__CLOUD_SAFE_EXACT_HEAD_PASS",
+    "result": "BLOCKED_SOURCE_DEFECT__CAFE_CARD_MOBILE_SAFE_AREA",
     "certifiedSha": "4782aa655cd2d0340cc93ce7b8dd53604963f225",
     "receipt": "coordination/HIGH_SCHOOL_INTEGRATION_SMOKE_RECEIPT.json",
     "receiptPr": 241,
@@ -111,9 +111,9 @@
     "schoolTree": "4092b4453ff8e67a399dbfe5260e0089d5b98410",
     "milestone": "HOUSING_LAYOUT_PERSISTENCE_SUPPORT"
   },
-  "currentMilestone": "P1_RUNTIME_SMOKE_REQUIRED_ON_4782AA",
+  "currentMilestone": "P1_CAFE_CARD_SOURCE_REPAIR_REQUIRED_BEFORE_RUNTIME_SMOKE",
   "releasePackage": {
-    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_CANONICAL_PREFLIGHT_READY_BUT_INELIGIBLE",
+    "result": "PRIOR_PACKAGE_PRESERVED__CURRENT_PREFLIGHT_STALE_ON_SOURCE_DEFECT",
     "artifact": "pip-high-school-4323049-source-tree-836ffa7d",
     "gitTreeSha": "836ffa7df77240e5980fe79727436a446880cf90",
     "receipt": "coordination/HIGH_SCHOOL_RELEASE_PACKAGE_RECEIPT.json",
@@ -122,6 +122,13 @@
     "currentPreflight": "coordination/release-packages/pip-high-school-4782aa-package-readiness-v1.json",
     "reservedArtifact": "pip-high-school-4782aa-source-tree-d05616b9",
     "reservedArtifactId": "4782aa655cd2d0340cc93ce7b8dd53604963f225:d05616b9697cd83f6fd08bf2499ccff4b03e1f16",
-    "robloxPublished": false
+    "robloxPublished": false,
+    "currentPreflightStatus": "STALE_PREFLIGHT_ONLY__DO_NOT_EMIT"
+  },
+  "currentSourceDefect": {
+    "id": "P1_CAFE_CARD_MOBILE_SAFE_AREA",
+    "evidence": "CafeCard exceeds mobile safe-right bounds and overlaps the right touch exclusion zone on the repository iPhone/iPad fixtures.",
+    "reservedBranch": "rebuild/high-school-cafe-card-safe-area-4782aa-v1",
+    "status": "REPAIR_RESERVED"
   }
 }
