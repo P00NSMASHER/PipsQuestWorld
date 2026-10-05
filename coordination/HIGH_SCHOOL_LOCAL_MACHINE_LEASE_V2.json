@@ -1,27 +1,28 @@
 {
   "schemaVersion": 8,
   "resource": "ONLINE_LAPTOP",
-  "availability": "POLL_PENDING_AFTER_LEASE",
+  "availability": "OFFLINE",
   "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
   "canonicalRoot": "school/**",
   "lease": {
-    "status": "HELD",
-    "holderLane": "Roblox High School Integration Smoke",
-    "purpose": "Final P1 exact-canonical actual startup/rendered/device/traversal/save-rejoin smoke",
-    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
-    "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
-    "interactionMode": "BACKGROUND_HEADLESS_PREFERRED__GUI_ONLY_IF_REQUIRED_FOR_ROBLOX_STUDIO_SMOKE",
-    "userAuthorizedPublish": false,
-    "claimedAt": "2026-10-05T23:55:00Z",
-    "expiresAt": "2026-10-06T00:15:00Z",
+    "status": "FREE",
+    "holderLane": null,
+    "purpose": null,
+    "canonicalSha": null,
+    "candidateSha": null,
+    "interactionMode": null,
+    "userAuthorizedPublish": null,
+    "claimedAt": null,
+    "expiresAt": null,
     "reclaimedExpiredLease": false
   },
   "lastOutcome": {
     "lane": "Roblox High School Integration Smoke",
-    "completedAt": "2026-10-05T16:46:00Z",
-    "candidateSha": "7f1779fbe5a7143c596160e334e8e2444f20b6a0",
+    "completedAt": "2026-10-05T23:55:30Z",
+    "candidateSha": "313ae0ec5be540c1caeeaf251e841e3c7a27e14b",
+    "canonicalSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
     "result": "LOCAL_CONNECTOR_UNAVAILABLE",
-    "evidencePointer": "Desktop Commander device PAAM-L044 reported Offline immediately after a valid exact-canonical lease claim; no Roblox Studio/runtime action or publication was attempted.",
+    "evidencePointer": "Desktop Commander device PAAM-L044 reported Offline (last seen 22h ago) immediately after valid lease claim. No Roblox Studio/runtime action or publication attempted.",
     "placeId": "87245440673982",
     "universeId": "10768955678"
   },
@@ -34,5 +35,5 @@
     "spendMoneyAllowed": false,
     "canonicalScopeOnly": true
   },
-  "availabilityNote": "Lease acquired for exact-canonical final P1 Smoke on 33a5a11. Poll PAAM-L044 after CAS claim; no Roblox publication or spend is authorized."
+  "availabilityNote": "PAAM-L044 is offline. Lease released immediately. Final P1 exact-canonical runtime/device Smoke remains LOCAL_ONLY_REQUIRED on 33a5a11."
 }
