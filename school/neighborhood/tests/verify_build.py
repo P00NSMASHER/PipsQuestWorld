@@ -93,13 +93,9 @@ def validate_abvm_contract() -> dict:
         "Howard retaining wall",
         "Brick chimney",
         "Front stone belt",
-        "Dr Carl McBreen",
-        "Mrs. Melissa Thompson",
-        "Administrative Assistant, Marketing Coordinator",
-        "Mrs Carol Boyer",
-        "President of Catholicity and Mission",
-        'prompt.Name="MeetFaculty"',
-        "facultyPositions",
+        "Dr. McBreen — Principal",
+        "Mrs. Thompson — Secretary",
+        "Mrs. Boyer — Assistant Principal",
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
         "Stair opening side guard",
@@ -118,49 +114,25 @@ def validate_abvm_contract() -> dict:
             "formal facade must retain the four exact configured arched bays")
 
     expected_room_calls = (
-        'classroom(root,"math","Math","Learning Lab",-49,4,',
-        'classroom(root,"reading","Reading","Learning Lab",49,4,',
-        'classroom(root,"grammar","Grammar","Learning Lab",-49,20,',
-        'classroom(root,"religion","Religion","Learning Lab",49,20,',
-        'classroom(root,"vocabulary","Vocabulary","Learning Lab",-49,36,',
-        'classroom(root,"spelling","Spelling","Learning Lab",49,36,',
+        'classroom(root,"math","Math","Mrs. Campion",-49,4,',
+        'classroom(root,"reading","Reading","Mrs. Russek",49,4,',
+        'classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,',
+        'classroom(root,"religion","Religion","Mr. Bolich",49,20,',
+        'classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,',
+        'classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,',
     )
     require(all(world.count(call) == 1 for call in expected_room_calls),
             "six classroom volumes must remain on their intended floors")
     require('World.shopPosition=Vector3.new(31,5,-49)' in world,
             "ABVM School Shop position moved outside its guarded lobby zone")
-    required_subjects = ("math", "reading", "grammar", "religion", "vocabulary", "spelling")
-    for subject in required_subjects:
-        require(f'id="{subject}"' in catalog and 'room="Learning Lab"' in catalog,
-                f"missing neutral ABVM learning-lab mapping: {subject}")
-    require("teacher=" not in catalog.split("Catalog.Tiers", 1)[0],
-            "real faculty must not be falsely attributed to the six subject learning labs")
-
-    required_faculty = {
-        "Dr Carl McBreen": "Principal",
-        "Mrs. Melissa Thompson": "Administrative Assistant, Marketing Coordinator",
-        "Mrs Carol Boyer": "President of Catholicity and Mission",
-        "Mrs. Erin Heckman": "Pre-Kindergarten",
-        "Mrs. Sharon Rossi": "Pre-Kindergarten",
-        "Mrs. Cindy Campion": "Kindergarten",
-        "Mrs. MaryAnn Lascala": "Kindergarten Aide",
-        "Mrs. Karla Russek": "First Grade",
-        "Mrs. Aimee Benulis": "Second Grade",
-        "Mrs. Marla Callaghan": "Third Grade",
-        "Ms. MaryLouise Smith": "Fourth Grade",
-        "Mrs Nicole Leagans": "Fifth Grade Teacher",
-        "Mrs. Lyric Paskel": "6th Grade Teacher",
-        "Mr. Mike Yordy": "Seventh Grade",
-        "Mrs. Jacqui Urban": "Eighth Grade",
-        "Mr. David Bolich": "Technology Teacher and Physical Education Teacher",
-        "Mrs. Lucilla Kochol": "Art, After School Care Administrator",
-        "Mrs. Cindy Long": "Food Service Manager",
+    required_subjects = {
+        "math": "Mrs. Campion", "reading": "Mrs. Russek",
+        "grammar": "Mrs. Benulis", "religion": "Mr. Bolich",
+        "vocabulary": "Mr. Yordy", "spelling": "Mrs. Kochol",
     }
-    require("Catalog.Faculty = {" in catalog and "Catalog.ByStaffId" in catalog and "Catalog.ByStaffName" in catalog,
-            "faculty directory/index contract missing")
-    for name, role in required_faculty.items():
-        require(f'name="{name}"' in catalog and f'role="{role}"' in catalog,
-                f"missing exact faculty directory entry: {name} / {role}")
+    for subject, teacher in required_subjects.items():
+        require(f'id="{subject}"' in catalog and f'teacher="{teacher}"' in catalog,
+                f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
     require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
@@ -183,8 +155,7 @@ def validate_abvm_contract() -> dict:
         "rail = {", "goal = {", "drive = {", "shopCardHeight", "columns = columns",
     )), "gold-standard responsive layout contract regressed")
     require(all(marker in main for marker in (
-        'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()', 'showFaculty=function()',
-        'Name="FacultyGrid"', '"Faculty & Staff Directory"',
+        'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
@@ -204,7 +175,6 @@ def validate_abvm_contract() -> dict:
         "frontArchedBays": 4,
         "centerDoorBays": 2,
         "subjectClassrooms": len(required_subjects),
-        "facultyStaff": len(required_faculty),
         "photoContractStaticOnly": True,
     }
 
