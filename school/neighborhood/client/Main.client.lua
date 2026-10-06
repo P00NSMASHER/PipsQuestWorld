@@ -58,7 +58,10 @@ local goalIcon=UI.frame(goalCard,{Position=UDim2.fromOffset(7,6),Size=UDim2.from
 UI.corner(goalIcon,10)
 local goalIconText=UI.text(goalIcon,"★",16,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
 local resumeButton
-local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(49,2),Size=UDim2.new(1,-58,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(49,2),Size=UDim2.new(1,-112,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+local bonusChip=UI.frame(goalCard,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-7,0,5),Size=UDim2.fromOffset(48,20),BackgroundColor3=UI.P.goldSoft})
+UI.corner(bonusChip,999);UI.stroke(bonusChip,UI.P.gold)
+local bonusText=UI.text(bonusChip,"★ 0/5",9,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=Color3.fromRGB(151,108,23)})
 local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(49,19),Size=UDim2.new(1,-58,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
 local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(49,36),Size=UDim2.new(1,-58,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
@@ -92,6 +95,7 @@ local function update(snapshot)
     local oldCoins=state.coins
     state=snapshot
     walletText.Text=tostring(state.coins)
+    bonusText.Text="★ "..tostring(state.lessonCount or 0).."/5"
     if (state.wrongStreak or 0)>0 then
         streakText.Text=tostring(state.wrongStreak)
         streakCaption.Text="WRONG STREAK"
