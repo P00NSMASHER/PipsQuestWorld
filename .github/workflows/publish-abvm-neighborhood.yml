@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: gold-standard version 26 bonus progress
+# release: gold-standard version 27 native icons
 
 on:
   push:
