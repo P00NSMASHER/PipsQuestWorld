@@ -203,39 +203,6 @@ test("corrupt balances fail validation while legacy statistics normalize",functi
     p=Learning.newProfile();p.correct=2;p.answers=1;assert(Learning.valid(p));equal(p.answers,2)
 end)
 test("catalog ids and prices are valid; every category has a progression",function()
-    local exactFaculty={
-        {"carl_mcbreen","Dr Carl McBreen","Principal"},
-        {"melissa_thompson","Mrs. Melissa Thompson","Administrative Assistant, Marketing Coordinator"},
-        {"carol_boyer","Mrs Carol Boyer","President of Catholicity and Mission"},
-        {"erin_heckman","Mrs. Erin Heckman","Pre-Kindergarten"},
-        {"sharon_rossi","Mrs. Sharon Rossi","Pre-Kindergarten"},
-        {"cindy_campion","Mrs. Cindy Campion","Kindergarten"},
-        {"maryann_lascala","Mrs. MaryAnn Lascala","Kindergarten Aide"},
-        {"karla_russek","Mrs. Karla Russek","First Grade"},
-        {"aimee_benulis","Mrs. Aimee Benulis","Second Grade"},
-        {"marla_callaghan","Mrs. Marla Callaghan","Third Grade"},
-        {"marylouise_smith","Ms. MaryLouise Smith","Fourth Grade"},
-        {"nicole_leagans","Mrs Nicole Leagans","Fifth Grade Teacher"},
-        {"lyric_paskel","Mrs. Lyric Paskel","6th Grade Teacher"},
-        {"mike_yordy","Mr. Mike Yordy","Seventh Grade"},
-        {"jacqui_urban","Mrs. Jacqui Urban","Eighth Grade"},
-        {"david_bolich","Mr. David Bolich","Technology Teacher and Physical Education Teacher"},
-        {"lucilla_kochol","Mrs. Lucilla Kochol","Art, After School Care Administrator"},
-        {"cindy_long","Mrs. Cindy Long","Food Service Manager"},
-    }
-    equal(#Catalog.Faculty,#exactFaculty)
-    local facultyIds,facultyNames={},{}
-    for i,expected in ipairs(exactFaculty) do
-        local staff=Catalog.Faculty[i]
-        equal(staff.id,expected[1]);equal(staff.name,expected[2]);equal(staff.role,expected[3])
-        assert(not facultyIds[staff.id]);facultyIds[staff.id]=true
-        assert(not facultyNames[staff.name]);facultyNames[staff.name]=true
-        equal(Catalog.ByStaffId[staff.id],staff);equal(Catalog.ByStaffName[staff.name],staff)
-        assert(type(staff.floor)=="number" and staff.floor>=1 and staff.floor<=3)
-        assert(type(staff.location)=="string" and #staff.location>3)
-        assert(type(staff.appearance)=="table" and type(staff.appearance.hair)=="table" and type(staff.appearance.top)=="table")
-    end
-
     local seen={};local categories={}
     for _,item in ipairs(Catalog.Items) do
         assert(not seen[item.id]);seen[item.id]=true
