@@ -157,7 +157,7 @@ def validate_abvm_contract() -> dict:
     gold_ui_markers = (
         "function UI.surface", "function UI.chip", "function UI.iconButton",
         "function UI.answerCard", "function UI.feedbackCard", "function UI.flyout",
-        "function UI.avatarViewport",
+        "function UI.avatarViewport", "function UI.vectorIcon", "function UI.tintIcon",
     )
     require(all(marker in ui_source for marker in gold_ui_markers),
             "gold-standard reusable UI primitives regressed")
@@ -186,9 +186,18 @@ def validate_abvm_contract() -> dict:
         '"GRADE 2  •  ABVM  •  v"..tostring(game.PlaceVersion)',
         'local bonusChip=UI.frame(goalCard',
         'bonusText.Text="★ "..tostring(state.lessonCount or 0).."/5"',
+        'IconKind=iconKind',
+        'UI.tintIcon(iconBox,UI.P.white)',
+        '{"school","School","school"',
+        '{"home","Home","home"',
+        '{"shop","Shop","shop"',
+        '{"vehicle","Ride","vehicle"',
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
+    require('{"▦","School"' not in main and '{"⌂","Home"' not in main and
+            '{"▣","Shop"' not in main and '{"◆","Ride"' not in main,
+            "abstract primary-nav glyphs returned; native vector icon family is required")
     require(all(marker in leaderboards_source for marker in (
         "silver=Color3.fromRGB", "bronze=Color3.fromRGB",
         'make("UIStroke",root,{Color=palette.gold',
