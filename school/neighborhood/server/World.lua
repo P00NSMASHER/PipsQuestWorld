@@ -278,6 +278,21 @@ local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
         local z=zStart+(zEnd-zStart)*t
         local y=yStart+(yEnd-yStart)*t
         World.part(root,"Interior stair",Vector3.new(11,.72,2.25),CFrame.new(x,y,z),palette.stone,Enum.Material.Concrete)
+        if i%4==0 then
+            for _,sx in ipairs({-5.2,5.2}) do
+                World.part(root,"Interior stair rail post",Vector3.new(.25,3,.25),CFrame.new(x+sx,y+1.8,z),palette.metal,Enum.Material.Metal,false)
+            end
+        end
+    end
+    local dz=zEnd-zStart
+    local dy=yEnd-yStart
+    local railLength=math.sqrt(dz*dz+dy*dy)
+    local midZ=(zStart+zEnd)/2
+    local midY=(yStart+yEnd)/2+2.7
+    local pitch=math.atan2(dy,dz)
+    for _,sx in ipairs({-5.2,5.2}) do
+        World.part(root,"Interior stair handrail",Vector3.new(.28,.28,railLength),
+            CFrame.new(x+sx,midY,midZ)*CFrame.Angles(pitch,0,0),palette.metal,Enum.Material.Metal,false)
     end
 end
 
@@ -508,10 +523,18 @@ function World.build()
     World.part(root,"Howard curb",Vector3.new(2.2,.55,176),CFrame.new(158,.35,-88),palette.stone,Enum.Material.Concrete)
 
     -- Playable interior floors/halls. Exterior stays faithful; interior is wider/clearer than the real plan.
-    for _,floorY in ipairs({4,20,36}) do
+    for index,floorY in ipairs({4,20,36}) do
         World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),Color3.fromRGB(177,151,118),Enum.Material.WoodPlanks)
         World.part(root,"Hall left rail",Vector3.new(.4,2.3,92),CFrame.new(-14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
         World.part(root,"Hall right rail",Vector3.new(.4,2.3,92),CFrame.new(14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
+        sign(root,"FLOOR "..tostring(index),CFrame.new(0,floorY+8,-141.6),Vector3.new(12,2.5,.2),palette.navy,palette.gold)
+        if index==1 then
+            sign(root,"MAIN OFFICE  ←\nMATH  ←     →  READING",CFrame.new(0,floorY+9,-78),Vector3.new(22,4,.2),palette.green,palette.cream)
+        elseif index==2 then
+            sign(root,"GRAMMAR  ←     →  RELIGION",CFrame.new(0,floorY+9,-78),Vector3.new(22,3,.2),palette.green,palette.cream)
+        else
+            sign(root,"VOCABULARY  ←     →  SPELLING",CFrame.new(0,floorY+9,-78),Vector3.new(24,3,.2),palette.green,palette.cream)
+        end
     end
 
     local active={}
@@ -526,8 +549,10 @@ function World.build()
     -- Stairs connect all three playable academic floors.
     stairFlight(root,-7,-58,-101,5,19.4)
     World.part(root,"Second floor stair landing",Vector3.new(13,.6,9),CFrame.new(-7,20,-105),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Second floor stair guard",Vector3.new(13,3,.3),CFrame.new(-7,21.7,-109.3),palette.metal,Enum.Material.Metal,false)
     stairFlight(root,7,-118,-75,21,35.4)
     World.part(root,"Third floor stair landing",Vector3.new(13,.6,9),CFrame.new(7,36,-71),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Third floor stair guard",Vector3.new(13,3,.3),CFrame.new(7,37.7,-66.7),palette.metal,Enum.Material.Metal,false)
 
     -- Main lobby/admin suite.
     sign(root,"ASSUMPTION BVM CATHOLIC SCHOOL\nFaith • Education • Community",CFrame.new(0,12,-39)*CFrame.Angles(0,math.pi,0),Vector3.new(42,7,.25),palette.navy,palette.gold)
