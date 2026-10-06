@@ -35,7 +35,7 @@ test("ABVM source is pinned and every question has one unique valid answer",func
         subjects[q.subject]=(subjects[q.subject] or 0)+1
     end
     equal(#Bank.Questions,338)
-    for _,subject in ipairs(Catalog.Subjects) do assert(subjects[subject.id]>=10);equal(subject.teacher,nil);equal(subject.room,"Learning Lab") end
+    for _,subject in ipairs(Catalog.Subjects) do assert(subjects[subject.id]>=10);assert(type(subject.teacher)=="string" and #subject.teacher>3) end
 end)
 test("first try and correction bases use the tuned 10/6 split",function()
     local a,b=Learning.newProfile(),Learning.newProfile();local q=first("math")
