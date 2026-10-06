@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: first gold-standard UI visual playtest
+# release: gold-standard UI batch 2
 
 on:
   push:
