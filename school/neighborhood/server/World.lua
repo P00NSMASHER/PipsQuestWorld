@@ -1,112 +1,364 @@
 --!strict
--- Purpose-built school + residential street. No clock, job, club or city systems.
+-- Assumption BVM-inspired school + residential neighborhood.
+-- Exterior proportions and identity follow the user-authorized Pottsville references;
+-- interior dimensions are deliberately widened/simplified for readable mobile play.
 local Workspace=game:GetService("Workspace")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
+
 local World={rooms={},plots={},homes={},leaderboardParts={}}
-local palette={navy=Color3.fromRGB(40,58,79),cream=Color3.fromRGB(239,234,221),wood=Color3.fromRGB(170,132,96),green=Color3.fromRGB(115,163,137),gold=Color3.fromRGB(216,185,115)}
+local palette={
+    navy=Color3.fromRGB(22,45,79),
+    cream=Color3.fromRGB(239,234,221),
+    wood=Color3.fromRGB(145,104,72),
+    green=Color3.fromRGB(24,103,59),
+    gold=Color3.fromRGB(223,177,60),
+    brick=Color3.fromRGB(112,82,61),
+    brickDark=Color3.fromRGB(79,59,48),
+    tan=Color3.fromRGB(194,178,144),
+    stone=Color3.fromRGB(174,170,158),
+    glass=Color3.fromRGB(151,185,198),
+    asphalt=Color3.fromRGB(64,68,72),
+    metal=Color3.fromRGB(121,126,129),
+}
 local function color(rgb) return Color3.fromRGB(rgb[1],rgb[2],rgb[3]) end
+
 function World.part(parent,name,size,cf,tint,material,collide)
     local p=Instance.new("Part")
-    p.Name=name; p.Size=size; p.CFrame=cf; p.Color=tint
-    p.Anchored=true; p.Material=material or Enum.Material.SmoothPlastic
-    p.TopSurface=Enum.SurfaceType.Smooth; p.BottomSurface=Enum.SurfaceType.Smooth
-    p.CanCollide=collide~=false; p.Parent=parent
+    p.Name=name;p.Size=size;p.CFrame=cf;p.Color=tint
+    p.Anchored=true;p.Material=material or Enum.Material.SmoothPlastic
+    p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
+    p.CanCollide=collide~=false;p.Parent=parent
     return p
 end
-local function sign(parent,text,cf,size,tint)
-    local p=World.part(parent,"Sign",size or Vector3.new(20,4,0.3),cf,tint or palette.navy,nil,false)
-    local g=Instance.new("SurfaceGui");g.Face=Enum.NormalId.Front;g.SizingMode=Enum.SurfaceGuiSizingMode.PixelsPerStud;g.PixelsPerStud=28;g.Parent=p
-    local t=Instance.new("TextLabel");t.Size=UDim2.fromScale(1,1);t.BackgroundTransparency=1;t.Font=Enum.Font.GothamBold;t.TextColor3=palette.cream;t.TextScaled=true;t.Text=text;t.Parent=g
-    local pad=Instance.new("UIPadding");pad.PaddingLeft=UDim.new(0,10);pad.PaddingRight=UDim.new(0,10);pad.PaddingTop=UDim.new(0,6);pad.PaddingBottom=UDim.new(0,6);pad.Parent=t
+
+local function sign(parent,text,cf,size,tint,textColor)
+    local p=World.part(parent,"Sign",size or Vector3.new(20,4,.3),cf,tint or palette.navy,nil,false)
+    local g=Instance.new("SurfaceGui")
+    g.Face=Enum.NormalId.Front;g.SizingMode=Enum.SurfaceGuiSizingMode.PixelsPerStud;g.PixelsPerStud=30;g.LightInfluence=0;g.Parent=p
+    local t=Instance.new("TextLabel")
+    t.Size=UDim2.fromScale(1,1);t.BackgroundTransparency=1;t.Font=Enum.Font.GothamBold
+    t.TextColor3=textColor or palette.cream;t.TextScaled=true;t.TextWrapped=true;t.Text=text;t.Parent=g
+    local pad=Instance.new("UIPadding")
+    pad.PaddingLeft=UDim.new(0,10);pad.PaddingRight=UDim.new(0,10);pad.PaddingTop=UDim.new(0,6);pad.PaddingBottom=UDim.new(0,6);pad.Parent=t
     return p
 end
-local function tree(parent,x,z)
-    World.part(parent,"Tree trunk",Vector3.new(2,9,2),CFrame.new(x,4.5,z),palette.wood,Enum.Material.Wood)
-    local crown=World.part(parent,"Tree crown",Vector3.new(12,13,12),CFrame.new(x,13,z),palette.green,Enum.Material.Grass,false)
+
+local function cross(parent,cf,scale,tint)
+    local s=scale or 1
+    World.part(parent,"Cross vertical",Vector3.new(1.1*s,6*s,.6*s),cf,tint or palette.gold,Enum.Material.SmoothPlastic,false)
+    World.part(parent,"Cross horizontal",Vector3.new(4.2*s,1.1*s,.6*s),cf*CFrame.new(0,1.1*s,0),tint or palette.gold,Enum.Material.SmoothPlastic,false)
+end
+
+local function tree(parent,x,z,scale)
+    local s=scale or 1
+    World.part(parent,"Tree trunk",Vector3.new(1.6*s,7*s,1.6*s),CFrame.new(x,3.5*s,z),palette.wood,Enum.Material.Wood)
+    local crown=World.part(parent,"Tree crown",Vector3.new(9*s,10*s,9*s),CFrame.new(x,10*s,z),Color3.fromRGB(72,124,72),Enum.Material.Grass,false)
     crown.Shape=Enum.PartType.Ball
 end
-local function desk(parent,x,z,tint)
-    World.part(parent,"Desk top",Vector3.new(6,0.5,4),CFrame.new(x,3.6,z),palette.wood,Enum.Material.Wood)
-    for _,dx in ipairs({-2.5,2.5}) do World.part(parent,"Desk leg",Vector3.new(.35,3,.35),CFrame.new(x+dx,1.8,z),palette.navy) end
-    World.part(parent,"Chair",Vector3.new(2.4,.4,2.4),CFrame.new(x,2.2,z+4),tint)
-    World.part(parent,"Chair back",Vector3.new(2.4,2.8,.3),CFrame.new(x,3.3,z+5),tint)
+
+local function windowPanel(parent,cf,width,height)
+    World.part(parent,"Window stone frame",Vector3.new(width+1.2,height+1.2,.55),cf,palette.stone,Enum.Material.Concrete,false)
+    local glass=World.part(parent,"Window glass",Vector3.new(width,height,.22),cf*CFrame.new(0,0,-.34),palette.glass,Enum.Material.Glass,false)
+    glass.Transparency=.17
+    World.part(parent,"Window mullion V",Vector3.new(.22,height,.28),cf*CFrame.new(0,0,-.5),palette.cream,nil,false)
+    World.part(parent,"Window mullion H",Vector3.new(width,.22,.28),cf*CFrame.new(0,0,-.5),palette.cream,nil,false)
 end
-local function classroom(root,subject,x,z)
-    local m=Instance.new("Model");m.Name=subject.id.."_classroom";m.Parent=root
-    local tint=color(subject.color)
-    World.part(m,"Floor",Vector3.new(62,.5,50),CFrame.new(x,.7,z),Color3.fromRGB(225,224,211),Enum.Material.WoodPlanks)
-    World.part(m,"Outer wall",Vector3.new(1,17,50),CFrame.new(x+(x<0 and -31 or 31),8.5,z),palette.cream)
-    for _,side in ipairs({-1,1}) do
-        World.part(m,"End wall",Vector3.new(62,17,1),CFrame.new(x,8.5,z+side*25),palette.cream)
-        World.part(m,"Hall wall",Vector3.new(1,17,18),CFrame.new(x+(x<0 and 31 or -31),8.5,z+side*16),palette.cream)
-    end
-    World.part(m,"Door lintel",Vector3.new(1,5,14),CFrame.new(x+(x<0 and 31 or -31),14.5,z),palette.cream)
-    World.part(m,"Teaching wall",Vector3.new(36,8,.3),CFrame.new(x,9,z-24.35),palette.navy,nil,false)
-    sign(m,subject.name.."\nWalk in. Learn. Earn.",CFrame.new(x,9,z-24.05)*CFrame.Angles(0,math.pi,0),Vector3.new(35,7,.1),tint)
-    World.part(m,"Subject runner",Vector3.new(11,.08,48),CFrame.new(x,.99,z),tint,Enum.Material.Fabric,false)
-    for _,dx in ipairs({-18,18}) do for _,dz in ipairs({-8,7}) do desk(m,x+dx,z+dz,tint) end end
-    for _,dx in ipairs({-18,18}) do
-        local light=World.part(m,"Ceiling light",Vector3.new(10,.3,2),CFrame.new(x+dx,16.3,z),Color3.fromRGB(248,241,211),Enum.Material.Neon,false)
-        local glow=Instance.new("SurfaceLight");glow.Face=Enum.NormalId.Bottom;glow.Brightness=.7;glow.Range=24;glow.Angle=120;glow.Parent=light
-    end
-    -- Label faces the corridor on both sides; not dependent on a GUI prompt.
-    local labelCF=CFrame.new(x+(x<0 and 30.4 or -30.4),12.3,z)*CFrame.Angles(0,x<0 and -math.pi/2 or math.pi/2,0)
-    sign(m,subject.short,labelCF,Vector3.new(12,2.5,.2),tint)
-    World.rooms[subject.id]={x=x,z=z,hx=29,hz=23}
+
+local function parkedCar(parent,x,z,rotation,tint)
+    local cf=CFrame.new(x,1.05,z)*CFrame.Angles(0,rotation or 0,0)
+    World.part(parent,"Parked car body",Vector3.new(6,1.4,11),cf,tint,Enum.Material.SmoothPlastic,false)
+    local cabin=World.part(parent,"Parked car cabin",Vector3.new(5,1.8,5.2),cf*CFrame.new(0,1.35,-.2),Color3.fromRGB(111,143,154),Enum.Material.Glass,false)
+    cabin.Transparency=.14
+    for _,sx in ipairs({-1,1}) do for _,sz in ipairs({-1,1}) do
+        local wheel=World.part(parent,"Parked car wheel",Vector3.new(.8,1.8,1.8),cf*CFrame.new(sx*3,.05,sz*3.4),Color3.fromRGB(35,38,41),Enum.Material.SmoothPlastic,false)
+        wheel.Shape=Enum.PartType.Cylinder;wheel.CFrame*=CFrame.Angles(0,0,math.pi/2)
+    end end
 end
+
+local function fencePanel(parent,cf,size)
+    local panel=World.part(parent,"Chain link fence",size,cf,palette.metal,Enum.Material.Metal,true)
+    panel.Transparency=.58
+end
+
+local function rowHome(parent,x,z,tint,levels)
+    local floors=levels or 3
+    local height=10*floors
+    World.part(parent,"Rowhome",Vector3.new(22,height,30),CFrame.new(x,height/2,z),tint,Enum.Material.Brick)
+    World.part(parent,"Rowhome roof",Vector3.new(23,.8,31),CFrame.new(x,height+.45,z),Color3.fromRGB(55,57,58),Enum.Material.Slate)
+    for floor=1,floors do
+        local y=5+(floor-1)*10
+        for _,dx in ipairs({-6,6}) do windowPanel(parent,CFrame.new(x+dx,y,z-15.15),5.4,5.2) end
+    end
+    World.part(parent,"Rowhome door",Vector3.new(5,7,.35),CFrame.new(x,3.5,z-15.3),Color3.fromRGB(69,87,98),Enum.Material.Wood,false)
+end
+
+local function desk(parent,x,y,z,tint)
+    World.part(parent,"Desk top",Vector3.new(5,.45,3.2),CFrame.new(x,y+2.9,z),palette.wood,Enum.Material.Wood)
+    for _,dx in ipairs({-2.1,2.1}) do World.part(parent,"Desk leg",Vector3.new(.3,2.6,.3),CFrame.new(x+dx,y+1.5,z),palette.navy) end
+    World.part(parent,"Chair",Vector3.new(2.2,.35,2.1),CFrame.new(x,y+1.7,z+3.1),tint,Enum.Material.Fabric)
+    World.part(parent,"Chair back",Vector3.new(2.2,2.4,.3),CFrame.new(x,y+2.6,z+4),tint,Enum.Material.Fabric)
+end
+
+local function npc(parent,name,position,suit,tint)
+    local model=Instance.new("Model");model.Name=name;model.Parent=parent
+    local skin=Color3.fromRGB(226,196,164)
+    local torsoColor=suit and Color3.fromRGB(31,43,60) or (tint or Color3.fromRGB(80,112,145))
+    World.part(model,"Torso",Vector3.new(3.2,4.2,1.8),CFrame.new(position+Vector3.new(0,4.5,0)),torsoColor,Enum.Material.Fabric,false)
+    World.part(model,"Left leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(-.8,1.4,0)),Color3.fromRGB(48,54,65),Enum.Material.Fabric,false)
+    World.part(model,"Right leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(.8,1.4,0)),Color3.fromRGB(48,54,65),Enum.Material.Fabric,false)
+    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.05,4.4,0)),skin,Enum.Material.SmoothPlastic,false)
+    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.05,4.4,0)),skin,Enum.Material.SmoothPlastic,false)
+    local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
+    head.Shape=Enum.PartType.Ball
+    if suit then
+        World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),Color3.fromRGB(245,245,242),nil,false)
+        World.part(model,"Suit tie",Vector3.new(.35,2,.2),CFrame.new(position+Vector3.new(0,4.9,-1.12)),palette.gold,nil,false)
+    end
+    local gui=Instance.new("BillboardGui");gui.Name="Name";gui.AlwaysOnTop=true;gui.Size=UDim2.fromOffset(190,44);gui.StudsOffset=Vector3.new(0,2.1,0);gui.Parent=head
+    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.08
+    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=14;label.Text=name;label.Parent=gui
+    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,9);corner.Parent=label
+    return model
+end
+
+local function classroom(root,id,title,teacher,x,floorY,tint,active)
+    local m=Instance.new("Model");m.Name=id.."_classroom";m.Parent=root
+    local roomWidth=49;local roomDepth=58;local z=-109
+    local hallX=x<0 and -23.5 or 23.5
+    local outerX=x<0 and -74.5 or 74.5
+    World.part(m,"Floor",Vector3.new(roomWidth,.45,roomDepth),CFrame.new(x,floorY+.25,z),Color3.fromRGB(210,199,176),Enum.Material.WoodPlanks)
+    World.part(m,"Outer wall",Vector3.new(1,14,roomDepth),CFrame.new(outerX,floorY+7,z),palette.cream)
+    World.part(m,"Back wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z-roomDepth/2),palette.cream)
+    World.part(m,"Front wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z+roomDepth/2),palette.cream)
+    -- Hall wall leaves a generous, camera-safe doorway centered on the room.
+    World.part(m,"Hall wall north",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z-17.5),palette.cream)
+    World.part(m,"Hall wall south",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z+17.5),palette.cream)
+    World.part(m,"Door lintel",Vector3.new(1,4,12),CFrame.new(hallX,floorY+12,z),palette.cream)
+    local boardCf=CFrame.new(x,floorY+8,z-roomDepth/2+.65)*CFrame.Angles(0,math.pi,0)
+    sign(m,"ASSUMPTION BVM\n"..title.." — "..teacher,boardCf,Vector3.new(30,6,.25),tint,palette.cream)
+    cross(m,CFrame.new(x+14,floorY+10,z-roomDepth/2+.45),.45,palette.gold)
+    for _,dx in ipairs({-11,0,11}) do
+        for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
+    end
+    local teacherX=x+(x<0 and 13 or -13)
+    npc(m,teacher,Vector3.new(teacherX,floorY,z-21),false,tint)
+    local hallLabelCf=CFrame.new(hallX+(x<0 and .65 or -.65),floorY+9,z)*CFrame.Angles(0,x<0 and -math.pi/2 or math.pi/2,0)
+    sign(m,title.."\n"..teacher,hallLabelCf,Vector3.new(14,4,.25),tint,palette.cream)
+    if active then World.rooms[id]={x=x,z=z,hx=23,hz=27,minY=floorY,maxY=floorY+14} end
+end
+
+local function makeFrontArch(root,x)
+    local z=-34.3
+    World.part(root,"Arch left pier",Vector3.new(1.2,16,1.2),CFrame.new(x-5.3,12,z),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Arch right pier",Vector3.new(1.2,16,1.2),CFrame.new(x+5.3,12,z),palette.stone,Enum.Material.Concrete)
+    local cap=World.part(root,"Arch crown",Vector3.new(11.4,6,1.15),CFrame.new(x,19.5,z),palette.stone,Enum.Material.Concrete,false)
+    cap.Shape=Enum.PartType.Ball
+    local glass=World.part(root,"Arched glass",Vector3.new(9.2,6,0.45),CFrame.new(x,18.6,z-.35),palette.glass,Enum.Material.Glass,false)
+    glass.Shape=Enum.PartType.Ball;glass.Transparency=.15
+    local lower=World.part(root,"Tall arched glazing",Vector3.new(9.2,10,.35),CFrame.new(x,12.2,z-.4),palette.glass,Enum.Material.Glass,false)
+    lower.Transparency=.14
+    World.part(root,"Entry double doors",Vector3.new(8.5,7,.28),CFrame.new(x,7.5,z-.55),Color3.fromRGB(210,207,190),Enum.Material.Metal,false)
+    World.part(root,"Door split",Vector3.new(.18,7,.34),CFrame.new(x,7.5,z-.75),palette.stone,nil,false)
+end
+
+local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
+    local steps=22
+    for i=0,steps-1 do
+        local t=i/(steps-1)
+        local z=zStart+(zEnd-zStart)*t
+        local y=yStart+(yEnd-yStart)*t
+        World.part(root,"Interior stair",Vector3.new(11,.72,2.25),CFrame.new(x,y,z),palette.stone,Enum.Material.Concrete)
+    end
+end
+
 function World.build()
-    local old=Workspace:FindFirstChild("NeighborhoodWorld"); if old then old:Destroy() end
+    local old=Workspace:FindFirstChild("NeighborhoodWorld");if old then old:Destroy() end
     local root=Instance.new("Folder");root.Name="NeighborhoodWorld";root.Parent=Workspace;World.root=root
-    World.part(root,"Ground",Vector3.new(500,2,1450),CFrame.new(0,-1,480),Color3.fromRGB(145,180,138),Enum.Material.Grass)
-    World.part(root,"School foundation",Vector3.new(176,1,142),CFrame.new(0,0,-94),palette.cream,Enum.Material.Concrete)
-    World.part(root,"Hall runner",Vector3.new(27,.2,140),CFrame.new(0,.7,-94),palette.wood,Enum.Material.WoodPlanks)
-    World.part(root,"North facade",Vector3.new(176,18,1),CFrame.new(0,9,-164),palette.cream)
-    for _,x in ipairs({-53,53}) do World.part(root,"Front facade",Vector3.new(70,18,1),CFrame.new(x,9,-24),palette.cream) end
-    World.part(root,"Entrance header",Vector3.new(36,5,1),CFrame.new(0,15.5,-24),palette.navy)
-    World.part(root,"Roof",Vector3.new(180,1.2,147),CFrame.new(0,18.8,-94),palette.navy,Enum.Material.Slate)
-    for _,x in ipairs({-86,86}) do World.part(root,"Facade edge",Vector3.new(2,18,142),CFrame.new(x,9,-94),palette.cream) end
-    sign(root,"PIP HIGH",CFrame.new(0,16,-22)*CFrame.Angles(0,math.pi,0),Vector3.new(29,4,.4))
-    -- Three permanent lobby boards: academic accuracy, total answers, and current money.
-    -- Their SurfaceGuis are filled by the server Leaderboards module.
-    World.leaderboardParts={
-        accuracy=World.part(root,"Accuracy leaderboard",Vector3.new(48,13,.5),CFrame.new(-54,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
-        questions=World.part(root,"Questions leaderboard",Vector3.new(48,13,.5),CFrame.new(0,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
-        credits=World.part(root,"Money leaderboard",Vector3.new(48,13,.5),CFrame.new(54,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
-    }
-    for i,subject in ipairs(Catalog.Subjects) do classroom(root,subject,i%2==1 and -51 or 51,i<=2 and -124 or -64) end
-    -- A small school store is the only non-residential destination.
-    World.shopPosition=Vector3.new(0,2,-151)
-    World.part(root,"Shop counter",Vector3.new(20,4,4),CFrame.new(0,2.6,-156),palette.wood,Enum.Material.Wood)
-    local sp=sign(root,"CAMPUS SHOP",CFrame.new(0,8,-159)*CFrame.Angles(0,math.pi,0),Vector3.new(22,3,.2),palette.navy)
-    local prompt=Instance.new("ProximityPrompt");prompt.ActionText="Browse";prompt.ObjectText="Campus shop";prompt.MaxActivationDistance=16;prompt.RequiresLineOfSight=false;prompt.HoldDuration=0;prompt.Parent=sp
-    World.shopPrompt=prompt
-    World.part(root,"School approach",Vector3.new(28,.3,52),CFrame.new(0,.2,0),Color3.fromRGB(219,212,194),Enum.Material.Cobblestone)
-    World.part(root,"Main street",Vector3.new(28,.12,1110),CFrame.new(0,.04,580),Color3.fromRGB(69,78,85),Enum.Material.Asphalt)
-    World.part(root,"School frontage road",Vector3.new(225,.1,22),CFrame.new(0,.04,39),Color3.fromRGB(69,78,85),Enum.Material.Asphalt)
-    for _,x in ipairs({-21,21}) do World.part(root,"Sidewalk",Vector3.new(12,.3,1110),CFrame.new(x,.15,580),palette.cream,Enum.Material.Concrete) end
+    World.rooms={};World.leaderboardParts={}
+
+    -- Base neighborhood and school block.
+    World.part(root,"Ground",Vector3.new(520,2,1450),CFrame.new(0,-1,480),Color3.fromRGB(118,153,106),Enum.Material.Grass)
+    World.part(root,"School block",Vector3.new(195,1.2,150),CFrame.new(0,.1,-91),Color3.fromRGB(128,128,118),Enum.Material.Concrete)
+    World.part(root,"Main street",Vector3.new(28,.12,1110),CFrame.new(0,.04,580),palette.asphalt,Enum.Material.Asphalt)
+    World.part(root,"School frontage road",Vector3.new(240,.12,23),CFrame.new(0,.05,35),palette.asphalt,Enum.Material.Asphalt)
+    for _,x in ipairs({-21,21}) do World.part(root,"Neighborhood sidewalk",Vector3.new(12,.3,1110),CFrame.new(x,.15,580),palette.cream,Enum.Material.Concrete) end
     for z=70,1090,28 do World.part(root,"Road marking",Vector3.new(.4,.03,9),CFrame.new(0,.12,z),Color3.fromRGB(236,221,156),nil,false) end
+
+    -- Howard Avenue is intentionally tight and steep-looking: stepped grade, retaining walls and dense neighbors.
+    for i=0,5 do
+        World.part(root,"Howard Avenue",Vector3.new(27,.22,32),CFrame.new(173,.1+i*.42,-166+i*30),palette.asphalt,Enum.Material.Asphalt)
+    end
+    World.part(root,"Howard retaining wall",Vector3.new(4,14,170),CFrame.new(151,6,-88),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"West retaining wall",Vector3.new(5,10,145),CFrame.new(-108,4,-92),palette.brickDark,Enum.Material.Brick)
+
+    -- Real-school-inspired exterior massing: tall, rectangular, flat-roofed, brown brick with tan infill.
+    World.part(root,"School main floor",Vector3.new(150,.7,110),CFrame.new(0,4,-90),Color3.fromRGB(190,184,166),Enum.Material.Concrete)
+    World.part(root,"Second floor slab",Vector3.new(148,.65,108),CFrame.new(0,20,-90),Color3.fromRGB(170,166,153),Enum.Material.Concrete)
+    World.part(root,"Third floor slab",Vector3.new(148,.65,108),CFrame.new(0,36,-90),Color3.fromRGB(170,166,153),Enum.Material.Concrete)
+    World.part(root,"Flat black roof",Vector3.new(154,1,114),CFrame.new(0,52.5,-90),Color3.fromRGB(45,47,48),Enum.Material.Slate)
+    World.part(root,"Roof parapet front",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-34.5),palette.brick,Enum.Material.Brick)
+    World.part(root,"Roof parapet back",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-145.5),palette.brick,Enum.Material.Brick)
+
+    -- Exterior side/back walls. East wall keeps a usable Howard Avenue doorway.
+    World.part(root,"West brick wall",Vector3.new(1.4,48,110),CFrame.new(-75,28,-90),palette.brick,Enum.Material.Brick)
+    World.part(root,"East brick wall back",Vector3.new(1.4,48,44),CFrame.new(75,28,-123),palette.brick,Enum.Material.Brick)
+    World.part(root,"East brick wall front",Vector3.new(1.4,48,50),CFrame.new(75,28,-60),palette.brick,Enum.Material.Brick)
+    World.part(root,"East entry header",Vector3.new(1.4,31,16),CFrame.new(75,36.5,-93),palette.brick,Enum.Material.Brick)
+    World.part(root,"Back brick wall",Vector3.new(150,48,1.4),CFrame.new(0,28,-145),palette.brick,Enum.Material.Brick)
+    World.part(root,"Exposed lower masonry",Vector3.new(150,6,1.5),CFrame.new(0,1,-145.2),palette.brickDark,Enum.Material.Brick)
+
+    -- Formal front facade: heavy upper block with tan bays, brick pilasters and three arched entrance bays.
+    World.part(root,"Front upper brick mass",Vector3.new(150,31,1.4),CFrame.new(0,37,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower west",Vector3.new(55,17,1.4),CFrame.new(-47.5,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower east",Vector3.new(55,17,1.4),CFrame.new(47.5,12,-35),palette.brick,Enum.Material.Brick)
+    for _,x in ipairs({-68,-51,-34,-17,0,17,34,51,68}) do
+        World.part(root,"Front brick pilaster",Vector3.new(2.3,48,2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
+    end
+    for _,floorY in ipairs({29,44}) do
+        for _,x in ipairs({-59.5,-42.5,-25.5,25.5,42.5,59.5}) do
+            World.part(root,"Tan facade bay",Vector3.new(13.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
+            windowPanel(root,CFrame.new(x,floorY,-33.7),8.5,5.8)
+        end
+    end
+    for _,x in ipairs({-18,0,18}) do makeFrontArch(root,x) end
+    sign(root,"ASSUMPTION BVM\nCATHOLIC SCHOOL",CFrame.new(0,27,-33.4)*CFrame.Angles(0,math.pi,0),Vector3.new(39,6,.35),palette.navy,palette.gold)
+    cross(root,CFrame.new(0,48,-33.4),1.05,palette.gold)
+
+    -- Repeating side windows and strong vertical brick rhythm visible in the reference photos.
+    for _,side in ipairs({-1,1}) do
+        local wallX=side*75.65
+        local yaw=side<0 and -math.pi/2 or math.pi/2
+        for _,floorY in ipairs({12,28,44}) do
+            for _,z in ipairs({-132,-115,-77,-60}) do
+                windowPanel(root,CFrame.new(wallX,floorY,z)*CFrame.Angles(0,yaw,0),8,5.4)
+            end
+        end
+        for _,z in ipairs({-139,-122,-105,-71,-54,-37}) do
+            World.part(root,"Side brick pilaster",Vector3.new(2,48,2.2),CFrame.new(side*74.9,28,z),palette.brickDark,Enum.Material.Brick)
+        end
+    end
+
+    -- Broad formal stairs and landing, intentionally generous for mobile camera/movement.
+    for i=0,7 do
+        World.part(root,"Front broad stair",Vector3.new(57,.65,3.2),CFrame.new(0,.35+i*.52,-7-i*3.25),palette.stone,Enum.Material.Concrete)
+    end
+    World.part(root,"Front landing",Vector3.new(59,.7,8),CFrame.new(0,4.3,-31),palette.stone,Enum.Material.Concrete)
+    World.part(root,"School approach",Vector3.new(28,.3,40),CFrame.new(0,.2,13),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+
+    -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
+    World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(93,111,121),Enum.Material.Metal,false)
+    World.part(root,"Howard arch left",Vector3.new(.7,12,1.2),CFrame.new(75.6,10,-99),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Howard arch right",Vector3.new(.7,12,1.2),CFrame.new(75.6,10,-87),palette.stone,Enum.Material.Concrete,false)
+    local sideArch=World.part(root,"Howard arch crown",Vector3.new(.8,12,5),CFrame.new(75.6,16,-93),palette.stone,Enum.Material.Concrete,false)
+    sideArch.Shape=Enum.PartType.Ball
+    cross(root,CFrame.new(75.25,20,-93)*CFrame.Angles(0,math.pi/2,0),.55,palette.gold)
+    World.part(root,"Howard walkway",Vector3.new(21,.35,17),CFrame.new(93,.25,-93),palette.stone,Enum.Material.Concrete)
+    local roadSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL\n────────\nENTRANCE ON HOWARD AVENUE",CFrame.new(107,7,-78)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,10,.45),palette.green,palette.gold)
+    roadSign.Name="Assumption BVM Howard Avenue sign"
+
+    -- Parking lot and simple perimeter fencing.
+    World.part(root,"School parking lot",Vector3.new(67,.22,111),CFrame.new(116,.12,-100),Color3.fromRGB(78,78,75),Enum.Material.Asphalt)
+    for z=-137,-62,15 do
+        for x=91,139,12 do World.part(root,"Parking stripe",Vector3.new(.18,.04,10),CFrame.new(x,.25,z),Color3.fromRGB(225,220,198),nil,false) end
+    end
+    fencePanel(root,CFrame.new(149,4,-100),Vector3.new(.45,8,112))
+    fencePanel(root,CFrame.new(116,4,-155),Vector3.new(67,8,.45))
+    fencePanel(root,CFrame.new(116,4,-45),Vector3.new(67,8,.45))
+    for _,entry in ipairs({
+        {97,-137,0,Color3.fromRGB(221,222,218)},
+        {113,-137,0,Color3.fromRGB(55,66,77)},
+        {129,-137,0,Color3.fromRGB(165,177,183)},
+        {97,-63,math.pi,Color3.fromRGB(61,83,109)},
+        {113,-63,math.pi,Color3.fromRGB(210,208,197)},
+        {129,-63,math.pi,Color3.fromRGB(87,91,94)},
+    }) do parkedCar(root,entry[1],entry[2],entry[3],entry[4]) end
+
+    -- Dense urban Pottsville context. These are backdrop buildings, not owned player homes.
+    local rowColors={Color3.fromRGB(145,104,83),Color3.fromRGB(173,153,131),Color3.fromRGB(119,91,78),Color3.fromRGB(188,179,160)}
+    for i,z in ipairs({-145,-92,-39}) do
+        rowHome(root,-142,z,rowColors[(i-1)%#rowColors+1],3)
+        rowHome(root,205,z,rowColors[i%#rowColors+1],3)
+    end
+    rowHome(root,-169,-118,rowColors[3],3);rowHome(root,-169,-63,rowColors[2],2)
+    tree(root,-101,-28,.85);tree(root,-102,-145,.95);tree(root,88,-34,.7)
+
+    -- Playable interior floors/halls. Exterior stays faithful; interior is wider/clearer than the real plan.
+    for _,floorY in ipairs({4,20,36}) do
+        World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),Color3.fromRGB(177,151,118),Enum.Material.WoodPlanks)
+        World.part(root,"Hall left rail",Vector3.new(.4,2.3,92),CFrame.new(-14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
+        World.part(root,"Hall right rail",Vector3.new(.4,2.3,92),CFrame.new(14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
+    end
+
+    local active={}
+    for _,subject in ipairs(Catalog.Subjects) do active[subject.id]=subject end
+    classroom(root,"math","Math","Mrs. Campion",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
+    classroom(root,"reading","Reading","Mrs. Russek",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
+    classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,Color3.fromRGB(137,105,170),false)
+    classroom(root,"religion","Religion","Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
+    classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,Color3.fromRGB(58,135,118),false)
+    classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
+
+    -- Stairs connect all three playable academic floors.
+    stairFlight(root,-7,-58,-101,5,19.4)
+    World.part(root,"Second floor stair landing",Vector3.new(13,.6,9),CFrame.new(-7,20,-105),palette.stone,Enum.Material.Concrete)
+    stairFlight(root,7,-118,-75,21,35.4)
+    World.part(root,"Third floor stair landing",Vector3.new(13,.6,9),CFrame.new(7,36,-71),palette.stone,Enum.Material.Concrete)
+
+    -- Main lobby/admin suite.
+    sign(root,"ASSUMPTION BVM CATHOLIC SCHOOL\nFaith • Education • Community",CFrame.new(0,12,-39)*CFrame.Angles(0,math.pi,0),Vector3.new(42,7,.25),palette.navy,palette.gold)
+    cross(root,CFrame.new(0,17,-39),.5,palette.gold)
+    World.part(root,"Main Office counter",Vector3.new(31,3.5,4),CFrame.new(-46,6,-47),palette.wood,Enum.Material.Wood)
+    sign(root,"MAIN OFFICE",CFrame.new(-46,10,-44.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
+    sign(root,"Secretary — Mrs. Thompson",CFrame.new(-58,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(18,2.5,.2),palette.navy,palette.cream)
+    sign(root,"Principal — Dr. McBreen",CFrame.new(-47,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(18,2.5,.2),palette.navy,palette.cream)
+    sign(root,"Assistant Principal — Mrs. Boyer",CFrame.new(-35,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(20,2.5,.2),palette.navy,palette.cream)
+    npc(root,"Mrs. Thompson — Secretary",Vector3.new(-56,4,-48),false,Color3.fromRGB(86,125,143))
+    npc(root,"Dr. McBreen — Principal",Vector3.new(-46,4,-48),true,palette.navy)
+    npc(root,"Mrs. Boyer — Assistant Principal",Vector3.new(-36,4,-48),false,Color3.fromRGB(89,111,132))
+
+    -- Three ABVM-branded leaderboard boards on the lobby's east wall.
+    World.leaderboardParts={
+        accuracy=World.part(root,"Accuracy leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-47)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+        questions=World.part(root,"Questions leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-58)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+        credits=World.part(root,"Money leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-69)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+    }
+    sign(root,"ASSUMPTION BVM\nLEADERBOARDS",CFrame.new(68.5,15.2,-58)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(31,4,.3),palette.green,palette.gold)
+
+    -- School shop remains one of the few non-class destinations and stays inside the school.
+    World.shopPosition=Vector3.new(31,5,-49)
+    World.part(root,"ABVM Shop counter",Vector3.new(28,3.5,4),CFrame.new(31,6,-48),palette.wood,Enum.Material.Wood)
+    local sp=sign(root,"ABVM SCHOOL SHOP",CFrame.new(31,10,-45.8)*CFrame.Angles(0,math.pi,0),Vector3.new(25,3,.2),palette.green,palette.gold)
+    local prompt=Instance.new("ProximityPrompt");prompt.ActionText="Browse";prompt.ObjectText="ABVM School Shop";prompt.MaxActivationDistance=16;prompt.RequiresLineOfSight=false;prompt.HoldDuration=0;prompt.Parent=sp
+    World.shopPrompt=prompt
+
+    -- Player-owned neighborhood lots continue south of the school.
     for i=1,24 do
         local side=i%2==1 and -1 or 1
         local row=math.ceil(i/2)
         local x,z=side*72,72+(row-1)*90
         local cf=CFrame.new(x,0,z)*CFrame.Angles(0,side<0 and math.pi/2 or -math.pi/2,0)
-        World.plots[i]={cf=cf,door=cf* CFrame.new(0,4,25),drive=CFrame.new(side*8,1.65,z+27),owner=nil}
-        World.part(root,"Residential lot "..i,Vector3.new(79,.25,76),CFrame.new(x,.13,z),Color3.fromRGB(161,190,145),Enum.Material.Grass)
-        tree(root,side*119,z-20)
+        World.plots[i]={cf=cf,door=cf*CFrame.new(0,4,25),drive=CFrame.new(side*8,1.65,z+27),owner=nil}
+        World.part(root,"Residential lot "..i,Vector3.new(79,.25,76),CFrame.new(x,.13,z),Color3.fromRGB(141,171,127),Enum.Material.Grass)
+        tree(root,side*119,z-20,.85)
     end
-    for _,x in ipairs({-109,109}) do tree(root,x,-15);tree(root,x,-120) end
-    local spawn=Instance.new("SpawnLocation");spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=CFrame.new(0,1,12);spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
-    World.schoolDoor=CFrame.new(0,4,-4)*CFrame.Angles(0,math.pi,0)
+
+    local spawn=Instance.new("SpawnLocation")
+    spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=CFrame.new(0,1,-1);spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
+    World.schoolDoor=CFrame.new(0,3,-5)*CFrame.Angles(0,math.pi,0)
     return World
 end
+
 function World.subjectAt(position)
-    if position.Y<0 or position.Y>17 then return nil end
     for id,r in pairs(World.rooms) do
-        if math.abs(position.X-r.x)<=r.hx and math.abs(position.Z-r.z)<=r.hz then return id end
+        if position.Y>=r.minY and position.Y<=r.maxY and math.abs(position.X-r.x)<=r.hx and math.abs(position.Z-r.z)<=r.hz then
+            return id
+        end
     end
     return nil
 end
+
 function World.allocate(player)
     for i,p in ipairs(World.plots) do
         if not p.owner then p.owner=player.UserId;return i end
