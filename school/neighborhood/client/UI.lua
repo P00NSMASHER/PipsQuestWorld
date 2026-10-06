@@ -78,8 +78,8 @@ end
 function UI.iconButton(parent,icon,label,fn,props)
     props=props or {}
     local b=UI.button(parent,"",fn,{Position=props.Position,Size=props.Size or UDim2.fromOffset(72,44),BackgroundColor3=props.BackgroundColor3 or UI.P.white,CornerRadius=props.CornerRadius or UI.R.control})
-    UI.text(b,icon,props.IconSize or 18,{Position=UDim2.fromOffset(7,0),Size=UDim2.fromOffset(24,b.AbsoluteSize.Y>0 and b.AbsoluteSize.Y or 44),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=props.IconColor or UI.P.teal})
-    UI.text(b,label,props.TextSize or 12,{Position=UDim2.fromOffset(31,0),Size=UDim2.new(1,-35,1,0),Font=Enum.Font.GothamBold,TextColor3=props.TextColor3 or UI.P.ink})
+    UI.text(b,icon,props.IconSize or 18,{Name="Icon",Position=UDim2.fromOffset(7,0),Size=UDim2.fromOffset(24,b.AbsoluteSize.Y>0 and b.AbsoluteSize.Y or 44),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=props.IconColor or UI.P.teal})
+    UI.text(b,label,props.TextSize or 12,{Name="Label",Position=UDim2.fromOffset(31,0),Size=UDim2.new(1,-35,1,0),Font=Enum.Font.GothamBold,TextColor3=props.TextColor3 or UI.P.ink})
     return b
 end
 function UI.answerCard(parent,text,fn,props)
