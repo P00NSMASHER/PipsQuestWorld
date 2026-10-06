@@ -573,7 +573,8 @@ showShop=function(selected,subfilter)
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     local columns=layout.columns
     local gap=layout.shopGap
-    local cardHeight=layout.shopCardHeight
+    local showcaseCategory=category=="Homes" or category=="Vehicles"
+    local cardHeight=showcaseCategory and (layout.compact and 178 or 194) or layout.shopCardHeight
     local rows=math.max(1,math.ceil(#visible/columns))
     local grid=UI.new("Frame",body,{Name="ProductGrid",LayoutOrder=2,Size=UDim2.new(1,0,0,rows*cardHeight+(rows-1)*gap),BackgroundTransparency=1})
     UI.new("UIGridLayout",grid,{
@@ -588,10 +589,12 @@ showShop=function(selected,subfilter)
         local owned=state.owned[item.id]==true
         local slot=equippedSlot(item)
         local equipped=slot~=nil and state.equipped[slot]==item.id
-        local card=UI.surface(grid,{Name=item.id,LayoutOrder=number,Size=UDim2.new(1,0,0,cardHeight),BackgroundColor3=UI.P.white,Shadow=false})
-        local previewSize=layout.compact and 96 or 108
+        local cardTint=category=="Homes" and UI.P.goldSoft:Lerp(UI.P.white,.76) or category=="Vehicles" and UI.P.navySoft:Lerp(UI.P.white,.72) or UI.P.white
+        local card=UI.surface(grid,{Name=item.id,LayoutOrder=number,Size=UDim2.new(1,0,0,cardHeight),BackgroundColor3=cardTint,Shadow=false})
+        local previewSize=showcaseCategory and (layout.compact and 122 or 136) or (layout.compact and 96 or 108)
         local textX=previewSize+20
-        UI.preview(card,item,{Position=UDim2.fromOffset(10,10),Size=UDim2.fromOffset(previewSize,previewSize),CornerRadius=14})
+        local previewBg=category=="Homes" and Color3.fromRGB(244,236,214) or category=="Vehicles" and Color3.fromRGB(229,235,244) or UI.P.soft
+        UI.preview(card,item,{Position=UDim2.fromOffset(10,10),Size=UDim2.fromOffset(previewSize,previewSize),CornerRadius=14,BackgroundColor3=previewBg})
 
         UI.text(card,item.name,15,{Position=UDim2.fromOffset(textX,8),Size=UDim2.new(1,-textX-10,0,30),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
         local affordable=state.coins>=item.price
