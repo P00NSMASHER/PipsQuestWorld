@@ -44,6 +44,26 @@ local function sign(parent,text,cf,size,tint,textColor)
     return p
 end
 
+local function crest(parent,name,cf,diameter)
+    local d=diameter or 12
+    local p=World.part(parent,name or "ABVM crest",Vector3.new(d,d,.35),cf,palette.navy,nil,false)
+    local gui=Instance.new("SurfaceGui");gui.Face=Enum.NormalId.Front;gui.SizingMode=Enum.SurfaceGuiSizingMode.PixelsPerStud;gui.PixelsPerStud=36;gui.LightInfluence=0;gui.Parent=p
+    local outer=Instance.new("Frame");outer.Size=UDim2.fromScale(.94,.94);outer.Position=UDim2.fromScale(.03,.03);outer.BackgroundColor3=palette.navy;outer.BorderSizePixel=0;outer.Parent=gui
+    local oc=Instance.new("UICorner");oc.CornerRadius=UDim.new(1,0);oc.Parent=outer
+    local os=Instance.new("UIStroke");os.Color=palette.gold;os.Thickness=7;os.Parent=outer
+    local green=Instance.new("Frame");green.Size=UDim2.fromScale(.72,.72);green.AnchorPoint=Vector2.new(.5,.5);green.Position=UDim2.fromScale(.5,.5);green.BackgroundColor3=palette.green;green.BorderSizePixel=0;green.Parent=outer
+    local gc=Instance.new("UICorner");gc.CornerRadius=UDim.new(1,0);gc.Parent=green
+    local gs=Instance.new("UIStroke");gs.Color=palette.gold;gs.Thickness=4;gs.Parent=green
+    local center=Instance.new("Frame");center.Size=UDim2.fromScale(.9,.9);center.AnchorPoint=Vector2.new(.5,.5);center.Position=UDim2.fromScale(.5,.5);center.BackgroundColor3=Color3.fromRGB(247,246,241);center.BorderSizePixel=0;center.Parent=green
+    local cc=Instance.new("UICorner");cc.CornerRadius=UDim.new(1,0);cc.Parent=center
+    local a=Instance.new("TextLabel");a.BackgroundTransparency=1;a.Size=UDim2.fromScale(.7,.62);a.Position=UDim2.fromScale(.15,.23);a.Text="A";a.Font=Enum.Font.Garamond;a.TextScaled=true;a.TextColor3=palette.navy;a.Parent=center
+    local cr=Instance.new("TextLabel");cr.BackgroundTransparency=1;cr.Size=UDim2.fromScale(.35,.3);cr.Position=UDim2.fromScale(.325,.06);cr.Text="✝";cr.Font=Enum.Font.GothamBold;cr.TextScaled=true;cr.TextColor3=palette.gold;cr.Parent=center
+    local book=Instance.new("TextLabel");book.BackgroundTransparency=1;book.Size=UDim2.fromScale(.58,.25);book.Position=UDim2.fromScale(.21,.71);book.Text="▱  ▰";book.Font=Enum.Font.GothamBold;book.TextScaled=true;book.TextColor3=palette.navy;book.Parent=center
+    local top=Instance.new("TextLabel");top.BackgroundTransparency=1;top.Size=UDim2.fromScale(.78,.16);top.Position=UDim2.fromScale(.11,.03);top.Text="ASSUMPTION BVM";top.Font=Enum.Font.GothamBold;top.TextScaled=true;top.TextColor3=palette.gold;top.Parent=outer
+    local bottom=Instance.new("TextLabel");bottom.BackgroundTransparency=1;bottom.Size=UDim2.fromScale(.78,.15);bottom.Position=UDim2.fromScale(.11,.82);bottom.Text="CATHOLIC SCHOOL";bottom.Font=Enum.Font.GothamBold;bottom.TextScaled=true;bottom.TextColor3=palette.gold;bottom.Parent=outer
+    return p
+end
+
 local function cross(parent,cf,scale,tint)
     local s=scale or 1
     World.part(parent,"Cross vertical",Vector3.new(1.1*s,6*s,.6*s),cf,tint or palette.gold,Enum.Material.SmoothPlastic,false)
@@ -252,7 +272,9 @@ function World.build()
     end
     for _,x in ipairs({-18,0,18}) do makeFrontArch(root,x) end
     sign(root,"ASSUMPTION BVM\nCATHOLIC SCHOOL",CFrame.new(0,27,-33.4)*CFrame.Angles(0,math.pi,0),Vector3.new(39,6,.35),palette.navy,palette.gold)
-    cross(root,CFrame.new(0,48,-33.4),1.05,palette.gold)
+    crest(root,"Front ABVM crest",CFrame.new(0,38,-33.25)*CFrame.Angles(0,math.pi,0),10)
+    cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
+    sign(root,"1928",CFrame.new(-9,21.6,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
 
     -- Repeating side windows and strong vertical brick rhythm visible in the reference photos.
     for _,side in ipairs({-1,1}) do
@@ -348,7 +370,7 @@ function World.build()
 
     -- Main lobby/admin suite.
     sign(root,"ASSUMPTION BVM CATHOLIC SCHOOL\nFaith • Education • Community",CFrame.new(0,12,-39)*CFrame.Angles(0,math.pi,0),Vector3.new(42,7,.25),palette.navy,palette.gold)
-    cross(root,CFrame.new(0,17,-39),.5,palette.gold)
+    crest(root,"Lobby ABVM crest",CFrame.new(0,18,-39)*CFrame.Angles(0,math.pi,0),7)
     World.part(root,"Main Office counter",Vector3.new(31,3.5,4),CFrame.new(-46,6,-47),palette.wood,Enum.Material.Wood)
     sign(root,"MAIN OFFICE",CFrame.new(-46,10,-44.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
     sign(root,"Secretary — Mrs. Thompson",CFrame.new(-58,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(18,2.5,.2),palette.navy,palette.cream)
