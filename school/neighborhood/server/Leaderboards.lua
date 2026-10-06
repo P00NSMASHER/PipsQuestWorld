@@ -95,14 +95,14 @@ end
 
 local function formatValue(kind:string,value:number):string
     if kind=="accuracy" then return string.format("%.1f%%",value/100) end
-    if kind=="credits" then return tostring(value).." coins" end
+    if kind=="credits" then return tostring(value).." Credits" end
     return tostring(value)
 end
 
 local meta={
     accuracy={title="TOP ACCURACY",subtitle="20 answers minimum",accent=palette.green},
     questions={title="MOST QUESTIONS",subtitle="All saved answers",accent=palette.blue},
-    credits={title="MOST MONEY",subtitle="Current spendable coins",accent=palette.gold},
+    credits={title="MOST CREDITS",subtitle="Current spendable balance",accent=palette.gold},
 }
 
 local function renderBoard(part:BasePart,kind:string,rows:{any})
