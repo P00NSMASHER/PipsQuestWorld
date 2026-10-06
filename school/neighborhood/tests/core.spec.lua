@@ -228,6 +228,31 @@ test("catalog ids and prices are valid; every category has a progression",functi
     equal(Catalog.ById.outfit_abvm_plaid.price,75)
     equal(Catalog.ById.outfit_abvm_plaid.style,7)
 end)
+test("official ABVM store garments map into Roblox apparel without youth adult duplicates",function()
+    local priced={
+        abvm_store_polo_green=15,abvm_store_polo_navy=15,
+        abvm_store_ls_polo_green=17,abvm_store_ls_polo_navy=17,
+        abvm_store_quarter_zip_navy=26,abvm_store_heather_tee=10,
+        abvm_store_crewneck_heather=15,abvm_store_sweatpants_heather=15,
+        abvm_store_shorts_heather=12,
+    }
+    for id,usd in pairs(priced) do
+        local item=Catalog.ById[id]
+        assert(item and item.category=="Clothes")
+        equal(item.retailUSD,usd);equal(item.price,usd*4)
+        assert(item.slot=="uniformTop" or item.slot=="uniformBottom")
+        assert(not string.find(item.name,"Youth") and not string.find(item.name,"Adult"))
+    end
+    equal(Catalog.ById.abvm_store_polo_green.style,51)
+    equal(Catalog.ById.abvm_store_ls_polo_navy.style,52)
+    equal(Catalog.ById.abvm_store_quarter_zip_navy.style,53)
+    equal(Catalog.ById.abvm_store_heather_tee.style,54)
+    equal(Catalog.ById.abvm_store_crewneck_heather.style,55)
+    equal(Catalog.ById.abvm_store_sweatpants_heather.style,61)
+    equal(Catalog.ById.abvm_store_shorts_heather.style,62)
+    local hoodie=Catalog.ById.abvm_store_hoodie_heather
+    assert(hoodie and hoodie.slot=="uniformTop" and hoodie.retailUSD==nil)
+end)
 test("mix-and-match ABVM uniform pieces equip independently",function()
     local p=Learning.newProfile();p.coins=500;p.earned=500
     local ids={"uniform_top_green_polo","uniform_bottom_plaid_skirt","uniform_socks_navy","uniform_shoes_brown"}
