@@ -32,6 +32,25 @@ Catalog.Items = {
     -- ABVM uniform references supplied by the user: forest-green polo + khaki, or green/navy/white plaid.
     {id="outfit_abvm_polo", category="Clothes", name="ABVM Uniform • Polo", price=25, tier=1, style=6, color={31,91,67}, description="Forest-green ABVM polo with khaki school bottoms."},
     {id="outfit_abvm_plaid", category="Clothes", name="ABVM Uniform • Plaid", price=75, tier=1, style=7, color={31,91,67}, description="ABVM green/navy/white plaid uniform with navy knee socks."},
+
+    -- Mix-and-match ABVM uniform pieces. The slot field is additive and preserves legacy outfit saves.
+    {id="uniform_top_green_polo", category="Clothes", slot="uniformTop", name="Uniform Top • Green Polo", price=15, tier=1, style=11, color={31,91,67}, description="Forest-green ABVM polo."},
+    {id="uniform_top_navy_polo", category="Clothes", slot="uniformTop", name="Uniform Top • Navy Polo", price=15, tier=1, style=12, color={28,48,72}, description="Navy school polo with ABVM chest mark."},
+    {id="uniform_top_white_polo", category="Clothes", slot="uniformTop", name="Uniform Top • White Polo", price=15, tier=1, style=13, color={238,238,231}, description="White school polo with green ABVM chest mark."},
+    {id="uniform_top_green_sweater", category="Clothes", slot="uniformTop", name="School Sweater • Green", price=30, tier=1, style=14, color={31,91,67}, description="Forest-green school sweater for cooler days."},
+    {id="uniform_top_navy_cardigan", category="Clothes", slot="uniformTop", name="School Cardigan • Navy", price=30, tier=1, style=15, color={28,48,72}, description="Navy school cardigan with light shirt inset."},
+    {id="uniform_bottom_khaki_pants", category="Clothes", slot="uniformBottom", name="Uniform Bottom • Khaki Pants", price=15, tier=1, style=21, color={205,190,154}, description="Classic khaki uniform pants."},
+    {id="uniform_bottom_khaki_shorts", category="Clothes", slot="uniformBottom", name="Uniform Bottom • Khaki Shorts", price=15, tier=1, style=22, color={205,190,154}, description="Classic khaki uniform shorts."},
+    {id="uniform_bottom_khaki_skirt", category="Clothes", slot="uniformBottom", name="Uniform Bottom • Khaki Skirt", price=20, tier=1, style=23, color={205,190,154}, description="Khaki school skirt."},
+    {id="uniform_bottom_plaid_skirt", category="Clothes", slot="uniformBottom", name="Uniform Bottom • Plaid Skirt", price=25, tier=1, style=24, color={31,91,67}, description="Green/navy/white plaid school skirt."},
+    {id="uniform_bottom_plaid_jumper", category="Clothes", slot="uniformBottom", name="Uniform • Plaid Jumper", price=35, tier=1, style=25, color={31,91,67}, description="Green/navy/white plaid school jumper."},
+    {id="uniform_socks_navy", category="Clothes", slot="uniformLegwear", name="School Socks • Navy", price=10, tier=1, style=31, color={28,48,72}, description="Navy knee socks."},
+    {id="uniform_socks_white", category="Clothes", slot="uniformLegwear", name="School Socks • White", price=10, tier=1, style=32, color={238,238,231}, description="White school socks."},
+    {id="uniform_tights_navy", category="Clothes", slot="uniformLegwear", name="School Tights • Navy", price=15, tier=1, style=33, color={28,48,72}, description="Navy school tights."},
+    {id="uniform_shoes_brown", category="Clothes", slot="uniformShoes", name="School Shoes • Brown", price=20, tier=1, style=41, color={112,74,50}, description="Brown school shoes."},
+    {id="uniform_shoes_black", category="Clothes", slot="uniformShoes", name="School Shoes • Black", price=20, tier=1, style=42, color={45,47,49}, description="Black school shoes."},
+    {id="uniform_shoes_tan", category="Clothes", slot="uniformShoes", name="School Shoes • Tan", price=20, tier=1, style=43, color={166,127,86}, description="Tan school shoes."},
+
     {id="outfit_coral", category="Clothes", name="Everyday Tee • Coral", price=50, tier=1, style=1, color={227,128,126}, description="A simple everyday school look."},
     {id="outfit_ocean", category="Clothes", name="Everyday Tee • Ocean", price=50, tier=1, style=1, color={70,158,183}, description="The same starter look in ocean blue."},
     {id="outfit_hoodie", category="Clothes", name="Campus Hoodie", price=150, tier=2, style=2, color={42,91,126}, description="A navy hoodie-inspired layer for school and the neighborhood."},
