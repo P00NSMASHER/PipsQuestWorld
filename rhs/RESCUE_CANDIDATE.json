@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "purpose": "iPhone rescue validation only",
+  "productCommit": "a70c3df16268663649c157649b43534fa73f92ac",
+  "productBinary": "rhs/working/ROBLOX High School.rbxl",
+  "productBinaryGitBlob": "1e5189ccd241a1fdfa9d1b192b0ca9acad6a3d82",
+  "expectedWorkingSha256": "83df781ddf608f59933ca480e73092d495148ab45b42e78b1f3e0ddc10532054",
+  "claims": {
+    "rhs2Parity": false,
+    "runtimeVerified": false,
+    "publishAuthorized": true
+  },
+  "requiredNext": "Full RHS Static Preflight on unchanged binary, then private Open Cloud publish for actual iPhone runtime test."
+}
