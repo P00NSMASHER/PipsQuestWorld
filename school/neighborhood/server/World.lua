@@ -188,10 +188,11 @@ local function npc(parent,name,position,suit,tint)
         World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),Color3.fromRGB(245,245,242),nil,false)
         World.part(model,"Suit tie",Vector3.new(.35,2,.2),CFrame.new(position+Vector3.new(0,4.9,-1.12)),palette.gold,nil,false)
     end
-    local gui=Instance.new("BillboardGui");gui.Name="Name";gui.AlwaysOnTop=true;gui.Size=UDim2.fromOffset(190,44);gui.StudsOffset=Vector3.new(0,2.1,0);gui.Parent=head
-    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.08
-    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=14;label.Text=name;label.Parent=gui
-    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,9);corner.Parent=label
+    local gui=Instance.new("BillboardGui");gui.Name="Name";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(118,28);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=30;gui.Parent=head
+    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.24
+    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=11;label.Text=name;label.TextTruncate=Enum.TextTruncate.AtEnd;label.Parent=gui
+    local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.62;stroke.Thickness=1;stroke.Parent=label
+    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,8);corner.Parent=label
     return model
 end
 
