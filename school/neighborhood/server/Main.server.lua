@@ -9,7 +9,9 @@ local ProfileStore=require(script.Parent.ProfileStore)
 local World=require(script.Parent.World).build()
 local Garage=require(script.Parent.Garage)
 local Wardrobe=require(script.Parent.Wardrobe)
+local Leaderboards=require(script.Parent.Leaderboards)
 local store=ProfileStore.new()
+local leaderboards=Leaderboards.new()
 local sessions={}
 local remote=Instance.new("Folder");remote.Name="NeighborhoodRemotes";remote.Parent=ReplicatedStorage
 local function create(class,name) local v=Instance.new(class);v.Name=name;v.Parent=remote;return v end
@@ -27,6 +29,17 @@ end
 local function emit(player,kind,data)
     if player.Parent==Players then changed:FireClient(player,{kind=kind,data=data,state=state(player)}) end
 end
+local function syncLeaderboard(userId)
+    local profile=store.profiles[userId]
+    if not profile then return end
+    task.spawn(function()
+        leaderboards:record(userId,profile)
+    end)
+end
+local function refreshLeaderboardBoards()
+    local snapshot=leaderboards:snapshot(10)
+    if snapshot then leaderboards:render(World.leaderboardParts,snapshot) end
+end
 local function nextQuestion(player)
     local s=sessions[player.UserId];local profile=store.profiles[player.UserId]
     if not s or not profile or not s.subject then return nil end
@@ -36,7 +49,7 @@ local function nextQuestion(player)
     for i=#order,2,-1 do local j=math.random(i);order[i],order[j]=order[j],order[i] end
     local choices={};local correctIndex=0
     for i,index in ipairs(order) do choices[i]=q.choices[index];if index==q.answer then correctIndex=i end end
-    s.pending={token=HttpService:GenerateGUID(false),q=q,correctIndex=correctIndex,started=os.clock(),missed=false}
+    s.pending={token=HttpService:GenerateGUID(false),q=q,correctIndex=correctIndex,started=os.clock(),missed=false,wrongChoices={}}
     s.lastQuestion=q.id
     local progress=profile.practice[q.id]
     return {token=s.pending.token,subject=q.subject,prompt=q.prompt,choices=choices,skill=q.skill,
@@ -84,6 +97,7 @@ local function join(player)
     if player.Character then task.spawn(spawned,player.Character) end
     appearance(player)
     emit(player,"ready",{message="This home is yours. Head to school and choose a classroom."})
+    syncLeaderboard(player.UserId)
 end
 local function handle(player,command,args)
     local s=sessions[player.UserId];local p=store.profiles[player.UserId]
@@ -100,8 +114,24 @@ local function handle(player,command,args)
         if os.clock()-pending.started<1 then return {ok=false,code="read_question"} end
         if type(args.choice)~="number" or args.choice%1~=0 or args.choice<1 or args.choice>#pending.q.choices then return {ok=false,code="invalid_choice"} end
         if args.choice~=pending.correctIndex then
+            if pending.wrongChoices[args.choice] then
+                return {ok=true,correct=false,duplicate=true,penalty=0,deducted=0,
+                    wrongStreak=p.wrongStreak,explanation=pending.q.explanation,
+                    message="You already tried that answer. No extra coins were deducted.",state=state(player)}
+            end
+            local missId=pending.token..":miss:"..tostring(args.choice)
+            local result=store:transact(player.UserId,function(profile)
+                return Learning.miss(profile,missId,pending.q,os.time())
+            end)
+            if not result.ok then return result end
             pending.missed=true
-            return {ok=true,correct=false,explanation=pending.q.explanation,correctChoice=pending.correctIndex,message="Use the explanation, then try again. You can still earn 15 coins."}
+            pending.wrongChoices[args.choice]=true
+            result.correct=false;result.explanation=pending.q.explanation;result.state=state(player)
+            result.message=result.deducted>0
+                and ("Wrong streak "..tostring(result.wrongStreak).." • -"..tostring(result.deducted).." coins")
+                or ("Wrong streak "..tostring(result.wrongStreak).." • balance protected at 0")
+            syncLeaderboard(player.UserId)
+            return result
         end
         local result=store:transact(player.UserId,function(profile)
             return Learning.reward(profile,pending.token,pending.q,not pending.missed,os.time())
@@ -110,6 +140,7 @@ local function handle(player,command,args)
         s.pending=nil
         result.correct=true;result.explanation=pending.q.explanation;result.state=state(player)
         result.next=nextQuestion(player)
+        syncLeaderboard(player.UserId)
         return result
     elseif command=="dismiss" then
         s.pending=nil;s.blockedSubject=s.subject
@@ -134,7 +165,7 @@ local function handle(player,command,args)
         end)
         if result.ok then
             -- Purchasing never silently spends again. Equipping is a separate free action.
-            appearance(player);result.state=state(player)
+            appearance(player);result.state=state(player);syncLeaderboard(player.UserId)
         end
         return result
     elseif command=="home" or command=="school" then
@@ -189,6 +220,12 @@ task.spawn(function()
                 if not result.ok and result.code~="saving" then emit(player,"notice",{message="Saving is temporarily unavailable. Purchases and rewards must be saved before they appear."}) end
             end)
         end
+    end
+end)
+task.spawn(function()
+    while true do
+        refreshLeaderboardBoards()
+        task.wait(Leaderboards.REFRESH_SECONDS)
     end
 end)
 game:BindToClose(function()
