@@ -1,0 +1,75 @@
+name: Publish RHS Rescue to Roblox
+
+on:
+  push:
+    branches:
+      - deploy/rhs-rescue-ad07fb5
+    paths:
+      - '.github/workflows/publish-rhs-rescue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: roblox-publish-rhs-rescue
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: ad07fb530179af16dc2843e42a56d82a1554c88e
+      EXPECTED_RBXL_SHA256: e0c4a3d490eb0797adb57180d40ac8dbd2b8f1fb81e6e08afc54efbdd03d5b91
+      UNIVERSE_ID: '10768955678'
+      PLACE_ID: '87245440673982'
+      RBXL_PATH: 'rhs/working/ROBLOX High School.rbxl'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ad07fb530179af16dc2843e42a56d82a1554c88e
+          persist-credentials: false
+
+      - name: Verify exact rescue binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test -s "$RBXL_PATH"
+          actual="$(sha256sum "$RBXL_PATH" | awk '{print $1}')"
+          echo "RBXL_SHA256=$actual"
+          test "$actual" = "$EXPECTED_RBXL_SHA256"
+
+      - name: Require configured Roblox API key
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY" || { echo "::error::ROBLOX_API_KEY repository secret is missing"; exit 1; }
+
+      - name: Publish rescue binary to existing private Roblox place
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          response="$RUNNER_TEMP/roblox-publish-response.json"
+          status="$(curl --silent --show-error --location \
+            --output "$response" --write-out '%{http_code}' \
+            --request POST \
+            "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            --header 'Content-Type: application/octet-stream' \
+            --data-binary "@$RBXL_PATH")"
+          cat "$response"
+          test "$status" -ge 200 -a "$status" -lt 300 || { echo "::error::Roblox publish failed with HTTP $status"; exit 1; }
+          python3 - "$response" <<'PY'
+          import json, pathlib, sys
+          data=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          version=data.get("versionNumber")
+          if not isinstance(version, int) or version < 1:
+              raise SystemExit("Roblox response did not contain a valid versionNumber")
+          print(f"ROBLOX_RHS_RESCUE_PUBLISH_OK versionNumber={version}")
+          PY
