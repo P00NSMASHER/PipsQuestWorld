@@ -161,6 +161,29 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     for _,dx in ipairs({-11,0,11}) do
         for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
     end
+    -- One clear subject-specific visual cue per room; decorative only, never another learning authority.
+    if id=="math" then
+        sign(m,"2 + 3 = 5   •   10 − 4 = 6",CFrame.new(x,floorY+9,z+28.35),Vector3.new(28,3,.2),tint,palette.cream)
+    elseif id=="reading" then
+        World.part(m,"Reading bookcase",Vector3.new(16,8,2),CFrame.new(x+12,floorY+4.5,z+27),palette.wood,Enum.Material.Wood)
+        for i=1,12 do
+            World.part(m,"Reading book",Vector3.new(.8,3,1.2),CFrame.new(x+5+i*1.05,floorY+6,z+25.8),
+                color(Catalog.Subjects[(i-1)%#Catalog.Subjects+1].color),nil,false)
+        end
+    elseif id=="grammar" then
+        sign(m,"WHO?  +  DOES WHAT?\nBuild a complete sentence.",CFrame.new(x,floorY+9,z+28.35),Vector3.new(30,5,.2),tint,palette.cream)
+    elseif id=="religion" then
+        cross(m,CFrame.new(x,floorY+10,z+28.25)*CFrame.Angles(0,math.pi,0),.8,palette.gold)
+        sign(m,"FAITH  •  HOPE  •  LOVE",CFrame.new(x,floorY+5.5,z+28.3),Vector3.new(25,2.6,.2),palette.navy,palette.gold)
+    elseif id=="vocabulary" then
+        sign(m,"WORD  →  MEANING  →  CONTEXT",CFrame.new(x,floorY+9,z+28.35),Vector3.new(31,3,.2),tint,palette.cream)
+    elseif id=="spelling" then
+        for i,letter in ipairs({"A","B","V","M","S","P","E","L","L"}) do
+            local tx=x-15+(i-1)*3.7
+            local tile=sign(m,letter,CFrame.new(tx,floorY+9,z+28.35),Vector3.new(3,3,.18),i%2==0 and palette.navy or tint,palette.cream)
+            tile.Name="Spelling letter tile"
+        end
+    end
     local teacherX=x+(x<0 and 13 or -13)
     npc(m,teacher,Vector3.new(teacherX,floorY,z-21),false,tint)
     local hallLabelCf=CFrame.new(hallX+(x<0 and .65 or -.65),floorY+9,z)*CFrame.Angles(0,x<0 and -math.pi/2 or math.pi/2,0)
@@ -324,7 +347,15 @@ function World.build()
     end
     cross(root,CFrame.new(75.25,23,-93)*CFrame.Angles(0,math.pi/2,0),.55,palette.gold)
     World.part(root,"Howard walkway",Vector3.new(21,.35,17),CFrame.new(93,.25,-93),palette.stone,Enum.Material.Concrete)
-    local roadSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL\n────────\nENTRANCE ON HOWARD AVENUE",CFrame.new(107,7,-78)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,10,.45),palette.green,palette.gold)
+    -- Freestanding green/gold Howard Avenue sign with posts and caps like the user's reference.
+    for _,z in ipairs({-84.5,-71.5}) do
+        World.part(root,"Howard sign post",Vector3.new(.85,17,.85),CFrame.new(107,5.7,z),palette.green,Enum.Material.Wood,false)
+        local cap=World.part(root,"Howard sign post cap",Vector3.new(1.3,1.3,1.3),CFrame.new(107,14.2,z),palette.gold,nil,false)
+        cap.Shape=Enum.PartType.Ball
+    end
+    local signBacking=World.part(root,"Howard sign gold backing",Vector3.new(.6,10.8,15.8),CFrame.new(107,9,-78),palette.gold,Enum.Material.Metal,false)
+    signBacking.CFrame*=CFrame.Angles(0,-math.pi/2,0)
+    local roadSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL\n────────\nENTRANCE ON HOWARD AVENUE",CFrame.new(106.65,9,-78)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,10,.45),palette.green,palette.gold)
     roadSign.Name="Assumption BVM Howard Avenue sign"
 
     -- Parking lot and simple perimeter fencing.
@@ -397,6 +428,17 @@ function World.build()
     npc(root,"Mrs. Thompson — Secretary",Vector3.new(-59,4,-52),false,Color3.fromRGB(86,125,143))
     npc(root,"Dr. McBreen — Principal",Vector3.new(-37,4,-61),true,palette.navy)
     npc(root,"Mrs. Boyer — Assistant Principal",Vector3.new(-21,4,-61),false,Color3.fromRGB(89,111,132))
+
+    -- Small lobby identity details: trophy case and bulletin board keep the entry recognizably school-like.
+    local trophyGlass=World.part(root,"Lobby trophy case glass",Vector3.new(17,8,.7),CFrame.new(25,8,-42),Color3.fromRGB(153,184,193),Enum.Material.Glass,false)
+    trophyGlass.Transparency=.45
+    World.part(root,"Lobby trophy case base",Vector3.new(18,1.2,2),CFrame.new(25,4.7,-42),palette.wood,Enum.Material.Wood)
+    for _,x in ipairs({20,25,30}) do
+        World.part(root,"Trophy stem",Vector3.new(.4,2,.4),CFrame.new(x,7,-41.5),palette.gold,nil,false)
+        local cup=World.part(root,"Trophy cup",Vector3.new(1.7,1.4,1.2),CFrame.new(x,8.5,-41.5),palette.gold,nil,false)
+        cup.Shape=Enum.PartType.Ball
+    end
+    sign(root,"ASSUMPTION BVM\nFAITH • SERVICE • LEARNING",CFrame.new(-17,9,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(24,5,.2),palette.green,palette.gold)
 
     -- Three ABVM-branded leaderboard boards on the lobby's east wall.
     World.leaderboardParts={
