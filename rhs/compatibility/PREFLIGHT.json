@@ -1,21 +1,23 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-10-01",
+  "recordedAt": "2026-10-06",
   "baseline": {
     "bytes": 2283775,
     "sha256": "d71efe44c35a60cb1699c290aed708d901a3a532db74307ae502518616423360",
     "immutable": true
   },
   "working": {
-    "sha256": "fbc6206282e082af6a5caf9d40fd3805b69b4776ca4d8d6c545d8a9812d55c0d",
-    "compatibilityPatchCount": 4,
+    "sha256": "83df781ddf608f59933ca480e73092d495148ab45b42e78b1f3e0ddc10532054",
+    "compatibilityPatchCount": 6,
     "runtimeVerified": false,
     "published": false,
     "compatibilityRepairs": [
       "sandbox-legacy-ranking-login",
       "sandbox-legacy-group-ranking",
       "sandbox-legacy-gameanalytics",
-      "harden-car-instance-remotes"
+      "harden-car-instance-remotes",
+      "compat-modern-touch-control-startup",
+      "compat-house-load-preload-timeout"
     ]
   },
   "staticChecks": {
@@ -183,5 +185,5 @@
     "rhsBootstrapWriterRetired": true,
     "historicalMazeTreePreservedForAttribution": true
   },
-  "nextHardGate": "Roblox Studio runtime smoke: spawn -> movement/jump/camera -> HUD -> schedule/class flow"
+  "nextHardGate": "Private iPhone runtime smoke: spawn -> touch movement/jump/camera -> HUD -> house load -> schedule/class flow"
 }
