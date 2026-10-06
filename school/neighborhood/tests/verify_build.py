@@ -134,7 +134,14 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
-    require("duplicate=true,penalty=0,deducted=0" in main and "wrongStreak=p.wrongStreak,hint=pending.q.hint" in main,
+    duplicate_block = re.search(
+        r"if pending\.wrongChoices\[args\.choice\] then(?P<body>.*?)\n\s*end",
+        main, re.S)
+    require(duplicate_block is not None, "duplicate wrong-answer branch missing")
+    duplicate_body = duplicate_block.group("body")
+    require("duplicate=true" in duplicate_body and "penalty=0" in duplicate_body and
+            "deducted=0" in duplicate_body and "hint=pending.q.hint" in duplicate_body and
+            "explanation=" not in duplicate_body,
             "duplicate wrong-answer path must stay hint-only and penalty-free")
     return {
         "frontArchedBays": 4,
