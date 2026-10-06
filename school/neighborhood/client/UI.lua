@@ -123,9 +123,10 @@ function UI.crest(parent,props)
     UI.text(center,"✝",10,{Position=UDim2.fromScale(.31,-.08),Size=UDim2.fromScale(.38,.38),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,ZIndex=(props.ZIndex or 3)+4})
     return outer
 end
-function UI.preview(parent,item)
-    local v=UI.new("ViewportFrame",parent,{Size=UDim2.fromOffset(94,94),Position=UDim2.fromOffset(10,10),BackgroundColor3=UI.P.soft,BorderSizePixel=0,LightDirection=Vector3.new(-1,-1,-1),Ambient=Color3.fromRGB(205,205,205)})
-    UI.corner(v,12)
+function UI.preview(parent,item,props)
+    props=props or {}
+    local v=UI.new("ViewportFrame",parent,{Size=props.Size or UDim2.fromOffset(94,94),Position=props.Position or UDim2.fromOffset(10,10),BackgroundColor3=props.BackgroundColor3 or UI.P.soft,BorderSizePixel=0,LightDirection=Vector3.new(-1,-1,-1),Ambient=Color3.fromRGB(205,205,205)})
+    UI.corner(v,props.CornerRadius or 12)
     local model=Instance.new("Model");model.Parent=v
     local tint=Color3.fromRGB(table.unpack(item.color))
     local function p(size,pos,c,shape)
