@@ -148,7 +148,13 @@ def validate_abvm_contract() -> dict:
     require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
             "gold-standard dark primary navigation rail missing")
     require('nav.Parent=canvas' in main and 'layout.goldLandscape' in main,
-            "landscape navigation must detach from the top header into the left rail")
+            "landscape navigation must detach from the top header into the right rail")
+    require('IgnoreGuiInset=true' in main and 'ScreenInsets=Enum.ScreenInsets.None' in main,
+            "top capsule must be able to align vertically with Roblox CoreGui")
+    require('goalCard=UI.new("Frame",header' in main and 'CornerRadius=999' in main,
+            "approved capsule-integrated reward composition regressed")
+    require('nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)' in main,
+            "approved far-right navigation placement regressed")
     require('Size=UDim2.fromOffset(760,50)' not in main,
             "legacy wide white-toolbar HUD pattern returned")
 

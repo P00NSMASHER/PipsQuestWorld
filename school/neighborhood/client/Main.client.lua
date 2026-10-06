@@ -14,7 +14,7 @@ local remotes=ReplicatedStorage:WaitForChild("NeighborhoodRemotes")
 local request=remotes:WaitForChild("Request")
 local changed=remotes:WaitForChild("Changed")
 local drive=remotes:WaitForChild("Drive")
-local gui=UI.new("ScreenGui",player:WaitForChild("PlayerGui"),{Name="PipNeighborhoodUI",ResetOnSpawn=false,DisplayOrder=20,IgnoreGuiInset=false,ScreenInsets=Enum.ScreenInsets.CoreUISafeInsets,ZIndexBehavior=Enum.ZIndexBehavior.Sibling})
+local gui=UI.new("ScreenGui",player:WaitForChild("PlayerGui"),{Name="PipNeighborhoodUI",ResetOnSpawn=false,DisplayOrder=20,IgnoreGuiInset=true,ScreenInsets=Enum.ScreenInsets.None,ZIndexBehavior=Enum.ZIndexBehavior.Sibling})
 gui:SetAttribute("RobloxPlaceVersion",game.PlaceVersion)
 local canvas=UI.new("Frame",gui,{Size=UDim2.fromScale(1,1),BackgroundTransparency=1})
 local state={ready=false,coins=0,earned=0,lost=0,correct=0,answers=0,accuracyBasisPoints=0,correctStreak=0,wrongStreak=0,lessonCount=0,owned={},equipped={},goal="home_cottage"}
@@ -27,44 +27,51 @@ local clothesFilter="All"
 local homeFilter="All"
 local vehicleFilter="All"
 
--- Compact floating rail from the authoritative gold-standard board.
-local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(500,50),BackgroundColor3=UI.P.ink,BackgroundTransparency=.02})
-local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
+-- User-approved exploration HUD: one CoreGui-height capsule plus a right-side nav rail.
+local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(0,0),Position=UDim2.fromOffset(0,15),Size=UDim2.fromOffset(650,56),BackgroundColor3=UI.P.ink,BackgroundTransparency=.02,CornerRadius=999})
+local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,8),Size=UDim2.fromOffset(40,40),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
 UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
-UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
-UI.text(header,"GRADE 2  •  ABVM  •  v"..tostring(game.PlaceVersion),9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(132,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,TextTruncate=Enum.TextTruncate.AtEnd})
+local nameText=UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(56,5),Size=UDim2.fromOffset(144,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
+local gradeText=UI.text(header,"GRADE 2  •  ABVM  •  v"..tostring(game.PlaceVersion),9,{Position=UDim2.fromOffset(56,27),Size=UDim2.fromOffset(146,16),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,TextTruncate=Enum.TextTruncate.AtEnd})
+local profileDivider=UI.frame(header,{Position=UDim2.fromOffset(204,13),Size=UDim2.fromOffset(1,30),BackgroundColor3=Color3.fromRGB(102,120,143),BackgroundTransparency=.25})
+UI.corner(profileDivider,1)
 
-local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,7),Size=UDim2.fromOffset(108,36),BackgroundColor3=UI.P.gold})
+local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(108,40),BackgroundColor3=UI.P.gold})
 UI.corner(wallet,UI.R.chip)
-local coinIcon=UI.frame(wallet,{Position=UDim2.fromOffset(5,5),Size=UDim2.fromOffset(26,26),BackgroundColor3=UI.P.ink})
+local coinIcon=UI.frame(wallet,{Position=UDim2.fromOffset(5,5),Size=UDim2.fromOffset(30,30),BackgroundColor3=UI.P.ink})
 UI.corner(coinIcon,999)
 UI.text(coinIcon,"C",12,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
-local walletText=UI.text(wallet,"0",15,{Position=UDim2.fromOffset(36,1),Size=UDim2.new(1,-42,0,20),TextColor3=UI.P.ink,Font=Enum.Font.GothamBold})
-UI.text(wallet,"CREDITS",8,{Position=UDim2.fromOffset(36,18),Size=UDim2.new(1,-42,0,13),TextColor3=Color3.fromRGB(75,64,35),Font=Enum.Font.GothamBold})
+local walletText=UI.text(wallet,"0",15,{Position=UDim2.fromOffset(40,2),Size=UDim2.new(1,-46,0,20),TextColor3=UI.P.ink,Font=Enum.Font.GothamBold})
+UI.text(wallet,"CREDITS",8,{Position=UDim2.fromOffset(40,20),Size=UDim2.new(1,-46,0,13),TextColor3=Color3.fromRGB(75,64,35),Font=Enum.Font.GothamBold})
 
-local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-124,0,7),Size=UDim2.fromOffset(108,36),BackgroundColor3=UI.P.teal})
-UI.corner(streakPill,UI.R.chip)
-local streakIcon=UI.frame(streakPill,{Position=UDim2.fromOffset(5,5),Size=UDim2.fromOffset(26,26),BackgroundColor3=Color3.fromRGB(24,78,58)})
-UI.corner(streakIcon,999)
-local streakIconText=UI.text(streakIcon,"✦",13,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
-local streakText=UI.text(streakPill,"0",15,{Position=UDim2.fromOffset(36,1),Size=UDim2.new(1,-42,0,20),TextColor3=UI.P.white,Font=Enum.Font.GothamBold})
-local streakCaption=UI.text(streakPill,"STREAK",8,{Position=UDim2.fromOffset(36,18),Size=UDim2.new(1,-42,0,13),TextColor3=Color3.fromRGB(220,239,231),Font=Enum.Font.GothamBold})
+-- Streak state is preserved for feedback logic but is intentionally not a permanent explore-mode block.
+local streakPill=UI.frame(header,{Visible=false,Position=UDim2.fromOffset(0,0),Size=UDim2.fromOffset(1,1),BackgroundColor3=UI.P.teal})
+local streakIcon=UI.frame(streakPill,{Size=UDim2.fromOffset(1,1),BackgroundColor3=Color3.fromRGB(24,78,58)})
+local streakIconText=UI.text(streakIcon,"✦",1,{Size=UDim2.fromScale(1,1),TextColor3=UI.P.white})
+local streakText=UI.text(streakPill,"0",1,{Size=UDim2.fromScale(1,1),TextColor3=UI.P.white})
+local streakCaption=UI.text(streakPill,"STREAK",1,{Size=UDim2.fromScale(1,1),TextColor3=Color3.fromRGB(220,239,231)})
+
 local nav=UI.frame(canvas,{Name="PrimaryNav",BackgroundColor3=UI.P.ink,BackgroundTransparency=.04,Size=UDim2.fromOffset(104,212)})
 UI.corner(nav,18);UI.stroke(nav,Color3.fromRGB(46,67,93))
 
--- Compact progression chip; expand only while a lesson can be resumed.
-local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.02})
-local goalIcon=UI.frame(goalCard,{Position=UDim2.fromOffset(7,6),Size=UDim2.fromOffset(34,30),BackgroundColor3=UI.P.gold})
-UI.corner(goalIcon,10)
-local goalIconText=UI.text(goalIcon,"★",16,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
+-- Next reward is integrated into the navy player capsule instead of floating as a second card.
+local goalCard=UI.new("Frame",header,{Name="NextGoal",Position=UDim2.fromOffset(208,5),Size=UDim2.fromOffset(312,46),BackgroundTransparency=1,BorderSizePixel=0})
+local goalIcon=UI.frame(goalCard,{Position=UDim2.fromOffset(0,7),Size=UDim2.fromOffset(32,32),BackgroundColor3=UI.P.success})
+UI.corner(goalIcon,999)
+local function renderGoalIcon(kind)
+    local old=goalIcon:FindFirstChild("Icon")
+    if old then old:Destroy() end
+    UI.vectorIcon(goalIcon,kind,UI.P.white,4)
+end
+renderGoalIcon("home")
 local resumeButton
-local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(49,2),Size=UDim2.new(1,-112,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-local bonusChip=UI.frame(goalCard,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-7,0,5),Size=UDim2.fromOffset(48,20),BackgroundColor3=UI.P.goldSoft})
+local goalTitle=UI.text(goalCard,"Cozy Cottage",11,{Position=UDim2.fromOffset(40,1),Size=UDim2.new(1,-104,0,18),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
+local bonusChip=UI.frame(goalCard,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-4,0,2),Size=UDim2.fromOffset(52,22),BackgroundColor3=UI.P.ink})
 UI.corner(bonusChip,999);UI.stroke(bonusChip,UI.P.gold)
-local bonusText=UI.text(bonusChip,"★ 0/5",9,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=Color3.fromRGB(151,108,23)})
-local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(49,19),Size=UDim2.new(1,-58,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
-local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(49,36),Size=UDim2.new(1,-58,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
-local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
+local bonusText=UI.text(bonusChip,"★ 0/5",9,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+local goalInfo=UI.text(goalCard,"0 / 400",10,{Position=UDim2.fromOffset(40,18),Size=UDim2.new(1,-96,0,15),TextColor3=Color3.fromRGB(207,218,231),TextTruncate=Enum.TextTruncate.AtEnd})
+local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(40,37),Size=UDim2.new(1,-96,0,4),BackgroundColor3=Color3.fromRGB(73,103,133)});UI.corner(goalTrack,4)
+local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=Color3.fromRGB(94,151,183)});UI.corner(goalFill,4)
 
 local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.white,BackgroundTransparency=.01,ClipsDescendants=true})
 local panelScale=UI.new("UIScale",panel,{Scale=1})
@@ -119,26 +126,20 @@ local function update(snapshot)
     end
     if resumeButton then
         resumeButton.Visible=state.subject~=nil
-        local goalLayout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y).goal
-        goalCard.Size=UDim2.fromOffset(goalLayout.width,goalLayout.height+(state.subject and 40 or 0))
+        bonusChip.Visible=state.subject==nil
     end
     local goal=Catalog.ById[state.goal] or Catalog.ById.home_cottage
-    local goalIcons={Homes="⌂",Vehicles="◆",Clothes="♢",Items="▣"}
+    local goalKinds={Homes="home",Vehicles="vehicle",Clothes="apparel",Items="items"}
     local goalColors={Homes=UI.P.success,Vehicles=Color3.fromRGB(58,124,219),Clothes=UI.P.gold,Items=UI.P.ink}
-    goalIconText.Text=goalIcons[goal.category] or "★"
-    goalIcon.BackgroundColor3=goalColors[goal.category] or UI.P.gold
-    goalIconText.TextColor3=(goal.category=="Clothes") and UI.P.ink or UI.P.white
+    renderGoalIcon(goalKinds[goal.category] or "home")
+    goalIcon.BackgroundColor3=goalColors[goal.category] or UI.P.success
     if state.owned[goal.id] then
-        goalTitle.Text="Owned • "..goal.name
-        goalInfo.Text="Choose your next reward in the shop"
+        goalTitle.Text=goal.name
+        goalInfo.Text="OWNED"
         goalFill.Size=UDim2.fromScale(1,1)
     else
-        local remaining=math.max(0,goal.price-state.coins)
-        local baseAnswers=math.ceil(remaining/10)
-        goalTitle.Text="Next reward • "..goal.name
-        goalInfo.Text=remaining==0
-            and ("Ready to buy  •  lesson "..tostring(state.lessonCount).."/5")
-            or string.format("%d / %d Credits  •  ≈ %d correct",math.min(state.coins,goal.price),goal.price,baseAnswers)
+        goalTitle.Text=goal.name
+        goalInfo.Text=string.format("%d / %d",math.min(state.coins,goal.price),goal.price)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
@@ -381,12 +382,12 @@ showQuestion=function(q)
         table.insert(buttons,button)
     end
 end
-resumeButton=UI.button(goalCard,"Continue this lesson",function()
+resumeButton=UI.button(goalCard,"CONTINUE",function()
     task.spawn(function()
         local result=call("study",{})
         if result.ok then showQuestion(result.question) end
     end)
-end,{Position=UDim2.fromOffset(11,47),Size=UDim2.new(1,-22,0,32),Visible=false,TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
+end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-4,0,5),Size=UDim2.fromOffset(66,30),Visible=false,TextSize=9,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=999})
 local function equippedSlot(item)
     if item.slot then return item.slot end
     if item.category=="Homes" then return "home" end
@@ -808,35 +809,61 @@ local function reflow()
     header.Position=UDim2.fromOffset(layout.rail.x,layout.rail.y)
     header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
+    if layout.narrow then
+        avatar.Visible=true
+        avatar.Position=UDim2.fromOffset(8,8)
+        avatar.Size=UDim2.fromOffset(32,32)
+        nameText.Position=UDim2.fromOffset(47,4)
+        nameText.Size=UDim2.new(1,-170,0,22)
+        gradeText.Visible=false
+        profileDivider.Visible=false
+        wallet.Position=UDim2.new(1,-8,0,7)
+        wallet.Size=UDim2.fromOffset(104,36)
+    else
+        avatar.Visible=true
+        avatar.Position=UDim2.fromOffset(8,8)
+        avatar.Size=UDim2.fromOffset(40,40)
+        nameText.Position=UDim2.fromOffset(56,5)
+        nameText.Size=UDim2.fromOffset(layout.topCompact and 112 or 144,23)
+        gradeText.Visible=not layout.topCompact
+        gradeText.Position=UDim2.fromOffset(56,27)
+        gradeText.Size=UDim2.fromOffset(146,16)
+        profileDivider.Visible=not layout.topCompact
+        profileDivider.Position=UDim2.fromOffset(204,13)
+        wallet.Position=UDim2.new(1,-8,0,8)
+        wallet.Size=UDim2.fromOffset(108,40)
+    end
+
+    goalCard.Position=UDim2.fromOffset(layout.goal.x,layout.goal.y)
+    goalCard.Size=UDim2.fromOffset(layout.goal.width,layout.goal.height)
+    goalIcon.Position=UDim2.fromOffset(0,7)
+    goalIcon.Size=UDim2.fromOffset(32,32)
+    local tightGoal=layout.goal.width<190
+    goalTitle.Position=UDim2.fromOffset(40,1)
+    goalTitle.Size=UDim2.new(1,tightGoal and -48 or -104,0,18)
+    goalInfo.Position=UDim2.fromOffset(40,18)
+    goalInfo.Size=UDim2.new(1,tightGoal and -44 or -96,0,15)
+    goalTrack.Position=UDim2.fromOffset(40,37)
+    goalTrack.Size=UDim2.new(1,tightGoal and -44 or -96,0,4)
+    bonusChip.Visible=(not tightGoal) and state.subject==nil
+    if resumeButton then
+        resumeButton.Visible=(not tightGoal) and state.subject~=nil
+        resumeButton.Position=UDim2.new(1,-4,0,5)
+        resumeButton.Size=UDim2.fromOffset(66,30)
+    end
+    streakPill.Visible=false
+
+    nav.Parent=canvas
+    nav.BackgroundTransparency=.04
+    nav.AnchorPoint=Vector2.new(0,0)
+    nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)
+    nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
     if layout.goldLandscape then
-        nav.Parent=canvas
-        nav.BackgroundTransparency=.04
-        nav.AnchorPoint=Vector2.new(0,0)
-        nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)
-        nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
-        streakPill.Visible=size.X>=850
         for i,b in ipairs(navButtons) do
             b.Size=UDim2.new(1,0,0,46)
             b.Position=UDim2.fromOffset(0,(i-1)*52)
         end
-    elseif layout.narrow then
-        nav.Parent=header
-        nav.BackgroundTransparency=1
-        streakPill.Visible=false
-        nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Position=UDim2.new(.5,0,0,48)
-        nav.Size=UDim2.new(1,-18,0,layout.nav.height)
-        for i,b in ipairs(navButtons) do
-            b.Size=UDim2.new(.25,-6,1,0)
-            b.Position=UDim2.new((i-1)*.25,3,0,0)
-        end
     else
-        nav.Parent=header
-        nav.BackgroundTransparency=1
-        streakPill.Visible=size.X>=850
-        nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Position=UDim2.new(.5,size.X<850 and -36 or -8,0,5)
-        nav.Size=UDim2.fromOffset(size.X<850 and 260 or 300,40)
         for i,b in ipairs(navButtons) do
             b.Size=UDim2.new(.25,-6,1,0)
             b.Position=UDim2.new((i-1)*.25,3,0,0)
@@ -847,14 +874,6 @@ local function reflow()
     panel.Position=UDim2.fromOffset(m.x,m.y)
     panel.Size=UDim2.fromOffset(m.width,m.height)
 
-    local g=layout.goal
-    goalCard.Position=UDim2.fromOffset(g.x,g.y)
-    goalCard.Size=UDim2.fromOffset(g.width,g.height+(state.subject and 40 or 0))
-    if resumeButton then
-        resumeButton.Position=UDim2.fromOffset(11,g.height+3)
-        resumeButton.Size=UDim2.new(1,-22,0,32)
-    end
-
     toast.Size=UDim2.fromOffset(math.min(390,size.X-24),48)
 
     local d=layout.drive
@@ -862,7 +881,7 @@ local function reflow()
     driving.Position=UDim2.new(1,-d.right,d.yScale,0)
     driving.Size=UDim2.fromOffset(d.width,d.height)
 
-    local signature=tostring(layout.columns)..":"..tostring(layout.narrow)..":"..tostring(layout.landscape)
+    local signature=tostring(layout.columns)..":"..tostring(layout.narrow)..":"..tostring(layout.landscape)..":"..tostring(layout.goldLandscape)
     if lastLayoutSignature and signature~=lastLayoutSignature then
         task.defer(function()
             if view=="shop" then
@@ -898,12 +917,14 @@ end)
 player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
     local isDriving=player:GetAttribute("NeighborhoodDriving")==true
     driving.Visible=isDriving
+    nav.Visible=not isDriving
     if isDriving then
         if setNavActive then setNavActive("vehicle") end
         goalCard.Visible=false
         panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false;view=nil
     else
         table.clear(held);table.clear(heldInputs)
+        nav.Visible=true
         if setNavActive then setNavActive(locationCommand) end
         if not panel.Visible then goalCard.Visible=true end
     end

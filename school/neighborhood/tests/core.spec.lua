@@ -282,13 +282,18 @@ test("layout remains inside gold-standard iPhone, iPad and desktop safe canvases
         local l=Layout.compute(v[1],v[2]);local r=l.modal
         assert(r.x>=0 and r.y>=l.headerHeight and r.x+r.width<=v[1] and r.y+r.height<=v[2])
         assert(l.rail.x>=0 and l.rail.y>=0 and l.rail.x+l.rail.width<=v[1])
-        assert(l.goal.x>=0 and l.goal.x+l.goal.width<=v[1])
+        assert(l.goal.x>=0 and l.goal.x+l.goal.width<=l.rail.width)
         assert(l.answerHeight>=48)
         assert(l.nav.height>=44)
+        assert(l.nav.x>=0 and l.nav.x+l.nav.width<=v[1] and l.nav.y+l.nav.height<=v[2])
         assert(l.drive.width>=88 and l.drive.height>=160)
         if v[1]>=720 and v[1]>=v[2] then
-            assert(l.headerHeight/v[2]<=.20)
             assert(l.columns==2)
+        end
+        if l.goldLandscape then
+            assert(l.headerHeight/v[2]<=.20)
+            assert(l.nav.x>=v[1]-l.nav.width-12)
+            assert(l.nav.y>=l.rail.y+l.rail.height)
         end
     end
 end)
