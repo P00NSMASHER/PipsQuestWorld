@@ -1,0 +1,118 @@
+name: Probe ABVM Image Asset via Binary Luau
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-faculty-v1
+    paths:
+      - '.github/workflows/probe-abvm-image-binary-luau.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: probe-abvm-image-binary-luau
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      UNIVERSE_ID: '10769455759'
+      PLACE_ID: '114603280760042'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Prepare square reference image bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick
+          curl -fsSL --retry 3             'https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000146.JPG'             -o "$RUNNER_TEMP/source.jpg"
+          convert "$RUNNER_TEMP/source.jpg" -auto-orient             -resize '720x720^' -gravity North -extent 512x512             -depth 8 RGBA:"$RUNNER_TEMP/image.rgba"
+          size="$(wc -c < "$RUNNER_TEMP/image.rgba" | tr -d ' ')"
+          test "$size" = "1048576"
+          echo "Prepared RGBA bytes: $size"
+
+      - name: Create image asset from binary input inside Luau execution
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          size="$(wc -c < "$RUNNER_TEMP/image.rgba" | tr -d ' ')"
+          curl -fsSL --request POST             "https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/luau-execution-session-task-binary-inputs"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/json'             --data "$(jq -cn --argjson size "$size" '{size:$size}')"             > "$RUNNER_TEMP/binary-input.json"
+          jq . "$RUNNER_TEMP/binary-input.json"
+          binary_path="$(jq -r '.path // empty' "$RUNNER_TEMP/binary-input.json")"
+          upload_uri="$(jq -r '.uploadUri // empty' "$RUNNER_TEMP/binary-input.json")"
+          test -n "$binary_path" -a -n "$upload_uri"
+          curl -fsSL --request PUT "$upload_uri"             --header 'Content-Type: application/octet-stream'             --data-binary @"$RUNNER_TEMP/image.rgba"
+
+          cat > "$RUNNER_TEMP/probe.luau" <<'LUA'
+          local AssetService = game:GetService("AssetService")
+          local arg = ({ ... })[1]
+          assert(arg and arg.BinaryInput, "missing binary input")
+          local image = AssetService:CreateEditableImage({Size=Vector2.new(512,512)})
+          assert(image, "unable to create editable image")
+          image:WritePixelsBuffer(Vector2.zero,Vector2.new(512,512),arg.BinaryInput)
+          print("IMAGE_BUFFER_READY",image.Size.X,image.Size.Y)
+
+          local okCreate,resultOrError,idOrError = pcall(function()
+              return AssetService:CreateAssetAsync(image,Enum.AssetType.Image,{
+                  CreatorId=6064228083,
+                  CreatorType=Enum.AssetCreatorType.User,
+                  Name="ABVM Staff Reference Image",
+                  Description="Authorized ABVM school reference image for the experience.",
+              })
+          end)
+          if not okCreate then
+              error("IMAGE_CREATE_CALL_FAILED: "..tostring(resultOrError))
+          end
+          print("IMAGE_CREATE_RESULT",tostring(resultOrError),tostring(idOrError))
+          if resultOrError ~= Enum.CreateAssetResult.Success then
+              error("IMAGE_CREATE_FAILED: "..tostring(resultOrError).." / "..tostring(idOrError))
+          end
+          return tostring(idOrError)
+          LUA
+
+          script_json="$(jq -Rs --arg binary "$binary_path" '{script:.,binaryInput:$binary,timeout:"120s"}' < "$RUNNER_TEMP/probe.luau")"
+          create_url="https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/places/$PLACE_ID/luau-execution-session-tasks"
+          curl -fsSL --request POST "$create_url"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/json'             --data "$script_json" > "$RUNNER_TEMP/task.json"
+          jq . "$RUNNER_TEMP/task.json"
+          task_path="$(jq -r '.path // empty' "$RUNNER_TEMP/task.json")"
+          test -n "$task_path"
+
+          task_url="https://apis.roblox.com/cloud/v2/$task_path"
+          for attempt in $(seq 1 80); do
+            curl -fsSL "$task_url" --header "x-api-key: $ROBLOX_API_KEY" > "$RUNNER_TEMP/result.json"
+            state="$(jq -r '.state // empty' "$RUNNER_TEMP/result.json")"
+            echo "task state=$state"
+            if [ "$state" != "PROCESSING" ] && [ "$state" != "QUEUED" ] && [ -n "$state" ]; then
+              break
+            fi
+            sleep 2
+          done
+          curl -fsSL "$task_url/logs" --header "x-api-key: $ROBLOX_API_KEY" > "$RUNNER_TEMP/logs.json" || true
+          jq . "$RUNNER_TEMP/result.json"
+          jq . "$RUNNER_TEMP/logs.json" || true
+          test "$(jq -r '.state' "$RUNNER_TEMP/result.json")" = "COMPLETE"
+          jq -e '.output.results | length > 0' "$RUNNER_TEMP/result.json" >/dev/null
+
+      - name: Preserve receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-image-binary-probe-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/binary-input.json
+            ${{ runner.temp }}/task.json
+            ${{ runner.temp }}/result.json
+            ${{ runner.temp }}/logs.json
+          retention-days: 7
+          if-no-files-found: warn
