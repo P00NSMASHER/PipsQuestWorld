@@ -1,7 +1,9 @@
 --!strict
 local TweenService=game:GetService("TweenService")
 local UI={}
-UI.P={ink=Color3.fromRGB(22,45,79),muted=Color3.fromRGB(95,108,119),paper=Color3.fromRGB(247,244,236),white=Color3.fromRGB(255,255,255),line=Color3.fromRGB(217,219,211),teal=Color3.fromRGB(24,103,59),gold=Color3.fromRGB(223,177,60),soft=Color3.fromRGB(232,239,230),rose=Color3.fromRGB(164,104,101)}
+UI.P={ink=Color3.fromRGB(22,45,79),muted=Color3.fromRGB(95,108,119),paper=Color3.fromRGB(247,244,236),white=Color3.fromRGB(255,255,255),line=Color3.fromRGB(217,219,211),teal=Color3.fromRGB(31,91,67),gold=Color3.fromRGB(221,175,60),soft=Color3.fromRGB(232,239,230),rose=Color3.fromRGB(182,92,85),success=Color3.fromRGB(47,142,103),negative=Color3.fromRGB(182,92,85),navySoft=Color3.fromRGB(232,237,243),goldSoft=Color3.fromRGB(250,242,218)}
+UI.T={display=23,section=18,body=15,caption=12}
+UI.R={surface=18,control=13,chip=999}
 function UI.new(class,parent,props)
     local o=Instance.new(class)
     for k,v in pairs(props or {}) do o[k]=v end
@@ -17,6 +19,38 @@ function UI.frame(parent,props)
     if props.BackgroundColor3==nil then props.BackgroundColor3=UI.P.white end
     local o=UI.new("Frame",parent,props);UI.corner(o);return o
 end
+function UI.shadow(parent,position,size,radius)
+    local s=UI.new("Frame",parent,{Position=position or UDim2.fromOffset(2,3),Size=size or UDim2.fromScale(1,1),BackgroundColor3=Color3.fromRGB(18,31,47),BackgroundTransparency=.86,BorderSizePixel=0,ZIndex=0})
+    UI.corner(s,radius or UI.R.surface)
+    return s
+end
+function UI.surface(parent,props)
+    props=props or {}
+    local shadowProps=props.Shadow~=false
+    props.Shadow=nil
+    local position=props.Position
+    local size=props.Size
+    local radius=props.CornerRadius or UI.R.surface
+    props.CornerRadius=nil
+    if shadowProps then UI.shadow(parent,position and position+UDim2.fromOffset(2,3) or UDim2.fromOffset(2,3),size,radius) end
+    local o=UI.frame(parent,props);UI.corner(o,radius);UI.stroke(o,UI.P.line);return o
+end
+function UI.chip(parent,text,props)
+    props=props or {}
+    local bg=props.BackgroundColor3 or UI.P.white
+    local fg=props.TextColor3 or UI.P.ink
+    local size=props.Size or UDim2.fromOffset(math.max(74,#text*7+24),30)
+    local frame=UI.frame(parent,{Position=props.Position or UDim2.new(),Size=size,BackgroundColor3=bg,BackgroundTransparency=props.BackgroundTransparency or 0,ZIndex=props.ZIndex or 2})
+    UI.corner(frame,UI.R.chip);UI.stroke(frame,props.StrokeColor or UI.P.line)
+    UI.text(frame,text,props.TextSize or UI.T.caption,{Size=UDim2.fromScale(1,1),TextColor3=fg,TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,ZIndex=(props.ZIndex or 2)+1})
+    return frame
+end
+function UI.flyout(parent,text,color)
+    local label=UI.text(parent,text,15,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,-2),Size=UDim2.fromOffset(88,28),TextColor3=color or UI.P.success,TextXAlignment=Enum.TextXAlignment.Right,Font=Enum.Font.GothamBold,ZIndex=50})
+    label.TextTransparency=0
+    TweenService:Create(label,TweenInfo.new(.55,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(1,-8,0,-28),TextTransparency=1}):Play()
+    task.delay(.6,function() if label.Parent then label:Destroy() end end)
+end
 function UI.text(parent,text,size,props)
     local base={BackgroundTransparency=1,Text=text,Font=Enum.Font.Gotham,TextSize=size or 17,TextColor3=UI.P.ink,TextWrapped=true,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Center,Size=UDim2.new(1,0,0,32)}
     for k,v in pairs(props or {}) do base[k]=v end
@@ -25,9 +59,41 @@ end
 function UI.button(parent,text,fn,props)
     local base={Text=text,Font=Enum.Font.GothamBold,TextSize=16,TextColor3=UI.P.ink,TextWrapped=true,BorderSizePixel=0,BackgroundColor3=UI.P.soft,AutoButtonColor=true,Size=UDim2.new(1,0,0,48)}
     for k,v in pairs(props or {}) do base[k]=v end
-    local b=UI.new("TextButton",parent,base);UI.corner(b,12)
+    local b=UI.new("TextButton",parent,base);UI.corner(b,props and props.CornerRadius or UI.R.control)
+    local scale=UI.new("UIScale",b,{Scale=1})
+    b.InputBegan:Connect(function(input)
+        if b.Active and (input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1) then
+            TweenService:Create(scale,TweenInfo.new(.08),{Scale=.965}):Play()
+        end
+    end)
+    b.InputEnded:Connect(function(input)
+        if input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1 then
+            TweenService:Create(scale,TweenInfo.new(.12,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Scale=1}):Play()
+        end
+    end)
     b.Activated:Connect(function() if b.Active then fn(b) end end)
     return b
+end
+function UI.iconButton(parent,icon,label,fn,props)
+    props=props or {}
+    local b=UI.button(parent,"",fn,{Position=props.Position,Size=props.Size or UDim2.fromOffset(72,44),BackgroundColor3=props.BackgroundColor3 or UI.P.white,CornerRadius=props.CornerRadius or UI.R.control})
+    UI.text(b,icon,props.IconSize or 18,{Position=UDim2.fromOffset(7,0),Size=UDim2.fromOffset(24,b.AbsoluteSize.Y>0 and b.AbsoluteSize.Y or 44),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=props.IconColor or UI.P.teal})
+    UI.text(b,label,props.TextSize or 12,{Position=UDim2.fromOffset(31,0),Size=UDim2.new(1,-35,1,0),Font=Enum.Font.GothamBold,TextColor3=props.TextColor3 or UI.P.ink})
+    return b
+end
+function UI.answerCard(parent,text,fn,props)
+    props=props or {}
+    local b=UI.button(parent,text,fn,{LayoutOrder=props.LayoutOrder,Size=props.Size or UDim2.new(1,0,0,58),AutomaticSize=props.AutomaticSize,TextXAlignment=Enum.TextXAlignment.Left,BackgroundColor3=props.BackgroundColor3 or UI.P.white,TextSize=props.TextSize or 16,TextColor3=props.TextColor3 or UI.P.ink})
+    UI.pad(b,14);UI.stroke(b,props.StrokeColor or UI.P.line);return b
+end
+function UI.feedbackCard(parent,text,tone,props)
+    props=props or {}
+    local bg=tone=="negative" and Color3.fromRGB(249,235,232) or tone=="success" and Color3.fromRGB(232,245,238) or UI.P.goldSoft
+    local fg=tone=="negative" and UI.P.negative or tone=="success" and UI.P.success or UI.P.ink
+    local f=UI.frame(parent,{LayoutOrder=props.LayoutOrder or 10,Visible=props.Visible~=false,Size=props.Size or UDim2.new(1,0,0,58),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=bg})
+    UI.stroke(f,fg);UI.pad(f,12)
+    local t=UI.text(f,text,props.TextSize or 14,{Size=UDim2.new(1,0,0,34),AutomaticSize=Enum.AutomaticSize.Y,TextColor3=fg,Font=Enum.Font.GothamMedium})
+    return f,t
 end
 function UI.stack(parent,gap)
     return UI.new("UIListLayout",parent,{SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,gap or 10)})
