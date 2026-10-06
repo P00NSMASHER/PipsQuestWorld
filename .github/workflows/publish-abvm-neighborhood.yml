@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: gold-standard UI batch 3
+# release: gold-standard visible HUD correction
 
 on:
   push:
