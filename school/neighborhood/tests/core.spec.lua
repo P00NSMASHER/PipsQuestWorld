@@ -34,29 +34,29 @@ test("ABVM source is pinned and every question has one unique valid answer",func
         assert(type(q.explanation)=="string" and #q.explanation>5)
         subjects[q.subject]=(subjects[q.subject] or 0)+1
     end
-    equal(#Bank.Questions,51)
-    for _,subject in ipairs(Catalog.Subjects) do assert(subjects[subject.id]>=10) end
+    equal(#Bank.Questions,338)
+    for _,subject in ipairs(Catalog.Subjects) do assert(subjects[subject.id]>=10);assert(type(subject.teacher)=="string" and #subject.teacher>3) end
 end)
-test("first try and correction bases retain canonical 25/15 split",function()
+test("first try and correction bases use the tuned 10/6 split",function()
     local a,b=Learning.newProfile(),Learning.newProfile();local q=first("math")
     local firstTry=Learning.reward(a,"one",q,true,1000)
     local correction=Learning.reward(b,"two",q,false,1000)
-    equal(firstTry.coins,25);equal(firstTry.streakBonus,0);equal(firstTry.total,25)
-    equal(correction.coins,15);equal(correction.streakBonus,0);equal(correction.total,15)
+    equal(firstTry.coins,10);equal(firstTry.streakBonus,0);equal(firstTry.total,10)
+    equal(correction.coins,6);equal(correction.streakBonus,0);equal(correction.total,6)
 end)
-test("correct streak bonuses progress by five and cap at twenty five",function()
+test("correct streak bonuses progress by two and cap at ten",function()
     local p=Learning.newProfile()
-    local expected={0,5,10,15,20,25,25,25}
+    local expected={0,2,4,6,8,10,10,10}
     for i,want in ipairs(expected) do
         local result=Learning.reward(p,"right"..i,Bank.Questions[i],true,1000+i)
         equal(result.streakBonus,want);equal(result.correctStreak,i)
     end
     equal(p.correctStreak,#expected);equal(p.bestCorrectStreak,#expected)
 end)
-test("wrong penalties progress by five and cap at twenty five",function()
+test("wrong penalties progress by two and cap at ten",function()
     local p=Learning.newProfile();p.coins=200;p.earned=200
     local q=first("math")
-    local expected={5,10,15,20,25,25,25}
+    local expected={2,4,6,8,10,10,10}
     local spent=0
     for i,want in ipairs(expected) do
         local result=Learning.miss(p,"miss"..i,q,1000+i)
@@ -68,9 +68,9 @@ end)
 test("wrong penalties never push the wallet below zero",function()
     local p=Learning.newProfile();p.coins=7;p.earned=7
     local q=first("math")
-    equal(Learning.miss(p,"m1",q,1000).deducted,5)
-    equal(Learning.miss(p,"m2",q,1001).deducted,2)
-    equal(Learning.miss(p,"m3",q,1002).deducted,0)
+    equal(Learning.miss(p,"m1",q,1000).deducted,2)
+    equal(Learning.miss(p,"m2",q,1001).deducted,4)
+    equal(Learning.miss(p,"m3",q,1002).deducted,1)
     equal(p.coins,0);equal(p.lost,7);assert(Learning.valid(p))
 end)
 test("wrong answer breaks positive streak and correct answer breaks negative streak",function()
@@ -102,21 +102,21 @@ test("duplicate miss receipt never doubles a penalty",function()
     local p=Learning.newProfile();p.coins=50;p.earned=50;local q=first("math")
     local firstMiss=Learning.miss(p,"stable-miss",q,1000)
     local again=Learning.miss(p,"stable-miss",q,1001)
-    equal(firstMiss.deducted,5);equal(again.deducted,5)
-    equal(p.coins,45);equal(p.answers,1);equal(p.wrongStreak,1)
+    equal(firstMiss.deducted,2);equal(again.deducted,2)
+    equal(p.coins,48);equal(p.answers,1);equal(p.wrongStreak,1)
 end)
 test("new operation id does not farm an immediate repeated question",function()
     local p=Learning.newProfile();local q=first("math")
     Learning.reward(p,"one",q,true,1000)
     local repeatResult=Learning.reward(p,"two",q,true,1002)
-    equal(repeatResult.total,0);assert(repeatResult.reviewOnly);equal(p.coins,25);equal(p.lessonCount,1)
+    equal(repeatResult.total,0);assert(repeatResult.reviewOnly);equal(p.coins,10);equal(p.lessonCount,1)
     equal(p.correctStreak,1)
 end)
 test("a later spaced review earns base plus current streak bonus",function()
     local p=Learning.newProfile();local q=first("math")
     Learning.reward(p,"one",q,true,1000)
     local review=Learning.reward(p,"two",q,true,1600)
-    equal(review.coins,25);equal(review.streakBonus,5);equal(review.total,30)
+    equal(review.coins,10);equal(review.streakBonus,2);equal(review.total,12)
 end)
 test("five different paid questions award streaks plus one lesson bonus",function()
     local p=Learning.newProfile();local bonus=0;local streak=0
@@ -124,7 +124,7 @@ test("five different paid questions award streaks plus one lesson bonus",functio
         local result=Learning.reward(p,"q"..i,Bank.Questions[i],true,1000+i)
         bonus+=result.bonus;streak+=result.streakBonus
     end
-    equal(streak,50);equal(bonus,50);equal(p.coins,225);equal(p.lessonCount,0)
+    equal(streak,20);equal(bonus,15);equal(p.coins,85);equal(p.lessonCount,0)
 end)
 test("six first-try answers buy a cottage with change",function()
     local p=Learning.newProfile()
@@ -153,7 +153,7 @@ test("unowned item cannot be equipped",function()
 end)
 test("owning an estate never increases first-question income",function()
     local p=Learning.newProfile();p.owned.home_estate=true;p.equipped.home="home_estate"
-    equal(Learning.reward(p,"one",first("reading"),true,1000).total,25)
+    equal(Learning.reward(p,"one",first("reading"),true,1000).total,10)
 end)
 test("question selection is subject-scoped and avoids immediate repeat",function()
     local p=Learning.newProfile();local q=Learning.choose(p,Bank.Questions,"reading",1000,nil)
