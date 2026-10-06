@@ -371,14 +371,25 @@ function World.build()
     -- Main lobby/admin suite.
     sign(root,"ASSUMPTION BVM CATHOLIC SCHOOL\nFaith • Education • Community",CFrame.new(0,12,-39)*CFrame.Angles(0,math.pi,0),Vector3.new(42,7,.25),palette.navy,palette.gold)
     crest(root,"Lobby ABVM crest",CFrame.new(0,18,-39)*CFrame.Angles(0,math.pi,0),7)
-    World.part(root,"Main Office counter",Vector3.new(31,3.5,4),CFrame.new(-46,6,-47),palette.wood,Enum.Material.Wood)
-    sign(root,"MAIN OFFICE",CFrame.new(-46,10,-44.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
-    sign(root,"Secretary — Mrs. Thompson",CFrame.new(-58,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(18,2.5,.2),palette.navy,palette.cream)
-    sign(root,"Principal — Dr. McBreen",CFrame.new(-47,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(18,2.5,.2),palette.navy,palette.cream)
-    sign(root,"Assistant Principal — Mrs. Boyer",CFrame.new(-35,8.5,-52)*CFrame.Angles(0,math.pi,0),Vector3.new(20,2.5,.2),palette.navy,palette.cream)
-    npc(root,"Mrs. Thompson — Secretary",Vector3.new(-56,4,-48),false,Color3.fromRGB(86,125,143))
-    npc(root,"Dr. McBreen — Principal",Vector3.new(-46,4,-48),true,palette.navy)
-    npc(root,"Mrs. Boyer — Assistant Principal",Vector3.new(-36,4,-48),false,Color3.fromRGB(89,111,132))
+    -- A compact but real admin suite rather than labels floating in the lobby.
+    World.part(root,"Main Office rear wall",Vector3.new(51,11,1),CFrame.new(-49,9.5,-72),palette.cream)
+    World.part(root,"Main Office west wall",Vector3.new(1,11,27),CFrame.new(-74,9.5,-58.5),palette.cream)
+    World.part(root,"Principal partition",Vector3.new(1,11,18),CFrame.new(-45,9.5,-63),palette.cream)
+    World.part(root,"Assistant partition",Vector3.new(1,11,18),CFrame.new(-29,9.5,-63),palette.cream)
+    -- Keep broad openings on the lobby side for mobile traversal.
+    World.part(root,"Main Office counter",Vector3.new(27,3.5,4),CFrame.new(-59,6,-48),palette.wood,Enum.Material.Wood)
+    World.part(root,"Office waiting bench",Vector3.new(10,1.1,2.6),CFrame.new(-28,5,-49),Color3.fromRGB(103,117,130),Enum.Material.Fabric)
+    World.part(root,"Principal desk",Vector3.new(10,2.2,4),CFrame.new(-37,5.3,-65),palette.wood,Enum.Material.Wood)
+    World.part(root,"Assistant desk",Vector3.new(10,2.2,4),CFrame.new(-21,5.3,-65),palette.wood,Enum.Material.Wood)
+    sign(root,"MAIN OFFICE",CFrame.new(-59,10,-45.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
+    sign(root,"Secretary — Mrs. Thompson",CFrame.new(-59,8.6,-53)*CFrame.Angles(0,math.pi,0),Vector3.new(19,2.5,.2),palette.navy,palette.cream)
+    sign(root,"Principal — Dr. McBreen",CFrame.new(-37,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(16,2.6,.2),palette.navy,palette.cream)
+    sign(root,"Assistant Principal — Mrs. Boyer",CFrame.new(-21,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(18,2.6,.2),palette.navy,palette.cream)
+    cross(root,CFrame.new(-37,13,-71.5),.35,palette.gold)
+    cross(root,CFrame.new(-21,13,-71.5),.35,palette.gold)
+    npc(root,"Mrs. Thompson — Secretary",Vector3.new(-59,4,-52),false,Color3.fromRGB(86,125,143))
+    npc(root,"Dr. McBreen — Principal",Vector3.new(-37,4,-61),true,palette.navy)
+    npc(root,"Mrs. Boyer — Assistant Principal",Vector3.new(-21,4,-61),false,Color3.fromRGB(89,111,132))
 
     -- Three ABVM-branded leaderboard boards on the lobby's east wall.
     World.leaderboardParts={
