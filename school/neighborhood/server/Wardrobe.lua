@@ -69,6 +69,87 @@ function Wardrobe.apply(character,profile,catalog)
             layer(folder,torso,"Premier band",Vector3.new(ts.X*1.05,.18,ts.Z*1.08),CFrame.new(0,-ts.Y*.25,0),Color3.fromRGB(225,199,121))
         end
     end
+    -- Additive mix-and-match uniform pieces layer over the legacy outfit slot.
+    local function equipped(slot)
+        local id=profile.equipped[slot]
+        local item=id and catalog.ById[id] or nil
+        if item and profile.owned[id] then return item end
+        return nil
+    end
+    local top=equipped("uniformTop")
+    if top then
+        local topColor=Color3.fromRGB(table.unpack(top.color))
+        local ts=torso.Size
+        layer(folder,torso,"Uniform top",Vector3.new(ts.X*1.04,ts.Y*.9,ts.Z*1.07),CFrame.new(0,0,0),topColor)
+        local markColor=top.style==13 and Color3.fromRGB(31,91,67) or Color3.fromRGB(238,238,231)
+        layer(folder,torso,"Uniform ABVM chest mark",Vector3.new(.42,.22,.06),CFrame.new(ts.X*.25,ts.Y*.14,-ts.Z*.56),markColor)
+        if top.style==14 then
+            layer(folder,torso,"Sweater collar",Vector3.new(ts.X*.7,.28,ts.Z*1.08),CFrame.new(0,ts.Y*.38,0),Color3.fromRGB(238,238,231))
+        elseif top.style==15 then
+            layer(folder,torso,"Cardigan shirt inset",Vector3.new(ts.X*.42,ts.Y*.78,.06),CFrame.new(0,0,-ts.Z*.57),Color3.fromRGB(238,238,231))
+        end
+        for _,side in ipairs({"Left","Right"}) do
+            local arm=character:FindFirstChild(side.."UpperArm") or character:FindFirstChild(side.." Arm")
+            if arm and arm:IsA("BasePart") then
+                local sleeveScale=(top.style==14 or top.style==15) and .95 or .55
+                layer(folder,arm,"Uniform sleeve",Vector3.new(arm.Size.X*1.05,arm.Size.Y*sleeveScale,arm.Size.Z*1.05),CFrame.new(0,0,0),topColor)
+            end
+        end
+    end
+
+    local bottom=equipped("uniformBottom")
+    if bottom then
+        local bottomColor=Color3.fromRGB(table.unpack(bottom.color))
+        local plaid=bottom.style==24 or bottom.style==25
+        local navy=Color3.fromRGB(28,48,72)
+        local cream=Color3.fromRGB(235,231,216)
+        if plaid or bottom.style==23 then
+            local height=bottom.style==25 and torso.Size.Y*1.02 or torso.Size.Y*.68
+            layer(folder,torso,bottom.style==25 and "Plaid jumper" or "Uniform skirt",
+                Vector3.new(torso.Size.X*1.2,height,torso.Size.Z*1.15),CFrame.new(0,-torso.Size.Y*.24,0),bottomColor)
+            if plaid then
+                for _,x in ipairs({-.38,0,.38}) do
+                    layer(folder,torso,"Plaid vertical",Vector3.new(.12,height*.96,.07),CFrame.new(torso.Size.X*x,-torso.Size.Y*.24,-torso.Size.Z*.6),navy)
+                end
+                for _,y in ipairs({-.33,-.05,.23}) do
+                    layer(folder,torso,"Plaid horizontal",Vector3.new(torso.Size.X*1.14,.09,.07),CFrame.new(0,torso.Size.Y*y,-torso.Size.Z*.6),cream)
+                end
+            end
+        else
+            for _,side in ipairs({"Left","Right"}) do
+                local leg=character:FindFirstChild(side.."UpperLeg") or character:FindFirstChild(side.." Leg")
+                if leg and leg:IsA("BasePart") then
+                    local scale=bottom.style==22 and .58 or .98
+                    layer(folder,leg,bottom.style==22 and "Khaki shorts" or "Khaki pants",
+                        Vector3.new(leg.Size.X*1.07,leg.Size.Y*scale,leg.Size.Z*1.07),CFrame.new(0,leg.Size.Y*(1-scale)*.42,0),bottomColor)
+                end
+            end
+        end
+    end
+
+    local legwear=equipped("uniformLegwear")
+    if legwear then
+        local sockColor=Color3.fromRGB(table.unpack(legwear.color))
+        for _,side in ipairs({"Left","Right"}) do
+            local lower=character:FindFirstChild(side.."LowerLeg") or character:FindFirstChild(side.." Leg")
+            if lower and lower:IsA("BasePart") then
+                layer(folder,lower,legwear.style==33 and "School tights" or "School socks",
+                    Vector3.new(lower.Size.X*1.055,lower.Size.Y*.98,lower.Size.Z*1.055),CFrame.new(0,0,0),sockColor)
+            end
+        end
+    end
+
+    local shoes=equipped("uniformShoes")
+    if shoes then
+        local shoeColor=Color3.fromRGB(table.unpack(shoes.color))
+        for _,side in ipairs({"Left","Right"}) do
+            local foot=character:FindFirstChild(side.."Foot") or character:FindFirstChild(side.." Leg")
+            if foot and foot:IsA("BasePart") then
+                layer(folder,foot,"School shoe",Vector3.new(foot.Size.X*1.12,foot.Size.Y*.72,foot.Size.Z*1.18),CFrame.new(0,-foot.Size.Y*.1,-foot.Size.Z*.04),shoeColor)
+            end
+        end
+    end
+
     if profile.owned.item_backpack then
         local s=torso.Size
         layer(folder,torso,"Campus backpack",Vector3.new(s.X*.73,s.Y*.85,.6),CFrame.new(0,0,s.Z/2+.38),Color3.fromRGB(65,150,150))
