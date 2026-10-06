@@ -539,17 +539,14 @@ showShop=function(selected,subfilter)
         local slot=equippedSlot(item)
         local equipped=slot~=nil and state.equipped[slot]==item.id
         local card=UI.surface(grid,{Name=item.id,LayoutOrder=number,Size=UDim2.new(1,0,0,cardHeight),BackgroundColor3=UI.P.white,Shadow=false})
-        local previewSize=layout.compact and 84 or 104
+        local previewSize=layout.compact and 96 or 108
         local textX=previewSize+20
         UI.preview(card,item,{Position=UDim2.fromOffset(10,10),Size=UDim2.fromOffset(previewSize,previewSize),CornerRadius=14})
 
         UI.text(card,item.name,15,{Position=UDim2.fromOffset(textX,8),Size=UDim2.new(1,-textX-10,0,30),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
-        local remaining=math.max(0,item.price-state.coins)
-        local priceStatus
-        if owned then priceStatus=equipped and "Equipped" or "Owned"
-        elseif remaining==0 then priceStatus=tostring(item.price).." Credits • ready"
-        else priceStatus=tostring(item.price).." Credits • "..tostring(remaining).." to go" end
-        UI.text(card,priceStatus,12,{Position=UDim2.fromOffset(textX,37),Size=UDim2.new(1,-textX-10,0,20),TextColor3=owned and UI.P.success or UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+        local affordable=state.coins>=item.price
+        local priceStatus=owned and (equipped and "✓ Equipped" or "Owned") or (tostring(item.price).." Credits")
+        UI.text(card,priceStatus,12,{Position=UDim2.fromOffset(textX,37),Size=UDim2.new(1,-textX-10,0,20),TextColor3=owned and UI.P.success or (affordable and UI.P.success or UI.P.teal),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
         local tierName=(Catalog.Tiers[item.tier] and Catalog.Tiers[item.tier].name) or "School"
         UI.chip(card,equipped and "✓ Equipped" or tierName,{Position=UDim2.fromOffset(textX,60),Size=UDim2.fromOffset(equipped and 82 or 78,24),BackgroundColor3=equipped and Color3.fromRGB(232,245,238) or UI.P.navySoft,TextColor3=equipped and UI.P.success or UI.P.ink,TextSize=10,StrokeColor=equipped and UI.P.success or UI.P.line})
         if not layout.compact then
