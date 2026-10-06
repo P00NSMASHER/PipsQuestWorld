@@ -749,18 +749,32 @@ function World.house(player,plotId,profile)
     end
     if stage>=3 then
         p("Terrace",Vector3.new(width-5,1,depth-2),Vector3.new(0,14.5,0),palette.cream)
-        for _,x in ipairs({-width/2+3,width/2-3}) do p("Terrace trim",Vector3.new(.5,2.5,depth-2),Vector3.new(x,16,0),palette.gold,nil,false) end
-    end
-    if stage>=3 then
+        for _,x in ipairs({-width/2+3,width/2-3}) do
+            p("Terrace trim",Vector3.new(.5,2.5,depth-2),Vector3.new(x,16,0),palette.gold,nil,false)
+        end
         for step=0,14 do
             p("Terrace stair",Vector3.new(5,.55,2.2),Vector3.new(width/2+4,1+step*.96,14-step*2),palette.cream)
         end
         p("Terrace access",Vector3.new(10,.6,5),Vector3.new(width/2+.5,14.5,-14),palette.cream)
     end
-    if stage>=4 then
+    if stage==3 then
+        local upperWidth=width-12
+        local upperDepth=depth-12
+        p("Suburban upper floor",Vector3.new(upperWidth,8.5,upperDepth),Vector3.new(0,18.8,-2),color(item.color))
+        p("Suburban upper roof",Vector3.new(upperWidth+2,.8,upperDepth+2),Vector3.new(0,23.5,-2),palette.navy,Enum.Material.Slate)
+        for _,x in ipairs({-upperWidth/4,upperWidth/4}) do
+            local upperWindow=p("Suburban upper window",Vector3.new(7,4,.18),Vector3.new(x,19.1,-2+upperDepth/2+.12),Color3.fromRGB(150,198,210),Enum.Material.Glass,false)
+            upperWindow.Transparency=.18
+            p("Suburban upper window trim",Vector3.new(7.8,.35,.35),Vector3.new(x,16.9,-2+upperDepth/2+.3),palette.cream,nil,false)
+        end
+    elseif stage>=4 then
         p("Upper pavilion",Vector3.new(width-12,8,depth-14),Vector3.new(0,18,-3),palette.cream)
-        p("Pavilion glazing",Vector3.new(width-16,5,.3),Vector3.new(0,18,(depth-14)/2-2.7),Color3.fromRGB(147,187,201),Enum.Material.Glass,false)
+        local glazing=p("Pavilion glazing",Vector3.new(width-16,5,.3),Vector3.new(0,18,(depth-14)/2-2.7),Color3.fromRGB(147,187,201),Enum.Material.Glass,false)
+        glazing.Transparency=.15
         p("Upper roof",Vector3.new(width-9,.7,depth-11),Vector3.new(0,22.4,-3),palette.navy)
+        for _,x in ipairs({-width/2+8,width/2-8}) do
+            p("Modern upper column",Vector3.new(.6,8,.6),Vector3.new(x,18,(depth-14)/2-2.5),palette.gold,nil,false)
+        end
     end
     if stage>=5 then
         -- Estate tier adds a visibly grander entrance and side wings without changing ownership logic.
