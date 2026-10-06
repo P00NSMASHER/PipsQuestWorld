@@ -23,8 +23,9 @@ local busy=false
 local category="Homes"
 local header=UI.frame(canvas,{Name="Header",Position=UDim2.fromOffset(8,4),Size=UDim2.new(1,-16,0,52),BackgroundColor3=UI.P.paper})
 UI.stroke(header)
-UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(12,2),Size=UDim2.fromOffset(102,25),Font=Enum.Font.GothamBold})
-UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(12,25),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+UI.crest(header,{Position=UDim2.fromOffset(8,6),Size=UDim2.fromOffset(36,36)})
+UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(50,2),Size=UDim2.fromOffset(82,25),Font=Enum.Font.GothamBold})
+UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(50,25),Size=UDim2.fromOffset(108,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,6),Size=UDim2.fromOffset(110,38),BackgroundColor3=UI.P.ink})
 local walletText=UI.text(wallet,"0 Credits",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
 local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(320,44)})
