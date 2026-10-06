@@ -1,0 +1,74 @@
+name: Neighborhood Preview Checks
+
+on:
+  push:
+    branches: [rebuild/school-neighborhood-earn-v1]
+    paths:
+      - 'school/neighborhood/**'
+      - 'school/neighborhood.project.json'
+      - '.github/workflows/neighborhood-preview.yml'
+  pull_request:
+    branches: [rebuild/high-school-foundation]
+    paths:
+      - 'school/neighborhood/**'
+      - 'school/neighborhood.project.json'
+      - '.github/workflows/neighborhood-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neighborhood-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned validation tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/neighborhood-tools/luau" "$RUNNER_TEMP/neighborhood-tools/rojo"
+          cd "$RUNNER_TEMP/neighborhood-tools"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip -o rojo.zip
+          echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
+          unzip -q luau.zip -d luau
+          unzip -q rojo.zip -d rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
+      - name: Verify source, model behavior and isolated place mapping
+        shell: bash
+        run: |
+          python3 school/neighborhood/tests/verify_build.py \
+            --compiler "$RUNNER_TEMP/neighborhood-tools/luau/luau-compile" \
+            --luau "$RUNNER_TEMP/neighborhood-tools/luau/luau" \
+            --rojo "$RUNNER_TEMP/neighborhood-tools/rojo/rojo" \
+            --expected-sha "$SOURCE_SHA" \
+            --out "$RUNNER_TEMP/neighborhood-preview"
+      - name: Preserve preview and scoped verification results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: neighborhood-static-preview-${{ github.run_id }}
+          path: ${{ runner.temp }}/neighborhood-preview/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Explain acceptance boundary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          printf '%s\n' '## Preview checks only' \
+            'This job does not run Roblox, certify iPhone visuals or persistence, or publish a place.' \
+            'Use school/neighborhood.project.json for this new mode; the old publisher targets another project.' >> "$GITHUB_STEP_SUMMARY"
