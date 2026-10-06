@@ -219,13 +219,18 @@ showClasses=function()
     })
     for i,s in ipairs(Catalog.Subjects) do
         local visual=subjectVisual(s.id)
-        local card=UI.surface(grid,{LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
-        local iconTile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(44,44),BackgroundColor3=visual.color})
+        local cardTint=visual.color:Lerp(UI.P.white,.88)
+        local card=UI.surface(grid,{LayoutOrder=i,BackgroundColor3=cardTint,Shadow=false})
+        local cardStroke=card:FindFirstChildOfClass("UIStroke")
+        if cardStroke then cardStroke.Color=visual.color;cardStroke.Transparency=.58 end
+        local accent=UI.frame(card,{Position=UDim2.fromOffset(5,10),Size=UDim2.fromOffset(4,44),BackgroundColor3=visual.color})
+        UI.corner(accent,999)
+        local iconTile=UI.frame(card,{Position=UDim2.fromOffset(14,10),Size=UDim2.fromOffset(44,44),BackgroundColor3=visual.color})
         UI.corner(iconTile,11)
         UI.text(iconTile,visual.icon,visual.icon=="ABC" and 10 or 18,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
-        UI.text(card,s.short,16,{Position=UDim2.fromOffset(62,7),Size=UDim2.new(1,-74,0,25),Font=Enum.Font.GothamBold})
-        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
-        UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
+        UI.text(card,s.short,16,{Position=UDim2.fromOffset(68,7),Size=UDim2.new(1,-86,0,25),Font=Enum.Font.GothamBold})
+        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(68,32),Size=UDim2.new(1,-86,0,20),TextColor3=UI.P.muted})
+        UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=visual.color})
     end
     UI.chip(body,"Six ABVM classrooms • one clear learning path",{LayoutOrder=4,Size=UDim2.fromOffset(292,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
 end
