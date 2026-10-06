@@ -21,30 +21,43 @@ local view=nil
 local activeQuestion=nil
 local busy=false
 local category="Homes"
-local header=UI.frame(canvas,{Name="Header",Position=UDim2.fromOffset(8,4),Size=UDim2.new(1,-16,0,52),BackgroundColor3=UI.P.paper})
-UI.stroke(header)
-UI.crest(header,{Position=UDim2.fromOffset(8,6),Size=UDim2.fromOffset(36,36)})
-UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(50,2),Size=UDim2.fromOffset(82,25),Font=Enum.Font.GothamBold})
-UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(50,25),Size=UDim2.fromOffset(108,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
-local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,6),Size=UDim2.fromOffset(110,38),BackgroundColor3=UI.P.ink})
-local walletText=UI.text(wallet,"0 Credits",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
-local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(320,44)})
-local goalCard=UI.frame(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,68),Size=UDim2.fromOffset(274,96),BackgroundColor3=UI.P.paper})
-UI.stroke(goalCard)
+local clothesFilter="All"
+
+-- Compact floating rail from the authoritative gold-standard board.
+local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(760,50),BackgroundColor3=UI.P.paper,BackgroundTransparency=.03})
+UI.crest(header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34)})
+UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(78,23),Font=Enum.Font.GothamBold})
+UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(104,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+
+local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.ink})
+UI.corner(wallet,UI.R.chip)
+local walletText=UI.text(wallet,"0 Credits",15,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-120,0,8),Size=UDim2.fromOffset(106,34),BackgroundColor3=UI.P.goldSoft})
+UI.corner(streakPill,UI.R.chip)
+local streakText=UI.text(streakPill,"✓ 0  •  ✕ 0",12,{TextColor3=UI.P.ink,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(300,40)})
+
+-- Compact progression chip; expand only while a lesson can be resumed.
+local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.04})
 local resumeButton
-local goalTitle=UI.text(goalCard,"Your first home is ready",14,{Position=UDim2.fromOffset(12,5),Size=UDim2.new(1,-24,0,28),Font=Enum.Font.GothamBold})
-local goalInfo=UI.text(goalCard,"Loading your progress…",13,{Position=UDim2.fromOffset(12,32),Size=UDim2.new(1,-24,0,25),TextColor3=UI.P.muted})
-local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(12,64),Size=UDim2.new(1,-24,0,7),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
+local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(11,3),Size=UDim2.new(1,-22,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(11,20),Size=UDim2.new(1,-22,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
+local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(11,37),Size=UDim2.new(1,-22,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
-local streakInfo=UI.text(goalCard,"Accuracy —  •  Correct streak 0",11,{Position=UDim2.fromOffset(12,76),Size=UDim2.new(1,-24,0,16),TextColor3=UI.P.muted})
-local panel=UI.frame(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.paper,ClipsDescendants=true})
-UI.stroke(panel)
-local panelTitle=UI.text(panel,"",21,{Position=UDim2.fromOffset(18,9),Size=UDim2.new(1,-105,0,42),Font=Enum.Font.GothamBold})
-local body=UI.new("ScrollingFrame",panel,{Name="Content",Position=UDim2.fromOffset(14,64),Size=UDim2.new(1,-28,1,-78),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(),AutomaticCanvasSize=Enum.AutomaticSize.Y,ScrollBarThickness=4,ScrollBarImageColor3=UI.P.muted,ScrollingDirection=Enum.ScrollingDirection.Y})
+
+local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.paper,BackgroundTransparency=.015,ClipsDescendants=true})
+local panelTitle=UI.text(panel,"",UI.T.display,{Position=UDim2.fromOffset(18,7),Size=UDim2.new(1,-76,0,42),Font=Enum.Font.GothamBold})
+local body=UI.new("ScrollingFrame",panel,{Name="Content",Position=UDim2.fromOffset(14,58),Size=UDim2.new(1,-28,1,-72),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(),AutomaticCanvasSize=Enum.AutomaticSize.Y,ScrollBarThickness=3,ScrollBarImageColor3=UI.P.muted,ScrollingDirection=Enum.ScrollingDirection.Y})
 UI.stack(body,10)
-UI.new("UIPadding",body,{PaddingRight=UDim.new(0,5),PaddingBottom=UDim.new(0,12)})
-local toast=UI.frame(canvas,{Name="Notice",Visible=false,AnchorPoint=Vector2.new(.5,1),Position=UDim2.new(.5,0,1,-10),Size=UDim2.new(0,430,0,58),BackgroundColor3=UI.P.ink,ZIndex=30})
-local toastText=UI.text(toast,"",15,{Size=UDim2.new(1,-28,1,-12),Position=UDim2.fromOffset(14,6),TextColor3=UI.P.white,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=31})
+UI.new("UIPadding",body,{PaddingRight=UDim.new(0,4),PaddingBottom=UDim.new(0,12)})
+
+-- Sticky shop controls live outside the scrolling content.
+local shopTabs=UI.new("Frame",panel,{Name="ShopTabs",Visible=false,Position=UDim2.fromOffset(14,54),Size=UDim2.new(1,-28,0,42),BackgroundTransparency=1})
+local shopSubtabs=UI.new("Frame",panel,{Name="ShopSubtabs",Visible=false,Position=UDim2.fromOffset(14,99),Size=UDim2.new(1,-28,0,34),BackgroundTransparency=1})
+
+local toast=UI.frame(canvas,{Name="Notice",Visible=false,AnchorPoint=Vector2.new(.5,1),Position=UDim2.new(.5,0,1,-10),Size=UDim2.new(0,390,0,48),BackgroundColor3=UI.P.ink,ZIndex=30})
+UI.corner(toast,UI.R.chip)
+local toastText=UI.text(toast,"",14,{Size=UDim2.new(1,-24,1,-8),Position=UDim2.fromOffset(12,4),TextColor3=UI.P.white,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=31})
 local toastSerial=0
 local function notify(message)
     toastSerial+=1;local serial=toastSerial
