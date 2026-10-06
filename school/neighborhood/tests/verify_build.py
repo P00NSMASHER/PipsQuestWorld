@@ -136,6 +136,10 @@ def validate_abvm_contract() -> dict:
             "broad real-faculty directory scope must remain absent")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
+    require("Learning Lab" not in main and "Faculty & Staff Directory" not in main and "Catalog.Faculty" not in main,
+            "rejected generic Learning Lab / broad faculty directory UI reintroduced")
+    for teacher in ("Mrs. Campion","Mrs. Russek","Mrs. Benulis","Mr. Bolich","Mr. Yordy","Mrs. Kochol"):
+        require(teacher in catalog, f"approved classroom teacher missing from Catalog.Subjects: {teacher}")
     require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
             "gold-standard dark primary navigation rail missing")
     require('nav.Parent=canvas' in main and 'layout.goldLandscape' in main,
