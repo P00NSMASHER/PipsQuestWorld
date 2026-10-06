@@ -254,12 +254,29 @@ function UI.preview(parent,item,props)
     elseif item.category=="Clothes" then
         if item.slot=="uniformTop" then
             local forest=Color3.fromRGB(31,91,67)
+            local navy=Color3.fromRGB(28,48,72)
             local cream=Color3.fromRGB(238,238,231)
+            local heather=item.style==54 or item.style==55 or item.style==56
+            local longSleeve=item.style==14 or item.style==15 or item.style==52 or item.style==53 or item.style==55 or item.style==56
             p(Vector3.new(2.2,2.4,1),Vector3.new(0,2.4,0),tint)
             p(Vector3.new(1.1,1.1,1.1),Vector3.new(0,4.1,0),Color3.fromRGB(226,207,181),Enum.PartType.Ball)
-            for _,x in ipairs({-1.5,1.5}) do p(Vector3.new(.8,item.style>=14 and 2.3 or 1.4,.8),Vector3.new(x,2.5,0),tint) end
-            p(Vector3.new(.38,.18,.08),Vector3.new(.5,2.75,-.56),item.style==13 and forest or cream)
-            if item.style==15 then p(Vector3.new(.7,1.8,.07),Vector3.new(0,2.35,-.57),cream) end
+            for _,x in ipairs({-1.5,1.5}) do p(Vector3.new(.8,longSleeve and 2.3 or 1.4,.8),Vector3.new(x,2.5,0),tint) end
+            local markColor=item.style==13 and forest or (heather and navy or cream)
+            p(Vector3.new(.38,.18,.08),Vector3.new(.5,2.75,-.56),markColor)
+            if item.style==15 then
+                p(Vector3.new(.7,1.8,.07),Vector3.new(0,2.35,-.57),cream)
+            elseif item.style==51 or item.style==52 then
+                p(Vector3.new(1.45,.24,1.05),Vector3.new(0,3.45,0),tint)
+                p(Vector3.new(.12,.7,.07),Vector3.new(0,3.03,-.57),markColor)
+            elseif item.style==53 then
+                p(Vector3.new(1.4,.34,1.05),Vector3.new(0,3.45,0),tint)
+                p(Vector3.new(.10,.92,.07),Vector3.new(0,3.0,-.57),Color3.fromRGB(36,38,43))
+            elseif item.style==55 then
+                p(Vector3.new(1.35,.18,1.04),Vector3.new(0,3.46,0),Color3.fromRGB(145,147,150))
+            elseif item.style==56 then
+                p(Vector3.new(1.65,1.0,.9),Vector3.new(0,4.0,.45),tint)
+                p(Vector3.new(1.55,.48,.10),Vector3.new(0,1.72,-.57),Color3.fromRGB(151,153,156))
+            end
         elseif item.slot=="uniformBottom" then
             local navy=Color3.fromRGB(28,48,72)
             local cream=Color3.fromRGB(235,231,216)
@@ -271,7 +288,7 @@ function UI.preview(parent,item,props)
                     for _,y in ipairs({1.05,1.7,2.35}) do p(Vector3.new(2.9,.1,.07),Vector3.new(0,y,-.64),cream) end
                 end
             else
-                local h=item.style==22 and 1.6 or 3.2
+                local h=(item.style==22 or item.style==62) and 1.6 or 3.2
                 for _,x in ipairs({-.7,.7}) do p(Vector3.new(1.05,h,1),Vector3.new(x,h/2,0),tint) end
             end
         elseif item.slot=="uniformLegwear" then
