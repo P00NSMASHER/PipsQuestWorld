@@ -135,6 +135,27 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
+
+    ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
+    layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
+    gold_ui_markers = (
+        "function UI.surface", "function UI.chip", "function UI.iconButton",
+        "function UI.answerCard", "function UI.feedbackCard", "function UI.flyout",
+        "function UI.avatarViewport",
+    )
+    require(all(marker in ui_source for marker in gold_ui_markers),
+            "gold-standard reusable UI primitives regressed")
+    require(all(marker in layout_source for marker in (
+        "rail = {", "goal = {", "drive = {", "shopCardHeight", "columns = columns",
+    )), "gold-standard responsive layout contract regressed")
+    require(all(marker in main for marker in (
+        'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()',
+        '"Drive","go"', '"Reverse","back"', '"Park"',
+        'local subjectVisuals={', '"Starter","Family","Luxury"',
+        '"Starter","Sport","Premium"',
+    )), "gold-standard player-facing screen contract regressed")
+    require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
+            "debug steering toolbar returned; native thumbstick steering is required")
     duplicate_start = server_main.find("if pending.wrongChoices[args.choice] then")
     miss_start = server_main.find("local missId=", duplicate_start)
     require(duplicate_start >= 0 and miss_start > duplicate_start,
