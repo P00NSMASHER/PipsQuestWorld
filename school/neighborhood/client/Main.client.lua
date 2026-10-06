@@ -254,6 +254,7 @@ end
 
 showShop=function(selected,subfilter)
     category=selected or category
+    if setNavActive then setNavActive("shop") end
     if subfilter then clothesFilter=subfilter end
     if category~="Clothes" then clothesFilter="All" end
     open("shop","ABVM School Shop")
@@ -411,35 +412,70 @@ UserInputService.WindowFocusReleased:Connect(function() table.clear(held);table.
 local function reflow()
     local size=canvas.AbsoluteSize
     local layout=Layout.compute(size.X,size.Y)
-    header.Size=UDim2.new(1,-16,0,layout.headerHeight)
-    if size.X<600 then
-        nav.Position=UDim2.new(.5,0,0,55);nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Size=UDim2.fromOffset(math.min(320,size.X-28),44)
+    local rail=layout.rail
+    header.Position=UDim2.new(.5,0,0,rail.y)
+    header.Size=UDim2.fromOffset(rail.width,rail.height)
+
+    if layout.narrow then
+        nav.AnchorPoint=Vector2.new(.5,0)
+        nav.Position=UDim2.new(.5,0,0,47)
+        nav.Size=UDim2.new(1,-16,0,38)
     else
-        nav.Position=UDim2.new(.5,-4,0,6);nav.AnchorPoint=Vector2.new(.5,0);nav.Size=UDim2.fromOffset(320,44)
+        local navWidth=math.min(300,math.max(240,rail.width-420))
+        nav.AnchorPoint=Vector2.new(.5,0)
+        nav.Position=UDim2.new(.5,-35,0,5)
+        nav.Size=UDim2.fromOffset(navWidth,40)
     end
-    for i,b in ipairs(navButtons) do b.Size=UDim2.new(.25,-6,1,0);b.Position=UDim2.new((i-1)*.25,3,0,0) end
+    for i,entry in ipairs(navButtons) do
+        local b=entry.button
+        b.Size=UDim2.new(.25,-5,1,0)
+        b.Position=UDim2.new((i-1)*.25,3,0,0)
+    end
+
+    local g=layout.goal
+    goalCard.Position=UDim2.fromOffset(g.x,g.y)
+    if not state.subject then goalCard.Size=UDim2.fromOffset(g.width,g.height) end
+
     local m=layout.modal
     panel.Position=UDim2.fromOffset(m.x,m.y);panel.Size=UDim2.fromOffset(m.width,m.height)
-    goalCard.Position=UDim2.fromOffset(12,layout.headerHeight+16)
-    toast.Size=UDim2.fromOffset(math.min(430,size.X-24),58)
-    driving.Size=UDim2.fromOffset(math.min(362,size.X-12),66)
-    for i,b in ipairs(driveButtons) do b.Position=UDim2.new((i-1)/5,4,0,7);b.Size=UDim2.new(.2,-8,0,52) end
-    parkButton.Position=UDim2.new(.8,4,0,7);parkButton.Size=UDim2.new(.2,-8,0,52)
+    if view=="shop" then
+        body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
+        body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+    end
+
+    toast.Size=UDim2.fromOffset(math.min(390,size.X-24),48)
+    local d=layout.drive
+    driving.Position=UDim2.new(1,-d.right,d.yScale,0)
+    driving.Size=UDim2.fromOffset(d.width,d.height)
 end
 canvas:GetPropertyChangedSignal("AbsoluteSize"):Connect(reflow)
 reflow()
 changed.OnClientEvent:Connect(function(packet)
     if type(packet)~="table" then return end
     update(packet.state)
-    if packet.kind=="question" then showQuestion(packet.data)
-    elseif packet.kind=="left_classroom" then if view=="quiz" then close(false) end
-    elseif packet.kind=="shop" then showShop()
-    elseif packet.data and packet.data.message then notify(packet.data.message) end
+    if packet.kind=="question" then
+        if setNavActive then setNavActive("school") end
+        showQuestion(packet.data)
+    elseif packet.kind=="left_classroom" then
+        if view=="quiz" then close(false) end
+    elseif packet.kind=="shop" then
+        showShop()
+    elseif packet.data and packet.data.message then
+        notify(packet.data.message)
+    end
 end)
 player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
-    driving.Visible=player:GetAttribute("NeighborhoodDriving")==true
-    if not driving.Visible then table.clear(held);table.clear(heldInputs) end
+    local isDriving=player:GetAttribute("NeighborhoodDriving")==true
+    driving.Visible=isDriving
+    if isDriving then
+        if setNavActive then setNavActive("vehicle") end
+        goalCard.Visible=false
+        panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false;view=nil
+    else
+        table.clear(held);table.clear(heldInputs)
+        if setNavActive then setNavActive(nil) end
+        if not panel.Visible then goalCard.Visible=true end
+    end
 end)
 UserInputService.InputBegan:Connect(function(input,processed)
     if not processed and input.KeyCode==Enum.KeyCode.Escape then close() end
@@ -460,8 +496,10 @@ task.spawn(function()
             if UserInputService:IsKeyDown(Enum.KeyCode.A) or UserInputService:IsKeyDown(Enum.KeyCode.Left) then steer=-1 end
             if UserInputService:IsKeyDown(Enum.KeyCode.D) or UserInputService:IsKeyDown(Enum.KeyCode.Right) then steer=1 end
         end
-        if controls and throttle==0 and steer==0 then
-            local vector=controls:GetMoveVector();throttle=math.clamp(-vector.Z,-1,1);steer=math.clamp(vector.X,-1,1)
+        if controls then
+            local vector=controls:GetMoveVector()
+            if throttle==0 then throttle=math.clamp(-vector.Z,-1,1) end
+            if steer==0 then steer=math.clamp(vector.X,-1,1) end
         end
         drive:FireServer(throttle,steer)
     end
