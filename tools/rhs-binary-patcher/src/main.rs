@@ -161,9 +161,12 @@ fn compare_semantics(baseline: &WeakDom, working: &WeakDom, receipt: &PatchRecei
         bail!("script path/class inventory drift");
     }
 
-    let mut approved: HashMap<(String, String), &AppliedPatch> = HashMap::new();
+    let mut approved: HashMap<(String, String), Vec<&AppliedPatch>> = HashMap::new();
     for patch in &receipt.applied_patches {
-        approved.insert((patch.target_path.clone(), patch.class.clone()), patch);
+        approved
+            .entry((patch.target_path.clone(), patch.class.clone()))
+            .or_default()
+            .push(patch);
     }
 
     for (key, before_hashes) in &before.scripts {
@@ -172,24 +175,44 @@ fn compare_semantics(baseline: &WeakDom, working: &WeakDom, receipt: &PatchRecei
             .get(key)
             .ok_or_else(|| anyhow!("missing working script {:?}", key))?;
 
-        if let Some(patch) = approved.get(key) {
+        if let Some(patches) = approved.get(key) {
             if before_hashes.len() != 1 || after_hashes.len() != 1 {
                 bail!("approved patched script path is not unique: {:?}", key);
             }
-            if before_hashes[0] != patch.before_source_sha256 {
+
+            let first = patches
+                .first()
+                .ok_or_else(|| anyhow!("empty approved patch chain for {:?}", key))?;
+            let last = patches
+                .last()
+                .ok_or_else(|| anyhow!("empty approved patch chain for {:?}", key))?;
+
+            if before_hashes[0] != first.before_source_sha256 {
                 bail!(
                     "approved patch baseline hash mismatch for {:?}: {} != {}",
                     key,
                     before_hashes[0],
-                    patch.before_source_sha256
+                    first.before_source_sha256
                 );
             }
-            if after_hashes[0] != patch.after_source_sha256 {
+
+            for pair in patches.windows(2) {
+                if pair[0].after_source_sha256 != pair[1].before_source_sha256 {
+                    bail!(
+                        "approved patch chain discontinuity for {:?}: {} != {}",
+                        key,
+                        pair[0].after_source_sha256,
+                        pair[1].before_source_sha256
+                    );
+                }
+            }
+
+            if after_hashes[0] != last.after_source_sha256 {
                 bail!(
                     "approved patch working hash mismatch for {:?}: {} != {}",
                     key,
                     after_hashes[0],
-                    patch.after_source_sha256
+                    last.after_source_sha256
                 );
             }
         } else if before_hashes != after_hashes {
