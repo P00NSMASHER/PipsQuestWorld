@@ -1,0 +1,149 @@
+name: Upload ABVM Faculty Face Images
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-faculty-v1
+    paths:
+      - '.github/workflows/upload-abvm-faculty-faces.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upload-abvm-faculty-faces
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      UNIVERSE_ID: '10769455759'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Install portrait processing tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick
+          mkdir -p "$RUNNER_TEMP/faculty-src" "$RUNNER_TEMP/faculty-faces"
+
+      - name: Resolve canonical experience creator
+        id: creator
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl -fsSL "https://games.roblox.com/v1/games?universeIds=$UNIVERSE_ID")"
+          printf '%s' "$response" > "$RUNNER_TEMP/universe.json"
+          creator_type="$(jq -r '.data[0].creator.type' "$RUNNER_TEMP/universe.json")"
+          creator_id="$(jq -r '.data[0].creator.id' "$RUNNER_TEMP/universe.json")"
+          test "$creator_type" = "User" -o "$creator_type" = "Group"
+          test "$creator_id" != "null" -a -n "$creator_id"
+          echo "creator_type=$creator_type" >> "$GITHUB_OUTPUT"
+          echo "creator_id=$creator_id" >> "$GITHUB_OUTPUT"
+          printf 'Resolved creator: %s %s\n' "$creator_type" "$creator_id"
+
+      - name: Download, crop, and upload all 18 faculty faces
+        id: upload
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+          CREATOR_TYPE: ${{ steps.creator.outputs.creator_type }}
+          CREATOR_ID: ${{ steps.creator.outputs.creator_id }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY"
+          manifest="$RUNNER_TEMP/faculty-assets.json"
+          echo '{}' > "$manifest"
+
+          cat > "$RUNNER_TEMP/faculty.tsv" <<'EOF'
+          melissa_thompson|Mrs. Melissa Thompson|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000146.JPG
+          cindy_campion|Mrs. Cindy Campion|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000019.JPG
+          maryann_lascala|Mrs. MaryAnn Lascala|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000072.JPG
+          karla_russek|Mrs. Karla Russek|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000120.JPG
+          aimee_benulis|Mrs. Aimee Benulis|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000007.JPG
+          marla_callaghan|Mrs. Marla Callaghan|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000018.JPG
+          marylouise_smith|Ms. MaryLouise Smith|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000137.JPG
+          nicole_leagans|Mrs Nicole Leagans|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000094.JPG
+          mike_yordy|Mr. Mike Yordy|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000173.JPG
+          jacqui_urban|Mrs. Jacqui Urban|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000153.JPG
+          lucilla_kochol|Mrs. Lucilla Kochol|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000068.JPG
+          david_bolich|Mr. David Bolich|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000008.JPG
+          cindy_long|Mrs. Cindy Long|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000077.JPG
+          sharon_rossi|Mrs. Sharon Rossi|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000119.JPG
+          erin_heckman|Mrs. Erin Heckman|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/00000058.JPG
+          carol_boyer|Mrs Carol Boyer|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/Boyer_Mrs.JPG
+          carl_mcbreen|Dr Carl McBreen|https://www.assumptionbvmschool.net/uploaded/Screenshot_2026-08-19_at_2.32.17_PM.png
+          lyric_paskel|Mrs. Lyric Paskel|https://www.assumptionbvmschool.net/uploaded/faculty/ABVM/Paskel_Mrs.JPG
+          EOF
+          sed -i 's/^          //' "$RUNNER_TEMP/faculty.tsv"
+
+          if [ "$CREATOR_TYPE" = "Group" ]; then
+            creator_json="$(jq -cn --argjson id "$CREATOR_ID" '{groupId:$id}')"
+          else
+            creator_json="$(jq -cn --argjson id "$CREATOR_ID" '{userId:$id}')"
+          fi
+
+          while IFS='|' read -r staff_id display_name source_url; do
+            echo "Preparing $staff_id"
+            src="$RUNNER_TEMP/faculty-src/$staff_id"
+            face="$RUNNER_TEMP/faculty-faces/$staff_id.jpg"
+            curl -fsSL --retry 3 --connect-timeout 20 --max-time 90 "$source_url" -o "$src"
+
+            # Zoom/crop the real school portrait to a consistent square head/face plate.
+            convert "$src" -auto-orient -resize '720x720^' -gravity North -extent 512x512 -strip -quality 90 "$face"
+            test -s "$face"
+
+            request_json="$(jq -cn               --arg name "ABVM Faculty Face - $display_name"               --arg desc "User-authorized Assumption BVM faculty portrait for the ABVM Roblox school NPC."               --argjson creator "$creator_json"               '{assetType:"Image",displayName:$name,description:$desc,creationContext:{creator:$creator}}')"
+
+            response_file="$RUNNER_TEMP/create-$staff_id.json"
+            http_code="$(curl --silent --show-error --location               --output "$response_file" --write-out '%{http_code}'               --request POST 'https://apis.roblox.com/assets/v1/assets'               --header "x-api-key: $ROBLOX_API_KEY"               --form-string "request=$request_json"               --form "fileContent=@$face;type=image/jpeg")"
+            cat "$response_file"
+            test "$http_code" -ge 200 -a "$http_code" -lt 300
+
+            operation_path="$(jq -r '.path // empty' "$response_file")"
+            test -n "$operation_path"
+            operation_id="${operation_path#operations/}"
+
+            operation_file="$RUNNER_TEMP/op-$staff_id.json"
+            asset_id=""
+            moderation_state=""
+            for attempt in $(seq 1 60); do
+              curl -fsSL                 "https://apis.roblox.com/assets/v1/operations/$operation_id"                 --header "x-api-key: $ROBLOX_API_KEY"                 -o "$operation_file"
+              if [ "$(jq -r '.done // false' "$operation_file")" = "true" ]; then
+                asset_id="$(jq -r '.response.assetId // empty' "$operation_file")"
+                moderation_state="$(jq -r '.response.moderationResult.moderationState // "UNKNOWN"' "$operation_file")"
+                break
+              fi
+              sleep 2
+            done
+            cat "$operation_file"
+            test -n "$asset_id"
+
+            tmp="$(mktemp)"
+            jq               --arg id "$staff_id"               --arg name "$display_name"               --arg asset "$asset_id"               --arg moderation "$moderation_state"               --arg source "$source_url"               '. + {($id): {displayName:$name, assetId:$asset, image:"rbxassetid://"+$asset, moderationState:$moderation, sourceUrl:$source}}'               "$manifest" > "$tmp"
+            mv "$tmp" "$manifest"
+            echo "Uploaded $staff_id -> $asset_id ($moderation_state)"
+          done < "$RUNNER_TEMP/faculty.tsv"
+
+          test "$(jq 'length' "$manifest")" -eq 18
+          jq -S . "$manifest" | tee "$RUNNER_TEMP/faculty-assets.pretty.json"
+
+      - name: Preserve faculty face asset map
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-faculty-face-assets-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/faculty-assets.json
+            ${{ runner.temp }}/faculty-assets.pretty.json
+            ${{ runner.temp }}/faculty-faces/
+            ${{ runner.temp }}/universe.json
+          retention-days: 14
+          if-no-files-found: error
