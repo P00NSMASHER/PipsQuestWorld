@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "owner": "Roblox High School Integration Smoke",
   "createdAt": "2026-10-05T23:51:00Z",
   "result": "EXECUTION_PLAN_READY__LOCAL_ONLY_REQUIRED",
@@ -132,13 +132,31 @@
       "checks": [
         "Run coordination/ui/compare_rhs2_ui.py using same-canonical captures and locked ROI manifest.",
         "Treat numeric comparison as triage only.",
-        "Populate PR214_RUNTIME_CAPTURE_CONTRACT_V1.json only with evidence actually observed.",
-        "Run the runtime capture validator and require SMOKE_RUNTIME_CAPTURE_CONTRACT_OK.",
-        "Only then set runtimeExecuted=true, renderedParityEstablished=true and overallStatus=PASS.",
-        "Hand exact canonical 33a5a11 to Release/Package."
+        "Write capture-receipt.json beneath evidenceRoot using the schema2 PR214_RUNTIME_CAPTURE_CONTRACT_V1.json template; keep the shared template on HOLD. Record only observed startup, per-profile captures and panels, traversal, and same-player save/rejoin evidence, with canonicalSha and file hashes.",
+        "Record whether each profile was tested on physical hardware or in Roblox Studio emulation. Emulated rendering does not establish physical-device interaction.",
+        "Keep overallStatus=HOLD while either physical iPhone or iPad interaction remains unobserved; Studio emulation may supply partial rendered evidence but cannot clear the full device gate.",
+        "Have independent QA inspect the actual captures, interaction traces and reference comparison; numeric triage and schema validation do not establish visual parity.",
+        "Only after all required runtime observations and independent visual review pass, populate the completed local receipt with runtimeExecuted=true, renderedParityEstablished=true and overallStatus=PASS.",
+        "Reread the live canonical; stop if it differs from 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17. Run acceptanceValidation.argv against the final completed receipt and require exit 0 plus SMOKE_RUNTIME_CAPTURE_PASS_OK. HOLD/draft validation or --self-test output never authorizes release.",
+        "Preserve the validated receipt and evidence hashes unchanged. Any evidence or receipt edit requires strict revalidation. Only then update the Smoke handoff and give exact canonical 33a5a11 to Release/Package."
       ]
     }
   ],
+  "acceptanceValidation": {
+    "argv": [
+      "python3",
+      "coordination/smoke/validate_runtime_capture_contract.py",
+      "coordination/smoke/runtime-evidence/33a5a11ba771e0bbfbc82ed40ce5417c772a2f17/capture-receipt.json",
+      "--require-pass",
+      "--expected-canonical",
+      "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+      "--evidence-root",
+      "coordination/smoke/runtime-evidence/33a5a11ba771e0bbfbc82ed40ce5417c772a2f17"
+    ],
+    "requiredOutput": "SMOKE_RUNTIME_CAPTURE_PASS_OK",
+    "draftOutput": "SMOKE_RUNTIME_CAPTURE_CONTRACT_DRAFT_OK",
+    "draftCanAuthorizeRelease": false
+  },
   "hardStops": [
     "Canonical head changes from 33a5a11.",
     "Authorized device is offline or lease unavailable.",

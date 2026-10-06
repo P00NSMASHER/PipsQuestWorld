@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "owner": "Roblox High School Integration Smoke",
   "inputCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
   "producerCandidate": {
@@ -38,13 +38,17 @@
     "Confirm actual Roblox client startup succeeds before any visual/traversal claim.",
     "Capture all required reference checkpoints on desktop, iPhone landscape and iPad landscape with viewport/safe-inset/FOV/camera metadata.",
     "Exercise movement/traversal, Shop, Travel, Avatar/Outfit, House/Housing Editor, CafeCard, VehicleCard, ClassActivityModal and save/rejoin.",
-    "Never classify Luau compile, Rojo build, headless/static, or source-inspection evidence as rendered/device/runtime PASS."
+    "Never classify Luau compile, Rojo build, headless/static, or source-inspection evidence as rendered/device/runtime PASS.",
+    "Draft and self-test validation emit SMOKE_RUNTIME_CAPTURE_CONTRACT_DRAFT_OK only; they cannot grant final acceptance.",
+    "Full PASS requires physical iPhone and iPad captures, exact device geometry, all panels on all profiles, and startup/save-rejoin observations backed by canonical-bound hashed evidence files.",
+    "Studio emulation may document partial rendered checks in an overall HOLD receipt; it does not establish physical-device evidence.",
+    "The strict validator verifies evidence completeness, metadata and file integrity; independent visual/runtime review remains required."
   ],
-  "outputLocation": "coordination/smoke/runtime-evidence/<integrated-canonical-sha>/capture-receipt.json",
+  "outputLocation": "coordination/smoke/runtime-evidence/33a5a11ba771e0bbfbc82ed40ce5417c772a2f17/capture-receipt.json",
   "blocker": "LOCAL_ONLY_REQUIRED: actual Roblox startup/rendered/device/traversal/feature-interaction/save-rejoin evidence is unexecuted on exact canonical 33a5a11.",
   "nextHandoff": {
     "owner": "Roblox High School Release & Package Gate",
-    "condition": "Only after exact-canonical runtime receipt validates with overallStatus PASS, runtimeExecuted=true and renderedParityEstablished=true."
+    "condition": "Only after the completed receipt validates with --require-pass --expected-canonical <live-sha> --evidence-root <canonical-evidence-directory>, emits SMOKE_RUNTIME_CAPTURE_PASS_OK, and independent QA reviews the actual runtime/physical-device/rendered evidence."
   },
   "runtimeExecuted": false,
   "renderedParityEstablished": false,
@@ -90,8 +94,16 @@
           "fov": null,
           "camera": null,
           "evidence": null
+        },
+        {
+          "id": "C_0005",
+          "status": "PENDING",
+          "fov": null,
+          "camera": null,
+          "evidence": null
         }
-      ]
+      ],
+      "captureMode": null
     },
     {
       "id": "iphone_landscape",
@@ -133,8 +145,16 @@
           "fov": null,
           "camera": null,
           "evidence": null
+        },
+        {
+          "id": "C_0005",
+          "status": "PENDING",
+          "fov": null,
+          "camera": null,
+          "evidence": null
         }
-      ]
+      ],
+      "captureMode": null
     },
     {
       "id": "ipad_landscape",
@@ -176,98 +196,293 @@
           "fov": null,
           "camera": null,
           "evidence": null
+        },
+        {
+          "id": "C_0005",
+          "status": "PENDING",
+          "fov": null,
+          "camera": null,
+          "evidence": null
         }
-      ]
+      ],
+      "captureMode": null
     }
   ],
   "routeChecks": [
     {
       "id": "spawn",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "entrance",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "atrium_left",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "atrium_right",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "corridor",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "stair_up",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "stair_down",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "class_free_roam",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "menus",
       "status": "PENDING",
-      "evidence": null
+      "evidence": null,
+      "observations": {
+        "completed": null
+      }
     },
     {
       "id": "save_rejoin",
       "status": "PENDING",
       "evidence": null,
-      "observedRejoinMatch": null
+      "observedRejoinMatch": null,
+      "observations": {
+        "playerIdBefore": null,
+        "playerIdAfter": null,
+        "committedStateSha256": null,
+        "restoredStateSha256": null,
+        "durableAwardCountBefore": null,
+        "durableAwardCountAfter": null,
+        "completionIdBefore": null,
+        "completionIdAfter": null
+      }
     }
   ],
   "panelChecks": [
     {
       "id": "shop",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "travel",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "avatar",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "house",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "housing_editor",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "class_activity_modal",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     },
     {
       "id": "cafe",
       "status": "PENDING",
-      "evidence": null
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "vehicle",
+      "status": "PENDING",
+      "captures": [
+        {
+          "profileId": "desktop",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "iphone_landscape",
+          "status": "PENDING",
+          "evidence": null
+        },
+        {
+          "profileId": "ipad_landscape",
+          "status": "PENDING",
+          "evidence": null
+        }
+      ]
     }
-  ]
+  ],
+  "startupCheck": {
+    "status": "PENDING",
+    "evidence": null,
+    "observations": {
+      "clientStarted": null,
+      "startupErrorCount": null,
+      "canonicalScreenGuiCount": null,
+      "canonicalClientMountCount": null,
+      "playerId": null,
+      "universeId": null,
+      "placeId": null
+    }
+  },
+  "physicalDeviceEvidenceEstablished": false,
+  "moneySpent": false,
+  "robloxPublished": false,
+  "taskStateChanged": false
 }

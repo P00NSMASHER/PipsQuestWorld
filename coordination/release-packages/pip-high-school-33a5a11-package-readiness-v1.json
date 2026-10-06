@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lane": "Roblox High School Release & Package Gate",
   "owner": "Roblox High School Release & Package Gate",
   "observedAt": "2026-10-05T23:52:30Z",
@@ -75,13 +75,13 @@
   ],
   "packageGate": {
     "eligible": false,
-    "unlockCondition": "Final Integration Smoke reaches PASS on exact canonical 33a5a11 with runtimeExecuted=true and renderedParityEstablished=true.",
+    "unlockCondition": "Final Integration Smoke reaches PASS on exact canonical 33a5a11 with runtimeExecuted=true and renderedParityEstablished=true, and strict validation of the completed capture receipt and evidence bundle returns SMOKE_RUNTIME_CAPTURE_PASS_OK.",
     "staleHeadRule": "Any canonical-head change invalidates this preflight and requires recomputing root/school tree identity plus exact-head checks.",
     "noFalsePassRule": "Mapped compile/build and static guards do not substitute for runtime/device/rendered evidence."
   },
   "postUnlockActions": [
     "Reread live canonical and require it still equals 33a5a11.",
-    "Reread final Smoke receipt and require full PASS on 33a5a11.",
+    "Reread final Smoke receipt and require full PASS on 33a5a11. Independently rerun acceptanceValidation.argv from coordination/smoke/PR292_33A5A11_LOCAL_SMOKE_EXECUTION_PLAN.json against the unchanged completed receipt and evidence bundle; require exit 0 and SMOKE_RUNTIME_CAPTURE_PASS_OK. Draft/self-test output cannot unlock packaging.",
     "Recompute root and school tree SHAs and require 9bb9306f / 8873f39f identities unchanged.",
     "Emit deterministic package checkpoint using the reserved artifact identity.",
     "Update Release receipt and Control Tower state.",
