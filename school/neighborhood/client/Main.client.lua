@@ -58,7 +58,7 @@ local panelScale=UI.new("UIScale",panel,{Scale=1})
 local panelHeader=UI.frame(panel,{Name="PanelHeader",Position=UDim2.fromOffset(0,0),Size=UDim2.new(1,0,0,50),BackgroundColor3=UI.P.ink,ZIndex=3})
 UI.corner(panelHeader,18)
 local panelHeaderMask=UI.frame(panelHeader,{Position=UDim2.new(0,0,1,-18),Size=UDim2.new(1,0,0,18),BackgroundColor3=UI.P.ink,ZIndex=3})
-local panelTitle=UI.text(panelHeader,"",UI.T.section,{Position=UDim2.fromOffset(18,4),Size=UDim2.new(1,-68,0,42),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,ZIndex=4})
+local panelTitle=UI.text(panelHeader,"",UI.T.section,{Position=UDim2.fromOffset(54,4),Size=UDim2.new(1,-108,0,42),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=4})
 local body=UI.new("ScrollingFrame",panel,{Name="Content",Position=UDim2.fromOffset(14,58),Size=UDim2.new(1,-28,1,-72),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(),AutomaticCanvasSize=Enum.AutomaticSize.Y,ScrollBarThickness=3,ScrollBarImageColor3=UI.P.muted,ScrollingDirection=Enum.ScrollingDirection.Y})
 UI.stack(body,10)
 UI.new("UIPadding",body,{PaddingRight=UDim.new(0,4),PaddingBottom=UDim.new(0,12)})
@@ -147,7 +147,7 @@ local function close(notifyServer)
     if setNavActive then setNavActive(locationCommand) end
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
 end
-UI.button(panelHeader,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,7),Size=UDim2.fromOffset(36,36),TextSize=22,BackgroundColor3=UI.P.paper,TextColor3=UI.P.ink,CornerRadius=999,ZIndex=5})
+UI.button(panelHeader,"‹",function() close() end,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(36,36),TextSize=28,BackgroundColor3=UI.P.paper,TextColor3=UI.P.ink,CornerRadius=999,ZIndex=5})
 local function open(kind,title)
     view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
     panelScale.Scale=.975
