@@ -376,18 +376,43 @@ function World.build()
 
     -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
     World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(93,111,121),Enum.Material.Metal,false)
+    World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(83,103,117),Enum.Material.Metal,false)
+    World.part(root,"Howard door split",Vector3.new(.45,7.8,.18),CFrame.new(75.15,8,-93),palette.stone,nil,false)
+    for _,z in ipairs({-96,-90}) do
+        local slit=World.part(root,"Howard door window",Vector3.new(.15,2.7,1.3),CFrame.new(75.12,8.5,z),Color3.fromRGB(39,54,63),Enum.Material.Glass,false)
+        slit.Transparency=.2
+    end
+
+    -- Brick outer arch and lighter inner stone ring match the real recessed doorway.
+    for i=0,12 do
+        local theta=math.pi*i/12
+        local z=-93+math.cos(theta)*7.25
+        local y=16+math.sin(theta)*7.25
+        World.part(root,"Howard outer brick arch",Vector3.new(1.45,3.6,1.25),
+            CFrame.new(75.9,y,z)*CFrame.Angles(theta+math.pi/2,0,0),
+            palette.brickDark,Enum.Material.Brick,false)
+    end
     World.part(root,"Howard arch left",Vector3.new(1.15,12,1.25),CFrame.new(75.6,10,-99),palette.stone,Enum.Material.Concrete,false)
     World.part(root,"Howard arch right",Vector3.new(1.15,12,1.25),CFrame.new(75.6,10,-87),palette.stone,Enum.Material.Concrete,false)
-    for i=0,10 do
-        local theta=math.pi*i/10
+    for i=0,12 do
+        local theta=math.pi*i/12
         local z=-93+math.cos(theta)*6
         local y=16+math.sin(theta)*6
-        World.part(root,"Howard arch stone segment",Vector3.new(1.35,3.2,1.2),
-            CFrame.new(75.6,y,z)*CFrame.Angles(theta+math.pi/2,0,0),
+        World.part(root,"Howard inner stone arch",Vector3.new(1.35,3.05,1.15),
+            CFrame.new(75.55,y,z)*CFrame.Angles(theta+math.pi/2,0,0),
             palette.stone,Enum.Material.Concrete,false)
     end
-    cross(root,CFrame.new(75.25,23,-93)*CFrame.Angles(0,math.pi/2,0),.55,palette.gold)
+
+    local transom=World.part(root,"Howard dark transom",Vector3.new(.22,5,9.2),CFrame.new(75.28,14,-93),Color3.fromRGB(37,48,51),Enum.Material.Glass,false)
+    transom.Transparency=.18
+    cross(root,CFrame.new(75.05,14.4,-93)*CFrame.Angles(0,math.pi/2,0),.42,Color3.fromRGB(112,186,174))
+
+    for _,z in ipairs({-101.5,-84.5}) do
+        World.part(root,"Howard wall light mount",Vector3.new(.55,2.4,1.15),CFrame.new(75.18,11,z),palette.stone,Enum.Material.Concrete,false)
+        local lamp=World.part(root,"Howard wall light",Vector3.new(.6,1.1,.8),CFrame.new(74.82,11,z),Color3.fromRGB(232,221,181),Enum.Material.Neon,false)
+        local glow=Instance.new("PointLight");glow.Brightness=.45;glow.Range=11;glow.Color=Color3.fromRGB(255,226,171);glow.Parent=lamp
+    end
+
     World.part(root,"Howard walkway",Vector3.new(21,.35,17),CFrame.new(93,.25,-93),palette.stone,Enum.Material.Concrete)
     -- Freestanding green/gold Howard Avenue sign with posts and caps like the user's reference.
     for _,z in ipairs({-84.5,-71.5}) do
