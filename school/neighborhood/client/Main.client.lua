@@ -46,7 +46,7 @@ UI.corner(nav,18);UI.stroke(nav,Color3.fromRGB(46,67,93))
 local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.02})
 local goalIcon=UI.frame(goalCard,{Position=UDim2.fromOffset(7,6),Size=UDim2.fromOffset(34,30),BackgroundColor3=UI.P.gold})
 UI.corner(goalIcon,10)
-UI.text(goalIcon,"★",16,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
+local goalIconText=UI.text(goalIcon,"★",16,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
 local resumeButton
 local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(49,2),Size=UDim2.new(1,-58,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
 local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(49,19),Size=UDim2.new(1,-58,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
@@ -101,17 +101,22 @@ local function update(snapshot)
         goalCard.Size=UDim2.fromOffset(goalLayout.width,goalLayout.height+(state.subject and 40 or 0))
     end
     local goal=Catalog.ById[state.goal] or Catalog.ById.home_cottage
+    local goalIcons={Homes="⌂",Vehicles="◆",Clothes="♢",Items="▣"}
+    local goalColors={Homes=UI.P.success,Vehicles=Color3.fromRGB(58,124,219),Clothes=UI.P.gold,Items=UI.P.ink}
+    goalIconText.Text=goalIcons[goal.category] or "★"
+    goalIcon.BackgroundColor3=goalColors[goal.category] or UI.P.gold
+    goalIconText.TextColor3=(goal.category=="Items") and UI.P.white or UI.P.ink
     if state.owned[goal.id] then
-        goalTitle.Text="Made it: "..goal.name
-        goalInfo.Text="Choose a new goal in the shop"
+        goalTitle.Text="Owned • "..goal.name
+        goalInfo.Text="Choose your next reward in the shop"
         goalFill.Size=UDim2.fromScale(1,1)
     else
         local remaining=math.max(0,goal.price-state.coins)
-        goalTitle.Text="Next: "..goal.name
         local baseAnswers=math.ceil(remaining/10)
+        goalTitle.Text="Next reward • "..goal.name
         goalInfo.Text=remaining==0
             and ("Ready to buy  •  lesson "..tostring(state.lessonCount).."/5")
-            or string.format("%d Credits to go  •  ≈ %d correct or fewer",remaining,baseAnswers)
+            or string.format("%d / %d Credits  •  ≈ %d correct",state.coins,goal.price,baseAnswers)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
