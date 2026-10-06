@@ -355,8 +355,7 @@ function World.build()
 
     -- Real-school-inspired exterior massing: tall, rectangular, flat-roofed, brown brick with tan infill.
     World.part(root,"School main floor",Vector3.new(150,.7,110),CFrame.new(0,4,-90),Color3.fromRGB(190,184,166),Enum.Material.Concrete)
-    World.part(root,"Second floor slab",Vector3.new(148,.65,108),CFrame.new(0,20,-90),Color3.fromRGB(170,166,153),Enum.Material.Concrete)
-    World.part(root,"Third floor slab",Vector3.new(148,.65,108),CFrame.new(0,36,-90),Color3.fromRGB(170,166,153),Enum.Material.Concrete)
+    -- Upper classrooms and halls already provide walkable floors. Full upper slabs would cap the stairwells.
     World.part(root,"Flat black roof",Vector3.new(154,1,114),CFrame.new(0,52.5,-90),Color3.fromRGB(45,47,48),Enum.Material.Slate)
     World.part(root,"Roof parapet front",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-34.5),palette.brick,Enum.Material.Brick)
     World.part(root,"Roof parapet back",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-145.5),palette.brick,Enum.Material.Brick)
@@ -594,7 +593,24 @@ function World.build()
 
     -- Playable interior floors/halls. Exterior stays faithful; interior is wider/clearer than the real plan.
     for index,floorY in ipairs({4,20,36}) do
-        World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),Color3.fromRGB(177,151,118),Enum.Material.WoodPlanks)
+        local floorColor=Color3.fromRGB(177,151,118)
+        if index==1 then
+            World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),floorColor,Enum.Material.WoodPlanks)
+        elseif index==2 then
+            -- Opening around first stair arrival at x=-7, z≈-101.
+            World.part(root,"Central hall floor back",Vector3.new(30,.4,28),CFrame.new(0,floorY+.25,-128),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Central hall floor front",Vector3.new(30,.4,50),CFrame.new(0,floorY+.25,-63),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Central hall floor stair side",Vector3.new(15.5,.4,26),CFrame.new(7.25,floorY+.25,-101),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Stair opening side guard",Vector3.new(.3,3,26),CFrame.new(-.35,floorY+1.8,-101),palette.metal,Enum.Material.Metal,false)
+            World.part(root,"Stair opening back guard",Vector3.new(13.5,3,.3),CFrame.new(-7,floorY+1.8,-114),palette.metal,Enum.Material.Metal,false)
+        else
+            -- Opening around second stair arrival at x=7, z≈-75.
+            World.part(root,"Central hall floor back",Vector3.new(30,.4,58),CFrame.new(0,floorY+.25,-113),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Central hall floor front",Vector3.new(30,.4,18),CFrame.new(0,floorY+.25,-47),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Central hall floor stair side",Vector3.new(15.5,.4,28),CFrame.new(-7.25,floorY+.25,-75),floorColor,Enum.Material.WoodPlanks)
+            World.part(root,"Stair opening side guard",Vector3.new(.3,3,28),CFrame.new(.35,floorY+1.8,-75),palette.metal,Enum.Material.Metal,false)
+            World.part(root,"Stair opening front guard",Vector3.new(13.5,3,.3),CFrame.new(7,floorY+1.8,-61),palette.metal,Enum.Material.Metal,false)
+        end
         World.part(root,"Hall left rail",Vector3.new(.4,2.3,92),CFrame.new(-14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
         World.part(root,"Hall right rail",Vector3.new(.4,2.3,92),CFrame.new(14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
         for _,z in ipairs({-130,-108,-86,-64,-44}) do
