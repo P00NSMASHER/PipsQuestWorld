@@ -29,8 +29,8 @@ local vehicleFilter="All"
 -- Compact floating rail from the authoritative gold-standard board.
 local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(760,50),BackgroundColor3=UI.P.paper,BackgroundTransparency=.03})
 UI.crest(header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34)})
-UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(78,23),Font=Enum.Font.GothamBold})
-UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(104,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+UI.text(header,"ABVM STUDENT",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.ink})
 UI.corner(wallet,UI.R.chip)
@@ -656,20 +656,36 @@ local function reflow()
     header.Position=UDim2.fromOffset(layout.rail.x,layout.rail.y)
     header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
-    if layout.narrow then
+    if layout.goldLandscape then
+        nav.Parent=canvas
+        nav.AnchorPoint=Vector2.new(0,0)
+        nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)
+        nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
+        streakPill.Visible=size.X>=850
+        for i,b in ipairs(navButtons) do
+            b.Size=UDim2.new(1,0,0,46)
+            b.Position=UDim2.fromOffset(0,(i-1)*52)
+        end
+    elseif layout.narrow then
+        nav.Parent=header
         streakPill.Visible=false
         nav.AnchorPoint=Vector2.new(.5,0)
         nav.Position=UDim2.new(.5,0,0,46)
         nav.Size=UDim2.new(1,-18,0,40)
+        for i,b in ipairs(navButtons) do
+            b.Size=UDim2.new(.25,-6,1,0)
+            b.Position=UDim2.new((i-1)*.25,3,0,0)
+        end
     else
+        nav.Parent=header
         streakPill.Visible=size.X>=850
         nav.AnchorPoint=Vector2.new(.5,0)
         nav.Position=UDim2.new(.5,size.X<850 and -36 or -8,0,5)
         nav.Size=UDim2.fromOffset(size.X<850 and 260 or 300,40)
-    end
-    for i,b in ipairs(navButtons) do
-        b.Size=UDim2.new(.25,-6,1,0)
-        b.Position=UDim2.new((i-1)*.25,3,0,0)
+        for i,b in ipairs(navButtons) do
+            b.Size=UDim2.new(.25,-6,1,0)
+            b.Position=UDim2.new((i-1)*.25,3,0,0)
+        end
     end
 
     local m=layout.modal
