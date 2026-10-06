@@ -26,14 +26,37 @@ function UI.shadow(parent,position,size,radius)
 end
 function UI.surface(parent,props)
     props=props or {}
-    local shadowProps=props.Shadow~=false
-    props.Shadow=nil
-    local position=props.Position
-    local size=props.Size
+    local wantShadow=props.Shadow~=false
     local radius=props.CornerRadius or UI.R.surface
-    props.CornerRadius=nil
-    if shadowProps then UI.shadow(parent,position and position+UDim2.fromOffset(2,3) or UDim2.fromOffset(2,3),size,radius) end
-    local o=UI.frame(parent,props);UI.corner(o,radius);UI.stroke(o,UI.P.line);return o
+    props.Shadow=nil;props.CornerRadius=nil
+    local o=UI.frame(parent,props);UI.corner(o,radius);UI.stroke(o,UI.P.line)
+    if wantShadow then
+        local shadow=UI.new("Frame",parent,{
+            Name=(o.Name~="" and o.Name.."Shadow" or "SurfaceShadow"),
+            AnchorPoint=o.AnchorPoint,
+            Position=o.Position+UDim2.fromOffset(2,3),
+            Size=o.Size,
+            BackgroundColor3=Color3.fromRGB(18,31,47),
+            BackgroundTransparency=.87,
+            BorderSizePixel=0,
+            Visible=o.Visible,
+            ZIndex=math.max(0,o.ZIndex-1),
+        })
+        UI.corner(shadow,radius)
+        local function sync()
+            shadow.AnchorPoint=o.AnchorPoint
+            shadow.Position=o.Position+UDim2.fromOffset(2,3)
+            shadow.Size=o.Size
+            shadow.Visible=o.Visible
+            shadow.ZIndex=math.max(0,o.ZIndex-1)
+        end
+        o:GetPropertyChangedSignal("AnchorPoint"):Connect(sync)
+        o:GetPropertyChangedSignal("Position"):Connect(sync)
+        o:GetPropertyChangedSignal("Size"):Connect(sync)
+        o:GetPropertyChangedSignal("Visible"):Connect(sync)
+        o:GetPropertyChangedSignal("ZIndex"):Connect(sync)
+    end
+    return o
 end
 function UI.chip(parent,text,props)
     props=props or {}
