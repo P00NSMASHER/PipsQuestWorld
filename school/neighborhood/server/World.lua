@@ -116,7 +116,7 @@ local function utilityPole(parent,x,z,height)
     World.part(parent,"Utility pole",Vector3.new(1.1,h,1.1),CFrame.new(x,h/2,z),Color3.fromRGB(91,70,52),Enum.Material.Wood)
     World.part(parent,"Utility crossarm",Vector3.new(10,.65,.65),CFrame.new(x,h-4,z),Color3.fromRGB(91,70,52),Enum.Material.Wood,false)
     for _,dx in ipairs({-4,0,4}) do
-        local ins=World.part(parent,"Utility insulator",Vector3.new(.5,.8,.5),CFrame.new(x+dx,h-3.3,z),Color3.fromRGB(185,183,171),Enum.Material.Ceramic,false)
+        local ins=World.part(parent,"Utility insulator",Vector3.new(.5,.8,.5),CFrame.new(x+dx,h-3.3,z),Color3.fromRGB(185,183,171),Enum.Material.SmoothPlastic,false)
         ins.Shape=Enum.PartType.Cylinder
     end
     return Vector3.new(x,h-2.8,z)
