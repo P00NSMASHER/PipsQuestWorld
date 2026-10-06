@@ -133,6 +133,17 @@ test("twenty first-try answers buy a cottage with change",function()
     assert(Learning.purchase(p,"buy-cottage",Catalog.ById.home_cottage).ok)
     equal(p.coins,30);assert(p.owned.home_cottage);equal(p.earned,430)
 end)
+test("home ladder has deliberate perfect-play pacing",function()
+    local function earnedAfter(n)
+        local p=Learning.newProfile()
+        for i=1,n do Learning.reward(p,"pace"..i,Bank.Questions[(i-1)%#Bank.Questions+1],true,1000+i*601) end
+        return p.coins
+    end
+    assert(earnedAfter(19)<400);assert(earnedAfter(20)>=400)
+    assert(earnedAfter(66)<1500);assert(earnedAfter(67)>=1500)
+    assert(earnedAfter(197)<4500);assert(earnedAfter(198)>=4500)
+    assert(earnedAfter(523)<12000);assert(earnedAfter(524)>=12000)
+end)
 test("prices come from catalog and no purchase can go negative",function()
     local p=Learning.newProfile()
     assert(not Learning.purchase(p,"x",Catalog.ById.home_estate).ok);equal(p.coins,0)
