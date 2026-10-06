@@ -96,9 +96,13 @@ def validate_abvm_contract() -> dict:
         "Mrs. Thompson — Secretary",
         "Mrs. Boyer — Assistant Principal",
         "World.schoolDoor=CFrame.new(0,3,18)",
+        "Central hall floor stair side",
+        "Stair opening side guard",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
+    require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
+            "redundant full upper slabs would cap the playable stairwells")
     expected_arch_calls = (
         "makeFrontArch(root,-27,false)",
         "makeFrontArch(root,-9,true)",
