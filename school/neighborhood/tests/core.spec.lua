@@ -240,11 +240,18 @@ test("mix-and-match ABVM uniform pieces equip independently",function()
     end
     assert(p.equipped.home=="home_starter" and p.equipped.vehicle=="vehicle_cart")
 end)
-test("layout remains inside iPhone, iPad and desktop safe canvases",function()
-    for _,v in ipairs({{758,360},{720,320},{852,393},{350,760},{320,568},{976,724},{1366,700}}) do
+test("layout remains inside gold-standard iPhone, iPad and desktop safe canvases",function()
+    for _,v in ipairs({{1112,512},{852,393},{758,360},{720,320},{350,760},{320,568},{976,724},{1366,700}}) do
         local l=Layout.compute(v[1],v[2]);local r=l.modal
         assert(r.x>=0 and r.y>=l.headerHeight and r.x+r.width<=v[1] and r.y+r.height<=v[2])
+        assert(l.rail.x>=0 and l.rail.y>=0 and l.rail.x+l.rail.width<=v[1])
+        assert(l.goal.x>=0 and l.goal.x+l.goal.width<=v[1])
         assert(l.answerHeight>=48)
+        assert(l.drive.width>=88 and l.drive.height>=160)
+        if v[1]>=720 and v[1]>=v[2] then
+            assert(l.headerHeight/v[2]<=.20)
+            assert(l.columns==2)
+        end
     end
 end)
 print("NEIGHBORHOOD_CORE_TESTS_PASS "..count)
