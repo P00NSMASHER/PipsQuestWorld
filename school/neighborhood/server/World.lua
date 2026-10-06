@@ -295,9 +295,9 @@ function World.build()
     for _,subject in ipairs(Catalog.Subjects) do active[subject.id]=subject end
     classroom(root,"math","Math","Mrs. Campion",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
     classroom(root,"reading","Reading","Mrs. Russek",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
-    classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,Color3.fromRGB(137,105,170),false)
+    classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,color((active.grammar and active.grammar.color) or {137,105,170}),active.grammar~=nil)
     classroom(root,"religion","Religion","Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
-    classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,Color3.fromRGB(58,135,118),false)
+    classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
     classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
 
     -- Stairs connect all three playable academic floors.
