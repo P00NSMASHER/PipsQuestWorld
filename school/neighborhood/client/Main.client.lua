@@ -510,14 +510,19 @@ showShop=function(selected,subfilter)
     open("shop",titles[category] or "ABVM School Shop")
 
     UI.clear(shopTabs);UI.clear(shopSubtabs)
+    shopTabs.BackgroundTransparency=0;shopTabs.BackgroundColor3=UI.P.navySoft
+    UI.corner(shopTabs,14)
+    shopSubtabs.BackgroundTransparency=0;shopSubtabs.BackgroundColor3=UI.P.soft
+    UI.corner(shopSubtabs,12)
     local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Apparel","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
     for i,def in ipairs(categoryDefs) do
         local key,label,icon=def[1],def[2],def[3]
         UI.iconButton(shopTabs,icon,label,function() showShop(key) end,{
             Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=11,IconSize=15,
-            BackgroundColor3=key==category and UI.P.ink or UI.P.white,
+            BackgroundColor3=key==category and UI.P.ink or UI.P.navySoft,
             TextColor3=key==category and UI.P.white or UI.P.ink,
-            IconColor=key==category and UI.P.gold or UI.P.teal,
+            IconBackgroundColor3=key==category and UI.P.gold or UI.P.white,
+            IconColor=key==category and UI.P.ink or UI.P.teal,
         })
     end
 
@@ -545,7 +550,7 @@ showShop=function(selected,subfilter)
             end,{
                 Position=UDim2.new((i-1)/#subfilters,2,0,0),Size=UDim2.new(1/#subfilters,-4,1,0),
                 TextSize=10,
-                BackgroundColor3=label==activeFilter and UI.P.teal or UI.P.white,
+                BackgroundColor3=label==activeFilter and UI.P.teal or UI.P.soft,
                 TextColor3=label==activeFilter and UI.P.white or UI.P.ink,
                 CornerRadius=10,
             })
@@ -598,10 +603,23 @@ showShop=function(selected,subfilter)
 
         UI.text(card,item.name,15,{Position=UDim2.fromOffset(textX,8),Size=UDim2.new(1,-textX-10,0,30),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
         local affordable=state.coins>=item.price
-        local priceStatus=owned and (equipped and "✓ Equipped" or "Owned") or (tostring(item.price).." Credits")
-        UI.text(card,priceStatus,12,{Position=UDim2.fromOffset(textX,37),Size=UDim2.new(1,-textX-10,0,20),TextColor3=owned and UI.P.success or (affordable and UI.P.success or UI.P.teal),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
         local tierName=(Catalog.Tiers[item.tier] and Catalog.Tiers[item.tier].name) or "School"
-        UI.chip(card,equipped and "✓ Equipped" or tierName,{Position=UDim2.fromOffset(textX,60),Size=UDim2.fromOffset(equipped and 82 or 78,24),BackgroundColor3=equipped and Color3.fromRGB(232,245,238) or UI.P.navySoft,TextColor3=equipped and UI.P.success or UI.P.ink,TextSize=10,StrokeColor=equipped and UI.P.success or UI.P.line})
+        local slotName=item.slot=="uniformTop" and "TOP" or item.slot=="uniformBottom" and "BOTTOM" or item.slot=="uniformLegwear" and "SOCKS" or item.slot=="uniformShoes" and "SHOES" or nil
+        local badgeText=equipped and "✓ EQUIPPED" or owned and "OWNED" or slotName or string.upper(tierName)
+        local badgeBg=equipped and Color3.fromRGB(232,245,238) or owned and UI.P.soft or category=="Homes" and UI.P.goldSoft or category=="Vehicles" and UI.P.navySoft or UI.P.soft
+        local badgeFg=equipped and UI.P.success or owned and UI.P.teal or UI.P.ink
+        UI.chip(card,badgeText,{
+            Position=UDim2.fromOffset(textX,38),Size=UDim2.fromOffset(math.min(102,math.max(64,#badgeText*6+18)),22),
+            BackgroundColor3=badgeBg,TextColor3=badgeFg,TextSize=9,
+            StrokeColor=equipped and UI.P.success or UI.P.line,
+        })
+        if not owned then
+            UI.text(card,"●  "..tostring(item.price).." Credits",12,{
+                Position=UDim2.fromOffset(textX,63),Size=UDim2.new(1,-textX-10,0,20),
+                TextColor3=affordable and UI.P.success or Color3.fromRGB(180,132,28),
+                Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd,
+            })
+        end
         if not layout.compact then
             UI.text(card,item.description,11,{Position=UDim2.fromOffset(textX,87),Size=UDim2.new(1,-textX-10,0,24),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
         end
@@ -620,16 +638,21 @@ showShop=function(selected,subfilter)
                     if view=="shop" then showShop(category,category=="Clothes" and clothesFilter or category=="Homes" and homeFilter or category=="Vehicles" and vehicleFilter or nil) end
                 end
             end)
-        end,{Position=UDim2.new(0,10,1,-46),Size=UDim2.new(.68,-14,0,36),TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
+        end,{Position=UDim2.new(0,10,1,-46),Size=UDim2.new(1,-60,0,36),TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
         if owned and (equipped or item.category=="Items") then
             action.Active=false;action.BackgroundColor3=UI.P.soft;action.TextColor3=UI.P.success
         end
-        UI.button(card,state.goal==item.id and "★ Goal" or "☆ Goal",function()
+        UI.button(card,state.goal==item.id and "★" or "☆",function()
             task.spawn(function()
                 local result=call("goal",{itemId=item.id})
                 if result.ok and view=="shop" then showShop(category,category=="Clothes" and clothesFilter or category=="Homes" and homeFilter or category=="Vehicles" and vehicleFilter or nil) end
             end)
-        end,{Position=UDim2.new(.68,2,1,-46),Size=UDim2.new(.32,-12,0,36),TextSize=11,BackgroundColor3=state.goal==item.id and UI.P.goldSoft or UI.P.white,CornerRadius=10})
+        end,{
+            Position=UDim2.new(1,-46,1,-46),Size=UDim2.fromOffset(36,36),TextSize=18,
+            BackgroundColor3=state.goal==item.id and UI.P.goldSoft or UI.P.white,
+            TextColor3=state.goal==item.id and Color3.fromRGB(180,132,28) or UI.P.muted,
+            CornerRadius=10,
+        })
     end
 end
 local navButtons={}
