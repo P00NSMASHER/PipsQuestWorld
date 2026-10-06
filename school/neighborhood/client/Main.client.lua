@@ -111,7 +111,7 @@ local messages={
     not_enough_coins="Keep learning, or choose a smaller goal. Your Credits are safe.",not_owned="Earn and buy this item before equipping it.",
     temporarily_unavailable="That did not finish. Please try again.",slow_down="One action at a time.",travel_cooldown="You're already on your way. Try again shortly.",
 }
-local showShop,showQuestion,setNavActive,showAvatar
+local showShop,showQuestion,setNavActive,showAvatar,showClasses
 local function call(command,args)
     if busy then return {ok=false,code="saving"} end
     busy=true
@@ -165,6 +165,36 @@ local function subject(id)
     for _,s in ipairs(Catalog.Subjects) do if s.id==id then return s end end
     return Catalog.Subjects[1]
 end
+
+showClasses=function()
+    if setNavActive then setNavActive("school") end
+    open("classes","Classes")
+    UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
+        LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
+    })
+    UI.text(body,"Choose a classroom, then walk through its doorway to begin.",13,{
+        LayoutOrder=2,Size=UDim2.new(1,0,0,30),TextColor3=UI.P.muted,
+    })
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+    local columns=layout.landscape and layout.columns or 1
+    local rows=math.ceil(#Catalog.Subjects/columns)
+    local grid=UI.new("Frame",body,{LayoutOrder=3,Size=UDim2.new(1,0,0,rows*66+(rows-1)*8),BackgroundTransparency=1})
+    UI.new("UIGridLayout",grid,{
+        CellPadding=UDim2.fromOffset(8,8),
+        CellSize=UDim2.new(1/columns,-(8*(columns-1))/columns,0,66),
+        FillDirectionMaxCells=columns,
+        SortOrder=Enum.SortOrder.LayoutOrder,
+    })
+    for i,s in ipairs(Catalog.Subjects) do
+        local tint=Color3.fromRGB(table.unpack(s.color))
+        local card=UI.surface(grid,{LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
+        UI.frame(card,{Position=UDim2.fromOffset(8,9),Size=UDim2.fromOffset(8,48),BackgroundColor3=tint})
+        UI.text(card,s.short,16,{Position=UDim2.fromOffset(26,7),Size=UDim2.new(1,-38,0,25),Font=Enum.Font.GothamBold})
+        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(26,32),Size=UDim2.new(1,-38,0,20),TextColor3=UI.P.muted})
+    end
+    UI.chip(body,"Walk into the room to start earning",{LayoutOrder=4,Size=UDim2.fromOffset(230,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
+end
+
 showQuestion=function(q)
     if not q then return end
     local s=subject(q.subject)
@@ -475,7 +505,9 @@ for i,definition in ipairs(navDefs) do
         close(false)
         task.spawn(function()
             local result=call(command,{})
-            if result.ok and command=="school" then notify("Choose an Assumption BVM classroom. Walk through its doorway to begin.") end
+            if result.ok and command=="school" then
+                showClasses()
+            end
             if result.ok and command=="vehicle" then notify("Use your thumbstick to steer. Drive and Reverse control speed.") end
         end)
     end,{
@@ -603,6 +635,8 @@ local function reflow()
                 showQuestion(activeQuestion)
             elseif view=="avatar" then
                 showAvatar()
+            elseif view=="classes" then
+                showClasses()
             end
         end)
     end
