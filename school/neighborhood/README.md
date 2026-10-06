@@ -27,9 +27,13 @@ This is not the whole ABVM question corpus and is not yet automatic weekly synch
 
 ## Reward and shop design
 
-Correct on the first try earns 25 learning coins; correct after a guided retry earns 15. Wrong answers never subtract existing coins. Each completed set of five different paid questions adds 50 coins. Immediate repetition of the same question is practice-only; after 10 minutes that question may earn again. Time spent idle does not earn currency. Wealthier houses and clothes do not increase the reward rate.
+Correct on the first try earns a 25-coin base reward; correct after a guided retry earns 15. Consecutive paid correct answers add a progressive streak bonus of +0, +5, +10, +15, +20, then +25 per answer while the streak continues. The +25 streak bonus is capped. A wrong answer resets the positive streak and starts a progressive negative streak: -5, -10, -15, -20, then -25 per distinct wrong attempt while the streak continues. The wallet never drops below zero. A correct answer immediately clears the negative streak.
 
-Every player starts at zero coins, with a free house and cart. Six distinct first-try answers earn 200 coins including one lesson bonus, enough to buy the 180-coin garden cottage with 20 remaining. Smaller goals are accessible sooner: a rug costs 35, a sweatshirt 60, and a reading lamp 80.
+Selecting the same wrong choice twice on one question cannot double-charge the player. Wrong answers are persisted as answer attempts, so accuracy is correct attempts divided by all saved attempts. Each completed set of five different paid questions still adds 50 coins. Immediate repetition of the same already-rewarded question is practice-only; after 10 minutes that question may earn again. Time spent idle does not earn currency. Wealthier houses and clothes do not increase the reward rate.
+
+Every player starts at zero coins, with a free house and cart. Six distinct first-try answers now earn 275 coins when the progressive streak and one lesson bonus are included, enough to buy the 180-coin garden cottage with 95 remaining. Smaller goals remain accessible sooner: a rug costs 35, a sweatshirt 60, and a reading lamp 80.
+
+Three global boards are mounted inside the school. **Top Accuracy** ranks saved accuracy after a 20-answer minimum, **Most Questions** ranks all saved answer attempts, and **Most Money** ranks current spendable coins. Leaderboard writes are best-effort mirrors only; the session-locked profile store remains the authority for rewards, penalties, purchases, and ownership.
 
 The fixed-price catalog contains 19 entries: four homes, five clothing choices, six furnishings/wearable items, and four vehicles. Later goals include a 1,100-coin villa and a 5,200-coin estate. The five named lifestyle tiers are visual collections and personal progress labels, not hidden purchase restrictions. Buying and equipping are separate actions for homes, outfits, and vehicles. Furnishings appear automatically in the player's own house; the backpack is wearable.
 
@@ -64,7 +68,7 @@ python3 school/neighborhood/tests/verify_build.py \
   --out /path/to/preview-output
 ```
 
-The verifier compiles all 11 mapped Lua sources, runs 19 pure model/layout tests, builds the place, validates its exact script inventory, and checks three deliberately broken project/place cases. In a Git checkout, add `--expected-sha <full-commit>` to bind the run to an exact head. Logs, per-file hashes, the place hash, and the preview are written to the output directory.
+The verifier compiles all 12 mapped Lua sources, runs 26 pure model/layout tests, builds the place, validates its exact script inventory, and checks three deliberately broken project/place cases. In a Git checkout, add `--expected-sha <full-commit>` to bind the run to an exact head. Logs, per-file hashes, the place hash, and the preview are written to the output directory.
 
 `PASS_STATIC_PREVIEW_ONLY` is deliberately not a runtime or release result. The built artifact must contain exactly one server entrypoint, one client entrypoint, and the nine expected module scripts, with the question bank on the server only.
 
