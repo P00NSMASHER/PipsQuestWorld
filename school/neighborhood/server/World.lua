@@ -655,6 +655,12 @@ function World.build()
         cup.Shape=Enum.PartType.Ball
     end
     sign(root,"ASSUMPTION BVM\nFAITH • SERVICE • LEARNING",CFrame.new(-17,9,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(24,5,.2),palette.green,palette.gold)
+    sign(root,
+        "SCHOOL DIRECTORY\n"..
+        "Floor 1  •  Main Office  •  Math — Mrs. Campion  •  Reading — Mrs. Russek\n"..
+        "Floor 2  •  Grammar — Mrs. Benulis  •  Religion — Mr. Bolich\n"..
+        "Floor 3  •  Vocabulary — Mr. Yordy  •  Spelling — Mrs. Kochol",
+        CFrame.new(44,10,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(34,8,.2),palette.navy,palette.cream)
 
     -- Three ABVM-branded leaderboard boards on the lobby's east wall.
     World.leaderboardParts={
