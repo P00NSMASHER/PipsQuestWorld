@@ -85,7 +85,8 @@ local function update(snapshot)
     end
     if resumeButton then
         resumeButton.Visible=state.subject~=nil
-        goalCard.Size=UDim2.fromOffset(286,state.subject and 84 or 44)
+        local goalLayout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y).goal
+        goalCard.Size=UDim2.fromOffset(goalLayout.width,goalLayout.height+(state.subject and 40 or 0))
     end
     local goal=Catalog.ById[state.goal] or Catalog.ById.home_cottage
     if state.owned[goal.id] then
@@ -390,6 +391,16 @@ for i,definition in ipairs(navDefs) do
         IconColor=command=="school" and UI.P.gold or UI.P.teal,
     })
     table.insert(navButtons,b)
+end
+setNavActive=function(command)
+    for i,b in ipairs(navButtons) do
+        local active=navDefs[i][3]==command
+        b.BackgroundColor3=active and UI.P.ink or UI.P.white
+        local icon=b:FindFirstChild("Icon")
+        local label=b:FindFirstChild("Label")
+        if icon and icon:IsA("TextLabel") then icon.TextColor3=active and UI.P.gold or (navDefs[i][3]=="school" and UI.P.gold or UI.P.teal) end
+        if label and label:IsA("TextLabel") then label.TextColor3=active and UI.P.white or UI.P.ink end
+    end
 end
 
 setNavActive=function(command)
