@@ -21,6 +21,7 @@ local view=nil
 local activeQuestion=nil
 local busy=false
 local category="Homes"
+local locationCommand=nil
 local clothesFilter="All"
 local homeFilter="All"
 local vehicleFilter="All"
@@ -48,6 +49,7 @@ local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(11,37),Size=UDim2.n
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
 
 local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.paper,BackgroundTransparency=.015,ClipsDescendants=true})
+local panelScale=UI.new("UIScale",panel,{Scale=1})
 local panelTitle=UI.text(panel,"",UI.T.display,{Position=UDim2.fromOffset(18,7),Size=UDim2.new(1,-76,0,42),Font=Enum.Font.GothamBold})
 local body=UI.new("ScrollingFrame",panel,{Name="Content",Position=UDim2.fromOffset(14,58),Size=UDim2.new(1,-28,1,-72),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(),AutomaticCanvasSize=Enum.AutomaticSize.Y,ScrollBarThickness=3,ScrollBarImageColor3=UI.P.muted,ScrollingDirection=Enum.ScrollingDirection.Y})
 UI.stack(body,10)
@@ -129,12 +131,14 @@ local function close(notifyServer)
     panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false
     goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true
     view=nil;activeQuestion=nil
-    if setNavActive then setNavActive(nil) end
+    if setNavActive then setNavActive(locationCommand) end
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
 end
 UI.button(panel,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-10,0,8),Size=UDim2.fromOffset(40,40),TextSize=24,BackgroundColor3=UI.P.white,CornerRadius=20})
 local function open(kind,title)
     view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
+    panelScale.Scale=.975
+    TweenService:Create(panelScale,TweenInfo.new(.18,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Scale=1}):Play()
     local isShop=kind=="shop"
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     shopTabs.Visible=isShop
@@ -573,7 +577,11 @@ for i,definition in ipairs(navDefs) do
         task.spawn(function()
             local result=call(command,{})
             if result.ok and command=="school" then
+                locationCommand="school"
                 showClasses()
+            elseif result.ok and command=="home" then
+                locationCommand="home"
+                if setNavActive then setNavActive("home") end
             end
             if result.ok and command=="vehicle" then notify("Use your thumbstick to steer. Drive and Reverse control speed.") end
         end)
@@ -715,6 +723,7 @@ changed.OnClientEvent:Connect(function(packet)
     if type(packet)~="table" then return end
     update(packet.state)
     if packet.kind=="question" then
+        locationCommand="school"
         if setNavActive then setNavActive("school") end
         showQuestion(packet.data)
     elseif packet.kind=="left_classroom" then
@@ -734,7 +743,7 @@ player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
         panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false;view=nil
     else
         table.clear(held);table.clear(heldInputs)
-        if setNavActive then setNavActive(nil) end
+        if setNavActive then setNavActive(locationCommand) end
         if not panel.Visible then goalCard.Visible=true end
     end
 end)
