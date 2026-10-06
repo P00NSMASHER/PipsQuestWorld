@@ -126,6 +126,7 @@ local function close(notifyServer)
     panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false
     goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true
     view=nil;activeQuestion=nil
+    if setNavActive then setNavActive(nil) end
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
 end
 UI.button(panel,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-10,0,8),Size=UDim2.fromOffset(40,40),TextSize=24,BackgroundColor3=UI.P.white,CornerRadius=20})
@@ -583,6 +584,8 @@ local function reflow()
                 showShop(category,clothesFilter)
             elseif view=="quiz" and activeQuestion then
                 showQuestion(activeQuestion)
+            elseif view=="avatar" then
+                showAvatar()
             end
         end)
     end
