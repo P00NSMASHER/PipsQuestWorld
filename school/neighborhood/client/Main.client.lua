@@ -558,14 +558,30 @@ showShop=function(selected,subfilter)
     if subfilters then
         shopSubtabs.Visible=true
         local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
-        if not (layout.compact and layout.landscape) then
+        local wrapFilters=layout.narrow and not layout.landscape and #subfilters>4
+        if wrapFilters then
+            shopSubtabs.Position=UDim2.fromOffset(14,99)
+            shopSubtabs.Size=UDim2.new(1,-28,0,68)
+            body.Position=UDim2.fromOffset(14,172)
+            body.Size=UDim2.new(1,-28,1,-186)
+        elseif not (layout.compact and layout.landscape) then
             body.Position=UDim2.fromOffset(14,138);body.Size=UDim2.new(1,-28,1,-152)
         end
         for i,label in ipairs(subfilters) do
+            local position,size
+            if wrapFilters then
+                local col=(i-1)%4
+                local row=math.floor((i-1)/4)
+                position=UDim2.new(col/4,2,row/2,2)
+                size=UDim2.new(.25,-4,.5,-4)
+            else
+                position=UDim2.new((i-1)/#subfilters,2,0,0)
+                size=UDim2.new(1/#subfilters,-4,1,0)
+            end
             UI.button(shopSubtabs,label,function()
                 if category=="Clothes" and label=="Avatar" then showAvatar() else showShop(category,label) end
             end,{
-                Position=UDim2.new((i-1)/#subfilters,2,0,0),Size=UDim2.new(1/#subfilters,-4,1,0),
+                Position=position,Size=size,
                 TextSize=10,
                 BackgroundColor3=label==activeFilter and UI.P.teal or UI.P.soft,
                 TextColor3=label==activeFilter and UI.P.white or UI.P.ink,
@@ -800,8 +816,8 @@ local function reflow()
         nav.BackgroundTransparency=1
         streakPill.Visible=false
         nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Position=UDim2.new(.5,0,0,46)
-        nav.Size=UDim2.new(1,-18,0,40)
+        nav.Position=UDim2.new(.5,0,0,48)
+        nav.Size=UDim2.new(1,-18,0,layout.nav.height)
         for i,b in ipairs(navButtons) do
             b.Size=UDim2.new(.25,-6,1,0)
             b.Position=UDim2.new((i-1)*.25,3,0,0)
