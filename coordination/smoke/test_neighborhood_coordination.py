@@ -32,8 +32,13 @@ def validate(state, index):
     for record in (state['canonical'], state['candidate']):
         require(re.fullmatch(r'[0-9a-f]{40}', record['observedSha']) is not None, 'invalid observed SHA')
     execution = state['execution']
-    require(type(execution['verifiedScheduledRobloxWorkers']) is int and execution['verifiedScheduledRobloxWorkers'] >= 0, 'invalid execution count')
-    require(execution['scheduledTasksChanged'] is False and execution['agentLaunchClaimed'] is False, 'unperformed task change or agent launch claimed')
+    require(execution['verifiedScheduledRobloxWorkers'] == 15, 'scheduled worker allocation drift')
+    require(execution['scheduledTasksChanged'] is True, 'explicit worker reallocation missing')
+    require(execution['agentLaunchClaimed'] is False, 'agent launch was not performed')
+    priority = state.get('topPriority', {})
+    require(priority.get('issue') == 304, 'top priority issue drift')
+    require(priority.get('referenceFolder') == '/Roblox/ABVM References', 'reference folder drift')
+    require(len(priority.get('libraryRefs', [])) == 10, 'ABVM reference inventory drift')
     lanes = {lane['id']: lane for lane in state['lanes']}
     require(len(lanes) == len(state['lanes']), 'duplicate lane')
     paths = []
@@ -100,7 +105,7 @@ class NeighborhoodCoordinationTests(unittest.TestCase):
             validate(self.state, self.index)
 
     def test_reject_dependency_cycle(self):
-        self.state['priorityQueue'][0]['dependsOn'] = ['N07']
+        self.state['priorityQueue'][0]['dependsOn'] = ['A08']
         with self.assertRaisesRegex(ValueError, 'cycle'):
             validate(self.state, self.index)
 
@@ -118,7 +123,7 @@ class NeighborhoodCoordinationTests(unittest.TestCase):
 
     def test_reject_unperformed_launch_claim(self):
         self.state['execution']['agentLaunchClaimed'] = True
-        with self.assertRaisesRegex(ValueError, 'unperformed'):
+        with self.assertRaisesRegex(ValueError, 'agent launch'):
             validate(self.state, self.index)
 
 
