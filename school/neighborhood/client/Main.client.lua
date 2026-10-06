@@ -132,7 +132,7 @@ local function open(kind,title)
         body.Size=UDim2.new(1,-28,1,-72)
     end
 end
-local showShop,showQuestion
+local showShop,showQuestion,setNavActive
 local function subject(id)
     for _,s in ipairs(Catalog.Subjects) do if s.id==id then return s end end
     return Catalog.Subjects[1]
@@ -354,32 +354,58 @@ showShop=function(selected,subfilter)
     end
 end
 local navButtons={}
-for i,definition in ipairs({{"School","school"},{"Home","home"},{"Shop","shop"},{"Ride","vehicle"}}) do
-    local label,command=definition[1],definition[2]
-    local b=UI.button(nav,label,function()
+local activeNav=nil
+setNavActive=function(command)
+    activeNav=command
+    for _,entry in ipairs(navButtons) do
+        local b=entry.button
+        local active=entry.command==command
+        b.BackgroundColor3=active and UI.P.ink or UI.P.white
+        local icon=b:FindFirstChild("Icon")
+        local label=b:FindFirstChild("Label")
+        if icon and icon:IsA("TextLabel") then icon.TextColor3=active and UI.P.gold or UI.P.teal end
+        if label and label:IsA("TextLabel") then label.TextColor3=active and UI.P.white or UI.P.ink end
+    end
+end
+
+local navDefs={
+    {"School","school","▦"},
+    {"Home","home","⌂"},
+    {"Shop","shop","▣"},
+    {"Ride","vehicle","◇"},
+}
+for i,definition in ipairs(navDefs) do
+    local label,command,icon=definition[1],definition[2],definition[3]
+    local b=UI.iconButton(nav,icon,label,function()
         if not state.ready then notify("Your saved progress is still loading.");return end
+        setNavActive(command)
         if command=="shop" then showShop();return end
         close(false)
         task.spawn(function()
             local result=call(command,{})
-            if result.ok and command=="school" then notify("Choose an Assumption BVM classroom. Walk through its doorway to begin.") end
-            if result.ok and command=="vehicle" then notify("Use the driving controls or your thumbstick. Park returns normal walking.") end
+            if not result.ok then setNavActive(nil);return end
+            if command=="school" then notify("Choose a classroom. Walk through its doorway to begin.") end
+            if command=="vehicle" then notify("Steer with the thumbstick. Use Drive / Reverse, then Park to walk.") end
         end)
-    end,{Position=UDim2.fromOffset((i-1)*80,0),Size=UDim2.fromOffset(74,44),TextSize=14,BackgroundColor3=UI.P.white})
-    table.insert(navButtons,b)
+    end,{Position=UDim2.fromOffset((i-1)*76,0),Size=UDim2.fromOffset(72,40),TextSize=11,IconSize=16,BackgroundColor3=UI.P.white})
+    table.insert(navButtons,{button=b,command=command})
 end
-local driving=UI.frame(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(.5,1),Position=UDim2.new(.5,0,1,-8),Size=UDim2.fromOffset(362,66),BackgroundColor3=UI.P.paper})
-UI.stroke(driving)
-local held={};local heldInputs={};local driveButtons={}
-for i,d in ipairs({{"Left","left"},{"Back","back"},{"Go","go"},{"Right","right"}}) do
-    local key=d[2]
-    local b=UI.button(driving,d[1],function() end,{Position=UDim2.fromOffset(6+(i-1)*70,7),Size=UDim2.fromOffset(64,52),TextSize=13})
-    table.insert(driveButtons,b)
-    b.InputBegan:Connect(function(input)
-        if input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1 then held[key]=true;heldInputs[input]=key end
+
+-- Gold-standard driving controls: native movement vector steers; only pedals and Park are overlaid.
+local driving=UI.surface(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),BackgroundColor3=UI.P.paper,BackgroundTransparency=.04})
+local held={};local heldInputs={}
+local driveButton=UI.button(driving,"Drive  ▲",function() end,{Position=UDim2.fromOffset(7,7),Size=UDim2.fromOffset(78,56),TextSize=13,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white})
+local reverseButton=UI.button(driving,"Reverse  ▼",function() end,{Position=UDim2.fromOffset(7,67),Size=UDim2.fromOffset(78,56),TextSize=12,BackgroundColor3=UI.P.white})
+local parkButton=UI.button(driving,"Park",function() task.spawn(call,"park",{}) end,{Position=UDim2.fromOffset(7,129),Size=UDim2.fromOffset(78,38),TextSize=12,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
+local function bindPedal(button,key)
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1 then
+            held[key]=true;heldInputs[input]=key
+        end
     end)
 end
-local parkButton=UI.button(driving,"Park",function() task.spawn(call,"park",{}) end,{Position=UDim2.fromOffset(286,7),Size=UDim2.fromOffset(68,52),TextSize=13,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
+bindPedal(driveButton,"go")
+bindPedal(reverseButton,"back")
 UserInputService.InputEnded:Connect(function(input) local key=heldInputs[input];if key then held[key]=false;heldInputs[input]=nil end end)
 UserInputService.WindowFocusReleased:Connect(function() table.clear(held);table.clear(heldInputs);drive:FireServer(0,0) end)
 local function reflow()
