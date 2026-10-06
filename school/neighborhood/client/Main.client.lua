@@ -150,7 +150,11 @@ showQuestion=function(q)
                     UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=11,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
                     UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=12,BackgroundColor3=UI.P.white,TextSize=14})
                 else
+                    -- The known-wrong option stays visibly crossed out and cannot be tapped again locally.
+                    button.Active=false
+                    button.AutoButtonColor=false
                     button.BackgroundColor3=Color3.fromRGB(247,232,220)
+                    button.Text="✕   "..choice
                     local penaltyText=result.message or ("Wrong streak "..tostring(result.wrongStreak or 0))
                     feedback.Text=penaltyText.."\nHint: "..tostring(result.hint or q.hint or "Try eliminating one answer.").."\nChoose another answer to break the negative streak."
                     feedback.TextColor3=UI.P.ink
