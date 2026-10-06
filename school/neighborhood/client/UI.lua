@@ -161,6 +161,50 @@ function UI.crest(parent,props)
     UI.new("UIStroke",foot,{Color=UI.P.gold,Thickness=2})
     return root
 end
+function UI.avatarViewport(parent,character,props)
+    props=props or {}
+    local v=UI.new("ViewportFrame",parent,{
+        Name=props.Name or "AvatarViewport",
+        Position=props.Position or UDim2.new(),
+        Size=props.Size or UDim2.new(1,0,1,0),
+        BackgroundColor3=props.BackgroundColor3 or UI.P.navySoft,
+        BorderSizePixel=0,
+        LightDirection=Vector3.new(-1,-1,-1),
+        Ambient=Color3.fromRGB(195,198,201),
+    })
+    UI.corner(v,props.CornerRadius or 16)
+    local world=Instance.new("WorldModel");world.Parent=v
+    local model=nil
+    if character then
+        local previous=character.Archivable
+        character.Archivable=true
+        local ok,clone=pcall(function() return character:Clone() end)
+        character.Archivable=previous
+        if ok and clone then
+            model=clone
+            for _,desc in ipairs(model:GetDescendants()) do
+                if desc:IsA("LuaSourceContainer") or desc:IsA("Tool") then
+                    desc:Destroy()
+                elseif desc:IsA("BasePart") then
+                    desc.Anchored=true;desc.CanCollide=false;desc.CanTouch=false;desc.CanQuery=false
+                end
+            end
+            model.Parent=world
+            model:PivotTo(CFrame.new(0,0,0))
+        end
+    end
+    local camera=Instance.new("Camera")
+    camera.FieldOfView=34
+    camera.CFrame=CFrame.lookAt(Vector3.new(0,2.6,-8.5),Vector3.new(0,2.2,0))
+    camera.Parent=v;v.CurrentCamera=camera
+    local angle=0
+    local function rotate(delta)
+        if not model then return end
+        angle+=delta
+        model:PivotTo(CFrame.Angles(0,math.rad(angle),0))
+    end
+    return v,model,rotate
+end
 function UI.preview(parent,item,props)
     props=props or {}
     local v=UI.new("ViewportFrame",parent,{Size=props.Size or UDim2.fromOffset(94,94),Position=props.Position or UDim2.fromOffset(10,10),BackgroundColor3=props.BackgroundColor3 or UI.P.soft,BorderSizePixel=0,LightDirection=Vector3.new(-1,-1,-1),Ambient=Color3.fromRGB(205,205,205)})
