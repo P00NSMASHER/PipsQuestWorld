@@ -4,13 +4,13 @@
 local Catalog = {}
 
 Catalog.Subjects = {
-    -- These are learning rooms, not claims about the real faculty members' teaching assignments.
-    {id="math", name="Math", short="Math", room="Learning Lab", color={62,154,214}},
-    {id="reading", name="Reading / ELA", short="Reading", room="Learning Lab", color={125,103,202}},
-    {id="grammar", name="Grammar", short="Grammar", room="Learning Lab", color={137,105,170}},
-    {id="religion", name="Religion", short="Religion", room="Learning Lab", color={196,147,58}},
-    {id="vocabulary", name="Vocabulary", short="Vocabulary", room="Learning Lab", color={58,135,118}},
-    {id="spelling", name="Spelling / Handwriting", short="Spelling", room="Learning Lab", color={51,158,129}},
+    -- Gameplay classroom identities are user-approved and intentionally separate from real-world grade assignments.
+    {id="math", name="Math", short="Math", teacher="Mrs. Campion", room="Learning Lab", color={62,154,214}},
+    {id="reading", name="Reading / ELA", short="Reading", teacher="Mrs. Russek", room="Learning Lab", color={125,103,202}},
+    {id="grammar", name="Grammar", short="Grammar", teacher="Mrs. Benulis", room="Learning Lab", color={137,105,170}},
+    {id="religion", name="Religion", short="Religion", teacher="Mr. Bolich", room="Learning Lab", color={196,147,58}},
+    {id="vocabulary", name="Vocabulary", short="Vocabulary", teacher="Mr. Yordy", room="Learning Lab", color={58,135,118}},
+    {id="spelling", name="Spelling / Handwriting", short="Spelling", teacher="Mrs. Kochol", room="Learning Lab", color={51,158,129}},
 }
 
 -- User-supplied Assumption BVM faculty/staff directory references.
@@ -18,11 +18,11 @@ Catalog.Subjects = {
 -- Appearance fields are intentionally stylized, asset-ID-free Roblox cues based only on visible
 -- photo details such as hair, glasses, facial hair, clothing colors and accessories.
 Catalog.Faculty = {
-    {id="carl_mcbreen", name="Dr Carl McBreen", role="Principal", group="Administration", floor=1, location="Main Office",
+    {id="carl_mcbreen", name="Dr Carl McBreen", displayName="Dr. McBreen", role="Principal", gameRole="Principal", group="Administration", floor=1, location="Main Office",
         appearance={skin={226,188,154},hair={132,119,105},hairStyle="short",top={36,44,57},inner={128,162,195},tie={43,58,82},suit=true}},
-    {id="melissa_thompson", name="Mrs. Melissa Thompson", role="Administrative Assistant, Marketing Coordinator", group="Administration", floor=1, location="Main Office",
+    {id="melissa_thompson", name="Mrs. Melissa Thompson", displayName="Mrs. Thompson", role="Administrative Assistant, Marketing Coordinator", gameRole="Secretary", group="Administration", floor=1, location="Main Office",
         appearance={skin={232,195,169},hair={208,181,143},hairStyle="shoulder",top={31,48,79}}},
-    {id="carol_boyer", name="Mrs Carol Boyer", role="President of Catholicity and Mission", group="Administration", floor=1, location="Main Office",
+    {id="carol_boyer", name="Mrs Carol Boyer", displayName="Mrs. Boyer", role="President of Catholicity and Mission", gameRole="Assistant Principal", group="Administration", floor=1, location="Main Office",
         appearance={skin={230,198,176},hair={220,206,180},hairStyle="bob",top={34,36,40},inner={213,210,223},outer={32,34,38},pin=true}},
     {id="erin_heckman", name="Mrs. Erin Heckman", role="Pre-Kindergarten", group="Early Learning", floor=1, location="Early Learning Hall",
         appearance={skin={234,198,177},hair={203,170,132},hairStyle="shoulderBangs",top={239,238,232},outer={155,63,52},vest=true,cross=true}},
