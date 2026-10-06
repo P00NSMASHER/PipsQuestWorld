@@ -105,12 +105,81 @@ function UI.button(parent,text,fn,props)
     b.Activated:Connect(function() if b.Active then fn(b) end end)
     return b
 end
+function UI.tintIcon(parent,color)
+    local textIcon=parent:FindFirstChild("Icon")
+    if textIcon and textIcon:IsA("TextLabel") then textIcon.TextColor3=color end
+    for _,desc in ipairs(parent:GetDescendants()) do
+        if desc:IsA("Frame") and desc:GetAttribute("VectorIconPart")==true then
+            desc.BackgroundColor3=color
+        end
+    end
+end
+
+function UI.vectorIcon(parent,kind,color,zIndex)
+    local z=zIndex or 3
+    local fg=color or UI.P.teal
+    local root=UI.new("Frame",parent,{Name="Icon",Size=UDim2.fromScale(1,1),BackgroundTransparency=1,ZIndex=z})
+    local function part(name,x,y,w,h,rotation,radius)
+        local p=UI.new("Frame",root,{
+            Name=name,Position=UDim2.fromOffset(x,y),Size=UDim2.fromOffset(w,h),
+            BackgroundColor3=fg,BorderSizePixel=0,Rotation=rotation or 0,ZIndex=z+1,
+        })
+        p:SetAttribute("VectorIconPart",true)
+        if radius then UI.corner(p,radius) end
+        return p
+    end
+    if kind=="school" then
+        part("RoofBar",5,5,18,3,0,2)
+        part("LeftColumn",7,9,3,12,0,1)
+        part("MiddleColumn",13,9,3,12,0,1)
+        part("RightColumn",19,9,3,12,0,1)
+        part("Base",5,21,18,3,0,2)
+    elseif kind=="home" then
+        part("Roof",8,4,12,12,45,2)
+        part("House",7,11,14,12,0,2)
+        local door=part("Door",12,16,4,7,0,1)
+        door.BackgroundColor3=parent.BackgroundColor3
+        door:SetAttribute("VectorIconPart",false)
+    elseif kind=="shop" then
+        part("Basket",6,9,16,10,0,3)
+        part("Handle",4,6,5,3,-18,2)
+        part("WheelLeft",8,20,4,4,0,999)
+        part("WheelRight",18,20,4,4,0,999)
+    elseif kind=="vehicle" then
+        part("Body",4,12,20,8,0,3)
+        part("Cabin",9,7,11,7,0,3)
+        part("WheelLeft",6,18,5,5,0,999)
+        part("WheelRight",18,18,5,5,0,999)
+    elseif kind=="apparel" then
+        part("Torso",9,7,10,16,0,3)
+        part("LeftSleeve",4,8,8,5,-28,3)
+        part("RightSleeve",16,8,8,5,28,3)
+    elseif kind=="items" then
+        part("Box",6,7,16,16,0,3)
+        local seam=part("Seam",13,7,2,16,0,1)
+        seam.BackgroundColor3=parent.BackgroundColor3
+        seam:SetAttribute("VectorIconPart",false)
+        local lid=part("Lid",5,6,18,3,0,2)
+        lid.BackgroundColor3=fg
+    elseif kind=="avatar" then
+        part("Head",10,4,8,8,0,999)
+        part("Body",7,13,14,11,0,4)
+    else
+        UI.text(root,"•",15,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=fg,ZIndex=z+1})
+    end
+    return root
+end
+
 function UI.iconButton(parent,icon,label,fn,props)
     props=props or {}
     local b=UI.button(parent,"",fn,{Position=props.Position,Size=props.Size or UDim2.fromOffset(72,44),BackgroundColor3=props.BackgroundColor3 or UI.P.white,CornerRadius=props.CornerRadius or UI.R.control})
     local iconBox=UI.frame(b,{Name="IconBox",Position=UDim2.fromOffset(5,7),Size=UDim2.fromOffset(28,28),BackgroundColor3=props.IconBackgroundColor3 or UI.P.soft,ZIndex=b.ZIndex+1})
     UI.corner(iconBox,9)
-    UI.text(iconBox,icon,props.IconSize or 15,{Name="Icon",Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=props.IconColor or UI.P.teal,ZIndex=b.ZIndex+2})
+    if props.IconKind then
+        UI.vectorIcon(iconBox,props.IconKind,props.IconColor or UI.P.teal,b.ZIndex+2)
+    else
+        UI.text(iconBox,icon,props.IconSize or 15,{Name="Icon",Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=props.IconColor or UI.P.teal,ZIndex=b.ZIndex+2})
+    end
     UI.text(b,label,props.TextSize or 11,{Name="Label",Position=UDim2.fromOffset(38,0),Size=UDim2.new(1,-42,1,0),Font=Enum.Font.GothamBold,TextColor3=props.TextColor3 or UI.P.ink,ZIndex=b.ZIndex+1})
     return b
 end
