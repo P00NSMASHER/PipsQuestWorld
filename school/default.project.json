@@ -61,9 +61,6 @@
         "CampusBuilder": {
           "$path": "src/server/CampusBuilder.server.lua"
         },
-        "CampusPolish": {
-          "$path": "src/server/CampusPolish.server.lua"
-        },
         "FoundationBootstrap": {
           "$path": "src/server/FoundationBootstrap.server.lua"
         },
@@ -147,9 +144,6 @@
         "$className": "StarterPlayerScripts",
         "CanonicalSchoolClient": {
           "$path": "src/client/CanonicalSchoolClient.client.lua"
-        },
-        "MobilePolish": {
-          "$path": "src/client/MobilePolish.client.lua"
         }
       }
     }
