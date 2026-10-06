@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: ABVM mix-and-match uniform shop
+# release: first gold-standard UI visual playtest
 
 on:
   push:
