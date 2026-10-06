@@ -200,37 +200,54 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     if active then World.rooms[id]={x=x,z=z,hx=23,hz=27,minY=floorY,maxY=floorY+14} end
 end
 
-local function makeFrontArch(root,x)
+local function makeFrontArch(root,x,hasDoor)
     local z=-34.2
     local radius=5.25
     local springY=18
-    -- Rectangular voussoirs approximate the real stone arch without a giant spherical cap.
-    for i=0,10 do
-        local theta=math.pi*i/10
+    -- Four bays are visible in the close-up reference. The center pair are doors;
+    -- the outer pair remain tall windows.
+    for i=0,12 do
+        local theta=math.pi*i/12
         local px=x+math.cos(theta)*radius
         local py=springY+math.sin(theta)*radius
-        World.part(root,"Arch stone segment",Vector3.new(3.1,1.25,1.35),
+        World.part(root,"Arch stone segment",Vector3.new(2.75,1.2,1.35),
             CFrame.new(px,py,z)*CFrame.Angles(0,0,theta+math.pi/2),
             palette.stone,Enum.Material.Concrete,false)
     end
     World.part(root,"Arch left pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x-radius,11.8,z),palette.stone,Enum.Material.Concrete)
     World.part(root,"Arch right pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x+radius,11.8,z),palette.stone,Enum.Material.Concrete)
+
     local upperGlass=World.part(root,"Arched upper glazing",Vector3.new(9.1,5,.3),CFrame.new(x,19.2,z-.55),palette.glass,Enum.Material.Glass,false)
     upperGlass.Transparency=.12
-    local lower=World.part(root,"Tall arched glazing",Vector3.new(9.1,10.2,.32),CFrame.new(x,12.2,z-.56),palette.glass,Enum.Material.Glass,false)
-    lower.Transparency=.12
-    -- Diamond-ish upper mullions plus rectangular lower mullions echo the reference window rhythm.
-    for _,offset in ipairs({-2.8,0,2.8}) do
-        World.part(root,"Arch vertical mullion",Vector3.new(.16,13,.18),CFrame.new(x+offset,14.8,z-.78),palette.cream,nil,false)
+    for _,offset in ipairs({-3,-1.5,0,1.5,3}) do
+        World.part(root,"Arch upper mullion",Vector3.new(.13,5.5,.16),
+            CFrame.new(x+offset,19.2,z-.78)*CFrame.Angles(0,0,offset*.07),palette.cream,nil,false)
     end
-    for _,y in ipairs({10.5,14,17.5}) do
-        World.part(root,"Arch horizontal mullion",Vector3.new(9,.16,.18),CFrame.new(x,y,z-.78),palette.cream,nil,false)
+
+    if hasDoor then
+        local transom=World.part(root,"Door transom glazing",Vector3.new(9.1,4.4,.3),CFrame.new(x,14.7,z-.56),palette.glass,Enum.Material.Glass,false)
+        transom.Transparency=.12
+        World.part(root,"Entry double doors",Vector3.new(8.6,7.2,.3),CFrame.new(x,8,z-.72),Color3.fromRGB(218,214,198),Enum.Material.Metal,false)
+        World.part(root,"Door split",Vector3.new(.18,7.1,.36),CFrame.new(x,8,z-.9),palette.stone,nil,false)
+        for _,dx in ipairs({-2.25,2.25}) do
+            World.part(root,"Door window",Vector3.new(1.25,2.4,.1),CFrame.new(x+dx,8.3,z-.94),Color3.fromRGB(73,95,105),Enum.Material.Glass,false)
+        end
+    else
+        local lower=World.part(root,"Tall lower glazing",Vector3.new(9.1,10.7,.32),CFrame.new(x,12.1,z-.56),palette.glass,Enum.Material.Glass,false)
+        lower.Transparency=.12
+        for _,offset in ipairs({-2.8,0,2.8}) do
+            World.part(root,"Lower vertical mullion",Vector3.new(.16,10.2,.18),CFrame.new(x+offset,12.1,z-.78),palette.cream,nil,false)
+        end
+        for _,y in ipairs({9.5,13,16}) do
+            World.part(root,"Lower horizontal mullion",Vector3.new(9,.16,.18),CFrame.new(x,y,z-.78),palette.cream,nil,false)
+        end
     end
-    World.part(root,"Entry double doors",Vector3.new(8.6,7.1,.3),CFrame.new(x,7.55,z-.72),Color3.fromRGB(218,214,198),Enum.Material.Metal,false)
-    World.part(root,"Door split",Vector3.new(.18,7,.36),CFrame.new(x,7.55,z-.9),palette.stone,nil,false)
-    for _,dx in ipairs({-2.25,2.25}) do
-        World.part(root,"Door window",Vector3.new(1.25,2.5,.1),CFrame.new(x+dx,8.2,z-.94),Color3.fromRGB(73,95,105),Enum.Material.Glass,false)
-    end
+
+    -- Small stone hood details above each bay are prominent in the close-up.
+    World.part(root,"Arch hood left",Vector3.new(4.2,.85,1.1),
+        CFrame.new(x-2.1,25,z)*CFrame.Angles(0,0,math.rad(-38)),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Arch hood right",Vector3.new(4.2,.85,1.1),
+        CFrame.new(x+2.1,25,z)*CFrame.Angles(0,0,math.rad(38)),palette.stone,Enum.Material.Concrete,false)
 end
 
 local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
@@ -289,7 +306,7 @@ function World.build()
     World.part(root,"Back brick wall",Vector3.new(150,48,1.4),CFrame.new(0,28,-145),palette.brick,Enum.Material.Brick)
     World.part(root,"Exposed lower masonry",Vector3.new(150,6,1.5),CFrame.new(0,1,-145.2),palette.brickDark,Enum.Material.Brick)
 
-    -- Formal front facade: heavy upper block with tan bays, brick pilasters and three arched entrance bays.
+    -- Formal front facade: heavy upper block with tan bays, brick pilasters and four arched bays.
     World.part(root,"Front upper brick mass",Vector3.new(150,31,1.4),CFrame.new(0,37,-35),palette.brick,Enum.Material.Brick)
     World.part(root,"Front lower west",Vector3.new(55,17,1.4),CFrame.new(-47.5,12,-35),palette.brick,Enum.Material.Brick)
     World.part(root,"Front lower east",Vector3.new(55,17,1.4),CFrame.new(47.5,12,-35),palette.brick,Enum.Material.Brick)
@@ -302,11 +319,14 @@ function World.build()
             windowPanel(root,CFrame.new(x,floorY,-33.7),8.5,5.8)
         end
     end
-    for _,x in ipairs({-18,0,18}) do makeFrontArch(root,x) end
-    sign(root,"ASSUMPTION BVM\nCATHOLIC SCHOOL",CFrame.new(0,27,-33.4)*CFrame.Angles(0,math.pi,0),Vector3.new(39,6,.35),palette.navy,palette.gold)
-    crest(root,"Front ABVM crest",CFrame.new(0,38,-33.25)*CFrame.Angles(0,math.pi,0),10)
+    makeFrontArch(root,-27,false)
+    makeFrontArch(root,-9,true)
+    makeFrontArch(root,9,true)
+    makeFrontArch(root,27,false)
+    -- Keep branding subordinate to the real masonry rhythm; the large crest remains inside the lobby.
+    sign(root,"ASSUMPTION BVM SCHOOL",CFrame.new(0,28,-33.4)*CFrame.Angles(0,math.pi,0),Vector3.new(27,3.4,.3),palette.navy,palette.gold)
     cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
-    sign(root,"1928",CFrame.new(-9,21.6,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
+    sign(root,"1928",CFrame.new(0,17.2,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
 
     -- Repeating side windows and strong vertical brick rhythm visible in the reference photos.
     for _,side in ipairs({-1,1}) do
