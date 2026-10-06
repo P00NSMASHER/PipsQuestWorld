@@ -142,7 +142,7 @@ local function open(kind,title)
         body.Size=UDim2.new(1,-28,1,-72)
     end
 end
-local showShop,showQuestion,setNavActive
+local showShop,showQuestion,setNavActive,showAvatar
 local function subject(id)
     for _,s in ipairs(Catalog.Subjects) do if s.id==id then return s end end
     return Catalog.Subjects[1]
@@ -260,6 +260,82 @@ local function clothingMatches(item,filter)
     return true
 end
 
+showAvatar=function()
+    if setNavActive then setNavActive("shop") end
+    open("avatar","Avatar Preview")
+
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+    local previewHeight=layout.compact and 210 or 290
+    local previewCard=UI.surface(body,{LayoutOrder=1,Size=UDim2.new(1,0,0,previewHeight),BackgroundColor3=UI.P.white,Shadow=false})
+    local viewport=UI.new("ViewportFrame",previewCard,{
+        Position=UDim2.fromOffset(8,8),Size=UDim2.new(1,-16,1,-16),
+        BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,
+        Ambient=Color3.fromRGB(210,210,210),LightDirection=Vector3.new(-1,-1,-1),
+    })
+    UI.corner(viewport,16)
+
+    local clone=nil
+    local baseCf=CFrame.new()
+    local angle=0
+    local character=player.Character
+    if character then
+        local oldArchivable=character.Archivable
+        character.Archivable=true
+        local ok,value=pcall(function() return character:Clone() end)
+        character.Archivable=oldArchivable
+        if ok and value then
+            clone=value
+            for _,desc in ipairs(clone:GetDescendants()) do
+                if desc:IsA("BasePart") then
+                    desc.Anchored=true;desc.CanCollide=false;desc.CanTouch=false;desc.CanQuery=false
+                elseif desc:IsA("Script") or desc:IsA("LocalScript") then
+                    desc:Destroy()
+                end
+            end
+            clone.Parent=viewport
+            local _,bounds=clone:GetBoundingBox()
+            baseCf=CFrame.new(0,bounds.Y*.5,0)*CFrame.Angles(0,math.pi,0)
+            clone:PivotTo(baseCf)
+            local camera=Instance.new("Camera")
+            camera.FieldOfView=28
+            camera.CFrame=CFrame.lookAt(Vector3.new(0,bounds.Y*.56,bounds.Y*2.15),Vector3.new(0,bounds.Y*.5,0))
+            camera.Parent=viewport;viewport.CurrentCamera=camera
+        end
+    end
+    if not clone then
+        UI.text(viewport,"Your avatar will appear here after your character loads.",14,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.new(1,-40,0,60),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
+    end
+
+    UI.button(previewCard,"‹",function()
+        if clone then angle-=math.rad(30);clone:PivotTo(baseCf*CFrame.Angles(0,angle,0)) end
+    end,{Position=UDim2.new(0,14,.5,-22),Size=UDim2.fromOffset(44,44),TextSize=28,BackgroundColor3=UI.P.paper,CornerRadius=999})
+    UI.button(previewCard,"›",function()
+        if clone then angle+=math.rad(30);clone:PivotTo(baseCf*CFrame.Angles(0,angle,0)) end
+    end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-14,.5,-22),Size=UDim2.fromOffset(44,44),TextSize=28,BackgroundColor3=UI.P.paper,CornerRadius=999})
+
+    local pieces=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,46),BackgroundTransparency=1})
+    local defs={{"Tops","Tops"},{"Bottoms","Bottoms"},{"Socks","Socks"},{"Shoes","Shoes"}}
+    for i,def in ipairs(defs) do
+        UI.button(pieces,def[1],function() showShop("Clothes",def[2]) end,{
+            Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),
+            TextSize=12,BackgroundColor3=UI.P.white,CornerRadius=12,
+        })
+    end
+
+    local equippedNames={}
+    for _,slot in ipairs({"uniformTop","uniformBottom","uniformLegwear","uniformShoes"}) do
+        local id=state.equipped[slot]
+        local item=id and Catalog.ById[id] or nil
+        if item then table.insert(equippedNames,item.name) end
+    end
+    UI.text(body,#equippedNames>0 and ("Equipped • "..table.concat(equippedNames,"  •  ")) or "Choose uniform pieces from the shop.",12,{
+        LayoutOrder=3,Size=UDim2.new(1,0,0,38),TextColor3=UI.P.muted,TextXAlignment=Enum.TextXAlignment.Center,
+    })
+    UI.button(body,"Save Outfit",function()
+        notify("Your equipped uniform pieces are already saved to your profile.")
+    end,{LayoutOrder=4,Size=UDim2.new(1,0,0,48),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=15})
+end
+
 showShop=function(selected,subfilter)
     category=selected or category
     if setNavActive then setNavActive("shop") end
@@ -282,9 +358,11 @@ showShop=function(selected,subfilter)
     if category=="Clothes" then
         shopSubtabs.Visible=true
         body.Position=UDim2.fromOffset(14,138);body.Size=UDim2.new(1,-28,1,-152)
-        local filters={"All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
+        local filters={"Avatar","All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
         for i,label in ipairs(filters) do
-            UI.button(shopSubtabs,label,function() showShop("Clothes",label) end,{
+            UI.button(shopSubtabs,label,function()
+                if label=="Avatar" then showAvatar() else showShop("Clothes",label) end
+            end,{
                 Position=UDim2.new((i-1)/#filters,2,0,0),Size=UDim2.new(1/#filters,-4,1,0),TextSize=10,
                 BackgroundColor3=label==clothesFilter and UI.P.teal or UI.P.white,
                 TextColor3=label==clothesFilter and UI.P.white or UI.P.ink,
