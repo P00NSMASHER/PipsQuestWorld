@@ -29,6 +29,9 @@ Catalog.Items = {
     {id="home_estate", category="Homes", name="Dream Estate", price=12000, tier=5, style=5, color={238,231,216}, description="The largest home, with premium details, grounds and a distinctive entrance."},
 
     -- Clothes: experience-local looks. No listing claims platform-wide Roblox ownership.
+    -- ABVM uniform references supplied by the user: forest-green polo + khaki, or green/navy/white plaid.
+    {id="outfit_abvm_polo", category="Clothes", name="ABVM Uniform • Polo", price=25, tier=1, style=6, color={31,91,67}, description="Forest-green ABVM polo with khaki school bottoms."},
+    {id="outfit_abvm_plaid", category="Clothes", name="ABVM Uniform • Plaid", price=75, tier=1, style=7, color={31,91,67}, description="ABVM green/navy/white plaid uniform with navy knee socks."},
     {id="outfit_coral", category="Clothes", name="Everyday Tee • Coral", price=50, tier=1, style=1, color={227,128,126}, description="A simple everyday school look."},
     {id="outfit_ocean", category="Clothes", name="Everyday Tee • Ocean", price=50, tier=1, style=1, color={70,158,183}, description="The same starter look in ocean blue."},
     {id="outfit_hoodie", category="Clothes", name="Campus Hoodie", price=150, tier=2, style=2, color={42,91,126}, description="A navy hoodie-inspired layer for school and the neighborhood."},
