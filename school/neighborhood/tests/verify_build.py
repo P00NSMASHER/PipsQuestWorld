@@ -98,9 +98,14 @@ def validate_abvm_contract() -> dict:
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
-    configured_arches = re.findall(r"(?m)^\s*makeFrontArch\(root,\s*-?\d+", world)
-    require(len(configured_arches) == 4,
-            "formal facade must retain exactly four configured arched bays")
+    expected_arch_calls = (
+        "makeFrontArch(root,-27,false)",
+        "makeFrontArch(root,-9,true)",
+        "makeFrontArch(root,9,true)",
+        "makeFrontArch(root,27,false)",
+    )
+    require(all(world.count(call) == 1 for call in expected_arch_calls),
+            "formal facade must retain the four exact configured arched bays")
     required_subjects = {
         "math": "Mrs. Campion", "reading": "Mrs. Russek",
         "grammar": "Mrs. Benulis", "religion": "Mr. Bolich",
