@@ -279,9 +279,26 @@ showQuestion=function(q)
 
     local feedbackFrame,feedbackText=UI.feedbackCard(questionColumn,"","hint",{LayoutOrder=10,Visible=false,TextSize=14})
     local buttons={}
+    local useAnswerGrid=layout.landscape and layout.columns==2 and #q.choices==4
+    local answerParent=answerColumn
+    if useAnswerGrid then
+        local answerGap=9
+        local answerGrid=UI.new("Frame",answerColumn,{
+            Name="AnswerGrid",LayoutOrder=1,
+            Size=UDim2.new(1,0,0,layout.answerHeight*2+answerGap),
+            BackgroundTransparency=1,
+        })
+        UI.new("UIGridLayout",answerGrid,{
+            CellPadding=UDim2.fromOffset(answerGap,answerGap),
+            CellSize=UDim2.new(.5,-answerGap/2,0,layout.answerHeight),
+            FillDirectionMaxCells=2,
+            SortOrder=Enum.SortOrder.LayoutOrder,
+        })
+        answerParent=answerGrid
+    end
     for i,choice in ipairs(q.choices) do
         local button
-        button=UI.answerCard(answerColumn,string.char(64+i).."   "..choice,function()
+        button=UI.answerCard(answerParent,string.char(64+i).."   "..choice,function()
             task.spawn(function()
                 for _,b in ipairs(buttons) do b.Active=false end
                 local result=call("answer",{token=q.token,choice=i})
@@ -327,7 +344,13 @@ showQuestion=function(q)
                     end
                 end)
             end)
-        end,{LayoutOrder=3+i,Size=UDim2.new(1,0,0,layout.answerHeight),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=UI.P.white,TextSize=16})
+        end,{
+            LayoutOrder=useAnswerGrid and i or (3+i),
+            Size=UDim2.new(1,0,0,layout.answerHeight),
+            AutomaticSize=useAnswerGrid and Enum.AutomaticSize.None or Enum.AutomaticSize.Y,
+            BackgroundColor3=UI.P.white,
+            TextSize=16,
+        })
         table.insert(buttons,button)
     end
 end
