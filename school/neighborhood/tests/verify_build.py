@@ -160,7 +160,8 @@ def validate_abvm_contract() -> dict:
         "rail = {", "goal = {", "drive = {", "shopCardHeight", "columns = columns",
     )), "gold-standard responsive layout contract regressed")
     require(all(marker in main for marker in (
-        'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()',
+        'Name="ProductGrid"', 'Name="AnswerGrid"', 'FillDirectionMaxCells=2',
+        'showClasses=function()', 'showAvatar=function()',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
