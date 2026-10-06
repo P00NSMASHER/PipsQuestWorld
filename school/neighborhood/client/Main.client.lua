@@ -66,12 +66,21 @@ local function notify(message)
 end
 local function update(snapshot)
     if not snapshot or not snapshot.ready then return end
+    local wasReady=state.ready
     local oldCoins=state.coins
     state=snapshot
     walletText.Text=tostring(state.coins).." Credits"
-    streakText.Text=string.format("✓ %d  •  ✕ %d",state.correctStreak or 0,state.wrongStreak or 0)
+    if (state.wrongStreak or 0)>0 then
+        streakText.Text="✕ streak "..tostring(state.wrongStreak)
+        streakPill.BackgroundColor3=Color3.fromRGB(249,235,232)
+        streakText.TextColor3=UI.P.negative
+    else
+        streakText.Text="✓ streak "..tostring(state.correctStreak or 0)
+        streakPill.BackgroundColor3=UI.P.soft
+        streakText.TextColor3=UI.P.success
+    end
     local delta=state.coins-oldCoins
-    if delta~=0 then
+    if wasReady and delta~=0 then
         UI.flyout(wallet,(delta>0 and "+" or "")..tostring(delta),delta>0 and UI.P.success or UI.P.negative)
     end
     if resumeButton then
@@ -353,98 +362,122 @@ showShop=function(selected,subfilter)
     end
 end
 local navButtons={}
-local activeNav=nil
-setNavActive=function(command)
-    activeNav=command
-    for _,entry in ipairs(navButtons) do
-        local b=entry.button
-        local active=entry.command==command
-        b.BackgroundColor3=active and UI.P.ink or UI.P.white
-        local icon=b:FindFirstChild("Icon")
-        local label=b:FindFirstChild("Label")
-        if icon and icon:IsA("TextLabel") then icon.TextColor3=active and UI.P.gold or UI.P.teal end
-        if label and label:IsA("TextLabel") then label.TextColor3=active and UI.P.white or UI.P.ink end
-    end
-end
-
 local navDefs={
-    {"School","school","▦"},
-    {"Home","home","⌂"},
-    {"Shop","shop","▣"},
-    {"Ride","vehicle","◇"},
+    {"▦","School","school"},
+    {"⌂","Home","home"},
+    {"▣","Shop","shop"},
+    {"◆","Ride","vehicle"},
 }
 for i,definition in ipairs(navDefs) do
-    local label,command,icon=definition[1],definition[2],definition[3]
+    local icon,label,command=definition[1],definition[2],definition[3]
     local b=UI.iconButton(nav,icon,label,function()
         if not state.ready then notify("Your saved progress is still loading.");return end
-        setNavActive(command)
         if command=="shop" then showShop();return end
         close(false)
         task.spawn(function()
             local result=call(command,{})
-            if not result.ok then setNavActive(nil);return end
-            if command=="school" then notify("Choose a classroom. Walk through its doorway to begin.") end
-            if command=="vehicle" then notify("Steer with the thumbstick. Use Drive / Reverse, then Park to walk.") end
+            if result.ok and command=="school" then notify("Choose an Assumption BVM classroom. Walk through its doorway to begin.") end
+            if result.ok and command=="vehicle" then notify("Use your thumbstick to steer. Drive and Reverse control speed.") end
         end)
-    end,{Position=UDim2.fromOffset((i-1)*76,0),Size=UDim2.fromOffset(72,40),TextSize=11,IconSize=16,BackgroundColor3=UI.P.white})
-    table.insert(navButtons,{button=b,command=command})
+    end,{
+        Position=UDim2.new((i-1)*.25,3,0,0),
+        Size=UDim2.new(.25,-6,1,0),
+        TextSize=11,
+        IconSize=16,
+        BackgroundColor3=UI.P.white,
+        IconColor=command=="school" and UI.P.gold or UI.P.teal,
+    })
+    table.insert(navButtons,b)
 end
 
--- Gold-standard driving controls: native movement vector steers; only pedals and Park are overlaid.
-local driving=UI.surface(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),BackgroundColor3=UI.P.paper,BackgroundTransparency=.04})
-local held={};local heldInputs={}
-local driveButton=UI.button(driving,"Drive  ▲",function() end,{Position=UDim2.fromOffset(7,7),Size=UDim2.fromOffset(78,56),TextSize=13,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white})
-local reverseButton=UI.button(driving,"Reverse  ▼",function() end,{Position=UDim2.fromOffset(7,67),Size=UDim2.fromOffset(78,56),TextSize=12,BackgroundColor3=UI.P.white})
-local parkButton=UI.button(driving,"Park",function() task.spawn(call,"park",{}) end,{Position=UDim2.fromOffset(7,129),Size=UDim2.fromOffset(78,38),TextSize=12,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
-local function bindPedal(button,key)
-    button.InputBegan:Connect(function(input)
+-- Driving keeps native thumbstick steering and replaces the old five-button debug strip.
+local driving=UI.surface(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),BackgroundColor3=UI.P.paper,CornerRadius=18})
+UI.text(driving,"DRIVE",10,{Position=UDim2.fromOffset(8,5),Size=UDim2.new(1,-16,0,18),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.muted})
+local held={};local heldInputs={};local driveButtons={}
+for i,d in ipairs({{"Drive","go"},{"Reverse","back"}}) do
+    local label,key=d[1],d[2]
+    local b=UI.button(driving,label,function() end,{
+        Position=UDim2.fromOffset(10,24+(i-1)*53),
+        Size=UDim2.new(1,-20,0,46),
+        TextSize=12,
+        BackgroundColor3=i==1 and UI.P.teal or UI.P.white,
+        TextColor3=i==1 and UI.P.white or UI.P.ink,
+        CornerRadius=13,
+    })
+    table.insert(driveButtons,b)
+    b.InputBegan:Connect(function(input)
         if input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1 then
             held[key]=true;heldInputs[input]=key
         end
     end)
 end
-bindPedal(driveButton,"go")
-bindPedal(reverseButton,"back")
-UserInputService.InputEnded:Connect(function(input) local key=heldInputs[input];if key then held[key]=false;heldInputs[input]=nil end end)
-UserInputService.WindowFocusReleased:Connect(function() table.clear(held);table.clear(heldInputs);drive:FireServer(0,0) end)
+local parkButton=UI.button(driving,"Park",function() task.spawn(call,"park",{}) end,{
+    Position=UDim2.new(0,10,1,-42),Size=UDim2.new(1,-20,0,32),TextSize=11,
+    BackgroundColor3=UI.P.ink,TextColor3=UI.P.white,CornerRadius=999,
+})
+UserInputService.InputEnded:Connect(function(input)
+    local key=heldInputs[input]
+    if key then held[key]=false;heldInputs[input]=nil end
+end)
+UserInputService.WindowFocusReleased:Connect(function()
+    table.clear(held);table.clear(heldInputs);drive:FireServer(0,0)
+end)
+
+local lastLayoutSignature=nil
 local function reflow()
     local size=canvas.AbsoluteSize
     local layout=Layout.compute(size.X,size.Y)
-    local rail=layout.rail
-    header.Position=UDim2.new(.5,0,0,rail.y)
-    header.Size=UDim2.fromOffset(rail.width,rail.height)
+
+    header.AnchorPoint=Vector2.new(0,0)
+    header.Position=UDim2.fromOffset(layout.rail.x,layout.rail.y)
+    header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
     if layout.narrow then
+        streakPill.Visible=false
         nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Position=UDim2.new(.5,0,0,47)
-        nav.Size=UDim2.new(1,-16,0,38)
+        nav.Position=UDim2.new(.5,0,0,46)
+        nav.Size=UDim2.new(1,-18,0,40)
     else
-        local navWidth=math.min(300,math.max(240,rail.width-420))
+        streakPill.Visible=size.X>=850
         nav.AnchorPoint=Vector2.new(.5,0)
-        nav.Position=UDim2.new(.5,-35,0,5)
-        nav.Size=UDim2.fromOffset(navWidth,40)
+        nav.Position=UDim2.new(.5,size.X<850 and -36 or -8,0,5)
+        nav.Size=UDim2.fromOffset(size.X<850 and 260 or 300,40)
     end
-    for i,entry in ipairs(navButtons) do
-        local b=entry.button
-        b.Size=UDim2.new(.25,-5,1,0)
+    for i,b in ipairs(navButtons) do
+        b.Size=UDim2.new(.25,-6,1,0)
         b.Position=UDim2.new((i-1)*.25,3,0,0)
     end
 
+    local m=layout.modal
+    panel.Position=UDim2.fromOffset(m.x,m.y)
+    panel.Size=UDim2.fromOffset(m.width,m.height)
+
     local g=layout.goal
     goalCard.Position=UDim2.fromOffset(g.x,g.y)
-    if not state.subject then goalCard.Size=UDim2.fromOffset(g.width,g.height) end
-
-    local m=layout.modal
-    panel.Position=UDim2.fromOffset(m.x,m.y);panel.Size=UDim2.fromOffset(m.width,m.height)
-    if view=="shop" then
-        body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
-        body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+    goalCard.Size=UDim2.fromOffset(g.width,g.height+(state.subject and 40 or 0))
+    if resumeButton then
+        resumeButton.Position=UDim2.fromOffset(11,g.height+3)
+        resumeButton.Size=UDim2.new(1,-22,0,32)
     end
 
     toast.Size=UDim2.fromOffset(math.min(390,size.X-24),48)
+
     local d=layout.drive
+    driving.AnchorPoint=Vector2.new(1,.5)
     driving.Position=UDim2.new(1,-d.right,d.yScale,0)
     driving.Size=UDim2.fromOffset(d.width,d.height)
+
+    local signature=tostring(layout.columns)..":"..tostring(layout.narrow)..":"..tostring(layout.landscape)
+    if lastLayoutSignature and signature~=lastLayoutSignature then
+        task.defer(function()
+            if view=="shop" then
+                showShop(category,clothesFilter)
+            elseif view=="quiz" and activeQuestion then
+                showQuestion(activeQuestion)
+            end
+        end)
+    end
+    lastLayoutSignature=signature
 end
 canvas:GetPropertyChangedSignal("AbsoluteSize"):Connect(reflow)
 reflow()
