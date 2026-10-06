@@ -80,6 +80,7 @@ def validate_abvm_contract() -> dict:
     catalog = (MODE / "shared/Catalog.lua").read_text(encoding="utf-8")
     main = (MODE / "client/Main.client.lua").read_text(encoding="utf-8")
     server_main = (MODE / "server/Main.server.lua").read_text(encoding="utf-8")
+    leaderboards_source = (MODE / "server/Leaderboards.lua").read_text(encoding="utf-8")
     required_world = (
         "makeFrontArch(root,-27,false)",
         "makeFrontArch(root,-9,true)",
@@ -99,6 +100,10 @@ def validate_abvm_contract() -> dict:
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
         "Stair opening side guard",
+        "SCHOOL INFO",
+        "★  ABVM SCHOOL LEADERS  ★",
+        "Leaderboard gold top trim",
+        "Credits leaderboard",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
@@ -174,6 +179,12 @@ def validate_abvm_contract() -> dict:
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
+    require(all(marker in leaderboards_source for marker in (
+        "silver=Color3.fromRGB", "bronze=Color3.fromRGB",
+        'make("UIStroke",root,{Color=palette.gold',
+        "medalColor=rank==1 and palette.gold",
+        'Text="★"',
+    )), "gold-standard leaderboard framing/medal hierarchy regressed")
     duplicate_start = server_main.find("if pending.wrongChoices[args.choice] then")
     miss_start = server_main.find("local missId=", duplicate_start)
     require(duplicate_start >= 0 and miss_start > duplicate_start,
