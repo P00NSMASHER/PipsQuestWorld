@@ -739,20 +739,22 @@ function World.build()
         cup.Shape=Enum.PartType.Ball
     end
     sign(root,"ASSUMPTION BVM\nFAITH • SERVICE • LEARNING",CFrame.new(-17,9,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(24,5,.2),palette.green,palette.gold)
-    sign(root,
-        "SCHOOL DIRECTORY\n"..
-        "Floor 1  •  Main Office  •  Math — Mrs. Campion  •  Reading — Mrs. Russek\n"..
-        "Floor 2  •  Grammar — Mrs. Benulis  •  Religion — Mr. Bolich\n"..
-        "Floor 3  •  Vocabulary — Mr. Yordy  •  Spelling — Mrs. Kochol",
-        CFrame.new(44,10,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(34,8,.2),palette.navy,palette.cream)
+    sign(root,"SCHOOL INFO",CFrame.new(44,13.1,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(17,2.4,.2),palette.navy,palette.gold)
+    sign(root,"1  MAIN OFFICE • MATH • READING",CFrame.new(44,10.4,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.2,.2),palette.green,palette.cream)
+    sign(root,"2  GRAMMAR • RELIGION",CFrame.new(44,8,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.2,.2),palette.navy,palette.cream)
+    sign(root,"3  VOCABULARY • SPELLING",CFrame.new(44,5.6,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.2,.2),palette.navy,palette.cream)
 
-    -- Three ABVM-branded leaderboard boards on the lobby's east wall.
+    -- Three framed ABVM leaderboards on the lobby's east wall.
     World.leaderboardParts={
-        accuracy=World.part(root,"Accuracy leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-47)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
-        questions=World.part(root,"Questions leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-58)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
-        credits=World.part(root,"Money leaderboard",Vector3.new(21,8,.45),CFrame.new(68.8,9,-69)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+        accuracy=World.part(root,"Accuracy leaderboard",Vector3.new(23,9,.45),CFrame.new(68.8,9.5,-46)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+        questions=World.part(root,"Questions leaderboard",Vector3.new(23,9,.45),CFrame.new(68.8,9.5,-58)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
+        credits=World.part(root,"Credits leaderboard",Vector3.new(23,9,.45),CFrame.new(68.8,9.5,-70)*CFrame.Angles(0,-math.pi/2,0),palette.navy,nil,false),
     }
-    sign(root,"ASSUMPTION BVM\nLEADERBOARDS",CFrame.new(68.5,15.2,-58)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(31,4,.3),palette.green,palette.gold)
+    for _,z in ipairs({-46,-58,-70}) do
+        World.part(root,"Leaderboard gold top trim",Vector3.new(.5,.35,23.7),CFrame.new(68.55,14.15,z)*CFrame.Angles(0,-math.pi/2,0),palette.gold,Enum.Material.Metal,false)
+        World.part(root,"Leaderboard gold bottom trim",Vector3.new(.5,.35,23.7),CFrame.new(68.55,4.85,z)*CFrame.Angles(0,-math.pi/2,0),palette.gold,Enum.Material.Metal,false)
+    end
+    sign(root,"★  ABVM SCHOOL LEADERS  ★",CFrame.new(68.45,16.5,-58)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(34,3,.3),palette.green,palette.gold)
 
     -- School shop remains one of the few non-class destinations and stays inside the school.
     World.shopPosition=Vector3.new(31,5,-49)
