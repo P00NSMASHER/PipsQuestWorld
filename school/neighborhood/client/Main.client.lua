@@ -335,7 +335,7 @@ local function clothingMatches(item,filter)
     if filter=="Bottoms" then return item.slot=="uniformBottom" end
     if filter=="Socks" then return item.slot=="uniformLegwear" end
     if filter=="Shoes" then return item.slot=="uniformShoes" end
-    if filter=="Sweaters" then return item.style==14 or item.style==15 end
+    if filter=="Sweaters" or filter=="Layers" then return item.style==14 or item.style==15 or item.style==53 or item.style==55 or item.style==56 end
     if filter=="Full" then return item.slot==nil end
     return true
 end
@@ -424,7 +424,7 @@ showAvatar=function()
         local item=id and Catalog.ById[id] or nil
         if item then table.insert(equippedNames,item.name) end
     end
-    UI.text(body,#equippedNames>0 and ("Equipped • "..table.concat(equippedNames,"  •  ")) or "Choose uniform pieces from the shop.",12,{
+    UI.text(body,#equippedNames>0 and ("Equipped • "..table.concat(equippedNames,"  •  ")) or "Choose ABVM apparel pieces from the shop.",12,{
         LayoutOrder=3,Size=UDim2.new(1,0,0,38),TextColor3=UI.P.muted,TextXAlignment=Enum.TextXAlignment.Center,
     })
     UI.button(body,"Save Outfit",function()
@@ -440,11 +440,11 @@ showShop=function(selected,subfilter)
         elseif category=="Homes" then homeFilter=subfilter
         elseif category=="Vehicles" then vehicleFilter=subfilter end
     end
-    local titles={Homes="Houses",Clothes="ABVM Uniforms",Items="School Shop",Vehicles="Vehicles"}
+    local titles={Homes="Houses",Clothes="ABVM Apparel",Items="School Shop",Vehicles="Vehicles"}
     open("shop",titles[category] or "ABVM School Shop")
 
     UI.clear(shopTabs);UI.clear(shopSubtabs)
-    local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Uniforms","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
+    local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Apparel","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
     for i,def in ipairs(categoryDefs) do
         local key,label,icon=def[1],def[2],def[3]
         UI.iconButton(shopTabs,icon,label,function() showShop(key) end,{
@@ -458,7 +458,7 @@ showShop=function(selected,subfilter)
     local subfilters=nil
     local activeFilter="All"
     if category=="Clothes" then
-        subfilters={"Avatar","All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
+        subfilters={"Avatar","All","Tops","Bottoms","Socks","Shoes","Full","Layers"}
         activeFilter=clothesFilter
     elseif category=="Homes" then
         subfilters={"All","Starter","Family","Luxury"}
