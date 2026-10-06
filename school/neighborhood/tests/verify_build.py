@@ -164,7 +164,7 @@ def validate_abvm_contract() -> dict:
         'visual.color:Lerp(UI.P.white,.88)', 'cardStroke.Transparency=.58',
         '"ABVM UNIFORM PREVIEW"', 'local equippedDefs={', '"✓  Save Outfit"',
         'showClasses=function()', 'showAvatar=function()',
-        '"Drive","go"', '"Reverse","back"', '"Park"',
+        '"▲\\nDRIVE","go"', '"▼\\nREVERSE","back"', '"P  PARK"', 'pedalDefs={',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
         'shopTabs.BackgroundColor3=UI.P.navySoft',
