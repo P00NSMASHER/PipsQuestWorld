@@ -196,8 +196,7 @@ showQuestion=function(q)
                     feedbackFrame.BackgroundColor3=Color3.fromRGB(232,245,238)
                     local feedbackStroke=feedbackFrame:FindFirstChildOfClass("UIStroke");if feedbackStroke then feedbackStroke.Color=UI.P.success end
                     feedbackText.TextColor3=UI.P.success
-                    feedbackText.Text=headline.."
-"..tostring(result.explanation or "")
+                    feedbackText.Text=headline.."\n"..tostring(result.explanation or "")
 
                     UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=20,Size=UDim2.new(1,0,0,52),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=16})
                     UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=21,Size=UDim2.new(1,0,0,44),BackgroundColor3=UI.P.white,TextSize=13})
@@ -213,8 +212,7 @@ showQuestion=function(q)
                     local feedbackStroke=feedbackFrame:FindFirstChildOfClass("UIStroke");if feedbackStroke then feedbackStroke.Color=UI.P.negative end
                     feedbackText.TextColor3=UI.P.negative
                     local penaltyText=result.message or ("Wrong streak "..tostring(result.wrongStreak or 0))
-                    feedbackText.Text=penaltyText.."
-Hint: "..tostring(result.hint or q.hint or "Try eliminating one answer.")
+                    feedbackText.Text=penaltyText.."\nHint: "..tostring(result.hint or q.hint or "Try eliminating one answer.")
                 end
 
                 task.defer(function()
