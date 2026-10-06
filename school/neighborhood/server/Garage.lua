@@ -45,7 +45,7 @@ function Garage.spawn(player,item,cf)
     end end
     local seat=Instance.new("VehicleSeat");seat.Name="DriverSeat";seat.Size=Vector3.new(2.5,.7,2.6);seat.CFrame=cf*CFrame.new(0,1.2,.5);seat.Anchored=true;seat.Torque=0;seat.MaxSpeed=0;seat.TurnSpeed=0;seat.Color=Color3.fromRGB(56,68,80);seat.Parent=model
     model.Parent=Workspace
-    local r={model=model,seat=seat,cf=cf,throttle=0,steer=0,at=0,speed=item.speed}
+    local r={model=model,seat=seat,cf=cf,throttle=0,steer=0,at=0,speed=item.speed,length=length}
     Garage.active[player.UserId]=r
     seat:GetPropertyChangedSignal("Occupant"):Connect(function()
         local occupant=seat.Occupant
@@ -74,7 +74,7 @@ RunService.Heartbeat:Connect(function(dt)
         local nextCf=r.cf*CFrame.Angles(0,-steer*math.rad(60)*dt*throttle,0)
         local delta=nextCf.LookVector*throttle*r.speed*dt
         local params=RaycastParams.new();params.FilterType=Enum.RaycastFilterType.Exclude;params.FilterDescendantsInstances={r.model,player.Character};params.RespectCanCollide=true
-        local hit=Workspace:Blockcast(nextCf,Vector3.new(6.8,1.5,10.5),delta,params)
+        local hit=Workspace:Blockcast(nextCf,Vector3.new(6.8,1.5,r.length+.7),delta,params)
         local pos=nextCf.Position+delta
         if not hit and math.abs(pos.X)<=215 and pos.Z>=-12 and pos.Z<=1140 then
             r.cf=nextCf+delta;r.model:PivotTo(r.cf)
