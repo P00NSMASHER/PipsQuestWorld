@@ -252,9 +252,30 @@ showFaculty=function()
         local card=UI.surface(grid,{Name="Faculty_"..staff.id,LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
         local appearance=staff.appearance or {}
         local hair=appearance.hair or {95,75,60}
-        local tile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(48,48),BackgroundColor3=Color3.fromRGB(hair[1],hair[2],hair[3])})
-        UI.corner(tile,999)
-        UI.text(tile,string.sub(staff.name,1,1),18,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
+        local skin=appearance.skin or {226,196,164}
+        local tile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(48,48),BackgroundColor3=UI.P.navySoft})
+        UI.corner(tile,999);tile.ClipsDescendants=true
+        local face=UI.frame(tile,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.56),Size=UDim2.fromOffset(31,34),BackgroundColor3=Color3.fromRGB(skin[1],skin[2],skin[3])})
+        UI.corner(face,999)
+        local hairCap=UI.frame(tile,{AnchorPoint=Vector2.new(.5,0),Position=UDim2.fromScale(.5,.08),Size=UDim2.fromOffset(35,18),BackgroundColor3=Color3.fromRGB(hair[1],hair[2],hair[3])})
+        UI.corner(hairCap,999)
+        for _,x in ipairs({-.22,.22}) do
+            local eye=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5+x,.46),Size=UDim2.fromOffset(3,3),BackgroundColor3=Color3.fromRGB(44,48,52)})
+            UI.corner(eye,999)
+        end
+        local mouth=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.72),Size=UDim2.fromOffset(9,2),BackgroundColor3=Color3.fromRGB(145,82,82)})
+        UI.corner(mouth,999)
+        if appearance.glasses then
+            for _,x in ipairs({-.22,.22}) do
+                local lens=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5+x,.46),Size=UDim2.fromOffset(10,7),BackgroundTransparency=1})
+                UI.corner(lens,4);UI.stroke(lens,Color3.fromRGB(52,56,61))
+            end
+        end
+        if appearance.beard then
+            local beard=appearance.beardColor or hair
+            local chin=UI.frame(face,{AnchorPoint=Vector2.new(.5,1),Position=UDim2.fromScale(.5,.98),Size=UDim2.fromOffset(22,11),BackgroundColor3=Color3.fromRGB(beard[1],beard[2],beard[3])})
+            UI.corner(chin,999)
+        end
         UI.text(card,staff.name,14,{Position=UDim2.fromOffset(66,6),Size=UDim2.new(1,-76,0,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
         UI.text(card,staff.role,11,{Position=UDim2.fromOffset(66,28),Size=UDim2.new(1,-76,0,28),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
         UI.text(card,"Floor "..tostring(staff.floor).." • "..tostring(staff.location),10,{Position=UDim2.fromOffset(66,56),Size=UDim2.new(1,-76,0,18),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
