@@ -74,6 +74,50 @@ def inspect_place(root: ET.Element) -> dict[str, str]:
     return scripts
 
 
+def validate_abvm_contract() -> dict:
+    """Protect photo-critical source intent; this is not a rendered-fidelity assertion."""
+    world = (MODE / "server/World.lua").read_text(encoding="utf-8")
+    catalog = (MODE / "shared/Catalog.lua").read_text(encoding="utf-8")
+    main = (MODE / "client/Main.client.lua").read_text(encoding="utf-8")
+    required_world = (
+        "makeFrontArch(root,-27,false)",
+        "makeFrontArch(root,-9,true)",
+        "makeFrontArch(root,9,true)",
+        "makeFrontArch(root,27,false)",
+        '"1928"',
+        "Howard outer brick arch",
+        "Howard inner stone arch",
+        "ENTRANCE ON HOWARD AVENUE",
+        "School parking lot",
+        "Howard retaining wall",
+        "Brick chimney",
+        "Front stone belt",
+        "Dr. McBreen — Principal",
+        "Mrs. Thompson — Secretary",
+        "Mrs. Boyer — Assistant Principal",
+    )
+    missing = [marker for marker in required_world if marker not in world]
+    require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
+    require(world.count("makeFrontArch(root,") == 4,
+            "formal facade must retain exactly four configured arched bays")
+    required_subjects = {
+        "math": "Mrs. Campion", "reading": "Mrs. Russek",
+        "grammar": "Mrs. Benulis", "religion": "Mr. Bolich",
+        "vocabulary": "Mr. Yordy", "spelling": "Mrs. Kochol",
+    }
+    for subject, teacher in required_subjects.items():
+        require(f'id="{subject}"' in catalog and f'teacher="{teacher}"' in catalog,
+                f"missing ABVM classroom mapping: {subject} / {teacher}")
+    require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
+            "mobile classroom identity lost full school name")
+    return {
+        "frontArchedBays": 4,
+        "centerDoorBays": 2,
+        "subjectClassrooms": len(required_subjects),
+        "photoContractStaticOnly": True,
+    }
+
+
 def check_guard_mutations(project: dict, place: ET.Element) -> int:
     bad_project = copy.deepcopy(project)
     bad_project["tree"]["ServerScriptService"]["Neighborhood"]["$path"] = "src/server"
@@ -135,6 +179,7 @@ def main() -> int:
             report["sourceCommit"] = head
         project = json.loads(PROJECT.read_text(encoding="utf-8"))
         validate_project(project)
+        abvm_contract = validate_abvm_contract()
         actual = {str(p.relative_to(MODE)) for subdir in ("shared", "server", "client")
                   for p in (MODE / subdir).rglob("*.lua")}
         require(actual == SOURCES, "mapped source inventory changed; review expected scripts")
@@ -155,6 +200,7 @@ def main() -> int:
                  MODE / "tests/core.spec.lua", Path(__file__).resolve()]
         report.update(status="PASS_STATIC_PREVIEW_ONLY", sourceFilesCompiled=len(SOURCES),
                       coreTests=26, buildGuardNegativeControls=mutations,
+                      abvmStaticContract=abvm_contract,
                       scriptInventory=script_inventory,
                       fileSha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in files},
