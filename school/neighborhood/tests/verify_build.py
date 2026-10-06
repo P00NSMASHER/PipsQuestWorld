@@ -79,6 +79,7 @@ def validate_abvm_contract() -> dict:
     world = (MODE / "server/World.lua").read_text(encoding="utf-8")
     catalog = (MODE / "shared/Catalog.lua").read_text(encoding="utf-8")
     main = (MODE / "client/Main.client.lua").read_text(encoding="utf-8")
+    server_main = (MODE / "server/Main.server.lua").read_text(encoding="utf-8")
     required_world = (
         "makeFrontArch(root,-27,false)",
         "makeFrontArch(root,-9,true)",
@@ -134,11 +135,11 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
-    duplicate_start = main.find("if pending.wrongChoices[args.choice] then")
-    miss_start = main.find("local missId=", duplicate_start)
+    duplicate_start = server_main.find("if pending.wrongChoices[args.choice] then")
+    miss_start = server_main.find("local missId=", duplicate_start)
     require(duplicate_start >= 0 and miss_start > duplicate_start,
             "duplicate wrong-answer branch missing")
-    duplicate_body = main[duplicate_start:miss_start]
+    duplicate_body = server_main[duplicate_start:miss_start]
     require("duplicate=true" in duplicate_body and "penalty=0" in duplicate_body and
             "deducted=0" in duplicate_body and "hint=pending.q.hint" in duplicate_body and
             "explanation=" not in duplicate_body,
