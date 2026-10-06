@@ -180,6 +180,8 @@ def validate_abvm_contract() -> dict:
         'local streakIcon=UI.frame(streakPill',
         'streakCaption.Text="WRONG STREAK"',
         'streakCaption.Text="STREAK"',
+        'local wrapFilters=layout.narrow and not layout.landscape and #subfilters>4',
+        'nav.Size=UDim2.new(1,-18,0,layout.nav.height)',
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
