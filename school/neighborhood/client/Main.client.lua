@@ -22,6 +22,8 @@ local activeQuestion=nil
 local busy=false
 local category="Homes"
 local clothesFilter="All"
+local homeFilter="All"
+local vehicleFilter="All"
 
 -- Compact floating rail from the authoritative gold-standard board.
 local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(760,50),BackgroundColor3=UI.P.paper,BackgroundTransparency=.03})
@@ -136,7 +138,8 @@ local function open(kind,title)
     local isShop=kind=="shop"
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     shopTabs.Visible=isShop
-    shopSubtabs.Visible=isShop and category=="Clothes"
+    local hasSubtabs=isShop and (category=="Clothes" or category=="Homes" or category=="Vehicles")
+    shopSubtabs.Visible=hasSubtabs
     panelTitle.Visible=not (isShop and layout.compact and layout.landscape)
     if isShop then
         if layout.compact and layout.landscape then
@@ -144,7 +147,7 @@ local function open(kind,title)
             shopTabs.Size=UDim2.new(1,-76,0,36)
             shopSubtabs.Position=UDim2.fromOffset(14,48)
             shopSubtabs.Size=UDim2.new(1,-28,0,30)
-            local top=category=="Clothes" and 82 or 48
+            local top=hasSubtabs and 82 or 48
             body.Position=UDim2.fromOffset(14,top)
             body.Size=UDim2.new(1,-28,1,-(top+14))
         else
@@ -152,8 +155,8 @@ local function open(kind,title)
             shopTabs.Size=UDim2.new(1,-28,0,42)
             shopSubtabs.Position=UDim2.fromOffset(14,99)
             shopSubtabs.Size=UDim2.new(1,-28,0,34)
-            body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
-            body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+            body.Position=UDim2.fromOffset(14,hasSubtabs and 138 or 100)
+            body.Size=UDim2.new(1,-28,1,-(hasSubtabs and 152 or 114))
         end
     else
         panelTitle.Visible=true
@@ -308,6 +311,22 @@ local function clothingMatches(item,filter)
     return true
 end
 
+local function homeMatches(item,filter)
+    if filter=="All" then return true end
+    if filter=="Starter" then return item.tier<=2 end
+    if filter=="Family" then return item.tier==3 end
+    if filter=="Luxury" then return item.tier>=4 end
+    return true
+end
+
+local function vehicleMatches(item,filter)
+    if filter=="All" then return true end
+    if filter=="Starter" then return item.tier<=2 end
+    if filter=="Sport" then return item.style==3 end
+    if filter=="Premium" then return item.tier>=5 end
+    return true
+end
+
 showAvatar=function()
     if setNavActive then setNavActive("shop") end
     open("avatar","Avatar Preview")
@@ -387,9 +406,13 @@ end
 showShop=function(selected,subfilter)
     category=selected or category
     if setNavActive then setNavActive("shop") end
-    if subfilter then clothesFilter=subfilter end
-    if category~="Clothes" then clothesFilter="All" end
-    open("shop","ABVM School Shop")
+    if subfilter then
+        if category=="Clothes" then clothesFilter=subfilter
+        elseif category=="Homes" then homeFilter=subfilter
+        elseif category=="Vehicles" then vehicleFilter=subfilter end
+    end
+    local titles={Homes="Houses",Clothes="ABVM Uniforms",Items="School Shop",Vehicles="Vehicles"}
+    open("shop",titles[category] or "ABVM School Shop")
 
     UI.clear(shopTabs);UI.clear(shopSubtabs)
     local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Uniforms","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
@@ -403,23 +426,41 @@ showShop=function(selected,subfilter)
         })
     end
 
+    local subfilters=nil
+    local activeFilter="All"
     if category=="Clothes" then
+        subfilters={"Avatar","All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
+        activeFilter=clothesFilter
+    elseif category=="Homes" then
+        subfilters={"All","Starter","Family","Luxury"}
+        activeFilter=homeFilter
+    elseif category=="Vehicles" then
+        subfilters={"All","Starter","Sport","Premium"}
+        activeFilter=vehicleFilter
+    end
+    if subfilters then
         shopSubtabs.Visible=true
-        body.Position=UDim2.fromOffset(14,138);body.Size=UDim2.new(1,-28,1,-152)
-        local filters={"Avatar","All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
-        for i,label in ipairs(filters) do
+        local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+        if not (layout.compact and layout.landscape) then
+            body.Position=UDim2.fromOffset(14,138);body.Size=UDim2.new(1,-28,1,-152)
+        end
+        for i,label in ipairs(subfilters) do
             UI.button(shopSubtabs,label,function()
-                if label=="Avatar" then showAvatar() else showShop("Clothes",label) end
+                if category=="Clothes" and label=="Avatar" then showAvatar() else showShop(category,label) end
             end,{
-                Position=UDim2.new((i-1)/#filters,2,0,0),Size=UDim2.new(1/#filters,-4,1,0),TextSize=10,
-                BackgroundColor3=label==clothesFilter and UI.P.teal or UI.P.white,
-                TextColor3=label==clothesFilter and UI.P.white or UI.P.ink,
+                Position=UDim2.new((i-1)/#subfilters,2,0,0),Size=UDim2.new(1/#subfilters,-4,1,0),
+                TextSize=10,
+                BackgroundColor3=label==activeFilter and UI.P.teal or UI.P.white,
+                TextColor3=label==activeFilter and UI.P.white or UI.P.ink,
                 CornerRadius=10,
             })
         end
     else
         shopSubtabs.Visible=false
-        body.Position=UDim2.fromOffset(14,100);body.Size=UDim2.new(1,-28,1,-114)
+        local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+        if not (layout.compact and layout.landscape) then
+            body.Position=UDim2.fromOffset(14,100);body.Size=UDim2.new(1,-28,1,-114)
+        end
     end
 
     local _,tier=Catalog.tier(state.earned)
@@ -427,9 +468,11 @@ showShop=function(selected,subfilter)
 
     local visible={}
     for _,item in ipairs(Catalog.Items) do
-        if item.category==category and (category~="Clothes" or clothingMatches(item,clothesFilter)) then
-            table.insert(visible,item)
-        end
+        local matches=item.category==category
+        if matches and category=="Clothes" then matches=clothingMatches(item,clothesFilter) end
+        if matches and category=="Homes" then matches=homeMatches(item,homeFilter) end
+        if matches and category=="Vehicles" then matches=vehicleMatches(item,vehicleFilter) end
+        if matches then table.insert(visible,item) end
     end
 
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
@@ -475,7 +518,7 @@ showShop=function(selected,subfilter)
                 local result=call(owned and "equip" or "buy",{itemId=item.id})
                 if result.ok then
                     notify(owned and (item.name.." equipped.") or (item.name.." added to your collection."))
-                    if view=="shop" then showShop(category,clothesFilter) end
+                    if view=="shop" then showShop(category,category=="Clothes" and clothesFilter or category=="Homes" and homeFilter or category=="Vehicles" and vehicleFilter or nil) end
                 end
             end)
         end,{Position=UDim2.new(0,10,1,-46),Size=UDim2.new(.68,-14,0,36),TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
@@ -485,7 +528,7 @@ showShop=function(selected,subfilter)
         UI.button(card,state.goal==item.id and "★ Goal" or "☆ Goal",function()
             task.spawn(function()
                 local result=call("goal",{itemId=item.id})
-                if result.ok and view=="shop" then showShop(category,clothesFilter) end
+                if result.ok and view=="shop" then showShop(category,category=="Clothes" and clothesFilter or category=="Homes" and homeFilter or category=="Vehicles" and vehicleFilter or nil) end
             end)
         end,{Position=UDim2.new(.68,2,1,-46),Size=UDim2.new(.32,-12,0,36),TextSize=11,BackgroundColor3=state.goal==item.id and UI.P.goldSoft or UI.P.white,CornerRadius=10})
     end
@@ -630,7 +673,7 @@ local function reflow()
     if lastLayoutSignature and signature~=lastLayoutSignature then
         task.defer(function()
             if view=="shop" then
-                showShop(category,clothesFilter)
+                showShop(category,category=="Clothes" and clothesFilter or category=="Homes" and homeFilter or category=="Vehicles" and vehicleFilter or nil)
             elseif view=="quiz" and activeQuestion then
                 showQuestion(activeQuestion)
             elseif view=="avatar" then
