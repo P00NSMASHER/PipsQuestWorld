@@ -130,7 +130,7 @@ local function handle(player,command,args)
         if args.choice~=pending.correctIndex then
             if pending.wrongChoices[args.choice] then
                 return {ok=true,correct=false,duplicate=true,penalty=0,deducted=0,
-                    wrongStreak=p.wrongStreak,explanation=pending.q.explanation,
+                    wrongStreak=p.wrongStreak,hint=pending.q.hint,
                     message="You already tried that answer. No extra Credits were deducted.",state=state(player)}
             end
             local missId=pending.token..":miss:"..tostring(args.choice)
