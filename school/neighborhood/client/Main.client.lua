@@ -105,7 +105,7 @@ local function update(snapshot)
     local goalColors={Homes=UI.P.success,Vehicles=Color3.fromRGB(58,124,219),Clothes=UI.P.gold,Items=UI.P.ink}
     goalIconText.Text=goalIcons[goal.category] or "★"
     goalIcon.BackgroundColor3=goalColors[goal.category] or UI.P.gold
-    goalIconText.TextColor3=(goal.category=="Items") and UI.P.white or UI.P.ink
+    goalIconText.TextColor3=(goal.category=="Clothes") and UI.P.ink or UI.P.white
     if state.owned[goal.id] then
         goalTitle.Text="Owned • "..goal.name
         goalInfo.Text="Choose your next reward in the shop"
@@ -116,7 +116,7 @@ local function update(snapshot)
         goalTitle.Text="Next reward • "..goal.name
         goalInfo.Text=remaining==0
             and ("Ready to buy  •  lesson "..tostring(state.lessonCount).."/5")
-            or string.format("%d / %d Credits  •  ≈ %d correct",state.coins,goal.price,baseAnswers)
+            or string.format("%d / %d Credits  •  ≈ %d correct",math.min(state.coins,goal.price),goal.price,baseAnswers)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
