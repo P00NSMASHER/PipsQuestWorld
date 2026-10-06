@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "owner": "Roblox High School Control Tower",
   "id": "P2_CLASSROOM_FREE_ROAM",
   "preparedAt": "2026-10-05T23:52:00Z",
@@ -16,7 +16,7 @@
     "oneProducerOnly": true
   },
   "activationConditions": [
-    "Final Integration Smoke overallStatus is PASS on exact canonical 33a5a11 with runtimeExecuted=true and renderedParityEstablished=true.",
+    "Final Integration Smoke overallStatus is PASS on exact canonical 33a5a11 with runtimeExecuted=true and renderedParityEstablished=true; the completed capture receipt and evidence bundle must pass strict validation from the current execution plan with SMOKE_RUNTIME_CAPTURE_PASS_OK.",
     "Release/Package emits the reserved deterministic 33a5a11 source-tree checkpoint and Control Tower records it as current packaged canonical.",
     "Live canonical still equals 33a5a11, or a newer packaged descendant is explicitly reconciled before activation.",
     "No other product producer is active and WIP cap remains at or below 2/3 before opening this producer.",
@@ -104,10 +104,10 @@
     "save/rejoin exact-state match"
   ],
   "pipelineAfterProducer": [
-    "all three exact-head PR guards green",
+    "Mapped Build, Foundation, Class/Education, and Progression checks all pass on the exact producer PR head",
     "independent QA on the exact changed head",
     "protected Integration with expected head SHA",
-    "all three exact-canonical push guards green",
+    "Mapped Build, Foundation, Class/Education, and Progression push checks all pass on the exact integrated canonical head",
     "Integration Smoke with functional/rendered/interaction/device/save-rejoin statuses separated",
     "deterministic Release/Package on the exact integrated canonical"
   ],
