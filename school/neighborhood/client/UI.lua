@@ -41,6 +41,21 @@ function UI.flash(o)
     local original=o.BackgroundColor3;o.BackgroundColor3=Color3.fromRGB(244,220,157)
     TweenService:Create(o,TweenInfo.new(.45),{BackgroundColor3=original}):Play()
 end
+function UI.crest(parent,props)
+    props=props or {}
+    local size=props.Size or UDim2.fromOffset(38,38)
+    local outer=UI.frame(parent,{Name=props.Name or "ABVMCrest",Position=props.Position or UDim2.fromOffset(8,5),Size=size,BackgroundColor3=UI.P.ink,ZIndex=props.ZIndex or 3})
+    UI.corner(outer,999)
+    UI.new("UIStroke",outer,{Color=UI.P.gold,Thickness=2})
+    local green=UI.frame(outer,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(.73,.73),BackgroundColor3=UI.P.teal,ZIndex=(props.ZIndex or 3)+1})
+    UI.corner(green,999)
+    UI.new("UIStroke",green,{Color=UI.P.gold,Thickness=1})
+    local center=UI.frame(green,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(.78,.78),BackgroundColor3=UI.P.paper,ZIndex=(props.ZIndex or 3)+2})
+    UI.corner(center,999)
+    UI.text(center,"A",22,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.Garamond,TextColor3=UI.P.ink,ZIndex=(props.ZIndex or 3)+3})
+    UI.text(center,"✝",10,{Position=UDim2.fromScale(.31,-.08),Size=UDim2.fromScale(.38,.38),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,ZIndex=(props.ZIndex or 3)+4})
+    return outer
+end
 function UI.preview(parent,item)
     local v=UI.new("ViewportFrame",parent,{Size=UDim2.fromOffset(94,94),Position=UDim2.fromOffset(10,10),BackgroundColor3=UI.P.soft,BorderSizePixel=0,LightDirection=Vector3.new(-1,-1,-1),Ambient=Color3.fromRGB(205,205,205)})
     UI.corner(v,12)
