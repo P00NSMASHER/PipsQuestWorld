@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "stateModel": "SHARDED_COORDINATION",
   "owner": "Roblox High School Control Tower",
   "writePolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
   "activeDirection": "SCHOOL_NEIGHBORHOOD_LEARN_EARN_UPGRADE",
-  "activeQueueIssue": 302,
+  "activeQueueIssue": 304,
   "readOrder": [
     "coordination/HIGH_SCHOOL_CANONICAL_SCOPE_OVERRIDE.md",
     "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
     "coordination/HIGH_SCHOOL_SWARM_STATE.json",
     "coordination/state/NEIGHBORHOOD_WORKERS.json",
-    "live issue #302 and PR #301 heads/comments/reviews/CI",
+    "live issue #304, issue #302 and PR #301 heads/comments/reviews/CI",
     "newest applicable exact-head lane receipts",
     "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md, only where consistent with current scope"
   ],
@@ -38,6 +38,6 @@
   "canonicalSourceRoot": "school/**",
   "activeBuildProject": "school/neighborhood.project.json",
   "retiredRuntimePolicy": "Do not map Maze, StarBlox, the old school default project or the RHS restoration runtime into the neighborhood mode. Reuse verified appropriate assets or fixes deliberately, not by publishing an old game under a new name.",
-  "automationImmutability": "No task definition, schedule or enablement change was made. Current lane assignments are not a claim that scheduled workers exist. Reallocation of unrelated tasks requires explicit user direction.",
-  "referenceRule": "Reuse relevant authorized references and tested components. Evidence of actual new-mode rendering/touch/save behavior is required; historic frame measurements and successful uploads do not certify the new game."
+  "automationImmutability": "User explicitly redirected all 15 active scheduled tasks to issue #304 on 2026-10-06 while preserving their existing schedules and enabled states. No disabled tasks were revived and no additional tasks were created.",
+  "referenceRule": "The user-authorized ABVM logo and nine real-school photos are persistent in ChatGPT Library /Roblox/ABVM References and listed in issue #304. Workers must inspect actual files when available and keep rendered/iPhone fidelity evidence separate from static checks."
 }
