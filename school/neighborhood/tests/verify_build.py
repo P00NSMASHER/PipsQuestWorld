@@ -113,26 +113,25 @@ def validate_abvm_contract() -> dict:
     require(all(world.count(call) == 1 for call in expected_arch_calls),
             "formal facade must retain the four exact configured arched bays")
 
-    expected_room_calls = (
-        'classroom(root,"math","Math","Mrs. Campion",-49,4,',
-        'classroom(root,"reading","Reading","Mrs. Russek",49,4,',
-        'classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,',
-        'classroom(root,"religion","Religion","Mr. Bolich",49,20,',
-        'classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,',
-        'classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,',
-    )
-    require(all(world.count(call) == 1 for call in expected_room_calls),
-            "six classroom volumes must remain on their intended floors")
     require('World.shopPosition=Vector3.new(31,5,-49)' in world,
             "ABVM School Shop position moved outside its guarded lobby zone")
     required_subjects = {
-        "math": "Mrs. Campion", "reading": "Mrs. Russek",
-        "grammar": "Mrs. Benulis", "religion": "Mr. Bolich",
-        "vocabulary": "Mr. Yordy", "spelling": "Mrs. Kochol",
+        "math": ("Math", "Mrs. Campion", "-49,4"),
+        "reading": ("Reading", "Mrs. Russek", "49,4"),
+        "grammar": ("Grammar", "Mrs. Benulis", "-49,20"),
+        "religion": ("Religion", "Mr. Bolich", "49,20"),
+        "vocabulary": ("Vocabulary", "Mr. Yordy", "-49,36"),
+        "spelling": ("Spelling", "Mrs. Kochol", "49,36"),
     }
-    for subject, teacher in required_subjects.items():
+    for subject, (title, teacher, position) in required_subjects.items():
         require(f'id="{subject}"' in catalog and f'teacher="{teacher}"' in catalog,
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
+        require(
+            f'classroom(root,"{subject}","{title}",(active.{subject} and active.{subject}.teacher) or "{teacher}",{position},' in world,
+            f"world classroom lost approved teacher/position contract: {subject} / {teacher}"
+        )
+    require("Catalog.Faculty = {" in catalog and "Catalog.ByStaffId = {}" in catalog,
+            "photo-backed faculty directory authority missing")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
     require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
