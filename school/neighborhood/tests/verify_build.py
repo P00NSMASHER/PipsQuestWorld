@@ -134,11 +134,11 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
-    duplicate_block = re.search(
-        r"if pending\.wrongChoices\[args\.choice\] then(?P<body>.*?)\n\s*end",
-        main, re.S)
-    require(duplicate_block is not None, "duplicate wrong-answer branch missing")
-    duplicate_body = duplicate_block.group("body")
+    duplicate_start = main.find("if pending.wrongChoices[args.choice] then")
+    miss_start = main.find("local missId=", duplicate_start)
+    require(duplicate_start >= 0 and miss_start > duplicate_start,
+            "duplicate wrong-answer branch missing")
+    duplicate_body = main[duplicate_start:miss_start]
     require("duplicate=true" in duplicate_body and "penalty=0" in duplicate_body and
             "deducted=0" in duplicate_body and "hint=pending.q.hint" in duplicate_body and
             "explanation=" not in duplicate_body,
