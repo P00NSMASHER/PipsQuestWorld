@@ -282,6 +282,7 @@ function World.build()
         local yaw=side<0 and -math.pi/2 or math.pi/2
         for _,floorY in ipairs({12,28,44}) do
             for _,z in ipairs({-132,-115,-77,-60}) do
+                World.part(root,"Side tan facade bay",Vector3.new(.52,11.2,13.4),CFrame.new(side*75.1,floorY,z),palette.tan,Enum.Material.Concrete,false)
                 windowPanel(root,CFrame.new(wallX,floorY,z)*CFrame.Angles(0,yaw,0),8,5.4)
             end
         end
