@@ -95,6 +95,7 @@ def validate_abvm_contract() -> dict:
         "Dr. McBreen — Principal",
         "Mrs. Thompson — Secretary",
         "Mrs. Boyer — Assistant Principal",
+        "World.schoolDoor=CFrame.new(0,3,18)",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
