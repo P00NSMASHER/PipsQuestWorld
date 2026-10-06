@@ -121,6 +121,8 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
+    require("duplicate=true,penalty=0,deducted=0" in main and "wrongStreak=p.wrongStreak,hint=pending.q.hint" in main,
+            "duplicate wrong-answer path must stay hint-only and penalty-free")
     return {
         "frontArchedBays": 4,
         "centerDoorBays": 2,
