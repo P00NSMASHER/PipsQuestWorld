@@ -56,7 +56,7 @@ local function update(snapshot)
     local oldCoins=state.coins
     state=snapshot
     walletText.Text=tostring(state.coins).." Credits"
-    streakInfo.Text=string.format("%.1f%% correct  •  +%d / -%d streak",(state.accuracyBasisPoints or 0)/100,state.correctStreak or 0,state.wrongStreak or 0)
+    streakInfo.Text=string.format("%.1f%% correct  •  ✓ %d streak  •  ✕ %d streak",(state.accuracyBasisPoints or 0)/100,state.correctStreak or 0,state.wrongStreak or 0)
     if state.coins>oldCoins then UI.flash(wallet) end
     if resumeButton then
         resumeButton.Visible=state.subject~=nil
@@ -68,8 +68,11 @@ local function update(snapshot)
         goalInfo.Text="Choose your next goal in the shop"
         goalFill.Size=UDim2.fromScale(1,1)
     else
+        local remaining=math.max(0,goal.price-state.coins)
         goalTitle.Text="Next: "..goal.name
-        goalInfo.Text=string.format("%d / %d Credits  •  Lesson %d/5",state.coins,goal.price,state.lessonCount)
+        goalInfo.Text=remaining==0
+            and ("Ready to buy  •  Lesson "..tostring(state.lessonCount).."/5")
+            or string.format("%d Credits to go  •  %d / %d",remaining,state.coins,goal.price)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
@@ -138,8 +141,10 @@ showQuestion=function(q)
                     for _,b in ipairs(buttons) do b.Active=false;b.Visible=false end
                     button.BackgroundColor3=UI.P.teal;button.TextColor3=UI.P.white
                     local headline=result.reviewOnly and "Review complete." or "+"..tostring(result.total).." Credits saved!"
-                    if result.streakBonus and result.streakBonus>0 then headline..="  Streak +"..tostring(result.streakBonus).."." end
-                    if result.bonus and result.bonus>0 then headline..="  Includes your +15 lesson bonus." end
+                    if result.streakBonus and result.streakBonus>0 then
+                        headline..="  Streak bonus +"..tostring(result.streakBonus).." • correct streak "..tostring(result.correctStreak or state.correctStreak or 0).."."
+                    end
+                    if result.bonus and result.bonus>0 then headline..="  Includes your +15 five-question bonus." end
                     feedback.Text=headline.."\n"..result.explanation
                     info.Text=string.format("Lesson %d / 5  •  Every 5 different questions earns +15",state.lessonCount)
                     UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=11,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
@@ -182,8 +187,17 @@ showShop=function(selected)
         UI.stroke(card)
         UI.preview(card,item)
         UI.text(card,item.name,18,{Position=UDim2.fromOffset(116,10),Size=UDim2.new(1,-128,0,40),Font=Enum.Font.GothamBold})
-        UI.text(card,owned and "Owned" or (tostring(item.price).." Credits"),17,{Position=UDim2.fromOffset(116,51),Size=UDim2.new(1,-128,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
-        UI.text(card,Catalog.Tiers[item.tier].name,12,{Position=UDim2.fromOffset(116,79),Size=UDim2.new(1,-128,0,24),TextColor3=UI.P.muted})
+        local remaining=math.max(0,item.price-state.coins)
+        local priceStatus
+        if owned then
+            priceStatus="Owned"
+        elseif remaining==0 then
+            priceStatus="Ready • "..tostring(item.price).." Credits"
+        else
+            priceStatus=tostring(item.price).." Credits • "..tostring(remaining).." to go"
+        end
+        UI.text(card,priceStatus,16,{Position=UDim2.fromOffset(116,51),Size=UDim2.new(1,-128,0,30),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
+        UI.text(card,Catalog.Tiers[item.tier].name,12,{Position=UDim2.fromOffset(116,81),Size=UDim2.new(1,-128,0,22),TextColor3=UI.P.muted})
         UI.text(card,item.description,14,{Position=UDim2.fromOffset(12,107),Size=UDim2.new(1,-24,0,42),TextColor3=UI.P.muted})
         local label=owned and (item.category=="Items" and "Placed / worn" or (equipped and "Equipped" or "Equip")) or "Buy • "..item.price
         local action=UI.button(card,label,function()
