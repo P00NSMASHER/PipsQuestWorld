@@ -1,39 +1,43 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "stateModel": "SHARDED_COORDINATION",
   "owner": "Roblox High School Control Tower",
   "writePolicy": "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
+  "activeDirection": "SCHOOL_NEIGHBORHOOD_LEARN_EARN_UPGRADE",
+  "activeQueueIssue": 302,
   "readOrder": [
-    "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md",
     "coordination/HIGH_SCHOOL_CANONICAL_SCOPE_OVERRIDE.md",
     "coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md",
     "coordination/HIGH_SCHOOL_SWARM_STATE.json",
-    "coordination/state/CANONICAL.json",
-    "coordination/state/WIP.json",
-    "coordination/state/PLAYABLE.json",
-    "coordination/state/BLOCKERS.json",
-    "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json",
-    "newest lane receipts",
-    "live GitHub heads/PRs/CI"
+    "coordination/state/NEIGHBORHOOD_WORKERS.json",
+    "live issue #302 and PR #301 heads/comments/reviews/CI",
+    "newest applicable exact-head lane receipts",
+    "coordination/HIGH_SCHOOL_SWARM_PROTOCOL.md, only where consistent with current scope"
   ],
   "authoritativeShards": {
+    "neighborhoodWorkers": "coordination/state/NEIGHBORHOOD_WORKERS.json",
+    "localMachineLease": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json"
+  },
+  "historicalShards": {
     "canonical": "coordination/state/CANONICAL.json",
     "wip": "coordination/state/WIP.json",
     "playable": "coordination/state/PLAYABLE.json",
     "blockers": "coordination/state/BLOCKERS.json",
-    "localMachineLease": "coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json",
     "referenceParity": "coordination/state/RHS2_REFERENCE_PARITY_BACKLOG.json"
   },
+  "historicalRule": "Old clone-first/P1/P2 and ten-active-worker claims are historical. They do not supersede current user direction, live scheduler evidence or the neighborhood queue. Do not delete the evidence or relax actual runtime/QA gates.",
   "receiptRule": "Lane receipts are exact-SHA evidence caches and never outrank a newer live branch head.",
-  "mutationRule": "Change only the smallest owning shard. Do not expand this manifest back into a monolithic mutable state payload.",
+  "mutationRule": "Change only the smallest owning shard; preserve the active producer's files and require recorded exclusive handoffs.",
   "legacySnapshot": {
     "branch": "coordination/high-school-control-tower",
-    "commit": "a43a05386185f0fcf1992bcd67b73d91e9beb29f",
-    "priorStateBlobSha": "9171e810a4ba5945084aeb1afd4ed59f994a1d26",
-    "note": "Historical full state remains in Git history; do not copy it into routine writes."
+    "commit": "4300598d531f71bd288cd9c24c7d69a7b6210e6d",
+    "priorManifestBlobSha": "f4316dc64d048b0524371604221319985763b113",
+    "priorWipBlobSha": "480e13d40178f61e76d52a965def2d57ab6016cb",
+    "note": "Unchanged prior state remains in Git history and historical shards, not the active delivery queue."
   },
   "canonicalSourceRoot": "school/**",
-  "retiredRuntimePolicy": "Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, game/**, old feat/*, retired Maze/Pips worktrees/branches, and Roblox places titled StarBlox are historical only.",
-  "automationImmutability": "No worker may mutate any Roblox task definition, schedule, or enablement without explicit user instruction.",
-  "referenceRule": "Persistent A/B/C Library IDs and timestamped visual/behavioral evidence live in the reference-parity shard; it never proves hidden source/assets/backend behavior and never replaces rendered/device validation."
+  "activeBuildProject": "school/neighborhood.project.json",
+  "retiredRuntimePolicy": "Do not map Maze, StarBlox, the old school default project or the RHS restoration runtime into the neighborhood mode. Reuse verified appropriate assets or fixes deliberately, not by publishing an old game under a new name.",
+  "automationImmutability": "No task definition, schedule or enablement change was made. Current lane assignments are not a claim that scheduled workers exist. Reallocation of unrelated tasks requires explicit user direction.",
+  "referenceRule": "Reuse relevant authorized references and tested components. Evidence of actual new-mode rendering/touch/save behavior is required; historic frame measurements and successful uploads do not certify the new game."
 }
