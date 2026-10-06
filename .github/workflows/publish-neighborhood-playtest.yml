@@ -1,0 +1,100 @@
+name: Publish Neighborhood Playtest
+
+on:
+  push:
+    branches:
+      - deploy/neighborhood-playtest-6b1016c
+    paths:
+      - '.github/workflows/publish-neighborhood-playtest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: roblox-neighborhood-playtest
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: 6b1016c066e660b5ee21b8da9ecd77414843564f
+      UNIVERSE_ID: '10768955678'
+      PLACE_ID: '87245440673982'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 6b1016c066e660b5ee21b8da9ecd77414843564f
+          persist-credentials: false
+
+      - name: Verify exact source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Install pinned Luau and Rojo
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tools/luau" "$RUNNER_TEMP/tools/rojo"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip \
+            -o "$RUNNER_TEMP/tools/luau.zip"
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  '"$RUNNER_TEMP/tools/luau.zip" | sha256sum -c -
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip \
+            -o "$RUNNER_TEMP/tools/rojo.zip"
+          echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  '"$RUNNER_TEMP/tools/rojo.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/tools/luau.zip" -d "$RUNNER_TEMP/tools/luau"
+          unzip -q "$RUNNER_TEMP/tools/rojo.zip" -d "$RUNNER_TEMP/tools/rojo"
+          chmod +x "$RUNNER_TEMP/tools/luau/luau" "$RUNNER_TEMP/tools/luau/luau-compile" "$RUNNER_TEMP/tools/rojo/rojo"
+
+      - name: Run exact neighborhood verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/neighborhood/tests/verify_build.py \
+            --compiler "$RUNNER_TEMP/tools/luau/luau-compile" \
+            --luau "$RUNNER_TEMP/tools/luau/luau" \
+            --rojo "$RUNNER_TEMP/tools/rojo/rojo" \
+            --expected-sha "$SOURCE_SHA" \
+            --out "$RUNNER_TEMP/neighborhood-preview"
+          test -s "$RUNNER_TEMP/neighborhood-preview/PipHigh-Neighborhood-preview.rbxlx"
+          sha256sum "$RUNNER_TEMP/neighborhood-preview/PipHigh-Neighborhood-preview.rbxlx"
+
+      - name: Require configured Roblox API key
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY" || { echo "::error::ROBLOX_API_KEY repository secret is missing"; exit 1; }
+
+      - name: Publish private neighborhood playtest
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          place="$RUNNER_TEMP/neighborhood-preview/PipHigh-Neighborhood-preview.rbxlx"
+          response="$RUNNER_TEMP/roblox-publish-response.json"
+          status="$(curl --silent --show-error --location \
+            --output "$response" --write-out '%{http_code}' \
+            --request POST \
+            "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            --header 'Content-Type: application/xml' \
+            --data-binary "@$place")"
+          cat "$response"
+          test "$status" -ge 200 -a "$status" -lt 300 || { echo "::error::Roblox publish failed with HTTP $status"; exit 1; }
+          python3 - "$response" <<'PY'
+          import json, pathlib, sys
+          data=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          version=data.get("versionNumber")
+          if not isinstance(version,int) or version < 1:
+              raise SystemExit("Roblox response did not contain a valid versionNumber")
+          print(f"ROBLOX_NEIGHBORHOOD_PLAYTEST_OK versionNumber={version}")
+          PY
