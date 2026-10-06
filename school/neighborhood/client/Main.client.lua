@@ -111,6 +111,7 @@ local messages={
     not_enough_coins="Keep learning, or choose a smaller goal. Your Credits are safe.",not_owned="Earn and buy this item before equipping it.",
     temporarily_unavailable="That did not finish. Please try again.",slow_down="One action at a time.",travel_cooldown="You're already on your way. Try again shortly.",
 }
+local showShop,showQuestion,setNavActive,showAvatar
 local function call(command,args)
     if busy then return {ok=false,code="saving"} end
     busy=true
@@ -133,17 +134,33 @@ UI.button(panel,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Positi
 local function open(kind,title)
     view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
     local isShop=kind=="shop"
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     shopTabs.Visible=isShop
     shopSubtabs.Visible=isShop and category=="Clothes"
+    panelTitle.Visible=not (isShop and layout.compact and layout.landscape)
     if isShop then
-        body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
-        body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+        if layout.compact and layout.landscape then
+            shopTabs.Position=UDim2.fromOffset(14,8)
+            shopTabs.Size=UDim2.new(1,-76,0,36)
+            shopSubtabs.Position=UDim2.fromOffset(14,48)
+            shopSubtabs.Size=UDim2.new(1,-28,0,30)
+            local top=category=="Clothes" and 82 or 48
+            body.Position=UDim2.fromOffset(14,top)
+            body.Size=UDim2.new(1,-28,1,-(top+14))
+        else
+            shopTabs.Position=UDim2.fromOffset(14,54)
+            shopTabs.Size=UDim2.new(1,-28,0,42)
+            shopSubtabs.Position=UDim2.fromOffset(14,99)
+            shopSubtabs.Size=UDim2.new(1,-28,0,34)
+            body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
+            body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+        end
     else
+        panelTitle.Visible=true
         body.Position=UDim2.fromOffset(14,58)
         body.Size=UDim2.new(1,-28,1,-72)
     end
 end
-local showShop,showQuestion,setNavActive,showAvatar
 local function subject(id)
     for _,s in ipairs(Catalog.Subjects) do if s.id==id then return s end end
     return Catalog.Subjects[1]
