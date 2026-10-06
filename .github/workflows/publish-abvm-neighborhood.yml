@@ -1,10 +1,11 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: gold-standard visible HUD correction
+# release: full user-authorized ABVM faculty/staff integration
 
 on:
   push:
     branches:
       - rebuild/school-neighborhood-earn-v1
+      - rebuild/school-neighborhood-faculty-v1
     paths:
       - '.github/workflows/publish-abvm-neighborhood.yml'
   workflow_dispatch:
