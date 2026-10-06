@@ -568,13 +568,13 @@ showShop=function(selected,subfilter)
 end
 local navButtons={}
 local navDefs={
-    {"▦","School","school"},
-    {"⌂","Home","home"},
-    {"▣","Shop","shop"},
-    {"◆","Ride","vehicle"},
+    {"▦","School","school",Color3.fromRGB(221,175,60)},
+    {"⌂","Home","home",Color3.fromRGB(47,142,103)},
+    {"▣","Shop","shop",Color3.fromRGB(58,124,219)},
+    {"◆","Ride","vehicle",Color3.fromRGB(111,92,207)},
 }
 for i,definition in ipairs(navDefs) do
-    local icon,label,command=definition[1],definition[2],definition[3]
+    local icon,label,command,accent=definition[1],definition[2],definition[3],definition[4]
     local b=UI.iconButton(nav,icon,label,function()
         if not state.ready then notify("Your saved progress is still loading.");return end
         if command=="shop" then showShop();return end
@@ -595,28 +595,33 @@ for i,definition in ipairs(navDefs) do
         Size=UDim2.new(.25,-6,1,0),
         TextSize=11,
         IconSize=16,
-        BackgroundColor3=UI.P.ink,
+        BackgroundColor3=Color3.fromRGB(19,40,68),
         TextColor3=UI.P.white,
-        IconBackgroundColor3=command=="school" and UI.P.goldSoft or Color3.fromRGB(32,74,62),
-        IconColor=command=="school" and UI.P.gold or UI.P.white,
+        IconBackgroundColor3=accent,
+        IconColor=UI.P.white,
     })
     table.insert(navButtons,b)
 end
 setNavActive=function(command)
     for i,b in ipairs(navButtons) do
         local active=navDefs[i][3]==command
-        b.BackgroundColor3=active and UI.P.teal or UI.P.ink
+        local accent=navDefs[i][4]
+        b.BackgroundColor3=active and Color3.fromRGB(31,91,67) or Color3.fromRGB(19,40,68)
+        local activeStroke=b:FindFirstChild("ActiveStroke")
+        if not activeStroke then
+            activeStroke=Instance.new("UIStroke");activeStroke.Name="ActiveStroke";activeStroke.Thickness=1.5;activeStroke.Parent=b
+        end
+        activeStroke.Color=active and UI.P.gold or Color3.fromRGB(46,67,93)
+        activeStroke.Transparency=active and 0 or .45
+
         local iconBox=b:FindFirstChild("IconBox")
         local icon=iconBox and iconBox:FindFirstChild("Icon") or nil
         local label=b:FindFirstChild("Label")
-        if iconBox and iconBox:IsA("Frame") then
-            iconBox.BackgroundColor3=active and UI.P.goldSoft or Color3.fromRGB(32,74,62)
-        end
-        if icon and icon:IsA("TextLabel") then
-            icon.TextColor3=active and UI.P.gold or UI.P.white
-        end
+        if iconBox and iconBox:IsA("Frame") then iconBox.BackgroundColor3=accent end
+        if icon and icon:IsA("TextLabel") then icon.TextColor3=UI.P.white end
         if label and label:IsA("TextLabel") then
             label.TextColor3=UI.P.white
+            label.TextTransparency=active and 0 or .06
         end
     end
 end
