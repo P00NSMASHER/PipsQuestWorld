@@ -39,6 +39,7 @@ end
 function Shell.mount(options)
     local api = { entries = {}, layout = nil, reflowing = false }
     local gui, player = options.gui, options.player
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     local waypoint, waypointGui, waypointText, waypointLocation
     local elapsed = 0
 
@@ -121,11 +122,12 @@ function Shell.mount(options)
             if entry == active then
                 for _, card in ipairs(options.cards) do card.Visible = false end
             end
+            entry.panel.AnchorPoint = Vector2.new(0, 0)
             entry.panel.Position = UDim2.fromOffset(8, 8)
             entry.scale.Scale = 1
             entry.scroll.CanvasSize = UDim2.fromOffset(entry.width + 16, entry.height + 16)
             entry.scroll.ScrollBarThickness = 5
-            entry.hint.Visible = entry.height + 16 > height - 58
+            entry.hint.Visible = entry.height + 16 > height - 74
         end
         if options.touch then
             for _, item in ipairs(options.hud) do item.Visible = active == nil end
@@ -172,6 +174,7 @@ function Shell.mount(options)
             outer.Visible = false
             outer.ZIndex = 20
             outer.Active = true
+            outer.ClipsDescendants = true
             outer.Parent = gui
             Style.applyPrimaryPanel(outer)
             label(outer, "ShellHeading", spec.title, UDim2.new(1, -70, 0, 44), UDim2.fromOffset(14, 4))
@@ -180,13 +183,13 @@ function Shell.mount(options)
             scroll.BackgroundTransparency = 1
             scroll.BorderSizePixel = 0
             scroll.Position = UDim2.fromOffset(4, 50)
-            scroll.Size = UDim2.new(1, -8, 1, -58)
+            scroll.Size = UDim2.new(1, -8, 1, -74)
             scroll.ScrollingDirection = Enum.ScrollingDirection.XY
             scroll.Active = true
             scroll.Parent = outer
-            local hint = label(outer, "ScrollHint", "Swipe to see more", UDim2.fromOffset(132, 18), UDim2.new(1, -190, 0, 17))
+            local hint = label(outer, "ScrollHint", "Swipe to see more", UDim2.new(1, -24, 0, 16), UDim2.new(0, 12, 1, -20))
             hint.TextSize = 11
-            hint.TextXAlignment = Enum.TextXAlignment.Right
+            hint.TextXAlignment = Enum.TextXAlignment.Center
             local entry = {
                 panel = panel, scale = spec.scale, shell = outer,
                 scroll = scroll, hint = hint,
@@ -211,6 +214,11 @@ function Shell.mount(options)
                 if api.focusedCard == card then api.focusedCard = nil end
                 return
             end
+            if card:GetAttribute("Dismissed") == true and card:GetAttribute("ManuallyOpened") ~= true then
+                card.Visible = false
+                return
+            end
+            if card:GetAttribute("ManuallyOpened") == true then card:SetAttribute("Dismissed", false) end
             for _, entry in ipairs(api.entries) do
                 if entry.shell.Visible then card.Visible = false; return end
             end
@@ -227,6 +235,7 @@ function Shell.mount(options)
             end
         end)
         closeButton(card, function()
+            card:SetAttribute("Dismissed", true)
             card:SetAttribute("ManuallyOpened", false)
             card.Visible = false
         end)
