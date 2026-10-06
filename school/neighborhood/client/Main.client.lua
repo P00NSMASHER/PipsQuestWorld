@@ -16,7 +16,7 @@ local changed=remotes:WaitForChild("Changed")
 local drive=remotes:WaitForChild("Drive")
 local gui=UI.new("ScreenGui",player:WaitForChild("PlayerGui"),{Name="PipNeighborhoodUI",ResetOnSpawn=false,DisplayOrder=20,IgnoreGuiInset=false,ScreenInsets=Enum.ScreenInsets.CoreUISafeInsets,ZIndexBehavior=Enum.ZIndexBehavior.Sibling})
 local canvas=UI.new("Frame",gui,{Size=UDim2.fromScale(1,1),BackgroundTransparency=1})
-local state={ready=false,coins=0,earned=0,lessonCount=0,owned={},equipped={},goal="home_cottage"}
+local state={ready=false,coins=0,earned=0,lost=0,correct=0,answers=0,accuracyBasisPoints=0,correctStreak=0,wrongStreak=0,lessonCount=0,owned={},equipped={},goal="home_cottage"}
 local view=nil
 local activeQuestion=nil
 local busy=false
@@ -34,7 +34,7 @@ local goalTitle=UI.text(goalCard,"Your first home is ready",14,{Position=UDim2.f
 local goalInfo=UI.text(goalCard,"Loading your progress…",13,{Position=UDim2.fromOffset(12,32),Size=UDim2.new(1,-24,0,25),TextColor3=UI.P.muted})
 local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(12,64),Size=UDim2.new(1,-24,0,7),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
-UI.text(goalCard,"Walk into a classroom to start earning",11,{Position=UDim2.fromOffset(12,76),Size=UDim2.new(1,-24,0,16),TextColor3=UI.P.muted})
+local streakInfo=UI.text(goalCard,"Accuracy —  •  Correct streak 0",11,{Position=UDim2.fromOffset(12,76),Size=UDim2.new(1,-24,0,16),TextColor3=UI.P.muted})
 local panel=UI.frame(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.paper,ClipsDescendants=true})
 UI.stroke(panel)
 local panelTitle=UI.text(panel,"",21,{Position=UDim2.fromOffset(18,9),Size=UDim2.new(1,-105,0,42),Font=Enum.Font.GothamBold})
@@ -54,6 +54,7 @@ local function update(snapshot)
     local oldCoins=state.coins
     state=snapshot
     walletText.Text=tostring(state.coins).." coins"
+    streakInfo.Text=string.format("%.1f%% correct  •  +%d / -%d streak",(state.accuracyBasisPoints or 0)/100,state.correctStreak or 0,state.wrongStreak or 0)
     if state.coins>oldCoins then UI.flash(wallet) end
     if resumeButton then
         resumeButton.Visible=state.subject~=nil
@@ -114,7 +115,7 @@ showQuestion=function(q)
         answerColumn=UI.new("ScrollingFrame",row,{Position=UDim2.new(.47,6,0,0),Size=UDim2.new(.53,-6,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=3})
         UI.stack(questionColumn,8);UI.stack(answerColumn,8)
     end
-    local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No coins for an immediate repeat" or "25 coins first try  •  15 after a helpful retry",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
+    local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No coins for an immediate repeat" or "25 first try  •  15 after retry  •  correct streak bonus up to +25",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
     local questionCard=UI.frame(questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,84),AutomaticSize=Enum.AutomaticSize.Y})
     UI.pad(questionCard,16)
     UI.text(questionCard,q.prompt,canvas.AbsoluteSize.Y<520 and 17 or 20,{Size=UDim2.new(1,0,0,52),AutomaticSize=Enum.AutomaticSize.Y,TextYAlignment=Enum.TextYAlignment.Top,Font=Enum.Font.GothamMedium})
@@ -134,6 +135,7 @@ showQuestion=function(q)
                     for _,b in ipairs(buttons) do b.Active=false;b.Visible=false end
                     button.BackgroundColor3=UI.P.teal;button.TextColor3=UI.P.white
                     local headline=result.reviewOnly and "Review complete." or "+"..tostring(result.total).." coins saved!"
+                    if result.streakBonus and result.streakBonus>0 then headline..="  Streak +"..tostring(result.streakBonus).."." end
                     if result.bonus and result.bonus>0 then headline..="  Includes your +50 lesson bonus." end
                     feedback.Text=headline.."\n"..result.explanation
                     info.Text=string.format("Lesson %d / 5  •  Every 5 different questions earns +50",state.lessonCount)
@@ -141,9 +143,9 @@ showQuestion=function(q)
                     UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=12,BackgroundColor3=UI.P.white,TextSize=14})
                 else
                     button.BackgroundColor3=Color3.fromRGB(247,232,220)
-                    feedback.Text="Let's work it out. "..result.explanation.."\nChoose again; there is no coin penalty."
+                    local penaltyText=result.message or ("Wrong streak "..tostring(result.wrongStreak or 0))
+                    feedback.Text=penaltyText.."\n"..result.explanation.."\nChoose another answer to break the negative streak."
                     feedback.TextColor3=UI.P.ink
-                    if buttons[result.correctChoice] then UI.stroke(buttons[result.correctChoice],UI.P.teal) end
                 end
                 -- Keep feedback reachable without forcing the user to hunt beneath long passages.
                 task.defer(function() if feedback.Parent then questionColumn.CanvasPosition=Vector2.new(0,math.max(0,questionColumn.AbsoluteCanvasSize.Y-questionColumn.AbsoluteWindowSize.Y)) end end)
