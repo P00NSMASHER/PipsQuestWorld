@@ -19,13 +19,19 @@ function Wardrobe.apply(character,profile,catalog)
         local ts=torso.Size
         layer(folder,torso,"Jacket",Vector3.new(ts.X*1.03,ts.Y*.88,ts.Z*1.06),CFrame.new(0,0,0),tint)
         if outfit.style>=2 then
-            layer(folder,torso,"Jacket trim",Vector3.new(.13,ts.Y*.86,.05),CFrame.new(0,0,-ts.Z*.55),outfit.style==3 and Color3.fromRGB(217,184,105) or Color3.fromRGB(242,233,211))
+            layer(folder,torso,"Jacket trim",Vector3.new(.13,ts.Y*.86,.05),CFrame.new(0,0,-ts.Z*.55),outfit.style>=3 and Color3.fromRGB(217,184,105) or Color3.fromRGB(242,233,211))
         end
         for _,side in ipairs({"Left","Right"}) do
             local arm=character:FindFirstChild(side.."UpperArm") or character:FindFirstChild(side.." Arm")
             if arm and arm:IsA("BasePart") then
                 layer(folder,arm,"Sleeve",Vector3.new(arm.Size.X*1.045,arm.Size.Y*.66,arm.Size.Z*1.045),CFrame.new(0,arm.Size.Y*.12,0),outfit.style==2 and Color3.fromRGB(237,231,218) or tint)
             end
+        end
+        if outfit.style>=4 then
+            layer(folder,torso,"Signature collar",Vector3.new(ts.X*.72,.35,ts.Z*1.08),CFrame.new(0,ts.Y*.38,0),Color3.fromRGB(217,184,105))
+        end
+        if outfit.style>=5 then
+            layer(folder,torso,"Premier band",Vector3.new(ts.X*1.05,.18,ts.Z*1.08),CFrame.new(0,-ts.Y*.25,0),Color3.fromRGB(225,199,121))
         end
     end
     if profile.owned.item_backpack then
