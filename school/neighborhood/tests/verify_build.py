@@ -176,6 +176,10 @@ def validate_abvm_contract() -> dict:
         'shopSubtabs.BackgroundColor3=UI.P.soft',
         'badgeText=equipped and "✓ EQUIPPED" or owned and "OWNED"',
         'state.goal==item.id and "★" or "☆"',
+        'local coinIcon=UI.frame(wallet',
+        'local streakIcon=UI.frame(streakPill',
+        'streakCaption.Text="WRONG STREAK"',
+        'streakCaption.Text="STREAK"',
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
