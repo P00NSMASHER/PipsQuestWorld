@@ -246,7 +246,11 @@ end)
 game:BindToClose(function()
     local count=0
     for _,player in ipairs(Players:GetPlayers()) do
-        count+=1;task.spawn(function() store:release(player.UserId);count-=1 end)
+        count+=1;task.spawn(function()
+            syncLeaderboard(player.UserId,true)
+            store:release(player.UserId)
+            count-=1
+        end)
     end
     local start=os.clock();repeat task.wait(.1) until count==0 or os.clock()-start>25
 end)
