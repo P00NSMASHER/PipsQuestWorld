@@ -132,8 +132,8 @@ def validate_abvm_contract() -> dict:
             literal_call in world or bound_call in world,
             f"world classroom lost approved teacher/position contract: {subject} / {teacher}"
         )
-    require("Catalog.Faculty = {" in catalog and "Catalog.ByStaffId = {}" in catalog,
-            "photo-backed faculty directory authority missing")
+    require("Catalog.Faculty = {" not in catalog and "Catalog.ByStaffId" not in catalog,
+            "broad real-faculty directory scope must remain absent")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
     require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
