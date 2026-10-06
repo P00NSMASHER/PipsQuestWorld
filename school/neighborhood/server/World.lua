@@ -101,6 +101,27 @@ local function fencePanel(parent,cf,size)
     panel.Transparency=.58
 end
 
+local function cable(parent,a,b,thickness)
+    local delta=b-a
+    local length=delta.Magnitude
+    if length<.1 then return nil end
+    local p=World.part(parent,"Utility cable",Vector3.new(thickness or .18,thickness or .18,length),
+        CFrame.lookAt((a+b)/2,b),Color3.fromRGB(42,43,43),Enum.Material.SmoothPlastic,false)
+    p.CanQuery=false;p.CanTouch=false
+    return p
+end
+
+local function utilityPole(parent,x,z,height)
+    local h=height or 31
+    World.part(parent,"Utility pole",Vector3.new(1.1,h,1.1),CFrame.new(x,h/2,z),Color3.fromRGB(91,70,52),Enum.Material.Wood)
+    World.part(parent,"Utility crossarm",Vector3.new(10,.65,.65),CFrame.new(x,h-4,z),Color3.fromRGB(91,70,52),Enum.Material.Wood,false)
+    for _,dx in ipairs({-4,0,4}) do
+        local ins=World.part(parent,"Utility insulator",Vector3.new(.5,.8,.5),CFrame.new(x+dx,h-3.3,z),Color3.fromRGB(185,183,171),Enum.Material.Ceramic,false)
+        ins.Shape=Enum.PartType.Cylinder
+    end
+    return Vector3.new(x,h-2.8,z)
+end
+
 local function rowHome(parent,x,z,tint,levels,baseY)
     local floors=levels or 3
     local base=baseY or 0
@@ -467,6 +488,24 @@ function World.build()
     rowHome(root,-169,-118,rowColors[3],3,8)
     rowHome(root,-169,-63,rowColors[2],2,5)
     tree(root,-101,-28,.85);tree(root,-102,-145,.95);tree(root,88,-34,.7)
+
+    -- Sparse overhead utilities are a strong Pottsville/Howard Avenue cue in the reference photos.
+    local poleA=utilityPole(root,157,-154,34)
+    local poleB=utilityPole(root,157,-94,33)
+    local poleC=utilityPole(root,157,-35,32)
+    local poleD=utilityPole(root,-116,-142,32)
+    local poleE=utilityPole(root,-116,-54,31)
+    for _,offset in ipairs({-3.6,0,3.6}) do
+        cable(root,poleA+Vector3.new(offset,0,0),poleB+Vector3.new(offset,0,0),.14)
+        cable(root,poleB+Vector3.new(offset,0,0),poleC+Vector3.new(offset,0,0),.14)
+    end
+    cable(root,poleD+Vector3.new(-3,0,0),poleE+Vector3.new(-3,0,0),.14)
+    cable(root,poleD+Vector3.new(3,0,0),poleE+Vector3.new(3,0,0),.14)
+
+    -- Hard urban edges replace the generic-campus feel around the school block.
+    World.part(root,"Front west retaining cap",Vector3.new(46,.65,2.4),CFrame.new(-57,.7,-3),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front east retaining cap",Vector3.new(46,.65,2.4),CFrame.new(57,.7,-3),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Howard curb",Vector3.new(2.2,.55,176),CFrame.new(158,.35,-88),palette.stone,Enum.Material.Concrete)
 
     -- Playable interior floors/halls. Exterior stays faithful; interior is wider/clearer than the real plan.
     for _,floorY in ipairs({4,20,36}) do
