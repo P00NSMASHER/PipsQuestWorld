@@ -232,14 +232,27 @@ local function npc(parent,staff,position)
     local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     head.Shape=Enum.PartType.Ball
 
-    -- Simple expressive face. Photo references drive only visible, non-sensitive likeness cues.
+    -- Higher-fidelity photo-guided facial construction. Keep the Roblox silhouette, but use
+    -- layered brows, eyes, nose, ears and mouth instead of the old three-dot cartoon face.
+    local eyeColor=appearanceColor(appearance.eye,Color3.fromRGB(72,82,88))
+    local browColor=hair:Lerp(Color3.fromRGB(54,47,43),.24)
     for _,x in ipairs({-.43,.43}) do
-        local white=World.part(model,"Eye white",Vector3.new(.48,.34,.12),CFrame.new(position+Vector3.new(x,8.02,-1.16)),Color3.fromRGB(248,248,244),Enum.Material.SmoothPlastic,false)
+        local white=World.part(model,"Eye white",Vector3.new(.52,.30,.10),CFrame.new(position+Vector3.new(x,8.02,-1.18)),Color3.fromRGB(248,246,241),Enum.Material.SmoothPlastic,false)
         white.Shape=Enum.PartType.Ball
-        local pupil=World.part(model,"Eye",Vector3.new(.18,.2,.09),CFrame.new(position+Vector3.new(x,8.01,-1.25)),Color3.fromRGB(42,47,52),Enum.Material.SmoothPlastic,false)
+        local iris=World.part(model,"Iris",Vector3.new(.23,.23,.07),CFrame.new(position+Vector3.new(x,8.01,-1.255)),eyeColor,Enum.Material.SmoothPlastic,false)
+        iris.Shape=Enum.PartType.Ball
+        local pupil=World.part(model,"Pupil",Vector3.new(.10,.11,.055),CFrame.new(position+Vector3.new(x,8.01,-1.30)),Color3.fromRGB(28,31,34),Enum.Material.SmoothPlastic,false)
         pupil.Shape=Enum.PartType.Ball
+        World.part(model,"Eyebrow",Vector3.new(.62,.10,.08),CFrame.new(position+Vector3.new(x,8.35,-1.18))*CFrame.Angles(0,0,math.rad(x<0 and -5 or 5)),browColor,Enum.Material.SmoothPlastic,false)
     end
-    World.part(model,"Smile",Vector3.new(.72,.11,.09),CFrame.new(position+Vector3.new(0,7.37,-1.2))*CFrame.Angles(0,0,math.rad(-4)),Color3.fromRGB(126,69,64),Enum.Material.SmoothPlastic,false)
+    local nose=World.part(model,"Nose",Vector3.new(.28,.48,.24),CFrame.new(position+Vector3.new(0,7.76,-1.22)),skin:Lerp(Color3.fromRGB(194,146,126),.08),Enum.Material.SmoothPlastic,false)
+    nose.Shape=Enum.PartType.Ball
+    for _,x in ipairs({-1.18,1.18}) do
+        local ear=World.part(model,"Ear",Vector3.new(.28,.52,.24),CFrame.new(position+Vector3.new(x,7.86,0)),skin,Enum.Material.SmoothPlastic,false)
+        ear.Shape=Enum.PartType.Ball
+    end
+    local lipColor=appearance.beard and Color3.fromRGB(128,82,76) or Color3.fromRGB(151,88,91)
+    World.part(model,"Mouth",Vector3.new(.74,.13,.075),CFrame.new(position+Vector3.new(0,7.30,-1.22))*CFrame.Angles(0,0,math.rad(-2)),lipColor,Enum.Material.SmoothPlastic,false)
 
     local style=appearance.hairStyle or "short"
     local function hairPart(name,size,offset,shape)
@@ -248,10 +261,12 @@ local function npc(parent,staff,position)
         return p
     end
     if style=="balding" then
-        hairPart("Hair crown",Vector3.new(1.85,.75,2.0),Vector3.new(0,8.7,.2),Enum.PartType.Ball)
-        hairPart("Hair back",Vector3.new(2.0,1.3,.6),Vector3.new(0,8.15,1.0),Enum.PartType.Ball)
+        hairPart("Hair crown",Vector3.new(1.75,.62,1.9),Vector3.new(0,8.72,.28),Enum.PartType.Ball)
+        hairPart("Hair back",Vector3.new(2.05,1.2,.55),Vector3.new(0,8.14,1.02),Enum.PartType.Ball)
+        hairPart("Hair temple left",Vector3.new(.42,.95,.75),Vector3.new(-1.02,8.22,.45),Enum.PartType.Ball)
+        hairPart("Hair temple right",Vector3.new(.42,.95,.75),Vector3.new(1.02,8.22,.45),Enum.PartType.Ball)
     else
-        hairPart("Hair crown",Vector3.new(2.55,1.25,2.45),Vector3.new(0,8.63,.05),Enum.PartType.Ball)
+        hairPart("Hair crown",Vector3.new(2.48,1.12,2.36),Vector3.new(0,8.68,.10),Enum.PartType.Ball)
         if style=="short" then
             hairPart("Hair side left",Vector3.new(.42,1.35,1.55),Vector3.new(-1.08,8.05,.15),Enum.PartType.Ball)
             hairPart("Hair side right",Vector3.new(.42,1.35,1.55),Vector3.new(1.08,8.05,.15),Enum.PartType.Ball)
@@ -279,6 +294,8 @@ local function npc(parent,staff,position)
             lens.Transparency=.72
         end
         World.part(model,"Glasses bridge",Vector3.new(.34,.08,.08),CFrame.new(position+Vector3.new(0,8.02,-1.35)),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
+        World.part(model,"Glasses temple left",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(-.96,8.04,-1.03))*CFrame.Angles(0,math.rad(72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
+        World.part(model,"Glasses temple right",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(.96,8.04,-1.03))*CFrame.Angles(0,math.rad(-72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
     end
     if appearance.beard then
         local beardColor=appearanceColor(appearance.beardColor,hair)
@@ -289,7 +306,9 @@ local function npc(parent,staff,position)
 
     if appearance.suit then
         World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),innerColor,Enum.Material.Fabric,false)
-        World.part(model,"Suit tie",Vector3.new(.35,2,.2),CFrame.new(position+Vector3.new(0,4.9,-1.12)),appearanceColor(appearance.tie,palette.navy),Enum.Material.Fabric,false)
+        World.part(model,"Suit lapel left",Vector3.new(.62,2.0,.16),CFrame.new(position+Vector3.new(-.56,5.05,-1.08))*CFrame.Angles(0,0,math.rad(-12)),outerColor,Enum.Material.Fabric,false)
+        World.part(model,"Suit lapel right",Vector3.new(.62,2.0,.16),CFrame.new(position+Vector3.new(.56,5.05,-1.08))*CFrame.Angles(0,0,math.rad(12)),outerColor,Enum.Material.Fabric,false)
+        World.part(model,"Suit tie",Vector3.new(.28,1.9,.2),CFrame.new(position+Vector3.new(0,4.9,-1.16)),appearanceColor(appearance.tie,palette.navy),Enum.Material.Fabric,false)
     elseif appearance.outer then
         World.part(model,appearance.vest and "Sweater vest" or "Jacket shirt inset",Vector3.new(1.65,3.5,.16),CFrame.new(position+Vector3.new(0,4.55,-.99)),topColor,Enum.Material.Fabric,false)
     end
@@ -331,8 +350,8 @@ local function npc(parent,staff,position)
     prompt.Name="MeetFaculty"
     prompt.ActionText="Meet"
     prompt.ObjectText=staff.name.." • "..staff.role
-    prompt.MaxActivationDistance=12
-    prompt.RequiresLineOfSight=false
+    prompt.MaxActivationDistance=10
+    prompt.RequiresLineOfSight=true
     prompt.HoldDuration=0
     prompt.Parent=head
     return model
