@@ -312,11 +312,17 @@ function World.build()
     -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
     World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
     World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(93,111,121),Enum.Material.Metal,false)
-    World.part(root,"Howard arch left",Vector3.new(.7,12,1.2),CFrame.new(75.6,10,-99),palette.stone,Enum.Material.Concrete,false)
-    World.part(root,"Howard arch right",Vector3.new(.7,12,1.2),CFrame.new(75.6,10,-87),palette.stone,Enum.Material.Concrete,false)
-    local sideArch=World.part(root,"Howard arch crown",Vector3.new(.8,12,5),CFrame.new(75.6,16,-93),palette.stone,Enum.Material.Concrete,false)
-    sideArch.Shape=Enum.PartType.Ball
-    cross(root,CFrame.new(75.25,20,-93)*CFrame.Angles(0,math.pi/2,0),.55,palette.gold)
+    World.part(root,"Howard arch left",Vector3.new(1.15,12,1.25),CFrame.new(75.6,10,-99),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Howard arch right",Vector3.new(1.15,12,1.25),CFrame.new(75.6,10,-87),palette.stone,Enum.Material.Concrete,false)
+    for i=0,10 do
+        local theta=math.pi*i/10
+        local z=-93+math.cos(theta)*6
+        local y=16+math.sin(theta)*6
+        World.part(root,"Howard arch stone segment",Vector3.new(1.35,3.2,1.2),
+            CFrame.new(75.6,y,z)*CFrame.Angles(theta+math.pi/2,0,0),
+            palette.stone,Enum.Material.Concrete,false)
+    end
+    cross(root,CFrame.new(75.25,23,-93)*CFrame.Angles(0,math.pi/2,0),.55,palette.gold)
     World.part(root,"Howard walkway",Vector3.new(21,.35,17),CFrame.new(93,.25,-93),palette.stone,Enum.Material.Concrete)
     local roadSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL\n────────\nENTRANCE ON HOWARD AVENUE",CFrame.new(107,7,-78)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,10,.45),palette.green,palette.gold)
     roadSign.Name="Assumption BVM Howard Avenue sign"
