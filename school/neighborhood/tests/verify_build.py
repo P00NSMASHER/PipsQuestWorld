@@ -167,6 +167,10 @@ def validate_abvm_contract() -> dict:
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
+        'shopTabs.BackgroundColor3=UI.P.navySoft',
+        'shopSubtabs.BackgroundColor3=UI.P.soft',
+        'badgeText=equipped and "✓ EQUIPPED" or owned and "OWNED"',
+        'state.goal==item.id and "★" or "☆"',
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
