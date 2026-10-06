@@ -409,10 +409,20 @@ showAvatar=function()
     local previewCard=UI.surface(body,{LayoutOrder=1,Size=UDim2.new(1,0,0,previewHeight),BackgroundColor3=UI.P.white,Shadow=false})
     local viewport=UI.new("ViewportFrame",previewCard,{
         Position=UDim2.fromOffset(8,8),Size=UDim2.new(1,-16,1,-16),
-        BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,
-        Ambient=Color3.fromRGB(210,210,210),LightDirection=Vector3.new(-1,-1,-1),
+        BackgroundColor3=UI.P.paper,BorderSizePixel=0,
+        Ambient=Color3.fromRGB(220,217,205),LightDirection=Vector3.new(-1,-1,-1),
     })
     UI.corner(viewport,16)
+    UI.new("UIGradient",viewport,{
+        Rotation=90,
+        Color=ColorSequence.new({
+            ColorSequenceKeypoint.new(0,UI.P.navySoft),
+            ColorSequenceKeypoint.new(.55,UI.P.paper),
+            ColorSequenceKeypoint.new(1,Color3.fromRGB(233,225,204)),
+        }),
+    })
+    local stageLabel=UI.text(viewport,"ABVM UNIFORM PREVIEW",10,{Position=UDim2.fromOffset(12,8),Size=UDim2.new(1,-24,0,18),Font=Enum.Font.GothamBold,TextColor3=UI.P.ink,ZIndex=5})
+    UI.text(viewport,"‹ rotate ›",10,{AnchorPoint=Vector2.new(.5,1),Position=UDim2.new(.5,0,1,-8),Size=UDim2.fromOffset(88,18),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted,ZIndex=5})
 
     local clone=nil
     local baseCf=CFrame.new()
@@ -453,26 +463,38 @@ showAvatar=function()
         if clone then angle+=math.rad(30);clone:PivotTo(baseCf*CFrame.Angles(0,angle,0)) end
     end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-14,.5,-22),Size=UDim2.fromOffset(44,44),TextSize=28,BackgroundColor3=UI.P.paper,CornerRadius=999})
 
-    local pieces=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,46),BackgroundTransparency=1})
-    local defs={{"Tops","Tops"},{"Bottoms","Bottoms"},{"Socks","Socks"},{"Shoes","Shoes"}}
+    local pieces=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,48),BackgroundTransparency=1})
+    local defs={{"▰","Tops","Tops"},{"▥","Bottoms","Bottoms"},{"▯","Socks","Socks"},{"◆","Shoes","Shoes"}}
     for i,def in ipairs(defs) do
-        UI.button(pieces,def[1],function() showShop("Clothes",def[2]) end,{
+        UI.iconButton(pieces,def[1],def[2],function() showShop("Clothes",def[3]) end,{
             Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),
-            TextSize=12,BackgroundColor3=UI.P.white,CornerRadius=12,
+            TextSize=11,IconSize=14,BackgroundColor3=UI.P.white,
+            IconBackgroundColor3=i==1 and UI.P.teal or i==2 and Color3.fromRGB(58,124,219) or i==3 and UI.P.gold or Color3.fromRGB(111,92,207),
+            IconColor=UI.P.white,
         })
     end
 
-    local equippedNames={}
-    for _,slot in ipairs({"uniformTop","uniformBottom","uniformLegwear","uniformShoes"}) do
-        local id=state.equipped[slot]
+    local equippedRow=UI.new("Frame",body,{LayoutOrder=3,Size=UDim2.new(1,0,0,64),BackgroundTransparency=1})
+    local equippedDefs={
+        {"uniformTop","Top"},
+        {"uniformBottom","Bottom"},
+        {"uniformLegwear","Socks"},
+        {"uniformShoes","Shoes"},
+    }
+    for i,entry in ipairs(equippedDefs) do
+        local id=state.equipped[entry[1]]
         local item=id and Catalog.ById[id] or nil
-        if item then table.insert(equippedNames,item.name) end
+        local short=item and item.name:gsub("^.- • ","") or "None"
+        UI.chip(equippedRow,entry[2].." • "..short,{
+            Position=UDim2.new(((i-1)%2)*.5,((i-1)%2)*4,math.floor((i-1)/2)*.5,math.floor((i-1)/2)*4),
+            Size=UDim2.new(.5,-6,0,28),
+            BackgroundColor3=item and UI.P.soft or UI.P.white,
+            TextColor3=item and UI.P.teal or UI.P.muted,
+            TextSize=10,
+        })
     end
-    UI.text(body,#equippedNames>0 and ("Equipped • "..table.concat(equippedNames,"  •  ")) or "Choose ABVM apparel pieces from the shop.",12,{
-        LayoutOrder=3,Size=UDim2.new(1,0,0,38),TextColor3=UI.P.muted,TextXAlignment=Enum.TextXAlignment.Center,
-    })
-    UI.button(body,"Save Outfit",function()
-        notify("Your equipped uniform pieces are already saved to your profile.")
+    UI.button(body,"✓  Save Outfit",function()
+        notify("Your equipped uniform pieces are saved automatically.")
     end,{LayoutOrder=4,Size=UDim2.new(1,0,0,48),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=15})
 end
 
