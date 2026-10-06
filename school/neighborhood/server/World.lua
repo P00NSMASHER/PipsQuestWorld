@@ -212,6 +212,8 @@ local function npc(parent,staff,position)
     model:SetAttribute("StaffId",staff.id)
     model:SetAttribute("StaffName",staff.name)
     model:SetAttribute("StaffRole",staff.role)
+    local displayName=staff.displayName or staff.name
+    local displayRole=staff.gameRole or staff.role
     model:SetAttribute("StaffLocation",staff.location or "")
     model:SetAttribute("StaffFloor",staff.floor or 0)
 
@@ -323,14 +325,14 @@ local function npc(parent,staff,position)
     local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(180,46);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=28;gui.Parent=head
     local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.15
     label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=11;label.TextWrapped=true
-    label.Text=staff.name.."\n"..staff.role;label.Parent=gui
+    label.Text=displayName.."\n"..displayRole;label.Parent=gui
     local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.35;stroke.Thickness=1;stroke.Parent=label
     local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,8);corner.Parent=label
 
     local prompt=Instance.new("ProximityPrompt")
     prompt.Name="MeetFaculty"
     prompt.ActionText="Meet"
-    prompt.ObjectText=staff.name.." • "..staff.role
+    prompt.ObjectText=displayName.." • "..displayRole
     prompt.MaxActivationDistance=12
     prompt.RequiresLineOfSight=false
     prompt.HoldDuration=0
@@ -811,12 +813,12 @@ function World.build()
 
     local active={}
     for _,subject in ipairs(Catalog.Subjects) do active[subject.id]=subject end
-    classroom(root,"math","Math","Learning Lab",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
-    classroom(root,"reading","Reading","Learning Lab",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
-    classroom(root,"grammar","Grammar","Learning Lab",-49,20,color((active.grammar and active.grammar.color) or {137,105,170}),active.grammar~=nil)
-    classroom(root,"religion","Religion","Learning Lab",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
-    classroom(root,"vocabulary","Vocabulary","Learning Lab",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
-    classroom(root,"spelling","Spelling","Learning Lab",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
+    classroom(root,"math","Math",(active.math and active.math.teacher) or "Mrs. Campion",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
+    classroom(root,"reading","Reading",(active.reading and active.reading.teacher) or "Mrs. Russek",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
+    classroom(root,"grammar","Grammar",(active.grammar and active.grammar.teacher) or "Mrs. Benulis",-49,20,color((active.grammar and active.grammar.color) or {137,105,170}),active.grammar~=nil)
+    classroom(root,"religion","Religion",(active.religion and active.religion.teacher) or "Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
+    classroom(root,"vocabulary","Vocabulary",(active.vocabulary and active.vocabulary.teacher) or "Mr. Yordy",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
+    classroom(root,"spelling","Spelling",(active.spelling and active.spelling.teacher) or "Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
 
     -- Stairs connect all three playable academic floors.
     stairFlight(root,-7,-58,-101,5,19.4)
@@ -840,9 +842,9 @@ function World.build()
     World.part(root,"Principal desk",Vector3.new(10,2.2,4),CFrame.new(-37,5.3,-65),palette.wood,Enum.Material.Wood)
     World.part(root,"Assistant desk",Vector3.new(10,2.2,4),CFrame.new(-21,5.3,-65),palette.wood,Enum.Material.Wood)
     sign(root,"MAIN OFFICE",CFrame.new(-59,10,-45.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
-    sign(root,"Mrs. Melissa Thompson\nAdministrative Assistant, Marketing Coordinator",CFrame.new(-59,8.8,-53)*CFrame.Angles(0,math.pi,0),Vector3.new(22,4.2,.2),palette.navy,palette.cream)
-    sign(root,"Dr Carl McBreen\nPrincipal",CFrame.new(-37,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(17,3.6,.2),palette.navy,palette.cream)
-    sign(root,"Mrs Carol Boyer\nPresident of Catholicity and Mission",CFrame.new(-21,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(22,4.4,.2),palette.navy,palette.cream)
+    sign(root,"Mrs. Thompson\nSecretary",CFrame.new(-59,8.8,-53)*CFrame.Angles(0,math.pi,0),Vector3.new(18,3.6,.2),palette.navy,palette.cream)
+    sign(root,"Dr. McBreen\nPrincipal",CFrame.new(-37,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(17,3.6,.2),palette.navy,palette.cream)
+    sign(root,"Mrs. Boyer\nAssistant Principal",CFrame.new(-21,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(19,3.8,.2),palette.navy,palette.cream)
     cross(root,CFrame.new(-37,13,-71.5),.35,palette.gold)
     cross(root,CFrame.new(-21,13,-71.5),.35,palette.gold)
 
