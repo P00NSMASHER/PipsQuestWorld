@@ -677,6 +677,33 @@ function World.build()
     local prompt=Instance.new("ProximityPrompt");prompt.ActionText="Browse";prompt.ObjectText="ABVM School Shop";prompt.MaxActivationDistance=16;prompt.RequiresLineOfSight=false;prompt.HoldDuration=0;prompt.Parent=sp
     World.shopPrompt=prompt
 
+    -- Physical display cues mirror the four shop tabs without creating a second purchase authority.
+    World.part(root,"Shop back wall",Vector3.new(48,11,1),CFrame.new(43,9.5,-62),palette.cream)
+    sign(root,"CLOTHES",CFrame.new(25,12,-61.4),Vector3.new(12,2.4,.2),palette.navy,palette.gold)
+    World.part(root,"Shop clothes rail",Vector3.new(14,.35,.35),CFrame.new(25,8,-60),palette.metal,Enum.Material.Metal,false)
+    for _,x in ipairs({20.5,25,29.5}) do
+        World.part(root,"Shop jacket",Vector3.new(3,4,.7),CFrame.new(x,6.2,-60),x==25 and palette.green or palette.navy,Enum.Material.Fabric,false)
+        World.part(root,"Shop jacket trim",Vector3.new(.2,3.8,.78),CFrame.new(x,6.2,-60.4),palette.gold,nil,false)
+    end
+
+    sign(root,"HOME",CFrame.new(41,12,-61.4),Vector3.new(10,2.4,.2),palette.navy,palette.gold)
+    World.part(root,"Shop home pedestal",Vector3.new(10,1,8),CFrame.new(41,4.7,-58),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Shop home model",Vector3.new(7,4,6),CFrame.new(41,7,-58),Color3.fromRGB(215,205,183),Enum.Material.SmoothPlastic,false)
+    World.part(root,"Shop home roof",Vector3.new(7.8,.5,6.8),CFrame.new(41,9.2,-58),palette.navy,Enum.Material.Slate,false)
+
+    sign(root,"ITEMS",CFrame.new(54,12,-61.4),Vector3.new(10,2.4,.2),palette.navy,palette.gold)
+    World.part(root,"Shop item shelf",Vector3.new(10,4,.8),CFrame.new(54,6.2,-60),palette.wood,Enum.Material.Wood)
+    World.part(root,"Shop display lamp",Vector3.new(.45,3,.45),CFrame.new(51.5,8,-59.3),palette.gold,nil,false)
+    World.part(root,"Shop display books",Vector3.new(3.8,2.3,.8),CFrame.new(55,7.5,-59.3),palette.green,Enum.Material.SmoothPlastic,false)
+
+    sign(root,"RIDES",CFrame.new(66,12,-61.4),Vector3.new(10,2.4,.2),palette.navy,palette.gold)
+    World.part(root,"Shop ride poster",Vector3.new(9,5,.2),CFrame.new(66,8,-61.2),palette.navy,nil,false)
+    World.part(root,"Shop ride body",Vector3.new(6,.9,.35),CFrame.new(66,8,-61),palette.gold,nil,false)
+    for _,x in ipairs({63.5,68.5}) do
+        local wheel=World.part(root,"Shop ride wheel",Vector3.new(.45,1.4,1.4),CFrame.new(x,6.9,-60.8),Color3.fromRGB(40,45,50),nil,false)
+        wheel.Shape=Enum.PartType.Cylinder
+    end
+
     -- Player-owned neighborhood lots continue south of the school.
     for i=1,24 do
         local side=i%2==1 and -1 or 1
