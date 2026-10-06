@@ -250,7 +250,15 @@ showQuestion=function(q)
     UI.text(subjectBadge,quizVisual.icon,quizVisual.icon=="ABC" and 8 or 14,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
     UI.text(subjectRow,s.short.."  •  "..(s.teacher or "Classroom"),UI.T.section,{Position=UDim2.fromOffset(38,0),Size=UDim2.new(1,-38,1,0),Font=Enum.Font.GothamBold})
 
-    local rewardRow=UI.new("Frame",questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,30),BackgroundTransparency=1})
+    local progressRow=UI.new("Frame",questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,28),BackgroundTransparency=1})
+    local progressTrack=UI.frame(progressRow,{Position=UDim2.fromOffset(0,8),Size=UDim2.new(1,-54,0,7),BackgroundColor3=UI.P.line})
+    UI.corner(progressTrack,999)
+    local lessonFraction=math.clamp((state.lessonCount or 0)/5,0,1)
+    local progressFill=UI.frame(progressTrack,{Size=UDim2.fromScale(lessonFraction,1),BackgroundColor3=quizVisual.color})
+    UI.corner(progressFill,999)
+    UI.text(progressRow,tostring(state.lessonCount or 0).."/5",11,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,0,0,0),Size=UDim2.fromOffset(46,24),TextXAlignment=Enum.TextXAlignment.Right,Font=Enum.Font.GothamBold,TextColor3=UI.P.muted})
+
+    local rewardRow=UI.new("Frame",questionColumn,{LayoutOrder=3,Size=UDim2.new(1,0,0,30),BackgroundTransparency=1})
     local rewardList=UI.new("UIListLayout",rewardRow,{FillDirection=Enum.FillDirection.Horizontal,HorizontalAlignment=Enum.HorizontalAlignment.Left,VerticalAlignment=Enum.VerticalAlignment.Center,Padding=UDim.new(0,6)})
     if q.reviewOnly then
         UI.chip(rewardRow,"Practice review",{Size=UDim2.fromOffset(104,28),BackgroundColor3=UI.P.goldSoft,TextColor3=UI.P.ink})
@@ -260,7 +268,7 @@ showQuestion=function(q)
         UI.chip(rewardRow,"streak +10",{Size=UDim2.fromOffset(86,28),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink})
     end
 
-    local questionCard=UI.surface(questionColumn,{LayoutOrder=3,Size=UDim2.new(1,0,0,98),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=UI.P.white,Shadow=false})
+    local questionCard=UI.surface(questionColumn,{LayoutOrder=4,Size=UDim2.new(1,0,0,98),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=UI.P.white,Shadow=false})
     UI.pad(questionCard,16)
     UI.text(questionCard,q.prompt,layout.textSize,{Size=UDim2.new(1,0,0,62),AutomaticSize=Enum.AutomaticSize.Y,TextYAlignment=Enum.TextYAlignment.Top,Font=Enum.Font.GothamMedium})
 
