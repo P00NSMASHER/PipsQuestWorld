@@ -199,6 +199,19 @@ test("catalog ids and prices are valid; every category has a progression",functi
         categories[item.category]=(categories[item.category] or 0)+1
     end
     for _,category in ipairs({"Homes","Clothes","Items","Vehicles"}) do assert(categories[category]>=4) end
+
+    local homes={"home_starter","home_cottage","home_suburban","home_villa","home_estate"}
+    local homePrices={0,400,1500,4500,12000}
+    for i,id in ipairs(homes) do
+        local item=Catalog.ById[id]
+        assert(item and item.category=="Homes")
+        equal(item.price,homePrices[i]);equal(item.style,i)
+        if i>1 then assert(item.price>Catalog.ById[homes[i-1]].price) end
+    end
+    equal(Catalog.ById.vehicle_cart.price,0)
+    equal(Catalog.ById.vehicle_hatch.price,900)
+    equal(Catalog.ById.vehicle_sport.price,2400)
+    equal(Catalog.ById.vehicle_luxe.price,6500)
 end)
 test("layout remains inside iPhone, iPad and desktop safe canvases",function()
     for _,v in ipairs({{758,360},{720,320},{852,393},{350,760},{320,568},{976,724},{1366,700}}) do
