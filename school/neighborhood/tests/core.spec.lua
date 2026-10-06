@@ -227,16 +227,15 @@ test("catalog ids and prices are valid; every category has a progression",functi
     equal(Catalog.ById.outfit_abvm_polo.style,6)
     equal(Catalog.ById.outfit_abvm_plaid.price,75)
     equal(Catalog.ById.outfit_abvm_plaid.style,7)
-end)
-test("official ABVM store garments map into Roblox apparel without youth adult duplicates",function()
-    local priced={
+
+    local retail={
         abvm_store_polo_green=15,abvm_store_polo_navy=15,
         abvm_store_ls_polo_green=17,abvm_store_ls_polo_navy=17,
         abvm_store_quarter_zip_navy=26,abvm_store_heather_tee=10,
         abvm_store_crewneck_heather=15,abvm_store_sweatpants_heather=15,
         abvm_store_shorts_heather=12,
     }
-    for id,usd in pairs(priced) do
+    for id,usd in pairs(retail) do
         local item=Catalog.ById[id]
         assert(item and item.category=="Clothes")
         equal(item.retailUSD,usd);equal(item.price,usd*4)
