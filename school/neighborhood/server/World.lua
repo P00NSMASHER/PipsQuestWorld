@@ -201,154 +201,30 @@ local function ceilingLight(parent,position,size,brightness,range)
     return fixture
 end
 
-local function appearanceColor(value,fallback)
-    if type(value)=="table" and #value>=3 then return Color3.fromRGB(value[1],value[2],value[3]) end
-    return fallback
-end
-
-local function npc(parent,staff,position)
-    local appearance=staff.appearance or {}
-    local model=Instance.new("Model");model.Name="Faculty_"..staff.id;model.Parent=parent
-    model:SetAttribute("StaffId",staff.id)
-    model:SetAttribute("StaffName",staff.name)
-    model:SetAttribute("StaffRole",staff.role)
-    local displayName=staff.displayName or staff.name
-    local displayRole=staff.gameRole or staff.role
-    model:SetAttribute("StaffLocation",staff.location or "")
-    model:SetAttribute("StaffFloor",staff.floor or 0)
-
-    local skin=appearanceColor(appearance.skin,Color3.fromRGB(226,196,164))
-    local hair=appearanceColor(appearance.hair,Color3.fromRGB(95,75,60))
-    local topColor=appearanceColor(appearance.top,Color3.fromRGB(80,112,145))
-    local outerColor=appearanceColor(appearance.outer,topColor)
-    local innerColor=appearanceColor(appearance.inner,topColor)
-    local lowerColor=Color3.fromRGB(48,54,65)
-    local torsoColor=appearance.outer and outerColor or topColor
-
+local function npc(parent,name,position,suit,tint)
+    local model=Instance.new("Model");model.Name=name;model.Parent=parent
+    local skin=Color3.fromRGB(226,196,164)
+    local torsoColor=suit and Color3.fromRGB(31,43,60) or (tint or Color3.fromRGB(80,112,145))
     World.part(model,"Torso",Vector3.new(3.2,4.2,1.8),CFrame.new(position+Vector3.new(0,4.5,0)),torsoColor,Enum.Material.Fabric,false)
-    World.part(model,"Left leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(-.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
-    World.part(model,"Right leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
-    local armColor=(appearance.jacket or appearance.outer) and outerColor or topColor
-    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.05,4.4,0)),armColor,Enum.Material.Fabric,false)
-    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.05,4.4,0)),armColor,Enum.Material.Fabric,false)
+    World.part(model,"Left leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(-.8,1.4,0)),Color3.fromRGB(48,54,65),Enum.Material.Fabric,false)
+    World.part(model,"Right leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(.8,1.4,0)),Color3.fromRGB(48,54,65),Enum.Material.Fabric,false)
+    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.05,4.4,0)),skin,Enum.Material.SmoothPlastic,false)
+    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.05,4.4,0)),skin,Enum.Material.SmoothPlastic,false)
     local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     head.Shape=Enum.PartType.Ball
-
-    -- Simple expressive face. Photo references drive only visible, non-sensitive likeness cues.
-    for _,x in ipairs({-.43,.43}) do
-        local white=World.part(model,"Eye white",Vector3.new(.48,.34,.12),CFrame.new(position+Vector3.new(x,8.02,-1.16)),Color3.fromRGB(248,248,244),Enum.Material.SmoothPlastic,false)
-        white.Shape=Enum.PartType.Ball
-        local pupil=World.part(model,"Eye",Vector3.new(.18,.2,.09),CFrame.new(position+Vector3.new(x,8.01,-1.25)),Color3.fromRGB(42,47,52),Enum.Material.SmoothPlastic,false)
-        pupil.Shape=Enum.PartType.Ball
+    if suit then
+        World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),Color3.fromRGB(245,245,242),nil,false)
+        World.part(model,"Suit tie",Vector3.new(.35,2,.2),CFrame.new(position+Vector3.new(0,4.9,-1.12)),palette.gold,nil,false)
     end
-    World.part(model,"Smile",Vector3.new(.72,.11,.09),CFrame.new(position+Vector3.new(0,7.37,-1.2))*CFrame.Angles(0,0,math.rad(-4)),Color3.fromRGB(126,69,64),Enum.Material.SmoothPlastic,false)
-
-    local style=appearance.hairStyle or "short"
-    local function hairPart(name,size,offset,shape)
-        local p=World.part(model,name,size,CFrame.new(position+offset),hair,Enum.Material.SmoothPlastic,false)
-        if shape then p.Shape=shape end
-        return p
-    end
-    if style=="balding" then
-        hairPart("Hair crown",Vector3.new(1.85,.75,2.0),Vector3.new(0,8.7,.2),Enum.PartType.Ball)
-        hairPart("Hair back",Vector3.new(2.0,1.3,.6),Vector3.new(0,8.15,1.0),Enum.PartType.Ball)
-    else
-        hairPart("Hair crown",Vector3.new(2.55,1.25,2.45),Vector3.new(0,8.63,.05),Enum.PartType.Ball)
-        if style=="short" then
-            hairPart("Hair side left",Vector3.new(.42,1.35,1.55),Vector3.new(-1.08,8.05,.15),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.42,1.35,1.55),Vector3.new(1.08,8.05,.15),Enum.PartType.Ball)
-        elseif style=="pulledBack" then
-            hairPart("Hair side left",Vector3.new(.5,2.1,1.35),Vector3.new(-1.03,7.75,.2),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.5,2.1,1.35),Vector3.new(1.03,7.75,.2),Enum.PartType.Ball)
-            hairPart("Ponytail",Vector3.new(1.15,2.3,1.2),Vector3.new(0,7.65,1.55),Enum.PartType.Ball)
-        else
-            local long=(style=="long" or style=="longWavy" or style=="longStraight")
-            local sideHeight=long and 4.4 or 3.0
-            hairPart("Hair side left",Vector3.new(.7,sideHeight,1.45),Vector3.new(-1.12,7.25,.25),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.7,sideHeight,1.45),Vector3.new(1.12,7.25,.25),Enum.PartType.Ball)
-            if style=="shoulderBangs" then
-                hairPart("Bangs",Vector3.new(2.1,.75,.45),Vector3.new(0,8.52,-1.0),Enum.PartType.Ball)
-            elseif style=="longWavy" then
-                hairPart("Wavy hair left",Vector3.new(.9,2.3,1.1),Vector3.new(-1.3,6.3,.35),Enum.PartType.Ball)
-                hairPart("Wavy hair right",Vector3.new(.9,2.3,1.1),Vector3.new(1.3,6.3,.35),Enum.PartType.Ball)
-            end
-        end
-    end
-
-    if appearance.glasses then
-        for _,x in ipairs({-.48,.48}) do
-            local lens=World.part(model,"Glasses lens",Vector3.new(.78,.58,.08),CFrame.new(position+Vector3.new(x,8.02,-1.33)),Color3.fromRGB(45,49,54),Enum.Material.Glass,false)
-            lens.Transparency=.72
-        end
-        World.part(model,"Glasses bridge",Vector3.new(.34,.08,.08),CFrame.new(position+Vector3.new(0,8.02,-1.35)),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
-    end
-    if appearance.beard then
-        local beardColor=appearanceColor(appearance.beardColor,hair)
-        local beard=World.part(model,"Beard",Vector3.new(1.65,1.65,.48),CFrame.new(position+Vector3.new(0,7.08,-1.0)),beardColor,Enum.Material.SmoothPlastic,false)
-        beard.Shape=Enum.PartType.Ball
-        World.part(model,"Mustache",Vector3.new(1.2,.28,.12),CFrame.new(position+Vector3.new(0,7.48,-1.28)),beardColor,Enum.Material.SmoothPlastic,false)
-    end
-
-    if appearance.suit then
-        World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),innerColor,Enum.Material.Fabric,false)
-        World.part(model,"Suit tie",Vector3.new(.35,2,.2),CFrame.new(position+Vector3.new(0,4.9,-1.12)),appearanceColor(appearance.tie,palette.navy),Enum.Material.Fabric,false)
-    elseif appearance.outer then
-        World.part(model,appearance.vest and "Sweater vest" or "Jacket shirt inset",Vector3.new(1.65,3.5,.16),CFrame.new(position+Vector3.new(0,4.55,-.99)),topColor,Enum.Material.Fabric,false)
-    end
-
-    if appearance.cross then
-        local gold=Color3.fromRGB(202,175,116)
-        World.part(model,"Cross necklace vertical",Vector3.new(.12,.62,.08),CFrame.new(position+Vector3.new(0,5.45,-1.12)),gold,Enum.Material.Metal,false)
-        World.part(model,"Cross necklace horizontal",Vector3.new(.38,.12,.08),CFrame.new(position+Vector3.new(0,5.58,-1.13)),gold,Enum.Material.Metal,false)
-    end
-    if appearance.pin then
-        local pin=World.part(model,"Lapel pin",Vector3.new(.28,.28,.1),CFrame.new(position+Vector3.new(.75,5.35,-1.03)),palette.gold,Enum.Material.Metal,false)
-        pin.Shape=Enum.PartType.Ball
-    end
-
-    if appearance.pattern then
-        local patternColors={
-            floral={Color3.fromRGB(245,238,232),Color3.fromRGB(89,39,81)},
-            lineFloral={Color3.fromRGB(48,49,54),Color3.fromRGB(235,229,218)},
-            school={Color3.fromRGB(232,170,63),Color3.fromRGB(88,145,149)},
-            brightFloral={Color3.fromRGB(235,72,153),Color3.fromRGB(74,166,124)},
-            geometric={Color3.fromRGB(32,33,36),Color3.fromRGB(239,238,231)},
-        }
-        local colors=patternColors[appearance.pattern] or {palette.gold,palette.green}
-        for i,offset in ipairs({{-1,.75},{0,.92},{1,.62},{-.6,-.15},{.55,-.35},{0,-1.05}}) do
-            local dot=World.part(model,"Clothing pattern",Vector3.new(.38,.38,.08),
-                CFrame.new(position+Vector3.new(offset[1],4.7+offset[2],-1.02)),colors[(i-1)%#colors+1],Enum.Material.SmoothPlastic,false)
-            dot.Shape=Enum.PartType.Ball
-        end
-    end
-
-    local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(180,46);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=28;gui.Parent=head
-    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.15
-    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=11;label.TextWrapped=true
-    label.Text=displayName.."\n"..displayRole;label.Parent=gui
-    local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.35;stroke.Thickness=1;stroke.Parent=label
-    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,8);corner.Parent=label
-
-    local prompt=Instance.new("ProximityPrompt")
-    prompt.Name="MeetFaculty"
-    prompt.ActionText="Meet"
-    prompt.ObjectText=displayName.." • "..displayRole
-    prompt.MaxActivationDistance=12
-    prompt.RequiresLineOfSight=false
-    prompt.HoldDuration=0
-    prompt.Parent=head
+    local gui=Instance.new("BillboardGui");gui.Name="Name";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(62,15);gui.StudsOffset=Vector3.new(0,1.15,0);gui.MaxDistance=10;gui.Parent=head
+    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.55
+    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=7;label.Text=name;label.TextTruncate=Enum.TextTruncate.AtEnd;label.Parent=gui
+    local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.88;stroke.Thickness=.7;stroke.Parent=label
+    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(1,0);corner.Parent=label
     return model
 end
 
-local function facultyDirectoryText(floor)
-    local lines={"FACULTY & STAFF • FLOOR "..tostring(floor)}
-    for _,staff in ipairs(Catalog.Faculty) do
-        if staff.floor==floor then table.insert(lines,staff.name.." — "..staff.role) end
-    end
-    return table.concat(lines,"\n")
-end
-
-local function classroom(root,id,title,roomLabel,x,floorY,tint,active)
+local function classroom(root,id,title,teacher,x,floorY,tint,active)
     local m=Instance.new("Model");m.Name=id.."_classroom";m.Parent=root
     local roomWidth=49;local roomDepth=58;local z=-109
     local hallX=x<0 and -23.5 or 23.5
@@ -362,7 +238,7 @@ local function classroom(root,id,title,roomLabel,x,floorY,tint,active)
     World.part(m,"Hall wall south",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z+17.5),palette.cream)
     World.part(m,"Door lintel",Vector3.new(1,4,12),CFrame.new(hallX,floorY+12,z),palette.cream)
     local boardCf=CFrame.new(x,floorY+8,z-roomDepth/2+.65)*CFrame.Angles(0,math.pi,0)
-    sign(m,"ASSUMPTION BVM\n"..title.." • "..roomLabel,boardCf,Vector3.new(30,6,.25),tint,palette.cream)
+    sign(m,"ASSUMPTION BVM\n"..title.." — "..teacher,boardCf,Vector3.new(30,6,.25),tint,palette.cream)
     cross(m,CFrame.new(x+14,floorY+10,z-roomDepth/2+.45),.45,palette.gold)
     for _,dx in ipairs({-11,0,11}) do
         for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
@@ -397,8 +273,10 @@ local function classroom(root,id,title,roomLabel,x,floorY,tint,active)
             tile.Name="Spelling letter tile"
         end
     end
+    local teacherX=x+(x<0 and 13 or -13)
+    npc(m,teacher,Vector3.new(teacherX,floorY,z-21),false,tint)
     local hallLabelCf=CFrame.new(hallX+(x<0 and .65 or -.65),floorY+9,z)*CFrame.Angles(0,x<0 and -math.pi/2 or math.pi/2,0)
-    sign(m,title.."\n"..roomLabel,hallLabelCf,Vector3.new(14,4,.25),tint,palette.cream)
+    sign(m,title.."\n"..teacher,hallLabelCf,Vector3.new(14,4,.25),tint,palette.cream)
     if active then World.rooms[id]={x=x,z=z,hx=23,hz=27,minY=floorY,maxY=floorY+14} end
 end
 
@@ -489,7 +367,7 @@ function World.build()
     local root=Instance.new("Folder");root.Name="NeighborhoodWorld";root.Parent=Workspace;World.root=root
     World.rooms={};World.leaderboardParts={}
 
-    -- Bright, warm daytime presentation from the gold-standard concept board.
+    -- Bright, warm daytime presentation from the authoritative gold-standard board.
     Lighting.ClockTime=10.4
     Lighting.Brightness=2.4
     Lighting.EnvironmentDiffuseScale=.45
@@ -813,12 +691,12 @@ function World.build()
 
     local active={}
     for _,subject in ipairs(Catalog.Subjects) do active[subject.id]=subject end
-    classroom(root,"math","Math",(active.math and active.math.teacher) or "Mrs. Campion",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
-    classroom(root,"reading","Reading",(active.reading and active.reading.teacher) or "Mrs. Russek",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
-    classroom(root,"grammar","Grammar",(active.grammar and active.grammar.teacher) or "Mrs. Benulis",-49,20,color((active.grammar and active.grammar.color) or {137,105,170}),active.grammar~=nil)
-    classroom(root,"religion","Religion",(active.religion and active.religion.teacher) or "Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
-    classroom(root,"vocabulary","Vocabulary",(active.vocabulary and active.vocabulary.teacher) or "Mr. Yordy",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
-    classroom(root,"spelling","Spelling",(active.spelling and active.spelling.teacher) or "Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
+    classroom(root,"math","Math","Mrs. Campion",-49,4,color((active.math and active.math.color) or {62,154,214}),active.math~=nil)
+    classroom(root,"reading","Reading","Mrs. Russek",49,4,color((active.reading and active.reading.color) or {125,103,202}),active.reading~=nil)
+    classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,color((active.grammar and active.grammar.color) or {137,105,170}),active.grammar~=nil)
+    classroom(root,"religion","Religion","Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
+    classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
+    classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
 
     -- Stairs connect all three playable academic floors.
     stairFlight(root,-7,-58,-101,5,19.4)
@@ -842,39 +720,14 @@ function World.build()
     World.part(root,"Principal desk",Vector3.new(10,2.2,4),CFrame.new(-37,5.3,-65),palette.wood,Enum.Material.Wood)
     World.part(root,"Assistant desk",Vector3.new(10,2.2,4),CFrame.new(-21,5.3,-65),palette.wood,Enum.Material.Wood)
     sign(root,"MAIN OFFICE",CFrame.new(-59,10,-45.8)*CFrame.Angles(0,math.pi,0),Vector3.new(20,3,.2),palette.green,palette.gold)
-    sign(root,"Mrs. Thompson\nSecretary",CFrame.new(-59,8.8,-53)*CFrame.Angles(0,math.pi,0),Vector3.new(18,3.6,.2),palette.navy,palette.cream)
-    sign(root,"Dr. McBreen\nPrincipal",CFrame.new(-37,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(17,3.6,.2),palette.navy,palette.cream)
-    sign(root,"Mrs. Boyer\nAssistant Principal",CFrame.new(-21,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(19,3.8,.2),palette.navy,palette.cream)
+    sign(root,"Secretary — Mrs. Thompson",CFrame.new(-59,8.6,-53)*CFrame.Angles(0,math.pi,0),Vector3.new(19,2.5,.2),palette.navy,palette.cream)
+    sign(root,"Principal — Dr. McBreen",CFrame.new(-37,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(16,2.6,.2),palette.navy,palette.cream)
+    sign(root,"Assistant Principal — Mrs. Boyer",CFrame.new(-21,9,-72.55)*CFrame.Angles(0,0,0),Vector3.new(18,2.6,.2),palette.navy,palette.cream)
     cross(root,CFrame.new(-37,13,-71.5),.35,palette.gold)
     cross(root,CFrame.new(-21,13,-71.5),.35,palette.gold)
-
-    -- One stylized, non-colliding NPC per user-supplied faculty/staff member.
-    -- Positions keep the real directory roles intact without falsely assigning subject teaching duties.
-    local facultyPositions={
-        carl_mcbreen=Vector3.new(-37,4,-61),
-        melissa_thompson=Vector3.new(-59,4,-52),
-        carol_boyer=Vector3.new(-21,4,-61),
-        erin_heckman=Vector3.new(-9,4,-128),
-        sharon_rossi=Vector3.new(9,4,-128),
-        cindy_campion=Vector3.new(-9,4,-112),
-        maryann_lascala=Vector3.new(9,4,-112),
-        karla_russek=Vector3.new(0,4,-94),
-        cindy_long=Vector3.new(10,4,-50),
-        aimee_benulis=Vector3.new(-9,20,-128),
-        marla_callaghan=Vector3.new(9,20,-128),
-        marylouise_smith=Vector3.new(-9,20,-96),
-        nicole_leagans=Vector3.new(9,20,-96),
-        lyric_paskel=Vector3.new(0,20,-52),
-        mike_yordy=Vector3.new(-9,36,-128),
-        jacqui_urban=Vector3.new(9,36,-128),
-        david_bolich=Vector3.new(-9,36,-94),
-        lucilla_kochol=Vector3.new(9,36,-94),
-    }
-    for _,staff in ipairs(Catalog.Faculty) do
-        local position=facultyPositions[staff.id]
-        if position then npc(root,staff,position) end
-    end
-
+    npc(root,"Mrs. Thompson — Secretary",Vector3.new(-59,4,-52),false,Color3.fromRGB(86,125,143))
+    npc(root,"Dr. McBreen — Principal",Vector3.new(-37,4,-61),true,palette.navy)
+    npc(root,"Mrs. Boyer — Assistant Principal",Vector3.new(-21,4,-61),false,Color3.fromRGB(89,111,132))
 
     -- Small lobby identity details: trophy case and bulletin board keep the entry recognizably school-like.
     local trophyGlass=World.part(root,"Lobby trophy case glass",Vector3.new(17,8,.7),CFrame.new(25,8,-42),Color3.fromRGB(153,184,193),Enum.Material.Glass,false)
@@ -887,15 +740,11 @@ function World.build()
     end
     sign(root,"ASSUMPTION BVM\nFAITH • SERVICE • LEARNING",CFrame.new(-17,9,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(24,5,.2),palette.green,palette.gold)
     sign(root,
-        "FACULTY & STAFF DIRECTORY\n"..
-        "Floor 1 • Administration • Pre-K • Kindergarten • First Grade • Food Service\n"..
-        "Floor 2 • Second • Third • Fourth • Fifth • Sixth Grade\n"..
-        "Floor 3 • Seventh • Eighth • Technology / PE • Art / After School\n"..
-        "Open School → Faculty & Staff for exact names and roles",
-        CFrame.new(44,10,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(36,9,.2),palette.navy,palette.cream)
-    sign(root,facultyDirectoryText(1),CFrame.new(-14,10,-141.9),Vector3.new(27,10,.2),palette.green,palette.cream)
-    sign(root,facultyDirectoryText(2),CFrame.new(-14,26,-141.9),Vector3.new(27,10,.2),palette.green,palette.cream)
-    sign(root,facultyDirectoryText(3),CFrame.new(-14,42,-141.9),Vector3.new(27,10,.2),palette.green,palette.cream)
+        "SCHOOL DIRECTORY\n"..
+        "Floor 1  •  Main Office  •  Math — Mrs. Campion  •  Reading — Mrs. Russek\n"..
+        "Floor 2  •  Grammar — Mrs. Benulis  •  Religion — Mr. Bolich\n"..
+        "Floor 3  •  Vocabulary — Mr. Yordy  •  Spelling — Mrs. Kochol",
+        CFrame.new(44,10,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(34,8,.2),palette.navy,palette.cream)
 
     -- Three ABVM-branded leaderboard boards on the lobby's east wall.
     World.leaderboardParts={
