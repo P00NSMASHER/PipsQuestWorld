@@ -1,0 +1,38 @@
+name: High School Smoke Contract Guards
+
+on:
+  pull_request:
+    branches: [coordination/high-school-control-tower]
+    paths:
+      - "coordination/smoke/**"
+      - "coordination/state/WIP.json"
+      - "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json"
+      - "coordination/release-packages/pip-high-school-33a5a11-package-readiness-v1.json"
+      - ".github/workflows/high-school-smoke-contract.yml"
+  push:
+    branches: [coordination/high-school-control-tower]
+    paths:
+      - "coordination/smoke/**"
+      - "coordination/state/WIP.json"
+      - "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json"
+      - "coordination/release-packages/pip-high-school-33a5a11-package-readiness-v1.json"
+      - ".github/workflows/high-school-smoke-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact coordination head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: coordination
+      - name: Test acceptance failures and handoff consistency
+        run: python3 -m unittest discover -s coordination/smoke -p 'test_*.py' -v
+      - name: Validate the draft without claiming runtime acceptance
+        run: python3 coordination/smoke/validate_runtime_capture_contract.py coordination/smoke/PR214_RUNTIME_CAPTURE_CONTRACT_V1.json --self-test
