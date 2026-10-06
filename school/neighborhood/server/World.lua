@@ -425,23 +425,43 @@ function World.build()
         end
     end
 
-    -- Broad formal stairs and landing, intentionally generous for mobile camera/movement.
-    for i=0,7 do
-        World.part(root,"Front broad stair",Vector3.new(57,.65,3.2),CFrame.new(0,.35+i*.52,-7-i*3.25),palette.stone,Enum.Material.Concrete)
+    -- Broad formal stairs: the real facade sits noticeably uphill from the lower approach.
+    local frontSteps=14
+    local startZ=-1.5
+    local endZ=-31
+    local startY=.25
+    local endY=4.3
+    for i=0,frontSteps-1 do
+        local t=i/(frontSteps-1)
+        local z=startZ+(endZ-startZ)*t
+        local y=startY+(endY-startY)*t
+        World.part(root,"Front broad stair",Vector3.new(57,.58,2.45),CFrame.new(0,y,z),palette.stone,Enum.Material.Concrete)
     end
+    World.part(root,"Front lower landing",Vector3.new(59,.45,9),CFrame.new(0,.1,3),palette.stone,Enum.Material.Concrete)
     World.part(root,"Front landing",Vector3.new(59,.7,8),CFrame.new(0,4.3,-31),palette.stone,Enum.Material.Concrete)
-    -- Low masonry cheeks and center rails reproduce the formal stair approach without narrowing the playable lane.
-    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,30),CFrame.new(-31,2.55,-18.5),palette.brickDark,Enum.Material.Brick)
-    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,30),CFrame.new(31,2.55,-18.5),palette.brickDark,Enum.Material.Brick)
+
+    -- Low masonry cheeks and continuous paired rails match the reference while leaving a broad center lane.
+    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(-31,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(31,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    local stairDz=endZ-startZ
+    local stairDy=endY-startY
+    local stairLength=math.sqrt(stairDz*stairDz+stairDy*stairDy)
+    local stairPitch=math.atan2(stairDy,stairDz)
     for _,x in ipairs({-9,9}) do
-        for step=0,4 do
-            World.part(root,"Front stair rail post",Vector3.new(.28,3,.28),CFrame.new(x,1.6+step*.75,-8-step*5.2),palette.metal,Enum.Material.Metal,false)
+        for step=0,6 do
+            local t=step/6
+            World.part(root,"Front stair rail post",Vector3.new(.3,3,.3),
+                CFrame.new(x,startY+1.6+(endY-startY)*t,startZ+(endZ-startZ)*t),palette.metal,Enum.Material.Metal,false)
         end
+        World.part(root,"Front stair handrail",Vector3.new(.32,.32,stairLength),
+            CFrame.new(x,(startY+endY)/2+2.7,(startZ+endZ)/2)*CFrame.Angles(stairPitch,0,0),
+            palette.metal,Enum.Material.Metal,false)
     end
+
     -- White low front additions flank the arched section in the real facade.
     World.part(root,"Front west low annex",Vector3.new(41,8,13),CFrame.new(-55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
     World.part(root,"Front east low annex",Vector3.new(41,8,13),CFrame.new(55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
-    World.part(root,"School approach",Vector3.new(28,.3,40),CFrame.new(0,.2,13),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+    World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
     for _,x in ipairs({-34,34}) do
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
         local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
