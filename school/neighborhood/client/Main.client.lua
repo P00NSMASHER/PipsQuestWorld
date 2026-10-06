@@ -599,27 +599,17 @@ setNavActive=function(command)
     for i,b in ipairs(navButtons) do
         local active=navDefs[i][3]==command
         b.BackgroundColor3=active and UI.P.ink or UI.P.white
-        local icon=b:FindFirstChild("Icon")
+        local iconBox=b:FindFirstChild("IconBox")
+        local icon=iconBox and iconBox:FindFirstChild("Icon") or nil
         local label=b:FindFirstChild("Label")
-        if icon and icon:IsA("TextLabel") then icon.TextColor3=active and UI.P.gold or (navDefs[i][3]=="school" and UI.P.gold or UI.P.teal) end
-        if label and label:IsA("TextLabel") then label.TextColor3=active and UI.P.white or UI.P.ink end
-    end
-end
-
-setNavActive=function(command)
-    for i,b in ipairs(navButtons) do
-        local active=navDefs[i][3]==command
-        b.BackgroundColor3=active and UI.P.ink or UI.P.white
-        local labels={}
-        for _,child in ipairs(b:GetChildren()) do
-            if child:IsA("TextLabel") then table.insert(labels,child) end
+        if iconBox and iconBox:IsA("Frame") then
+            iconBox.BackgroundColor3=active and UI.P.goldSoft or UI.P.soft
         end
-        for _,label in ipairs(labels) do
-            if label.Position.X.Offset<30 then
-                label.TextColor3=active and UI.P.gold or UI.P.teal
-            else
-                label.TextColor3=active and UI.P.white or UI.P.ink
-            end
+        if icon and icon:IsA("TextLabel") then
+            icon.TextColor3=active and UI.P.gold or (navDefs[i][3]=="school" and UI.P.gold or UI.P.teal)
+        end
+        if label and label:IsA("TextLabel") then
+            label.TextColor3=active and UI.P.white or UI.P.ink
         end
     end
 end
