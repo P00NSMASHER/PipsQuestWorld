@@ -51,6 +51,9 @@
         },
         "FeaturePanelController": {
           "$path": "src/shared/FeaturePanelController.lua"
+        },
+        "MobilePanelShell": {
+          "$path": "src/shared/MobilePanelShell.lua"
         }
       }
     },
@@ -145,6 +148,12 @@
         "CanonicalSchoolClient": {
           "$path": "src/client/CanonicalSchoolClient.client.lua"
         }
+      }
+    },
+    "StarterGui": {
+      "$className": "StarterGui",
+      "$properties": {
+        "ScreenOrientation": "LandscapeSensor"
       }
     }
   }

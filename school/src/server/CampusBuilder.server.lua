@@ -30,12 +30,15 @@ local function makePart(name, size, cframe, color, material, parent)
     part.Material = material or Enum.Material.SmoothPlastic
     part.TopSurface = Enum.SurfaceType.Smooth
     part.BottomSurface = Enum.SurfaceType.Smooth
+    part.CastShadow = size.Y > 1
     part.Parent = parent or geometry
     return part
 end
 
 local function makeLabel(text, cframe)
     local sign = makePart("Sign_" .. text:gsub("%W", ""), Vector3.new(18, 5, 0.6), cframe, Color3.fromRGB(35, 45, 64), Enum.Material.SmoothPlastic)
+    sign.CanCollide = false
+    sign.CanQuery = false
     local gui = Instance.new("SurfaceGui")
     gui.Face = Enum.NormalId.Front
     gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
@@ -100,6 +103,13 @@ for _, z in ipairs({ 78, 90, 102, 114 }) do
             Enum.Material.Neon
         )
         light.CanCollide = false
+        light.CanQuery = false
+        local illumination = Instance.new("PointLight")
+        illumination.Brightness = 0.65
+        illumination.Range = 24
+        illumination.Shadows = false
+        illumination.Color = Color3.fromRGB(255, 246, 227)
+        illumination.Parent = light
     end
 end
 
@@ -207,8 +217,8 @@ for _, band in ipairs({
 end
 
 makePart("UpperHallLanding", Vector3.new(32, 1, 13), CFrame.new(0, 7.5, -119), referenceWhite, Enum.Material.Concrete)
-makePart("UpperHallRailBlue", Vector3.new(31, 1.1, 0.7), CFrame.new(0, 11.0, -112.8), referenceBlue, Enum.Material.Metal)
-makePart("UpperHallRailRed", Vector3.new(31, 0.7, 0.8), CFrame.new(0, 12.1, -112.8), referenceRed, Enum.Material.Metal)
+makePart("UpperHallRailBlue", Vector3.new(0.7, 1.1, 13), CFrame.new(-15.5, 11.0, -119), referenceBlue, Enum.Material.Metal)
+makePart("UpperHallRailRed", Vector3.new(0.8, 0.7, 13), CFrame.new(15.5, 12.1, -119), referenceRed, Enum.Material.Metal)
 
 local trophyGlass = makePart("TrophyCaseGlass", Vector3.new(24, 8, 1), CFrame.new(32, 5, 84), glassColor, Enum.Material.Glass)
 trophyGlass.Transparency = 0.35
@@ -219,6 +229,13 @@ makePart("TrophyCaseTop", Vector3.new(25, 0.8, 2.4), CFrame.new(32, 9.2, 84), tr
 local function buildLockerBank(sideX, startZ, count)
     for index = 0, count - 1 do
         local z = startZ + index * 4
+        local doorway = false
+        for _, room in pairs(SchoolConfig.Rooms) do
+            if room.position.X * sideX > 0 and math.abs(room.position.Z - z) < 7 then
+                doorway = true
+            end
+        end
+        if not doorway then
         local locker = makePart(
             "Locker",
             Vector3.new(1.2, 7, 3.4),
@@ -234,6 +251,8 @@ local function buildLockerBank(sideX, startZ, count)
             Enum.Material.Metal
         )
         vent.CanCollide = false
+        vent.CanQuery = false
+        end
     end
 end
 
@@ -257,8 +276,18 @@ local function buildClassroom(roomName, center, accent)
 
     makePart("Floor", Vector3.new(58, 0.5, 42), CFrame.new(center.X, 0.6, center.Z), Color3.fromRGB(220, 225, 231), Enum.Material.Concrete, roomFolder)
     makePart("BackWall", Vector3.new(58, 14, 1), CFrame.new(center.X, 7, center.Z - 21), wallColor, Enum.Material.SmoothPlastic, roomFolder)
-    makePart("SideWallA", Vector3.new(1, 14, 42), CFrame.new(center.X - 29, 7, center.Z), wallColor, Enum.Material.SmoothPlastic, roomFolder)
-    makePart("SideWallB", Vector3.new(1, 14, 42), CFrame.new(center.X + 29, 7, center.Z), wallColor, Enum.Material.SmoothPlastic, roomFolder)
+    for _, side in ipairs({ -1, 1 }) do
+        local x = center.X + side * 29
+        if center.X * side < 0 then
+            for _, zSide in ipairs({ -1, 1 }) do
+                makePart("DoorSideWall", Vector3.new(1, 14, 15.5), CFrame.new(x, 7, center.Z + zSide * 13.25), wallColor, Enum.Material.SmoothPlastic, roomFolder)
+            end
+            makePart("DoorHeader", Vector3.new(1, 3, 11), CFrame.new(x, 12.5, center.Z), accent, Enum.Material.SmoothPlastic, roomFolder)
+            makePart("ClassroomEntryPath", Vector3.new(15, 0.3, 11), CFrame.new(x + side * 7, 0.75, center.Z), floorColor, Enum.Material.Concrete, roomFolder)
+        else
+            makePart("SideWall", Vector3.new(1, 14, 42), CFrame.new(x, 7, center.Z), wallColor, Enum.Material.SmoothPlastic, roomFolder)
+        end
+    end
     makePart("FrontStripA", Vector3.new(22, 14, 1), CFrame.new(center.X - 18, 7, center.Z + 21), wallColor, Enum.Material.SmoothPlastic, roomFolder)
     makePart("FrontStripB", Vector3.new(22, 14, 1), CFrame.new(center.X + 18, 7, center.Z + 21), wallColor, Enum.Material.SmoothPlastic, roomFolder)
     makePart("Whiteboard", Vector3.new(28, 8, 0.5), CFrame.new(center.X, 8, center.Z - 20.2), Color3.fromRGB(245, 247, 250), Enum.Material.SmoothPlastic, roomFolder)
@@ -473,17 +502,17 @@ local function buildStorefront(key, width, depth, height, color)
     local location = SchoolConfig.WorldLocations[key]
     local center = location.position
     makePart(key .. "Floor", Vector3.new(width, 0.5, depth), CFrame.new(center.X, 0.6, center.Z), Color3.fromRGB(211, 214, 218), Enum.Material.Concrete)
-    makePart(key .. "Back", Vector3.new(width, height, 1), CFrame.new(center.X, height / 2, center.Z + depth / 2), color, Enum.Material.Brick)
+    makePart(key .. "Back", Vector3.new(width, height, 1), CFrame.new(center.X, height / 2, center.Z - depth / 2), color, Enum.Material.Brick)
     makePart(key .. "Left", Vector3.new(1, height, depth), CFrame.new(center.X - width / 2, height / 2, center.Z), color, Enum.Material.Brick)
     makePart(key .. "Right", Vector3.new(1, height, depth), CFrame.new(center.X + width / 2, height / 2, center.Z), color, Enum.Material.Brick)
     makePart(key .. "Roof", Vector3.new(width + 2, 1, depth + 2), CFrame.new(center.X, height, center.Z), Color3.fromRGB(55, 59, 67), Enum.Material.Metal)
-    local window = makePart(key .. "Window", Vector3.new(width - 8, 8, 0.45), CFrame.new(center.X, 7, center.Z - depth / 2 + 0.4), glassColor, Enum.Material.Glass)
+    local window = makePart(key .. "Window", Vector3.new(width - 8, 8, 0.45), CFrame.new(center.X, 7, center.Z + depth / 2 - 0.4), glassColor, Enum.Material.Glass)
     window.Transparency = 0.3
     window.CanCollide = false
-    local door = makePart(key .. "Door", Vector3.new(6, 9, 0.5), CFrame.new(center.X, 5, center.Z - depth / 2 + 0.25), glassColor, Enum.Material.Glass)
+    local door = makePart(key .. "Door", Vector3.new(6, 9, 0.5), CFrame.new(center.X, 5, center.Z + depth / 2 - 0.25), glassColor, Enum.Material.Glass)
     door.Transparency = 0.24
     door.CanCollide = false
-    makeLabel(location.displayName, CFrame.new(center.X, height - 3, center.Z - depth / 2 - 0.35))
+    makeLabel(location.displayName, CFrame.new(center.X, height - 3, center.Z + depth / 2 + 0.35) * CFrame.Angles(0, math.rad(180), 0))
 end
 
 buildStorefront("Cafe", 58, 42, 22, Color3.fromRGB(173, 112, 78))
@@ -537,12 +566,19 @@ for index, plot in ipairs(SchoolConfig.HousingPlots) do
 
     makePart(
         "HouseBody",
-        Vector3.new(44, 18, 32),
-        CFrame.new(houseOrigin.X, houseOrigin.Y + 8.35, houseOrigin.Z),
+        Vector3.new(44, 18, 1),
+        CFrame.new(houseOrigin.X, houseOrigin.Y + 8.35, houseOrigin.Z + 15.5),
         houseColor,
         Enum.Material.Brick,
         plotFolder
     )
+    -- Hollow shell: ownership/style still act on every HouseBody part.
+    for _, side in ipairs({ -1, 1 }) do
+        makePart("HouseBody", Vector3.new(1, 18, 32), CFrame.new(houseOrigin.X + side * 21.5, houseOrigin.Y + 8.35, houseOrigin.Z), houseColor, Enum.Material.Brick, plotFolder)
+        makePart("HouseBody", Vector3.new(18, 18, 1), CFrame.new(houseOrigin.X + side * 13, houseOrigin.Y + 8.35, houseOrigin.Z - 15.5), houseColor, Enum.Material.Brick, plotFolder)
+    end
+    makePart("HouseBody", Vector3.new(8, 7, 1), CFrame.new(houseOrigin.X, houseOrigin.Y + 13.85, houseOrigin.Z - 15.5), houseColor, Enum.Material.Brick, plotFolder)
+    makePart("HouseFloor", Vector3.new(43, 0.4, 31), CFrame.new(houseOrigin.X, houseOrigin.Y, houseOrigin.Z), floorColor, Enum.Material.WoodPlanks, plotFolder)
     makePart(
         "HouseRoof",
         Vector3.new(48, 3, 36),
@@ -628,7 +664,53 @@ spawn.CFrame = CFrame.new(0, 1.55, 177)
 spawn.Anchored = true
 spawn.Neutral = true
 spawn.Color = Color3.fromRGB(111, 174, 229)
-spawn.Material = Enum.Material.Neon
+spawn.Material = Enum.Material.SmoothPlastic
+spawn.Transparency = 1
+spawn.CanCollide = false
+spawn.CanQuery = false
 spawn.Parent = campus
 
 makeLabel("PIP HIGH", CFrame.new(0, 12, 119.5) * CFrame.Angles(0, math.rad(180), 0))
+
+
+-- Finished ceiling plane with a central skylight, warm interior light, and
+-- continuous corridor trim. All geometry remains in the single SchoolCampus.
+do
+    local Lighting = game:GetService("Lighting")
+    Lighting.Ambient = Color3.fromRGB(145, 149, 162)
+    Lighting.OutdoorAmbient = Color3.fromRGB(164, 167, 178)
+    Lighting.Brightness = 2
+    Lighting.ClockTime = 10.5
+    for _, x in ipairs({ -56, 56 }) do
+        makePart("SchoolCeiling", Vector3.new(78, 0.6, 245), CFrame.new(x, 18.3, 0), referenceWhite, Enum.Material.SmoothPlastic)
+    end
+    local skylight = makePart("HallSkylight", Vector3.new(34, 0.35, 245), CFrame.new(0, 18.3, 0), Color3.fromRGB(202, 227, 239), Enum.Material.Glass)
+    skylight.Transparency = 0.24
+    for _, x in ipairs({ -17.8, 17.8 }) do
+        makePart("CorridorHeaderTrim", Vector3.new(0.6, 1, 230), CFrame.new(x, 14, 0), referenceBlue)
+    end
+    for _, z in ipairs({ -95, -60, -25, 10, 45, 80 }) do
+        local light = makePart("HallLight", Vector3.new(8, 0.15, 2), CFrame.new(0, 17.85, z), Color3.fromRGB(255, 246, 227), Enum.Material.Neon)
+        light.CanCollide = false
+        light.CanQuery = false
+        local source = Instance.new("PointLight")
+        source.Brightness = 0.6
+        source.Range = 28
+        source.Shadows = false
+        source.Color = light.Color
+        source.Parent = light
+    end
+    local cafe = SchoolConfig.WorldLocations.Cafe.position
+    makePart("CafeCounter", Vector3.new(26, 3, 4), CFrame.new(cafe.X, 2.2, cafe.Z - 12), Color3.fromRGB(135, 91, 64), Enum.Material.Wood)
+    makePart("CafeCounterTop", Vector3.new(27, 0.4, 5), CFrame.new(cafe.X, 3.9, cafe.Z - 12), referenceWhite, Enum.Material.Marble)
+    for _, dx in ipairs({ -15, 15 }) do
+        local top = makePart("CafeTable", Vector3.new(5, 0.5, 5), CFrame.new(cafe.X + dx, 3, cafe.Z - 3), Color3.fromRGB(165, 121, 78), Enum.Material.Wood)
+        makePart("CafeTableLeg", Vector3.new(0.6, 2.8, 0.6), CFrame.new(cafe.X + dx, 1.4, cafe.Z - 3), trimColor, Enum.Material.Metal)
+        for _, dz in ipairs({ -4, 4 }) do
+            makePart("CafeChair", Vector3.new(3, 0.6, 3), CFrame.new(cafe.X + dx, 1.9, cafe.Z - 3 + dz), referenceBlue)
+        end
+    end
+    makeLabel("TOWN / CAFE / AUTO SHOP", CFrame.new(24, 6, 287) * CFrame.Angles(0, math.pi, 0))
+    makeLabel("SCHOOL / CLASSES", CFrame.new(-24, 6, 365))
+    campus:SetAttribute("RecoveryBuild", "IPHONE-01")
+end

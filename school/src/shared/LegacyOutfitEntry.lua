@@ -195,10 +195,60 @@ local selectedSlot = 1
 local selectedOutfit = nil
 local pendingSaveRequestId = nil
 
+-- Save the player's currently worn classic clothing and up to three hats.
+-- Actual asset identities come from their HumanoidDescription, never invented IDs.
+slots.Size = UDim2.new(1, -16, 0, 152)
+for index = 1, 12 do
+    local slot = slots:FindFirstChild("Slot" .. tostring(index))
+    slot.Size = UDim2.fromOffset(60, 44)
+    slot.Position = UDim2.fromOffset(((index - 1) % 4) * 66, math.floor((index - 1) / 4) * 50)
+    slot.TextSize = 12
+end
+pages.Visible = false
+morphs.Visible = false
+for _, definition in ipairs(verifiedInputLabels) do
+    local item = panel:FindFirstChild(definition.name)
+    if not item:IsA("TextButton") then item.Visible = false end
+end
+local nameInput = Instance.new("TextBox")
+nameInput.Name = "SavedLookName"
+nameInput.Position = UDim2.fromOffset(8, 200)
+nameInput.Size = UDim2.fromOffset(270, 44)
+nameInput.PlaceholderText = "Name this look"
+nameInput.ClearTextOnFocus = false
+nameInput.Text = ""
+nameInput.Font = Rhs2UiStyle.Font.Medium
+nameInput.TextColor3 = Rhs2UiStyle.Palette.White
+nameInput.TextSize = 16
+nameInput.Parent = panel
+Rhs2UiStyle.applyDarkRow(nameInput)
+local outfitStatus = Instance.new("TextLabel")
+outfitStatus.Name = "SavedLookStatus"
+outfitStatus.BackgroundTransparency = 1
+outfitStatus.Position = UDim2.fromOffset(8, 302)
+outfitStatus.Size = UDim2.fromOffset(270, 52)
+outfitStatus.Font = Rhs2UiStyle.Font.Regular
+outfitStatus.TextSize = 12
+outfitStatus.TextColor3 = Rhs2UiStyle.Palette.White
+outfitStatus.TextWrapped = true
+outfitStatus.Text = "Select a slot. Save your current clothing and hats, or wear a saved look."
+outfitStatus.Parent = panel
+actionControls.SaveOutfitLabel.Position = UDim2.fromOffset(8, 254)
+actionControls.SaveOutfitLabel.Size = UDim2.fromOffset(132, 44)
+actionControls.SaveOutfitLabel.Text = "SAVE THIS LOOK"
+actionControls.SaveOutfitLabel.TextSize = 12
+actionControls.WearOutfitLabel.Position = UDim2.fromOffset(146, 254)
+actionControls.WearOutfitLabel.Size = UDim2.fromOffset(132, 44)
+actionControls.WearOutfitLabel.Text = "WEAR SELECTED"
+actionControls.WearOutfitLabel.TextSize = 12
+nameInput.FocusLost:Connect(function() pendingSaveRequestId = nil end)
+
 local function applyLoadedOutfit(slot, outfit)
     if type(outfit) ~= "table" then return end
     selectedSlot = slot
     selectedOutfit = outfit
+    nameInput.Text = outfit.OutfitName or ""
+    outfitStatus.Text = "Selected slot " .. tostring(slot) .. "."
     for fieldName, marker in pairs(fieldValues) do
         local value = outfit[fieldName]
         if value ~= nil then marker.Value = value end
@@ -233,6 +283,12 @@ for index = 1, 12 do
                 else
                     selectedSlot = index
                     selectedOutfit = nil
+                    nameInput.Text = ""
+                    outfitStatus.Text = "Slot " .. tostring(index) .. " is empty. Save this look here."
+                end
+                pendingSaveRequestId = nil
+                for number = 1, 12 do
+                    Rhs2UiStyle.applyTab(slots:FindFirstChild("Slot" .. tostring(number)), number == selectedSlot)
                 end
             end
         end)
@@ -245,6 +301,9 @@ actionControls.WearOutfitLabel.Activated:Connect(function()
     end)
     if ok and type(response) == "table" and response.accepted == true then
         applyLoadedOutfit(selectedSlot, response.outfit)
+        outfitStatus.Text = "Saved look applied."
+    else
+        outfitStatus.Text = "No saved look in this slot, or the avatar is not ready yet."
     end
 end)
 
@@ -266,6 +325,28 @@ actionControls.SaveOutfitLabel.Activated:Connect(function()
         outfit[fieldName] = marker.Value
     end
 
+    outfit.OutfitName = nameInput.Text
+    if outfit.OutfitName == "" then
+        outfitStatus.Text = "Give your look a name first."
+        return
+    end
+    local descriptionOk, description = pcall(function()
+        local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+        assert(humanoid, "Avatar not ready")
+        return humanoid:GetAppliedDescription()
+    end)
+    if not descriptionOk then
+        outfitStatus.Text = "Your avatar is still loading. Try again shortly."
+        return
+    end
+    outfit.Shirt, outfit.Pants, outfit.Face = description.Shirt, description.Pants, description.Face
+    local hatIndex = 1
+    for asset in tostring(description.HatAccessory):gmatch("%d+") do
+        if hatIndex > 3 then break end
+        outfit["Hat" .. tostring(hatIndex)] = tonumber(asset)
+        hatIndex = hatIndex + 1
+    end
+    outfitStatus.Text = "Saving your look..."
     local filterOk, filtered = pcall(function()
         return getFilteredNamesForOutfit:InvokeServer(outfit)
     end)
@@ -273,6 +354,7 @@ actionControls.SaveOutfitLabel.Activated:Connect(function()
         if type(filtered) == "table" and filtered.code == "INVALID_NAME" then
             pendingSaveRequestId = nil
         end
+        outfitStatus.Text = "That name could not be saved. Try a shorter name."
         return
     end
     -- GetFilteredNamesForOutfit is the verified preview/validation seam.
@@ -290,10 +372,20 @@ actionControls.SaveOutfitLabel.Activated:Connect(function()
             pendingSaveRequestId = nil
             applyLoadedOutfit(selectedSlot, response.outfit)
             refreshPage(baseSlot.Value)
+            outfitStatus.Text = "Look saved to slot " .. tostring(selectedSlot) .. "."
         elseif response.retryable ~= true then
             pendingSaveRequestId = nil
+            outfitStatus.Text = "Look was not saved. Try again."
+        else
+            outfitStatus.Text = "Save is pending. Tap SAVE THIS LOOK to retry."
         end
+    else
+        outfitStatus.Text = "Could not reach the save service. Try again."
     end
+end)
+
+panel:GetPropertyChangedSignal("Visible"):Connect(function()
+    if panel.Visible then refreshPage(baseSlot.Value) end
 end)
 
 entry.Activated:Connect(function()

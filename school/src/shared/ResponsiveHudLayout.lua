@@ -105,6 +105,19 @@ function ResponsiveHudLayout.compute(viewport, insets, exclusionZones)
     )
     local quickY = safe.bottom - outerGap - quickHeight
 
+    local railBottomLimit = safe.bottom - outerGap
+    for _, zone in ipairs(exclusionZones or {}) do
+        if zone.x < railX + railWidth and zone.right > railX then
+            railBottomLimit = math.min(railBottomLimit, zone.y)
+        end
+    end
+    if railY + railHeight > railBottomLimit then
+        railY = math.max(safe.y + outerGap, railBottomLimit - railHeight)
+        if railY < statusY + statusHeight + groupGap then
+            statusX = railX - groupGap - statusWidth
+        end
+    end
+
     local layout = {
         viewport = rect(0, 0, width, height),
         safe = safe,
