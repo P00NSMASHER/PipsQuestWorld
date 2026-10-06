@@ -126,9 +126,9 @@ local function handle(player,command,args)
             if not result.ok then return result end
             pending.missed=true
             pending.wrongChoices[args.choice]=true
-            result.correct=false;result.explanation=pending.q.explanation;result.state=state(player)
+            result.correct=false;result.hint=pending.q.hint;result.state=state(player)
             result.message=result.deducted>0
-                and ("Wrong streak "..tostring(result.wrongStreak).." • -"..tostring(result.deducted).." coins")
+                and ("Wrong streak "..tostring(result.wrongStreak).." • -"..tostring(result.deducted).." Credits")
                 or ("Wrong streak "..tostring(result.wrongStreak).." • balance protected at 0")
             syncLeaderboard(player.UserId)
             return result
