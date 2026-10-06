@@ -70,7 +70,7 @@ function UI.chip(parent,text,props)
     local bg=props.BackgroundColor3 or UI.P.white
     local fg=props.TextColor3 or UI.P.ink
     local size=props.Size or UDim2.fromOffset(math.max(74,#text*7+24),30)
-    local frame=UI.frame(parent,{Position=props.Position or UDim2.new(),Size=size,BackgroundColor3=bg,BackgroundTransparency=props.BackgroundTransparency or 0,ZIndex=props.ZIndex or 2})
+    local frame=UI.frame(parent,{Position=props.Position or UDim2.new(),Size=size,BackgroundColor3=bg,BackgroundTransparency=props.BackgroundTransparency or 0,ZIndex=props.ZIndex or 2,LayoutOrder=props.LayoutOrder or 0})
     UI.corner(frame,UI.R.chip);UI.stroke(frame,props.StrokeColor or UI.P.line)
     UI.text(frame,text,props.TextSize or UI.T.caption,{Size=UDim2.fromScale(1,1),TextColor3=fg,TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,ZIndex=(props.ZIndex or 2)+1})
     return frame
