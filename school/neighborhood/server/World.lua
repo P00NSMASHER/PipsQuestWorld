@@ -309,8 +309,19 @@ function World.build()
                 windowPanel(root,CFrame.new(wallX,floorY,z)*CFrame.Angles(0,yaw,0),8,5.4)
             end
         end
+        -- Smaller lower/service windows sell the partially exposed basement on the hill side.
+        for _,z in ipairs({-127,-103,-79,-55}) do
+            local basement=World.part(root,"Basement window",Vector3.new(.3,3.8,6.3),CFrame.new(wallX,5.9,z)*CFrame.Angles(0,yaw,0),Color3.fromRGB(88,109,116),Enum.Material.Glass,false)
+            basement.Transparency=.28
+            for _,offset in ipairs({-2,0,2}) do
+                World.part(root,"Basement window bar",Vector3.new(.32,4.2,.25),CFrame.new(side*75.85,5.9,z+offset),palette.metal,Enum.Material.Metal,false)
+            end
+        end
         for _,z in ipairs({-139,-122,-105,-71,-54,-37}) do
             World.part(root,"Side brick pilaster",Vector3.new(2,48,2.2),CFrame.new(side*74.9,28,z),palette.brickDark,Enum.Material.Brick)
+        end
+        for _,z in ipairs({-137,-42}) do
+            World.part(root,"Rain downspout",Vector3.new(.55,44,.55),CFrame.new(side*76.1,27,z),Color3.fromRGB(193,194,188),Enum.Material.Metal,false)
         end
     end
 
@@ -366,6 +377,22 @@ function World.build()
     fencePanel(root,CFrame.new(149,4,-100),Vector3.new(.45,8,112))
     fencePanel(root,CFrame.new(116,4,-155),Vector3.new(67,8,.45))
     fencePanel(root,CFrame.new(116,4,-45),Vector3.new(67,8,.45))
+    for z=-154,-46,18 do World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(149,4.4,z),palette.metal,Enum.Material.Metal,true) end
+    for x=84,148,12 do
+        World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-155),palette.metal,Enum.Material.Metal,true)
+        World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-45),palette.metal,Enum.Material.Metal,true)
+    end
+    -- Side-lot service details visible in the real-school references.
+    for _,z in ipairs({-121,-108}) do
+        World.part(root,"Wall HVAC unit",Vector3.new(2.8,4.5,5.4),CFrame.new(77,7,z),Color3.fromRGB(167,170,166),Enum.Material.Metal,false)
+        for y=5.8,8.2,2.4 do World.part(root,"HVAC grille",Vector3.new(.15,.25,4.4),CFrame.new(78.45,y,z),palette.metal,Enum.Material.Metal,false) end
+    end
+    World.part(root,"Utility cabinet",Vector3.new(3.2,6,4.5),CFrame.new(78,3.2,-132),Color3.fromRGB(116,120,119),Enum.Material.Metal,false)
+    local hydrant=World.part(root,"Red fire hydrant",Vector3.new(2.1,4,2.1),CFrame.new(162,2,-52),Color3.fromRGB(185,47,37),Enum.Material.Metal,false)
+    hydrant.Shape=Enum.PartType.Cylinder
+    World.part(root,"Hydrant crossbar",Vector3.new(4,.9,.9),CFrame.new(162,2.7,-52),Color3.fromRGB(185,47,37),Enum.Material.Metal,false)
+    local hydrantTop=World.part(root,"Hydrant cap",Vector3.new(2.8,1.3,2.8),CFrame.new(162,4.3,-52),Color3.fromRGB(185,47,37),Enum.Material.Metal,false)
+    hydrantTop.Shape=Enum.PartType.Ball
     for _,entry in ipairs({
         {97,-137,0,Color3.fromRGB(221,222,218)},
         {113,-137,0,Color3.fromRGB(55,66,77)},
