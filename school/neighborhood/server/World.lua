@@ -314,19 +314,21 @@ function World.build()
         World.part(root,"Front brick pilaster",Vector3.new(2.3,48,2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
     end
     for _,floorY in ipairs({29,44}) do
-        for _,x in ipairs({-59.5,-42.5,-25.5,25.5,42.5,59.5}) do
-            World.part(root,"Tan facade bay",Vector3.new(13.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
-            windowPanel(root,CFrame.new(x,floorY,-33.7),8.5,5.8)
+        for _,x in ipairs({-60,-40,-20,0,20,40,60}) do
+            World.part(root,"Tan facade bay",Vector3.new(14.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
+            windowPanel(root,CFrame.new(x,floorY,-33.7),8.8,5.8)
         end
     end
+    -- Horizontal stone/concrete belt between the arched ground level and upper classroom bays.
+    World.part(root,"Front stone belt",Vector3.new(148,1.1,1.2),CFrame.new(0,26.1,-33.8),palette.stone,Enum.Material.Concrete,false)
     makeFrontArch(root,-27,false)
     makeFrontArch(root,-9,true)
     makeFrontArch(root,9,true)
     makeFrontArch(root,27,false)
-    -- Keep branding subordinate to the real masonry rhythm; the large crest remains inside the lobby.
-    sign(root,"ASSUMPTION BVM SCHOOL",CFrame.new(0,28,-33.4)*CFrame.Angles(0,math.pi,0),Vector3.new(27,3.4,.3),palette.navy,palette.gold)
+    -- The real facade is mostly architecture, not signage. Identity is carried by the Howard sign,
+    -- lobby crest and a small restrained roofline cross.
     cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
-    sign(root,"1928",CFrame.new(0,17.2,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
+    sign(root,"1928",CFrame.new(0,10.6,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
 
     -- Repeating side windows and strong vertical brick rhythm visible in the reference photos.
     for _,side in ipairs({-1,1}) do
