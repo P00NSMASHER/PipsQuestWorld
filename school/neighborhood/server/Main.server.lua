@@ -117,7 +117,7 @@ local function handle(player,command,args)
             if pending.wrongChoices[args.choice] then
                 return {ok=true,correct=false,duplicate=true,penalty=0,deducted=0,
                     wrongStreak=p.wrongStreak,explanation=pending.q.explanation,
-                    message="You already tried that answer. No extra coins were deducted.",state=state(player)}
+                    message="You already tried that answer. No extra Credits were deducted.",state=state(player)}
             end
             local missId=pending.token..":miss:"..tostring(args.choice)
             local result=store:transact(player.UserId,function(profile)
