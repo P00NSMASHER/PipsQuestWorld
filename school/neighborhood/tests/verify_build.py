@@ -111,6 +111,19 @@ def validate_abvm_contract() -> dict:
     )
     require(all(world.count(call) == 1 for call in expected_arch_calls),
             "formal facade must retain the four exact configured arched bays")
+
+    expected_room_calls = (
+        'classroom(root,"math","Math","Mrs. Campion",-49,4,',
+        'classroom(root,"reading","Reading","Mrs. Russek",49,4,',
+        'classroom(root,"grammar","Grammar","Mrs. Benulis",-49,20,',
+        'classroom(root,"religion","Religion","Mr. Bolich",49,20,',
+        'classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,',
+        'classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,',
+    )
+    require(all(world.count(call) == 1 for call in expected_room_calls),
+            "six classroom volumes must remain on their intended floors")
+    require('World.shopPosition=Vector3.new(31,5,-49)' in world,
+            "ABVM School Shop position moved outside its guarded lobby zone")
     required_subjects = {
         "math": "Mrs. Campion", "reading": "Mrs. Russek",
         "grammar": "Mrs. Benulis", "religion": "Mr. Bolich",
