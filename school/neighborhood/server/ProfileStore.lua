@@ -19,7 +19,11 @@ function Store:operate(id, reducer, release)
     local ok, updated = pcall(function()
         local function transform(envelope)
             envelope = envelope or {profile=Learning.newProfile(),lease={}}
-            if type(envelope)~="table" or not Learning.valid(envelope.profile) then
+            if type(envelope)~="table" or type(envelope.profile)~="table" then
+                error("invalid_stored_profile")
+            end
+            Learning.normalize(envelope.profile)
+            if not Learning.valid(envelope.profile) then
                 error("invalid_stored_profile")
             end
             local lease=envelope.lease or {}
