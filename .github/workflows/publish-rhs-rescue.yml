@@ -1,4 +1,5 @@
 name: Publish RHS Rescue to Roblox
+# trigger: validated mobile rescue preflight run 37409584955
 
 on:
   push:
