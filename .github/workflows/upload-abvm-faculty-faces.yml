@@ -35,20 +35,23 @@ jobs:
           sudo apt-get install -y -qq imagemagick
           mkdir -p "$RUNNER_TEMP/faculty-src" "$RUNNER_TEMP/faculty-faces"
 
-      - name: Resolve canonical experience creator
+      - name: Resolve API-key owner and asset permission
         id: creator
         shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
         run: |
           set -euo pipefail
-          response="$(curl -fsSL "https://games.roblox.com/v1/games?universeIds=$UNIVERSE_ID")"
-          printf '%s' "$response" > "$RUNNER_TEMP/universe.json"
-          creator_type="$(jq -r '.data[0].creator.type' "$RUNNER_TEMP/universe.json")"
-          creator_id="$(jq -r '.data[0].creator.id' "$RUNNER_TEMP/universe.json")"
-          test "$creator_type" = "User" -o "$creator_type" = "Group"
-          test "$creator_id" != "null" -a -n "$creator_id"
-          echo "creator_type=$creator_type" >> "$GITHUB_OUTPUT"
+          test -n "$ROBLOX_API_KEY"
+          curl -fsSL             --request POST 'https://apis.roblox.com/api-keys/v1/introspect'             --header 'Content-Type: application/json'             --data "$(jq -cn --arg key "$ROBLOX_API_KEY" '{apiKey:$key}')"             -o "$RUNNER_TEMP/api-key-introspect.json"
+          jq '{name,authorizedUserId,enabled,expired,scopes}' "$RUNNER_TEMP/api-key-introspect.json"
+          creator_id="$(jq -r '.authorizedUserId // empty' "$RUNNER_TEMP/api-key-introspect.json")"
+          test -n "$creator_id" -a "$creator_id" != "0"
+          jq -e '.enabled == true and (.expired == false)' "$RUNNER_TEMP/api-key-introspect.json" >/dev/null
+          jq -e '.scopes[] | select((.name=="asset" or .name=="asset:write") and ((.operations // []) | index("write") or .name=="asset:write"))' "$RUNNER_TEMP/api-key-introspect.json" >/dev/null
+          echo "creator_type=User" >> "$GITHUB_OUTPUT"
           echo "creator_id=$creator_id" >> "$GITHUB_OUTPUT"
-          printf 'Resolved creator: %s %s\n' "$creator_type" "$creator_id"
+          printf 'Resolved API-key owner user %s with asset write permission.\n' "$creator_id"
 
       - name: Download, crop, and upload all 18 faculty faces
         id: upload
