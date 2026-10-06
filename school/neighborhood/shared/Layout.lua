@@ -8,7 +8,7 @@ function Layout.compute(width, height)
     local narrow = width < 600
 
     local goldLandscape = landscape and width >= 720
-    local railHeight = narrow and 92 or 50
+    local railHeight = narrow and 100 or 50
     local railWidth = goldLandscape and math.min(500,math.max(390,width*.45)) or math.min(790, math.max(280, width - 24))
     local navWidth = goldLandscape and 104 or railWidth
     local goalHeight = narrow and 54 or 44
@@ -33,7 +33,7 @@ function Layout.compute(width, height)
             x=12,
             y=goldLandscape and 72 or (railHeight+6),
             width=navWidth,
-            height=goldLandscape and 212 or 44,
+            height=goldLandscape and 212 or (narrow and 46 or 44),
         },
         goal = {
             x=goldLandscape and (width-298) or 12,
