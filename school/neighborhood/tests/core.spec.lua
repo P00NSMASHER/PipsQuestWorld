@@ -284,6 +284,7 @@ test("layout remains inside gold-standard iPhone, iPad and desktop safe canvases
         assert(l.rail.x>=0 and l.rail.y>=0 and l.rail.x+l.rail.width<=v[1])
         assert(l.goal.x>=0 and l.goal.x+l.goal.width<=v[1])
         assert(l.answerHeight>=48)
+        assert(l.nav.height>=44)
         assert(l.drive.width>=88 and l.drive.height>=160)
         if v[1]>=720 and v[1]>=v[2] then
             assert(l.headerHeight/v[2]<=.20)
