@@ -80,18 +80,37 @@ function Wardrobe.apply(character,profile,catalog)
     if top then
         local topColor=Color3.fromRGB(table.unpack(top.color))
         local ts=torso.Size
+        local forest=Color3.fromRGB(31,91,67)
+        local navy=Color3.fromRGB(28,48,72)
+        local cream=Color3.fromRGB(238,238,231)
+        local heather=top.style==54 or top.style==55 or top.style==56
         layer(folder,torso,"Uniform top",Vector3.new(ts.X*1.04,ts.Y*.9,ts.Z*1.07),CFrame.new(0,0,0),topColor)
-        local markColor=top.style==13 and Color3.fromRGB(31,91,67) or Color3.fromRGB(238,238,231)
+        local markColor=top.style==13 and forest or (heather and navy or cream)
         layer(folder,torso,"Uniform ABVM chest mark",Vector3.new(.42,.22,.06),CFrame.new(ts.X*.25,ts.Y*.14,-ts.Z*.56),markColor)
         if top.style==14 then
-            layer(folder,torso,"Sweater collar",Vector3.new(ts.X*.7,.28,ts.Z*1.08),CFrame.new(0,ts.Y*.38,0),Color3.fromRGB(238,238,231))
+            layer(folder,torso,"Sweater collar",Vector3.new(ts.X*.7,.28,ts.Z*1.08),CFrame.new(0,ts.Y*.38,0),cream)
         elseif top.style==15 then
-            layer(folder,torso,"Cardigan shirt inset",Vector3.new(ts.X*.42,ts.Y*.78,.06),CFrame.new(0,0,-ts.Z*.57),Color3.fromRGB(238,238,231))
+            layer(folder,torso,"Cardigan shirt inset",Vector3.new(ts.X*.42,ts.Y*.78,.06),CFrame.new(0,0,-ts.Z*.57),cream)
+        elseif top.style==51 or top.style==52 then
+            layer(folder,torso,"Store polo collar",Vector3.new(ts.X*.74,.28,ts.Z*1.08),CFrame.new(0,ts.Y*.39,0),topColor)
+            layer(folder,torso,"Store polo placket",Vector3.new(.16,ts.Y*.34,.06),CFrame.new(0,ts.Y*.22,-ts.Z*.57),markColor)
+            for _,y in ipairs({.30,.20,.10}) do
+                layer(folder,torso,"Store polo button",Vector3.new(.08,.08,.07),CFrame.new(0,ts.Y*y,-ts.Z*.59),markColor)
+            end
+        elseif top.style==53 then
+            layer(folder,torso,"Quarter zip collar",Vector3.new(ts.X*.72,.38,ts.Z*1.08),CFrame.new(0,ts.Y*.38,0),topColor)
+            layer(folder,torso,"Quarter zip",Vector3.new(.11,ts.Y*.46,.07),CFrame.new(0,ts.Y*.2,-ts.Z*.58),Color3.fromRGB(36,38,43))
+        elseif top.style==55 then
+            layer(folder,torso,"Crewneck rib collar",Vector3.new(ts.X*.68,.22,ts.Z*1.08),CFrame.new(0,ts.Y*.4,0),Color3.fromRGB(145,147,150))
+        elseif top.style==56 then
+            layer(folder,torso,"Pullover hood",Vector3.new(ts.X*.9,ts.Y*.5,ts.Z*.78),CFrame.new(0,ts.Y*.58,ts.Z*.34),topColor)
+            layer(folder,torso,"Kangaroo pocket",Vector3.new(ts.X*.72,ts.Y*.25,.08),CFrame.new(0,-ts.Y*.23,-ts.Z*.58),Color3.fromRGB(151,153,156))
         end
         for _,side in ipairs({"Left","Right"}) do
             local arm=character:FindFirstChild(side.."UpperArm") or character:FindFirstChild(side.." Arm")
             if arm and arm:IsA("BasePart") then
-                local sleeveScale=(top.style==14 or top.style==15) and .95 or .55
+                local longSleeve=top.style==14 or top.style==15 or top.style==52 or top.style==53 or top.style==55 or top.style==56
+                local sleeveScale=longSleeve and .95 or .55
                 layer(folder,arm,"Uniform sleeve",Vector3.new(arm.Size.X*1.05,arm.Size.Y*sleeveScale,arm.Size.Z*1.05),CFrame.new(0,0,0),topColor)
             end
         end
@@ -119,8 +138,13 @@ function Wardrobe.apply(character,profile,catalog)
             for _,side in ipairs({"Left","Right"}) do
                 local leg=character:FindFirstChild(side.."UpperLeg") or character:FindFirstChild(side.." Leg")
                 if leg and leg:IsA("BasePart") then
-                    local scale=bottom.style==22 and .58 or .98
-                    layer(folder,leg,bottom.style==22 and "Khaki shorts" or "Khaki pants",
+                    local shorts=bottom.style==22 or bottom.style==62
+                    local scale=shorts and .58 or .98
+                    local pieceName
+                    if bottom.style==61 then pieceName="ABVM sweatpants"
+                    elseif bottom.style==62 then pieceName="ABVM athletic shorts"
+                    else pieceName=shorts and "Khaki shorts" or "Khaki pants" end
+                    layer(folder,leg,pieceName,
                         Vector3.new(leg.Size.X*1.07,leg.Size.Y*scale,leg.Size.Z*1.07),CFrame.new(0,leg.Size.Y*(1-scale)*.42,0),bottomColor)
                 end
             end
