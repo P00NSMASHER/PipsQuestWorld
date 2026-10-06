@@ -465,8 +465,15 @@ function World.build()
     end
 
     -- White low front additions flank the arched section in the real facade.
-    World.part(root,"Front west low annex",Vector3.new(41,8,13),CFrame.new(-55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
-    World.part(root,"Front east low annex",Vector3.new(41,8,13),CFrame.new(55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
+    for _,x in ipairs({-55,55}) do
+        World.part(root,"Front low annex",Vector3.new(41,8,13),CFrame.new(x,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
+        World.part(root,"Front low annex roof",Vector3.new(43,.55,14.5),CFrame.new(x,11.25,-27),Color3.fromRGB(69,72,72),Enum.Material.Slate)
+        for _,y in ipairs({4.6,6.2,7.8,9.4}) do
+            World.part(root,"Front annex siding line",Vector3.new(40,.12,.18),CFrame.new(x,y,-20.42),Color3.fromRGB(184,189,183),nil,false)
+        end
+        local sideWindow=World.part(root,"Front annex window",Vector3.new(7,3.5,.18),CFrame.new(x,7.4,-20.3),palette.glass,Enum.Material.Glass,false)
+        sideWindow.Transparency=.2
+    end
     World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
     for _,x in ipairs({-34,34}) do
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
