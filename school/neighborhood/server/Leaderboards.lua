@@ -15,7 +15,9 @@ local REFRESH_SECONDS=30
 local palette={
     navy=Color3.fromRGB(20,31,49),paper=Color3.fromRGB(245,242,234),
     muted=Color3.fromRGB(143,157,175),green=Color3.fromRGB(54,176,122),
-    blue=Color3.fromRGB(70,132,232),gold=Color3.fromRGB(226,178,77)
+    blue=Color3.fromRGB(70,132,232),gold=Color3.fromRGB(226,178,77),
+    silver=Color3.fromRGB(181,190,201),bronze=Color3.fromRGB(181,122,78),
+    row=Color3.fromRGB(29,43,64),rowAlt=Color3.fromRGB(34,49,72)
 }
 
 local function storeName(suffix:string):string
@@ -116,23 +118,30 @@ local function renderBoard(part:BasePart,kind:string,rows:{any})
     local m=meta[kind]
     local gui=make("SurfaceGui",part,{Name="PipLeaderboard",Face=Enum.NormalId.Front,SizingMode=Enum.SurfaceGuiSizingMode.PixelsPerStud,PixelsPerStud=36,LightInfluence=0})::SurfaceGui
     local root=make("Frame",gui,{Size=UDim2.fromScale(1,1),BackgroundColor3=palette.navy,BorderSizePixel=0})::Frame
-    make("UICorner",root,{CornerRadius=UDim.new(0,10)})
+    make("UICorner",root,{CornerRadius=UDim.new(0,12)})
+    make("UIStroke",root,{Color=palette.gold,Thickness=2,Transparency=.12})
     make("Frame",root,{Size=UDim2.new(1,0,0,8),BackgroundColor3=m.accent,BorderSizePixel=0})
-    make("TextLabel",root,{Position=UDim2.fromOffset(18,13),Size=UDim2.new(1,-36,0,18),BackgroundTransparency=1,Text="ASSUMPTION BVM CATHOLIC SCHOOL",TextColor3=palette.gold,Font=Enum.Font.GothamBold,TextSize=11,TextXAlignment=Enum.TextXAlignment.Left})
-    make("TextLabel",root,{Position=UDim2.fromOffset(18,30),Size=UDim2.new(1,-36,0,34),BackgroundTransparency=1,Text=m.title,TextColor3=palette.paper,Font=Enum.Font.GothamBold,TextSize=23,TextXAlignment=Enum.TextXAlignment.Left})
-    make("TextLabel",root,{Position=UDim2.fromOffset(18,61),Size=UDim2.new(1,-36,0,31),BackgroundTransparency=1,Text=m.subtitle,TextWrapped=true,TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=12,TextXAlignment=Enum.TextXAlignment.Left})
-    local holder=make("Frame",root,{Position=UDim2.fromOffset(14,98),Size=UDim2.new(1,-28,1,-112),BackgroundTransparency=1})::Frame
+    local badge=make("Frame",root,{Position=UDim2.fromOffset(16,18),Size=UDim2.fromOffset(42,42),BackgroundColor3=m.accent,BorderSizePixel=0})::Frame
+    make("UICorner",badge,{CornerRadius=UDim.new(1,0)})
+    make("TextLabel",badge,{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text="★",TextColor3=palette.navy,Font=Enum.Font.GothamBold,TextSize=22,TextXAlignment=Enum.TextXAlignment.Center})
+    make("TextLabel",root,{Position=UDim2.fromOffset(68,14),Size=UDim2.new(1,-84,0,16),BackgroundTransparency=1,Text="ASSUMPTION BVM CATHOLIC SCHOOL",TextColor3=palette.gold,Font=Enum.Font.GothamBold,TextSize=10,TextXAlignment=Enum.TextXAlignment.Left})
+    make("TextLabel",root,{Position=UDim2.fromOffset(68,29),Size=UDim2.new(1,-84,0,30),BackgroundTransparency=1,Text=m.title,TextColor3=palette.paper,Font=Enum.Font.GothamBold,TextSize=21,TextXAlignment=Enum.TextXAlignment.Left})
+    make("TextLabel",root,{Position=UDim2.fromOffset(18,66),Size=UDim2.new(1,-36,0,28),BackgroundTransparency=1,Text=m.subtitle,TextWrapped=true,TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=11,TextXAlignment=Enum.TextXAlignment.Left})
+    local holder=make("Frame",root,{Position=UDim2.fromOffset(14,99),Size=UDim2.new(1,-28,1,-122),BackgroundTransparency=1})::Frame
     make("UIListLayout",holder,{Padding=UDim.new(0,5),SortOrder=Enum.SortOrder.LayoutOrder})
     if #rows==0 then
         make("TextLabel",holder,{Size=UDim2.new(1,0,0,40),BackgroundTransparency=1,Text="No ranked players yet",TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=16})
         return
     end
     for rank,row in ipairs(rows) do
-        local line=make("Frame",holder,{LayoutOrder=rank,Size=UDim2.new(1,0,0,35),BackgroundColor3=Color3.fromRGB(29,43,64),BorderSizePixel=0})::Frame
-        make("UICorner",line,{CornerRadius=UDim.new(0,7)})
-        make("TextLabel",line,{Position=UDim2.fromOffset(8,0),Size=UDim2.fromOffset(34,35),BackgroundTransparency=1,Text="#"..rank,TextColor3=rank<=3 and m.accent or palette.muted,Font=Enum.Font.GothamBold,TextSize=14})
-        make("TextLabel",line,{Position=UDim2.fromOffset(44,0),Size=UDim2.new(1,-145,1,0),BackgroundTransparency=1,Text=row.name,TextColor3=palette.paper,Font=Enum.Font.GothamMedium,TextSize=14,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd})
-        make("TextLabel",line,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,0),Size=UDim2.fromOffset(92,35),BackgroundTransparency=1,Text=formatValue(kind,row.value),TextColor3=m.accent,Font=Enum.Font.GothamBold,TextSize=14,TextXAlignment=Enum.TextXAlignment.Right})
+        local line=make("Frame",holder,{LayoutOrder=rank,Size=UDim2.new(1,0,0,35),BackgroundColor3=rank%2==0 and palette.rowAlt or palette.row,BorderSizePixel=0})::Frame
+        make("UICorner",line,{CornerRadius=UDim.new(0,8)})
+        local medalColor=rank==1 and palette.gold or rank==2 and palette.silver or rank==3 and palette.bronze or Color3.fromRGB(51,67,91)
+        local medal=make("Frame",line,{Position=UDim2.fromOffset(7,5),Size=UDim2.fromOffset(25,25),BackgroundColor3=medalColor,BorderSizePixel=0})::Frame
+        make("UICorner",medal,{CornerRadius=UDim.new(1,0)})
+        make("TextLabel",medal,{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text=tostring(rank),TextColor3=rank<=3 and palette.navy or palette.paper,Font=Enum.Font.GothamBold,TextSize=12,TextXAlignment=Enum.TextXAlignment.Center})
+        make("TextLabel",line,{Position=UDim2.fromOffset(40,0),Size=UDim2.new(1,-140,1,0),BackgroundTransparency=1,Text=row.name,TextColor3=palette.paper,Font=Enum.Font.GothamMedium,TextSize=13,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd})
+        make("TextLabel",line,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,0),Size=UDim2.fromOffset(94,35),BackgroundTransparency=1,Text=formatValue(kind,row.value),TextColor3=m.accent,Font=Enum.Font.GothamBold,TextSize=13,TextXAlignment=Enum.TextXAlignment.Right})
     end
 end
 
