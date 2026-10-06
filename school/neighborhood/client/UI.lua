@@ -110,18 +110,26 @@ function UI.flash(o)
 end
 function UI.crest(parent,props)
     props=props or {}
-    local size=props.Size or UDim2.fromOffset(38,38)
-    local outer=UI.frame(parent,{Name=props.Name or "ABVMCrest",Position=props.Position or UDim2.fromOffset(8,5),Size=size,BackgroundColor3=UI.P.ink,ZIndex=props.ZIndex or 3})
-    UI.corner(outer,999)
-    UI.new("UIStroke",outer,{Color=UI.P.gold,Thickness=2})
-    local green=UI.frame(outer,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(.73,.73),BackgroundColor3=UI.P.teal,ZIndex=(props.ZIndex or 3)+1})
-    UI.corner(green,999)
-    UI.new("UIStroke",green,{Color=UI.P.gold,Thickness=1})
-    local center=UI.frame(green,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(.78,.78),BackgroundColor3=UI.P.paper,ZIndex=(props.ZIndex or 3)+2})
-    UI.corner(center,999)
-    UI.text(center,"A",22,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.Garamond,TextColor3=UI.P.ink,ZIndex=(props.ZIndex or 3)+3})
-    UI.text(center,"✝",10,{Position=UDim2.fromScale(.31,-.08),Size=UDim2.fromScale(.38,.38),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,ZIndex=(props.ZIndex or 3)+4})
-    return outer
+    local size=props.Size or UDim2.fromOffset(38,42)
+    local z=props.ZIndex or 3
+    local root=UI.new("Frame",parent,{Name=props.Name or "ABVMCrest",Position=props.Position or UDim2.fromOffset(8,4),Size=size,BackgroundTransparency=1,ZIndex=z})
+
+    -- Native shield approximation of the gold-standard ABVM crest: navy field, gold border,
+    -- gold crown/cross language and white central cross. No external asset dependency.
+    local shield=UI.new("Frame",root,{AnchorPoint=Vector2.new(.5,0),Position=UDim2.fromScale(.5,0),Size=UDim2.fromScale(.78,.88),BackgroundColor3=UI.P.ink,BorderSizePixel=0,ZIndex=z+1})
+    UI.corner(shield,8)
+    UI.new("UIStroke",shield,{Color=UI.P.gold,Thickness=2.2})
+
+    local crown=UI.new("TextLabel",root,{BackgroundTransparency=1,Position=UDim2.fromScale(.12,-.11),Size=UDim2.fromScale(.76,.34),Text="♛",Font=Enum.Font.GothamBold,TextScaled=true,TextColor3=UI.P.gold,ZIndex=z+4})
+    local crossV=UI.new("Frame",shield,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.56),Size=UDim2.fromScale(.18,.52),BackgroundColor3=UI.P.paper,BorderSizePixel=0,ZIndex=z+3})
+    UI.corner(crossV,3)
+    local crossH=UI.new("Frame",shield,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.48),Size=UDim2.fromScale(.52,.16),BackgroundColor3=UI.P.paper,BorderSizePixel=0,ZIndex=z+3})
+    UI.corner(crossH,3)
+
+    local foot=UI.new("Frame",root,{AnchorPoint=Vector2.new(.5,1),Position=UDim2.fromScale(.5,.98),Size=UDim2.fromScale(.48,.16),BackgroundColor3=UI.P.ink,BorderSizePixel=0,Rotation=45,ZIndex=z+1})
+    UI.corner(foot,5)
+    UI.new("UIStroke",foot,{Color=UI.P.gold,Thickness=2})
+    return root
 end
 function UI.preview(parent,item,props)
     props=props or {}
