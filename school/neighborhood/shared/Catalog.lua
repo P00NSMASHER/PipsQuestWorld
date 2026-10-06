@@ -2,10 +2,10 @@
 -- One shared, fixed-price catalog. Server alone changes balances and ownership.
 local Catalog = {}
 Catalog.Subjects = {
-    {id = "math", name = "Math", short = "Math", color = {62, 154, 214}},
-    {id = "reading", name = "Reading / ELA", short = "Reading", color = {125, 103, 202}},
-    {id = "spelling", name = "Spelling / Handwriting", short = "Spelling", color = {51, 158, 129}},
-    {id = "religion", name = "Religion", short = "Religion", color = {196, 147, 58}},
+    {id = "math", name = "Math", short = "Math", teacher = "Mrs. Campion", color = {62, 154, 214}},
+    {id = "reading", name = "Reading / ELA", short = "Reading", teacher = "Mrs. Russek", color = {125, 103, 202}},
+    {id = "spelling", name = "Spelling / Handwriting", short = "Spelling", teacher = "Mrs. Kochol", color = {51, 158, 129}},
+    {id = "religion", name = "Religion", short = "Religion", teacher = "Mr. Bolich", color = {196, 147, 58}},
 }
 Catalog.Tiers = {
     {name = "Starting out", earned = 0}, {name = "Finding your style", earned = 300},
