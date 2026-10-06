@@ -162,6 +162,7 @@ def validate_abvm_contract() -> dict:
     require(all(marker in main for marker in (
         'Name="ProductGrid"', 'Name="AnswerGrid"', 'FillDirectionMaxCells=2',
         'visual.color:Lerp(UI.P.white,.88)', 'cardStroke.Transparency=.58',
+        '"ABVM UNIFORM PREVIEW"', 'local equippedDefs={', '"✓  Save Outfit"',
         'showClasses=function()', 'showAvatar=function()',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
