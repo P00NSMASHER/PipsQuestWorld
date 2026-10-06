@@ -126,8 +126,10 @@ def validate_abvm_contract() -> dict:
     for subject, (title, teacher, position) in required_subjects.items():
         require(f'id="{subject}"' in catalog and f'teacher="{teacher}"' in catalog,
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
+        literal_call = f'classroom(root,"{subject}","{title}","{teacher}",{position},'
+        bound_call = f'classroom(root,"{subject}","{title}",(active.{subject} and active.{subject}.teacher) or "{teacher}",{position},'
         require(
-            f'classroom(root,"{subject}","{title}",(active.{subject} and active.{subject}.teacher) or "{teacher}",{position},' in world,
+            literal_call in world or bound_call in world,
             f"world classroom lost approved teacher/position contract: {subject} / {teacher}"
         )
     require("Catalog.Faculty = {" in catalog and "Catalog.ByStaffId = {}" in catalog,
