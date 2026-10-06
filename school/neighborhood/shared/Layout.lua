@@ -46,7 +46,7 @@ function Layout.compute(width, height)
             width = 92,
             height = 174,
             right = 12,
-            yScale = .58,
+            yScale = compact and .47 or .58,
         },
     }
 end
