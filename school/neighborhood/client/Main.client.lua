@@ -23,7 +23,7 @@ local busy=false
 local category="Homes"
 local header=UI.frame(canvas,{Name="Header",Position=UDim2.fromOffset(8,4),Size=UDim2.new(1,-16,0,52),BackgroundColor3=UI.P.paper})
 UI.stroke(header)
-UI.text(header,"PIP HIGH",17,{Position=UDim2.fromOffset(12,5),Size=UDim2.fromOffset(94,38),Font=Enum.Font.GothamBold})
+UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(12,5),Size=UDim2.fromOffset(94,38),Font=Enum.Font.GothamBold})
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,6),Size=UDim2.fromOffset(110,38),BackgroundColor3=UI.P.ink})
 local walletText=UI.text(wallet,"0 coins",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
 local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(320,44)})
@@ -106,7 +106,7 @@ end
 showQuestion=function(q)
     if not q then return end
     local s=subject(q.subject)
-    open("quiz",s.short.." classroom")
+    open("quiz",s.short.." • "..(s.teacher or "Classroom"))
     activeQuestion=q
     local questionColumn, answerColumn=body,body
     if canvas.AbsoluteSize.X>=680 and canvas.AbsoluteSize.Y<520 then
@@ -162,7 +162,7 @@ resumeButton=UI.button(goalCard,"Continue this lesson",function()
 end,{Position=UDim2.fromOffset(12,98),Size=UDim2.new(1,-24,0,44),Visible=false,TextSize=14,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white})
 showShop=function(selected)
     category=selected or category
-    open("shop","Campus shop")
+    open("shop","ABVM School Shop")
     local index,tier=Catalog.tier(state.earned)
     UI.text(body,tier.name.."  •  Everything is bought with learning coins",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,34),TextColor3=UI.P.muted})
     local tabs=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,44),BackgroundTransparency=1})
@@ -210,7 +210,7 @@ for i,definition in ipairs({{"School","school"},{"Home","home"},{"Shop","shop"},
         close(false)
         task.spawn(function()
             local result=call(command,{})
-            if result.ok and command=="school" then notify("Choose a colored classroom. Walk through its doorway to begin.") end
+            if result.ok and command=="school" then notify("Choose an Assumption BVM classroom. Walk through its doorway to begin.") end
             if result.ok and command=="vehicle" then notify("Use the driving controls or your thumbstick. Park returns normal walking.") end
         end)
     end,{Position=UDim2.fromOffset((i-1)*80,0),Size=UDim2.fromOffset(74,44),TextSize=14,BackgroundColor3=UI.P.white})
@@ -294,7 +294,7 @@ task.spawn(function()
         local result=call("state",{})
         if result.state and result.state.ready then
             update(result.state)
-            notify("Your home and starter ride are free. Visit a classroom to earn your first upgrade.")
+            notify("Your home and starter ride are free. Head to Assumption BVM to earn your first upgrade.")
             break
         end
         task.wait(2)
