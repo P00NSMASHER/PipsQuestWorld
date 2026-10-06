@@ -3,7 +3,7 @@
 local Workspace=game:GetService("Workspace")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
-local World={rooms={},plots={},homes={}}
+local World={rooms={},plots={},homes={},leaderboardParts={}}
 local palette={navy=Color3.fromRGB(40,58,79),cream=Color3.fromRGB(239,234,221),wood=Color3.fromRGB(170,132,96),green=Color3.fromRGB(115,163,137),gold=Color3.fromRGB(216,185,115)}
 local function color(rgb) return Color3.fromRGB(rgb[1],rgb[2],rgb[3]) end
 function World.part(parent,name,size,cf,tint,material,collide)
@@ -67,6 +67,13 @@ function World.build()
     World.part(root,"Roof",Vector3.new(180,1.2,147),CFrame.new(0,18.8,-94),palette.navy,Enum.Material.Slate)
     for _,x in ipairs({-86,86}) do World.part(root,"Facade edge",Vector3.new(2,18,142),CFrame.new(x,9,-94),palette.cream) end
     sign(root,"PIP HIGH",CFrame.new(0,16,-22)*CFrame.Angles(0,math.pi,0),Vector3.new(29,4,.4))
+    -- Three permanent lobby boards: academic accuracy, total answers, and current money.
+    -- Their SurfaceGuis are filled by the server Leaderboards module.
+    World.leaderboardParts={
+        accuracy=World.part(root,"Accuracy leaderboard",Vector3.new(48,13,.5),CFrame.new(-54,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
+        questions=World.part(root,"Questions leaderboard",Vector3.new(48,13,.5),CFrame.new(0,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
+        credits=World.part(root,"Money leaderboard",Vector3.new(48,13,.5),CFrame.new(54,9.5,-163.2)*CFrame.Angles(0,math.pi,0),palette.navy,nil,false),
+    }
     for i,subject in ipairs(Catalog.Subjects) do classroom(root,subject,i%2==1 and -51 or 51,i<=2 and -124 or -64) end
     -- A small school store is the only non-residential destination.
     World.shopPosition=Vector3.new(0,2,-151)
