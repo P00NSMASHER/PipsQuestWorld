@@ -28,7 +28,8 @@ local vehicleFilter="All"
 
 -- Compact floating rail from the authoritative gold-standard board.
 local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(760,50),BackgroundColor3=UI.P.paper,BackgroundTransparency=.03})
-UI.crest(header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34)})
+local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
+UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
 UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
 UI.text(header,"ABVM STUDENT",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
@@ -48,9 +49,12 @@ local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOff
 local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(11,37),Size=UDim2.new(1,-22,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
 
-local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.paper,BackgroundTransparency=.015,ClipsDescendants=true})
+local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.white,BackgroundTransparency=.01,ClipsDescendants=true})
 local panelScale=UI.new("UIScale",panel,{Scale=1})
-local panelTitle=UI.text(panel,"",UI.T.display,{Position=UDim2.fromOffset(18,7),Size=UDim2.new(1,-76,0,42),Font=Enum.Font.GothamBold})
+local panelHeader=UI.frame(panel,{Name="PanelHeader",Position=UDim2.fromOffset(0,0),Size=UDim2.new(1,0,0,50),BackgroundColor3=UI.P.ink,ZIndex=3})
+UI.corner(panelHeader,18)
+local panelHeaderMask=UI.frame(panelHeader,{Position=UDim2.new(0,0,1,-18),Size=UDim2.new(1,0,0,18),BackgroundColor3=UI.P.ink,ZIndex=3})
+local panelTitle=UI.text(panelHeader,"",UI.T.section,{Position=UDim2.fromOffset(18,4),Size=UDim2.new(1,-68,0,42),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,ZIndex=4})
 local body=UI.new("ScrollingFrame",panel,{Name="Content",Position=UDim2.fromOffset(14,58),Size=UDim2.new(1,-28,1,-72),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(),AutomaticCanvasSize=Enum.AutomaticSize.Y,ScrollBarThickness=3,ScrollBarImageColor3=UI.P.muted,ScrollingDirection=Enum.ScrollingDirection.Y})
 UI.stack(body,10)
 UI.new("UIPadding",body,{PaddingRight=UDim.new(0,4),PaddingBottom=UDim.new(0,12)})
@@ -134,7 +138,7 @@ local function close(notifyServer)
     if setNavActive then setNavActive(locationCommand) end
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
 end
-UI.button(panel,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-10,0,8),Size=UDim2.fromOffset(40,40),TextSize=24,BackgroundColor3=UI.P.white,CornerRadius=20})
+UI.button(panelHeader,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,7),Size=UDim2.fromOffset(36,36),TextSize=22,BackgroundColor3=UI.P.paper,TextColor3=UI.P.ink,CornerRadius=999,ZIndex=5})
 local function open(kind,title)
     view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
     panelScale.Scale=.975
@@ -144,26 +148,26 @@ local function open(kind,title)
     shopTabs.Visible=isShop
     local hasSubtabs=isShop and (category=="Clothes" or category=="Homes" or category=="Vehicles")
     shopSubtabs.Visible=hasSubtabs
-    panelTitle.Visible=not (isShop and layout.compact and layout.landscape)
+    panelTitle.Visible=true
+    panelHeader.Visible=true
     if isShop then
         if layout.compact and layout.landscape then
-            shopTabs.Position=UDim2.fromOffset(14,8)
-            shopTabs.Size=UDim2.new(1,-76,0,36)
-            shopSubtabs.Position=UDim2.fromOffset(14,48)
-            shopSubtabs.Size=UDim2.new(1,-28,0,30)
-            local top=hasSubtabs and 82 or 48
-            body.Position=UDim2.fromOffset(14,top)
-            body.Size=UDim2.new(1,-28,1,-(top+14))
-        else
             shopTabs.Position=UDim2.fromOffset(14,54)
-            shopTabs.Size=UDim2.new(1,-28,0,42)
+            shopTabs.Size=UDim2.new(1,-28,0,34)
+            shopSubtabs.Position=UDim2.fromOffset(14,91)
+            shopSubtabs.Size=UDim2.new(1,-28,0,28)
+            local top=hasSubtabs and 123 or 92
+            body.Position=UDim2.fromOffset(14,top)
+            body.Size=UDim2.new(1,-28,1,-(top+12))
+        else
+            shopTabs.Position=UDim2.fromOffset(14,56)
+            shopTabs.Size=UDim2.new(1,-28,0,40)
             shopSubtabs.Position=UDim2.fromOffset(14,99)
-            shopSubtabs.Size=UDim2.new(1,-28,0,34)
-            body.Position=UDim2.fromOffset(14,hasSubtabs and 138 or 100)
-            body.Size=UDim2.new(1,-28,1,-(hasSubtabs and 152 or 114))
+            shopSubtabs.Size=UDim2.new(1,-28,0,32)
+            body.Position=UDim2.fromOffset(14,hasSubtabs and 136 or 99)
+            body.Size=UDim2.new(1,-28,1,-(hasSubtabs and 148 or 112))
         end
     else
-        panelTitle.Visible=true
         body.Position=UDim2.fromOffset(14,58)
         body.Size=UDim2.new(1,-28,1,-72)
     end
