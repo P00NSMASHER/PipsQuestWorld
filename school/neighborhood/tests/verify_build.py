@@ -184,6 +184,8 @@ def validate_abvm_contract() -> dict:
         'nav.Size=UDim2.new(1,-18,0,layout.nav.height)',
         'gui:SetAttribute("RobloxPlaceVersion",game.PlaceVersion)',
         '"GRADE 2  •  ABVM  •  v"..tostring(game.PlaceVersion)',
+        'local bonusChip=UI.frame(goalCard',
+        'bonusText.Text="★ "..tostring(state.lessonCount or 0).."/5"',
     )), "gold-standard player-facing screen contract regressed")
     require('{"Left","left"}' not in main and '{"Right","right"}' not in main,
             "debug steering toolbar returned; native thumbstick steering is required")
