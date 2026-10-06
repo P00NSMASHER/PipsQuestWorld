@@ -223,6 +223,10 @@ test("catalog ids and prices are valid; every category has a progression",functi
     equal(Catalog.ById.vehicle_hatch.price,900)
     equal(Catalog.ById.vehicle_sport.price,2400)
     equal(Catalog.ById.vehicle_luxe.price,6500)
+    equal(Catalog.ById.outfit_abvm_polo.price,25)
+    equal(Catalog.ById.outfit_abvm_polo.style,6)
+    equal(Catalog.ById.outfit_abvm_plaid.price,75)
+    equal(Catalog.ById.outfit_abvm_plaid.style,7)
 end)
 test("layout remains inside iPhone, iPad and desktop safe canvases",function()
     for _,v in ipairs({{758,360},{720,320},{852,393},{350,760},{320,568},{976,724},{1366,700}}) do
