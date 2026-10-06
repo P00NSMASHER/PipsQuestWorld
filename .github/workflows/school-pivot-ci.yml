@@ -51,3 +51,9 @@ jobs:
         run: lua5.4 school/tests/foundation_world_contract_spec.lua
       - name: Run housing plot contracts
         run: lua5.4 school/tests/housing_plot_contract_spec.lua
+      - name: Execute iPhone bootstrap and touch-panel regressions
+        run: lua5.4 school/tests/iphone_recovery_boot_spec.lua
+      - name: Execute save-retry and camera-rebind regressions
+        run: lua5.4 school/tests/iphone_recovery_interaction_spec.lua
+      - name: Inspect generated school and house traversal geometry
+        run: lua5.4 school/tests/iphone_recovery_world_spec.lua
