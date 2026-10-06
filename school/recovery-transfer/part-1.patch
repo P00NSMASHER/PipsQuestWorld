@@ -1,0 +1,300 @@
+--- a/school/default.project.json
++++ b/school/default.project.json
+@@ -51,6 +51,9 @@
+         },
+         "FeaturePanelController": {
+           "$path": "src/shared/FeaturePanelController.lua"
++        },
++        "MobilePanelShell": {
++          "$path": "src/shared/MobilePanelShell.lua"
+         }
+       }
+     },
+@@ -146,6 +149,12 @@
+           "$path": "src/client/CanonicalSchoolClient.client.lua"
+         }
+       }
++    },
++    "StarterGui": {
++      "$className": "StarterGui",
++      "$properties": {
++        "ScreenOrientation": "LandscapeSensor"
++      }
+     }
+   }
+ }
+--- a/school/src/client/CanonicalSchoolClient.client.lua
++++ b/school/src/client/CanonicalSchoolClient.client.lua
+@@ -34,9 +34,13 @@
+ gui.ResetOnSpawn = false
+ gui.DisplayOrder = 10
+ gui.IgnoreGuiInset = true
++gui.ScreenInsets = Enum.ScreenInsets.None
++gui.Enabled = false
++gui:SetAttribute("RecoveryBuild", "IPHONE-01")
+ gui.Parent = playerGui
+ 
+ local featurePanels = FeaturePanelController.new()
++featurePanels.quickActions = {}
+ 
+ local auxiliaryPanelBottomMargin = UserInputService.TouchEnabled and 112 or 12
+ 
+@@ -225,16 +229,20 @@
+     { label = "", color = Color3.fromRGB(68, 195, 80) },
+     { label = "", color = Color3.fromRGB(210, 83, 188) },
+ }) do
+-    local quickSlot = Instance.new("TextLabel")
++    local quickSlot = Instance.new("TextButton")
+     quickSlot.Name = "QuickSlot" .. tostring(index)
+     quickSlot.Size = UDim2.fromOffset(52, 52)
+     quickSlot.BackgroundColor3 = slot.color
+     quickSlot.Font = Rhs2UiStyle.Font.Bold
+-    quickSlot.Text = slot.label
++    quickSlot.Text = ({ "CLASS", "CAFE", "CAR", "HOUSE" })[index]
+     quickSlot.TextColor3 = Color3.fromRGB(255, 255, 255)
+-    quickSlot.TextSize = 10
++    quickSlot.TextSize = 12
+     quickSlot.Parent = quickBar
+     Rhs2UiStyle.applyQuickSlot(quickSlot, slot.color)
++    quickSlot.Activated:Connect(function()
++        local handler = featurePanels.quickActions[index]
++        if handler then handler() end
++    end)
+ end
+ 
+ local currentHudLayout = nil
+@@ -274,6 +282,12 @@
+     end
+ 
+     local viewport = camera.ViewportSize
++    -- Cameras can briefly report zero/portrait dimensions while the app opens.
++    -- Defer placement, not the rest of client initialization.
++    if viewport.X < 480 or viewport.Y < 300 then
++        gui.Enabled = false
++        return
++    end
+     local insets = { left = 0, top = 0, right = 0, bottom = 0 }
+     local insetOk, topLeftInset, bottomRightInset = pcall(function()
+         return GuiService:GetGuiInset()
+@@ -283,6 +297,20 @@
+         insets.top = topLeftInset.Y
+         insets.right = bottomRightInset.X
+         insets.bottom = bottomRightInset.Y
++    end
++
++    if UserInputService.TouchEnabled then
++        local safeOk, deviceArea, fullArea = pcall(function()
++            return GuiService:GetInsetArea(Enum.ScreenInsets.DeviceSafeInsets),
++                GuiService:GetInsetArea(Enum.ScreenInsets.None)
++        end)
++        if safeOk then
++            insets.left = math.max(insets.left, deviceArea.Min.X - fullArea.Min.X)
++            insets.right = math.max(insets.right, fullArea.Max.X - deviceArea.Max.X)
++            insets.top = math.max(insets.top, deviceArea.Min.Y - fullArea.Min.Y)
++            insets.bottom = math.max(insets.bottom, fullArea.Max.Y - deviceArea.Max.Y)
++        end
++        insets.bottom = math.max(insets.bottom, 21)
+     end
+ 
+     local layout = ResponsiveHudLayout.compute(
+@@ -419,6 +447,7 @@
+     utilityRail.Position = UDim2.fromOffset(utilityGrid.x, utilityGrid.y)
+     utilityRail.Size = UDim2.fromOffset(utilityGrid.width, utilityGrid.height)
+     utilityRail.Visible = utilityGrid.visible
++    utilityRail.Visible = false -- Reference-only tiles are not playable actions.
+     utilityLayout.CellPadding = UDim2.fromOffset(utilityGrid.gap, utilityGrid.gap)
+     utilityLayout.CellSize = UDim2.fromOffset(utilityGrid.tileSize, utilityGrid.tileSize)
+ 
+@@ -427,6 +456,10 @@
+         if child:IsA("GuiObject") and child.Name:match("^QuickSlot") then
+             child.Size = UDim2.fromOffset(layout.quickSlotSize, layout.quickSlotSize)
+         end
++    end
++    gui.Enabled = true
++    if featurePanels.mobileShell then
++        featurePanels.mobileShell:reflow(layout)
+     end
+ end
+ 
+@@ -636,8 +669,9 @@
+     modal.Visible = true
+ end
+ 
+-action.Activated:Connect(function()
++featurePanels.quickActions[1] = function()
+     if busy or not latestClassState then return end
++    if pendingProgression or latestClassState.progressionPending or latestClassState.completedCurrentClass then return end
+ 
+     if latestClassState.active then
+         local ok, result = pcall(function()
+@@ -645,6 +679,10 @@
+         end)
+         if ok and result and result.returnToFreeRoam then
+             statusLabel.Text = "Back in free roam."
++            modal.Visible = false
++            activeActivity = nil
++            activeClassKey = nil
++            pendingProgression = nil
+         end
+         return
+     end
+@@ -681,9 +719,11 @@
+     else
+         statusLabel.Text = tostring(response.code or "Class is not available yet.")
+     end
+-end)
++end
++action.Activated:Connect(featurePanels.quickActions[1])
+ 
+ local function findOutfitPanel()
++    if outfitPanel and outfitPanel.Parent then return outfitPanel end
+     for _, guiName in ipairs({ "Outfits", "OutfitsMobile", "OutfitsConsole" }) do
+         local outfitGui = playerGui:FindFirstChild(guiName)
+         if outfitGui then
+@@ -809,7 +849,7 @@
+ shopDetails.Size = UDim2.new(0.58, -7, 1, 0)
+ shopDetails.BackgroundColor3 = Rhs2UiStyle.Palette.ShellNavy
+ shopDetails.Font = Rhs2UiStyle.Font.Regular
+-shopDetails.Text = "DETAILS\n\nNo verified clothing items are available yet."
++shopDetails.Text = "DETAILS\n\nThe clothing shop is not stocked yet.\nYour saved looks are in AVATAR."
+ shopDetails.TextColor3 = Rhs2UiStyle.Palette.White
+ shopDetails.TextSize = 13
+ shopDetails.TextWrapped = true
+@@ -916,7 +956,7 @@
+     show = function()
+         local confirmation = shoppingBoundary.consumeServerConfirmation()
+         shopDetails.Text = confirmation and ("DETAILS\n\n" .. confirmation)
+-            or "DETAILS\n\nNo verified clothing items are available yet."
++            or "DETAILS\n\nThe clothing shop is not stocked yet.\nYour saved looks are in AVATAR."
+         shopPanel.Visible = true
+         return true
+     end,
+@@ -1073,7 +1113,7 @@
+                 action.Active = false
+             end
+         else
+-            statusLabel.Text = "Waiting for school services..."
++            statusLabel.Text = "School services unavailable. Retrying..."
+             action.Active = false
+         end
+ 
+@@ -1116,7 +1156,7 @@
+ cafeTitle.BackgroundTransparency = 0
+ cafeTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+ cafeTitle.Position = UDim2.new(0, 0, 0, 0)
+-cafeTitle.Size = UDim2.new(1, 0, 0, 26)
++cafeTitle.Size = UDim2.new(1, -54, 0, 40)
+ cafeTitle.Font = Rhs2UiStyle.Font.Bold
+ cafeTitle.Text = "Corner Cafe"
+ cafeTitle.TextColor3 = Rhs2UiStyle.Palette.White
+@@ -1127,8 +1167,8 @@
+ 
+ local cafeStatus = Instance.new("TextLabel")
+ cafeStatus.BackgroundTransparency = 1
+-cafeStatus.Position = UDim2.new(0, 10, 0, 34)
+-cafeStatus.Size = UDim2.new(1, -20, 0, 48)
++cafeStatus.Position = UDim2.new(0, 10, 0, 48)
++cafeStatus.Size = UDim2.new(1, -20, 0, 40)
+ cafeStatus.Font = Rhs2UiStyle.Font.Regular
+ cafeStatus.Text = "Start a short cafe shift and serve one order."
+ cafeStatus.TextColor3 = Rhs2UiStyle.Palette.White
+@@ -1139,8 +1179,8 @@
+ cafeStatus.Parent = cafeCard
+ 
+ local cafeAction = Instance.new("TextButton")
+-cafeAction.Position = UDim2.new(0, 8, 1, -48)
+-cafeAction.Size = UDim2.new(1, -16, 0, 40)
++cafeAction.Position = UDim2.new(0, 8, 1, -52)
++cafeAction.Size = UDim2.new(1, -16, 0, 44)
+ cafeAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+ cafeAction.Font = Rhs2UiStyle.Font.Bold
+ cafeAction.Text = "START SHIFT"
+@@ -1151,8 +1191,8 @@
+ 
+ local cafeLeave = Instance.new("TextButton")
+ cafeLeave.AnchorPoint = Vector2.new(1, 0)
+-cafeLeave.Position = UDim2.new(1, -8, 0, 28)
+-cafeLeave.Size = UDim2.new(0, 82, 0, 30)
++cafeLeave.Position = UDim2.new(1, -8, 1, -52)
++cafeLeave.Size = UDim2.new(0, 72, 0, 44)
+ cafeLeave.BackgroundTransparency = 1
+ cafeLeave.Font = Rhs2UiStyle.Font.Medium
+ cafeLeave.Text = "LEAVE JOB"
+@@ -1178,8 +1218,9 @@
+     latestCafeJob = state
+     local active = state.active == true
+     local atCafe = state.atCafe == true
+-    cafeCard.Visible = active or atCafe
++    cafeCard.Visible = active or atCafe or cafeCard:GetAttribute("ManuallyOpened") == true
+     cafeLeave.Visible = active
++    cafeAction.Size = UDim2.new(1, active and -92 or -16, 0, 44)
+ 
+     if active then
+         cafeAction.Text = "SERVE ORDER  •  +$" .. tostring(state.wage or 25)
+@@ -1279,6 +1320,7 @@
+     cafeBusy = false
+ 
+     if ok and type(response) == "table" and response.accepted == true then
++        cafeCard:SetAttribute("ManuallyOpened", false)
+         setCafeMessage("Shift ended. Back to free roam.")
+     else
+         setCafeMessage("Could not leave the shift yet.")
+@@ -1322,7 +1364,7 @@
+ vehicleTitle.BackgroundTransparency = 0
+ vehicleTitle.BackgroundColor3 = Rhs2UiStyle.Palette.HeaderBlue
+ vehicleTitle.Position = UDim2.new(0, 0, 0, 0)
+-vehicleTitle.Size = UDim2.new(1, 0, 0, 26)
++vehicleTitle.Size = UDim2.new(1, -54, 0, 40)
+ vehicleTitle.Font = Rhs2UiStyle.Font.Bold
+ vehicleTitle.Text = "Auto Shop"
+ vehicleTitle.TextColor3 = Rhs2UiStyle.Palette.White
+@@ -1333,8 +1375,8 @@
+ 
+ local vehicleStatus = Instance.new("TextLabel")
+ vehicleStatus.BackgroundTransparency = 1
+-vehicleStatus.Position = UDim2.new(0, 10, 0, 34)
+-vehicleStatus.Size = UDim2.new(1, -20, 0, 38)
++vehicleStatus.Position = UDim2.new(0, 10, 0, 44)
++vehicleStatus.Size = UDim2.new(1, -20, 0, 30)
+ vehicleStatus.Font = Rhs2UiStyle.Font.Regular
+ vehicleStatus.Text = "Spawn the starter car."
+ vehicleStatus.TextColor3 = Rhs2UiStyle.Palette.White
+@@ -1345,8 +1387,8 @@
+ vehicleStatus.Parent = vehicleCard
+ 
+ local vehicleAction = Instance.new("TextButton")
+-vehicleAction.Position = UDim2.new(0, 8, 1, -46)
+-vehicleAction.Size = UDim2.new(1, -16, 0, 38)
++vehicleAction.Position = UDim2.new(0, 8, 1, -52)
++vehicleAction.Size = UDim2.new(1, -16, 0, 44)
+ vehicleAction.BackgroundColor3 = Rhs2UiStyle.Palette.ActiveGold
+ vehicleAction.Font = Rhs2UiStyle.Font.Bold
+ vehicleAction.Text = "SPAWN STARTER CAR"
+@@ -1490,7 +1532,7 @@
+     end
+ 
+     latestVehicleState = state
+-    vehicleCard.Visible = state.active == true or state.atAutoShop == true
++    vehicleCard.Visible = state.active == true or state.atAutoShop == true or vehicleCard:GetAttribute("ManuallyOpened") == true
+ 
+     if state.driving == true then
+         bindVehicleControls()
+@@ -2368,3 +2410,49 @@
+ end
+ 
+ mountHousingEditor()
++
++
++-- Recovery UI has no server authority. It exposes the existing actions and
++-- keeps mobile menus readable at native scale inside a safe scrolling shell.
++featurePanels.quickActions[2] = function()
++    cafeCard:SetAttribute("ManuallyOpened", not cafeCard.Visible)
++    cafeCard.Visible = cafeCard:GetAttribute("ManuallyOpened") == true
++    if cafeCard.Visible then
++        if featurePanels.mobileShell then featurePanels.mobileShell:guideTo("Cafe") end
++        setCafeMessage("Walk to Corner Cafe in town, then start a shift. Two shifts earn a house.")
++    end
++end
++featurePanels.quickActions[3] = function()
++    vehicleCard:SetAttribute("ManuallyOpened", not vehicleCard.Visible)
++    vehicleCard.Visible = vehicleCard:GetAttribute("ManuallyOpened") == true
