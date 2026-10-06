@@ -100,6 +100,37 @@ function UI.preview(parent,item)
         if item.style>=3 then p(Vector3.new(.24,.08,bodyLength),Vector3.new(0,1.58,0),UI.P.gold) end
         for _,x in ipairs({-1.85,1.85}) do for _,z in ipairs({-1.9,1.9}) do p(Vector3.new(.5,1.4,1.4),Vector3.new(x,.7,z),UI.P.ink,Enum.PartType.Cylinder) end end
     elseif item.category=="Clothes" then
+        if item.slot=="uniformTop" then
+            local forest=Color3.fromRGB(31,91,67)
+            local cream=Color3.fromRGB(238,238,231)
+            p(Vector3.new(2.2,2.4,1),Vector3.new(0,2.4,0),tint)
+            p(Vector3.new(1.1,1.1,1.1),Vector3.new(0,4.1,0),Color3.fromRGB(226,207,181),Enum.PartType.Ball)
+            for _,x in ipairs({-1.5,1.5}) do p(Vector3.new(.8,item.style>=14 and 2.3 or 1.4,.8),Vector3.new(x,2.5,0),tint) end
+            p(Vector3.new(.38,.18,.08),Vector3.new(.5,2.75,-.56),item.style==13 and forest or cream)
+            if item.style==15 then p(Vector3.new(.7,1.8,.07),Vector3.new(0,2.35,-.57),cream) end
+        elseif item.slot=="uniformBottom" then
+            local navy=Color3.fromRGB(28,48,72)
+            local cream=Color3.fromRGB(235,231,216)
+            if item.style==23 or item.style==24 or item.style==25 then
+                local h=item.style==25 and 3.2 or 2.2
+                p(Vector3.new(3,h,1.2),Vector3.new(0,1.7,0),tint)
+                if item.style>=24 then
+                    for _,x in ipairs({-.8,0,.8}) do p(Vector3.new(.12,h*.95,.07),Vector3.new(x,1.7,-.64),navy) end
+                    for _,y in ipairs({1.05,1.7,2.35}) do p(Vector3.new(2.9,.1,.07),Vector3.new(0,y,-.64),cream) end
+                end
+            else
+                local h=item.style==22 and 1.6 or 3.2
+                for _,x in ipairs({-.7,.7}) do p(Vector3.new(1.05,h,1),Vector3.new(x,h/2,0),tint) end
+            end
+        elseif item.slot=="uniformLegwear" then
+            local h=item.style==33 and 4.2 or 3.1
+            for _,x in ipairs({-.75,.75}) do p(Vector3.new(.9,h,.9),Vector3.new(x,h/2,0),tint) end
+        elseif item.slot=="uniformShoes" then
+            for _,x in ipairs({-1.05,1.05}) do
+                p(Vector3.new(1.5,.8,2.7),Vector3.new(x,.5,0),tint)
+                p(Vector3.new(1.55,.15,2.8),Vector3.new(x,.08,0),Color3.fromRGB(40,42,43))
+            end
+        else
         local isUniform=item.style==6 or item.style==7
         local forest=Color3.fromRGB(31,91,67)
         local khaki=Color3.fromRGB(205,190,154)
@@ -121,6 +152,7 @@ function UI.preview(parent,item)
             if item.style>=2 then p(Vector3.new(.12,2.1,.05),Vector3.new(0,2.4,-.55),item.style>=3 and UI.P.gold or UI.P.paper) end
             if item.style>=4 then p(Vector3.new(1.4,.15,.06),Vector3.new(0,3.25,-.56),UI.P.gold) end
             if item.style>=5 then p(Vector3.new(1.7,.12,.06),Vector3.new(0,1.55,-.56),UI.P.gold) end
+        end
         end
     elseif item.id=="item_rug" then p(Vector3.new(5,.2,4),Vector3.new(0,.2,0),tint)
     elseif item.id=="item_lamp" then
