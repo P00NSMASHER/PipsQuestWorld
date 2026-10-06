@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "owner": "Control Tower",
+  "queueIssue": 302,
+  "direction": "SCHOOL_NEIGHBORHOOD_LEARN_EARN_UPGRADE",
+  "canonical": {"branch": "rebuild/high-school-foundation", "observedSha": "39369a41655ec716813436315589ad1c477c70ca"},
+  "candidate": {"pr": 301, "branch": "rebuild/school-neighborhood-earn-v1", "observedSha": "6b1016c066e660b5ee21b8da9ecd77414843564f", "buildProject": "school/neighborhood.project.json", "status": "DRAFT_IMPLEMENTATION_NOT_RELEASE_APPROVED"},
+  "freshnessRule": "Observed SHAs are snapshots, not authorization. Re-read live candidate/base, comments, reviews and checks before claiming files, consuming evidence, merging or publishing.",
+  "execution": {"mode": "INTERACTIVE_OR_EXPLICIT_WORKER_CLAIM", "verifiedScheduledRobloxWorkers": 0, "scheduledTasksChanged": false, "agentLaunchClaimed": false, "capacityBlocker": "USER_ALLOCATION_REQUIRED_FOR_SCHEDULED_ROBLOX_WORK", "rule": "Do not repurpose unrelated tasks or infer executing agents from lane names. Preserve all existing task schedules and enablement."},
+  "wip": {"capIncludingBase": 3, "currentProducerPr": 301, "productWriter": "EXISTING_PR301_IMPLEMENTATION_OWNER", "downstreamCandidate": null, "rule": "One mutable integration candidate. Existing producer retains product files until explicit per-file handoff; at most one isolated downstream candidate within cap. Do not overwrite the current producer."},
+  "supersedes": {"legacyWipSchema": 84, "scope": "Old clone-first, clock/jobs, deferred-ABVM and ten-active-worker directions are historical, not current blockers.", "legacyCoordinationCommit": "4300598d531f71bd288cd9c24c7d69a7b6210e6d", "recoveryPr": 300, "recoveryPrRole": "REFERENCE_ONLY_NOT_COMPETING_RELEASE"},
+  "inputs": {"packageName": "PipHigh_Neighborhood_Pivot.zip", "packageSha256": "cf5acf5b1d806d15da969235e7c2d752fb8b6067a561e3457ba8a00e068e79fb", "packageStatus": "LOCAL_COMPONENT_HANDOFF_NOT_MAPPED_OR_DEPLOYED", "rule": "Retrieve the real attachment through Files and verify hash. Adapt useful components into PR301; never map a second controller, profile writer or question authority."},
+  "contract": {
+    "currency": "Credits",
+    "baseIndependent": 10,
+    "baseSupported": 6,
+    "positiveStreakBonus": [0, 2, 4, 6, 8, 10],
+    "negativeStreakDeduction": [2, 4, 6, 8, 10],
+    "lessonEvery": 5,
+    "lessonBonus": 15,
+    "walletFloor": 0,
+    "streakRule": "Cap each ladder at its last value; opposite result resets the other streak. Persist atomically; duplicate saved choices/tokens cannot double-charge, pay or count. Immediate practice-only repeats cannot farm bonuses. No debt, loss of possessions or movement/learning lockout.",
+    "subjects": ["Math", "Reading", "Spelling", "Vocabulary", "Grammar", "Religion"],
+    "boards": ["Highest Accuracy", "Most Questions", "Most Credits"],
+    "accuracyMinimumAttempts": 20,
+    "accuracyBasis": "CORRECT_DIVIDED_BY_ALL_SAVED_ANSWER_ATTEMPTS",
+    "questionsBasis": "ALL_SAVED_ANSWER_ATTEMPTS_DEDUPLICATED",
+    "creditsBasis": "CURRENT_SPENDABLE_BALANCE",
+    "privacy": "Roblox account identities only; no school roster, child real name, email or worksheet photograph.",
+    "removed": ["visible clock", "school schedule", "jobs", "clubs", "idle income", "inert controls"]
+  },
+  "lanes": [
+    {"id": "DIRECTOR", "role": "Control Tower", "paths": ["coordination/state/NEIGHBORHOOD_WORKERS.json"], "deliverable": "Maintain one queue, live-head handoffs, file claims and factual execution status.", "handoffTo": "INTEGRATION"},
+    {"id": "CONTENT", "role": "Class and Content", "paths": ["school/neighborhood/server/QuestionBank.lua"], "deliverable": "Verify/adapt expanded ABVM bank and six-subject coverage; provide entry/exit/retry cases without leaking keys or importing private data.", "handoffTo": "INTEGRATION"},
+    {"id": "ECONOMY", "role": "Economy and Leaderboards", "paths": ["school/neighborhood/server/Learning.lua", "school/neighborhood/server/ProfileStore.lua", "school/neighborhood/server/Leaderboards.lua", "school/neighborhood/shared/Catalog.lua"], "deliverable": "Reconcile one tuning and catalog; integrate saved streaks, deductions, independent boards, replay safety and save/mirror failure behavior.", "handoffTo": "INTEGRATION"},
+    {"id": "WORLD", "role": "World and Homes", "paths": ["school/neighborhood/server/World.lua"], "deliverable": "Compact school/neighborhood, six accessible rooms, three board mounts, exclusive plots and visible home tiers; preserve free movement and remove jobs/clock.", "handoffTo": "INTEGRATION"},
+    {"id": "MOBILE", "role": "iPhone UI, Shop and Garage", "paths": ["school/neighborhood/client/**", "school/neighborhood/shared/Layout.lua", "school/neighborhood/server/Garage.lua", "school/neighborhood/server/Wardrobe.lua"], "deliverable": "One readable phone HUD and streak/transaction feedback, actual previews/equip, reliable driving/dismount and touch-safe close/back.", "handoffTo": "INTEGRATION"},
+    {"id": "QA", "role": "Independent QA and Runtime Smoke", "paths": ["coordination/qa/neighborhood/**"], "deliverable": "Read-only exact-head review, independent save/replay/two-player tests and actual Roblox/iPhone evidence with explicit limits.", "handoffTo": "INTEGRATION"},
+    {"id": "INTEGRATION", "role": "Integration and Release", "paths": ["school/neighborhood.project.json", "school/neighborhood/server/Main.server.lua", "school/neighborhood/tests/**"], "deliverable": "Sole integration/merge/publish operator. Wire reviewed lane changes, migrate conflicting AGENTS wording, validate exact built inventory and release only the reviewed project/artifact.", "handoffTo": "DIRECTOR"}
+  ],
+  "claims": {"requiredFields": ["executor", "lane", "inputSha", "paths", "deliverable", "evidence", "nextConsumer"], "activeDelegatedClaims": [], "rule": "Lane paths define responsibility, not permission for concurrent writes. Record executor and exact non-overlapping files on issue302 before transfer; otherwise submit a patch to the current producer."},
+  "priorityQueue": [
+    {"id": "N01", "owner": "ECONOMY", "dependsOn": [], "status": "HANDOFF_READY", "deliverable": "Reconcile 10/6 and +2/-2 package tuning against PR301's 25/15 and +5/-5; one versioned contract, matching prices/tests/UI, no save reset."},
+    {"id": "N02", "owner": "CONTENT", "dependsOn": [], "status": "HANDOFF_READY", "deliverable": "Verify and adapt six-subject/338-question package against current four-room/51-question snapshot; report actual accepted count and provenance."},
+    {"id": "N03", "owner": "WORLD", "dependsOn": [], "status": "HANDOFF_READY", "deliverable": "Prepare six room and three lobby-board placements plus exclusive plot/home visual checks; wire subject registry after N02."},
+    {"id": "N04", "owner": "MOBILE", "dependsOn": [], "status": "HANDOFF_READY", "deliverable": "Prepare iPhone geometry and visual fixes; consume N01 transaction/streak contract before final wiring; never reskin a second HUD."},
+    {"id": "N05", "owner": "INTEGRATION", "dependsOn": ["N01", "N02", "N03", "N04"], "status": "WAITING_INPUTS", "deliverable": "Assemble one candidate with one server/client/profile authority and run relevant complete build/functional gates."},
+    {"id": "N06", "owner": "QA", "dependsOn": ["N05"], "status": "PREP_NOW_REVIEW_FINAL_HEAD", "deliverable": "Inspect final exact source, independent tests and real startup/phone/save-rejoin evidence; separate static, runtime, visual and physical-device verdicts."},
+    {"id": "N07", "owner": "INTEGRATION", "dependsOn": ["N06"], "status": "NOT_RELEASE_APPROVED", "deliverable": "Normal protected merge and user-authorized exact-artifact private deployment only; verify Roblox response/version and preserve rollback. No stale 33a5a11 or rescue publisher."}
+  ],
+  "acceptanceJourney": ["join with unique home", "enter each subject classroom", "correct and wrong answers persist streak effects once", "read three independent school boards", "preview buy and use real item", "upgrade own home", "drive and dismount", "rejoin with wallet stats and possessions intact"],
+  "evidence": {"runtimeVerified": false, "physicalIPhoneVerified": false, "polishApproved": false, "publicationPerformedByThisCoordination": false, "rule": "A role, plan, package, test pass, merge or upload alone never means this journey works. Observe the actual same-build behavior."}
+}
