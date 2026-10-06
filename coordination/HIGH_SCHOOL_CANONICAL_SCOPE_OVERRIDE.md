@@ -1,61 +1,33 @@
-# Pip High Canonical Scope Override
+# Pip High: current school and neighborhood scope
 
-This file records the current user-specified canonical scope and coordination override for the high-school swarm. It governs when older protocol/state wording conflicts.
+The user's latest direction is one high school and one neighborhood, with individual homes, ABVM classroom questions, earned Credits, shops, vehicles, positive/negative answer streaks and three school leaderboards. This is not an exact RHS/RHS2-clone milestone.
 
-## Canonical target
-- Canonical product: **Pip High**, built as one progressive effort toward exact player-facing parity with the original/Legacy Roblox High School experience.
-- Canonical runtime/test root: `school/**` only.
-- The parity target is rebuilt forward on the current certified Pip High lineage. Retired Maze/PipsQuest, StarBlox/Brookhaven, RHS-exact/licensed-exact, `game/**`, old `feat/*`, retired worktrees/branches, and Roblox places titled StarBlox remain historical-only and must not be reopened as runtime candidates or merged into canonical WIP.
-- Parity means matching the approved reference baseline's visible layout, navigation flow, school-day behavior, class interactions, HUD/presentation, free-roam/after-school loop, and other verified player-facing systems while preserving the canonical server-authoritative progression/persistence contracts.
+## Authority and current queue
 
-## Progressive build order
-The current Phase-1 goal is the exact live Roblox High School clone on the canonical `school/**` / `rebuild/high-school-foundation` lineage. Second-grade/Emma/STAR/K-8 content is `DEFERRED_PHASE_2` until the clone is functionally complete and the user explicitly advances phases.
+Use issue **#302** and `coordination/state/NEIGHBORHOOD_WORKERS.json` for current assignments, dependencies, claims and evidence limits. This scope overrides conflicting old protocol/state directions, including clone-first ordering, a required school clock, jobs, deferred ABVM content, and the legacy claim of ten active workers. The old `WIP.json` schema 84 and P1/P2 parity receipts remain historical evidence, not the active neighborhood work queue.
 
-After the certified café/economy slice, player-facing priority is:
-1. vehicles;
-2. housing/property;
-3. avatar/outfit/customization and shopping;
-4. jobs beyond café;
-5. social/free-roam;
-6. animations/presentation;
-7. mobile polish.
+Continue the existing **PR #301** and its producer on `rebuild/school-neighborhood-earn-v1`, targeting `rebuild/high-school-foundation`. Re-read live heads; recorded SHAs are observations, not immutable claims about a moving branch. Build **`school/neighborhood.project.json`**. Only its neighborhood entrypoints may run. Never publish `school/default.project.json` or the old RHS rescue binary as this pivot. Preserve earlier sources and saves; PR #300 supplies narrowly reusable recovery work, not a competing release.
 
-Live parity evidence may promote a more critical regression ahead of that sequence. Release/Package is a deterministic checkpoint, never product completion.
+## Product contract
 
-## Pipeline and worker coordination
-Control Tower coordinates all canonical workers through `coordination/state/WIP.json`. Every lane consumes the same exact canonical product SHA and the same private-server target from current Release/publish evidence.
+Keep the school, short neighborhood routes, starter home for every player, shop and usable vehicles. Remove the visible clock, school schedule, jobs, clubs, idle income, unrelated destinations and dead controls. Interior traversal, room entry and closing a panel must leave movement/camera usable.
 
-Semantic order is:
-`Control Tower -> producer/support preparation -> QA -> Integration -> Smoke -> Release/Package -> Control Tower`.
+Use the latest documented handoff tuning: 10 independent or 6 supported base Credits; correct streak bonuses 0/2/4/6/8/10, capped; consecutive wrong deductions 2/4/6/8/10, capped; 15 extra per five eligible completions. The wallet floor is zero. The new bounded wrong-answer deductions explicitly supersede the old no-deduction direction, but do not permit debt, removing possessions, shame labels, learning lockout or movement lockout. Persist the opposite-streak reset and deduplicate choices/tokens.
 
-The WIP cap remains three including canonical base: one critical-path producer plus at most one non-overlapping downstream product candidate. Other lanes may receive only narrow tests/contracts/fixtures/provenance/support that materially advance the same upcoming slice. If no useful owned work exists, they use `WAIT_PIPELINE` and perform only the minimum freshness read.
+The intended subjects are Math, Reading, Spelling, Vocabulary, Grammar and Religion. Validate the attached expanded question bank and adapt it into the single existing server question authority. Reconcile four-room/51-item and six-subject/338-item source differences explicitly; never claim an unimported bank is in the game. Retain provenance and answer-key privacy.
 
-Lane ownership remains unique:
-- **Foundation:** world/clock/location/spawn.
-- **Class & Education:** class/session/activity.
-- **Content QA:** authorized fixtures/assets/provenance.
-- **Progression & Mobile:** durable progression/economy/ownership/mobile read-only presentation.
-- **Free Roam:** jobs/vehicles/housing/customization/social.
-- **QA/Contract:** validation only.
-- **Integration:** mechanical integration only.
-- **Integration Smoke:** post-integration certification.
-- **Release/Package:** deterministic package checkpoint only.
-- **DevEx:** CI/evidence infrastructure only.
+The school boards are Highest Accuracy (correct/all saved answer attempts, minimum 20), Most Questions (deduplicated saved attempts), and Most Credits (current spendable balance). Use only Roblox identities. Ordered leaderboard mirrors cannot become the wallet authority or roll back successful profile commits.
 
-When QA, Integration, Smoke, or Release clears a stage, Control Tower immediately assigns the next highest-priority clone gap in the same run or the next run. Never leave `NEXT_PRIORITY_UNASSIGNED` when useful non-overlapping work exists.
+## Worker and write discipline
 
-## WIP and write discipline
-Each non-wait directive identifies the exact canonical SHA/base, one measurable objective, owned paths/contracts, dependency consumed, required evidence/exit criterion, and handoff receiver. Producers never write directly to protected canonical; product edits use one current-base lane branch, exact-head CI, QA, then Integration.
+The existing producer owns all product files until an exact-head, explicit per-file handoff. Lane responsibility is not an assertion that an agent is running. Coordinator owns queue/claims; Class/Content owns curriculum; Economy owns wallet/streaks/boards/catalog; World owns rooms/plots/homes; Mobile owns UI/shop/garage presentation; QA is independent/read-only; Integration/Release is the sole merger/publisher. The shared bootstrap/project/profile/client entrypoint cannot have simultaneous writers.
 
-If a GitHub mutation receives `CONNECTOR_SAFETY_DENIAL`, do not retry the identical payload through blob/tree/ref or local-machine workarounds. Preserve the intended diff and either pursue a different independently owned objective or record the precise denial for DevEx/Control Tower. Ordinary protected-branch rejection is not a blocker when a lane branch can be used.
+Preserve the three-item WIP cap including base, one current product producer and at most one isolated downstream candidate. Other work must be a distinct useful patch, fixture, review or asset for that same integrated player journey. Reuse unchanged evidence and existing branches after interruption; do not perform repeated broad audits or status-only commits.
 
-The success metric is validated player-facing parity advancement per hour, not commit/receipt/run count. An unchanged worker run is expected only when its explicit WIP directive is `WAIT_PIPELINE` and there is genuinely no non-overlapping owned work.
+Follow `coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md` and ordinary protected PR integration. No secret disclosure, spending, authority expansion, bypassing rejected actions, weakening tests or foreground laptop interference. This coordination does not change task names, schedules, enablement, credentials, Roblox visibility or the live place. Scheduling allocation requires an explicit user decision; never infer background workers from a historical receipt.
 
-## Worker-wide coordination override
-Every canonical high-school lane MUST read and follow `coordination/HIGH_SCHOOL_GITHUB_WRITE_POLICY.md`.
+## Acceptance and publication
 
-`coordination/HIGH_SCHOOL_SWARM_STATE.json` remains a small manifest. Mutable state lives in the authoritative shards under `coordination/state/**`, while the local-machine lease remains `coordination/HIGH_SCHOOL_LOCAL_MACHINE_LEASE_V2.json`. Workers update only the smallest owning shard.
+The target journey is: own home -> enter every subject classroom -> save correct/wrong streak effects once -> read the three boards -> preview/buy/use an actual item -> upgrade home -> drive/dismount -> rejoin with possessions, wallet and stats intact.
 
-A platform safety rejection before GitHub accepts a mutation is `CONNECTOR_SAFETY_DENIAL`, not a GitHub permission/branch-protection failure. Never retry an identical blocked payload or replay the same full content through blob/tree/commit/ref.
-
-Durable changes are branch/PR-first from an exact live base SHA. Never weaken tests/protections, use the laptop as a GitHub-write workaround, spend money, publish Roblox, broaden authority, or mutate any Roblox automation definition to bypass a write failure.
+Require exact-source compile/build and relevant tests, then actual Roblox startup, interactions, persistence, rendered-phone review and physical iPhone touch evidence. Keep those verdicts separate. A private playtest may only be described as such; an upload is not finished-game or polish approval. Use the existing publication authorization only for the exact new mapped candidate after the appropriate review, never as permission to republish a rejected old build.
