@@ -69,24 +69,27 @@ local function update(snapshot)
     local oldCoins=state.coins
     state=snapshot
     walletText.Text=tostring(state.coins).." Credits"
-    streakInfo.Text=string.format("%.1f%% correct  •  ✓ %d streak  •  ✕ %d streak",(state.accuracyBasisPoints or 0)/100,state.correctStreak or 0,state.wrongStreak or 0)
-    if state.coins>oldCoins then UI.flash(wallet) end
+    streakText.Text=string.format("✓ %d  •  ✕ %d",state.correctStreak or 0,state.wrongStreak or 0)
+    local delta=state.coins-oldCoins
+    if delta~=0 then
+        UI.flyout(wallet,(delta>0 and "+" or "")..tostring(delta),delta>0 and UI.P.success or UI.P.negative)
+    end
     if resumeButton then
         resumeButton.Visible=state.subject~=nil
-        goalCard.Size=UDim2.fromOffset(274,state.subject and 148 or 96)
+        goalCard.Size=UDim2.fromOffset(286,state.subject and 84 or 44)
     end
     local goal=Catalog.ById[state.goal] or Catalog.ById.home_cottage
     if state.owned[goal.id] then
         goalTitle.Text="Made it: "..goal.name
-        goalInfo.Text="Choose your next goal in the shop"
+        goalInfo.Text="Choose a new goal in the shop"
         goalFill.Size=UDim2.fromScale(1,1)
     else
         local remaining=math.max(0,goal.price-state.coins)
         goalTitle.Text="Next: "..goal.name
         local baseAnswers=math.ceil(remaining/10)
         goalInfo.Text=remaining==0
-            and ("Ready to buy  •  Lesson "..tostring(state.lessonCount).."/5")
-            or string.format("%d Credits to go  •  about %d correct answers or fewer with streaks",remaining,baseAnswers)
+            and ("Ready to buy  •  lesson "..tostring(state.lessonCount).."/5")
+            or string.format("%d Credits to go  •  ≈ %d correct or fewer",remaining,baseAnswers)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
@@ -110,12 +113,24 @@ local function call(command,args)
 end
 local function close(notifyServer)
     local wasQuiz=view=="quiz"
-    panel.Visible=false;goalCard.Visible=true;view=nil;activeQuestion=nil
+    panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false
+    goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true
+    view=nil;activeQuestion=nil
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
 end
-UI.button(panel,"Close",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-12,0,9),Size=UDim2.fromOffset(72,44),TextSize=14,BackgroundColor3=UI.P.white})
+UI.button(panel,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-10,0,8),Size=UDim2.fromOffset(40,40),TextSize=24,BackgroundColor3=UI.P.white,CornerRadius=20})
 local function open(kind,title)
     view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
+    local isShop=kind=="shop"
+    shopTabs.Visible=isShop
+    shopSubtabs.Visible=isShop and category=="Clothes"
+    if isShop then
+        body.Position=UDim2.fromOffset(14,category=="Clothes" and 138 or 100)
+        body.Size=UDim2.new(1,-28,1,-(category=="Clothes" and 152 or 114))
+    else
+        body.Position=UDim2.fromOffset(14,58)
+        body.Size=UDim2.new(1,-28,1,-72)
+    end
 end
 local showShop,showQuestion
 local function subject(id)
@@ -185,7 +200,7 @@ resumeButton=UI.button(goalCard,"Continue this lesson",function()
         local result=call("study",{})
         if result.ok then showQuestion(result.question) end
     end)
-end,{Position=UDim2.fromOffset(12,98),Size=UDim2.new(1,-24,0,44),Visible=false,TextSize=14,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white})
+end,{Position=UDim2.fromOffset(11,47),Size=UDim2.new(1,-22,0,32),Visible=false,TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
 showShop=function(selected)
     category=selected or category
     open("shop","ABVM School Shop")
