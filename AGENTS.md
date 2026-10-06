@@ -19,6 +19,7 @@ You are working on the active Pip High school + neighborhood game.
 15. No Robux monetization, loot boxes, FOMO, artificial waits, idle income, or penalties beyond the explicit bounded answer-streak Credit rules.
 16. The visible school clock, bell schedule, jobs, clubs, and unrelated destinations are not part of the active neighborhood mode.
 17. When the user is away/at work, all local automation must remain background/headless and must not steal desktop focus.
+18. Current explicit user direction requires the supplied full Assumption BVM faculty/staff roster in the active Roblox candidate: preserve exact displayed names/roles, a faculty directory, and stylized NPC likeness cues derived only from the user-supplied photos. This is not speculative drift and must not be reverted to the older pre-faculty state.
 
 ## Definition of Done for an iteration
 
