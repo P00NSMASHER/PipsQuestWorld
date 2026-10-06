@@ -715,20 +715,29 @@ setNavActive=function(command)
     end
 end
 
--- Driving keeps native thumbstick steering and replaces the old five-button debug strip.
-local driving=UI.surface(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),BackgroundColor3=UI.P.paper,CornerRadius=18})
-UI.text(driving,"DRIVE",10,{Position=UDim2.fromOffset(8,5),Size=UDim2.new(1,-16,0,18),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.muted})
+-- Native thumbstick steers. Right-side pedals stay minimal and game-like.
+local driving=UI.new("Frame",canvas,{
+    Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),
+    Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),
+    BackgroundTransparency=1,BorderSizePixel=0,
+})
+local driveTag=UI.chip(driving,"RIDE",{
+    Position=UDim2.new(.5,-30,0,0),Size=UDim2.fromOffset(60,22),
+    BackgroundColor3=UI.P.ink,TextColor3=UI.P.gold,TextSize=9,StrokeColor=Color3.fromRGB(46,67,93),
+})
 local held={};local heldInputs={};local driveButtons={}
-for i,d in ipairs({{"Drive","go"},{"Reverse","back"}}) do
-    local label,key=d[1],d[2]
+local pedalDefs={
+    {"▲\nDRIVE","go",UI.P.teal,UI.P.white},
+    {"▼\nREVERSE","back",UI.P.ink,UI.P.white},
+}
+for i,d in ipairs(pedalDefs) do
+    local label,key,bg,fg=d[1],d[2],d[3],d[4]
     local b=UI.button(driving,label,function() end,{
-        Position=UDim2.fromOffset(10,24+(i-1)*53),
-        Size=UDim2.new(1,-20,0,46),
-        TextSize=12,
-        BackgroundColor3=i==1 and UI.P.teal or UI.P.white,
-        TextColor3=i==1 and UI.P.white or UI.P.ink,
-        CornerRadius=13,
+        Position=UDim2.new(.5,-31,0,27+(i-1)*66),
+        Size=UDim2.fromOffset(62,62),
+        TextSize=11,BackgroundColor3=bg,TextColor3=fg,CornerRadius=999,
     })
+    UI.stroke(b,i==1 and UI.P.success or Color3.fromRGB(46,67,93))
     table.insert(driveButtons,b)
     b.InputBegan:Connect(function(input)
         if input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1 then
@@ -736,10 +745,11 @@ for i,d in ipairs({{"Drive","go"},{"Reverse","back"}}) do
         end
     end)
 end
-local parkButton=UI.button(driving,"Park",function() task.spawn(call,"park",{}) end,{
-    Position=UDim2.new(0,10,1,-42),Size=UDim2.new(1,-20,0,32),TextSize=11,
-    BackgroundColor3=UI.P.ink,TextColor3=UI.P.white,CornerRadius=999,
+local parkButton=UI.button(driving,"P  PARK",function() task.spawn(call,"park",{}) end,{
+    Position=UDim2.new(.5,-32,1,-24),Size=UDim2.fromOffset(64,24),TextSize=9,
+    BackgroundColor3=UI.P.goldSoft,TextColor3=UI.P.ink,CornerRadius=999,
 })
+UI.stroke(parkButton,UI.P.gold)
 UserInputService.InputEnded:Connect(function(input)
     local key=heldInputs[input]
     if key then held[key]=false;heldInputs[input]=nil end
