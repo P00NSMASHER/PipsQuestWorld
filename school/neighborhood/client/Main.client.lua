@@ -43,11 +43,14 @@ local nav=UI.frame(canvas,{Name="PrimaryNav",BackgroundColor3=UI.P.ink,Backgroun
 UI.corner(nav,18);UI.stroke(nav,Color3.fromRGB(46,67,93))
 
 -- Compact progression chip; expand only while a lesson can be resumed.
-local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.04})
+local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.02})
+local goalIcon=UI.frame(goalCard,{Position=UDim2.fromOffset(7,6),Size=UDim2.fromOffset(34,30),BackgroundColor3=UI.P.gold})
+UI.corner(goalIcon,10)
+UI.text(goalIcon,"★",16,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
 local resumeButton
-local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(11,3),Size=UDim2.new(1,-22,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(11,20),Size=UDim2.new(1,-22,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
-local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(11,37),Size=UDim2.new(1,-22,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
+local goalTitle=UI.text(goalCard,"Your first home is ready",13,{Position=UDim2.fromOffset(49,2),Size=UDim2.new(1,-58,0,19),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+local goalInfo=UI.text(goalCard,"Loading progress…",11,{Position=UDim2.fromOffset(49,19),Size=UDim2.new(1,-58,0,15),TextColor3=UI.P.muted,TextTruncate=Enum.TextTruncate.AtEnd})
+local goalTrack=UI.frame(goalCard,{Position=UDim2.fromOffset(49,36),Size=UDim2.new(1,-58,0,4),BackgroundColor3=UI.P.line});UI.corner(goalTrack,4)
 local goalFill=UI.frame(goalTrack,{Size=UDim2.fromScale(0,1),BackgroundColor3=UI.P.teal});UI.corner(goalFill,4)
 
 local panel=UI.surface(canvas,{Name="FocusPanel",Visible=false,BackgroundColor3=UI.P.white,BackgroundTransparency=.01,ClipsDescendants=true})
