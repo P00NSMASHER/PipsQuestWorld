@@ -25,7 +25,7 @@ local header=UI.frame(canvas,{Name="Header",Position=UDim2.fromOffset(8,4),Size=
 UI.stroke(header)
 UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(12,5),Size=UDim2.fromOffset(94,38),Font=Enum.Font.GothamBold})
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,6),Size=UDim2.fromOffset(110,38),BackgroundColor3=UI.P.ink})
-local walletText=UI.text(wallet,"0 coins",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local walletText=UI.text(wallet,"0 Credits",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
 local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(320,44)})
 local goalCard=UI.frame(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,68),Size=UDim2.fromOffset(274,96),BackgroundColor3=UI.P.paper})
 UI.stroke(goalCard)
@@ -53,7 +53,7 @@ local function update(snapshot)
     if not snapshot or not snapshot.ready then return end
     local oldCoins=state.coins
     state=snapshot
-    walletText.Text=tostring(state.coins).." coins"
+    walletText.Text=tostring(state.coins).." Credits"
     streakInfo.Text=string.format("%.1f%% correct  •  +%d / -%d streak",(state.accuracyBasisPoints or 0)/100,state.correctStreak or 0,state.wrongStreak or 0)
     if state.coins>oldCoins then UI.flash(wallet) end
     if resumeButton then
@@ -67,7 +67,7 @@ local function update(snapshot)
         goalFill.Size=UDim2.fromScale(1,1)
     else
         goalTitle.Text="Next: "..goal.name
-        goalInfo.Text=string.format("%d / %d coins  •  Lesson %d/5",state.coins,goal.price,state.lessonCount)
+        goalInfo.Text=string.format("%d / %d Credits  •  Lesson %d/5",state.coins,goal.price,state.lessonCount)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
@@ -75,8 +75,8 @@ local messages={
     saving="Your progress is saving. Try again in a moment.", save_unavailable="Save not confirmed. Please retry; purchases are protected against double charges.",
     profile_in_use="Your progress is open in another server. Rejoin after leaving that game.", loading="Your progress is still loading.",
     read_question="Take a moment to read the question, then choose.", question_expired="Walk into a classroom to start a new question.",
-    enter_classroom="Walk into one of the four subject classrooms first.", outside_for_vehicle="Walk outside the school to call your vehicle.",
-    not_enough_coins="Keep learning, or choose a smaller goal. Your coins are safe.",not_owned="Earn and buy this item before equipping it.",
+    enter_classroom="Walk into one of the six subject classrooms first.", outside_for_vehicle="Walk outside the school to call your vehicle.",
+    not_enough_coins="Keep learning, or choose a smaller goal. Your Credits are safe.",not_owned="Earn and buy this item before equipping it.",
     temporarily_unavailable="That did not finish. Please try again.",slow_down="One action at a time.",travel_cooldown="You're already on your way. Try again shortly.",
 }
 local function call(command,args)
@@ -115,7 +115,7 @@ showQuestion=function(q)
         answerColumn=UI.new("ScrollingFrame",row,{Position=UDim2.new(.47,6,0,0),Size=UDim2.new(.53,-6,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=3})
         UI.stack(questionColumn,8);UI.stack(answerColumn,8)
     end
-    local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No coins for an immediate repeat" or "25 first try  •  15 after retry  •  correct streak bonus up to +25",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
+    local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No Credits for an immediate repeat" or "10 first try  •  6 after retry  •  streak bonus up to +10",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
     local questionCard=UI.frame(questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,84),AutomaticSize=Enum.AutomaticSize.Y})
     UI.pad(questionCard,16)
     UI.text(questionCard,q.prompt,canvas.AbsoluteSize.Y<520 and 17 or 20,{Size=UDim2.new(1,0,0,52),AutomaticSize=Enum.AutomaticSize.Y,TextYAlignment=Enum.TextYAlignment.Top,Font=Enum.Font.GothamMedium})
@@ -134,17 +134,17 @@ showQuestion=function(q)
                 if result.correct then
                     for _,b in ipairs(buttons) do b.Active=false;b.Visible=false end
                     button.BackgroundColor3=UI.P.teal;button.TextColor3=UI.P.white
-                    local headline=result.reviewOnly and "Review complete." or "+"..tostring(result.total).." coins saved!"
+                    local headline=result.reviewOnly and "Review complete." or "+"..tostring(result.total).." Credits saved!"
                     if result.streakBonus and result.streakBonus>0 then headline..="  Streak +"..tostring(result.streakBonus).."." end
-                    if result.bonus and result.bonus>0 then headline..="  Includes your +50 lesson bonus." end
+                    if result.bonus and result.bonus>0 then headline..="  Includes your +15 lesson bonus." end
                     feedback.Text=headline.."\n"..result.explanation
-                    info.Text=string.format("Lesson %d / 5  •  Every 5 different questions earns +50",state.lessonCount)
+                    info.Text=string.format("Lesson %d / 5  •  Every 5 different questions earns +15",state.lessonCount)
                     UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=11,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
                     UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=12,BackgroundColor3=UI.P.white,TextSize=14})
                 else
                     button.BackgroundColor3=Color3.fromRGB(247,232,220)
                     local penaltyText=result.message or ("Wrong streak "..tostring(result.wrongStreak or 0))
-                    feedback.Text=penaltyText.."\n"..result.explanation.."\nChoose another answer to break the negative streak."
+                    feedback.Text=penaltyText.."\nHint: "..tostring(result.hint or q.hint or "Try eliminating one answer.").."\nChoose another answer to break the negative streak."
                     feedback.TextColor3=UI.P.ink
                 end
                 -- Keep feedback reachable without forcing the user to hunt beneath long passages.
@@ -164,7 +164,7 @@ showShop=function(selected)
     category=selected or category
     open("shop","ABVM School Shop")
     local index,tier=Catalog.tier(state.earned)
-    UI.text(body,tier.name.."  •  Everything is bought with learning coins",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,34),TextColor3=UI.P.muted})
+    UI.text(body,tier.name.."  •  Everything is bought with learning Credits",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,34),TextColor3=UI.P.muted})
     local tabs=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,44),BackgroundTransparency=1})
     for i,name in ipairs({"Homes","Clothes","Items","Vehicles"}) do
         UI.button(tabs,name,function() showShop(name) end,{Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=13,BackgroundColor3=name==category and UI.P.ink or UI.P.white,TextColor3=name==category and UI.P.white or UI.P.ink})
@@ -179,7 +179,7 @@ showShop=function(selected)
         UI.stroke(card)
         UI.preview(card,item)
         UI.text(card,item.name,18,{Position=UDim2.fromOffset(116,10),Size=UDim2.new(1,-128,0,40),Font=Enum.Font.GothamBold})
-        UI.text(card,owned and "Owned" or (tostring(item.price).." coins"),17,{Position=UDim2.fromOffset(116,51),Size=UDim2.new(1,-128,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
+        UI.text(card,owned and "Owned" or (tostring(item.price).." Credits"),17,{Position=UDim2.fromOffset(116,51),Size=UDim2.new(1,-128,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
         UI.text(card,Catalog.Tiers[item.tier].name,12,{Position=UDim2.fromOffset(116,79),Size=UDim2.new(1,-128,0,24),TextColor3=UI.P.muted})
         UI.text(card,item.description,14,{Position=UDim2.fromOffset(12,107),Size=UDim2.new(1,-24,0,42),TextColor3=UI.P.muted})
         local label=owned and (item.category=="Items" and "Placed / worn" or (equipped and "Equipped" or "Equip")) or "Buy • "..item.price
