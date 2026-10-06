@@ -176,7 +176,7 @@ function Learning.equip(p, op, item)
     Learning.normalize(p)
     if not item or not p.owned[item.id] then return {ok=false,code="not_owned"} end
     local slots={Homes="home",Vehicles="vehicle",Clothes="outfit"}
-    local slot=slots[item.category]
+    local slot=item.slot or slots[item.category]
     if slot then p.equipped[slot]=item.id end
     -- Furnishings are automatically placed; ownership is the persisted state.
     return Learning.record(p,op,{ok=true,kind="equip",itemId=item.id})
