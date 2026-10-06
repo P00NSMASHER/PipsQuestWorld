@@ -33,12 +33,21 @@ UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
 UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
 UI.text(header,"GRADE 2  •  ABVM",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(118,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
-local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.gold})
+local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,7),Size=UDim2.fromOffset(108,36),BackgroundColor3=UI.P.gold})
 UI.corner(wallet,UI.R.chip)
-local walletText=UI.text(wallet,"0 Credits",15,{TextColor3=UI.P.ink,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
-local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-120,0,8),Size=UDim2.fromOffset(106,34),BackgroundColor3=UI.P.teal})
+local coinIcon=UI.frame(wallet,{Position=UDim2.fromOffset(5,5),Size=UDim2.fromOffset(26,26),BackgroundColor3=UI.P.ink})
+UI.corner(coinIcon,999)
+UI.text(coinIcon,"C",12,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+local walletText=UI.text(wallet,"0",15,{Position=UDim2.fromOffset(36,1),Size=UDim2.new(1,-42,0,20),TextColor3=UI.P.ink,Font=Enum.Font.GothamBold})
+UI.text(wallet,"CREDITS",8,{Position=UDim2.fromOffset(36,18),Size=UDim2.new(1,-42,0,13),TextColor3=Color3.fromRGB(75,64,35),Font=Enum.Font.GothamBold})
+
+local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-124,0,7),Size=UDim2.fromOffset(108,36),BackgroundColor3=UI.P.teal})
 UI.corner(streakPill,UI.R.chip)
-local streakText=UI.text(streakPill,"✓ 0  •  ✕ 0",12,{TextColor3=UI.P.white,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local streakIcon=UI.frame(streakPill,{Position=UDim2.fromOffset(5,5),Size=UDim2.fromOffset(26,26),BackgroundColor3=Color3.fromRGB(24,78,58)})
+UI.corner(streakIcon,999)
+local streakIconText=UI.text(streakIcon,"✦",13,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
+local streakText=UI.text(streakPill,"0",15,{Position=UDim2.fromOffset(36,1),Size=UDim2.new(1,-42,0,20),TextColor3=UI.P.white,Font=Enum.Font.GothamBold})
+local streakCaption=UI.text(streakPill,"STREAK",8,{Position=UDim2.fromOffset(36,18),Size=UDim2.new(1,-42,0,13),TextColor3=Color3.fromRGB(220,239,231),Font=Enum.Font.GothamBold})
 local nav=UI.frame(canvas,{Name="PrimaryNav",BackgroundColor3=UI.P.ink,BackgroundTransparency=.04,Size=UDim2.fromOffset(104,212)})
 UI.corner(nav,18);UI.stroke(nav,Color3.fromRGB(46,67,93))
 
@@ -81,15 +90,23 @@ local function update(snapshot)
     local wasReady=state.ready
     local oldCoins=state.coins
     state=snapshot
-    walletText.Text=tostring(state.coins).." Credits"
+    walletText.Text=tostring(state.coins)
     if (state.wrongStreak or 0)>0 then
-        streakText.Text="✕ streak "..tostring(state.wrongStreak)
+        streakText.Text=tostring(state.wrongStreak)
+        streakCaption.Text="WRONG STREAK"
         streakPill.BackgroundColor3=UI.P.negative
+        streakIcon.BackgroundColor3=Color3.fromRGB(133,61,57)
+        streakIconText.Text="✕"
         streakText.TextColor3=UI.P.white
+        streakCaption.TextColor3=Color3.fromRGB(250,226,224)
     else
-        streakText.Text="✓ streak "..tostring(state.correctStreak or 0)
+        streakText.Text=tostring(state.correctStreak or 0)
+        streakCaption.Text="STREAK"
         streakPill.BackgroundColor3=UI.P.teal
+        streakIcon.BackgroundColor3=Color3.fromRGB(24,78,58)
+        streakIconText.Text="✦"
         streakText.TextColor3=UI.P.white
+        streakCaption.TextColor3=Color3.fromRGB(220,239,231)
     end
     local delta=state.coins-oldCoins
     if wasReady and delta~=0 then
