@@ -285,18 +285,13 @@ test("catalog ids and prices are valid; every category has a progression",functi
     local hoodie=Catalog.ById.abvm_store_hoodie_heather
     assert(hoodie and hoodie.slot=="uniformTop" and hoodie.retailUSD==nil)
 end)
-test("user-approved ABVM classroom teacher mappings remain exact",function()
-    local expected={
-        math="Mrs. Campion",
-        reading="Mrs. Russek",
-        grammar="Mrs. Benulis",
-        religion="Mr. Bolich",
-        vocabulary="Mr. Yordy",
-        spelling="Mrs. Kochol",
-    }
+test("real faculty roles stay separate from subject learning-lab labels",function()
     for _,subject in ipairs(Catalog.Subjects) do
-        equal(subject.teacher,expected[subject.id])
+        equal(subject.teacher,nil)
+        equal(subject.room,"Learning Lab")
     end
+    equal(Catalog.ByStaffId.aimee_benulis.role,"Second Grade")
+    equal(Catalog.ByStaffId.david_bolich.role,"Technology Teacher and Physical Education Teacher")
 end)
 test("mix-and-match ABVM uniform pieces equip independently",function()
     local p=Learning.newProfile();p.coins=500;p.earned=500
