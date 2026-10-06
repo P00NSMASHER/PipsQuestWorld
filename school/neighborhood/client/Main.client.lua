@@ -233,54 +233,124 @@ resumeButton=UI.button(goalCard,"Continue this lesson",function()
         if result.ok then showQuestion(result.question) end
     end)
 end,{Position=UDim2.fromOffset(11,47),Size=UDim2.new(1,-22,0,32),Visible=false,TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
-showShop=function(selected)
+local function equippedSlot(item)
+    if item.slot then return item.slot end
+    if item.category=="Homes" then return "home" end
+    if item.category=="Vehicles" then return "vehicle" end
+    if item.category=="Clothes" then return "outfit" end
+    return nil
+end
+
+local function clothingMatches(item,filter)
+    if filter=="All" then return true end
+    if filter=="Tops" then return item.slot=="uniformTop" end
+    if filter=="Bottoms" then return item.slot=="uniformBottom" end
+    if filter=="Socks" then return item.slot=="uniformLegwear" end
+    if filter=="Shoes" then return item.slot=="uniformShoes" end
+    if filter=="Sweaters" then return item.style==14 or item.style==15 end
+    if filter=="Full" then return item.slot==nil end
+    return true
+end
+
+showShop=function(selected,subfilter)
     category=selected or category
+    if subfilter then clothesFilter=subfilter end
+    if category~="Clothes" then clothesFilter="All" end
     open("shop","ABVM School Shop")
-    local index,tier=Catalog.tier(state.earned)
-    UI.text(body,tier.name.."  •  Everything is bought with learning Credits",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,34),TextColor3=UI.P.muted})
-    local tabs=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,44),BackgroundTransparency=1})
-    for i,name in ipairs({"Homes","Clothes","Items","Vehicles"}) do
-        UI.button(tabs,name,function() showShop(name) end,{Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=13,BackgroundColor3=name==category and UI.P.ink or UI.P.white,TextColor3=name==category and UI.P.white or UI.P.ink})
+
+    UI.clear(shopTabs);UI.clear(shopSubtabs)
+    local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Uniforms","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
+    for i,def in ipairs(categoryDefs) do
+        local key,label,icon=def[1],def[2],def[3]
+        UI.iconButton(shopTabs,icon,label,function() showShop(key) end,{
+            Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=11,IconSize=15,
+            BackgroundColor3=key==category and UI.P.ink or UI.P.white,
+            TextColor3=key==category and UI.P.white or UI.P.ink,
+            IconColor=key==category and UI.P.gold or UI.P.teal,
+        })
     end
-    local number=0
+
+    if category=="Clothes" then
+        shopSubtabs.Visible=true
+        body.Position=UDim2.fromOffset(14,138);body.Size=UDim2.new(1,-28,1,-152)
+        local filters={"All","Tops","Bottoms","Socks","Shoes","Full","Sweaters"}
+        for i,label in ipairs(filters) do
+            UI.button(shopSubtabs,label,function() showShop("Clothes",label) end,{
+                Position=UDim2.new((i-1)/#filters,2,0,0),Size=UDim2.new(1/#filters,-4,1,0),TextSize=10,
+                BackgroundColor3=label==clothesFilter and UI.P.teal or UI.P.white,
+                TextColor3=label==clothesFilter and UI.P.white or UI.P.ink,
+                CornerRadius=10,
+            })
+        end
+    else
+        shopSubtabs.Visible=false
+        body.Position=UDim2.fromOffset(14,100);body.Size=UDim2.new(1,-28,1,-114)
+    end
+
+    local _,tier=Catalog.tier(state.earned)
+    UI.text(body,tier.name.."  •  "..tostring(state.coins).." Credits available",UI.T.caption,{LayoutOrder=1,Size=UDim2.new(1,0,0,24),TextColor3=UI.P.muted,Font=Enum.Font.GothamBold})
+
+    local visible={}
     for _,item in ipairs(Catalog.Items) do
-        if item.category~=category then continue end
-        number+=1
+        if item.category==category and (category~="Clothes" or clothingMatches(item,clothesFilter)) then
+            table.insert(visible,item)
+        end
+    end
+
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+    local columns=layout.columns
+    local gap=layout.shopGap
+    local cardHeight=layout.shopCardHeight
+    local rows=math.max(1,math.ceil(#visible/columns))
+    local grid=UI.new("Frame",body,{Name="ProductGrid",LayoutOrder=2,Size=UDim2.new(1,0,0,rows*cardHeight+(rows-1)*gap),BackgroundTransparency=1})
+    UI.new("UIGridLayout",grid,{
+        CellPadding=UDim2.fromOffset(gap,gap),
+        CellSize=UDim2.new(1/columns,-(gap*(columns-1))/columns,0,cardHeight),
+        FillDirectionMaxCells=columns,
+        SortOrder=Enum.SortOrder.LayoutOrder,
+        HorizontalAlignment=Enum.HorizontalAlignment.Left,
+    })
+
+    for number,item in ipairs(visible) do
         local owned=state.owned[item.id]==true
-        local equipped=state.equipped.home==item.id or state.equipped.outfit==item.id or state.equipped.vehicle==item.id
-        local card=UI.frame(body,{Name=item.id,LayoutOrder=number+2,Size=UDim2.new(1,0,0,210)})
-        UI.stroke(card)
+        local slot=equippedSlot(item)
+        local equipped=slot~=nil and state.equipped[slot]==item.id
+        local card=UI.surface(grid,{Name=item.id,LayoutOrder=number,Size=UDim2.new(1,0,0,cardHeight),BackgroundColor3=UI.P.white,Shadow=false})
         UI.preview(card,item)
-        UI.text(card,item.name,18,{Position=UDim2.fromOffset(116,10),Size=UDim2.new(1,-128,0,40),Font=Enum.Font.GothamBold})
+
+        UI.text(card,item.name,16,{Position=UDim2.fromOffset(114,8),Size=UDim2.new(1,-122,0,34),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top})
         local remaining=math.max(0,item.price-state.coins)
         local priceStatus
+        if owned then priceStatus=equipped and "Equipped" or "Owned"
+        elseif remaining==0 then priceStatus=tostring(item.price).." Credits • ready"
+        else priceStatus=tostring(item.price).." Credits • "..tostring(remaining).." to go" end
+        UI.text(card,priceStatus,13,{Position=UDim2.fromOffset(114,42),Size=UDim2.new(1,-122,0,22),TextColor3=owned and UI.P.success or UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+        UI.text(card,item.description,12,{Position=UDim2.fromOffset(114,64),Size=UDim2.new(1,-122,0,42),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
+
+        local label
         if owned then
-            priceStatus="Owned"
-        elseif remaining==0 then
-            priceStatus="Ready • "..tostring(item.price).." Credits"
+            label=item.category=="Items" and "Owned" or (equipped and "Equipped" or "Equip")
         else
-            priceStatus=tostring(item.price).." Credits • "..tostring(remaining).." to go"
+            label="Buy • "..tostring(item.price)
         end
-        UI.text(card,priceStatus,16,{Position=UDim2.fromOffset(116,51),Size=UDim2.new(1,-128,0,30),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
-        UI.text(card,Catalog.Tiers[item.tier].name,12,{Position=UDim2.fromOffset(116,81),Size=UDim2.new(1,-128,0,22),TextColor3=UI.P.muted})
-        UI.text(card,item.description,14,{Position=UDim2.fromOffset(12,107),Size=UDim2.new(1,-24,0,42),TextColor3=UI.P.muted})
-        local label=owned and (item.category=="Items" and "Placed / worn" or (equipped and "Equipped" or "Equip")) or "Buy • "..item.price
         local action=UI.button(card,label,function()
             task.spawn(function()
                 local result=call(owned and "equip" or "buy",{itemId=item.id})
                 if result.ok then
-                    notify(owned and (item.name.." equipped.") or (item.name.." is yours. Saved to your profile."))
-                    if view=="shop" then showShop(category) end
+                    notify(owned and (item.name.." equipped.") or (item.name.." added to your collection."))
+                    if view=="shop" then showShop(category,clothesFilter) end
                 end
             end)
-        end,{Position=UDim2.fromOffset(12,156),Size=UDim2.new(.62,-18,0,44),TextSize=14,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
-        if owned and (equipped or item.category=="Items") then action.Active=false;action.BackgroundColor3=UI.P.soft;action.TextColor3=UI.P.teal end
-        UI.button(card,state.goal==item.id and "Your goal" or "Set goal",function()
+        end,{Position=UDim2.new(0,10,1,-46),Size=UDim2.new(.68,-14,0,36),TextSize=12,BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,CornerRadius=10})
+        if owned and (equipped or item.category=="Items") then
+            action.Active=false;action.BackgroundColor3=UI.P.soft;action.TextColor3=UI.P.success
+        end
+        UI.button(card,state.goal==item.id and "★ Goal" or "☆ Goal",function()
             task.spawn(function()
                 local result=call("goal",{itemId=item.id})
-                if result.ok and view=="shop" then showShop(category) end
+                if result.ok and view=="shop" then showShop(category,clothesFilter) end
             end)
-        end,{Position=UDim2.new(.62,0,0,156),Size=UDim2.new(.38,-12,0,44),TextSize=13,BackgroundColor3=UI.P.soft})
+        end,{Position=UDim2.new(.68,2,1,-46),Size=UDim2.new(.32,-12,0,36),TextSize=11,BackgroundColor3=state.goal==item.id and UI.P.goldSoft or UI.P.white,CornerRadius=10})
     end
 end
 local navButtons={}
