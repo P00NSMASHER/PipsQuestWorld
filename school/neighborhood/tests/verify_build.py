@@ -135,6 +135,12 @@ def validate_abvm_contract() -> dict:
                 f"missing ABVM classroom mapping: {subject} / {teacher}")
     require("ASSUMPTION BVM CATHOLIC SCHOOL" in main,
             "mobile classroom identity lost full school name")
+    require('Name="PrimaryNav"' in main and 'BackgroundColor3=UI.P.ink' in main,
+            "gold-standard dark primary navigation rail missing")
+    require('nav.Parent=canvas' in main and 'layout.goldLandscape' in main,
+            "landscape navigation must detach from the top header into the left rail")
+    require('Size=UDim2.fromOffset(760,50)' not in main,
+            "legacy wide white-toolbar HUD pattern returned")
 
     ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
     layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
