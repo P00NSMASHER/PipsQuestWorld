@@ -1,6 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: gold-standard version 25 runtime identity
-# release: gold-standard visible HUD correction
+# release: gold-standard version 26 bonus progress
 
 on:
   push:
