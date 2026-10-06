@@ -162,6 +162,17 @@ local function desk(parent,x,y,z,tint)
     World.part(parent,"Chair back",Vector3.new(2.2,2.4,.3),CFrame.new(x,y+2.6,z+4),tint,Enum.Material.Fabric)
 end
 
+local function ceilingLight(parent,position,size,brightness,range)
+    local fixture=World.part(parent,"Ceiling light",size or Vector3.new(6,.25,2.2),CFrame.new(position),Color3.fromRGB(247,240,211),Enum.Material.Neon,false)
+    local light=Instance.new("PointLight")
+    light.Brightness=brightness or .65
+    light.Range=range or 20
+    light.Color=Color3.fromRGB(255,235,195)
+    light.Shadows=false
+    light.Parent=fixture
+    return fixture
+end
+
 local function npc(parent,name,position,suit,tint)
     local model=Instance.new("Model");model.Name=name;model.Parent=parent
     local skin=Color3.fromRGB(226,196,164)
@@ -202,6 +213,9 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     cross(m,CFrame.new(x+14,floorY+10,z-roomDepth/2+.45),.45,palette.gold)
     for _,dx in ipairs({-11,0,11}) do
         for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
+    end
+    for _,dx in ipairs({-11,11}) do
+        for _,dz in ipairs({-12,13}) do ceilingLight(m,Vector3.new(x+dx,floorY+13.2,z+dz),Vector3.new(7,.22,2.2),.55,18) end
     end
     -- One clear subject-specific visual cue per room; decorative only, never another learning authority.
     if id=="math" then
@@ -428,6 +442,10 @@ function World.build()
     World.part(root,"Front west low annex",Vector3.new(41,8,13),CFrame.new(-55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
     World.part(root,"Front east low annex",Vector3.new(41,8,13),CFrame.new(55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
     World.part(root,"School approach",Vector3.new(28,.3,40),CFrame.new(0,.2,13),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+    for _,x in ipairs({-34,34}) do
+        local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
+        local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
+    end
 
     -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
     World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
@@ -546,6 +564,7 @@ function World.build()
         World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),Color3.fromRGB(177,151,118),Enum.Material.WoodPlanks)
         World.part(root,"Hall left rail",Vector3.new(.4,2.3,92),CFrame.new(-14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
         World.part(root,"Hall right rail",Vector3.new(.4,2.3,92),CFrame.new(14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
+        for _,z in ipairs({-130,-110,-90,-70,-50}) do ceilingLight(root,Vector3.new(0,floorY+13.1,z),Vector3.new(5,.2,2),.48,17) end
         sign(root,"FLOOR "..tostring(index),CFrame.new(0,floorY+8,-141.6),Vector3.new(12,2.5,.2),palette.navy,palette.gold)
         if index==1 then
             sign(root,"MAIN OFFICE  ←\nMATH  ←     →  READING",CFrame.new(0,floorY+9,-78),Vector3.new(22,4,.2),palette.green,palette.cream)
