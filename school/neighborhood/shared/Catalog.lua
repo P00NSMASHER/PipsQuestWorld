@@ -51,6 +51,20 @@ Catalog.Items = {
     {id="uniform_shoes_black", category="Clothes", slot="uniformShoes", name="School Shoes • Black", price=20, tier=1, style=42, color={45,47,49}, description="Black school shoes."},
     {id="uniform_shoes_tan", category="Clothes", slot="uniformShoes", name="School Shoes • Tan", price=20, tier=1, style=43, color={166,127,86}, description="Tan school shoes."},
 
+    -- Official 2026 ABVM school-store apparel supplied by the user.
+    -- Youth/adult storefront duplicates collapse into one avatar-scaled Roblox garment.
+    -- When the retail price is visible in the supplied reference, the in-game Credit price is 4x that value.
+    {id="abvm_store_polo_green", category="Clothes", slot="uniformTop", name="ABVM Store Polo • Green", price=60, retailUSD=15, tier=1, style=51, color={31,91,67}, description="Official ABVM school-store short-sleeve polo in forest green."},
+    {id="abvm_store_polo_navy", category="Clothes", slot="uniformTop", name="ABVM Store Polo • Navy", price=60, retailUSD=15, tier=1, style=51, color={28,48,72}, description="Official ABVM school-store short-sleeve polo in navy."},
+    {id="abvm_store_ls_polo_green", category="Clothes", slot="uniformTop", name="ABVM Store Long-Sleeve Polo • Green", price=68, retailUSD=17, tier=1, style=52, color={31,91,67}, description="Official ABVM school-store long-sleeve polo in forest green."},
+    {id="abvm_store_ls_polo_navy", category="Clothes", slot="uniformTop", name="ABVM Store Long-Sleeve Polo • Navy", price=68, retailUSD=17, tier=1, style=52, color={28,48,72}, description="Official ABVM school-store long-sleeve polo in navy."},
+    {id="abvm_store_quarter_zip_navy", category="Clothes", slot="uniformTop", name="ABVM Store 1/4-Zip • Navy", price=104, retailUSD=26, tier=1, style=53, color={28,48,72}, description="Official ABVM school-store quarter-zip pullover in navy."},
+    {id="abvm_store_heather_tee", category="Clothes", slot="uniformTop", name="ABVM Store Heather Tee", price=40, retailUSD=10, tier=1, style=54, color={166,168,170}, description="Official ABVM school-store heather-gray short-sleeve tee."},
+    {id="abvm_store_crewneck_heather", category="Clothes", slot="uniformTop", name="ABVM Store Crewneck", price=60, retailUSD=15, tier=1, style=55, color={166,168,170}, description="Official ABVM school-store heather-gray crewneck sweatshirt."},
+    {id="abvm_store_hoodie_heather", category="Clothes", slot="uniformTop", name="ABVM Store Pullover Hoodie", price=120, tier=2, style=56, color={166,168,170}, description="ABVM school-store heather-gray pullover hoodie from the supplied reference; retail price was not visible, so only the in-game Credit price is defined."},
+    {id="abvm_store_sweatpants_heather", category="Clothes", slot="uniformBottom", name="ABVM Store Sweatpants", price=60, retailUSD=15, tier=1, style=61, color={166,168,170}, description="Official ABVM school-store heather-gray sweatpants."},
+    {id="abvm_store_shorts_heather", category="Clothes", slot="uniformBottom", name="ABVM Store Athletic Shorts", price=48, retailUSD=12, tier=1, style=62, color={194,196,198}, description="Official ABVM school-store light-gray athletic shorts."},
+
     {id="outfit_coral", category="Clothes", name="Everyday Tee • Coral", price=50, tier=1, style=1, color={227,128,126}, description="A simple everyday school look."},
     {id="outfit_ocean", category="Clothes", name="Everyday Tee • Ocean", price=50, tier=1, style=1, color={70,158,183}, description="The same starter look in ocean blue."},
     {id="outfit_hoodie", category="Clothes", name="Campus Hoodie", price=150, tier=2, style=2, color={42,91,126}, description="A navy hoodie-inspired layer for school and the neighborhood."},
