@@ -23,7 +23,8 @@ local busy=false
 local category="Homes"
 local header=UI.frame(canvas,{Name="Header",Position=UDim2.fromOffset(8,4),Size=UDim2.new(1,-16,0,52),BackgroundColor3=UI.P.paper})
 UI.stroke(header)
-UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(12,5),Size=UDim2.fromOffset(94,38),Font=Enum.Font.GothamBold})
+UI.text(header,"ABVM",17,{Position=UDim2.fromOffset(12,2),Size=UDim2.fromOffset(102,25),Font=Enum.Font.GothamBold})
+UI.text(header,"CATHOLIC SCHOOL",9,{Position=UDim2.fromOffset(12,25),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,6),Size=UDim2.fromOffset(110,38),BackgroundColor3=UI.P.ink})
 local walletText=UI.text(wallet,"0 Credits",17,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
 local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(320,44)})
@@ -115,6 +116,7 @@ showQuestion=function(q)
         answerColumn=UI.new("ScrollingFrame",row,{Position=UDim2.new(.47,6,0,0),Size=UDim2.new(.53,-6,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=3})
         UI.stack(questionColumn,8);UI.stack(answerColumn,8)
     end
+    UI.text(questionColumn,"ASSUMPTION BVM CATHOLIC SCHOOL",11,{LayoutOrder=0,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold})
     local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No Credits for an immediate repeat" or "10 first try  •  6 after retry  •  streak bonus up to +10",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
     local questionCard=UI.frame(questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,84),AutomaticSize=Enum.AutomaticSize.Y})
     UI.pad(questionCard,16)
