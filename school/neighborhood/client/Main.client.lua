@@ -123,7 +123,7 @@ local messages={
     not_enough_coins="Keep learning, or choose a smaller goal. Your Credits are safe.",not_owned="Earn and buy this item before equipping it.",
     temporarily_unavailable="That did not finish. Please try again.",slow_down="One action at a time.",travel_cooldown="You're already on your way. Try again shortly.",
 }
-local showShop,showQuestion,setNavActive,showAvatar,showClasses,showFaculty
+local showShop,showQuestion,setNavActive,showAvatar,showClasses
 local function call(command,args)
     if busy then return {ok=false,code="saving"} end
     busy=true
@@ -219,55 +219,16 @@ showClasses=function()
         UI.corner(iconTile,11)
         UI.text(iconTile,visual.icon,visual.icon=="ABC" and 10 or 18,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
         UI.text(card,s.short,16,{Position=UDim2.fromOffset(62,7),Size=UDim2.new(1,-74,0,25),Font=Enum.Font.GothamBold})
-        UI.text(card,s.room or "Learning Lab",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
+        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
         UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
     end
-    UI.button(body,"Faculty & Staff Directory",function() showFaculty() end,{
-        LayoutOrder=4,Size=UDim2.new(1,0,0,46),BackgroundColor3=UI.P.ink,TextColor3=UI.P.white,TextSize=14,CornerRadius=12,
-    })
-    UI.chip(body,"Learning Labs are separate from real staff roles",{LayoutOrder=5,Size=UDim2.fromOffset(294,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
-end
-
-showFaculty=function()
-    if setNavActive then setNavActive("school") end
-    open("faculty","Faculty & Staff")
-    UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
-        LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
-    })
-    UI.text(body,"Directory names and roles match the supplied Assumption BVM faculty/staff references. NPCs are placed throughout the school with matching stylized visual cues.",12,{
-        LayoutOrder=2,Size=UDim2.new(1,0,0,46),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
-    })
-    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
-    local columns=layout.landscape and layout.columns or 1
-    local rows=math.ceil(#Catalog.Faculty/columns)
-    local cardHeight=layout.compact and 76 or 84
-    local grid=UI.new("Frame",body,{Name="FacultyGrid",LayoutOrder=3,Size=UDim2.new(1,0,0,rows*cardHeight+(rows-1)*8),BackgroundTransparency=1})
-    UI.new("UIGridLayout",grid,{
-        CellPadding=UDim2.fromOffset(8,8),
-        CellSize=UDim2.new(1/columns,-(8*(columns-1))/columns,0,cardHeight),
-        FillDirectionMaxCells=columns,
-        SortOrder=Enum.SortOrder.LayoutOrder,
-    })
-    for i,staff in ipairs(Catalog.Faculty) do
-        local card=UI.surface(grid,{Name="Faculty_"..staff.id,LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
-        local appearance=staff.appearance or {}
-        local hair=appearance.hair or {95,75,60}
-        local tile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(48,48),BackgroundColor3=Color3.fromRGB(hair[1],hair[2],hair[3])})
-        UI.corner(tile,999)
-        UI.text(tile,string.sub(staff.name,1,1),18,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
-        UI.text(card,staff.name,14,{Position=UDim2.fromOffset(66,6),Size=UDim2.new(1,-76,0,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-        UI.text(card,staff.role,11,{Position=UDim2.fromOffset(66,28),Size=UDim2.new(1,-76,0,28),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
-        UI.text(card,"Floor "..tostring(staff.floor).." • "..tostring(staff.location),10,{Position=UDim2.fromOffset(66,56),Size=UDim2.new(1,-76,0,18),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-    end
-    UI.button(body,"Back to Learning Labs",function() showClasses() end,{
-        LayoutOrder=4,Size=UDim2.new(1,0,0,46),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=14,CornerRadius=12,
-    })
+    UI.chip(body,"Six ABVM classrooms • one clear learning path",{LayoutOrder=4,Size=UDim2.fromOffset(292,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
 end
 
 showQuestion=function(q)
     if not q then return end
     local s=subject(q.subject)
-    open("quiz",s.short.."  •  "..(s.room or "Learning Lab"))
+    open("quiz",s.short.."  •  "..(s.teacher or "Classroom"))
     activeQuestion=q
 
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
@@ -287,7 +248,7 @@ showQuestion=function(q)
     local subjectBadge=UI.frame(subjectRow,{Position=UDim2.fromOffset(0,2),Size=UDim2.fromOffset(30,30),BackgroundColor3=quizVisual.color})
     UI.corner(subjectBadge,9)
     UI.text(subjectBadge,quizVisual.icon,quizVisual.icon=="ABC" and 8 or 14,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
-    UI.text(subjectRow,s.short.."  •  "..(s.room or "Learning Lab"),UI.T.section,{Position=UDim2.fromOffset(38,0),Size=UDim2.new(1,-38,1,0),Font=Enum.Font.GothamBold})
+    UI.text(subjectRow,s.short.."  •  "..(s.teacher or "Classroom"),UI.T.section,{Position=UDim2.fromOffset(38,0),Size=UDim2.new(1,-38,1,0),Font=Enum.Font.GothamBold})
 
     local progressRow=UI.new("Frame",questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,28),BackgroundTransparency=1})
     local progressTrack=UI.frame(progressRow,{Position=UDim2.fromOffset(0,8),Size=UDim2.new(1,-54,0,7),BackgroundColor3=UI.P.line})
