@@ -228,6 +228,18 @@ test("catalog ids and prices are valid; every category has a progression",functi
     equal(Catalog.ById.outfit_abvm_plaid.price,75)
     equal(Catalog.ById.outfit_abvm_plaid.style,7)
 end)
+test("mix-and-match ABVM uniform pieces equip independently",function()
+    local p=Learning.newProfile();p.coins=500;p.earned=500
+    local ids={"uniform_top_green_polo","uniform_bottom_plaid_skirt","uniform_socks_navy","uniform_shoes_brown"}
+    local slots={"uniformTop","uniformBottom","uniformLegwear","uniformShoes"}
+    for i,id in ipairs(ids) do
+        local item=Catalog.ById[id];assert(item and item.slot==slots[i])
+        assert(Learning.purchase(p,"buy-"..id,item).ok)
+        assert(Learning.equip(p,"equip-"..id,item).ok)
+        equal(p.equipped[slots[i]],id)
+    end
+    assert(p.equipped.home=="home_starter" and p.equipped.vehicle=="vehicle_cart")
+end)
 test("layout remains inside iPhone, iPad and desktop safe canvases",function()
     for _,v in ipairs({{758,360},{720,320},{852,393},{350,760},{320,568},{976,724},{1366,700}}) do
         local l=Layout.compute(v[1],v[2]);local r=l.modal
