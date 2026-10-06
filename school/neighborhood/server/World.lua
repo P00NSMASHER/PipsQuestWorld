@@ -256,6 +256,13 @@ local function makeFrontArch(root,x,hasDoor)
         World.part(root,"Arch upper mullion",Vector3.new(.13,5.5,.16),
             CFrame.new(x+offset,19.2,z-.78)*CFrame.Angles(0,0,offset*.07),palette.cream,nil,false)
     end
+    -- Light diamond tracery is one of the most recognizable details in the user's close-up.
+    for _,dx in ipairs({-2.4,0,2.4}) do
+        World.part(root,"Arch tracery left",Vector3.new(3.9,.13,.17),
+            CFrame.new(x+dx-.75,20.2,z-.8)*CFrame.Angles(0,0,math.rad(52)),palette.cream,nil,false)
+        World.part(root,"Arch tracery right",Vector3.new(3.9,.13,.17),
+            CFrame.new(x+dx+.75,20.2,z-.8)*CFrame.Angles(0,0,math.rad(-52)),palette.cream,nil,false)
+    end
 
     if hasDoor then
         local transom=World.part(root,"Door transom glazing",Vector3.new(9.1,4.4,.3),CFrame.new(x,14.7,z-.56),palette.glass,Enum.Material.Glass,false)
