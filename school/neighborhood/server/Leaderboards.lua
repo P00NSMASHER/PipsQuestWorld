@@ -100,8 +100,8 @@ local function formatValue(kind:string,value:number):string
 end
 
 local meta={
-    accuracy={title="TOP ACCURACY",subtitle="20 answers minimum",accent=palette.green},
-    questions={title="MOST QUESTIONS",subtitle="All saved answers",accent=palette.blue},
+    accuracy={title="HIGHEST ACCURACY",subtitle="Correct answers ÷ all saved attempts • 20 minimum",accent=palette.green},
+    questions={title="MOST QUESTIONS",subtitle="All saved answer attempts",accent=palette.blue},
     credits={title="MOST CREDITS",subtitle="Current spendable balance",accent=palette.gold},
 }
 
@@ -113,9 +113,10 @@ local function renderBoard(part:BasePart,kind:string,rows:{any})
     local root=make("Frame",gui,{Size=UDim2.fromScale(1,1),BackgroundColor3=palette.navy,BorderSizePixel=0})::Frame
     make("UICorner",root,{CornerRadius=UDim.new(0,10)})
     make("Frame",root,{Size=UDim2.new(1,0,0,8),BackgroundColor3=m.accent,BorderSizePixel=0})
-    make("TextLabel",root,{Position=UDim2.fromOffset(18,16),Size=UDim2.new(1,-36,0,38),BackgroundTransparency=1,Text=m.title,TextColor3=palette.paper,Font=Enum.Font.GothamBold,TextSize=25,TextXAlignment=Enum.TextXAlignment.Left})
-    make("TextLabel",root,{Position=UDim2.fromOffset(18,51),Size=UDim2.new(1,-36,0,25),BackgroundTransparency=1,Text=m.subtitle,TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=14,TextXAlignment=Enum.TextXAlignment.Left})
-    local holder=make("Frame",root,{Position=UDim2.fromOffset(14,84),Size=UDim2.new(1,-28,1,-98),BackgroundTransparency=1})::Frame
+    make("TextLabel",root,{Position=UDim2.fromOffset(18,13),Size=UDim2.new(1,-36,0,18),BackgroundTransparency=1,Text="ASSUMPTION BVM CATHOLIC SCHOOL",TextColor3=palette.gold,Font=Enum.Font.GothamBold,TextSize=11,TextXAlignment=Enum.TextXAlignment.Left})
+    make("TextLabel",root,{Position=UDim2.fromOffset(18,30),Size=UDim2.new(1,-36,0,34),BackgroundTransparency=1,Text=m.title,TextColor3=palette.paper,Font=Enum.Font.GothamBold,TextSize=23,TextXAlignment=Enum.TextXAlignment.Left})
+    make("TextLabel",root,{Position=UDim2.fromOffset(18,61),Size=UDim2.new(1,-36,0,31),BackgroundTransparency=1,Text=m.subtitle,TextWrapped=true,TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=12,TextXAlignment=Enum.TextXAlignment.Left})
+    local holder=make("Frame",root,{Position=UDim2.fromOffset(14,98),Size=UDim2.new(1,-28,1,-112),BackgroundTransparency=1})::Frame
     make("UIListLayout",holder,{Padding=UDim.new(0,5),SortOrder=Enum.SortOrder.LayoutOrder})
     if #rows==0 then
         make("TextLabel",holder,{Size=UDim2.new(1,0,0,40),BackgroundTransparency=1,Text="No ranked players yet",TextColor3=palette.muted,Font=Enum.Font.GothamMedium,TextSize=16})
