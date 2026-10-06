@@ -27,19 +27,20 @@ local homeFilter="All"
 local vehicleFilter="All"
 
 -- Compact floating rail from the authoritative gold-standard board.
-local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(760,50),BackgroundColor3=UI.P.paper,BackgroundTransparency=.03})
+local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(500,50),BackgroundColor3=UI.P.ink,BackgroundTransparency=.02})
 local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
 UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
-UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
 UI.text(header,"ABVM STUDENT",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
-local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.ink})
+local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.gold})
 UI.corner(wallet,UI.R.chip)
-local walletText=UI.text(wallet,"0 Credits",15,{TextColor3=UI.P.paper,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
-local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-120,0,8),Size=UDim2.fromOffset(106,34),BackgroundColor3=UI.P.goldSoft})
+local walletText=UI.text(wallet,"0 Credits",15,{TextColor3=UI.P.ink,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local streakPill=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-120,0,8),Size=UDim2.fromOffset(106,34),BackgroundColor3=UI.P.teal})
 UI.corner(streakPill,UI.R.chip)
-local streakText=UI.text(streakPill,"✓ 0  •  ✕ 0",12,{TextColor3=UI.P.ink,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
-local nav=UI.new("Frame",header,{BackgroundTransparency=1,Size=UDim2.fromOffset(300,40)})
+local streakText=UI.text(streakPill,"✓ 0  •  ✕ 0",12,{TextColor3=UI.P.white,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,Size=UDim2.fromScale(1,1)})
+local nav=UI.frame(canvas,{Name="PrimaryNav",BackgroundColor3=UI.P.ink,BackgroundTransparency=.04,Size=UDim2.fromOffset(104,212)})
+UI.corner(nav,18);UI.stroke(nav,Color3.fromRGB(46,67,93))
 
 -- Compact progression chip; expand only while a lesson can be resumed.
 local goalCard=UI.surface(canvas,{Name="NextGoal",Position=UDim2.fromOffset(12,62),Size=UDim2.fromOffset(286,44),BackgroundColor3=UI.P.paper,BackgroundTransparency=.04})
@@ -80,12 +81,12 @@ local function update(snapshot)
     walletText.Text=tostring(state.coins).." Credits"
     if (state.wrongStreak or 0)>0 then
         streakText.Text="✕ streak "..tostring(state.wrongStreak)
-        streakPill.BackgroundColor3=Color3.fromRGB(249,235,232)
-        streakText.TextColor3=UI.P.negative
+        streakPill.BackgroundColor3=UI.P.negative
+        streakText.TextColor3=UI.P.white
     else
         streakText.Text="✓ streak "..tostring(state.correctStreak or 0)
-        streakPill.BackgroundColor3=UI.P.soft
-        streakText.TextColor3=UI.P.success
+        streakPill.BackgroundColor3=UI.P.teal
+        streakText.TextColor3=UI.P.white
     end
     local delta=state.coins-oldCoins
     if wasReady and delta~=0 then
@@ -594,26 +595,28 @@ for i,definition in ipairs(navDefs) do
         Size=UDim2.new(.25,-6,1,0),
         TextSize=11,
         IconSize=16,
-        BackgroundColor3=UI.P.white,
-        IconColor=command=="school" and UI.P.gold or UI.P.teal,
+        BackgroundColor3=UI.P.ink,
+        TextColor3=UI.P.white,
+        IconBackgroundColor3=command=="school" and UI.P.goldSoft or Color3.fromRGB(32,74,62),
+        IconColor=command=="school" and UI.P.gold or UI.P.white,
     })
     table.insert(navButtons,b)
 end
 setNavActive=function(command)
     for i,b in ipairs(navButtons) do
         local active=navDefs[i][3]==command
-        b.BackgroundColor3=active and UI.P.ink or UI.P.white
+        b.BackgroundColor3=active and UI.P.teal or UI.P.ink
         local iconBox=b:FindFirstChild("IconBox")
         local icon=iconBox and iconBox:FindFirstChild("Icon") or nil
         local label=b:FindFirstChild("Label")
         if iconBox and iconBox:IsA("Frame") then
-            iconBox.BackgroundColor3=active and UI.P.goldSoft or UI.P.soft
+            iconBox.BackgroundColor3=active and UI.P.goldSoft or Color3.fromRGB(32,74,62)
         end
         if icon and icon:IsA("TextLabel") then
-            icon.TextColor3=active and UI.P.gold or (navDefs[i][3]=="school" and UI.P.gold or UI.P.teal)
+            icon.TextColor3=active and UI.P.gold or UI.P.white
         end
         if label and label:IsA("TextLabel") then
-            label.TextColor3=active and UI.P.white or UI.P.ink
+            label.TextColor3=UI.P.white
         end
     end
 end
@@ -662,6 +665,7 @@ local function reflow()
 
     if layout.goldLandscape then
         nav.Parent=canvas
+        nav.BackgroundTransparency=.04
         nav.AnchorPoint=Vector2.new(0,0)
         nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)
         nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
@@ -672,6 +676,7 @@ local function reflow()
         end
     elseif layout.narrow then
         nav.Parent=header
+        nav.BackgroundTransparency=1
         streakPill.Visible=false
         nav.AnchorPoint=Vector2.new(.5,0)
         nav.Position=UDim2.new(.5,0,0,46)
@@ -682,6 +687,7 @@ local function reflow()
         end
     else
         nav.Parent=header
+        nav.BackgroundTransparency=1
         streakPill.Visible=size.X>=850
         nav.AnchorPoint=Vector2.new(.5,0)
         nav.Position=UDim2.new(.5,size.X<850 and -36 or -8,0,5)
