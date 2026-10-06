@@ -100,13 +100,28 @@ function UI.preview(parent,item)
         if item.style>=3 then p(Vector3.new(.24,.08,bodyLength),Vector3.new(0,1.58,0),UI.P.gold) end
         for _,x in ipairs({-1.85,1.85}) do for _,z in ipairs({-1.9,1.9}) do p(Vector3.new(.5,1.4,1.4),Vector3.new(x,.7,z),UI.P.ink,Enum.PartType.Cylinder) end end
     elseif item.category=="Clothes" then
-        p(Vector3.new(2,2.2,1),Vector3.new(0,2.4,0),tint)
+        local isUniform=item.style==6 or item.style==7
+        local forest=Color3.fromRGB(31,91,67)
+        local khaki=Color3.fromRGB(205,190,154)
+        local navy=Color3.fromRGB(28,48,72)
+        local cream=Color3.fromRGB(235,231,216)
+        p(Vector3.new(2,2.2,1),Vector3.new(0,2.4,0),isUniform and forest or tint)
         p(Vector3.new(1.1,1.1,1.1),Vector3.new(0,4.1,0),Color3.fromRGB(226,207,181),Enum.PartType.Ball)
-        for _,x in ipairs({-1.45,1.45}) do p(Vector3.new(.8,2,.8),Vector3.new(x,2.4,0),item.style==2 and UI.P.paper or tint) end
-        for _,x in ipairs({-.5,.5}) do p(Vector3.new(.85,1.4,.8),Vector3.new(x,.7,0),UI.P.ink) end
-        if item.style>=2 then p(Vector3.new(.12,2.1,.05),Vector3.new(0,2.4,-.55),item.style>=3 and UI.P.gold or UI.P.paper) end
-        if item.style>=4 then p(Vector3.new(1.4,.15,.06),Vector3.new(0,3.25,-.56),UI.P.gold) end
-        if item.style>=5 then p(Vector3.new(1.7,.12,.06),Vector3.new(0,1.55,-.56),UI.P.gold) end
+        for _,x in ipairs({-1.45,1.45}) do p(Vector3.new(.8,2,.8),Vector3.new(x,2.4,0),isUniform and forest or (item.style==2 and UI.P.paper or tint)) end
+        for _,x in ipairs({-.5,.5}) do p(Vector3.new(.85,1.4,.8),Vector3.new(x,.7,0),isUniform and (item.style==7 and navy or khaki) or UI.P.ink) end
+        if item.style==6 then
+            p(Vector3.new(.38,.18,.08),Vector3.new(.48,2.75,-.56),cream)
+            p(Vector3.new(1.7,.18,.08),Vector3.new(0,3.3,-.56),forest)
+        elseif item.style==7 then
+            p(Vector3.new(2.25,2.4,1.12),Vector3.new(0,2.05,0),forest)
+            for _,x in ipairs({-.65,0,.65}) do p(Vector3.new(.11,2.35,.06),Vector3.new(x,2.05,-.59),navy) end
+            for _,y in ipairs({1.45,2.05,2.65}) do p(Vector3.new(2.2,.1,.06),Vector3.new(0,y,-.59),cream) end
+            p(Vector3.new(.38,.18,.08),Vector3.new(.48,2.75,-.62),cream)
+        else
+            if item.style>=2 then p(Vector3.new(.12,2.1,.05),Vector3.new(0,2.4,-.55),item.style>=3 and UI.P.gold or UI.P.paper) end
+            if item.style>=4 then p(Vector3.new(1.4,.15,.06),Vector3.new(0,3.25,-.56),UI.P.gold) end
+            if item.style>=5 then p(Vector3.new(1.7,.12,.06),Vector3.new(0,1.55,-.56),UI.P.gold) end
+        end
     elseif item.id=="item_rug" then p(Vector3.new(5,.2,4),Vector3.new(0,.2,0),tint)
     elseif item.id=="item_lamp" then
         p(Vector3.new(2.5,.3,2.5),Vector3.new(0,.2,0),UI.P.ink);p(Vector3.new(.2,3,.2),Vector3.new(0,1.8,0),UI.P.gold);p(Vector3.new(2.7,1.8,2.7),Vector3.new(0,3.5,0),UI.P.paper)
