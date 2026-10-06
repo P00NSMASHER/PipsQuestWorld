@@ -149,17 +149,36 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
 end
 
 local function makeFrontArch(root,x)
-    local z=-34.3
-    World.part(root,"Arch left pier",Vector3.new(1.2,16,1.2),CFrame.new(x-5.3,12,z),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Arch right pier",Vector3.new(1.2,16,1.2),CFrame.new(x+5.3,12,z),palette.stone,Enum.Material.Concrete)
-    local cap=World.part(root,"Arch crown",Vector3.new(11.4,6,1.15),CFrame.new(x,19.5,z),palette.stone,Enum.Material.Concrete,false)
-    cap.Shape=Enum.PartType.Ball
-    local glass=World.part(root,"Arched glass",Vector3.new(9.2,6,0.45),CFrame.new(x,18.6,z-.35),palette.glass,Enum.Material.Glass,false)
-    glass.Shape=Enum.PartType.Ball;glass.Transparency=.15
-    local lower=World.part(root,"Tall arched glazing",Vector3.new(9.2,10,.35),CFrame.new(x,12.2,z-.4),palette.glass,Enum.Material.Glass,false)
-    lower.Transparency=.14
-    World.part(root,"Entry double doors",Vector3.new(8.5,7,.28),CFrame.new(x,7.5,z-.55),Color3.fromRGB(210,207,190),Enum.Material.Metal,false)
-    World.part(root,"Door split",Vector3.new(.18,7,.34),CFrame.new(x,7.5,z-.75),palette.stone,nil,false)
+    local z=-34.2
+    local radius=5.25
+    local springY=18
+    -- Rectangular voussoirs approximate the real stone arch without a giant spherical cap.
+    for i=0,10 do
+        local theta=math.pi*i/10
+        local px=x+math.cos(theta)*radius
+        local py=springY+math.sin(theta)*radius
+        World.part(root,"Arch stone segment",Vector3.new(3.1,1.25,1.35),
+            CFrame.new(px,py,z)*CFrame.Angles(0,0,theta+math.pi/2),
+            palette.stone,Enum.Material.Concrete,false)
+    end
+    World.part(root,"Arch left pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x-radius,11.8,z),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Arch right pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x+radius,11.8,z),palette.stone,Enum.Material.Concrete)
+    local upperGlass=World.part(root,"Arched upper glazing",Vector3.new(9.1,5,.3),CFrame.new(x,19.2,z-.55),palette.glass,Enum.Material.Glass,false)
+    upperGlass.Transparency=.12
+    local lower=World.part(root,"Tall arched glazing",Vector3.new(9.1,10.2,.32),CFrame.new(x,12.2,z-.56),palette.glass,Enum.Material.Glass,false)
+    lower.Transparency=.12
+    -- Diamond-ish upper mullions plus rectangular lower mullions echo the reference window rhythm.
+    for _,offset in ipairs({-2.8,0,2.8}) do
+        World.part(root,"Arch vertical mullion",Vector3.new(.16,13,.18),CFrame.new(x+offset,14.8,z-.78),palette.cream,nil,false)
+    end
+    for _,y in ipairs({10.5,14,17.5}) do
+        World.part(root,"Arch horizontal mullion",Vector3.new(9,.16,.18),CFrame.new(x,y,z-.78),palette.cream,nil,false)
+    end
+    World.part(root,"Entry double doors",Vector3.new(8.6,7.1,.3),CFrame.new(x,7.55,z-.72),Color3.fromRGB(218,214,198),Enum.Material.Metal,false)
+    World.part(root,"Door split",Vector3.new(.18,7,.36),CFrame.new(x,7.55,z-.9),palette.stone,nil,false)
+    for _,dx in ipairs({-2.25,2.25}) do
+        World.part(root,"Door window",Vector3.new(1.25,2.5,.1),CFrame.new(x+dx,8.2,z-.94),Color3.fromRGB(73,95,105),Enum.Material.Glass,false)
+    end
 end
 
 local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
@@ -199,6 +218,16 @@ function World.build()
     World.part(root,"Flat black roof",Vector3.new(154,1,114),CFrame.new(0,52.5,-90),Color3.fromRGB(45,47,48),Enum.Material.Slate)
     World.part(root,"Roof parapet front",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-34.5),palette.brick,Enum.Material.Brick)
     World.part(root,"Roof parapet back",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-145.5),palette.brick,Enum.Material.Brick)
+    -- Reference-visible roofline rhythm, chimney stack and simple roof vents.
+    for _,x in ipairs({-66,-44,-22,0,22,44,66}) do
+        World.part(root,"Front parapet cap",Vector3.new(4.2,2.2,2.3),CFrame.new(x,55,-34.7),palette.stone,Enum.Material.Concrete,false)
+    end
+    World.part(root,"Brick chimney",Vector3.new(11,20,11),CFrame.new(62,62,-57),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Chimney cap",Vector3.new(12.5,1.4,12.5),CFrame.new(62,72.4,-57),palette.stone,Enum.Material.Concrete)
+    for _,entry in ipairs({{-45,-77},{-18,-114},{18,-69},{43,-118}}) do
+        World.part(root,"Roof vent base",Vector3.new(5,.8,5),CFrame.new(entry[1],53.4,entry[2]),Color3.fromRGB(91,94,94),Enum.Material.Metal,false)
+        World.part(root,"Roof vent",Vector3.new(2.2,3,2.2),CFrame.new(entry[1],55,entry[2]),Color3.fromRGB(132,136,136),Enum.Material.Metal,false)
+    end
 
     -- Exterior side/back walls. East wall keeps a usable Howard Avenue doorway.
     World.part(root,"West brick wall",Vector3.new(1.4,48,110),CFrame.new(-75,28,-90),palette.brick,Enum.Material.Brick)
@@ -244,6 +273,17 @@ function World.build()
         World.part(root,"Front broad stair",Vector3.new(57,.65,3.2),CFrame.new(0,.35+i*.52,-7-i*3.25),palette.stone,Enum.Material.Concrete)
     end
     World.part(root,"Front landing",Vector3.new(59,.7,8),CFrame.new(0,4.3,-31),palette.stone,Enum.Material.Concrete)
+    -- Low masonry cheeks and center rails reproduce the formal stair approach without narrowing the playable lane.
+    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,30),CFrame.new(-31,2.55,-18.5),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,30),CFrame.new(31,2.55,-18.5),palette.brickDark,Enum.Material.Brick)
+    for _,x in ipairs({-9,9}) do
+        for step=0,4 do
+            World.part(root,"Front stair rail post",Vector3.new(.28,3,.28),CFrame.new(x,1.6+step*.75,-8-step*5.2),palette.metal,Enum.Material.Metal,false)
+        end
+    end
+    -- White low front additions flank the arched section in the real facade.
+    World.part(root,"Front west low annex",Vector3.new(41,8,13),CFrame.new(-55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
+    World.part(root,"Front east low annex",Vector3.new(41,8,13),CFrame.new(55,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
     World.part(root,"School approach",Vector3.new(28,.3,40),CFrame.new(0,.2,13),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
 
     -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
