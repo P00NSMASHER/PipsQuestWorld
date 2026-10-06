@@ -26,8 +26,8 @@ function Garage.spawn(player,item,cf)
     local roofY=item.style==3 and 2.8 or 3.5
     local body=p("Chassis",Vector3.new(6.7,1.3,length),Vector3.zero,tint,true)
     model.PrimaryPart=body
-    p("Bonnet",Vector3.new(6.3,.6,2.7),Vector3.new(0,.9,-3),tint,false)
-    p("Rear",Vector3.new(6.3,.7,2),Vector3.new(0,1,3.7),tint,false)
+    p("Bonnet",Vector3.new(6.3,.6,math.min(2.7,length*.28)),Vector3.new(0,.9,-length*.3),tint,false)
+    p("Rear",Vector3.new(6.3,.7,math.min(2.2,length*.24)),Vector3.new(0,1,length*.34),tint,false)
     p("Roof",Vector3.new(6.1,.35,4.7),Vector3.new(0,roofY,.5),item.style>=3 and Color3.fromRGB(47,60,76) or tint,false)
     for _,x in ipairs({-2.8,2.8}) do
         for _,z in ipairs({-1.7,2.4}) do p("Pillar",Vector3.new(.3,roofY-.7,.3),Vector3.new(x,(roofY+.7)/2,z),tint,false) end
@@ -39,7 +39,8 @@ function Garage.spawn(player,item,cf)
     if item.style>=3 then
         p("Signature stripe",Vector3.new(.5,.05,length),Vector3.new(0,.68,0),Color3.fromRGB(220,185,116),false)
     end
-    for _,x in ipairs({-3.35,3.35}) do for _,z in ipairs({-3.2,3.2}) do
+    local axleZ=length*.32
+    for _,x in ipairs({-3.35,3.35}) do for _,z in ipairs({-axleZ,axleZ}) do
         local wheel=p("Wheel",Vector3.new(.7,2.1,2.1),Vector3.new(x,-.55,z),Color3.fromRGB(38,45,54),false);wheel.Shape=Enum.PartType.Cylinder
         local hub=p("Wheel hub",Vector3.new(.72,1.1,1.1),Vector3.new(x,-.55,z),item.style==4 and Color3.fromRGB(214,180,111) or Color3.fromRGB(186,196,201),false);hub.Shape=Enum.PartType.Cylinder
     end end
