@@ -4,7 +4,7 @@
     "engine": "rbx_binary",
     "rbxDomRevision": "43d1f129f2eb1fd055512f039863ff35ae5a10f1"
   },
-  "patchManifestSha256": "9e01cb2dba24791209c0f40bcfaa78863dd9613720d6728903801a0043bd2021",
+  "patchManifestSha256": "568c2051820fee7bb32111d829bf19ed49ef294004eadd052cd018bfca38fde8",
   "patchReceipt": {
     "appliedPatches": [
       {
@@ -84,6 +84,20 @@
         "targetPath": "ServerScriptService/CarSpawnScript"
       },
       {
+        "afterSourceSha256": "b210141ea6566f6ce545348fe1d35e823349c6b3bc483ceb07c8c00d7dcb23f6",
+        "beforeSourceSha256": "34f02eccaa6cab7236fbd33c561db2614c830de9930369a81157db481ae06dad",
+        "class": "LocalScript",
+        "id": "compat-modern-touch-control-startup",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "2484ea6037d89cb1f6647ce4a4674e9d705cc1c12e235b50c5acb3ee97f8c958",
+            "oldSha256": "769b4c2046d27769430daadb2b2f15afc6651aef6e2cfd12a0284bd0a037659f"
+          }
+        ],
+        "targetPath": "StarterPlayer/StarterPlayerScripts/ControlScript"
+      },
+      {
         "afterSourceSha256": "e2f37f551a573bf45aaeeb45bbd4828e1b5030938293d63a62f659de2e87e4c4",
         "beforeSourceSha256": "1d6380b04337dda056798204fc5295926a0cd858a28cc843961875d4c55cc9f2",
         "class": "Script",
@@ -127,8 +141,22 @@
         "targetPath": "ServerScriptService/OutfitHandler"
       },
       {
-        "afterSourceSha256": "66f73eeb7972411c905289b02cc9052f004251d277870323dfe46cb4f946d016",
+        "afterSourceSha256": "fe35854ab2247d9554bf4927999a829b5e63a874c716713d74b951876010c662",
         "beforeSourceSha256": "5c9e905672a3644ce70d14394202b63283fe9de23e907c336fd8d5275d59227c",
+        "class": "Script",
+        "id": "compat-house-load-preload-timeout",
+        "replacements": [
+          {
+            "expectedCount": 1,
+            "newSha256": "ab46b5b88cb15220aa3f37b57f606a371c673f274284c5858b47d15f0c7b0af2",
+            "oldSha256": "22f89585110033617c2ef39c01b1643e40d564521b22216fc2c85cac41ea9dab"
+          }
+        ],
+        "targetPath": "ServerScriptService/CustomHouseScript_NEW"
+      },
+      {
+        "afterSourceSha256": "e01c3a64bd933aa34af70ac734690974fbef86939df577918119c20d8d457a02",
+        "beforeSourceSha256": "fe35854ab2247d9554bf4927999a829b5e63a874c716713d74b951876010c662",
         "class": "Script",
         "id": "harden-house-furniture-remotes",
         "replacements": [
@@ -353,5 +381,5 @@
     "schemaVersion": 1
   },
   "schemaVersion": 1,
-  "workingSha256": "b99c120960b1d8c01df26de793fa0a03d075f8e1313ac25facbd5d00ddbd89ef"
+  "workingSha256": "e0c4a3d490eb0797adb57180d40ac8dbd2b8f1fb81e6e08afc54efbdd03d5b91"
 }
