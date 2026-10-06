@@ -718,7 +718,7 @@ function World.build()
     local spawn=Instance.new("SpawnLocation")
     spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=CFrame.new(0,1,18);spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
     -- Travel places the player on the lower approach with the facade in view, not on top of the stairs.
-    World.schoolDoor=CFrame.new(0,3,18)*CFrame.Angles(0,math.pi,0)
+    World.schoolDoor=CFrame.new(0,3,18)
     return World
 end
 
