@@ -169,6 +169,18 @@ local function subject(id)
     return Catalog.Subjects[1]
 end
 
+local subjectVisuals={
+    math={color=Color3.fromRGB(224,82,97),icon="×÷"},
+    reading={color=Color3.fromRGB(116,105,218),icon="▤"},
+    religion={color=Color3.fromRGB(59,151,95),icon="✝"},
+    spelling={color=Color3.fromRGB(224,165,56),icon="ABC"},
+    grammar={color=Color3.fromRGB(58,124,219),icon="✎"},
+    vocabulary={color=Color3.fromRGB(111,92,207),icon="…"},
+}
+local function subjectVisual(id)
+    return subjectVisuals[id] or {color=UI.P.teal,icon="•"}
+end
+
 showClasses=function()
     if setNavActive then setNavActive("school") end
     open("classes","Classes")
@@ -189,11 +201,14 @@ showClasses=function()
         SortOrder=Enum.SortOrder.LayoutOrder,
     })
     for i,s in ipairs(Catalog.Subjects) do
-        local tint=Color3.fromRGB(table.unpack(s.color))
+        local visual=subjectVisual(s.id)
         local card=UI.surface(grid,{LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
-        UI.frame(card,{Position=UDim2.fromOffset(8,9),Size=UDim2.fromOffset(8,48),BackgroundColor3=tint})
-        UI.text(card,s.short,16,{Position=UDim2.fromOffset(26,7),Size=UDim2.new(1,-38,0,25),Font=Enum.Font.GothamBold})
-        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(26,32),Size=UDim2.new(1,-38,0,20),TextColor3=UI.P.muted})
+        local iconTile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(44,44),BackgroundColor3=visual.color})
+        UI.corner(iconTile,11)
+        UI.text(iconTile,visual.icon,visual.icon=="ABC" and 10 or 18,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
+        UI.text(card,s.short,16,{Position=UDim2.fromOffset(62,7),Size=UDim2.new(1,-74,0,25),Font=Enum.Font.GothamBold})
+        UI.text(card,s.teacher or "Classroom",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
+        UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
     end
     UI.chip(body,"Walk into the room to start earning",{LayoutOrder=4,Size=UDim2.fromOffset(230,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
 end
@@ -216,7 +231,12 @@ showQuestion=function(q)
     end
 
     UI.text(questionColumn,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{LayoutOrder=0,Size=UDim2.new(1,0,0,18),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold})
-    UI.text(questionColumn,s.short.."  •  "..(s.teacher or "Classroom"),UI.T.section,{LayoutOrder=1,Size=UDim2.new(1,0,0,28),Font=Enum.Font.GothamBold})
+    local quizVisual=subjectVisual(s.id)
+    local subjectRow=UI.new("Frame",questionColumn,{LayoutOrder=1,Size=UDim2.new(1,0,0,34),BackgroundTransparency=1})
+    local subjectBadge=UI.frame(subjectRow,{Position=UDim2.fromOffset(0,2),Size=UDim2.fromOffset(30,30),BackgroundColor3=quizVisual.color})
+    UI.corner(subjectBadge,9)
+    UI.text(subjectBadge,quizVisual.icon,quizVisual.icon=="ABC" and 8 or 14,{Size=UDim2.fromScale(1,1),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.white})
+    UI.text(subjectRow,s.short.."  •  "..(s.teacher or "Classroom"),UI.T.section,{Position=UDim2.fromOffset(38,0),Size=UDim2.new(1,-38,1,0),Font=Enum.Font.GothamBold})
 
     local rewardRow=UI.new("Frame",questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,30),BackgroundTransparency=1})
     local rewardList=UI.new("UIListLayout",rewardRow,{FillDirection=Enum.FillDirection.Horizontal,HorizontalAlignment=Enum.HorizontalAlignment.Left,VerticalAlignment=Enum.VerticalAlignment.Center,Padding=UDim.new(0,6)})
