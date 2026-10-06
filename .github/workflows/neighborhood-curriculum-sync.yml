@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 school/neighborhood/tools/import_abvm.py "$RUNNER_TEMP/abvm" \
+          python3 school/neighborhood/tools/import_abvm.py "$RUNNER_TEMP/abvm/pages" \
             --out school/neighborhood/server/QuestionBank.lua \
             --receipt school/neighborhood/abvm-import-receipt.json
           grep -q '"imported": 338' school/neighborhood/abvm-import-receipt.json
