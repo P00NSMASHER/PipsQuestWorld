@@ -1,0 +1,140 @@
+name: iPhone Native UI Construction Check
+on:
+  push:
+    branches: [ops/iphone-recovery-native-ui-check]
+    paths: ['.github/workflows/iphone-native-ui.yml']
+permissions:
+  contents: read
+concurrency:
+  group: iphone-native-ui-check
+  cancel-in-progress: false
+jobs:
+  engine-ui:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dc5ebc1d24e8742a8d8b5c07ff701facd5b886e3
+          persist-credentials: false
+      - name: Exercise candidate layout and shell against native engine APIs
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, time, urllib.request, urllib.error
+          key = os.environ.get('ROBLOX_API_KEY','')
+          if not key: raise SystemExit('Configured secret unavailable')
+          shell = pathlib.Path('school/src/shared/MobilePanelShell.lua').read_text()
+          assert hashlib.sha256(shell.encode()).hexdigest() == '7181aca36a17dcdcf73c146e744e296c579bf28d50950e88fd2f284d3640d71d'
+          layout = pathlib.Path('school/src/shared/ResponsiveHudLayout.lua').read_text()
+          script = 'local function candidateLayout()\n'+layout+'\nend\nlocal function candidateShell()\n'+shell+'\nend\n'
+          script += '''
+          local Layout = candidateLayout()
+          local Shell = candidateShell()
+          local root = game:GetService("StarterGui")
+          local tested = 0
+          for _, fixture in ipairs({{852,393,12},{852,393,36},{852,393,58},{844,390,58},{872,402,58},{1024,768,58}}) do
+              local gui = Instance.new("ScreenGui")
+              gui.Name = "IsolatedRecoveryUiTest"
+              gui.ScreenInsets = Enum.ScreenInsets.None
+              gui.Parent = root
+              local event = Instance.new("BindableEvent")
+              local player = {Character=nil,CharacterAdded=event.Event}
+              function player:WaitForChild(name)
+                  assert(name == "PlayerGui")
+                  return root -- No real player or rendered client exists in this test.
+              end
+              local function frame(name,w,h)
+                  local result = Instance.new("Frame")
+                  result.Name = name
+                  result.Size = UDim2.fromOffset(w,h)
+                  result.Visible = false
+                  result.Parent = gui
+                  return result
+              end
+              local hud={frame("CompactSchoolStatus",210,96),frame("RHS2ActionRail",48,188),frame("RHS2QuickBar",240,48)}
+              local list=Instance.new("UIListLayout")
+              list.Parent=hud[2]
+              for i=1,4 do
+                  local b=Instance.new("TextButton")
+                  b.Name="Rail"..i
+                  b.Parent=hud[2]
+              end
+              local specs={}
+              for _,def in ipairs({{"Class",540,390},{"Shop",530,354},{"Travel",530,354},{"Avatar",286,400},{"House",248,292},{"Editor",330,346}}) do
+                  local panel=frame(def[1],def[2],def[3])
+                  local scale=Instance.new("UIScale")
+                  scale.Parent=panel
+                  table.insert(specs,{panel=panel,scale=scale,title=def[1]})
+              end
+              local cards={frame("Cafe",260,150),frame("Vehicle",260,132)}
+              local controller={}
+              function controller:close()
+                  for _, spec in ipairs(specs) do spec.panel.Visible=false end
+              end
+              local api=Shell.mount({gui=gui,player=player,touch=true,controller=controller,hud=hud,panels=specs,cards=cards,classClose=function() controller:close() end})
+              local viewport={width=fixture[1],height=fixture[2]}
+              local insets={left=47,top=fixture[3],right=47,bottom=21}
+              local zones=Layout.touchExclusionZones(viewport,insets)
+              local computed=Layout.compute(viewport,insets,zones)
+              assert(Layout.validate(computed))
+              api:reflow(computed)
+              assert(gui.ZIndexBehavior==Enum.ZIndexBehavior.Sibling,"Wrong content drawing order")
+              for _,entry in ipairs(api.entries) do
+                  entry.panel.Visible=true
+                  api:reflow()
+                  assert(entry.shell.Visible,"Panel did not open")
+                  assert(entry.scale.Scale==1,"Tiny menu content")
+                  assert(entry.panel.AnchorPoint==Vector2.new(0,0),"Content offset out of canvas")
+                  local x,y=entry.shell.Position.X.Offset,entry.shell.Position.Y.Offset
+                  local w,h=entry.shell.Size.X.Offset,entry.shell.Size.Y.Offset
+                  assert(x>=47 and x+w<=fixture[1]-47 and y>=fixture[3] and y+h<=fixture[2]-21,"Shell outside safe area")
+                  for _,zone in ipairs(zones) do
+                      assert(not Layout.overlaps({x=x,y=y,right=x+w,bottom=y+h},zone),"Shell obstructs touch region")
+                  end
+                  local close=entry.shell:FindFirstChild("RecoveryClose")
+                  assert(close.Size.X.Offset>=44 and close.Size.Y.Offset>=44,"Close control too small")
+                  assert(entry.scroll.CanvasSize.Y.Offset==entry.height+16,"Missing scroll content")
+                  entry.panel.Visible=false
+                  api:reflow()
+                  assert(not entry.shell.Visible,"Closed shell still visible")
+                  tested=tested+1
+              end
+              api:guideTo("Cafe")
+              assert(workspace:FindFirstChild("LocalNavigationMarker"),"Navigation marker was not built")
+              gui:Destroy()
+              event:Destroy()
+          end
+          return {result="NATIVE_UI_CONSTRUCTION_PASS",panelProfiles=tested,renderedClientTested=false,physicalIphoneTested=false,playerAndViewport="synthetic adapters",running=game:GetService("RunService"):IsRunning()}
+          '''
+          prefix='https://apis.roblox.com/cloud/v2/'
+          def request(url, data=None):
+              payload=json.dumps(data).encode() if data is not None else None
+              req=urllib.request.Request(url,data=payload,headers={'x-api-key':key,'Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as response: return json.load(response)
+              except urllib.error.HTTPError as exc:
+                  raise RuntimeError(f'Engine HTTP {exc.code}: '+exc.read().decode()[:1000]) from None
+          task=request(prefix+'universes/10768955678/places/87245440673982/versions/7/luau-execution-session-tasks',{'script':script,'timeout':'90s'})
+          path=task['path']
+          assert path.startswith('universes/10768955678/places/87245440673982/versions/7/')
+          for _ in range(45):
+              task=request(prefix+path)
+              if task.get('state')!='PROCESSING': break
+              time.sleep(2)
+          task.pop('script',None)
+          report={'candidateSha':'dc5ebc1d24e8742a8d8b5c07ff701facd5b886e3','scope':'native UI construction only; no rendered or physical device claim','task':task}
+          pathlib.Path('native-ui-result.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report))
+          results=task.get('output',{}).get('results',[])
+          if task.get('state')!='COMPLETE' or task.get('error') or not any(isinstance(r,dict) and r.get('result')=='NATIVE_UI_CONSTRUCTION_PASS' and r.get('panelProfiles')==36 for r in results):
+              raise SystemExit('NATIVE_UI_NOT_PASSED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iphone-native-ui-${{ github.run_id }}
+          path: native-ui-result.json
+          retention-days: 7
+          if-no-files-found: warn
