@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 83,
+  "schemaVersion": 84,
   "owner": "Roblox High School Control Tower",
-  "observedAt": "2026-10-05T23:53:00Z",
+  "observedAt": "2026-10-06T00:06:16Z",
   "canonical": {
     "branch": "rebuild/high-school-foundation",
     "sha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
@@ -373,10 +373,10 @@
     "status": "REFERENCE_ACCESS_CURRENT__CANONICAL_5FD5C05__INTERACTION_REPAIR_REQUIRED__SMOKE_HOLD"
   },
   "nextProducerReservation": {
-    "owner": "Pip High Free Roam",
-    "scope": "P1_INTERACTION_REPAIR_ON_INTEGRATED_VISIBLE_BASELINE",
-    "status": "RESERVED_SINGLE_PRODUCER__FRESH_BRANCH_FROM_5FD5C05__NO_SECOND_PRODUCER",
-    "inputSha": "5fd5c0539229b629eda865e574539990d6e17b5b",
+    "owner": "Roblox High School Class & Education",
+    "scope": "P2_CLASSROOM_FREE_ROAM",
+    "status": "ARMED_PREP_ONLY__REBASED_TO_33A5A11__BLOCKED_UNTIL_FINAL_SMOKE_AND_PACKAGE",
+    "inputSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
     "pr": null,
     "headSha": null
   },
@@ -982,13 +982,13 @@
     }
   },
   "nextActionableWork": {
-    "owner": "Pip High Free Roam",
-    "pr": 214,
-    "exactHead": "baa6a24f6bcf11d01e014d0c3caa2ef29ae78eb8",
-    "defect": "QA-MOBILE-HOUSE-AUX-PANELS-OUTSIDE-SAFE-AREA",
-    "action": "Repair LegacyHousePanel and LegacyHousingEditorV2 safe-area containment on desktop, iPhone 852x393 and iPad 1024x768; avoid movement/camera exclusions; add mutation-sensitive geometry tests; rerun all three guards.",
-    "blocker": null,
-    "downstream": "Independent same-SHA QA -> Integration -> Smoke -> Package"
+    "owner": "Roblox High School Integration Smoke",
+    "pr": null,
+    "exactHead": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "defect": null,
+    "action": "Execute coordination/smoke/PR292_33A5A11_LOCAL_SMOKE_EXECUTION_PLAN.json on the authorized device; strictly validate the completed evidence bundle before recording full Smoke PASS.",
+    "blocker": "LOCAL_ONLY_REQUIRED",
+    "downstream": "Full exact-canonical runtime Smoke PASS -> deterministic Package -> exactly one P2 Classroom / Free Roam producer"
   },
   "distinctReferenceGapsClosedSinceSchema56": [
     "PR214_ENTRANCE_ATRIUM_ENVIRONMENT_AUTHORITY_SPEC_PR217",
@@ -1026,31 +1026,11 @@
   "p2ActivationManifest": {
     "mergedPr": 236,
     "artifact": "coordination/activation/P2_CLASSROOM_FREE_ROAM_39911A.json",
-    "expectedBaseSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "status": "ARMED_PREP_ONLY__BLOCKED_BY_P1_SOURCE_REPAIR_AND_RUNTIME_SMOKE",
-    "proposedProducerBranch": "rebuild/high-school-classroom-free-roam-39911a-v1"
+    "expectedBaseSha": "33a5a11ba771e0bbfbc82ed40ce5417c772a2f17",
+    "status": "ARMED_PREP_ONLY__REBASED_TO_33A5A11__BLOCKED_UNTIL_FINAL_SMOKE_AND_PACKAGE",
+    "proposedProducerBranch": "rebuild/high-school-classroom-free-roam-33a5a11-v1"
   },
-  "sourceDefect": {
-    "id": "P1_CLASS_MODAL_IPHONE_SAFE_AREA",
-    "exactCanonicalSha": "39911a193ba6e76379c52ce67cb60bbc912bf279",
-    "path": "school/src/client/CanonicalSchoolClient.client.lua",
-    "evidence": {
-      "viewport": "852x393",
-      "safeInsets": {
-        "left": 47,
-        "top": 12,
-        "right": 47,
-        "bottom": 21
-      },
-      "modalHeight": 390,
-      "modalVerticalCenterScale": 0.55,
-      "computedTop": 21.15,
-      "computedBottom": 411.15,
-      "safeBottom": 372,
-      "overflowBottom": 39.15
-    },
-    "status": "SOURCE_PROVEN__REPAIR_RESERVED"
-  },
+  "sourceDefect": null,
   "uiVisualParity": {
     "referenceSpec": "coordination/reference-extraction/rhs2_ui_visual_parity_spec_20261005.json",
     "directive": "coordination/ui/P1_RHS2_UI_VISUAL_PARITY_DIRECTIVE.json",
