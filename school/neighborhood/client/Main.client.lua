@@ -536,15 +536,16 @@ showShop=function(selected,subfilter)
     UI.corner(shopTabs,14)
     shopSubtabs.BackgroundTransparency=0;shopSubtabs.BackgroundColor3=UI.P.soft
     UI.corner(shopSubtabs,12)
-    local categoryDefs={{"Homes","Houses","⌂"},{"Clothes","Apparel","◆"},{"Items","Items","▣"},{"Vehicles","Vehicles","◇"}}
+    local categoryDefs={{"Homes","Houses","home"},{"Clothes","Apparel","apparel"},{"Items","Items","items"},{"Vehicles","Vehicles","vehicle"}}
     for i,def in ipairs(categoryDefs) do
-        local key,label,icon=def[1],def[2],def[3]
-        UI.iconButton(shopTabs,icon,label,function() showShop(key) end,{
-            Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=11,IconSize=15,
+        local key,label,iconKind=def[1],def[2],def[3]
+        UI.iconButton(shopTabs,"",label,function() showShop(key) end,{
+            Position=UDim2.new((i-1)/4,3,0,0),Size=UDim2.new(.25,-6,1,0),TextSize=11,
             BackgroundColor3=key==category and UI.P.ink or UI.P.navySoft,
             TextColor3=key==category and UI.P.white or UI.P.ink,
             IconBackgroundColor3=key==category and UI.P.gold or UI.P.white,
             IconColor=key==category and UI.P.ink or UI.P.teal,
+            IconKind=iconKind,
         })
     end
 
@@ -695,14 +696,14 @@ showShop=function(selected,subfilter)
 end
 local navButtons={}
 local navDefs={
-    {"▦","School","school",Color3.fromRGB(221,175,60)},
-    {"⌂","Home","home",Color3.fromRGB(47,142,103)},
-    {"▣","Shop","shop",Color3.fromRGB(58,124,219)},
-    {"◆","Ride","vehicle",Color3.fromRGB(111,92,207)},
+    {"school","School","school",Color3.fromRGB(221,175,60)},
+    {"home","Home","home",Color3.fromRGB(47,142,103)},
+    {"shop","Shop","shop",Color3.fromRGB(58,124,219)},
+    {"vehicle","Ride","vehicle",Color3.fromRGB(111,92,207)},
 }
 for i,definition in ipairs(navDefs) do
-    local icon,label,command,accent=definition[1],definition[2],definition[3],definition[4]
-    local b=UI.iconButton(nav,icon,label,function()
+    local iconKind,label,command,accent=definition[1],definition[2],definition[3],definition[4]
+    local b=UI.iconButton(nav,"",label,function()
         if not state.ready then notify("Your saved progress is still loading.");return end
         if command=="shop" then showShop();return end
         close(false)
@@ -726,6 +727,7 @@ for i,definition in ipairs(navDefs) do
         TextColor3=UI.P.white,
         IconBackgroundColor3=accent,
         IconColor=UI.P.white,
+        IconKind=iconKind,
     })
     table.insert(navButtons,b)
 end
@@ -742,10 +744,11 @@ setNavActive=function(command)
         activeStroke.Transparency=active and 0 or .45
 
         local iconBox=b:FindFirstChild("IconBox")
-        local icon=iconBox and iconBox:FindFirstChild("Icon") or nil
         local label=b:FindFirstChild("Label")
-        if iconBox and iconBox:IsA("Frame") then iconBox.BackgroundColor3=accent end
-        if icon and icon:IsA("TextLabel") then icon.TextColor3=UI.P.white end
+        if iconBox and iconBox:IsA("Frame") then
+            iconBox.BackgroundColor3=accent
+            UI.tintIcon(iconBox,UI.P.white)
+        end
         if label and label:IsA("TextLabel") then
             label.TextColor3=UI.P.white
             label.TextTransparency=active and 0 or .06
