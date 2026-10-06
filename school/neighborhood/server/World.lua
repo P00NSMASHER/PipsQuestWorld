@@ -85,6 +85,18 @@ local function windowPanel(parent,cf,width,height)
     World.part(parent,"Window mullion H",Vector3.new(width,.22,.28),cf*CFrame.new(0,0,-.5),palette.cream,nil,false)
 end
 
+local function schoolWindowPanel(parent,cf,width,height)
+    World.part(parent,"School window stone frame",Vector3.new(width+1.15,height+1.15,.58),cf,palette.stone,Enum.Material.Concrete,false)
+    local glass=World.part(parent,"School window glass",Vector3.new(width,height,.22),cf*CFrame.new(0,0,-.34),palette.glass,Enum.Material.Glass,false)
+    glass.Transparency=.16
+    for _,fraction in ipairs({-.3,0,.3}) do
+        World.part(parent,"School window mullion V",Vector3.new(.17,height,.28),cf*CFrame.new(width*fraction,0,-.5),palette.cream,nil,false)
+    end
+    World.part(parent,"School window mullion H",Vector3.new(width,.18,.28),cf*CFrame.new(0,0,-.5),palette.cream,nil,false)
+    -- Slight lower sash line matches the old horizontal classroom window banks.
+    World.part(parent,"School window sash",Vector3.new(width,.13,.3),cf*CFrame.new(0,-height*.28,-.52),palette.cream,nil,false)
+end
+
 local function parkedCar(parent,x,z,rotation,tint)
     local cf=CFrame.new(x,1.05,z)*CFrame.Angles(0,rotation or 0,0)
     World.part(parent,"Parked car body",Vector3.new(6,1.4,11),cf,tint,Enum.Material.SmoothPlastic,false)
@@ -352,7 +364,7 @@ function World.build()
     for _,floorY in ipairs({29,44}) do
         for _,x in ipairs({-60,-40,-20,0,20,40,60}) do
             World.part(root,"Tan facade bay",Vector3.new(14.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
-            windowPanel(root,CFrame.new(x,floorY,-33.7),8.8,5.8)
+            schoolWindowPanel(root,CFrame.new(x,floorY,-33.7),8.8,5.8)
         end
     end
     -- Horizontal stone/concrete belt between the arched ground level and upper classroom bays.
@@ -373,7 +385,7 @@ function World.build()
         for _,floorY in ipairs({12,28,44}) do
             for _,z in ipairs({-132,-115,-77,-60}) do
                 World.part(root,"Side tan facade bay",Vector3.new(.52,11.2,13.4),CFrame.new(side*75.1,floorY,z),palette.tan,Enum.Material.Concrete,false)
-                windowPanel(root,CFrame.new(wallX,floorY,z)*CFrame.Angles(0,yaw,0),8,5.4)
+                schoolWindowPanel(root,CFrame.new(wallX,floorY,z)*CFrame.Angles(0,yaw,0),8,5.4)
             end
         end
         -- Smaller lower/service windows sell the partially exposed basement on the hill side.
