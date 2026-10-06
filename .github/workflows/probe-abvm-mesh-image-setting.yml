@@ -1,0 +1,73 @@
+name: Probe and Enable ABVM Mesh Image Setting
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-faculty-v1
+    paths:
+      - '.github/workflows/probe-abvm-mesh-image-setting.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: probe-abvm-mesh-image-setting
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      UNIVERSE_ID: '10769455759'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Attempt configuration read and bounded Mesh Image enable
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY"
+          url="https://develop.roblox.com/v2/universes/$UNIVERSE_ID/configuration"
+
+          read_code="$(curl --silent --show-error             --output "$RUNNER_TEMP/config-before.json" --write-out '%{http_code}'             --request GET "$url"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Accept: application/json')"
+          echo "configuration GET HTTP $read_code"
+          cat "$RUNNER_TEMP/config-before.json" | jq 'del(.privateServerPrice,.permissions)' 2>/dev/null || cat "$RUNNER_TEMP/config-before.json"
+
+          if [ "$read_code" -ge 200 ] && [ "$read_code" -lt 300 ]; then
+            current="$(jq -r '.isMeshTextureApiAccessAllowed // false' "$RUNNER_TEMP/config-before.json")"
+            echo "isMeshTextureApiAccessAllowed before=$current"
+            if [ "$current" != "true" ]; then
+              patch_code="$(curl --silent --show-error                 --output "$RUNNER_TEMP/config-patch.json" --write-out '%{http_code}'                 --request PATCH "$url"                 --header "x-api-key: $ROBLOX_API_KEY"                 --header 'Content-Type: application/json'                 --data '{"isMeshTextureApiAccessAllowed":true}')"
+              echo "configuration PATCH HTTP $patch_code"
+              cat "$RUNNER_TEMP/config-patch.json"
+              test "$patch_code" -ge 200 -a "$patch_code" -lt 300
+            fi
+
+            verify_code="$(curl --silent --show-error               --output "$RUNNER_TEMP/config-after.json" --write-out '%{http_code}'               --request GET "$url"               --header "x-api-key: $ROBLOX_API_KEY"               --header 'Accept: application/json')"
+            echo "configuration verify GET HTTP $verify_code"
+            test "$verify_code" -ge 200 -a "$verify_code" -lt 300
+            jq -e '.isMeshTextureApiAccessAllowed == true' "$RUNNER_TEMP/config-after.json" >/dev/null
+            echo "MESH_IMAGE_SETTING_ENABLED"
+          else
+            echo "API_KEY_CONFIGURATION_AUTH_UNAVAILABLE"
+            exit 2
+          fi
+
+      - name: Preserve non-secret receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-mesh-image-setting-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/config-before.json
+            ${{ runner.temp }}/config-patch.json
+            ${{ runner.temp }}/config-after.json
+          retention-days: 3
+          if-no-files-found: warn
