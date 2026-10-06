@@ -464,6 +464,19 @@ function World.house(player,plotId,profile)
         p("Pavilion glazing",Vector3.new(width-16,5,.3),Vector3.new(0,18,(depth-14)/2-2.7),Color3.fromRGB(147,187,201),Enum.Material.Glass,false)
         p("Upper roof",Vector3.new(width-9,.7,depth-11),Vector3.new(0,22.4,-3),palette.navy)
     end
+    if stage>=5 then
+        -- Estate tier adds a visibly grander entrance and side wings without changing ownership logic.
+        p("Estate left wing",Vector3.new(10,9,depth-8),Vector3.new(-width/2+4,5.2,-1),color(item.color))
+        p("Estate right wing",Vector3.new(10,9,depth-8),Vector3.new(width/2-4,5.2,-1),color(item.color))
+        p("Estate entry canopy",Vector3.new(15,.8,7),Vector3.new(0,10.5,depth/2+4),palette.cream,Enum.Material.Concrete)
+        for _,x in ipairs({-6,6}) do
+            p("Estate entry column",Vector3.new(1.1,10,1.1),Vector3.new(x,5.5,depth/2+5),palette.cream,Enum.Material.Concrete)
+        end
+        p("Estate double door",Vector3.new(8,8,.4),Vector3.new(0,4.7,depth/2+.7),palette.navy,Enum.Material.Wood,false)
+        for _,x in ipairs({-width/2+8,width/2-8}) do
+            p("Estate hedge",Vector3.new(10,3,4),Vector3.new(x,1.8,depth/2+10),Color3.fromRGB(76,120,74),Enum.Material.Grass,false)
+        end
+    end
     if profile.owned.item_rug then p("Sunrise rug",Vector3.new(14,.06,10),Vector3.new(-6,1.05,1),color(Catalog.ById.item_rug.color),Enum.Material.Fabric,false) end
     if profile.owned.item_lamp then
         p("Lamp stem",Vector3.new(.35,5,.35),Vector3.new(-width/2+3,3.4,-6),palette.gold,nil,false)
