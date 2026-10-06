@@ -2,6 +2,11 @@ name: Publish Pip High to Roblox
 # one-shot trigger for exact canonical 33a5a11
 
 on:
+  push:
+    branches:
+      - deploy/roblox-open-cloud-33a5a11
+    paths:
+      - '.github/workflows/publish-roblox.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,13 +21,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      EXPECTED_SHA: 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17
+      EXPECTED_SHA: 39369a41655ec716813436315589ad1c477c70ca
       UNIVERSE_ID: '10768955678'
       PLACE_ID: '87245440673982'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17
+          ref: 39369a41655ec716813436315589ad1c477c70ca
           persist-credentials: false
 
       - name: Require configured Roblox API key
