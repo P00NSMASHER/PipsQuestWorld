@@ -187,7 +187,7 @@ def validate_abvm_contract() -> dict:
         'streakCaption.Text="WRONG STREAK"',
         'streakCaption.Text="STREAK"',
         'local wrapFilters=layout.narrow and not layout.landscape and #subfilters>4',
-        'nav.Size=UDim2.new(1,-18,0,layout.nav.height)',
+        'nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)',
         'gui:SetAttribute("RobloxPlaceVersion",game.PlaceVersion)',
         '"GRADE 2  •  ABVM  •  v"..tostring(game.PlaceVersion)',
         'local bonusChip=UI.frame(goalCard',
