@@ -4,11 +4,11 @@
 -- through ProfileStore before the client is told they succeeded.
 local Learning = {}
 
-local CORRECT_STREAK_STEP = 5
-local CORRECT_STREAK_MAX = 25
-local WRONG_PENALTY_BASE = 5
-local WRONG_PENALTY_STEP = 5
-local WRONG_PENALTY_MAX = 25
+local CORRECT_STREAK_STEP = 2
+local CORRECT_STREAK_MAX = 10
+local WRONG_PENALTY_BASE = 2
+local WRONG_PENALTY_STEP = 2
+local WRONG_PENALTY_MAX = 10
 
 local function integer(x)
     return type(x)=="number" and x==x and x>=0 and x<1e12 and x==math.floor(x)
@@ -120,7 +120,7 @@ function Learning.reward(p, op, question, firstTry, now)
     local reward = 0
     -- Revisiting helps learning; replaying the same item immediately is not a mint.
     if not prior or now - (prior.lastReward or 0) >= 600 then
-        reward = firstTry and 25 or 15
+        reward = firstTry and 10 or 6
     end
 
     p.answers += 1
@@ -145,7 +145,7 @@ function Learning.reward(p, op, question, firstTry, now)
         p.lesson[question.id] = true
         p.lessonCount += 1
         if p.lessonCount == 5 then
-            bonus=50
+            bonus=15
             p.lesson={}
             p.lessonCount=0
         end
