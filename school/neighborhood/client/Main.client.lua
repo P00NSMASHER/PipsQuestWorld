@@ -70,9 +70,10 @@ local function update(snapshot)
     else
         local remaining=math.max(0,goal.price-state.coins)
         goalTitle.Text="Next: "..goal.name
+        local baseAnswers=math.ceil(remaining/10)
         goalInfo.Text=remaining==0
             and ("Ready to buy  •  Lesson "..tostring(state.lessonCount).."/5")
-            or string.format("%d Credits to go  •  %d / %d",remaining,state.coins,goal.price)
+            or string.format("%d Credits to go  •  about %d correct answers or fewer with streaks",remaining,baseAnswers)
         TweenService:Create(goalFill,TweenInfo.new(.3),{Size=UDim2.fromScale(math.clamp(state.coins/math.max(1,goal.price),0,1),1)}):Play()
     end
 end
