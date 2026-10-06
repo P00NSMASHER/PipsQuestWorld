@@ -3,6 +3,7 @@
 -- Exterior proportions and identity follow the user-authorized Pottsville references;
 -- interior dimensions are deliberately widened/simplified for readable mobile play.
 local Workspace=game:GetService("Workspace")
+local Lighting=game:GetService("Lighting")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
 
@@ -75,6 +76,33 @@ local function tree(parent,x,z,scale)
     World.part(parent,"Tree trunk",Vector3.new(1.6*s,7*s,1.6*s),CFrame.new(x,3.5*s,z),palette.wood,Enum.Material.Wood)
     local crown=World.part(parent,"Tree crown",Vector3.new(9*s,10*s,9*s),CFrame.new(x,10*s,z),Color3.fromRGB(72,124,72),Enum.Material.Grass,false)
     crown.Shape=Enum.PartType.Ball
+end
+
+local function shrub(parent,x,z,scale)
+    local s=scale or 1
+    local bush=World.part(parent,"School shrub",Vector3.new(5*s,3.4*s,4.4*s),CFrame.new(x,1.7*s,z),Color3.fromRGB(55,116,62),Enum.Material.Grass,false)
+    bush.Shape=Enum.PartType.Ball
+    return bush
+end
+
+local function planter(parent,x,z,width)
+    local w=width or 10
+    World.part(parent,"Stone planter",Vector3.new(w,1.4,4.2),CFrame.new(x,.75,z),Color3.fromRGB(169,164,151),Enum.Material.Concrete)
+    World.part(parent,"Planter soil",Vector3.new(w-.8,.35,3.4),CFrame.new(x,1.48,z),Color3.fromRGB(82,62,46),Enum.Material.Ground,false)
+    local flowerColors={
+        Color3.fromRGB(224,85,108),
+        Color3.fromRGB(245,190,72),
+        Color3.fromRGB(240,236,228),
+        Color3.fromRGB(133,93,178),
+    }
+    local count=math.max(4,math.floor(w/1.7))
+    for i=1,count do
+        local offset=(i-(count+1)/2)*(w-1.6)/math.max(1,count-1)
+        local stem=World.part(parent,"Flower stem",Vector3.new(.16,.95,.16),CFrame.new(x+offset,2.05,z),Color3.fromRGB(62,118,63),Enum.Material.Grass,false)
+        stem.CanQuery=false;stem.CanTouch=false
+        local bloom=World.part(parent,"Flower bloom",Vector3.new(.62,.62,.62),CFrame.new(x+offset,2.55,z),flowerColors[(i-1)%#flowerColors+1],Enum.Material.SmoothPlastic,false)
+        bloom.Shape=Enum.PartType.Ball;bloom.CanQuery=false;bloom.CanTouch=false
+    end
 end
 
 local function windowPanel(parent,cf,width,height)
@@ -459,6 +487,25 @@ function World.build()
     local root=Instance.new("Folder");root.Name="NeighborhoodWorld";root.Parent=Workspace;World.root=root
     World.rooms={};World.leaderboardParts={}
 
+    -- Bright, warm daytime presentation from the gold-standard concept board.
+    Lighting.ClockTime=10.4
+    Lighting.Brightness=2.4
+    Lighting.EnvironmentDiffuseScale=.45
+    Lighting.EnvironmentSpecularScale=.35
+    Lighting.Ambient=Color3.fromRGB(122,126,132)
+    Lighting.OutdoorAmbient=Color3.fromRGB(165,169,176)
+    Lighting.ColorShift_Top=Color3.fromRGB(255,244,221)
+    local atmosphere=Lighting:FindFirstChild("ABVMAtmosphere")
+    if not atmosphere then
+        atmosphere=Instance.new("Atmosphere");atmosphere.Name="ABVMAtmosphere";atmosphere.Parent=Lighting
+    end
+    atmosphere.Density=.22
+    atmosphere.Offset=.12
+    atmosphere.Color=Color3.fromRGB(210,226,239)
+    atmosphere.Decay=Color3.fromRGB(168,186,204)
+    atmosphere.Glare=.08
+    atmosphere.Haze=1.35
+
     -- Base neighborhood and school block.
     World.part(root,"Ground",Vector3.new(520,2,1450),CFrame.new(0,-1,480),Color3.fromRGB(118,153,106),Enum.Material.Grass)
     World.part(root,"School block",Vector3.new(195,1.2,150),CFrame.new(0,.1,-91),Color3.fromRGB(128,128,118),Enum.Material.Concrete)
@@ -595,6 +642,19 @@ function World.build()
         sideWindow.Transparency=.2
     end
     World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+
+    -- Gold-standard arrival landscaping: clipped shrubs and bright flower beds frame the stairs.
+    for _,x in ipairs({-43,43}) do
+        shrub(root,x,-8,1.1)
+        shrub(root,x,7,.95)
+        planter(root,x,-18,11)
+    end
+    for _,x in ipairs({-59,59}) do
+        shrub(root,x,2,.9)
+        tree(root,x,16,.72)
+    end
+    planter(root,-24,12,9)
+    planter(root,24,12,9)
     for _,x in ipairs({-34,34}) do
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
         local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
