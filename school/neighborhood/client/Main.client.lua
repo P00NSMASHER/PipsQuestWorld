@@ -140,59 +140,91 @@ end
 showQuestion=function(q)
     if not q then return end
     local s=subject(q.subject)
-    open("quiz",s.short.." • "..(s.teacher or "Classroom"))
+    open("quiz",s.short.."  •  "..(s.teacher or "Classroom"))
     activeQuestion=q
-    local questionColumn, answerColumn=body,body
-    if canvas.AbsoluteSize.X>=680 and canvas.AbsoluteSize.Y<520 then
-        local row=UI.new("Frame",body,{Size=UDim2.new(1,0,0,math.max(120,body.AbsoluteSize.Y-4)),BackgroundTransparency=1})
-        questionColumn=UI.new("ScrollingFrame",row,{Size=UDim2.new(.47,-6,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=3})
-        answerColumn=UI.new("ScrollingFrame",row,{Position=UDim2.new(.47,6,0,0),Size=UDim2.new(.53,-6,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=3})
-        UI.stack(questionColumn,8);UI.stack(answerColumn,8)
+
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+    local questionColumn,answerColumn=body,body
+    if layout.columns==2 and layout.landscape then
+        local row=UI.new("Frame",body,{Size=UDim2.new(1,0,0,math.max(220,layout.modal.height-92)),BackgroundTransparency=1})
+        questionColumn=UI.new("ScrollingFrame",row,{Size=UDim2.new(.43,-7,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=2,ScrollBarImageColor3=UI.P.muted})
+        answerColumn=UI.new("ScrollingFrame",row,{Position=UDim2.new(.43,7,0,0),Size=UDim2.new(.57,-7,1,0),BackgroundTransparency=1,BorderSizePixel=0,AutomaticCanvasSize=Enum.AutomaticSize.Y,CanvasSize=UDim2.new(),ScrollBarThickness=2,ScrollBarImageColor3=UI.P.muted})
+        UI.stack(questionColumn,9);UI.stack(answerColumn,9)
+        UI.new("UIPadding",questionColumn,{PaddingRight=UDim.new(0,3),PaddingBottom=UDim.new(0,8)})
+        UI.new("UIPadding",answerColumn,{PaddingLeft=UDim.new(0,3),PaddingBottom=UDim.new(0,8)})
     end
-    UI.text(questionColumn,"ASSUMPTION BVM CATHOLIC SCHOOL",11,{LayoutOrder=0,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold})
-    local info=UI.text(questionColumn,q.reviewOnly and "PRACTICE REVIEW  •  No Credits for an immediate repeat" or "10 first try  •  6 after retry  •  streak bonus up to +10",13,{LayoutOrder=1,Size=UDim2.new(1,0,0,26),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold})
-    local questionCard=UI.frame(questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,84),AutomaticSize=Enum.AutomaticSize.Y})
+
+    UI.text(questionColumn,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{LayoutOrder=0,Size=UDim2.new(1,0,0,18),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold})
+    UI.text(questionColumn,s.short.."  •  "..(s.teacher or "Classroom"),UI.T.section,{LayoutOrder=1,Size=UDim2.new(1,0,0,28),Font=Enum.Font.GothamBold})
+
+    local rewardRow=UI.new("Frame",questionColumn,{LayoutOrder=2,Size=UDim2.new(1,0,0,30),BackgroundTransparency=1})
+    local rewardList=UI.new("UIListLayout",rewardRow,{FillDirection=Enum.FillDirection.Horizontal,HorizontalAlignment=Enum.HorizontalAlignment.Left,VerticalAlignment=Enum.VerticalAlignment.Center,Padding=UDim.new(0,6)})
+    if q.reviewOnly then
+        UI.chip(rewardRow,"Practice review",{Size=UDim2.fromOffset(104,28),BackgroundColor3=UI.P.goldSoft,TextColor3=UI.P.ink})
+    else
+        UI.chip(rewardRow,"+10 first try",{Size=UDim2.fromOffset(96,28),BackgroundColor3=UI.P.soft,TextColor3=UI.P.success})
+        UI.chip(rewardRow,"+6 retry",{Size=UDim2.fromOffset(76,28),BackgroundColor3=UI.P.goldSoft,TextColor3=UI.P.ink})
+        UI.chip(rewardRow,"streak +10",{Size=UDim2.fromOffset(86,28),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink})
+    end
+
+    local questionCard=UI.surface(questionColumn,{LayoutOrder=3,Size=UDim2.new(1,0,0,98),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=UI.P.white,Shadow=false})
     UI.pad(questionCard,16)
-    UI.text(questionCard,q.prompt,canvas.AbsoluteSize.Y<520 and 17 or 20,{Size=UDim2.new(1,0,0,52),AutomaticSize=Enum.AutomaticSize.Y,TextYAlignment=Enum.TextYAlignment.Top,Font=Enum.Font.GothamMedium})
-    local feedback=UI.text(questionColumn,"",16,{LayoutOrder=10,Visible=false,Size=UDim2.new(1,-4,0,48),AutomaticSize=Enum.AutomaticSize.Y,TextColor3=UI.P.teal})
+    UI.text(questionCard,q.prompt,layout.textSize,{Size=UDim2.new(1,0,0,62),AutomaticSize=Enum.AutomaticSize.Y,TextYAlignment=Enum.TextYAlignment.Top,Font=Enum.Font.GothamMedium})
+
+    local feedbackFrame,feedbackText=UI.feedbackCard(questionColumn,"","hint",{LayoutOrder=10,Visible=false,TextSize=14})
     local buttons={}
     for i,choice in ipairs(q.choices) do
         local button
-        button=UI.button(answerColumn,string.char(64+i).."   "..choice,function()
+        button=UI.answerCard(answerColumn,string.char(64+i).."   "..choice,function()
             task.spawn(function()
                 for _,b in ipairs(buttons) do b.Active=false end
                 local result=call("answer",{token=q.token,choice=i})
                 if activeQuestion~=q or view~="quiz" then return end
-                for _,b in ipairs(buttons) do b.Active=true end
+                for _,b in ipairs(buttons) do if not string.find(b.Text,"^✕") then b.Active=true end end
                 if not result.ok then return end
-                feedback.Visible=true
+
+                feedbackFrame.Visible=true
                 if result.correct then
-                    for _,b in ipairs(buttons) do b.Active=false;b.Visible=false end
-                    button.BackgroundColor3=UI.P.teal;button.TextColor3=UI.P.white
-                    local headline=result.reviewOnly and "Review complete." or "+"..tostring(result.total).." Credits saved!"
-                    if result.streakBonus and result.streakBonus>0 then
-                        headline..="  Streak bonus +"..tostring(result.streakBonus).." • correct streak "..tostring(result.correctStreak or state.correctStreak or 0).."."
-                    end
-                    if result.bonus and result.bonus>0 then headline..="  Includes your +15 five-question bonus." end
-                    feedback.Text=headline.."\n"..result.explanation
-                    info.Text=string.format("Lesson %d / 5  •  Every 5 different questions earns +15",state.lessonCount)
-                    UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=11,BackgroundColor3=UI.P.ink,TextColor3=UI.P.white})
-                    UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=12,BackgroundColor3=UI.P.white,TextSize=14})
+                    for _,b in ipairs(buttons) do b.Active=false end
+                    button.BackgroundColor3=UI.P.success
+                    button.TextColor3=UI.P.white
+                    local stroke=button:FindFirstChildOfClass("UIStroke");if stroke then stroke.Color=UI.P.success end
+
+                    local headline=result.reviewOnly and "Review complete" or ("+"..tostring(result.total).." Credits")
+                    if result.streakBonus and result.streakBonus>0 then headline..="  •  streak +"..tostring(result.streakBonus) end
+                    if result.bonus and result.bonus>0 then headline..="  •  +15 bonus" end
+                    feedbackFrame.BackgroundColor3=Color3.fromRGB(232,245,238)
+                    local feedbackStroke=feedbackFrame:FindFirstChildOfClass("UIStroke");if feedbackStroke then feedbackStroke.Color=UI.P.success end
+                    feedbackText.TextColor3=UI.P.success
+                    feedbackText.Text=headline.."
+"..tostring(result.explanation or "")
+
+                    UI.button(answerColumn,"Next question  →",function() showQuestion(result.next) end,{LayoutOrder=20,Size=UDim2.new(1,0,0,52),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=16})
+                    UI.button(answerColumn,"Back to exploring",function() close() end,{LayoutOrder=21,Size=UDim2.new(1,0,0,44),BackgroundColor3=UI.P.white,TextSize=13})
                 else
-                    -- The known-wrong option stays visibly crossed out and cannot be tapped again locally.
                     button.Active=false
                     button.AutoButtonColor=false
-                    button.BackgroundColor3=Color3.fromRGB(247,232,220)
+                    button.BackgroundColor3=Color3.fromRGB(249,235,232)
+                    button.TextColor3=UI.P.negative
                     button.Text="✕   "..choice
+                    local stroke=button:FindFirstChildOfClass("UIStroke");if stroke then stroke.Color=UI.P.negative end
+
+                    feedbackFrame.BackgroundColor3=Color3.fromRGB(249,235,232)
+                    local feedbackStroke=feedbackFrame:FindFirstChildOfClass("UIStroke");if feedbackStroke then feedbackStroke.Color=UI.P.negative end
+                    feedbackText.TextColor3=UI.P.negative
                     local penaltyText=result.message or ("Wrong streak "..tostring(result.wrongStreak or 0))
-                    feedback.Text=penaltyText.."\nHint: "..tostring(result.hint or q.hint or "Try eliminating one answer.").."\nChoose another answer to break the negative streak."
-                    feedback.TextColor3=UI.P.ink
+                    feedbackText.Text=penaltyText.."
+Hint: "..tostring(result.hint or q.hint or "Try eliminating one answer.")
                 end
-                -- Keep feedback reachable without forcing the user to hunt beneath long passages.
-                task.defer(function() if feedback.Parent then questionColumn.CanvasPosition=Vector2.new(0,math.max(0,questionColumn.AbsoluteCanvasSize.Y-questionColumn.AbsoluteWindowSize.Y)) end end)
+
+                task.defer(function()
+                    if feedbackFrame.Parent then
+                        questionColumn.CanvasPosition=Vector2.new(0,math.max(0,questionColumn.AbsoluteCanvasSize.Y-questionColumn.AbsoluteWindowSize.Y))
+                    end
+                end)
             end)
-        end,{LayoutOrder=2+i,Size=UDim2.new(1,0,0,54),AutomaticSize=Enum.AutomaticSize.Y,TextXAlignment=Enum.TextXAlignment.Left,BackgroundColor3=UI.P.white,TextSize=17})
-        UI.pad(button,14);UI.stroke(button);table.insert(buttons,button)
+        end,{LayoutOrder=3+i,Size=UDim2.new(1,0,0,layout.answerHeight),AutomaticSize=Enum.AutomaticSize.Y,BackgroundColor3=UI.P.white,TextSize=16})
+        table.insert(buttons,button)
     end
 end
 resumeButton=UI.button(goalCard,"Continue this lesson",function()
