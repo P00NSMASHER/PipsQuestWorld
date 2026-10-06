@@ -12,6 +12,7 @@ local Wardrobe=require(script.Parent.Wardrobe)
 local Leaderboards=require(script.Parent.Leaderboards)
 local store=ProfileStore.new()
 local leaderboards=Leaderboards.new()
+local leaderboardQueued={}
 local sessions={}
 local remote=Instance.new("Folder");remote.Name="NeighborhoodRemotes";remote.Parent=ReplicatedStorage
 local function create(class,name) local v=Instance.new(class);v.Name=name;v.Parent=remote;return v end
@@ -29,11 +30,24 @@ end
 local function emit(player,kind,data)
     if player.Parent==Players then changed:FireClient(player,{kind=kind,data=data,state=state(player)}) end
 end
-local function syncLeaderboard(userId)
+local function syncLeaderboard(userId,immediate)
     local profile=store.profiles[userId]
     if not profile then return end
-    task.spawn(function()
-        leaderboards:record(userId,profile)
+    local snapshot=Learning.copy(profile)
+    if immediate then
+        leaderboardQueued[userId]=nil
+        task.spawn(function() leaderboards:record(userId,snapshot) end)
+        return
+    end
+    if leaderboardQueued[userId] then
+        leaderboardQueued[userId]=snapshot
+        return
+    end
+    leaderboardQueued[userId]=snapshot
+    task.delay(5,function()
+        local latest=leaderboardQueued[userId]
+        leaderboardQueued[userId]=nil
+        if latest then leaderboards:record(userId,latest) end
     end)
 end
 local function refreshLeaderboardBoards()
@@ -197,6 +211,7 @@ World.shopPrompt.Triggered:Connect(function(player) emit(player,"shop",{}) end)
 Players.PlayerAdded:Connect(function(player) task.spawn(join,player) end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(join,player) end
 Players.PlayerRemoving:Connect(function(player)
+    syncLeaderboard(player.UserId,true)
     Garage.remove(player);World.release(player);sessions[player.UserId]=nil;store:release(player.UserId)
 end)
 task.spawn(function()
