@@ -4,66 +4,13 @@
 local Catalog = {}
 
 Catalog.Subjects = {
-    -- Gameplay classroom identities are user-approved and intentionally separate from real-world grade assignments.
-    {id="math", name="Math", short="Math", teacher="Mrs. Campion", room="Learning Lab", color={62,154,214}},
-    {id="reading", name="Reading / ELA", short="Reading", teacher="Mrs. Russek", room="Learning Lab", color={125,103,202}},
-    {id="grammar", name="Grammar", short="Grammar", teacher="Mrs. Benulis", room="Learning Lab", color={137,105,170}},
-    {id="religion", name="Religion", short="Religion", teacher="Mr. Bolich", room="Learning Lab", color={196,147,58}},
-    {id="vocabulary", name="Vocabulary", short="Vocabulary", teacher="Mr. Yordy", room="Learning Lab", color={58,135,118}},
-    {id="spelling", name="Spelling / Handwriting", short="Spelling", teacher="Mrs. Kochol", room="Learning Lab", color={51,158,129}},
+    {id="math", name="Math", short="Math", teacher="Mrs. Campion", color={62,154,214}},
+    {id="reading", name="Reading / ELA", short="Reading", teacher="Mrs. Russek", color={125,103,202}},
+    {id="grammar", name="Grammar", short="Grammar", teacher="Mrs. Benulis", color={137,105,170}},
+    {id="religion", name="Religion", short="Religion", teacher="Mr. Bolich", color={196,147,58}},
+    {id="vocabulary", name="Vocabulary", short="Vocabulary", teacher="Mr. Yordy", color={58,135,118}},
+    {id="spelling", name="Spelling / Handwriting", short="Spelling", teacher="Mrs. Kochol", color={51,158,129}},
 }
-
--- User-supplied Assumption BVM faculty/staff directory references.
--- Names and roles below preserve the exact displayed directory text.
--- Appearance fields are intentionally stylized, asset-ID-free Roblox cues based only on visible
--- photo details such as hair, glasses, facial hair, clothing colors and accessories.
-Catalog.Faculty = {
-    {id="carl_mcbreen", name="Dr Carl McBreen", displayName="Dr. McBreen", role="Principal", gameRole="Principal", group="Administration", floor=1, location="Main Office",
-        appearance={skin={226,188,154},hair={132,119,105},hairStyle="short",top={36,44,57},inner={128,162,195},tie={43,58,82},suit=true}},
-    {id="melissa_thompson", name="Mrs. Melissa Thompson", displayName="Mrs. Thompson", role="Administrative Assistant, Marketing Coordinator", gameRole="Secretary", group="Administration", floor=1, location="Main Office",
-        appearance={skin={232,195,169},hair={208,181,143},hairStyle="shoulder",top={31,48,79}}},
-    {id="carol_boyer", name="Mrs Carol Boyer", displayName="Mrs. Boyer", role="President of Catholicity and Mission", gameRole="Assistant Principal", group="Administration", floor=1, location="Main Office",
-        appearance={skin={230,198,176},hair={220,206,180},hairStyle="bob",top={34,36,40},inner={213,210,223},outer={32,34,38},pin=true}},
-    {id="erin_heckman", name="Mrs. Erin Heckman", role="Pre-Kindergarten", group="Early Learning", floor=1, location="Early Learning Hall",
-        appearance={skin={234,198,177},hair={203,170,132},hairStyle="shoulderBangs",top={239,238,232},outer={155,63,52},vest=true,cross=true}},
-    {id="sharon_rossi", name="Mrs. Sharon Rossi", role="Pre-Kindergarten", group="Early Learning", floor=1, location="Early Learning Hall",
-        appearance={skin={230,197,170},hair={194,158,126},hairStyle="shoulder",top={78,132,221},cross=true}},
-    {id="cindy_campion", name="Mrs. Cindy Campion", role="Kindergarten", group="Elementary", floor=1, location="Lower Elementary Hall",
-        appearance={skin={229,193,168},hair={115,69,47},hairStyle="pulledBack",top={29,91,70}}},
-    {id="maryann_lascala", name="Mrs. MaryAnn Lascala", role="Kindergarten Aide", group="Elementary Support", floor=1, location="Lower Elementary Hall",
-        appearance={skin={230,201,178},hair={210,190,165},hairStyle="bob",top={30,31,34}}},
-    {id="karla_russek", name="Mrs. Karla Russek", role="First Grade", group="Elementary", floor=1, location="Lower Elementary Hall",
-        appearance={skin={230,198,178},hair={187,179,166},hairStyle="long",top={239,239,235},outer={34,37,42},jacket=true}},
-    {id="aimee_benulis", name="Mrs. Aimee Benulis", role="Second Grade", group="Elementary", floor=2, location="Second Floor",
-        appearance={skin={230,194,169},hair={119,84,69},hairStyle="shoulder",top={32,48,77}}},
-    {id="marla_callaghan", name="Mrs. Marla Callaghan", role="Third Grade", group="Elementary", floor=2, location="Second Floor",
-        appearance={skin={231,197,174},hair={194,158,126},hairStyle="shoulder",top={171,55,123},glasses=true,pattern="floral"}},
-    {id="marylouise_smith", name="Ms. MaryLouise Smith", role="Fourth Grade", group="Elementary", floor=2, location="Second Floor",
-        appearance={skin={230,193,166},hair={184,132,100},hairStyle="short",top={219,207,190},pattern="lineFloral"}},
-    {id="nicole_leagans", name="Mrs Nicole Leagans", role="Fifth Grade Teacher", group="Elementary", floor=2, location="Second Floor",
-        appearance={skin={232,195,170},hair={119,73,53},hairStyle="longStraight",top={139,48,71},pattern="school"}},
-    {id="lyric_paskel", name="Mrs. Lyric Paskel", role="6th Grade Teacher", group="Middle School", floor=2, location="Second Floor",
-        appearance={skin={230,194,171},hair={49,40,38},hairStyle="longWavy",top={27,28,31},outer={118,116,112},jacket=true}},
-    {id="mike_yordy", name="Mr. Mike Yordy", role="Seventh Grade", group="Middle School", floor=3, location="Third Floor",
-        appearance={skin={220,183,158},hair={86,80,76},hairStyle="short",top={28,30,33},beard=true,beardColor={84,82,80}}},
-    {id="jacqui_urban", name="Mrs. Jacqui Urban", role="Eighth Grade", group="Middle School", floor=3, location="Third Floor",
-        appearance={skin={229,194,172},hair={155,155,151},hairStyle="bob",top={238,199,214},glasses=true,cross=true}},
-    {id="david_bolich", name="Mr. David Bolich", role="Technology Teacher and Physical Education Teacher", group="Specials", floor=3, location="Third Floor",
-        appearance={skin={221,188,164},hair={198,195,185},hairStyle="balding",top={66,94,109},glasses=true,beard=true,beardColor={165,165,160}}},
-    {id="lucilla_kochol", name="Mrs. Lucilla Kochol", role="Art, After School Care Administrator", group="Specials", floor=3, location="Third Floor",
-        appearance={skin={226,192,168},hair={166,103,73},hairStyle="short",top={28,29,32},outer={42,37,43},glasses=true,pattern="brightFloral"}},
-    {id="cindy_long", name="Mrs. Cindy Long", role="Food Service Manager", group="Operations", floor=1, location="Food Service",
-        appearance={skin={226,193,169},hair={155,92,65},hairStyle="short",top={27,28,31},outer={236,235,226},glasses=true,pattern="geometric"}},
-}
-
-Catalog.ByStaffId = {}
-Catalog.ByStaffName = {}
-for _,staff in ipairs(Catalog.Faculty) do
-    assert(Catalog.ByStaffId[staff.id] == nil, "duplicate faculty id")
-    assert(Catalog.ByStaffName[staff.name] == nil, "duplicate faculty name")
-    Catalog.ByStaffId[staff.id]=staff
-    Catalog.ByStaffName[staff.name]=staff
-end
 
 Catalog.Tiers = {
     {name="Starting out", earned=0},
