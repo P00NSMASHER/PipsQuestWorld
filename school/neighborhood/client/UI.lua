@@ -1,7 +1,7 @@
 --!strict
 local TweenService=game:GetService("TweenService")
 local UI={}
-UI.P={ink=Color3.fromRGB(36,52,71),muted=Color3.fromRGB(103,118,131),paper=Color3.fromRGB(245,242,234),white=Color3.fromRGB(255,255,255),line=Color3.fromRGB(221,227,226),teal=Color3.fromRGB(39,132,123),gold=Color3.fromRGB(222,178,77),soft=Color3.fromRGB(230,240,235),rose=Color3.fromRGB(182,111,93)}
+UI.P={ink=Color3.fromRGB(22,45,79),muted=Color3.fromRGB(95,108,119),paper=Color3.fromRGB(247,244,236),white=Color3.fromRGB(255,255,255),line=Color3.fromRGB(217,219,211),teal=Color3.fromRGB(24,103,59),gold=Color3.fromRGB(223,177,60),soft=Color3.fromRGB(232,239,230),rose=Color3.fromRGB(164,104,101)}
 function UI.new(class,parent,props)
     local o=Instance.new(class)
     for k,v in pairs(props or {}) do o[k]=v end
@@ -57,6 +57,11 @@ function UI.preview(parent,item)
         p(Vector3.new(.85,2,.12),Vector3.new(0,1,-2.1),UI.P.ink)
         for _,x in ipairs({-1.5,1.5}) do p(Vector3.new(1.1,1,.15),Vector3.new(x,2.1,-2.1),Color3.fromRGB(160,200,214)) end
         if item.style>=3 then p(Vector3.new(3,2,2.5),Vector3.new(0,4.8,.3),tint);p(Vector3.new(3.4,.25,2.9),Vector3.new(0,5.9,.3),UI.P.gold) end
+        if item.style>=5 then
+            p(Vector3.new(1.5,2.7,3),Vector3.new(-3.1,1.7,.1),tint)
+            p(Vector3.new(1.5,2.7,3),Vector3.new(3.1,1.7,.1),tint)
+            p(Vector3.new(2.2,.25,2.1),Vector3.new(0,4.2,-2.2),UI.P.paper)
+        end
     elseif item.category=="Vehicles" then
         p(Vector3.new(3.8,1.1,6),Vector3.new(0,1,0),tint)
         p(Vector3.new(3.3,1.1,2.8),Vector3.new(0,2,.2),Color3.fromRGB(165,198,204))
