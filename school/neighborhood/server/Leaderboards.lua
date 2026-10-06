@@ -7,6 +7,7 @@ local Learning=require(script.Parent.Learning)
 
 local Leaderboards={}
 Leaderboards.__index=Leaderboards
+local nameCache={}
 
 local ACCURACY_MIN_ANSWERS=20
 local REFRESH_SECONDS=30
@@ -31,9 +32,13 @@ local function userIdFromKey(value:any):number?
 end
 
 local function displayName(userId:number):string
+    local now=os.time()
+    local cached=nameCache[userId]
+    if cached and now-cached.at<3600 then return cached.name end
     local ok,name=pcall(function()return Players:GetNameFromUserIdAsync(userId)end)
-    if ok and type(name)=="string" and #name>0 then return string.sub(name,1,40) end
-    return "Player "..tostring(userId)
+    local resolved=(ok and type(name)=="string" and #name>0) and string.sub(name,1,40) or ("Player "..tostring(userId))
+    nameCache[userId]={name=resolved,at=now}
+    return resolved
 end
 
 local function orderedRows(store:OrderedDataStore,limit:number):{any}
