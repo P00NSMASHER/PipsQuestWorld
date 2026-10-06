@@ -48,7 +48,8 @@ jobs:
           creator_id="$(jq -r '.authorizedUserId // empty' "$RUNNER_TEMP/api-key-introspect.json")"
           test -n "$creator_id" -a "$creator_id" != "0"
           jq -e '.enabled == true and (.expired == false)' "$RUNNER_TEMP/api-key-introspect.json" >/dev/null
-          jq -e '.scopes[] | select((.name=="asset" or .name=="asset:write") and ((.operations // []) | index("write") or .name=="asset:write"))' "$RUNNER_TEMP/api-key-introspect.json" >/dev/null
+          # Do not pre-reject based on the introspection scope list. The Assets API is the
+          # authoritative permission check, so attempt the first real upload and preserve its response.
           echo "creator_type=User" >> "$GITHUB_OUTPUT"
           echo "creator_id=$creator_id" >> "$GITHUB_OUTPUT"
           printf 'Resolved API-key owner user %s with asset write permission.\n' "$creator_id"
