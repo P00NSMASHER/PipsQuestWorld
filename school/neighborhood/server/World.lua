@@ -101,16 +101,25 @@ local function fencePanel(parent,cf,size)
     panel.Transparency=.58
 end
 
-local function rowHome(parent,x,z,tint,levels)
+local function rowHome(parent,x,z,tint,levels,baseY)
     local floors=levels or 3
+    local base=baseY or 0
     local height=10*floors
-    World.part(parent,"Rowhome",Vector3.new(22,height,30),CFrame.new(x,height/2,z),tint,Enum.Material.Brick)
-    World.part(parent,"Rowhome roof",Vector3.new(23,.8,31),CFrame.new(x,height+.45,z),Color3.fromRGB(55,57,58),Enum.Material.Slate)
+    if base>0 then
+        World.part(parent,"Rowhome retaining base",Vector3.new(24,base,32),CFrame.new(x,base/2,z),palette.brickDark,Enum.Material.Brick)
+    end
+    World.part(parent,"Rowhome",Vector3.new(22,height,30),CFrame.new(x,base+height/2,z),tint,Enum.Material.Brick)
+    World.part(parent,"Rowhome roof",Vector3.new(23,.8,31),CFrame.new(x,base+height+.45,z),Color3.fromRGB(55,57,58),Enum.Material.Slate)
     for floor=1,floors do
-        local y=5+(floor-1)*10
+        local y=base+5+(floor-1)*10
         for _,dx in ipairs({-6,6}) do windowPanel(parent,CFrame.new(x+dx,y,z-15.15),5.4,5.2) end
     end
-    World.part(parent,"Rowhome door",Vector3.new(5,7,.35),CFrame.new(x,3.5,z-15.3),Color3.fromRGB(69,87,98),Enum.Material.Wood,false)
+    World.part(parent,"Rowhome door",Vector3.new(5,7,.35),CFrame.new(x,base+3.5,z-15.3),Color3.fromRGB(69,87,98),Enum.Material.Wood,false)
+    if base>0 then
+        for step=0,math.floor(base/1.2) do
+            World.part(parent,"Rowhome hill stair",Vector3.new(5,.45,2),CFrame.new(x,step*1.2+.25,z-18-step*1.8),palette.stone,Enum.Material.Concrete)
+        end
+    end
 end
 
 local function desk(parent,x,y,z,tint)
@@ -405,10 +414,11 @@ function World.build()
     -- Dense urban Pottsville context. These are backdrop buildings, not owned player homes.
     local rowColors={Color3.fromRGB(145,104,83),Color3.fromRGB(173,153,131),Color3.fromRGB(119,91,78),Color3.fromRGB(188,179,160)}
     for i,z in ipairs({-145,-92,-39}) do
-        rowHome(root,-142,z,rowColors[(i-1)%#rowColors+1],3)
-        rowHome(root,205,z,rowColors[i%#rowColors+1],3)
+        rowHome(root,-142,z,rowColors[(i-1)%#rowColors+1],3,(i-1)*3)
+        rowHome(root,205,z,rowColors[i%#rowColors+1],3,2+(i-1)*3)
     end
-    rowHome(root,-169,-118,rowColors[3],3);rowHome(root,-169,-63,rowColors[2],2)
+    rowHome(root,-169,-118,rowColors[3],3,8)
+    rowHome(root,-169,-63,rowColors[2],2,5)
     tree(root,-101,-28,.85);tree(root,-102,-145,.95);tree(root,88,-34,.7)
 
     -- Playable interior floors/halls. Exterior stays faithful; interior is wider/clearer than the real plan.
