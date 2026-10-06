@@ -200,7 +200,7 @@ end
 
 showClasses=function()
     if setNavActive then setNavActive("school") end
-    open("classes","Classes")
+    open("classes","▤  Classes")
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
@@ -374,7 +374,7 @@ end
 
 showAvatar=function()
     if setNavActive then setNavActive("shop") end
-    open("avatar","Avatar Preview")
+    open("avatar","◆  Avatar Preview")
 
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     local previewHeight=layout.compact and 210 or 290
@@ -456,7 +456,7 @@ showShop=function(selected,subfilter)
         elseif category=="Homes" then homeFilter=subfilter
         elseif category=="Vehicles" then vehicleFilter=subfilter end
     end
-    local titles={Homes="Houses",Clothes="ABVM Apparel",Items="School Shop",Vehicles="Vehicles"}
+    local titles={Homes="⌂  Houses",Clothes="◆  ABVM Apparel",Items="▣  School Shop",Vehicles="◇  Vehicles"}
     open("shop",titles[category] or "ABVM School Shop")
 
     UI.clear(shopTabs);UI.clear(shopSubtabs)
