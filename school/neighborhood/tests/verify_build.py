@@ -16,7 +16,7 @@ MODE = ROOT / "school/neighborhood"
 PROJECT = ROOT / "school/neighborhood.project.json"
 SOURCES = {
     "shared/Catalog.lua", "shared/Layout.lua", "server/Garage.lua",
-    "server/Learning.lua", "server/Main.server.lua", "server/ProfileStore.lua",
+    "server/Learning.lua", "server/Leaderboards.lua", "server/Main.server.lua", "server/ProfileStore.lua",
     "server/QuestionBank.lua", "server/Wardrobe.lua", "server/World.lua",
     "client/Main.client.lua", "client/UI.lua",
 }
@@ -24,7 +24,7 @@ EXPECTED_SCRIPTS = {
     "ReplicatedStorage/NeighborhoodShared/Catalog": "ModuleScript",
     "ReplicatedStorage/NeighborhoodShared/Layout": "ModuleScript",
     **{f"ServerScriptService/Neighborhood/{name}": "ModuleScript" for name in
-       ("Garage", "Learning", "ProfileStore", "QuestionBank", "Wardrobe", "World")},
+       ("Garage", "Learning", "Leaderboards", "ProfileStore", "QuestionBank", "Wardrobe", "World")},
     "ServerScriptService/Neighborhood/Main": "Script",
     "StarterPlayer/StarterPlayerScripts/NeighborhoodClient/Main": "LocalScript",
     "StarterPlayer/StarterPlayerScripts/NeighborhoodClient/UI": "ModuleScript",
@@ -144,7 +144,7 @@ def main() -> int:
             run([str(args.compiler.resolve()), "--null", str(MODE / path)], compile_log, True)
         test_output = run([str(args.luau.resolve()), str(MODE / "tests/core.spec.lua")],
                           args.out / "core-tests.log")
-        require("NEIGHBORHOOD_CORE_TESTS_PASS 19" in test_output, "complete model-test marker missing")
+        require("NEIGHBORHOOD_CORE_TESTS_PASS 26" in test_output, "complete model-test marker missing")
         place_path = args.out / "PipHigh-Neighborhood-preview.rbxlx"
         run([str(args.rojo.resolve()), "build", str(PROJECT), "-o", str(place_path)],
             args.out / "rojo-build.log")
@@ -154,12 +154,12 @@ def main() -> int:
         files = [PROJECT, *[MODE / path for path in sorted(SOURCES)],
                  MODE / "tests/core.spec.lua", Path(__file__).resolve()]
         report.update(status="PASS_STATIC_PREVIEW_ONLY", sourceFilesCompiled=len(SOURCES),
-                      coreTests=19, buildGuardNegativeControls=mutations,
+                      coreTests=26, buildGuardNegativeControls=mutations,
                       scriptInventory=script_inventory,
                       fileSha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in files},
                       placeSha256=hashlib.sha256(place_path.read_bytes()).hexdigest())
-        print("NEIGHBORHOOD_STATIC_PREVIEW_OK: 19 model tests; 11 compiled sources; 3 negative controls")
+        print("NEIGHBORHOOD_STATIC_PREVIEW_OK: 26 model tests; 12 compiled sources; 3 negative controls")
     except (ValueError, OSError, subprocess.SubprocessError, ET.ParseError) as exc:
         report["error"] = str(exc)
         print(f"NEIGHBORHOOD_STATIC_PREVIEW_FAIL: {exc}", file=sys.stderr)
