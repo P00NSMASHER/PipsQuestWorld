@@ -326,14 +326,16 @@ showShop=function(selected,subfilter)
         local card=UI.surface(grid,{Name=item.id,LayoutOrder=number,Size=UDim2.new(1,0,0,cardHeight),BackgroundColor3=UI.P.white,Shadow=false})
         UI.preview(card,item)
 
-        UI.text(card,item.name,16,{Position=UDim2.fromOffset(114,8),Size=UDim2.new(1,-122,0,34),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top})
+        UI.text(card,item.name,15,{Position=UDim2.fromOffset(114,8),Size=UDim2.new(1,-122,0,30),Font=Enum.Font.GothamBold,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
         local remaining=math.max(0,item.price-state.coins)
         local priceStatus
         if owned then priceStatus=equipped and "Equipped" or "Owned"
         elseif remaining==0 then priceStatus=tostring(item.price).." Credits • ready"
         else priceStatus=tostring(item.price).." Credits • "..tostring(remaining).." to go" end
-        UI.text(card,priceStatus,13,{Position=UDim2.fromOffset(114,42),Size=UDim2.new(1,-122,0,22),TextColor3=owned and UI.P.success or UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-        UI.text(card,item.description,12,{Position=UDim2.fromOffset(114,64),Size=UDim2.new(1,-122,0,42),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
+        UI.text(card,priceStatus,12,{Position=UDim2.fromOffset(114,37),Size=UDim2.new(1,-122,0,20),TextColor3=owned and UI.P.success or UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+        local tierName=(Catalog.Tiers[item.tier] and Catalog.Tiers[item.tier].name) or "School"
+        UI.chip(card,equipped and "✓ Equipped" or tierName,{Position=UDim2.fromOffset(114,60),Size=UDim2.fromOffset(equipped and 82 or 72,24),BackgroundColor3=equipped and Color3.fromRGB(232,245,238) or UI.P.navySoft,TextColor3=equipped and UI.P.success or UI.P.ink,TextSize=10,StrokeColor=equipped and UI.P.success or UI.P.line})
+        UI.text(card,item.description,11,{Position=UDim2.fromOffset(114,87),Size=UDim2.new(1,-122,0,24),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
 
         local label
         if owned then
