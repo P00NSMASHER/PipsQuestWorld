@@ -3,7 +3,17 @@ _G.RECOVERY_BOOT_HELPER_ONLY=true
 local boot=dofile('school/tests/iphone_recovery_boot_spec.lua')
 _G.RECOVERY_BOOT_HELPER_ONLY=nil
 local c=boot(852,393,58,true)
-local root='SchoolFoundation/FreeRoam/Outfits/'
+assert(c:find('RobloxHighSchoolLegacyUI').ZIndexBehavior=='ZIndexBehavior.Sibling','Mobile content must render above its parent shell')
+-- User-dismissed contextual cards stay closed through subsequent server refreshes.
+c:press('QuickSlot2')
+local cafe=c:find('LegacyCafePanel')
+cafe:FindFirstChild('RecoveryClose').Activated:Fire()
+c:remote('SchoolFoundation/FreeRoam/CafeJob/GetState',{active=false,atCafe=true})
+c:pump(); c:pump()
+assert(not cafe.Visible,'Dismissed cafe card reopened on polling')
+c:press('QuickSlot2'); assert(cafe.Visible,'Manual cafe entry did not clear dismissal')
+cafe:FindFirstChild('RecoveryClose').Activated:Fire()
+local root='SchoolFoundation/FreeRoam/Outfits/' 
 local saved, saves, requestIds=nil,0,{}
 c.player.Character:FindFirstChildOfClass('Humanoid').GetAppliedDescription=function()
     -- Synthetic IDs exercise extraction only. They are never published as assets.
