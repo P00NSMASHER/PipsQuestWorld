@@ -29,27 +29,34 @@ function UI.surface(parent,props)
     local wantShadow=props.Shadow~=false
     local radius=props.CornerRadius or UI.R.surface
     props.Shadow=nil;props.CornerRadius=nil
-    local o=UI.frame(parent,props);UI.corner(o,radius);UI.stroke(o,UI.P.line)
+    local shadow=nil
     if wantShadow then
-        local shadow=UI.new("Frame",parent,{
-            Name=(o.Name~="" and o.Name.."Shadow" or "SurfaceShadow"),
-            AnchorPoint=o.AnchorPoint,
-            Position=o.Position+UDim2.fromOffset(2,3),
-            Size=o.Size,
+        local anchor=props.AnchorPoint or Vector2.zero
+        local position=props.Position or UDim2.new()
+        local size=props.Size or UDim2.new()
+        shadow=UI.new("Frame",parent,{
+            Name=(props.Name and props.Name~="" and props.Name.."Shadow" or "SurfaceShadow"),
+            AnchorPoint=anchor,
+            Position=position+UDim2.fromOffset(2,3),
+            Size=size,
             BackgroundColor3=Color3.fromRGB(18,31,47),
             BackgroundTransparency=.87,
             BorderSizePixel=0,
-            Visible=o.Visible,
-            ZIndex=math.max(0,o.ZIndex-1),
+            Visible=props.Visible~=false,
+            ZIndex=props.ZIndex or 1,
         })
         UI.corner(shadow,radius)
+    end
+    local o=UI.frame(parent,props);UI.corner(o,radius);UI.stroke(o,UI.P.line)
+    if shadow then
         local function sync()
             shadow.AnchorPoint=o.AnchorPoint
             shadow.Position=o.Position+UDim2.fromOffset(2,3)
             shadow.Size=o.Size
             shadow.Visible=o.Visible
-            shadow.ZIndex=math.max(0,o.ZIndex-1)
+            shadow.ZIndex=o.ZIndex
         end
+        sync()
         o:GetPropertyChangedSignal("AnchorPoint"):Connect(sync)
         o:GetPropertyChangedSignal("Position"):Connect(sync)
         o:GetPropertyChangedSignal("Size"):Connect(sync)
