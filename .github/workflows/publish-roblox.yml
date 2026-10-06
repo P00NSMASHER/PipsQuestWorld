@@ -2,11 +2,6 @@ name: Publish Pip High to Roblox
 # one-shot trigger for exact canonical 33a5a11
 
 on:
-  push:
-    branches:
-      - deploy/roblox-open-cloud-33a5a11
-    paths:
-      - '.github/workflows/publish-roblox.yml'
   workflow_dispatch:
 
 permissions:
