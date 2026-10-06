@@ -1,0 +1,171 @@
+name: Materialize iPhone Recovery Candidate
+on:
+  push:
+    branches: [rebuild/iphone-recovery-33a5a11-v1]
+    paths: ['.github/workflows/iphone-recovery-build.yml']
+permissions:
+  contents: write
+concurrency:
+  group: iphone-recovery-materialize
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.repository == 'P00NSMASHER/PipsQuestWorld'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Verify and apply exact reviewed source delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/rebuild/iphone-recovery-33a5a11-v1
+          git merge-base --is-ancestor 33a5a11ba771e0bbfbc82ed40ce5417c772a2f17 HEAD
+          python3 - <<'PY'
+          import hashlib, pathlib, subprocess
+          root = pathlib.Path('school/recovery-transfer')
+          patch = b''.join((root / f'part-{i}.patch').read_bytes() for i in range(1, 6))
+          assert hashlib.sha256(patch).hexdigest() == '184e1d5056c9982e81fc024d8b58ab60248f69235f99be2217fea1a1fa6abba7', 'Patch identity mismatch'
+          manifest = [
+            ('school/default.project.json','58689e0818d39ca56b43d54e33ab4d39cd5dad83a8237d2454ce9df386e533f2','a623aae7b79e366f2428271a8730fd815546dd78611b89353a8af107eea5b892'),
+            ('school/src/client/CanonicalSchoolClient.client.lua','47980c9e7e714da82f82f1c1b020d661e1ad8a26859ed0120720e00da6324b66','a1a6358e479b8a9744c751842b1fc4de2bd4ef2f4d610aeafb80f857d22f42c2'),
+            ('school/src/server/CampusBuilder.server.lua','37d0286fb05f17180ff56cdb2b3b173a93cec4880f141f14fcd61c09cfd687f4','1b65926fc193e908bd6ef0d6e1064bfef31b021a082f213f9e17ec731302a641'),
+            ('school/src/shared/LegacyOutfitEntry.lua','ed583204b3fbdee259c69ad4125ea03f72e6239f9f29cfb3e41c45e03270e537','26f15537cded5608f81468cfc301e8320a79d431a1d3496015a8394b8af6337b'),
+            ('school/src/shared/MobilePanelShell.lua',None,'262fe1146281d1e619292c2dc8acc976c11e77022687b6cb69ffee9685cbf35f'),
+            ('school/src/shared/ResponsiveHudLayout.lua','253df38bd78bc0c602313e279408f092818145ebb4722be579e79aa6a7e4dce6','80f290a7d6ed201b1575c1caa397a413a49398d4fedb7ff3086bfb4149cdabc9'),
+            ('school/tests/iphone_recovery_boot_spec.lua',None,'d3c30e128873233e89bafa6257b26780d60685cfab6b637d991602258edd8377'),
+            ('school/tests/iphone_recovery_interaction_spec.lua',None,'c5d80d5c56f318638775251eccdf9ff5750e6f33b50cbf638ad1a6f61bf5b200'),
+            ('school/tests/iphone_recovery_world_spec.lua',None,'95fba29977fbdb860e4fbcbddb760e958da4c4a5ab40c24d70f4298235449170'),
+            ('school/tests/support/roblox_client_stub.lua',None,'5c19dfeba37f377098284689afe436a0934b477701982cad6ec77c365b84c683'),
+            ('.github/workflows/school-pivot-ci.yml','396d3f61def95991b9dc8ee5268623ce630ae0131c3d82254adb8eabe9da8cf3','c3c44a403926c61c4f67d2c1352425b00e4a3778ca3ae3d96f41261c51983024'),
+          ]
+          for name, before, after in manifest:
+              path = pathlib.Path(name)
+              assert (hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None) == before, name
+          subprocess.run(['git','apply','--check','-'],input=patch,check=True)
+          subprocess.run(['git','apply','-'],input=patch,check=True)
+          for name, before, after in manifest:
+              assert hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest() == after, name
+          print('EXACT_IPHONE_SOURCE_DELTA_OK')
+          PY
+          # The connector will make the small CI edit separately; this token only commits product source.
+          git restore .github/workflows/school-pivot-ci.yml
+          git rm -r school/recovery-transfer
+          git add school
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Repair iPhone bootstrap, native-scale menus, outfits and campus traversal'
+      - name: Install validation tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y lua5.4
+          mkdir -p "$RUNNER_TEMP/iphone-tools/luau" "$RUNNER_TEMP/iphone-tools/rojo" "$RUNNER_TEMP/iphone-evidence"
+          cd "$RUNNER_TEMP/iphone-tools"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip -o rojo.zip
+          echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
+          unzip -q luau.zip -d luau
+          unzip -q rojo.zip -d rojo
+          chmod +x luau/luau-compile rojo/rojo
+      - name: Run every deterministic test and full mapped build
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in school/tests/*_spec.lua; do lua5.4 "$spec"; done
+          python3 scripts/verify-school-pivot.py
+          python3 scripts/verify-foundation-ci-scope.py
+          python3 scripts/verify-school-build.py --self-test
+          python3 scripts/verify-school-build.py --expected-sha "$(git rev-parse HEAD)" --compiler "$RUNNER_TEMP/iphone-tools/luau/luau-compile" --rojo "$RUNNER_TEMP/iphone-tools/rojo/rojo" --out "$RUNNER_TEMP/iphone-evidence"
+          git diff --check
+      - name: Push only the tested producer branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/rebuild/iphone-recovery-33a5a11-v1 | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/rebuild/iphone-recovery-33a5a11-v1
+          git rev-parse HEAD | tee "$RUNNER_TEMP/iphone-evidence/producer-commit.txt"
+      - name: Test candidate world construction in isolated Roblox engine session
+        continue-on-error: true
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess, time, urllib.request, urllib.error
+          key = os.environ.get('ROBLOX_API_KEY','')
+          if not key: raise SystemExit('ENGINE_TEST_UNAVAILABLE: missing configured secret')
+          source = pathlib.Path('school/src/server/CampusBuilder.server.lua').read_text()
+          sha = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          script = 'local function buildCandidateWorld()\n' + source + '\nend\nbuildCandidateWorld()\n' + '''
+          local campus = assert(workspace:FindFirstChild("SchoolCampus"), "Campus absent")
+          assert(campus:GetAttribute("RecoveryBuild") == "IPHONE-01", "Wrong world source")
+          assert(campus:FindFirstChild("SchoolCeiling", true), "Roof absent")
+          assert(campus:FindFirstChild("HallSkylight", true), "Skylight absent")
+          local config = require(game:GetService("ReplicatedStorage").Shared.SchoolConfig)
+          local tested = 0
+          for _, roomName in ipairs({"Homeroom", "Math", "ELA", "Science", "SocialStudies", "Library"}) do
+              local room = assert(campus:FindFirstChild(roomName, true))
+              local center = config.Rooms[roomName].position
+              local doorX = center.X < 0 and center.X + 29 or center.X - 29
+              local params = OverlapParams.new()
+              params.FilterType = Enum.RaycastFilterType.Include
+              params.FilterDescendantsInstances = {room}
+              params.RespectCanCollide = true
+              local hits = workspace:GetPartBoundsInBox(CFrame.new(doorX, 4.5, center.Z), Vector3.new(3, 5, 3), params)
+              assert(#hits == 0, roomName .. " doorway obstructed")
+              tested = tested + 1
+          end
+          for _, plot in ipairs(config.HousingPlots) do
+              local model = assert(campus.HousingPlots:FindFirstChild(plot.id))
+              local walls = {}
+              for _, part in ipairs(model:GetChildren()) do
+                  if part.Name == "HouseBody" then table.insert(walls, part) end
+              end
+              assert(#walls == 6, "House is not hollow")
+              local params = OverlapParams.new()
+              params.FilterType = Enum.RaycastFilterType.Include
+              params.FilterDescendantsInstances = walls
+              params.RespectCanCollide = true
+              for _, offset in ipairs({-18,-15.5,-12,0,8}) do
+                  local hits = workspace:GetPartBoundsInBox(CFrame.new(plot.houseOrigin.X, 4.5, plot.houseOrigin.Z + offset), Vector3.new(3,5,3), params)
+                  assert(#hits == 0, "House entry blocked")
+              end
+          end
+          print("IPHONE_CANDIDATE_WORLD_ENGINE_OK", tested)
+          return {result="WORLD_CONSTRUCTION_AND_COLLISION_QUERY_PASS", classrooms=tested, instances=#campus:GetDescendants(), running=game:GetService("RunService"):IsRunning(), renderedClientTested=false, physicalIphoneTested=false}
+          '''
+          prefix='https://apis.roblox.com/cloud/v2/'
+          def request(url, data=None):
+              payload=json.dumps(data).encode() if data is not None else None
+              req=urllib.request.Request(url,data=payload,headers={'x-api-key':key,'Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+              except urllib.error.HTTPError as exc:
+                  raise RuntimeError(f'Roblox engine HTTP {exc.code}: '+exc.read().decode()[:1200]) from None
+          task=request(prefix+'universes/10768955678/places/87245440673982/luau-execution-session-tasks',{'script':script,'timeout':'90s'})
+          path=task['path']
+          assert path.startswith('universes/10768955678/places/87245440673982/'), 'Unexpected task target'
+          for _ in range(40):
+              task=request(prefix+path)
+              if task.get('state') != 'PROCESSING': break
+              time.sleep(3)
+          task.pop('script',None)
+          report={'candidateSha':sha,'scope':'isolated candidate world construction only; not live players or rendered client','task':task}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'iphone-evidence','engine-world.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report))
+          if task.get('state') != 'COMPLETE' or task.get('error'): raise SystemExit('ENGINE_WORLD_NOT_PASSED')
+          PY
+      - name: Preserve exact build and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iphone-recovery-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/iphone-evidence/
+          retention-days: 7
+          if-no-files-found: warn
