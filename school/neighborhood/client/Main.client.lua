@@ -392,6 +392,24 @@ for i,definition in ipairs(navDefs) do
     table.insert(navButtons,b)
 end
 
+setNavActive=function(command)
+    for i,b in ipairs(navButtons) do
+        local active=navDefs[i][3]==command
+        b.BackgroundColor3=active and UI.P.ink or UI.P.white
+        local labels={}
+        for _,child in ipairs(b:GetChildren()) do
+            if child:IsA("TextLabel") then table.insert(labels,child) end
+        end
+        for _,label in ipairs(labels) do
+            if label.Position.X.Offset<30 then
+                label.TextColor3=active and UI.P.gold or UI.P.teal
+            else
+                label.TextColor3=active and UI.P.white or UI.P.ink
+            end
+        end
+    end
+end
+
 -- Driving keeps native thumbstick steering and replaces the old five-button debug strip.
 local driving=UI.surface(canvas,{Name="DrivingControls",Visible=false,AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-12,.58,0),Size=UDim2.fromOffset(92,174),BackgroundColor3=UI.P.paper,CornerRadius=18})
 UI.text(driving,"DRIVE",10,{Position=UDim2.fromOffset(8,5),Size=UDim2.new(1,-16,0,18),TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.muted})
