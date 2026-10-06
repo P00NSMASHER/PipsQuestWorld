@@ -4,7 +4,7 @@ This is a separate first implementation of the user's new direction, not another
 
 ## Scope and build target
 
-Build `school/neighborhood.project.json`, not `school/default.project.json`. Only the new neighborhood server, client, and shared modules are mapped. The older RHS binary and procedural-school project remain untouched for history and rollback. This mode contains a school, four subject classrooms, a campus-shop counter, and a residential street with 24 independently assigned house plots. It does not load the old jobs, clubs, school-day schedule, visible clock, or old HUD.
+Build `school/neighborhood.project.json`, not `school/default.project.json`. Only the new neighborhood server, client, and shared modules are mapped. The older RHS binary and procedural-school project remain untouched for history and rollback. This mode contains a recognizable Assumption BVM-inspired three-story school, six subject classrooms, an admin/lobby/leaderboard core, a school shop, and a residential street with 24 independently assigned house plots. It does not load the old jobs, clubs, school-day schedule, visible clock, or old HUD.
 
 World geometry, clothing overlays, vehicle models, and shop previews in this mode are original generated content. This is not the original RHS2 map or a claim of exact visual parity. All children begin with their own furnished starter home and a starter ride. The progression runs from modest to luxury; it does not attach insulting labels to players or publish a poorest-player ranking.
 
@@ -12,32 +12,32 @@ World geometry, clothing overlays, vehicle models, and shop previews in this mod
 
 The server determines the classroom from the character's position. Entering the room offers the subject's question; leaving invalidates it. Initial client messages contain shuffled choices and a per-question token, not answer keys. An incorrect answer shows an explanation and a supported retry.
 
-The initial bank is a curated 51-item snapshot from `P00NSMASHER/abvmschoolstarworld`, commit `aa2fe3fbcb9b25205948073ee284b96910733d79`, file `pages/study-games.js`, blob `85d901540218aefd7a0f54c439286c9e24143b1f`.
+The active bank is a deterministic **338-item** curriculum-only import from `P00NSMASHER/abvmschoolstarworld` pinned to commit `aa2fe3fbcb9b25205948073ee284b96910733d79`. The import verifies exact source-file SHA-256 values before generating the server-only bank, removes duplicate prompts, excludes invalid choices, and exports no roster, email, child identity, progress, calendar, or worksheet-image metadata.
 
-| Classroom | Initial questions |
-| --- | ---: |
-| Math | 16 |
-| Reading / ELA | 13 |
-| Spelling / Handwriting | 12 |
-| Religion | 10 |
+| Classroom | Questions | Teacher |
+| --- | ---: | --- |
+| Math | 121 | Mrs. Campion |
+| Reading | 91 | Mrs. Russek |
+| Religion | 56 | Mr. Bolich |
+| Spelling | 41 | Mrs. Kochol |
+| Grammar | 16 | Mrs. Benulis |
+| Vocabulary | 13 | Mr. Yordy |
 
-The question level is Grade 2 because that is the verified ABVM source; the high-school setting does not silently change the curriculum. Source ranges are recorded in `QuestionBank.lua`. Some questions instantiate the source's deterministic variants; wording is lightly adapted where necessary. No teacher emails, student identifiers, individual performance records, or uploaded worksheet photographs are copied.
-
-This is not the whole ABVM question corpus and is not yet automatic weekly synchronization. The first import favors self-contained questions that do not require an unavailable illustration or external passage. Future imports must preserve subject mapping, answer correctness, explanations, and curriculum-only privacy boundaries.
+The question level remains Grade 2 because that is the verified ABVM learning source; the school building does not silently change the curriculum. The generated receipt is `school/neighborhood/abvm-import-receipt.json`, and answer keys remain in ServerScriptService only.
 
 ## Reward and shop design
 
-Correct on the first try earns a 25-coin base reward; correct after a guided retry earns 15. Consecutive paid correct answers add a progressive streak bonus of +0, +5, +10, +15, +20, then +25 per answer while the streak continues. The +25 streak bonus is capped. A wrong answer resets the positive streak and starts a progressive negative streak: -5, -10, -15, -20, then -25 per distinct wrong attempt while the streak continues. The wallet never drops below zero. A correct answer immediately clears the negative streak.
+Correct independently on the first try earns a **10-Credit** base reward; correct after a guided retry earns **6 Credits**. Consecutive paid correct answers add **+0, +2, +4, +6, +8, then +10** while the streak continues. A wrong answer resets the positive streak and starts a bounded negative streak of **-2, -4, -6, -8, then -10 Credits**. The wallet never drops below zero. A correct answer immediately clears the negative streak.
 
-Selecting the same wrong choice twice on one question cannot double-charge the player. Wrong answers are persisted as answer attempts, so accuracy is correct attempts divided by all saved attempts. Each completed set of five different paid questions still adds 50 coins. Immediate repetition of the same already-rewarded question is practice-only; after 10 minutes that question may earn again. Time spent idle does not earn currency. Wealthier houses and clothes do not increase the reward rate.
+Selecting the same wrong choice twice on one question cannot double-charge the player. Wrong attempts count toward persisted accuracy, but the client receives a hint rather than the full explanation until the question is answered correctly. Every five different reward-eligible completions adds **+15 Credits**. Immediate same-question reward farming remains blocked; later legitimate review can earn again. Time spent idle does not earn currency, and wealthier houses or clothes never increase question payouts.
 
-Every player starts at zero coins, with a free house and cart. Six distinct first-try answers now earn 275 coins when the progressive streak and one lesson bonus are included, enough to buy the 180-coin garden cottage with 95 remaining. Smaller goals remain accessible sooner: a rug costs 35, a sweatshirt 60, and a reading lamp 80.
+Five uninterrupted independent answers earn **85 Credits** including the lesson bonus. Twenty uninterrupted independent answers earn **430 Credits**, enough for the 400-Credit Cozy Cottage with 30 remaining. The larger home ladder is intentionally slower so clothing, decor, and vehicle purchases matter between house upgrades.
 
-Three global boards are mounted inside the school. **Top Accuracy** ranks saved accuracy after a 20-answer minimum, **Most Questions** ranks all saved answer attempts, and **Most Money** ranks current spendable coins. Leaderboard writes are best-effort mirrors only; the session-locked profile store remains the authority for rewards, penalties, purchases, and ownership.
+Three global boards are mounted inside the school. **Top Accuracy** ranks saved accuracy after a 20-answer minimum, **Most Questions** ranks all saved answer attempts, and **Most Credits** ranks current spendable balance. Leaderboard writes are best-effort mirrors only; the session-locked profile store remains the authority for rewards, penalties, purchases, and ownership.
 
-The fixed-price catalog contains 19 entries: four homes, five clothing choices, six furnishings/wearable items, and four vehicles. Later goals include a 1,100-coin villa and a 5,200-coin estate. The five named lifestyle tiers are visual collections and personal progress labels, not hidden purchase restrictions. Buying and equipping are separate actions for homes, outfits, and vehicles. Furnishings appear automatically in the player's own house; the backpack is wearable.
+The fixed-price catalog preserves all previously shipped IDs while expanding the progression to five home tiers and a wider clothing ladder. Home prices are 0 / 400 / 1,500 / 4,500 / 12,000 Credits; the paid vehicles are 900 / 2,400 / 6,500 Credits. Every enabled shop listing has an actual renderer/equip path; placeholders are not sold. A personal goal bar shows exact current balance versus the selected item price.
 
-No Robux purchase prompts, loot boxes, random rewards, daily-login losses, or premium income boosts are included. A personal goal bar displays the cost and current saved coins.
+No Robux purchase prompts, loot boxes, random rewards, daily-login losses, or premium income boosts are included.
 
 ## Persistence and authority
 
@@ -47,13 +47,13 @@ The 180-second lease is renewed periodically and released on departure where pos
 
 ## Interface
 
-The new HUD has only School, Home, Shop, and Ride navigation, a wallet, and a personal next-goal card. The classroom view uses readable answer buttons, feedback, a next-question action, and a close control. A wide/short landscape screen uses separate question and answer columns. The shop has Homes, Clothes, Items, and Vehicles tabs, small 3D previews, prices, owned/equipped states, and set-goal actions. Native Roblox movement remains enabled.
+The ABVM HUD has only School, Home, Shop, and Ride navigation, a Credit balance, streak/accuracy feedback, and a personal next-goal card. The classroom view uses readable answer buttons, feedback, a next-question action, and a close control. A wide/short landscape screen uses separate question and answer columns. The shop has Homes, Clothes, Items, and Vehicles tabs, small 3D previews, prices, owned/equipped states, and set-goal actions. Native Roblox movement remains enabled.
 
 The implementation uses CoreUISafeInsets for the interactive ScreenGui. Pure geometry fixtures include portrait and landscape phone, iPad, and desktop canvases. Actual touch behavior, text wrapping, orientation changes during a lesson, avatar-clothing clipping, seat behavior, and frame rate still require runtime/device inspection.
 
 ## Reused work and research
 
-- The existing canonical ProgressionBinding's 25/15 first-try/retry distinction informed the reward split.
+- Earlier progression work informed server authority/idempotency, but the active user-approved reward tuning is now 10/6 with bounded ±2-step streak ladders.
 - EconomyRepository and vehicle work informed ownership, serialized mutation, bounded inputs, and one active vehicle per player.
 - ABVM's study engine supplies the initial curriculum and the question/explanation/retry structure.
 - The reviewed hunter ledger's `COMPONENTS.md`, at `P00NSMASHER/github-value-hunt-ledger@4d1a450b94be7298ce678d6718becfc7dc65e09b`, informed stable-operation receipts, cautious handling of unknown outcomes, pinned provenance, and the distinction between passing a validator and proving real behavior. No third-party hunter code was copied into this mode. This does not claim an exhaustive review of every hunter repository.
