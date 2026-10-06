@@ -58,8 +58,9 @@ function UI.text(parent,text,size,props)
 end
 function UI.button(parent,text,fn,props)
     local base={Text=text,Font=Enum.Font.GothamBold,TextSize=16,TextColor3=UI.P.ink,TextWrapped=true,BorderSizePixel=0,BackgroundColor3=UI.P.soft,AutoButtonColor=true,Size=UDim2.new(1,0,0,48)}
-    for k,v in pairs(props or {}) do base[k]=v end
-    local b=UI.new("TextButton",parent,base);UI.corner(b,props and props.CornerRadius or UI.R.control)
+    local radius=(props and props.CornerRadius) or UI.R.control
+    for k,v in pairs(props or {}) do if k~="CornerRadius" then base[k]=v end end
+    local b=UI.new("TextButton",parent,base);UI.corner(b,radius)
     local scale=UI.new("UIScale",b,{Scale=1})
     b.InputBegan:Connect(function(input)
         if b.Active and (input.UserInputType==Enum.UserInputType.Touch or input.UserInputType==Enum.UserInputType.MouseButton1) then
