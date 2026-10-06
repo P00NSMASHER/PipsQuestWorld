@@ -31,7 +31,7 @@ local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Posi
 local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
 UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
 UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
-UI.text(header,"ABVM STUDENT",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(112,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+UI.text(header,"GRADE 2  •  ABVM",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(118,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.gold})
 UI.corner(wallet,UI.R.chip)
