@@ -214,6 +214,10 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     for _,dx in ipairs({-11,0,11}) do
         for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
     end
+    for _,dx in ipairs({-13,0,13}) do
+        local light=World.part(m,"Classroom ceiling light",Vector3.new(9,.28,1.6),CFrame.new(x+dx,floorY+13.35,z),Color3.fromRGB(248,241,211),Enum.Material.Neon,false)
+        local glow=Instance.new("SurfaceLight");glow.Face=Enum.NormalId.Bottom;glow.Brightness=.55;glow.Range=22;glow.Angle=120;glow.Parent=light
+    end
     for _,dx in ipairs({-11,11}) do
         for _,dz in ipairs({-12,13}) do ceilingLight(m,Vector3.new(x+dx,floorY+13.2,z+dz),Vector3.new(7,.22,2.2),.55,18) end
     end
@@ -362,6 +366,8 @@ function World.build()
     end
     World.part(root,"Brick chimney",Vector3.new(11,20,11),CFrame.new(62,62,-57),palette.brickDark,Enum.Material.Brick)
     World.part(root,"Chimney cap",Vector3.new(12.5,1.4,12.5),CFrame.new(62,72.4,-57),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Roof center finial base",Vector3.new(2.4,5,2.4),CFrame.new(0,57.2,-34.8),palette.stone,Enum.Material.Concrete,false)
+    cross(root,CFrame.new(0,61.2,-34.8),.48,palette.gold)
     for _,entry in ipairs({{-45,-77},{-18,-114},{18,-69},{43,-118}}) do
         World.part(root,"Roof vent base",Vector3.new(5,.8,5),CFrame.new(entry[1],53.4,entry[2]),Color3.fromRGB(91,94,94),Enum.Material.Metal,false)
         World.part(root,"Roof vent",Vector3.new(2.2,3,2.2),CFrame.new(entry[1],55,entry[2]),Color3.fromRGB(132,136,136),Enum.Material.Metal,false)
@@ -584,6 +590,10 @@ function World.build()
         World.part(root,"Central hall floor",Vector3.new(30,.4,104),CFrame.new(0,floorY+.25,-90),Color3.fromRGB(177,151,118),Enum.Material.WoodPlanks)
         World.part(root,"Hall left rail",Vector3.new(.4,2.3,92),CFrame.new(-14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
         World.part(root,"Hall right rail",Vector3.new(.4,2.3,92),CFrame.new(14.5,floorY+2,-96),palette.stone,Enum.Material.Metal,false)
+        for _,z in ipairs({-130,-108,-86,-64,-44}) do
+            local hallLight=World.part(root,"Hall ceiling light",Vector3.new(8,.24,1.4),CFrame.new(0,floorY+13.2,z),Color3.fromRGB(248,241,211),Enum.Material.Neon,false)
+            local hallGlow=Instance.new("SurfaceLight");hallGlow.Face=Enum.NormalId.Bottom;hallGlow.Brightness=.45;hallGlow.Range=18;hallGlow.Angle=120;hallGlow.Parent=hallLight
+        end
         for _,z in ipairs({-130,-110,-90,-70,-50}) do ceilingLight(root,Vector3.new(0,floorY+13.1,z),Vector3.new(5,.2,2),.48,17) end
         sign(root,"FLOOR "..tostring(index),CFrame.new(0,floorY+8,-141.6),Vector3.new(12,2.5,.2),palette.navy,palette.gold)
         if index==1 then
