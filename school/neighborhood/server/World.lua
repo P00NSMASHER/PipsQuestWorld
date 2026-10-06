@@ -735,6 +735,7 @@ function World.build()
         local cf=CFrame.new(x,0,z)*CFrame.Angles(0,side<0 and math.pi/2 or -math.pi/2,0)
         World.plots[i]={cf=cf,door=cf*CFrame.new(0,4,25),drive=CFrame.new(side*8,1.65,z+27),owner=nil}
         World.part(root,"Residential lot "..i,Vector3.new(79,.25,76),CFrame.new(x,.13,z),Color3.fromRGB(141,171,127),Enum.Material.Grass)
+        sign(root,string.format("%02d",i),cf*CFrame.new(-31,3.2,31)*CFrame.Angles(0,math.pi,0),Vector3.new(5,3,.25),palette.navy,palette.gold)
         tree(root,side*119,z-20,.85)
     end
 
