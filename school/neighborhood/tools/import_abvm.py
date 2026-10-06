@@ -12,7 +12,7 @@ EXPECTED_FILES={
     "star-practice.mjs":"a3ec7572069f91aa32b91aa32b91aa32b91aa32b91aa32b91aa32b91aa32b91",
 }
 # Correct hash kept separately to make accidental edits obvious.
-EXPECTED_FILES["star-practice.mjs"]="a3ec7572069f91aa32b91aab3193b0f6be3b34b968632e"
+EXPECTED_FILES["star-practice.mjs"]="a3ec7572069f91aa32b91f271b74bd84076da107eb3193b0f6be3b34b968632e"
 
 ROOM_TO_SUBJECT={
     "Math":"math","Reading":"reading","Grammar":"grammar",
