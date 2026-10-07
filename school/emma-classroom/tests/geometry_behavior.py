@@ -110,6 +110,7 @@ for _,teacher in ipairs(Data.Teachers) do
             assert(x-w/2>0 and x+w/2<440 and y-h/2>0 and y+h/2<600,"Face ink must fit the head surface")
             if f.Name=="Friendly eye" then eyeN+=1;assert(h>w and f.BackgroundColor3.R<.15) end
             if f.Name=="Friendly smile" then smileN+=1;assert(y>=396 and y<=435 and f.BackgroundColor3.R<.15) end
+            if f.Name=="Soft beard" then assert(y-h/2>435,"Beard ink must not cover the smile") end
         end
     end
     assert(eyeN==2 and smileN==12,"A face must have two readable eyes and a complete gentle smile")
@@ -117,10 +118,8 @@ for _,teacher in ipairs(Data.Teachers) do
     local scale=m:GetScale()
     if teacher.hairStyle~="balding" then
         local cap=m:FindFirstChild("Connected hair cap")
-        local fringe=m:FindFirstChild("Single swept fringe")
-        assert(cap and fringe)
+        assert(cap and m:FindFirstChild("Connected hair cap rounded corner"))
         assert(cap.CFrame.Position.Y-cap.Size.Y/2 < head.CFrame.Position.Y+head.Size.Y/2,"Cap must intersect the crown")
-        assert(fringe.CFrame.Position.Y<cap.CFrame.Position.Y and fringe.CFrame.Position.Y+fringe.Size.Y/2>cap.CFrame.Position.Y-cap.Size.Y/2,"Fringe must connect to cap")
     end
     local n,groups,counts=0,{},{}
     local minY,maxY=math.huge,-math.huge
@@ -147,7 +146,7 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.8, "World label must scale in studs rather than fixed pixels")
     if teacher.name=="Mr. Bolich" then
         assert(m:FindFirstChild("Left Arm").CFrame.Position.Y+m:FindFirstChild("Left Arm").Size.Y/2 < 2*m:GetScale(),"Skin forearm must stay below the polo shoulder")
-        assert(counts["Connected beard"]==9 and counts["Beard side"]==2 and not counts["Layered beard lock"])
+        assert(counts["Soft beard"]==1 and counts["Smooth beard chin"]==1 and not counts["Layered beard lock"] and not counts["Connected beard"])
         assert(counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
     if teacher.name=="Dr. McBreen" then assert(counts["Tie diagonal stripe"]==5 and counts["Notched jacket lapel"]==2) end
     if teacher.name=="Mrs. Boyer" then assert(counts["Pearl earring"]==2 and counts["Gold mission pin"]==1) end

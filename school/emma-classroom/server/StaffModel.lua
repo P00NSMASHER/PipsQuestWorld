@@ -113,7 +113,7 @@ function StaffModel.create(teacher)
         for _,side in ipairs({-1,1}) do line("Glasses temple",Vector3.new(side*.76,4.31,-.90),Vector3.new(side*1.17,4.27,.18),.06,INK) end
     end
 
-    -- One cap, one fringe, and connected side/back pieces. No floating locks
+    -- One cap and connected side/back pieces. No floating locks
     -- or thin strand geometry that shimmers at phone resolution.
     local style=teacher.hairStyle or "shoulder"
     if style=="balding" then
@@ -123,8 +123,7 @@ function StaffModel.create(teacher)
         oval("Balding back hair",Vector3.new(2.05,.85,.40),CFrame.new(0,4.50,.91),hair)
     else
         local short=style=="short"
-        oval("Connected hair cap",Vector3.new(2.42,.80,1.92),CFrame.new(0,5.04,.05),hair)
-        oval("Single swept fringe",Vector3.new(1.97,short and .26 or .36,.36),CFrame.new(-.10,4.97,-.81)*CFrame.Angles(0,0,short and -.04 or .10),hair)
+        rounded("Connected hair cap",Vector3.new(2.42,.74,1.94),CFrame.new(0,5.02,.025),hair,nil,.21)
         for _,side in ipairs({-1,1}) do
             if short then
                 oval("Tapered sideburn",Vector3.new(.25,.73,.62),CFrame.new(side*1.04,4.62,.02),hair)
@@ -139,16 +138,11 @@ function StaffModel.create(teacher)
         end
     end
     if teacher.beard then
-        -- Flat, continuous beard silhouette keeps the smile visible. The old
-        -- seven bead-like beard locks looked like teeth growing out of the chin.
+        -- One flat chin silhouette below the smile; no chain of beard beads.
         local beard=rgb(teacher.beard)
-        for i=0,8 do
-            local x=-.72+i*.18
-            local drop=isBolich and (.24+.20*(1-math.abs(x))) or .05
-            oval("Connected beard",Vector3.new(.35,isBolich and .56 or .28,.21),CFrame.new(x,3.28-drop*.4,-.78),beard)
-        end
-        for _,side in ipairs({-1,1}) do
-            oval("Beard side",Vector3.new(.25,.44,.26),CFrame.new(side*.84,3.47,-.72),beard)
+        ink("Soft beard",220,isBolich and 520 or 540,350,isBolich and 140 or 70,beard)
+        if isBolich then
+            oval("Smooth beard chin",Vector3.new(1.78,.56,.94),CFrame.new(0,2.96,-.12),beard)
         end
     end
 
