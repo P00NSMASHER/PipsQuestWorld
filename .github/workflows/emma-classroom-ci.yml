@@ -60,13 +60,16 @@ jobs:
           grep -q 'SESSION_GOAL=10' school/emma-classroom/server/Main.server.lua
           grep -q 'teacherModel' school/emma-classroom/server/Main.server.lua
           grep -q 'World.moveTeacher' school/emma-classroom/server/Main.server.lua
-          grep -q 'Nice job, Emma' school/emma-classroom/client/Main.client.lua
+          grep -q 'camera.CameraType=Enum.CameraType.Scriptable' school/emma-classroom/client/Main.client.lua
+          grep -q 'answerBar' school/emma-classroom/client/Main.client.lua
+          ! grep -q 'QuestionCard' school/emma-classroom/client/Main.client.lua
           grep -q 'Emma desk nameplate' school/emma-classroom/server/World.lua
           grep -q 'Interactive smartboard' school/emma-classroom/server/World.lua
           grep -q 'Class values' school/emma-classroom/server/World.lua
           grep -q 'Staff badge' school/emma-classroom/server/World.lua
           grep -q 'Speech' school/emma-classroom/server/World.lua
-          grep -q 'Let Your Light Shine' school/emma-classroom/server/World.lua || grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
+          grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
+          grep -q 'Staff door jamb' school/emma-classroom/server/World.lua
           ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
 
       - name: Build isolated place
