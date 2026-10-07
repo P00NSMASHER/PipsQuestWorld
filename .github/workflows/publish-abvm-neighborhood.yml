@@ -148,8 +148,26 @@ jobs:
           local unique=0
           for _ in pairs(ids) do unique+=1 end
           assert(unique==expected,"Expected 18 unique baked faculty portrait IDs; got "..tostring(unique))
+
+          local galleryCount=0
+          local galleryIds={}
+          for _,candidate in ipairs(root:GetChildren()) do
+              if candidate:IsA("BasePart") and candidate:GetAttribute("GalleryPortrait") == true then
+                  local staffId=candidate:GetAttribute("GalleryStaffId")
+                  if type(staffId)=="string" and candidate:FindFirstChild("FacultyGalleryPortrait") then
+                      galleryCount+=1
+                      galleryIds[staffId]=true
+                  end
+              end
+          end
+          local galleryUnique=0
+          for _ in pairs(galleryIds) do galleryUnique+=1 end
+          assert(galleryCount==expected,"Expected 18 visible faculty gallery panels; got "..tostring(galleryCount))
+          assert(galleryUnique==expected,"Expected 18 unique faculty gallery IDs; got "..tostring(galleryUnique))
+
           print("BAKED_FACULTY_PORTRAITS_OK",count,unique)
-          return tostring(count)
+          print("FACULTY_GALLERY_VISIBLE_OK",galleryCount,galleryUnique)
+          return tostring(count)..":"..tostring(galleryCount)
           LUA
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
@@ -182,6 +200,7 @@ jobs:
           test "$(jq -r '.state' "$RUNNER_TEMP/portrait-runtime.json")" = "COMPLETE"
           jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
           grep -q 'BAKED_FACULTY_PORTRAITS_OK' "$RUNNER_TEMP/portrait-runtime-logs.json"
+          grep -q 'FACULTY_GALLERY_VISIBLE_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
 
       - name: Publish receipt
         if: ${{ success() }}
