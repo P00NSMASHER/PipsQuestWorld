@@ -111,6 +111,66 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     end
 end
 
+local function bulletinBoard(parent: Instance,name: string,x: number,y: number,z: number,width: number,height: number,title: string)
+    local frame=part(parent,name.." wood frame",Vector3.new(width+.8,height+.8,.32),CFrame.new(x,y,z),Color3.fromRGB(105,73,48),Enum.Material.Wood,false)
+    local cork=part(parent,name.." cork",Vector3.new(width,height,.18),CFrame.new(x,y,z-.19),Color3.fromRGB(168,122,75),Enum.Material.Fabric,false)
+    surfaceText(cork,title,Enum.NormalId.Front,Color3.fromRGB(247,241,217),Color3.fromRGB(168,122,75),Enum.Font.GothamBold)
+    return frame
+end
+
+local function buildClassroomTexture(root: Instance)
+    -- The real school photos are busy, old, warm and layered. This deliberately kills the sterile showroom look.
+    bulletinBoard(root,"Student work board",-21,12.0,-33.78,12,5.2,"OUR WORK\n★  ★  ★")
+    bulletinBoard(root,"Reading board",-21,6.5,-33.78,12,4.2,"READING\ncharacters • setting • problem • solution")
+    sign(root,"Prayer card","PRAY\nLEARN\nSERVE",Vector3.new(5.2,6.5,.18),CFrame.new(-32.7,9,-33.72),Color3.fromRGB(239,232,201),Color3.fromRGB(68,89,72))
+
+    -- Classroom rules and paper chains on the side wall.
+    local rules={"LISTEN","BE KIND","TRY YOUR BEST","HELP OTHERS","KEEP GOING"}
+    for i,v in ipairs(rules) do
+        sign(root,"Rule card "..i,v,Vector3.new(.18,2.3,6.4),CFrame.new(36.30,14.7-i*2.55,-6)*CFrame.Angles(0,-math.pi/2,0),
+            i%2==0 and Color3.fromRGB(230,239,223) or Color3.fromRGB(244,229,205),P.blue)
+    end
+
+    -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
+    part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(124,102,79),Enum.Material.Wood)
+    for y=2,10,2 do
+        part(root,"Cabinet shelf line",Vector3.new(6.4,.12,.18),CFrame.new(31,y,21.02),Color3.fromRGB(77,63,52),Enum.Material.Wood,false)
+    end
+    for _,x in ipairs({29.3,32.7}) do
+        ball(root,"Cabinet knob",Vector3.new(.32,.32,.32),CFrame.new(x,6,21),Color3.fromRGB(191,178,145),Enum.Material.Metal,false)
+    end
+    local trash=cylinder(root,"Classroom trash can",Vector3.new(3.4,3.1,3.1),CFrame.new(32.8,1.7,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(95,100,101),Enum.Material.Metal,false)
+    trash.Transparency=.05
+    local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(22.5,4.05,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
+    surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
+    part(root,"Rolling cart top",Vector3.new(5.5,.4,3.2),CFrame.new(-29,3.5,22),Color3.fromRGB(71,105,125),Enum.Material.Metal)
+    for _,y in ipairs({1.0,2.1,3.2}) do part(root,"Rolling cart shelf",Vector3.new(5.2,.22,3),CFrame.new(-29,y,22),Color3.fromRGB(82,119,139),Enum.Material.Metal,false) end
+    for _,x in ipairs({-31.2,-26.8}) do
+        for _,z in ipairs({20.8,23.2}) do cylinder(root,"Cart wheel",Vector3.new(.35,.75,.75),CFrame.new(x,.45,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(45,48,49),Enum.Material.SmoothPlastic,false) end
+    end
+
+    -- A small prayer table / classroom faith corner.
+    part(root,"Prayer table",Vector3.new(8,.5,3.5),CFrame.new(-28,3.2,-27),Color3.fromRGB(139,98,64),Enum.Material.Wood)
+    for _,x in ipairs({-31,-25}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
+    local cloth=part(root,"Prayer table cloth",Vector3.new(7.4,.12,3.1),CFrame.new(-28,3.48,-27),Color3.fromRGB(64,104,77),Enum.Material.Fabric,false)
+    cloth.Transparency=.03
+    part(root,"Prayer cross vertical",Vector3.new(.45,3,.28),CFrame.new(-28,5.2,-27),Color3.fromRGB(112,77,48),Enum.Material.Wood,false)
+    part(root,"Prayer cross horizontal",Vector3.new(1.8,.45,.28),CFrame.new(-28,5.7,-27),Color3.fromRGB(112,77,48),Enum.Material.Wood,false)
+    book(root,-30,3.72,-27,Color3.fromRGB(92,61,42),0)
+
+    -- Scuffed floor runners and rug zones create the visual density visible in the school photos.
+    part(root,"Front teaching rug",Vector3.new(25,.12,10),CFrame.new(-7,.58,-20),Color3.fromRGB(62,91,120),Enum.Material.Fabric,false)
+    local rug=part(root,"Alphabet rug",Vector3.new(18,.13,12),CFrame.new(-20,.59,14),Color3.fromRGB(64,103,139),Enum.Material.Fabric,false)
+    surfaceText(rug,"A  B  C  D  E  F\nG  H  I  J  K  L\nM  N  O  P  Q  R\nS  T  U  V  W  X  Y  Z",Enum.NormalId.Top,Color3.fromRGB(244,219,111),rug.Color,Enum.Font.GothamBold)
+
+    -- Student supply baskets on the center tables.
+    local basketColors={Color3.fromRGB(221,91,86),Color3.fromRGB(75,142,190),Color3.fromRGB(86,154,96),Color3.fromRGB(231,181,63)}
+    for i,x in ipairs({-18,0,18}) do
+        local b=part(root,"Supply basket",Vector3.new(2.8,.9,1.8),CFrame.new(x,3.72,4.8),basketColors[i],Enum.Material.SmoothPlastic,false)
+        surfaceText(b,"PENCILS",Enum.NormalId.Front,Color3.fromRGB(248,245,232),b.Color,Enum.Font.GothamBold)
+    end
+end
+
 local function buildCubbies(root: Instance)
     part(root,"Cubbies wood surround",Vector3.new(27,8,3),CFrame.new(21,4.2,25.2),Color3.fromRGB(142,103,68),Enum.Material.Wood)
     local binColors={
@@ -281,6 +341,7 @@ function World.build()
     buildTeacherDesk(root)
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
+    buildClassroomTexture(root)
 
     -- Student desks. The center-middle desk is Emma's, with her name and water bottle.
     local index=0
