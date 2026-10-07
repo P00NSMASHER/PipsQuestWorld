@@ -20,6 +20,8 @@ The game is accepted only when an actual iPhone Roblox capture shows the followi
 - staff proportions, hair, face, clothing, hands and shoes read as intentionally modeled Roblox characters rather than primitive placeholders
 - wrong-answer feedback is visible without punishing Emma or obscuring the scene
 - 10-question completion flow works on iPhone
+- normal thumbstick movement, jump and touch camera orbit work before, during and after a question
+- Study view frames the teacher/Smartboard/doorway, and Look around restores the player camera without respawning
 
 ## Evidence rule
 
