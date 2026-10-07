@@ -8,12 +8,12 @@ function Layout.compute(width, height)
     local narrow = width < 600
 
     local goldLandscape = landscape and width >= 720
-    local railHeight = narrow and 92 or 50
-    local railWidth = goldLandscape and math.min(500,math.max(390,width*.45)) or math.min(790, math.max(280, width - 24))
-    local navWidth = goldLandscape and 104 or railWidth
-    local goalHeight = narrow and 54 or 44
-    local contentLeft = goldLandscape and 126 or 12
-    local modalWidth = math.min(goldLandscape and 850 or 840, math.max(260, width - contentLeft - 14))
+    local railHeight = narrow and 88 or (compact and 40 or 46)
+    local railWidth = goldLandscape and math.min(420,math.max(330,width*.38)) or math.min(790, math.max(280, width - 24))
+    local navWidth = goldLandscape and 84 or railWidth
+    local goalHeight = compact and 38 or (narrow and 50 or 44)
+    local contentLeft = goldLandscape and 104 or 12
+    local modalWidth = math.min(goldLandscape and 780 or 840, math.max(260, width - contentLeft - 14))
     local modalHeight = math.max(150, math.min(680, height - railHeight - 22))
     local columns = goldLandscape and 2 or 1
 
@@ -31,14 +31,14 @@ function Layout.compute(width, height)
         },
         nav = {
             x=12,
-            y=goldLandscape and 72 or (railHeight+6),
+            y=goldLandscape and 68 or (railHeight+6),
             width=navWidth,
-            height=goldLandscape and 212 or 44,
+            height=goldLandscape and 170 or 44,
         },
         goal = {
-            x=goldLandscape and (width-298) or 12,
-            y=goldLandscape and 62 or (railHeight+10),
-            width=math.min(286,math.max(220,width-24)),
+            x=goldLandscape and (width-(compact and 232 or 298)) or 12,
+            y=goldLandscape and (compact and 5 or 58) or (railHeight+10),
+            width=math.min(compact and 220 or 286,math.max(200,width-24)),
             height=goalHeight,
         },
         modal = {
