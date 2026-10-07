@@ -11,8 +11,6 @@ local shared=ReplicatedStorage:WaitForChild("NeighborhoodShared")
 local Catalog=require(shared:WaitForChild("Catalog"))
 local Layout=require(shared:WaitForChild("Layout"))
 local UI=require(script.Parent:WaitForChild("UI"))
-local PortraitPixels=require(shared:WaitForChild("PortraitPixels"))
-local PortraitRenderer=require(shared:WaitForChild("PortraitRenderer"))
 local remotes=ReplicatedStorage:WaitForChild("NeighborhoodRemotes")
 local request=remotes:WaitForChild("Request")
 local changed=remotes:WaitForChild("Changed")
@@ -141,7 +139,7 @@ end
 local function close(notifyServer)
     local wasQuiz=view=="quiz"
     panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false
-    goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true
+    goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true and locationCommand~="school"
     view=nil;activeQuestion=nil
     if setNavActive then setNavActive(locationCommand) end
     if wasQuiz and notifyServer~=false then task.spawn(call,"dismiss",{}) end
@@ -199,31 +197,6 @@ end
 
 local function facultyViewport(parent,staff,props)
     props=props or {}
-
-    -- Directory cards use the baked school portrait directly. Full profiles still use the
-    -- 3D Roblox NPC, whose face plate carries the same portrait data.
-    if props.Headshot then
-        local portrait=PortraitPixels[staff.id]
-        if type(portrait)=="table" and type(portrait.rows)=="table" and #portrait.rows>0 then
-            local photo=UI.frame(parent,{
-                Name="FacultyPortraitPhoto",
-                Position=props.Position or UDim2.new(),
-                Size=props.Size or UDim2.new(1,0,1,0),
-                BackgroundColor3=UI.P.navySoft,
-                ClipsDescendants=true,
-                ZIndex=props.ZIndex or 2,
-            })
-            UI.corner(photo,props.CornerRadius or 14)
-            PortraitRenderer.render(photo,portrait,{
-                Name="PhotoPixels",
-                Position=UDim2.fromScale(.03,.03),
-                Size=UDim2.fromScale(.94,.94),
-                CornerRadius=props.CornerRadius or 12,
-                ZIndex=(props.ZIndex or 2)+1,
-            })
-            return photo
-        end
-    end
 
     local viewport=UI.new("ViewportFrame",parent,{
         Name="FacultyPortrait",
@@ -322,10 +295,10 @@ showClasses=function()
         UI.text(card,s.room or "Learning Lab",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
         UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
     end
-    UI.button(body,"View All 18 Faculty & Staff",function() showFaculty() end,{
+    UI.button(body,"Faculty & Staff",function() showFaculty() end,{
         LayoutOrder=4,Size=UDim2.new(1,0,0,50),BackgroundColor3=UI.P.gold,TextColor3=UI.P.ink,TextSize=15,CornerRadius=12,
     })
-    UI.chip(body,"18 baked staff portraits • first-floor gallery",{LayoutOrder=5,Size=UDim2.fromOffset(288,30),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink})
+    UI.chip(body,"18 stylized staff NPCs • clean recognizable cues",{LayoutOrder=5,Size=UDim2.fromOffset(300,30),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink})
     UI.chip(body,"Learning Labs are separate from real staff roles",{LayoutOrder=6,Size=UDim2.fromOffset(294,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
 end
 
@@ -336,7 +309,7 @@ showFaculty=function()
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
-    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. The actual NPC heads now use wrapped photo faces across the front and both cheeks. Tap any portrait here or in the hallway for the matching 3D profile.",12,{
+    UI.text(body,"All 18 staff members are modeled as clean Roblox likenesses using hair, glasses, facial hair, skin tone, clothing and accessories from the supplied references. Tap any staff card for the full 3D profile.",12,{
         LayoutOrder=2,Size=UDim2.new(1,0,0,44),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
     })
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
@@ -873,16 +846,38 @@ local function reflow()
     header.Position=UDim2.fromOffset(layout.rail.x,layout.rail.y)
     header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
+    local compactLandscape=layout.goldLandscape and layout.compact
+    avatar.Position=UDim2.fromOffset(8,compactLandscape and 5 or 7)
+    avatar.Size=UDim2.fromOffset(compactLandscape and 30 or 34,compactLandscape and 30 or 34)
+    wallet.Position=UDim2.new(1,-7,0,compactLandscape and 5 or 8)
+    wallet.Size=UDim2.fromOffset(compactLandscape and 92 or 104,compactLandscape and 30 or 34)
+    walletText.TextSize=compactLandscape and 13 or 15
+    goalInfo.Visible=not compactLandscape
+    goalTrack.Visible=not compactLandscape
+    if compactLandscape then
+        goalIcon.Position=UDim2.fromOffset(5,5)
+        goalIcon.Size=UDim2.fromOffset(28,28)
+        goalTitle.Position=UDim2.fromOffset(40,1)
+        goalTitle.Size=UDim2.new(1,-47,1,-2)
+        goalTitle.TextSize=12
+    else
+        goalIcon.Position=UDim2.fromOffset(7,6)
+        goalIcon.Size=UDim2.fromOffset(34,30)
+        goalTitle.Position=UDim2.fromOffset(49,2)
+        goalTitle.Size=UDim2.new(1,-58,0,19)
+        goalTitle.TextSize=13
+    end
+
     if layout.goldLandscape then
         nav.Parent=canvas
-        nav.BackgroundTransparency=.04
+        nav.BackgroundTransparency=.06
         nav.AnchorPoint=Vector2.new(0,0)
         nav.Position=UDim2.fromOffset(layout.nav.x,layout.nav.y)
         nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
-        streakPill.Visible=size.X>=850
+        streakPill.Visible=false
         for i,b in ipairs(navButtons) do
-            b.Size=UDim2.new(1,0,0,46)
-            b.Position=UDim2.fromOffset(0,(i-1)*52)
+            b.Size=UDim2.new(1,0,0,38)
+            b.Position=UDim2.fromOffset(0,(i-1)*42)
         end
     elseif layout.narrow then
         nav.Parent=header
@@ -965,27 +960,12 @@ changed.OnClientEvent:Connect(function(packet)
     end
 end)
 ProximityPromptService.PromptTriggered:Connect(function(prompt)
-    if prompt.Name=="OpenFacultyDirectory" then
+    if prompt.Name~="MeetFaculty" then return end
+    local model=prompt:FindFirstAncestorOfClass("Model")
+    local staffId=model and model:GetAttribute("StaffId") or nil
+    if type(staffId)=="string" then
         locationCommand="school"
-        showFaculty()
-        return
-    end
-    if prompt.Name=="OpenFacultyProfile" then
-        local holder=prompt.Parent
-        local staffId=holder and holder:GetAttribute("GalleryStaffId") or nil
-        if type(staffId)=="string" then
-            locationCommand="school"
-            showFacultyProfile(staffId)
-        end
-        return
-    end
-    if prompt.Name=="MeetFaculty" then
-        local model=prompt:FindFirstAncestorOfClass("Model")
-        local staffId=model and model:GetAttribute("StaffId") or nil
-        if type(staffId)=="string" then
-            locationCommand="school"
-            showFacultyProfile(staffId)
-        end
+        showFacultyProfile(staffId)
     end
 end)
 
@@ -999,7 +979,7 @@ player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
     else
         table.clear(held);table.clear(heldInputs)
         if setNavActive then setNavActive(locationCommand) end
-        if not panel.Visible then goalCard.Visible=true end
+        if not panel.Visible then goalCard.Visible=locationCommand~="school" end
     end
 end)
 UserInputService.InputBegan:Connect(function(input,processed)
