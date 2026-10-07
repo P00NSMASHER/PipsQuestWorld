@@ -203,8 +203,10 @@ end
 
 local function buildBackDoorAndHall(root: Instance)
     -- Warm wood classroom doorway with tiny photo-inspired corridor beyond it.
-    part(root,"Door wood surround",Vector3.new(18,13,1.4),CFrame.new(0,6.5,27.1),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Door opening mask",Vector3.new(15.2,11.2,1.6),CFrame.new(0,5.7,26.7),Color3.fromRGB(102,132,147),Enum.Material.SmoothPlastic,false)
+    part(root,"Door jamb left",Vector3.new(1.1,11.5,1.3),CFrame.new(-8.4,5.75,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Door jamb right",Vector3.new(1.1,11.5,1.3),CFrame.new(8.4,5.75,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Door wood header",Vector3.new(17.9,1.1,1.3),CFrame.new(0,11.25,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Door transom glass",Vector3.new(15.4,2.4,.24),CFrame.new(0,13.0,26.7),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.32
     for _,x in ipairs({-4,4}) do
         local door=part(root,"Open classroom door",Vector3.new(6.5,10,.55),CFrame.new(x,5.3,25.7)*CFrame.Angles(0,math.rad(x<0 and -52 or 52),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
         local glass=part(root,"Door glass",Vector3.new(3.1,4.6,.18),door.CFrame*CFrame.new(0,1.6,-.35),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.27
