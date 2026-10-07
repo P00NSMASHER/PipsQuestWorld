@@ -82,9 +82,9 @@ def validate_abvm_contract() -> dict:
     server_main = (MODE / "server/Main.server.lua").read_text(encoding="utf-8")
     leaderboards_source = (MODE / "server/Leaderboards.lua").read_text(encoding="utf-8")
     required_world = (
-        "makeFrontArch(root,-24,false)",
-        "makeFrontArch(root,0,true)",
-        "makeFrontArch(root,24,true)",
+        "makeFrontArch(root,-17,false)",
+        "makeFrontArch(root,17,true)",
+        "makeFrontArch(root,51,true)",
         '"1928"',
         "Howard outer brick arch",
         "Howard inner stone arch",
@@ -148,12 +148,16 @@ def validate_abvm_contract() -> dict:
     require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
             "redundant full upper slabs would cap the playable stairwells")
     expected_arch_calls = (
-        "makeFrontArch(root,-24,false)",
-        "makeFrontArch(root,0,true)",
-        "makeFrontArch(root,24,true)",
+        "makeFrontArch(root,-17,false)",
+        "makeFrontArch(root,17,true)",
+        "makeFrontArch(root,51,true)",
     )
     require(all(world.count(call) == 1 for call in expected_arch_calls),
             "formal facade must retain the three exact gold-standard arched bays")
+    require(all(marker in world for marker in (
+        '"Front lower far west"', '"Front lower interbay west"', '"Front lower interbay east"', '"Front lower far east"',
+        "local stairCenterX=17", "stairCenterX-34", "stairCenterX+34"
+    )), "gold-standard lower facade openings / stair alignment regressed")
     require("for _,x in ipairs({-51,-17,17,51}) do" in world and
             "schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)" in world,
             "gold-standard four-bay upper facade rhythm regressed")
@@ -271,6 +275,8 @@ def validate_abvm_contract() -> dict:
         "warmWindowDepth": True,
         "nativeSkyPolish": True,
         "heroArrivalComposition": True,
+        "rightBiasedEntranceComposition": True,
+        "trueFrontArchOpenings": True,
         "layeredFacadeCornice": True,
         "chunkyRobloxTreeCanopy": True,
         "subjectClassrooms": len(required_subjects),
