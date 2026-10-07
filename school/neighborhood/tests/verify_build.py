@@ -173,8 +173,12 @@ def validate_abvm_contract() -> dict:
             "faculty directory/index contract missing")
     require(portrait_sources.count("https://www.assumptionbvmschool.net/") == 18,
             "faculty portrait source manifest must contain exactly 18 approved school references")
-    require(portrait_pixels.count("rows={") == 18 and "__meta={generated=" in portrait_pixels,
-            "faculty portrait payload contract must contain 18 records")
+    require(
+        portrait_pixels.count("rows={") == 18
+        and "__meta={generated=true,width=48,height=48,segment=16,count=18}" in portrait_pixels
+        and portrait_pixels.count("sourceSha256=") == 18,
+        "faculty portrait payload must contain 18 generated, source-hashed photo records",
+    )
     require("function Renderer.render" in portrait_renderer and "ColorSequenceKeypoint.new" in portrait_renderer,
             "asset-free portrait gradient renderer missing")
     for name, role in required_faculty.items():
