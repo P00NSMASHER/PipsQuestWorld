@@ -1,7 +1,12 @@
 --!strict
 -- Neighborhood adapter around the proven RHS2 responsive HUD geometry contract.
 -- Landscape gameplay now derives from safe-area/exclusion-zone math rather than hand-tuned phone offsets.
-local ResponsiveHudLayout=require(script.Parent.ResponsiveHudLayout)
+local ResponsiveHudLayout
+if script ~= nil and script.Parent ~= nil then
+    ResponsiveHudLayout=require(script.Parent.ResponsiveHudLayout)
+else
+    ResponsiveHudLayout=require("./ResponsiveHudLayout")
+end
 
 local Layout={}
 
