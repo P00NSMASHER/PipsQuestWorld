@@ -602,6 +602,8 @@ function World.build()
     World.part(root,"School block",Vector3.new(195,1.2,150),CFrame.new(0,.1,-91),Color3.fromRGB(128,128,118),Enum.Material.Concrete)
     World.part(root,"Main street",Vector3.new(28,.12,1110),CFrame.new(0,.04,580),palette.asphalt,Enum.Material.Asphalt)
     World.part(root,"School frontage road",Vector3.new(240,.12,23),CFrame.new(0,.05,35),palette.asphalt,Enum.Material.Asphalt)
+    World.part(root,"Gold standard front sidewalk",Vector3.new(240,.34,9),CFrame.new(0,.2,22.2),Color3.fromRGB(218,212,197),Enum.Material.Concrete)
+    World.part(root,"Gold standard front curb",Vector3.new(240,.72,1.3),CFrame.new(0,.38,26.8),palette.stone,Enum.Material.Concrete)
     for _,x in ipairs({-21,21}) do World.part(root,"Neighborhood sidewalk",Vector3.new(12,.3,1110),CFrame.new(x,.15,580),palette.cream,Enum.Material.Concrete) end
     for z=70,1090,28 do World.part(root,"Road marking",Vector3.new(.4,.03,9),CFrame.new(0,.12,z),Color3.fromRGB(236,221,156),nil,false) end
 
@@ -791,6 +793,13 @@ function World.build()
         end
     end
     World.part(root,"School approach",Vector3.new(45,.3,28),CFrame.new(17,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+    local heroHydrant=World.part(root,"Gold standard front hydrant",Vector3.new(1.7,3.6,1.7),CFrame.new(103,1.8,21.8),Color3.fromRGB(188,48,36),Enum.Material.Metal,false)
+    heroHydrant.Shape=Enum.PartType.Cylinder
+    World.part(root,"Gold standard hydrant crossbar",Vector3.new(3.3,.72,.72),CFrame.new(103,2.55,21.8),Color3.fromRGB(188,48,36),Enum.Material.Metal,false)
+    local heroHydrantCap=World.part(root,"Gold standard hydrant cap",Vector3.new(2.2,1.05,2.2),CFrame.new(103,3.75,21.8),Color3.fromRGB(188,48,36),Enum.Material.Metal,false)
+    heroHydrantCap.Shape=Enum.PartType.Ball
+    World.part(root,"Gold standard street sign post",Vector3.new(.42,7.2,.42),CFrame.new(75,3.6,20.8),Color3.fromRGB(112,118,120),Enum.Material.Metal,false)
+    World.part(root,"Gold standard street sign plate",Vector3.new(2.9,2.2,.18),CFrame.new(75,6.7,20.65),Color3.fromRGB(145,149,149),Enum.Material.Metal,false)
 
     -- Street-level identity from the approved Roblox render. The two-panel sign and arched crown
     -- intentionally echo the generated target while staying entirely native Roblox geometry/UI.
