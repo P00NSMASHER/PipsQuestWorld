@@ -128,15 +128,20 @@ local function windowPanel(parent,cf,width,height)
 end
 
 local function schoolWindowPanel(parent,cf,width,height)
+    -- Layered frame + inset glass + soft warm backing gives the same readable window depth
+    -- as the approved Roblox render without textures or expensive mesh windows.
     World.part(parent,"School window stone frame",Vector3.new(width+1.15,height+1.15,.58),cf,palette.stone,Enum.Material.Concrete,false)
     local glass=World.part(parent,"School window glass",Vector3.new(width,height,.22),cf*CFrame.new(0,0,-.34),palette.glass,Enum.Material.Glass,false)
-    glass.Transparency=.16
+    glass.Transparency=.13
+    local warm=World.part(parent,"School window warm glow",Vector3.new(width-.45,height-.45,.08),
+        cf*CFrame.new(0,0,-.57),Color3.fromRGB(255,229,176),Enum.Material.Neon,false)
+    warm.Transparency=.72;warm.CanQuery=false;warm.CanTouch=false
     for _,fraction in ipairs({-.3,0,.3}) do
         World.part(parent,"School window mullion V",Vector3.new(.17,height,.28),cf*CFrame.new(width*fraction,0,-.5),palette.cream,nil,false)
     end
     World.part(parent,"School window mullion H",Vector3.new(width,.18,.28),cf*CFrame.new(0,0,-.5),palette.cream,nil,false)
-    -- Slight lower sash line matches the old horizontal classroom window banks.
     World.part(parent,"School window sash",Vector3.new(width,.13,.3),cf*CFrame.new(0,-height*.28,-.52),palette.cream,nil,false)
+    World.part(parent,"School window sill",Vector3.new(width+1.45,.32,.8),cf*CFrame.new(0,-height/2-.62,-.08),palette.stone,Enum.Material.Concrete,false)
 end
 
 local function parkedCar(parent,x,z,rotation,tint)
@@ -400,6 +405,21 @@ function World.build()
     atmosphere.Glare=.08
     atmosphere.Haze=1.35
 
+    -- Native post-processing for the bright blue-sky / warm-brick gold-standard look.
+    -- Keep it restrained so mobile devices get polish without an overprocessed screenshot effect.
+    local bloom=Lighting:FindFirstChild("ABVMGoldBloom")
+    if not bloom then bloom=Instance.new("BloomEffect");bloom.Name="ABVMGoldBloom";bloom.Parent=Lighting end
+    bloom.Intensity=.11;bloom.Size=18;bloom.Threshold=1.05
+    local grade=Lighting:FindFirstChild("ABVMGoldGrade")
+    if not grade then grade=Instance.new("ColorCorrectionEffect");grade.Name="ABVMGoldGrade";grade.Parent=Lighting end
+    grade.Brightness=.025;grade.Contrast=.055;grade.Saturation=.08
+    local rays=Lighting:FindFirstChild("ABVMSunRays")
+    if not rays then rays=Instance.new("SunRaysEffect");rays.Name="ABVMSunRays";rays.Parent=Lighting end
+    rays.Intensity=.025;rays.Spread=.72
+    local clouds=Workspace.Terrain:FindFirstChild("GoldStandardClouds")
+    if not clouds then clouds=Instance.new("Clouds");clouds.Name="GoldStandardClouds";clouds.Parent=Workspace.Terrain end
+    clouds.Cover=.22;clouds.Density=.38;clouds.Color=Color3.fromRGB(248,250,255)
+
     -- Base neighborhood and school block.
     World.part(root,"Ground",Vector3.new(520,2,1450),CFrame.new(0,-1,480),Color3.fromRGB(118,153,106),Enum.Material.Grass)
     World.part(root,"School block",Vector3.new(195,1.2,150),CFrame.new(0,.1,-91),Color3.fromRGB(128,128,118),Enum.Material.Concrete)
@@ -448,7 +468,12 @@ function World.build()
     World.part(root,"Front lower east",Vector3.new(55,17,1.4),CFrame.new(47.5,12,-35),palette.brick,Enum.Material.Brick)
     for _,x in ipairs({-68,-51,-34,-17,0,17,34,51,68}) do
         World.part(root,"Front brick pilaster",Vector3.new(2.3,48,2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
+        World.part(root,"Front pilaster stone cap",Vector3.new(3.6,1.2,2.5),CFrame.new(x,52.2,-34.15),palette.stone,Enum.Material.Concrete,false)
     end
+    -- The reference render has a noticeably heavier east/front corner pier that visually anchors
+    -- the vertical green banner and the side elevation.
+    World.part(root,"Gold standard east corner tower",Vector3.new(6.6,50,5.4),CFrame.new(71.6,28,-36.2),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"East corner tower stone cap",Vector3.new(7.6,1.4,6.3),CFrame.new(71.6,53.1,-36.2),palette.stone,Enum.Material.Concrete,false)
     for _,floorY in ipairs({29,44}) do
         for _,x in ipairs({-60,-40,-20,0,20,40,60}) do
             World.part(root,"Tan facade bay",Vector3.new(14.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
@@ -549,23 +574,38 @@ function World.build()
     end
     World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
 
-    -- Street-level identity from the approved Roblox render. This is intentionally a compact
-    -- native-Part sign, not a giant facade billboard, so the real-school architecture still leads.
-    for _,x in ipairs({-62,-48}) do
-        World.part(root,"Front school sign post",Vector3.new(.9,11,.9),CFrame.new(x,5.5,8),palette.green,Enum.Material.Wood,false)
-        local cap=World.part(root,"Front school sign post cap",Vector3.new(1.35,1.35,1.35),CFrame.new(x,11.2,8),palette.gold,nil,false)
+    -- Street-level identity from the approved Roblox render. The two-panel sign and arched crown
+    -- intentionally echo the generated target while staying entirely native Roblox geometry/UI.
+    for _,x in ipairs({-63,-47}) do
+        World.part(root,"Front school sign post",Vector3.new(.95,13,.95),CFrame.new(x,6.5,8),palette.green,Enum.Material.Wood,false)
+        local cap=World.part(root,"Front school sign post cap",Vector3.new(1.45,1.45,1.45),CFrame.new(x,13.25,8),palette.gold,nil,false)
         cap.Shape=Enum.PartType.Ball
     end
-    World.part(root,"Front school sign gold backing",Vector3.new(16.2,8.8,.65),
-        CFrame.new(-55,7.1,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
-    local frontSchoolSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL",
-        CFrame.new(-55,7.1,7.5)*CFrame.Angles(0,math.pi,0),
-        Vector3.new(15.4,8,.42),palette.green,palette.gold)
+    World.part(root,"Front school sign gold backing",Vector3.new(18,8.2,.72),
+        CFrame.new(-55,8.2,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
+    local frontSchoolSign=sign(root,"ASSUMPTION\nBVM SCHOOL",
+        CFrame.new(-55,8.2,7.5)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(17.2,7.4,.45),palette.green,palette.gold)
     frontSchoolSign.Name="Gold standard front school sign"
+    for i=-2,2 do
+        local rise=(2-math.abs(i))*.62
+        World.part(root,"Front school sign arched crown",Vector3.new(3.6,1.25,.74),
+            CFrame.new(-55+i*3.15,12.15+rise,7.9)*CFrame.Angles(0,math.pi,0),
+            i==0 and palette.green or Color3.fromRGB(20,91,52),Enum.Material.Wood,false)
+    end
+    cross(root,CFrame.new(-55,13.05,7.2)*CFrame.Angles(0,math.pi,0),.34,palette.gold)
+    World.part(root,"Gold standard entrance strip backing",Vector3.new(18,2.35,.7),
+        CFrame.new(-55,3.35,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
+    local entranceStrip=sign(root,"ENTRANCE ON HOWARD AVENUE",
+        CFrame.new(-55,3.35,7.5)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(17.2,1.65,.45),palette.green,palette.gold)
+    entranceStrip.Name="Gold standard entrance strip"
 
     -- Tiered masonry and greenery make the uphill arrival read clearly at Roblox camera distance.
-    World.part(root,"Front garden terrace west",Vector3.new(30,2.2,5.2),CFrame.new(-49,1.1,1.5),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Front garden terrace east",Vector3.new(30,2.2,5.2),CFrame.new(49,1.1,1.5),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front garden terrace west",Vector3.new(34,2.6,6.2),CFrame.new(-50,1.3,1.4),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front garden terrace east",Vector3.new(34,2.6,6.2),CFrame.new(50,1.3,1.4),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front garden terrace west upper",Vector3.new(28,1.8,4.8),CFrame.new(-49,2.3,-4.2),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front garden terrace east upper",Vector3.new(28,1.8,4.8),CFrame.new(49,2.3,-4.2),palette.stone,Enum.Material.Concrete)
 
     -- Gold-standard arrival landscaping: clipped shrubs and bright flower beds frame the stairs.
     for _,x in ipairs({-43,43}) do
@@ -573,13 +613,16 @@ function World.build()
         shrub(root,x,7,.95)
         planter(root,x,-18,11)
     end
+    for _,x in ipairs({-67,-61,-49,-41,41,49,59,67}) do
+        shrub(root,x,x<0 and 4.8 or 2.6,(math.abs(x)>60) and .78 or .92)
+    end
     for _,x in ipairs({-59,59}) do
-        shrub(root,x,2,.9)
         tree(root,x,16,.72)
     end
     planter(root,-24,12,9)
     planter(root,24,12,9)
-    for _,x in ipairs({-34,34}) do
+    planter(root,-55,12.5,17)
+    for _,x in ipairs({-39,-21,21,39}) do
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
         local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
     end
