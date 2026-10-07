@@ -2,7 +2,6 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local DataStoreService=game:GetService("DataStoreService")
-local TweenService=game:GetService("TweenService")
 local HttpService=game:GetService("HttpService")
 local Data=require(ReplicatedStorage:WaitForChild("EmmaStudyShared"):WaitForChild("Data"))
 local World=require(script.Parent:WaitForChild("World")).build()
@@ -79,17 +78,14 @@ local function chooseQuestion(s)
     return pool[#pool].q
 end
 
-local function tweenModel(model,target,duration)
-    local value=Instance.new("CFrameValue");value.Value=model:GetPivot()
-    local conn=value:GetPropertyChangedSignal("Value"):Connect(function() if model.Parent then model:PivotTo(value.Value) end end)
-    local tween=TweenService:Create(value,TweenInfo.new(duration,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{Value=target})
-    tween:Play();tween.Completed:Wait();conn:Disconnect();value:Destroy()
-end
-
 local function dismissTeacher(s)
     if s.teacherModel and s.teacherModel.Parent then
         local m=s.teacherModel;s.teacherModel=nil
-        task.spawn(function() tweenModel(m,World.TeacherDoor,1.35);if m then m:Destroy() end end)
+        World.setTeacherSpeech(m,nil)
+        task.spawn(function()
+            World.moveTeacher(m,World.TeacherDoor,1.25)
+            if m and m.Parent then m:Destroy() end
+        end)
     end
 end
 
@@ -105,14 +101,19 @@ startRound=function(player)
     local q=chooseQuestion(s);s.seen[q.id]=true
     local teacher=chooseTeacher(q.subject)
     dismissTeacher(s)
-    local model=World.teacherModel(teacher.name,teacher.role,teacher.shirt);model.Parent=World.Root;model:PivotTo(World.TeacherDoor);s.teacherModel=model
+    World.resetBoard()
+    local model=World.teacherModel(teacher);model.Parent=World.Root;model:PivotTo(World.TeacherDoor);s.teacherModel=model
+    event:FireClient(player,{kind="teacher_entering",teacher=teacher.name,role=teacher.role,subject=q.subject,progress=publicProgress(s)})
     task.spawn(function()
-        tweenModel(model,World.TeacherFront,1.65)
-        if sessions[player.UserId]~=s then return end
+        World.moveTeacher(model,World.TeacherFront,1.7)
+        if sessions[player.UserId]~=s or not model.Parent then return end
+        World.setTeacherSpeech(model,"Hi, Emma! I have one question for you. ♥")
+        task.wait(.45)
         local choices=shuffle(q.choices)
         local token=HttpService:GenerateGUID(false)
         s.pending={token=token,q=q,choices=choices,teacher=teacher}
         s.busy=false
+        World.setBoardQuestion(q.subject,teacher.name,q.prompt)
         event:FireClient(player,{kind="question",teacher=teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
     end)
 end
@@ -124,15 +125,24 @@ local function answer(player,args)
     local choice=p.choices[args.index]
     if not choice then return {ok=false,code="invalid_choice"} end
     if choice~=p.q.answer then
+        World.setBoardHint(p.q.hint or "Take another look.")
+        World.setTeacherSpeech(s.teacherModel,"Almost. Try one more time, Emma.")
         return {ok=true,correct=false,hint=p.q.hint,message="Try again. "..(p.q.hint or "")}
     end
     s.pending=nil;s.stars+=1;s.correctThisSession+=1;s.totalCorrect+=1
     local skill=s.skills[p.q.skill] or {correct=0};skill.correct=(skill.correct or 0)+1;s.skills[p.q.skill]=skill
     saveProgress(player,s)
+    World.setBoardCorrect(p.q.explanation or "Nice job!")
+    World.setTeacherSpeech(s.teacherModel,"Correct! Nice job, Emma! ★")
     event:FireClient(player,{kind="correct",teacher=p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
-    task.delay(1.65,function()
+    task.delay(1.9,function()
         local current=sessions[player.UserId]
-        if current==s then dismissTeacher(s);task.delay(1.1,function() if sessions[player.UserId]==s then startRound(player) end end) end
+        if current==s then
+            dismissTeacher(s)
+            task.delay(1.05,function()
+                if sessions[player.UserId]==s then World.resetBoard();startRound(player) end
+            end)
+        end
     end)
     return {ok=true,correct=true}
 end
@@ -141,12 +151,12 @@ request.OnServerInvoke=function(player,command,args)
     if command=="answer" then return answer(player,args) end
     local s=sessions[player.UserId]
     if command=="restart" and s then
-        dismissTeacher(s);s.pending=nil;s.seen={};s.stars=0;s.correctThisSession=0
+        dismissTeacher(s);s.pending=nil;s.seen={};s.stars=0;s.correctThisSession=0;World.resetBoard()
         task.delay(.35,function() startRound(player) end)
         return {ok=true}
     end
     if command=="skip" and s and s.pending then
-        s.pending=nil;dismissTeacher(s);task.delay(1.1,function() startRound(player) end)
+        s.pending=nil;dismissTeacher(s);World.resetBoard();task.delay(1.05,function() startRound(player) end)
         return {ok=true}
     end
     if command=="state" and s then return {ok=true,progress=publicProgress(s),week=Data.WeekLabel,focus=Data.Focus} end
