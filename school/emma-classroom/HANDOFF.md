@@ -2,12 +2,17 @@
 
 ## Implemented
 
+- Made lifetime progress persistence monotonic across out-of-order DataStore
+  completions. Older asynchronous saves can no longer reduce total correct,
+  completed sessions, or per-skill correct counts.
 - Restored normal Roblox movement, jump, autorotation and touch camera control.
 - Added a 44px `Study view` / `Look around` toggle. Study view retains the intentional teacher/Smartboard/doorway composition; Look around restores the character camera.
 - Strengthened classroom CI so a future permanent movement lock fails the tiny-game contract.
 
 ## Actually tested
 
+- Executed the actual server source against a forced stale-save regression and
+  verified that newer lifetime/session/skill totals survive.
 - Luau compilation for every classroom client/server/shared source.
 - Isolated Rojo place build.
 - Classroom CI contract checks, including both camera modes and absence of movement-lock assignments.
@@ -15,6 +20,7 @@
 ## Not tested
 
 - Roblox Studio runtime launch.
+- Live Roblox DataStore behavior under throttling, shutdown, and reconnect.
 - Physical iPhone thumbstick, jump, camera orbit and safe-area interaction.
 - Final composed Study view against the authorized classroom reference.
 

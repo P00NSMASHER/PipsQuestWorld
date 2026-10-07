@@ -36,12 +36,31 @@ local function loadProgress(player)
 end
 
 local function saveProgress(player,s)
-    local snapshot={totalCorrect=s.totalCorrect,sessionsCompleted=s.sessionsCompleted,skills=s.skills}
+    -- Every correct answer can schedule a save. DataStore requests may finish in
+    -- a different order, so snapshots and writes must both be monotonic: an
+    -- older completion is never allowed to erase newer lifetime progress.
+    local snapshot={
+        totalCorrect=math.max(0,tonumber(s.totalCorrect) or 0),
+        sessionsCompleted=math.max(0,tonumber(s.sessionsCompleted) or 0),
+        skills=table.clone(s.skills),
+    }
     task.spawn(function()
         pcall(function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
-                old.totalCorrect=snapshot.totalCorrect;old.sessionsCompleted=snapshot.sessionsCompleted;old.skills=snapshot.skills
+                old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,snapshot.totalCorrect)
+                old.sessionsCompleted=math.max(tonumber(old.sessionsCompleted) or 0,snapshot.sessionsCompleted)
+                local mergedSkills=type(old.skills)=="table" and table.clone(old.skills) or {}
+                for skillName,snapshotSkill in pairs(snapshot.skills) do
+                    local oldSkill=type(mergedSkills[skillName])=="table" and mergedSkills[skillName] or {}
+                    local nextSkill=table.clone(oldSkill)
+                    nextSkill.correct=math.max(
+                        tonumber(oldSkill.correct) or 0,
+                        tonumber(snapshotSkill.correct) or 0
+                    )
+                    mergedSkills[skillName]=nextSkill
+                end
+                old.skills=mergedSkills
                 old.updatedAt=os.time()
                 return old
             end)

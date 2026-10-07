@@ -88,7 +88,15 @@ assert(requests.OnServerInvoke(player,"restart").ok);flush()
 assert(requests.OnServerInvoke(player,"state").progress.stars==0)
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==10)
-print("PASS: handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip")
+-- A stale leaving snapshot must not regress a newer DataStore completion.
+saved["u:1"].totalCorrect=20
+saved["u:1"].sessionsCompleted=3
+saved["u:1"].skills.legacy={correct=9}
+Players.PlayerRemoving.callback(player);flush()
+assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
+assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
+assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
+print("PASS: handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic persistence")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:
