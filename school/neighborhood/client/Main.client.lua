@@ -252,7 +252,7 @@ local function facultyViewport(parent,staff,props)
         if ok and clone then
             model=clone
             for _,desc in ipairs(model:GetDescendants()) do
-                if desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") or desc:IsA("ProximityPrompt") or desc:IsA("LuaSourceContainer") then
+                if desc:IsA("BillboardGui") or desc:IsA("ProximityPrompt") or desc:IsA("LuaSourceContainer") then
                     desc:Destroy()
                 elseif desc:IsA("BasePart") then
                     desc.Anchored=true
@@ -336,7 +336,7 @@ showFaculty=function()
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
-    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. The first-floor hallway now displays every portrait together. Tap any portrait here or in the hallway for the matching 3D profile.",12,{
+    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. The actual NPC heads now use wrapped photo faces across the front and both cheeks. Tap any portrait here or in the hallway for the matching 3D profile.",12,{
         LayoutOrder=2,Size=UDim2.new(1,0,0,44),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
     })
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
