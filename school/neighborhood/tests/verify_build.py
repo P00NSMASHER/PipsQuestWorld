@@ -99,6 +99,11 @@ def validate_abvm_contract() -> dict:
         "Mrs Carol Boyer",
         "President of Catholicity and Mission",
         'prompt.Name="MeetFaculty"',
+        '"Left hand"',
+        '"Right hand"',
+        '"Left shoe"',
+        '"Right shoe"',
+        '"Neck"',
         "facultyPositions",
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
@@ -184,7 +189,8 @@ def validate_abvm_contract() -> dict:
     )), "gold-standard responsive layout contract regressed")
     require(all(marker in main for marker in (
         'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()', 'showFaculty=function()',
-        'Name="FacultyGrid"', '"Faculty & Staff Directory"',
+        'showFacultyProfile=function(staffId)', 'Name="FacultyGrid"', 'Name="FacultyPortrait"',
+        'ProximityPromptService.PromptTriggered', 'Headshot=true', '"Faculty & Staff Directory"',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
