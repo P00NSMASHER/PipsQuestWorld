@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: simple 18-person faculty/staff likenesses + compact mobile HUD
+# release: RHS responsive HUD port + StaffAvatarFactory three-person pilot
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
     paths:
       - '.github/workflows/publish-abvm-neighborhood.yml'
       - 'school/neighborhood/shared/Layout.lua'
+      - 'school/neighborhood/shared/ResponsiveHudLayout.lua'
+      - 'school/neighborhood/shared/FeaturePanelController.lua'
+      - 'school/neighborhood/shared/Catalog.lua'
+      - 'school/neighborhood/server/StaffAvatarFactory.lua'
       - 'school/neighborhood/server/World.lua'
       - 'school/neighborhood/client/Main.client.lua'
       - 'school/neighborhood/tests/verify_build.py'
@@ -103,7 +107,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
 
-      - name: Runtime smoke test simple faculty likenesses
+      - name: Runtime smoke test staff avatar factory pilot
         shell: bash
         env:
           ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
@@ -124,6 +128,14 @@ jobs:
 
           local count=0
           local ids={}
+          local prototypeIds={}
+          local prototypeCount=0
+          local expectedPrototype={
+              carl_mcbreen=true,
+              carol_boyer=true,
+              david_bolich=true,
+          }
+
           for _,candidate in ipairs(root:GetChildren()) do
               if candidate:IsA("Model") and candidate:GetAttribute("StaffId") ~= nil then
                   local staffId=tostring(candidate:GetAttribute("StaffId"))
@@ -137,15 +149,36 @@ jobs:
                       count+=1
                       ids[staffId]=true
                   end
+
+                  if candidate:GetAttribute("AvatarFactoryMode") == "prototype-v1" then
+                      prototypeCount+=1
+                      prototypeIds[staffId]=true
+                      assert(expectedPrototype[staffId]==true,"Unexpected staff prototype: "..staffId)
+                      if staffId=="carl_mcbreen" then
+                          assert(candidate:FindFirstChild("Prototype side sweep"),"McBreen prototype hair cue missing")
+                          assert(candidate:FindFirstChild("Suit tie"),"McBreen prototype suit cue missing")
+                      elseif staffId=="carol_boyer" then
+                          assert(candidate:FindFirstChild("Prototype bob left"),"Boyer prototype bob cue missing")
+                          assert(candidate:FindFirstChild("Prototype cardigan inset"),"Boyer prototype cardigan cue missing")
+                      elseif staffId=="david_bolich" then
+                          assert(candidate:FindFirstChild("Prototype temple left"),"Bolich prototype balding cue missing")
+                          assert(candidate:FindFirstChild("Glasses lens"),"Bolich prototype glasses cue missing")
+                          assert(candidate:FindFirstChild("Beard"),"Bolich prototype beard cue missing")
+                      end
+                  end
               end
           end
 
-          assert(count==expected,"Expected 18 simple faculty likenesses; got "..tostring(count))
+          assert(count==expected,"Expected 18 factory-built faculty likenesses; got "..tostring(count))
           local unique=0
           for _ in pairs(ids) do unique+=1 end
-          assert(unique==expected,"Expected 18 unique simple faculty IDs; got "..tostring(unique))
-          print("SIMPLE_FACULTY_LIKENESSES_OK",count,unique)
-          return tostring(count)
+          assert(unique==expected,"Expected 18 unique faculty IDs; got "..tostring(unique))
+          assert(prototypeCount==3,"Expected exactly 3 enhanced staff prototypes; got "..tostring(prototypeCount))
+          for staffId in pairs(expectedPrototype) do
+              assert(prototypeIds[staffId]==true,"Missing expected staff prototype: "..staffId)
+          end
+          print("STAFF_AVATAR_FACTORY_OK",count,prototypeCount)
+          return tostring(count)..":"..tostring(prototypeCount)
           LUA
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
@@ -214,7 +247,7 @@ jobs:
           jq . "$RUNNER_TEMP/portrait-runtime-logs.json" || true
           test "$(jq -r '.state' "$RUNNER_TEMP/portrait-runtime.json")" = "COMPLETE"
           jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
-          grep -q 'SIMPLE_FACULTY_LIKENESSES_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
+          grep -q 'STAFF_AVATAR_FACTORY_OK 18 3' "$RUNNER_TEMP/portrait-runtime-logs.json"
           fi
 
       - name: Publish receipt
