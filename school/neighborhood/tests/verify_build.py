@@ -189,6 +189,13 @@ def validate_abvm_contract() -> dict:
         "Photo playground slide",
         "Photo playground tunnel ring",
         "Back brick connector header",
+        "Faith room chair seat",
+        "Faith room altar table",
+        "Faith room second smartboard",
+        "Second stair tan brick wall",
+        "Third stair tan brick wall",
+        "Lobby tile seam",
+        "Lobby photo brick wainscot west",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
@@ -352,6 +359,9 @@ def validate_abvm_contract() -> dict:
         "photoClassroomFinish": True,
         "photoGymCafeteria": True,
         "photoPlayground": True,
+        "photoFaithPresentationRoom": True,
+        "photoStairwellFinish": True,
+        "photoLobbyFinish": True,
         "subjectClassrooms": len(required_subjects),
         "photoContractStaticOnly": True,
     }
