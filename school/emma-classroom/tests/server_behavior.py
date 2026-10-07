@@ -16,8 +16,20 @@ local task={spawn=function(f,...) local a=table.pack(...);table.insert(queue,fun
 local function signal() return {Connect=function(self,f) self.callback=f end} end
 local player={UserId=1,CharacterAdded=signal()}
 local Players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function() return {} end}
-local saved,events={},{}
-local store={GetAsync=function(_,key) return saved[key] end,UpdateAsync=function(_,key,f) saved[key]=f(saved[key]);return saved[key] end}
+local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
+local getFailures,updateFailures,getAttempts,updateAttempts=2,0,0,0
+local store={
+    GetAsync=function(_,key)
+        getAttempts+=1
+        if getFailures>0 then getFailures-=1;error("forced transient GetAsync failure") end
+        return saved[key]
+    end,
+    UpdateAsync=function(_,key,f)
+        updateAttempts+=1
+        if updateFailures>0 then updateFailures-=1;error("forced transient UpdateAsync failure") end
+        saved[key]=f(saved[key]);return saved[key]
+    end,
+}
 local service={}
 service.WaitForChild=function(_,name) if name=="EmmaStudyShared" then return service end;return name end
 local requests
@@ -53,9 +65,10 @@ end
 boot()
 Players.PlayerAdded.callback(player)
 flush()
+assert(getAttempts==3,"Progress load must retry transient DataStore failures")
 assert(#events==0,"Wait for the client handshake before emitting a round")
 local first=requests.OnServerInvoke(player,"state")
-assert(first.ok and first.progress.stars==0)
+assert(first.ok and first.progress.stars==0 and first.progress.totalCorrect==4)
 flush()
 local function pending()
     local state=requests.OnServerInvoke(player,"state")
@@ -77,23 +90,25 @@ for step=1,10 do
     local miss=requests.OnServerInvoke(player,"answer",{token=q.token,index=wrong})
     assert(miss.ok and miss.correct==false and miss.answer==nil)
     assert(requests.OnServerInvoke(player,"state").progress.stars==step-1,"No wrong-answer penalty or reward")
+    if step==1 then updateFailures=2 end
     local hit=requests.OnServerInvoke(player,"answer",{token=q.token,index=correct})
     assert(hit.ok and hit.correct)
     assert(not requests.OnServerInvoke(player,"answer",{token=q.token,index=correct}).ok,"Replay cannot earn another star")
     flush()
     assert(requests.OnServerInvoke(player,"state").progress.stars==step)
 end
+assert(updateAttempts>=3,"Progress save must retry transient DataStore failures")
 assert(events[#events].kind=="session_complete")
-assert(saved["u:1"].totalCorrect==10 and saved["u:1"].sessionsCompleted==1)
+assert(saved["u:1"].totalCorrect==14 and saved["u:1"].sessionsCompleted==1)
 assert(requests.OnServerInvoke(player,"restart").ok);flush()
 assert(requests.OnServerInvoke(player,"state").progress.stars==0)
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
-assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==10)
+assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14)
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end
 closeCallback()
-assert(saved["u:1"].totalCorrect==10 and saved["u:1"].sessionsCompleted==1)
+assert(saved["u:1"].totalCorrect==14 and saved["u:1"].sessionsCompleted==1)
 -- A stale leaving snapshot must not regress a newer DataStore completion.
 saved["u:1"].totalCorrect=20
 saved["u:1"].sessionsCompleted=3
@@ -102,7 +117,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic and awaited-shutdown persistence")
+print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic and awaited-shutdown persistence")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:
