@@ -97,6 +97,8 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(m:GetAttribute("StaffGeometryVersion")==4)
     local head=m:FindFirstChild("Head")
     assert(head and not head:FindFirstChild("Classic rounded head"),"Do not reintroduce nonstandard Head mesh scaling")
+    local headCenter=m:FindFirstChild("Head center")
+    assert(head.CFrame.Position.Z-head.Size.Z/2 < headCenter.CFrame.Position.Z-headCenter.Size.Z/2-.015*m:GetScale(),"Face-bearing surface must be physically in front of the other head pieces")
     local face=head:FindFirstChild("Friendly face")
     assert(face and face.Face==Enum.NormalId.Front and face.LightInfluence==0 and not face.AlwaysOnTop)
     assert(face.CanvasSize[1]==440 and face.CanvasSize[2]==600 and face.ZOffset>0)

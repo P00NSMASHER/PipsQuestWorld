@@ -73,6 +73,9 @@ function StaffModel.create(teacher)
     -- Explicit rounded parts have known bounds. MeshType.Head has nonstandard
     -- scaling; version 55 buried its 3D eyes/mouth and hair inside that mesh.
     local head=rounded("Head",Vector3.new(2.25,2.2,1.75),CFrame.new(0,4.12,0),skin,nil,.32)
+    -- Move the actual face-bearing part ahead of the overlapping rounded
+    -- head pieces. ZOffset only orders SurfaceGuis; it cannot lift face ink.
+    head.Size+=Vector3.new(0,0,.024);head.CFrame*=CFrame.new(0,0,-.012)
     local face=Instance.new("SurfaceGui");face.Name="Friendly face";face.Face=Enum.NormalId.Front
     face.CanvasSize=Vector2.new(440,600);face.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
     face.LightInfluence=0;face.Brightness=1;face.AlwaysOnTop=false;face.ZOffset=.015;face.Parent=head
