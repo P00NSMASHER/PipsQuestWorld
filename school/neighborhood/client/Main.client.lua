@@ -3,6 +3,7 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local UserInputService=game:GetService("UserInputService")
+local ProximityPromptService=game:GetService("ProximityPromptService")
 local Workspace=game:GetService("Workspace")
 local TweenService=game:GetService("TweenService")
 local player=Players.LocalPlayer
@@ -25,6 +26,7 @@ local locationCommand=nil
 local clothesFilter="All"
 local homeFilter="All"
 local vehicleFilter="All"
+local activeFacultyId=nil
 
 -- Compact floating rail from the authoritative gold-standard board.
 local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(500,50),BackgroundColor3=UI.P.ink,BackgroundTransparency=.02})
@@ -123,7 +125,7 @@ local messages={
     not_enough_coins="Keep learning, or choose a smaller goal. Your Credits are safe.",not_owned="Earn and buy this item before equipping it.",
     temporarily_unavailable="That did not finish. Please try again.",slow_down="One action at a time.",travel_cooldown="You're already on your way. Try again shortly.",
 }
-local showShop,showQuestion,setNavActive,showAvatar,showClasses,showFaculty
+local showShop,showQuestion,setNavActive,showAvatar,showClasses,showFaculty,showFacultyProfile
 local function call(command,args)
     if busy then return {ok=false,code="saving"} end
     busy=true
@@ -193,6 +195,76 @@ local function subjectVisual(id)
     return subjectVisuals[id] or {color=UI.P.teal,icon="•"}
 end
 
+local function facultyViewport(parent,staff,props)
+    props=props or {}
+    local viewport=UI.new("ViewportFrame",parent,{
+        Name="FacultyPortrait",
+        Position=props.Position or UDim2.new(),
+        Size=props.Size or UDim2.new(1,0,1,0),
+        BackgroundColor3=props.BackgroundColor3 or UI.P.navySoft,
+        BorderSizePixel=0,
+        Ambient=Color3.fromRGB(205,207,210),
+        LightDirection=Vector3.new(-1,-1,-1),
+        ZIndex=props.ZIndex or 2,
+    })
+    UI.corner(viewport,props.CornerRadius or 14)
+
+    local worldModel=Instance.new("WorldModel")
+    worldModel.Parent=viewport
+    local root=Workspace:FindFirstChild("NeighborhoodWorld")
+    local source=root and root:FindFirstChild("Faculty_"..staff.id,true)
+    local model=nil
+    local fitted=Vector3.new(4,9,3)
+
+    if source and source:IsA("Model") then
+        local previous=source.Archivable
+        source.Archivable=true
+        local ok,clone=pcall(function() return source:Clone() end)
+        source.Archivable=previous
+        if ok and clone then
+            model=clone
+            for _,desc in ipairs(model:GetDescendants()) do
+                if desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") or desc:IsA("ProximityPrompt") or desc:IsA("LuaSourceContainer") then
+                    desc:Destroy()
+                elseif desc:IsA("BasePart") then
+                    desc.Anchored=true
+                    desc.CanCollide=false
+                    desc.CanTouch=false
+                    desc.CanQuery=false
+                end
+            end
+            model.Parent=worldModel
+            local boxCf,boxSize=model:GetBoundingBox()
+            local pivot=model:GetPivot()
+            local boundsFromPivot=pivot:ToObjectSpace(boxCf)
+            model:PivotTo(CFrame.new(0,boxSize.Y*.5,0)*boundsFromPivot:Inverse())
+            local _,newSize=model:GetBoundingBox()
+            fitted=newSize
+        end
+    end
+
+    local camera=Instance.new("Camera")
+    camera.FieldOfView=props.Headshot and 27 or 31
+    local targetY=props.Headshot and fitted.Y*.72 or fitted.Y*.47
+    local distance
+    if props.Headshot then
+        distance=math.max(5.7,fitted.X*2.0,fitted.Y*.72)
+    else
+        distance=math.max(8.5,fitted.X*2.0,fitted.Y*1.2)
+    end
+    camera.CFrame=CFrame.lookAt(Vector3.new(0,targetY,-distance),Vector3.new(0,targetY,0))
+    camera.Parent=viewport
+    viewport.CurrentCamera=camera
+
+    if not model then
+        UI.text(viewport,string.sub(staff.name,1,1),24,{
+            AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromOffset(42,42),
+            TextXAlignment=Enum.TextXAlignment.Center,Font=Enum.Font.GothamBold,TextColor3=UI.P.teal,ZIndex=(props.ZIndex or 2)+1,
+        })
+    end
+    return viewport
+end
+
 showClasses=function()
     if setNavActive then setNavActive("school") end
     open("classes","Classes")
@@ -229,18 +301,19 @@ showClasses=function()
 end
 
 showFaculty=function()
+    activeFacultyId=nil
     if setNavActive then setNavActive("school") end
     open("faculty","Faculty & Staff")
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
-    UI.text(body,"Directory names and roles match the supplied Assumption BVM faculty/staff references. NPCs are placed throughout the school with matching stylized visual cues.",12,{
-        LayoutOrder=2,Size=UDim2.new(1,0,0,46),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
+    UI.text(body,"All 18 staff members are modeled in the school. Tap any 3D portrait for the full profile, or walk up to that person and use Meet.",12,{
+        LayoutOrder=2,Size=UDim2.new(1,0,0,44),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
     })
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
     local columns=layout.landscape and layout.columns or 1
     local rows=math.ceil(#Catalog.Faculty/columns)
-    local cardHeight=layout.compact and 76 or 84
+    local cardHeight=layout.compact and 88 or 96
     local grid=UI.new("Frame",body,{Name="FacultyGrid",LayoutOrder=3,Size=UDim2.new(1,0,0,rows*cardHeight+(rows-1)*8),BackgroundTransparency=1})
     UI.new("UIGridLayout",grid,{
         CellPadding=UDim2.fromOffset(8,8),
@@ -250,38 +323,70 @@ showFaculty=function()
     })
     for i,staff in ipairs(Catalog.Faculty) do
         local card=UI.surface(grid,{Name="Faculty_"..staff.id,LayoutOrder=i,BackgroundColor3=UI.P.white,Shadow=false})
-        local appearance=staff.appearance or {}
-        local hair=appearance.hair or {95,75,60}
-        local skin=appearance.skin or {226,196,164}
-        local tile=UI.frame(card,{Position=UDim2.fromOffset(8,10),Size=UDim2.fromOffset(48,48),BackgroundColor3=UI.P.navySoft})
-        UI.corner(tile,999);tile.ClipsDescendants=true
-        local face=UI.frame(tile,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.56),Size=UDim2.fromOffset(31,34),BackgroundColor3=Color3.fromRGB(skin[1],skin[2],skin[3])})
-        UI.corner(face,999)
-        local hairCap=UI.frame(tile,{AnchorPoint=Vector2.new(.5,0),Position=UDim2.fromScale(.5,.08),Size=UDim2.fromOffset(35,18),BackgroundColor3=Color3.fromRGB(hair[1],hair[2],hair[3])})
-        UI.corner(hairCap,999)
-        for _,x in ipairs({-.22,.22}) do
-            local eye=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5+x,.46),Size=UDim2.fromOffset(3,3),BackgroundColor3=Color3.fromRGB(44,48,52)})
-            UI.corner(eye,999)
-        end
-        local mouth=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5,.72),Size=UDim2.fromOffset(9,2),BackgroundColor3=Color3.fromRGB(145,82,82)})
-        UI.corner(mouth,999)
-        if appearance.glasses then
-            for _,x in ipairs({-.22,.22}) do
-                local lens=UI.frame(face,{AnchorPoint=Vector2.new(.5,.5),Position=UDim2.fromScale(.5+x,.46),Size=UDim2.fromOffset(10,7),BackgroundTransparency=1})
-                UI.corner(lens,4);UI.stroke(lens,Color3.fromRGB(52,56,61))
-            end
-        end
-        if appearance.beard then
-            local beard=appearance.beardColor or hair
-            local chin=UI.frame(face,{AnchorPoint=Vector2.new(.5,1),Position=UDim2.fromScale(.5,.98),Size=UDim2.fromOffset(22,11),BackgroundColor3=Color3.fromRGB(beard[1],beard[2],beard[3])})
-            UI.corner(chin,999)
-        end
-        UI.text(card,staff.name,14,{Position=UDim2.fromOffset(66,6),Size=UDim2.new(1,-76,0,23),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
-        UI.text(card,staff.role,11,{Position=UDim2.fromOffset(66,28),Size=UDim2.new(1,-76,0,28),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd})
-        UI.text(card,"Floor "..tostring(staff.floor).." • "..tostring(staff.location),10,{Position=UDim2.fromOffset(66,56),Size=UDim2.new(1,-76,0,18),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd})
+        facultyViewport(card,staff,{
+            Position=UDim2.fromOffset(8,8),
+            Size=UDim2.fromOffset(60,cardHeight-16),
+            Headshot=true,
+            CornerRadius=12,
+        })
+        UI.text(card,staff.name,14,{Position=UDim2.fromOffset(76,6),Size=UDim2.new(1,-104,0,24),Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd,ZIndex=4})
+        UI.text(card,staff.role,11,{Position=UDim2.fromOffset(76,29),Size=UDim2.new(1,-104,0,34),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,TextTruncate=Enum.TextTruncate.AtEnd,ZIndex=4})
+        UI.text(card,"Floor "..tostring(staff.floor).." • "..tostring(staff.location),10,{Position=UDim2.fromOffset(76,cardHeight-27),Size=UDim2.new(1,-104,0,18),TextColor3=UI.P.teal,Font=Enum.Font.GothamBold,TextTruncate=Enum.TextTruncate.AtEnd,ZIndex=4})
+        UI.text(card,"›",22,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-8,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted,ZIndex=4})
+        UI.button(card,"",function() showFacultyProfile(staff.id) end,{
+            Name="OpenFacultyProfile",
+            Position=UDim2.fromScale(0,0),Size=UDim2.fromScale(1,1),
+            BackgroundTransparency=1,TextTransparency=1,ZIndex=10,CornerRadius=18,
+        })
     end
     UI.button(body,"Back to Learning Labs",function() showClasses() end,{
         LayoutOrder=4,Size=UDim2.new(1,0,0,46),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=14,CornerRadius=12,
+    })
+end
+
+showFacultyProfile=function(staffId)
+    local staff=Catalog.ByStaffId[staffId]
+    if not staff then
+        notify("That staff profile is unavailable.")
+        return
+    end
+    activeFacultyId=staffId
+    locationCommand="school"
+    if setNavActive then setNavActive("school") end
+    open("facultyProfile",staff.name)
+
+    local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+    local heroHeight=layout.compact and 248 or 304
+    local hero=UI.surface(body,{LayoutOrder=1,Size=UDim2.new(1,0,0,heroHeight),BackgroundColor3=UI.P.white,Shadow=false})
+    facultyViewport(hero,staff,{
+        Position=UDim2.fromOffset(10,10),
+        Size=UDim2.new(1,-20,1,-82),
+        Headshot=false,
+        CornerRadius=14,
+    })
+    UI.text(hero,staff.role,15,{
+        Position=UDim2.new(0,14,1,-68),Size=UDim2.new(1,-28,0,30),
+        Font=Enum.Font.GothamBold,TextColor3=UI.P.ink,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=5,
+    })
+    UI.text(hero,staff.group,11,{
+        Position=UDim2.new(0,14,1,-39),Size=UDim2.new(1,-28,0,22),
+        Font=Enum.Font.GothamBold,TextColor3=UI.P.gold,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=5,
+    })
+
+    local meta=UI.new("Frame",body,{LayoutOrder=2,Size=UDim2.new(1,0,0,34),BackgroundTransparency=1})
+    UI.chip(meta,"Floor "..tostring(staff.floor),{
+        Position=UDim2.fromOffset(0,2),Size=UDim2.new(.32,-4,0,30),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink,
+    })
+    UI.chip(meta,staff.location,{
+        Position=UDim2.new(.32,4,0,2),Size=UDim2.new(.68,-4,0,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal,
+    })
+
+    local locationCard=UI.surface(body,{LayoutOrder=3,Size=UDim2.new(1,0,0,72),BackgroundColor3=UI.P.paper,Shadow=false})
+    UI.text(locationCard,"IN THE SCHOOL",10,{Position=UDim2.fromOffset(12,7),Size=UDim2.new(1,-24,0,18),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+    UI.text(locationCard,tostring(staff.location).." • Floor "..tostring(staff.floor),14,{Position=UDim2.fromOffset(12,25),Size=UDim2.new(1,-24,0,34),Font=Enum.Font.GothamBold,TextColor3=UI.P.ink})
+
+    UI.button(body,"Back to Faculty & Staff",function() showFaculty() end,{
+        LayoutOrder=4,Size=UDim2.new(1,0,0,48),BackgroundColor3=UI.P.teal,TextColor3=UI.P.white,TextSize=14,CornerRadius=12,
     })
 end
 
@@ -804,6 +909,10 @@ local function reflow()
                 showAvatar()
             elseif view=="classes" then
                 showClasses()
+            elseif view=="faculty" then
+                showFaculty()
+            elseif view=="facultyProfile" and activeFacultyId then
+                showFacultyProfile(activeFacultyId)
             end
         end)
     end
@@ -826,6 +935,15 @@ changed.OnClientEvent:Connect(function(packet)
         notify(packet.data.message)
     end
 end)
+ProximityPromptService.PromptTriggered:Connect(function(prompt)
+    if prompt.Name~="MeetFaculty" then return end
+    local model=prompt:FindFirstAncestorOfClass("Model")
+    local staffId=model and model:GetAttribute("StaffId") or nil
+    if type(staffId)=="string" then
+        showFacultyProfile(staffId)
+    end
+end)
+
 player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
     local isDriving=player:GetAttribute("NeighborhoodDriving")==true
     driving.Visible=isDriving
