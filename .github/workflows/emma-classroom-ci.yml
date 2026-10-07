@@ -73,7 +73,7 @@ jobs:
           grep -q 'Emma desk nameplate' school/emma-classroom/server/World.lua
           grep -q 'Interactive smartboard' school/emma-classroom/server/World.lua
           grep -q 'Class values' school/emma-classroom/server/World.lua
-          grep -q 'Staff badge' school/emma-classroom/server/World.lua
+          grep -q 'Staff badge' school/emma-classroom/server/StaffModel.lua
           grep -q 'Speech' school/emma-classroom/server/World.lua
           grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
           grep -q 'Staff door jamb' school/emma-classroom/server/World.lua
@@ -88,6 +88,7 @@ jobs:
         run: |
           "$RUNNER_TEMP/tools/luau/luau" school/emma-classroom/tests/core.spec.lua
           python3 school/emma-classroom/tests/server_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
 
       - name: Build isolated place
         shell: bash

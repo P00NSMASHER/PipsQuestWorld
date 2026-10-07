@@ -31,3 +31,13 @@
 ## Known release hold
 
 This candidate is not runtime-complete or publishable until an actual Roblox/iPhone capture proves movement, camera restoration, Study view composition, question interaction and the 10-question loop on the exact candidate head.
+
+## Staff/detail continuation
+
+The next candidate includes `STAFF_DETAIL_PASS.md`: a new native staff factory
+for all 18 profiles, detailed Bolich/McBreen/Boyer outfits/accessories, grouped
+limb-detail poses, paired desks and photo-guided window/rug/coat-storage details.
+`tests/geometry_behavior.py` executes both actual constructors with service/math
+doubles. The previous stale-save and awaited-shutdown fixes remain intact.
+This candidate has no Studio or physical-iPhone visual pass and does not claim
+portrait-level rendering or a measured exact classroom replica.

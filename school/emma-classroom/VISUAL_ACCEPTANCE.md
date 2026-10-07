@@ -44,3 +44,13 @@ The live game may be ahead of the last visually reviewed capture. Treat every li
 The reference recording exposes that the prior compact-strip goal omitted the readable prompt. For this candidate, inspect the right-side landscape panel and lower portrait panel at actual device scale. The complete prompt, hints and all options must be accessible at readable type, with no overlap on native movement/jump controls. Check the teacher remains visible to the left in Study view. The earlier 75% scenery target is not an acceptance substitute for question readability. No rendered pass is recorded for the new candidate.
 
 Verify the smaller staff scale and side-aisle route; front-facing Smartboard text; lit window openings; and all 18 labeled profiles. Publishing remains subject to the existing actual-capture gate.
+
+## Staff/detail continuation checks
+
+Inspect all 18 staff with close-ups before treating the new native geometry as
+accepted. Prioritize Bolich's beard/mouth/glasses, McBreen's hair/tie/lapels and
+Boyer's swept bob/pearls/gold details. Confirm the classic head mesh renders as
+intended, accessories remain attached through turns, soles meet the floor, and
+C-hand contours read cleanly. Source geometry tests are not likeness scores.
+Check the 16 paired desks, clear back-left reading area, separated rugs, inward
+alphabet cards, blinds/curtain folds and coat storage against the real photos.
