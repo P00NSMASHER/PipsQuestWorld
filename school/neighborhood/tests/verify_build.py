@@ -118,6 +118,18 @@ def validate_abvm_contract() -> dict:
         "★  ABVM SCHOOL LEADERS  ★",
         "Leaderboard gold top trim",
         "Credits leaderboard",
+        "Classroom area rug",
+        "Teacher desk top",
+        "Student work board",
+        "Classroom doorway jamb",
+        "Hall navy inlay",
+        "Hall wainscot",
+        "Hall classroom door jamb",
+        "Water fountain body",
+        "Lobby terrazzo floor",
+        "Lobby welcome rug",
+        "Trophy case backing",
+        "Stair landing light",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
