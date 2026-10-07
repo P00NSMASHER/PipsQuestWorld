@@ -176,6 +176,7 @@ jobs:
           # Handle 429 explicitly instead of letting curl turn a healthy publish red.
           sleep 5
           task_path=""
+          smoke_deferred="false"
           for attempt in $(seq 1 12); do
             code="$(curl --silent --show-error --location \
               --output "$RUNNER_TEMP/portrait-task.json" --write-out '%{http_code}' \
@@ -199,8 +200,22 @@ jobs:
               exit 1
             fi
           done
-          test -n "$task_path"
+          if [ -z "$task_path" ]; then
+            last_code="$(jq -r '.code // empty' "$RUNNER_TEMP/portrait-task.json" 2>/dev/null || true)"
+            if [ "$last_code" = "RESOURCE_EXHAUSTED" ]; then
+              echo "::warning::Published place is healthy, but Roblox Luau execution-session quota is exhausted; runtime gallery smoke deferred."
+              echo "RUNTIME_GALLERY_SMOKE_DEFERRED_RATE_LIMIT" | tee "$RUNNER_TEMP/portrait-runtime-logs.json"
+              smoke_deferred="true"
+            else
+              echo "::error::Unable to create runtime gallery smoke task."
+              cat "$RUNNER_TEMP/portrait-task.json" || true
+              exit 1
+            fi
+          fi
 
+          if [ "$smoke_deferred" = "true" ]; then
+            echo '{"state":"DEFERRED_RATE_LIMIT"}' > "$RUNNER_TEMP/portrait-runtime.json"
+          else
           task_url="https://apis.roblox.com/cloud/v2/$task_path"
           for attempt in $(seq 1 60); do
             curl -fsSL --retry 5 --retry-all-errors --retry-delay 1 --retry-max-time 20 "$task_url" \
@@ -223,6 +238,7 @@ jobs:
           jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
           grep -q 'BAKED_FACULTY_PORTRAITS_OK' "$RUNNER_TEMP/portrait-runtime-logs.json"
           grep -q 'FACULTY_GALLERY_VISIBLE_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
+          fi
 
       - name: Publish receipt
         if: ${{ success() }}
