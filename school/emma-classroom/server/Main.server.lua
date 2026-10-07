@@ -170,7 +170,13 @@ local function join(player)
     local function place(character)
         local root=character:WaitForChild("HumanoidRootPart",10)
         if root then character:PivotTo(World.Spawn) end
-        local hum=character:FindFirstChildOfClass("Humanoid");if hum then hum.WalkSpeed=13 end
+        local hum=character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed=0;hum.JumpPower=0;hum.AutoRotate=false
+            task.delay(.25,function()
+                if character.Parent and World.EmmaSeat and hum.Parent then World.EmmaSeat:Sit(hum) end
+            end)
+        end
     end
     player.CharacterAdded:Connect(place);if player.Character then task.spawn(place,player.Character) end
     task.delay(1.2,function() if sessions[player.UserId]==s then startRound(player) end end)
