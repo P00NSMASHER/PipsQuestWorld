@@ -230,8 +230,9 @@ def validate_abvm_contract() -> dict:
             "legacy wide white-toolbar HUD pattern returned")
 
     ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
-    require("local ResponsiveHudLayout=require(script.Parent.ResponsiveHudLayout)" in layout_source,
-            "neighborhood layout must be driven by the proven responsive HUD module")
+    require("ResponsiveHudLayout=require(script.Parent.ResponsiveHudLayout)" in layout_source
+            and 'ResponsiveHudLayout=require("./ResponsiveHudLayout")' in layout_source,
+            "neighborhood layout must use the proven responsive HUD module in Roblox and headless tests")
     require(all(marker in layout_source for marker in (
         "ResponsiveHudLayout.touchExclusionZones",
         "ResponsiveHudLayout.compute(viewport,insets,exclusions)",
