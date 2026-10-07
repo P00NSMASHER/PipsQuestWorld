@@ -573,6 +573,195 @@ local function makeFrontArch(root,x,hasDoor)
         CFrame.new(x+2.45,25,z)*CFrame.Angles(0,0,math.rad(38)),palette.stone,Enum.Material.Concrete,false)
 end
 
+
+local function cafeteriaTable(parent,x,y,z)
+    local navy=Color3.fromRGB(48,67,97)
+    World.part(parent,"Gym cafeteria table top",Vector3.new(22,.5,4.2),CFrame.new(x,y+2.8,z),navy,Enum.Material.SmoothPlastic)
+    World.part(parent,"Gym cafeteria bench left",Vector3.new(22,.42,1.55),CFrame.new(x,y+1.65,z-3.5),navy,Enum.Material.SmoothPlastic)
+    World.part(parent,"Gym cafeteria bench right",Vector3.new(22,.42,1.55),CFrame.new(x,y+1.65,z+3.5),navy,Enum.Material.SmoothPlastic)
+    for _,dx in ipairs({-9,9}) do
+        World.part(parent,"Gym cafeteria table leg",Vector3.new(.42,2.8,.42),CFrame.new(x+dx,y+1.35,z),palette.metal,Enum.Material.Metal)
+        World.part(parent,"Gym cafeteria bench support",Vector3.new(.42,1.6,7.6),CFrame.new(x+dx,y+.8,z),palette.metal,Enum.Material.Metal)
+    end
+    local casterPositions={{-9,-4.3},{9,-4.3},{-9,4.3},{9,4.3}}
+    for _,p in ipairs(casterPositions) do
+        local wheel=World.part(parent,"Gym cafeteria caster",Vector3.new(.45,.8,.8),CFrame.new(x+p[1],y+.35,z+p[2]),Color3.fromRGB(43,46,49),Enum.Material.SmoothPlastic,false)
+        wheel.Shape=Enum.PartType.Cylinder;wheel.CFrame*=CFrame.Angles(0,0,math.pi/2)
+    end
+end
+
+local function gymArchedWindow(parent,x,floorY,z)
+    local frame=Color3.fromRGB(36,45,55)
+    -- Tall rectangular lower sash.
+    local glass=World.part(parent,"Gym arched window glass",Vector3.new(.24,9.2,11.2),CFrame.new(x,floorY+14.5,z),Color3.fromRGB(203,224,232),Enum.Material.Glass,false)
+    glass.Transparency=.12
+    for _,dz in ipairs({-3.8,0,3.8}) do
+        World.part(parent,"Gym window mullion vertical",Vector3.new(.3,9.5,.22),CFrame.new(x-.16,floorY+14.5,z+dz),frame,Enum.Material.Wood,false)
+    end
+    for _,y in ipairs({floorY+11.6,floorY+14.5,floorY+17.4}) do
+        World.part(parent,"Gym window mullion horizontal",Vector3.new(.32,.24,11.4),CFrame.new(x-.16,y,z),frame,Enum.Material.Wood,false)
+    end
+    -- Stepped arched crown.
+    for _,entry in ipairs({{-4.5,1.8},{-3,3.6},{-1.5,4.7},{0,5.2},{1.5,4.7},{3,3.6},{4.5,1.8}}) do
+        local crown=World.part(parent,"Gym arched window crown",Vector3.new(.24,entry[2],1.25),
+            CFrame.new(x,floorY+19.1+entry[2]/2,z+entry[1]),Color3.fromRGB(203,224,232),Enum.Material.Glass,false)
+        crown.Transparency=.12
+    end
+    for _,dz in ipairs({-4.5,-3,-1.5,0,1.5,3,4.5}) do
+        World.part(parent,"Gym arch tracery",Vector3.new(.3,5.8,.18),CFrame.new(x-.17,floorY+21.3,z+dz),frame,Enum.Material.Wood,false)
+    end
+    World.part(parent,"Gym window sill",Vector3.new(.8,.45,12.2),CFrame.new(x+.08,floorY+9.7,z),Color3.fromRGB(206,203,194),Enum.Material.Concrete,false)
+end
+
+local function buildGymCafeteria(root,floorY)
+    local gym=Instance.new("Model");gym.Name="PhotoDerived_GymCafeteria";gym.Parent=root
+    local z=-194
+    local width=112
+    local depth=74
+    local cream=Color3.fromRGB(242,239,229)
+    local darkTrim=Color3.fromRGB(35,48,69)
+
+    World.part(gym,"Gym polished wood floor",Vector3.new(width,.5,depth),CFrame.new(0,floorY+.25,z),Color3.fromRGB(145,96,58),Enum.Material.WoodPlanks)
+    World.part(gym,"Gym west wall",Vector3.new(1.2,27,depth),CFrame.new(-width/2,floorY+13.5,z),cream)
+    World.part(gym,"Gym east wall",Vector3.new(1.2,27,depth),CFrame.new(width/2,floorY+13.5,z),cream)
+    World.part(gym,"Gym rear wall",Vector3.new(width,27,1.2),CFrame.new(0,floorY+13.5,z-depth/2),cream)
+    World.part(gym,"Gym front wall west",Vector3.new(47,27,1.2),CFrame.new(-32.5,floorY+13.5,z+depth/2),cream)
+    World.part(gym,"Gym front wall east",Vector3.new(47,27,1.2),CFrame.new(32.5,floorY+13.5,z+depth/2),cream)
+    World.part(gym,"Gym front header",Vector3.new(18,16,1.2),CFrame.new(0,floorY+19,z+depth/2),cream)
+
+    for _,entry in ipairs({
+        {-width/2+.75,0,depth-2,1.5},
+        {width/2-.75,0,depth-2,1.5},
+    }) do
+        World.part(gym,"Gym dark lower wall",Vector3.new(1.35,4.5,entry[3]),CFrame.new(entry[1],floorY+2.35,z),darkTrim,Enum.Material.SmoothPlastic,false)
+    end
+    World.part(gym,"Gym rear dark lower wall",Vector3.new(width-2,4.5,1.35),CFrame.new(0,floorY+2.35,z-depth/2+.7),darkTrim,Enum.Material.SmoothPlastic,false)
+
+    -- High white ceiling and exposed beams match the photographed multipurpose gym/cafeteria.
+    World.part(gym,"Gym ceiling",Vector3.new(width-1,.32,depth-1),CFrame.new(0,floorY+26.7,z),Color3.fromRGB(246,245,239),Enum.Material.SmoothPlastic,false)
+    for _,beamZ in ipairs({-224,-210,-196,-182,-168}) do
+        World.part(gym,"Gym ceiling beam",Vector3.new(width-2,1.2,1.8),CFrame.new(0,floorY+25.7,beamZ),Color3.fromRGB(232,231,225),Enum.Material.Wood,false)
+    end
+    for _,x in ipairs({-32,0,32}) do
+        for _,zz in ipairs({-211,-183}) do
+            local lamp=ceilingLight(gym,Vector3.new(x,floorY+25.9,zz),Vector3.new(6,.3,2),.75,24)
+            lamp.Name="Gym ceiling light"
+        end
+    end
+
+    -- Court lines.
+    World.part(gym,"Gym center stripe",Vector3.new(.22,.04,depth-6),CFrame.new(0,floorY+.54,z),Color3.fromRGB(49,53,57),nil,false)
+    World.part(gym,"Gym half-court stripe",Vector3.new(width-7,.04,.22),CFrame.new(0,floorY+.54,z),Color3.fromRGB(49,53,57),nil,false)
+    local center=World.part(gym,"Gym center circle",Vector3.new(.08,22,22),CFrame.new(0,floorY+.58,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(92,65,53),Enum.Material.SmoothPlastic,false)
+    center.Shape=Enum.PartType.Cylinder
+
+    -- Three large Gothic-arched windows and exit-door zones from the photo set.
+    for _,windowZ in ipairs({-214,-194,-174}) do
+        gymArchedWindow(gym,-55.25,floorY,windowZ)
+        World.part(gym,"Gym exit door",Vector3.new(.34,7.6,8.2),CFrame.new(-55.05,floorY+4.2,windowZ),Color3.fromRGB(68,87,90),Enum.Material.Metal,false)
+        World.part(gym,"Gym exit door split",Vector3.new(.4,7.3,.18),CFrame.new(-54.82,floorY+4.2,windowZ),palette.metal,Enum.Material.Metal,false)
+    end
+
+    -- Stage, green curtain, side arch doors and heraldic trim.
+    World.part(gym,"Gym stage deck",Vector3.new(82,1.4,13),CFrame.new(0,floorY+1,z-depth/2+7),Color3.fromRGB(88,58,43),Enum.Material.WoodPlanks)
+    World.part(gym,"Gym stage proscenium",Vector3.new(86,22,1.2),CFrame.new(0,floorY+14,z-depth/2+1.2),cream,Enum.Material.Concrete,false)
+    World.part(gym,"Gym stage opening",Vector3.new(72,17,.5),CFrame.new(0,floorY+12.5,z-depth/2+1.7),Color3.fromRGB(39,72,56),Enum.Material.Fabric,false)
+    for _,cx in ipairs({-30,-18,-6,6,18,30}) do
+        World.part(gym,"Gym stage curtain fold",Vector3.new(5.2,17,.42),CFrame.new(cx,floorY+12.5,z-depth/2+1.4),Color3.fromRGB(43,82,62),Enum.Material.Fabric,false)
+    end
+    for _,side in ipairs({-1,1}) do
+        World.part(gym,"Gym stage side arch door",Vector3.new(7.5,12,.7),CFrame.new(side*49,floorY+6.5,z-depth/2+1.5),Color3.fromRGB(31,44,58),Enum.Material.Wood,false)
+    end
+    sign(gym,"ASSUMPTION BVM SCHOOL",CFrame.new(0,floorY+24.1,z-depth/2+1.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.4,.18),palette.green,palette.gold)
+
+    -- Suspended hoop in front of the stage.
+    World.part(gym,"Gym hoop support",Vector3.new(.7,11,.7),CFrame.new(0,floorY+21,z-depth/2+11),palette.metal,Enum.Material.Metal,false)
+    World.part(gym,"Gym backboard",Vector3.new(15,8,.5),CFrame.new(0,floorY+17.2,z-depth/2+11),Color3.fromRGB(242,243,240),Enum.Material.SmoothPlastic,false)
+    World.part(gym,"Gym backboard square",Vector3.new(5,.24,.58),CFrame.new(0,floorY+17,z-depth/2+10.7),Color3.fromRGB(46,49,53),Enum.Material.SmoothPlastic,false)
+    local rim=World.part(gym,"Gym basketball rim",Vector3.new(.45,5,5),CFrame.new(0,floorY+13.9,z-depth/2+7.7)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(185,66,38),Enum.Material.Metal,false)
+    rim.Shape=Enum.PartType.Cylinder
+
+    -- Photo-supported folding cafeteria tables.
+    for _,tx in ipairs({-30,0,30}) do
+        for _,tz in ipairs({-184,-204}) do cafeteriaTable(gym,tx,floorY,tz) end
+    end
+    World.part(gym,"Gym folded table bank",Vector3.new(1.6,7,33),CFrame.new(54.2,floorY+4,-198),Color3.fromRGB(47,68,98),Enum.Material.Metal,false)
+
+    -- Connector from the central hall. Placement is gameplay inference; room finishes are photo-derived.
+    World.part(gym,"Gym connector floor",Vector3.new(18,.45,12),CFrame.new(0,floorY+.25,-151),Color3.fromRGB(68,70,68),Enum.Material.Slate)
+    World.part(gym,"Gym connector west wall",Vector3.new(1,11,12),CFrame.new(-9,floorY+5.7,-151),Color3.fromRGB(101,132,147))
+    World.part(gym,"Gym connector east wall",Vector3.new(1,11,12),CFrame.new(9,floorY+5.7,-151),Color3.fromRGB(101,132,147))
+    World.part(gym,"Gym connector west brick wainscot",Vector3.new(1.08,3.4,12),CFrame.new(-8.55,floorY+1.9,-151),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    World.part(gym,"Gym connector east brick wainscot",Vector3.new(1.08,3.4,12),CFrame.new(8.55,floorY+1.9,-151),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    World.part(gym,"Gym connector ceiling",Vector3.new(18,.25,12),CFrame.new(0,floorY+11.1,-151),Color3.fromRGB(224,227,224),Enum.Material.SmoothPlastic,false)
+    ceilingLight(gym,Vector3.new(0,floorY+10.9,-151),Vector3.new(6,.22,2),.6,16).Name="Gym connector light"
+end
+
+local function buildPhotoPlayground(root)
+    local yard=Instance.new("Model");yard.Name="PhotoDerived_PlaygroundAndYard";yard.Parent=root
+    local asphalt=Color3.fromRGB(69,70,68)
+    -- Asphalt activity yard with chain-link perimeter and wall-mounted hoop.
+    World.part(yard,"Photo asphalt school yard",Vector3.new(82,.24,72),CFrame.new(-135,.16,-76),asphalt,Enum.Material.Asphalt)
+    fencePanel(yard,CFrame.new(-176,4,-76),Vector3.new(.45,8,72))
+    fencePanel(yard,CFrame.new(-94,4,-76),Vector3.new(.45,8,72))
+    fencePanel(yard,CFrame.new(-135,4,-112),Vector3.new(82,8,.45))
+    fencePanel(yard,CFrame.new(-135,4,-40),Vector3.new(82,8,.45))
+    for _,x in ipairs({-176,-162,-148,-134,-120,-106,-94}) do
+        World.part(yard,"Photo yard fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-40),palette.metal,Enum.Material.Metal,true)
+        World.part(yard,"Photo yard fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-112),palette.metal,Enum.Material.Metal,true)
+    end
+    for _,z in ipairs({-108,-90,-72,-54,-40}) do
+        World.part(yard,"Photo yard fence post",Vector3.new(.65,9,.65),CFrame.new(-176,4.4,z),palette.metal,Enum.Material.Metal,true)
+        World.part(yard,"Photo yard fence post",Vector3.new(.65,9,.65),CFrame.new(-94,4.4,z),palette.metal,Enum.Material.Metal,true)
+    end
+    World.part(yard,"Photo yard basketball backboard",Vector3.new(.45,8,11),CFrame.new(-95,14,-78),Color3.fromRGB(234,236,232),Enum.Material.SmoothPlastic,false)
+    local yardRim=World.part(yard,"Photo yard basketball rim",Vector3.new(.42,4.6,4.6),CFrame.new(-92.8,10.8,-78)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(181,64,39),Enum.Material.Metal,false)
+    yardRim.Shape=Enum.PartType.Cylinder
+    -- Hopscotch rectangles.
+    for i=1,8 do
+        local z=-58-(i-1)*3.8
+        World.part(yard,"Photo yard hopscotch box",Vector3.new(4.8,.035,3.1),CFrame.new(-131,.31,z),Color3.fromRGB(191,151,54),Enum.Material.SmoothPlastic,false)
+        if i%3==0 then
+            World.part(yard,"Photo yard hopscotch pair",Vector3.new(4.8,.035,3.1),CFrame.new(-125.7,.31,z),Color3.fromRGB(191,151,54),Enum.Material.SmoothPlastic,false)
+        end
+    end
+
+    -- Mulch playground against a tall ivy/brick edge.
+    World.part(yard,"Photo mulch playground",Vector3.new(82,.3,58),CFrame.new(-135,.18,-150),Color3.fromRGB(105,79,55),Enum.Material.Ground)
+    fencePanel(yard,CFrame.new(-176,4,-150),Vector3.new(.45,8,58))
+    fencePanel(yard,CFrame.new(-94,4,-150),Vector3.new(.45,8,58))
+    fencePanel(yard,CFrame.new(-135,4,-179),Vector3.new(82,8,.45))
+    World.part(yard,"Photo playground brick wall",Vector3.new(1.5,30,58),CFrame.new(-92.8,15,-150),Color3.fromRGB(111,79,61),Enum.Material.Brick)
+    for _,entry in ipairs({{-92,17,-168},{-92,12,-157},{-92,20,-146},{-92,14,-135}}) do
+        local ivy=World.part(yard,"Photo playground ivy",Vector3.new(1.7,10,9),CFrame.new(entry[1],entry[2],entry[3]),Color3.fromRGB(54,104,57),Enum.Material.Grass,false)
+        ivy.Transparency=.08
+    end
+
+    -- Play structure: red dome climber, blue panels, tan slide.
+    World.part(yard,"Photo playground platform",Vector3.new(18,1,14),CFrame.new(-134,6,-151),Color3.fromRGB(86,104,121),Enum.Material.Metal)
+    for _,x in ipairs({-141,-127}) do
+        for _,z in ipairs({-157,-145}) do
+            World.part(yard,"Photo playground post",Vector3.new(.7,7,.7),CFrame.new(x,3.5,z),Color3.fromRGB(115,64,55),Enum.Material.Metal)
+        end
+    end
+    for _,entry in ipairs({{-145,-153},{-145,-149},{-141,-159},{-137,-159}}) do
+        World.part(yard,"Photo red dome climber bar",Vector3.new(.55,6,.55),CFrame.new(entry[1],3,entry[2])*CFrame.Angles(math.rad(18),0,0),Color3.fromRGB(176,69,57),Enum.Material.Metal,false)
+    end
+    World.part(yard,"Photo playground blue panel",Vector3.new(6,3,.45),CFrame.new(-128,8,-151),Color3.fromRGB(45,93,144),Enum.Material.SmoothPlastic,false)
+    World.part(yard,"Photo playground slide",Vector3.new(6,.65,18),CFrame.new(-122,3.4,-151)*CFrame.Angles(0,0,math.rad(-17)),Color3.fromRGB(222,192,132),Enum.Material.SmoothPlastic)
+    World.part(yard,"Photo playground slide rail top",Vector3.new(.5,2,18),CFrame.new(-122,4.7,-154)*CFrame.Angles(0,0,math.rad(-17)),Color3.fromRGB(205,171,109),Enum.Material.SmoothPlastic,false)
+    World.part(yard,"Photo playground slide rail bottom",Vector3.new(.5,2,18),CFrame.new(-122,4.7,-148)*CFrame.Angles(0,0,math.rad(-17)),Color3.fromRGB(205,171,109),Enum.Material.SmoothPlastic,false)
+
+    -- Two colorful crawl tunnels.
+    for _,tz in ipairs({-166,-134}) do
+        for i=0,5 do
+            local ring=World.part(yard,"Photo playground tunnel ring",Vector3.new(1.2,7,7),CFrame.new(-154+i*2.4,2.7,tz)*CFrame.Angles(0,0,math.pi/2),
+                ({Color3.fromRGB(211,70,68),Color3.fromRGB(67,126,189),Color3.fromRGB(211,196,62)})[(i%3)+1],Enum.Material.SmoothPlastic,false)
+            ring.Shape=Enum.PartType.Cylinder
+        end
+    end
+end
+
 local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
     local steps=22
     for i=0,steps-1 do
@@ -696,8 +885,12 @@ function World.build()
     World.part(root,"East brick wall back",Vector3.new(1.4,48,44),CFrame.new(75,28,-123),palette.brick,Enum.Material.Brick)
     World.part(root,"East brick wall front",Vector3.new(1.4,48,50),CFrame.new(75,28,-60),palette.brick,Enum.Material.Brick)
     World.part(root,"East entry header",Vector3.new(1.4,31,16),CFrame.new(75,36.5,-93),palette.brick,Enum.Material.Brick)
-    World.part(root,"Back brick wall",Vector3.new(150,48,1.4),CFrame.new(0,28,-145),palette.brick,Enum.Material.Brick)
-    World.part(root,"Exposed lower masonry",Vector3.new(150,6,1.5),CFrame.new(0,1,-145.2),palette.brickDark,Enum.Material.Brick)
+    -- Rear wall is segmented around a ground-floor connector into the photo-derived gym/cafeteria.
+    World.part(root,"Back brick wall west",Vector3.new(63,48,1.4),CFrame.new(-43.5,28,-145),palette.brick,Enum.Material.Brick)
+    World.part(root,"Back brick wall east",Vector3.new(63,48,1.4),CFrame.new(43.5,28,-145),palette.brick,Enum.Material.Brick)
+    World.part(root,"Back brick connector header",Vector3.new(24,38,1.4),CFrame.new(0,33,-145),palette.brick,Enum.Material.Brick)
+    World.part(root,"Exposed lower masonry west",Vector3.new(63,6,1.5),CFrame.new(-43.5,1,-145.2),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Exposed lower masonry east",Vector3.new(63,6,1.5),CFrame.new(43.5,1,-145.2),palette.brickDark,Enum.Material.Brick)
 
     -- Formal front facade: four upper window bays, then the three large arches from the approved render
     -- aligned beneath the final three bays. The lower wall is segmented so the arches are real openings,
@@ -1025,12 +1218,15 @@ function World.build()
     -- Dense urban Pottsville context. These are backdrop buildings, not owned player homes.
     local rowColors={Color3.fromRGB(145,104,83),Color3.fromRGB(173,153,131),Color3.fromRGB(119,91,78),Color3.fromRGB(188,179,160)}
     for i,z in ipairs({-145,-92,-39}) do
-        rowHome(root,-142,z,rowColors[(i-1)%#rowColors+1],3,(i-1)*3)
+        rowHome(root,-220,z,rowColors[(i-1)%#rowColors+1],3,(i-1)*3)
         rowHome(root,205,z,rowColors[i%#rowColors+1],3,2+(i-1)*3)
     end
-    rowHome(root,-169,-118,rowColors[3],3,8)
-    rowHome(root,-169,-63,rowColors[2],2,5)
+    rowHome(root,-245,-118,rowColors[3],3,8)
+    rowHome(root,-245,-63,rowColors[2],2,5)
     tree(root,-101,-28,.85);tree(root,-102,-145,.95);tree(root,88,-34,.7)
+
+    -- Photo-derived fenced asphalt yard and mulch playground on the west side.
+    buildPhotoPlayground(root)
 
     -- The approved hero image has a green hill line plus tiny civic/utility silhouettes in the far
     -- background. Keep these extremely simple because they are scenery, not gameplay geometry.
@@ -1152,6 +1348,11 @@ function World.build()
     classroom(root,"religion","Religion","Mr. Bolich",49,20,color((active.religion and active.religion.color) or {196,147,58}),active.religion~=nil)
     classroom(root,"vocabulary","Vocabulary","Mr. Yordy",-49,36,color((active.vocabulary and active.vocabulary.color) or {58,135,118}),active.vocabulary~=nil)
     classroom(root,"spelling","Spelling","Mrs. Kochol",49,36,color((active.spelling and active.spelling.color) or {51,158,129}),active.spelling~=nil)
+
+    -- Large shared room reproduced from the user's gym/cafeteria photos. The room's finishes and
+    -- contents are photo-derived; its rear connector placement is a gameplay inference because no
+    -- verified complete floor plan was provided.
+    buildGymCafeteria(root,4)
 
     -- Stairs connect all three playable academic floors.
     stairFlight(root,-7,-58,-101,5,19.4)
