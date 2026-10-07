@@ -305,17 +305,32 @@ test("mix-and-match ABVM uniform pieces equip independently",function()
     end
     assert(p.equipped.home=="home_starter" and p.equipped.vehicle=="vehicle_cart")
 end)
-test("layout remains inside gold-standard iPhone, iPad and desktop safe canvases",function()
+test("responsive HUD keeps gameplay surfaces inside safe non-overlapping regions",function()
+    local function overlaps(a,b)
+        return math.min(a.x+a.width,b.x+b.width)>math.max(a.x,b.x)
+            and math.min(a.y+a.height,b.y+b.height)>math.max(a.y,b.y)
+    end
     for _,v in ipairs({{1112,512},{852,393},{758,360},{720,320},{350,760},{320,568},{976,724},{1366,700}}) do
         local l=Layout.compute(v[1],v[2]);local r=l.modal
-        assert(r.x>=0 and r.y>=l.headerHeight and r.x+r.width<=v[1] and r.y+r.height<=v[2])
-        assert(l.rail.x>=0 and l.rail.y>=0 and l.rail.x+l.rail.width<=v[1])
-        assert(l.goal.x>=0 and l.goal.x+l.goal.width<=v[1])
+        assert(r.x>=0 and r.y>=0 and r.x+r.width<=v[1] and r.y+r.height<=v[2])
+        assert(l.rail.x>=0 and l.rail.y>=0 and l.rail.x+l.rail.width<=v[1] and l.rail.y+l.rail.height<=v[2])
+        assert(l.nav.x>=0 and l.nav.y>=0 and l.nav.x+l.nav.width<=v[1] and l.nav.y+l.nav.height<=v[2])
+        assert(l.goal.x>=0 and l.goal.y>=0 and l.goal.x+l.goal.width<=v[1] and l.goal.y+l.goal.height<=v[2])
         assert(l.answerHeight>=48)
         assert(l.drive.width>=88 and l.drive.height>=160)
-        if v[1]>=720 and v[1]>=v[2] then
-            assert(l.headerHeight/v[2]<=.20)
-            assert(l.columns==2)
+        if v[1]>=480 and v[1]>=v[2] and v[2]>=300 then
+            assert(l.referenceHud==true)
+            assert(l.nav.width<=58)
+            assert(l.rail.width<=154)
+            assert(not overlaps(r,l.rail))
+            assert(not overlaps(r,l.nav))
+            assert(not overlaps(r,l.goal))
+            for _,zone in ipairs(l.exclusionZones) do
+                assert(not overlaps(r,zone))
+            end
+            if v[1]>=720 then assert(l.columns==2) end
+        else
+            assert(l.referenceHud==false)
         end
     end
 end)
