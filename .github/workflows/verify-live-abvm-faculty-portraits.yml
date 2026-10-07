@@ -1,0 +1,110 @@
+name: Verify Live ABVM Faculty Portraits
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-faculty-v1
+    paths:
+      - '.github/workflows/verify-live-abvm-faculty-portraits.yml'
+      - 'school/neighborhood/shared/PortraitPixels.lua'
+      - 'school/neighborhood/shared/PortraitRenderer.lua'
+      - 'school/neighborhood/server/World.lua'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-live-abvm-faculty-portraits
+  cancel-in-progress: true
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      UNIVERSE_ID: '10769455759'
+      PLACE_ID: '114603280760042'
+    steps:
+      - name: Inspect published faculty portrait runtime
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY"
+          cat > "$RUNNER_TEMP/verify.luau" <<'LUA'
+          local Workspace=game:GetService("Workspace")
+          local root=Workspace:FindFirstChild("NeighborhoodWorld")
+          assert(root,"NeighborhoodWorld missing")
+
+          local ids={
+              "carl_mcbreen","melissa_thompson","carol_boyer","erin_heckman","sharon_rossi",
+              "cindy_campion","maryann_lascala","karla_russek","aimee_benulis","marla_callaghan",
+              "marylouise_smith","nicole_leagans","lyric_paskel","mike_yordy","jacqui_urban",
+              "david_bolich","lucilla_kochol","cindy_long",
+          }
+          local checked=0
+          for _,id in ipairs(ids) do
+              local model=root:FindFirstChild("Faculty_"..id,true)
+              assert(model and model:IsA("Model"),"missing faculty model: "..id)
+              assert(model:GetAttribute("PortraitMode")=="baked-photo","portrait mode mismatch: "..id)
+              local plate=model:FindFirstChild("Photo face plate")
+              assert(plate and plate:IsA("BasePart"),"portrait face plate missing: "..id)
+              local gui=plate:FindFirstChild("BakedFacultyPortrait")
+              assert(gui and gui:IsA("SurfaceGui"),"portrait SurfaceGui missing: "..id)
+              local border=gui:FindFirstChild("PortraitBorder")
+              assert(border and border:IsA("Frame"),"portrait border missing: "..id)
+              local pixels=border:FindFirstChild("PhotoPixels")
+              assert(pixels and pixels:IsA("Frame"),"portrait pixels missing: "..id)
+              local strips=0
+              local gradients=0
+              for _,desc in ipairs(pixels:GetDescendants()) do
+                  if desc:IsA("Frame") and desc.Name=="PortraitStrip" then strips+=1 end
+                  if desc:IsA("UIGradient") and desc.Name=="PortraitGradient" then gradients+=1 end
+              end
+              assert(strips==144,"portrait strip count mismatch for "..id..": "..tostring(strips))
+              assert(gradients==144,"portrait gradient count mismatch for "..id..": "..tostring(gradients))
+              checked+=1
+          end
+          assert(checked==18,"faculty count mismatch")
+          print("ABVM_BAKED_FACULTY_LIVE_OK",checked)
+          return tostring(checked)
+          LUA
+
+          body="$(jq -Rs '{script:.,timeout:"120s"}' < "$RUNNER_TEMP/verify.luau")"
+          create_url="https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/places/$PLACE_ID/luau-execution-session-tasks"
+          curl -fsSL --request POST "$create_url" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            --header 'Content-Type: application/json' \
+            --data "$body" > "$RUNNER_TEMP/task.json"
+          jq . "$RUNNER_TEMP/task.json"
+          task_path="$(jq -r '.path // empty' "$RUNNER_TEMP/task.json")"
+          test -n "$task_path"
+          task_url="https://apis.roblox.com/cloud/v2/$task_path"
+
+          for attempt in $(seq 1 80); do
+            curl -fsSL "$task_url" --header "x-api-key: $ROBLOX_API_KEY" > "$RUNNER_TEMP/result.json"
+            state="$(jq -r '.state // empty' "$RUNNER_TEMP/result.json")"
+            echo "task state=$state"
+            if [ "$state" != "PROCESSING" ] && [ "$state" != "QUEUED" ] && [ -n "$state" ]; then break; fi
+            sleep 2
+          done
+          curl -fsSL "$task_url/logs" --header "x-api-key: $ROBLOX_API_KEY" > "$RUNNER_TEMP/logs.json" || true
+          jq . "$RUNNER_TEMP/result.json"
+          jq . "$RUNNER_TEMP/logs.json" || true
+          test "$(jq -r '.state' "$RUNNER_TEMP/result.json")" = "COMPLETE"
+          grep -q 'ABVM_BAKED_FACULTY_LIVE_OK' "$RUNNER_TEMP/logs.json"
+          grep -q '18' "$RUNNER_TEMP/logs.json"
+
+      - name: Preserve live verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-live-faculty-portrait-verification-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/task.json
+            ${{ runner.temp }}/result.json
+            ${{ runner.temp }}/logs.json
+          retention-days: 14
+          if-no-files-found: warn
