@@ -73,9 +73,23 @@ end
 
 local function tree(parent,x,z,scale)
     local s=scale or 1
-    World.part(parent,"Tree trunk",Vector3.new(1.6*s,7*s,1.6*s),CFrame.new(x,3.5*s,z),palette.wood,Enum.Material.Wood)
-    local crown=World.part(parent,"Tree crown",Vector3.new(9*s,10*s,9*s),CFrame.new(x,10*s,z),Color3.fromRGB(72,124,72),Enum.Material.Grass,false)
-    crown.Shape=Enum.PartType.Ball
+    -- Deliberately chunky canopy: the approved visual target reads as polished Roblox,
+    -- not a photoreal mesh import. Five low-cost leaf blocks keep that silhouette.
+    World.part(parent,"Tree trunk",Vector3.new(1.7*s,7.2*s,1.7*s),CFrame.new(x,3.6*s,z),palette.wood,Enum.Material.Wood)
+    local chunks={
+        {0,10.1,0,6.8,Color3.fromRGB(69,126,70)},
+        {-2.9,9.3,.4,5.4,Color3.fromRGB(79,137,76)},
+        {2.8,9.4,-.3,5.2,Color3.fromRGB(62,116,64)},
+        {-.8,12.6,-1.2,5.3,Color3.fromRGB(83,143,79)},
+        {1.1,11.7,2.2,4.8,Color3.fromRGB(73,131,70)},
+    }
+    for _,c in ipairs(chunks) do
+        local leaf=World.part(parent,"Tree canopy chunk",
+            Vector3.new(c[4]*s,c[4]*.82*s,c[4]*s),
+            CFrame.new(x+c[1]*s,c[2]*s,z+c[3]*s),
+            c[5],Enum.Material.Grass,false)
+        leaf.CanQuery=false;leaf.CanTouch=false
+    end
 end
 
 local function shrub(parent,x,z,scale)
@@ -452,6 +466,18 @@ function World.build()
     cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
     sign(root,"1928",CFrame.new(0,10.6,-33.15)*CFrame.Angles(0,math.pi,0),Vector3.new(5,2,.25),palette.stone,palette.brickDark)
 
+    -- The approved Roblox gold standard adds one restrained vertical identity banner on the
+    -- east/front corner. It is built from native Parts + SurfaceGui so it is cheap, crisp and
+    -- reproducible in Studio instead of depending on an external photoreal texture.
+    local facadeBanner=sign(root,"✝\nFAITH\nFAMILY\nACADEMICS\nSERVICE",
+        CFrame.new(75.75,35,-56)*CFrame.Angles(0,-math.pi/2,0),
+        Vector3.new(9,22,.42),palette.green,palette.gold)
+    facadeBanner.Name="Gold standard facade banner"
+    World.part(root,"Facade banner gold top trim",Vector3.new(.48,.45,9.7),
+        CFrame.new(75.95,46.2,-56),palette.gold,Enum.Material.Metal,false)
+    World.part(root,"Facade banner gold bottom trim",Vector3.new(.48,.45,9.7),
+        CFrame.new(75.95,23.8,-56),palette.gold,Enum.Material.Metal,false)
+
     -- Repeating side windows and strong vertical brick rhythm visible in the reference photos.
     for _,side in ipairs({-1,1}) do
         local wallX=side*75.65
@@ -522,6 +548,24 @@ function World.build()
         sideWindow.Transparency=.2
     end
     World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+
+    -- Street-level identity from the approved Roblox render. This is intentionally a compact
+    -- native-Part sign, not a giant facade billboard, so the real-school architecture still leads.
+    for _,x in ipairs({-62,-48}) do
+        World.part(root,"Front school sign post",Vector3.new(.9,11,.9),CFrame.new(x,5.5,8),palette.green,Enum.Material.Wood,false)
+        local cap=World.part(root,"Front school sign post cap",Vector3.new(1.35,1.35,1.35),CFrame.new(x,11.2,8),palette.gold,nil,false)
+        cap.Shape=Enum.PartType.Ball
+    end
+    World.part(root,"Front school sign gold backing",Vector3.new(16.2,8.8,.65),
+        CFrame.new(-55,7.1,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
+    local frontSchoolSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL",
+        CFrame.new(-55,7.1,7.5)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(15.4,8,.42),palette.green,palette.gold)
+    frontSchoolSign.Name="Gold standard front school sign"
+
+    -- Tiered masonry and greenery make the uphill arrival read clearly at Roblox camera distance.
+    World.part(root,"Front garden terrace west",Vector3.new(30,2.2,5.2),CFrame.new(-49,1.1,1.5),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front garden terrace east",Vector3.new(30,2.2,5.2),CFrame.new(49,1.1,1.5),palette.stone,Enum.Material.Concrete)
 
     -- Gold-standard arrival landscaping: clipped shrubs and bright flower beds frame the stairs.
     for _,x in ipairs({-43,43}) do
