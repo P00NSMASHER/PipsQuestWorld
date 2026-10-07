@@ -172,10 +172,9 @@ local function join(player)
         if root then character:PivotTo(World.Spawn) end
         local hum=character:FindFirstChildOfClass("Humanoid")
         if hum then
-            hum.WalkSpeed=0;hum.JumpPower=0;hum.AutoRotate=false
-            task.delay(.25,function()
-                if character.Parent and World.EmmaSeat and hum.Parent then World.EmmaSeat:Sit(hum) end
-            end)
+            -- The classroom is small, but it is still a Roblox space: Emma can
+            -- walk around and use the normal touch camera between questions.
+            hum.WalkSpeed=16;hum.JumpPower=50;hum.AutoRotate=true
         end
     end
     player.CharacterAdded:Connect(place);if player.Character then task.spawn(place,player.Character) end
