@@ -113,7 +113,7 @@ startRound=function(player)
         local token=HttpService:GenerateGUID(false)
         s.pending={token=token,q=q,choices=choices,teacher=teacher}
         s.busy=false
-        World.setBoardQuestion(q.subject,teacher.name,q.prompt)
+        World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
         event:FireClient(player,{kind="question",teacher=teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
     end)
 end
