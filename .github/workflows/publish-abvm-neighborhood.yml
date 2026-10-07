@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: version 29 premium school interior polish
+# release: version 30 photo-derived school replica pass
 
 on:
   push:
