@@ -301,59 +301,64 @@ end
 
 local function makeFrontArch(root,x,hasDoor)
     local z=-34.2
-    local radius=5.25
-    local springY=18
-    -- Four bays are visible in the close-up reference. The center pair are doors;
-    -- the outer pair remain tall windows.
-    for i=0,12 do
-        local theta=math.pi*i/12
+    local radius=6.35
+    local springY=17.4
+    local glassWidth=11.2
+    -- Three large segmented arches define the approved Roblox facade. Native blocks keep
+    -- the silhouette crisp and cheap while the cream tracery carries the church-school character.
+    for i=0,14 do
+        local theta=math.pi*i/14
         local px=x+math.cos(theta)*radius
         local py=springY+math.sin(theta)*radius
-        World.part(root,"Arch stone segment",Vector3.new(2.75,1.2,1.35),
+        World.part(root,"Arch stone segment",Vector3.new(2.7,1.25,1.4),
             CFrame.new(px,py,z)*CFrame.Angles(0,0,theta+math.pi/2),
             palette.stone,Enum.Material.Concrete,false)
     end
-    World.part(root,"Arch left pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x-radius,11.8,z),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Arch right pier",Vector3.new(1.25,16.5,1.35),CFrame.new(x+radius,11.8,z),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Arch left pier",Vector3.new(1.35,16.8,1.4),CFrame.new(x-radius,11.6,z),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Arch right pier",Vector3.new(1.35,16.8,1.4),CFrame.new(x+radius,11.6,z),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Arch keystone",Vector3.new(2.2,1.55,1.7),CFrame.new(x,24.05,z-.05),Color3.fromRGB(196,191,179),Enum.Material.Concrete,false)
 
-    local upperGlass=World.part(root,"Arched upper glazing",Vector3.new(9.1,5,.3),CFrame.new(x,19.2,z-.55),palette.glass,Enum.Material.Glass,false)
-    upperGlass.Transparency=.12
-    for _,offset in ipairs({-3,-1.5,0,1.5,3}) do
-        World.part(root,"Arch upper mullion",Vector3.new(.13,5.5,.16),
-            CFrame.new(x+offset,19.2,z-.78)*CFrame.Angles(0,0,offset*.07),palette.cream,nil,false)
+    local upperGlass=World.part(root,"Arched upper glazing",Vector3.new(glassWidth,5.3,.3),CFrame.new(x,19,z-.55),Color3.fromRGB(91,118,133),Enum.Material.Glass,false)
+    upperGlass.Transparency=.1
+    local upperGlow=World.part(root,"Arch warm backlight",Vector3.new(glassWidth-.5,4.85,.08),CFrame.new(x,19,z-.77),Color3.fromRGB(255,222,159),Enum.Material.Neon,false)
+    upperGlow.Transparency=.77;upperGlow.CanQuery=false;upperGlow.CanTouch=false
+    for _,offset in ipairs({-3.8,-1.9,0,1.9,3.8}) do
+        World.part(root,"Arch upper mullion",Vector3.new(.14,5.6,.17),
+            CFrame.new(x+offset,19,z-.8)*CFrame.Angles(0,0,offset*.045),palette.cream,nil,false)
     end
-    -- Light diamond tracery is one of the most recognizable details in the user's close-up.
-    for _,dx in ipairs({-2.4,0,2.4}) do
-        World.part(root,"Arch tracery left",Vector3.new(3.9,.13,.17),
-            CFrame.new(x+dx-.75,20.2,z-.8)*CFrame.Angles(0,0,math.rad(52)),palette.cream,nil,false)
-        World.part(root,"Arch tracery right",Vector3.new(3.9,.13,.17),
-            CFrame.new(x+dx+.75,20.2,z-.8)*CFrame.Angles(0,0,math.rad(-52)),palette.cream,nil,false)
+    for _,dx in ipairs({-3.15,0,3.15}) do
+        World.part(root,"Arch tracery left",Vector3.new(4.6,.14,.18),
+            CFrame.new(x+dx-.82,20.15,z-.82)*CFrame.Angles(0,0,math.rad(54)),palette.cream,nil,false)
+        World.part(root,"Arch tracery right",Vector3.new(4.6,.14,.18),
+            CFrame.new(x+dx+.82,20.15,z-.82)*CFrame.Angles(0,0,math.rad(-54)),palette.cream,nil,false)
     end
 
     if hasDoor then
-        local transom=World.part(root,"Door transom glazing",Vector3.new(9.1,4.4,.3),CFrame.new(x,14.7,z-.56),palette.glass,Enum.Material.Glass,false)
-        transom.Transparency=.12
-        World.part(root,"Entry double doors",Vector3.new(8.6,7.2,.3),CFrame.new(x,8,z-.72),Color3.fromRGB(218,214,198),Enum.Material.Metal,false)
-        World.part(root,"Door split",Vector3.new(.18,7.1,.36),CFrame.new(x,8,z-.9),palette.stone,nil,false)
-        for _,dx in ipairs({-2.25,2.25}) do
-            World.part(root,"Door window",Vector3.new(1.25,2.4,.1),CFrame.new(x+dx,8.3,z-.94),Color3.fromRGB(73,95,105),Enum.Material.Glass,false)
+        local transom=World.part(root,"Door transom glazing",Vector3.new(glassWidth,4.2,.3),CFrame.new(x,14.45,z-.56),Color3.fromRGB(93,118,129),Enum.Material.Glass,false)
+        transom.Transparency=.11
+        World.part(root,"Entry double doors",Vector3.new(10.5,7.4,.34),CFrame.new(x,8,z-.72),Color3.fromRGB(224,219,201),Enum.Material.Metal,false)
+        World.part(root,"Door split",Vector3.new(.2,7.2,.4),CFrame.new(x,8,z-.92),palette.stone,nil,false)
+        for _,dx in ipairs({-2.7,2.7}) do
+            World.part(root,"Door window",Vector3.new(1.45,2.45,.12),CFrame.new(x+dx,8.5,z-.96),Color3.fromRGB(67,88,98),Enum.Material.Glass,false)
+            World.part(root,"Door handle",Vector3.new(.22,1.05,.28),CFrame.new(x+dx*.25,6.9,z-1.02),palette.metal,Enum.Material.Metal,false)
         end
     else
-        local lower=World.part(root,"Tall lower glazing",Vector3.new(9.1,10.7,.32),CFrame.new(x,12.1,z-.56),palette.glass,Enum.Material.Glass,false)
-        lower.Transparency=.12
-        for _,offset in ipairs({-2.8,0,2.8}) do
-            World.part(root,"Lower vertical mullion",Vector3.new(.16,10.2,.18),CFrame.new(x+offset,12.1,z-.78),palette.cream,nil,false)
+        local lower=World.part(root,"Tall lower glazing",Vector3.new(glassWidth,10.8,.32),CFrame.new(x,12,z-.56),Color3.fromRGB(86,112,124),Enum.Material.Glass,false)
+        lower.Transparency=.1
+        local lowerGlow=World.part(root,"Arch lower warm backlight",Vector3.new(glassWidth-.5,10.2,.08),CFrame.new(x,12,z-.78),Color3.fromRGB(255,225,171),Enum.Material.Neon,false)
+        lowerGlow.Transparency=.82;lowerGlow.CanQuery=false;lowerGlow.CanTouch=false
+        for _,offset in ipairs({-3.7,0,3.7}) do
+            World.part(root,"Lower vertical mullion",Vector3.new(.16,10.3,.18),CFrame.new(x+offset,12,z-.8),palette.cream,nil,false)
         end
-        for _,y in ipairs({9.5,13,16}) do
-            World.part(root,"Lower horizontal mullion",Vector3.new(9,.16,.18),CFrame.new(x,y,z-.78),palette.cream,nil,false)
+        for _,y in ipairs({9.3,12.7,16}) do
+            World.part(root,"Lower horizontal mullion",Vector3.new(glassWidth,.16,.18),CFrame.new(x,y,z-.8),palette.cream,nil,false)
         end
     end
 
-    -- Small stone hood details above each bay are prominent in the close-up.
-    World.part(root,"Arch hood left",Vector3.new(4.2,.85,1.1),
-        CFrame.new(x-2.1,25,z)*CFrame.Angles(0,0,math.rad(-38)),palette.stone,Enum.Material.Concrete,false)
-    World.part(root,"Arch hood right",Vector3.new(4.2,.85,1.1),
-        CFrame.new(x+2.1,25,z)*CFrame.Angles(0,0,math.rad(38)),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Arch hood left",Vector3.new(4.7,.9,1.15),
+        CFrame.new(x-2.45,25,z)*CFrame.Angles(0,0,math.rad(-38)),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Arch hood right",Vector3.new(4.7,.9,1.15),
+        CFrame.new(x+2.45,25,z)*CFrame.Angles(0,0,math.rad(38)),palette.stone,Enum.Material.Concrete,false)
 end
 
 local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
@@ -464,28 +469,27 @@ function World.build()
 
     -- Formal front facade: heavy upper block with tan bays, brick pilasters and four arched bays.
     World.part(root,"Front upper brick mass",Vector3.new(150,31,1.4),CFrame.new(0,37,-35),palette.brick,Enum.Material.Brick)
-    World.part(root,"Front lower west",Vector3.new(55,17,1.4),CFrame.new(-47.5,12,-35),palette.brick,Enum.Material.Brick)
-    World.part(root,"Front lower east",Vector3.new(55,17,1.4),CFrame.new(47.5,12,-35),palette.brick,Enum.Material.Brick)
-    for _,x in ipairs({-68,-51,-34,-17,0,17,34,51,68}) do
-        World.part(root,"Front brick pilaster",Vector3.new(2.3,48,2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
-        World.part(root,"Front pilaster stone cap",Vector3.new(3.6,1.2,2.5),CFrame.new(x,52.2,-34.15),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Front lower west",Vector3.new(44,17,1.4),CFrame.new(-53,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower east",Vector3.new(44,17,1.4),CFrame.new(53,12,-35),palette.brick,Enum.Material.Brick)
+    for _,x in ipairs({-68,-34,0,34,68}) do
+        World.part(root,"Front brick pilaster",Vector3.new(2.8,48,2.2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
+        World.part(root,"Front pilaster stone cap",Vector3.new(4.2,1.25,2.7),CFrame.new(x,52.2,-34.15),palette.stone,Enum.Material.Concrete,false)
     end
     -- The reference render has a noticeably heavier east/front corner pier that visually anchors
     -- the vertical green banner and the side elevation.
     World.part(root,"Gold standard east corner tower",Vector3.new(6.6,50,5.4),CFrame.new(71.6,28,-36.2),palette.brickDark,Enum.Material.Brick)
     World.part(root,"East corner tower stone cap",Vector3.new(7.6,1.4,6.3),CFrame.new(71.6,53.1,-36.2),palette.stone,Enum.Material.Concrete,false)
     for _,floorY in ipairs({29,44}) do
-        for _,x in ipairs({-60,-40,-20,0,20,40,60}) do
-            World.part(root,"Tan facade bay",Vector3.new(14.5,11,.55),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
-            schoolWindowPanel(root,CFrame.new(x,floorY,-33.7),8.8,5.8)
+        for _,x in ipairs({-51,-17,17,51}) do
+            World.part(root,"Tan facade bay",Vector3.new(27.2,11.8,.58),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
+            schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)
         end
     end
     -- Horizontal stone/concrete belt between the arched ground level and upper classroom bays.
     World.part(root,"Front stone belt",Vector3.new(148,1.1,1.2),CFrame.new(0,26.1,-33.8),palette.stone,Enum.Material.Concrete,false)
-    makeFrontArch(root,-27,false)
-    makeFrontArch(root,-9,true)
-    makeFrontArch(root,9,true)
-    makeFrontArch(root,27,false)
+    makeFrontArch(root,-24,false)
+    makeFrontArch(root,0,true)
+    makeFrontArch(root,24,true)
     -- The real facade is mostly architecture, not signage. Identity is carried by the Howard sign,
     -- lobby crest and a small restrained roofline cross.
     cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
@@ -563,14 +567,12 @@ function World.build()
     end
 
     -- White low front additions flank the arched section in the real facade.
-    for _,x in ipairs({-55,55}) do
-        World.part(root,"Front low annex",Vector3.new(41,8,13),CFrame.new(x,7,-27),Color3.fromRGB(215,218,207),Enum.Material.SmoothPlastic)
-        World.part(root,"Front low annex roof",Vector3.new(43,.55,14.5),CFrame.new(x,11.25,-27),Color3.fromRGB(69,72,72),Enum.Material.Slate)
-        for _,y in ipairs({4.6,6.2,7.8,9.4}) do
-            World.part(root,"Front annex siding line",Vector3.new(40,.12,.18),CFrame.new(x,y,-20.42),Color3.fromRGB(184,189,183),nil,false)
+    for _,x in ipairs({-44,44}) do
+        World.part(root,"Front low annex",Vector3.new(23,8.5,12.5),CFrame.new(x,7.25,-27),Color3.fromRGB(219,221,211),Enum.Material.SmoothPlastic)
+        World.part(root,"Front low annex roof",Vector3.new(24.5,.7,14),CFrame.new(x,11.55,-27),Color3.fromRGB(63,65,65),Enum.Material.Slate)
+        for _,y in ipairs({4.7,6.35,8,9.65}) do
+            World.part(root,"Front annex siding line",Vector3.new(22,.12,.2),CFrame.new(x,y,-20.72),Color3.fromRGB(184,189,183),nil,false)
         end
-        local sideWindow=World.part(root,"Front annex window",Vector3.new(7,3.5,.18),CFrame.new(x,7.4,-20.3),palette.glass,Enum.Material.Glass,false)
-        sideWindow.Transparency=.2
     end
     World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
 
@@ -622,7 +624,9 @@ function World.build()
     planter(root,-24,12,9)
     planter(root,24,12,9)
     planter(root,-55,12.5,17)
-    for _,x in ipairs({-39,-21,21,39}) do
+    for _,x in ipairs({-39,-12,12,39}) do
+        World.part(root,"Entrance lamp stone hood",Vector3.new(3.2,.8,1.1),
+            CFrame.new(x,25,-33.15)*CFrame.Angles(0,0,math.rad(x<0 and -38 or 38)),palette.stone,Enum.Material.Concrete,false)
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
         local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
     end
