@@ -1,7 +1,11 @@
 name: Publish Emma Study Classroom
 
 on:
-  # Evidence-gated release: builds can run on every push, publishing is manual only.
+  push:
+    branches:
+      - rebuild/emma-classroom-study-v1
+    paths:
+      - 'school/emma-classroom/PUBLISH_REQUEST'
   workflow_dispatch:
 
 permissions:
