@@ -490,10 +490,18 @@ function World.setTeacherSpeech(model: Model?,text: string?)
     end
 end
 
-function World.setBoardQuestion(subject: string,teacher: string,prompt: string)
+function World.setBoardQuestion(subject: string,teacher: string,prompt: string,choices:{string}?)
     if World.BoardSubject then World.BoardSubject.Text=subject.."  •  "..teacher end
-    if World.BoardQuestion then World.BoardQuestion.Text=prompt end
-    if World.BoardFooter then World.BoardFooter.Text="Think it through, Emma. Take your time." end
+    if World.BoardQuestion then
+        local lines={prompt}
+        if choices then
+            for i,choice in ipairs(choices) do
+                lines[#lines+1]=string.char(64+i)..".  "..choice
+            end
+        end
+        World.BoardQuestion.Text=table.concat(lines,"\n")
+    end
+    if World.BoardFooter then World.BoardFooter.Text="Choose A, B, C or D below. Take your time." end
 end
 
 function World.setBoardHint(hint: string)
