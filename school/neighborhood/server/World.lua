@@ -324,18 +324,20 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     local roomWidth=49;local roomDepth=58;local z=-109
     local hallX=x<0 and -23.5 or 23.5
     local outerX=x<0 and -74.5 or 74.5
-    local warmFloor=Color3.fromRGB(203,186,157)
-    local trim=Color3.fromRGB(128,104,78)
+    local warmFloor=Color3.fromRGB(92,70,52)
+    local trim=Color3.fromRGB(61,76,108)
+    local roomWall=Color3.fromRGB(239,225,146)
+    local hallUpper=Color3.fromRGB(101,132,147)
     local wallInset=x<0 and -.55 or .55
     local outerInset=x<0 and .55 or -.55
 
     World.part(m,"Floor",Vector3.new(roomWidth,.45,roomDepth),CFrame.new(x,floorY+.25,z),warmFloor,Enum.Material.WoodPlanks)
-    World.part(m,"Outer wall",Vector3.new(1,14,roomDepth),CFrame.new(outerX,floorY+7,z),Color3.fromRGB(242,239,230))
-    World.part(m,"Back wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z-roomDepth/2),Color3.fromRGB(242,239,230))
-    World.part(m,"Front wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z+roomDepth/2),Color3.fromRGB(242,239,230))
-    World.part(m,"Hall wall north",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z-17.5),Color3.fromRGB(242,239,230))
-    World.part(m,"Hall wall south",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z+17.5),Color3.fromRGB(242,239,230))
-    World.part(m,"Door lintel",Vector3.new(1,4,12),CFrame.new(hallX,floorY+12,z),Color3.fromRGB(242,239,230))
+    World.part(m,"Outer wall",Vector3.new(1,14,roomDepth),CFrame.new(outerX,floorY+7,z),roomWall)
+    World.part(m,"Back wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z-roomDepth/2),roomWall)
+    World.part(m,"Front wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z+roomDepth/2),roomWall)
+    World.part(m,"Hall wall north",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z-17.5),hallUpper)
+    World.part(m,"Hall wall south",Vector3.new(1,14,23),CFrame.new(hallX,floorY+7,z+17.5),hallUpper)
+    World.part(m,"Door lintel",Vector3.new(1,4,12),CFrame.new(hallX,floorY+12,z),hallUpper)
 
     -- Real school finish language: wood baseboards, framed doorway and a restrained chair rail.
     World.part(m,"Outer baseboard",Vector3.new(.18,.7,roomDepth-1),CFrame.new(outerX+outerInset,floorY+.58,z),trim,Enum.Material.Wood,false)
@@ -349,9 +351,9 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     -- Finished paired classroom doors: visible glass, hardware and school-blue panels without blocking touch navigation.
     local doorX=hallX+wallInset*1.18
     for _,offset in ipairs({-3.25,3.25}) do
-        local door=World.part(m,"Classroom door leaf",Vector3.new(.3,9.15,5.5),CFrame.new(doorX,floorY+5,z+offset),Color3.fromRGB(67,88,108),Enum.Material.Wood,false)
+        local door=World.part(m,"Classroom door leaf",Vector3.new(.3,9.15,5.5),CFrame.new(doorX,floorY+5,z+offset),Color3.fromRGB(128,91,58),Enum.Material.Wood,false)
         door.CanQuery=false;door.CanTouch=false
-        local vision=World.part(m,"Classroom vision glass",Vector3.new(.12,3.45,2.55),CFrame.new(doorX-wallInset*.25,floorY+7.25,z+offset),Color3.fromRGB(159,188,198),Enum.Material.Glass,false)
+        local vision=World.part(m,"Classroom vision glass",Vector3.new(.12,3.45,2.55),CFrame.new(doorX-wallInset*.25,floorY+7.25,z+offset),Color3.fromRGB(205,218,214),Enum.Material.Glass,false)
         vision.Transparency=.22;vision.CanQuery=false;vision.CanTouch=false
         World.part(m,"Classroom door kick plate",Vector3.new(.12,1.05,4.9),CFrame.new(doorX-wallInset*.26,floorY+1.05,z+offset),palette.metal,Enum.Material.Metal,false)
         World.part(m,"Classroom door handle",Vector3.new(.16,.65,.16),CFrame.new(doorX-wallInset*.32,floorY+4.5,z+offset+(offset<0 and 1.8 or -1.8)),palette.gold,Enum.Material.Metal,false)
@@ -366,18 +368,22 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
         World.part(m,"Classroom ceiling grid H",Vector3.new(roomWidth-1.2,.06,.06),CFrame.new(x,floorY+13.58,z+dz),Color3.fromRGB(202,203,199),Enum.Material.Metal,false)
     end
 
-    -- A proper whiteboard and teaching wall replace the giant floating-looking room sign.
-    World.part(m,"Classroom whiteboard",Vector3.new(33,7,.32),CFrame.new(x,floorY+8,z-roomDepth/2+.6),Color3.fromRGB(248,248,243),Enum.Material.SmoothPlastic,false)
-    World.part(m,"Whiteboard top frame",Vector3.new(34,.32,.42),CFrame.new(x,floorY+11.6,z-roomDepth/2+.35),palette.metal,Enum.Material.Metal,false)
-    World.part(m,"Whiteboard bottom frame",Vector3.new(34,.32,.42),CFrame.new(x,floorY+4.4,z-roomDepth/2+.35),palette.metal,Enum.Material.Metal,false)
-    World.part(m,"Whiteboard tray",Vector3.new(20,.32,.8),CFrame.new(x,floorY+4.15,z-roomDepth/2+1),palette.metal,Enum.Material.Metal,false)
-    local boardCf=CFrame.new(x,floorY+8,z-roomDepth/2+.82)*CFrame.Angles(0,math.pi,0)
-    sign(m,"ASSUMPTION BVM  •  "..title.."\n"..teacher,boardCf,Vector3.new(27,4,.18),palette.navy,palette.cream)
-    cross(m,CFrame.new(x+20,floorY+10,z-roomDepth/2+.45),.38,palette.gold)
-    World.part(m,"Whiteboard marker blue",Vector3.new(1.1,.12,.14),CFrame.new(x-3,floorY+4.42,z-roomDepth/2+.9),palette.navy,nil,false)
-    World.part(m,"Whiteboard marker green",Vector3.new(1.1,.12,.14),CFrame.new(x-1.5,floorY+4.42,z-roomDepth/2+.9),palette.green,nil,false)
-    World.part(m,"Whiteboard eraser",Vector3.new(1.5,.24,.55),CFrame.new(x+1,floorY+4.42,z-roomDepth/2+.92),Color3.fromRGB(75,79,83),Enum.Material.Fabric,false)
-    framedHallPanel(m,"Classroom mission panel","FAITH • LEARNING • SERVICE",CFrame.new(x-18,floorY+10,z-roomDepth/2+.62)*CFrame.Angles(0,math.pi,0),Vector3.new(9,3,.16),palette.green)
+    -- Photo-derived teaching wall: old dark chalkboard/built-ins with a modern interactive board layered over it.
+    World.part(m,"Classroom chalkboard",Vector3.new(36,7.4,.34),CFrame.new(x,floorY+8,z-roomDepth/2+.55),Color3.fromRGB(45,50,47),Enum.Material.SmoothPlastic,false)
+    World.part(m,"Chalkboard wood top",Vector3.new(37,.36,.5),CFrame.new(x,floorY+11.9,z-roomDepth/2+.34),Color3.fromRGB(113,80,51),Enum.Material.Wood,false)
+    World.part(m,"Chalkboard wood bottom",Vector3.new(37,.36,.5),CFrame.new(x,floorY+4.15,z-roomDepth/2+.34),Color3.fromRGB(113,80,51),Enum.Material.Wood,false)
+    World.part(m,"Chalk tray",Vector3.new(23,.34,.85),CFrame.new(x,floorY+3.95,z-roomDepth/2+1),Color3.fromRGB(126,92,61),Enum.Material.Wood,false)
+    local smart=World.part(m,"Classroom smartboard",Vector3.new(20,6,.28),CFrame.new(x+4,floorY+8,z-roomDepth/2+.82),Color3.fromRGB(235,241,239),Enum.Material.Glass,false)
+    smart.Transparency=.04
+    local boardCf=CFrame.new(x+4,floorY+8,z-roomDepth/2+.99)*CFrame.Angles(0,math.pi,0)
+    sign(m,title.."  •  ABVM\nLEARN • PRACTICE • GROW",boardCf,Vector3.new(17,3.2,.16),Color3.fromRGB(232,239,237),palette.navy)
+    sign(m,"Aa Bb Cc  •  Dd Ee Ff  •  Gg Hh Ii  •  Jj Kk Ll  •  Mm Nn Oo",
+        CFrame.new(x,floorY+12.65,z-roomDepth/2+.66)*CFrame.Angles(0,math.pi,0),Vector3.new(38,1.4,.16),palette.navy,palette.cream)
+    cross(m,CFrame.new(x-18.5,floorY+9.6,z-roomDepth/2+.45),.42,Color3.fromRGB(112,79,48))
+    World.part(m,"Chalk blue",Vector3.new(1.1,.12,.14),CFrame.new(x-3,floorY+4.25,z-roomDepth/2+.9),Color3.fromRGB(107,145,179),nil,false)
+    World.part(m,"Chalk white",Vector3.new(1.1,.12,.14),CFrame.new(x-1.5,floorY+4.25,z-roomDepth/2+.9),palette.cream,nil,false)
+    World.part(m,"Chalkboard eraser",Vector3.new(1.5,.24,.55),CFrame.new(x+1,floorY+4.25,z-roomDepth/2+.92),Color3.fromRGB(75,79,83),Enum.Material.Fabric,false)
+    framedHallPanel(m,"Classroom mission panel","I AM A CHILD OF GOD\nI MAKE A DIFFERENCE",CFrame.new(x-17.5,floorY+6,z-roomDepth/2+.72)*CFrame.Angles(0,math.pi,0),Vector3.new(10,3.2,.16),palette.green)
 
     -- Teacher zone, rug, storage and small lived-in details.
     local teacherDeskX=x+(x<0 and -13 or 13)
@@ -388,10 +394,19 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     World.part(m,"Teacher laptop base",Vector3.new(3.2,.18,2.2),CFrame.new(teacherDeskX,floorY+3.45,z-22),Color3.fromRGB(75,82,88),Enum.Material.Metal,false)
     World.part(m,"Teacher laptop screen",Vector3.new(3.2,2.1,.18),CFrame.new(teacherDeskX,floorY+4.45,z-22.9)*CFrame.Angles(math.rad(-8),0,0),Color3.fromRGB(69,94,108),Enum.Material.Glass,false)
 
-    local rugColor=tint:Lerp(Color3.fromRGB(236,232,220),.38)
+    local rugColor=Color3.fromRGB(60,104,155)
     World.part(m,"Classroom area rug",Vector3.new(18,.12,9),CFrame.new(x,floorY+.52,z-22),rugColor,Enum.Material.Fabric,false)
     World.part(m,"Classroom rug stripe A",Vector3.new(16,.04,.28),CFrame.new(x,floorY+.59,z-25.1),palette.gold,nil,false)
     World.part(m,"Classroom rug stripe B",Vector3.new(16,.04,.28),CFrame.new(x,floorY+.59,z-18.9),palette.navy,nil,false)
+    local alphabetRug=World.part(m,"Classroom alphabet rug",Vector3.new(.16,15,15),CFrame.new(x+12,floorY+.58,z+14)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(64,112,165),Enum.Material.Fabric,false)
+    alphabetRug.Shape=Enum.PartType.Cylinder
+    for i=1,12 do
+        local a=(i-1)*math.pi*2/12
+        local dot=World.part(m,"Classroom rug letter tile",Vector3.new(.12,2.1,2.1),
+            CFrame.new(x+12+math.cos(a)*5.6,floorY+.68,z+14+math.sin(a)*5.6)*CFrame.Angles(0,0,math.pi/2),
+            Color3.fromHSV((i-1)/12,.55,.95),Enum.Material.Fabric,false)
+        dot.Shape=Enum.PartType.Cylinder
+    end
 
     local cabinetX=x+(x<0 and -14 or 14)
     World.part(m,"Classroom storage cabinet",Vector3.new(15,6,2.1),CFrame.new(cabinetX,floorY+3.3,z+26.6),Color3.fromRGB(184,153,113),Enum.Material.Wood)
@@ -401,6 +416,35 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     for _,dx in ipairs({-5,-1.7,1.7,5}) do
         World.part(m,"Classroom cubby bin",Vector3.new(2.7,1.25,1.4),CFrame.new(cabinetX+dx,floorY+1.2,z+25.3),tint:Lerp(palette.cream,.45),Enum.Material.SmoothPlastic,false)
     end
+
+    -- Two large photo-supported window bays, blue-gray curtains and cast-iron-style radiators.
+    for _,windowZ in ipairs({z-23,z-6}) do
+        local innerX=outerX+outerInset*1.3
+        local pane=World.part(m,"Classroom interior window",Vector3.new(.12,6.1,9.2),
+            CFrame.new(innerX,floorY+8,windowZ)*CFrame.Angles(0,x<0 and -math.pi/2 or math.pi/2,0),
+            Color3.fromRGB(205,225,231),Enum.Material.Glass,false)
+        pane.Transparency=.15
+        for _,offset in ipairs({-3,0,3}) do
+            World.part(m,"Classroom window mullion",Vector3.new(.16,6.3,.18),
+                CFrame.new(innerX,floorY+8,windowZ+offset),Color3.fromRGB(102,76,53),Enum.Material.Wood,false)
+        end
+        World.part(m,"Classroom window valance",Vector3.new(.22,1.3,10),
+            CFrame.new(innerX-wallInset*.16,floorY+11.3,windowZ),Color3.fromRGB(116,137,167),Enum.Material.Fabric,false)
+        World.part(m,"Classroom radiator",Vector3.new(1.25,2.8,8.2),CFrame.new(innerX-wallInset*.6,floorY+1.65,windowZ),
+            Color3.fromRGB(176,181,179),Enum.Material.Metal,false)
+        for _,rz in ipairs({-3,-1.5,0,1.5,3}) do
+            World.part(m,"Classroom radiator fin",Vector3.new(1.38,2.5,.12),CFrame.new(innerX-wallInset*.62,floorY+1.7,windowZ+rz),
+                Color3.fromRGB(152,158,157),Enum.Material.Metal,false)
+        end
+    end
+
+    -- Deep wood built-ins/cubbies are visible in the classroom photos and help the room read as an older school.
+    World.part(m,"Classroom built-in cubby wall",Vector3.new(31,7,2.25),CFrame.new(x,floorY+3.6,z+26.55),Color3.fromRGB(145,105,68),Enum.Material.Wood)
+    for _,cx in ipairs({-12,-8,-4,0,4,8,12}) do
+        World.part(m,"Classroom cubby opening",Vector3.new(3.2,2.5,.22),CFrame.new(x+cx,floorY+4.7,z+25.35),Color3.fromRGB(70,58,48),Enum.Material.SmoothPlastic,false)
+    end
+    sign(m,"1  2  3  4  5  6  7  8  9  10  •  20  •  30  •  40  •  50  •  100",
+        CFrame.new(x,floorY+12.4,z+28.28),Vector3.new(40,1.5,.15),Color3.fromRGB(87,119,135),palette.cream)
 
     local outerDisplayX=outerX+outerInset
     local studentWorkCf=CFrame.new(outerDisplayX,floorY+8,z+6)*CFrame.Angles(0,x<0 and math.pi/2 or -math.pi/2,0)
@@ -1018,18 +1062,18 @@ function World.build()
 
     -- Polished interior halls: full-width corridors, vinyl/terrazzo-like floors, wainscot and framed doors.
     for index,floorY in ipairs({4,20,36}) do
-        local floorColor=Color3.fromRGB(220,216,204)
-        local floorMaterial=Enum.Material.SmoothPlastic
+        local floorColor=Color3.fromRGB(68,70,68)
+        local floorMaterial=Enum.Material.Slate
         if index==1 then
             World.part(root,"Central hall floor",Vector3.new(47,.42,104),CFrame.new(0,floorY+.25,-90),floorColor,floorMaterial)
-            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,102),CFrame.new(0,floorY+.49,-90),palette.navy,nil,false)
-            for _,x in ipairs({-2.05,2.05}) do World.part(root,"Hall gold inlay",Vector3.new(.22,.055,102),CFrame.new(x,floorY+.5,-90),palette.gold,nil,false) end
+            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,102),CFrame.new(0,floorY+.49,-90),Color3.fromRGB(76,78,75),nil,false)
+            for _,x in ipairs({-2.05,2.05}) do World.part(root,"Hall gold inlay",Vector3.new(.22,.055,102),CFrame.new(x,floorY+.5,-90),Color3.fromRGB(101,102,97),nil,false) end
         elseif index==2 then
             World.part(root,"Central hall floor back",Vector3.new(47,.42,28),CFrame.new(0,floorY+.25,-128),floorColor,floorMaterial)
             World.part(root,"Central hall floor front",Vector3.new(47,.42,50),CFrame.new(0,floorY+.25,-63),floorColor,floorMaterial)
             World.part(root,"Central hall floor stair side",Vector3.new(24,.42,26),CFrame.new(11.5,floorY+.25,-101),floorColor,floorMaterial)
-            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,27),CFrame.new(0,floorY+.49,-128),palette.navy,nil,false)
-            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,49),CFrame.new(0,floorY+.49,-63),palette.navy,nil,false)
+            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,27),CFrame.new(0,floorY+.49,-128),Color3.fromRGB(76,78,75),nil,false)
+            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,49),CFrame.new(0,floorY+.49,-63),Color3.fromRGB(76,78,75),nil,false)
             World.part(root,"Stair opening side guard",Vector3.new(.35,3.3,26),CFrame.new(-.35,floorY+1.9,-101),palette.navy,Enum.Material.Metal,false)
             World.part(root,"Stair opening back guard",Vector3.new(13.5,3.3,.35),CFrame.new(-7,floorY+1.9,-114),palette.navy,Enum.Material.Metal,false)
             World.part(root,"Stair guard wood cap",Vector3.new(.55,.25,26),CFrame.new(-.35,floorY+3.55,-101),palette.wood,Enum.Material.Wood,false)
@@ -1037,8 +1081,8 @@ function World.build()
             World.part(root,"Central hall floor back",Vector3.new(47,.42,58),CFrame.new(0,floorY+.25,-113),floorColor,floorMaterial)
             World.part(root,"Central hall floor front",Vector3.new(47,.42,18),CFrame.new(0,floorY+.25,-47),floorColor,floorMaterial)
             World.part(root,"Central hall floor stair side",Vector3.new(24,.42,28),CFrame.new(-11.5,floorY+.25,-75),floorColor,floorMaterial)
-            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,57),CFrame.new(0,floorY+.49,-113),palette.navy,nil,false)
-            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,17),CFrame.new(0,floorY+.49,-47),palette.navy,nil,false)
+            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,57),CFrame.new(0,floorY+.49,-113),Color3.fromRGB(76,78,75),nil,false)
+            World.part(root,"Hall navy inlay",Vector3.new(3.4,.05,17),CFrame.new(0,floorY+.49,-47),Color3.fromRGB(76,78,75),nil,false)
             World.part(root,"Stair opening side guard",Vector3.new(.35,3.3,28),CFrame.new(.35,floorY+1.9,-75),palette.navy,Enum.Material.Metal,false)
             World.part(root,"Stair opening front guard",Vector3.new(13.5,3.3,.35),CFrame.new(7,floorY+1.9,-61),palette.navy,Enum.Material.Metal,false)
             World.part(root,"Stair guard wood cap",Vector3.new(.55,.25,28),CFrame.new(.35,floorY+3.55,-75),palette.wood,Enum.Material.Wood,false)
@@ -1048,13 +1092,26 @@ function World.build()
         for _,side in ipairs({-1,1}) do
             local wallX=side*23.05
             for _,segment in ipairs({{-128.5,27},{-72,62}}) do
-                World.part(root,"Hall wainscot",Vector3.new(.28,3.3,segment[2]),CFrame.new(wallX,floorY+1.9,segment[1]),Color3.fromRGB(37,57,82),Enum.Material.SmoothPlastic,false)
-                World.part(root,"Hall gold chair rail",Vector3.new(.34,.24,segment[2]),CFrame.new(wallX,floorY+3.55,segment[1]),palette.gold,Enum.Material.Metal,false)
+                World.part(root,"Hall wainscot",Vector3.new(.32,3.3,segment[2]),CFrame.new(wallX,floorY+1.9,segment[1]),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+                World.part(root,"Hall gold chair rail",Vector3.new(.38,.24,segment[2]),CFrame.new(wallX,floorY+3.55,segment[1]),Color3.fromRGB(139,94,55),Enum.Material.Wood,false)
             end
             for _,doorZ in ipairs({-115.35,-102.65}) do
                 World.part(root,"Hall classroom door jamb",Vector3.new(.38,10,.55),CFrame.new(wallX,floorY+5.2,doorZ),Color3.fromRGB(124,91,63),Enum.Material.Wood,false)
             end
             World.part(root,"Hall classroom door header",Vector3.new(.38,.55,13.2),CFrame.new(wallX,floorY+10.15,-109),Color3.fromRGB(124,91,63),Enum.Material.Wood,false)
+        end
+
+        -- Photo-derived corridor finish: glossy dark square tile, blue-gray upper walls, exposed conduit,
+        -- wood classroom doors and simple fluorescent fixtures.
+        World.part(root,"Hall painted ceiling",Vector3.new(47,.24,104),CFrame.new(0,floorY+13.85,-90),Color3.fromRGB(220,224,222),Enum.Material.SmoothPlastic,false)
+        for zSeam=-134,-46,8 do
+            World.part(root,"Hall tile seam cross",Vector3.new(46.5,.03,.08),CFrame.new(0,floorY+.52,zSeam),Color3.fromRGB(111,112,108),nil,false)
+        end
+        for _,xSeam in ipairs({-18,-12,-6,0,6,12,18}) do
+            World.part(root,"Hall tile seam long",Vector3.new(.08,.03,103),CFrame.new(xSeam,floorY+.52,-90),Color3.fromRGB(111,112,108),nil,false)
+        end
+        for _,side in ipairs({-1,1}) do
+            World.part(root,"Hall ceiling conduit",Vector3.new(.16,.16,100),CFrame.new(side*20.5,floorY+13.45,-90),Color3.fromRGB(163,167,166),Enum.Material.Metal,false)
         end
 
         -- Practical school details keep the corridor from reading like an empty tunnel.
