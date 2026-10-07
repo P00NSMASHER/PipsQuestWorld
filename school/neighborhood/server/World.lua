@@ -244,8 +244,7 @@ local function npc(parent,staff,position)
     World.part(model,"Left shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(-.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
     World.part(model,"Right shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
 
-    local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
-    head.Shape=Enum.PartType.Ball
+    local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.10),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     model:SetAttribute("LikenessMode","simple-stylized")
     model:SetAttribute("PortraitMode","disabled")
 
@@ -257,7 +256,7 @@ local function npc(parent,staff,position)
     }) do
         local eye=World.part(
             model,entry[1],Vector3.new(.22,.27,.09),
-            CFrame.new(position+Vector3.new(entry[2],8.04,-1.18)),
+            CFrame.new(position+Vector3.new(entry[2],8.04,-1.10)),
             Color3.fromRGB(39,44,49),Enum.Material.SmoothPlastic,false
         )
         eye.Shape=Enum.PartType.Ball
@@ -265,7 +264,7 @@ local function npc(parent,staff,position)
     end
     local mouth=World.part(
         model,"Simple smile",Vector3.new(.70,.12,.08),
-        CFrame.new(position+Vector3.new(0,7.38,-1.19))*CFrame.Angles(0,0,math.rad(-2)),
+        CFrame.new(position+Vector3.new(0,7.38,-1.11))*CFrame.Angles(0,0,math.rad(-2)),
         Color3.fromRGB(143,87,86),Enum.Material.SmoothPlastic,false
     )
     mouth.CanQuery=false;mouth.CanTouch=false
@@ -368,18 +367,18 @@ local function npc(parent,staff,position)
         end
     end
 
-    local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(180,46);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=28;gui.Parent=head
-    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.15
-    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=11;label.TextWrapped=true
-    label.Text=staff.name.."\n"..staff.role;label.Parent=gui
+    local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(148,28);gui.StudsOffset=Vector3.new(0,1.55,0);gui.MaxDistance=18;gui.Parent=head
+    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.18
+    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=10;label.TextWrapped=false;label.TextTruncate=Enum.TextTruncate.AtEnd
+    label.Text=staff.name;label.Parent=gui
     local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.35;stroke.Thickness=1;stroke.Parent=label
     local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,8);corner.Parent=label
 
     local prompt=Instance.new("ProximityPrompt")
     prompt.Name="MeetFaculty"
     prompt.ActionText="Meet"
-    prompt.ObjectText=staff.name.." • "..staff.role
-    prompt.MaxActivationDistance=10
+    prompt.ObjectText=staff.name
+    prompt.MaxActivationDistance=8
     prompt.RequiresLineOfSight=true
     prompt.HoldDuration=0
     prompt.Parent=head
