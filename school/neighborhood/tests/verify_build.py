@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[3]
 MODE = ROOT / "school/neighborhood"
 PROJECT = ROOT / "school/neighborhood.project.json"
 SOURCES = {
-    "shared/Catalog.lua", "shared/Layout.lua", "server/Garage.lua",
+    "shared/Catalog.lua", "shared/Layout.lua", "shared/PortraitPixels.lua", "shared/PortraitRenderer.lua", "server/Garage.lua",
     "server/Learning.lua", "server/Leaderboards.lua", "server/Main.server.lua", "server/ProfileStore.lua",
     "server/QuestionBank.lua", "server/Wardrobe.lua", "server/World.lua",
     "client/Main.client.lua", "client/UI.lua",
@@ -23,6 +23,8 @@ SOURCES = {
 EXPECTED_SCRIPTS = {
     "ReplicatedStorage/NeighborhoodShared/Catalog": "ModuleScript",
     "ReplicatedStorage/NeighborhoodShared/Layout": "ModuleScript",
+    "ReplicatedStorage/NeighborhoodShared/PortraitPixels": "ModuleScript",
+    "ReplicatedStorage/NeighborhoodShared/PortraitRenderer": "ModuleScript",
     **{f"ServerScriptService/Neighborhood/{name}": "ModuleScript" for name in
        ("Garage", "Learning", "Leaderboards", "ProfileStore", "QuestionBank", "Wardrobe", "World")},
     "ServerScriptService/Neighborhood/Main": "Script",
