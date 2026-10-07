@@ -70,6 +70,11 @@ jobs:
           grep -q 'Speech' school/emma-classroom/server/World.lua
           grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
           grep -q 'Staff door jamb' school/emma-classroom/server/World.lua
+          grep -q 'Student work board' school/emma-classroom/server/World.lua
+          grep -q 'Prayer table' school/emma-classroom/server/World.lua
+          grep -q 'Alphabet rug' school/emma-classroom/server/World.lua
+          grep -q 'Supply basket' school/emma-classroom/server/World.lua
+          grep -q 'Tall storage cabinet' school/emma-classroom/server/World.lua
           ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
 
       - name: Build isolated place
