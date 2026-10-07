@@ -18,7 +18,7 @@ function StaffModel.create(teacher)
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(1,1,1)
     root.Anchored=true;root.Transparency=1;root.CanCollide=false;root.CanTouch=false;root.CanQuery=false;root.Parent=model
     model.PrimaryPart=root
-    model:SetAttribute("StaffGeometryVersion",2)
+    model:SetAttribute("StaffGeometryVersion",3)
     local skin,hair,shirt,accent=rgb(teacher.skin),rgb(teacher.hair),rgb(teacher.shirt),rgb(teacher.accent)
     local clothes=teacher.clothing or "blouse"
     local formal=clothes=="suit" or clothes=="blazer"
@@ -37,8 +37,24 @@ function StaffModel.create(teacher)
     end
     local function box(name,size,cf,color,group,material) return make(name,size,cf,color,group,nil,material) end
     local function oval(name,size,cf,color,group) return make(name,size,cf,color,group,Enum.PartType.Ball) end
+    -- Round the silhouette with real cylindrical corners, rather than a block
+    -- hidden behind accessories. All six pieces retain the same limb transform.
+    local function rounded(name,size,cf,color,group,radius)
+        local r=radius or .12
+        local core=box(name,Vector3.new(size.X-2*r,size.Y,size.Z),cf,color,group)
+        box(name.." center",Vector3.new(size.X,size.Y-2*r,size.Z),cf,color,group)
+        for _,x in ipairs({-1,1}) do for _,y in ipairs({-1,1}) do
+            make(name.." rounded corner",Vector3.new(size.Z,2*r,2*r),cf*CFrame.new(x*(size.X/2-r),y*(size.Y/2-r),0)*CFrame.Angles(0,math.pi/2,0),color,group,Enum.PartType.Cylinder)
+        end end
+        return core
+    end
+    local function wedge(name,size,cf,color)
+        local p=box(name,size,cf,color)
+        local mesh=Instance.new("SpecialMesh");mesh.Name="Tailored triangular lapel";mesh.MeshType=Enum.MeshType.Wedge;mesh.Parent=p
+        return p
+    end
     local function line(name,a,b,width,color,group)
-        return box(name,Vector3.new(width,width,(b-a).Magnitude),CFrame.lookAt((a+b)*.5,b),color,group)
+        return make(name,Vector3.new((b-a).Magnitude,width,width),CFrame.lookAt((a+b)*.5,b)*CFrame.Angles(0,math.pi/2,0),color,group,Enum.PartType.Cylinder)
     end
     local function path(name,points,width,color,group)
         for i=2,#points do line(name,points[i-1],points[i],width,color,group) end
@@ -52,7 +68,7 @@ function StaffModel.create(teacher)
         path(name,pts,width,color,group)
     end
 
-    box("Torso",Vector3.new(3.15,2.85,1.65),CFrame.new(0,1.46,0),shirt,nil,Enum.Material.Fabric)
+    rounded("Torso",Vector3.new(3.15,2.85,1.65),CFrame.new(0,1.46,0),shirt,nil,.20)
     oval("Neck",Vector3.new(.9,.55,.9),CFrame.new(0,3.08,0),skin)
     local head=box("Head",Vector3.new(2.25,2.2,2),CFrame.new(0,4.12,0),skin)
     local headMesh=Instance.new("SpecialMesh");headMesh.Name="Classic rounded head";headMesh.MeshType=Enum.MeshType.Head;headMesh.Parent=head
@@ -69,10 +85,9 @@ function StaffModel.create(teacher)
         end
     end
     -- Filled mouth with a white inset and curved lip; avoids the former straight red bar.
-    oval("Smile mouth",Vector3.new(.96,.37,.055),CFrame.new(0,3.76,-1.025),INK)
-    oval("Smile teeth",Vector3.new(.77,.18,.038),CFrame.new(0,3.83,-1.059),WHITE)
-    box("Smile upper mask",Vector3.new(1.0,.17,.04),CFrame.new(0,3.985,-1.07),skin)
-    curve("Smile lower outline",0,3.86,-1.065,.46,.26,math.pi,math.pi*2,8,.035,INK)
+    oval("Smile mouth",Vector3.new(.96,.32,.055),CFrame.new(0,3.82,-1.025),INK)
+    oval("Smile teeth",Vector3.new(.82,.26,.038),CFrame.new(0,3.845,-1.059),WHITE)
+    box("Smile upper mask",Vector3.new(1.03,.055,.04),CFrame.new(0,3.9475,-1.09),skin)
     if teacher.glasses then
         for _,x in ipairs({-.48,.48}) do
             -- Rounded rectangle contours, no opaque lens plates covering the eyes.
@@ -83,49 +98,58 @@ function StaffModel.create(teacher)
         for _,side in ipairs({-1,1}) do line("Glasses temple",Vector3.new(side*.83,4.46,-1.13),Vector3.new(side*1.15,4.38,.25),.06,INK) end
     end
 
-    -- Sculpted locks overlap along the sweep; strand ridges use restrained contrast.
-    local highlight=hair:Lerp(WHITE,.16)
+    -- One continuous silhouette, a side part and three overlapping swept
+    -- layers. The old six upright lobes read as a pile of balls on the phone.
+    local highlight=hair:Lerp(WHITE,.09)
     local style=teacher.hairStyle or "shoulder"
     if style=="balding" then
         for _,side in ipairs({-1,1}) do
-            oval("Balding side hair",Vector3.new(.28,1.05,1.45),CFrame.new(side*1.11,4.57,.27),hair)
-            for i=1,4 do oval("Side hair strand",Vector3.new(.065,.8,.20),CFrame.new(side*1.235,4.6,-.25+i*.22)*CFrame.Angles(.12,0,side*.08),highlight) end
+            oval("Balding side hair",Vector3.new(.24,1.05,1.35),CFrame.new(side*1.10,4.57,.27),hair)
+            for i=1,3 do line("Side hair strand",Vector3.new(side*1.22,4.92,-.25+i*.22),Vector3.new(side*1.23,4.15,-.15+i*.22),.026,highlight) end
         end
     else
-        oval("Hair back cap",Vector3.new(2.38,1.27,1.78),CFrame.new(0,4.98,.27),hair)
         local short=style=="short"
-        for i=0,5 do
-            local x=-.87+i*.34
-            local y=short and 5.08 or 4.98+.16*math.sin(i*.5)
-            local tilt=short and math.rad(-18) or math.rad(-30-i*3)
-            local cf=CFrame.new(x,y,-.72)*CFrame.Angles(0,0,tilt)
-            oval("Swept hair lock",Vector3.new(short and .78 or .88,short and .30 or .78,.63),cf,hair)
-            oval("Hair strand ridge",Vector3.new(.045,short and .22 or .57,.045),cf*CFrame.new(-.1,0,-.255),highlight)
+        oval("Hair back cap",Vector3.new(2.36,.72,1.85),CFrame.new(0,5.22,.16),hair)
+        -- Long sweep comes down the left forehead and tucks behind the ear.
+        for i=0,2 do
+            local x=-.56+i*.45
+            local cf=CFrame.new(x,short and 5.20 or 5.03+i*.08,-1.00)*CFrame.Angles(0,0,math.rad(short and (-10+i*5) or (38-i*6)))
+            oval("Swept hair lock",Vector3.new(short and .94 or 1.04,short and .32 or .49,.46),cf,hair)
+            oval("Hair strand ridge",Vector3.new(short and .71 or .77,.022,.025),cf*CFrame.new(0,.10,-.220),highlight)
         end
-        if not short then
-            local length=style=="bob" and 1.8 or (style=="shoulder" and 2.25 or 3.1)
-            for _,side in ipairs({-1,1}) do
-                local cf=CFrame.new(side*1.08,4.66-length*.39,.22)*CFrame.Angles(0,0,side*-.065)
-                oval("Shaped side hair",Vector3.new(.68,length,1.45),cf,hair)
+        for _,side in ipairs({-1,1}) do
+            if short then
+                oval("Tapered sideburn",Vector3.new(.20,.69,.52),CFrame.new(side*1.08,4.65,-.08),hair)
+            else
+                local length=style=="bob" and 1.55 or (style=="shoulder" and 2.12 or 2.70)
+                local cf=CFrame.new(side*1.05,4.70-length*.44,.23)*CFrame.Angles(0,0,side*-.05)
+                oval("Shaped side hair",Vector3.new(.55,length,1.37),cf,hair)
                 for i=0,2 do
-                    oval("Side hair contour",Vector3.new(.065,length*.77,.065),cf*CFrame.new(side*.20,0,-.55+i*.25),highlight)
+                    line("Side hair contour",(cf*CFrame.new(side*.20,length*.28,-.54+i*.18)).Position,(cf*CFrame.new(side*.20,-length*.32,-.42+i*.18)).Position,.025,highlight)
                 end
                 if style=="waves" then
-                    for i=0,3 do oval("Layered hair wave",Vector3.new(.58,.72,.65),cf*CFrame.new(side*.09,-length*.36+i*.66,-.4)*CFrame.Angles(0,0,side*.3),hair) end
+                    for i=0,2 do oval("Layered hair wave",Vector3.new(.42,.66,.44),cf*CFrame.new(side*.12,-length*.30+i*.65,-.36)*CFrame.Angles(0,0,side*.18),hair) end
                 end
             end
-            oval("Hair back fall",Vector3.new(2.0,length,.62),CFrame.new(0,4.66-length*.39,.96),hair)
+        end
+        if not short then
+            local length=style=="bob" and 1.55 or (style=="shoulder" and 2.12 or 2.70)
+            oval("Hair back fall",Vector3.new(2.05,length,.62),CFrame.new(0,4.7-length*.44,.90),hair)
         end
     end
     if teacher.beard then
         local beard=rgb(teacher.beard)
         local long=isBolich
+        if long then
+            oval("Continuous beard underlay",Vector3.new(1.86,.72,.37),CFrame.new(0,3.24,-.87),beard)
+            for _,side in ipairs({-1,1}) do oval("Beard cheek contour",Vector3.new(.30,.72,.30),CFrame.new(side*.79,3.66,-.85),beard) end
+        end
         for i=0,6 do
             local x=-.78+i*.26
             local drop=long and (.45+.25*(1-math.abs(x))) or .12
             oval("Layered beard lock",Vector3.new(.40,long and .92 or .45,.39),CFrame.new(x,3.42-drop*.35,-.88),beard)
             if long then
-                for j=0,1 do oval("Beard strand",Vector3.new(.045,.56,.065),CFrame.new(x-.08+j*.13,3.25-drop*.3,-1.07)*CFrame.Angles(0,0,x*.15),beard:Lerp(WHITE,.25)) end
+                oval("Beard strand",Vector3.new(.025,.56,.04),CFrame.new(x,3.25-drop*.3,-1.07)*CFrame.Angles(0,0,x*.15),beard:Lerp(WHITE,.16))
             end
         end
         for _,side in ipairs({-1,1}) do oval("Swept moustache",Vector3.new(.48,.18,.18),CFrame.new(side*.22,3.985,-1.09)*CFrame.Angles(0,0,side*.2),beard) end
@@ -136,7 +160,7 @@ function StaffModel.create(teacher)
         box("Shirt inset",Vector3.new(1.1,2.45,.09),CFrame.new(0,1.72,-.862),accent,nil,Enum.Material.Fabric)
         for _,side in ipairs({-1,1}) do
             box("Tailored jacket panel",Vector3.new(1.0,2.62,.15),CFrame.new(side*1.03,1.46,-.9),shirt,nil,Enum.Material.Fabric)
-            box("Notched jacket lapel",Vector3.new(.46,1.18,.12),CFrame.new(side*.65,2.35,-1.005)*CFrame.Angles(0,0,side*-.30),shirt:Lerp(WHITE,.06),nil,Enum.Material.Fabric)
+            wedge("Notched jacket lapel",Vector3.new(.12,1.20,.53),CFrame.new(side*.64,2.32,-1.005)*CFrame.Angles(0,0,side*-.22)*CFrame.Angles(0,side*math.pi/2,0),shirt:Lerp(WHITE,.07))
             box("Jacket welt pocket",Vector3.new(.65,.07,.06),CFrame.new(side*1.03,.92,-1.002),shirt:Lerp(WHITE,.15))
             box("Pocket seam",Vector3.new(.59,.022,.025),CFrame.new(side*1.03,.88,-1.04),shirt:Lerp(WHITE,.25))
         end
@@ -157,8 +181,13 @@ function StaffModel.create(teacher)
         box("Polo placket",Vector3.new(.24,.68,.065),CFrame.new(0,2.47,-.88),shirt:Lerp(INK,.15),nil,Enum.Material.Fabric)
         for i=0,1 do oval("Polo button",Vector3.new(.075,.075,.055),CFrame.new(0,2.60-i*.29,-.925),WHITE) end
         if isBolich then
-            for i=-4,4 do box("Polo woven vertical check",Vector3.new(.015,2.55,.02),CFrame.new(i*.31,1.45,-.852),shirt:Lerp(WHITE,.11)) end
-            for i=0,7 do box("Polo woven horizontal check",Vector3.new(2.92,.015,.02),CFrame.new(0,.30+i*.33,-.854),shirt:Lerp(WHITE,.11)) end
+            local textile=Instance.new("SurfaceGui");textile.Name="Polo woven print";textile.Face=Enum.NormalId.Front; textile.CanvasSize=Vector2.new(600,math.floor(600*model:FindFirstChild("Torso").Size.Y/model:FindFirstChild("Torso").Size.X));textile.LightInfluence=1;textile.Parent=model:FindFirstChild("Torso")
+            for i=1,8 do
+                local stripe=Instance.new("Frame");stripe.Name="Polo woven horizontal check";stripe.BorderSizePixel=0;stripe.Size=UDim2.new(1,0,0,1);stripe.Position=UDim2.fromScale(0,i/9);stripe.BackgroundColor3=shirt:Lerp(WHITE,.15);stripe.Parent=textile
+            end
+            for i=1,7 do
+                local stripe=Instance.new("Frame");stripe.BorderSizePixel=0;stripe.Size=UDim2.new(0,1,1,0);stripe.Position=UDim2.fromScale(i/8,0);stripe.BackgroundColor3=shirt:Lerp(WHITE,.12);stripe.Parent=textile
+            end
         end
     elseif clothes=="striped" then
         for i=0,7 do box("Blouse stripe",Vector3.new(2.96,.055,.035),CFrame.new(0,.23+i*.34,-.865),accent,nil,Enum.Material.Fabric) end
@@ -181,8 +210,8 @@ function StaffModel.create(teacher)
         local legGroup=side<0 and "leftLeg" or "rightLeg"
         local x=side*2.02
         local short=clothes=="polo"
-        box(side<0 and "Left Arm" or "Right Arm",Vector3.new(1.03,2.65,1.40),CFrame.new(x,1.58,0),short and skin or shirt,armGroup,short and Enum.Material.SmoothPlastic or Enum.Material.Fabric)
-        box("Sleeve shoulder",Vector3.new(1.09,short and 1.13 or 2.05,1.46),CFrame.new(x,short and 2.31 or 1.85,0),shirt,armGroup,Enum.Material.Fabric)
+        rounded(side<0 and "Left Arm" or "Right Arm",Vector3.new(1.03,short and 1.60 or 2.65,1.40),CFrame.new(x,short and 1.12 or 1.58,0),short and skin or shirt,armGroup,.16)
+        rounded("Sleeve shoulder",Vector3.new(1.09,short and 1.13 or 2.05,1.46),CFrame.new(x,short and 2.31 or 1.85,0),shirt,armGroup,.17)
         box("Sleeve hem",Vector3.new(1.10,.08,1.47),CFrame.new(x,short and 1.75 or .85,0),shirt:Lerp(WHITE,.09),armGroup,Enum.Material.Fabric)
         if formal then box("Shirt cuff",Vector3.new(1.02,.16,1.41),CFrame.new(x,.65,0),accent,armGroup,Enum.Material.Fabric) end
         -- C-shaped toy hands: a ring with an opening, rounded ends, and a thumb.
@@ -193,7 +222,7 @@ function StaffModel.create(teacher)
         for _,t in ipairs({math.rad(from),math.rad(to)}) do oval("Rounded hand fingertip",Vector3.new(.30,.30,.31),CFrame.new(handX+math.cos(t)*.42,.22+math.sin(t)*.43,-.13),skin,armGroup) end
         oval("Hand thumb",Vector3.new(.28,.38,.34),CFrame.new(handX-side*.22,.39,-.31),skin,armGroup)
         local lx=side*.82
-        box(side<0 and "Left Leg" or "Right Leg",Vector3.new(1.36,2.77,1.48),CFrame.new(lx,-1.47,0),pants,legGroup,Enum.Material.Fabric)
+        rounded(side<0 and "Left Leg" or "Right Leg",Vector3.new(1.36,2.77,1.48),CFrame.new(lx,-1.47,0),pants,legGroup,.12)
         box("Trouser pressed crease",Vector3.new(.022,2.51,.03),CFrame.new(lx,-1.46,-.757),pants:Lerp(WHITE,.13),legGroup)
         box("Trouser cuff seam",Vector3.new(1.30,.045,.035),CFrame.new(lx,-2.78,-.755),pants:Lerp(WHITE,.13),legGroup)
         local shoeColor=isBolich and Color3.fromRGB(39,48,69) or INK
@@ -210,10 +239,10 @@ function StaffModel.create(teacher)
     box("Badge clip",Vector3.new(.12,.09,.065),badge.CFrame*CFrame.new(0,.28,0),GOLD)
     box("Badge portrait",Vector3.new(.15,.19,.065),badge.CFrame*CFrame.new(0,.08,-.01),shirt)
     for i=0,1 do box("Badge print",Vector3.new(.23,.022,.07),badge.CFrame*CFrame.new(0,-.07-i*.07,-.012),GREEN) end
-    local nameGui=Instance.new("BillboardGui");nameGui.Name="TeacherName";nameGui.Size=UDim2.fromOffset(190,42)
-    nameGui.StudsOffset=Vector3.new(0,6.25,0);nameGui.AlwaysOnTop=false;nameGui.MaxDistance=45;nameGui.Parent=root
-    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=GREEN;label.BackgroundTransparency=.08
-    label.TextColor3=GOLD;label.TextScaled=true;label.Text=teacher.fullName or teacher.name;label.Font=Enum.Font.GothamBold;label.Parent=nameGui
+    local nameGui=Instance.new("BillboardGui");nameGui.Name="TeacherName";nameGui.Size=UDim2.fromScale(4.8,.70)
+    nameGui.StudsOffset=Vector3.new(0,6.15,0);nameGui.AlwaysOnTop=false;nameGui.MaxDistance=32;nameGui.Parent=root
+    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=GREEN;label.BackgroundTransparency=.28
+    label.TextColor3=GOLD;label.TextScaled=true;label.Text=teacher.name;label.Font=Enum.Font.GothamBold;label.Parent=nameGui
     local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,10);corner.Parent=label
     local speech=Instance.new("BillboardGui");speech.Name="Speech";speech.Size=UDim2.fromOffset(310,105);speech.StudsOffset=Vector3.new(3.8,7.0,0)
     speech.AlwaysOnTop=true;speech.MaxDistance=55;speech.Enabled=false;speech.Parent=root

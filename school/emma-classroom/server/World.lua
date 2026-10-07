@@ -7,13 +7,13 @@ local StaffModel=require(script.Parent:WaitForChild("StaffModel"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(232,222,173),
+    wall=Color3.fromRGB(239,233,207),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
     gold=Color3.fromRGB(238,203,99),
     wood=Color3.fromRGB(137,96,62),
-    woodDark=Color3.fromRGB(83,61,47),
+    woodDark=Color3.fromRGB(119,87,61),
     ink=Color3.fromRGB(39,44,43),
     cream=Color3.fromRGB(248,245,232),
     metal=Color3.fromRGB(120,126,129),
@@ -37,6 +37,19 @@ local function cylinder(parent: Instance,name: string,size: Vector3,cf: CFrame,c
     local p=part(parent,name,size,cf,color,material,collide);p.Shape=Enum.PartType.Cylinder;return p
 end
 
+-- Rounded laminate/plastic outlines with a shallow dark edge band.
+-- Core collision stays simple; corner detail never obstructs an aisle.
+local function roundedPanel(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,r:number,horizontal:boolean,collide:boolean?):Part
+    local w=Vector3.new(size.X,horizontal and size.Z or size.Y,horizontal and size.Y or size.Z)
+    local base=horizontal and cf*CFrame.Angles(-math.pi/2,0,0) or cf
+    local core=part(parent,name,Vector3.new(w.X-2*r,w.Y,w.Z),base,color,Enum.Material.SmoothPlastic,collide)
+    part(parent,name.." center",Vector3.new(w.X,w.Y-2*r,w.Z),base,color,Enum.Material.SmoothPlastic,false)
+    for _,x in ipairs({-1,1}) do for _,y in ipairs({-1,1}) do
+        cylinder(parent,name.." rounded corner",Vector3.new(w.Z,r*2,r*2),base*CFrame.new(x*(w.X/2-r),y*(w.Y/2-r),0)*CFrame.Angles(0,math.pi/2,0),color,Enum.Material.SmoothPlastic,false)
+    end end
+    return core
+end
+
 local function surfaceText(target: BasePart,text: string,face: Enum.NormalId,textColor: Color3,bg: Color3,font: Enum.Font?): TextLabel
     local gui=Instance.new("SurfaceGui")
     gui.Name="Surface";gui.Face=face;local width=target.Size.X
@@ -58,7 +71,7 @@ end
 
 local function ceilingLight(parent: Instance,x: number,z: number)
     local box=part(parent,"Recessed ceiling light",Vector3.new(7.6,.22,2.4),CFrame.new(x,17.72,z),Color3.fromRGB(255,249,220),Enum.Material.Neon,false)
-    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.3;light.Range=20;light.Angle=105;light.Shadows=false;light.Parent=box
+    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(255,251,242);light.Brightness=.65;light.Range=29;light.Angle=105;light.Shadows=false;light.Parent=box
     part(parent,"Light trim",Vector3.new(8,.10,2.8),CFrame.new(x,17.80,z),Color3.fromRGB(205,207,202),Enum.Material.Metal,false)
 end
 
@@ -75,8 +88,12 @@ local function plant(parent: Instance,x: number,y: number,z: number,scale: numbe
 end
 
 local function book(parent: Instance,x: number,y: number,z: number,color: Color3,rotation: number)
-    part(parent,"Classroom book",Vector3.new(2.4,.32,3.2),CFrame.new(x,y,z)*CFrame.Angles(0,rotation,0),color,Enum.Material.SmoothPlastic,false)
-    part(parent,"Book pages",Vector3.new(2.15,.16,2.95),CFrame.new(x,y+.18,z)*CFrame.Angles(0,rotation,0),Color3.fromRGB(238,232,211),Enum.Material.SmoothPlastic,false)
+    local cf=CFrame.new(x,y,z)*CFrame.Angles(0,rotation,0)
+    roundedPanel(parent,"Classroom book",Vector3.new(2.15,.18,2.85),cf,color,.10,true,false)
+    part(parent,"Book pages",Vector3.new(1.94,.12,2.65),cf*CFrame.new(.015,.14,0),P.cream,Enum.Material.SmoothPlastic,false)
+    part(parent,"Notebook spine",Vector3.new(.12,.15,2.85),cf*CFrame.new(-1.04,.14,0),color:Lerp(P.ink,.14),Enum.Material.SmoothPlastic,false)
+    for i=0,5 do part(parent,"Notebook ruled line",Vector3.new(1.6,.012,.017),cf*CFrame.new(.05,.206,-.82+i*.31),Color3.fromRGB(167,184,196),Enum.Material.SmoothPlastic,false) end
+    part(parent,"Notebook margin",Vector3.new(.014,.014,2.35),cf*CFrame.new(-.59,.207,0),Color3.fromRGB(212,136,141),Enum.Material.SmoothPlastic,false)
 end
 
 local function pencilCup(parent: Instance,x: number,y: number,z: number)
@@ -88,28 +105,39 @@ local function pencilCup(parent: Instance,x: number,y: number,z: number)
 end
 
 local function schoolChair(parent: Instance,name: string,x: number,z: number,tint: Color3)
-    part(parent,name.." seat",Vector3.new(2.9,.42,2.55),CFrame.new(x,1.55,z),tint,Enum.Material.SmoothPlastic)
-    part(parent,name.." back",Vector3.new(2.9,2.65,.38),CFrame.new(x,2.9,z+1.05),tint,Enum.Material.SmoothPlastic)
-    for _,dx in ipairs({-.95,.95}) do
-        part(parent,name.." leg",Vector3.new(.22,1.55,.22),CFrame.new(x+dx,.78,z),P.metal,Enum.Material.Metal)
-        part(parent,name.." back support",Vector3.new(.20,2.75,.20),CFrame.new(x+dx,2.65,z+.82),P.metal,Enum.Material.Metal,false)
+    roundedPanel(parent,name.." seat",Vector3.new(2.9,.30,2.55),CFrame.new(x,1.6,z),tint,.27,true,true)
+    local backCF=CFrame.new(x,2.98,z+1.10)*CFrame.Angles(math.rad(-7),0,0)
+    roundedPanel(parent,name.." back",Vector3.new(2.9,2.55,.27),backCF,tint,.35,false,true)
+    -- Inset grip is a shallow dark detail; no block sticking through the back.
+    roundedPanel(parent,name.." hand grip",Vector3.new(1.26,.28,.025),backCF*CFrame.new(0,.72,-.15),tint:Lerp(Color3.new(0,0,0),.45),.12,false,false)
+    for _,dx in ipairs({-.97,.97}) do
+        for _,dz in ipairs({-.78,.78}) do
+            cylinder(parent,name.." tubular leg",Vector3.new(1.43,.17,.17),CFrame.new(x+dx,.77,z+dz)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,true)
+            cylinder(parent,name.." rubber foot",Vector3.new(.17,.24,.24),CFrame.new(x+dx,.14,z+dz)*CFrame.Angles(0,0,math.pi/2),P.ink,Enum.Material.SmoothPlastic,false)
+        end
+        cylinder(parent,name.." back support",Vector3.new(2.65,.16,.16),CFrame.new(x+dx,2.62,z+.89)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
     end
 end
 
 local function desk(parent: Instance,x: number,z: number,index: number,emma: boolean)
-    part(parent,"Student desk top",Vector3.new(7,.48,4.6),CFrame.new(x,3,z),Color3.fromRGB(191,158,107),Enum.Material.Wood)
-    part(parent,"Desk front lip",Vector3.new(6.8,.58,.35),CFrame.new(x,2.7,z-2.12),Color3.fromRGB(49,49,46),Enum.Material.SmoothPlastic,false)
+    roundedPanel(parent,"Student desk edge",Vector3.new(7,.30,4.6),CFrame.new(x,2.91,z),Color3.fromRGB(61,61,58),.24,true,true)
+    roundedPanel(parent,"Student desk top",Vector3.new(6.94,.12,4.54),CFrame.new(x,3.11,z),Color3.fromRGB(201,176,127),.23,true,false)
     for _,dx in ipairs({-2.8,2.8}) do
-        part(parent,"Desk leg",Vector3.new(.28,2.75,.28),CFrame.new(x+dx,1.5,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
-        part(parent,"Desk foot",Vector3.new(1.0,.18,3.6),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
+        cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
+        part(parent,"Desk foot",Vector3.new(.58,.16,3.6),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
     end
     part(parent,"Desk book tray",Vector3.new(5.8,.12,3.6),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
     for _,dx in ipairs({-2.9,2.9}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.6),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
     book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
     schoolChair(parent,"Student chair",x,z+3.9,Color3.fromRGB(47,50,50))
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
-    book(parent,x-1.2,3.36,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
-    part(parent,"Desk pencil",Vector3.new(.14,.14,2.2),CFrame.new(x+1.4,3.42,z-.6)*CFrame.Angles(0,math.rad(18),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
+    book(parent,x-1.2,3.28,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
+    part(parent,"Desk pencil",Vector3.new(.09,.09,1.75),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
+    local pencilCF=CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0)
+    part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
+    part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
+    local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.6),P.cream,Enum.Material.SmoothPlastic,false)
+    surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     if emma then
         local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-2.33)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
         surfaceText(tag,"★ EMMA ★",Enum.NormalId.Back,P.gold,P.green)
@@ -121,15 +149,16 @@ end
 local function bulletinBoard(parent: Instance,name: string,x: number,y: number,z: number,width: number,height: number,title: string)
     local frame=part(parent,name.." wood frame",Vector3.new(width+.8,height+.8,.32),CFrame.new(x,y,z),Color3.fromRGB(105,73,48),Enum.Material.Wood,false)
     local cork=part(parent,name.." cork",Vector3.new(width,height,.18),CFrame.new(x,y,z-.19),Color3.fromRGB(168,122,75),Enum.Material.Fabric,false)
-    surfaceText(cork,title,Enum.NormalId.Back,Color3.fromRGB(247,241,217),Color3.fromRGB(168,122,75),Enum.Font.GothamBold)
+    local titleLabel=surfaceText(cork,title,Enum.NormalId.Back,P.cream,cork.Color,Enum.Font.GothamBold)
+    titleLabel.Position=UDim2.fromScale(.08,.02);titleLabel.Size=UDim2.fromScale(.84,.18)
+    titleLabel.BackgroundTransparency=1
     return frame
 end
 
 local function buildClassroomTexture(root: Instance)
     -- The real school photos are busy, old, warm and layered. This deliberately kills the sterile showroom look.
-    bulletinBoard(root,"Student work board",-21,12.0,-33.78,12,5.2,"OUR WORK\n★  ★  ★")
-    bulletinBoard(root,"Reading board",-21,6.5,-33.78,12,4.2,"READING\ncharacters • setting • problem • solution")
-    sign(root,"Prayer card","PRAY\nLEARN\nSERVE",Vector3.new(5.2,6.5,.18),CFrame.new(-32.7,9,-33.72),Color3.fromRGB(239,232,201),Color3.fromRGB(68,89,72))
+    -- Small pieces of work belong inside framed boards, with breathable margins.
+    bulletinBoard(root,"Student work board",-26,9,-33.65,12,7.0,"OUR WORK")
 
     -- Classroom rules and paper chains on the side wall.
     local rules={"LISTEN","BE KIND","TRY YOUR BEST","HELP OTHERS","KEEP GOING"}
@@ -197,8 +226,11 @@ local function buildClassroomTexture(root: Instance)
     -- Student supply baskets on the center tables.
     local basketColors={Color3.fromRGB(221,91,86),Color3.fromRGB(75,142,190),Color3.fromRGB(86,154,96),Color3.fromRGB(231,181,63)}
     for i,x in ipairs({-20,-4,16}) do
-        local b=part(root,"Supply basket",Vector3.new(2.8,.9,1.8),CFrame.new(x,3.72,4.8),basketColors[i],Enum.Material.SmoothPlastic,false)
-        surfaceText(b,"PENCILS",Enum.NormalId.Front,Color3.fromRGB(248,245,232),b.Color,Enum.Font.GothamBold)
+        local color=basketColors[i]
+        part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,4.8),color,Enum.Material.SmoothPlastic,false)
+        for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,4.8+dz),color,Enum.Material.SmoothPlastic,false) end
+        for _,dx in ipairs({-1.33,1.33}) do part(root,"Basket end rim",Vector3.new(.13,.65,1.6),CFrame.new(x+dx,3.55,4.8),color,Enum.Material.SmoothPlastic,false) end
+        for j=0,3 do part(root,"Basket pencil",Vector3.new(.09,.09,2.2),CFrame.new(x-.75+j*.42,3.36,4.8)*CFrame.Angles(0,math.rad(75+j*7),0),P.gold,Enum.Material.SmoothPlastic,false) end
     end
 end
 
@@ -220,15 +252,25 @@ local function buildReadingCorner(root:Instance)
         end
     end
     for i=1,6 do
-        local paper=part(root,"Student artwork paper",Vector3.new(1.5,2,.04),CFrame.new(-25+(i-1)*1.55,11.5,-33.4),P.cream,Enum.Material.SmoothPlastic,false)
-        ball(root,"Artwork flower",Vector3.new(.65,.65,.06),paper.CFrame*CFrame.new(0,.1,.05),colors[i%4+1],Enum.Material.SmoothPlastic,false)
-        part(root,"Artwork stem",Vector3.new(.07,.6,.06),paper.CFrame*CFrame.new(0,-.4,.05),P.green,Enum.Material.SmoothPlastic,false)
+        local x=-29.9+((i-1)%3)*3.85;local y=9.55-math.floor((i-1)/3)*2.55
+        local cf=CFrame.new(x,y,-33.35)*CFrame.Angles(0,0,math.rad(i%2==0 and 3 or -3))
+        part(root,"Student artwork border",Vector3.new(2.9,2.28,.06),cf,colors[i%4+1],Enum.Material.SmoothPlastic,false)
+        local paper=part(root,"Student artwork paper",Vector3.new(2.64,2.04,.04),cf*CFrame.new(0,0,.055),P.cream,Enum.Material.SmoothPlastic,false)
+        for petal=0,4 do
+            local t=petal*math.pi*2/5
+            ball(root,"Artwork flower petal",Vector3.new(.36,.36,.035),paper.CFrame*CFrame.new(math.cos(t)*.27,.16+math.sin(t)*.27,.03),colors[i%4+1],Enum.Material.SmoothPlastic,false)
+        end
+        part(root,"Artwork stem",Vector3.new(.055,.68,.03),paper.CFrame*CFrame.new(0,-.40,.034),P.green,Enum.Material.SmoothPlastic,false)
+        ball(root,"Artwork center",Vector3.new(.24,.24,.045),paper.CFrame*CFrame.new(0,.16,.044),P.gold,Enum.Material.SmoothPlastic,false)
+        ball(root,"Artwork pin",Vector3.new(.11,.11,.08),cf*CFrame.new(0,1.0,.11),P.gold,Enum.Material.Metal,false)
     end
 
 end
 
 local function buildCubbies(root: Instance)
-    part(root,"Cubbies wood surround",Vector3.new(27,8,3),CFrame.new(21,4.2,25.2),Color3.fromRGB(142,103,68),Enum.Material.Wood)
+    part(root,"Cubbies wood surround",Vector3.new(27,8,.24),CFrame.new(21,4.2,26.5),Color3.fromRGB(142,103,68),Enum.Material.Wood)
+    for _,y in ipairs({.28,4.2,8.2}) do part(root,"Cubbie open shelf",Vector3.new(27,.22,3),CFrame.new(21,y,25.2),P.wood,Enum.Material.Wood,false) end
+    for i=0,6 do part(root,"Cubbie divider",Vector3.new(.18,8,3),CFrame.new(7.5+i*4.5,4.2,25.2),P.wood,Enum.Material.Wood,false) end
     local binColors={
         Color3.fromRGB(67,129,183),Color3.fromRGB(229,112,103),Color3.fromRGB(97,150,90),
         Color3.fromRGB(233,182,67),Color3.fromRGB(157,105,176),Color3.fromRGB(74,155,148),
@@ -237,9 +279,13 @@ local function buildCubbies(root: Instance)
     for row=0,1 do
         for col=0,5 do
             n+=1
-            local x=10.8+col*4.1;local y=2.25+row*3.15
-            part(root,"Cubbie opening",Vector3.new(3.4,2.55,.35),CFrame.new(x,y,23.55),Color3.fromRGB(71,57,46),Enum.Material.SmoothPlastic,false)
-            part(root,"Cubbie bin",Vector3.new(2.85,1.55,2.1),CFrame.new(x,y-.2,23.05),binColors[(n-1)%#binColors+1],Enum.Material.SmoothPlastic,false)
+            local x=9.75+col*4.5;local y=1.75+row*3.95
+            local color=binColors[(n-1)%#binColors+1]
+            local cf=CFrame.new(x,y-.2,24.8)
+            part(root,"Cubbie bin",Vector3.new(3.55,.15,2.45),cf*CFrame.new(0,-.60,0),color,Enum.Material.SmoothPlastic,false)
+            for _,dx in ipairs({-1.70,1.70}) do part(root,"Bin side",Vector3.new(.15,1.45,2.45),cf*CFrame.new(dx,0,0),color,Enum.Material.SmoothPlastic,false) end
+            for _,dz in ipairs({-1.15,1.15}) do part(root,"Bin front and back",Vector3.new(3.4,1.45,.15),cf*CFrame.new(0,0,dz),color,Enum.Material.SmoothPlastic,false) end
+            roundedPanel(root,"Bin label",Vector3.new(1.2,.43,.025),cf*CFrame.new(0,.18,-1.235),P.cream,.08,false,false)
         end
     end
     part(root,"Wood coat rail",Vector3.new(26,.65,.38),CFrame.new(21,11.1,26.1),P.woodDark,Enum.Material.Wood,false)
@@ -279,12 +325,12 @@ local function buildWindows(root: Instance)
                 part(root,"Blue curtain fold",Vector3.new(.24,8.35,.28),CFrame.new(-35.57+fold*.08,9,z+dz+fold*.23),Color3.fromRGB(112-fold*8,132-fold*8,159-fold*8),Enum.Material.Fabric,false)
             end
         end
-        part(root,"Radiator body",Vector3.new(1.35,3.0,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(177,181,178),Enum.Material.Metal,false)
-        for _,rz in ipairs({-4,-2,0,2,4}) do part(root,"Radiator fin",Vector3.new(1.48,2.7,.18),CFrame.new(-34.48,1.75,z+rz),Color3.fromRGB(150,156,155),Enum.Material.Metal,false) end
+        part(root,"Radiator body",Vector3.new(1.35,2.6,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(222,221,207),Enum.Material.Metal,false)
+        for rz=-5,5,.5 do part(root,"Radiator fin",Vector3.new(1.48,2.7,.18),CFrame.new(-34.48,1.75,z+rz),Color3.fromRGB(201,204,196),Enum.Material.Metal,false) end
     end
     -- Warm sunlight washes the front-left classroom corner.
     local sunAnchor=part(root,"Window sun anchor",Vector3.new(.3,.3,.3),CFrame.new(-34,10,-10),Color3.new(1,1,1),Enum.Material.Neon,false);sunAnchor.Transparency=1
-    local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,222,165);sun.Brightness=.45;sun.Range=28;sun.Shadows=true;sun.Parent=sunAnchor
+    local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,246,225);sun.Brightness=1.15;sun.Range=48;sun.Shadows=true;sun.Parent=sunAnchor
 end
 
 local function buildFrontWall(root: Instance)
@@ -309,10 +355,9 @@ local function buildFrontWall(root: Instance)
     World.BoardSubject=subject;World.BoardQuestion=q;World.BoardFooter=footer
 
     -- Cross, motto, alphabet strip and classroom values from the target concept.
-    part(root,"Classroom cross vertical",Vector3.new(1,4.8,.45),CFrame.new(-28,10,-33.9),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
-    part(root,"Classroom cross horizontal",Vector3.new(3.5,1,.45),CFrame.new(-28,10.7,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    part(root,"Classroom cross vertical",Vector3.new(1,4.8,.45),CFrame.new(32,10,-33.9),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    part(root,"Classroom cross horizontal",Vector3.new(3.5,1,.45),CFrame.new(32,10.7,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
     sign(root,"Light banner","LET YOUR LIGHT SHINE  •  MATTHEW 5:16",Vector3.new(29,2.0,.2),CFrame.new(-6,15.0,-33.85),Color3.fromRGB(248,239,213),Color3.fromRGB(78,65,48))
-    sign(root,"Kindness panel","FAITH  +  LEARNING  +  KINDNESS",Vector3.new(16,4.6,.2),CFrame.new(28,10.8,-33.85),Color3.fromRGB(47,57,64),Color3.fromRGB(238,230,198))
     local letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     for i=1,26 do
         local x=-31.2+(i-1)*2.38
@@ -330,9 +375,16 @@ local function buildRightWall(root: Instance)
 end
 
 local function buildTeacherDesk(root: Instance)
-    part(root,"Teacher desk top",Vector3.new(14,.65,6),CFrame.new(25,3.1,-25),Color3.fromRGB(151,109,72),Enum.Material.Wood)
-    part(root,"Teacher desk front",Vector3.new(13,3.8,.65),CFrame.new(25,1.65,-27.7),Color3.fromRGB(126,87,59),Enum.Material.Wood)
+    roundedPanel(root,"Teacher desk top",Vector3.new(14,.45,6),CFrame.new(25,3.1,-25),Color3.fromRGB(177,140,95),.26,true,true)
+    part(root,"Teacher desk front",Vector3.new(13,3.8,.65),CFrame.new(25,1.65,-27.5),Color3.fromRGB(126,87,59),Enum.Material.Wood)
     for _,x in ipairs({19.2,30.8}) do part(root,"Teacher desk leg",Vector3.new(.55,3.2,.55),CFrame.new(x,1.55,-25),Color3.fromRGB(100,72,53),Enum.Material.Wood) end
+    for _,x in ipairs({20.7,29.3}) do
+        part(root,"Teacher drawer pedestal",Vector3.new(3.8,2.9,4.9),CFrame.new(x,1.65,-25),P.wood,Enum.Material.Wood,false)
+        for row=0,2 do
+            part(root,"Teacher inset drawer",Vector3.new(3.48,.78,.12),CFrame.new(x,.72+row*.88,-22.48),Color3.fromRGB(166,129,86),Enum.Material.Wood,false)
+            part(root,"Teacher drawer handle",Vector3.new(1.02,.10,.18),CFrame.new(x,.84+row*.88,-22.29),P.metal,Enum.Material.Metal,false)
+        end
+    end
     local laptop=part(root,"Teacher laptop screen",Vector3.new(4.6,2.8,.22),CFrame.new(26,5.1,-26.1)*CFrame.Angles(math.rad(-8),0,0),Color3.fromRGB(50,70,82),Enum.Material.Glass,false)
     surfaceText(laptop,"ABVM\nGRADE 2",Enum.NormalId.Back,P.cream,Color3.fromRGB(50,70,82),Enum.Font.GothamBold)
     part(root,"Teacher laptop base",Vector3.new(4.8,.2,3.1),CFrame.new(26,3.6,-24.9),Color3.fromRGB(88,93,95),Enum.Material.Metal,false)
@@ -384,15 +436,15 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=1.8;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.3
-    Lighting.Ambient=Color3.fromRGB(112,113,112);Lighting.OutdoorAmbient=Color3.fromRGB(183,185,178)
-    Lighting.EnvironmentDiffuseScale=.55;Lighting.EnvironmentSpecularScale=.35;Lighting.ExposureCompensation=-.1
+    Lighting.ClockTime=10.25;Lighting.Brightness=2.4;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.55
+    Lighting.Ambient=Color3.fromRGB(165,166,167);Lighting.OutdoorAmbient=Color3.fromRGB(191,202,217)
+    Lighting.EnvironmentDiffuseScale=.85;Lighting.EnvironmentSpecularScale=.42;Lighting.ExposureCompensation=.12
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
-    atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.14;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.8;atmosphere.Glare=.05;atmosphere.Parent=Lighting
+    atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.025;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
     bloom.Name="EmmaClassroomBloom";bloom.Intensity=.03;bloom.Size=20;bloom.Threshold=1.25;bloom.Parent=Lighting
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
-    grade.Name="EmmaClassroomGrade";grade.Brightness=0;grade.Contrast=.035;grade.Saturation=-.04;grade.TintColor=Color3.fromRGB(255,249,236);grade.Parent=Lighting
+    grade.Name="EmmaClassroomGrade";grade.Brightness=0;grade.Contrast=.035;grade.Saturation=.01;grade.TintColor=Color3.fromRGB(255,253,250);grade.Parent=Lighting
     local rays=Lighting:FindFirstChild("EmmaClassroomSunRays") or Instance.new("SunRaysEffect")
     rays.Name="EmmaClassroomSunRays";rays.Intensity=.025;rays.Spread=.8;rays.Parent=Lighting
 end
@@ -404,6 +456,18 @@ function World.build()
 
     -- Architectural shell.
     part(root,"Dark varnished classroom floor",Vector3.new(74,1,62),CFrame.new(0,0,-4),P.woodDark,Enum.Material.WoodPlanks)
+    for row=0,8 do
+        for col=0,36 do
+            local x=-36+col*2
+            local start=math.max(-34,-34+row*8-(col%2)*4)
+            local finish=math.min(27,-26+row*8-(col%2)*4)
+            if finish>start then
+                local tint=Color3.fromRGB(124+(col*7+row*3)%13,91+(col*3+row*5)%10,64+(col+row*7)%8)
+                local plank=part(root,"Oak floor board",Vector3.new(1.98,.025,finish-start-.025),CFrame.new(x,.518,(start+finish)/2),tint,Enum.Material.Wood,false)
+                plank.Reflectance=.04;plank.CastShadow=false
+            end
+        end
+    end
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)
     part(root,"Back wall right",Vector3.new(28,18,1),CFrame.new(23,9,27),P.wall)
@@ -447,8 +511,6 @@ function World.build()
     -- Lived-in details.
     plant(root,-31,.1,20,.85)
     plant(root,-30,8.2,-29,.55)
-    sign(root,"Today board","TODAY\n✓ Reading\n✓ Spelling\n✓ Grammar\n✓ Math\n✓ Religion",Vector3.new(8.5,10,.2),CFrame.new(-30,8,-33.82),Color3.fromRGB(49,53,57),Color3.fromRGB(230,229,218))
-    sign(root,"Small mission poster","TEACH\nPRAY\nENCOURAGE\nBELONG",Vector3.new(6,7,.2),CFrame.new(33,7,-33.82),Color3.fromRGB(245,239,215),Color3.fromRGB(77,64,47))
     -- Small wall clock.
     local clock=cylinder(root,"Classroom wall clock",Vector3.new(.25,3.2,3.2),CFrame.new(31.5,15.1,-34)*CFrame.Angles(0,math.pi/2,0),Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
     cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),clock.CFrame,Color3.fromRGB(61,63,63),Enum.Material.Metal,false)

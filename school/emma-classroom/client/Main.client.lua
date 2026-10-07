@@ -118,9 +118,10 @@ local function setStudyCamera()
     camera=Workspace.CurrentCamera
     if not camera then return end
     camera.CameraType=Enum.CameraType.Scriptable
-    camera.FieldOfView=68
-    -- Rear-left classroom view: Emma/desk foreground, teacher + Smartboard center, doorway/right wall visible.
-    camera.CFrame=CFrame.lookAt(Vector3.new(-12,8.5,17),Vector3.new(1,6.8,-22))
+    local framing=Layout.studyCamera(root.AbsoluteSize.X,root.AbsoluteSize.Y)
+    camera.FieldOfView=framing.fov
+    -- Teaching-corner composition: staff face and outfit are visible beside the answer panel; desks stay behind the camera.
+    camera.CFrame=CFrame.lookAt(Vector3.new(table.unpack(framing.eye)),Vector3.new(table.unpack(framing.target)))
     studyView=true
     viewToggle.Text="Look around"
 end
@@ -180,6 +181,7 @@ layout=function()
     local size=root.AbsoluteSize
     local w,h=math.max(1,size.X),math.max(1,size.Y)
     local dims=Layout.panel(w,h)
+    if studyView then setStudyCamera() end
     progressChip.Position=UDim2.fromOffset(12,10);progressChip.Size=UDim2.fromOffset(130,36)
     viewToggle.AnchorPoint=Vector2.new(1,0);viewToggle.Position=UDim2.new(1,-12,0,6);viewToggle.Size=UDim2.fromOffset(116,44)
     teacherChip.AnchorPoint=Vector2.new(.5,0);teacherChip.Position=UDim2.new(.5,0,0,10);teacherChip.Size=UDim2.fromOffset(math.max(100,math.min(300,w-280)),36)
@@ -217,15 +219,21 @@ local cam=Workspace.CurrentCamera
 if cam then
     cam:GetPropertyChangedSignal("ViewportSize"):Connect(layout)
 end
-layout();setPlayerCamera()
+layout();setStudyCamera()
 
 viewToggle.Activated:Connect(function()
     if studyView then setPlayerCamera() else setStudyCamera() end
 end)
 
-player.CharacterAdded:Connect(function()
-    task.wait(.25);setPlayerCamera()
-end)
+local function connectCharacter(character)
+    local humanoid=character:WaitForChild("Humanoid")
+    if studyView then setStudyCamera() else setPlayerCamera() end
+    humanoid.Running:Connect(function(speed)
+        if studyView and speed>.5 then setPlayerCamera() end
+    end)
+end
+player.CharacterAdded:Connect(connectCharacter)
+if player.Character then task.spawn(connectCharacter,player.Character) end
 
 local function showPayload(payload)
     if type(payload)~="table" then return end
