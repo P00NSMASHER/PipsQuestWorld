@@ -15,4 +15,12 @@ function Layout.studyCamera(w:number,h:number)
     end
     return {eye={-13,6.7,-10},target={-9,2,-20},fov=70}
 end
+
+-- A live DataStore load can legitimately outlast the first few client calls.
+-- Keep reconnect attempts gentle and bounded per attempt without ever forcing
+-- Emma to leave a healthy server just because startup was slow.
+function Layout.connectionRetryDelay(attempt:number):number
+    local step=math.max(0,math.floor(attempt)-1)
+    return math.min(5,.4*2^math.min(step,4))
+end
 return Layout
