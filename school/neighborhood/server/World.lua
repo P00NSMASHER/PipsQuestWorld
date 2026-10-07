@@ -884,6 +884,8 @@ function World.build()
     -- read as a city school rather than a freestanding campus object.
     World.part(root,"Gold standard east sidewalk",Vector3.new(12,.36,112),CFrame.new(82,.22,-90),Color3.fromRGB(205,201,190),Enum.Material.Concrete)
     World.part(root,"Gold standard east curb",Vector3.new(1.4,.72,118),CFrame.new(88.6,.36,-90),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Gold standard east street lane",Vector3.new(20,.16,94),CFrame.new(99,.18,-78),Color3.fromRGB(61,64,67),Enum.Material.Asphalt)
+    World.part(root,"Gold standard east far curb",Vector3.new(1.2,.58,94),CFrame.new(109.6,.3,-78),palette.stone,Enum.Material.Concrete)
     World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
     World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(83,103,117),Enum.Material.Metal,false)
     World.part(root,"Howard door split",Vector3.new(.45,7.8,.18),CFrame.new(75.15,8,-93),palette.stone,nil,false)
@@ -934,18 +936,19 @@ function World.build()
     local roadSign=sign(root,"✝\nASSUMPTION\nBVM SCHOOL\n────────\nENTRANCE ON HOWARD AVENUE",CFrame.new(106.65,9,-78)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,10,.45),palette.green,palette.gold)
     roadSign.Name="Assumption BVM Howard Avenue sign"
 
-    -- Parking lot and simple perimeter fencing.
-    World.part(root,"School parking lot",Vector3.new(67,.22,111),CFrame.new(116,.12,-100),Color3.fromRGB(78,78,75),Enum.Material.Asphalt)
-    for z=-137,-62,15 do
-        for x=91,139,12 do World.part(root,"Parking stripe",Vector3.new(.18,.04,10),CFrame.new(x,.25,z),Color3.fromRGB(225,220,198),nil,false) end
+    -- Parking recedes behind the east street corridor so the hero angle reads like the approved
+    -- city-school streetscape. The lot remains present for real-photo context but no longer fills the foreground.
+    World.part(root,"School parking lot",Vector3.new(40,.22,68),CFrame.new(129,.12,-121),Color3.fromRGB(78,78,75),Enum.Material.Asphalt)
+    for _,z in ipairs({-142,-124,-106}) do
+        for x=117,141,12 do World.part(root,"Parking stripe",Vector3.new(.18,.04,10),CFrame.new(x,.25,z),Color3.fromRGB(225,220,198),nil,false) end
     end
-    fencePanel(root,CFrame.new(149,4,-100),Vector3.new(.45,8,112))
-    fencePanel(root,CFrame.new(116,4,-155),Vector3.new(67,8,.45))
-    fencePanel(root,CFrame.new(116,4,-45),Vector3.new(67,8,.45))
-    for z=-154,-46,18 do World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(149,4.4,z),palette.metal,Enum.Material.Metal,true) end
-    for x=84,148,12 do
+    fencePanel(root,CFrame.new(149,4,-121),Vector3.new(.45,8,69))
+    fencePanel(root,CFrame.new(129,4,-155),Vector3.new(40,8,.45))
+    fencePanel(root,CFrame.new(129,4,-87),Vector3.new(40,8,.45))
+    for z=-154,-88,16.5 do World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(149,4.4,z),palette.metal,Enum.Material.Metal,true) end
+    for x=110,148,12 do
         World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-155),palette.metal,Enum.Material.Metal,true)
-        World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-45),palette.metal,Enum.Material.Metal,true)
+        World.part(root,"Parking fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-87),palette.metal,Enum.Material.Metal,true)
     end
     -- Side-lot service details visible in the real-school references.
     for _,z in ipairs({-121,-108}) do
@@ -959,12 +962,10 @@ function World.build()
     local hydrantTop=World.part(root,"Hydrant cap",Vector3.new(2.8,1.3,2.8),CFrame.new(162,4.3,-52),Color3.fromRGB(185,47,37),Enum.Material.Metal,false)
     hydrantTop.Shape=Enum.PartType.Ball
     for _,entry in ipairs({
-        {97,-137,0,Color3.fromRGB(221,222,218)},
-        {113,-137,0,Color3.fromRGB(55,66,77)},
-        {129,-137,0,Color3.fromRGB(165,177,183)},
-        {97,-63,math.pi,Color3.fromRGB(61,83,109)},
-        {113,-63,math.pi,Color3.fromRGB(210,208,197)},
-        {129,-63,math.pi,Color3.fromRGB(87,91,94)},
+        {117,-139,0,Color3.fromRGB(221,222,218)},
+        {133,-139,0,Color3.fromRGB(55,66,77)},
+        {117,-111,math.pi,Color3.fromRGB(61,83,109)},
+        {133,-111,math.pi,Color3.fromRGB(210,208,197)},
     }) do parkedCar(root,entry[1],entry[2],entry[3],entry[4]) end
 
     -- Dense urban Pottsville context. These are backdrop buildings, not owned player homes.
