@@ -733,6 +733,16 @@ function World.build()
     end
     World.part(root,"Front lower landing",Vector3.new(77,.45,9),CFrame.new(stairCenterX,.1,3),palette.stone,Enum.Material.Concrete)
     World.part(root,"Front landing",Vector3.new(77,.7,8),CFrame.new(stairCenterX,4.3,-31),palette.stone,Enum.Material.Concrete)
+    for _,side in ipairs({-1,1}) do
+        for tier=0,2 do
+            local z=4-tier*8.5
+            local y=.8+tier*.75
+            local wall=World.part(root,"Gold standard stair planter wall",Vector3.new(12,1.6+tier*.35,5.2),
+                CFrame.new(stairCenterX+side*(45-tier*2.6),y,z),palette.stone,Enum.Material.Concrete)
+            wall.CanQuery=false
+            shrub(root,stairCenterX+side*(45-tier*2.6),z,0.62+tier*.08)
+        end
+    end
 
     -- Low masonry cheeks and paired rails match the broad ceremonial stair in the target.
     World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX-40,2.55,-15),palette.brickDark,Enum.Material.Brick)
@@ -779,6 +789,18 @@ function World.build()
     local frontGui=frontSchoolSign:FindFirstChildOfClass("SurfaceGui")
     local frontLabel=frontGui and frontGui:FindFirstChildOfClass("TextLabel")
     if frontLabel then frontLabel.Font=Enum.Font.Garamond;frontLabel.TextStrokeTransparency=.78;frontLabel.TextStrokeColor3=Color3.fromRGB(107,75,20) end
+    for _,entry in ipairs({
+        {-63.2,8.4,math.rad(-24),"left"},
+        {-46.8,8.4,math.rad(24),"right"},
+    }) do
+        World.part(root,"Gold standard sign flourish "..entry[4],Vector3.new(.22,3.2,.18),
+            CFrame.new(entry[1],entry[2],frontSignZ-.82)*CFrame.Angles(0,0,entry[3]),palette.gold,Enum.Material.Metal,false)
+        for dy=-1,1 do
+            local leaf=World.part(root,"Gold standard sign leaf "..entry[4],Vector3.new(.58,.34,.2),
+                CFrame.new(entry[1]+(entry[4]=="left" and -.55 or .55),entry[2]+dy*.78,frontSignZ-.86),palette.gold,Enum.Material.Metal,false)
+            leaf.CFrame*=CFrame.Angles(0,0,entry[3]*.7)
+        end
+    end
     for i=-2,2 do
         local rise=(2-math.abs(i))*.62
         World.part(root,"Front school sign arched crown",Vector3.new(3.6,1.25,.74),
@@ -829,6 +851,10 @@ function World.build()
     end
 
     -- Howard Avenue side entrance, cross, walk and green/gold roadside sign.
+    -- A continuous sidewalk hugs the side wall in the gold standard and makes the long east elevation
+    -- read as a city school rather than a freestanding campus object.
+    World.part(root,"Gold standard east sidewalk",Vector3.new(12,.36,112),CFrame.new(82,.22,-90),Color3.fromRGB(205,201,190),Enum.Material.Concrete)
+    World.part(root,"Gold standard east curb",Vector3.new(1.4,.72,118),CFrame.new(88.6,.36,-90),palette.stone,Enum.Material.Concrete)
     World.part(root,"Howard entry landing",Vector3.new(14,.6,17),CFrame.new(82,4.2,-93),palette.stone,Enum.Material.Concrete)
     World.part(root,"Howard double doors",Vector3.new(.35,8,10),CFrame.new(75.45,8,-93),Color3.fromRGB(83,103,117),Enum.Material.Metal,false)
     World.part(root,"Howard door split",Vector3.new(.45,7.8,.18),CFrame.new(75.15,8,-93),palette.stone,nil,false)
