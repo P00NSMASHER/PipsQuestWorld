@@ -168,11 +168,36 @@ def validate_abvm_contract() -> dict:
         "Lobby acoustic ceiling",
         "Lobby reception front",
         "Lobby mission frame",
+        "Classroom chalkboard",
+        "Classroom smartboard",
+        "Classroom built-in cubby wall",
+        "Classroom interior window",
+        "Classroom radiator",
+        "Hall tile seam cross",
+        "Hall painted ceiling",
+        "Hall ceiling conduit",
+        "PhotoDerived_GymCafeteria",
+        "Gym polished wood floor",
+        "Gym arched window glass",
+        "Gym stage curtain fold",
+        "Gym cafeteria table top",
+        "Gym connector floor",
+        "PhotoDerived_PlaygroundAndYard",
+        "Photo asphalt school yard",
+        "Photo mulch playground",
+        "Photo yard basketball backboard",
+        "Photo playground slide",
+        "Photo playground tunnel ring",
+        "Back brick connector header",
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
     require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
             "redundant full upper slabs would cap the playable stairwells")
+    require("security camera" not in world.lower() and "access control" not in world.lower(),
+            "real-school operational security details must not be modeled from photographs")
+    require('buildGymCafeteria(root,4)' in world and 'buildPhotoPlayground(root)' in world,
+            "photo-derived gym/cafeteria or playground integration call missing")
     require('"Arched upper glazing"' not in world and '"Arch warm backlight"' not in world,
             "rectangular upper glazing returned; arched windows must keep segmented curve-following panels")
     expected_arch_calls = (
@@ -323,6 +348,10 @@ def validate_abvm_contract() -> dict:
         "wrappedSideParapets": True,
         "distantPottsvilleSkyline": True,
         "chunkyRobloxTreeCanopy": True,
+        "photoHallwayFinish": True,
+        "photoClassroomFinish": True,
+        "photoGymCafeteria": True,
+        "photoPlayground": True,
         "subjectClassrooms": len(required_subjects),
         "photoContractStaticOnly": True,
     }
