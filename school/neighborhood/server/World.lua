@@ -208,53 +208,85 @@ local function appearanceColor(value,fallback)
     return fallback
 end
 
-local function attachBakedPortrait(model,staff,position)
+local function attachWrappedPortraitHead(model,staff,head)
     local portrait=PortraitPixels[staff.id]
     if type(portrait)~="table" or type(portrait.rows)~="table" or #portrait.rows==0 then
         model:SetAttribute("PortraitMode","native")
         return false
     end
 
-    local plate=World.part(
-        model,
-        "Photo face plate",
-        Vector3.new(2.18,2.18,.07),
-        CFrame.new(position+Vector3.new(0,7.82,-1.39)),
-        Color3.fromRGB(22,45,79),
-        Enum.Material.SmoothPlastic,
-        false
+    local function faceSlice(name,size,localCf,x0,x1,canvasX)
+        local panel=World.part(
+            model,
+            name,
+            size,
+            head.CFrame*localCf,
+            head.Color,
+            Enum.Material.SmoothPlastic,
+            false
+        )
+        panel.CastShadow=false
+        panel.CanQuery=false
+        panel.CanTouch=false
+        panel:SetAttribute("WrappedFacePanel",true)
+        panel:SetAttribute("StaffId",staff.id)
+
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="BakedFacultyPortrait"..name
+        gui.Face=Enum.NormalId.Front
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(canvasX,320)
+        gui.LightInfluence=0
+        gui.AlwaysOnTop=false
+        gui.Parent=panel
+
+        local skinFrame=Instance.new("Frame")
+        skinFrame.Name="WrappedPortraitRoot"
+        skinFrame.Size=UDim2.fromScale(1,1)
+        skinFrame.BackgroundColor3=head.Color
+        skinFrame.BorderSizePixel=0
+        skinFrame.ClipsDescendants=true
+        skinFrame.Parent=gui
+
+        PortraitRenderer.renderCrop(skinFrame,portrait,{
+            Name=name.."Pixels",
+            Position=UDim2.fromScale(0,0),
+            Size=UDim2.fromScale(1,1),
+            ZIndex=2,
+            SampleStep=1,
+            X0=x0,
+            X1=x1,
+            Y0=.035,
+            Y1=.79,
+        })
+        return panel
+    end
+
+    -- Option B: center face plus two angled cheek slices. The slight overlap hides seams
+    -- at normal Roblox camera distance while preserving the native 3D hair/body silhouette.
+    faceSlice(
+        "FaceFront",
+        Vector3.new(1.96,2.04,.055),
+        CFrame.new(0,.02,-1.192),
+        .18,.82,
+        320
     )
-    plate.CastShadow=false
-    plate.CanQuery=false
-    plate.CanTouch=false
+    faceSlice(
+        "FaceLeft",
+        Vector3.new(.78,1.94,.055),
+        CFrame.new(-.91,.01,-.73)*CFrame.Angles(0,math.rad(55),0),
+        .04,.31,
+        150
+    )
+    faceSlice(
+        "FaceRight",
+        Vector3.new(.78,1.94,.055),
+        CFrame.new(.91,.01,-.73)*CFrame.Angles(0,math.rad(-55),0),
+        .69,.96,
+        150
+    )
 
-    local gui=Instance.new("SurfaceGui")
-    gui.Name="BakedFacultyPortrait"
-    gui.Face=Enum.NormalId.Front
-    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-    gui.CanvasSize=Vector2.new(384,384)
-    gui.LightInfluence=0
-    gui.AlwaysOnTop=false
-    gui.Parent=plate
-
-    local border=Instance.new("Frame")
-    border.Name="PortraitBorder"
-    border.Size=UDim2.fromScale(1,1)
-    border.BackgroundColor3=palette.navy
-    border.BorderSizePixel=0
-    border.Parent=gui
-    local corner=Instance.new("UICorner")
-    corner.CornerRadius=UDim.new(0,22)
-    corner.Parent=border
-
-    PortraitRenderer.render(border,portrait,{
-        Name="PhotoPixels",
-        Position=UDim2.fromScale(.028,.028),
-        Size=UDim2.fromScale(.944,.944),
-        CornerRadius=18,
-        ZIndex=2,
-    })
-    model:SetAttribute("PortraitMode","baked-photo")
+    model:SetAttribute("PortraitMode","wrapped-photo")
     return true
 end
 
@@ -383,27 +415,33 @@ local function npc(parent,staff,position)
     local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     head.Shape=Enum.PartType.Ball
 
-    -- Higher-fidelity photo-guided facial construction. Keep the Roblox silhouette, but use
-    -- layered brows, eyes, nose, ears and mouth instead of the old three-dot cartoon face.
-    local eyeColor=appearanceColor(appearance.eye,Color3.fromRGB(72,82,88))
-    local browColor=hair:Lerp(Color3.fromRGB(54,47,43),.24)
-    for _,x in ipairs({-.43,.43}) do
-        local white=World.part(model,"Eye white",Vector3.new(.52,.30,.10),CFrame.new(position+Vector3.new(x,8.02,-1.18)),Color3.fromRGB(248,246,241),Enum.Material.SmoothPlastic,false)
-        white.Shape=Enum.PartType.Ball
-        local iris=World.part(model,"Iris",Vector3.new(.23,.23,.07),CFrame.new(position+Vector3.new(x,8.01,-1.255)),eyeColor,Enum.Material.SmoothPlastic,false)
-        iris.Shape=Enum.PartType.Ball
-        local pupil=World.part(model,"Pupil",Vector3.new(.10,.11,.055),CFrame.new(position+Vector3.new(x,8.01,-1.30)),Color3.fromRGB(28,31,34),Enum.Material.SmoothPlastic,false)
-        pupil.Shape=Enum.PartType.Ball
-        World.part(model,"Eyebrow",Vector3.new(.62,.10,.08),CFrame.new(position+Vector3.new(x,8.35,-1.18))*CFrame.Angles(0,0,math.rad(x<0 and -5 or 5)),browColor,Enum.Material.SmoothPlastic,false)
+    local hasWrappedPortrait=attachWrappedPortraitHead(model,staff,head)
+
+    -- The real school portrait is the visible face whenever available. Procedural facial
+    -- geometry remains only as a fail-closed fallback for a missing/invalid portrait payload.
+    if not hasWrappedPortrait then
+        local eyeColor=appearanceColor(appearance.eye,Color3.fromRGB(72,82,88))
+        local browColor=hair:Lerp(Color3.fromRGB(54,47,43),.24)
+        for _,x in ipairs({-.43,.43}) do
+            local white=World.part(model,"Eye white",Vector3.new(.52,.30,.10),CFrame.new(position+Vector3.new(x,8.02,-1.18)),Color3.fromRGB(248,246,241),Enum.Material.SmoothPlastic,false)
+            white.Shape=Enum.PartType.Ball
+            local iris=World.part(model,"Iris",Vector3.new(.23,.23,.07),CFrame.new(position+Vector3.new(x,8.01,-1.255)),eyeColor,Enum.Material.SmoothPlastic,false)
+            iris.Shape=Enum.PartType.Ball
+            local pupil=World.part(model,"Pupil",Vector3.new(.10,.11,.055),CFrame.new(position+Vector3.new(x,8.01,-1.30)),Color3.fromRGB(28,31,34),Enum.Material.SmoothPlastic,false)
+            pupil.Shape=Enum.PartType.Ball
+            World.part(model,"Eyebrow",Vector3.new(.62,.10,.08),CFrame.new(position+Vector3.new(x,8.35,-1.18))*CFrame.Angles(0,0,math.rad(x<0 and -5 or 5)),browColor,Enum.Material.SmoothPlastic,false)
+        end
+        local nose=World.part(model,"Nose",Vector3.new(.28,.48,.24),CFrame.new(position+Vector3.new(0,7.76,-1.22)),skin:Lerp(Color3.fromRGB(194,146,126),.08),Enum.Material.SmoothPlastic,false)
+        nose.Shape=Enum.PartType.Ball
+        local lipColor=appearance.beard and Color3.fromRGB(128,82,76) or Color3.fromRGB(151,88,91)
+        World.part(model,"Mouth",Vector3.new(.74,.13,.075),CFrame.new(position+Vector3.new(0,7.30,-1.22))*CFrame.Angles(0,0,math.rad(-2)),lipColor,Enum.Material.SmoothPlastic,false)
     end
-    local nose=World.part(model,"Nose",Vector3.new(.28,.48,.24),CFrame.new(position+Vector3.new(0,7.76,-1.22)),skin:Lerp(Color3.fromRGB(194,146,126),.08),Enum.Material.SmoothPlastic,false)
-    nose.Shape=Enum.PartType.Ball
+
+    -- Ears remain native Roblox geometry outside the wrapped face shell.
     for _,x in ipairs({-1.18,1.18}) do
         local ear=World.part(model,"Ear",Vector3.new(.28,.52,.24),CFrame.new(position+Vector3.new(x,7.86,0)),skin,Enum.Material.SmoothPlastic,false)
         ear.Shape=Enum.PartType.Ball
     end
-    local lipColor=appearance.beard and Color3.fromRGB(128,82,76) or Color3.fromRGB(151,88,91)
-    World.part(model,"Mouth",Vector3.new(.74,.13,.075),CFrame.new(position+Vector3.new(0,7.30,-1.22))*CFrame.Angles(0,0,math.rad(-2)),lipColor,Enum.Material.SmoothPlastic,false)
 
     local style=appearance.hairStyle or "short"
     local function hairPart(name,size,offset,shape)
@@ -447,7 +485,7 @@ local function npc(parent,staff,position)
         end
     end
 
-    if appearance.glasses then
+    if appearance.glasses and not hasWrappedPortrait then
         for _,x in ipairs({-.48,.48}) do
             local lens=World.part(model,"Glasses lens",Vector3.new(.78,.58,.08),CFrame.new(position+Vector3.new(x,8.02,-1.33)),Color3.fromRGB(45,49,54),Enum.Material.Glass,false)
             lens.Transparency=.72
@@ -456,7 +494,7 @@ local function npc(parent,staff,position)
         World.part(model,"Glasses temple left",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(-.96,8.04,-1.03))*CFrame.Angles(0,math.rad(72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
         World.part(model,"Glasses temple right",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(.96,8.04,-1.03))*CFrame.Angles(0,math.rad(-72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
     end
-    if appearance.beard then
+    if appearance.beard and not hasWrappedPortrait then
         local beardColor=appearanceColor(appearance.beardColor,hair)
         local beard=World.part(model,"Beard",Vector3.new(1.65,1.65,.48),CFrame.new(position+Vector3.new(0,7.08,-1.0)),beardColor,Enum.Material.SmoothPlastic,false)
         beard.Shape=Enum.PartType.Ball
@@ -497,8 +535,6 @@ local function npc(parent,staff,position)
             dot.Shape=Enum.PartType.Ball
         end
     end
-
-    attachBakedPortrait(model,staff,position)
 
     local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(180,46);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=28;gui.Parent=head
     local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.15
