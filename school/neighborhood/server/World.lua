@@ -6,6 +6,7 @@ local Workspace=game:GetService("Workspace")
 local Lighting=game:GetService("Lighting")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
+local StaffAvatarFactory=require(script.Parent.StaffAvatarFactory)
 
 local World={rooms={},plots={},homes={},leaderboardParts={}}
 local palette={
@@ -201,189 +202,7 @@ local function ceilingLight(parent,position,size,brightness,range)
     return fixture
 end
 
-local function appearanceColor(value,fallback)
-    if type(value)=="table" and #value>=3 then return Color3.fromRGB(value[1],value[2],value[3]) end
-    return fallback
-end
-
-local function npc(parent,staff,position)
-    local appearance=staff.appearance or {}
-    local model=Instance.new("Model");model.Name="Faculty_"..staff.id;model.Parent=parent
-    model:SetAttribute("StaffId",staff.id)
-    model:SetAttribute("StaffName",staff.name)
-    model:SetAttribute("StaffRole",staff.role)
-    model:SetAttribute("StaffLocation",staff.location or "")
-    model:SetAttribute("StaffFloor",staff.floor or 0)
-
-    local skin=appearanceColor(appearance.skin,Color3.fromRGB(226,196,164))
-    local hair=appearanceColor(appearance.hair,Color3.fromRGB(95,75,60))
-    local topColor=appearanceColor(appearance.top,Color3.fromRGB(80,112,145))
-    local outerColor=appearanceColor(appearance.outer,topColor)
-    local innerColor=appearanceColor(appearance.inner,topColor)
-    local lowerColor=Color3.fromRGB(48,54,65)
-    local torsoColor=appearance.outer and outerColor or topColor
-
-    World.part(model,"Torso",Vector3.new(3.2,4.2,1.8),CFrame.new(position+Vector3.new(0,4.5,0)),torsoColor,Enum.Material.Fabric,false)
-    World.part(model,"Left leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(-.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
-    World.part(model,"Right leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
-    local armColor=(appearance.jacket or appearance.outer) and outerColor or topColor
-    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.02,4.4,0))*CFrame.Angles(0,0,math.rad(-4)),armColor,Enum.Material.Fabric,false)
-    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.02,4.4,0))*CFrame.Angles(0,0,math.rad(4)),armColor,Enum.Material.Fabric,false)
-
-    -- Small silhouette details matter disproportionately at Roblox camera distance. Hands, neck
-    -- and shoes keep the staff from reading as stacked blocks while remaining intentionally Roblox-like.
-    for _,x in ipairs({-2.13,2.13}) do
-        local hand=World.part(model,x<0 and "Left hand" or "Right hand",Vector3.new(.82,.82,.82),
-            CFrame.new(position+Vector3.new(x,2.52,-.02)),skin,Enum.Material.SmoothPlastic,false)
-        hand.Shape=Enum.PartType.Ball
-    end
-    local neck=World.part(model,"Neck",Vector3.new(.68,.72,.68),
-        CFrame.new(position+Vector3.new(0,6.62,0))*CFrame.Angles(0,0,math.rad(90)),skin,Enum.Material.SmoothPlastic,false)
-    neck.Shape=Enum.PartType.Cylinder
-    local shoeColor=Color3.fromRGB(38,42,48)
-    World.part(model,"Left shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(-.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
-    World.part(model,"Right shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
-
-    local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.10),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
-    model:SetAttribute("LikenessMode","simple-stylized")
-    model:SetAttribute("PortraitMode","disabled")
-
-    -- Simple, achievable Roblox likeness. The distinctive cues are silhouette, hair,
-    -- glasses/facial hair, skin tone, clothing and accessories, not pasted photography.
-    for _,entry in ipairs({
-        {"Simple left eye",-.43},
-        {"Simple right eye",.43},
-    }) do
-        local eye=World.part(
-            model,entry[1],Vector3.new(.22,.27,.09),
-            CFrame.new(position+Vector3.new(entry[2],8.04,-1.10)),
-            Color3.fromRGB(39,44,49),Enum.Material.SmoothPlastic,false
-        )
-        eye.Shape=Enum.PartType.Ball
-        eye.CanQuery=false;eye.CanTouch=false
-    end
-    local mouth=World.part(
-        model,"Simple smile",Vector3.new(.70,.12,.08),
-        CFrame.new(position+Vector3.new(0,7.38,-1.11))*CFrame.Angles(0,0,math.rad(-2)),
-        Color3.fromRGB(143,87,86),Enum.Material.SmoothPlastic,false
-    )
-    mouth.CanQuery=false;mouth.CanTouch=false
-
-    for _,x in ipairs({-1.18,1.18}) do
-        local ear=World.part(model,"Ear",Vector3.new(.28,.52,.24),CFrame.new(position+Vector3.new(x,7.86,0)),skin,Enum.Material.SmoothPlastic,false)
-        ear.Shape=Enum.PartType.Ball
-    end
-
-    local style=appearance.hairStyle or "short"
-    local function hairPart(name,size,offset,shape)
-        local p=World.part(model,name,size,CFrame.new(position+offset),hair,Enum.Material.SmoothPlastic,false)
-        if shape then p.Shape=shape end
-        return p
-    end
-    if style=="balding" then
-        hairPart("Hair crown",Vector3.new(1.75,.62,1.9),Vector3.new(0,8.72,.28),Enum.PartType.Ball)
-        hairPart("Hair back",Vector3.new(2.05,1.2,.55),Vector3.new(0,8.14,1.02),Enum.PartType.Ball)
-        hairPart("Hair temple left",Vector3.new(.42,.95,.75),Vector3.new(-1.02,8.22,.45),Enum.PartType.Ball)
-        hairPart("Hair temple right",Vector3.new(.42,.95,.75),Vector3.new(1.02,8.22,.45),Enum.PartType.Ball)
-    else
-        hairPart("Hair crown",Vector3.new(2.48,1.12,2.36),Vector3.new(0,8.68,.10),Enum.PartType.Ball)
-        if style=="short" then
-            hairPart("Hair side left",Vector3.new(.42,1.35,1.55),Vector3.new(-1.08,8.05,.15),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.42,1.35,1.55),Vector3.new(1.08,8.05,.15),Enum.PartType.Ball)
-        elseif style=="pulledBack" then
-            hairPart("Hair side left",Vector3.new(.5,2.1,1.35),Vector3.new(-1.03,7.75,.2),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.5,2.1,1.35),Vector3.new(1.03,7.75,.2),Enum.PartType.Ball)
-            hairPart("Ponytail",Vector3.new(1.15,2.3,1.2),Vector3.new(0,7.65,1.55),Enum.PartType.Ball)
-        else
-            local long=(style=="long" or style=="longWavy" or style=="longStraight")
-            local sideHeight=long and 4.4 or 3.0
-            hairPart("Hair side left",Vector3.new(.7,sideHeight,1.45),Vector3.new(-1.12,7.25,.25),Enum.PartType.Ball)
-            hairPart("Hair side right",Vector3.new(.7,sideHeight,1.45),Vector3.new(1.12,7.25,.25),Enum.PartType.Ball)
-            if style=="bob" then
-                hairPart("Bob back",Vector3.new(2.18,2.15,.82),Vector3.new(0,7.58,.88),Enum.PartType.Ball)
-            elseif style=="shoulder" then
-                hairPart("Shoulder hair back",Vector3.new(2.08,2.78,.86),Vector3.new(0,7.08,.92),Enum.PartType.Ball)
-            elseif style=="shoulderBangs" then
-                hairPart("Bangs",Vector3.new(2.1,.75,.45),Vector3.new(0,8.52,-1.0),Enum.PartType.Ball)
-                hairPart("Shoulder hair back",Vector3.new(2.08,2.78,.86),Vector3.new(0,7.08,.92),Enum.PartType.Ball)
-            elseif style=="longStraight" or style=="long" then
-                hairPart("Long hair back",Vector3.new(2.12,4.05,.88),Vector3.new(0,6.45,.92),Enum.PartType.Ball)
-            elseif style=="longWavy" then
-                hairPart("Long hair back",Vector3.new(2.05,3.55,.86),Vector3.new(0,6.68,.94),Enum.PartType.Ball)
-                hairPart("Wavy hair left",Vector3.new(.9,2.3,1.1),Vector3.new(-1.3,6.3,.35),Enum.PartType.Ball)
-                hairPart("Wavy hair right",Vector3.new(.9,2.3,1.1),Vector3.new(1.3,6.3,.35),Enum.PartType.Ball)
-            end
-        end
-    end
-
-    if appearance.glasses then
-        for _,x in ipairs({-.48,.48}) do
-            local lens=World.part(model,"Glasses lens",Vector3.new(.78,.58,.08),CFrame.new(position+Vector3.new(x,8.02,-1.33)),Color3.fromRGB(45,49,54),Enum.Material.Glass,false)
-            lens.Transparency=.72
-        end
-        World.part(model,"Glasses bridge",Vector3.new(.34,.08,.08),CFrame.new(position+Vector3.new(0,8.02,-1.35)),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
-        World.part(model,"Glasses temple left",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(-.96,8.04,-1.03))*CFrame.Angles(0,math.rad(72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
-        World.part(model,"Glasses temple right",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(.96,8.04,-1.03))*CFrame.Angles(0,math.rad(-72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
-    end
-    if appearance.beard then
-        local beardColor=appearanceColor(appearance.beardColor,hair)
-        local beard=World.part(model,"Beard",Vector3.new(1.45,.82,.18),CFrame.new(position+Vector3.new(0,7.10,-1.16)),beardColor,Enum.Material.SmoothPlastic,false)
-        beard.CanQuery=false;beard.CanTouch=false
-        World.part(model,"Mustache",Vector3.new(1.05,.18,.10),CFrame.new(position+Vector3.new(0,7.48,-1.23)),beardColor,Enum.Material.SmoothPlastic,false)
-    end
-
-    if appearance.suit then
-        World.part(model,"Suit shirt",Vector3.new(1.35,2.2,.18),CFrame.new(position+Vector3.new(0,5,-1)),innerColor,Enum.Material.Fabric,false)
-        World.part(model,"Suit lapel left",Vector3.new(.62,2.0,.16),CFrame.new(position+Vector3.new(-.56,5.05,-1.08))*CFrame.Angles(0,0,math.rad(-12)),outerColor,Enum.Material.Fabric,false)
-        World.part(model,"Suit lapel right",Vector3.new(.62,2.0,.16),CFrame.new(position+Vector3.new(.56,5.05,-1.08))*CFrame.Angles(0,0,math.rad(12)),outerColor,Enum.Material.Fabric,false)
-        World.part(model,"Suit tie",Vector3.new(.28,1.9,.2),CFrame.new(position+Vector3.new(0,4.9,-1.16)),appearanceColor(appearance.tie,palette.navy),Enum.Material.Fabric,false)
-    elseif appearance.outer then
-        World.part(model,appearance.vest and "Sweater vest" or "Jacket shirt inset",Vector3.new(1.65,3.5,.16),CFrame.new(position+Vector3.new(0,4.55,-.99)),topColor,Enum.Material.Fabric,false)
-    end
-
-    if appearance.cross then
-        local gold=Color3.fromRGB(202,175,116)
-        World.part(model,"Cross necklace vertical",Vector3.new(.12,.62,.08),CFrame.new(position+Vector3.new(0,5.45,-1.12)),gold,Enum.Material.Metal,false)
-        World.part(model,"Cross necklace horizontal",Vector3.new(.38,.12,.08),CFrame.new(position+Vector3.new(0,5.58,-1.13)),gold,Enum.Material.Metal,false)
-    end
-    if appearance.pin then
-        local pin=World.part(model,"Lapel pin",Vector3.new(.28,.28,.1),CFrame.new(position+Vector3.new(.75,5.35,-1.03)),palette.gold,Enum.Material.Metal,false)
-        pin.Shape=Enum.PartType.Ball
-    end
-
-    if appearance.pattern then
-        local patternColors={
-            floral={Color3.fromRGB(245,238,232),Color3.fromRGB(89,39,81)},
-            lineFloral={Color3.fromRGB(48,49,54),Color3.fromRGB(235,229,218)},
-            school={Color3.fromRGB(232,170,63),Color3.fromRGB(88,145,149)},
-            brightFloral={Color3.fromRGB(235,72,153),Color3.fromRGB(74,166,124)},
-            geometric={Color3.fromRGB(32,33,36),Color3.fromRGB(239,238,231)},
-        }
-        local colors=patternColors[appearance.pattern] or {palette.gold,palette.green}
-        for i,offset in ipairs({{-1,.75},{0,.92},{1,.62},{-.6,-.15},{.55,-.35},{0,-1.05}}) do
-            local dot=World.part(model,"Clothing pattern",Vector3.new(.38,.38,.08),
-                CFrame.new(position+Vector3.new(offset[1],4.7+offset[2],-1.02)),colors[(i-1)%#colors+1],Enum.Material.SmoothPlastic,false)
-            dot.Shape=Enum.PartType.Ball
-        end
-    end
-
-    local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(148,28);gui.StudsOffset=Vector3.new(0,1.55,0);gui.MaxDistance=18;gui.Parent=head
-    local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.18
-    label.TextColor3=palette.cream;label.Font=Enum.Font.GothamBold;label.TextSize=10;label.TextWrapped=false;label.TextTruncate=Enum.TextTruncate.AtEnd
-    label.Text=staff.name;label.Parent=gui
-    local stroke=Instance.new("UIStroke");stroke.Color=palette.gold;stroke.Transparency=.35;stroke.Thickness=1;stroke.Parent=label
-    local corner=Instance.new("UICorner");corner.CornerRadius=UDim.new(0,8);corner.Parent=label
-
-    local prompt=Instance.new("ProximityPrompt")
-    prompt.Name="MeetFaculty"
-    prompt.ActionText="Meet"
-    prompt.ObjectText=staff.name
-    prompt.MaxActivationDistance=8
-    prompt.RequiresLineOfSight=true
-    prompt.HoldDuration=0
-    prompt.Parent=head
-    return model
-end
+-- Faculty NPC construction is centralized in StaffAvatarFactory. World owns placement only.
 
 local function facultyDirectoryText(floor)
     local lines={"FACULTY & STAFF • FLOOR "..tostring(floor)}
@@ -917,7 +736,7 @@ function World.build()
     }
     for _,staff in ipairs(Catalog.Faculty) do
         local position=facultyPositions[staff.id]
-        if position then npc(root,staff,position) end
+        if position then StaffAvatarFactory.build(root,staff,position) end
     end
 
     -- Small lobby identity details: trophy case and bulletin board keep the entry recognizably school-like.
