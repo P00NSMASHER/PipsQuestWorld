@@ -82,10 +82,9 @@ def validate_abvm_contract() -> dict:
     server_main = (MODE / "server/Main.server.lua").read_text(encoding="utf-8")
     leaderboards_source = (MODE / "server/Leaderboards.lua").read_text(encoding="utf-8")
     required_world = (
-        "makeFrontArch(root,-27,false)",
-        "makeFrontArch(root,-9,true)",
-        "makeFrontArch(root,9,true)",
-        "makeFrontArch(root,27,false)",
+        "makeFrontArch(root,-24,false)",
+        "makeFrontArch(root,0,true)",
+        "makeFrontArch(root,24,true)",
         '"1928"',
         "Howard outer brick arch",
         "Howard inner stone arch",
@@ -125,13 +124,15 @@ def validate_abvm_contract() -> dict:
     require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
             "redundant full upper slabs would cap the playable stairwells")
     expected_arch_calls = (
-        "makeFrontArch(root,-27,false)",
-        "makeFrontArch(root,-9,true)",
-        "makeFrontArch(root,9,true)",
-        "makeFrontArch(root,27,false)",
+        "makeFrontArch(root,-24,false)",
+        "makeFrontArch(root,0,true)",
+        "makeFrontArch(root,24,true)",
     )
     require(all(world.count(call) == 1 for call in expected_arch_calls),
-            "formal facade must retain the four exact configured arched bays")
+            "formal facade must retain the three exact gold-standard arched bays")
+    require("for _,x in ipairs({-51,-17,17,51}) do" in world and
+            "schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)" in world,
+            "gold-standard four-bay upper facade rhythm regressed")
 
     require('World.shopPosition=Vector3.new(31,5,-49)' in world,
             "ABVM School Shop position moved outside its guarded lobby zone")
@@ -235,8 +236,9 @@ def validate_abvm_contract() -> dict:
             "explanation=" not in duplicate_body,
             "duplicate wrong-answer path must stay hint-only and penalty-free")
     return {
-        "frontArchedBays": 4,
-        "centerDoorBays": 2,
+        "frontArchedBays": 3,
+        "frontUpperWindowBays": 4,
+        "doorBays": 2,
         "frontBrandedSign": True,
         "frontEntranceStrip": True,
         "archedSignCrown": True,
