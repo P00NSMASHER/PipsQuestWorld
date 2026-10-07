@@ -65,7 +65,7 @@ function Layout.compute(width,height)
         goal={x=base.quick.x,y=base.quick.y,width=base.quick.width,height=base.quick.height},
         modal={x=modal.x,y=modal.y,width=modal.width,height=modal.height,scale=modal.scale},
         answerHeight=height<520 and 54 or 60,
-        columns=width>=780 and 2 or 1,
+        columns=width>=720 and 2 or 1,
         shopCardHeight=height<520 and 156 or 166,
         shopGap=10,
         textSize=height<520 and 17 or 20,
