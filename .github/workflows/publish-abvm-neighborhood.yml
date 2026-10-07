@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: high-quality interactive 18-person faculty/staff integration
+# release: baked 18-photo faculty/staff integration
 
 on:
   push:
@@ -8,6 +8,13 @@ on:
       - rebuild/school-neighborhood-faculty-v1
     paths:
       - '.github/workflows/publish-abvm-neighborhood.yml'
+      - 'school/neighborhood/shared/PortraitPixels.lua'
+      - 'school/neighborhood/shared/PortraitRenderer.lua'
+      - 'school/neighborhood/server/World.lua'
+      - 'school/neighborhood/client/Main.client.lua'
+      - 'school/neighborhood/faculty-portrait-sources.tsv'
+      - 'school/neighborhood/tools/bake_faculty_portraits.py'
+      - 'school/neighborhood/tests/verify_build.py'
   workflow_dispatch:
 
 permissions:
@@ -39,6 +46,10 @@ jobs:
           test "$PLACE_ID" = "114603280760042"
           test -f school/neighborhood.project.json
           test ! -e school/neighborhood.rbxl
+          grep -q '__meta={generated=true,width=48,height=48,segment=16,count=18}' \
+            school/neighborhood/shared/PortraitPixels.lua
+          test "$(grep -c 'sourceSha256=' school/neighborhood/shared/PortraitPixels.lua)" -eq 18
+          test "$(grep -c '        rows={' school/neighborhood/shared/PortraitPixels.lua)" -eq 18
           printf 'Publishing source %s to universe %s start place %s\n' "$SOURCE_SHA" "$UNIVERSE_ID" "$PLACE_ID"
 
       - name: Install pinned validation/build tools
@@ -99,6 +110,69 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
 
+      - name: Runtime smoke test baked faculty portraits
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_API_KEY"
+          cat > "$RUNNER_TEMP/portrait-smoke.luau" <<'LUA'
+          local expected=18
+          for attempt=1,60 do
+              local root=workspace:FindFirstChild("NeighborhoodWorld")
+              if root then
+                  local count=0
+                  for _,candidate in ipairs(root:GetChildren()) do
+                      if candidate:IsA("Model")
+                          and candidate:GetAttribute("StaffId") ~= nil
+                          and candidate:GetAttribute("PortraitMode") == "baked-photo"
+                          and candidate:FindFirstChild("BakedFacultyPortrait",true) then
+                          count+=1
+                      end
+                  end
+                  if count==expected then
+                      print("BAKED_FACULTY_PORTRAITS_OK",count)
+                      return tostring(count)
+                  end
+                  print("WAITING_FOR_BAKED_FACULTY_PORTRAITS",attempt,count)
+              end
+              task.wait(.5)
+          end
+          error("Expected 18 baked faculty portraits in the published place")
+          LUA
+
+          script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
+          create_url="https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/places/$PLACE_ID/luau-execution-session-tasks"
+          curl -fsSL --request POST "$create_url" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            --header 'Content-Type: application/json' \
+            --data "$script_json" > "$RUNNER_TEMP/portrait-task.json"
+          task_path="$(jq -r '.path // empty' "$RUNNER_TEMP/portrait-task.json")"
+          test -n "$task_path"
+
+          task_url="https://apis.roblox.com/cloud/v2/$task_path"
+          for attempt in $(seq 1 60); do
+            curl -fsSL "$task_url" \
+              --header "x-api-key: $ROBLOX_API_KEY" \
+              > "$RUNNER_TEMP/portrait-runtime.json"
+            state="$(jq -r '.state // empty' "$RUNNER_TEMP/portrait-runtime.json")"
+            echo "portrait runtime state=$state"
+            if [ "$state" != "PROCESSING" ] && [ "$state" != "QUEUED" ] && [ -n "$state" ]; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsSL "$task_url/logs" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            > "$RUNNER_TEMP/portrait-runtime-logs.json" || true
+
+          jq . "$RUNNER_TEMP/portrait-runtime.json"
+          jq . "$RUNNER_TEMP/portrait-runtime-logs.json" || true
+          test "$(jq -r '.state' "$RUNNER_TEMP/portrait-runtime.json")" = "COMPLETE"
+          jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
+          grep -q 'BAKED_FACULTY_PORTRAITS_OK' "$RUNNER_TEMP/portrait-runtime-logs.json"
+
       - name: Publish receipt
         if: ${{ success() }}
         shell: bash
@@ -122,5 +196,8 @@ jobs:
             ${{ runner.temp }}/place.sha256
             ${{ runner.temp }}/version.txt
             ${{ runner.temp }}/publish-response.json
+            ${{ runner.temp }}/portrait-task.json
+            ${{ runner.temp }}/portrait-runtime.json
+            ${{ runner.temp }}/portrait-runtime-logs.json
           retention-days: 14
           if-no-files-found: warn
