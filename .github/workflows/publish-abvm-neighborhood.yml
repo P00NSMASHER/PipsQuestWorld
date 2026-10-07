@@ -172,7 +172,11 @@ jobs:
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
           create_url="https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/places/$PLACE_ID/luau-execution-session-tasks"
-          curl -fsSL --request POST "$create_url" \
+          # Luau execution sessions are rate-limited independently of place publish.
+          # Give the new version a moment to settle and retry transient 429/5xx responses.
+          sleep 5
+          curl -fsSL --retry 6 --retry-all-errors --retry-delay 2 --retry-max-time 45 \
+            --request POST "$create_url" \
             --header "x-api-key: $ROBLOX_API_KEY" \
             --header 'Content-Type: application/json' \
             --data "$script_json" > "$RUNNER_TEMP/portrait-task.json"
@@ -181,7 +185,7 @@ jobs:
 
           task_url="https://apis.roblox.com/cloud/v2/$task_path"
           for attempt in $(seq 1 60); do
-            curl -fsSL "$task_url" \
+            curl -fsSL --retry 5 --retry-all-errors --retry-delay 1 --retry-max-time 20 "$task_url" \
               --header "x-api-key: $ROBLOX_API_KEY" \
               > "$RUNNER_TEMP/portrait-runtime.json"
             state="$(jq -r '.state // empty' "$RUNNER_TEMP/portrait-runtime.json")"
@@ -191,7 +195,7 @@ jobs:
             fi
             sleep 1
           done
-          curl -fsSL "$task_url/logs" \
+          curl -fsSL --retry 5 --retry-all-errors --retry-delay 1 --retry-max-time 20 "$task_url/logs" \
             --header "x-api-key: $ROBLOX_API_KEY" \
             > "$RUNNER_TEMP/portrait-runtime-logs.json" || true
 
