@@ -601,10 +601,14 @@ function World.build()
     World.part(root,"Back brick wall",Vector3.new(150,48,1.4),CFrame.new(0,28,-145),palette.brick,Enum.Material.Brick)
     World.part(root,"Exposed lower masonry",Vector3.new(150,6,1.5),CFrame.new(0,1,-145.2),palette.brickDark,Enum.Material.Brick)
 
-    -- Formal front facade: heavy upper block with tan bays, brick pilasters and four arched bays.
+    -- Formal front facade: four upper window bays, then the three large arches from the approved render
+    -- aligned beneath the final three bays. The lower wall is segmented so the arches are real openings,
+    -- not decorative glass stuck onto a solid brick collision wall.
     World.part(root,"Front upper brick mass",Vector3.new(150,31,1.4),CFrame.new(0,37,-35),palette.brick,Enum.Material.Brick)
-    World.part(root,"Front lower west",Vector3.new(44,17,1.4),CFrame.new(-53,12,-35),palette.brick,Enum.Material.Brick)
-    World.part(root,"Front lower east",Vector3.new(44,17,1.4),CFrame.new(53,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower far west",Vector3.new(45,17,1.4),CFrame.new(-52.5,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower interbay west",Vector3.new(7.5,17,1.4),CFrame.new(0,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower interbay east",Vector3.new(7.5,17,1.4),CFrame.new(34,12,-35),palette.brick,Enum.Material.Brick)
+    World.part(root,"Front lower far east",Vector3.new(16,17,1.4),CFrame.new(67,12,-35),palette.brick,Enum.Material.Brick)
     for _,x in ipairs({-68,-34,0,34,68}) do
         World.part(root,"Front brick pilaster",Vector3.new(2.8,48,2.2),CFrame.new(x,28,-34.2),palette.brickDark,Enum.Material.Brick)
         World.part(root,"Front pilaster stone cap",Vector3.new(4.2,1.25,2.7),CFrame.new(x,52.2,-34.15),palette.stone,Enum.Material.Concrete,false)
@@ -624,9 +628,9 @@ function World.build()
     World.part(root,"Gold standard front cornice",Vector3.new(150,1.15,1.6),CFrame.new(0,51.25,-33.95),Color3.fromRGB(194,190,178),Enum.Material.Concrete,false)
     World.part(root,"Front foundation west",Vector3.new(43,3.1,1.8),CFrame.new(-53,5,-33.75),Color3.fromRGB(76,68,61),Enum.Material.Slate,false)
     World.part(root,"Front foundation east",Vector3.new(43,3.1,1.8),CFrame.new(53,5,-33.75),Color3.fromRGB(76,68,61),Enum.Material.Slate,false)
-    makeFrontArch(root,-24,false)
-    makeFrontArch(root,0,true)
-    makeFrontArch(root,24,true)
+    makeFrontArch(root,-17,false)
+    makeFrontArch(root,17,true)
+    makeFrontArch(root,51,true)
     -- The real facade is mostly architecture, not signage. Identity is carried by the Howard sign,
     -- lobby crest and a small restrained roofline cross.
     cross(root,CFrame.new(0,49.2,-33.4),.72,palette.gold)
@@ -670,7 +674,9 @@ function World.build()
         end
     end
 
-    -- Broad formal stairs: the real facade sits noticeably uphill from the lower approach.
+    -- Broad formal stairs are biased east to sit under the three gold-standard arches, matching
+    -- the target composition where the freestanding sign and garden occupy the left foreground.
+    local stairCenterX=17
     local frontSteps=14
     local startZ=-1.5
     local endZ=-31
@@ -680,19 +686,19 @@ function World.build()
         local t=i/(frontSteps-1)
         local z=startZ+(endZ-startZ)*t
         local y=startY+(endY-startY)*t
-        World.part(root,"Front broad stair",Vector3.new(57,.58,2.45),CFrame.new(0,y,z),palette.stone,Enum.Material.Concrete)
+        World.part(root,"Front broad stair",Vector3.new(63,.58,2.45),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
     end
-    World.part(root,"Front lower landing",Vector3.new(59,.45,9),CFrame.new(0,.1,3),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Front landing",Vector3.new(59,.7,8),CFrame.new(0,4.3,-31),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front lower landing",Vector3.new(65,.45,9),CFrame.new(stairCenterX,.1,3),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front landing",Vector3.new(65,.7,8),CFrame.new(stairCenterX,4.3,-31),palette.stone,Enum.Material.Concrete)
 
     -- Low masonry cheeks and continuous paired rails match the reference while leaving a broad center lane.
-    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(-31,2.55,-15),palette.brickDark,Enum.Material.Brick)
-    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(31,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX-34,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX+34,2.55,-15),palette.brickDark,Enum.Material.Brick)
     local stairDz=endZ-startZ
     local stairDy=endY-startY
     local stairLength=math.sqrt(stairDz*stairDz+stairDy*stairDy)
     local stairPitch=math.atan2(stairDy,stairDz)
-    for _,x in ipairs({-9,9}) do
+    for _,x in ipairs({stairCenterX-10,stairCenterX+10}) do
         for step=0,6 do
             local t=step/6
             World.part(root,"Front stair rail post",Vector3.new(.3,3,.3),
@@ -769,9 +775,9 @@ function World.build()
     for x=-97,-71,13 do
         World.part(root,"Front west fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-3),palette.metal,Enum.Material.Metal,true)
     end
-    for _,x in ipairs({-39,-12,12,39}) do
+    for _,x in ipairs({-31,0,34,65}) do
         World.part(root,"Entrance lamp stone hood",Vector3.new(3.2,.8,1.1),
-            CFrame.new(x,25,-33.15)*CFrame.Angles(0,0,math.rad(x<0 and -38 or 38)),palette.stone,Enum.Material.Concrete,false)
+            CFrame.new(x,25,-33.15)*CFrame.Angles(0,0,math.rad(x<17 and -38 or 38)),palette.stone,Enum.Material.Concrete,false)
         local lamp=World.part(root,"Formal entrance wall lamp",Vector3.new(.8,2.1,.7),CFrame.new(x,12,-33.1),Color3.fromRGB(241,220,163),Enum.Material.Neon,false)
         local glow=Instance.new("PointLight");glow.Brightness=.55;glow.Range=15;glow.Color=Color3.fromRGB(255,225,170);glow.Parent=lamp
     end
@@ -1112,8 +1118,8 @@ function World.build()
     end
 
     local spawn=Instance.new("SpawnLocation")
-    local arrivalPosition=Vector3.new(44,3,27)
-    local arrivalFocus=Vector3.new(0,10,-32)
+    local arrivalPosition=Vector3.new(59,3,30)
+    local arrivalFocus=Vector3.new(17,12,-36)
     local arrivalCf=CFrame.lookAt(arrivalPosition,arrivalFocus)
     spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=arrivalCf;spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
     -- School travel intentionally lands at the same front-right hero angle as the approved render:
