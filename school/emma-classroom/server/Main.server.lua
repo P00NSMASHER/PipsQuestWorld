@@ -35,7 +35,7 @@ local function loadProgress(player)
     return data
 end
 
-local function saveProgress(player,s)
+local function saveProgress(player,s,awaitCompletion:boolean?)
     -- Every correct answer can schedule a save. DataStore requests may finish in
     -- a different order, so snapshots and writes must both be monotonic: an
     -- older completion is never allowed to erase newer lifetime progress.
@@ -44,7 +44,7 @@ local function saveProgress(player,s)
         sessionsCompleted=math.max(0,tonumber(s.sessionsCompleted) or 0),
         skills=table.clone(s.skills),
     }
-    task.spawn(function()
+    local function writeSnapshot()
         pcall(function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
@@ -65,7 +65,8 @@ local function saveProgress(player,s)
                 return old
             end)
         end)
-    end)
+    end
+    if awaitCompletion then writeSnapshot() else task.spawn(writeSnapshot) end
 end
 
 local function chooseTeacher(subject,previous)
@@ -215,10 +216,9 @@ end
 Players.PlayerAdded:Connect(join)
 for _,p in ipairs(Players:GetPlayers()) do task.spawn(join,p) end
 Players.PlayerRemoving:Connect(function(player)
-    local s=sessions[player.UserId];if s then dismissTeacher(s);saveProgress(player,s) end;sessions[player.UserId]=nil
+    local s=sessions[player.UserId];if s then dismissTeacher(s);saveProgress(player,s,true) end;sessions[player.UserId]=nil
 end)
 
 game:BindToClose(function()
-    for _,p in ipairs(Players:GetPlayers()) do local s=sessions[p.UserId];if s then saveProgress(p,s) end end
-    task.wait(2)
+    for _,p in ipairs(Players:GetPlayers()) do local s=sessions[p.UserId];if s then saveProgress(p,s,true) end end
 end)

@@ -32,12 +32,13 @@ local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,s
 World.build=function() return World end
 local counter=0
 local Http={GenerateGUID=function() counter+=1;return "token-"..counter end}
+local closeCallback
 local game={GetService=function(_,name)
     if name=="Players" then return Players end
     if name=="ReplicatedStorage" then return service end
     if name=="DataStoreService" then return {GetDataStore=function() return store end} end
     if name=="HttpService" then return Http end
-end,BindToClose=function() end}
+end,BindToClose=function(_,callback) closeCallback=callback end}
 local script={Parent=service}
 local require=function(module)
     if module=="Data" then return Data end
@@ -88,6 +89,11 @@ assert(requests.OnServerInvoke(player,"restart").ok);flush()
 assert(requests.OnServerInvoke(player,"state").progress.stars==0)
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==10)
+-- A shutdown save is synchronous: it must be durable before BindToClose returns.
+saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
+Players.GetPlayers=function() return {player} end
+closeCallback()
+assert(saved["u:1"].totalCorrect==10 and saved["u:1"].sessionsCompleted==1)
 -- A stale leaving snapshot must not regress a newer DataStore completion.
 saved["u:1"].totalCorrect=20
 saved["u:1"].sessionsCompleted=3
@@ -96,7 +102,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic persistence")
+print("PASS: handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic and awaited-shutdown persistence")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:
