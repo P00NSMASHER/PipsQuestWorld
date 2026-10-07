@@ -567,8 +567,11 @@ function World.build()
             schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)
         end
     end
-    -- Horizontal stone/concrete belt between the arched ground level and upper classroom bays.
+    -- Horizontal stone/concrete belts and cornice create the layered facade depth visible in the target.
     World.part(root,"Front stone belt",Vector3.new(148,1.1,1.2),CFrame.new(0,26.1,-33.8),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"Gold standard front cornice",Vector3.new(150,1.15,1.6),CFrame.new(0,51.25,-33.95),Color3.fromRGB(194,190,178),Enum.Material.Concrete,false)
+    World.part(root,"Front foundation west",Vector3.new(43,3.1,1.8),CFrame.new(-53,5,-33.75),Color3.fromRGB(76,68,61),Enum.Material.Slate,false)
+    World.part(root,"Front foundation east",Vector3.new(43,3.1,1.8),CFrame.new(53,5,-33.75),Color3.fromRGB(76,68,61),Enum.Material.Slate,false)
     makeFrontArch(root,-24,false)
     makeFrontArch(root,0,true)
     makeFrontArch(root,24,true)
@@ -671,6 +674,9 @@ function World.build()
         CFrame.new(-55,8.2,7.5)*CFrame.Angles(0,math.pi,0),
         Vector3.new(17.2,7.4,.45),palette.green,palette.gold)
     frontSchoolSign.Name="Gold standard front school sign"
+    local frontGui=frontSchoolSign:FindFirstChildOfClass("SurfaceGui")
+    local frontLabel=frontGui and frontGui:FindFirstChildOfClass("TextLabel")
+    if frontLabel then frontLabel.Font=Enum.Font.Garamond;frontLabel.TextStrokeTransparency=.78;frontLabel.TextStrokeColor3=Color3.fromRGB(107,75,20) end
     for i=-2,2 do
         local rise=(2-math.abs(i))*.62
         World.part(root,"Front school sign arched crown",Vector3.new(3.6,1.25,.74),
@@ -706,6 +712,11 @@ function World.build()
     planter(root,-24,12,9)
     planter(root,24,12,9)
     planter(root,-55,12.5,17)
+    -- Chain-link edge behind the sign is a strong cue in both the real reference and approved render.
+    fencePanel(root,CFrame.new(-84,4,-3),Vector3.new(28,8,.4))
+    for x=-97,-71,13 do
+        World.part(root,"Front west fence post",Vector3.new(.65,9,.65),CFrame.new(x,4.4,-3),palette.metal,Enum.Material.Metal,true)
+    end
     for _,x in ipairs({-39,-12,12,39}) do
         World.part(root,"Entrance lamp stone hood",Vector3.new(3.2,.8,1.1),
             CFrame.new(x,25,-33.15)*CFrame.Angles(0,0,math.rad(x<0 and -38 or 38)),palette.stone,Enum.Material.Concrete,false)
@@ -1030,9 +1041,13 @@ function World.build()
     end
 
     local spawn=Instance.new("SpawnLocation")
-    spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=CFrame.new(0,1,18);spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
-    -- Travel places the player on the lower approach with the facade in view, not on top of the stairs.
-    World.schoolDoor=CFrame.new(0,3,18)
+    local arrivalPosition=Vector3.new(44,3,27)
+    local arrivalFocus=Vector3.new(0,10,-32)
+    local arrivalCf=CFrame.lookAt(arrivalPosition,arrivalFocus)
+    spawn.Name="SchoolArrival";spawn.Size=Vector3.new(8,1,8);spawn.CFrame=arrivalCf;spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
+    -- School travel intentionally lands at the same front-right hero angle as the approved render:
+    -- facade centered, sign on the left, east corner/side elevation visible on the right.
+    World.schoolDoor=arrivalCf
     return World
 end
 
