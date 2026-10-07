@@ -109,9 +109,13 @@ def validate_abvm_contract() -> dict:
         '"Left shoe"',
         '"Right shoe"',
         '"Neck"',
-        '"Photo face plate"',
-        '"BakedFacultyPortrait"',
-        'PortraitRenderer.render(border,portrait',
+        '"FaceFront"',
+        '"FaceLeft"',
+        '"FaceRight"',
+        '"BakedFacultyPortrait"..name',
+        'PortraitRenderer.renderCrop(skinFrame,portrait',
+        'model:SetAttribute("PortraitMode","wrapped-photo")',
+        "if not hasWrappedPortrait then",
         '"FacultyGallery_"',
         '"FacultyGalleryPortrait"',
         '"OpenFacultyDirectory"',
@@ -184,8 +188,16 @@ def validate_abvm_contract() -> dict:
         and portrait_pixels.count("sourceSha256=") == 18,
         "faculty portrait payload must contain 18 generated, source-hashed photo records",
     )
-    require("function Renderer.render" in portrait_renderer and "ColorSequenceKeypoint.new" in portrait_renderer,
-            "asset-free portrait gradient renderer missing")
+    require(
+        "function Renderer.render" in portrait_renderer
+        and "function Renderer.renderCrop" in portrait_renderer
+        and "props.X0" in portrait_renderer
+        and "props.Y1" in portrait_renderer
+        and "ColorSequenceKeypoint.new" in portrait_renderer,
+        "crop-aware asset-free portrait gradient renderer missing",
+    )
+    require('"Photo face plate"' not in world and 'model:SetAttribute("PortraitMode","baked-photo")' not in world,
+            "legacy flat staff face plate must not coexist with wrapped photo heads")
     for name, role in required_faculty.items():
         require(f'name="{name}"' in catalog and f'role="{role}"' in catalog,
                 f"missing exact faculty directory entry: {name} / {role}")
