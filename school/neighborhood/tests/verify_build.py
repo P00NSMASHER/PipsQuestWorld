@@ -110,6 +110,9 @@ def validate_abvm_contract() -> dict:
         '"Right shoe"',
         '"Neck"',
         'model:SetAttribute("LikenessMode","simple-stylized")',
+        'Vector3.new(2.35,2.35,2.10)',
+        'prompt.ObjectText=staff.name',
+        'gui.MaxDistance=18',
         'model:SetAttribute("PortraitMode","disabled")',
         '"Simple left eye"',
         '"Simple right eye"',
@@ -207,10 +210,20 @@ def validate_abvm_contract() -> dict:
 
     ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
     layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
-    require("navWidth = goldLandscape and 84" in layout_source,
-            "landscape navigation rail regressed to oversized geometry")
-    require("compact and 40 or 46" in layout_source,
-            "compact landscape header regressed to oversized geometry")
+    require("compactLandscape = goldLandscape and compact" in layout_source,
+            "compact landscape mode missing")
+    require("navWidth = compactLandscape and 58" in layout_source,
+            "compact landscape icon rail regressed to oversized geometry")
+    require("railWidth = compactLandscape and 104" in layout_source,
+            "compact landscape wallet header regressed to oversized geometry")
+    require("avatar.Visible=not compactLandscape" in main
+            and "nameText.Visible=not compactLandscape" in main
+            and "gradeText.Visible=not compactLandscape" in main,
+            "compact landscape must hide redundant player identity chrome")
+    require("label.Visible=not compactLandscape" in main,
+            "compact landscape navigation must be icon-only")
+    require("resumeButton.Visible=state.subject~=nil and not compactLandscape" in main,
+            "compact landscape goal card must not expand over gameplay")
     require("streakPill.Visible=false" in main,
             "compact landscape HUD must hide the redundant streak pill")
     require('locationCommand~="school"' in main,
