@@ -13,6 +13,22 @@ local event=Instance.new("RemoteEvent");event.Name="Event";event.Parent=remotes
 local store=DataStoreService:GetDataStore("EmmaStudyClassroomV1")
 local sessions={}
 local SESSION_GOAL=10
+local DATASTORE_ATTEMPTS=4
+local DATASTORE_RETRY_SECONDS=.35
+
+local function retryDataStore(operationName,operation)
+    local lastError
+    for attempt=1,DATASTORE_ATTEMPTS do
+        local ok,result=pcall(operation)
+        if ok then return true,result end
+        lastError=result
+        if attempt<DATASTORE_ATTEMPTS then
+            task.wait(DATASTORE_RETRY_SECONDS*2^(attempt-1))
+        end
+    end
+    warn(string.format("Emma classroom %s failed after %d attempts: %s",operationName,DATASTORE_ATTEMPTS,tostring(lastError)))
+    return false,nil
+end
 
 local function shuffle(list)
     local out=table.clone(list)
@@ -26,7 +42,9 @@ end
 
 local function loadProgress(player)
     local data={totalCorrect=0,sessionsCompleted=0,skills={}}
-    local ok,result=pcall(function() return store:GetAsync("u:"..player.UserId) end)
+    local ok,result=retryDataStore("progress load",function()
+        return store:GetAsync("u:"..player.UserId)
+    end)
     if ok and type(result)=="table" then
         data.totalCorrect=tonumber(result.totalCorrect) or 0
         data.sessionsCompleted=tonumber(result.sessionsCompleted) or 0
@@ -45,7 +63,7 @@ local function saveProgress(player,s,awaitCompletion:boolean?)
         skills=table.clone(s.skills),
     }
     local function writeSnapshot()
-        pcall(function()
+        return retryDataStore("progress save",function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
                 old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,snapshot.totalCorrect)
