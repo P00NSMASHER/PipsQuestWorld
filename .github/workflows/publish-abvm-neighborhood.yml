@@ -172,15 +172,33 @@ jobs:
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
           create_url="https://apis.roblox.com/cloud/v2/universes/$UNIVERSE_ID/places/$PLACE_ID/luau-execution-session-tasks"
-          # Luau execution sessions are rate-limited independently of place publish.
-          # Give the new version a moment to settle and retry transient 429/5xx responses.
+          # Luau execution-session creation has a stricter rate limit than place publishing.
+          # Handle 429 explicitly instead of letting curl turn a healthy publish red.
           sleep 5
-          curl -fsSL --retry 6 --retry-all-errors --retry-delay 2 --retry-max-time 45 \
-            --request POST "$create_url" \
-            --header "x-api-key: $ROBLOX_API_KEY" \
-            --header 'Content-Type: application/json' \
-            --data "$script_json" > "$RUNNER_TEMP/portrait-task.json"
-          task_path="$(jq -r '.path // empty' "$RUNNER_TEMP/portrait-task.json")"
+          task_path=""
+          for attempt in $(seq 1 12); do
+            code="$(curl --silent --show-error --location \
+              --output "$RUNNER_TEMP/portrait-task.json" --write-out '%{http_code}' \
+              --request POST "$create_url" \
+              --header "x-api-key: $ROBLOX_API_KEY" \
+              --header 'Content-Type: application/json' \
+              --data "$script_json")"
+            echo "portrait task create attempt=$attempt http=$code"
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              task_path="$(jq -r '.path // empty' "$RUNNER_TEMP/portrait-task.json")"
+              test -n "$task_path"
+              break
+            fi
+            cat "$RUNNER_TEMP/portrait-task.json" || true
+            if [ "$code" = "429" ]; then
+              sleep 15
+            elif [ "$code" -ge 500 ] && [ "$code" -lt 600 ]; then
+              sleep 5
+            else
+              echo "::error::Luau execution task creation failed with HTTP $code"
+              exit 1
+            fi
+          done
           test -n "$task_path"
 
           task_url="https://apis.roblox.com/cloud/v2/$task_path"
