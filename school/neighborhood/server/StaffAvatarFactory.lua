@@ -134,20 +134,36 @@ local function addHair(model,position,hair,style,detail)
 end
 
 local function addGlasses(model,position,prototype)
-    local lensW=prototype and .72 or .78
-    local lensH=prototype and .52 or .58
-    for _,x in ipairs({-.48,.48}) do
-        local lens=part(model,"Glasses lens",Vector3.new(lensW,lensH,.075),CFrame.new(position+Vector3.new(x,8.02,-1.22)),Color3.fromRGB(45,49,54),Enum.Material.Glass)
-        lens.Transparency=.70
+    if prototype then
+        for _,x in ipairs({-.48,.48}) do
+            local lens=part(model,"Glasses lens",Vector3.new(.72,.52,.075),CFrame.new(position+Vector3.new(x,8.02,-1.22)),Color3.fromRGB(45,49,54),Enum.Material.Glass)
+            lens.Transparency=.70
+        end
+        part(model,"Glasses bridge",Vector3.new(.32,.07,.07),CFrame.new(position+Vector3.new(0,8.02,-1.24)),Color3.fromRGB(45,49,54),Enum.Material.Metal)
+        return
     end
-    part(model,"Glasses bridge",Vector3.new(.32,.07,.07),CFrame.new(position+Vector3.new(0,8.02,-1.24)),Color3.fromRGB(45,49,54),Enum.Material.Metal)
+
+    -- Preserve the shipped baseline exactly for the 15 non-prototype staff.
+    for _,x in ipairs({-.48,.48}) do
+        local lens=part(model,"Glasses lens",Vector3.new(.78,.58,.08),CFrame.new(position+Vector3.new(x,8.02,-1.33)),Color3.fromRGB(45,49,54),Enum.Material.Glass)
+        lens.Transparency=.72
+    end
+    part(model,"Glasses bridge",Vector3.new(.34,.08,.08),CFrame.new(position+Vector3.new(0,8.02,-1.35)),Color3.fromRGB(45,49,54),Enum.Material.Metal)
+    part(model,"Glasses temple left",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(-.96,8.04,-1.03))*CFrame.Angles(0,math.rad(72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal)
+    part(model,"Glasses temple right",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(.96,8.04,-1.03))*CFrame.Angles(0,math.rad(-72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal)
 end
 
 local function addBeard(model,position,color,prototype)
-    local height=prototype and .66 or .82
-    local beard=part(model,"Beard",Vector3.new(prototype and 1.30 or 1.45,height,.16),CFrame.new(position+Vector3.new(0,7.12,-1.12)),color,Enum.Material.SmoothPlastic)
+    if prototype then
+        local beard=part(model,"Beard",Vector3.new(1.30,.66,.16),CFrame.new(position+Vector3.new(0,7.12,-1.12)),color,Enum.Material.SmoothPlastic)
+        beard.CanQuery=false
+        part(model,"Mustache",Vector3.new(.92,.16,.09),CFrame.new(position+Vector3.new(0,7.48,-1.16)),color,Enum.Material.SmoothPlastic)
+        return
+    end
+
+    local beard=part(model,"Beard",Vector3.new(1.45,.82,.18),CFrame.new(position+Vector3.new(0,7.10,-1.16)),color,Enum.Material.SmoothPlastic)
     beard.CanQuery=false
-    part(model,"Mustache",Vector3.new(prototype and .92 or 1.05,.16,.09),CFrame.new(position+Vector3.new(0,7.48,-1.16)),color,Enum.Material.SmoothPlastic)
+    part(model,"Mustache",Vector3.new(1.05,.18,.10),CFrame.new(position+Vector3.new(0,7.48,-1.23)),color,Enum.Material.SmoothPlastic)
 end
 
 local function addClothing(model,position,appearance,avatar,topColor,outerColor,innerColor)
@@ -207,8 +223,7 @@ function Factory.build(parent,staff,position)
     local topColor=rgb(appearance.top,DEFAULT_TOP)
     local outerColor=rgb(appearance.outer,topColor)
     local innerColor=rgb(appearance.inner,Color3.fromRGB(235,235,230))
-    local lowerColor=rgb(avatar.lower,{48,54,65})
-    if typeof(lowerColor)~="Color3" then lowerColor=Color3.fromRGB(48,54,65) end
+    local lowerColor=rgb(avatar.lower,Color3.fromRGB(48,54,65))
 
     local bodyWidth=prototype and (avatar.body=="administrator" and 3.38 or 3.10) or 3.2
     local torsoHeight=prototype and 4.08 or 4.2
