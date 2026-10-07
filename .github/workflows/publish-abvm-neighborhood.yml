@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: full user-authorized ABVM faculty/staff integration
+# release: high-quality interactive 18-person faculty/staff integration
 
 on:
   push:
