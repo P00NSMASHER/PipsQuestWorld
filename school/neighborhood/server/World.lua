@@ -6,8 +6,6 @@ local Workspace=game:GetService("Workspace")
 local Lighting=game:GetService("Lighting")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
-local PortraitPixels=require(ReplicatedStorage.NeighborhoodShared.PortraitPixels)
-local PortraitRenderer=require(ReplicatedStorage.NeighborhoodShared.PortraitRenderer)
 
 local World={rooms={},plots={},homes={},leaderboardParts={}}
 local palette={
@@ -208,172 +206,6 @@ local function appearanceColor(value,fallback)
     return fallback
 end
 
-local function attachWrappedPortraitHead(model,staff,head)
-    local portrait=PortraitPixels[staff.id]
-    if type(portrait)~="table" or type(portrait.rows)~="table" or #portrait.rows==0 then
-        model:SetAttribute("PortraitMode","native")
-        return false
-    end
-
-    local function faceSlice(name,size,localCf,x0,x1,canvasX)
-        local panel=World.part(
-            model,
-            name,
-            size,
-            head.CFrame*localCf,
-            head.Color,
-            Enum.Material.SmoothPlastic,
-            false
-        )
-        panel.CastShadow=false
-        panel.CanQuery=false
-        panel.CanTouch=false
-        panel:SetAttribute("WrappedFacePanel",true)
-        panel:SetAttribute("StaffId",staff.id)
-
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="BakedFacultyPortrait"..name
-        gui.Face=Enum.NormalId.Front
-        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-        gui.CanvasSize=Vector2.new(canvasX,320)
-        gui.LightInfluence=0
-        gui.AlwaysOnTop=false
-        gui.Parent=panel
-
-        local skinFrame=Instance.new("Frame")
-        skinFrame.Name="WrappedPortraitRoot"
-        skinFrame.Size=UDim2.fromScale(1,1)
-        skinFrame.BackgroundColor3=head.Color
-        skinFrame.BorderSizePixel=0
-        skinFrame.ClipsDescendants=true
-        skinFrame.Parent=gui
-
-        PortraitRenderer.renderCrop(skinFrame,portrait,{
-            Name=name.."Pixels",
-            Position=UDim2.fromScale(0,0),
-            Size=UDim2.fromScale(1,1),
-            ZIndex=2,
-            SampleStep=1,
-            X0=x0,
-            X1=x1,
-            Y0=.035,
-            Y1=.79,
-        })
-        return panel
-    end
-
-    -- Option B: center face plus two angled cheek slices. The slight overlap hides seams
-    -- at normal Roblox camera distance while preserving the native 3D hair/body silhouette.
-    faceSlice(
-        "FaceFront",
-        Vector3.new(1.96,2.04,.055),
-        CFrame.new(0,.02,-1.192),
-        .18,.82,
-        320
-    )
-    faceSlice(
-        "FaceLeft",
-        Vector3.new(.78,1.94,.055),
-        CFrame.new(-.91,.01,-.73)*CFrame.Angles(0,math.rad(55),0),
-        .04,.31,
-        150
-    )
-    faceSlice(
-        "FaceRight",
-        Vector3.new(.78,1.94,.055),
-        CFrame.new(.91,.01,-.73)*CFrame.Angles(0,math.rad(-55),0),
-        .69,.96,
-        150
-    )
-
-    model:SetAttribute("PortraitMode","wrapped-photo")
-    return true
-end
-
-local function facultyGalleryPanel(parent,staff,cf)
-    local portrait=PortraitPixels[staff.id]
-    if type(portrait)~="table" or type(portrait.rows)~="table" or #portrait.rows==0 then return nil end
-
-    local panel=World.part(
-        parent,
-        "FacultyGallery_"..staff.id,
-        Vector3.new(5.25,6.8,.28),
-        cf,
-        palette.navy,
-        Enum.Material.SmoothPlastic,
-        false
-    )
-    panel.CastShadow=false
-    panel:SetAttribute("GalleryStaffId",staff.id)
-    panel:SetAttribute("GalleryStaffName",staff.name)
-    panel:SetAttribute("GalleryPortrait",true)
-
-    local gui=Instance.new("SurfaceGui")
-    gui.Name="FacultyGalleryPortrait"
-    gui.Face=Enum.NormalId.Front
-    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-    gui.CanvasSize=Vector2.new(420,544)
-    gui.LightInfluence=0
-    gui.AlwaysOnTop=false
-    gui.Parent=panel
-
-    local card=Instance.new("Frame")
-    card.Name="GalleryCard"
-    card.Size=UDim2.fromScale(1,1)
-    card.BackgroundColor3=Color3.fromRGB(247,244,236)
-    card.BorderSizePixel=0
-    card.Parent=gui
-
-    local photo=PortraitRenderer.render(card,portrait,{
-        Name="GalleryPhotoPixels",
-        Position=UDim2.fromScale(.045,.035),
-        Size=UDim2.fromScale(.91,.69),
-        CornerRadius=14,
-        ZIndex=2,
-        SampleStep=2,
-    })
-
-    local photoStroke=Instance.new("UIStroke")
-    photoStroke.Name="GalleryPhotoStroke"
-    photoStroke.Color=palette.gold
-    photoStroke.Thickness=3
-    photoStroke.Parent=photo or card
-
-    local name=Instance.new("TextLabel")
-    name.Name="GalleryName"
-    name.Position=UDim2.fromScale(.05,.75)
-    name.Size=UDim2.fromScale(.90,.10)
-    name.BackgroundTransparency=1
-    name.Text=staff.name
-    name.TextColor3=palette.navy
-    name.Font=Enum.Font.GothamBold
-    name.TextScaled=true
-    name.TextWrapped=true
-    name.Parent=card
-
-    local role=Instance.new("TextLabel")
-    role.Name="GalleryRole"
-    role.Position=UDim2.fromScale(.055,.855)
-    role.Size=UDim2.fromScale(.89,.105)
-    role.BackgroundTransparency=1
-    role.Text=staff.role
-    role.TextColor3=Color3.fromRGB(74,88,102)
-    role.Font=Enum.Font.GothamMedium
-    role.TextScaled=true
-    role.TextWrapped=true
-    role.Parent=card
-
-    local prompt=Instance.new("ProximityPrompt")
-    prompt.Name="OpenFacultyProfile"
-    prompt.ActionText="View profile"
-    prompt.ObjectText=staff.name
-    prompt.MaxActivationDistance=9
-    prompt.RequiresLineOfSight=false
-    prompt.HoldDuration=0
-    prompt.Parent=panel
-    return panel
-end
-
 local function npc(parent,staff,position)
     local appearance=staff.appearance or {}
     local model=Instance.new("Model");model.Name="Faculty_"..staff.id;model.Parent=parent
@@ -414,30 +246,30 @@ local function npc(parent,staff,position)
 
     local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     head.Shape=Enum.PartType.Ball
+    model:SetAttribute("LikenessMode","simple-stylized")
+    model:SetAttribute("PortraitMode","disabled")
 
-    local hasWrappedPortrait=attachWrappedPortraitHead(model,staff,head)
-
-    -- The real school portrait is the visible face whenever available. Procedural facial
-    -- geometry remains only as a fail-closed fallback for a missing/invalid portrait payload.
-    if not hasWrappedPortrait then
-        local eyeColor=appearanceColor(appearance.eye,Color3.fromRGB(72,82,88))
-        local browColor=hair:Lerp(Color3.fromRGB(54,47,43),.24)
-        for _,x in ipairs({-.43,.43}) do
-            local white=World.part(model,"Eye white",Vector3.new(.52,.30,.10),CFrame.new(position+Vector3.new(x,8.02,-1.18)),Color3.fromRGB(248,246,241),Enum.Material.SmoothPlastic,false)
-            white.Shape=Enum.PartType.Ball
-            local iris=World.part(model,"Iris",Vector3.new(.23,.23,.07),CFrame.new(position+Vector3.new(x,8.01,-1.255)),eyeColor,Enum.Material.SmoothPlastic,false)
-            iris.Shape=Enum.PartType.Ball
-            local pupil=World.part(model,"Pupil",Vector3.new(.10,.11,.055),CFrame.new(position+Vector3.new(x,8.01,-1.30)),Color3.fromRGB(28,31,34),Enum.Material.SmoothPlastic,false)
-            pupil.Shape=Enum.PartType.Ball
-            World.part(model,"Eyebrow",Vector3.new(.62,.10,.08),CFrame.new(position+Vector3.new(x,8.35,-1.18))*CFrame.Angles(0,0,math.rad(x<0 and -5 or 5)),browColor,Enum.Material.SmoothPlastic,false)
-        end
-        local nose=World.part(model,"Nose",Vector3.new(.28,.48,.24),CFrame.new(position+Vector3.new(0,7.76,-1.22)),skin:Lerp(Color3.fromRGB(194,146,126),.08),Enum.Material.SmoothPlastic,false)
-        nose.Shape=Enum.PartType.Ball
-        local lipColor=appearance.beard and Color3.fromRGB(128,82,76) or Color3.fromRGB(151,88,91)
-        World.part(model,"Mouth",Vector3.new(.74,.13,.075),CFrame.new(position+Vector3.new(0,7.30,-1.22))*CFrame.Angles(0,0,math.rad(-2)),lipColor,Enum.Material.SmoothPlastic,false)
+    -- Simple, achievable Roblox likeness. The distinctive cues are silhouette, hair,
+    -- glasses/facial hair, skin tone, clothing and accessories, not pasted photography.
+    for _,entry in ipairs({
+        {"Simple left eye",-.43},
+        {"Simple right eye",.43},
+    }) do
+        local eye=World.part(
+            model,entry[1],Vector3.new(.22,.27,.09),
+            CFrame.new(position+Vector3.new(entry[2],8.04,-1.18)),
+            Color3.fromRGB(39,44,49),Enum.Material.SmoothPlastic,false
+        )
+        eye.Shape=Enum.PartType.Ball
+        eye.CanQuery=false;eye.CanTouch=false
     end
+    local mouth=World.part(
+        model,"Simple smile",Vector3.new(.70,.12,.08),
+        CFrame.new(position+Vector3.new(0,7.38,-1.19))*CFrame.Angles(0,0,math.rad(-2)),
+        Color3.fromRGB(143,87,86),Enum.Material.SmoothPlastic,false
+    )
+    mouth.CanQuery=false;mouth.CanTouch=false
 
-    -- Ears remain native Roblox geometry outside the wrapped face shell.
     for _,x in ipairs({-1.18,1.18}) do
         local ear=World.part(model,"Ear",Vector3.new(.28,.52,.24),CFrame.new(position+Vector3.new(x,7.86,0)),skin,Enum.Material.SmoothPlastic,false)
         ear.Shape=Enum.PartType.Ball
@@ -485,7 +317,7 @@ local function npc(parent,staff,position)
         end
     end
 
-    if appearance.glasses and not hasWrappedPortrait then
+    if appearance.glasses then
         for _,x in ipairs({-.48,.48}) do
             local lens=World.part(model,"Glasses lens",Vector3.new(.78,.58,.08),CFrame.new(position+Vector3.new(x,8.02,-1.33)),Color3.fromRGB(45,49,54),Enum.Material.Glass,false)
             lens.Transparency=.72
@@ -494,11 +326,11 @@ local function npc(parent,staff,position)
         World.part(model,"Glasses temple left",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(-.96,8.04,-1.03))*CFrame.Angles(0,math.rad(72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
         World.part(model,"Glasses temple right",Vector3.new(.72,.07,.07),CFrame.new(position+Vector3.new(.96,8.04,-1.03))*CFrame.Angles(0,math.rad(-72),0),Color3.fromRGB(45,49,54),Enum.Material.Metal,false)
     end
-    if appearance.beard and not hasWrappedPortrait then
+    if appearance.beard then
         local beardColor=appearanceColor(appearance.beardColor,hair)
-        local beard=World.part(model,"Beard",Vector3.new(1.65,1.65,.48),CFrame.new(position+Vector3.new(0,7.08,-1.0)),beardColor,Enum.Material.SmoothPlastic,false)
-        beard.Shape=Enum.PartType.Ball
-        World.part(model,"Mustache",Vector3.new(1.2,.28,.12),CFrame.new(position+Vector3.new(0,7.48,-1.28)),beardColor,Enum.Material.SmoothPlastic,false)
+        local beard=World.part(model,"Beard",Vector3.new(1.45,.82,.18),CFrame.new(position+Vector3.new(0,7.10,-1.16)),beardColor,Enum.Material.SmoothPlastic,false)
+        beard.CanQuery=false;beard.CanTouch=false
+        World.part(model,"Mustache",Vector3.new(1.05,.18,.10),CFrame.new(position+Vector3.new(0,7.48,-1.23)),beardColor,Enum.Material.SmoothPlastic,false)
     end
 
     if appearance.suit then
@@ -1088,36 +920,6 @@ function World.build()
         local position=facultyPositions[staff.id]
         if position then npc(root,staff,position) end
     end
-
-    -- First-floor photo gallery: all 18 staff are visible in one walkable hallway.
-    -- Existing role-appropriate NPC placements remain untouched; these are portrait panels only.
-    local gallerySign=sign(
-        root,
-        "FACULTY & STAFF PHOTO GALLERY\nALL 18 STAFF • WALK THE HALL OR OPEN THE DIRECTORY",
-        CFrame.new(0,11,-49)*CFrame.Angles(0,math.pi,0),
-        Vector3.new(29,4.2,.22),
-        palette.navy,
-        palette.gold
-    )
-    gallerySign.Name="Faculty Gallery Sign"
-    local galleryPrompt=Instance.new("ProximityPrompt")
-    galleryPrompt.Name="OpenFacultyDirectory"
-    galleryPrompt.ActionText="View all 18"
-    galleryPrompt.ObjectText="Faculty & Staff Gallery"
-    galleryPrompt.MaxActivationDistance=14
-    galleryPrompt.RequiresLineOfSight=false
-    galleryPrompt.HoldDuration=0
-    galleryPrompt.Parent=gallerySign
-
-    for index,staff in ipairs(Catalog.Faculty) do
-        local left=index<=9
-        local slot=(index-1)%9
-        local x=left and -14.12 or 14.12
-        local z=-55-slot*9.15
-        local yaw=left and -math.pi/2 or math.pi/2
-        facultyGalleryPanel(root,staff,CFrame.new(x,9,z)*CFrame.Angles(0,yaw,0))
-    end
-
 
     -- Small lobby identity details: trophy case and bulletin board keep the entry recognizably school-like.
     local trophyGlass=World.part(root,"Lobby trophy case glass",Vector3.new(17,8,.7),CFrame.new(25,8,-42),Color3.fromRGB(153,184,193),Enum.Material.Glass,false)
