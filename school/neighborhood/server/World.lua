@@ -558,6 +558,10 @@ function World.build()
     Lighting.Ambient=Color3.fromRGB(122,126,132)
     Lighting.OutdoorAmbient=Color3.fromRGB(165,169,176)
     Lighting.ColorShift_Top=Color3.fromRGB(255,244,221)
+    Lighting.GlobalShadows=true
+    Lighting.ShadowSoftness=.28
+    Lighting.ExposureCompensation=.08
+    Lighting.GeographicLatitude=40.68
     local atmosphere=Lighting:FindFirstChild("ABVMAtmosphere")
     if not atmosphere then
         atmosphere=Instance.new("Atmosphere");atmosphere.Name="ABVMAtmosphere";atmosphere.Parent=Lighting
@@ -649,7 +653,8 @@ function World.build()
     for _,floorY in ipairs({29,44}) do
         for _,x in ipairs({-51,-17,17,51}) do
             World.part(root,"Tan facade bay",Vector3.new(27.2,11.8,.58),CFrame.new(x,floorY,-34.1),palette.tan,Enum.Material.Concrete,false)
-            schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)
+            local facadeWindowWidth=x==-51 and 9.6 or 15.2
+            schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),facadeWindowWidth,5.9)
         end
     end
     -- Horizontal stone/concrete belts and cornice create the layered facade depth visible in the target.
@@ -715,19 +720,19 @@ function World.build()
         local t=i/(frontSteps-1)
         local z=startZ+(endZ-startZ)*t
         local y=startY+(endY-startY)*t
-        World.part(root,"Front broad stair",Vector3.new(63,.58,2.45),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
+        World.part(root,"Front broad stair",Vector3.new(75,.58,2.45),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
     end
-    World.part(root,"Front lower landing",Vector3.new(65,.45,9),CFrame.new(stairCenterX,.1,3),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Front landing",Vector3.new(65,.7,8),CFrame.new(stairCenterX,4.3,-31),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front lower landing",Vector3.new(77,.45,9),CFrame.new(stairCenterX,.1,3),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front landing",Vector3.new(77,.7,8),CFrame.new(stairCenterX,4.3,-31),palette.stone,Enum.Material.Concrete)
 
-    -- Low masonry cheeks and continuous paired rails match the reference while leaving a broad center lane.
-    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX-34,2.55,-15),palette.brickDark,Enum.Material.Brick)
-    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX+34,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    -- Low masonry cheeks and paired rails match the broad ceremonial stair in the target.
+    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX-40,2.55,-15),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX+40,2.55,-15),palette.brickDark,Enum.Material.Brick)
     local stairDz=endZ-startZ
     local stairDy=endY-startY
     local stairLength=math.sqrt(stairDz*stairDz+stairDy*stairDy)
     local stairPitch=math.atan2(stairDy,stairDz)
-    for _,x in ipairs({stairCenterX-10,stairCenterX+10}) do
+    for _,x in ipairs({stairCenterX-18,stairCenterX+18}) do
         for step=0,6 do
             local t=step/6
             World.part(root,"Front stair rail post",Vector3.new(.3,3,.3),
@@ -746,20 +751,21 @@ function World.build()
             World.part(root,"Front annex siding line",Vector3.new(22,.12,.2),CFrame.new(x,y,-20.72),Color3.fromRGB(184,189,183),nil,false)
         end
     end
-    World.part(root,"School approach",Vector3.new(28,.3,28),CFrame.new(0,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
+    World.part(root,"School approach",Vector3.new(45,.3,28),CFrame.new(17,.2,19),Color3.fromRGB(204,198,184),Enum.Material.Cobblestone)
 
     -- Street-level identity from the approved Roblox render. The two-panel sign and arched crown
     -- intentionally echo the generated target while staying entirely native Roblox geometry/UI.
-    for _,x in ipairs({-63,-47}) do
-        World.part(root,"Front school sign post",Vector3.new(.95,13,.95),CFrame.new(x,6.5,8),palette.green,Enum.Material.Wood,false)
-        local cap=World.part(root,"Front school sign post cap",Vector3.new(1.45,1.45,1.45),CFrame.new(x,13.25,8),palette.gold,nil,false)
+    local frontSignZ=14.5
+    for _,x in ipairs({-64,-46}) do
+        World.part(root,"Front school sign post",Vector3.new(1,13.6,1),CFrame.new(x,6.8,frontSignZ),palette.green,Enum.Material.Wood,false)
+        local cap=World.part(root,"Front school sign post cap",Vector3.new(1.55,1.55,1.55),CFrame.new(x,13.8,frontSignZ),palette.gold,nil,false)
         cap.Shape=Enum.PartType.Ball
     end
-    World.part(root,"Front school sign gold backing",Vector3.new(18,8.2,.72),
-        CFrame.new(-55,8.2,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
+    World.part(root,"Front school sign gold backing",Vector3.new(20,8.8,.76),
+        CFrame.new(-55,8.5,frontSignZ-.1)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
     local frontSchoolSign=sign(root,"ASSUMPTION\nBVM SCHOOL",
-        CFrame.new(-55,8.2,7.5)*CFrame.Angles(0,math.pi,0),
-        Vector3.new(17.2,7.4,.45),palette.green,palette.gold)
+        CFrame.new(-55,8.5,frontSignZ-.5)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(19.2,8,.48),palette.green,palette.gold)
     frontSchoolSign.Name="Gold standard front school sign"
     local frontGui=frontSchoolSign:FindFirstChildOfClass("SurfaceGui")
     local frontLabel=frontGui and frontGui:FindFirstChildOfClass("TextLabel")
@@ -767,15 +773,15 @@ function World.build()
     for i=-2,2 do
         local rise=(2-math.abs(i))*.62
         World.part(root,"Front school sign arched crown",Vector3.new(3.6,1.25,.74),
-            CFrame.new(-55+i*3.15,12.15+rise,7.9)*CFrame.Angles(0,math.pi,0),
+            CFrame.new(-55+i*3.45,12.55+rise,frontSignZ-.1)*CFrame.Angles(0,math.pi,0),
             i==0 and palette.green or Color3.fromRGB(20,91,52),Enum.Material.Wood,false)
     end
-    cross(root,CFrame.new(-55,13.05,7.2)*CFrame.Angles(0,math.pi,0),.34,palette.gold)
-    World.part(root,"Gold standard entrance strip backing",Vector3.new(18,2.35,.7),
-        CFrame.new(-55,3.35,7.9)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
+    cross(root,CFrame.new(-55,13.45,frontSignZ-.8)*CFrame.Angles(0,math.pi,0),.36,palette.gold)
+    World.part(root,"Gold standard entrance strip backing",Vector3.new(20,2.45,.74),
+        CFrame.new(-55,3.35,frontSignZ-.1)*CFrame.Angles(0,math.pi,0),palette.gold,Enum.Material.Metal,false)
     local entranceStrip=sign(root,"ENTRANCE ON HOWARD AVENUE",
-        CFrame.new(-55,3.35,7.5)*CFrame.Angles(0,math.pi,0),
-        Vector3.new(17.2,1.65,.45),palette.green,palette.gold)
+        CFrame.new(-55,3.35,frontSignZ-.5)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(19.2,1.72,.48),palette.green,palette.gold)
     entranceStrip.Name="Gold standard entrance strip"
 
     -- Tiered masonry and greenery make the uphill arrival read clearly at Roblox camera distance.
@@ -796,9 +802,11 @@ function World.build()
     for _,x in ipairs({-59,59}) do
         tree(root,x,16,.72)
     end
+    tree(root,-88,-7,1.18)
+    tree(root,-108,-17,1.05)
     planter(root,-24,12,9)
     planter(root,24,12,9)
-    planter(root,-55,12.5,17)
+    planter(root,-55,8.5,17)
     -- Chain-link edge behind the sign is a strong cue in both the real reference and approved render.
     fencePanel(root,CFrame.new(-84,4,-3),Vector3.new(28,8,.4))
     for x=-97,-71,13 do
