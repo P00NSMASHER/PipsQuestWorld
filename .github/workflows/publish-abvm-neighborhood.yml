@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: baked 18-photo faculty/staff integration
+# release: simple 18-person faculty/staff likenesses + compact mobile HUD
 
 on:
   push:
@@ -8,12 +8,9 @@ on:
       - rebuild/school-neighborhood-faculty-v1
     paths:
       - '.github/workflows/publish-abvm-neighborhood.yml'
-      - 'school/neighborhood/shared/PortraitPixels.lua'
-      - 'school/neighborhood/shared/PortraitRenderer.lua'
+      - 'school/neighborhood/shared/Layout.lua'
       - 'school/neighborhood/server/World.lua'
       - 'school/neighborhood/client/Main.client.lua'
-      - 'school/neighborhood/faculty-portrait-sources.tsv'
-      - 'school/neighborhood/tools/bake_faculty_portraits.py'
       - 'school/neighborhood/tests/verify_build.py'
   workflow_dispatch:
 
@@ -46,10 +43,6 @@ jobs:
           test "$PLACE_ID" = "114603280760042"
           test -f school/neighborhood.project.json
           test ! -e school/neighborhood.rbxl
-          grep -q '__meta={generated=true,width=48,height=48,segment=16,count=18}' \
-            school/neighborhood/shared/PortraitPixels.lua
-          test "$(grep -c 'sourceSha256=' school/neighborhood/shared/PortraitPixels.lua)" -eq 18
-          test "$(grep -c '        rows={' school/neighborhood/shared/PortraitPixels.lua)" -eq 18
           printf 'Publishing source %s to universe %s start place %s\n' "$SOURCE_SHA" "$UNIVERSE_ID" "$PLACE_ID"
 
       - name: Install pinned validation/build tools
@@ -110,7 +103,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
 
-      - name: Runtime smoke test baked faculty portraits
+      - name: Runtime smoke test simple faculty likenesses
         shell: bash
         env:
           ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
@@ -123,8 +116,6 @@ jobs:
           local neighborhood=ServerScriptService:WaitForChild("Neighborhood")
           local World=require(neighborhood:WaitForChild("World"))
 
-          -- Luau execution sessions load the published place snapshot but do not boot normal
-          -- server scripts. Explicitly run the same world constructor used by the game server.
           World.build()
           task.wait()
 
@@ -136,43 +127,25 @@ jobs:
           for _,candidate in ipairs(root:GetChildren()) do
               if candidate:IsA("Model") and candidate:GetAttribute("StaffId") ~= nil then
                   local staffId=tostring(candidate:GetAttribute("StaffId"))
-                  if candidate:GetAttribute("PortraitMode") == "wrapped-photo"
-                      and candidate:FindFirstChild("FaceFront",true)
-                      and candidate:FindFirstChild("FaceLeft",true)
-                      and candidate:FindFirstChild("FaceRight",true)
-                      and candidate:FindFirstChild("BakedFacultyPortraitFaceFront",true)
-                      and candidate:FindFirstChild("BakedFacultyPortraitFaceLeft",true)
-                      and candidate:FindFirstChild("BakedFacultyPortraitFaceRight",true) then
+                  if candidate:GetAttribute("LikenessMode") == "simple-stylized"
+                      and candidate:GetAttribute("PortraitMode") == "disabled"
+                      and candidate:FindFirstChild("Head")
+                      and candidate:FindFirstChild("Simple left eye")
+                      and candidate:FindFirstChild("Simple right eye")
+                      and candidate:FindFirstChild("Simple smile")
+                      and not candidate:FindFirstChild("FaceFront",true) then
                       count+=1
                       ids[staffId]=true
                   end
               end
           end
 
-          assert(count==expected,"Expected 18 baked faculty portraits; got "..tostring(count))
+          assert(count==expected,"Expected 18 simple faculty likenesses; got "..tostring(count))
           local unique=0
           for _ in pairs(ids) do unique+=1 end
-          assert(unique==expected,"Expected 18 unique baked faculty portrait IDs; got "..tostring(unique))
-
-          local galleryCount=0
-          local galleryIds={}
-          for _,candidate in ipairs(root:GetChildren()) do
-              if candidate:IsA("BasePart") and candidate:GetAttribute("GalleryPortrait") == true then
-                  local staffId=candidate:GetAttribute("GalleryStaffId")
-                  if type(staffId)=="string" and candidate:FindFirstChild("FacultyGalleryPortrait") then
-                      galleryCount+=1
-                      galleryIds[staffId]=true
-                  end
-              end
-          end
-          local galleryUnique=0
-          for _ in pairs(galleryIds) do galleryUnique+=1 end
-          assert(galleryCount==expected,"Expected 18 visible faculty gallery panels; got "..tostring(galleryCount))
-          assert(galleryUnique==expected,"Expected 18 unique faculty gallery IDs; got "..tostring(galleryUnique))
-
-          print("WRAPPED_FACULTY_HEADS_OK",count,unique)
-          print("FACULTY_GALLERY_VISIBLE_OK",galleryCount,galleryUnique)
-          return tostring(count)..":"..tostring(galleryCount)
+          assert(unique==expected,"Expected 18 unique simple faculty IDs; got "..tostring(unique))
+          print("SIMPLE_FACULTY_LIKENESSES_OK",count,unique)
+          return tostring(count)
           LUA
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
@@ -241,8 +214,7 @@ jobs:
           jq . "$RUNNER_TEMP/portrait-runtime-logs.json" || true
           test "$(jq -r '.state' "$RUNNER_TEMP/portrait-runtime.json")" = "COMPLETE"
           jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
-          grep -q 'WRAPPED_FACULTY_HEADS_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
-          grep -q 'FACULTY_GALLERY_VISIBLE_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
+          grep -q 'SIMPLE_FACULTY_LIKENESSES_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
           fi
 
       - name: Publish receipt
