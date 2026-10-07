@@ -16,6 +16,7 @@ function Renderer.render(parent:Instance,portrait:any,props:any?)
     local width=portrait.width or 48
     local height=portrait.height or #portrait.rows
     local segment=portrait.segment or 16
+    local sampleStep=math.max(1,math.floor(props.SampleStep or 1))
 
     local root=Instance.new("Frame")
     root.Name=props.Name or "BakedPortrait"
@@ -33,14 +34,15 @@ function Renderer.render(parent:Instance,portrait:any,props:any?)
         corner.Parent=root
     end
 
-    for y,row in ipairs(portrait.rows) do
+    for y=1,#portrait.rows,sampleStep do
+        local row=portrait.rows[y]
         if type(row)=="string" and #row>=width*6 then
             for x=1,width,segment do
                 local count=math.min(segment,width-x+1)
                 local strip=Instance.new("Frame")
                 strip.Name="PortraitStrip"
                 strip.Position=UDim2.fromScale((x-1)/width,(y-1)/height)
-                strip.Size=UDim2.fromScale(count/width,1/height+0.0005)
+                strip.Size=UDim2.fromScale(count/width,math.min(sampleStep,height-y+1)/height+0.0005)
                 strip.BackgroundColor3=colorAt(row,x)
                 strip.BorderSizePixel=0
                 strip.ZIndex=root.ZIndex+1
@@ -48,9 +50,12 @@ function Renderer.render(parent:Instance,portrait:any,props:any?)
 
                 if count>1 then
                     local keypoints={}
-                    for i=0,count-1 do
-                        table.insert(keypoints,ColorSequenceKeypoint.new(i/(count-1),colorAt(row,x+i)))
+                    local last=count-1
+                    table.insert(keypoints,ColorSequenceKeypoint.new(0,colorAt(row,x)))
+                    for i=sampleStep,last-1,sampleStep do
+                        table.insert(keypoints,ColorSequenceKeypoint.new(i/last,colorAt(row,x+i)))
                     end
+                    table.insert(keypoints,ColorSequenceKeypoint.new(1,colorAt(row,x+last)))
                     local gradient=Instance.new("UIGradient")
                     gradient.Name="PortraitGradient"
                     gradient.Rotation=0
