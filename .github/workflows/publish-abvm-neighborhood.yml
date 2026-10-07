@@ -119,27 +119,37 @@ jobs:
           test -n "$ROBLOX_API_KEY"
           cat > "$RUNNER_TEMP/portrait-smoke.luau" <<'LUA'
           local expected=18
-          for attempt=1,60 do
-              local root=workspace:FindFirstChild("NeighborhoodWorld")
-              if root then
-                  local count=0
-                  for _,candidate in ipairs(root:GetChildren()) do
-                      if candidate:IsA("Model")
-                          and candidate:GetAttribute("StaffId") ~= nil
-                          and candidate:GetAttribute("PortraitMode") == "baked-photo"
-                          and candidate:FindFirstChild("BakedFacultyPortrait",true) then
-                          count+=1
-                      end
+          local ServerScriptService=game:GetService("ServerScriptService")
+          local neighborhood=ServerScriptService:WaitForChild("Neighborhood")
+          local World=require(neighborhood:WaitForChild("World"))
+
+          -- Luau execution sessions load the published place snapshot but do not boot normal
+          -- server scripts. Explicitly run the same world constructor used by the game server.
+          World.build()
+          task.wait()
+
+          local root=workspace:FindFirstChild("NeighborhoodWorld")
+          assert(root,"NeighborhoodWorld was not built in the runtime smoke session")
+
+          local count=0
+          local ids={}
+          for _,candidate in ipairs(root:GetChildren()) do
+              if candidate:IsA("Model") and candidate:GetAttribute("StaffId") ~= nil then
+                  local staffId=tostring(candidate:GetAttribute("StaffId"))
+                  if candidate:GetAttribute("PortraitMode") == "baked-photo"
+                      and candidate:FindFirstChild("BakedFacultyPortrait",true) then
+                      count+=1
+                      ids[staffId]=true
                   end
-                  if count==expected then
-                      print("BAKED_FACULTY_PORTRAITS_OK",count)
-                      return tostring(count)
-                  end
-                  print("WAITING_FOR_BAKED_FACULTY_PORTRAITS",attempt,count)
               end
-              task.wait(.5)
           end
-          error("Expected 18 baked faculty portraits in the published place")
+
+          assert(count==expected,"Expected 18 baked faculty portraits; got "..tostring(count))
+          local unique=0
+          for _ in pairs(ids) do unique+=1 end
+          assert(unique==expected,"Expected 18 unique baked faculty portrait IDs; got "..tostring(unique))
+          print("BAKED_FACULTY_PORTRAITS_OK",count,unique)
+          return tostring(count)
           LUA
 
           script_json="$(jq -Rs '{script:.,timeout:"60s"}' < "$RUNNER_TEMP/portrait-smoke.luau")"
