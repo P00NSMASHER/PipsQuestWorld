@@ -378,8 +378,10 @@ function World.teacherModel(teacher)
     -- Arms and hands, stored with local CFrames so the walk tween can swing them.
     rigPart(m,root,"Left Arm",Vector3.new(1.0,3.7,1.0),CFrame.new(-2.25,2.6,0),skin,Enum.Material.SmoothPlastic,"leftArm")
     rigPart(m,root,"Right Arm",Vector3.new(1.0,3.7,1.0),CFrame.new(2.25,2.6,0),skin,Enum.Material.SmoothPlastic,"rightArm")
-    ball(m,"Left Hand",Vector3.new(1.05,1.05,1.05),root.CFrame*CFrame.new(-2.25,.62,0),skin,Enum.Material.SmoothPlastic,false)
-    ball(m,"Right Hand",Vector3.new(1.05,1.05,1.05),root.CFrame*CFrame.new(2.25,.62,0),skin,Enum.Material.SmoothPlastic,false)
+    local leftHand=ball(m,"Left Hand",Vector3.new(1.05,1.05,1.05),root.CFrame*CFrame.new(-2.25,.62,0),skin,Enum.Material.SmoothPlastic,false)
+    leftHand:SetAttribute("RigKind","leftHand");leftHand:SetAttribute("LocalCF",CFrame.new(-2.25,.62,0))
+    local rightHand=ball(m,"Right Hand",Vector3.new(1.05,1.05,1.05),root.CFrame*CFrame.new(2.25,.62,0),skin,Enum.Material.SmoothPlastic,false)
+    rightHand:SetAttribute("RigKind","rightHand");rightHand:SetAttribute("LocalCF",CFrame.new(2.25,.62,0))
     rigPart(m,root,"Left Leg",Vector3.new(1.25,3.8,1.35),CFrame.new(-.85,-1.65,0),pants,Enum.Material.Fabric,"leftLeg")
     rigPart(m,root,"Right Leg",Vector3.new(1.25,3.8,1.35),CFrame.new(.85,-1.65,0),pants,Enum.Material.Fabric,"rightLeg")
     rigPart(m,root,"Left Shoe",Vector3.new(1.45,.72,2.1),CFrame.new(-.85,-3.75,-.35),Color3.fromRGB(241,239,231),Enum.Material.SmoothPlastic,"leftShoe")
@@ -412,21 +414,20 @@ end
 
 function World.poseTeacher(model: Model,phase: number,walking: boolean)
     local pivot=model:GetPivot()
-    local swing=walking and math.sin(phase)*math.rad(22) or 0
-    for _,obj in ipairs(model:GetChildren()) do
-        if obj:IsA("BasePart") then
-            local kind=obj:GetAttribute("RigKind")
-            local localCF=obj:GetAttribute("LocalCF")
-            if kind and typeof(localCF)=="CFrame" then
-                local rot=CFrame.new()
-                if kind=="leftArm" then rot=CFrame.Angles(swing,0,0)
-                elseif kind=="rightArm" then rot=CFrame.Angles(-swing,0,0)
-                elseif kind=="leftLeg" or kind=="leftShoe" then rot=CFrame.Angles(-swing*.65,0,0)
-                elseif kind=="rightLeg" or kind=="rightShoe" then rot=CFrame.Angles(swing*.65,0,0) end
-                obj.CFrame=pivot*(localCF :: CFrame)*rot
-            end
-        end
+    local swing=walking and math.sin(phase)*math.rad(24) or 0
+    local function pose(name:string,cf:CFrame)
+        local obj=model:FindFirstChild(name)
+        if obj and obj:IsA("BasePart") then obj.CFrame=pivot*cf end
     end
+    -- Pivot around shoulders/hips instead of merely tilting limbs in place. Tiny detail, huge difference.
+    pose("Left Arm",CFrame.new(-2.25,4.35,0)*CFrame.Angles(swing,0,0)*CFrame.new(0,-1.75,0))
+    pose("Right Arm",CFrame.new(2.25,4.35,0)*CFrame.Angles(-swing,0,0)*CFrame.new(0,-1.75,0))
+    pose("Left Hand",CFrame.new(-2.25,4.35,0)*CFrame.Angles(swing,0,0)*CFrame.new(0,-3.75,0))
+    pose("Right Hand",CFrame.new(2.25,4.35,0)*CFrame.Angles(-swing,0,0)*CFrame.new(0,-3.75,0))
+    pose("Left Leg",CFrame.new(-.85,.2,0)*CFrame.Angles(-swing*.72,0,0)*CFrame.new(0,-1.85,0))
+    pose("Right Leg",CFrame.new(.85,.2,0)*CFrame.Angles(swing*.72,0,0)*CFrame.new(0,-1.85,0))
+    pose("Left Shoe",CFrame.new(-.85,.2,0)*CFrame.Angles(-swing*.72,0,0)*CFrame.new(0,-4.0,-.35))
+    pose("Right Shoe",CFrame.new(.85,.2,0)*CFrame.Angles(swing*.72,0,0)*CFrame.new(0,-4.0,-.35))
 end
 
 function World.moveTeacher(model: Model,target: CFrame,duration: number)
