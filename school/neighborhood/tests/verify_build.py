@@ -109,18 +109,11 @@ def validate_abvm_contract() -> dict:
         '"Left shoe"',
         '"Right shoe"',
         '"Neck"',
-        '"FaceFront"',
-        '"FaceLeft"',
-        '"FaceRight"',
-        '"BakedFacultyPortrait"..name',
-        'PortraitRenderer.renderCrop(skinFrame,portrait',
-        'model:SetAttribute("PortraitMode","wrapped-photo")',
-        "if not hasWrappedPortrait then",
-        '"FacultyGallery_"',
-        '"FacultyGalleryPortrait"',
-        '"OpenFacultyDirectory"',
-        '"OpenFacultyProfile"',
-        'SampleStep=2',
+        'model:SetAttribute("LikenessMode","simple-stylized")',
+        'model:SetAttribute("PortraitMode","disabled")',
+        '"Simple left eye"',
+        '"Simple right eye"',
+        '"Simple smile"',
         "facultyPositions",
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
@@ -189,15 +182,17 @@ def validate_abvm_contract() -> dict:
         "faculty portrait payload must contain 18 generated, source-hashed photo records",
     )
     require(
-        "function Renderer.render" in portrait_renderer
-        and "function Renderer.renderCrop" in portrait_renderer
-        and "props.X0" in portrait_renderer
-        and "props.Y1" in portrait_renderer
-        and "ColorSequenceKeypoint.new" in portrait_renderer,
-        "crop-aware asset-free portrait gradient renderer missing",
+        "attachWrappedPortraitHead" not in world
+        and '"FaceFront"' not in world
+        and '"FaceLeft"' not in world
+        and '"FaceRight"' not in world
+        and '"FacultyGallery_"' not in world,
+        "photo-wrapped staff heads or portrait-wall gallery must not return",
     )
-    require('"Photo face plate"' not in world and 'model:SetAttribute("PortraitMode","baked-photo")' not in world,
-            "legacy flat staff face plate must not coexist with wrapped photo heads")
+    require("PortraitPixels" not in world and "PortraitRenderer" not in world,
+            "simple staff NPCs must not depend on baked portrait rendering")
+    require("PortraitPixels" not in main and "PortraitRenderer" not in main,
+            "faculty UI must render the actual simple NPC models, not baked photographs")
     for name, role in required_faculty.items():
         require(f'name="{name}"' in catalog and f'role="{role}"' in catalog,
                 f"missing exact faculty directory entry: {name} / {role}")
@@ -212,6 +207,14 @@ def validate_abvm_contract() -> dict:
 
     ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
     layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
+    require("navWidth = goldLandscape and 84" in layout_source,
+            "landscape navigation rail regressed to oversized geometry")
+    require("compact and 40 or 46" in layout_source,
+            "compact landscape header regressed to oversized geometry")
+    require("streakPill.Visible=false" in main,
+            "compact landscape HUD must hide the redundant streak pill")
+    require('locationCommand~="school"' in main,
+            "school gameplay must not be covered by the persistent goal card")
     gold_ui_markers = (
         "function UI.surface", "function UI.chip", "function UI.iconButton",
         "function UI.answerCard", "function UI.feedbackCard", "function UI.flyout",
@@ -225,9 +228,8 @@ def validate_abvm_contract() -> dict:
     require(all(marker in main for marker in (
         'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()', 'showFaculty=function()',
         'showFacultyProfile=function(staffId)', 'Name="FacultyGrid"', 'Name="FacultyPortrait"',
-        'Name="FacultyPortraitPhoto"', 'PortraitRenderer.render(photo,portrait',
-        'ProximityPromptService.PromptTriggered', '"OpenFacultyDirectory"', '"OpenFacultyProfile"',
-        '"View All 18 Faculty & Staff"', 'Headshot=true',
+        'Name="FacultyPortrait"', 'ProximityPromptService.PromptTriggered',
+        '"Faculty & Staff"', 'Headshot=true',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
         '"Starter","Sport","Premium"',
