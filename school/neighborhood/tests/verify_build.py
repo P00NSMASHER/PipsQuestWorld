@@ -94,6 +94,10 @@ def validate_abvm_contract() -> dict:
         "Howard retaining wall",
         "Brick chimney",
         "Front stone belt",
+        "Gold standard facade banner",
+        "Gold standard front school sign",
+        "Front garden terrace west",
+        "Tree canopy chunk",
         "Dr. McBreen — Principal",
         "Mrs. Thompson — Secretary",
         "Mrs. Boyer — Assistant Principal",
@@ -222,6 +226,9 @@ def validate_abvm_contract() -> dict:
     return {
         "frontArchedBays": 4,
         "centerDoorBays": 2,
+        "frontBrandedSign": True,
+        "verticalFacadeBanner": True,
+        "chunkyRobloxTreeCanopy": True,
         "subjectClassrooms": len(required_subjects),
         "photoContractStaticOnly": True,
     }
