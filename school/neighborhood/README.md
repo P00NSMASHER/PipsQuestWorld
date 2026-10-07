@@ -16,6 +16,8 @@ Required exterior cues now encoded in source and static guards are: warm bright 
 
 Do not chase the render by adding giant textures, pre-baked building images, or expensive mesh detail that cannot be maintained in Studio. The desired read is “high-end Roblox interpretation of the real school,” not “photo pasted into Roblox.” Architecture remains primary; branding supports it.
 
+School travel now deliberately places the avatar on a front-right three-quarter approach matching the approved hero composition: the facade fills the center, the green/gold sign reads on the left, and the heavy east corner plus side elevation remain visible on the right. This is a composition aid, not a forced cinematic camera.
+
 ## Learning and curriculum
 
 The server determines the classroom from the character's position. Entering the room offers the subject's question; leaving invalidates it. Initial client messages contain shuffled choices and a per-question token, not answer keys. An incorrect answer shows an explanation and a supported retry.
