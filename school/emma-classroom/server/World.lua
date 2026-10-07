@@ -71,7 +71,7 @@ end
 
 local function ceilingLight(parent: Instance,x: number,z: number)
     local box=part(parent,"Recessed ceiling light",Vector3.new(7.6,.22,2.4),CFrame.new(x,17.72,z),Color3.fromRGB(255,249,220),Enum.Material.Neon,false)
-    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(255,251,242);light.Brightness=.65;light.Range=29;light.Angle=105;light.Shadows=false;light.Parent=box
+    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(255,251,242);light.Brightness=.24;light.Range=29;light.Angle=105;light.Shadows=false;light.Parent=box
     part(parent,"Light trim",Vector3.new(8,.10,2.8),CFrame.new(x,17.80,z),Color3.fromRGB(205,207,202),Enum.Material.Metal,false)
 end
 
@@ -330,7 +330,7 @@ local function buildWindows(root: Instance)
     end
     -- Warm sunlight washes the front-left classroom corner.
     local sunAnchor=part(root,"Window sun anchor",Vector3.new(.3,.3,.3),CFrame.new(-34,10,-10),Color3.new(1,1,1),Enum.Material.Neon,false);sunAnchor.Transparency=1
-    local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,246,225);sun.Brightness=1.15;sun.Range=48;sun.Shadows=true;sun.Parent=sunAnchor
+    local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,246,225);sun.Brightness=.50;sun.Range=48;sun.Shadows=true;sun.Parent=sunAnchor
 end
 
 local function buildFrontWall(root: Instance)
@@ -436,9 +436,9 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=2.4;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.55
-    Lighting.Ambient=Color3.fromRGB(165,166,167);Lighting.OutdoorAmbient=Color3.fromRGB(191,202,217)
-    Lighting.EnvironmentDiffuseScale=.85;Lighting.EnvironmentSpecularScale=.42;Lighting.ExposureCompensation=.12
+    Lighting.ClockTime=10.25;Lighting.Brightness=1.5;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.55
+    Lighting.Ambient=Color3.fromRGB(110,114,120);Lighting.OutdoorAmbient=Color3.fromRGB(150,163,182)
+    Lighting.EnvironmentDiffuseScale=.55;Lighting.EnvironmentSpecularScale=.20;Lighting.ExposureCompensation=-.18
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
     atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.025;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
