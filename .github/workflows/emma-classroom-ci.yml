@@ -69,6 +69,8 @@ jobs:
           ! grep -q 'hum.JumpPower=0' school/emma-classroom/server/Main.server.lua
           ! grep -q 'hum.AutoRotate=false' school/emma-classroom/server/Main.server.lua
           grep -q 'answerBar' school/emma-classroom/client/Main.client.lua
+          grep -q 'Layout.connectionRetryDelay' school/emma-classroom/client/Main.client.lua
+          ! grep -q 'Rejoin to reconnect' school/emma-classroom/client/Main.client.lua
           ! grep -q 'QuestionCard' school/emma-classroom/client/Main.client.lua
           grep -q 'Emma desk nameplate' school/emma-classroom/server/World.lua
           grep -q 'Interactive smartboard' school/emma-classroom/server/World.lua
