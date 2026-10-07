@@ -15,18 +15,21 @@ ROOT = Path(__file__).resolve().parents[3]
 MODE = ROOT / "school/neighborhood"
 PROJECT = ROOT / "school/neighborhood.project.json"
 SOURCES = {
-    "shared/Catalog.lua", "shared/Layout.lua", "shared/PortraitPixels.lua", "shared/PortraitRenderer.lua", "server/Garage.lua",
+    "shared/Catalog.lua", "shared/Layout.lua", "shared/ResponsiveHudLayout.lua", "shared/FeaturePanelController.lua",
+    "shared/PortraitPixels.lua", "shared/PortraitRenderer.lua", "server/Garage.lua",
     "server/Learning.lua", "server/Leaderboards.lua", "server/Main.server.lua", "server/ProfileStore.lua",
-    "server/QuestionBank.lua", "server/Wardrobe.lua", "server/World.lua",
+    "server/QuestionBank.lua", "server/Wardrobe.lua", "server/StaffAvatarFactory.lua", "server/World.lua",
     "client/Main.client.lua", "client/UI.lua",
 }
 EXPECTED_SCRIPTS = {
     "ReplicatedStorage/NeighborhoodShared/Catalog": "ModuleScript",
     "ReplicatedStorage/NeighborhoodShared/Layout": "ModuleScript",
+    "ReplicatedStorage/NeighborhoodShared/ResponsiveHudLayout": "ModuleScript",
+    "ReplicatedStorage/NeighborhoodShared/FeaturePanelController": "ModuleScript",
     "ReplicatedStorage/NeighborhoodShared/PortraitPixels": "ModuleScript",
     "ReplicatedStorage/NeighborhoodShared/PortraitRenderer": "ModuleScript",
     **{f"ServerScriptService/Neighborhood/{name}": "ModuleScript" for name in
-       ("Garage", "Learning", "Leaderboards", "ProfileStore", "QuestionBank", "Wardrobe", "World")},
+       ("Garage", "Learning", "Leaderboards", "ProfileStore", "QuestionBank", "Wardrobe", "StaffAvatarFactory", "World")},
     "ServerScriptService/Neighborhood/Main": "Script",
     "StarterPlayer/StarterPlayerScripts/NeighborhoodClient/Main": "LocalScript",
     "StarterPlayer/StarterPlayerScripts/NeighborhoodClient/UI": "ModuleScript",
@@ -79,7 +82,11 @@ def inspect_place(root: ET.Element) -> dict[str, str]:
 def validate_abvm_contract() -> dict:
     """Protect photo-critical source intent; this is not a rendered-fidelity assertion."""
     world = (MODE / "server/World.lua").read_text(encoding="utf-8")
+    avatar_factory = (MODE / "server/StaffAvatarFactory.lua").read_text(encoding="utf-8")
     catalog = (MODE / "shared/Catalog.lua").read_text(encoding="utf-8")
+    layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
+    responsive_layout = (MODE / "shared/ResponsiveHudLayout.lua").read_text(encoding="utf-8")
+    feature_controller = (MODE / "shared/FeaturePanelController.lua").read_text(encoding="utf-8")
     portrait_pixels = (MODE / "shared/PortraitPixels.lua").read_text(encoding="utf-8")
     portrait_renderer = (MODE / "shared/PortraitRenderer.lua").read_text(encoding="utf-8")
     portrait_sources = (MODE / "faculty-portrait-sources.tsv").read_text(encoding="utf-8")
@@ -103,20 +110,8 @@ def validate_abvm_contract() -> dict:
         "Administrative Assistant, Marketing Coordinator",
         "Mrs Carol Boyer",
         "President of Catholicity and Mission",
-        'prompt.Name="MeetFaculty"',
-        '"Left hand"',
-        '"Right hand"',
-        '"Left shoe"',
-        '"Right shoe"',
-        '"Neck"',
-        'model:SetAttribute("LikenessMode","simple-stylized")',
-        'Vector3.new(2.35,2.35,2.10)',
-        'prompt.ObjectText=staff.name',
-        'gui.MaxDistance=18',
-        'model:SetAttribute("PortraitMode","disabled")',
-        '"Simple left eye"',
-        '"Simple right eye"',
-        '"Simple smile"',
+        'local StaffAvatarFactory=require(script.Parent.StaffAvatarFactory)',
+        'StaffAvatarFactory.build(root,staff,position)',
         "facultyPositions",
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
@@ -124,6 +119,30 @@ def validate_abvm_contract() -> dict:
     )
     missing = [marker for marker in required_world if marker not in world]
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
+
+    required_factory = (
+        'function Factory.build(parent,staff,position)',
+        'model:SetAttribute("LikenessMode","simple-stylized")',
+        'model:SetAttribute("PortraitMode","disabled")',
+        'model:SetAttribute("AvatarFactoryMode",prototype and "prototype-v1" or "baseline-v1")',
+        '"Simple left eye"',
+        '"Simple right eye"',
+        '"Simple smile"',
+        '"Prototype hair crown"',
+        '"Prototype bob left"',
+        '"Prototype temple left"',
+        'prompt.Name="MeetFaculty"',
+        'prompt.ObjectText=staff.name',
+        'gui.MaxDistance=18',
+    )
+    missing_factory = [marker for marker in required_factory if marker not in avatar_factory]
+    require(not missing_factory, f"staff avatar factory markers missing: {missing_factory}")
+    require(catalog.count("avatar={prototype=true") == 3,
+            "exactly three faculty prototypes must be enabled during the pilot")
+    require(all(marker in catalog for marker in (
+        'hairDetail="sidePart"', 'hairDetail="softBob"', 'hairDetail="balding"',
+        'outfit="suit"', 'outfit="cardigan"', 'outfit="staffCasual"',
+    )), "three prototype staff presets are incomplete")
     require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
             "redundant full upper slabs would cap the playable stairwells")
     expected_arch_calls = (
@@ -193,9 +212,11 @@ def validate_abvm_contract() -> dict:
         "photo-wrapped staff heads or portrait-wall gallery must not return",
     )
     require("PortraitPixels" not in world and "PortraitRenderer" not in world,
-            "simple staff NPCs must not depend on baked portrait rendering")
+            "world placement must not depend on baked portrait rendering")
+    require("PortraitPixels" not in avatar_factory and "PortraitRenderer" not in avatar_factory,
+            "staff avatar factory must stay Roblox-native and asset-ID-free")
     require("PortraitPixels" not in main and "PortraitRenderer" not in main,
-            "faculty UI must render the actual simple NPC models, not baked photographs")
+            "faculty UI must render the actual NPC models, not baked photographs")
     for name, role in required_faculty.items():
         require(f'name="{name}"' in catalog and f'role="{role}"' in catalog,
                 f"missing exact faculty directory entry: {name} / {role}")
@@ -209,23 +230,40 @@ def validate_abvm_contract() -> dict:
             "legacy wide white-toolbar HUD pattern returned")
 
     ui_source = (MODE / "client/UI.lua").read_text(encoding="utf-8")
-    layout_source = (MODE / "shared/Layout.lua").read_text(encoding="utf-8")
-    require("compactLandscape = goldLandscape and compact" in layout_source,
-            "compact landscape mode missing")
-    require("navWidth = compactLandscape and 58" in layout_source,
-            "compact landscape icon rail regressed to oversized geometry")
-    require("railWidth = compactLandscape and 104" in layout_source,
-            "compact landscape wallet header regressed to oversized geometry")
-    require("avatar.Visible=not compactLandscape" in main
-            and "nameText.Visible=not compactLandscape" in main
-            and "gradeText.Visible=not compactLandscape" in main,
-            "compact landscape must hide redundant player identity chrome")
-    require("label.Visible=not compactLandscape" in main,
-            "compact landscape navigation must be icon-only")
-    require("resumeButton.Visible=state.subject~=nil and not compactLandscape" in main,
-            "compact landscape goal card must not expand over gameplay")
+    require("local ResponsiveHudLayout=require(script.Parent.ResponsiveHudLayout)" in layout_source,
+            "neighborhood layout must be driven by the proven responsive HUD module")
+    require(all(marker in layout_source for marker in (
+        "ResponsiveHudLayout.touchExclusionZones",
+        "ResponsiveHudLayout.compute(viewport,insets,exclusions)",
+        "ResponsiveHudLayout.computeInteractionModal",
+        "ResponsiveHudLayout.computeSafeFloatingCard",
+        "referenceHud=true",
+    )), "responsive HUD adapter contract incomplete")
+    require(all(marker in responsive_layout for marker in (
+        "function ResponsiveHudLayout.compute(",
+        "function ResponsiveHudLayout.touchExclusionZones(",
+        "function ResponsiveHudLayout.computeInteractionModal(",
+        "function ResponsiveHudLayout.computeSafeFloatingCard(",
+        "function ResponsiveHudLayout.validateInteractionModal(",
+    )), "ported RHS responsive HUD geometry is incomplete")
+    require(all(marker in feature_controller for marker in (
+        "function Controller.new()",
+        "function Controller:register(",
+        "function Controller:activate(",
+        "function Controller:restore(",
+        "function Controller:reset(",
+    )), "ported feature panel controller is incomplete")
+    require('local FeaturePanelController=require(shared:WaitForChild("FeaturePanelController"))' in main
+            and 'panelController:register("focus"' in main
+            and 'panelController:restore("focus","open")' in main
+            and 'panelController:reset("driving")' in main,
+            "neighborhood client is not using the feature panel controller")
+    require("avatar.Visible=false" in main and "nameText.Visible=false" in main and "gradeText.Visible=false" in main,
+            "reference landscape HUD must hide redundant player identity chrome")
+    require("label.Visible=false" in main,
+            "reference landscape navigation must be icon-only")
     require("streakPill.Visible=false" in main,
-            "compact landscape HUD must hide the redundant streak pill")
+            "reference landscape HUD must hide the redundant streak pill")
     require('locationCommand~="school"' in main,
             "school gameplay must not be covered by the persistent goal card")
     gold_ui_markers = (
@@ -236,8 +274,8 @@ def validate_abvm_contract() -> dict:
     require(all(marker in ui_source for marker in gold_ui_markers),
             "gold-standard reusable UI primitives regressed")
     require(all(marker in layout_source for marker in (
-        "rail = {", "goal = {", "drive = {", "shopCardHeight", "columns = columns",
-    )), "gold-standard responsive layout contract regressed")
+        "rail={", "goal={", "drive={", "shopCardHeight", "columns=",
+    )), "responsive neighborhood layout adapter regressed")
     require(all(marker in main for marker in (
         'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()', 'showFaculty=function()',
         'showFacultyProfile=function(staffId)', 'Name="FacultyGrid"', 'Name="FacultyPortrait"',
@@ -263,6 +301,8 @@ def validate_abvm_contract() -> dict:
         "centerDoorBays": 2,
         "subjectClassrooms": len(required_subjects),
         "facultyStaff": len(required_faculty),
+        "avatarFactoryPrototypes": 3,
+        "responsiveHudPorted": True,
         "photoContractStaticOnly": True,
     }
 
