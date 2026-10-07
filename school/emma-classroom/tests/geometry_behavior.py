@@ -49,7 +49,7 @@ local Color3={new=function(r,g,b) return setmetatable({R=r,G=g,B=b},Color) end}
 Color3.fromRGB=function(r,g,b) return Color3.new(r/255,g/255,b/255) end
 local Enum=setmetatable({},{__index=function(t,k) local v=setmetatable({},{__index=function(_,name)return k.."."..name end});rawset(t,k,v);return v end})
 local UDim={new=function(...) return {...} end}
-local UDim2={fromScale=function(...) return {...} end,fromOffset=function(...)return {...}end}
+local UDim2={new=function(...) return {...} end,fromScale=function(...) return {...} end,fromOffset=function(...)return {...}end}
 local Vector2={new=function(...)return {...}end}
 local methods={}
 local instanceMeta={__index=function(t,k) return methods[k] or t.props[k] end,__newindex=function(t,k,v)
@@ -94,7 +94,10 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==2)
+    assert(m:GetAttribute("StaffGeometryVersion")==3)
+    local mask=m:FindFirstChild("Smile upper mask")
+    local eye=m:FindFirstChild("Expressive oval eye")
+    assert(mask.CFrame.Position.Y+mask.Size.Y/2<eye.CFrame.Position.Y-eye.Size.Y/2,"Smile mask must not clip the eyes")
     local head=m:FindFirstChild("Head")
     assert(head and head:FindFirstChild("Classic rounded head").MeshType==Enum.MeshType.Head)
     local n,groups,counts=0,{},{}
@@ -115,10 +118,12 @@ for _,teacher in ipairs(Data.Teachers) do
     maxParts=math.max(maxParts,n)
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
+    assert(counts["Torso rounded corner"]==4 and counts["Left Arm rounded corner"]==4 and counts["Left Leg rounded corner"]==4)
     assert(counts["C shaped hand"]==20 and counts["Expressive oval eye"]==2 and counts["Eye catchlight"]==2)
     assert(groups.leftArm>=14 and groups.rightArm>=14 and groups.leftLeg>=6 and groups.rightLeg>=6)
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
-    if teacher.name=="Mr. Bolich" then assert(counts["Beard strand"]==14 and counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
+    assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.8, "World label must scale in studs rather than fixed pixels")
+    if teacher.name=="Mr. Bolich" then assert(counts["Beard strand"]==7 and counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
     if teacher.name=="Dr. McBreen" then assert(counts["Tie diagonal stripe"]==5 and counts["Notched jacket lapel"]==2) end
     if teacher.name=="Mrs. Boyer" then assert(counts["Pearl earring"]==2 and counts["Gold mission pin"]==1) end
     local arm=m:FindFirstChild("Left Arm")
@@ -147,6 +152,9 @@ for _,d in ipairs(World.Root:GetDescendants()) do
     counts[d.Name]=(counts[d.Name] or 0)+1
     if d:IsA("BasePart") then assert(d.Size.X>0 and d.Size.Y>0 and d.Size.Z>0,d.Name) end
 end
+assert(counts["Oak floor board"]>290 and counts["Teacher inset drawer"]==6)
+assert(counts["Student desk top rounded corner"]==64 and counts["Student chair back rounded corner"]==64)
+assert(counts["Cubbie divider"]==7 and counts["Bin side"]==24)
 assert(counts["Student desk top"]==16 and counts["Emma desk nameplate"]==1)
 assert(counts["Metal coat hook"]==8 and counts["Hanging school bag"]==8)
 assert(counts["Reading rug alphabet border"]==26 and counts["Reading rug flower center"]==10)
