@@ -111,6 +111,8 @@ def validate_abvm_contract() -> dict:
         "Front pilaster stone cap",
         "School window warm glow",
         "School window sill",
+        "Arch segmented glazing",
+        "Arch segmented warm backlight",
         "GoldStandardClouds",
         "ABVMGoldBloom",
         "ABVMGoldGrade",
@@ -152,6 +154,8 @@ def validate_abvm_contract() -> dict:
     require(not missing, f"ABVM photo/admin contract markers missing: {missing}")
     require('"Second floor slab"' not in world and '"Third floor slab"' not in world,
             "redundant full upper slabs would cap the playable stairwells")
+    require('"Arched upper glazing"' not in world and '"Arch warm backlight"' not in world,
+            "rectangular upper glazing returned; arched windows must keep segmented curve-following panels")
     expected_arch_calls = (
         "makeFrontArch(root,-17,false)",
         "makeFrontArch(root,17,true)",
@@ -279,6 +283,7 @@ def validate_abvm_contract() -> dict:
         "verticalFacadeBanner": True,
         "heavyEastCornerPier": True,
         "warmWindowDepth": True,
+        "segmentedNativeArchGlazing": True,
         "nativeSkyPolish": True,
         "heroArrivalComposition": True,
         "rightBiasedEntranceComposition": True,
