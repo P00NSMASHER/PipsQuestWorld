@@ -324,14 +324,15 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     local roomWidth=49;local roomDepth=58;local z=-109
     local hallX=x<0 and -23.5 or 23.5
     local outerX=x<0 and -74.5 or 74.5
-    local warmFloor=Color3.fromRGB(92,70,52)
+    local warmFloor=id=="religion" and Color3.fromRGB(67,66,64) or Color3.fromRGB(92,70,52)
+    local floorMaterial=id=="religion" and Enum.Material.Fabric or Enum.Material.WoodPlanks
     local trim=Color3.fromRGB(61,76,108)
-    local roomWall=Color3.fromRGB(239,225,146)
+    local roomWall=id=="religion" and Color3.fromRGB(239,236,228) or Color3.fromRGB(239,225,146)
     local hallUpper=Color3.fromRGB(101,132,147)
     local wallInset=x<0 and -.55 or .55
     local outerInset=x<0 and .55 or -.55
 
-    World.part(m,"Floor",Vector3.new(roomWidth,.45,roomDepth),CFrame.new(x,floorY+.25,z),warmFloor,Enum.Material.WoodPlanks)
+    World.part(m,"Floor",Vector3.new(roomWidth,.45,roomDepth),CFrame.new(x,floorY+.25,z),warmFloor,floorMaterial)
     World.part(m,"Outer wall",Vector3.new(1,14,roomDepth),CFrame.new(outerX,floorY+7,z),roomWall)
     World.part(m,"Back wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z-roomDepth/2),roomWall)
     World.part(m,"Front wall",Vector3.new(roomWidth,14,1),CFrame.new(x,floorY+7,z+roomDepth/2),roomWall)
@@ -429,7 +430,8 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
                 CFrame.new(innerX,floorY+8,windowZ+offset),Color3.fromRGB(102,76,53),Enum.Material.Wood,false)
         end
         World.part(m,"Classroom window valance",Vector3.new(.22,1.3,10),
-            CFrame.new(innerX-wallInset*.16,floorY+11.3,windowZ),Color3.fromRGB(116,137,167),Enum.Material.Fabric,false)
+            CFrame.new(innerX-wallInset*.16,floorY+11.3,windowZ),
+            id=="religion" and Color3.fromRGB(244,244,238) or Color3.fromRGB(116,137,167),Enum.Material.Fabric,false)
         World.part(m,"Classroom radiator",Vector3.new(1.25,2.8,8.2),CFrame.new(innerX-wallInset*.6,floorY+1.65,windowZ),
             Color3.fromRGB(176,181,179),Enum.Material.Metal,false)
         for _,rz in ipairs({-3,-1.5,0,1.5,3}) do
@@ -457,9 +459,28 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     trash.Shape=Enum.PartType.Cylinder
     framedHallPanel(m,"Classroom values panel","BE KIND\nBE CURIOUS\nDO YOUR BEST",CFrame.new(outerDisplayX,floorY+8,z-10)*CFrame.Angles(0,x<0 and math.pi/2 or -math.pi/2,0),Vector3.new(12,6,.18),palette.navy)
 
-    -- Nine student stations remain roomy enough for mobile navigation.
-    for _,dx in ipairs({-11,0,11}) do
-        for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
+    -- Student furniture follows the photo set: ordinary classrooms use grouped desks; the
+    -- faith/presentation room uses rows of simple chairs facing the teaching wall.
+    if id=="religion" then
+        for _,dx in ipairs({-14,-7,0,7,14}) do
+            for _,dz in ipairs({-8,2,12}) do
+                local chairZ=z+dz
+                World.part(m,"Faith room chair seat",Vector3.new(2.4,.42,2.25),CFrame.new(x+dx,floorY+1.55,chairZ),Color3.fromRGB(78,83,88),Enum.Material.SmoothPlastic)
+                World.part(m,"Faith room chair back",Vector3.new(2.4,2.5,.35),CFrame.new(x+dx,floorY+2.75,chairZ+1),Color3.fromRGB(78,83,88),Enum.Material.SmoothPlastic)
+                for _,legX in ipairs({-.85,.85}) do
+                    World.part(m,"Faith room chair leg",Vector3.new(.22,1.55,.22),CFrame.new(x+dx+legX,floorY+.8,chairZ),palette.metal,Enum.Material.Metal)
+                end
+            end
+        end
+        World.part(m,"Faith room altar table",Vector3.new(13,2.6,4),CFrame.new(x-15,floorY+2.2,z+22),Color3.fromRGB(126,91,61),Enum.Material.Wood)
+        World.part(m,"Faith room altar cloth",Vector3.new(13.4,.18,4.4),CFrame.new(x-15,floorY+3.6,z+22),Color3.fromRGB(245,244,238),Enum.Material.Fabric,false)
+        cross(m,CFrame.new(x-15,floorY+9,z+28.2)*CFrame.Angles(0,math.pi,0),.9,Color3.fromRGB(112,79,48))
+        local sideBoard=World.part(m,"Faith room second smartboard",Vector3.new(.3,7,13),CFrame.new(outerX+outerInset*1.2,floorY+7.8,z+12),Color3.fromRGB(235,241,239),Enum.Material.Glass,false)
+        sideBoard.Transparency=.04
+    else
+        for _,dx in ipairs({-11,0,11}) do
+            for _,dz in ipairs({-13,3,19}) do desk(m,x+dx,floorY,z+dz,tint) end
+        end
     end
 
     -- Warm, even classroom lighting without the old over-lit duplicate fixture look.
@@ -473,6 +494,8 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     -- One clear subject-specific visual cue per room; decorative only, never another learning authority.
     if id=="math" then
         sign(m,"NUMBER SENSE\n2 + 3 = 5   •   10 − 4 = 6",CFrame.new(x,floorY+9,z+28.35),Vector3.new(27,4.5,.2),tint,palette.cream)
+        sign(m,"FIRST GRADE WORD WALL\nAND • ARE • HAVE • PLAY • SAID • THE • YOU",
+            CFrame.new(x-7,floorY+7,z+28.38),Vector3.new(28,3.2,.18),Color3.fromRGB(87,142,166),palette.cream)
     elseif id=="reading" then
         World.part(m,"Reading bookcase",Vector3.new(16,8,2),CFrame.new(x+12,floorY+4.5,z+27),palette.wood,Enum.Material.Wood)
         for i=1,12 do
@@ -483,8 +506,9 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     elseif id=="grammar" then
         sign(m,"WHO?  +  DOES WHAT?\nBuild a complete sentence.",CFrame.new(x,floorY+9,z+28.35),Vector3.new(30,5,.2),tint,palette.cream)
     elseif id=="religion" then
-        cross(m,CFrame.new(x,floorY+10,z+28.25)*CFrame.Angles(0,math.pi,0),.8,palette.gold)
+        cross(m,CFrame.new(x,floorY+10,z+28.25)*CFrame.Angles(0,math.pi,0),.8,Color3.fromRGB(112,79,48))
         sign(m,"FAITH  •  HOPE  •  LOVE",CFrame.new(x,floorY+5.5,z+28.3),Vector3.new(25,2.6,.2),palette.navy,palette.gold)
+        sign(m,"LET YOUR LIGHT SHINE",CFrame.new(x,floorY+12.1,z+28.32),Vector3.new(24,2,.18),Color3.fromRGB(239,236,228),palette.navy)
     elseif id=="vocabulary" then
         sign(m,"WORD  →  MEANING  →  CONTEXT",CFrame.new(x,floorY+9,z+28.35),Vector3.new(31,3,.2),tint,palette.cream)
     elseif id=="spelling" then
@@ -768,10 +792,10 @@ local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
         local t=i/(steps-1)
         local z=zStart+(zEnd-zStart)*t
         local y=yStart+(yEnd-yStart)*t
-        World.part(root,"Interior stair",Vector3.new(11,.72,2.25),CFrame.new(x,y,z),palette.stone,Enum.Material.Concrete)
+        World.part(root,"Interior stair",Vector3.new(11,.72,2.25),CFrame.new(x,y,z),Color3.fromRGB(83,62,46),Enum.Material.WoodPlanks)
         if i%4==0 then
             for _,sx in ipairs({-5.2,5.2}) do
-                World.part(root,"Interior stair rail post",Vector3.new(.25,3,.25),CFrame.new(x+sx,y+1.8,z),palette.metal,Enum.Material.Metal,false)
+                World.part(root,"Interior stair rail post",Vector3.new(.32,3,.32),CFrame.new(x+sx,y+1.8,z),Color3.fromRGB(37,86,62),Enum.Material.Metal,false)
             end
         end
     end
@@ -782,8 +806,8 @@ local function stairFlight(root,x,zStart,zEnd,yStart,yEnd)
     local midY=(yStart+yEnd)/2+2.7
     local pitch=math.atan2(dy,dz)
     for _,sx in ipairs({-5.2,5.2}) do
-        World.part(root,"Interior stair handrail",Vector3.new(.28,.28,railLength),
-            CFrame.new(x+sx,midY,midZ)*CFrame.Angles(pitch,0,0),palette.metal,Enum.Material.Metal,false)
+        World.part(root,"Interior stair handrail",Vector3.new(.34,.34,railLength),
+            CFrame.new(x+sx,midY,midZ)*CFrame.Angles(pitch,0,0),Color3.fromRGB(105,73,49),Enum.Material.Wood,false)
     end
 end
 
@@ -1356,10 +1380,14 @@ function World.build()
 
     -- Stairs connect all three playable academic floors.
     stairFlight(root,-7,-58,-101,5,19.4)
-    World.part(root,"Second floor stair landing",Vector3.new(13,.6,9),CFrame.new(-7,20,-105),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Second floor stair landing",Vector3.new(13,.6,9),CFrame.new(-7,20,-105),Color3.fromRGB(83,62,46),Enum.Material.WoodPlanks)
+    World.part(root,"Second stair tan brick wall",Vector3.new(14,7,.7),CFrame.new(-13.7,23.2,-105),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    World.part(root,"Second stair cream upper wall",Vector3.new(14,6,.7),CFrame.new(-13.7,29.7,-105),Color3.fromRGB(239,236,228),Enum.Material.SmoothPlastic,false)
     World.part(root,"Second floor stair guard",Vector3.new(13,3,.3),CFrame.new(-7,21.7,-109.3),palette.metal,Enum.Material.Metal,false)
     stairFlight(root,7,-118,-75,21,35.4)
-    World.part(root,"Third floor stair landing",Vector3.new(13,.6,9),CFrame.new(7,36,-71),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Third floor stair landing",Vector3.new(13,.6,9),CFrame.new(7,36,-71),Color3.fromRGB(83,62,46),Enum.Material.WoodPlanks)
+    World.part(root,"Third stair tan brick wall",Vector3.new(14,7,.7),CFrame.new(13.7,39.2,-71),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    World.part(root,"Third stair cream upper wall",Vector3.new(14,6,.7),CFrame.new(13.7,45.7,-71),Color3.fromRGB(239,236,228),Enum.Material.SmoothPlastic,false)
     World.part(root,"Third floor stair guard",Vector3.new(13,3,.3),CFrame.new(7,37.7,-66.7),palette.metal,Enum.Material.Metal,false)
     World.part(root,"Second stair landing mat",Vector3.new(11,.12,7),CFrame.new(-7,20.38,-105),palette.navy,Enum.Material.Fabric,false)
     World.part(root,"Third stair landing mat",Vector3.new(11,.12,7),CFrame.new(7,36.38,-71),palette.navy,Enum.Material.Fabric,false)
@@ -1375,9 +1403,17 @@ function World.build()
     for _,x in ipairs({-48,-24,0,24,48}) do
         World.part(root,"Lobby ceiling beam",Vector3.new(.12,.08,36),CFrame.new(x,17.65,-56),Color3.fromRGB(203,204,200),Enum.Material.Metal,false)
     end
-    World.part(root,"Lobby terrazzo floor",Vector3.new(136,.14,38),CFrame.new(0,4.43,-56),Color3.fromRGB(228,225,216),Enum.Material.SmoothPlastic,false)
-    World.part(root,"Lobby navy inlay",Vector3.new(4,.05,36),CFrame.new(0,4.52,-56),palette.navy,nil,false)
-    for _,x in ipairs({-2.35,2.35}) do World.part(root,"Lobby gold inlay",Vector3.new(.24,.055,36),CFrame.new(x,4.53,-56),palette.gold,nil,false) end
+    World.part(root,"Lobby terrazzo floor",Vector3.new(136,.14,38),CFrame.new(0,4.43,-56),Color3.fromRGB(68,70,68),Enum.Material.Slate,false)
+    World.part(root,"Lobby navy inlay",Vector3.new(4,.05,36),CFrame.new(0,4.52,-56),Color3.fromRGB(76,78,75),nil,false)
+    for _,x in ipairs({-2.35,2.35}) do World.part(root,"Lobby gold inlay",Vector3.new(.24,.055,36),CFrame.new(x,4.53,-56),Color3.fromRGB(101,102,97),nil,false) end
+    for xSeam=-64,64,8 do
+        World.part(root,"Lobby tile seam",Vector3.new(.06,.03,37),CFrame.new(xSeam,4.54,-56),Color3.fromRGB(111,112,108),nil,false)
+    end
+    for zSeam=-72,-40,8 do
+        World.part(root,"Lobby tile seam",Vector3.new(135,.03,.06),CFrame.new(0,4.54,zSeam),Color3.fromRGB(111,112,108),nil,false)
+    end
+    World.part(root,"Lobby photo brick wainscot west",Vector3.new(.4,3.4,34),CFrame.new(-67.6,6.1,-56),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    World.part(root,"Lobby photo brick wainscot east",Vector3.new(.4,3.4,34),CFrame.new(67.6,6.1,-56),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     World.part(root,"Lobby welcome rug",Vector3.new(24,.14,7.5),CFrame.new(0,4.57,-42.5),palette.navy,Enum.Material.Fabric,false)
     World.part(root,"Lobby rug gold stripe",Vector3.new(21,.04,.32),CFrame.new(0,4.66,-42.5),palette.gold,nil,false)
     for _,x in ipairs({-13,0,13}) do
