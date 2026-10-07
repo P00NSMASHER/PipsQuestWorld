@@ -8,6 +8,14 @@ Build `school/neighborhood.project.json`, not `school/default.project.json`. Onl
 
 World geometry, clothing overlays, vehicle models, and shop previews in this mode are original generated content. This is not the original RHS2 map or a claim of exact visual parity. All children begin with their own furnished starter home and a starter ride. The progression runs from modest to luxury; it does not attach insulting labels to players or publish a poorest-player ranking.
 
+## Authoritative Roblox visual target — 2026-10-06
+
+The latest user-approved Roblox render is now the **gold standard for visual language and exterior presentation**. The target is deliberately achievable with native Roblox geometry rather than a photorealistic one-off render. Preserve the real-school photo cues, but stylize them into a polished, warm, readable Roblox world.
+
+Required exterior cues now encoded in source and static guards are: warm bright daytime lighting; brown brick with tan infill panels; strong vertical pilasters and light stone belts; the four real-photo-inspired arched front bays; broad uphill stairs and masonry cheeks; a dark flat roof with parapet rhythm and chimney; a compact green/gold street sign; a restrained green/gold vertical faith/family/academics/service banner; clipped shrubs, flower planters and chunky low-poly tree canopies; fenced asphalt parking; nearby rowhomes, retaining walls, utility poles and the steep Howard Avenue edge.
+
+Do not chase the render by adding giant textures, pre-baked building images, or expensive mesh detail that cannot be maintained in Studio. The desired read is “high-end Roblox interpretation of the real school,” not “photo pasted into Roblox.” Architecture remains primary; branding supports it.
+
 ## Learning and curriculum
 
 The server determines the classroom from the character's position. Entering the room offers the subject's question; leaving invalidates it. Initial client messages contain shuffled choices and a per-question token, not answer keys. An incorrect answer shows an explanation and a supported retry.
