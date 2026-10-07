@@ -4,6 +4,7 @@ import argparse,subprocess
 ap=argparse.ArgumentParser();ap.add_argument('--luau',required=True);args=ap.parse_args()
 p=Path(__file__).resolve().parents[1]
 prefix=r'''
+local warn=function() end
 local Data=require("../shared/Data")
 local Questions=require("../server/QuestionBank")
 local queue={}
@@ -38,9 +39,10 @@ local Instance={new=function(class)
     if class=="RemoteEvent" then return {FireClient=function(_,_,e) table.insert(events,e) end} end
     return {}
 end}
+local visualFailure=false
 local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,setBoardHint=function() end,setBoardCorrect=function() end,
     setTeacherSpeech=function() end,walkTeacher=function() end,
-    teacherModel=function() return {PivotTo=function() end,Destroy=function(self) self.Parent=nil end} end}
+    teacherModel=function() if visualFailure then error("forced visual constructor failure") end;return {SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end} end}
 World.build=function() return World end
 local counter=0
 local Http={GenerateGUID=function() counter+=1;return "token-"..counter end}
@@ -102,6 +104,9 @@ assert(events[#events].kind=="session_complete")
 assert(saved["u:1"].totalCorrect==14 and saved["u:1"].sessionsCompleted==1)
 assert(requests.OnServerInvoke(player,"restart").ok);flush()
 assert(requests.OnServerInvoke(player,"state").progress.stars==0)
+visualFailure=true
+assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
+visualFailure=false
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14)
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
@@ -117,7 +122,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip, monotonic and awaited-shutdown persistence")
+print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip with failed visual constructor, monotonic and awaited-shutdown persistence")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:

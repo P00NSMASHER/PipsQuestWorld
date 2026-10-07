@@ -1,0 +1,12 @@
+<roblox version="4">
+  <Item class="Decal">
+    <Properties>
+      <token name="Face">5</token>
+      <string name="Name">WomanFace</string>
+      <Content name="Texture">
+        <url>rbxassetid://83022608</url>
+      </Content>
+      <float name="Transparency">0</float>
+    </Properties>
+  </Item>
+</roblox>

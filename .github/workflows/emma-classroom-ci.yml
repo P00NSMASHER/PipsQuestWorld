@@ -89,6 +89,7 @@ jobs:
       - name: Question bank and device layout tests
         run: |
           "$RUNNER_TEMP/tools/luau/luau" school/emma-classroom/tests/core.spec.lua
+          python3 school/emma-classroom/tests/client_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/server_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
 

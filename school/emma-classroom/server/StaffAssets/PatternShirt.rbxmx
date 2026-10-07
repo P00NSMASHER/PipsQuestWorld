@@ -1,0 +1,11 @@
+<roblox version="4">
+  <Item class="Shirt" referent="RBX0">
+    <Properties>
+      <Content name="ShirtTemplate">
+        <url>rbxassetid://3670737337</url>
+      </Content>
+      <string name="Name">PatternShirt</string>
+      <bool name="archivable">true</bool>
+    </Properties>
+  </Item>
+</roblox>

@@ -42,6 +42,16 @@ for _,size in ipairs({{568,280},{724,320},{844,390},{1112,512},{390,760},{375,60
     if w>h then assert(maxX<w-p.width-p.right-8,"Keep the head beside the answer panel")
     else assert(maxY<h-p.height-p.bottom-8,"Keep the head above the portrait answer panel") end
 end
+-- Answers reserve their own visible space, independent of prompt/hint length.
+for _,size in ipairs({{568,280},{724,320},{844,390},{1112,512},{390,760},{375,600},{1024,700}}) do
+    local panel=Layout.panel(size[1],size[2])
+    for count=1,3 do for _,promptHeight in ipairs({40,100,500}) do
+        local area=Layout.questionArea(panel.height,count,promptHeight)
+        assert(area.answerHeight>=44,"Each answer needs a touch target")
+        assert(area.answerTop+area.answerTotal<=panel.height-40,"All answers must be above feedback/skip")
+        assert(area.prompt>=28,"Question/hint remains independently scrollable")
+    end end
+end
 local retryDelays={}
 for attempt=1,20 do
     local delay=Layout.connectionRetryDelay(attempt)

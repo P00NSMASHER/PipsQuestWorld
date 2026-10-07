@@ -54,7 +54,7 @@ gui.Parent=player:WaitForChild("PlayerGui")
 
 local root=Instance.new("Frame");root.Size=UDim2.fromScale(1,1);root.BackgroundTransparency=1;root.Parent=gui
 
--- The UI is deliberately tiny. The classroom, teacher and Smartboard are the interface now.
+-- One phone-safe question panel. All choices remain visible beside the teacher.
 local progressChip=Instance.new("Frame")
 progressChip.Name="ProgressChip";progressChip.BackgroundColor3=P.green;progressChip.BackgroundTransparency=.04;progressChip.BorderSizePixel=0;progressChip.ZIndex=10;progressChip.Parent=root
 corner(progressChip,14);stroke(progressChip,P.gold,.18,1.2)
@@ -83,13 +83,12 @@ corner(answerBar,18);stroke(answerBar,P.green,.32,1.4)
 local subjectLine=text(answerBar,"Schoolwork",12,P.green,Enum.Font.GothamBold);subjectLine.TextXAlignment=Enum.TextXAlignment.Left;subjectLine.ZIndex=31
 local feedback=text(answerBar,"Take your time.",13,P.muted,Enum.Font.GothamMedium);feedback.TextXAlignment=Enum.TextXAlignment.Left;feedback.ZIndex=31
 local content=Instance.new("ScrollingFrame")
-content.Name="QuestionAndChoices";content.BackgroundTransparency=1;content.BorderSizePixel=0;content.ScrollBarThickness=4
+content.Name="QuestionAndHint";content.BackgroundTransparency=1;content.BorderSizePixel=0;content.ScrollBarThickness=4
 content.ScrollBarImageColor3=P.green;content.AutomaticCanvasSize=Enum.AutomaticSize.Y;content.CanvasSize=UDim2.new();content.ZIndex=31;content.Parent=answerBar
-local contentList=Instance.new("UIListLayout");contentList.Padding=UDim.new(0,10);contentList.SortOrder=Enum.SortOrder.LayoutOrder;contentList.Parent=content
 local promptText=text(content,"",17,P.ink,Enum.Font.GothamBold)
 promptText.Name="QuestionPrompt";promptText.LayoutOrder=0;promptText.TextXAlignment=Enum.TextXAlignment.Left;promptText.TextYAlignment=Enum.TextYAlignment.Top;promptText.ZIndex=32
-local answers=Instance.new("Frame");answers.BackgroundTransparency=1;answers.LayoutOrder=1;answers.ZIndex=31;answers.Parent=content
-local answerList=Instance.new("UIListLayout");answerList.SortOrder=Enum.SortOrder.LayoutOrder;answerList.Padding=UDim.new(0,8);answerList.Parent=answers
+local answers=Instance.new("Frame");answers.BackgroundTransparency=1;answers.LayoutOrder=1;answers.ZIndex=31;answers.Parent=answerBar
+local answerList=Instance.new("UIListLayout");answerList.SortOrder=Enum.SortOrder.LayoutOrder;answerList.Padding=UDim.new(0,6);answerList.Parent=answers
 local skip=Instance.new("TextButton")
 skip.Name="SkipQuestion";skip.BackgroundColor3=Color3.fromRGB(230,231,225);skip.Text="Skip";skip.TextColor3=P.muted;skip.Font=Enum.Font.GothamBold;skip.TextSize=13;skip.AutoButtonColor=true;skip.ZIndex=32;skip.Parent=answerBar
 corner(skip,10)
@@ -101,6 +100,7 @@ local busy=false
 local colors={P.blue,P.teal,P.amber,P.purple}
 local camera=Workspace.CurrentCamera
 local studyView=false
+local hasStudyCard=false
 
 local function setPlayerCamera()
     camera=Workspace.CurrentCamera
@@ -110,7 +110,7 @@ local function setPlayerCamera()
     camera.CameraType=Enum.CameraType.Custom
     if humanoid then camera.CameraSubject=humanoid end
     camera.FieldOfView=70
-    studyView=false
+    studyView=false;answerBar.Visible=false
     viewToggle.Text="Study view"
 end
 
@@ -122,7 +122,7 @@ local function setStudyCamera()
     camera.FieldOfView=framing.fov
     -- Teaching-corner composition: staff face and outfit are visible beside the answer panel; desks stay behind the camera.
     camera.CFrame=CFrame.lookAt(Vector3.new(table.unpack(framing.eye)),Vector3.new(table.unpack(framing.target)))
-    studyView=true
+    studyView=true;answerBar.Visible=hasStudyCard
     viewToggle.Text="Look around"
 end
 
@@ -157,11 +157,13 @@ local function makeAnswer(value:string,index:number)
     corner(b,13);stroke(b,color,.35,1.1)
 
     local badge=Instance.new("Frame")
-    badge.AnchorPoint=Vector2.new(0,.5);badge.Position=UDim2.new(0,8,.5,0);badge.Size=UDim2.fromOffset(30,30);badge.BackgroundColor3=color;badge.BorderSizePixel=0;badge.ZIndex=33;badge.Parent=b
+    badge.AnchorPoint=Vector2.new(0,.5);badge.Position=UDim2.new(0,8,.5,0);badge.Size=UDim2.fromOffset(24,24);badge.BackgroundColor3=color;badge.BorderSizePixel=0;badge.ZIndex=33;badge.Parent=b
     corner(badge,999)
     local bt=text(badge,string.char(64+index),14,Color3.new(1,1,1),Enum.Font.GothamBold);bt.Size=UDim2.fromScale(1,1);bt.ZIndex=34
 
-    local a=text(b,value,14,P.ink,Enum.Font.GothamBold);a.Name="ChoiceText";a.Position=UDim2.fromOffset(48,8);a.Size=UDim2.new(1,-58,1,-16);a.ZIndex=33
+    local a=text(b,value,14,P.ink,Enum.Font.GothamBold);a.Name="ChoiceText";a.Position=UDim2.fromOffset(40,4);a.Size=UDim2.new(1,-48,1,-8);a.ZIndex=33
+    a.TextScaled=true
+    local limit=Instance.new("UITextSizeConstraint");limit.MinTextSize=12;limit.MaxTextSize=16;limit.Parent=a
 
     b.Activated:Connect(function()
         if busy or not currentToken then return end
@@ -188,26 +190,21 @@ layout=function()
     teacherChip.Visible=teacherText.Text~="Teacher" and w>620
     entering.Size=UDim2.fromOffset(math.min(300,w-40),44);entering.Position=UDim2.new(.35,0,.35,0)
     answerBar.Size=UDim2.fromOffset(dims.width,dims.height);answerBar.Position=UDim2.new(1,-dims.right,1,-dims.bottom)
-    subjectLine.Position=UDim2.fromOffset(16,10);subjectLine.Size=UDim2.new(1,-32,0,20)
-    content.Position=UDim2.fromOffset(16,38);content.Size=UDim2.new(1,-32,1,-102)
-    local contentW=math.max(100,dims.width-38)
+    subjectLine.Position=UDim2.fromOffset(12,8);subjectLine.Size=UDim2.new(1,-24,0,18)
+    local contentW=math.max(100,dims.width-28)
     local stem=promptText:GetAttribute("Prompt") or ""
     promptText.Text=stem..(feedbackHint~="" and "\n\nHint: "..feedbackHint or "")
     local stemH=TextService:GetTextSize(promptText.Text,17,Enum.Font.GothamBold,Vector2.new(contentW,10000)).Y
+    local buttons={}
+    for _,b in ipairs(answers:GetChildren()) do if b:IsA("TextButton") then table.insert(buttons,b) end end
+    local area=Layout.questionArea(dims.height,#buttons,math.max(40,stemH+8))
+    content.Position=UDim2.fromOffset(12,34);content.Size=UDim2.new(1,-24,0,area.prompt)
     promptText.Size=UDim2.new(1,-6,0,math.max(32,stemH+8))
-    local total=0
-    for _,b in ipairs(answers:GetChildren()) do
-        if b:IsA("TextButton") then
-            local label=b:FindFirstChild("ChoiceText")
-            local value=label and label.Text or b.Text
-            local measured=TextService:GetTextSize(value,14,Enum.Font.GothamBold,Vector2.new(math.max(80,contentW-64),10000)).Y
-            local height=math.max(56,measured+24)
-            b.Size=UDim2.new(1,-6,0,height);total+=height+8
-        end
-    end
-    answers.Size=UDim2.new(1,0,0,math.max(56,total-8))
-    feedback.Position=UDim2.new(0,16,1,-54);feedback.Size=UDim2.new(1,-110,0,44)
-    skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-12,1,-10);skip.Size=UDim2.fromOffset(76,44)
+    answers.Position=UDim2.fromOffset(12,area.answerTop);answers.Size=UDim2.new(1,-24,0,area.answerTotal)
+    for _,b in ipairs(buttons) do b.Size=UDim2.new(1,0,0,area.answerHeight) end
+    feedback.Position=UDim2.new(0,12,1,-38);feedback.Size=UDim2.new(1,-94,0,30)
+    skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-10,1,-7);skip.Size=UDim2.fromOffset(70,32)
+
 end
 root:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)
 Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
@@ -239,7 +236,7 @@ local function showPayload(payload)
     if type(payload)~="table" then return end
     if payload.kind=="teacher_entering" then
         setProgress(payload.progress)
-        currentToken=nil;clearAnswers();answerBar.Visible=false
+        currentToken=nil;clearAnswers();hasStudyCard=false;answerBar.Visible=false
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
         enteringText.Text=(payload.teacher or "Teacher").." is coming in…";entering.Visible=true
         layout()
@@ -247,15 +244,15 @@ local function showPayload(payload)
         skip.Visible=true;entering.Visible=false;currentToken=payload.token;busy=false;feedbackHint="";feedback.Text="Take your time."
         promptText:SetAttribute("Prompt",payload.prompt or "");content.CanvasPosition=Vector2.new()
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
-        subjectLine.Text=(payload.subject or "Schoolwork").."  •  Choose an answer below"
+        subjectLine.Text=(payload.subject or "Schoolwork").."  •  Tap your answer"
         clearAnswers()
         for i,v in ipairs(payload.choices or {}) do makeAnswer(v,i) end
         setProgress(payload.progress)
-        layout();answerBar.Visible=true
+        hasStudyCard=true;layout();answerBar.Visible=studyView
     elseif payload.kind=="correct" then
         currentToken=nil;clearAnswers();feedbackHint="";feedback.Text="+1 star"
         promptText:SetAttribute("Prompt",payload.explanation or "Nice work, Emma!")
-        subjectLine.Text="Correct!";layout();answerBar.Visible=true;skip.Visible=false
+        subjectLine.Text="Correct!";hasStudyCard=true;layout();answerBar.Visible=studyView;skip.Visible=false
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher").."  •  Correct! ★"
         setProgress(payload.progress);starBurst()
     elseif payload.kind=="session_complete" then
@@ -266,7 +263,7 @@ local function showPayload(payload)
         skip.Visible=false
         feedback.Text="Nice work, Emma."
         setProgress(payload.progress)
-        layout();answerBar.Visible=true
+        hasStudyCard=true;layout();answerBar.Visible=studyView
         local again=Instance.new("TextButton");again.BackgroundColor3=P.green;again.TextColor3=P.gold;again.Text="Do another 10";again.Font=Enum.Font.GothamBold;again.TextSize=16;again.ZIndex=32;again.Parent=answers
         corner(again,13);stroke(again,P.gold,.25,1)
         again.Activated:Connect(function()
@@ -281,11 +278,13 @@ event.OnClientEvent:Connect(showPayload)
 
 skip.Activated:Connect(function()
     if currentToken and not busy then
-        busy=true
+        local skippedToken=currentToken
+        currentToken=nil;busy=true;feedback.Text="Next question…"
         local ok,res=pcall(function() return request:InvokeServer("skip") end)
-        if ok and res and res.ok then
-            currentToken=nil;clearAnswers();answerBar.Visible=false
-        else feedback.Text="Tap again to skip." end
+        -- A new question event can arrive before InvokeServer returns. Preserve it.
+        if not (ok and res and res.ok) and currentToken==nil then
+            currentToken=skippedToken;feedback.Text="Tap again to skip."
+        end
         busy=false
     end
 end)
