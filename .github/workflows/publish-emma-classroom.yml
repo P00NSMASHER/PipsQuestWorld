@@ -1,13 +1,7 @@
 name: Publish Emma Study Classroom
 
 on:
-  push:
-    branches:
-      - rebuild/emma-classroom-study-v1
-    paths:
-      - 'school/emma-classroom/**'
-      - 'school/emma-classroom.project.json'
-      - '.github/workflows/publish-emma-classroom.yml'
+  # Evidence-gated release: builds can run on every push, publishing is manual only.
   workflow_dispatch:
 
 permissions:
