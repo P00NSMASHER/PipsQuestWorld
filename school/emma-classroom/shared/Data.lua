@@ -10,13 +10,14 @@ Data.Focus = "Reading test Oct. 7 • Spelling/Handwriting + Grammar tests Oct. 
 Data.SourceCommit = "b9c7e3fcc4c90463eaf05bea0d527b7f72df1688"
 
 Data.Teachers = {
-    {name="Mrs. Benulis", role="Second Grade", shirt={37,92,66}, weight=5},
-    {name="Mrs. Russek", role="First Grade", shirt={43,80,122}, weight=2},
-    {name="Mrs. Kochol", role="Art / After School", shirt={112,73,132}, weight=2},
-    {name="Mr. Bolich", role="Technology / PE", shirt={45,67,92}, weight=2},
-    {name="Mrs. Boyer", role="Catholicity & Mission", shirt={74,103,91}, weight=2},
-    {name="Mrs. Thompson", role="Administrative Assistant", shirt={78,109,134}, weight=1},
-    {name="Dr. McBreen", role="Principal", shirt={35,45,61}, weight=1},
+    -- Stylized native-Roblox visual profiles. These are intentionally distinct silhouettes, not claims of portrait-exact likeness.
+    {name="Mrs. Benulis", role="Second Grade", shirt={37,92,66}, weight=5, skin={229,194,163}, hair={92,55,36}, hairStyle="waves", glasses=false, accent={246,215,126}},
+    {name="Mrs. Russek", role="First Grade", shirt={43,80,122}, weight=2, skin={232,199,169}, hair={155,105,61}, hairStyle="long", glasses=false, accent={224,230,238}},
+    {name="Mrs. Kochol", role="Art / After School", shirt={112,73,132}, weight=2, skin={228,193,163}, hair={197,155,91}, hairStyle="bob", glasses=true, accent={244,191,216}},
+    {name="Mr. Bolich", role="Technology / PE", shirt={45,67,92}, weight=2, skin={222,184,151}, hair={74,52,40}, hairStyle="short", glasses=false, accent={188,215,235}},
+    {name="Mrs. Boyer", role="Catholicity & Mission", shirt={74,103,91}, weight=2, skin={229,195,166}, hair={82,59,48}, hairStyle="ponytail", glasses=false, accent={241,214,124}},
+    {name="Mrs. Thompson", role="Administrative Assistant", shirt={78,109,134}, weight=1, skin={232,199,170}, hair={186,145,99}, hairStyle="shoulder", glasses=true, accent={226,236,241}},
+    {name="Dr. McBreen", role="Principal", shirt={35,45,61}, weight=1, skin={220,181,150}, hair={118,104,94}, hairStyle="short", glasses=true, accent={242,205,103}},
 }
 
 Data.Questions = {
