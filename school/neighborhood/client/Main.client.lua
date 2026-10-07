@@ -10,6 +10,7 @@ local player=Players.LocalPlayer
 local shared=ReplicatedStorage:WaitForChild("NeighborhoodShared")
 local Catalog=require(shared:WaitForChild("Catalog"))
 local Layout=require(shared:WaitForChild("Layout"))
+local FeaturePanelController=require(shared:WaitForChild("FeaturePanelController"))
 local UI=require(script.Parent:WaitForChild("UI"))
 local remotes=ReplicatedStorage:WaitForChild("NeighborhoodRemotes")
 local request=remotes:WaitForChild("Request")
@@ -68,6 +69,20 @@ UI.new("UIPadding",body,{PaddingRight=UDim.new(0,4),PaddingBottom=UDim.new(0,12)
 -- Sticky shop controls live outside the scrolling content.
 local shopTabs=UI.new("Frame",panel,{Name="ShopTabs",Visible=false,Position=UDim2.fromOffset(14,54),Size=UDim2.new(1,-28,0,42),BackgroundTransparency=1})
 local shopSubtabs=UI.new("Frame",panel,{Name="ShopSubtabs",Visible=false,Position=UDim2.fromOffset(14,99),Size=UDim2.new(1,-28,0,34),BackgroundTransparency=1})
+
+local panelController=FeaturePanelController.new()
+panelController:register("focus",{
+    show=function()
+        panel.Visible=true
+        goalCard.Visible=false
+        return true
+    end,
+    hide=function()
+        panel.Visible=false
+        shopTabs.Visible=false
+        shopSubtabs.Visible=false
+    end,
+})
 
 local toast=UI.frame(canvas,{Name="Notice",Visible=false,AnchorPoint=Vector2.new(.5,1),Position=UDim2.new(.5,0,1,-10),Size=UDim2.new(0,390,0,48),BackgroundColor3=UI.P.ink,ZIndex=30})
 UI.corner(toast,UI.R.chip)
@@ -139,7 +154,7 @@ local function call(command,args)
 end
 local function close(notifyServer)
     local wasQuiz=view=="quiz"
-    panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false
+    panelController:close("user_close")
     goalCard.Visible=player:GetAttribute("NeighborhoodDriving")~=true and locationCommand~="school"
     view=nil;activeQuestion=nil
     if setNavActive then setNavActive(locationCommand) end
@@ -147,7 +162,8 @@ local function close(notifyServer)
 end
 UI.button(panelHeader,"×",function() close() end,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,7),Size=UDim2.fromOffset(36,36),TextSize=22,BackgroundColor3=UI.P.paper,TextColor3=UI.P.ink,CornerRadius=999,ZIndex=5})
 local function open(kind,title)
-    view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero;panel.Visible=true;goalCard.Visible=false
+    view=kind;panelTitle.Text=title;UI.clear(body);body.CanvasPosition=Vector2.zero
+    panelController:restore("focus","open")
     panelScale.Scale=.975
     TweenService:Create(panelScale,TweenInfo.new(.18,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Scale=1}):Play()
     local isShop=kind=="shop"
@@ -848,13 +864,24 @@ local function reflow()
     header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
     local compactLandscape=layout.compactLandscape
+    local referenceHud=layout.referenceHud==true
     avatar.Visible=not compactLandscape
     nameText.Visible=not compactLandscape
     gradeText.Visible=not compactLandscape
-    wallet.AnchorPoint=compactLandscape and Vector2.new(.5,0) or Vector2.new(1,0)
-    wallet.Position=compactLandscape and UDim2.new(.5,0,0,3) or UDim2.new(1,-7,0,8)
-    wallet.Size=UDim2.fromOffset(compactLandscape and 94 or 104,compactLandscape and 28 or 34)
-    walletText.TextSize=compactLandscape and 12 or 15
+    if referenceHud then
+        avatar.Visible=false
+        nameText.Visible=false
+        gradeText.Visible=false
+        wallet.AnchorPoint=Vector2.new(.5,.5)
+        wallet.Position=UDim2.fromScale(.5,.5)
+        wallet.Size=UDim2.fromOffset(math.max(82,layout.rail.width-16),30)
+        walletText.TextSize=12
+    else
+        wallet.AnchorPoint=compactLandscape and Vector2.new(.5,0) or Vector2.new(1,0)
+        wallet.Position=compactLandscape and UDim2.new(.5,0,0,3) or UDim2.new(1,-7,0,8)
+        wallet.Size=UDim2.fromOffset(compactLandscape and 94 or 104,compactLandscape and 28 or 34)
+        walletText.TextSize=compactLandscape and 12 or 15
+    end
     goalInfo.Visible=not compactLandscape
     goalTrack.Visible=not compactLandscape
     if compactLandscape then
@@ -879,14 +906,19 @@ local function reflow()
         nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
         streakPill.Visible=false
         for i,b in ipairs(navButtons) do
-            b.Size=compactLandscape and UDim2.fromOffset(50,38) or UDim2.new(1,0,0,38)
-            b.Position=compactLandscape and UDim2.fromOffset(4,(i-1)*42+4) or UDim2.fromOffset(0,(i-1)*42)
+            local buttonSize=layout.navButtonSize or 38
+            b.Size=UDim2.fromOffset(buttonSize,buttonSize)
+            b.Position=UDim2.fromOffset(
+                math.floor((layout.nav.width-buttonSize)/2),
+                math.floor((i-1)*(buttonSize+layout._responsive.railGap))
+            )
             local label=b:FindFirstChild("Label")
             local iconBox=b:FindFirstChild("IconBox")
-            if label and label:IsA("TextLabel") then label.Visible=not compactLandscape end
+            if label and label:IsA("TextLabel") then label.Visible=false end
             if iconBox and iconBox:IsA("Frame") then
-                iconBox.Position=compactLandscape and UDim2.fromOffset(11,5) or UDim2.fromOffset(5,7)
-                iconBox.Size=UDim2.fromOffset(28,28)
+                local iconSize=math.min(30,buttonSize-8)
+                iconBox.Position=UDim2.fromOffset(math.floor((buttonSize-iconSize)/2),math.floor((buttonSize-iconSize)/2))
+                iconBox.Size=UDim2.fromOffset(iconSize,iconSize)
             end
         end
     elseif layout.narrow then
@@ -987,12 +1019,15 @@ end)
 player:GetAttributeChangedSignal("NeighborhoodDriving"):Connect(function()
     local isDriving=player:GetAttribute("NeighborhoodDriving")==true
     driving.Visible=isDriving
+    nav.Visible=not isDriving
     if isDriving then
         if setNavActive then setNavActive("vehicle") end
         goalCard.Visible=false
-        panel.Visible=false;shopTabs.Visible=false;shopSubtabs.Visible=false;view=nil
+        panelController:reset("driving")
+        view=nil
     else
         table.clear(held);table.clear(heldInputs)
+        nav.Visible=true
         if setNavActive then setNavActive(locationCommand) end
         if not panel.Visible then goalCard.Visible=locationCommand~="school" end
     end
