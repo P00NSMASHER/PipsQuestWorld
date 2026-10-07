@@ -248,6 +248,29 @@ local function hallBench(parent,name,position)
     end
 end
 
+local function lockerBank(parent,name,position,inward,tint)
+    local body=World.part(parent,name.." body",Vector3.new(.92,6.5,12.2),CFrame.new(position+Vector3.new(0,3.4,0)),tint,Enum.Material.Metal,false)
+    body.CanQuery=false;body.CanTouch=false
+    local frontX=position.X+inward*.53
+    for i=1,5 do
+        local z=position.Z-4.8+(i-1)*2.4
+        local door=World.part(parent,name.." door",Vector3.new(.12,5.7,2.12),CFrame.new(frontX,position.Y+3.45,z),tint:Lerp(Color3.fromRGB(245,245,242),.08),Enum.Material.Metal,false)
+        door.CanQuery=false;door.CanTouch=false
+        World.part(parent,name.." vent",Vector3.new(.07,.14,.72),CFrame.new(frontX+inward*.08,position.Y+5.35,z),Color3.fromRGB(78,84,90),Enum.Material.Metal,false)
+        World.part(parent,name.." handle",Vector3.new(.08,.52,.12),CFrame.new(frontX+inward*.09,position.Y+3.25,z+.72),palette.gold,Enum.Material.Metal,false)
+    end
+    World.part(parent,name.." top cap",Vector3.new(1.12,.28,12.5),CFrame.new(position.X,position.Y+6.72,position.Z),palette.wood,Enum.Material.Wood,false)
+    World.part(parent,name.." toe kick",Vector3.new(1.02,.38,12.35),CFrame.new(position.X,position.Y+.22,position.Z),Color3.fromRGB(62,68,73),Enum.Material.Metal,false)
+end
+
+local function framedHallPanel(parent,name,text,cf,size,tint)
+    local frame=World.part(parent,name.." frame",size+Vector3.new(.8,.8,.22),cf,palette.wood,Enum.Material.Wood,false)
+    frame.CanQuery=false;frame.CanTouch=false
+    local face=sign(parent,text,cf*CFrame.new(0,0,-.18),size,tint,palette.cream)
+    face.Name=name
+    return face
+end
+
 local function npc(parent,name,position,suit,tint)
     local model=Instance.new("Model");model.Name=name;model.Parent=parent
     local skin=Color3.fromRGB(226,196,164)
@@ -298,6 +321,26 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     end
     World.part(m,"Classroom doorway header",Vector3.new(.42,.55,13.1),CFrame.new(hallX+wallInset,floorY+10.15,z),trim,Enum.Material.Wood,false)
 
+    -- Finished paired classroom doors: visible glass, hardware and school-blue panels without blocking touch navigation.
+    local doorX=hallX+wallInset*1.18
+    for _,offset in ipairs({-3.25,3.25}) do
+        local door=World.part(m,"Classroom door leaf",Vector3.new(.3,9.15,5.5),CFrame.new(doorX,floorY+5,z+offset),Color3.fromRGB(67,88,108),Enum.Material.Wood,false)
+        door.CanQuery=false;door.CanTouch=false
+        local vision=World.part(m,"Classroom vision glass",Vector3.new(.12,3.45,2.55),CFrame.new(doorX-wallInset*.25,floorY+7.25,z+offset),Color3.fromRGB(159,188,198),Enum.Material.Glass,false)
+        vision.Transparency=.22;vision.CanQuery=false;vision.CanTouch=false
+        World.part(m,"Classroom door kick plate",Vector3.new(.12,1.05,4.9),CFrame.new(doorX-wallInset*.26,floorY+1.05,z+offset),palette.metal,Enum.Material.Metal,false)
+        World.part(m,"Classroom door handle",Vector3.new(.16,.65,.16),CFrame.new(doorX-wallInset*.32,floorY+4.5,z+offset+(offset<0 and 1.8 or -1.8)),palette.gold,Enum.Material.Metal,false)
+    end
+
+    -- A finished acoustic ceiling keeps rooms from reading like open boxes while preserving the full playable height.
+    World.part(m,"Classroom acoustic ceiling",Vector3.new(roomWidth-.9,.28,roomDepth-.9),CFrame.new(x,floorY+13.76,z),Color3.fromRGB(246,244,237),Enum.Material.SmoothPlastic,false)
+    for _,dx in ipairs({-16,-8,0,8,16}) do
+        World.part(m,"Classroom ceiling grid V",Vector3.new(.06,.06,roomDepth-1.2),CFrame.new(x+dx,floorY+13.58,z),Color3.fromRGB(202,203,199),Enum.Material.Metal,false)
+    end
+    for _,dz in ipairs({-20,-10,0,10,20}) do
+        World.part(m,"Classroom ceiling grid H",Vector3.new(roomWidth-1.2,.06,.06),CFrame.new(x,floorY+13.58,z+dz),Color3.fromRGB(202,203,199),Enum.Material.Metal,false)
+    end
+
     -- A proper whiteboard and teaching wall replace the giant floating-looking room sign.
     World.part(m,"Classroom whiteboard",Vector3.new(33,7,.32),CFrame.new(x,floorY+8,z-roomDepth/2+.6),Color3.fromRGB(248,248,243),Enum.Material.SmoothPlastic,false)
     World.part(m,"Whiteboard top frame",Vector3.new(34,.32,.42),CFrame.new(x,floorY+11.6,z-roomDepth/2+.35),palette.metal,Enum.Material.Metal,false)
@@ -306,6 +349,10 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     local boardCf=CFrame.new(x,floorY+8,z-roomDepth/2+.82)*CFrame.Angles(0,math.pi,0)
     sign(m,"ASSUMPTION BVM  •  "..title.."\n"..teacher,boardCf,Vector3.new(27,4,.18),palette.navy,palette.cream)
     cross(m,CFrame.new(x+20,floorY+10,z-roomDepth/2+.45),.38,palette.gold)
+    World.part(m,"Whiteboard marker blue",Vector3.new(1.1,.12,.14),CFrame.new(x-3,floorY+4.42,z-roomDepth/2+.9),palette.navy,nil,false)
+    World.part(m,"Whiteboard marker green",Vector3.new(1.1,.12,.14),CFrame.new(x-1.5,floorY+4.42,z-roomDepth/2+.9),palette.green,nil,false)
+    World.part(m,"Whiteboard eraser",Vector3.new(1.5,.24,.55),CFrame.new(x+1,floorY+4.42,z-roomDepth/2+.92),Color3.fromRGB(75,79,83),Enum.Material.Fabric,false)
+    framedHallPanel(m,"Classroom mission panel","FAITH • LEARNING • SERVICE",CFrame.new(x-18,floorY+10,z-roomDepth/2+.62)*CFrame.Angles(0,math.pi,0),Vector3.new(9,3,.16),palette.green)
 
     -- Teacher zone, rug, storage and small lived-in details.
     local teacherDeskX=x+(x<0 and -13 or 13)
@@ -335,6 +382,11 @@ local function classroom(root,id,title,teacher,x,floorY,tint,active)
     local studentWork=sign(m,"STUDENT WORK\n★  CREATE  •  TRY  •  GROW  ★",studentWorkCf,Vector3.new(16,6,.22),tint,palette.cream)
     studentWork.Name="Student work board"
     interiorPlant(m,"Classroom plant",Vector3.new(x+(x<0 and -20 or 20),floorY,z+23))
+    World.part(m,"Classroom reading bench",Vector3.new(10,1.15,3),CFrame.new(x+(x<0 and 15 or -15),floorY+1,z+22.5),tint:Lerp(palette.cream,.35),Enum.Material.Fabric,false)
+    World.part(m,"Classroom reading bench back",Vector3.new(10,2.3,.45),CFrame.new(x+(x<0 and 15 or -15),floorY+2.25,z+23.8),tint:Lerp(palette.cream,.25),Enum.Material.Fabric,false)
+    local trash=World.part(m,"Classroom trash bin",Vector3.new(2.1,2.7,2.1),CFrame.new(x+(x<0 and 20 or -20),floorY+1.4,z-23),Color3.fromRGB(92,101,105),Enum.Material.Metal,false)
+    trash.Shape=Enum.PartType.Cylinder
+    framedHallPanel(m,"Classroom values panel","BE KIND\nBE CURIOUS\nDO YOUR BEST",CFrame.new(outerDisplayX,floorY+8,z-10)*CFrame.Angles(0,x<0 and math.pi/2 or -math.pi/2,0),Vector3.new(12,6,.18),palette.navy)
 
     -- Nine student stations remain roomy enough for mobile navigation.
     for _,dx in ipairs({-11,0,11}) do
@@ -879,6 +931,14 @@ function World.build()
 
         -- Practical school details keep the corridor from reading like an empty tunnel.
         hallBench(root,"Hall bench",Vector3.new(-18,floorY,-48))
+        local storageTint=index==1 and Color3.fromRGB(161,123,86) or Color3.fromRGB(62,83,105)
+        lockerBank(root,index==1 and "Lower hall cubby bank" or "Upper hall locker bank",Vector3.new(22.2,floorY,-126),-1,storageTint)
+        lockerBank(root,index==1 and "Lower hall cubby bank" or "Upper hall locker bank",Vector3.new(-22.2,floorY,-56),1,storageTint)
+        framedHallPanel(root,index==1 and "Hall welcome gallery" or "Hall student gallery",
+            index==1 and "WELCOME\nYOU BELONG HERE" or index==2 and "STUDENT WORK\nEFFORT • GROWTH • KINDNESS" or "ABVM VALUES\nLEAD • SERVE • BELIEVE",
+            CFrame.new(22.78,floorY+8,-87)*CFrame.Angles(0,-math.pi/2,0),Vector3.new(15,6,.18),index==2 and palette.green or palette.navy)
+        World.part(root,"Hall baseboard west",Vector3.new(.24,.55,95),CFrame.new(-22.82,floorY+.48,-92),Color3.fromRGB(117,88,65),Enum.Material.Wood,false)
+        World.part(root,"Hall baseboard east",Vector3.new(.24,.55,95),CFrame.new(22.82,floorY+.48,-92),Color3.fromRGB(117,88,65),Enum.Material.Wood,false)
         World.part(root,"Water fountain body",Vector3.new(2.8,3.4,1.5),CFrame.new(20.9,floorY+1.8,-51),Color3.fromRGB(173,181,184),Enum.Material.Metal,false)
         World.part(root,"Water fountain basin",Vector3.new(2.5,.35,2.1),CFrame.new(20.9,floorY+3.45,-50.6),Color3.fromRGB(206,213,214),Enum.Material.Metal,false)
         local hallArt=sign(root,index==1 and "WELCOME TO ABVM\nFAITH • LEARNING • SERVICE" or index==2 and "STUDENT SPOTLIGHT\nCREATE • LEARN • GROW" or "LEAD WITH KINDNESS\nWORK HARD • SERVE OTHERS",
@@ -925,6 +985,10 @@ function World.build()
     crest(root,"Lobby ABVM crest",CFrame.new(0,18,-39)*CFrame.Angles(0,math.pi,0),7)
 
     -- Lobby now reads as a finished school entrance instead of exposed base geometry.
+    World.part(root,"Lobby acoustic ceiling",Vector3.new(136,.3,37),CFrame.new(0,17.85,-56),Color3.fromRGB(245,243,236),Enum.Material.SmoothPlastic,false)
+    for _,x in ipairs({-48,-24,0,24,48}) do
+        World.part(root,"Lobby ceiling beam",Vector3.new(.12,.08,36),CFrame.new(x,17.65,-56),Color3.fromRGB(203,204,200),Enum.Material.Metal,false)
+    end
     World.part(root,"Lobby terrazzo floor",Vector3.new(136,.14,38),CFrame.new(0,4.43,-56),Color3.fromRGB(228,225,216),Enum.Material.SmoothPlastic,false)
     World.part(root,"Lobby navy inlay",Vector3.new(4,.05,36),CFrame.new(0,4.52,-56),palette.navy,nil,false)
     for _,x in ipairs({-2.35,2.35}) do World.part(root,"Lobby gold inlay",Vector3.new(.24,.055,36),CFrame.new(x,4.53,-56),palette.gold,nil,false) end
@@ -941,7 +1005,11 @@ function World.build()
     World.part(root,"Assistant partition",Vector3.new(1,11,18),CFrame.new(-29,9.5,-63),palette.cream)
     -- Keep broad openings on the lobby side for mobile traversal.
     World.part(root,"Main Office counter",Vector3.new(27,3.5,4),CFrame.new(-59,6,-48),palette.wood,Enum.Material.Wood)
+    World.part(root,"Lobby reception front",Vector3.new(24,2.65,.28),CFrame.new(-59,6.1,-45.85),palette.navy,Enum.Material.SmoothPlastic,false)
+    World.part(root,"Lobby reception gold band",Vector3.new(24,.2,.34),CFrame.new(-59,6.95,-45.68),palette.gold,Enum.Material.Metal,false)
+    crest(root,"Reception crest",CFrame.new(-59,6.1,-45.5)*CFrame.Angles(0,math.pi,0),3.4)
     World.part(root,"Office waiting bench",Vector3.new(10,1.1,2.6),CFrame.new(-28,5,-49),Color3.fromRGB(103,117,130),Enum.Material.Fabric)
+    World.part(root,"Office waiting bench back",Vector3.new(10,2.2,.42),CFrame.new(-28,6,-50.1),Color3.fromRGB(91,105,119),Enum.Material.Fabric,false)
     World.part(root,"Principal desk",Vector3.new(10,2.2,4),CFrame.new(-37,5.3,-65),palette.wood,Enum.Material.Wood)
     World.part(root,"Assistant desk",Vector3.new(10,2.2,4),CFrame.new(-21,5.3,-65),palette.wood,Enum.Material.Wood)
     World.part(root,"Main Office runner",Vector3.new(43,.12,18),CFrame.new(-49,4.55,-60),Color3.fromRGB(54,72,95),Enum.Material.Fabric,false)
@@ -977,6 +1045,9 @@ function World.build()
         cup.Shape=Enum.PartType.Ball
     end
     sign(root,"ASSUMPTION BVM\nFAITH • SERVICE • LEARNING",CFrame.new(-17,9,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(24,5,.2),palette.green,palette.gold)
+    framedHallPanel(root,"Lobby mission frame","SMALL SCHOOL\nBIG MISSION",CFrame.new(8,9,-41.75)*CFrame.Angles(0,math.pi,0),Vector3.new(14,5,.18),palette.navy)
+    interiorPlant(root,"Lobby east plant",Vector3.new(63,4,-43))
+    interiorPlant(root,"Lobby west plant",Vector3.new(-66,4,-43))
     sign(root,"SCHOOL INFO",CFrame.new(44,13.1,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(17,2.4,.2),palette.navy,palette.gold)
     sign(root,"1  MAIN OFFICE • MATH • READING",CFrame.new(44,10.4,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.2,.2),palette.green,palette.cream)
     sign(root,"2  GRAMMAR • RELIGION",CFrame.new(44,8,-41.8)*CFrame.Angles(0,math.pi,0),Vector3.new(31,2.2,.2),palette.navy,palette.cream)
