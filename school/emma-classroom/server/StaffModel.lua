@@ -140,6 +140,10 @@ function StaffModel.create(teacher)
     if teacher.beard then
         local beard=rgb(teacher.beard)
         local long=isBolich
+        if long then
+            oval("Continuous beard underlay",Vector3.new(1.86,.72,.37),CFrame.new(0,3.24,-.87),beard)
+            for _,side in ipairs({-1,1}) do oval("Beard cheek contour",Vector3.new(.30,.72,.30),CFrame.new(side*.79,3.66,-.85),beard) end
+        end
         for i=0,6 do
             local x=-.78+i*.26
             local drop=long and (.45+.25*(1-math.abs(x))) or .12
@@ -206,7 +210,7 @@ function StaffModel.create(teacher)
         local legGroup=side<0 and "leftLeg" or "rightLeg"
         local x=side*2.02
         local short=clothes=="polo"
-        rounded(side<0 and "Left Arm" or "Right Arm",Vector3.new(1.03,2.65,1.40),CFrame.new(x,1.58,0),short and skin or shirt,armGroup,.16)
+        rounded(side<0 and "Left Arm" or "Right Arm",Vector3.new(1.03,short and 1.60 or 2.65,1.40),CFrame.new(x,short and 1.12 or 1.58,0),short and skin or shirt,armGroup,.16)
         rounded("Sleeve shoulder",Vector3.new(1.09,short and 1.13 or 2.05,1.46),CFrame.new(x,short and 2.31 or 1.85,0),shirt,armGroup,.17)
         box("Sleeve hem",Vector3.new(1.10,.08,1.47),CFrame.new(x,short and 1.75 or .85,0),shirt:Lerp(WHITE,.09),armGroup,Enum.Material.Fabric)
         if formal then box("Shirt cuff",Vector3.new(1.02,.16,1.41),CFrame.new(x,.65,0),accent,armGroup,Enum.Material.Fabric) end

@@ -123,7 +123,10 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(groups.leftArm>=14 and groups.rightArm>=14 and groups.leftLeg>=6 and groups.rightLeg>=6)
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
     assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.8, "World label must scale in studs rather than fixed pixels")
-    if teacher.name=="Mr. Bolich" then assert(counts["Beard strand"]==7 and counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
+    if teacher.name=="Mr. Bolich" then
+        assert(m:FindFirstChild("Left Arm").CFrame.Position.Y+m:FindFirstChild("Left Arm").Size.Y/2 < 2*m:GetScale(),"Skin forearm must stay below the polo shoulder")
+        assert(counts["Continuous beard underlay"]==1 and counts["Beard cheek contour"]==2)
+        assert(counts["Beard strand"]==7 and counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
     if teacher.name=="Dr. McBreen" then assert(counts["Tie diagonal stripe"]==5 and counts["Notched jacket lapel"]==2) end
     if teacher.name=="Mrs. Boyer" then assert(counts["Pearl earring"]==2 and counts["Gold mission pin"]==1) end
     local arm=m:FindFirstChild("Left Arm")
