@@ -620,6 +620,10 @@ function World.build()
     World.part(root,"Flat black roof",Vector3.new(154,1,114),CFrame.new(0,52.5,-90),Color3.fromRGB(45,47,48),Enum.Material.Slate)
     World.part(root,"Roof parapet front",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-34.5),palette.brick,Enum.Material.Brick)
     World.part(root,"Roof parapet back",Vector3.new(154,2.5,1.2),CFrame.new(0,53.5,-145.5),palette.brick,Enum.Material.Brick)
+    World.part(root,"Roof parapet west",Vector3.new(1.2,2.5,112),CFrame.new(-76.5,53.5,-90),palette.brick,Enum.Material.Brick)
+    World.part(root,"Roof parapet east",Vector3.new(1.2,2.5,112),CFrame.new(76.5,53.5,-90),palette.brick,Enum.Material.Brick)
+    World.part(root,"East side stone cornice",Vector3.new(2.1,1.05,111),CFrame.new(75.7,51.3,-90),palette.stone,Enum.Material.Concrete,false)
+    World.part(root,"West side stone cornice",Vector3.new(2.1,1.05,111),CFrame.new(-75.7,51.3,-90),palette.stone,Enum.Material.Concrete,false)
     -- Reference-visible roofline rhythm, chimney stack and simple roof vents.
     for _,x in ipairs({-66,-44,-22,0,22,44,66}) do
         World.part(root,"Front parapet cap",Vector3.new(4.2,2.2,2.3),CFrame.new(x,55,-34.7),palette.stone,Enum.Material.Concrete,false)
@@ -627,6 +631,12 @@ function World.build()
     for _,x in ipairs({-66,-34,0,34,66}) do
         World.part(root,"Gold standard parapet pier",Vector3.new(4.4,4.6,2.5),CFrame.new(x,55.7,-34.65),palette.brickDark,Enum.Material.Brick,false)
         World.part(root,"Gold standard parapet pier cap",Vector3.new(5.4,1.05,3.2),CFrame.new(x,58.45,-34.65),palette.stone,Enum.Material.Concrete,false)
+    end
+    for _,side in ipairs({-1,1}) do
+        for _,z in ipairs({-137,-112,-87,-62,-39}) do
+            World.part(root,"Gold standard side parapet pier",Vector3.new(2.5,4.2,4.4),CFrame.new(side*76.45,55.5,z),palette.brickDark,Enum.Material.Brick,false)
+            World.part(root,"Gold standard side parapet cap",Vector3.new(3.2,1.0,5.4),CFrame.new(side*76.45,58.1,z),palette.stone,Enum.Material.Concrete,false)
+        end
     end
     World.part(root,"Brick chimney",Vector3.new(11,20,11),CFrame.new(62,62,-57),palette.brickDark,Enum.Material.Brick)
     World.part(root,"Chimney cap",Vector3.new(12.5,1.4,12.5),CFrame.new(62,72.4,-57),palette.stone,Enum.Material.Concrete)
