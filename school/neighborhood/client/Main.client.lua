@@ -11,6 +11,8 @@ local shared=ReplicatedStorage:WaitForChild("NeighborhoodShared")
 local Catalog=require(shared:WaitForChild("Catalog"))
 local Layout=require(shared:WaitForChild("Layout"))
 local UI=require(script.Parent:WaitForChild("UI"))
+local PortraitPixels=require(shared:WaitForChild("PortraitPixels"))
+local PortraitRenderer=require(shared:WaitForChild("PortraitRenderer"))
 local remotes=ReplicatedStorage:WaitForChild("NeighborhoodRemotes")
 local request=remotes:WaitForChild("Request")
 local changed=remotes:WaitForChild("Changed")
@@ -197,6 +199,32 @@ end
 
 local function facultyViewport(parent,staff,props)
     props=props or {}
+
+    -- Directory cards use the baked school portrait directly. Full profiles still use the
+    -- 3D Roblox NPC, whose face plate carries the same portrait data.
+    if props.Headshot then
+        local portrait=PortraitPixels[staff.id]
+        if type(portrait)=="table" and type(portrait.rows)=="table" and #portrait.rows>0 then
+            local photo=UI.frame(parent,{
+                Name="FacultyPortraitPhoto",
+                Position=props.Position or UDim2.new(),
+                Size=props.Size or UDim2.new(1,0,1,0),
+                BackgroundColor3=UI.P.navySoft,
+                ClipsDescendants=true,
+                ZIndex=props.ZIndex or 2,
+            })
+            UI.corner(photo,props.CornerRadius or 14)
+            PortraitRenderer.render(photo,portrait,{
+                Name="PhotoPixels",
+                Position=UDim2.fromScale(.03,.03),
+                Size=UDim2.fromScale(.94,.94),
+                CornerRadius=props.CornerRadius or 12,
+                ZIndex=(props.ZIndex or 2)+1,
+            })
+            return photo
+        end
+    end
+
     local viewport=UI.new("ViewportFrame",parent,{
         Name="FacultyPortrait",
         Position=props.Position or UDim2.new(),
@@ -307,7 +335,7 @@ showFaculty=function()
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
-    UI.text(body,"All 18 staff members are modeled in the school. Tap any 3D portrait for the full profile, or walk up to that person and use Meet.",12,{
+    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. Tap any portrait for the full 3D profile, or walk up to that person and use Meet.",12,{
         LayoutOrder=2,Size=UDim2.new(1,0,0,44),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
     })
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
