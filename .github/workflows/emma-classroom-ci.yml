@@ -38,7 +38,7 @@ jobs:
           echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
           unzip -q luau.zip -d luau
           unzip -q rojo.zip -d rojo
-          chmod +x luau/luau-compile rojo/rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
 
       - name: Compile classroom source
         shell: bash
@@ -55,18 +55,25 @@ jobs:
           test -f school/emma-classroom.project.json
           grep -q 'EmmaStudyClassroom' school/emma-classroom.project.json
           grep -q 'Data.PlayerName = "Emma"' school/emma-classroom/shared/Data.lua
-          grep -q 'Data.Questions = {' school/emma-classroom/shared/Data.lua
-          test "$(grep -c 'priority=' school/emma-classroom/shared/Data.lua)" -ge 100
+          grep -q 'local Questions = {' school/emma-classroom/server/QuestionBank.lua
+          ! grep -q 'answer=' school/emma-classroom/shared/*.lua
+          test "$(grep -c 'priority=' school/emma-classroom/server/QuestionBank.lua)" -ge 100
           grep -q 'SESSION_GOAL=10' school/emma-classroom/server/Main.server.lua
           grep -q 'teacherModel' school/emma-classroom/server/Main.server.lua
-          grep -q 'World.moveTeacher' school/emma-classroom/server/Main.server.lua
+          grep -q 'World.walkTeacher' school/emma-classroom/server/Main.server.lua
+          grep -q 'camera.CameraType=Enum.CameraType.Custom' school/emma-classroom/client/Main.client.lua
           grep -q 'camera.CameraType=Enum.CameraType.Scriptable' school/emma-classroom/client/Main.client.lua
+          grep -q 'viewToggle' school/emma-classroom/client/Main.client.lua
+          grep -q 'hum.WalkSpeed=16' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.WalkSpeed=0' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.JumpPower=0' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.AutoRotate=false' school/emma-classroom/server/Main.server.lua
           grep -q 'answerBar' school/emma-classroom/client/Main.client.lua
           ! grep -q 'QuestionCard' school/emma-classroom/client/Main.client.lua
           grep -q 'Emma desk nameplate' school/emma-classroom/server/World.lua
           grep -q 'Interactive smartboard' school/emma-classroom/server/World.lua
           grep -q 'Class values' school/emma-classroom/server/World.lua
-          grep -q 'Staff badge' school/emma-classroom/server/World.lua
+          grep -q 'Staff badge' school/emma-classroom/server/StaffModel.lua
           grep -q 'Speech' school/emma-classroom/server/World.lua
           grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
           grep -q 'Staff door jamb' school/emma-classroom/server/World.lua
@@ -77,6 +84,12 @@ jobs:
           grep -q 'Tall storage cabinet' school/emma-classroom/server/World.lua
           ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
 
+      - name: Question bank and device layout tests
+        run: |
+          "$RUNNER_TEMP/tools/luau/luau" school/emma-classroom/tests/core.spec.lua
+          python3 school/emma-classroom/tests/server_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Build isolated place
         shell: bash
         run: |
@@ -84,3 +97,15 @@ jobs:
           "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxl"
           test -s "$RUNNER_TEMP/emma-study.rbxl"
           sha256sum "$RUNNER_TEMP/emma-study.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxlx"
+          python3 school/emma-classroom/tests/verify_place.py "$RUNNER_TEMP/emma-study.rbxlx"
+
+      - name: Save reviewable classroom build
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-classroom-candidate-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/emma-study.rbxl
+            ${{ runner.temp }}/emma-study.rbxlx
+          retention-days: 14
+          if-no-files-found: error

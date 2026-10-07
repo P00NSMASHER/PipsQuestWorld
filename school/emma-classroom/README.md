@@ -51,7 +51,9 @@ Teacher/staff quality target:
 - distinct stylized Roblox silhouettes rather than colored rectangles
 - face, hair, hands, shoes, clothing layers, lanyard, staff badge and classroom prop
 - smooth walk-in/walk-out motion with limb swing
-- in-world nameplate and speech bubble
+- compact in-world nameplate, with the actual question and explanation in the phone UI
 - question mirrored on the classroom smartboard while the teacher is at the front
+
+See [REFERENCE_PASS.md](REFERENCE_PASS.md) for the October 7 recording-derived candidate and its verification limits. The question bank now lives in `server/QuestionBank.lua`; shared Data contains only staff and week metadata.
 
 The visual profiles are stylized native-Roblox interpretations. They must not be described as portrait-exact likenesses unless separately verified against labeled reference photographs.

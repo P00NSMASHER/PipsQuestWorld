@@ -4,6 +4,7 @@ local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local DataStoreService=game:GetService("DataStoreService")
 local HttpService=game:GetService("HttpService")
 local Data=require(ReplicatedStorage:WaitForChild("EmmaStudyShared"):WaitForChild("Data"))
+local Questions=require(script.Parent:WaitForChild("QuestionBank"))
 local World=require(script.Parent:WaitForChild("World")).build()
 
 local remotes=Instance.new("Folder");remotes.Name="EmmaClassroomRemotes";remotes.Parent=ReplicatedStorage
@@ -34,21 +35,41 @@ local function loadProgress(player)
     return data
 end
 
-local function saveProgress(player,s)
-    local snapshot={totalCorrect=s.totalCorrect,sessionsCompleted=s.sessionsCompleted,skills=s.skills}
-    task.spawn(function()
+local function saveProgress(player,s,awaitCompletion:boolean?)
+    -- Every correct answer can schedule a save. DataStore requests may finish in
+    -- a different order, so snapshots and writes must both be monotonic: an
+    -- older completion is never allowed to erase newer lifetime progress.
+    local snapshot={
+        totalCorrect=math.max(0,tonumber(s.totalCorrect) or 0),
+        sessionsCompleted=math.max(0,tonumber(s.sessionsCompleted) or 0),
+        skills=table.clone(s.skills),
+    }
+    local function writeSnapshot()
         pcall(function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
-                old.totalCorrect=snapshot.totalCorrect;old.sessionsCompleted=snapshot.sessionsCompleted;old.skills=snapshot.skills
+                old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,snapshot.totalCorrect)
+                old.sessionsCompleted=math.max(tonumber(old.sessionsCompleted) or 0,snapshot.sessionsCompleted)
+                local mergedSkills=type(old.skills)=="table" and table.clone(old.skills) or {}
+                for skillName,snapshotSkill in pairs(snapshot.skills) do
+                    local oldSkill=type(mergedSkills[skillName])=="table" and mergedSkills[skillName] or {}
+                    local nextSkill=table.clone(oldSkill)
+                    nextSkill.correct=math.max(
+                        tonumber(oldSkill.correct) or 0,
+                        tonumber(snapshotSkill.correct) or 0
+                    )
+                    mergedSkills[skillName]=nextSkill
+                end
+                old.skills=mergedSkills
                 old.updatedAt=os.time()
                 return old
             end)
         end)
-    end)
+    end
+    if awaitCompletion then writeSnapshot() else task.spawn(writeSnapshot) end
 end
 
-local function chooseTeacher(subject)
+local function chooseTeacher(subject,previous)
     local matching={}
     for _,t in ipairs(Data.Teachers) do
         local weight=t.weight or 1
@@ -57,7 +78,9 @@ local function chooseTeacher(subject)
         if subject=="Spelling / Handwriting" and t.name=="Mrs. Kochol" then weight+=3 end
         if subject=="Reading / ELA" and t.name=="Mrs. Russek" then weight+=2 end
         if subject=="Math" and t.name=="Mrs. Benulis" then weight+=4 end
-        for _=1,weight do matching[#matching+1]=t end
+        if t.name~=previous then
+            for _=1,weight do matching[#matching+1]=t end
+        end
     end
     return matching[math.random(1,#matching)]
 end
@@ -65,7 +88,7 @@ end
 local function chooseQuestion(s)
     local pool={}
     local total=0
-    for _,q in ipairs(Data.Questions) do
+    for _,q in ipairs(Questions) do
         if not s.seen[q.id] then
             local weight=math.max(1,q.priority or 1)
             total+=weight
@@ -83,7 +106,7 @@ local function dismissTeacher(s)
         local m=s.teacherModel;s.teacherModel=nil
         World.setTeacherSpeech(m,nil)
         task.spawn(function()
-            World.moveTeacher(m,World.TeacherDoor,1.25)
+            World.walkTeacher(m,false)
             if m and m.Parent then m:Destroy() end
         end)
     end
@@ -99,22 +122,23 @@ startRound=function(player)
     end
     s.busy=true
     local q=chooseQuestion(s);s.seen[q.id]=true
-    local teacher=chooseTeacher(q.subject)
+    local teacher=chooseTeacher(q.subject,s.previousTeacher)
+    s.previousTeacher=teacher.name
     dismissTeacher(s)
     World.resetBoard()
     local model=World.teacherModel(teacher);model.Parent=World.Root;model:PivotTo(World.TeacherDoor);s.teacherModel=model
-    event:FireClient(player,{kind="teacher_entering",teacher=teacher.name,role=teacher.role,subject=q.subject,progress=publicProgress(s)})
+    event:FireClient(player,{kind="teacher_entering",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,progress=publicProgress(s)})
     task.spawn(function()
-        World.moveTeacher(model,World.TeacherFront,1.7)
+        World.walkTeacher(model,true)
         if sessions[player.UserId]~=s or not model.Parent then return end
-        World.setTeacherSpeech(model,"Hi, Emma! I have one question for you. ♥")
+        World.setTeacherSpeech(model,nil)
         task.wait(.45)
         local choices=shuffle(q.choices)
         local token=HttpService:GenerateGUID(false)
         s.pending={token=token,q=q,choices=choices,teacher=teacher}
         s.busy=false
         World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
-        event:FireClient(player,{kind="question",teacher=teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
+        event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
     end)
 end
 
@@ -126,15 +150,15 @@ local function answer(player,args)
     if not choice then return {ok=false,code="invalid_choice"} end
     if choice~=p.q.answer then
         World.setBoardHint(p.q.hint or "Take another look.")
-        World.setTeacherSpeech(s.teacherModel,"Almost. Try one more time, Emma.")
+        World.setTeacherSpeech(s.teacherModel,nil)
         return {ok=true,correct=false,hint=p.q.hint,message="Try again. "..(p.q.hint or "")}
     end
     s.pending=nil;s.stars+=1;s.correctThisSession+=1;s.totalCorrect+=1
     local skill=s.skills[p.q.skill] or {correct=0};skill.correct=(skill.correct or 0)+1;s.skills[p.q.skill]=skill
     saveProgress(player,s)
     World.setBoardCorrect(p.q.explanation or "Nice job!")
-    World.setTeacherSpeech(s.teacherModel,"Correct! Nice job, Emma! ★")
-    event:FireClient(player,{kind="correct",teacher=p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
+    World.setTeacherSpeech(s.teacherModel,nil)
+    event:FireClient(player,{kind="correct",teacher=p.teacher.fullName or p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
     task.delay(1.9,function()
         local current=sessions[player.UserId]
         if current==s then
@@ -150,7 +174,7 @@ end
 request.OnServerInvoke=function(player,command,args)
     if command=="answer" then return answer(player,args) end
     local s=sessions[player.UserId]
-    if command=="restart" and s then
+    if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then
         dismissTeacher(s);s.pending=nil;s.seen={};s.stars=0;s.correctThisSession=0;World.resetBoard()
         task.delay(.35,function() startRound(player) end)
         return {ok=true}
@@ -159,7 +183,15 @@ request.OnServerInvoke=function(player,command,args)
         s.pending=nil;dismissTeacher(s);World.resetBoard();task.delay(1.05,function() startRound(player) end)
         return {ok=true}
     end
-    if command=="state" and s then return {ok=true,progress=publicProgress(s),week=Data.WeekLabel,focus=Data.Focus} end
+    if command=="state" and s then
+        if not s.ready then
+            s.ready=true
+            task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
+        end
+        local pending=s.pending
+        return {ok=true,progress=publicProgress(s),week=Data.WeekLabel,focus=Data.Focus,
+            question=pending and {kind="question",teacher=pending.teacher.fullName or pending.teacher.name,role=pending.teacher.role,subject=pending.q.subject,prompt=pending.q.prompt,choices=pending.choices,token=pending.token,progress=publicProgress(s)} or nil}
+    end
     return {ok=false,code="unknown"}
 end
 
@@ -172,23 +204,21 @@ local function join(player)
         if root then character:PivotTo(World.Spawn) end
         local hum=character:FindFirstChildOfClass("Humanoid")
         if hum then
-            hum.WalkSpeed=0;hum.JumpPower=0;hum.AutoRotate=false
-            task.delay(.25,function()
-                if character.Parent and World.EmmaSeat and hum.Parent then World.EmmaSeat:Sit(hum) end
-            end)
+            -- The classroom is small, but it is still a Roblox space: Emma can
+            -- walk around and use the normal touch camera between questions.
+            hum.WalkSpeed=16;hum.JumpPower=50;hum.AutoRotate=true
         end
     end
     player.CharacterAdded:Connect(place);if player.Character then task.spawn(place,player.Character) end
-    task.delay(1.2,function() if sessions[player.UserId]==s then startRound(player) end end)
+
 end
 
 Players.PlayerAdded:Connect(join)
 for _,p in ipairs(Players:GetPlayers()) do task.spawn(join,p) end
 Players.PlayerRemoving:Connect(function(player)
-    local s=sessions[player.UserId];if s then dismissTeacher(s);saveProgress(player,s) end;sessions[player.UserId]=nil
+    local s=sessions[player.UserId];if s then dismissTeacher(s);saveProgress(player,s,true) end;sessions[player.UserId]=nil
 end)
 
 game:BindToClose(function()
-    for _,p in ipairs(Players:GetPlayers()) do local s=sessions[p.UserId];if s then saveProgress(p,s) end end
-    task.wait(2)
+    for _,p in ipairs(Players:GetPlayers()) do local s=sessions[p.UserId];if s then saveProgress(p,s,true) end end
 end)

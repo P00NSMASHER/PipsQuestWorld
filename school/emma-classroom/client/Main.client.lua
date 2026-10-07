@@ -4,6 +4,8 @@ local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local StarterGui=game:GetService("StarterGui")
 local TweenService=game:GetService("TweenService")
 local Workspace=game:GetService("Workspace")
+local TextService=game:GetService("TextService")
+local Layout=require(ReplicatedStorage:WaitForChild("EmmaStudyShared"):WaitForChild("Layout"))
 
 local player=Players.LocalPlayer
 local remotes=ReplicatedStorage:WaitForChild("EmmaClassroomRemotes")
@@ -47,7 +49,7 @@ end
 
 local gui=Instance.new("ScreenGui")
 gui.Name="EmmaStudyUI";gui.ResetOnSpawn=false;gui.IgnoreGuiInset=false;gui.DisplayOrder=30;gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
-pcall(function() gui.ScreenInsets=Enum.ScreenInsets.DeviceSafeInsets end)
+pcall(function() gui.ScreenInsets=Enum.ScreenInsets.CoreUISafeInsets end)
 gui.Parent=player:WaitForChild("PlayerGui")
 
 local root=Instance.new("Frame");root.Size=UDim2.fromScale(1,1);root.BackgroundTransparency=1;root.Parent=gui
@@ -63,37 +65,64 @@ teacherChip.Name="TeacherChip";teacherChip.BackgroundColor3=Color3.fromRGB(248,2
 corner(teacherChip,14);stroke(teacherChip,P.green,.48,1)
 local teacherText=text(teacherChip,"Teacher",12,P.green,Enum.Font.GothamBold);teacherText.Size=UDim2.fromScale(1,1);teacherText.ZIndex=11
 
+local viewToggle=Instance.new("TextButton")
+viewToggle.Name="ViewToggle";viewToggle.BackgroundColor3=Color3.fromRGB(248,246,236);viewToggle.BorderSizePixel=0
+viewToggle.Text="Study view";viewToggle.TextColor3=P.green;viewToggle.Font=Enum.Font.GothamBold;viewToggle.TextSize=12
+viewToggle.AutoButtonColor=true;viewToggle.ZIndex=12;viewToggle.Parent=root
+corner(viewToggle,12);stroke(viewToggle,P.green,.42,1)
+
 local entering=Instance.new("Frame")
 entering.AnchorPoint=Vector2.new(.5,.5);entering.BackgroundColor3=P.green;entering.BackgroundTransparency=.05;entering.BorderSizePixel=0;entering.Visible=false;entering.ZIndex=20;entering.Parent=root
 corner(entering,999);stroke(entering,P.gold,.20,1.2)
 local enteringText=text(entering,"A teacher is coming in…",14,P.cream,Enum.Font.GothamBold);enteringText.Size=UDim2.fromScale(1,1);enteringText.ZIndex=21
 
 local answerBar=Instance.new("Frame")
-answerBar.Name="AnswerBar";answerBar.AnchorPoint=Vector2.new(.5,1);answerBar.BackgroundColor3=Color3.fromRGB(250,248,239);answerBar.BackgroundTransparency=.035;answerBar.BorderSizePixel=0;answerBar.Visible=false;answerBar.ZIndex=30;answerBar.Parent=root
+answerBar.Name="AnswerBar";answerBar.AnchorPoint=Vector2.new(1,1);answerBar.BackgroundColor3=Color3.fromRGB(250,248,239);answerBar.BackgroundTransparency=.035;answerBar.BorderSizePixel=0;answerBar.Visible=false;answerBar.ZIndex=30;answerBar.Parent=root
 corner(answerBar,18);stroke(answerBar,P.green,.32,1.4)
 
-local subjectLine=text(answerBar,"Schoolwork",11,P.green,Enum.Font.GothamBold);subjectLine.TextXAlignment=Enum.TextXAlignment.Left;subjectLine.ZIndex=31
-local feedback=text(answerBar,"",11,P.muted,Enum.Font.GothamMedium);feedback.TextXAlignment=Enum.TextXAlignment.Left;feedback.ZIndex=31
-
-local answers=Instance.new("Frame");answers.BackgroundTransparency=1;answers.ZIndex=31;answers.Parent=answerBar
-local answerGrid=Instance.new("UIGridLayout");answerGrid.SortOrder=Enum.SortOrder.LayoutOrder;answerGrid.CellPadding=UDim2.fromOffset(8,8);answerGrid.Parent=answers
-
+local subjectLine=text(answerBar,"Schoolwork",12,P.green,Enum.Font.GothamBold);subjectLine.TextXAlignment=Enum.TextXAlignment.Left;subjectLine.ZIndex=31
+local feedback=text(answerBar,"Take your time.",13,P.muted,Enum.Font.GothamMedium);feedback.TextXAlignment=Enum.TextXAlignment.Left;feedback.ZIndex=31
+local content=Instance.new("ScrollingFrame")
+content.Name="QuestionAndChoices";content.BackgroundTransparency=1;content.BorderSizePixel=0;content.ScrollBarThickness=4
+content.ScrollBarImageColor3=P.green;content.AutomaticCanvasSize=Enum.AutomaticSize.Y;content.CanvasSize=UDim2.new();content.ZIndex=31;content.Parent=answerBar
+local contentList=Instance.new("UIListLayout");contentList.Padding=UDim.new(0,10);contentList.SortOrder=Enum.SortOrder.LayoutOrder;contentList.Parent=content
+local promptText=text(content,"",17,P.ink,Enum.Font.GothamBold)
+promptText.Name="QuestionPrompt";promptText.LayoutOrder=0;promptText.TextXAlignment=Enum.TextXAlignment.Left;promptText.TextYAlignment=Enum.TextYAlignment.Top;promptText.ZIndex=32
+local answers=Instance.new("Frame");answers.BackgroundTransparency=1;answers.LayoutOrder=1;answers.ZIndex=31;answers.Parent=content
+local answerList=Instance.new("UIListLayout");answerList.SortOrder=Enum.SortOrder.LayoutOrder;answerList.Padding=UDim.new(0,8);answerList.Parent=answers
 local skip=Instance.new("TextButton")
-skip.BackgroundColor3=Color3.fromRGB(230,231,225);skip.Text="Skip";skip.TextColor3=Color3.fromRGB(74,77,78);skip.Font=Enum.Font.GothamBold;skip.TextSize=11;skip.AutoButtonColor=true;skip.ZIndex=32;skip.Parent=answerBar
+skip.Name="SkipQuestion";skip.BackgroundColor3=Color3.fromRGB(230,231,225);skip.Text="Skip";skip.TextColor3=P.muted;skip.Font=Enum.Font.GothamBold;skip.TextSize=13;skip.AutoButtonColor=true;skip.ZIndex=32;skip.Parent=answerBar
 corner(skip,10)
+local layout
+local feedbackHint=""
 
 local currentToken:string?=nil
 local busy=false
 local colors={P.blue,P.teal,P.amber,P.purple}
 local camera=Workspace.CurrentCamera
+local studyView=false
 
-local function setCamera()
+local function setPlayerCamera()
+    camera=Workspace.CurrentCamera
+    if not camera then return end
+    local character=player.Character
+    local humanoid=character and character:FindFirstChildOfClass("Humanoid")
+    camera.CameraType=Enum.CameraType.Custom
+    if humanoid then camera.CameraSubject=humanoid end
+    camera.FieldOfView=70
+    studyView=false
+    viewToggle.Text="Study view"
+end
+
+local function setStudyCamera()
     camera=Workspace.CurrentCamera
     if not camera then return end
     camera.CameraType=Enum.CameraType.Scriptable
     camera.FieldOfView=68
     -- Rear-left classroom view: Emma/desk foreground, teacher + Smartboard center, doorway/right wall visible.
-    camera.CFrame=CFrame.lookAt(Vector3.new(-18,8.8,21),Vector3.new(-4,7.2,-18))
+    camera.CFrame=CFrame.lookAt(Vector3.new(-12,8.5,17),Vector3.new(1,6.8,-22))
+    studyView=true
+    viewToggle.Text="Look around"
 end
 
 local function setProgress(p)
@@ -131,105 +160,137 @@ local function makeAnswer(value:string,index:number)
     corner(badge,999)
     local bt=text(badge,string.char(64+index),14,Color3.new(1,1,1),Enum.Font.GothamBold);bt.Size=UDim2.fromScale(1,1);bt.ZIndex=34
 
-    local a=text(b,value,14,P.ink,Enum.Font.GothamBold);a.Position=UDim2.fromOffset(42,3);a.Size=UDim2.new(1,-48,1,-6);a.ZIndex=33
+    local a=text(b,value,14,P.ink,Enum.Font.GothamBold);a.Name="ChoiceText";a.Position=UDim2.fromOffset(48,8);a.Size=UDim2.new(1,-58,1,-16);a.ZIndex=33
 
     b.Activated:Connect(function()
         if busy or not currentToken then return end
         busy=true
         local ok,res=pcall(function() return request:InvokeServer("answer",{token=currentToken,index=index}) end)
         busy=false
-        if not ok or not res then feedback.Text="Try that tap again.";return end
+        if not ok or not res or res.ok==false then feedback.Text="Tap again to send your answer.";return end
         if res.correct==false then
-            feedback.Text=res.hint or "Take another look."
+            feedbackHint=res.hint or "Take another look.";feedback.Text="Try again — your stars are safe.";layout()
             local old=b.BackgroundColor3;b.BackgroundColor3=P.wrong
             TweenService:Create(b,TweenInfo.new(.45),{BackgroundColor3=old}):Play()
         end
     end)
 end
 
-local function layout()
-    local cam=Workspace.CurrentCamera
-    local vp=cam and cam.ViewportSize or Vector2.new(844,390)
-    local w,h=vp.X,vp.Y
-    local landscape=w>h
-
-    progressChip.Position=UDim2.fromOffset(12,12);progressChip.Size=UDim2.fromOffset(138,38)
-    teacherChip.AnchorPoint=Vector2.new(1,0);teacherChip.Position=UDim2.new(1,-12,0,12);teacherChip.Size=UDim2.fromOffset(math.min(250,w*.30),38)
-    entering.Size=UDim2.fromOffset(math.min(300,w-40),44);entering.Position=UDim2.new(.5,0,.52,0)
-
-    local barW=math.min(880,w-20)
-    local barH=landscape and 142 or 248
-    answerBar.Size=UDim2.fromOffset(barW,barH);answerBar.Position=UDim2.new(.5,0,1,-10)
-
-    subjectLine.Position=UDim2.fromOffset(14,8);subjectLine.Size=UDim2.new(1,-100,0,18)
-    feedback.Position=UDim2.fromOffset(14,barH-28);feedback.Size=UDim2.new(1,-100,0,20)
-    skip.AnchorPoint=Vector2.new(1,0);skip.Position=UDim2.new(1,-12,0,barH-31);skip.Size=UDim2.fromOffset(70,24)
-
-    answers.Position=UDim2.fromOffset(12,32);answers.Size=UDim2.new(1,-24,0,landscape and 70 or 178)
-    if landscape then
-        answerGrid.FillDirectionMaxCells=4
-        answerGrid.CellSize=UDim2.new(.25,-6,0,64)
-    else
-        answerGrid.FillDirectionMaxCells=1
-        answerGrid.CellSize=UDim2.new(1,0,0,38)
+layout=function()
+    local size=root.AbsoluteSize
+    local w,h=math.max(1,size.X),math.max(1,size.Y)
+    local dims=Layout.panel(w,h)
+    progressChip.Position=UDim2.fromOffset(12,10);progressChip.Size=UDim2.fromOffset(130,36)
+    viewToggle.AnchorPoint=Vector2.new(1,0);viewToggle.Position=UDim2.new(1,-12,0,6);viewToggle.Size=UDim2.fromOffset(116,44)
+    teacherChip.AnchorPoint=Vector2.new(.5,0);teacherChip.Position=UDim2.new(.5,0,0,10);teacherChip.Size=UDim2.fromOffset(math.max(100,math.min(300,w-280)),36)
+    teacherChip.Visible=teacherText.Text~="Teacher" and w>620
+    entering.Size=UDim2.fromOffset(math.min(300,w-40),44);entering.Position=UDim2.new(.35,0,.35,0)
+    answerBar.Size=UDim2.fromOffset(dims.width,dims.height);answerBar.Position=UDim2.new(1,-dims.right,1,-dims.bottom)
+    subjectLine.Position=UDim2.fromOffset(16,10);subjectLine.Size=UDim2.new(1,-32,0,20)
+    content.Position=UDim2.fromOffset(16,38);content.Size=UDim2.new(1,-32,1,-102)
+    local contentW=math.max(100,dims.width-38)
+    local stem=promptText:GetAttribute("Prompt") or ""
+    promptText.Text=stem..(feedbackHint~="" and "\n\nHint: "..feedbackHint or "")
+    local stemH=TextService:GetTextSize(promptText.Text,17,Enum.Font.GothamBold,Vector2.new(contentW,10000)).Y
+    promptText.Size=UDim2.new(1,-6,0,math.max(32,stemH+8))
+    local total=0
+    for _,b in ipairs(answers:GetChildren()) do
+        if b:IsA("TextButton") then
+            local label=b:FindFirstChild("ChoiceText")
+            local value=label and label.Text or b.Text
+            local measured=TextService:GetTextSize(value,14,Enum.Font.GothamBold,Vector2.new(math.max(80,contentW-64),10000)).Y
+            local height=math.max(56,measured+24)
+            b.Size=UDim2.new(1,-6,0,height);total+=height+8
+        end
     end
+    answers.Size=UDim2.new(1,0,0,math.max(56,total-8))
+    feedback.Position=UDim2.new(0,16,1,-54);feedback.Size=UDim2.new(1,-110,0,44)
+    skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-12,1,-10);skip.Size=UDim2.fromOffset(76,44)
 end
+root:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    if studyView then setStudyCamera() else setPlayerCamera() end
+    layout()
+end)
 
 local cam=Workspace.CurrentCamera
 if cam then
     cam:GetPropertyChangedSignal("ViewportSize"):Connect(layout)
 end
-layout();setCamera()
+layout();setPlayerCamera()
 
-player.CharacterAdded:Connect(function()
-    task.wait(.25);setCamera()
+viewToggle.Activated:Connect(function()
+    if studyView then setPlayerCamera() else setStudyCamera() end
 end)
 
-event.OnClientEvent:Connect(function(payload)
+player.CharacterAdded:Connect(function()
+    task.wait(.25);setPlayerCamera()
+end)
+
+local function showPayload(payload)
     if type(payload)~="table" then return end
     if payload.kind=="teacher_entering" then
         setProgress(payload.progress)
         currentToken=nil;clearAnswers();answerBar.Visible=false
-        teacherChip.Visible=true;teacherText.Text=(payload.teacher or "Teacher").."  •  "..(payload.role or "ABVM Staff")
+        teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
         enteringText.Text=(payload.teacher or "Teacher").." is coming in…";entering.Visible=true
-        task.delay(1.9,function() entering.Visible=false end)
+        layout()
     elseif payload.kind=="question" then
-        entering.Visible=false;currentToken=payload.token;busy=false;feedback.Text=""
-        teacherChip.Visible=true;teacherText.Text=(payload.teacher or "Teacher").."  •  "..(payload.role or "ABVM Staff")
+        skip.Visible=true;entering.Visible=false;currentToken=payload.token;busy=false;feedbackHint="";feedback.Text="Take your time."
+        promptText:SetAttribute("Prompt",payload.prompt or "");content.CanvasPosition=Vector2.new()
+        teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
         subjectLine.Text=(payload.subject or "Schoolwork").."  •  Choose an answer below"
         clearAnswers()
         for i,v in ipairs(payload.choices or {}) do makeAnswer(v,i) end
         setProgress(payload.progress)
-        answerBar.Visible=true
+        layout();answerBar.Visible=true
     elseif payload.kind=="correct" then
-        currentToken=nil;clearAnswers();feedback.Text=""
-        answerBar.Visible=false
-        teacherChip.Visible=true;teacherText.Text=(payload.teacher or "Teacher").."  •  Correct! ★"
+        currentToken=nil;clearAnswers();feedbackHint="";feedback.Text="+1 star"
+        promptText:SetAttribute("Prompt",payload.explanation or "Nice work, Emma!")
+        subjectLine.Text="Correct!";layout();answerBar.Visible=true;skip.Visible=false
+        teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher").."  •  Correct! ★"
         setProgress(payload.progress);starBurst()
     elseif payload.kind=="session_complete" then
         currentToken=nil;clearAnswers()
-        teacherChip.Visible=true;teacherText.Text="Study session complete ★"
-        subjectLine.Text="10 real schoolwork questions finished"
+        teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text="Study session complete ★"
+        subjectLine.Text="Session complete"
+        feedbackHint="";promptText:SetAttribute("Prompt","You finished 10 questions, Emma! ★")
+        skip.Visible=false
         feedback.Text="Nice work, Emma."
         setProgress(payload.progress)
-        answerBar.Visible=true
+        layout();answerBar.Visible=true
         local again=Instance.new("TextButton");again.BackgroundColor3=P.green;again.TextColor3=P.gold;again.Text="Do another 10";again.Font=Enum.Font.GothamBold;again.TextSize=16;again.ZIndex=32;again.Parent=answers
         corner(again,13);stroke(again,P.gold,.25,1)
-        again.Activated:Connect(function() request:InvokeServer("restart") end)
-        starBurst()
+        again.Activated:Connect(function()
+            if busy then return end;busy=true
+            local ok,res=pcall(function() return request:InvokeServer("restart") end);busy=false
+            if not ok or not res or not res.ok then feedback.Text="Tap again to start." end
+        end)
+        layout();starBurst()
     end
-end)
+end
+event.OnClientEvent:Connect(showPayload)
 
 skip.Activated:Connect(function()
     if currentToken and not busy then
         busy=true
-        pcall(function() request:InvokeServer("skip") end)
-        currentToken=nil;clearAnswers();answerBar.Visible=false
+        local ok,res=pcall(function() return request:InvokeServer("skip") end)
+        if ok and res and res.ok then
+            currentToken=nil;clearAnswers();answerBar.Visible=false
+        else feedback.Text="Tap again to skip." end
         busy=false
     end
 end)
 
 task.spawn(function()
-    local ok,res=pcall(function() return request:InvokeServer("state") end)
-    if ok and res and res.progress then setProgress(res.progress) end
+    for attempt=1,8 do
+        local ok,res=pcall(function() return request:InvokeServer("state") end)
+        if ok and res and res.ok then
+            setProgress(res.progress)
+            if res.question then showPayload(res.question) end
+            return
+        end
+        task.wait(.4)
+    end
+    enteringText.Text="Rejoin to reconnect to your classroom.";entering.Visible=true
 end)
