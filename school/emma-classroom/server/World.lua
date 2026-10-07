@@ -287,13 +287,17 @@ function World.build()
     end
 
     local spawn=Instance.new("SpawnLocation")
-    spawn.Name="EmmaSeatSpawn";spawn.Size=Vector3.new(5,1,5);spawn.CFrame=CFrame.new(0,1,13)*CFrame.Angles(0,math.pi,0)
+    spawn.Name="EmmaSeatSpawn";spawn.Size=Vector3.new(5,1,5);spawn.CFrame=CFrame.new(0,1,10)*CFrame.Angles(0,math.pi,0)
     spawn.Transparency=1;spawn.CanCollide=false;spawn.Anchored=true;spawn.Neutral=true;spawn.Duration=0;spawn.Parent=root
+    local seat=Instance.new("Seat")
+    seat.Name="EmmaSeat";seat.Size=Vector3.new(2.6,.8,2.4);seat.CFrame=CFrame.new(0,1.9,8.4)*CFrame.Angles(0,math.pi,0)
+    seat.Transparency=1;seat.CanCollide=false;seat.Anchored=true;seat.Parent=root
 
     World.Root=root
     World.Spawn=spawn.CFrame
+    World.EmmaSeat=seat
     World.TeacherDoor=CFrame.new(0,4,45)*CFrame.Angles(0,math.pi,0)
-    World.TeacherFront=CFrame.new(0,4,-22)*CFrame.Angles(0,math.pi,0)
+    World.TeacherFront=CFrame.new(-10,4,-20)*CFrame.Angles(0,math.pi,0)
     World.resetBoard()
     return World
 end
