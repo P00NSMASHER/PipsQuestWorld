@@ -1,6 +1,6 @@
-publish-request: 2026-10-07 friendly-teacher-repair-v4
-scope: readable flat smiling faces, connected hair and reduced light washout
-candidate: 3ede584c53a24a34064e9fa733c121b640510353
-merge: ecb8e30fbf85a15aa4121887d0773797123cb009
+publish-request: 2026-10-07 friendly-teacher-repair-v4 final surface guard
+scope: readable smiling faces, connected hair, lower light washout, intentional study-camera exit, startup recovery
+candidate: f19701be9659fe12a720bd5c5435845413ac1803
+source-binary-sha256: 78b0cbf84dbb365242ca242871c0608a89bf97922f0769a8a66cdc9b4b7818d2
 authorization: existing upload/play request and follow-up teacher/playability repair
-acceptance: automated checks pass; native and iPhone review of this repair pending
+acceptance: full automated checks pass; native and iPhone review of this repair pending
