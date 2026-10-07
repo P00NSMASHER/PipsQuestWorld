@@ -1,6 +1,6 @@
 """Run actual StaffModel/World constructors with math/service doubles; no render claim."""
 from pathlib import Path
-import argparse, subprocess
+import argparse, subprocess, xml.etree.ElementTree as ET, json
 ap=argparse.ArgumentParser();ap.add_argument('--luau',required=True);args=ap.parse_args()
 p=Path(__file__).resolve().parents[1]
 harness=r'''
@@ -52,7 +52,7 @@ local UDim={new=function(...) return {...} end}
 local UDim2={new=function(...) return {...} end,fromScale=function(...) return {...} end,fromOffset=function(...)return {...}end}
 local Vector2={new=function(...)return {...}end}
 local methods={}
-local instanceMeta={__index=function(t,k) return methods[k] or t.props[k] end,__newindex=function(t,k,v)
+local instanceMeta={__index=function(t,k) if k=="Position" then return t.props.CFrame.Position end;if methods[k] then return methods[k] end;if t.props[k]~=nil then return t.props[k] end;return methods.FindFirstChild(t,k) end,__newindex=function(t,k,v)
     if k=="Parent" then
         local old=t.props.Parent
         if old then local n=table.find(old.children,t);if n then table.remove(old.children,n) end end
@@ -61,7 +61,29 @@ local instanceMeta={__index=function(t,k) return methods[k] or t.props[k] end,__
     t.props[k]=v
 end}
 local Instance={new=function(class) return setmetatable({props={ClassName=class,Name=class,CFrame=CFrame.new(),Size=Vector3.new(1,1,1)},children={},attrs={},scale=1},instanceMeta) end}
-function methods:IsA(k) return self.ClassName==k or (k=="BasePart" and (self.ClassName=="Part" or self.ClassName=="Seat" or self.ClassName=="SpawnLocation")) end
+function methods:IsA(k) return self.ClassName==k or (k=="BasePart" and (self.ClassName=="Part" or self.ClassName=="MeshPart" or self.ClassName=="Seat" or self.ClassName=="SpawnLocation")) end
+function methods:FindFirstChildOfClass(k) for _,c in ipairs(self.children) do if c.ClassName==k then return c end end end
+function methods:Clone()
+    local copy=Instance.new(self.ClassName)
+    for k,v in pairs(self.props) do if k~="Parent" then copy[k]=v end end
+    for k,v in pairs(self.attrs) do copy:SetAttribute(k,v) end
+    for _,c in ipairs(self.children) do c:Clone().Parent=copy end
+    return copy
+end
+function methods:BuildRigFromAttachments()
+    -- Engine method is not simulated as a renderer. Check the package's actual
+    -- rig attachment pairs coincide before constructing a staff rest pose.
+    local positions={}
+    for _,part in ipairs(self.Parent:GetChildren()) do
+        if part:IsA("BasePart") then for _,a in ipairs(part:GetChildren()) do
+            if a:IsA("Attachment") and string.find(a.Name,"RigAttachment$") then
+                local v=(part.CFrame*a.CFrame).Position
+                if positions[a.Name] then assert((positions[a.Name]-v).Magnitude<.001,"Disconnected native rig: "..a.Name)
+                else positions[a.Name]=v end
+            end
+        end end
+    end
+end
 function methods:SetAttribute(k,v) self.attrs[k]=v end
 function methods:GetAttribute(k) return self.attrs[k] end
 function methods:GetChildren() return table.clone(self.children) end
@@ -83,6 +105,9 @@ end
 local Workspace=Instance.new("Folder")
 local Lighting=Instance.new("Folder")
 local game={GetService=function(_,name) if name=="Workspace" then return Workspace elseif name=="Lighting" then return Lighting elseif name=="TweenService" then return {} end;error(name) end}
+local assets=Instance.new("Folder");assets.Name="StaffAssets"
+__ASSET_FIXTURES__
+local script={Parent={WaitForChild=function(_,name) assert(name=="StaffAssets");return assets end}}
 local function loadStaff()
 '''
 tests=r'''
@@ -94,74 +119,51 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==4)
+    assert(m:GetAttribute("StaffGeometryVersion")==5)
     local head=m:FindFirstChild("Head")
-    assert(head and not head:FindFirstChild("Classic rounded head"),"Do not reintroduce nonstandard Head mesh scaling")
-    local headCenter=m:FindFirstChild("Head center")
-    assert(head.CFrame.Position.Z-head.Size.Z/2 < headCenter.CFrame.Position.Z-headCenter.Size.Z/2-.015*m:GetScale(),"Face-bearing surface must be physically in front of the other head pieces")
-    local face=head:FindFirstChild("Friendly face")
-    assert(face and face.Face==Enum.NormalId.Front and face.LightInfluence==0 and not face.AlwaysOnTop)
-    assert(face.CanvasSize[1]==440 and face.CanvasSize[2]==600 and face.ZOffset>0)
-    -- Regression: every eye and mouth stroke is ink on the actual flat head
-    -- surface, not a 3D ellipsoid that can become buried in the head mesh.
-    local eyeN,smileN=0,0
-    for _,f in ipairs(face:GetChildren()) do
-        if f:IsA("Frame") then
-            local x,y=f.Position[1],f.Position[2]
-            local w,h=f.Size[1],f.Size[2]
-            assert(x-w/2>0 and x+w/2<440 and y-h/2>0 and y+h/2<600,"Face ink must fit the head surface")
-            if f.Name=="Friendly eye" then eyeN+=1;assert(h>w and f.BackgroundColor3.R<.15) end
-            if f.Name=="Friendly smile" then smileN+=1;assert(y>=396 and y<=435 and f.BackgroundColor3.R<.15) end
-            if f.Name=="Soft beard" then assert(y-h/2>435,"Beard ink must not cover the smile") end
-        end
-    end
-    assert(eyeN==2 and smileN==12,"A face must have two readable eyes and a complete gentle smile")
-    assert(not m:FindFirstChild("Expressive oval eye") and not m:FindFirstChild("Smile upper mask") and not m:FindFirstChild("Swept hair lock"))
-    local scale=m:GetScale()
-    if teacher.hairStyle~="balding" then
-        local cap=m:FindFirstChild("Connected hair cap")
-        assert(cap and m:FindFirstChild("Connected hair cap rounded corner"))
-        assert(cap.CFrame.Position.Y-cap.Size.Y/2 < head.CFrame.Position.Y+head.Size.Y/2,"Cap must intersect the crown")
-    end
-    local n,groups,counts=0,{},{}
+    local face=head:FindFirstChild("face")
+    assert(face and face:IsA("Decal") and not head:FindFirstChildOfClass("SurfaceGui"),"Use a standard avatar face, no handmade eye/skull overlays")
+    local shape=head:FindFirstChildOfClass("SpecialMesh")
+    assert(shape and shape.MeshType==Enum.MeshType.Head and shape.Scale.Y==1.25)
+    assert(m:FindFirstChildOfClass("Humanoid").RigType==Enum.HumanoidRigType.R15)
+    assert(m:FindFirstChildOfClass("Shirt") and m:FindFirstChildOfClass("Pants"))
+    local n,nativeN,groups=0,0,{}
     local minY,maxY=math.huge,-math.huge
     for _,d in ipairs(m:GetDescendants()) do
-        counts[d.Name]=(counts[d.Name] or 0)+1
+        assert(not d:IsA("Script") and not d:IsA("LocalScript"),"Imported visual assets must contain no scripts")
         if d:IsA("BasePart") then
             n+=1
+            if d:IsA("MeshPart") then nativeN+=1;assert(string.find(d.MeshId,"rbxassetid://")) end
             assert(d.Anchored and not d.CanCollide and not d.CanTouch and not d.CanQuery,d.Name)
             assert(d.Size.X>0 and d.Size.Y>0 and d.Size.Z>0)
-            for _,v in ipairs({d.CFrame.Position.X,d.CFrame.Position.Y,d.CFrame.Position.Z}) do assert(v==v and math.abs(v)<20) end
-            minY=math.min(minY,d.CFrame.Position.Y-d.Size.Y/2);maxY=math.max(maxY,d.CFrame.Position.Y+d.Size.Y/2)
-            local group=d:GetAttribute("PoseGroup")
-            if group then groups[group]=(groups[group] or 0)+1;assert(d:GetAttribute("RestCF")) end
+            minY=math.min(minY,d.Position.Y-d.Size.Y/2);maxY=math.max(maxY,d.Position.Y+d.Size.Y/2)
+            local g=d:GetAttribute("PoseGroup");if g then groups[g]=(groups[g] or 0)+1 end
         end
     end
-    assert(n<=180,"Staff part budget exceeded: "..teacher.name.." "..n)
-    maxParts=math.max(maxParts,n)
+    assert(nativeN==14,"Both standard R15 bodies must include all 14 mesh limbs")
+    assert(n<=40,"Staff part budget exceeded: "..teacher.name.." "..n);maxParts=math.max(maxParts,n)
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
-    assert(counts["Torso rounded corner"]==4 and counts["Left Arm rounded corner"]==4 and counts["Left Leg rounded corner"]==4)
-    assert(counts["C shaped hand"]==20 and counts["Friendly eye"]==2 and counts["Eye shine"]==2 and counts["Head rounded corner"]==4)
-    assert(groups.leftArm>=14 and groups.rightArm>=14 and groups.leftLeg>=6 and groups.rightLeg>=6)
+    assert(groups.leftArm==3 and groups.rightArm==3 and groups.leftLeg==3 and groups.rightLeg==3)
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
-    assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.8, "World label must scale in studs rather than fixed pixels")
-    if teacher.name=="Mr. Bolich" then
-        assert(m:FindFirstChild("Left Arm").CFrame.Position.Y+m:FindFirstChild("Left Arm").Size.Y/2 < 2*m:GetScale(),"Skin forearm must stay below the polo shoulder")
-        assert(counts["Soft beard"]==1 and counts["Smooth beard chin"]==1 and not counts["Layered beard lock"] and not counts["Connected beard"])
-        assert(counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
-    if teacher.name=="Dr. McBreen" then assert(counts["Tie diagonal stripe"]==5 and counts["Notched jacket lapel"]==2) end
-    if teacher.name=="Mrs. Boyer" then assert(counts["Pearl earring"]==2 and counts["Gold mission pin"]==1) end
-    local arm=m:FindFirstChild("Left Arm")
-    local cuff=m:FindFirstChild("Sleeve hem")
-    local before=(arm.CFrame:Inverse()*cuff.CFrame).Position
+    assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.2)
+    assert(not m:FindFirstChild("Ear") and not m:FindFirstChild("Connected hair cap") and not m:FindFirstChild("Smooth beard chin"),"Never reuse rejected procedural head/hair shapes")
+    local accessory=m:FindFirstChildOfClass("Accessory")
+    if teacher.hairStyle=="balding" then assert(not accessory) else
+        assert(accessory and accessory.Handle:FindFirstChildOfClass("SpecialMesh"))
+        local ha=accessory.Handle.HairAttachment
+        near((accessory.Handle.CFrame*CFrame.new(ha.CFrame.Position*m:GetScale())).Position,(head.CFrame*CFrame.new(head.HairAttachment.CFrame.Position*m:GetScale())).Position)
+    end
+    local arm=m:FindFirstChild("LeftUpperArm");local hand=m:FindFirstChild("LeftHand")
+    local before=(arm.CFrame:Inverse()*hand.CFrame).Position
+    local hairBefore=accessory and (head.CFrame:Inverse()*accessory.Handle.CFrame).Position
     m:PivotTo(CFrame.new(29,3.15,15.5)*CFrame.Angles(0,math.pi,0))
     StaffModel.pose(m,1.2,true)
-    near((arm.CFrame:Inverse()*cuff.CFrame).Position,before)
-    local posed=arm.CFrame.Position
-    StaffModel.pose(m,1.2,true);near(arm.CFrame.Position,posed)
-    StaffModel.pose(m,0,false)
-    near(arm.CFrame.Position,(m:GetPivot()*CFrame.new(arm:GetAttribute("RestCF").Position*m:GetScale())).Position)
+    near((arm.CFrame:Inverse()*hand.CFrame).Position,before)
+    if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
+    local posed=arm.Position;StaffModel.pose(m,1.2,true);near(arm.Position,posed)
+    StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
+
 end
 local script={Parent={WaitForChild=function(_,name)assert(name=="StaffModel");return StaffModel end}}
 local nativeRequire=require
@@ -197,11 +199,39 @@ for _,d in ipairs(World.Root:GetChildren()) do
         if p.Z>-21 and p.Z<16 then assert(not(p.X-s.X/2<30.4 and p.X+s.X/2>27.6),"Blocked teacher aisle: "..d.Name) end
     end
 end
-print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, limb-detail poses, flat readable faces, connected hair; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
+print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, native R15 mesh limbs/rig attachments, standard face assets and accessory poses; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
 '''
+def asset_fixtures():
+    lines=[]
+    def value(v):
+        name=v.get('name')
+        if v.tag in ('string','Content'):return json.dumps(v.findtext('url') if v.tag=='Content' else v.text or '')
+        if v.tag in ('float','double','int','int64'):return str(float(v.text))
+        if v.tag=='bool':return v.text
+        if v.tag=='Vector3':return 'Vector3.new('+','.join(v.findtext(k) for k in ('X','Y','Z'))+')'
+        if v.tag=='CoordinateFrame':
+            nums=[v.findtext(k) for k in ('X','Y','Z')]+[v.findtext('R'+str(i)+str(j)) for i in range(3) for j in range(3)]
+            return 'frame(Vector3.new('+','.join(nums[:3])+'),{'+','.join(nums[3:])+'})'
+        if v.tag=='token' and name=='MeshType':return 'Enum.MeshType.FileMesh'
+        if v.tag=='token' and name=='Face':return 'Enum.NormalId.Front'
+    counter=0
+    def add(item,parent):
+        nonlocal counter
+        counter+=1;n='asset'+str(counter)
+        lines.append('local '+n+'=Instance.new('+json.dumps(item.get('class'))+')')
+        for v in item.find('Properties'):
+            val=value(v)
+            if val is not None:
+                prop='Size' if v.get('name') in ('size','Size') else v.get('name')
+                lines.append(n+'['+json.dumps(prop)+']='+val)
+        lines.append(n+'.Parent='+parent)
+        for child in item.findall('Item'):add(child,n)
+    for path in sorted((p/'server/StaffAssets').glob('*.rbxmx')):
+        for item in ET.parse(path).getroot().findall('Item'):add(item,'assets')
+    return '\n'.join(lines)
 fixture=p/'tests/.geometry-runtime.generated.lua'
 try:
-    fixture.write_text(harness+(p/'server/StaffModel.lua').read_text()+tests+(p/'server/World.lua').read_text()+finish)
+    fixture.write_text(harness.replace("__ASSET_FIXTURES__",asset_fixtures())+(p/'server/StaffModel.lua').read_text()+tests+(p/'server/World.lua').read_text()+finish)
     subprocess.run([args.luau,str(fixture)],check=True)
 finally:
     fixture.unlink(missing_ok=True)

@@ -3,11 +3,18 @@
 local Layout={}
 function Layout.panel(w:number,h:number)
     local landscape=w>h
-    if landscape then
-        local width=math.min(420,math.max(290,math.floor(w*.42)))
-        return {width=math.min(width,w-24),height=math.max(150,h-132),right=12,bottom=74,landscape=true}
-    end
-    return {width=w-24,height=math.min(440,math.floor(h*.55)),right=12,bottom=76,landscape=false}
+    local width=landscape and math.min(460,math.max(280,math.floor(w*.50))) or w-24
+    return {width=math.min(width,w-24),height=landscape and h-8 or math.min(480,math.floor(h*.62)),right=12,bottom=4,landscape=landscape}
+end
+
+-- Reserve the answers first. Only the question/hint may scroll; choices never
+-- disappear below the fold, including on an iPhone in landscape orientation.
+function Layout.questionArea(panelHeight:number,count:number,desiredPromptHeight:number)
+    local rows=math.max(1,count)
+    local available=panelHeight-80
+    local prompt=math.max(28,math.min(desiredPromptHeight,available-rows*44-(rows-1)*6-8))
+    local answerHeight=math.max(44,math.floor((available-prompt-8-(rows-1)*6)/rows))
+    return {prompt=prompt,answerHeight=answerHeight,answerTop=34+prompt+8,answerTotal=rows*answerHeight+(rows-1)*6}
 end
 function Layout.studyCamera(w:number,h:number)
     if w>h then

@@ -144,20 +144,23 @@ startRound=function(player)
     s.previousTeacher=teacher.name
     dismissTeacher(s)
     World.resetBoard()
-    local model=World.teacherModel(teacher);model.Parent=World.Root;model:PivotTo(World.TeacherDoor);s.teacherModel=model
-    event:FireClient(player,{kind="teacher_entering",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,progress=publicProgress(s)})
-    task.spawn(function()
-        World.walkTeacher(model,true)
-        if sessions[player.UserId]~=s or not model.Parent then return end
-        World.setTeacherSpeech(model,nil)
-        task.wait(.45)
-        local choices=shuffle(q.choices)
-        local token=HttpService:GenerateGUID(false)
-        s.pending={token=token,q=q,choices=choices,teacher=teacher}
-        s.busy=false
-        World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
-        event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
-    end)
+    -- Appearance must never prevent Emma from answering. Native visual assets
+    -- are bundled; if a constructor fails, the question still starts normally.
+    local visualOK,model=pcall(World.teacherModel,teacher)
+    if visualOK and model then
+        model.Parent=World.Root;model:SetAttribute("QuickStudyEntry",true)
+        model:PivotTo(World.TeacherStudyEntry);s.teacherModel=model
+    else
+        model=nil
+        warn("Teacher visual unavailable; question remains usable")
+    end
+    local choices=shuffle(q.choices)
+    local token=HttpService:GenerateGUID(false)
+    s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
+    World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
+    event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
+    if model then task.spawn(function() World.walkTeacher(model,true) end) end
+
 end
 
 local function answer(player,args)
@@ -181,9 +184,7 @@ local function answer(player,args)
         local current=sessions[player.UserId]
         if current==s then
             dismissTeacher(s)
-            task.delay(1.05,function()
-                if sessions[player.UserId]==s then World.resetBoard();startRound(player) end
-            end)
+            World.resetBoard();startRound(player)
         end
     end)
     return {ok=true,correct=true}
@@ -198,7 +199,7 @@ request.OnServerInvoke=function(player,command,args)
         return {ok=true}
     end
     if command=="skip" and s and s.pending then
-        s.pending=nil;dismissTeacher(s);World.resetBoard();task.delay(1.05,function() startRound(player) end)
+        s.pending=nil;dismissTeacher(s);World.resetBoard();task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
         return {ok=true}
     end
     if command=="state" and s then

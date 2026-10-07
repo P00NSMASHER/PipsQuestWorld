@@ -535,6 +535,7 @@ function World.build()
     World.EmmaSeat=seat
     World.TeacherDoor=CFrame.new(45,3.15,15.5)*CFrame.Angles(0,math.pi,0)
     World.TeacherFront=CFrame.new(-10,3.15,-20)*CFrame.Angles(0,math.pi,0)
+    World.TeacherStudyEntry=CFrame.new(-15,3.15,-20)*CFrame.Angles(0,math.pi,0)
     World.TeacherPath={CFrame.new(29,3.15,15.5),CFrame.new(29,3.15,-20),World.TeacherFront}
     World.resetBoard()
     return World
@@ -574,6 +575,10 @@ function World.moveTeacher(model: Model,target: CFrame,duration: number)
 end
 
 function World.walkTeacher(model:Model,entering:boolean)
+    if model:GetAttribute("QuickStudyEntry") then
+        if model.Parent then World.moveTeacher(model,entering and World.TeacherFront or World.TeacherStudyEntry,.4) end
+        return
+    end
     if entering then
         for _,point in ipairs(World.TeacherPath) do
             if not model.Parent then return end

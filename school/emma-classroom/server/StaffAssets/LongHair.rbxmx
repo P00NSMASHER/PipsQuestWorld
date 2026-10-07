@@ -1,0 +1,92 @@
+<roblox version="4">
+  <Item class="Accessory">
+    <Properties>
+      <CoordinateFrame name="AttachmentPoint">
+        <X>0</X>
+        <Y>0.800000012</Y>
+        <Z>-0.0199999996</Z>
+        <R00>1</R00>
+        <R01>0</R01>
+        <R02>0</R02>
+        <R10>0</R10>
+        <R11>1</R11>
+        <R12>0</R12>
+        <R20>0</R20>
+        <R21>0</R21>
+        <R22>1</R22>
+      </CoordinateFrame>
+      <string name="Name">LongHair</string>
+    </Properties>
+    <Item class="Part">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0.999746025</X>
+          <Y>1.73336196</Y>
+          <Z>1.05053902</Z>
+          <R00>-0.999992132</R00>
+          <R01>-3.0444619e-010</R01>
+          <R02>-5.77416017e-007</R02>
+          <R10>-3.0328251e-010</R10>
+          <R11>1</R11>
+          <R12>4.33167031e-008</R12>
+          <R20>5.77416017e-007</R20>
+          <R21>4.33162235e-008</R21>
+          <R22>-0.999992132</R22>
+        </CoordinateFrame>
+        <string name="Name">Handle</string>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>1.32999992</X>
+          <Y>2.17999983</Y>
+          <Z>1.70000005</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SpecialMesh">
+        <Properties>
+          <Content name="MeshId">
+            <url>rbxassetid://319354652</url>
+          </Content>
+          <token name="MeshType">5</token>
+          <string name="Name">Mesh</string>
+          <Vector3 name="Offset">
+            <X>0</X>
+            <Y>0</Y>
+            <Z>0</Z>
+          </Vector3>
+          <Vector3 name="Scale">
+            <X>0.5</X>
+            <Y>0.5</Y>
+            <Z>0.5</Z>
+          </Vector3>
+          <Content name="TextureId">
+            <url>rbxassetid://376186990</url>
+          </Content>
+          <Vector3 name="VertexColor">
+            <X>1</X>
+            <Y>1</Y>
+            <Z>1</Z>
+          </Vector3>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>8.65838956e-009</X>
+            <Y>0.900000095</Y>
+            <Z>-0.0202722438</Z>
+            <R00>1</R00>
+            <R01>7.87137555e-009</R01>
+            <R02>-3.26223034e-024</R02>
+            <R10>-7.87137555e-009</R10>
+            <R11>1</R11>
+            <R12>-4.1444221e-016</R12>
+            <R20>0</R20>
+            <R21>4.1444221e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">HairAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+</roblox>
