@@ -227,8 +227,23 @@ local function npc(parent,staff,position)
     World.part(model,"Left leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(-.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
     World.part(model,"Right leg",Vector3.new(1.2,3.5,1.2),CFrame.new(position+Vector3.new(.8,1.4,0)),lowerColor,Enum.Material.Fabric,false)
     local armColor=(appearance.jacket or appearance.outer) and outerColor or topColor
-    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.05,4.4,0)),armColor,Enum.Material.Fabric,false)
-    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.05,4.4,0)),armColor,Enum.Material.Fabric,false)
+    World.part(model,"Left arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(-2.02,4.4,0))*CFrame.Angles(0,0,math.rad(-4)),armColor,Enum.Material.Fabric,false)
+    World.part(model,"Right arm",Vector3.new(.9,3.7,.9),CFrame.new(position+Vector3.new(2.02,4.4,0))*CFrame.Angles(0,0,math.rad(4)),armColor,Enum.Material.Fabric,false)
+
+    -- Small silhouette details matter disproportionately at Roblox camera distance. Hands, neck
+    -- and shoes keep the staff from reading as stacked blocks while remaining intentionally Roblox-like.
+    for _,x in ipairs({-2.13,2.13}) do
+        local hand=World.part(model,x<0 and "Left hand" or "Right hand",Vector3.new(.82,.82,.82),
+            CFrame.new(position+Vector3.new(x,2.52,-.02)),skin,Enum.Material.SmoothPlastic,false)
+        hand.Shape=Enum.PartType.Ball
+    end
+    local neck=World.part(model,"Neck",Vector3.new(.68,.72,.68),
+        CFrame.new(position+Vector3.new(0,6.62,0))*CFrame.Angles(0,0,math.rad(90)),skin,Enum.Material.SmoothPlastic,false)
+    neck.Shape=Enum.PartType.Cylinder
+    local shoeColor=Color3.fromRGB(38,42,48)
+    World.part(model,"Left shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(-.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
+    World.part(model,"Right shoe",Vector3.new(1.28,.58,1.78),CFrame.new(position+Vector3.new(.8,-.02,-.26)),shoeColor,Enum.Material.SmoothPlastic,false)
+
     local head=World.part(model,"Head",Vector3.new(2.35,2.35,2.35),CFrame.new(position+Vector3.new(0,7.8,0)),skin,Enum.Material.SmoothPlastic,false)
     head.Shape=Enum.PartType.Ball
 
@@ -279,9 +294,17 @@ local function npc(parent,staff,position)
             local sideHeight=long and 4.4 or 3.0
             hairPart("Hair side left",Vector3.new(.7,sideHeight,1.45),Vector3.new(-1.12,7.25,.25),Enum.PartType.Ball)
             hairPart("Hair side right",Vector3.new(.7,sideHeight,1.45),Vector3.new(1.12,7.25,.25),Enum.PartType.Ball)
-            if style=="shoulderBangs" then
+            if style=="bob" then
+                hairPart("Bob back",Vector3.new(2.18,2.15,.82),Vector3.new(0,7.58,.88),Enum.PartType.Ball)
+            elseif style=="shoulder" then
+                hairPart("Shoulder hair back",Vector3.new(2.08,2.78,.86),Vector3.new(0,7.08,.92),Enum.PartType.Ball)
+            elseif style=="shoulderBangs" then
                 hairPart("Bangs",Vector3.new(2.1,.75,.45),Vector3.new(0,8.52,-1.0),Enum.PartType.Ball)
+                hairPart("Shoulder hair back",Vector3.new(2.08,2.78,.86),Vector3.new(0,7.08,.92),Enum.PartType.Ball)
+            elseif style=="longStraight" or style=="long" then
+                hairPart("Long hair back",Vector3.new(2.12,4.05,.88),Vector3.new(0,6.45,.92),Enum.PartType.Ball)
             elseif style=="longWavy" then
+                hairPart("Long hair back",Vector3.new(2.05,3.55,.86),Vector3.new(0,6.68,.94),Enum.PartType.Ball)
                 hairPart("Wavy hair left",Vector3.new(.9,2.3,1.1),Vector3.new(-1.3,6.3,.35),Enum.PartType.Ball)
                 hairPart("Wavy hair right",Vector3.new(.9,2.3,1.1),Vector3.new(1.3,6.3,.35),Enum.PartType.Ball)
             end
