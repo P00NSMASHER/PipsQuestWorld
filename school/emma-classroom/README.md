@@ -32,3 +32,26 @@ The bank contains 134 verified/current questions. Nearer tests are weighted more
 ## Design rule
 
 Keep this simple. If a proposed feature does not help Emma answer schoolwork questions, it probably does not belong here.
+
+
+## Visual gold standard
+
+The user-approved classroom concept image is the visual-quality target for this tiny mode. Because the product is intentionally one room, polish is concentrated instead of spread across a fake open world.
+
+Non-negotiable room cues:
+- warm yellow ABVM classroom walls with deep blue trim and dark varnished wood floor
+- old-school chalkboard plus a modern interactive smartboard
+- wood-framed windows, blue valances, radiators and warm daylight
+- built-in cubbies with colorful bins, books, plants, globe, teacher desk and lived-in desk clutter
+- alphabet border, crucifix, “Let Your Light Shine,” ABVM values and personalized Emma desk
+- small photo-inspired blue-gray/tan-brick hallway visible through the classroom doors
+- restrained cinematic lighting, not neon theme-park lighting
+
+Teacher/staff quality target:
+- distinct stylized Roblox silhouettes rather than colored rectangles
+- face, hair, hands, shoes, clothing layers, lanyard, staff badge and classroom prop
+- smooth walk-in/walk-out motion with limb swing
+- in-world nameplate and speech bubble
+- question mirrored on the classroom smartboard while the teacher is at the front
+
+The visual profiles are stylized native-Roblox interpretations. They must not be described as portrait-exact likenesses unless separately verified against labeled reference photographs.
