@@ -63,6 +63,12 @@ teacherChip.Name="TeacherChip";teacherChip.BackgroundColor3=Color3.fromRGB(248,2
 corner(teacherChip,14);stroke(teacherChip,P.green,.48,1)
 local teacherText=text(teacherChip,"Teacher",12,P.green,Enum.Font.GothamBold);teacherText.Size=UDim2.fromScale(1,1);teacherText.ZIndex=11
 
+local viewToggle=Instance.new("TextButton")
+viewToggle.Name="ViewToggle";viewToggle.BackgroundColor3=Color3.fromRGB(248,246,236);viewToggle.BorderSizePixel=0
+viewToggle.Text="Study view";viewToggle.TextColor3=P.green;viewToggle.Font=Enum.Font.GothamBold;viewToggle.TextSize=12
+viewToggle.AutoButtonColor=true;viewToggle.ZIndex=12;viewToggle.Parent=root
+corner(viewToggle,12);stroke(viewToggle,P.green,.42,1)
+
 local entering=Instance.new("Frame")
 entering.AnchorPoint=Vector2.new(.5,.5);entering.BackgroundColor3=P.green;entering.BackgroundTransparency=.05;entering.BorderSizePixel=0;entering.Visible=false;entering.ZIndex=20;entering.Parent=root
 corner(entering,999);stroke(entering,P.gold,.20,1.2)
@@ -86,14 +92,29 @@ local currentToken:string?=nil
 local busy=false
 local colors={P.blue,P.teal,P.amber,P.purple}
 local camera=Workspace.CurrentCamera
+local studyView=false
 
-local function setCamera()
+local function setPlayerCamera()
+    camera=Workspace.CurrentCamera
+    if not camera then return end
+    local character=player.Character
+    local humanoid=character and character:FindFirstChildOfClass("Humanoid")
+    camera.CameraType=Enum.CameraType.Custom
+    if humanoid then camera.CameraSubject=humanoid end
+    camera.FieldOfView=70
+    studyView=false
+    viewToggle.Text="Study view"
+end
+
+local function setStudyCamera()
     camera=Workspace.CurrentCamera
     if not camera then return end
     camera.CameraType=Enum.CameraType.Scriptable
     camera.FieldOfView=68
     -- Rear-left classroom view: Emma/desk foreground, teacher + Smartboard center, doorway/right wall visible.
     camera.CFrame=CFrame.lookAt(Vector3.new(-18,8.8,21),Vector3.new(-4,7.2,-18))
+    studyView=true
+    viewToggle.Text="Look around"
 end
 
 local function setProgress(p)
@@ -154,6 +175,7 @@ local function layout()
     local landscape=w>h
 
     progressChip.Position=UDim2.fromOffset(12,12);progressChip.Size=UDim2.fromOffset(138,38)
+    viewToggle.Position=UDim2.fromOffset(12,58);viewToggle.Size=UDim2.fromOffset(124,44)
     teacherChip.AnchorPoint=Vector2.new(1,0);teacherChip.Position=UDim2.new(1,-12,0,12);teacherChip.Size=UDim2.fromOffset(math.min(250,w*.30),38)
     entering.Size=UDim2.fromOffset(math.min(300,w-40),44);entering.Position=UDim2.new(.5,0,.52,0)
 
@@ -179,10 +201,14 @@ local cam=Workspace.CurrentCamera
 if cam then
     cam:GetPropertyChangedSignal("ViewportSize"):Connect(layout)
 end
-layout();setCamera()
+layout();setPlayerCamera()
+
+viewToggle.Activated:Connect(function()
+    if studyView then setPlayerCamera() else setStudyCamera() end
+end)
 
 player.CharacterAdded:Connect(function()
-    task.wait(.25);setCamera()
+    task.wait(.25);setPlayerCamera()
 end)
 
 event.OnClientEvent:Connect(function(payload)
