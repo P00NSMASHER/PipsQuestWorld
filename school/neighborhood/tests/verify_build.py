@@ -78,6 +78,9 @@ def validate_abvm_contract() -> dict:
     """Protect photo-critical source intent; this is not a rendered-fidelity assertion."""
     world = (MODE / "server/World.lua").read_text(encoding="utf-8")
     catalog = (MODE / "shared/Catalog.lua").read_text(encoding="utf-8")
+    portrait_pixels = (MODE / "shared/PortraitPixels.lua").read_text(encoding="utf-8")
+    portrait_renderer = (MODE / "shared/PortraitRenderer.lua").read_text(encoding="utf-8")
+    portrait_sources = (MODE / "faculty-portrait-sources.tsv").read_text(encoding="utf-8")
     main = (MODE / "client/Main.client.lua").read_text(encoding="utf-8")
     server_main = (MODE / "server/Main.server.lua").read_text(encoding="utf-8")
     required_world = (
@@ -104,6 +107,9 @@ def validate_abvm_contract() -> dict:
         '"Left shoe"',
         '"Right shoe"',
         '"Neck"',
+        '"Photo face plate"',
+        '"BakedFacultyPortrait"',
+        'PortraitRenderer.render(border,portrait',
         "facultyPositions",
         "World.schoolDoor=CFrame.new(0,3,18)",
         "Central hall floor stair side",
@@ -163,6 +169,12 @@ def validate_abvm_contract() -> dict:
     }
     require("Catalog.Faculty = {" in catalog and "Catalog.ByStaffId" in catalog and "Catalog.ByStaffName" in catalog,
             "faculty directory/index contract missing")
+    require(portrait_sources.count("https://www.assumptionbvmschool.net/") == 18,
+            "faculty portrait source manifest must contain exactly 18 approved school references")
+    require(portrait_pixels.count("rows={") == 18 and "__meta={generated=" in portrait_pixels,
+            "faculty portrait payload contract must contain 18 records")
+    require("function Renderer.render" in portrait_renderer and "ColorSequenceKeypoint.new" in portrait_renderer,
+            "asset-free portrait gradient renderer missing")
     for name, role in required_faculty.items():
         require(f'name="{name}"' in catalog and f'role="{role}"' in catalog,
                 f"missing exact faculty directory entry: {name} / {role}")
@@ -190,6 +202,7 @@ def validate_abvm_contract() -> dict:
     require(all(marker in main for marker in (
         'Name="ProductGrid"', 'showClasses=function()', 'showAvatar=function()', 'showFaculty=function()',
         'showFacultyProfile=function(staffId)', 'Name="FacultyGrid"', 'Name="FacultyPortrait"',
+        'Name="FacultyPortraitPhoto"', 'PortraitRenderer.render(photo,portrait',
         'ProximityPromptService.PromptTriggered', 'Headshot=true', '"Faculty & Staff Directory"',
         '"Drive","go"', '"Reverse","back"', '"Park"',
         'local subjectVisuals={', '"Starter","Family","Luxury"',
