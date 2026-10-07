@@ -322,10 +322,11 @@ showClasses=function()
         UI.text(card,s.room or "Learning Lab",12,{Position=UDim2.fromOffset(62,32),Size=UDim2.new(1,-74,0,20),TextColor3=UI.P.muted})
         UI.text(card,"›",21,{AnchorPoint=Vector2.new(1,.5),Position=UDim2.new(1,-10,.5,0),Size=UDim2.fromOffset(18,30),TextXAlignment=Enum.TextXAlignment.Center,TextColor3=UI.P.muted})
     end
-    UI.button(body,"Faculty & Staff Directory",function() showFaculty() end,{
-        LayoutOrder=4,Size=UDim2.new(1,0,0,46),BackgroundColor3=UI.P.ink,TextColor3=UI.P.white,TextSize=14,CornerRadius=12,
+    UI.button(body,"View All 18 Faculty & Staff",function() showFaculty() end,{
+        LayoutOrder=4,Size=UDim2.new(1,0,0,50),BackgroundColor3=UI.P.gold,TextColor3=UI.P.ink,TextSize=15,CornerRadius=12,
     })
-    UI.chip(body,"Learning Labs are separate from real staff roles",{LayoutOrder=5,Size=UDim2.fromOffset(294,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
+    UI.chip(body,"18 baked staff portraits • first-floor gallery",{LayoutOrder=5,Size=UDim2.fromOffset(288,30),BackgroundColor3=UI.P.navySoft,TextColor3=UI.P.ink})
+    UI.chip(body,"Learning Labs are separate from real staff roles",{LayoutOrder=6,Size=UDim2.fromOffset(294,30),BackgroundColor3=UI.P.soft,TextColor3=UI.P.teal})
 end
 
 showFaculty=function()
@@ -335,7 +336,7 @@ showFaculty=function()
     UI.text(body,"ASSUMPTION BVM CATHOLIC SCHOOL",UI.T.caption,{
         LayoutOrder=1,Size=UDim2.new(1,0,0,20),TextColor3=UI.P.gold,Font=Enum.Font.GothamBold,
     })
-    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. Tap any portrait for the full 3D profile, or walk up to that person and use Meet.",12,{
+    UI.text(body,"All 18 staff members are modeled in the school with baked photo-derived face plates. The first-floor hallway now displays every portrait together. Tap any portrait here or in the hallway for the matching 3D profile.",12,{
         LayoutOrder=2,Size=UDim2.new(1,0,0,44),TextColor3=UI.P.muted,TextYAlignment=Enum.TextYAlignment.Top,
     })
     local layout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
@@ -964,11 +965,27 @@ changed.OnClientEvent:Connect(function(packet)
     end
 end)
 ProximityPromptService.PromptTriggered:Connect(function(prompt)
-    if prompt.Name~="MeetFaculty" then return end
-    local model=prompt:FindFirstAncestorOfClass("Model")
-    local staffId=model and model:GetAttribute("StaffId") or nil
-    if type(staffId)=="string" then
-        showFacultyProfile(staffId)
+    if prompt.Name=="OpenFacultyDirectory" then
+        locationCommand="school"
+        showFaculty()
+        return
+    end
+    if prompt.Name=="OpenFacultyProfile" then
+        local holder=prompt.Parent
+        local staffId=holder and holder:GetAttribute("GalleryStaffId") or nil
+        if type(staffId)=="string" then
+            locationCommand="school"
+            showFacultyProfile(staffId)
+        end
+        return
+    end
+    if prompt.Name=="MeetFaculty" then
+        local model=prompt:FindFirstAncestorOfClass("Model")
+        local staffId=model and model:GetAttribute("StaffId") or nil
+        if type(staffId)=="string" then
+            locationCommand="school"
+            showFacultyProfile(staffId)
+        end
     end
 end)
 
