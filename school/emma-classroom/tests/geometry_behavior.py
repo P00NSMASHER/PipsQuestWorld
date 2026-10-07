@@ -94,12 +94,33 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==3)
-    local mask=m:FindFirstChild("Smile upper mask")
-    local eye=m:FindFirstChild("Expressive oval eye")
-    assert(mask.CFrame.Position.Y+mask.Size.Y/2<eye.CFrame.Position.Y-eye.Size.Y/2,"Smile mask must not clip the eyes")
+    assert(m:GetAttribute("StaffGeometryVersion")==4)
     local head=m:FindFirstChild("Head")
-    assert(head and head:FindFirstChild("Classic rounded head").MeshType==Enum.MeshType.Head)
+    assert(head and not head:FindFirstChild("Classic rounded head"),"Do not reintroduce nonstandard Head mesh scaling")
+    local face=head:FindFirstChild("Friendly face")
+    assert(face and face.Face==Enum.NormalId.Front and face.LightInfluence==0 and not face.AlwaysOnTop)
+    assert(face.CanvasSize[1]==440 and face.CanvasSize[2]==600 and face.ZOffset>0)
+    -- Regression: every eye and mouth stroke is ink on the actual flat head
+    -- surface, not a 3D ellipsoid that can become buried in the head mesh.
+    local eyeN,smileN=0,0
+    for _,f in ipairs(face:GetChildren()) do
+        if f:IsA("Frame") then
+            local x,y=f.Position[1],f.Position[2]
+            local w,h=f.Size[1],f.Size[2]
+            assert(x-w/2>0 and x+w/2<440 and y-h/2>0 and y+h/2<600,"Face ink must fit the head surface")
+            if f.Name=="Friendly eye" then eyeN+=1;assert(h>w and f.BackgroundColor3.R<.15) end
+            if f.Name=="Friendly smile" then smileN+=1;assert(y>=396 and y<=435 and f.BackgroundColor3.R<.15) end
+            if f.Name=="Soft beard" then assert(y-h/2>435,"Beard ink must not cover the smile") end
+        end
+    end
+    assert(eyeN==2 and smileN==12,"A face must have two readable eyes and a complete gentle smile")
+    assert(not m:FindFirstChild("Expressive oval eye") and not m:FindFirstChild("Smile upper mask") and not m:FindFirstChild("Swept hair lock"))
+    local scale=m:GetScale()
+    if teacher.hairStyle~="balding" then
+        local cap=m:FindFirstChild("Connected hair cap")
+        assert(cap and m:FindFirstChild("Connected hair cap rounded corner"))
+        assert(cap.CFrame.Position.Y-cap.Size.Y/2 < head.CFrame.Position.Y+head.Size.Y/2,"Cap must intersect the crown")
+    end
     local n,groups,counts=0,{},{}
     local minY,maxY=math.huge,-math.huge
     for _,d in ipairs(m:GetDescendants()) do
@@ -119,14 +140,14 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
     assert(counts["Torso rounded corner"]==4 and counts["Left Arm rounded corner"]==4 and counts["Left Leg rounded corner"]==4)
-    assert(counts["C shaped hand"]==20 and counts["Expressive oval eye"]==2 and counts["Eye catchlight"]==2)
+    assert(counts["C shaped hand"]==20 and counts["Friendly eye"]==2 and counts["Eye shine"]==2 and counts["Head rounded corner"]==4)
     assert(groups.leftArm>=14 and groups.rightArm>=14 and groups.leftLeg>=6 and groups.rightLeg>=6)
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
     assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.8, "World label must scale in studs rather than fixed pixels")
     if teacher.name=="Mr. Bolich" then
         assert(m:FindFirstChild("Left Arm").CFrame.Position.Y+m:FindFirstChild("Left Arm").Size.Y/2 < 2*m:GetScale(),"Skin forearm must stay below the polo shoulder")
-        assert(counts["Continuous beard underlay"]==1 and counts["Beard cheek contour"]==2)
-        assert(counts["Beard strand"]==7 and counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
+        assert(counts["Soft beard"]==1 and counts["Smooth beard chin"]==1 and not counts["Layered beard lock"] and not counts["Connected beard"])
+        assert(counts["Sneaker lace"]==6 and counts["Polo woven horizontal check"]==8) end
     if teacher.name=="Dr. McBreen" then assert(counts["Tie diagonal stripe"]==5 and counts["Notched jacket lapel"]==2) end
     if teacher.name=="Mrs. Boyer" then assert(counts["Pearl earring"]==2 and counts["Gold mission pin"]==1) end
     local arm=m:FindFirstChild("Left Arm")
@@ -174,7 +195,7 @@ for _,d in ipairs(World.Root:GetChildren()) do
         if p.Z>-21 and p.Z<16 then assert(not(p.X-s.X/2<30.4 and p.X+s.X/2>27.6),"Blocked teacher aisle: "..d.Name) end
     end
 end
-print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, limb-detail poses, portrait-specific details; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
+print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, limb-detail poses, flat readable faces, connected hair; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
 '''
 fixture=p/'tests/.geometry-runtime.generated.lua'
 try:

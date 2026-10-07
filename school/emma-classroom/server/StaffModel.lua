@@ -18,7 +18,7 @@ function StaffModel.create(teacher)
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(1,1,1)
     root.Anchored=true;root.Transparency=1;root.CanCollide=false;root.CanTouch=false;root.CanQuery=false;root.Parent=model
     model.PrimaryPart=root
-    model:SetAttribute("StaffGeometryVersion",3)
+    model:SetAttribute("StaffGeometryVersion",4)
     local skin,hair,shirt,accent=rgb(teacher.skin),rgb(teacher.hair),rgb(teacher.shirt),rgb(teacher.accent)
     local clothes=teacher.clothing or "blouse"
     local formal=clothes=="suit" or clothes=="blazer"
@@ -70,89 +70,80 @@ function StaffModel.create(teacher)
 
     rounded("Torso",Vector3.new(3.15,2.85,1.65),CFrame.new(0,1.46,0),shirt,nil,.20)
     oval("Neck",Vector3.new(.9,.55,.9),CFrame.new(0,3.08,0),skin)
-    local head=box("Head",Vector3.new(2.25,2.2,2),CFrame.new(0,4.12,0),skin)
-    local headMesh=Instance.new("SpecialMesh");headMesh.Name="Classic rounded head";headMesh.MeshType=Enum.MeshType.Head;headMesh.Parent=head
-    for _,side in ipairs({-1,1}) do
-        local x=side*.48
-        oval("Expressive oval eye",Vector3.new(.24,.45,.07),CFrame.new(x,4.23,-1.025),INK)
-        oval("Eye catchlight",Vector3.new(.075,.095,.028),CFrame.new(x-.035,4.34,-1.064),WHITE)
-        path("Shaped eyebrow",{Vector3.new(x-.23,4.72,-.98),Vector3.new(x,4.78,-1.015),Vector3.new(x+.23,4.72,-.98)},.085,hair)
-        oval("Ear",Vector3.new(.32,.55,.55),CFrame.new(side*1.08,4.09,.0),skin)
-        oval("Ear inset",Vector3.new(.05,.25,.22),CFrame.new(side*1.245,4.1,-.045),skin:Lerp(Color3.fromRGB(192,112,91),.24))
-        if isBoyer then oval("Pearl earring",Vector3.new(.19,.19,.19),CFrame.new(side*1.18,3.87,-.34),WHITE) end
-        if not string.find(teacher.name,"Mr.",1,true) and teacher.name~="Dr. McBreen" then
-            line("Eyelash",Vector3.new(x+side*.07,4.44,-1.06),Vector3.new(x+side*.20,4.53,-1.05),.045,INK)
-        end
+    -- Explicit rounded parts have known bounds. MeshType.Head has nonstandard
+    -- scaling; version 55 buried its 3D eyes/mouth and hair inside that mesh.
+    local head=rounded("Head",Vector3.new(2.25,2.2,1.75),CFrame.new(0,4.12,0),skin,nil,.32)
+    local face=Instance.new("SurfaceGui");face.Name="Friendly face";face.Face=Enum.NormalId.Front
+    face.CanvasSize=Vector2.new(440,600);face.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    face.LightInfluence=0;face.Brightness=1;face.AlwaysOnTop=false;face.ZOffset=.015;face.Parent=head
+    local function ink(name,x,y,w,h,color,rotation)
+        local f=Instance.new("Frame");f.Name=name;f.AnchorPoint=Vector2.new(.5,.5)
+        f.Position=UDim2.fromOffset(x,y);f.Size=UDim2.fromOffset(w,h);f.BackgroundColor3=color
+        f.BorderSizePixel=0;f.Rotation=rotation or 0;f.Parent=face
+        local c=Instance.new("UICorner");c.CornerRadius=UDim.new(1,0);c.Parent=f
+        return f
     end
-    -- Filled mouth with a white inset and curved lip; avoids the former straight red bar.
-    oval("Smile mouth",Vector3.new(.96,.32,.055),CFrame.new(0,3.82,-1.025),INK)
-    oval("Smile teeth",Vector3.new(.82,.26,.038),CFrame.new(0,3.845,-1.059),WHITE)
-    box("Smile upper mask",Vector3.new(1.03,.055,.04),CFrame.new(0,3.9475,-1.09),skin)
+    -- Two open eyes and a gentle upward smile. Flat ink stays attached and
+    -- readable without raised eyeballs, teeth, eyelash spikes or mouth masks.
+    for _,x in ipairs({125,315}) do
+        ink("Friendly eye",x,295,38,64,INK)
+        ink("Eye shine",x-6,281,9,13,WHITE)
+        ink("Friendly brow",x,226,65,10,hair,x<220 and -5 or 5)
+    end
+    for i=0,11 do
+        local t1=math.pi*i/12;local t2=math.pi*(i+1)/12
+        local x1,y1=220-98*math.cos(t1),396+38*math.sin(t1)
+        local x2,y2=220-98*math.cos(t2),396+38*math.sin(t2)
+        local dx,dy=x2-x1,y2-y1
+        ink("Friendly smile",(x1+x2)/2,(y1+y2)/2,math.sqrt(dx*dx+dy*dy)+2,11,INK,math.deg(math.atan2(dy,dx)))
+    end
+    for _,side in ipairs({-1,1}) do
+        oval("Ear",Vector3.new(.24,.43,.40),CFrame.new(side*1.11,4.12,.10),skin)
+        if isBoyer then oval("Pearl earring",Vector3.new(.17,.17,.17),CFrame.new(side*1.19,3.85,-.13),WHITE) end
+    end
     if teacher.glasses then
-        for _,x in ipairs({-.48,.48}) do
-            -- Rounded rectangle contours, no opaque lens plates covering the eyes.
-            local points={Vector3.new(x-.32,4.55,-1.13),Vector3.new(x+.30,4.55,-1.13),Vector3.new(x+.36,4.49,-1.13),Vector3.new(x+.36,4.02,-1.13),Vector3.new(x+.30,3.96,-1.13),Vector3.new(x-.30,3.96,-1.13),Vector3.new(x-.36,4.02,-1.13),Vector3.new(x-.36,4.49,-1.13),Vector3.new(x-.32,4.55,-1.13)}
-            path("Rounded glasses frame",points,.075,INK)
+        for _,x in ipairs({125,315}) do
+            -- Transparent frames drawn around, never over, the eye centers.
+            ink("Glasses top",x,248,134,10,INK)
+            ink("Glasses bottom",x,345,134,10,INK)
+            ink("Glasses side",x-62,296.5,10,98,INK)
+            ink("Glasses side",x+62,296.5,10,98,INK)
         end
-        line("Glasses bridge",Vector3.new(-.12,4.35,-1.13),Vector3.new(.12,4.35,-1.13),.075,INK)
-        for _,side in ipairs({-1,1}) do line("Glasses temple",Vector3.new(side*.83,4.46,-1.13),Vector3.new(side*1.15,4.38,.25),.06,INK) end
+        ink("Glasses bridge",220,274,66,9,INK)
+        for _,side in ipairs({-1,1}) do line("Glasses temple",Vector3.new(side*.76,4.31,-.90),Vector3.new(side*1.17,4.27,.18),.06,INK) end
     end
 
-    -- One continuous silhouette, a side part and three overlapping swept
-    -- layers. The old six upright lobes read as a pile of balls on the phone.
-    local highlight=hair:Lerp(WHITE,.09)
+    -- One cap and connected side/back pieces. No floating locks
+    -- or thin strand geometry that shimmers at phone resolution.
     local style=teacher.hairStyle or "shoulder"
     if style=="balding" then
         for _,side in ipairs({-1,1}) do
-            oval("Balding side hair",Vector3.new(.24,1.05,1.35),CFrame.new(side*1.10,4.57,.27),hair)
-            for i=1,3 do line("Side hair strand",Vector3.new(side*1.22,4.92,-.25+i*.22),Vector3.new(side*1.23,4.15,-.15+i*.22),.026,highlight) end
+            oval("Balding side hair",Vector3.new(.28,1.0,1.40),CFrame.new(side*1.04,4.52,.20),hair)
         end
+        oval("Balding back hair",Vector3.new(2.05,.85,.40),CFrame.new(0,4.50,.91),hair)
     else
         local short=style=="short"
-        oval("Hair back cap",Vector3.new(2.36,.72,1.85),CFrame.new(0,5.22,.16),hair)
-        -- Long sweep comes down the left forehead and tucks behind the ear.
-        for i=0,2 do
-            local x=-.56+i*.45
-            local cf=CFrame.new(x,short and 5.20 or 5.03+i*.08,-1.00)*CFrame.Angles(0,0,math.rad(short and (-10+i*5) or (38-i*6)))
-            oval("Swept hair lock",Vector3.new(short and .94 or 1.04,short and .32 or .49,.46),cf,hair)
-            oval("Hair strand ridge",Vector3.new(short and .71 or .77,.022,.025),cf*CFrame.new(0,.10,-.220),highlight)
-        end
+        rounded("Connected hair cap",Vector3.new(2.42,.74,1.94),CFrame.new(0,5.02,.025),hair,nil,.21)
         for _,side in ipairs({-1,1}) do
             if short then
-                oval("Tapered sideburn",Vector3.new(.20,.69,.52),CFrame.new(side*1.08,4.65,-.08),hair)
+                oval("Tapered sideburn",Vector3.new(.25,.73,.62),CFrame.new(side*1.04,4.62,.02),hair)
             else
-                local length=style=="bob" and 1.55 or (style=="shoulder" and 2.12 or 2.70)
-                local cf=CFrame.new(side*1.05,4.70-length*.44,.23)*CFrame.Angles(0,0,side*-.05)
-                oval("Shaped side hair",Vector3.new(.55,length,1.37),cf,hair)
-                for i=0,2 do
-                    line("Side hair contour",(cf*CFrame.new(side*.20,length*.28,-.54+i*.18)).Position,(cf*CFrame.new(side*.20,-length*.32,-.42+i*.18)).Position,.025,highlight)
-                end
-                if style=="waves" then
-                    for i=0,2 do oval("Layered hair wave",Vector3.new(.42,.66,.44),cf*CFrame.new(side*.12,-length*.30+i*.65,-.36)*CFrame.Angles(0,0,side*.18),hair) end
-                end
+                local length=style=="bob" and 1.58 or (style=="shoulder" and 2.10 or 2.65)
+                oval("Connected side hair",Vector3.new(.49,length,1.50),CFrame.new(side*1.08,5.00-length*.43,.27),hair)
             end
         end
         if not short then
-            local length=style=="bob" and 1.55 or (style=="shoulder" and 2.12 or 2.70)
-            oval("Hair back fall",Vector3.new(2.05,length,.62),CFrame.new(0,4.7-length*.44,.90),hair)
+            local length=style=="bob" and 1.58 or (style=="shoulder" and 2.10 or 2.65)
+            oval("Connected back hair",Vector3.new(2.12,length,.46),CFrame.new(0,5.00-length*.43,.99),hair)
         end
     end
     if teacher.beard then
+        -- One flat chin silhouette below the smile; no chain of beard beads.
         local beard=rgb(teacher.beard)
-        local long=isBolich
-        if long then
-            oval("Continuous beard underlay",Vector3.new(1.86,.72,.37),CFrame.new(0,3.24,-.87),beard)
-            for _,side in ipairs({-1,1}) do oval("Beard cheek contour",Vector3.new(.30,.72,.30),CFrame.new(side*.79,3.66,-.85),beard) end
+        ink("Soft beard",220,isBolich and 520 or 540,350,isBolich and 140 or 70,beard)
+        if isBolich then
+            oval("Smooth beard chin",Vector3.new(1.78,.56,.94),CFrame.new(0,2.96,-.12),beard)
         end
-        for i=0,6 do
-            local x=-.78+i*.26
-            local drop=long and (.45+.25*(1-math.abs(x))) or .12
-            oval("Layered beard lock",Vector3.new(.40,long and .92 or .45,.39),CFrame.new(x,3.42-drop*.35,-.88),beard)
-            if long then
-                oval("Beard strand",Vector3.new(.025,.56,.04),CFrame.new(x,3.25-drop*.3,-1.07)*CFrame.Angles(0,0,x*.15),beard:Lerp(WHITE,.16))
-            end
-        end
-        for _,side in ipairs({-1,1}) do oval("Swept moustache",Vector3.new(.48,.18,.18),CFrame.new(side*.22,3.985,-1.09)*CFrame.Angles(0,0,side*.2),beard) end
     end
 
     local jacket=formal or clothes=="cardigan" or clothes=="vest"

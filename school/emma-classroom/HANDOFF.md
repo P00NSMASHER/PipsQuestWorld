@@ -1,3 +1,7 @@
+# Current repair: friendly, readable teachers
+
+The October 7 4:11 PM iPhone recording rejects version 55. See `FRIENDLY_STAFF_FIX.md` for the concrete face/hair/light repair and regression checks. Native/device acceptance of the replacement remains pending; earlier visual pass descriptions are historical.
+
 ## Current visual revision
 
 Version 54 was reviewed on a physical iPhone and rated 2/5 by the user. The next visual revision is documented in `VISUAL_QUALITY_V3.md`: rounded staff/furniture, daylight, actual storage detail and close study camera. Source/projection checks pass; a new native/device render must still be reviewed. Previous evidence below remains historical.

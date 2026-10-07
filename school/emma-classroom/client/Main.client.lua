@@ -229,7 +229,7 @@ local function connectCharacter(character)
     local humanoid=character:WaitForChild("Humanoid")
     if studyView then setStudyCamera() else setPlayerCamera() end
     humanoid.Running:Connect(function(speed)
-        if studyView and speed>.5 then setPlayerCamera() end
+        if studyView and speed>.5 and humanoid.MoveDirection.Magnitude>.05 then setPlayerCamera() end
     end)
 end
 player.CharacterAdded:Connect(connectCharacter)
