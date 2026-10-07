@@ -32,8 +32,8 @@ local activeFacultyId=nil
 local header=UI.surface(canvas,{Name="Header",AnchorPoint=Vector2.new(.5,0),Position=UDim2.new(.5,0,0,4),Size=UDim2.fromOffset(500,50),BackgroundColor3=UI.P.ink,BackgroundTransparency=.02})
 local avatar=UI.new("ImageLabel",header,{Position=UDim2.fromOffset(8,7),Size=UDim2.fromOffset(34,34),BackgroundColor3=UI.P.navySoft,BorderSizePixel=0,Image="rbxthumb://type=AvatarHeadShot&id="..tostring(player.UserId).."&w=150&h=150",ScaleType=Enum.ScaleType.Crop})
 UI.corner(avatar,999);UI.stroke(avatar,UI.P.gold)
-UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
-UI.text(header,"GRADE 2  •  ABVM",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(118,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
+local nameText=UI.text(header,player.DisplayName,16,{Position=UDim2.fromOffset(48,2),Size=UDim2.fromOffset(128,23),Font=Enum.Font.GothamBold,TextColor3=UI.P.white,TextTruncate=Enum.TextTruncate.AtEnd})
+local gradeText=UI.text(header,"GRADE 2  •  ABVM",9,{Position=UDim2.fromOffset(48,24),Size=UDim2.fromOffset(118,15),Font=Enum.Font.GothamBold,TextColor3=UI.P.gold})
 
 local wallet=UI.frame(header,{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-8,0,8),Size=UDim2.fromOffset(104,34),BackgroundColor3=UI.P.gold})
 UI.corner(wallet,UI.R.chip)
@@ -98,9 +98,10 @@ local function update(snapshot)
         UI.flyout(wallet,(delta>0 and "+" or "")..tostring(delta),delta>0 and UI.P.success or UI.P.negative)
     end
     if resumeButton then
-        resumeButton.Visible=state.subject~=nil
-        local goalLayout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y).goal
-        goalCard.Size=UDim2.fromOffset(goalLayout.width,goalLayout.height+(state.subject and 40 or 0))
+        local liveLayout=Layout.compute(canvas.AbsoluteSize.X,canvas.AbsoluteSize.Y)
+        resumeButton.Visible=state.subject~=nil and not liveLayout.compactLandscape
+        local goalLayout=liveLayout.goal
+        goalCard.Size=UDim2.fromOffset(goalLayout.width,goalLayout.height+((state.subject and not liveLayout.compactLandscape) and 40 or 0))
     end
     local goal=Catalog.ById[state.goal] or Catalog.ById.home_cottage
     if state.owned[goal.id] then
@@ -846,12 +847,14 @@ local function reflow()
     header.Position=UDim2.fromOffset(layout.rail.x,layout.rail.y)
     header.Size=UDim2.fromOffset(layout.rail.width,layout.rail.height)
 
-    local compactLandscape=layout.goldLandscape and layout.compact
-    avatar.Position=UDim2.fromOffset(8,compactLandscape and 5 or 7)
-    avatar.Size=UDim2.fromOffset(compactLandscape and 30 or 34,compactLandscape and 30 or 34)
-    wallet.Position=UDim2.new(1,-7,0,compactLandscape and 5 or 8)
-    wallet.Size=UDim2.fromOffset(compactLandscape and 92 or 104,compactLandscape and 30 or 34)
-    walletText.TextSize=compactLandscape and 13 or 15
+    local compactLandscape=layout.compactLandscape
+    avatar.Visible=not compactLandscape
+    nameText.Visible=not compactLandscape
+    gradeText.Visible=not compactLandscape
+    wallet.AnchorPoint=compactLandscape and Vector2.new(.5,0) or Vector2.new(1,0)
+    wallet.Position=compactLandscape and UDim2.new(.5,0,0,3) or UDim2.new(1,-7,0,8)
+    wallet.Size=UDim2.fromOffset(compactLandscape and 94 or 104,compactLandscape and 28 or 34)
+    walletText.TextSize=compactLandscape and 12 or 15
     goalInfo.Visible=not compactLandscape
     goalTrack.Visible=not compactLandscape
     if compactLandscape then
@@ -876,8 +879,15 @@ local function reflow()
         nav.Size=UDim2.fromOffset(layout.nav.width,layout.nav.height)
         streakPill.Visible=false
         for i,b in ipairs(navButtons) do
-            b.Size=UDim2.new(1,0,0,38)
-            b.Position=UDim2.fromOffset(0,(i-1)*42)
+            b.Size=compactLandscape and UDim2.fromOffset(50,38) or UDim2.new(1,0,0,38)
+            b.Position=compactLandscape and UDim2.fromOffset(4,(i-1)*42+4) or UDim2.fromOffset(0,(i-1)*42)
+            local label=b:FindFirstChild("Label")
+            local iconBox=b:FindFirstChild("IconBox")
+            if label and label:IsA("TextLabel") then label.Visible=not compactLandscape end
+            if iconBox and iconBox:IsA("Frame") then
+                iconBox.Position=compactLandscape and UDim2.fromOffset(11,5) or UDim2.fromOffset(5,7)
+                iconBox.Size=UDim2.fromOffset(28,28)
+            end
         end
     elseif layout.narrow then
         nav.Parent=header
@@ -889,6 +899,8 @@ local function reflow()
         for i,b in ipairs(navButtons) do
             b.Size=UDim2.new(.25,-6,1,0)
             b.Position=UDim2.new((i-1)*.25,3,0,0)
+            local label=b:FindFirstChild("Label");if label and label:IsA("TextLabel") then label.Visible=true end
+            local iconBox=b:FindFirstChild("IconBox");if iconBox and iconBox:IsA("Frame") then iconBox.Position=UDim2.fromOffset(5,7) end
         end
     else
         nav.Parent=header
@@ -900,6 +912,8 @@ local function reflow()
         for i,b in ipairs(navButtons) do
             b.Size=UDim2.new(.25,-6,1,0)
             b.Position=UDim2.new((i-1)*.25,3,0,0)
+            local label=b:FindFirstChild("Label");if label and label:IsA("TextLabel") then label.Visible=true end
+            local iconBox=b:FindFirstChild("IconBox");if iconBox and iconBox:IsA("Frame") then iconBox.Position=UDim2.fromOffset(5,7) end
         end
     end
 
@@ -909,8 +923,9 @@ local function reflow()
 
     local g=layout.goal
     goalCard.Position=UDim2.fromOffset(g.x,g.y)
-    goalCard.Size=UDim2.fromOffset(g.width,g.height+(state.subject and 40 or 0))
+    goalCard.Size=UDim2.fromOffset(g.width,g.height+((state.subject and not compactLandscape) and 40 or 0))
     if resumeButton then
+        resumeButton.Visible=state.subject~=nil and not compactLandscape
         resumeButton.Position=UDim2.fromOffset(11,g.height+3)
         resumeButton.Size=UDim2.new(1,-22,0,32)
     end
