@@ -1,5 +1,5 @@
 name: Publish ABVM Neighborhood to Roblox
-# release: gold-standard version 29 polished interior + current facade finishing
+# release: version 29 premium school interior polish
 
 on:
   push:
