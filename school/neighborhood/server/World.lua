@@ -258,6 +258,90 @@ local function attachBakedPortrait(model,staff,position)
     return true
 end
 
+local function facultyGalleryPanel(parent,staff,cf)
+    local portrait=PortraitPixels[staff.id]
+    if type(portrait)~="table" or type(portrait.rows)~="table" or #portrait.rows==0 then return nil end
+
+    local panel=World.part(
+        parent,
+        "FacultyGallery_"..staff.id,
+        Vector3.new(5.25,6.8,.28),
+        cf,
+        palette.navy,
+        Enum.Material.SmoothPlastic,
+        false
+    )
+    panel.CastShadow=false
+    panel:SetAttribute("GalleryStaffId",staff.id)
+    panel:SetAttribute("GalleryStaffName",staff.name)
+    panel:SetAttribute("GalleryPortrait",true)
+
+    local gui=Instance.new("SurfaceGui")
+    gui.Name="FacultyGalleryPortrait"
+    gui.Face=Enum.NormalId.Front
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(420,544)
+    gui.LightInfluence=0
+    gui.AlwaysOnTop=false
+    gui.Parent=panel
+
+    local card=Instance.new("Frame")
+    card.Name="GalleryCard"
+    card.Size=UDim2.fromScale(1,1)
+    card.BackgroundColor3=Color3.fromRGB(247,244,236)
+    card.BorderSizePixel=0
+    card.Parent=gui
+
+    local photo=PortraitRenderer.render(card,portrait,{
+        Name="GalleryPhotoPixels",
+        Position=UDim2.fromScale(.045,.035),
+        Size=UDim2.fromScale(.91,.69),
+        CornerRadius=14,
+        ZIndex=2,
+        SampleStep=2,
+    })
+
+    local photoStroke=Instance.new("UIStroke")
+    photoStroke.Name="GalleryPhotoStroke"
+    photoStroke.Color=palette.gold
+    photoStroke.Thickness=3
+    photoStroke.Parent=photo or card
+
+    local name=Instance.new("TextLabel")
+    name.Name="GalleryName"
+    name.Position=UDim2.fromScale(.05,.75)
+    name.Size=UDim2.fromScale(.90,.10)
+    name.BackgroundTransparency=1
+    name.Text=staff.name
+    name.TextColor3=palette.navy
+    name.Font=Enum.Font.GothamBold
+    name.TextScaled=true
+    name.TextWrapped=true
+    name.Parent=card
+
+    local role=Instance.new("TextLabel")
+    role.Name="GalleryRole"
+    role.Position=UDim2.fromScale(.055,.855)
+    role.Size=UDim2.fromScale(.89,.105)
+    role.BackgroundTransparency=1
+    role.Text=staff.role
+    role.TextColor3=Color3.fromRGB(74,88,102)
+    role.Font=Enum.Font.GothamMedium
+    role.TextScaled=true
+    role.TextWrapped=true
+    role.Parent=card
+
+    local prompt=Instance.new("ProximityPrompt")
+    prompt.Name="OpenFacultyProfile"
+    prompt.ActionText="View profile"
+    prompt.ObjectText=staff.name
+    prompt.MaxActivationDistance=9
+    prompt.RequiresLineOfSight=false
+    prompt.HoldDuration=0
+    prompt.Parent=panel
+    return panel
+end
+
 local function npc(parent,staff,position)
     local appearance=staff.appearance or {}
     local model=Instance.new("Model");model.Name="Faculty_"..staff.id;model.Parent=parent
@@ -967,6 +1051,35 @@ function World.build()
     for _,staff in ipairs(Catalog.Faculty) do
         local position=facultyPositions[staff.id]
         if position then npc(root,staff,position) end
+    end
+
+    -- First-floor photo gallery: all 18 staff are visible in one walkable hallway.
+    -- Existing role-appropriate NPC placements remain untouched; these are portrait panels only.
+    local gallerySign=sign(
+        root,
+        "FACULTY & STAFF PHOTO GALLERY\nALL 18 STAFF • WALK THE HALL OR OPEN THE DIRECTORY",
+        CFrame.new(0,11,-49)*CFrame.Angles(0,math.pi,0),
+        Vector3.new(29,4.2,.22),
+        palette.navy,
+        palette.gold
+    )
+    gallerySign.Name="Faculty Gallery Sign"
+    local galleryPrompt=Instance.new("ProximityPrompt")
+    galleryPrompt.Name="OpenFacultyDirectory"
+    galleryPrompt.ActionText="View all 18"
+    galleryPrompt.ObjectText="Faculty & Staff Gallery"
+    galleryPrompt.MaxActivationDistance=14
+    galleryPrompt.RequiresLineOfSight=false
+    galleryPrompt.HoldDuration=0
+    galleryPrompt.Parent=gallerySign
+
+    for index,staff in ipairs(Catalog.Faculty) do
+        local left=index<=9
+        local slot=(index-1)%9
+        local x=left and -14.12 or 14.12
+        local z=-55-slot*9.15
+        local yaw=left and -math.pi/2 or math.pi/2
+        facultyGalleryPanel(root,staff,CFrame.new(x,9,z)*CFrame.Angles(0,yaw,0))
     end
 
 
