@@ -477,13 +477,22 @@ local function makeFrontArch(root,x,hasDoor)
     World.part(root,"Arch right pier",Vector3.new(1.35,16.8,1.4),CFrame.new(x+radius,11.6,z),palette.stone,Enum.Material.Concrete)
     World.part(root,"Arch keystone",Vector3.new(2.2,1.55,1.7),CFrame.new(x,24.05,z-.05),Color3.fromRGB(196,191,179),Enum.Material.Concrete,false)
 
-    local upperGlass=World.part(root,"Arched upper glazing",Vector3.new(glassWidth,5.3,.3),CFrame.new(x,19,z-.55),Color3.fromRGB(91,118,133),Enum.Material.Glass,false)
-    upperGlass.Transparency=.1
-    local upperGlow=World.part(root,"Arch warm backlight",Vector3.new(glassWidth-.5,4.85,.08),CFrame.new(x,19,z-.77),Color3.fromRGB(255,222,159),Enum.Material.Neon,false)
-    upperGlow.Transparency=.77;upperGlow.CanQuery=false;upperGlow.CanTouch=false
+    -- Stepped native-glass strips follow the arch curve so the window actually reads as arched
+    -- from gameplay distance. This avoids a rectangular glass slab peeking through the corners.
+    for _,offset in ipairs({-5.4,-3.6,-1.8,0,1.8,3.6,5.4}) do
+        local arcHeight=math.sqrt(math.max(.2,radius*radius-offset*offset))
+        local panelHeight=math.max(1.1,arcHeight)
+        local upperGlass=World.part(root,"Arch segmented glazing",Vector3.new(1.62,panelHeight,.3),
+            CFrame.new(x+offset,springY+panelHeight/2,z-.55),Color3.fromRGB(91,118,133),Enum.Material.Glass,false)
+        upperGlass.Transparency=.1
+        local upperGlow=World.part(root,"Arch segmented warm backlight",Vector3.new(1.38,math.max(.8,panelHeight-.35),.08),
+            CFrame.new(x+offset,springY+panelHeight/2,z-.77),Color3.fromRGB(255,222,159),Enum.Material.Neon,false)
+        upperGlow.Transparency=.78;upperGlow.CanQuery=false;upperGlow.CanTouch=false
+    end
     for _,offset in ipairs({-3.8,-1.9,0,1.9,3.8}) do
-        World.part(root,"Arch upper mullion",Vector3.new(.14,5.6,.17),
-            CFrame.new(x+offset,19,z-.8)*CFrame.Angles(0,0,offset*.045),palette.cream,nil,false)
+        local mullionHeight=math.sqrt(math.max(.2,radius*radius-offset*offset))
+        World.part(root,"Arch upper mullion",Vector3.new(.14,mullionHeight+.35,.17),
+            CFrame.new(x+offset,springY+mullionHeight/2,z-.8)*CFrame.Angles(0,0,offset*.045),palette.cream,nil,false)
     end
     for _,dx in ipairs({-3.15,0,3.15}) do
         World.part(root,"Arch tracery left",Vector3.new(4.6,.14,.18),
