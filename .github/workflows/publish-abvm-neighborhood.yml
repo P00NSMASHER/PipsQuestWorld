@@ -136,8 +136,13 @@ jobs:
           for _,candidate in ipairs(root:GetChildren()) do
               if candidate:IsA("Model") and candidate:GetAttribute("StaffId") ~= nil then
                   local staffId=tostring(candidate:GetAttribute("StaffId"))
-                  if candidate:GetAttribute("PortraitMode") == "baked-photo"
-                      and candidate:FindFirstChild("BakedFacultyPortrait",true) then
+                  if candidate:GetAttribute("PortraitMode") == "wrapped-photo"
+                      and candidate:FindFirstChild("FaceFront",true)
+                      and candidate:FindFirstChild("FaceLeft",true)
+                      and candidate:FindFirstChild("FaceRight",true)
+                      and candidate:FindFirstChild("BakedFacultyPortraitFaceFront",true)
+                      and candidate:FindFirstChild("BakedFacultyPortraitFaceLeft",true)
+                      and candidate:FindFirstChild("BakedFacultyPortraitFaceRight",true) then
                       count+=1
                       ids[staffId]=true
                   end
@@ -165,7 +170,7 @@ jobs:
           assert(galleryCount==expected,"Expected 18 visible faculty gallery panels; got "..tostring(galleryCount))
           assert(galleryUnique==expected,"Expected 18 unique faculty gallery IDs; got "..tostring(galleryUnique))
 
-          print("BAKED_FACULTY_PORTRAITS_OK",count,unique)
+          print("WRAPPED_FACULTY_HEADS_OK",count,unique)
           print("FACULTY_GALLERY_VISIBLE_OK",galleryCount,galleryUnique)
           return tostring(count)..":"..tostring(galleryCount)
           LUA
@@ -177,7 +182,7 @@ jobs:
           sleep 5
           task_path=""
           smoke_deferred="false"
-          for attempt in $(seq 1 12); do
+          for attempt in $(seq 1 1); do
             code="$(curl --silent --show-error --location \
               --output "$RUNNER_TEMP/portrait-task.json" --write-out '%{http_code}' \
               --request POST "$create_url" \
@@ -236,7 +241,7 @@ jobs:
           jq . "$RUNNER_TEMP/portrait-runtime-logs.json" || true
           test "$(jq -r '.state' "$RUNNER_TEMP/portrait-runtime.json")" = "COMPLETE"
           jq -e '.output.results | length > 0' "$RUNNER_TEMP/portrait-runtime.json" >/dev/null
-          grep -q 'BAKED_FACULTY_PORTRAITS_OK' "$RUNNER_TEMP/portrait-runtime-logs.json"
+          grep -q 'WRAPPED_FACULTY_HEADS_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
           grep -q 'FACULTY_GALLERY_VISIBLE_OK 18 18' "$RUNNER_TEMP/portrait-runtime-logs.json"
           fi
 
