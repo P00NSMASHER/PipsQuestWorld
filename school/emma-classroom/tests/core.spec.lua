@@ -42,4 +42,12 @@ for _,size in ipairs({{568,280},{724,320},{844,390},{1112,512},{390,760},{375,60
     if w>h then assert(maxX<w-p.width-p.right-8,"Keep the head beside the answer panel")
     else assert(maxY<h-p.height-p.bottom-8,"Keep the head above the portrait answer panel") end
 end
-print("PASS: 18 staff, 134 valid server-only questions, seven device-safe panels and unobstructed study-camera head bounds")
+local retryDelays={}
+for attempt=1,20 do
+    local delay=Layout.connectionRetryDelay(attempt)
+    assert(delay>=.4 and delay<=5,"Connection retry delay must stay bounded")
+    assert(attempt==1 or delay>=retryDelays[attempt-1],"Connection retry backoff must be monotonic")
+    retryDelays[attempt]=delay
+end
+assert(retryDelays[1]==.4 and retryDelays[5]==5 and retryDelays[20]==5)
+print("PASS: 18 staff, 134 valid server-only questions, seven device-safe panels, unobstructed study-camera head bounds and bounded startup recovery")
