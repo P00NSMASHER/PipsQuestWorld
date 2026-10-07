@@ -291,14 +291,19 @@ skip.Activated:Connect(function()
 end)
 
 task.spawn(function()
-    for attempt=1,8 do
+    local attempt=0
+    while gui.Parent do
+        attempt+=1
         local ok,res=pcall(function() return request:InvokeServer("state") end)
         if ok and res and res.ok then
+            entering.Visible=false
             setProgress(res.progress)
             if res.question then showPayload(res.question) end
             return
         end
-        task.wait(.4)
+        enteringText.Text=attempt<5 and "Connecting to your classroom…"
+            or "Still connecting — your progress is safe."
+        entering.Visible=true
+        task.wait(Layout.connectionRetryDelay(attempt))
     end
-    enteringText.Text="Rejoin to reconnect to your classroom.";entering.Visible=true
 end)
