@@ -6,6 +6,8 @@ local Workspace=game:GetService("Workspace")
 local Lighting=game:GetService("Lighting")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Catalog=require(ReplicatedStorage.NeighborhoodShared.Catalog)
+local PortraitPixels=require(ReplicatedStorage.NeighborhoodShared.PortraitPixels)
+local PortraitRenderer=require(ReplicatedStorage.NeighborhoodShared.PortraitRenderer)
 
 local World={rooms={},plots={},homes={},leaderboardParts={}}
 local palette={
@@ -206,6 +208,56 @@ local function appearanceColor(value,fallback)
     return fallback
 end
 
+local function attachBakedPortrait(model,staff,position)
+    local portrait=PortraitPixels[staff.id]
+    if type(portrait)~="table" or type(portrait.rows)~="table" or #portrait.rows==0 then
+        model:SetAttribute("PortraitMode","native")
+        return false
+    end
+
+    local plate=World.part(
+        model,
+        "Photo face plate",
+        Vector3.new(2.18,2.18,.07),
+        CFrame.new(position+Vector3.new(0,7.82,-1.39)),
+        Color3.fromRGB(22,45,79),
+        Enum.Material.SmoothPlastic,
+        false
+    )
+    plate.CastShadow=false
+    plate.CanQuery=false
+    plate.CanTouch=false
+
+    local gui=Instance.new("SurfaceGui")
+    gui.Name="BakedFacultyPortrait"
+    gui.Face=Enum.NormalId.Front
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(384,384)
+    gui.LightInfluence=0
+    gui.AlwaysOnTop=false
+    gui.Parent=plate
+
+    local border=Instance.new("Frame")
+    border.Name="PortraitBorder"
+    border.Size=UDim2.fromScale(1,1)
+    border.BackgroundColor3=palette.navy
+    border.BorderSizePixel=0
+    border.Parent=gui
+    local corner=Instance.new("UICorner")
+    corner.CornerRadius=UDim.new(0,22)
+    corner.Parent=border
+
+    PortraitRenderer.render(border,portrait,{
+        Name="PhotoPixels",
+        Position=UDim2.fromScale(.028,.028),
+        Size=UDim2.fromScale(.944,.944),
+        CornerRadius=18,
+        ZIndex=2,
+    })
+    model:SetAttribute("PortraitMode","baked-photo")
+    return true
+end
+
 local function npc(parent,staff,position)
     local appearance=staff.appearance or {}
     local model=Instance.new("Model");model.Name="Faculty_"..staff.id;model.Parent=parent
@@ -361,6 +413,8 @@ local function npc(parent,staff,position)
             dot.Shape=Enum.PartType.Ball
         end
     end
+
+    attachBakedPortrait(model,staff,position)
 
     local gui=Instance.new("BillboardGui");gui.Name="FacultyName";gui.AlwaysOnTop=false;gui.Size=UDim2.fromOffset(180,46);gui.StudsOffset=Vector3.new(0,1.8,0);gui.MaxDistance=28;gui.Parent=head
     local label=Instance.new("TextLabel");label.Size=UDim2.fromScale(1,1);label.BackgroundColor3=palette.navy;label.BackgroundTransparency=.15
