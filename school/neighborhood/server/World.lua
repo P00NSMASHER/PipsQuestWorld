@@ -71,11 +71,12 @@ local function cross(parent,cf,scale,tint)
     World.part(parent,"Cross horizontal",Vector3.new(4.2*s,1.1*s,.6*s),cf*CFrame.new(0,1.1*s,0),tint or palette.gold,Enum.Material.SmoothPlastic,false)
 end
 
-local function tree(parent,x,z,scale)
+local function tree(parent,x,z,scale,baseY)
     local s=scale or 1
+    local y0=baseY or 0
     -- Deliberately chunky canopy: the approved visual target reads as polished Roblox,
     -- not a photoreal mesh import. Five low-cost leaf blocks keep that silhouette.
-    World.part(parent,"Tree trunk",Vector3.new(1.7*s,7.2*s,1.7*s),CFrame.new(x,3.6*s,z),palette.wood,Enum.Material.Wood)
+    World.part(parent,"Tree trunk",Vector3.new(1.7*s,7.2*s,1.7*s),CFrame.new(x,y0+3.6*s,z),palette.wood,Enum.Material.Wood)
     local chunks={
         {0,10.1,0,6.8,Color3.fromRGB(69,126,70)},
         {-2.9,9.3,.4,5.4,Color3.fromRGB(79,137,76)},
@@ -86,7 +87,7 @@ local function tree(parent,x,z,scale)
     for _,c in ipairs(chunks) do
         local leaf=World.part(parent,"Tree canopy chunk",
             Vector3.new(c[4]*s,c[4]*.82*s,c[4]*s),
-            CFrame.new(x+c[1]*s,c[2]*s,z+c[3]*s),
+            CFrame.new(x+c[1]*s,y0+c[2]*s,z+c[3]*s),
             c[5],Enum.Material.Grass,false)
         leaf.CanQuery=false;leaf.CanTouch=false
     end
@@ -179,6 +180,30 @@ local function utilityPole(parent,x,z,height)
         ins.Shape=Enum.PartType.Cylinder
     end
     return Vector3.new(x,h-2.8,z)
+end
+
+local function distantWaterTower(parent,x,z)
+    local baseY=22
+    for _,dx in ipairs({-4,4}) do
+        for _,dz in ipairs({-4,4}) do
+            World.part(parent,"Distant water tower leg",Vector3.new(.55,24,.55),CFrame.new(x+dx,baseY+12,z+dz),palette.metal,Enum.Material.Metal,false)
+        end
+    end
+    local tank=World.part(parent,"Distant water tower tank",Vector3.new(14,8,14),CFrame.new(x,baseY+27,z),Color3.fromRGB(168,177,181),Enum.Material.Metal,false)
+    tank.Shape=Enum.PartType.Cylinder;tank.CFrame*=CFrame.Angles(0,0,math.pi/2)
+    local cap=World.part(parent,"Distant water tower cap",Vector3.new(14.8,1.2,14.8),CFrame.new(x,baseY+31,z),Color3.fromRGB(185,191,193),Enum.Material.Metal,false)
+    cap.Shape=Enum.PartType.Cylinder;cap.CFrame*=CFrame.Angles(0,0,math.pi/2)
+end
+
+local function distantRadioMast(parent,x,z)
+    local h=74
+    for _,dx in ipairs({-2.2,2.2}) do
+        World.part(parent,"Distant radio mast leg",Vector3.new(.42,h,.42),CFrame.new(x+dx,24+h/2,z),Color3.fromRGB(104,111,114),Enum.Material.Metal,false)
+    end
+    for y=28,94,7 do
+        World.part(parent,"Distant radio mast crossbar",Vector3.new(5.4,.3,.3),CFrame.new(x,y,z),Color3.fromRGB(104,111,114),Enum.Material.Metal,false)
+    end
+    World.part(parent,"Distant radio mast antenna",Vector3.new(.28,10,.28),CFrame.new(x,103,z),Color3.fromRGB(82,87,90),Enum.Material.Metal,false)
 end
 
 local function rowHome(parent,x,z,tint,levels,baseY)
@@ -584,6 +609,10 @@ function World.build()
     for _,x in ipairs({-66,-44,-22,0,22,44,66}) do
         World.part(root,"Front parapet cap",Vector3.new(4.2,2.2,2.3),CFrame.new(x,55,-34.7),palette.stone,Enum.Material.Concrete,false)
     end
+    for _,x in ipairs({-66,-34,0,34,66}) do
+        World.part(root,"Gold standard parapet pier",Vector3.new(4.4,4.6,2.5),CFrame.new(x,55.7,-34.65),palette.brickDark,Enum.Material.Brick,false)
+        World.part(root,"Gold standard parapet pier cap",Vector3.new(5.4,1.05,3.2),CFrame.new(x,58.45,-34.65),palette.stone,Enum.Material.Concrete,false)
+    end
     World.part(root,"Brick chimney",Vector3.new(11,20,11),CFrame.new(62,62,-57),palette.brickDark,Enum.Material.Brick)
     World.part(root,"Chimney cap",Vector3.new(12.5,1.4,12.5),CFrame.new(62,72.4,-57),palette.stone,Enum.Material.Concrete)
     World.part(root,"Roof center finial base",Vector3.new(2.4,5,2.4),CFrame.new(0,57.2,-34.8),palette.stone,Enum.Material.Concrete,false)
@@ -875,6 +904,16 @@ function World.build()
     rowHome(root,-169,-118,rowColors[3],3,8)
     rowHome(root,-169,-63,rowColors[2],2,5)
     tree(root,-101,-28,.85);tree(root,-102,-145,.95);tree(root,88,-34,.7)
+
+    -- The approved hero image has a green hill line plus tiny civic/utility silhouettes in the far
+    -- background. Keep these extremely simple because they are scenery, not gameplay geometry.
+    World.part(root,"Gold standard distant ridge",Vector3.new(430,22,95),CFrame.new(35,8,-248),Color3.fromRGB(87,126,75),Enum.Material.Grass,false)
+    for _,entry in ipairs({
+        {-165,-228,1.35,19},{-130,-240,1.2,19},{-92,-230,1.3,19},{-55,-246,1.05,19},
+        {5,-232,1.3,19},{48,-242,1.18,19},{95,-230,1.35,19},{140,-244,1.22,19},{183,-232,1.35,19},
+    }) do tree(root,entry[1],entry[2],entry[3],entry[4]) end
+    distantWaterTower(root,210,-252)
+    distantRadioMast(root,276,-270)
 
     -- Sparse overhead utilities are a strong Pottsville/Howard Avenue cue in the reference photos.
     local poleA=utilityPole(root,157,-154,34)
