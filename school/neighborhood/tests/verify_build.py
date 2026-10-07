@@ -161,10 +161,11 @@ def validate_abvm_contract() -> dict:
             "formal facade must retain the three exact gold-standard arched bays")
     require(all(marker in world for marker in (
         '"Front lower far west"', '"Front lower interbay west"', '"Front lower interbay east"', '"Front lower far east"',
-        "local stairCenterX=17", "stairCenterX-34", "stairCenterX+34"
+        "local stairCenterX=17", "stairCenterX-40", "stairCenterX+40", "stairCenterX-18", "stairCenterX+18"
     )), "gold-standard lower facade openings / stair alignment regressed")
     require("for _,x in ipairs({-51,-17,17,51}) do" in world and
-            "schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),15.2,5.9)" in world,
+            "local facadeWindowWidth=x==-51 and 9.6 or 15.2" in world and
+            "schoolWindowPanel(root,CFrame.new(x,floorY,-33.68),facadeWindowWidth,5.9)" in world,
             "gold-standard four-bay upper facade rhythm regressed")
 
     require('World.shopPosition=Vector3.new(31,5,-49)' in world,
@@ -281,6 +282,9 @@ def validate_abvm_contract() -> dict:
         "nativeSkyPolish": True,
         "heroArrivalComposition": True,
         "rightBiasedEntranceComposition": True,
+        "overscaleForegroundSchoolSign": True,
+        "narrowFirstUpperWindowBay": True,
+        "broadenedCeremonialStair": True,
         "trueFrontArchOpenings": True,
         "layeredFacadeCornice": True,
         "steppedParapetSilhouette": True,
