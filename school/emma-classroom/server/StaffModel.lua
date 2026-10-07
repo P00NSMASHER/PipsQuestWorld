@@ -28,7 +28,8 @@ function StaffModel.create(teacher)
     local function make(name,size,cf,color,group,shape,material)
         local p=Instance.new("Part");p.Name=name;p.Size=size;p.CFrame=cf;p.Color=color
         p.Anchored=true;p.Massless=true;p.CanCollide=false;p.CanTouch=false;p.CanQuery=false
-        p.Material=material or Enum.Material.SmoothPlastic
+        -- Default Fabric was visibly noisy in the native Studio close-up.
+        p.Material=material==Enum.Material.Fabric and Enum.Material.SmoothPlastic or (material or Enum.Material.SmoothPlastic)
         p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
         if shape then p.Shape=shape end
         if group then p:SetAttribute("PoseGroup",group);p:SetAttribute("RestCF",cf) end
@@ -98,8 +99,8 @@ function StaffModel.create(teacher)
             local y=short and 5.08 or 4.98+.16*math.sin(i*.5)
             local tilt=short and math.rad(-18) or math.rad(-30-i*3)
             local cf=CFrame.new(x,y,-.72)*CFrame.Angles(0,0,tilt)
-            oval("Swept hair lock",Vector3.new(short and .63 or .75,short and .53 or .95,.55),cf,hair)
-            oval("Hair strand ridge",Vector3.new(.045,short and .39 or .69,.045),cf*CFrame.new(-.1,0,-.255),highlight)
+            oval("Swept hair lock",Vector3.new(short and .78 or .88,short and .30 or .78,.63),cf,hair)
+            oval("Hair strand ridge",Vector3.new(.045,short and .22 or .57,.045),cf*CFrame.new(-.1,0,-.255),highlight)
         end
         if not short then
             local length=style=="bob" and 1.8 or (style=="shoulder" and 2.25 or 3.1)

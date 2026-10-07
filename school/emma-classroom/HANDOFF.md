@@ -41,3 +41,14 @@ limb-detail poses, paired desks and photo-guided window/rug/coat-storage details
 doubles. The previous stale-save and awaited-shutdown fixes remain intact.
 This candidate has no Studio or physical-iPhone visual pass and does not claim
 portrait-level rendering or a measured exact classroom replica.
+
+## Authorized native Studio check and visible fixes
+
+At 1:00–1:11 PM Eastern the user authorized foreground laptop use. Native Studio
+constructed all 18 staff and the room successfully, then rendered the three
+portrait-target staff. The render failed the final visual target: noisy Fabric,
+stretched SurfaceGui lettering and rounded hair bumps. Follow-up source fixes
+address those concrete defects; they are not a rendered visual pass. Physical
+iPhone, real Play-mode question loop and final likeness still need inspection.
+At 1:11 PM the user requested background-only operation; Studio was minimized
+and remaining source/check work continued without bringing it forward.

@@ -153,6 +153,9 @@ assert(counts["Reading rug alphabet border"]==26 and counts["Reading rug flower 
 assert(counts["Window blind slat"]==32 and counts["Blue curtain fold"]==12)
 assert(counts["Color dot reading rug"]==nil,"Rug layers must not overlap")
 assert(World.BoardQuestion.Parent.Parent.Face==Enum.NormalId.Back)
+assert(World.BoardQuestion.Parent.Parent.CanvasSize[2]==math.floor(1200*6.8/23.5),"Smartboard text must retain its physical aspect ratio")
+local alphabet=World.Root:FindFirstChild("Alphabet tile")
+assert(alphabet:FindFirstChild("Surface").CanvasSize[2]==math.floor(1000*1.4/2.15),"Alphabet text must retain its physical aspect ratio")
 -- The straight side aisle is clear of solid desk tops, chairs, and storage.
 for _,d in ipairs(World.Root:GetChildren()) do
     if d:IsA("BasePart") and d.CanCollide and d.CFrame.Position.Y>1 and d.CFrame.Position.Y<8 then

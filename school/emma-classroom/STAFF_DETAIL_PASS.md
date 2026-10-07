@@ -59,10 +59,20 @@ These service doubles do not execute Roblox rendering, physics or network replic
 Studio and physical iPhone capture are still required for the exact candidate:
 close-up faces, mesh silhouette, hair intersections, faceted hand contours,
 beard/mouth separation, clothing seams, walking foot contact, lighting, camera
-composition, mobile frame rate and the complete question loop. The desktop was
-offline during this pass; no rendered acceptance result is recorded.
+composition, mobile frame rate and the complete question loop. A later authorized laptop window allowed a native Studio constructor check and
+an initial desktop render of Bolich/McBreen/Boyer. All 18 constructors succeeded
+inside Studio (maximum 163 parts; 1,564 world descendants with three review NPCs).
+That render exposed stretched wall/board lettering, noisy Fabric materials and
+separate hair bumps. Follow-up source fixes preserve SurfaceGui physical aspect
+ratios, replace staff Fabric with smooth materials and flatten/overlap swept locks.
+The initial rendered candidate was 2f266e7; it is not a visual acceptance pass.
+The material/text/hair fixes still need a new close-up capture. The user requested
+background-only operation at 1:11 PM and laptop use ends by 1:15 PM Eastern.
 
 The attached portraits have sculpted meshes, detailed surface textures and
 cinematic lighting. Native-part additions alone do not establish that level of
 fidelity. Custom sculpted/textured meshes and actual in-engine refinement may
 still be needed after visual review. Existing manual publication gate remains.
+
+Native initial-build SHA256: `e298a05113a655507ab6cea6b94b5fde376bf7f354108eab93f11dbf409942ab`.
+This identifies the transferred binary of the 2f266e7 source tree.

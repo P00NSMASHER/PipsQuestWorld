@@ -39,7 +39,10 @@ end
 
 local function surfaceText(target: BasePart,text: string,face: Enum.NormalId,textColor: Color3,bg: Color3,font: Enum.Font?): TextLabel
     local gui=Instance.new("SurfaceGui")
-    gui.Name="Surface";gui.Face=face;gui.CanvasSize=Vector2.new(1000,500);gui.LightInfluence=.15;gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize;gui.Parent=target
+    gui.Name="Surface";gui.Face=face;local width=target.Size.X
+    local height=face==Enum.NormalId.Top and target.Size.Z or target.Size.Y
+    if face==Enum.NormalId.Left or face==Enum.NormalId.Right then width=target.Size.Z end
+    gui.CanvasSize=Vector2.new(1000,math.max(80,math.floor(1000*height/width)));gui.LightInfluence=.15;gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize;gui.Parent=target
     local t=Instance.new("TextLabel")
     t.Size=UDim2.fromScale(1,1);t.BackgroundColor3=bg;t.BackgroundTransparency=.04
     t.TextColor3=textColor;t.Font=font or Enum.Font.GothamBold;t.TextScaled=true;t.TextWrapped=true;t.Text=text;t.Parent=gui
@@ -296,7 +299,7 @@ local function buildFrontWall(root: Instance)
     part(root,"Smartboard dark bezel",Vector3.new(24.05,7.35,.24),CFrame.new(7,8.2,-33.91),P.blue,Enum.Material.SmoothPlastic,false)
     part(root,"Smartboard pen tray",Vector3.new(13,.22,.65),CFrame.new(7,4.61,-33.26),Color3.fromRGB(208,211,209),Enum.Material.Metal,false)
     local smart=part(root,"Interactive smartboard",Vector3.new(23.5,6.8,.35),CFrame.new(7,8.2,-33.65),Color3.fromRGB(238,243,241),Enum.Material.Glass,false);smart.Transparency=.02
-    local gui=Instance.new("SurfaceGui");gui.Name="QuestionBoard";gui.Face=Enum.NormalId.Back;gui.CanvasSize=Vector2.new(1200,700);gui.LightInfluence=.05;gui.Parent=smart
+    local gui=Instance.new("SurfaceGui");gui.Name="QuestionBoard";gui.Face=Enum.NormalId.Back;gui.CanvasSize=Vector2.new(1200,math.floor(1200*smart.Size.Y/smart.Size.X));gui.LightInfluence=.05;gui.Parent=smart
     local bg=Instance.new("Frame");bg.Size=UDim2.fromScale(1,1);bg.BackgroundColor3=Color3.fromRGB(245,248,247);bg.BorderSizePixel=0;bg.Parent=gui
     local header=Instance.new("TextLabel");header.Name="Header";header.Position=UDim2.fromScale(.04,.05);header.Size=UDim2.fromScale(.92,.14);header.BackgroundColor3=P.green;header.TextColor3=P.gold;header.Text="EMMA'S SCHOOLWORK";header.Font=Enum.Font.GothamBold;header.TextScaled=true;header.Parent=bg
     local hc=Instance.new("UICorner");hc.CornerRadius=UDim.new(0,20);hc.Parent=header
