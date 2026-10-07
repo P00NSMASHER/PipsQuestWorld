@@ -717,49 +717,69 @@ function World.build()
         end
     end
 
-    -- Broad formal stairs are biased east to sit under the three gold-standard arches, matching
-    -- the target composition where the freestanding sign and garden occupy the left foreground.
+    -- Two-stage ceremonial stair from the approved render: a lower street flight, broad terrace,
+    -- then the upper flight into the three arched bays. This gives the arrival the same layered depth
+    -- instead of reading as one uninterrupted concrete ramp.
     local stairCenterX=17
-    local frontSteps=14
-    local startZ=-1.5
-    local endZ=-31
-    local startY=.25
-    local endY=4.3
-    for i=0,frontSteps-1 do
-        local t=i/(frontSteps-1)
-        local z=startZ+(endZ-startZ)*t
-        local y=startY+(endY-startY)*t
-        World.part(root,"Front broad stair",Vector3.new(75,.58,2.45),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
+    local lowerFrontSteps=7
+    local lowerStartZ=15
+    local lowerEndZ=-3
+    local lowerStartY=.35
+    local lowerEndY=1.85
+    for i=0,lowerFrontSteps-1 do
+        local t=i/(lowerFrontSteps-1)
+        local z=lowerStartZ+(lowerEndZ-lowerStartZ)*t
+        local y=lowerStartY+(lowerEndY-lowerStartY)*t
+        World.part(root,"Front lower stair",Vector3.new(75,.58,3.1),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
     end
-    World.part(root,"Front lower landing",Vector3.new(77,.45,9),CFrame.new(stairCenterX,.1,3),palette.stone,Enum.Material.Concrete)
-    World.part(root,"Front landing",Vector3.new(77,.7,8),CFrame.new(stairCenterX,4.3,-31),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front lower landing",Vector3.new(77,.45,8),CFrame.new(stairCenterX,.18,20),palette.stone,Enum.Material.Concrete)
+    World.part(root,"Front middle landing",Vector3.new(77,.55,8),CFrame.new(stairCenterX,1.9,-7),palette.stone,Enum.Material.Concrete)
+
+    local upperFrontSteps=9
+    local upperStartZ=-11
+    local upperEndZ=-31
+    local upperStartY=2.05
+    local upperEndY=4.4
+    for i=0,upperFrontSteps-1 do
+        local t=i/(upperFrontSteps-1)
+        local z=upperStartZ+(upperEndZ-upperStartZ)*t
+        local y=upperStartY+(upperEndY-upperStartY)*t
+        World.part(root,"Front upper stair",Vector3.new(75,.58,2.8),CFrame.new(stairCenterX,y,z),palette.stone,Enum.Material.Concrete)
+    end
+    World.part(root,"Front landing",Vector3.new(77,.7,8),CFrame.new(stairCenterX,4.4,-32.5),palette.stone,Enum.Material.Concrete)
+
     for _,side in ipairs({-1,1}) do
         for tier=0,2 do
-            local z=4-tier*8.5
-            local y=.8+tier*.75
-            local wall=World.part(root,"Gold standard stair planter wall",Vector3.new(12,1.6+tier*.35,5.2),
-                CFrame.new(stairCenterX+side*(45-tier*2.6),y,z),palette.stone,Enum.Material.Concrete)
+            local z=9-tier*11
+            local y=.9+tier*.8
+            local wall=World.part(root,"Gold standard stair planter wall",Vector3.new(13,1.7+tier*.35,5.6),
+                CFrame.new(stairCenterX+side*(45-tier*2.8),y,z),palette.stone,Enum.Material.Concrete)
             wall.CanQuery=false
-            shrub(root,stairCenterX+side*(45-tier*2.6),z,0.62+tier*.08)
+            shrub(root,stairCenterX+side*(45-tier*2.8),z,0.66+tier*.08)
         end
     end
 
-    -- Low masonry cheeks and paired rails match the broad ceremonial stair in the target.
-    World.part(root,"Front stair west cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX-40,2.55,-15),palette.brickDark,Enum.Material.Brick)
-    World.part(root,"Front stair east cheek",Vector3.new(3,5.2,35),CFrame.new(stairCenterX+40,2.55,-15),palette.brickDark,Enum.Material.Brick)
-    local stairDz=endZ-startZ
-    local stairDy=endY-startY
-    local stairLength=math.sqrt(stairDz*stairDz+stairDy*stairDy)
-    local stairPitch=math.atan2(stairDy,stairDz)
+    -- Deep masonry cheeks and split-flight rails make the stairs feel built into the hillside.
+    World.part(root,"Front stair west cheek",Vector3.new(3,5.6,50),CFrame.new(stairCenterX-40,2.8,-8),palette.brickDark,Enum.Material.Brick)
+    World.part(root,"Front stair east cheek",Vector3.new(3,5.6,50),CFrame.new(stairCenterX+40,2.8,-8),palette.brickDark,Enum.Material.Brick)
+
+    local function frontRailSegment(x,yA,zA,yB,zB,name)
+        local a=Vector3.new(x,yA,zA)
+        local b=Vector3.new(x,yB,zB)
+        local delta=b-a
+        World.part(root,name,Vector3.new(.32,.32,delta.Magnitude),CFrame.lookAt((a+b)/2,b),palette.metal,Enum.Material.Metal,false)
+    end
     for _,x in ipairs({stairCenterX-18,stairCenterX+18}) do
-        for step=0,6 do
-            local t=step/6
-            World.part(root,"Front stair rail post",Vector3.new(.3,3,.3),
-                CFrame.new(x,startY+1.6+(endY-startY)*t,startZ+(endZ-startZ)*t),palette.metal,Enum.Material.Metal,false)
+        for step=0,3 do
+            local t=step/3
+            World.part(root,"Front lower rail post",Vector3.new(.3,3,.3),
+                CFrame.new(x,lowerStartY+1.6+(lowerEndY-lowerStartY)*t,lowerStartZ+(lowerEndZ-lowerStartZ)*t),palette.metal,Enum.Material.Metal,false)
+            World.part(root,"Front upper rail post",Vector3.new(.3,3,.3),
+                CFrame.new(x,upperStartY+1.6+(upperEndY-upperStartY)*t,upperStartZ+(upperEndZ-upperStartZ)*t),palette.metal,Enum.Material.Metal,false)
         end
-        World.part(root,"Front stair handrail",Vector3.new(.32,.32,stairLength),
-            CFrame.new(x,(startY+endY)/2+2.7,(startZ+endZ)/2)*CFrame.Angles(stairPitch,0,0),
-            palette.metal,Enum.Material.Metal,false)
+        frontRailSegment(x,lowerStartY+2.6,lowerStartZ,lowerEndY+2.6,lowerEndZ,"Front lower stair handrail")
+        frontRailSegment(x,1.9+2.6,lowerEndZ,1.9+2.6,upperStartZ,"Front middle landing handrail")
+        frontRailSegment(x,upperStartY+2.6,upperStartZ,upperEndY+2.6,upperEndZ,"Front upper stair handrail")
     end
 
     -- White low front additions flank the arched section in the real facade.
