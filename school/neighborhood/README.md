@@ -18,6 +18,18 @@ Do not chase the render by adding giant textures, pre-baked building images, or 
 
 School travel now deliberately places the avatar on a front-right three-quarter approach matching the approved hero composition: the facade fills the center, the green/gold sign reads on the left, and the heavy east corner plus side elevation remain visible on the right. This is a composition aid, not a forced cinematic camera.
 
+## Photo-derived interior and grounds target — 2026-10-06
+
+The user's current photo set now overrides the earlier generic interior treatment. The build should reproduce the photographed school finishes at the same polish level as the approved Roblox exterior render.
+
+- **Hallways:** blue-gray painted upper walls, tan/orange glazed-brick wainscot, glossy dark square flooring, warm wood classroom doors/transoms, exposed edge conduit, plain fluorescent ceiling fixtures, schoolwork displays and practical benches/cubbies.
+- **Elementary classrooms:** pale yellow walls, deep blue trim, dark varnished wood floor, acoustic ceiling grid, fluorescent panels, old wood built-ins/cubbies, chalkboard plus modern interactive board, large wood-framed window bays, radiators, curtains/valances, colorful alphabet/activity rugs and densely used classroom furniture.
+- **Gym/cafeteria:** polished wood court, tall cream walls with dark lower trim, exposed ceiling beams, large Gothic-arched window bays, wall padding, basketball equipment, blue folding cafeteria tables and a raised stage with dark green curtain.
+- **Exterior school-life spaces:** chain-link fenced asphalt activity yard with hoop/hopscotch cues plus a separate mulch playground with ivy/brick edge, climbing structure, tan slide and colorful crawl tunnels.
+- **Stairs:** older-school material language, tan brick/painted walls, dark treads, green/dark painted railings and simple institutional lights.
+
+Where the photographs establish finishes and object relationships, follow them closely. Where they do not establish the building-wide floor plan or adjacency, keep placement explicitly gameplay-inferred and modular rather than calling it an exact real-world floor plan. Do not reproduce real camera placement, access-control hardware, alarm layouts, or other operational security details from school photographs.
+
 ## Learning and curriculum
 
 The server determines the classroom from the character's position. Entering the room offers the subject's question; leaving invalidates it. Initial client messages contain shuffled choices and a per-question token, not answer keys. An incorrect answer shows an explanation and a supported retry.
