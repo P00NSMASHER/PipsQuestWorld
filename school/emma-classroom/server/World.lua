@@ -222,6 +222,22 @@ local function buildBackDoorAndHall(root: Instance)
     local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.55;light.Range=16;light.Parent=hallLight
 end
 
+local function buildTeacherEntry(root: Instance)
+    -- Side staff door and a tiny continuation of the real blue-gray/tan-brick hallway.
+    part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,8.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,22.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Staff door header",Vector3.new(1.3,1.0,15.4),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    local door=part(root,"Open staff classroom door",Vector3.new(.55,10,6.6),CFrame.new(35.9,5.3,20.2)*CFrame.Angles(0,math.rad(58),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
+    local glass=part(root,"Staff door glass",Vector3.new(.18,4.7,3.1),door.CFrame*CFrame.new(-.35,1.6,0),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.28
+    part(root,"Side hall floor",Vector3.new(18,.5,20),CFrame.new(45.5,.25,15.5),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
+    part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
+    local hallLight=part(root,"Side hall fluorescent",Vector3.new(6,.22,2),CFrame.new(47,12.72,15.5),Color3.fromRGB(250,247,225),Enum.Material.Neon,false)
+    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.5;light.Range=15;light.Parent=hallLight
+    sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(.20,2.0,10),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
+end
+
 local function applyLighting(root: Instance)
     Lighting.ClockTime=10.25;Lighting.Brightness=2.5;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.3
     Lighting.Ambient=Color3.fromRGB(150,147,139);Lighting.OutdoorAmbient=Color3.fromRGB(183,185,178)
@@ -248,7 +264,10 @@ function World.build()
     part(root,"Back wall right",Vector3.new(28,18,1),CFrame.new(23,9,27),P.wall)
     part(root,"Door header wall",Vector3.new(18,5,1),CFrame.new(0,15.5,27),P.wall)
     part(root,"Left wall",Vector3.new(1,18,62),CFrame.new(-37,9,-4),P.wall)
-    part(root,"Right wall",Vector3.new(1,18,62),CFrame.new(37,9,-4),P.wall)
+    -- Right wall is segmented around the staff entry so the walk-in is visible from Emma's camera.
+    part(root,"Right wall front",Vector3.new(1,18,43),CFrame.new(37,9,-13.5),P.wall)
+    part(root,"Right wall back",Vector3.new(1,18,4),CFrame.new(37,9,25),P.wall)
+    part(root,"Right door header wall",Vector3.new(1,5,15),CFrame.new(37,15.5,15.5),P.wall)
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
     for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
     for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
@@ -261,6 +280,7 @@ function World.build()
     buildRightWall(root)
     buildTeacherDesk(root)
     buildBackDoorAndHall(root)
+    buildTeacherEntry(root)
 
     -- Student desks. The center-middle desk is Emma's, with her name and water bottle.
     local index=0
@@ -296,7 +316,7 @@ function World.build()
     World.Root=root
     World.Spawn=spawn.CFrame
     World.EmmaSeat=seat
-    World.TeacherDoor=CFrame.new(0,4,45)*CFrame.Angles(0,math.pi,0)
+    World.TeacherDoor=CFrame.new(45,4,15.5)*CFrame.Angles(0,math.pi,0)
     World.TeacherFront=CFrame.new(-10,4,-20)*CFrame.Angles(0,math.pi,0)
     World.resetBoard()
     return World
@@ -436,11 +456,20 @@ end
 
 function World.moveTeacher(model: Model,target: CFrame,duration: number)
     local start=model:GetPivot()
+    local startPos=start.Position
+    local targetPos=target.Position
+    local direction=Vector3.new(targetPos.X-startPos.X,0,targetPos.Z-startPos.Z)
     local alpha=Instance.new("NumberValue");alpha.Value=0
     local conn=alpha:GetPropertyChangedSignal("Value"):Connect(function()
         if not model.Parent then return end
         local a=alpha.Value
-        local base=start:Lerp(target,a)
+        local pos=startPos:Lerp(targetPos,a)
+        local base
+        if direction.Magnitude>.05 and a<.94 then
+            base=CFrame.lookAt(pos,pos+direction.Unit)
+        else
+            base=CFrame.new(pos)*target.Rotation
+        end
         local bob=math.abs(math.sin(a*math.pi*8))*.08
         model:PivotTo(base*CFrame.new(0,bob,0))
         World.poseTeacher(model,a*math.pi*8,true)
