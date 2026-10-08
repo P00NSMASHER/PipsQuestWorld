@@ -145,18 +145,56 @@ local function pupilWork(group:Instance)
             CFrame.new(x,9.6,z-.18),C.paper,Enum.Material.SmoothPlastic,false)
         piece(group,"Student art illustration backing",Vector3.new(4.55,3.63,.08),
             CFrame.new(x,9.6,z-.26),colors[i],Enum.Material.SmoothPlastic,false)
-        local petalColor=(i%2==0) and C.cream or C.pencil
-        for p=1,5 do
-            local angle=(p-1)*math.pi*2/5
-            local px=x+math.cos(angle)*.92
-            local py=9.55+math.sin(angle)*.78
-            sphere(group,"Crayon flower petal",Vector3.new(.80,.65,.045),
-                CFrame.new(px,py,z-.35),petalColor,Enum.Material.SmoothPlastic)
+        -- Each child's anonymous artwork has its own hand-made composition.
+        -- Repeating the exact same five-petal flower in every frame looked
+        -- like mass-produced wallpaper rather than an occupied classroom.
+        local front=z-.36
+        if i%3==1 then
+            local petalColor=(i%2==0) and C.cream or C.pencil
+            for p=1,6 do
+                local angle=(p-1)*math.pi/3
+                sphere(group,"Student drawing flower petal",Vector3.new(.72,.62,.055),
+                    CFrame.new(x+math.cos(angle)*.83,9.72+math.sin(angle)*.70,front),
+                    petalColor,Enum.Material.SmoothPlastic)
+            end
+            sphere(group,"Student drawing flower center",Vector3.new(.60,.60,.065),
+                CFrame.new(x,9.72,front-.04),C.gold,Enum.Material.SmoothPlastic)
+            piece(group,"Student drawing flower stem",Vector3.new(.07,1.0,.055),
+                CFrame.new(x,8.56,front),C.green,Enum.Material.SmoothPlastic,false)
+            for _,dx in ipairs({-.37,.37}) do
+                sphere(group,"Student drawing leaf",Vector3.new(.48,.24,.055),
+                    CFrame.new(x+dx,8.71,front),C.green,Enum.Material.SmoothPlastic)
+            end
+        elseif i%3==2 then
+            -- Paper-cut schoolhouse, roof, two little windows and grassy ground.
+            piece(group,"Student drawing cottage",Vector3.new(2.12,1.42,.07),
+                CFrame.new(x,9.15,front),C.cream,Enum.Material.SmoothPlastic,false)
+            for _,side in ipairs({-1,1}) do
+                piece(group,"Student drawing roof slope",Vector3.new(1.56,.17,.09),
+                    CFrame.new(x+side*.50,10.22,front-.04)*
+                    CFrame.Angles(0,0,math.rad(side*34)),C.oak,Enum.Material.Wood,false)
+                piece(group,"Student drawing window",Vector3.new(.43,.47,.08),
+                    CFrame.new(x+side*.58,9.30,front-.06),C.blue,Enum.Material.SmoothPlastic,false)
+            end
+            piece(group,"Student drawing door",Vector3.new(.51,.82,.09),
+                CFrame.new(x,8.89,front-.06),C.green,Enum.Material.Wood,false)
+            piece(group,"Student drawing grass",Vector3.new(3.05,.12,.06),
+                CFrame.new(x,8.31,front-.06),C.green,Enum.Material.SmoothPlastic,false)
+        else
+            -- A simple layered sunrise landscape, not a duplicated flower.
+            sphere(group,"Student drawing sun",Vector3.new(1.18,1.18,.06),
+                CFrame.new(x+.92,10.15,front),C.pencil,Enum.Material.SmoothPlastic)
+            for _,ray in ipairs({-55,-25,15,45,80}) do
+                local theta=math.rad(ray)
+                piece(group,"Student drawing sun ray",Vector3.new(.12,.50,.055),
+                    CFrame.new(x+.92+math.sin(theta)*.94,10.15+math.cos(theta)*.91,front-.04)*
+                    CFrame.Angles(0,0,-theta),C.cream,Enum.Material.SmoothPlastic,false)
+            end
+            for _,dx in ipairs({-1.0,1.0}) do
+                sphere(group,"Student drawing rolling hill",Vector3.new(2.65,.95,.07),
+                    CFrame.new(x+dx,8.43,front),C.green,Enum.Material.SmoothPlastic)
+            end
         end
-        sphere(group,"Crayon flower center",Vector3.new(.65,.65,.06),CFrame.new(x,9.55,z-.39),
-            C.gold,Enum.Material.SmoothPlastic)
-        piece(group,"Crayon stem",Vector3.new(.065,1.1,.05),CFrame.new(x,8.45,z-.35),
-            C.green,Enum.Material.SmoothPlastic,false)
         piece(group,"Gallery paper clip",Vector3.new(.46,.17,.12),
             CFrame.new(x,12,z-.43),C.metal,Enum.Material.Metal,false)
     end
