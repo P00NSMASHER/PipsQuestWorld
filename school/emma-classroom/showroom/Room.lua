@@ -231,11 +231,20 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     if emma then
         local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-1.98)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
         surfaceText(tag,"★ EMMA ★",Enum.NormalId.Back,P.gold,P.green)
-        cylinder(parent,"Emma pink water bottle",Vector3.new(1.10,.55,.55),
-            CFrame.new(x+2.12,3.77,z+.45)*CFrame.Angles(0,0,math.pi/2),
-            Color3.fromRGB(225,125,154),Enum.Material.SmoothPlastic,false)
-        part(parent,"Water bottle cap",Vector3.new(.42,.17,.42),
-            CFrame.new(x+2.12,4.38,z+.45),Color3.fromRGB(190,86,124),Enum.Material.SmoothPlastic,false)
+        -- A child-height reusable bottle rather than the oversized hot-pink
+        -- cylinder visible in close-up renders. Body rests on y=3.17 desktop;
+        -- shoulder and screw cap interlock without floating or intersecting
+        -- neighboring schoolwork.
+        local bottleX,bottleZ=x+2.12,z+.45
+        cylinder(parent,"Emma pink water bottle",Vector3.new(.82,.51,.51),
+            CFrame.new(bottleX,3.60,bottleZ)*CFrame.Angles(0,0,math.pi/2),
+            Color3.fromRGB(214,128,154),Enum.Material.SmoothPlastic,false)
+        cylinder(parent,"Water bottle tapered shoulder",Vector3.new(.20,.37,.37),
+            CFrame.new(bottleX,4.03,bottleZ)*CFrame.Angles(0,0,math.pi/2),
+            Color3.fromRGB(220,139,162),Enum.Material.SmoothPlastic,false)
+        part(parent,"Water bottle cap",Vector3.new(.29,.14,.29),
+            CFrame.new(bottleX,4.19,bottleZ),
+            Color3.fromRGB(169,91,124),Enum.Material.SmoothPlastic,false)
     end
 end
 
