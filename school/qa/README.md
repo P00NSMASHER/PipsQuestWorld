@@ -7,14 +7,14 @@
 1. In [Roblox Creator Dashboard](https://create.roblox.com/dashboard/creations), create a **new private experience** named "Emma Classroom Engine QA". Do not use the existing published/private Pip High playtest place or the original StarBlox universe.
 2. Record the new universe ID and its root place ID.
 3. In [Creator Dashboard API Keys](https://create.roblox.com/dashboard/credentials), create a key called EMMA_ENGINE_QA_CI. Restrict the key **only** to the new QA universe and grant exactly these operations:
-   - universe.places:write
-   - universe.place.luau-execution-session:write
+   - universe-places:write (Creator Dashboard API system: universe-places → Write)
+   - universe.place.luau-execution-session:write (API system: luau-execution-sessions → Write)
    No DataStore, messaging, monetization or live-place restart permissions. GitHub-hosted runners have dynamic IPs.
 4. In GitHub repository Settings > Secrets and variables > Actions, create:
    - Secret ROBLOX_QA_API_KEY (never put the key in source control)
    - Variable ROBLOX_QA_UNIVERSE_ID
    - Variable ROBLOX_QA_PLACE_ID
-5. Dispatch the Emma Engine Cloud QA (isolated) workflow and require an exact-head successful cloud run before merging the draft PR.
+5. Open draft PR #337 and re-run the failed Emma Engine Cloud QA check once the repository secret and variables exist. The workflow is on a feature branch, so manual Actions > Run workflow is not available until the workflow file exists on the repository default branch. Require an exact-head successful cloud run before merging.
 
 ## What it checks
 
