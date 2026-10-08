@@ -219,6 +219,44 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Easel wall stars did not move with the display"
     )
     print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f}")
+    # Physical backpack audit: verify actual Luau-created silhouettes, hooks,
+    # child proportions and mounting on the rear storage wall.
+    backpack_contract={
+        "Hanging school bag":8,
+        "Hanging school bag center":8,
+        "Hanging school bag rounded corner":32,
+        "Backpack shoulder strap":16,
+        "Backpack hanging loop":8,
+        "Backpack upper flap":8,
+        "Backpack front pocket":8,
+        "Backpack pocket zipper":8,
+        "Backpack zipper pull":8,
+        "Metal coat hook":8,
+        "Cubbie bin":12,
+    }
+    for component,expected in backpack_contract.items():
+        assert by_name[component]==expected, (
+            f"Child-scale backpack/storage count mismatch: {component}="
+            f"{by_name[component]} expected {expected}"
+        )
+    bags=sorted([row for row in lines if row[1]=="Hanging school bag"],
+                key=lambda row:float(row[9]))
+    loops=sorted([row for row in lines if row[1]=="Backpack hanging loop"],
+                 key=lambda row:float(row[9]))
+    hooks=sorted([row for row in lines if row[1]=="Metal coat hook"],
+                 key=lambda row:float(row[9]))
+    for bag,loop,hook in zip(bags,loops,hooks):
+        assert abs(float(bag[9])-float(hook[9])) < .03, "Backpack drifted off its coat hook"
+        assert abs(float(loop[9])-float(hook[9])) < .03, "Bag hanger does not meet coat hook"
+        assert abs(float(loop[10])-float(hook[10])) <= .18, "Bag handle floats below its hook"
+        assert abs(float(bag[10])-9.62) < .03, "Backpack slipped from child-scale mounting height"
+        assert abs(float(bag[11])-25.40) < .03, "Backpack protrudes into the classroom walkway"
+        assert abs(float(bag[6])-1.16)<.03 and abs(float(bag[7])-2.10)<.03, (
+            "Rounded backpack body or height changed unexpectedly"
+        )
+        assert "Ball" not in bag[3], "Rejected ellipsoid/backpack balloon returned"
+    print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
+          "handle_mount_gap=.07")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
