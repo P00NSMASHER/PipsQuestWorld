@@ -58,9 +58,10 @@ function StaffModel.create(teacher)
         if handle and attachment then
             handle.CFrame=head.CFrame*head.HairAttachment.CFrame*attachment.CFrame:Inverse()
             local mesh=handle:FindFirstChildOfClass("SpecialMesh")
-            -- The blonde texture is light enough to tint darker hair naturally.
-            if mesh and hairName=="LongHair" then mesh.VertexColor=rgb(teacher.hair) end
-            if mesh and hairName~="LongHair" then mesh.TextureId="";mesh.VertexColor=rgb(teacher.hair) end
+            -- Keep the real catalog texture (highlights, strands, shadows).
+            -- Stripping TextureId turned almost every hairstyle into a flat
+            -- plastic-looking silhouette. Tint gently so the texture survives.
+            if mesh then mesh.VertexColor=rgb(teacher.hair):Lerp(Color3.new(1,1,1),.30) end
         end
     end
     -- Accessories use familiar small proportions rather than giant facial parts.
