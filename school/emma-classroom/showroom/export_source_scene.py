@@ -278,6 +278,28 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert float(label[11])>26.0, "Cubbie sign protrudes into the classroom"
     print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
           f"material=Fabric handle_mount_gap=.07 sign_lower_edge={lower_edge:.2f}")
+    # Reading-corner clearance is measured from constructed source geometry.
+    # A blue pouf previously intersected the book rack and a rack leg.
+    poufs=[v for v in lines if v[1]=="Corduroy floor pouf"]
+    cushions=[v for v in lines if v[1]=="Soft seat cushion"]
+    rack=only("Child-height book display shelf")
+    assert len(poufs)==2 and len(cushions)==2, "Reading seating count changed"
+    rack_x=float(rack[9]); rack_width=float(rack[6])
+    min_clearance=min(abs(float(p[9])-rack_x)
+                      -(float(p[6])+rack_width)/2 for p in poufs)
+    assert min_clearance >= .15, (
+        f"Reading pouf intersects child book display rack: x_gap={min_clearance:.3f}"
+    )
+    seat_gap=abs(float(poufs[0][9])-float(poufs[1][9])) - (
+        float(poufs[0][6])+float(poufs[1][6]))/2
+    assert seat_gap >= .2, f"Reading poufs intersect: x_gap={seat_gap:.3f}"
+    assert all(abs(float(p[9])-float(c[9])) < .02 for p,c in zip(
+        sorted(poufs,key=lambda r:float(r[9])),
+        sorted(cushions,key=lambda r:float(r[9])))), (
+        "Cushions no longer share pouf seat center"
+    )
+    print(f"READING_NOOK_CLEARANCE_PASS pouf_to_rack={min_clearance:.2f} "
+          f"seat_to_seat={seat_gap:.2f} chairs=2")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
