@@ -40,6 +40,11 @@ class ImportTests(unittest.TestCase):
         self.assertEqual(len({q['id'] for q in self.bundle['questions']}),len(self.bundle['questions']))
         self.assertTrue(any(len(q['choices'])==4 for q in self.bundle['questions']))
         self.assertEqual(next(t for t in self.bundle['selectableTestPrep'] if t['label']=='Religion Ch. 3')['questionIds'],[])
+    def test_future_refresh_cannot_reuse_an_id_for_changed_content(self):
+        b=copy.deepcopy(self.bundle);b['questions'][0]['prompt']='Changed prompt';self.sign(b)
+        with self.assertRaises(ValueError):adapter.convert(b,self.sha,previous=self.bundle)
+        b=copy.deepcopy(self.bundle);b['questions'][0]['choices'].reverse();self.sign(b)
+        adapter.convert(b,self.sha,previous=self.bundle)
     def test_lua_unicode_and_control_escape(self):
         self.assertEqual(adapter.lua('café\n"\\'),'"café\\010\\"\\\\"')
 if __name__=='__main__':unittest.main()

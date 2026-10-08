@@ -34,7 +34,8 @@ use two columns on short screens; each option keeps a 44px target.
 Run `tools/refresh_curriculum.sh /path/to/clean/exact-sha-abvm-checkout` from any
 working directory. The ABVM checkout must include the merged v2 exporter. The
 script runs source contract tests, creates and validates a packet, and regenerates
-only the bundle, server bank and receipt. It never pushes, merges or publishes.
+only the bundle, server bank and receipt. IDs reused for changed prompts, keys,
+skills or choice sets fail closed; changed questions require reviewed new IDs. It never pushes, merges or publishes.
 Classroom CI reproduces the pinned ABVM checkout, compares the real regenerated
 bundle, runs importer/server/client/device-layout/geometry regressions, compiles
 Luau, builds the isolated place and verifies answer-key replication boundaries.

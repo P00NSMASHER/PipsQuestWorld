@@ -11,7 +11,7 @@ trap 'rm -rf "$STAGE_ROOT"' EXIT
 (cd "$SOURCE_ROOT" && node --test tests/study-universe.test.mjs)
 node "$SOURCE_ROOT/scripts/build-study-universe.mjs" "$STAGE_ROOT/curriculum.json"
 python3 "$DEST_ROOT/tools/import_study_universe.py" "$STAGE_ROOT/curriculum.json" \
-  --source-sha "$SOURCE_SHA" --out "$STAGE_ROOT/QuestionBank.lua" --receipt "$STAGE_ROOT/receipt.json"
+  --previous-bundle "$DEST_ROOT/curriculum.json" --source-sha "$SOURCE_SHA" --out "$STAGE_ROOT/QuestionBank.lua" --receipt "$STAGE_ROOT/receipt.json"
 # All content validation finishes before replacing any checked-in output.
 cp "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"
 cp "$STAGE_ROOT/QuestionBank.lua" "$DEST_ROOT/server/QuestionBank.lua"

@@ -170,7 +170,7 @@ startRound=function(player)
     local token=HttpService:GenerateGUID(false)
     s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
     World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
-    event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
+    event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=s.modeLabel or "Current ABVM lessons"})
     if model then task.spawn(function() World.walkTeacher(model,true) end) end
 
 end
@@ -235,7 +235,7 @@ request.OnServerInvoke=function(player,command,args)
             task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
         end
         local pending=s.pending
-        return {ok=true,progress=publicProgress(s),week=Questions.WeekLabel or Data.WeekLabel,focus=Data.Focus,tests=testCatalog(),modeId=s.modeId or "mix",modeLabel=s.modeLabel or "Mix",
+        return {ok=true,progress=publicProgress(s),week=Questions.WeekLabel,focus=s.modeLabel or "Current ABVM lessons",tests=testCatalog(),modeId=s.modeId or "mix",modeLabel=s.modeLabel or "Mix",
             question=pending and {kind="question",teacher=pending.teacher.fullName or pending.teacher.name,role=pending.teacher.role,subject=pending.q.subject,prompt=pending.q.prompt,tier=pending.q.tier,choices=pending.choices,token=pending.token,progress=publicProgress(s)} or nil}
     end
     return {ok=false,code="unknown"}

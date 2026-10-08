@@ -30,7 +30,7 @@ def lua(value):
     if isinstance(value, dict): return '{'+','.join('['+lua(k)+']='+lua(v) for k,v in value.items())+'}'
     raise ValueError('Unsupported Lua value')
 
-def convert(bundle, source_sha):
+def convert(bundle, source_sha, previous=None):
     require(re.fullmatch('[a-f0-9]{40}', source_sha) is not None, 'Pin a full ABVM Git source SHA')
     require(isinstance(bundle, dict) and set(bundle)==ROOT, 'Unsupported or extra bundle fields')
     require(bundle['schemaVersion']==2 and bundle['contentOnly'] is True, 'Content-only schema v2 required')
@@ -72,6 +72,12 @@ def convert(bundle, source_sha):
         if kind=='reviewed-original-schoolwork': require(string(p['lessonId']), 'Invalid lesson lineage')
         prompt=(q['subject'].casefold(),q['prompt'].casefold());require(prompt not in prompts, 'Duplicate/ambiguous prompt')
         prompts[prompt]=q['answer'];ids[q['id']]=q
+    if previous is not None:
+        old={q['id']:q for q in previous['questions']}
+        for ident,q in ids.items():
+            if ident in old:
+                signature=lambda row:(row['subject'],row['skill'],row['prompt'],row['answer'],sorted(row['choices']))
+                require(signature(q)==signature(old[ident]), 'Question ID reused for changed content; assign a reviewed new ID')
     def references(refs, ordered=True):
         require(isinstance(refs,list) and len(refs)==len(set(refs)) and all(i in ids for i in refs), 'Invalid question references')
         if ordered:
@@ -96,8 +102,8 @@ def convert(bundle, source_sha):
     return '\n'.join(lines),receipt
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('bundle',type=Path);parser.add_argument('--source-sha',required=True);parser.add_argument('--out',type=Path,required=True);parser.add_argument('--receipt',type=Path,required=True)
-    a=parser.parse_args();source=json.loads(a.bundle.read_text());bank,receipt=convert(source,a.source_sha)
+    parser=argparse.ArgumentParser();parser.add_argument('bundle',type=Path);parser.add_argument('--source-sha',required=True);parser.add_argument('--out',type=Path,required=True);parser.add_argument('--receipt',type=Path,required=True);parser.add_argument('--previous-bundle',type=Path)
+    a=parser.parse_args();source=json.loads(a.bundle.read_text());bank,receipt=convert(source,a.source_sha,json.loads(a.previous_bundle.read_text()) if a.previous_bundle else None)
     # Validate everything before touching either output.
     a.out.parent.mkdir(parents=True,exist_ok=True);a.receipt.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(bank);a.receipt.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
