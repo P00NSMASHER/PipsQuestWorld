@@ -70,7 +70,6 @@ def request(method, path, key, data=None, content_type="application/json"):
 
 def run(universe, place, key, place_file, test_file):
     verify_target(universe, place, key)
-    verify_key_permissions(universe, key)
     if not place_file.is_file() or not test_file.is_file():
         raise ValueError("Expected place and script files")
     place_xml = place_file.read_bytes()
@@ -80,6 +79,7 @@ def run(universe, place, key, place_file, test_file):
     if "__QA_UNIVERSE_ID__" not in script or "__QA_PLACE_ID__" not in script:
         raise ValueError("Missing runtime QA target guards in test script")
     script = script.replace("__QA_UNIVERSE_ID__", universe).replace("__QA_PLACE_ID__", place)
+    verify_key_permissions(universe, key)
 
     print(f"Running engine QA against isolated universe={universe}, place={place}")
     saved = request("POST", f"/universes/v1/{universe}/places/{place}/versions?versionType=Saved",
