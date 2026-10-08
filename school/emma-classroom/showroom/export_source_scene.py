@@ -156,7 +156,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     geometry_contract={
         "Student desk top":16,
         "Student chair contoured back collision":16,
-        "Student chair seamless molded back shell":16,
+        "Student chair school back shell":16,
+        "Student chair school back shell center":16,
+        "Student chair school back shell rounded corner":64,
         "Student chair underseat frame runner":32,
         "Desk laminated front bevel":16,
         "Desk shelf front restraint":16,
