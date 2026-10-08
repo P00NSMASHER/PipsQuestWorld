@@ -1,12 +1,14 @@
-publish-request: 2026-10-08 reviewed-abvm-357-multiplayer-isolation
-destination: existing Emma Study Classroom Roblox start place (universe 10769455759, place 114603280760042)
-source-branch: rebuild/emma-classroom-study-v1
-verified-classroom-head: 8be57abf0ac72e457dc8abc9fcd7b5e80b38af65
-reviewed-abvm-source: P00NSMASHER/abvmschoolstarworld@42aec22aaf3f3aa82993744fbf1e7064a55d58af
-curriculum: 357 questions (134 current, 65 cumulative, 158 original STAR-style fallback); named test preparation, strict order and server-authoritative grading
-gameplay: personal client smartboards, teacher ownership, multiplayer progress isolation and stale callback guards
-release-checks: six exact-head GitHub checks succeeded, including Emma Classroom CI and mapped place-build preflight
-authorization: user instructed integration into the continuing Roblox game even though more updates are planned
-scope: publish this incremental verified-source build to the existing place only; never auto-publish future curriculum changes
-runtime-acceptance: physical iPhone visuals, live DataStore isolation and actual Roblox gameplay remain unverified; do not claim polished or production-ready
-status: release requested; GitHub Actions publication result is authoritative
+publish-request: 2026-10-08 completed-session-recovery-v61
+scope: incremental update to EXISTING Emma Classroom Roblox start place; no new game
+universe-id: 10769455759
+place-id: 114603280760042
+verified-code-head: e6d41ba8345d113b4ae748854da02a1f1193c4b2
+curriculum-source-commit: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
+curriculum-content-sha256: 22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418
+curriculum-items: 357 (134 current, 65 cumulative, 158 original STAR-style practice)
+change: credit tenth-answer session immediately; keep exactly-once completion notification and recover Do another 10 from server state
+tests: four exact-head PR checks plus mapped-build, preview all passed; preserves per-player smartboards, private server answer keys and monotonic progress
+authorization: user requested finishing original Work and keeping updates integrated into existing continuing Roblox game
+release-control: manual PUBLISH_REQUEST only; do not enable scheduled Roblox publication
+device-evidence: actual iPhone/iPad gameplay, live DataStore disconnect/rejoin, touch targets and teacher rendering not independently verified; no release-quality claim
+status: requested; version number determined from Roblox response to publisher
