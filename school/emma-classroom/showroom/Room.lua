@@ -40,13 +40,14 @@ end
 
 -- Rounded laminate/plastic outlines with a shallow dark edge band.
 -- Core collision stays simple; corner detail never obstructs an aisle.
-local function roundedPanel(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,r:number,horizontal:boolean,collide:boolean?):Part
+local function roundedPanel(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,r:number,horizontal:boolean,collide:boolean?,material:Enum.Material?):Part
     local w=Vector3.new(size.X,horizontal and size.Z or size.Y,horizontal and size.Y or size.Z)
     local base=horizontal and cf*CFrame.Angles(-math.pi/2,0,0) or cf
-    local core=part(parent,name,Vector3.new(w.X-2*r,w.Y,w.Z),base,color,Enum.Material.SmoothPlastic,collide)
-    part(parent,name.." center",Vector3.new(w.X,w.Y-2*r,w.Z),base,color,Enum.Material.SmoothPlastic,false)
+    local finish=material or Enum.Material.SmoothPlastic
+    local core=part(parent,name,Vector3.new(w.X-2*r,w.Y,w.Z),base,color,finish,collide)
+    part(parent,name.." center",Vector3.new(w.X,w.Y-2*r,w.Z),base,color,finish,false)
     for _,x in ipairs({-1,1}) do for _,y in ipairs({-1,1}) do
-        cylinder(parent,name.." rounded corner",Vector3.new(w.Z,r*2,r*2),base*CFrame.new(x*(w.X/2-r),y*(w.Y/2-r),0)*CFrame.Angles(0,math.pi/2,0),color,Enum.Material.SmoothPlastic,false)
+        cylinder(parent,name.." rounded corner",Vector3.new(w.Z,r*2,r*2),base*CFrame.new(x*(w.X/2-r),y*(w.Y/2-r),0)*CFrame.Angles(0,math.pi/2,0),color,finish,false)
     end end
     return core
 end
@@ -395,7 +396,7 @@ local function buildCubbies(root: Instance)
         local color=binColors[i%#binColors+1]:Lerp(P.woodDark,.10)
         local bagCF=CFrame.new(x,9.62,25.40)
         roundedPanel(root,"Hanging school bag",Vector3.new(1.72,2.10,.58),
-            bagCF,color,.28,false,false)
+            bagCF,color,.28,false,false,Enum.Material.Fabric)
         for _,side in ipairs({-1,1}) do
             part(root,"Backpack shoulder strap",Vector3.new(.19,1.37,.12),
                 bagCF*CFrame.new(side*.57,-.11,.36),
