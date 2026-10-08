@@ -184,11 +184,54 @@ local function learningWall(root:Instance)
     end
 end
 
+-- Frame the actual teaching board instead of adding a giant UI overlay.
+-- This lives in the world and leaves the question SurfaceGui untouched.
+local function focalTeachingArea(root:Instance)
+    local group=makeGroup(root,"Smartboard and teacher's art corner")
+    local metal=Color3.fromRGB(188,198,204)
+    local trim=Color3.fromRGB(217,186,121)
+    for _,y in ipairs({4.48,11.93}) do
+        piece(group,"Smartboard satin aluminum trim",Vector3.new(24.15,.11,.12),
+            CFrame.new(7,y,-33.26),metal,Enum.Material.Metal,false)
+    end
+    for _,x in ipairs({-5.08,19.08}) do
+        piece(group,"Smartboard protective edge",Vector3.new(.10,7.34,.13),
+            CFrame.new(x,8.2,-33.26),metal,Enum.Material.Metal,false)
+    end
+    piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
+        CFrame.new(7,4.44,-32.97),C.cream,Enum.Material.SmoothPlastic,false)
+    local markerColors={C.coral,C.blue,C.mint,C.golden}
+    for i,c in ipairs(markerColors) do
+        local x=4.75+(i-1)*1.20
+        piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
+            CFrame.new(x,4.58,-32.72),c,Enum.Material.SmoothPlastic,false)
+        piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
+            CFrame.new(x+.39,4.58,-32.72),C.navy,Enum.Material.SmoothPlastic,false)
+    end
+    -- A real front-of-room display, not an extra game mode or another HUD.
+    local wood=piece(group,"Art easel wooden board",Vector3.new(5.3,4.8,.22),
+        CFrame.new(-20.4,6.55,-29.7),C.wood,Enum.Material.Wood,false)
+    local poster=piece(group,"Easel framed print",Vector3.new(4.68,4.18,.055),
+        wood.CFrame*CFrame.new(0,0,.15),C.mint,Enum.Material.SmoothPlastic,false)
+    printed(poster,"OUR CLASSROOM\\nA PLACE TO GROW",Enum.NormalId.Back,C.navy,C.mint)
+    for _,dx in ipairs({-1.80,1.80}) do
+        piece(group,"Easel timber support",Vector3.new(.32,6.2,.35),
+            CFrame.new(-20.4+dx,3.2,-29.82),C.woodEdge,Enum.Material.Wood,false)
+    end
+    piece(group,"Easel display ledge",Vector3.new(5.7,.22,.66),
+        CFrame.new(-20.4,4.32,-29.36),C.woodEdge,Enum.Material.Wood,false)
+    for _,x in ipairs({-22.6,-20.4,-18.2}) do
+        orb(group,"Golden achievement star",Vector3.new(.46,.46,.12),
+            CFrame.new(x,9.35,-29.46),trim,Enum.Material.Metal)
+    end
+end
+
 function ArtPass.decorate(root:Instance)
     local details=makeGroup(root,"Emma Original Art Direction Pass")
     windowNeighborhood(details)
     readingCorner(details)
     studentDeskDetails(details)
     learningWall(details)
+    focalTeachingArea(details)
 end
 return ArtPass
