@@ -1,3 +1,13 @@
+## CURRENT RESULT: ROBLOX UPLOAD APPROVED, MODELS STAGED BUT NOT ACTIVATED (Oct 8)
+
+- **Model import succeeded:** GitHub Actions run [37813670543, attempt 2](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37813670543) uploaded both source-identical GLB assets using the dedicated Roblox Assets API secret. Chair asset ID: **132417338693200**. Desk asset ID: **75559376486007**. Both operation responses reported **Approved**, no Roblox place version was published.
+- **Independent Roblox GET verification succeeded:** [read-only asset metadata run 37859517183](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37859517183) independently confirmed both assets' IDs, Model type, Approved moderation and user creator **6064228083** (DadSharkins), matching the game's universe and place.
+- **Staging:** The actual Roblox showroom configuration now contains the two verified IDs, while **Enabled = false**. The 16 original desks and chairs remain visible and collidable. The optional mesh adapter has rollback tests for wrong dimensions, unsafe model contents, rejected asset loads and an interrupted swap.
+- **Pending hard gate:** Real native Roblox engine screenshot(s), iPhone movement, collision and performance. An independent GLB preview is *not* a native engine pass. Do not enable, publish or merge without this evidence and explicit authorization.
+- **Historical notes below** document earlier failed attempts from before the dedicated key existed; they are superseded by this verified success.
+
+---
+
 # ABVM original classroom furniture: asset integration
 
 **Mission:** Replace primitive school desk and chair shapes with source-authored, low-poly 3D mesh assets. No educational UI or game mechanics are involved.
