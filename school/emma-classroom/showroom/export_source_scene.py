@@ -202,20 +202,23 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     chalk_left=chalk_x-chalk_width/2
     easel_right=easel_x+easel_width/2
     easel_clearance=chalk_left-easel_right
-    assert 3.0 <= easel_clearance <= 7.0, (
-        f"Easel blocks the chalkboard or was moved unrealistically far: {easel_clearance:.2f}"
+    assert 6.5 <= easel_clearance <= 9.0, (
+        f"Easel blocks the chalkboard or moved out of the left art corner: {easel_clearance:.2f}"
     )
+    assert abs(easel_x+31.0)<.02, "The visually dominant prior easel returned"
+    assert 4.0 <= easel_width <= 4.4, "Easel must have a compact school-scale silhouette"
+    assert 3.4 <= float(easel[7]) <= 3.8, "Oversized brown display returned"
     assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
-    assert -32.0 < easel_z < -27.0, "Easel no longer belongs in the front-left art corner"
+    assert -32.0 < easel_z < -29.0, "Easel no longer belongs in the front-left art corner"
     easel_poster=only("Easel framed print")
     easel_ledge=only("Easel display ledge")
     easel_legs=[row for row in lines if row[1]=="Easel timber support"]
     easel_stars=[row for row in lines if row[1]=="Golden achievement star"]
     assert abs(float(easel_poster[9])-easel_x)<.02 and abs(float(easel_ledge[9])-easel_x)<.02
-    assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.8,1.8], (
+    assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.46,1.46], (
         "Art easel wooden supports detached from display"
     )
-    assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-2.2,0.0,2.2], (
+    assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-1.55,0.0,1.55], (
         "Easel wall stars did not move with the display"
     )
     print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f}")
