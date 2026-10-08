@@ -5,70 +5,127 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/emma-curriculum-refresh.yml']
+    paths:
+      - '.github/workflows/emma-curriculum-refresh.yml'
+      - '.github/emma-curriculum-target.json'
+      - '.github/scripts/emma_curriculum_target.py'
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 concurrency:
   group: emma-reviewed-curriculum-candidate
   cancel-in-progress: false
+
 jobs:
-  prepare:
+  route:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 3
+    outputs:
+      branch: ${{ steps.resolve.outputs.branch }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: rebuild/emma-classroom-study-v1
+          ref: main
+          persist-credentials: false
+      - name: Verify reviewed target configuration
+        run: python3 -m unittest discover -s .github/scripts -p test_emma_curriculum_target.py
+      - id: resolve
+        name: Resolve active game branch without trusting source artifacts
+        run: python3 .github/scripts/emma_curriculum_target.py .github/emma-curriculum-target.json
+
+  prepare:
+    needs: route
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      TARGET_BRANCH: ${{ needs.route.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.route.outputs.branch }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Hold while a curriculum candidate is under review
+      - name: Preserve the independently maintained content adapter
+        run: |
+          set -euo pipefail
+          test -f school/emma-classroom/tools/refresh_curriculum.sh
+          test -f school/emma-classroom/tools/import_study_universe.py
+          test -f school/emma-classroom/curriculum.json
+          test -f school/emma-classroom/server/QuestionBank.lua
+          test -f school/emma-classroom/curriculum-receipt.json
+          echo "CONTENT_CONTRACT_PRESENT: $TARGET_BRANCH"
+      - name: Hold only while an existing curriculum draft is under review
         id: pending
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          count="$(gh api 'repos/${{ github.repository }}/pulls?state=open&base=rebuild%2Femma-classroom-study-v1&per_page=100' --jq '[.[] | select(.head.ref | startswith("curriculum/emma-abvm-"))] | length')"
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" != 0 ]; then echo 'An existing curriculum candidate remains under review; accepted content is unchanged.'; fi
-      - name: Export and validate reviewed ABVM main
+          active="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[] | [.base.ref,.head.ref] | @tsv' |
+            awk -F '\t' -v target="$TARGET_BRANCH" '$1==target && index($2,"curriculum/emma-abvm-")==1 {n++} END {print n+0}')"
+          echo "count=$active" >> "$GITHUB_OUTPUT"
+          if [[ "$active" != 0 ]]; then
+            echo "PENDING_REVIEW: $active governed curriculum PR(s) already target $TARGET_BRANCH."
+            echo "Do not replace a candidate under review; the next poll will resume after it closes."
+          fi
+      - name: Rebuild content from current reviewed ABVM main
         if: steps.pending.outputs.count == '0'
         run: |
           set -euo pipefail
           git clone --depth 1 https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm-source"
           bash school/emma-classroom/tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
-      - name: Prepare a draft content-only PR, never publish
+      - name: Prepare or recover one draft content-only candidate
         if: steps.pending.outputs.count == '0'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           files=(school/emma-classroom/curriculum.json school/emma-classroom/server/QuestionBank.lua school/emma-classroom/curriculum-receipt.json)
-          if git diff --quiet -- "${files[@]}"; then echo 'The accepted source snapshot is already current.'; exit 0; fi
+          if git diff --quiet -- "${files[@]}"; then
+            echo "NO_CHANGE: accepted governed curriculum and generated files match."
+            exit 0
+          fi
           source_sha="$(python3 -c 'import json; print(json.load(open("school/emma-classroom/curriculum-receipt.json"))["sourceCommit"])')"
           [[ "$source_sha" =~ ^[a-f0-9]{40}$ ]]
-          branch="curriculum/emma-abvm-${source_sha:0:12}"
-          # One immutable candidate per source SHA; preserve previously rejected
-          # candidates instead of rewriting or repeatedly reopening them.
-          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then echo 'This source already has a retained candidate; review its existing evidence.'; exit 0; fi
-          git switch -c "$branch"
-          git config user.name 'Emma Curriculum Bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add -- "${files[@]}"
-          git commit -m "Prepare reviewed ABVM curriculum $source_sha"
-          git push origin "HEAD:refs/heads/$branch"
-          cat > "$RUNNER_TEMP/pr-body.md" <<BODY
-          Refreshes only the shared bundle, server-only question bank and exact-source receipt from reviewed ABVM main at $source_sha.
+          # Source and target define candidate identity. A game-branch migration
+          # never steals a draft created for another branch.
+          target_digest="$(printf '%s' "$TARGET_BRANCH" | sha256sum | cut -c1-8)"
+          candidate="curriculum/emma-abvm-${source_sha:0:12}-$target_digest"
+          if git ls-remote --exit-code --heads origin "refs/heads/$candidate" >/dev/null 2>&1; then
+            echo "RECOVER_CANDIDATE: $candidate exists; never overwrite its reviewed commits."
+            # Reattempt PR creation after a prior GitHub-token permission error.
+            # Preserve deliberately closed/rejected PRs instead of reopening.
+            existing="$(gh pr list --state all --head "$candidate" --limit 100 --json number --jq 'length')"
+            if [[ "$existing" != 0 ]]; then
+              echo "RETAINED_CANDIDATE: $candidate has existing PR history; manual review required."
+              exit 0
+            fi
+          else
+            git switch -c "$candidate"
+            git config user.name "Emma Curriculum Bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add -- "${files[@]}"
+            git commit -m "Prepare reviewed ABVM curriculum $source_sha"
+            git push origin "HEAD:refs/heads/$candidate"
+          fi
+          cat > "$RUNNER_TEMP/curriculum-pr.md" <<BODY
+          Reviewed content-only update for active classroom branch `$TARGET_BRANCH`, prepared from ABVM commit `$source_sha`.
 
-          Source exporter tests, provenance/privacy/answer checks, deterministic conversion and importer regressions passed before candidate creation. Future ID reuse with changed content is rejected. No private learner history is exported.
+          Only curriculum.json, the generated server-only QuestionBank.lua and curriculum-receipt.json are changed. Source tests, deterministic export, provenance/answer-key/privacy validation and importer regressions passed. No private learner responses or grades were copied.
 
-          Keep draft until an independent user/controller marks ready and all exact-head classroom/Foundation/Class/Progression checks pass. GitHub-token-created PRs do not themselves trigger those workflows; ready_for_review is explicitly supported by Emma Classroom CI. Full reviewed-source gates remain required. No automatic merge, PUBLISH_REQUEST edit or Roblox publishing occurs. Runtime, live DataStore isolation and physical-iPhone acceptance remain separate release requirements.
+          This PR is draft until independently reviewed. The standalone **Emma Curriculum Contract** check can pass while game visuals are actively rebuilt; game/runtime/device checks remain separately required before any Roblox release. Bot-generated PRs may need an independently authorized review action to trigger checks.
+
+          **Never auto-merge, edit PUBLISH_REQUEST, publish Roblox, or claim real-device acceptance.**
           BODY
-          gh pr create --base rebuild/emma-classroom-study-v1 --head "$branch" --draft \
-            --title 'Refresh reviewed ABVM classroom curriculum' --body-file "$RUNNER_TEMP/pr-body.md"
-      - name: Preserve preparation evidence even if PR creation fails
+          if ! gh pr create --base "$TARGET_BRANCH" --head "$candidate" --draft \
+            --title "Prepare reviewed ABVM schoolwork for Emma" --body-file "$RUNNER_TEMP/curriculum-pr.md"; then
+            echo "::error::Prepared content exists on $candidate, but GitHub refused PR creation. Check Actions pull-request creation permission, then rerun; the next scheduled run will retry without rewriting the branch."
+            exit 1
+          fi
+      - name: Preserve the review receipt even when GitHub refuses a draft PR
         if: always() && steps.pending.outputs.count == '0'
         uses: actions/upload-artifact@v4
         with:

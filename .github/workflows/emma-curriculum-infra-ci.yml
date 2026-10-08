@@ -1,0 +1,50 @@
+name: Emma Curriculum Infrastructure CI
+on:
+  push:
+    paths:
+      - '.github/workflows/emma-curriculum-infra-ci.yml'
+      - '.github/workflows/emma-curriculum-refresh.yml'
+      - '.github/emma-curriculum-target.json'
+      - '.github/scripts/emma_curriculum_target.py'
+      - '.github/scripts/test_emma_curriculum_target.py'
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - '.github/workflows/emma-curriculum-infra-ci.yml'
+      - '.github/workflows/emma-curriculum-refresh.yml'
+      - '.github/emma-curriculum-target.json'
+      - '.github/scripts/emma_curriculum_target.py'
+      - '.github/scripts/test_emma_curriculum_target.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate branch-switch rules
+        run: python3 -m unittest discover -s .github/scripts -p test_emma_curriculum_target.py -v
+      - name: Exercise the current reviewed target
+        run: python3 .github/scripts/emma_curriculum_target.py .github/emma-curriculum-target.json
+      - name: Parse the scheduled and independent CI workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby -ryaml -e 'ARGV.each {|file| YAML.parse_file(file); puts "YAML_OK: #{file}" }' \
+            .github/workflows/emma-curriculum-refresh.yml \
+            .github/workflows/emma-curriculum-infra-ci.yml
+      - name: Preserve data-only and draft-only controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'cron:.*25 \*/4' .github/workflows/emma-curriculum-refresh.yml
+          grep -q 'gh pr create .*--draft' .github/workflows/emma-curriculum-refresh.yml
+          grep -q 'school/emma-classroom/server/QuestionBank.lua' .github/workflows/emma-curriculum-refresh.yml
+          grep -q 'TARGET_BRANCH:' .github/workflows/emma-curriculum-refresh.yml
+          grep -q 'git diff --quiet' .github/workflows/emma-curriculum-refresh.yml
+          echo 'PASS: every four hours, target-configurable, content-only candidate, no automatic Roblox release.'
