@@ -27,3 +27,19 @@ Once a trusted import yields asset IDs, enter the two returned IDs in `Furniture
 Local independent GLB round-trip and polygon/dimension tests are not equivalent to Roblox import, true physics, iPhone visual fidelity or native material correctness. The GLB preview is only an external graphics validation. Retain existing part-built furniture until native render evidence proves the replacement is better.
 
 No change to scores, teacher NPCs, questions, UI, educational source files, scheduled tasks or production releases. PR #339 remains draft and **not published**.
+
+
+## October 8 implementation and independent acceptance
+
+Original geometric meshes and a four-angle image preview are built from source code and validated as GLBs, not fabricated images. Exact candidate geometry:
+
+- Student chair: **2,360 triangles**, **2.460 × 3.774 × 2.365 Roblox studs**; SHA-256 `6094eb89c7467be429eeb2999ae537ca4bfe0f7a5c3f58882c4862c49a8742c4`.
+- Student desk: **2,336 triangles**, **5.780 × 3.085 × 3.860 studs**; SHA-256 `5bf8558ce7ec9fcbab55d21fd5702d70438229604b6cf628918fadc3b037a084`.
+
+Verified GitHub model generation and real preview [run 37812419207](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37812419207) **passed**. Both model binaries, generated manifest, and four-view image are available in that job's artifact. [Classroom-only source build run 37812419121](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37812419121) **passed**.
+
+The one-time nonproduction [Open Cloud model import attempt 37812419612](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37812419612) **did not upload any assets**. Its strict ownership preflight could not independently resolve the creator ID of universe `10769455759` from Roblox's public game metadata, so it stopped before the API upload request. Do not infer ownership from the GitHub account, universe number, or place number. Also do not assume the existing Roblox place-publish key includes Model asset-creation permissions.
+
+**Current blocker:** Verify the correct Roblox creator account/group and the Assets API permission. Only after both model uploads return approved owned asset IDs can the nonproduction configuration be enabled for Roblox-native inspection. This is not a laptop requirement for GLB creation, but is a Roblox authorization/import requirement. The current showroom has the loader wired in, but it intentionally retains the existing playable Part-based furniture.
+
+The independent preview is an offline material/geometry study, not a native Roblox Studio render or proof of iPhone frame rate, camera behavior, smooth normals, final package moderation or collision.
