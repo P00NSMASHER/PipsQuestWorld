@@ -23,6 +23,13 @@ def self_test():
     assert not acceptable(blank)[0], "White frame must fail"
     blank2=Image.new("RGB",(960,540),(235,235,235))
     assert not acceptable(blank2)[0], "Low-dynamic flat frame must fail"
+    nearly_blank=Image.new("RGB",(960,540),(255,255,255))
+    for y in range(0,540):
+        for x in range(0,16):
+            nearly_blank.putpixel((x,y),(33,78,143))
+    assert not acceptable(nearly_blank)[0], (
+        "A high-contrast but 98% blank camera must fail the unchanged coverage threshold"
+    )
     scene=Image.new("RGB",(960,540),(14,21,27))
     for y in range(110,400):
         for x in range(180,790):
