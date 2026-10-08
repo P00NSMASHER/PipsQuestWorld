@@ -42,6 +42,12 @@
         },
         "GalleryPass": {
           "$path": "emma-classroom/showroom/GalleryPass.lua"
+        },
+        "FurnitureMeshAdapter": {
+          "$path": "emma-classroom/showroom/FurnitureMeshAdapter.lua"
+        },
+        "FurnitureMeshConfig": {
+          "$path": "emma-classroom/showroom/FurnitureMeshConfig.lua"
         }
       }
     },
