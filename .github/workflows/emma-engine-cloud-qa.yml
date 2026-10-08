@@ -1,0 +1,69 @@
+name: Emma Engine Cloud QA (isolated)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - rebuild/emma-classroom-study-v1
+    paths:
+      - 'school/src/**'
+      - 'school/default.project.json'
+      - 'school/qa/**'
+      - '.github/workflows/emma-engine-cloud-qa.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: emma-isolated-cloud-qa
+  cancel-in-progress: false
+
+jobs:
+  engine-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      ROBLOX_QA_UNIVERSE_ID: ${{ vars.ROBLOX_QA_UNIVERSE_ID }}
+      ROBLOX_QA_PLACE_ID: ${{ vars.ROBLOX_QA_PLACE_ID }}
+      ROBLOX_QA_API_KEY: ${{ secrets.ROBLOX_QA_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Test cloud runner guardrails locally
+        run: python3 -m unittest discover -s school/qa -p 'test_*.py' -v
+
+      - name: Refuse missing credentials and live Roblox targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$ROBLOX_QA_API_KEY" || { echo '::error::ROBLOX_QA_API_KEY missing'; exit 1; }
+          test -n "$ROBLOX_QA_UNIVERSE_ID" || { echo '::error::ROBLOX_QA_UNIVERSE_ID missing'; exit 1; }
+          test -n "$ROBLOX_QA_PLACE_ID" || { echo '::error::ROBLOX_QA_PLACE_ID missing'; exit 1; }
+          python3 -c 'import os,sys;sys.path.insert(0,"school/qa");from cloud_qa import verify_target;verify_target(os.environ["ROBLOX_QA_UNIVERSE_ID"],os.environ["ROBLOX_QA_PLACE_ID"],os.environ["ROBLOX_QA_API_KEY"])'
+
+      - name: Download hash-pinned Rojo
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip \
+            -o "$RUNNER_TEMP/rojo.zip"
+          echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  '"$RUNNER_TEMP/rojo.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/rojo.zip" -d "$RUNNER_TEMP"
+          chmod +x "$RUNNER_TEMP/rojo"
+
+      - name: Build exact QA commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rojo" build school/default.project.json -o "$RUNNER_TEMP/emma-qa.rbxlx"
+          test -s "$RUNNER_TEMP/emma-qa.rbxlx"
+          sha256sum "$RUNNER_TEMP/emma-qa.rbxlx"
+
+      - name: Run real Roblox Luau engine QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/qa/cloud_qa.py --place "$RUNNER_TEMP/emma-qa.rbxlx" --script school/qa/run_cloud_qa.luau
