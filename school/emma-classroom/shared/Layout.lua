@@ -19,7 +19,11 @@ function Layout.questionArea(panelHeight:number,count:number,desiredPromptHeight
 end
 function Layout.studyCamera(w:number,h:number)
     if w>h then
-        return {eye={-13,6.7,-10},target={-2,5.4,-26},fov=58}
+        -- A real Studio Play capture showed the entire character below the
+        -- viewport while the chalkboard filled the frame. Look toward the
+        -- visiting teacher's full body and preserve the board to the right.
+        -- Wider FOV clears the head AND feet at short iPhone aspect ratios.
+        return {eye={-13,6.7,-10},target={-5,1.8,-24},fov=69}
     end
     return {eye={-13,6.7,-10},target={-9,2,-20},fov=70}
 end
