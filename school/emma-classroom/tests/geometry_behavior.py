@@ -210,7 +210,8 @@ end
 local World=loadWorld()
 World.build()
 local counts={}
-assert(#World.Root:GetDescendants()<3000,"Classroom object budget exceeded")
+local objectCount=#World.Root:GetDescendants()
+assert(objectCount<3000,"Classroom object budget exceeded: "..tostring(objectCount))
 for _,d in ipairs(World.Root:GetDescendants()) do
     counts[d.Name]=(counts[d.Name] or 0)+1
     if d:IsA("BasePart") then assert(d.Size.X>0 and d.Size.Y>0 and d.Size.Z>0,d.Name) end
