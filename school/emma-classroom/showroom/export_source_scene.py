@@ -317,6 +317,39 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         )
     print(f"READING_BOOKCASE_VARIATION_PASS books={len(book_spines)} "
           f"widths={len(book_widths)} heights={len(book_heights)}")
+    # The pink water bottle was a tall, visually distracting column in
+    # multiple player-eye screenshots. Audit actual built dimensions and
+    # surface contact, not merely the source string.
+    bottle=only("Emma pink water bottle")
+    shoulder=only("Water bottle tapered shoulder")
+    cap=only("Water bottle cap")
+    bottle_x,bottle_y,bottle_z=(float(bottle[i]) for i in (9,10,11))
+    height=float(bottle[6])  # Cylinder axis is local X, rotated onto world Y.
+    bottom=bottle_y-height/2
+    top=bottle_y+height/2
+    shoulder_y,shoulder_h=float(shoulder[10]),float(shoulder[6])
+    cap_y,cap_h=float(cap[10]),float(cap[7])
+    assert .78<=height<=.85 and abs(float(bottle[7])-.51)<.02, (
+        "Oversized water bottle returned"
+    )
+    assert abs(bottom-3.17)<.035, f"Bottle not supported by desktop: y={bottom:.3f}"
+    assert (shoulder_y-shoulder_h/2)<=top+.015, "Bottle shoulder floats"
+    assert (cap_y-cap_h/2)<=(shoulder_y+shoulder_h/2)+.015, (
+        "Bottle cap floats above its neck"
+    )
+    assert cap_y+cap_h/2<4.30, "Water bottle again obscures the central view"
+    assert all(abs(float(p[9])-bottle_x)<.005 and
+               abs(float(p[11])-bottle_z)<.005 for p in (shoulder,cap)), (
+        "Shoulder/cap shifted off bottle center"
+    )
+    assert abs(bottle_x-2.12)<.03 and abs(bottle_z-4.45)<.03, (
+        "Water bottle no longer stands on Emma's desk"
+    )
+    assert bottle_x+float(bottle[7])/2 < 2.86 and (
+        abs(bottle_z-4)+float(bottle[8])/2<1.90
+    ), "Water bottle extends beyond child desk"
+    print(f"EMMA_DESK_BOTTLE_GEOMETRY_PASS height={height:.2f} "
+          f"desk_gap={bottom-3.17:.2f} cap_top={cap_y+cap_h/2:.2f}")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
