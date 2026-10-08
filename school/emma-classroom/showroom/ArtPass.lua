@@ -179,7 +179,7 @@ local function learningWall(root:Instance)
         for i=0,2 do
             local wash=piece(group,"Soft oak floor sunlight",Vector3.new(8,.008,1.05),
                 CFrame.new(-29+i*6,.527,z+2+i*1.3),Color3.fromRGB(255,243,211),Enum.Material.SmoothPlastic,false)
-            wash.Transparency=.91;wash.CastShadow=false
+            wash.Transparency=.975;wash.CastShadow=false
         end
     end
 end
