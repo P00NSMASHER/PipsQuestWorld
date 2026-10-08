@@ -40,7 +40,10 @@ for _,size in ipairs({{568,280},{724,320},{844,390},{1112,512},{390,760},{375,60
         minY=math.min(minY,sy);maxY=math.max(maxY,sy);maxX=math.max(maxX,sx)
     end end
     assert(minY>50,"Keep the head clear of native top controls")
-    if w>h then assert(maxX<w-p.width-p.right-8,"Keep the head beside the answer panel")
+    if w>h then
+        assert(maxX<w-p.width-p.right-8,"Keep the head beside the answer panel")
+        local _,footY=project({-10,.50,-20},camera,w,h)
+        assert(footY<h-20,"Keep the teacher's feet in landscape frame, not cut off below the viewport")
     else assert(maxY<h-p.height-p.bottom-8,"Keep the head above the portrait answer panel") end
 end
 -- Answers reserve their own visible space, independent of prompt/hint length.
