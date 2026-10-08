@@ -102,14 +102,34 @@ function StaffModel.create(teacher)
     return model
 end
 
--- Display avatars stay in their native neutral pose. Whole-model PivotTo is
--- the sole movement writer; no separate head/limb animation runs during swaps.
+-- Articulated display gait without new engine rig joints. Bundled R15 mesh
+-- limbs stay connected as groups, including their hands and feet. The rest
+-- pose remains the single immutable authority; poses never accumulate drift.
+-- This is built from the existing licensed/native avatar meshes rather than
+-- primitive replacement limbs or uncontrolled humanoid animations.
 function StaffModel.pose(model,phase,walking)
     local pivot=model:GetPivot()
+    local swing=walking and math.sin(phase*.46)*.23 or 0
+    local armRoll=walking and math.sin(phase*.23)*.045 or 0
+    local function joint(group)
+        local shoulder=(group=="leftArm" or group=="rightArm")
+        local side=(group=="leftArm" or group=="leftLeg") and -1 or 1
+        local anchor=shoulder and Vector3.new(side*.85,.78,0) or Vector3.new(side*.48,-1.0,0)
+        local angle=shoulder and -side*swing or side*swing
+        local tilt=shoulder and side*armRoll or 0
+        return CFrame.new(anchor)*CFrame.Angles(angle,0,tilt)*CFrame.new(-anchor)
+    end
+    local joints={
+        leftArm=joint("leftArm"),rightArm=joint("rightArm"),
+        leftLeg=joint("leftLeg"),rightLeg=joint("rightLeg")
+    }
     for _,part in ipairs(model:GetDescendants()) do
         if part:IsA("BasePart") and part~=model.PrimaryPart then
             local rest=part:GetAttribute("RestCF")
-            if rest then part.CFrame=pivot*rest end
+            if rest then
+                local group=part:GetAttribute("PoseGroup")
+                part.CFrame=pivot*(joints[group] or CFrame.new())*rest
+            end
         end
     end
 end
