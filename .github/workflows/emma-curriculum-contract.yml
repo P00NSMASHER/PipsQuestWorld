@@ -68,7 +68,13 @@ jobs:
           bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-equivalent"
           sha256sum "${files[@]}" > "$RUNNER_TEMP/sha-advance.sha256"
           cmp "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/sha-advance.sha256"
-          printf '\n-- deliberate generated-bank corruption\n' >> server/QuestionBank.lua
+          # An ABVM commit with unchanged reviewed content must also preserve
+          # the old source receipt when repairing a damaged generated bank.
+          printf '\\n-- bank corruption after equivalent-source commit\\n' >> server/QuestionBank.lua
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-equivalent"
+          cmp server/QuestionBank.lua "$GITHUB_WORKSPACE/school/emma-classroom/server/QuestionBank.lua"
+          cmp curriculum-receipt.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum-receipt.json"
+                    printf '\n-- deliberate generated-bank corruption\n' >> server/QuestionBank.lua
           bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
           cmp server/QuestionBank.lua "$GITHUB_WORKSPACE/school/emma-classroom/server/QuestionBank.lua"
           cmp curriculum.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum.json"
