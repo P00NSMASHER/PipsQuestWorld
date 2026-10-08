@@ -80,7 +80,7 @@ for item in assets.values():
     assert item["type"] == "Model" and item["operationModeration"] in ("Approved","MODERATION_STATE_APPROVED")
     assert len(item["glbSha256"]) == 64 and int(item["assetId"]) > 0
 def staged_id(field):
-    match=re.search(r"\\b"+re.escape(field)+r"\\s*=\\s*(\\d+)\\b",mesh_config)
+    match=re.search(r"(?m)^\s*"+re.escape(field)+r"\s*=\s*(\d+)\s*,?\s*$", mesh_config)
     assert match, f"Missing staged furniture ID field {field}"
     return match.group(1)
 assert staged_id("ChairModelAssetId") == assets["abvm_student_chair"]["assetId"]
