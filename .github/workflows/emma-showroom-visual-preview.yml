@@ -54,6 +54,7 @@ jobs:
           "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check \
             --pre 'roblox-headless-renderer==1.0.0rc1'
           "$RUNNER_TEMP/rhr-venv/bin/rhr" --help | head -30
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_preview.py --self-test
 
       - name: Render interior cutaway and exterior control screenshots
         shell: bash
