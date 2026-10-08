@@ -128,18 +128,22 @@ local function studentDeskDetails(root:Instance)
                     disk(group,"Desk fixing bolt",.13,.035,CFrame.new(x+side*2.22,2.72,z+.71),
                         C.brass,Enum.Material.Metal)
                 end
-                piece(group,"Stationery tray",Vector3.new(1.1,.075,.75),CFrame.new(x+1.95,3.24,z+1.1),
+                -- A third of desks have a colored supply tray. This is a lived-in
+                -- classroom, not a cloned showroom arrangement.
+                if (row+col)%3==0 then
+                piece(group,"Stationery tray",Vector3.new(1.1,.075,.75),CFrame.new(x+1.72,3.24,z+.86),
                     accent,Enum.Material.SmoothPlastic,false)
                 for _,side in ipairs({-1,1}) do
-                    piece(group,"Tray wall",Vector3.new(.08,.25,.75),CFrame.new(x+1.95+side*.52,3.36,z+1.1),
+                    piece(group,"Tray wall",Vector3.new(.08,.25,.75),CFrame.new(x+1.72+side*.52,3.36,z+.86),
                         accent,Enum.Material.SmoothPlastic,false)
                 end
-                piece(group,"Pencil marker",Vector3.new(.09,.10,.63),CFrame.new(x+1.82,3.35,z+1.1),
+                piece(group,"Pencil marker",Vector3.new(.09,.10,.63),CFrame.new(x+1.62,3.35,z+.86),
                     C.navy,Enum.Material.SmoothPlastic,false)
-                piece(group,"Pencil cap",Vector3.new(.11,.12,.16),CFrame.new(x+1.82,3.35,z+.86),
+                piece(group,"Pencil cap",Vector3.new(.11,.12,.16),CFrame.new(x+1.62,3.35,z+.61),
                     C.cream,Enum.Material.SmoothPlastic,false)
-                piece(group,"Short ruler",Vector3.new(.09,.035,.67),CFrame.new(x+2.08,3.34,z+1.1),
+                piece(group,"Short ruler",Vector3.new(.09,.035,.67),CFrame.new(x+1.90,3.34,z+.86),
                     C.golden,Enum.Material.SmoothPlastic,false)
+                end
                 piece(group,"Chair back accent",Vector3.new(1.62,.26,.045),
                     CFrame.new(x,2.93,z+4.39)*CFrame.Angles(math.rad(-7),0,0),
                     accent,Enum.Material.SmoothPlastic,false)
