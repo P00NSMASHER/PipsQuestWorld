@@ -43,3 +43,18 @@ The one-time nonproduction [Open Cloud model import attempt 37812419612](https:/
 **Current blocker:** Verify the correct Roblox creator account/group and the Assets API permission. Only after both model uploads return approved owned asset IDs can the nonproduction configuration be enabled for Roblox-native inspection. This is not a laptop requirement for GLB creation, but is a Roblox authorization/import requirement. The current showroom has the loader wired in, but it intentionally retains the existing playable Part-based furniture.
 
 The independent preview is an offline material/geometry study, not a native Roblox Studio render or proof of iPhone frame rate, camera behavior, smooth normals, final package moderation or collision.
+
+## Creator ownership verified; Assets API authorization denied (October 8 follow-up)
+
+Roblox's Developer Universe API returns the authenticated target's public ownership:
+- Universe `10769455759`, root place `114603280760042`
+- Creator: Roblox **User 6064228083**, username **DadSharkins**.
+- The separate place-to-universe endpoint confirmed the same universe. The old games discovery API returned an `id=0` placeholder because the universe is private/unrated; it is unsuitable for this verification.
+
+The importer now fetches those endpoints live and matches their IDs; the verified owner is **not hard-coded as an override**. Actual GitHub import run [37813643610](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37813643610) recorded `VERIFIED_CREATOR_SOURCE developer-universe and place-link` before Roblox returned **HTTP 403** to the model upload. A second run also failed in the same upload step. No asset IDs or accepted asset-operation receipts were returned. The originals remain staged, never activated.
+
+The result establishes that the credential supplied to this job is not authorized for the requested model creation. The response does **not** establish whether the cause is missing `Assets: Read/Write` scope, an API-key creator mismatch, or another Roblox permission restriction. We will not invent a positive authorization.
+
+The workflow now uses **manual dispatch only** and accepts **only the dedicated `ROBLOX_ASSET_API_KEY` secret**, never the place publisher's `ROBLOX_API_KEY`. This prevents duplicate model imports on routine pull-request edits and keeps existing production deploy permissions separate.
+
+**Remaining required authorization:** Supply a creator-authorized Roblox Open Cloud API key for **Assets Read/Write** under the verified DadSharkins creator in GitHub Actions repository secret `ROBLOX_ASSET_API_KEY`. Do not paste credentials in chat. Trigger the existing import workflow once after confirming access, and inspect receipts and moderation status before enabling any visuals. Roblox has not uploaded either model, and native/iPhone visual acceptance has not occurred.
