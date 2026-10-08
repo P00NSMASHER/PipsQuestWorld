@@ -147,6 +147,10 @@ for _,teacher in ipairs(Data.Teachers) do
     local accessory=m:FindFirstChildOfClass("Accessory")
     if teacher.hairStyle=="balding" then assert(not accessory) else
         assert(accessory and accessory.Handle:FindFirstChildOfClass("SpecialMesh"))
+        -- Keep highlights and strand detail of native catalog hair. The former
+        -- TextureId="" code created solid-color blobs despite using mesh assets.
+        local hairMesh=accessory.Handle:FindFirstChildOfClass("SpecialMesh")
+        assert(type(hairMesh.TextureId)=="string" and hairMesh.TextureId~="","Bundled hair texture was stripped")
         local ha=accessory.Handle.HairAttachment
         near((accessory.Handle.CFrame*CFrame.new(ha.CFrame.Position*m:GetScale())).Position,(head.CFrame*CFrame.new(head.HairAttachment.CFrame.Position*m:GetScale())).Position)
     end
@@ -155,6 +159,8 @@ for _,teacher in ipairs(Data.Teachers) do
     local hairBefore=accessory and (head.CFrame:Inverse()*accessory.Handle.CFrame).Position
     m:PivotTo(CFrame.new(29,3.15,15.5)*CFrame.Angles(0,math.pi,0))
     StaffModel.pose(m,1.2,true)
+    local restArmPosition=(m:GetPivot()*arm:GetAttribute("RestCF")).Position
+    assert((arm.Position-restArmPosition).Magnitude>.02,"Walking must visibly articulate native R15 limbs")
     near((arm.CFrame:Inverse()*hand.CFrame).Position,before)
     if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
     for frame=0,60 do
@@ -163,8 +169,15 @@ for _,teacher in ipairs(Data.Teachers) do
         near((m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position,headRest)
         if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
     end
-    local posed=arm.Position;StaffModel.pose(m,1.2,true);near(arm.Position,posed)
+    StaffModel.pose(m,1.2,true)
+    local posed=arm.Position
+    StaffModel.pose(m,1.2,true)
+    near(arm.Position,posed) -- repeated SAME walking phase is deterministic
     StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
+    assert((m:FindFirstChild("LeftHand").CFrame:Inverse()*arm.CFrame).Position.Magnitude>0)
+    -- Non-walking neutral pose must exactly restore every separate mesh joint.
+    StaffModel.pose(m,2.7,false)
+    near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
 
 end
 local script={Parent={WaitForChild=function(_,name)assert(name=="StaffModel");return StaffModel end}}

@@ -170,9 +170,10 @@ startRound=function(player)
     local visualOK,model=pcall(World.teacherModel,teacher)
     if visualOK and model then
         model:SetAttribute("OwnerUserId",player.UserId)
-        model:SetAttribute("QuickStudyEntry",true)
+        model:SetAttribute("StaffEntranceAnimation",true)
+        model:PivotTo(World.TeacherDoor)
         model.Parent=World.Root
-        model:PivotTo(World.TeacherStudyEntry);s.teacherModel=model
+        s.teacherModel=model
     else
         model=nil
         warn("Teacher visual unavailable; question remains usable")

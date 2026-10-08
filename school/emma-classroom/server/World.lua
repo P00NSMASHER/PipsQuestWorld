@@ -127,7 +127,7 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     part(parent,"Desk book tray",Vector3.new(5.8,.12,3.6),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
     for _,dx in ipairs({-2.9,2.9}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.6),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
     book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
-    schoolChair(parent,"Student chair",x,z+3.9,Color3.fromRGB(47,50,50))
+    schoolChair(parent,"Student chair",x,z+3.9,Color3.fromRGB(70,101,133))
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
     book(parent,x-1.2,3.28,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
     cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
@@ -508,7 +508,9 @@ local function applyLighting(root: Instance)
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
     bloom.Name="EmmaClassroomBloom";bloom.Intensity=.03;bloom.Size=20;bloom.Threshold=1.25;bloom.Parent=Lighting
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
-    grade.Name="EmmaClassroomGrade";grade.Brightness=0;grade.Contrast=.035;grade.Saturation=.01;grade.TintColor=Color3.fromRGB(255,253,250);grade.Parent=Lighting
+    -- Quiet contrast and slightly warmer whites reveal native clothing
+    -- textures instead of flattening everything under bright ambient fill.
+    grade.Name="EmmaClassroomGrade";grade.Brightness=-.012;grade.Contrast=.095;grade.Saturation=-.035;grade.TintColor=Color3.fromRGB(255,250,241);grade.Parent=Lighting
     local rays=Lighting:FindFirstChild("EmmaClassroomSunRays") or Instance.new("SunRaysEffect")
     rays.Name="EmmaClassroomSunRays";rays.Intensity=.025;rays.Spread=.8;rays.Parent=Lighting
 end
@@ -597,9 +599,11 @@ function World.build()
     World.Root=root
     World.Spawn=spawn.CFrame
     World.EmmaSeat=seat
-    World.TeacherDoor=CFrame.new(45,3.15,15.5)*CFrame.Angles(0,math.pi,0)
+    World.TeacherDoor=CFrame.new(43,3.15,15.5)*CFrame.Angles(0,math.pi,0)
     World.TeacherFront=CFrame.new(-10,3.15,-20)*CFrame.Angles(0,math.pi,0)
     World.TeacherStudyEntry=CFrame.new(-15,3.15,-20)*CFrame.Angles(0,math.pi,0)
+    -- Enter through the existing staff doorway, follow the clear wall-side
+    -- aisle, then walk to the board without cutting through student desks.
     World.TeacherPath={CFrame.new(29,3.15,15.5),CFrame.new(29,3.15,-20),World.TeacherFront}
     World.resetBoard()
     return World
@@ -639,19 +643,15 @@ function World.moveTeacher(model: Model,target: CFrame,duration: number)
 end
 
 function World.walkTeacher(model:Model,entering:boolean)
-    if model:GetAttribute("QuickStudyEntry") then
-        if model.Parent then model:PivotTo(entering and World.TeacherFront or World.TeacherStudyEntry);World.poseTeacher(model,0,false) end
-        return
-    end
     if entering then
         for _,point in ipairs(World.TeacherPath) do
             if not model.Parent then return end
-            World.moveTeacher(model,point,math.max(.25,(model:GetPivot().Position-point.Position).Magnitude/16))
+            World.moveTeacher(model,point,math.max(.3,(model:GetPivot().Position-point.Position).Magnitude/22))
         end
     else
         for _,point in ipairs({World.TeacherPath[2],World.TeacherPath[1],World.TeacherDoor}) do
             if not model.Parent then return end
-            World.moveTeacher(model,point,math.max(.25,(model:GetPivot().Position-point.Position).Magnitude/16))
+            World.moveTeacher(model,point,math.max(.3,(model:GetPivot().Position-point.Position).Magnitude/22))
         end
     end
 end
