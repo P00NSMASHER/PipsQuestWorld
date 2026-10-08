@@ -119,7 +119,7 @@ local function renderBoard()
     for i,v in ipairs(boardState.choices) do
         lines[#lines+1]=string.char(64+i)..".  "..v
     end
-    boardQuestion.Text=table.concat(lines,"\\n")
+    boardQuestion.Text=table.concat(lines,"\n")
     boardFooter.Text=boardState.footer
 end
 local function setBoard(state)
