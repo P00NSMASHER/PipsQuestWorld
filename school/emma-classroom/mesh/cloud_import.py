@@ -105,6 +105,15 @@ def main():
     parser.add_argument("--folder",type=Path,required=True)
     parser.add_argument("--out",type=Path,required=True)
     opts=parser.parse_args()
+    # This is explicitly ONE-TIME model creation. After the signed import
+    # receipt is committed, rerunning should never create duplicate assets,
+    # even if someone dispatches the workflow with a valid write key.
+    if (Path(__file__).with_name("imported_models.json")).exists():
+        raise RuntimeError(
+            "ORIGINAL_FURNITURE_ALREADY_IMPORTED: Roblox-approved asset receipt "
+            "is present. Run the read-only metadata verification workflow; "
+            "do not upload duplicates."
+        )
     key=os.getenv("ROBLOX_ASSET_API_KEY", "").strip()
     if len(key)<20:
         raise RuntimeError(
