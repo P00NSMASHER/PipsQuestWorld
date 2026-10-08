@@ -60,7 +60,7 @@ for _,part in ipairs(Room.Root:GetDescendants()) do
         total+=1
         local cf=part.CFrame
         local m=cf.m
-        local c=part.Color
+        local c=part.Color or Color3.fromRGB(160,160,160)
         local size=part.Size
         local p=cf.Position
         local safeName=string.gsub(tostring(part.Name),"[|\\r\\n]"," ")
