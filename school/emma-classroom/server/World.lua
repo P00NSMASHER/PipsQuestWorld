@@ -4,10 +4,11 @@ local Lighting=game:GetService("Lighting")
 local TweenService=game:GetService("TweenService")
 
 local StaffModel=require(script.Parent:WaitForChild("StaffModel"))
+local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(239,233,207),
+    wall=Color3.fromRGB(245,242,225),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
@@ -500,9 +501,12 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=1.5;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.55
-    Lighting.Ambient=Color3.fromRGB(110,114,120);Lighting.OutdoorAmbient=Color3.fromRGB(150,163,182)
-    Lighting.EnvironmentDiffuseScale=.55;Lighting.EnvironmentSpecularScale=.20;Lighting.ExposureCompensation=-.18
+    Lighting.ClockTime=10.25;Lighting.Brightness=1.65;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.63
+    -- Soft is the current Roblox lighting-style API. Keep compatibility with
+    -- engine versions where the enum is unavailable; no external assets.
+    pcall(function() Lighting.LightingStyle=Enum.LightingStyle.Soft end)
+    Lighting.Ambient=Color3.fromRGB(134,137,139);Lighting.OutdoorAmbient=Color3.fromRGB(161,173,181)
+    Lighting.EnvironmentDiffuseScale=.66;Lighting.EnvironmentSpecularScale=.24;Lighting.ExposureCompensation=-.10
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
     atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.025;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
@@ -510,7 +514,7 @@ local function applyLighting(root: Instance)
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
     -- Quiet contrast and slightly warmer whites reveal native clothing
     -- textures instead of flattening everything under bright ambient fill.
-    grade.Name="EmmaClassroomGrade";grade.Brightness=-.012;grade.Contrast=.095;grade.Saturation=-.035;grade.TintColor=Color3.fromRGB(255,250,241);grade.Parent=Lighting
+    grade.Name="EmmaClassroomGrade";grade.Brightness=.00;grade.Contrast=.065;grade.Saturation=.035;grade.TintColor=Color3.fromRGB(255,252,245);grade.Parent=Lighting
     local rays=Lighting:FindFirstChild("EmmaClassroomSunRays") or Instance.new("SunRaysEffect")
     rays.Name="EmmaClassroomSunRays";rays.Intensity=.025;rays.Spread=.8;rays.Parent=Lighting
 end
@@ -518,6 +522,7 @@ end
 function World.build()
     local old=Workspace:FindFirstChild("EmmaStudyWorld");if old then old:Destroy() end
     local root=Instance.new("Folder");root.Name="EmmaStudyWorld";root.Parent=Workspace
+    root:SetAttribute("ArtDirection","EmmaRoomOriginalArtV9")
     applyLighting(root)
 
     -- Architectural shell.
@@ -573,6 +578,10 @@ function World.build()
             end
         end
     end
+
+    -- Original room kit decorates the real Rojo place. No AI render or preview.
+    -- Keep it separate from gameplay, board content and curriculum systems.
+    ArtPass.decorate(root)
 
     -- Lived-in details.
     plant(root,-31,.1,20,.85)
