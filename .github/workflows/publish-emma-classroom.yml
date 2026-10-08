@@ -1,4 +1,4 @@
-name: Publish Emma Study Classroom
+name: Publish ABVM Classroom Replica
 
 on:
   push:
@@ -43,24 +43,28 @@ jobs:
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau-compile rojo/rojo
 
-      - name: Verify tiny classroom source
+      - name: Require explicit replica-only release approval and compile showroom
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/shared/*.lua school/emma-classroom/server/*.lua school/emma-classroom/client/*.lua; do
+          # The previous v63 request was for the rejected study game.
+          # Publishing the replica needs a NEW, explicit marker after visual review.
+          grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
+          grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
+          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/server/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
-          grep -q 'SESSION_GOAL=10' school/emma-classroom/server/Main.server.lua
-          grep -q 'Data.PlayerName = "Emma"' school/emma-classroom/shared/Data.lua
-          ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
+          python3 school/emma-classroom/showroom/verify_build.py
 
-      - name: Build Emma classroom only
+      - name: Build replica with NO educational runtime
         shell: bash
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxl"
-          test -s "$RUNNER_TEMP/emma-study.rbxl"
-          sha256sum "$RUNNER_TEMP/emma-study.rbxl" | tee "$RUNNER_TEMP/place.sha256"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxl"
+          test -s "$RUNNER_TEMP/emma-replica.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxlx"
+          python3 school/emma-classroom/showroom/verify_build.py "$RUNNER_TEMP/emma-replica.rbxlx"
+          sha256sum "$RUNNER_TEMP/emma-replica.rbxl" | tee "$RUNNER_TEMP/place.sha256"
 
       - name: Publish exact classroom binary
         id: publish
@@ -71,7 +75,7 @@ jobs:
           set -euo pipefail
           test -n "$ROBLOX_API_KEY"
           response="$RUNNER_TEMP/publish-response.json"
-          code="$(curl --silent --show-error --location             --output "$response" --write-out '%{http_code}'             --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/octet-stream'             --data-binary @"$RUNNER_TEMP/emma-study.rbxl")"
+          code="$(curl --silent --show-error --location             --output "$response" --write-out '%{http_code}'             --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/octet-stream'             --data-binary @"$RUNNER_TEMP/emma-replica.rbxl")"
           cat "$response"
           test "$code" -ge 200 -a "$code" -lt 300
           version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["versionNumber"])' "$response")"
@@ -82,7 +86,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: emma-study-publish-${{ github.run_id }}
+          name: emma-replica-publish-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/place.sha256
             ${{ runner.temp }}/version.txt
