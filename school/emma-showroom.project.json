@@ -48,7 +48,6 @@
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "$properties": {
-        "CameraMode": "LockFirstPerson",
         "CameraMinZoomDistance": 0.5,
         "CameraMaxZoomDistance": 16
       },
