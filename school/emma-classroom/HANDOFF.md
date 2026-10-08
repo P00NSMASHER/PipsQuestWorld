@@ -1,3 +1,15 @@
+## October 8 — furniture reconstruction and adversarial close-up visual review
+
+**Current source checkpoint:** `4ab68c81456d0fb898ad86429d508b700cc3b3dc`. The new classroom-only chair/desks changes and source-derived previews are archived in [the furniture QA gallery](../../docs/visual-qa/emma-furniture-20261008/README.md).
+
+Implemented: Reworked all 16 chairs with single continuous rounded physical shells and invisibly simple collision; rejected an intermediate multi-panel shell after inspecting actual rendered close-ups because it visibly resembled stacked plates. Added underseat steel runners, thin laminate desk edge, front bevel, slimmer underdesk baskets, and support stretchers. Retained all desk positions, classroom-only first-person movement and isolated schoolwork systems. Fixed blank aerial preview false positives with an explicit camera and pixel occupancy check.
+
+Actually tested: Luau compilation, Rojo binary/XML assembly, schoolwork-runtime exclusion, executed Luau scene constructors, 2,688-part geometry budget, and all six exact-source GitHub workflow checks including the independent visual screenshots (run 37798089586). Verified actual image pixels for front, back, isometric, chair and desk close-ups. A four-piece chair-back attempt was *rejected by visual QA*, and its screenshots were retained.
+
+Not tested/known remaining limitations: Native Roblox rendering on Studio/iPhone, true seat collision or mobile fps, exact photo-to-world room measurements. Current continuous chairs still look too oval to meet a premium professionally meshed chair target; desks remain original part geometry, not production imported meshes. **No production publish / PR merge**. Keep the draft until native capture and substantive visual quality acceptance.
+
+---
+
 # CURRENT DIRECTION: classroom replica only (October 8, 2026)
 
 ## Continued geometry/visual iteration, no laptop
