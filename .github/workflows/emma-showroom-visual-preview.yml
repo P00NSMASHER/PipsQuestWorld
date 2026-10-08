@@ -64,11 +64,11 @@ jobs:
           RHR="$RUNNER_TEMP/rhr-venv/bin/rhr"
           SRC="$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
           mkdir -p "$RUNNER_TEMP/visual"
-          # One geometry upload / render session for every standard camera.
-          "$RHR" scene "$SRC" --views iso,front,top,left,right,back --out "$RUNNER_TEMP/visual/interior.png"
-          mv "$RUNNER_TEMP/visual/interior-iso.png" "$RUNNER_TEMP/visual/01-isometric.png"
-          mv "$RUNNER_TEMP/visual/interior-front.png" "$RUNNER_TEMP/visual/02-front.png"
-          mv "$RUNNER_TEMP/visual/interior-top.png" "$RUNNER_TEMP/visual/03-top.png"
+          # Keep aerial renders independent. The six-view batch once returned
+          # nearly all-white PNGs despite reporting success.
+          "$RHR" scene "$SRC" --view iso --out "$RUNNER_TEMP/visual/01-isometric.png"
+          "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
+          "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
           # Ground-level positions measured in room source studs.
           # Use the FULL classroom here. Cutaway previews are only for aerial shots;
           # otherwise dark voids replace real walls at the player eye position.
@@ -81,6 +81,20 @@ jobs:
           for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
+          # A PNG existing does not mean a room rendered: reject near-white
+          # screens from headless browser/renderer failures.
+          "$RUNNER_TEMP/rhr-venv/bin/python" - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          folder=Path(os.environ["RUNNER_TEMP"])/"visual"
+          for name in ("01-isometric","02-front","03-top"):
+              im=Image.open(folder/(name+".png")).convert("RGB")
+              dynamic=max(b-a for a,b in im.getextrema())
+              if dynamic<65:
+                  raise RuntimeError(f"Visually blank aerial render {name}: channel span {dynamic}")
+              print(f"VISUAL_NONBLANK_PASS {name} channel_span={dynamic}")
+          PY
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
