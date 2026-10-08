@@ -297,19 +297,8 @@ local function buildReadingCorner(root:Instance)
             part(root,"Book spine label",Vector3.new(.3,.14,.03),CFrame.new(x,1.7+row*2.55,22.53),P.cream,Enum.Material.SmoothPlastic,false)
         end
     end
-    for i=1,6 do
-        local x=-29.9+((i-1)%3)*3.85;local y=9.55-math.floor((i-1)/3)*2.55
-        local cf=CFrame.new(x,y,-33.35)*CFrame.Angles(0,0,math.rad(i%2==0 and 3 or -3))
-        part(root,"Student artwork border",Vector3.new(2.9,2.28,.06),cf,colors[i%4+1],Enum.Material.SmoothPlastic,false)
-        local paper=part(root,"Student artwork paper",Vector3.new(2.64,2.04,.04),cf*CFrame.new(0,0,.055),P.cream,Enum.Material.SmoothPlastic,false)
-        for petal=0,4 do
-            local t=petal*math.pi*2/5
-            ball(root,"Artwork flower petal",Vector3.new(.36,.36,.035),paper.CFrame*CFrame.new(math.cos(t)*.27,.16+math.sin(t)*.27,.03),colors[i%4+1],Enum.Material.SmoothPlastic,false)
-        end
-        part(root,"Artwork stem",Vector3.new(.055,.68,.03),paper.CFrame*CFrame.new(0,-.40,.034),P.green,Enum.Material.SmoothPlastic,false)
-        ball(root,"Artwork center",Vector3.new(.24,.24,.045),paper.CFrame*CFrame.new(0,.16,.044),P.gold,Enum.Material.SmoothPlastic,false)
-        ball(root,"Artwork pin",Vector3.new(.11,.11,.08),cf*CFrame.new(0,1.0,.11),P.gold,Enum.Material.Metal,false)
-    end
+    -- Six synthetic artwork panels were duplicated on the front chalkboard.
+    -- A dedicated single student gallery remains on the back wall.
 
 end
 
@@ -380,14 +369,23 @@ local function buildWindows(root: Instance)
 end
 
 local function buildFrontWall(root: Instance)
-    part(root,"Main chalkboard",Vector3.new(44,8.8,.45),CFrame.new(4,8.1,-34.25),Color3.fromRGB(42,47,45),Enum.Material.SmoothPlastic,false)
-    part(root,"Chalkboard wood top",Vector3.new(45,.55,.7),CFrame.new(4,12.75,-34.05),Color3.fromRGB(111,77,50),Enum.Material.Wood,false)
-    part(root,"Chalkboard wood bottom",Vector3.new(45,.55,.9),CFrame.new(4,3.55,-33.85),Color3.fromRGB(111,77,50),Enum.Material.Wood,false)
-    part(root,"Chalk tray",Vector3.new(29,.38,1.15),CFrame.new(4,3.35,-33.45),Color3.fromRGB(111,77,50),Enum.Material.Wood,false)
-
-    for _,x in ipairs({-18.5,26.5}) do part(root,"Chalkboard wood side",Vector3.new(.5,9.4,.7),CFrame.new(x,8.1,-34.05),P.woodDark,Enum.Material.Wood,false) end
-    for i=0,3 do part(root,"Chalk stick",Vector3.new(.85,.14,.14),CFrame.new(-4+i*1.3,3.59,-33.3),P.cream,Enum.Material.SmoothPlastic,false) end
-    part(root,"Chalkboard eraser",Vector3.new(1.4,.35,.62),CFrame.new(-8,3.6,-33.4),P.ink,Enum.Material.Fabric,false)
+    -- Architectural teaching wall: a realistic separate chalkboard beside the
+    -- existing smartboard, not a 44-stud black plate behind both displays.
+    part(root,"Main chalkboard",Vector3.new(15.8,7.55,.30),CFrame.new(-13.7,8.1,-34.14),Color3.fromRGB(43,54,50),Enum.Material.SmoothPlastic,false)
+    for _,y in ipairs({4.20,12.0}) do
+        part(root,"Chalkboard hardwood horizontal",Vector3.new(16.5,.48,.60),CFrame.new(-13.7,y,-34.0),
+            Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
+    end
+    for _,x in ipairs({-21.95,-5.45}) do
+        part(root,"Chalkboard hardwood stile",Vector3.new(.42,7.85,.58),CFrame.new(x,8.1,-34.0),
+            Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
+    end
+    part(root,"Chalk tray",Vector3.new(15.5,.18,.80),CFrame.new(-13.7,4.02,-33.63),Color3.fromRGB(129,92,57),Enum.Material.Wood,false)
+    for i=0,3 do
+        part(root,"Chalk stick",Vector3.new(.58,.095,.095),CFrame.new(-19+i*.66,4.16,-33.37),
+            P.cream,Enum.Material.SmoothPlastic,false)
+    end
+    part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-12,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
     part(root,"Smartboard dark bezel",Vector3.new(24.05,7.35,.24),CFrame.new(7,8.2,-33.91),P.blue,Enum.Material.SmoothPlastic,false)
     part(root,"Smartboard pen tray",Vector3.new(13,.22,.65),CFrame.new(7,4.61,-33.26),Color3.fromRGB(208,211,209),Enum.Material.Metal,false)
     local smart=part(root,"Interactive smartboard",Vector3.new(23.5,6.8,.35),CFrame.new(7,8.2,-33.65),Color3.fromRGB(238,243,241),Enum.Material.Glass,false);smart.Transparency=.02
