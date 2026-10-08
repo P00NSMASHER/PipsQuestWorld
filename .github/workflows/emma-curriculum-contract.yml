@@ -1,0 +1,86 @@
+name: Emma Curriculum Contract
+on:
+  push:
+    paths:
+      - 'school/emma-classroom/curriculum.json'
+      - 'school/emma-classroom/curriculum-receipt.json'
+      - 'school/emma-classroom/server/QuestionBank.lua'
+      - 'school/emma-classroom/tools/import_study_universe.py'
+      - 'school/emma-classroom/tools/refresh_curriculum.sh'
+      - 'school/emma-classroom/tests/test_curriculum_import.py'
+      - '.github/workflows/emma-curriculum-contract.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-classroom/curriculum.json'
+      - 'school/emma-classroom/curriculum-receipt.json'
+      - 'school/emma-classroom/server/QuestionBank.lua'
+      - 'school/emma-classroom/tools/import_study_universe.py'
+      - 'school/emma-classroom/tools/refresh_curriculum.sh'
+      - 'school/emma-classroom/tests/test_curriculum_import.py'
+      - '.github/workflows/emma-curriculum-contract.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reviewed-content:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify importer, privacy and deterministic generated files
+        run: python3 -m unittest discover -s school/emma-classroom/tests -p test_curriculum_import.py
+      - name: Reproduce exact reviewed ABVM bundle independently
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_sha="$(python3 -c 'import json; print(json.load(open("school/emma-classroom/curriculum-receipt.json"))["sourceCommit"])')"
+          [[ "$source_sha" =~ ^[a-f0-9]{40}$ ]]
+          git clone --no-checkout https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm-source"
+          git -C "$RUNNER_TEMP/abvm-source" checkout --detach "$source_sha"
+          test "$(git -C "$RUNNER_TEMP/abvm-source" rev-parse HEAD)" = "$source_sha"
+          (cd "$RUNNER_TEMP/abvm-source" && node --test tests/study-universe.test.mjs)
+          node "$RUNNER_TEMP/abvm-source/scripts/build-study-universe.mjs" "$RUNNER_TEMP/exact-reviewed.json"
+          cmp school/emma-classroom/curriculum.json "$RUNNER_TEMP/exact-reviewed.json"
+      - name: Prove refresh is a no-op when healthy and repairs only generated drift
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a school/emma-classroom "$RUNNER_TEMP/classroom-contract"
+          cd "$RUNNER_TEMP/classroom-contract"
+          files=(curriculum.json server/QuestionBank.lua curriculum-receipt.json)
+          sha256sum "${files[@]}" > "$RUNNER_TEMP/before.sha256"
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
+          sha256sum "${files[@]}" > "$RUNNER_TEMP/after.sha256"
+          cmp "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/after.sha256"
+          # Simulate an ABVM Git commit that changes no educational material.
+          # It must never cause meaningless question-bank or receipt churn.
+          git clone --quiet --no-hardlinks "$RUNNER_TEMP/abvm-source" "$RUNNER_TEMP/abvm-equivalent"
+          accepted_sha="$(python3 -c 'import json; print(json.load(open("curriculum-receipt.json"))["sourceCommit"])')"
+          git -C "$RUNNER_TEMP/abvm-equivalent" checkout --detach "$accepted_sha"
+          git -C "$RUNNER_TEMP/abvm-equivalent" -c user.name='Curriculum QA' \
+            -c user.email='qa@users.noreply.github.com' commit --allow-empty -m 'Source-only SHA advance fixture'
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-equivalent"
+          sha256sum "${files[@]}" > "$RUNNER_TEMP/sha-advance.sha256"
+          cmp "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/sha-advance.sha256"
+          printf '\n-- deliberate generated-bank corruption\n' >> server/QuestionBank.lua
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
+          cmp server/QuestionBank.lua "$GITHUB_WORKSPACE/school/emma-classroom/server/QuestionBank.lua"
+          cmp curriculum.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum.json"
+          cmp curriculum-receipt.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum-receipt.json"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("curriculum-receipt.json")
+          d=json.loads(p.read_text())
+          d["contentSha256"]="0"*64
+          p.write_text(json.dumps(d,indent=2)+"\n")
+          PY
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
+          cmp curriculum-receipt.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum-receipt.json"
+          echo 'PASS: game-independent data contract, SHA-only no-op and bank/receipt repair.'
