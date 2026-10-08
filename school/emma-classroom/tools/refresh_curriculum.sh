@@ -34,6 +34,11 @@ if cmp -s "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"; then
     exit 0
   fi
   echo "REPAIR_REQUIRED: reviewed content matches but generated bank/receipt has drifted."
+  # Repair against the previously accepted exact source, not a newer ABVM
+  # commit with byte-identical educational content. Avoid receipt churn.
+  cp "$STAGE_ROOT/accepted-QuestionBank.lua" "$STAGE_ROOT/QuestionBank.lua"
+  cp "$STAGE_ROOT/accepted-receipt.json" "$STAGE_ROOT/receipt.json"
+  SOURCE_SHA="$ACCEPTED_SHA"
 fi
 
 # Validate all generated files before editing the working tree. Source provenance,
