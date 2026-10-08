@@ -39,16 +39,28 @@ def verify_key_permissions(universe, key):
 
     if info.get("enabled") is not True or info.get("expired") is True:
         raise ValueError("QA key is disabled or expired")
-    required = {"universe.places:write", "universe.place.luau-execution-session:write"}
+    # The dashboard labels the APIs "universe-places" and "luau-execution-sessions".
+    # Roblox introspection uses their API names, not the dotted endpoint names.
+    required = {"universe-places:write", "luau-execution-sessions:write"}
+    aliases = {
+        "universe.place.luau-execution-session:write": "luau-execution-sessions:write",
+    }
     discovered = set()
-    for scope in info.get("scopes", []):
+    scopes = info.get("scopes")
+    if not isinstance(scopes, list) or not scopes:
+        raise ValueError("QA key returned no inspectable scopes")
+    for scope in scopes:
+        if not isinstance(scope, dict):
+            raise ValueError("Malformed QA key scope")
         name = scope.get("name", "")
-        operations = scope.get("operations", []) or []
+        operations = scope.get("operations", [])
+        if not isinstance(name, str) or not isinstance(operations, list):
+            raise ValueError("Malformed QA key permission")
         if ":" in name and not operations:
             permissions = {name}
         else:
             permissions = {name + ":" + operation for operation in operations}
-        discovered.update(permissions)
+        discovered.update(aliases.get(permission, permission) for permission in permissions)
         ids = set(str(i) for i in scope.get("universeIds", []))
         if ids != {universe}:
             raise ValueError("QA API key does not restrict every scope to the exact QA universe")
