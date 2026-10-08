@@ -20,6 +20,8 @@ expected = {
     "World": "emma-classroom/showroom/Room.lua",
     "GalleryPass": "emma-classroom/showroom/GalleryPass.lua",
     "ArtPass": "emma-classroom/showroom/ArtPass.lua",
+    "FurnitureMeshAdapter": "emma-classroom/showroom/FurnitureMeshAdapter.lua",
+    "FurnitureMeshConfig": "emma-classroom/showroom/FurnitureMeshConfig.lua",
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
@@ -55,6 +57,14 @@ assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returne
 assert 'local center=CFrame.new(20.55,5.87,-26.4)' in room, "Teacher globe moved off its desk"
 assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
 assert "GalleryPass.decorate(Room.Root)" in main
+assert "FurnitureMeshAdapter.apply(Room.Root)" in main
+mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()
+mesh_adapter=(base/"emma-classroom/showroom/FurnitureMeshAdapter.lua").read_text()
+assert "Enabled = false" in mesh_config, "Unreviewed premium meshes enabled without native QA"
+assert "ChairModelAssetId = 0" in mesh_config and "DeskModelAssetId = 0" in mesh_config
+assert "if not Config.Enabled then" in mesh_adapter, "Model fallback guard missing"
+assert "instances ~= 16" in mesh_adapter, "All 16 chairs/desks must construct before hiding originals"
+assert 'descendant:IsA("LuaSourceContainer")' in mesh_adapter, "Imported scripts must be rejected"
 assert 'sign(root,"Rule card "' not in room, "Old oversized classroom cards returned"
 assert 'for i,x in ipairs({-24,-8,12}) do' in room, "Unsupported basket placement returned"
 assert '"Number learning card"' not in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Rear wall gallery would overlap number cards"
