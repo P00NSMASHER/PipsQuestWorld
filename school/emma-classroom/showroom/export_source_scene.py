@@ -159,6 +159,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Student chair molded back panel":64,
         "Student chair molded side return":128,
         "Student chair underseat frame runner":32,
+        "Desk laminated front bevel":16,
+        "Desk shelf front restraint":16,
+        "Desk back steel stretcher":16,
     }
     for component,expected in geometry_contract.items():
         assert by_name[component]==expected, (
