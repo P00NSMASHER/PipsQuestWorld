@@ -6,6 +6,7 @@ on:
     paths:
       - 'school/emma-classroom/showroom/**'
       - 'school/emma-showroom.project.json'
+      - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
       - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
@@ -37,7 +38,7 @@ jobs:
           echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
           unzip -q luau.zip -d luau
           unzip -q rojo.zip -d rojo
-          chmod +x luau/luau-compile rojo/rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
 
       - name: Compile ONLY shipped room/client scripts
         shell: bash
@@ -47,6 +48,13 @@ jobs:
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" > /dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
+
+      - name: Exercise furniture activation and transactional rollback in Luau
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/tests/furniture_adapter_runtime.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
 
       - name: Assemble showroom rather than the study game
         shell: bash
