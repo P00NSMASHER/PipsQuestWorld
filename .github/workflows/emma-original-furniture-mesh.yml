@@ -28,7 +28,7 @@ jobs:
           set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/mesh-env"
           "$RUNNER_TEMP/mesh-env/bin/pip" install --disable-pip-version-check \
-            'trimesh==4.11.1' 'numpy==2.3.5' 'matplotlib==3.10.8' 'Pillow==11.3.0'
+            'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'matplotlib==3.10.8' 'Pillow==11.3.0'
 
       - name: Export authored chair and desk GLB candidates
         shell: bash
