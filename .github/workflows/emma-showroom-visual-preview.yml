@@ -1,0 +1,82 @@
+name: Emma Classroom Visual Snapshot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-showroom.project.json'
+      - 'school/emma-classroom/showroom/**'
+      - '.github/workflows/emma-showroom-visual-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshot-constructed-luau-room:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Get exact review head
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned geometry executor
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          mkdir -p luau
+          unzip -q luau.zip -d luau
+          chmod +x luau/luau
+
+      - name: Evaluate actual classroom constructor into a STATIC scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          test -s "$RUNNER_TEMP/emma-classroom-source.rbxmx"
+
+      - name: Install sandboxed independent headless renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/rhr-venv"
+          "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check \
+            --pre 'roblox-headless-renderer==1.0.0rc1'
+          "$RUNNER_TEMP/rhr-venv/bin/rhr" --help | head -30
+
+      - name: Render source-derived front, top, and isometric previews
+        shell: bash
+        env:
+          RHR_CACHE_DIR: ${{ runner.temp }}/rhr-cache
+        run: |
+          set -euo pipefail
+          RHR="$RUNNER_TEMP/rhr-venv/bin/rhr"
+          SRC="$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          mkdir -p "$RUNNER_TEMP/visual"
+          "$RHR" scene "$SRC" --view iso --out "$RUNNER_TEMP/visual/01-isometric.png"
+          "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
+          "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
+          test -s "$RUNNER_TEMP/visual/01-isometric.png"
+          test -s "$RUNNER_TEMP/visual/02-front.png"
+          test -s "$RUNNER_TEMP/visual/03-top.png"
+          sha256sum "$RUNNER_TEMP"/visual/*.png
+          echo "These are source-derived third-party renderer snapshots."
+          echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
+
+      - name: Save real rendered source snapshot for human/AI review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-classroom-geometry-preview-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/visual/*.png
+            ${{ runner.temp }}/emma-classroom-source.rbxmx
+          retention-days: 14
+          if-no-files-found: warn
