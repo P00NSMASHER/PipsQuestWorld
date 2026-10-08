@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "sourceRepository": "P00NSMASHER/abvmschoolstarworld",
-  "sourceCommit": "42aec22aaf3f3aa82993744fbf1e7064a55d58af",
-  "contentSha256": "22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418",
+  "sourceCommit": "377c8e831d77757c1c4773e7c00b9ae7555b9ee2",
+  "contentSha256": "856b28978ee63a4bc7ac1e2ae6c7dda18a8ef287213eba9464179cc0e16ddbb6",
   "imported": 357,
   "tiers": {
     "current": 134,
@@ -10,13 +10,6 @@
     "star-fallback": 158
   },
   "tests": [
-    {
-      "id": "test-2026-10-07-reading",
-      "label": "Reading",
-      "date": "2026-10-07",
-      "count": 60,
-      "supported": true
-    },
     {
       "id": "test-2026-10-09-grammar-subject-predicate",
       "label": "Grammar (subject & predicate)",
