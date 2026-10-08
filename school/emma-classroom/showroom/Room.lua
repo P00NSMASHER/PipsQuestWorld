@@ -389,9 +389,33 @@ local function buildCubbies(root: Instance)
     for i=0,7 do
         local x=10.3+i*3.05
         part(root,"Metal coat hook",Vector3.new(.10,.55,.48),CFrame.new(x,10.83,25.76),P.metal,Enum.Material.Metal,false)
-        local bag=ball(root,"Hanging school bag",Vector3.new(1.65,2.15,.80),CFrame.new(x,9.62,25.40),binColors[i%#binColors+1],Enum.Material.Fabric,false)
-        part(root,"Backpack pocket",Vector3.new(1.22,.8,.12),bag.CFrame*CFrame.new(0,-.37,-.43),bag.Color:Lerp(Color3.new(0,0,0),.14),Enum.Material.Fabric,false)
-        part(root,"Bag zipper",Vector3.new(1.04,.035,.06),bag.CFrame*CFrame.new(0,.03,-.50),P.cream,Enum.Material.Metal,false)
+        -- Backpacks are upholstered schoolbags with a rounded rectangular
+        -- profile, NOT eight identical ellipsoid balloons. All are decorative
+        -- and remain supported by the physical coat hooks above the cubbies.
+        local color=binColors[i%#binColors+1]:Lerp(P.woodDark,.10)
+        local bagCF=CFrame.new(x,9.62,25.40)
+        roundedPanel(root,"Hanging school bag",Vector3.new(1.72,2.10,.58),
+            bagCF,color,.28,false,false)
+        for _,side in ipairs({-1,1}) do
+            part(root,"Backpack shoulder strap",Vector3.new(.19,1.37,.12),
+                bagCF*CFrame.new(side*.57,-.11,.36),
+                color:Lerp(P.ink,.20),Enum.Material.Fabric,false)
+        end
+        -- The handle meets the actual hook at y=10.83. This closes the
+        -- visible gap that previously made the rounded blobs appear suspended.
+        part(root,"Backpack hanging loop",Vector3.new(.44,.22,.14),
+            CFrame.new(x,10.76,25.64),color:Lerp(P.ink,.21),
+            Enum.Material.Fabric,false)
+        part(root,"Backpack upper flap",Vector3.new(1.42,.38,.12),
+            bagCF*CFrame.new(0,.51,-.355),color:Lerp(P.cream,.11),
+            Enum.Material.Fabric,false)
+        part(root,"Backpack front pocket",Vector3.new(1.18,.72,.13),
+            bagCF*CFrame.new(0,-.43,-.38),color:Lerp(P.ink,.14),
+            Enum.Material.Fabric,false)
+        part(root,"Backpack pocket zipper",Vector3.new(.98,.055,.07),
+            bagCF*CFrame.new(0,-.13,-.47),P.metal,Enum.Material.Metal,false)
+        part(root,"Backpack zipper pull",Vector3.new(.09,.15,.085),
+            bagCF*CFrame.new(.41,-.22,-.51),P.metal,Enum.Material.Metal,false)
     end
     sign(root,"Cubbies label","READ • CREATE • GROW",Vector3.new(19,1.55,.2),CFrame.new(21,8.8,23.55),P.blue,P.cream)
 end
