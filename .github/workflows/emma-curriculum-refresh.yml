@@ -46,6 +46,9 @@ jobs:
         with:
           ref: ${{ needs.route.outputs.branch }}
           fetch-depth: 0
+          # Run cloned source tests and target-branch importers without a
+          # persistent repository write credential in git configuration.
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -167,8 +170,9 @@ jobs:
             # Preserve deliberately closed/rejected PRs instead of reopening.
             existing="$(gh pr list --state all --head "$candidate" --limit 100 --json number --jq 'length')"
             if [[ "$existing" != 0 ]]; then
-              echo "RETAINED_CANDIDATE: $candidate has existing PR history; manual review required."
-              exit 0
+              echo "::error::REVIEW_REQUIRED: $candidate has prior closed/open PR history; changed reviewed content is still pending explicit reviewer action."
+              echo "REVIEW_REQUIRED: retained $candidate targets $TARGET_BRANCH; no candidate was overwritten or silently discarded." >> "$GITHUB_STEP_SUMMARY"
+              exit 1
             fi
           else
             git switch -c "$candidate"
@@ -176,6 +180,9 @@ jobs:
             git config user.email "actions@users.noreply.github.com"
             git add -- "${files[@]}"
             git commit -m "Prepare reviewed ABVM curriculum $source_sha"
+            # Supply the scoped GitHub token only for this post-validation push;
+            # exporter and target checkout never inherit a stored write token.
+            gh auth setup-git
             git push origin "HEAD:refs/heads/$candidate"
           fi
           cat > "$RUNNER_TEMP/curriculum-pr.md" <<BODY
