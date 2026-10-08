@@ -1,10 +1,9 @@
 name: ABVM One-Time Roblox Model Import
 
+# Model uploads are side effects: do not auto-run for every PR edit.
+# Explicit dispatch only after a dedicated creator-authorized Assets API key
+# is present. Do not fall back to place-publishing keys.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'school/emma-classroom/mesh/CLOUD_IMPORT_REQUEST.md'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +15,7 @@ concurrency:
 
 jobs:
   import-two-original-models-only:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == 'P00NSMASHER/PipsQuestWorld'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -41,6 +40,18 @@ jobs:
           "$RUNNER_TEMP/cloud-model-env/bin/pip" install --disable-pip-version-check \
             'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'networkx==3.5' 'requests==2.32.5'
 
+      - name: Confirm dedicated Assets API key is available
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ "${#ROBLOX_ASSET_API_KEY}" -lt 20 ]; then
+            echo "BLOCKED_DEDICATED_ROBLOX_ASSET_KEY_MISSING"
+            exit 1
+          fi
+          echo "DEDICATED_ROBLOX_ASSET_KEY_PRESENT"
+
       - name: Regenerate exact original GLB binaries
         shell: bash
         run: |
@@ -50,7 +61,7 @@ jobs:
       - name: Upload only when creator ownership and key permissions are verified
         shell: bash
         env:
-          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY || secrets.ROBLOX_API_KEY }}
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
         run: |
           set -euo pipefail
           "$RUNNER_TEMP/cloud-model-env/bin/python" \
