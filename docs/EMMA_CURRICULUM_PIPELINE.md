@@ -79,7 +79,9 @@ schoolwork. A blocked review leaves the existing accepted bank intact.
 
 The scheduled job has `contents: write` and `pull-requests: write`, but
 GitHub repository settings can *separately* forbid the `GITHUB_TOKEN` from
-creating draft PRs. A successful `NO_CHANGE` poll never reaches the PR-creation
+creating draft PRs. The target checkout does not persist its write token; that
+token is configured for Git only after the reviewed-source tests and importer
+validation have passed. A successful `NO_CHANGE` poll never reaches the PR-creation
 path and therefore does **not** establish that this setting is enabled.
 
 On infrastructure pushes and manual dispatches, the workflow submits a draft-PR
@@ -94,7 +96,9 @@ use an unreviewed privileged personal token or auto-approval as a workaround.
 If source content changes and a candidate branch already exists, the poll
 refetches it, checks a strict three-file allowlist, and compares its full
 generated files with a *freshly validated* ABVM export. A tampered/stale branch
-fails as `CANDIDATE_DRIFT` without being overwritten or reopened. A trusted
+fails as `CANDIDATE_DRIFT` without being overwritten or reopened. A candidate
+with an already closed or rejected PR fails as `REVIEW_REQUIRED` rather than
+reporting a misleading successful no-op. A trusted
 candidate with no prior PR can be submitted again after permissions are fixed;
 any closed/rejected PR retains its historical review decision.
 
