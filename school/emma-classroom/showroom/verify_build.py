@@ -42,7 +42,10 @@ assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
 assert "Vector3.new(5.78,.28,3.86)" in room, "Oversized prototype desk returned"
-assert "Vector3.new(2.5,1.90,.23)" in room, "Oversized prototype chair returned"
+assert "Vector3.new(2.38,1.90,.22)" in room, "Missing single contoured-back chair collider"
+assert 'name.." molded back panel"' in room and 'name.." molded side return"' in room, "Backrest curved shell missing"
+assert 'name.." underseat frame runner"' in room, "Chair steel runner missing"
+assert 'bandProfile={' in room, "Chair should not revert to a flat block backrest"
 assert 'Vector3.new(1.10,.55,.55)' in room, "Oversized bottle was reintroduced"
 assert 'Frosted fluorescent diffuser' in room, "Glaring neon ceiling fixture returned"
 assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returned"
