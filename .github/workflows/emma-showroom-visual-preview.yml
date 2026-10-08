@@ -77,8 +77,12 @@ jobs:
           "$RHR" scene "$FULL" --camera=0,5.5,-17 --look-at=0,6,25 --out "$RUNNER_TEMP/visual/06-eye-back.png"
           "$RHR" scene "$FULL" --camera=12,5.5,0 --look-at=-36,7,0 --out "$RUNNER_TEMP/visual/07-eye-windows.png"
           "$RHR" scene "$FULL" --camera=-20,5.5,0 --look-at=35,7,0 --out "$RUNNER_TEMP/visual/08-eye-storage.png"
+          # Furniture detail views: actual school-chair contour and child desk
+          # from two angles, not simulated 2D design illustrations.
+          "$RHR" scene "$FULL" --camera=4.5,4.3,12.6 --look-at=0,2.4,6.5 --out "$RUNNER_TEMP/visual/09-chair-back.png"
+          "$RHR" scene "$FULL" --camera=7,4.0,8.2 --look-at=0,2.4,6.2 --out "$RUNNER_TEMP/visual/10-desk-side.png"
           "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage; do
+          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # A PNG existing does not mean a room rendered: reject near-white
