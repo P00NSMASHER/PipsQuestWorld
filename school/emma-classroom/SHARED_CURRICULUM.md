@@ -51,6 +51,23 @@ publishing is enabled. A live server uses its bundled snapshot until an accepted
 new place version is released. A malformed or unreviewed future source cannot
 replace the last accepted bank.
 
+## Permanent content contract through game redesigns
+
+The source authority is **ABVM**, not this Roblox build. A rebuilt classroom,
+a replacement character/avatar system, and rewritten phone UI must not alter
+the governed import roots `curriculum.json`, `server/QuestionBank.lua`,
+`curriculum-receipt.json`, or the reviewed importer without a separate
+contract review. The `Emma Curriculum Contract` GitHub Actions workflow
+checks these files independently of the world, visuals and Rojo place build.
+
+The four-hour scheduler lives on GitHub `main` and chooses its target game
+branch from `.github/emma-curriculum-target.json`. Changing the game's
+canonical branch requires updating that reviewed route, not stopping schoolwork
+ingestion or merging the unfinished parent PR. A changed study pack becomes
+a draft, content-only PR; a separately approved Roblox release is still
+required before players see the new bundle. A matching JSON export with a
+missing/tampered server question bank or receipt is a repair, not a no-op.
+
 ## Session-completion guarantees
 
 The server credits a ten-answer session as soon as the tenth correct answer is
