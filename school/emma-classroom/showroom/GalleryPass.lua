@@ -118,13 +118,13 @@ local function showcaseBoards(root:Instance,group:Instance)
         end
     end
     -- Actual chalkboard remains physically visible beside the smartboard.
-    local chalk=piece(group,"Chalk handwriting panel",Vector3.new(9.1,4.25,.09),
-        CFrame.new(-11.65,8.3,-33.72),Color3.fromRGB(40,51,49),
+    local chalk=piece(group,"Chalk handwriting panel",Vector3.new(12.6,4.20,.065),
+        CFrame.new(-13.7,8.3,-33.93),Color3.fromRGB(40,51,49),
         Enum.Material.SmoothPlastic,false)
     printFace(chalk,Enum.NormalId.Back,"GOOD MORNING!","We learn together.",chalk.Color,C.cream)
     for i=1,8 do
         piece(group,"Chalk dust in tray",Vector3.new(.26,.02,.14),
-            CFrame.new(-15+i*.43,3.56,-33.31),C.cream,Enum.Material.SmoothPlastic,false)
+            CFrame.new(-18+i*.43,4.20,-33.31),C.cream,Enum.Material.SmoothPlastic,false)
     end
 end
 
