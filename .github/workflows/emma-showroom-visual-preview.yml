@@ -41,6 +41,10 @@ jobs:
             --luau "$RUNNER_TEMP/luau/luau" \
             --out "$RUNNER_TEMP/emma-classroom-source.rbxmx"
           test -s "$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/emma-classroom-cutaway.rbxmx" --cutaway
+          test -s "$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
 
       - name: Install sandboxed independent headless renderer
         shell: bash
@@ -51,18 +55,19 @@ jobs:
             --pre 'roblox-headless-renderer==1.0.0rc1'
           "$RUNNER_TEMP/rhr-venv/bin/rhr" --help | head -30
 
-      - name: Render source-derived front, top, and isometric previews
+      - name: Render interior cutaway and exterior control screenshots
         shell: bash
         env:
           RHR_CACHE_DIR: ${{ runner.temp }}/rhr-cache
         run: |
           set -euo pipefail
           RHR="$RUNNER_TEMP/rhr-venv/bin/rhr"
-          SRC="$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          SRC="$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
           mkdir -p "$RUNNER_TEMP/visual"
           "$RHR" scene "$SRC" --view iso --out "$RUNNER_TEMP/visual/01-isometric.png"
           "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
           "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
+          "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           test -s "$RUNNER_TEMP/visual/01-isometric.png"
           test -s "$RUNNER_TEMP/visual/02-front.png"
           test -s "$RUNNER_TEMP/visual/03-top.png"
@@ -86,5 +91,6 @@ jobs:
           path: |
             ${{ runner.temp }}/visual/*.png
             ${{ runner.temp }}/emma-classroom-source.rbxmx
+            ${{ runner.temp }}/emma-classroom-cutaway.rbxmx
           retention-days: 14
           if-no-files-found: warn
