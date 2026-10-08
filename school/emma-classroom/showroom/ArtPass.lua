@@ -61,12 +61,30 @@ local function windowNeighborhood(root:Instance)
         end
     end
     for i,z in ipairs({-28.5,-9.5,16.5}) do
-        local trunk=piece(world,"Tree trunk outside",Vector3.new(.3,3.4,.46),CFrame.new(-37.90,6.5,z),
-            C.woodEdge,Enum.Material.Wood,false)
-        orb(world,"Soft tree crown",Vector3.new(2.7,4.6,5.5),trunk.CFrame*CFrame.new(-.08,2,0),
-            (i%2==0) and C.mint or Color3.fromRGB(108,153,104),Enum.Material.Grass)
-        orb(world,"Sunlit leaf canopy",Vector3.new(1.6,2,3.1),trunk.CFrame*CFrame.new(.06,3,.6),
-            Color3.fromRGB(155,190,117),Enum.Material.Grass)
+        local trunk=piece(world,"Tree trunk outside",Vector3.new(.32,3.4,.48),
+            CFrame.new(-38.45,6.5,z),Color3.fromRGB(92,76,55),Enum.Material.Wood,false)
+        -- Six staggered leaf masses make a believable irregular canopy.
+        -- One enormous perfect sphere looked like a green beach ball through
+        -- the school window in the real source-derived eye-level renders.
+        local clusters={
+            {-.18,1.85,-1.35,1.16,2.30,2.14},
+            {-.24,2.30,.95,1.43,2.15,2.44},
+            {.08,3.12,-.56,1.28,1.70,2.14},
+            {-.13,1.45,1.82,1.05,1.78,1.62},
+            {-.42,2.76,-1.82,.98,1.65,1.58},
+            {.25,3.75,.42,.94,1.47,1.49},
+        }
+        local shades={
+            Color3.fromRGB(78,123,79),Color3.fromRGB(92,142,89),
+            Color3.fromRGB(116,152,92),Color3.fromRGB(104,138,82),
+            Color3.fromRGB(82,129,88),Color3.fromRGB(132,159,103),
+        }
+        for k,v in ipairs(clusters) do
+            orb(world,"Irregular exterior leaf cluster",
+                Vector3.new(v[4],v[5],v[6]),
+                trunk.CFrame*CFrame.new(v[1],v[2],v[3]),
+                shades[(k+i-2)%#shades+1],Enum.Material.Grass)
+        end
     end
     for _,z in ipairs({-20.7,6.8}) do
         for _,offset in ipairs({-1.3,0,1.3}) do
