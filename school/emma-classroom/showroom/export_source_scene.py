@@ -300,6 +300,23 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     print(f"READING_NOOK_CLEARANCE_PASS pouf_to_rack={min_clearance:.2f} "
           f"seat_to_seat={seat_gap:.2f} chairs=2")
+    book_spines=[r for r in lines if r[1]=="Reading book spine"]
+    book_labels=[r for r in lines if r[1]=="Book spine label"]
+    assert len(book_spines)==40 and len(book_labels)==40, (
+        "Keep 40 reading books and their original individual labels"
+    )
+    book_heights={round(float(r[7]),3) for r in book_spines}
+    book_widths={round(float(r[6]),3) for r in book_spines}
+    assert len(book_heights)>=5 and len(book_widths)>=4, (
+        "Repeating identical shelf-book blocks instead of varied library books"
+    )
+    for r in book_spines:
+        bottom=float(r[10])-float(r[7])/2
+        assert min(abs(bottom-.83),abs(bottom-3.38))<.025, (
+            f"Reading shelf book base is visibly floating: y={bottom:.3f}"
+        )
+    print(f"READING_BOOKCASE_VARIATION_PASS books={len(book_spines)} "
+          f"widths={len(book_widths)} heights={len(book_heights)}")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
