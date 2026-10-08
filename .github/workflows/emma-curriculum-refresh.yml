@@ -49,6 +49,41 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Probe Actions draft-PR permission without creating a PR
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # GitHub can grant pull-requests:write to this job while a repository
+          # setting separately forbids Actions from creating pull requests.
+          # A guaranteed nonexistent branch makes this a side-effect-free check:
+          # 422 (unknown head) means the creation permission gate was passed,
+          # whereas 403 signals a permission denial.
+          probe="curriculum/emma-pr-permission-probe-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-nonexistent"
+          if git ls-remote --exit-code --heads origin "refs/heads/$probe" >/dev/null 2>&1; then
+            echo "::error::Permission probe branch unexpectedly exists; not sending API request."
+            exit 1
+          fi
+          response="$RUNNER_TEMP/pr-permission-probe.json"
+          status="$(curl --silent --show-error --output "$response" --write-out '%{http_code}' \
+            --request POST "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --data "$(python3 -c 'import json,sys; print(json.dumps({"title":"nonexistent-head permission probe","head":sys.argv[1],"base":sys.argv[2],"draft":True}))' "$probe" "$TARGET_BRANCH")")"
+          if [[ "$status" == 422 ]]; then
+            echo "PR_CREATE_PERMISSION_ALLOWED: GitHub rejected only the deliberately nonexistent head (HTTP 422); no PR was created."
+          elif [[ "$status" == 403 ]]; then
+            echo "::error::PR_CREATE_PERMISSION_DENIED: GitHub Actions token cannot create pull requests (HTTP 403). Check Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests."
+            cat "$response"
+            exit 1
+          else
+            echo "::error::PR_CREATE_PERMISSION_INCONCLUSIVE: GitHub returned HTTP $status for the nonexistent-head probe."
+            cat "$response"
+            exit 1
+          fi
       - name: Preserve the independently maintained content adapter
         run: |
           set -euo pipefail
@@ -57,7 +92,20 @@ jobs:
           test -f school/emma-classroom/curriculum.json
           test -f school/emma-classroom/server/QuestionBank.lua
           test -f school/emma-classroom/curriculum-receipt.json
-          echo "CONTENT_CONTRACT_PRESENT: $TARGET_BRANCH"
+          test -f school/emma-classroom.project.json
+          test -f school/emma-classroom/server/Main.server.lua
+          # A future visual rebuild must not merely carry files while dropping
+          # the server-only importer from the playable game's service mapping.
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          project=json.loads(Path('school/emma-classroom.project.json').read_text())
+          server=project['tree']['ServerScriptService']['EmmaStudy']['$path']
+          assert server == 'emma-classroom/server', 'Game no longer maps the governed server-only bank'
+          main=Path('school/emma-classroom/server/Main.server.lua').read_text()
+          assert 'WaitForChild("QuestionBank")' in main, 'Game lost its server-side bank consumer'
+          PY
+          echo "CONTENT_CONTRACT_CONNECTED: $TARGET_BRANCH"
       - name: Hold only while an existing curriculum draft is under review
         id: pending
         env:
@@ -96,6 +144,25 @@ jobs:
           candidate="curriculum/emma-abvm-${source_sha:0:12}-$target_digest"
           if git ls-remote --exit-code --heads origin "refs/heads/$candidate" >/dev/null 2>&1; then
             echo "RECOVER_CANDIDATE: $candidate exists; never overwrite its reviewed commits."
+            # Verify retained candidates are still the exact regenerated reviewed
+            # output and contain no unreviewed gameplay, keys or private files.
+            # A changed candidate is retained and fails closed, never overwritten.
+            git fetch --no-tags origin "refs/heads/$candidate:refs/remotes/origin/$candidate"
+            mapfile -t changed < <(git diff --name-only "origin/$TARGET_BRANCH...origin/$candidate")
+            [[ "${#changed[@]}" -gt 0 ]] || { echo "::error::STALE_CANDIDATE: retained branch has no reviewable diff."; exit 1; }
+            for changed_path in "${changed[@]}"; do
+              case "$changed_path" in
+                school/emma-classroom/curriculum.json|school/emma-classroom/server/QuestionBank.lua|school/emma-classroom/curriculum-receipt.json) ;;
+                *) echo "::error::UNTRUSTED_CANDIDATE_FILE: $changed_path"; exit 1 ;;
+              esac
+            done
+            for file in "${files[@]}"; do
+              if ! git show "refs/remotes/origin/$candidate:$file" | cmp -s - "$file"; then
+                echo "::error::CANDIDATE_DRIFT: $candidate does not match current validated ABVM output for $file; preserve for manual review."
+                exit 1
+              fi
+            done
+            echo "RECOVER_VALIDATED: retained candidate matches exact reviewed ABVM output and content-only file allowlist."
             # Reattempt PR creation after a prior GitHub-token permission error.
             # Preserve deliberately closed/rejected PRs instead of reopening.
             existing="$(gh pr list --state all --head "$candidate" --limit 100 --json number --jq 'length')"
@@ -112,7 +179,7 @@ jobs:
             git push origin "HEAD:refs/heads/$candidate"
           fi
           cat > "$RUNNER_TEMP/curriculum-pr.md" <<BODY
-          Reviewed content-only update for active classroom branch `$TARGET_BRANCH`, prepared from ABVM commit `$source_sha`.
+          Reviewed content-only update for active classroom branch $TARGET_BRANCH, prepared from ABVM commit $source_sha.
 
           Only curriculum.json, the generated server-only QuestionBank.lua and curriculum-receipt.json are changed. Source tests, deterministic export, provenance/answer-key/privacy validation and importer regressions passed. No private learner responses or grades were copied.
 
