@@ -28,7 +28,7 @@ jobs:
           set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/mesh-env"
           "$RUNNER_TEMP/mesh-env/bin/pip" install --disable-pip-version-check \
-            'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'networkx==3.5' 'matplotlib==3.10.8' 'Pillow==11.3.0'
+            'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'networkx==3.5' 'matplotlib==3.10.8' 'Pillow==11.3.0' 'requests==2.32.5'
 
       - name: Export authored chair and desk GLB candidates
         shell: bash
@@ -70,6 +70,23 @@ jobs:
             echo "DEDICATED_ASSET_KEY_MISSING"
           fi
           # Diagnostic only; absence does not fail furniture generation.
+
+      - name: Prove duplicate Roblox asset creation is blocked without API access
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ""
+        run: |
+          set -euo pipefail
+          if "$RUNNER_TEMP/mesh-env/bin/python" school/emma-classroom/mesh/cloud_import.py \
+            --folder "$RUNNER_TEMP/abvm-models" \
+            --out "$RUNNER_TEMP/do-not-create-asset.json" \
+            > "$RUNNER_TEMP/no-duplicate.log" 2>&1; then
+            echo "ERROR: Already imported furniture was permitted to upload again"
+            exit 1
+          fi
+          grep -q 'ORIGINAL_FURNITURE_ALREADY_IMPORTED' "$RUNNER_TEMP/no-duplicate.log"
+          test ! -f "$RUNNER_TEMP/do-not-create-asset.json"
+          echo "PASS_DUPLICATE_CREATION_BLOCKED_BEFORE_ROBLOX_NETWORK_OR_TOKEN"
 
       - name: Confirm approved Roblox IDs are staged but not enabled
         shell: bash
