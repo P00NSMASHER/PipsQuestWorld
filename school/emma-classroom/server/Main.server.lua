@@ -146,10 +146,16 @@ local startRound
 startRound=function(player)
     local s=sessions[player.UserId];if not s or s.busy then return end
     if s.correctThisSession>=SESSION_GOAL then
-        if s.sessionCompleteReported then return end
-        s.sessionCompleteReported=true
-        s.sessionsCompleted+=1;saveProgress(player,s)
-        event:FireClient(player,{kind="session_complete",progress=publicProgress(s),totalCorrect=s.totalCorrect,sessionsCompleted=s.sessionsCompleted})
+        -- Credit is normally committed by the tenth correct answer, before
+        -- this delayed notification. Retain a guarded fallback for recovery.
+        if not s.sessionCompleteReported then
+            s.sessionCompleteReported=true
+            s.sessionsCompleted+=1;saveProgress(player,s)
+        end
+        if not s.sessionCompleteSent then
+            s.sessionCompleteSent=true
+            event:FireClient(player,{kind="session_complete",progress=publicProgress(s),totalCorrect=s.totalCorrect,sessionsCompleted=s.sessionsCompleted})
+        end
         return
     end
     s.busy=true
@@ -226,13 +232,13 @@ request.OnServerInvoke=function(player,command,args)
             label=selected.label
         end
         dismissTeacher(s);s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
-        s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.generation=(s.generation or 0)+1
+        s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.sessionCompleteSent=false;s.generation=(s.generation or 0)+1
         local selectedGeneration=s.generation
         task.defer(function() if sessions[player.UserId]==s and s.generation==selectedGeneration then startRound(player) end end)
         return {ok=true,modeId=args.id,modeLabel=label or "Mix"}
     end
     if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then
-        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false
+        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.sessionCompleteSent=false
         s.generation=(s.generation or 0)+1
         local restartGeneration=s.generation
         task.delay(.35,function()
@@ -262,7 +268,7 @@ end
 
 local function join(player)
     local saved=loadProgress(player)
-    local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false}
+    local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
     sessions[player.UserId]=s
     local function place(character)
         local root=character:WaitForChild("HumanoidRootPart",10)
