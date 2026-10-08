@@ -255,8 +255,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Rounded backpack body or height changed unexpectedly"
         )
         assert "Ball" not in bag[3], "Rejected ellipsoid/backpack balloon returned"
+    for label in ("Hanging school bag",
+                  "Hanging school bag center",
+                  "Hanging school bag rounded corner"):
+        for row in (item for item in lines if item[1]==label):
+            assert str(row[4]).endswith("Fabric"), (
+                f"Backpack panel {label} is plastic, not textile fabric"
+            )
     print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
-          "handle_mount_gap=.07")
+          "material=Fabric handle_mount_gap=.07")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
