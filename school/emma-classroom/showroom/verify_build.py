@@ -64,7 +64,28 @@ assert "FurnitureMeshAdapter.apply(Room.Root)" in main
 mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()
 mesh_adapter=(base/"emma-classroom/showroom/FurnitureMeshAdapter.lua").read_text()
 assert "Enabled = false" in mesh_config, "Unreviewed premium meshes enabled without native QA"
-assert "ChairModelAssetId = 0" in mesh_config and "DeskModelAssetId = 0" in mesh_config
+# The owned Roblox models are now approved, but activation is explicitly held
+# until a real Roblox-engine visual and collision review on iPhone.
+# Staged IDs must exactly match the independently verified import receipt.
+import re
+receipt=json.loads((base/"emma-classroom/mesh/imported_models.json").read_text())
+assert receipt["productionEnabled"] is False
+assert receipt["creator"]["userId"] == "6064228083"
+assert receipt["universeId"] == "10769455759"
+assert receipt["rootPlaceId"] == "114603280760042"
+assert receipt["source"]["githubRunId"] == 37813670543
+assets={item["name"]:item for item in receipt["assets"]}
+assert set(assets) == {"abvm_student_chair","abvm_student_desk"}
+for item in assets.values():
+    assert item["type"] == "Model" and item["operationModeration"] in ("Approved","MODERATION_STATE_APPROVED")
+    assert len(item["glbSha256"]) == 64 and int(item["assetId"]) > 0
+def staged_id(field):
+    match=re.search(r"\\b"+re.escape(field)+r"\\s*=\\s*(\\d+)\\b",mesh_config)
+    assert match, f"Missing staged furniture ID field {field}"
+    return match.group(1)
+assert staged_id("ChairModelAssetId") == assets["abvm_student_chair"]["assetId"]
+assert staged_id("DeskModelAssetId") == assets["abvm_student_desk"]["assetId"]
+assert staged_id("ChairModelAssetId") != staged_id("DeskModelAssetId")
 assert "if not Config.Enabled then" in mesh_adapter, "Model fallback guard missing"
 assert "instances ~= 16" in mesh_adapter, "All 16 chairs/desks must construct before hiding originals"
 assert 'descendant:IsA("LuaSourceContainer")' not in mesh_adapter, "Use strict class allowlist, not partial script denial"
