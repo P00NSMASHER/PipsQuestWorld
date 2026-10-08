@@ -132,8 +132,16 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
     end
 end
 local function desk(parent: Instance,x: number,z: number,index: number,emma: boolean)
-    roundedPanel(parent,"Student desk edge",Vector3.new(5.78,.28,3.86),CFrame.new(x,2.91,z),Color3.fromRGB(61,61,58),.24,true,true)
-    roundedPanel(parent,"Student desk top",Vector3.new(5.72,.12,3.80),CFrame.new(x,3.11,z),Color3.fromRGB(201,176,127),.23,true,false)
+    -- Subtle laminate variation prevents an identical 16-copy furniture grid.
+    -- Keep the collision silhouette unchanged for every student.
+    local laminates={
+        Color3.fromRGB(197,173,130), Color3.fromRGB(206,179,138),
+        Color3.fromRGB(193,169,123), Color3.fromRGB(199,176,137),
+    }
+    roundedPanel(parent,"Student desk edge",Vector3.new(5.78,.28,3.86),CFrame.new(x,2.91,z),
+        Color3.fromRGB(77,75,69),.24,true,true)
+    roundedPanel(parent,"Student desk top",Vector3.new(5.72,.12,3.80),CFrame.new(x,3.11,z),
+        laminates[(index-1)%#laminates+1],.23,true,false)
     for _,dx in ipairs({-2.22,2.22}) do
         cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
         part(parent,"Desk foot",Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
@@ -141,16 +149,23 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     part(parent,"Desk book tray",Vector3.new(4.75,.12,3.08),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
     for _,dx in ipairs({-2.35,2.35}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.08),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
     book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
-    schoolChair(parent,"Student chair",x,z+3.48,Color3.fromRGB(70,101,133))
+    local upholstery={
+        Color3.fromRGB(67,94,130),Color3.fromRGB(78,107,136),
+        Color3.fromRGB(65,93,119),Color3.fromRGB(83,109,134),
+    }
+    schoolChair(parent,"Student chair",x,z+3.48,upholstery[(index-1)%#upholstery+1])
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
-    book(parent,x-1.2,3.28,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
+    -- Not every child leaves precisely the same notebook in precisely the
+    -- same position; preserve the stationery count without uniform patterns.
+    local shift=(index%3-1)*.24
+    book(parent,x-1.2+shift,3.28,z-.2,notebookColor,math.rad(index%2==0 and 7 or -6))
     cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
     local pencilCF=CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0)
     part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
     part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
     local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.40),P.cream,Enum.Material.SmoothPlastic,false)
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
-    local notebookCF=CFrame.new(x-1.2,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 5 or -5),0)
+    local notebookCF=CFrame.new(x-1.2+shift,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 7 or -6),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
     -- Keep three readable rules spread over the page rather than seven
     -- hairline Parts concentrated into the same small strip on every desk.
@@ -413,8 +428,8 @@ local function buildRightWall(root: Instance)
 end
 
 local function buildTeacherDesk(root: Instance)
-    roundedPanel(root,"Teacher desk top",Vector3.new(14,.45,6),CFrame.new(25,3.1,-25),Color3.fromRGB(177,140,95),.26,true,true)
-    part(root,"Teacher desk front",Vector3.new(13,3.8,.65),CFrame.new(25,1.65,-27.5),Color3.fromRGB(126,87,59),Enum.Material.Wood)
+    roundedPanel(root,"Teacher desk top",Vector3.new(12.5,.38,5.2),CFrame.new(25,3.1,-25),Color3.fromRGB(177,140,95),.26,true,true)
+    part(root,"Teacher desk front",Vector3.new(11.75,3.4,.42),CFrame.new(25,1.65,-27.15),Color3.fromRGB(126,87,59),Enum.Material.Wood)
     for _,x in ipairs({19.2,30.8}) do part(root,"Teacher desk leg",Vector3.new(.55,3.2,.55),CFrame.new(x,1.55,-25),Color3.fromRGB(100,72,53),Enum.Material.Wood) end
     for _,x in ipairs({20.7,29.3}) do
         part(root,"Teacher drawer pedestal",Vector3.new(3.8,2.9,4.9),CFrame.new(x,1.65,-25),P.wood,Enum.Material.Wood,false)
@@ -442,7 +457,7 @@ local function buildTeacherDesk(root: Instance)
     book(root,29.5,3.95,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
     -- Tilted globe: continents follow the sphere, with a meridian cradle and
     -- latitude lines. No rectangular land plate sticking off the sphere.
-    local center=CFrame.new(18.2,5.87,-29)*CFrame.Angles(0,0,math.rad(-23))
+    local center=CFrame.new(20.55,5.87,-26.4)*CFrame.Angles(0,0,math.rad(-23))
     local radius=1.90
     ball(root,"Classroom globe",Vector3.new(radius*2,radius*2,radius*2),center,Color3.fromRGB(100,167,191),Enum.Material.SmoothPlastic,false)
     local function arc(name,r,tilt,color,thickness)
@@ -466,8 +481,8 @@ local function buildTeacherDesk(root: Instance)
         local cf=CFrame.lookAt(point,center.Position)
         ball(root,"Globe continent",Vector3.new(patch[3],patch[4],.24),cf,Color3.fromRGB(158,174,111),Enum.Material.SmoothPlastic,false)
     end
-    cylinder(root,"Globe stand",Vector3.new(.73,.20,.20),CFrame.new(18.2,3.63,-29)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
-    cylinder(root,"Globe base",Vector3.new(.18,2.7,2.7),CFrame.new(18.2,3.34,-29)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(69,74,73),Enum.Material.Metal,false)
+    cylinder(root,"Globe stand",Vector3.new(.73,.20,.20),CFrame.new(20.55,3.63,-26.4)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
+    cylinder(root,"Globe base",Vector3.new(.18,2.7,2.7),CFrame.new(20.55,3.34,-26.4)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(69,74,73),Enum.Material.Metal,false)
 
 end
 
