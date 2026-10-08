@@ -42,12 +42,13 @@ end}
 local visualFailure=false
 local enforceSingleTeacher=true
 local teacherModels={}
-local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,setBoardHint=function() end,setBoardCorrect=function() end,
+local function sharedBoardWrite() error("Per-user curriculum must never mutate the shared server smartboard") end
+local World={Root={},resetBoard=sharedBoardWrite,setBoardQuestion=sharedBoardWrite,setBoardHint=sharedBoardWrite,setBoardCorrect=sharedBoardWrite,
     setTeacherSpeech=function() end,walkTeacher=function() end,
     teacherModel=function()
         for _,old in ipairs(teacherModels) do if enforceSingleTeacher then assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end end
         if visualFailure then error("forced visual constructor failure") end
-        local model={SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end}
+        local model={attrs={},SetAttribute=function(self,key,value) self.attrs[key]=value end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end}
         table.insert(teacherModels,model);return model
     end}
 World.build=function() return World end
@@ -170,6 +171,7 @@ Players.PlayerAdded.callback(player2)
 assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==0)
 flush()
 local two=requests.OnServerInvoke(player2,"state").question
+assert(teacherModels[#teacherModels].attrs.OwnerUserId==player2.UserId,"Visual NPC must belong to the student's viewport")
 local raw
 for _,candidate in ipairs(Questions) do if candidate.prompt==two.prompt and candidate.subject==two.subject then raw=candidate;break end end
 assert(requests.OnServerInvoke(player2,"answer",{token=two.token,index=table.find(two.choices,raw.answer)}).correct)
@@ -182,6 +184,32 @@ assert(questionEvents==1,"Old correct-delay callback cannot replace a selected t
 assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==1)
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"No cross-player progress exposure")
 assert(saved["u:2"].totalCorrect==1 and saved["u:1"].totalCorrect==14)
+-- A repeated ten-answer session can be restarted early via a malicious/late
+-- RPC. Its old delayed grading callback must never overwrite the new token.
+assert(requests.OnServerInvoke(player2,"select_test",{id="mix"}).ok);flush()
+for step=1,10 do
+    local nextQuestion=requests.OnServerInvoke(player2,"state").question
+    local matched
+    for _,candidate in ipairs(Questions) do
+        if candidate.prompt==nextQuestion.prompt and candidate.subject==nextQuestion.subject then matched=candidate;break end
+    end
+    assert(matched)
+    local answerIndex=table.find(nextQuestion.choices,matched.answer)
+    assert(requests.OnServerInvoke(player2,"answer",{token=nextQuestion.token,index=answerIndex}).correct)
+    if step<10 then flush() end
+end
+local newEvents=#events
+assert(requests.OnServerInvoke(player2,"restart").ok,"Completed round should allow restart")
+flush()
+local afterRestart=requests.OnServerInvoke(player2,"state")
+assert(afterRestart.question and afterRestart.progress.stars==0,"Restart must create one new session")
+local newQuestions,newCompletions=0,0
+for i=newEvents+1,#events do
+    if events[i].kind=="question" then newQuestions+=1 end
+    if events[i].kind=="session_complete" then newCompletions+=1 end
+end
+assert(newQuestions==1 and newCompletions==0,"Old completion timer must not replace or finish the restarted round")
+assert(saved["u:2"].totalCorrect==11 and saved["u:1"].totalCorrect==14)
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end
@@ -195,7 +223,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip with failed visual constructor, monotonic and awaited-shutdown persistence; no overlapping teacher models")
+print("PASS: server grades independently; smartboard stays local; NPCs have owners; old restart/test callbacks cannot overwrite new sessions; monotonic, independent persistence")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:

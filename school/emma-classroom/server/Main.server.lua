@@ -146,6 +146,8 @@ local startRound
 startRound=function(player)
     local s=sessions[player.UserId];if not s or s.busy then return end
     if s.correctThisSession>=SESSION_GOAL then
+        if s.sessionCompleteReported then return end
+        s.sessionCompleteReported=true
         s.sessionsCompleted+=1;saveProgress(player,s)
         event:FireClient(player,{kind="session_complete",progress=publicProgress(s),totalCorrect=s.totalCorrect,sessionsCompleted=s.sessionsCompleted})
         return
@@ -155,12 +157,15 @@ startRound=function(player)
     local teacher=chooseTeacher(q.subject,s.previousTeacher)
     s.previousTeacher=teacher.name
     dismissTeacher(s)
-    World.resetBoard()
+    -- The 3D classroom is shared across players; individual questions are
+    -- rendered locally on each student's smartboard, never on the server.
     -- Appearance must never prevent Emma from answering. Native visual assets
     -- are bundled; if a constructor fails, the question still starts normally.
     local visualOK,model=pcall(World.teacherModel,teacher)
     if visualOK and model then
-        model.Parent=World.Root;model:SetAttribute("QuickStudyEntry",true)
+        model:SetAttribute("OwnerUserId",player.UserId)
+        model:SetAttribute("QuickStudyEntry",true)
+        model.Parent=World.Root
         model:PivotTo(World.TeacherStudyEntry);s.teacherModel=model
     else
         model=nil
@@ -169,7 +174,6 @@ startRound=function(player)
     local choices=shuffle(q.choices)
     local token=HttpService:GenerateGUID(false)
     s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
-    World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
     event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=s.modeLabel or "Current ABVM lessons"})
     if model then task.spawn(function() World.walkTeacher(model,true) end) end
 
@@ -182,14 +186,12 @@ local function answer(player,args)
     local choice=p.choices[args.index]
     if not choice then return {ok=false,code="invalid_choice"} end
     if choice~=p.q.answer then
-        World.setBoardHint(p.q.hint or "Take another look.")
         World.setTeacherSpeech(s.teacherModel,nil)
         return {ok=true,correct=false,hint=p.q.hint,message="Try again. "..(p.q.hint or "")}
     end
     s.pending=nil;s.stars+=1;s.correctThisSession+=1;s.totalCorrect+=1
     local skill=s.skills[p.q.skill] or {correct=0};skill.correct=(skill.correct or 0)+1;s.skills[p.q.skill]=skill
     saveProgress(player,s)
-    World.setBoardCorrect(p.q.explanation or "Nice job!")
     World.setTeacherSpeech(s.teacherModel,nil)
     event:FireClient(player,{kind="correct",teacher=p.teacher.fullName or p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
     local completedGeneration=s.generation or 0
@@ -197,7 +199,7 @@ local function answer(player,args)
         local current=sessions[player.UserId]
         if current==s and (current.generation or 0)==completedGeneration then
             dismissTeacher(s)
-            World.resetBoard();startRound(player)
+            startRound(player)
         end
     end)
     return {ok=true,correct=true}
@@ -217,18 +219,25 @@ request.OnServerInvoke=function(player,command,args)
             label=selected.label
         end
         dismissTeacher(s);s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
-        s.stars=0;s.correctThisSession=0;s.generation=(s.generation or 0)+1;World.resetBoard()
+        s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.generation=(s.generation or 0)+1
         local selectedGeneration=s.generation
         task.defer(function() if sessions[player.UserId]==s and s.generation==selectedGeneration then startRound(player) end end)
         return {ok=true,modeId=args.id,modeLabel=label or "Mix"}
     end
     if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then
-        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;World.resetBoard()
-        task.delay(.35,function() startRound(player) end)
+        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false
+        s.generation=(s.generation or 0)+1
+        local restartGeneration=s.generation
+        task.delay(.35,function()
+            if sessions[player.UserId]==s and s.generation==restartGeneration then startRound(player) end
+        end)
         return {ok=true}
     end
     if command=="skip" and s and s.pending then
-        s.pending=nil;dismissTeacher(s);World.resetBoard();task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
+        s.pending=nil;dismissTeacher(s)
+        s.generation=(s.generation or 0)+1
+        local skipGeneration=s.generation
+        task.defer(function() if sessions[player.UserId]==s and s.generation==skipGeneration then startRound(player) end end)
         return {ok=true}
     end
     if command=="state" and s then
@@ -245,7 +254,7 @@ end
 
 local function join(player)
     local saved=loadProgress(player)
-    local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false}
+    local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false}
     sessions[player.UserId]=s
     local function place(character)
         local root=character:WaitForChild("HumanoidRootPart",10)
