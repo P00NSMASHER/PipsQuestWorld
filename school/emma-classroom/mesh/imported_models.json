@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "status": "Staged, not activated or released",
+  "universeId": "10769455759",
+  "rootPlaceId": "114603280760042",
+  "creator": {
+    "type": "User",
+    "userId": "6064228083",
+    "name": "DadSharkins"
+  },
+  "source": {
+    "githubRunId": 37813670543,
+    "runAttempt": 2,
+    "receiptArtifactId": 11585930298
+  },
+  "productionEnabled": false,
+  "assets": [
+    {
+      "name": "abvm_student_chair",
+      "assetId": "132417338693200",
+      "type": "Model",
+      "operationModeration": "Approved",
+      "glbSha256": "6094eb89c7467be429eeb2999ae537ca4bfe0f7a5c3f58882c4862c49a8742c4",
+      "triangles": 2360,
+      "dimensionsStuds": [
+        2.46,
+        3.774,
+        2.365
+      ]
+    },
+    {
+      "name": "abvm_student_desk",
+      "assetId": "75559376486007",
+      "type": "Model",
+      "operationModeration": "Approved",
+      "glbSha256": "5bf8558ce7ec9fcbab55d21fd5702d70438229604b6cf628918fadc3b037a084",
+      "triangles": 2336,
+      "dimensionsStuds": [
+        5.78,
+        3.085,
+        3.86
+      ]
+    }
+  ]
+}
