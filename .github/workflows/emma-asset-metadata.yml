@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'school/emma-classroom/mesh/imported_models.json'
+      - 'school/emma-classroom/showroom/FurnitureMeshConfig.lua'
       - 'school/emma-classroom/mesh/verify_uploaded_assets.py'
       - '.github/workflows/emma-asset-metadata.yml'
   workflow_dispatch:
