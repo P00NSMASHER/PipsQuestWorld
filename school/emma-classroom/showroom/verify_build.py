@@ -19,7 +19,7 @@ expected = {
     "Main": "emma-classroom/showroom/Main.server.lua",
     "World": "emma-classroom/showroom/Room.lua",
     "GalleryPass": "emma-classroom/showroom/GalleryPass.lua",
-    "ArtPass": "emma-classroom/server/ArtPass.lua",
+    "ArtPass": "emma-classroom/showroom/ArtPass.lua",
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
@@ -41,6 +41,9 @@ assert "StaffModel" not in room and "teacherModel" not in room
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
+assert "Vector3.new(5.78,.28,3.86)" in room, "Oversized prototype desk returned"
+assert "Vector3.new(2.5,1.90,.23)" in room, "Oversized prototype chair returned"
+assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
 assert "GalleryPass.decorate(Room.Root)" in main
 
 if len(sys.argv) > 1:
