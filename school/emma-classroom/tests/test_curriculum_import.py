@@ -48,6 +48,19 @@ class ImportTests(unittest.TestCase):
         with self.assertRaises(ValueError):adapter.convert(b,self.sha,previous=self.bundle)
         b=copy.deepcopy(self.bundle);b['questions'][0]['choices'].reverse();self.sign(b)
         adapter.convert(b,self.sha,previous=self.bundle)
+    def test_refresh_cannot_silently_drop_a_previously_approved_question(self):
+        b=copy.deepcopy(self.bundle)
+        deleted=b['questions'].pop()['id']
+        b['mixedReview'].remove(deleted)
+        for refs in b['currentSubjectPractice'].values():
+            if deleted in refs: refs.remove(deleted)
+        for t in b['selectableTestPrep']:
+            if deleted in t['questionIds']:
+                t['questionIds'].remove(deleted)
+                t['supported']=bool(t['questionIds'])
+        self.sign(b)
+        with self.assertRaisesRegex(ValueError,'Previously approved question IDs'):
+            adapter.convert(b,self.sha,previous=self.bundle)
     def test_lua_unicode_and_control_escape(self):
         self.assertEqual(adapter.lua('café\n"\\'),'"café\\010\\"\\\\"')
 if __name__=='__main__':unittest.main()
