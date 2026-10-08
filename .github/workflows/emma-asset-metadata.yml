@@ -1,0 +1,32 @@
+name: ABVM Approved Furniture Asset Metadata
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-classroom/mesh/imported_models.json'
+      - 'school/emma-classroom/mesh/verify_uploaded_assets.py'
+      - '.github/workflows/emma-asset-metadata.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-original-roblox-models:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify exact creator-owned Roblox asset metadata (read only)
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          python3 -m py_compile school/emma-classroom/mesh/verify_uploaded_assets.py
+          python3 school/emma-classroom/mesh/verify_uploaded_assets.py
+          echo "ROBOX_ASSET_READ_ONLY_CONFIRMATION_NO_GAME_PUBLISH"
