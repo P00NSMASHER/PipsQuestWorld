@@ -208,19 +208,19 @@ local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
     local metal=Color3.fromRGB(188,198,204)
     local trim=Color3.fromRGB(217,186,121)
-    for _,y in ipairs({4.48,11.93}) do
-        piece(group,"Smartboard satin aluminum trim",Vector3.new(24.15,.11,.12),
-            CFrame.new(7,y,-33.26),metal,Enum.Material.Metal,false)
+    for _,y in ipairs({4.79,11.58}) do
+        piece(group,"Smartboard satin aluminum trim",Vector3.new(19.45,.11,.12),
+            CFrame.new(5.2,y,-33.26),metal,Enum.Material.Metal,false)
     end
-    for _,x in ipairs({-5.08,19.08}) do
-        piece(group,"Smartboard protective edge",Vector3.new(.10,7.34,.13),
+    for _,x in ipairs({-4.525,14.925}) do
+        piece(group,"Smartboard protective edge",Vector3.new(.10,6.84,.13),
             CFrame.new(x,8.2,-33.26),metal,Enum.Material.Metal,false)
     end
     piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
-        CFrame.new(7,4.44,-32.97),C.cream,Enum.Material.SmoothPlastic,false)
+        CFrame.new(5.2,4.44,-32.97),C.cream,Enum.Material.SmoothPlastic,false)
     local markerColors={C.coral,C.blue,C.mint,C.golden}
     for i,c in ipairs(markerColors) do
-        local x=4.75+(i-1)*1.20
+        local x=2.95+(i-1)*1.20
         piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
             CFrame.new(x,4.58,-32.72),c,Enum.Material.SmoothPlastic,false)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
