@@ -16,27 +16,40 @@ from pathlib import Path
 import requests
 
 UNIVERSE_ID = 10769455759
+PLACE_ID = 114603280760042
 MODEL_NAMES = ("abvm_student_chair", "abvm_student_desk")
 BASE = "https://apis.roblox.com/assets/v1"
 
 
 def owner():
+    """Use the public Developer universe record, NOT filtered Games discovery.
+
+    Private or unrated experiences return an id=0 placeholder from
+    games.roblox.com/v1/games. The developer universe metadata explicitly
+    returns creatorType/creatorTargetId, and a separate place endpoint
+    independently binds the expected root place to the expected universe.
+    """
     response = requests.get(
-        "https://games.roblox.com/v1/games",
-        params={"universeIds": str(UNIVERSE_ID)}, timeout=20
+        f"https://develop.roblox.com/v1/universes/{UNIVERSE_ID}",
+        timeout=20
     )
     response.raise_for_status()
-    record = next(
-        (r for r in response.json().get("data", [])
-         if int(r.get("id", 0)) == UNIVERSE_ID), None
-    )
-    if not record:
-        raise RuntimeError("Cannot independently verify the owner of the target Roblox universe")
-    creator = record.get("creator", {})
-    creator_id = int(creator.get("id", 0))
-    creator_type = str(creator.get("type", "")).lower()
+    metadata = response.json()
+    if (int(metadata.get("id", 0)) != UNIVERSE_ID
+        or int(metadata.get("rootPlaceId", 0)) != PLACE_ID):
+        raise RuntimeError("Universe metadata mismatch: target and root place must agree")
+    creator_type = str(metadata.get("creatorType", "")).lower()
+    creator_id = int(metadata.get("creatorTargetId", 0))
     if creator_id <= 0 or creator_type not in ("user", "group"):
-        raise RuntimeError("Unrecognized Roblox creator type or ID: import prohibited")
+        raise RuntimeError("Developer API could not verify a supported Roblox creator")
+    link = requests.get(
+        f"https://apis.roblox.com/universes/v1/places/{PLACE_ID}/universe",
+        timeout=20
+    )
+    link.raise_for_status()
+    if int(link.json().get("universeId", 0)) != UNIVERSE_ID:
+        raise RuntimeError("Roblox place-to-universe corroboration failed")
+    print("VERIFIED_CREATOR_SOURCE developer-universe and place-link", flush=True)
     return {"userId" if creator_type == "user" else "groupId": str(creator_id)}
 
 
@@ -50,7 +63,7 @@ def import_model(key, creator, path, session):
         "assetType": "Model",
         "displayName": "ABVM Original " + label.replace("_", " ").title(),
         "description": "Original child-scale classroom furniture geometry, no scripts. ABVM classroom project.",
-        "creationContext": {"creator": creator}
+        "creationContext": {"creator": creator, "expectedPrice": 0}
     }
     with path.open("rb") as f:
         result = session.post(
