@@ -519,8 +519,8 @@ local function applyLighting(root: Instance)
 end
 
 function World.build()
-    local old=Workspace:FindFirstChild("EmmaStudyWorld");if old then old:Destroy() end
-    local root=Instance.new("Folder");root.Name="EmmaStudyWorld";root.Parent=Workspace
+    local old=Workspace:FindFirstChild("ABVMClassroomReplica");if old then old:Destroy() end
+    local root=Instance.new("Folder");root.Name="ABVMClassroomReplica";root.Parent=Workspace
     root:SetAttribute("ArtDirection","EmmaRoomOriginalArtV9")
     applyLighting(root)
 
@@ -597,12 +597,6 @@ function World.build()
 
     World.Root=root
     World.Spawn=spawn.CFrame
-    World.TeacherDoor=CFrame.new(43,3.15,15.5)*CFrame.Angles(0,math.pi,0)
-    World.TeacherFront=CFrame.new(-10,3.15,-20)*CFrame.Angles(0,math.pi,0)
-    World.TeacherStudyEntry=CFrame.new(-15,3.15,-20)*CFrame.Angles(0,math.pi,0)
-    -- Enter through the existing staff doorway, follow the clear wall-side
-    -- aisle, then walk to the board without cutting through student desks.
-    World.TeacherPath={CFrame.new(29,3.15,15.5),CFrame.new(29,3.15,-20),World.TeacherFront}
     return World
 end
 
