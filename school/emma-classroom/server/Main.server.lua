@@ -123,10 +123,10 @@ local function dismissTeacher(s)
     if s.teacherModel and s.teacherModel.Parent then
         local m=s.teacherModel;s.teacherModel=nil
         World.setTeacherSpeech(m,nil)
-        task.spawn(function()
-            World.walkTeacher(m,false)
-            if m and m.Parent then m:Destroy() end
-        end)
+        -- CharacterStudio-style clear-before-replace lifecycle: release the
+        -- outgoing visual immediately, before constructing the next teacher.
+        -- No detached outgoing rig or delayed cleanup may overlap the new one.
+        m:Destroy()
     end
 end
 

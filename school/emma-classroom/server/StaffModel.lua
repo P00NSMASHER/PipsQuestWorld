@@ -14,7 +14,7 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",5)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",6)
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
@@ -30,7 +30,7 @@ function StaffModel.create(teacher)
     face.Parent=head
 
     local hum=Instance.new("Humanoid");hum.Name="Humanoid";hum.RigType=Enum.HumanoidRigType.R15
-    hum.DisplayDistanceType=Enum.HumanoidDisplayDistanceType.None;hum.BreakJointsOnDeath=false;hum.AutomaticScalingEnabled=false;hum.Parent=model
+    hum.DisplayDistanceType=Enum.HumanoidDisplayDistanceType.None;hum.BreakJointsOnDeath=false;hum.AutomaticScalingEnabled=false;hum.AutoRotate=false;hum.RequiresNeck=false;hum.EvaluateStateMachine=false;hum.Parent=model
     local shirt=assets:WaitForChild((teacher.name=="Mrs. Thompson" and "DenimJacket") or ((teacher.clothing=="pattern" or teacher.clothing=="floral" or teacher.clothing=="striped") and "PatternShirt" or "Jacket")):Clone();shirt.Parent=model
     local pants=assets:WaitForChild("Jeans"):Clone();pants.Parent=model
     local skin=rgb(teacher.skin)
@@ -44,9 +44,12 @@ function StaffModel.create(teacher)
     end
     local bodyColors=Instance.new("BodyColors");bodyColors.HeadColor3=skin;bodyColors.LeftArmColor3=skin;bodyColors.RightArmColor3=skin
     bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin;bodyColors.Parent=model
-    -- Use the engine's standard rig attachment alignment before taking the rest
-    -- pose. No procedural skulls, separate eyeballs, ears, teeth, or hair caps.
-    hum:BuildRigFromAttachments()
+    -- Bundled limbs already have an aligned rest pose. Do not create Motor6D
+    -- or AnimationConstraint joints on an anchored display avatar: those engine
+    -- transforms would compete with PivotTo/rest transforms and detach the head.
+    for _,d in ipairs(model:GetDescendants()) do
+        if d:IsA("JointInstance") or d:IsA("Constraint") then d:Destroy() end
+    end
     if teacher.hairStyle~="balding" then
         local hairName=male and (teacher.name=="Mr. Yordy" and "BrownHair" or "ShortHair") or (teacher.hairStyle=="short" and "BunHair" or "LongHair")
         local accessory=assets:WaitForChild(hairName):Clone();accessory.Parent=model
@@ -57,7 +60,7 @@ function StaffModel.create(teacher)
             local mesh=handle:FindFirstChildOfClass("SpecialMesh")
             -- The blonde texture is light enough to tint darker hair naturally.
             if mesh and hairName=="LongHair" then mesh.VertexColor=rgb(teacher.hair) end
-            if mesh and teacher.name=="Dr. McBreen" then mesh.TextureId="";mesh.VertexColor=rgb(teacher.hair) end
+            if mesh and hairName~="LongHair" then mesh.TextureId="";mesh.VertexColor=rgb(teacher.hair) end
         end
     end
     -- Accessories use familiar small proportions rather than giant facial parts.
@@ -99,21 +102,14 @@ function StaffModel.create(teacher)
     return model
 end
 
+-- Display avatars stay in their native neutral pose. Whole-model PivotTo is
+-- the sole movement writer; no separate head/limb animation runs during swaps.
 function StaffModel.pose(model,phase,walking)
-    local pivot=model:GetPivot();local scale=model:GetScale();local shift=model:GetAttribute("PoseShift") or 0
+    local pivot=model:GetPivot()
     for _,part in ipairs(model:GetDescendants()) do
         if part:IsA("BasePart") and part~=model.PrimaryPart then
-            local rest=part:GetAttribute("RestCF");local group=part:GetAttribute("PoseGroup")
-            local transform=CFrame.new()
-            if group then
-                local arm=string.find(group,"Arm")~=nil;local left=string.find(group,"left")~=nil
-                local origin=Vector3.new((left and -1 or 1)*(arm and 1 or .5)*scale,(arm and .763 or -1)*scale+shift,0)
-                local swing=walking and math.sin(phase)*.28 or 0
-                if not left then swing=-swing end
-                if not arm then swing=-swing end
-                transform=CFrame.new(origin)*CFrame.Angles(swing,0,0)*CFrame.new(origin*-1)
-            end
-            if rest then part.CFrame=pivot*transform*rest end
+            local rest=part:GetAttribute("RestCF")
+            if rest then part.CFrame=pivot*rest end
         end
     end
 end

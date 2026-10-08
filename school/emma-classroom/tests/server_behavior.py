@@ -40,9 +40,15 @@ local Instance={new=function(class)
     return {}
 end}
 local visualFailure=false
+local teacherModels={}
 local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,setBoardHint=function() end,setBoardCorrect=function() end,
     setTeacherSpeech=function() end,walkTeacher=function() end,
-    teacherModel=function() if visualFailure then error("forced visual constructor failure") end;return {SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end} end}
+    teacherModel=function()
+        for _,old in ipairs(teacherModels) do assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end
+        if visualFailure then error("forced visual constructor failure") end
+        local model={SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end}
+        table.insert(teacherModels,model);return model
+    end}
 World.build=function() return World end
 local counter=0
 local Http={GenerateGUID=function() counter+=1;return "token-"..counter end}
@@ -122,7 +128,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip with failed visual constructor, monotonic and awaited-shutdown persistence")
+print("PASS: retrying load/save, handshake/recovery, wrong hint, invalid tokens, no replay reward, ten-question finish, restart, skip with failed visual constructor, monotonic and awaited-shutdown persistence; no overlapping teacher models")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:

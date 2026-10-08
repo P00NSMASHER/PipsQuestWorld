@@ -1,3 +1,18 @@
+## Current continuation — stable display avatars / classroom objects (v6)
+
+Version 58 failed the user's real recording: detached/missing heads during swaps,
+poor staff likeness and an unfinished room. This continuation removes native rig
+joint construction and Humanoid state evaluation from anchored display NPCs;
+whole-model positioning owns their neutral pose. Teacher replacement destroys the
+previous model synchronously. The detailed-object pass adds bound/ruled notebooks,
+desk hardware, hinged keyboard/trackpad laptop, spherical globe/cradle/continents,
+raised cabinet doors/hardware, cart rails and tissue/trash-can detail.
+
+Source, behavior, object-budget and build checks pass locally. Native Roblox
+rendering, likeness, live asset delivery and physical iPhone acceptance are still
+UNVERIFIED: PAAM-L044 is offline. No visual pass or five-star claim is recorded.
+See `DISPLAY_RIG_CLASSROOM_V6.md` for exact scope and reuse limits.
+
 # Current repair: native avatar bodies and visible phone answers
 
 The October 7 5:19 PM iPhone recording rejects published version 57. The prior procedural teacher repair did not meet the user's goal. `NATIVE_STAFF_PHONE_REPAIR.md` records its failures, the replacement, actual test results, and the pending Roblox/iPhone acceptance. This candidate has not been published; version 57 remains live until the replacement is inspected in Roblox.
