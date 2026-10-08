@@ -249,18 +249,67 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
 end
 
 local function bulletinBoard(parent: Instance,name: string,x: number,y: number,z: number,width: number,height: number,title: string)
-    local frame=part(parent,name.." wood frame",Vector3.new(width+.8,height+.8,.32),CFrame.new(x,y,z),Color3.fromRGB(105,73,48),Enum.Material.Wood,false)
-    local cork=part(parent,name.." cork",Vector3.new(width,height,.18),CFrame.new(x,y,z-.19),Color3.fromRGB(168,122,75),Enum.Material.Fabric,false)
+    -- The old "frame" was a SOLID brown slab in front of the cork, hiding
+    -- the bulletin board from every player-eye camera. Make a real recessed
+    -- cork field, with four narrow hardwood rails that leave its face exposed.
+    local backing=part(parent,name.." thin wood backing",
+        Vector3.new(width+.48,height+.48,.13),CFrame.new(x,y,z-.17),
+        Color3.fromRGB(105,73,48),Enum.Material.Wood,false)
+    local cork=part(parent,name.." exposed cork",
+        Vector3.new(width,height,.11),CFrame.new(x,y,z+.055),
+        Color3.fromRGB(171,132,92),Enum.Material.Fabric,false)
+    local border=Color3.fromRGB(109,77,51)
+    for _,dy in ipairs({-height/2-.15,height/2+.15}) do
+        part(parent,name.." horizontal wood rail",
+            Vector3.new(width+.50,.28,.19),CFrame.new(x,y+dy,z+.14),
+            border,Enum.Material.Wood,false)
+    end
+    for _,dx in ipairs({-width/2-.15,width/2+.15}) do
+        part(parent,name.." vertical wood rail",
+            Vector3.new(.28,height+.56,.19),CFrame.new(x+dx,y,z+.14),
+            border,Enum.Material.Wood,false)
+    end
     local titleLabel=surfaceText(cork,title,Enum.NormalId.Back,P.cream,cork.Color,Enum.Font.GothamBold)
     titleLabel.Position=UDim2.fromScale(.08,.02);titleLabel.Size=UDim2.fromScale(.84,.18)
     titleLabel.BackgroundTransparency=1
-    return frame
+    return backing
 end
 
 local function buildClassroomTexture(root: Instance)
     -- The real school photos are busy, old, warm and layered. This deliberately kills the sterile showroom look.
     -- Small pieces of work belong inside framed boards, with breathable margins.
-    bulletinBoard(root,"Student work board",-26,9,-33.65,12,7.0,"OUR WORK")
+    bulletinBoard(root,"Student work board",-26.3,9,-33.65,9.4,5.65,"OUR WORK")
+    -- Paper slips are PHYSICAL classroom artifacts, not screen-facing UI.
+    -- In the independent renderer SurfaceGui letters are not visible, but
+    -- paper pinned in front of exposed cork still reads as a lived-in room.
+    local paperColors={
+        Color3.fromRGB(246,244,229),
+        Color3.fromRGB(225,235,237),
+        Color3.fromRGB(247,229,217),
+    }
+    local headingColors={
+        Color3.fromRGB(90,125,154),
+        Color3.fromRGB(107,140,107),
+        Color3.fromRGB(184,124,88),
+    }
+    for i,x in ipairs({-29.3,-26.3,-23.3}) do
+        local y=8.72+(i%2)*.20
+        part(root,"Pinned student work sheet",
+            Vector3.new(2.16,2.90,.055),CFrame.new(x,y,-33.45),
+            paperColors[i],Enum.Material.SmoothPlastic,false)
+        part(root,"Student work colored heading",
+            Vector3.new(1.70,.15,.038),CFrame.new(x,y+.83,-33.40),
+            headingColors[i],Enum.Material.SmoothPlastic,false)
+        for line=1,3 do
+            part(root,"Student work pencil line",
+                Vector3.new(1.54,.045,.037),
+                CFrame.new(x,y+.41-line*.40,-33.40),
+                Color3.fromRGB(155,161,160),Enum.Material.SmoothPlastic,false)
+        end
+        ball(root,"Bulletin board brass pushpin",
+            Vector3.new(.18,.18,.08),CFrame.new(x,y+1.34,-33.39),
+            Color3.fromRGB(184,155,83),Enum.Material.Metal,false)
+    end
 
     -- No oversized individual rules: GalleryPass owns a restrained framed
     -- values board and keeps this wall clear of overlapping flat panels.
