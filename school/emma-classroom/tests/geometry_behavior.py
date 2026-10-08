@@ -169,7 +169,10 @@ for _,teacher in ipairs(Data.Teachers) do
         near((m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position,headRest)
         if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
     end
-    local posed=arm.Position;StaffModel.pose(m,1.2,true);near(arm.Position,posed)
+    StaffModel.pose(m,1.2,true)
+    local posed=arm.Position
+    StaffModel.pose(m,1.2,true)
+    near(arm.Position,posed) -- repeated SAME walking phase is deterministic
     StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
     assert((m:FindFirstChild("LeftHand").CFrame:Inverse()*arm.CFrame).Position.Magnitude>0)
     -- Non-walking neutral pose must exactly restore every separate mesh joint.
