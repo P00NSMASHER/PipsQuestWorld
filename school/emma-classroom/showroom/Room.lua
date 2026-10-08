@@ -418,7 +418,10 @@ local function buildCubbies(root: Instance)
         part(root,"Backpack zipper pull",Vector3.new(.09,.15,.085),
             bagCF*CFrame.new(.41,-.22,-.51),P.metal,Enum.Material.Metal,false)
     end
-    sign(root,"Cubbies label","READ • CREATE • GROW",Vector3.new(19,1.55,.2),CFrame.new(21,8.8,23.55),P.blue,P.cream)
+    -- Wall-mounted above the backpack hooks, not floating in front of and
+    -- obscuring the shaped bags. Artwork below ends at approximately y=12.
+    sign(root,"Cubbies label","READ • CREATE • GROW",Vector3.new(19,.90,.2),
+        CFrame.new(21,13.0,26.28),P.blue,P.cream)
 end
 
 local function buildWindows(root: Instance)
