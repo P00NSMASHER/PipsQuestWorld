@@ -143,9 +143,10 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),paper.CFrame*CFrame.new(.03,.010,-.82+line*.25),Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
     end
     part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
-    for ring=0,5 do
-        cylinder(parent,"Notebook binding",Vector3.new(.22,.08,.08),notebookCF*CFrame.new(-.98,.17,-1.02+ring*.4),P.metal,Enum.Material.Metal,false)
-    end
+    -- One fine steel binding rail reads crisply at phone scale; the former
+    -- 96 microscopic rings bloated scene replication without visual benefit.
+    part(parent,"Notebook binding rail",Vector3.new(.11,.075,2.40),
+        notebookCF*CFrame.new(-.98,.17,0),P.metal,Enum.Material.Metal,false)
     for _,dx in ipairs({-2.8,2.8}) do
         ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.81),P.metal,Enum.Material.Metal,false)
         part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.5),P.ink,Enum.Material.SmoothPlastic,false)
