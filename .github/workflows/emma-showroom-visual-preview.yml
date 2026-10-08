@@ -66,9 +66,32 @@ jobs:
           mkdir -p "$RUNNER_TEMP/visual"
           # Keep aerial renders independent. The six-view batch once returned
           # nearly all-white PNGs despite reporting success.
+          # The same source sometimes produces a white isometric PNG.
+          # Retain the strict image check and try an independent camera once,
+          # rather than accepting a visually blank output as a successful render.
+          check_aerial() {
+            "$RUNNER_TEMP/rhr-venv/bin/python" \
+              school/emma-classroom/showroom/check_preview.py "$1"
+          }
           "$RHR" scene "$SRC" --camera=65,50,65 --look-at=0,6,-4 --out "$RUNNER_TEMP/visual/01-isometric.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/01-isometric.png"; then
+            echo "Reject blank isometric; retrying with independent opposite camera"
+            "$RHR" scene "$SRC" --camera=-62,48,61 --look-at=0,6,-4 --out "$RUNNER_TEMP/visual/01-isometric.png"
+          fi
           "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/02-front.png"; then
+            echo "Reject blank front; retrying fixed eye-independent aerial camera"
+            "$RHR" scene "$SRC" --camera=0,10,85 --look-at=0,7,-4 --out "$RUNNER_TEMP/visual/02-front.png"
+          fi
           "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/03-top.png"; then
+            echo "Reject blank overhead; retrying fixed high camera"
+            "$RHR" scene "$SRC" --camera=0,92,-4 --look-at=0,0,-4 --out "$RUNNER_TEMP/visual/03-top.png"
+          fi
+          # Every final camera MUST still pass the identical pixel gate.
+          for name in 01-isometric 02-front 03-top; do
+            check_aerial "$RUNNER_TEMP/visual/$name.png"
+          done
           # Ground-level positions measured in room source studs.
           # Use the FULL classroom here. Cutaway previews are only for aerial shots;
           # otherwise dark voids replace real walls at the player eye position.
@@ -85,26 +108,8 @@ jobs:
           for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
-          # A PNG existing does not mean a room rendered: reject near-white
-          # screens from headless browser/renderer failures.
-          "$RUNNER_TEMP/rhr-venv/bin/python" - <<'PY'
-          from PIL import Image
-          from pathlib import Path
-          import os
-          folder=Path(os.environ["RUNNER_TEMP"])/"visual"
-          for name in ("01-isometric","02-front","03-top"):
-              im=Image.open(folder/(name+".png")).convert("RGB")
-              dynamic=max(b-a for a,b in im.getextrema())
-              sample=im.resize((96,54))
-              pixels=list(sample.getdata())
-              white_ratio=sum(min(rgb)>245 for rgb in pixels)/len(pixels)
-              if dynamic<65 or white_ratio>.94:
-                  raise RuntimeError(
-                      f"Visually blank aerial render {name}: "
-                      f"channel_span={dynamic}, white_ratio={white_ratio:.3f}"
-                  )
-              print(f"VISUAL_NONBLANK_PASS {name} channel_span={dynamic} white_ratio={white_ratio:.3f}")
-          PY
+          # Final frame validation was performed above after bounded retries.
+          # A blank image still fails this job and blocks visual acceptance.
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
