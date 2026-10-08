@@ -66,7 +66,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/visual"
           # Keep aerial renders independent. The six-view batch once returned
           # nearly all-white PNGs despite reporting success.
-          "$RHR" scene "$SRC" --view iso --out "$RUNNER_TEMP/visual/01-isometric.png"
+          "$RHR" scene "$SRC" --camera=65,50,65 --look-at=0,6,-4 --out "$RUNNER_TEMP/visual/01-isometric.png"
           "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
           "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
           # Ground-level positions measured in room source studs.
@@ -95,9 +95,15 @@ jobs:
           for name in ("01-isometric","02-front","03-top"):
               im=Image.open(folder/(name+".png")).convert("RGB")
               dynamic=max(b-a for a,b in im.getextrema())
-              if dynamic<65:
-                  raise RuntimeError(f"Visually blank aerial render {name}: channel span {dynamic}")
-              print(f"VISUAL_NONBLANK_PASS {name} channel_span={dynamic}")
+              sample=im.resize((96,54))
+              pixels=list(sample.getdata())
+              white_ratio=sum(min(rgb)>245 for rgb in pixels)/len(pixels)
+              if dynamic<65 or white_ratio>.94:
+                  raise RuntimeError(
+                      f"Visually blank aerial render {name}: "
+                      f"channel_span={dynamic}, white_ratio={white_ratio:.3f}"
+                  )
+              print(f"VISUAL_NONBLANK_PASS {name} channel_span={dynamic} white_ratio={white_ratio:.3f}")
           PY
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
