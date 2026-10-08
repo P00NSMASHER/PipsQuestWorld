@@ -97,14 +97,28 @@ jobs:
           # Use the FULL classroom here. Cutaway previews are only for aerial shots;
           # otherwise dark voids replace real walls at the player eye position.
           FULL="$RUNNER_TEMP/emma-classroom-source.rbxmx"
-          "$RHR" scene "$FULL" --camera=0,5.5,18 --look-at=0,7,-33 --out "$RUNNER_TEMP/visual/05-eye-front.png"
-          "$RHR" scene "$FULL" --camera=0,5.5,-17 --look-at=0,6,25 --out "$RUNNER_TEMP/visual/06-eye-back.png"
-          "$RHR" scene "$FULL" --camera=12,5.5,0 --look-at=-36,7,0 --out "$RUNNER_TEMP/visual/07-eye-windows.png"
-          "$RHR" scene "$FULL" --camera=-20,5.5,0 --look-at=35,7,0 --out "$RUNNER_TEMP/visual/08-eye-storage.png"
-          # Furniture detail views: actual school-chair contour and child desk
-          # from two angles, not simulated 2D design illustrations.
-          "$RHR" scene "$FULL" --camera=4.5,4.3,12.6 --look-at=0,2.4,6.5 --out "$RUNNER_TEMP/visual/09-chair-back.png"
-          "$RHR" scene "$FULL" --camera=7,4.0,8.2 --look-at=0,2.4,6.2 --out "$RUNNER_TEMP/visual/10-desk-side.png"
+          # Every player-eye camera is checked too. Previously only the
+          # aerial camera gate checked pixels, so blank close-ups could silently
+          # enter a passing build. One same-camera retry keeps comparisons fair.
+          render_eye_checked() {
+            local label="$1"
+            local eye="$2"
+            local aim="$3"
+            local output="$RUNNER_TEMP/visual/$label.png"
+            "$RHR" scene "$FULL" --camera="$eye" --look-at="$aim" --out "$output"
+            if ! check_aerial "$output"; then
+              echo "VISUAL_RETRY $label: first camera image was blank; one identical-camera retry"
+              "$RHR" scene "$FULL" --camera="$eye" --look-at="$aim" --out "$output"
+            fi
+            check_aerial "$output"
+          }
+          render_eye_checked 05-eye-front 0,5.5,18 0,7,-33
+          render_eye_checked 06-eye-back 0,5.5,-17 0,6,25
+          render_eye_checked 07-eye-windows 12,5.5,0 -36,7,0
+          render_eye_checked 08-eye-storage -20,5.5,0 35,7,0
+          # Furniture detail views: same real source, same camera each run.
+          render_eye_checked 09-chair-back 4.5,4.3,12.6 0,2.4,6.5
+          render_eye_checked 10-desk-side 7,4.0,8.2 0,2.4,6.2
           "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side; do
             test -s "$RUNNER_TEMP/visual/$name.png"
