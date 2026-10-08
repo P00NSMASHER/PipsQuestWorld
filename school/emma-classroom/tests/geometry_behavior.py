@@ -219,7 +219,7 @@ end
 assert(counts["Laptop keyboard key"]==40 and counts["Laptop trackpad"]==1)
 assert(counts["Globe meridian cradle"]==24 and counts["Globe continent"]==10)
 assert(counts["Cabinet door panel"]==2 and counts["Cabinet brass hinge"]==4)
-assert(counts["Notebook binding"]==96 and counts["Ruled notebook page"]==16)
+assert(counts["Notebook binding"]==nil and counts["Notebook binding rail"]==16 and counts["Ruled notebook page"]==16)
 assert(counts["Trash can rib"]==16 and counts["Folded tissue"]==1)
 assert(counts["Oak floor board"]==nil and counts["Warm oak classroom floor"]==1 and counts["Teacher inset drawer"]==6,"Native oak material must replace duplicated tile instances")
 assert(counts["Student desk top rounded corner"]==64 and counts["Student chair back rounded corner"]==64)
