@@ -226,21 +226,25 @@ local function focalTeachingArea(root:Instance)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
             CFrame.new(x+.39,4.58,-32.72),C.navy,Enum.Material.SmoothPlastic,false)
     end
-    -- A real front-of-room display, not an extra game mode or another HUD.
+    -- Locate the freestanding art display in the LEFT teaching corner.
+    -- The previous x=-20.4 arrangement overlapped the actual chalkboard
+    -- silhouette from Emma's eye-height view; this leaves a clear horizontal
+    -- gap without moving either wall-mounted teaching board or the desks.
+    local easelX=-29
     local wood=piece(group,"Art easel wooden board",Vector3.new(5.3,4.8,.22),
-        CFrame.new(-20.4,6.55,-29.7),C.wood,Enum.Material.Wood,false)
+        CFrame.new(easelX,6.55,-29.7),C.wood,Enum.Material.Wood,false)
     local poster=piece(group,"Easel framed print",Vector3.new(4.68,4.18,.055),
         wood.CFrame*CFrame.new(0,0,.15),C.mint,Enum.Material.SmoothPlastic,false)
     printed(poster,"OUR CLASSROOM\nA PLACE TO GROW",Enum.NormalId.Back,C.navy,C.mint)
     for _,dx in ipairs({-1.80,1.80}) do
         piece(group,"Easel timber support",Vector3.new(.32,6.2,.35),
-            CFrame.new(-20.4+dx,3.2,-29.82),C.woodEdge,Enum.Material.Wood,false)
+            CFrame.new(easelX+dx,3.2,-29.82),C.woodEdge,Enum.Material.Wood,false)
     end
     piece(group,"Easel display ledge",Vector3.new(5.7,.22,.66),
-        CFrame.new(-20.4,4.32,-29.36),C.woodEdge,Enum.Material.Wood,false)
-    for _,x in ipairs({-22.6,-20.4,-18.2}) do
+        CFrame.new(easelX,4.32,-29.36),C.woodEdge,Enum.Material.Wood,false)
+    for _,dx in ipairs({-2.2,0,2.2}) do
         orb(group,"Golden achievement star",Vector3.new(.46,.46,.12),
-            CFrame.new(x,9.35,-29.46),trim,Enum.Material.Metal)
+            CFrame.new(easelX+dx,9.35,-29.46),trim,Enum.Material.Metal)
     end
 end
 
