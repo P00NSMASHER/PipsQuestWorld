@@ -121,8 +121,11 @@ jobs:
           render_eye_checked 10-desk-side 7,4.0,8.2 0,2.4,6.2
           # Storage geometry review from the actual Luau-built classroom.
           render_eye_checked 11-storage-close-up 20,7.8,9 20,9.7,25.3
+          # Reading area: same source, two fixed eye-level viewpoints before and after.
+          render_eye_checked 12-reading-rug -27,5.0,4.8 -25,2.9,17
+          render_eye_checked 13-reading-books -10,5.2,14 -23,3.1,23
           "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up; do
+          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
