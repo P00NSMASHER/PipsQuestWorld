@@ -34,6 +34,14 @@ if cmp -s "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"; then
     exit 0
   fi
   echo "REPAIR_REQUIRED: reviewed content matches but generated bank/receipt has drifted."
+  # The ABVM Git head may have advanced without changing educational content.
+  # Repair from the last accepted source pin, never silently repin the receipt
+  # (or rewrite the generated question bank) to a cosmetic source commit.
+  cp "$STAGE_ROOT/accepted-QuestionBank.lua" "$DEST_ROOT/server/QuestionBank.lua"
+  cp "$STAGE_ROOT/accepted-receipt.json" "$DEST_ROOT/curriculum-receipt.json"
+  python3 -m unittest discover -s "$DEST_ROOT/tests" -p test_curriculum_import.py
+  echo "CONTENT_CANDIDATE_READY: repaired governed outputs at accepted ABVM commit $ACCEPTED_SHA; no Roblox publication."
+  exit 0
 fi
 
 # Validate all generated files before editing the working tree. Source provenance,
