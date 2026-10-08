@@ -269,7 +269,9 @@ local function buildClassroomTexture(root: Instance)
 
     -- Student supply baskets on the center tables.
     local basketColors={Color3.fromRGB(221,91,86),Color3.fromRGB(75,142,190),Color3.fromRGB(86,154,96),Color3.fromRGB(231,181,63)}
-    for i,x in ipairs({-20,-4,16}) do
+    -- Place each basket on a REAL middle-row desktop; the old values were
+    -- mid-gap between neighboring tables and the bins appeared to float.
+    for i,x in ipairs({-24,-8,12}) do
         local color=basketColors[i]
         part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,4.8),color,Enum.Material.SmoothPlastic,false)
         for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,4.8+dz),color,Enum.Material.SmoothPlastic,false) end
