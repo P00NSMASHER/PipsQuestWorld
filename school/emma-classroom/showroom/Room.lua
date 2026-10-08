@@ -123,26 +123,14 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         Vector3.new(2.38,1.90,.22),backCF,tint,Enum.Material.SmoothPlastic,true)
     backCollider.Transparency=1
     backCollider.CanQuery=false
-    -- Four gently inclined molded bands form a shallow ergonomic curve.
-    -- The two ends taper rather than presenting the old square plastic slab.
-    local bandProfile={
-        {-.69,2.03,.15,-8},
-        {-.23,2.43,.045,-3},
-        {.23,2.50,-.055,3},
-        {.69,2.13,-.16,9},
-    }
-    for i,band in ipairs(bandProfile) do
-        local frame=backCF*CFrame.new(0,band[1],band[3])*
-            CFrame.Angles(math.rad(band[4]),0,0)
-        local finish=tint:Lerp(P.cream,.11+i*.012)
-        part(parent,name.." molded back panel",Vector3.new(band[2]-.17,.52,.17),
-            frame,finish,Enum.Material.SmoothPlastic,false)
-        for _,side in ipairs({-1,1}) do
-            ball(parent,name.." molded side return",Vector3.new(.23,.54,.21),
-                frame*CFrame.new(side*(band[2]/2-.12),0,0),
-                finish,Enum.Material.SmoothPlastic,false)
-        end
-    end
+    -- Adversarial close-up review rejected the four-piece segmented
+    -- backrest: visible horizontal seams made the chair look like stacked
+    -- panels. One softly tapered ellipsoid gives a continuous molded shell
+    -- at iPhone viewing distance with substantially fewer replicated parts.
+    local shell=ball(parent,name.." seamless molded back shell",
+        Vector3.new(2.42,2.02,.31),backCF*CFrame.new(0,.03,-.01),
+        tint:Lerp(P.cream,.12),Enum.Material.SmoothPlastic,false)
+    shell.Reflectance=.015
     -- A small recessed grip, inset fasteners and visible chair-frame supports
     -- read as manufactured furniture rather than a colored rectangular wall.
     roundedPanel(parent,name.." hand grip",Vector3.new(.96,.14,.027),
