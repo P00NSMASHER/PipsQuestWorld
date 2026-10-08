@@ -191,6 +191,13 @@ local function answer(player,args)
     end
     s.pending=nil;s.stars+=1;s.correctThisSession+=1;s.totalCorrect+=1
     local skill=s.skills[p.q.skill] or {correct=0};skill.correct=(skill.correct or 0)+1;s.skills[p.q.skill]=skill
+    -- Credit the completed session in the same atomic grading step as the
+    -- tenth correct answer. A student may switch test modes, restart or leave
+    -- before the delayed celebration callback fires. None may erase credit.
+    if s.correctThisSession>=SESSION_GOAL and not s.sessionCompleteReported then
+        s.sessionCompleteReported=true
+        s.sessionsCompleted+=1
+    end
     saveProgress(player,s)
     World.setTeacherSpeech(s.teacherModel,nil)
     event:FireClient(player,{kind="correct",teacher=p.teacher.fullName or p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
@@ -247,6 +254,7 @@ request.OnServerInvoke=function(player,command,args)
         end
         local pending=s.pending
         return {ok=true,progress=publicProgress(s),week=Questions.WeekLabel,focus=s.modeLabel or "Current ABVM lessons",tests=testCatalog(),modeId=s.modeId or "mix",modeLabel=s.modeLabel or "Mix",
+            completed=s.correctThisSession>=SESSION_GOAL,sessionsCompleted=s.sessionsCompleted,
             question=pending and {kind="question",teacher=pending.teacher.fullName or pending.teacher.name,role=pending.teacher.role,subject=pending.q.subject,prompt=pending.q.prompt,tier=pending.q.tier,choices=pending.choices,token=pending.token,progress=publicProgress(s)} or nil}
     end
     return {ok=false,code="unknown"}
