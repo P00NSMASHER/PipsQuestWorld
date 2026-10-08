@@ -65,7 +65,20 @@ def render_script():
     forbidden = ("SavePlaceAsync", "DataStoreService", "SetAsync", "UpdateAsync",
                  "InsertService:Insert", "HttpService", "PlayerAdded")
     assert not any(term in script for term in forbidden)
+    # Insert the exact production adapter source into an ephemeral engine-only
+    # function. In this task ONLY, a local configuration table enables it;
+    # the committed Roblox game's FurnitureMeshConfig.Enabled stays false.
+    module = (HERE.parent / "showroom" / "FurnitureMeshAdapter.lua").read_text()
+    config_line = 'local Config = require(script.Parent:WaitForChild("FurnitureMeshConfig"))'
+    assert module.count(config_line) == 1, "Unexpected production adapter configuration wiring"
+    temporary = ("local Config = { Enabled = true, ChairModelAssetId = " +
+                 chair + ", DeskModelAssetId = " + desk +
+                 ", MaxMeshPartsPerModel = 8 }")
+    module = module.replace(config_line, temporary)
+    assert script.count("__ACTUAL_ADAPTER_SOURCE__") == 1
+    assert not any(term in module for term in forbidden)
     script = script.replace("__CHAIR_ASSET_ID__", chair).replace("__DESK_ASSET_ID__", desk)
+    script = script.replace("__ACTUAL_ADAPTER_SOURCE__", module)
     return script, chair, desk
 
 
@@ -134,7 +147,8 @@ def run():
     allowed_lines = [s for s in messages if
                      s.startswith("NATIVE_ASSET_MODEL_VERIFIED")
                      or s.startswith("NATIVE_ASSET_STAGING_VERIFIED")
-                     or s.startswith("NATIVE_ASSET_ENGINE_NO_SAVE")]
+                     or s.startswith("NATIVE_ASSET_ENGINE_NO_SAVE")
+                     or s.startswith("NATIVE_ACTUAL_ADAPTER_ACCEPTED")]
     for line in allowed_lines:
         print(line, flush=True)
     if state != "COMPLETE":
@@ -142,7 +156,9 @@ def run():
     expected = ("NATIVE_ASSET_MODEL_VERIFIED student_chair",
                 "NATIVE_ASSET_MODEL_VERIFIED student_desk",
                 "NATIVE_ASSET_STAGING_VERIFIED pairs=16",
-                "NATIVE_ASSET_ENGINE_NO_SAVE_NO_WORKSPACE_MUTATION")
+                "NATIVE_ASSET_ENGINE_NO_SAVE_NO_WORKSPACE_MUTATION",
+                "NATIVE_ACTUAL_ADAPTER_ACCEPTED models=32",
+                "NATIVE_ASSET_ENGINE_NO_SAVE_NO_WORKSPACE_MUTATION_CONFIRMED")
     combined = "\n".join(allowed_lines)
     if not all(x in combined for x in expected):
         raise RuntimeError("Native task completed without all model, staging, and nonmutation evidence")
