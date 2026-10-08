@@ -31,7 +31,7 @@ class ImportTests(unittest.TestCase):
             b=copy.deepcopy(self.bundle);b['mixedReview']=refs;self.sign(b)
             with self.assertRaises(ValueError):adapter.convert(b,self.sha)
     def test_unavailable_test_cannot_claim_support(self):
-        b=copy.deepcopy(self.bundle);next(t for t in b['selectableTestPrep'] if not t['supported'])['supported']=True;self.sign(b)
+        b=copy.deepcopy(self.bundle);b['selectableTestPrep'].append({'id':'fixture-missing','date':'2099-01-01','label':'Unknown scope','source':'regression','questionIds':[],'supported':True,'disclaimer':'Original practice'});self.sign(b)
         with self.assertRaises(ValueError):adapter.convert(b,self.sha)
     def test_star_cannot_become_test_evidence(self):
         b=copy.deepcopy(self.bundle);t=b['selectableTestPrep'][0];t['questionIds']=[next(q['id'] for q in b['questions'] if q['tier']=='star-fallback')];self.sign(b)
@@ -39,7 +39,10 @@ class ImportTests(unittest.TestCase):
     def test_current_ids_and_four_choices_are_preserved(self):
         self.assertEqual(len({q['id'] for q in self.bundle['questions']}),len(self.bundle['questions']))
         self.assertTrue(any(len(q['choices'])==4 for q in self.bundle['questions']))
-        self.assertEqual(next(t for t in self.bundle['selectableTestPrep'] if t['label']=='Religion Ch. 3')['questionIds'],[])
+        ids={q['id']:q for q in self.bundle['questions']}
+        for t in self.bundle['selectableTestPrep']:
+            if t['label']=='Religion Ch. 3':
+                self.assertTrue(all(ids[i]['skill']=='religion-chapter-3' for i in t['questionIds']))
     def test_future_refresh_cannot_reuse_an_id_for_changed_content(self):
         b=copy.deepcopy(self.bundle);b['questions'][0]['prompt']='Changed prompt';self.sign(b)
         with self.assertRaises(ValueError):adapter.convert(b,self.sha,previous=self.bundle)

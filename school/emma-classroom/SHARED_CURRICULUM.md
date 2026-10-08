@@ -40,7 +40,9 @@ Classroom CI reproduces the pinned ABVM checkout, compares the real regenerated
 bundle, runs importer/server/client/device-layout/geometry regressions, compiles
 Luau, builds the isolated place and verifies answer-key replication boundaries.
 
-Future automatic refreshes may prepare a draft PR from ABVM main. They must retain
+The main-branch refresh workflow checks ABVM main every four hours and prepares at
+most one draft curriculum PR at a time. An unchanged educational bundle keeps its
+accepted source receipt. Candidates must retain
 exact-source receipts, pass the same checks, and obtain review before integration.
 Bot-created PRs cannot be assumed to trigger GitHub CI; marking ready via an
 independently authorized user/controller fires the ready-for-review CI event.

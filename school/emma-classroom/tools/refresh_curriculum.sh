@@ -13,6 +13,10 @@ node "$SOURCE_ROOT/scripts/build-study-universe.mjs" "$STAGE_ROOT/curriculum.jso
 python3 "$DEST_ROOT/tools/import_study_universe.py" "$STAGE_ROOT/curriculum.json" \
   --previous-bundle "$DEST_ROOT/curriculum.json" --source-sha "$SOURCE_SHA" --out "$STAGE_ROOT/QuestionBank.lua" --receipt "$STAGE_ROOT/receipt.json"
 # All content validation finishes before replacing any checked-in output.
+if cmp -s "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"; then
+  echo "Accepted educational content already matches this reviewed source."
+  exit 0
+fi
 cp "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"
 cp "$STAGE_ROOT/QuestionBank.lua" "$DEST_ROOT/server/QuestionBank.lua"
 cp "$STAGE_ROOT/receipt.json" "$DEST_ROOT/curriculum-receipt.json"

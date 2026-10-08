@@ -2,6 +2,7 @@ name: High School Foundation Static Guards
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"

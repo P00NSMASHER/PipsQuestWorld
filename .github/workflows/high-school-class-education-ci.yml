@@ -11,6 +11,7 @@ on:
       - "docs/HIGH_SCHOOL_CLASS_EDUCATION_API.md"
       - ".github/workflows/high-school-class-education-ci.yml"
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"

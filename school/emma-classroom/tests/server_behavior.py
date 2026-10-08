@@ -117,7 +117,7 @@ assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14)
 -- Curriculum selection is server governed and never replicates answer keys.
 local state=requests.OnServerInvoke(player,"state")
-assert(#state.tests>0)
+assert(type(state.tests)=="table")
 for _,t in ipairs(state.tests) do assert(t.questionIds==nil and t.answer==nil) end
 local beforeToken=state.question.token
 assert(not requests.OnServerInvoke(player,"select_test",{id="invented"}).ok)
@@ -127,7 +127,17 @@ for _,t in ipairs(Questions.Tests) do
     if string.find(t.label,"Grammar",1,true) then grammar=t end
     if not t.supported then unavailable=t end
 end
-assert(grammar and unavailable)
+-- The source calendar is allowed to advance or gain complete coverage.
+-- If no such menu row exists now, exercise the same protocol with a local
+-- server-test fixture made from reviewed bank IDs; never rewrite product data.
+if not grammar then
+    local refs={};for _,q in ipairs(Questions) do if q.skill=="subject-predicate" then refs[#refs+1]=q.id end end
+    grammar={id="fixture-grammar",label="Grammar",questionIds=refs,supported=true};Questions.Tests[#Questions.Tests+1]=grammar
+end
+if not unavailable then
+    unavailable={id="fixture-unavailable",label="Unknown",questionIds={},supported=false};Questions.Tests[#Questions.Tests+1]=unavailable
+end
+assert(grammar and #grammar.questionIds>0 and unavailable)
 assert(not requests.OnServerInvoke(player,"select_test",{id=unavailable.id}).ok)
 assert(requests.OnServerInvoke(player,"select_test",{id=grammar.id}).ok);flush()
 for _=1,15 do
