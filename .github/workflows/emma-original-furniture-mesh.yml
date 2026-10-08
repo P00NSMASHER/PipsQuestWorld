@@ -59,6 +59,18 @@ jobs:
             school/emma-classroom/mesh/preview_meshes.py --dir "$RUNNER_TEMP/abvm-models"
           test -s "$RUNNER_TEMP/abvm-models/furniture-mesh-preview.png"
 
+      - name: Check dedicated Roblox asset key presence without exposing credentials
+        shell: bash
+        env:
+          DEDICATED_ASSET_KEY_CONFIGURED: ${{ secrets.ROBLOX_ASSET_API_KEY != '' }}
+        run: |
+          if [ "$DEDICATED_ASSET_KEY_CONFIGURED" = "true" ]; then
+            echo "DEDICATED_ASSET_KEY_PRESENT"
+          else
+            echo "DEDICATED_ASSET_KEY_MISSING"
+          fi
+          # Diagnostic only; absence does not fail furniture generation.
+
       - name: Prohibit unapproved asset IDs
         shell: bash
         run: |
