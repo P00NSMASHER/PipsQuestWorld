@@ -51,7 +51,7 @@ jobs:
           # Publishing the replica needs a NEW, explicit marker after visual review.
           grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
           grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
-          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/server/ArtPass.lua; do
+          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
