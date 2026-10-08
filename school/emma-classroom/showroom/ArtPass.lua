@@ -96,7 +96,10 @@ end
 
 local function readingCorner(root:Instance)
     local group=makeGroup(root,"Cozy story corner")
-    local seats={{x=-29.2,z=13,c=C.coral},{x=-22.7,z=15.1,c=C.blue}}
+    -- Both poufs stay on the same reading rug. The second had overlapped
+    -- the book-display rack and its left leg by about 1.7 studs; shift only
+    -- its x-position to restore a visible .3-stud furniture clearance.
+    local seats={{x=-29.2,z=13,c=C.coral},{x=-24.7,z=15.1,c=C.blue}}
     for _,v in ipairs(seats) do
         orb(group,"Corduroy floor pouf",Vector3.new(4.1,1.20,3.6),CFrame.new(v.x,1.14,v.z),v.c,Enum.Material.Fabric)
         orb(group,"Soft seat cushion",Vector3.new(3.35,.68,2.90),CFrame.new(v.x,1.83,v.z-.12),
