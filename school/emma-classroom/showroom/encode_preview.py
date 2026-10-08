@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image
 
 folder=Path(sys.argv[1])
-names=("01-isometric","02-front","03-top","05-eye-front","06-eye-back","07-eye-windows","08-eye-storage","09-chair-back","10-desk-side","11-storage-close-up")
+names=("01-isometric","02-front","03-top","05-eye-front","06-eye-back","07-eye-windows","08-eye-storage","09-chair-back","10-desk-side","11-storage-close-up","12-reading-rug","13-reading-books")
 for n in names:
     path=folder/(n+".png")
     if not path.is_file():
