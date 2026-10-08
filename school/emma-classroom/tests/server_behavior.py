@@ -104,6 +104,11 @@ for step=1,10 do
     local hit=requests.OnServerInvoke(player,"answer",{token=q.token,index=correct})
     assert(hit.ok and hit.correct)
     assert(not requests.OnServerInvoke(player,"answer",{token=q.token,index=correct}).ok,"Replay cannot earn another star")
+    if step==10 then
+        local final=requests.OnServerInvoke(player,"state")
+        assert(final.completed and final.sessionsCompleted==1,"Tenth correct answer must credit the session before delayed grading callbacks")
+        assert(events[#events].kind=="correct","Celebration has not yet fired; completion must already be committed")
+    end
     flush()
     assert(requests.OnServerInvoke(player,"state").progress.stars==step)
 end
@@ -198,6 +203,8 @@ for step=1,10 do
     assert(requests.OnServerInvoke(player2,"answer",{token=nextQuestion.token,index=answerIndex}).correct)
     if step<10 then flush() end
 end
+local tenth=requests.OnServerInvoke(player2,"state")
+assert(tenth.completed and tenth.sessionsCompleted==1,"Late restart must not swallow the first completed session")
 local newEvents=#events
 assert(requests.OnServerInvoke(player2,"restart").ok,"Completed round should allow restart")
 flush()
@@ -209,7 +216,32 @@ for i=newEvents+1,#events do
     if events[i].kind=="session_complete" then newCompletions+=1 end
 end
 assert(newQuestions==1 and newCompletions==0,"Old completion timer must not replace or finish the restarted round")
-assert(saved["u:2"].totalCorrect==11 and saved["u:1"].totalCorrect==14)
+assert(saved["u:2"].totalCorrect==11 and saved["u:2"].sessionsCompleted==1 and saved["u:1"].totalCorrect==14)
+-- Also exercise the other interruption: a student changes to test practice
+-- immediately after answering the tenth question, before the delayed callback.
+for step=1,10 do
+    local nextQuestion=requests.OnServerInvoke(player2,"state").question
+    local matched
+    for _,candidate in ipairs(Questions) do
+        if candidate.prompt==nextQuestion.prompt and candidate.subject==nextQuestion.subject then matched=candidate;break end
+    end
+    assert(matched)
+    assert(requests.OnServerInvoke(player2,"answer",{token=nextQuestion.token,index=table.find(nextQuestion.choices,matched.answer)}).correct)
+    if step<10 then flush() end
+end
+assert(requests.OnServerInvoke(player2,"state").sessionsCompleted==2,"Completion must count before switching practice modes")
+local beforeSwitch=#events
+assert(requests.OnServerInvoke(player2,"select_test",{id=grammar.id}).ok)
+flush()
+local afterSwitch=requests.OnServerInvoke(player2,"state")
+assert(not afterSwitch.completed and afterSwitch.modeId==grammar.id and afterSwitch.question,"Test switch must restore an active question")
+assert(afterSwitch.sessionsCompleted==2,"Switching practice must preserve lifetime finished sessions")
+local switchedQuestions=0
+for i=beforeSwitch+1,#events do
+    if events[i].kind=="question" then switchedQuestions+=1 end
+end
+assert(switchedQuestions==1,"Obsolete end-of-session callback must not advance test prep")
+assert(saved["u:2"].sessionsCompleted==2 and saved["u:2"].totalCorrect==21,"Tenth-answer completion must persist across an instant practice switch")
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end
@@ -223,7 +255,7 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: server grades independently; smartboard stays local; NPCs have owners; old restart/test callbacks cannot overwrite new sessions; monotonic, independent persistence")
+print("PASS: server grades independently; ten-answer sessions credit immediately through restart/test switches; client recovery metadata is private; stale callbacks cannot overwrite newer rounds; persistence remains monotonic")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:

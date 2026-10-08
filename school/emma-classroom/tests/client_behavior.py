@@ -142,7 +142,30 @@ local restart
 for _,c in ipairs(card:GetChildren())do for _,b in ipairs(c:GetChildren())do if b:IsA("TextButton") then restart=b end end end
 assert(restart and restart.Text=="Do another 10")
 assert(string.find(boardFrame.Subject.Text,"session complete",1,true),"Completion mirrored client-only")
-print("PASS: personal smartboard mirrors prompts, four choices, hints and completion; other players NPCs hidden; client preserves camera/answer/retry flow")
+-- A fresh HUD/late handshake can miss the final RemoteEvent. The server's
+-- completed state must restore the restart control without another question.
+while #queue>0 do table.remove(queue,1)() end
+local beforeGui=#playerGui:GetChildren()
+request.InvokeServer=function(_,cmd)
+    if cmd=="state" then return {ok=true,completed=true,progress={stars=10,questionNumber=10,goal=10,totalCorrect=10},sessionsCompleted=1,tests={}} end
+    error(cmd)
+end
+boot()
+assert(#queue==2,"Fresh GUI schedules world binding and initial state recovery")
+table.remove(queue,1)();table.remove(queue,1)()
+local restoredGui=playerGui:GetChildren()[beforeGui+1]
+local restoredRoot=restoredGui:GetChildren()[1]
+local restoredCard=restoredRoot.AnswerBar
+assert(restoredCard.Visible,"Completed session must be visible after GUI re-creation")
+local foundRestart=false
+for _,frame in ipairs(restoredCard:GetChildren()) do
+    for _,item in ipairs(frame:GetChildren()) do
+        if item:IsA("TextButton") and item.Text=="Do another 10" then foundRestart=true end
+    end
+end
+assert(foundRestart,"Missing final event must not strand the learner without restart")
+assert(string.find(boardFrame.Subject.Text,"session complete",1,true),"Recovered state must repaint the personal smartboard")
+print("PASS: client-local smartboard, owned NPC visibility, complete answers, hint/retry/camera, and missed-completion-event HUD recovery")
 '''
 fixture=p/'tests/.client-runtime.generated.lua'
 try:
