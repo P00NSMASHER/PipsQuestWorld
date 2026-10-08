@@ -126,15 +126,15 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
     -- Four gently inclined molded bands form a shallow ergonomic curve.
     -- The two ends taper rather than presenting the old square plastic slab.
     local bandProfile={
-        {-.69,2.20,.08,-5},
-        {-.23,2.42,.015,-2},
-        {.23,2.50,-.025,1},
-        {.69,2.31,-.105,5},
+        {-.69,2.03,.15,-8},
+        {-.23,2.43,.045,-3},
+        {.23,2.50,-.055,3},
+        {.69,2.13,-.16,9},
     }
     for i,band in ipairs(bandProfile) do
         local frame=backCF*CFrame.new(0,band[1],band[3])*
             CFrame.Angles(math.rad(band[4]),0,0)
-        local finish=tint:Lerp(P.cream,.055+i*.012)
+        local finish=tint:Lerp(P.cream,.11+i*.012)
         part(parent,name.." molded back panel",Vector3.new(band[2]-.17,.52,.17),
             frame,finish,Enum.Material.SmoothPlastic,false)
         for _,side in ipairs({-1,1}) do
@@ -176,8 +176,8 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         Color3.fromRGB(197,173,130), Color3.fromRGB(206,179,138),
         Color3.fromRGB(193,169,123), Color3.fromRGB(199,176,137),
     }
-    roundedPanel(parent,"Student desk edge",Vector3.new(5.78,.28,3.86),CFrame.new(x,2.91,z),
-        Color3.fromRGB(77,75,69),.24,true,true)
+    roundedPanel(parent,"Student desk edge",Vector3.new(5.78,.16,3.86),CFrame.new(x,2.97,z),
+        Color3.fromRGB(126,121,109),.21,true,true)
     roundedPanel(parent,"Student desk top",Vector3.new(5.72,.12,3.80),CFrame.new(x,3.11,z),
         laminates[(index-1)%#laminates+1],.23,true,false)
     for _,dx in ipairs({-2.22,2.22}) do
