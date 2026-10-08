@@ -99,4 +99,56 @@ print(string.format("NATIVE_ASSET_STAGING_VERIFIED pairs=%d models=%d desk_horiz
 for _,m in pairs(loaded) do m:Destroy() end
 staged:Destroy()
 print("NATIVE_ASSET_ENGINE_NO_SAVE_NO_WORKSPACE_MUTATION")
+
+-- Run the exact real showroom FurnitureMeshAdapter.lua in this disposable
+-- engine task, with activation enabled ONLY in this in-memory test module.
+-- The GitHub checkout and actual Roblox experience config remain disabled.
+local function loadRealFurnitureAdapter()
+__ACTUAL_ADAPTER_SOURCE__
+end
+local RealAdapter = loadRealFurnitureAdapter()
+local testRoot = Instance.new("Folder")
+testRoot.Name = "ABVM_EngineOnly_MeshAdapterTest"
+local oldParts = {}
+local untouched = {}
+for row,z in ipairs({-12,4,19}) do
+    for col,x in ipairs({-24,-16,-8,0,12,20}) do
+        if row<3 or col>2 then
+            for _,kind in ipairs({"Student chair seat","Student chair school back shell",
+                                   "Student desk top","Student desk edge rounded corner"}) do
+                local part = Instance.new("Part")
+                part.Name = kind
+                part.Size = Vector3.new(2,.15,2)
+                part.Transparency = 0
+                part.CanCollide = (kind=="Student chair seat" or kind=="Student desk top")
+                part.Parent = testRoot
+                table.insert(oldParts,part)
+            end
+            local art=Instance.new("Part")
+            art.Name="Student classroom artwork"
+            art.Transparency=.2
+            art.CanCollide=false
+            art.Parent=testRoot
+            table.insert(untouched,art)
+        end
+    end
+end
+assert(testRoot.Parent==nil, "Engine test root must never be parented to Workspace")
+assert(RealAdapter.apply(testRoot), "The real showroom adapter did not accept the real Roblox models")
+assert(testRoot:GetAttribute("FurnitureModelStatus")=="ImportedOwnerModels_EngineVisualQARequired")
+local meshFolder=testRoot:FindFirstChild("OwnerVerifiedOriginalMeshFurniture")
+assert(meshFolder and #meshFolder:GetChildren()==32,"Actual adapter must stage all 16 pairs")
+for _,part in ipairs(oldParts) do
+    assert(part.Transparency==1,"Legacy furniture surface would visibly overlap approved meshes")
+    if part.Name=="Student chair seat" or part.Name=="Student desk top" then
+        assert(part.CanCollide==true,"Original classroom collision changed during visual swap")
+    end
+end
+for _,part in ipairs(untouched) do
+    assert(part.Transparency==.2,"Non-furniture artwork changed during visual swap")
+end
+assert(testRoot.Parent==nil,"Actual adapter illegally parented test models to Workspace")
+print("NATIVE_ACTUAL_ADAPTER_ACCEPTED models=32 original_colliders_preserved=true")
+testRoot:Destroy()
+print("NATIVE_ASSET_ENGINE_NO_SAVE_NO_WORKSPACE_MUTATION_CONFIRMED")
 return "ABVM_NATIVE_FURNITURE_ENGINE_ACCEPTED"
