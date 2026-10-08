@@ -117,11 +117,37 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         tint,.23,true,true)
     seat.Reflectance=.015
     local backCF=CFrame.new(x,2.88,z+.93)*CFrame.Angles(math.rad(-8),0,0)
-    roundedPanel(parent,name.." back",Vector3.new(2.5,1.90,.23),backCF,
-        tint:Lerp(P.cream,.09),.31,false,true)
-    -- The shallow inset handhold is in the physical chair, not a floating HUD.
-    roundedPanel(parent,name.." hand grip",Vector3.new(1.12,.19,.028),
-        backCF*CFrame.new(0,.52,-.14),tint:Lerp(P.ink,.4),.075,false,false)
+    -- An invisible single-part collision silhouette avoids thousands of
+    -- collidable little pieces. The shell itself is visible, but decorative.
+    local backCollider=part(parent,name.." contoured back collision",
+        Vector3.new(2.38,1.90,.22),backCF,tint,Enum.Material.SmoothPlastic,true)
+    backCollider.Transparency=1
+    backCollider.CanQuery=false
+    -- Four gently inclined molded bands form a shallow ergonomic curve.
+    -- The two ends taper rather than presenting the old square plastic slab.
+    local bandProfile={
+        {-.69,2.20,.08,-5},
+        {-.23,2.42,.015,-2},
+        {.23,2.50,-.025,1},
+        {.69,2.31,-.105,5},
+    }
+    for i,band in ipairs(bandProfile) do
+        local frame=backCF*CFrame.new(0,band[1],band[3])*
+            CFrame.Angles(math.rad(band[4]),0,0)
+        local finish=tint:Lerp(P.cream,.055+i*.012)
+        part(parent,name.." molded back panel",Vector3.new(band[2]-.17,.52,.17),
+            frame,finish,Enum.Material.SmoothPlastic,false)
+        for _,side in ipairs({-1,1}) do
+            ball(parent,name.." molded side return",Vector3.new(.23,.54,.21),
+                frame*CFrame.new(side*(band[2]/2-.12),0,0),
+                finish,Enum.Material.SmoothPlastic,false)
+        end
+    end
+    -- A small recessed grip, inset fasteners and visible chair-frame supports
+    -- read as manufactured furniture rather than a colored rectangular wall.
+    roundedPanel(parent,name.." hand grip",Vector3.new(.96,.14,.027),
+        backCF*CFrame.new(0,.58,-.215),tint:Lerp(P.ink,.28),
+        .055,false,false)
     for _,dx in ipairs({-.82,.82}) do
         for _,dz in ipairs({-.66,.66}) do
             cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
@@ -133,6 +159,11 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         end
         cylinder(parent,name.." back support",Vector3.new(2.20,.13,.13),
             CFrame.new(x+dx,2.47,z+.73)*CFrame.Angles(0,0,math.pi/2),
+            P.metal,Enum.Material.Metal,false)
+        -- Slim horizontal under-seat steel runners are aligned with the
+        -- chair seat. These reinforce the real frame silhouette at eye level.
+        cylinder(parent,name.." underseat frame runner",Vector3.new(1.65,.13,.13),
+            CFrame.new(x+dx,1.41,z)*CFrame.Angles(0,math.pi/2,0),
             P.metal,Enum.Material.Metal,false)
         ball(parent,name.." backrest rivet",Vector3.new(.14,.14,.08),
             backCF*CFrame.new(dx,-.38,-.18),P.metal,Enum.Material.Metal,false)
