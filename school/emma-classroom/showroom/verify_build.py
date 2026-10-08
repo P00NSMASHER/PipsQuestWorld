@@ -43,6 +43,10 @@ assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
 assert "Vector3.new(5.78,.28,3.86)" in room, "Oversized prototype desk returned"
 assert "Vector3.new(2.5,1.90,.23)" in room, "Oversized prototype chair returned"
+assert 'Vector3.new(1.10,.55,.55)' in room, "Oversized bottle was reintroduced"
+assert 'Frosted fluorescent diffuser' in room, "Glaring neon ceiling fixture returned"
+assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returned"
+assert 'local center=CFrame.new(20.55,5.87,-26.4)' in room, "Teacher globe moved off its desk"
 assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert 'sign(root,"Rule card "' not in room, "Old oversized classroom cards returned"
