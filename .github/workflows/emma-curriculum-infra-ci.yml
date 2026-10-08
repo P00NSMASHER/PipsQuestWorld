@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/emma-curriculum-infra-ci.yml'
       - '.github/workflows/emma-curriculum-refresh.yml'
+      - '.github/workflows/emma-curriculum-pr-permission-probe.yml'
       - '.github/emma-curriculum-target.json'
       - '.github/scripts/emma_curriculum_target.py'
       - '.github/scripts/test_emma_curriculum_target.py'
@@ -13,6 +14,7 @@ on:
     paths:
       - '.github/workflows/emma-curriculum-infra-ci.yml'
       - '.github/workflows/emma-curriculum-refresh.yml'
+      - '.github/workflows/emma-curriculum-pr-permission-probe.yml'
       - '.github/emma-curriculum-target.json'
       - '.github/scripts/emma_curriculum_target.py'
       - '.github/scripts/test_emma_curriculum_target.py'
@@ -38,6 +40,7 @@ jobs:
           ruby -ryaml -e 'ARGV.each {|file| YAML.parse_file(file); puts "YAML_OK: #{file}" }' \
             .github/workflows/emma-curriculum-refresh.yml \
             .github/workflows/emma-curriculum-infra-ci.yml
+            .github/workflows/emma-curriculum-pr-permission-probe.yml
       - name: Preserve data-only and draft-only controls
         shell: bash
         run: |
@@ -48,3 +51,19 @@ jobs:
           grep -q 'TARGET_BRANCH:' .github/workflows/emma-curriculum-refresh.yml
           grep -q 'git diff --quiet' .github/workflows/emma-curriculum-refresh.yml
           echo 'PASS: every four hours, target-configurable, content-only candidate, no automatic Roblox release.'
+      - name: Prove credential, heredoc and disposable permission-probe invariants
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          workflow=Path('.github/workflows/emma-curriculum-refresh.yml').read_text()
+          probe=Path('.github/workflows/emma-curriculum-pr-permission-probe.yml').read_text()
+          assert "cat <<'BODY'" in workflow, 'PR body must use literal heredoc'
+          assert workflow.count('persist-credentials: false') >= 2, 'Source exporter must not inherit repository token'
+          assert 'gh auth setup-git' in workflow, 'Authenticate only after approved source tests'
+          assert 'REVIEW_REQUIRED:' in workflow and 'exit 1' in workflow, 'Closed candidates must fail visibly'
+          assert 'gh pr create --base main' in probe and 'gh pr close' in probe, 'Probe must test and clean up a draft PR'
+          assert 'school/emma-classroom/' not in probe, 'Probe cannot touch the approved question bank'
+          assert 'PUBLISH_REQUEST' not in probe, 'Probe cannot trigger Roblox publication'
+          print('PASS: no evaluated PR body, token isolation, safe probe and no curriculum modification')
+          PY
