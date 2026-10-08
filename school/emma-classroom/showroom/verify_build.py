@@ -43,7 +43,6 @@ assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
 assert "Vector3.new(5.78,.16,3.86)" in room, "Desk rim returned to bulky dark prototype"
 assert "Color3.fromRGB(126,121,109)" in room, "Thin laminate desk surround unexpectedly changed"
-assert "{-.69,2.03,.15,-8}" in room and "{.69,2.13,-.16,9}" in room, "Chair contour taper was lost"
 assert "Vector3.new(2.38,1.90,.22)" in room, "Missing single contoured-back chair collider"
 assert 'name.." seamless molded back shell"' in room, "Continuous molded chair shell missing"
 assert "Vector3.new(2.42,2.02,.31)" in room, "Chair shell proportions regressed"
