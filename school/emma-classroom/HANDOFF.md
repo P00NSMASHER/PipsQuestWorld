@@ -1,3 +1,58 @@
+# CURRENT DIRECTION: classroom replica only (October 8, 2026)
+
+The October 8 iPhone recording rejects v63's quiz-first classroom. The user
+explicitly stopped the question/teacher/UI work. New single objective: build
+the highest-quality recognizable ABVM classroom environment we can and show
+actual Roblox renders before approving a live version.
+
+New build target: **school/emma-showroom.project.json**.
+This is NOT the old school/emma-classroom.project.json study mode.
+
+Implemented in the replica candidate:
+- Compiled runtime contains only the room, two non-interactive art passes,
+  spawn bootstrap, and native first-person exploration.
+- No QuestionBank, EmmaStudy client/server scripts, progress UI, teaching
+  NPCs, answer remotes, score handling or DataStore are included in the
+  showcase place.
+- Maintains the photographed room cues: warm walls, navy trim, timber floor,
+  double classroom doors/hall glimpse, chalkboard and Smartboard,
+  16 paired desks, tall wood windows, radiator, cubbies, reading corner,
+  teacher desk, crucifix and school motto.
+- Replaces oversize wall values signs and question board with human-scale
+  non-interactive wall art, physical fixtures, small notice boards and
+  ambient classroom details; no screen-covering UI.
+- Spawn is in a clear rear aisle, not an invisible seat. Native mobile
+  thumbstick/jump/camera movement stays functional.
+- Keeps the old educational files in the repository without bundling them.
+  Existing content-refresh jobs are not renamed, stopped or rewritten.
+- Publisher targets this showroom only; requires a NEW
+  `requested-mode: classroom-replica-only` marker AND
+  `visual-acceptance: approved` in PUBLISH_REQUEST. Existing v63
+  marker cannot silently release this build.
+
+Verification status:
+- GitHub source writes are complete. Independent exact-source Luau/Rojo CI
+  and built-place XML screening are required and not yet described as passing.
+- Actual Roblox Studio or published-place screenshots, iPhone movement,
+  part lighting/material appearance, and physical reference-parity are
+  **NOT verified** by source edits.
+- Do NOT publish, merge or describe this as polished until a real Roblox render
+  and hallway/window/desk walkthrough meets visual acceptance.
+
+Visual acceptance sequence:
+1. Capture iPhone entry view showing the front board and the whole room with
+   no study widgets or staff NPCs.
+2. Walk through the center and right aisles without collision traps, sitting,
+   teleporting or controls stealing focus.
+3. Compare yellow/cream walls, blue trim, desk/chair proportions, window
+   wall, reading corner, doorway and ABVM board treatment to the saved real
+   classroom photographs. Reject any generic/primitive-looking elements.
+4. Check phone frame time, materials, lighting, distance-readability and
+   clipping before release. Favor correcting the actual 3D geometry rather
+   than adding menus or more graphics test infrastructure.
+
+---
+
 ## Current continuation — stable display avatars / classroom objects (v6)
 
 Version 58 failed the user's real recording: detached/missing heads during swaps,
