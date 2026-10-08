@@ -104,38 +104,51 @@ local function pencilCup(parent: Instance,x: number,y: number,z: number)
 end
 
 local function schoolChair(parent: Instance,name: string,x: number,z: number,tint: Color3)
-    roundedPanel(parent,name.." seat",Vector3.new(2.9,.30,2.55),CFrame.new(x,1.6,z),tint,.27,true,true)
-    local backCF=CFrame.new(x,2.98,z+1.10)*CFrame.Angles(math.rad(-7),0,0)
-    roundedPanel(parent,name.." back",Vector3.new(2.9,2.55,.27),backCF,tint,.35,false,true)
-    -- Inset grip is a shallow dark detail; no block sticking through the back.
-    roundedPanel(parent,name.." hand grip",Vector3.new(1.26,.28,.025),backCF*CFrame.new(0,.72,-.15),tint:Lerp(Color3.new(0,0,0),.45),.12,false,false)
-    for _,dx in ipairs({-.97,.97}) do
-        for _,dz in ipairs({-.78,.78}) do
-            cylinder(parent,name.." tubular leg",Vector3.new(1.43,.17,.17),CFrame.new(x+dx,.77,z+dz)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,true)
-            cylinder(parent,name.." rubber foot",Vector3.new(.17,.24,.24),CFrame.new(x+dx,.14,z+dz)*CFrame.Angles(0,0,math.pi/2),P.ink,Enum.Material.SmoothPlastic,false)
+    -- Child-scale molded school seating. The v63 chair backs were towering blue
+    -- rectangles, nearly as wide as the tabletop in iPhone screenshots.
+    local seat=roundedPanel(parent,name.." seat",Vector3.new(2.5,.24,2.18),CFrame.new(x,1.62,z),
+        tint,.23,true,true)
+    seat.Reflectance=.015
+    local backCF=CFrame.new(x,2.88,z+.93)*CFrame.Angles(math.rad(-8),0,0)
+    roundedPanel(parent,name.." back",Vector3.new(2.5,1.90,.23),backCF,
+        tint:Lerp(P.cream,.09),.31,false,true)
+    -- The shallow inset handhold is in the physical chair, not a floating HUD.
+    roundedPanel(parent,name.." hand grip",Vector3.new(1.12,.19,.028),
+        backCF*CFrame.new(0,.52,-.14),tint:Lerp(P.ink,.4),.075,false,false)
+    for _,dx in ipairs({-.82,.82}) do
+        for _,dz in ipairs({-.66,.66}) do
+            cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
+                CFrame.new(x+dx,.76,z+dz)*CFrame.Angles(0,0,math.pi/2),
+                P.metal,Enum.Material.Metal,true)
+            cylinder(parent,name.." rubber foot",Vector3.new(.19,.20,.20),
+                CFrame.new(x+dx,.13,z+dz)*CFrame.Angles(0,0,math.pi/2),
+                P.ink,Enum.Material.SmoothPlastic,false)
         end
-        cylinder(parent,name.." back support",Vector3.new(2.65,.16,.16),CFrame.new(x+dx,2.62,z+.89)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
+        cylinder(parent,name.." back support",Vector3.new(2.20,.13,.13),
+            CFrame.new(x+dx,2.47,z+.73)*CFrame.Angles(0,0,math.pi/2),
+            P.metal,Enum.Material.Metal,false)
+        ball(parent,name.." backrest rivet",Vector3.new(.14,.14,.08),
+            backCF*CFrame.new(dx,-.38,-.18),P.metal,Enum.Material.Metal,false)
     end
 end
-
 local function desk(parent: Instance,x: number,z: number,index: number,emma: boolean)
-    roundedPanel(parent,"Student desk edge",Vector3.new(7,.30,4.6),CFrame.new(x,2.91,z),Color3.fromRGB(61,61,58),.24,true,true)
-    roundedPanel(parent,"Student desk top",Vector3.new(6.94,.12,4.54),CFrame.new(x,3.11,z),Color3.fromRGB(201,176,127),.23,true,false)
-    for _,dx in ipairs({-2.8,2.8}) do
+    roundedPanel(parent,"Student desk edge",Vector3.new(5.78,.28,3.86),CFrame.new(x,2.91,z),Color3.fromRGB(61,61,58),.24,true,true)
+    roundedPanel(parent,"Student desk top",Vector3.new(5.72,.12,3.80),CFrame.new(x,3.11,z),Color3.fromRGB(201,176,127),.23,true,false)
+    for _,dx in ipairs({-2.22,2.22}) do
         cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
-        part(parent,"Desk foot",Vector3.new(.58,.16,3.6),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
+        part(parent,"Desk foot",Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
     end
-    part(parent,"Desk book tray",Vector3.new(5.8,.12,3.6),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
-    for _,dx in ipairs({-2.9,2.9}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.6),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
+    part(parent,"Desk book tray",Vector3.new(4.75,.12,3.08),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
+    for _,dx in ipairs({-2.35,2.35}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.08),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
     book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
-    schoolChair(parent,"Student chair",x,z+3.9,Color3.fromRGB(70,101,133))
+    schoolChair(parent,"Student chair",x,z+3.48,Color3.fromRGB(70,101,133))
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
     book(parent,x-1.2,3.28,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
     cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
     local pencilCF=CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0)
     part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
     part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
-    local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.6),P.cream,Enum.Material.SmoothPlastic,false)
+    local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.40),P.cream,Enum.Material.SmoothPlastic,false)
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 5 or -5),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
@@ -151,13 +164,13 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     -- 96 microscopic rings bloated scene replication without visual benefit.
     part(parent,"Notebook binding rail",Vector3.new(.11,.075,2.40),
         notebookCF*CFrame.new(-.98,.17,0),P.metal,Enum.Material.Metal,false)
-    for _,dx in ipairs({-2.8,2.8}) do
-        ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.81),P.metal,Enum.Material.Metal,false)
-        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.5),P.ink,Enum.Material.SmoothPlastic,false)
-        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z+1.5),P.ink,Enum.Material.SmoothPlastic,false)
+    for _,dx in ipairs({-2.22,2.22}) do
+        ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.52),P.metal,Enum.Material.Metal,false)
+        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.30),P.ink,Enum.Material.SmoothPlastic,false)
+        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z+1.30),P.ink,Enum.Material.SmoothPlastic,false)
     end
     if emma then
-        local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-2.33)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
+        local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-1.98)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
         surfaceText(tag,"★ EMMA ★",Enum.NormalId.Back,P.gold,P.green)
         cylinder(parent,"Emma pink water bottle",Vector3.new(1.9,.75,.75),CFrame.new(x+2.45,4.23,z+.45)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(225,125,154),Enum.Material.SmoothPlastic,false)
         part(parent,"Water bottle cap",Vector3.new(.5,.20,.5),CFrame.new(x+2.45,5.25,z+.45),Color3.fromRGB(190,86,124),Enum.Material.SmoothPlastic,false)
