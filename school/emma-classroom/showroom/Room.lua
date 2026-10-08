@@ -447,9 +447,9 @@ local function buildFrontWall(root: Instance)
             P.cream,Enum.Material.SmoothPlastic,false)
     end
     part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-12,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
-    part(root,"Smartboard dark bezel",Vector3.new(24.05,7.35,.24),CFrame.new(7,8.2,-33.91),P.blue,Enum.Material.SmoothPlastic,false)
-    part(root,"Smartboard pen tray",Vector3.new(13,.22,.65),CFrame.new(7,4.61,-33.26),Color3.fromRGB(208,211,209),Enum.Material.Metal,false)
-    local smart=part(root,"Interactive smartboard",Vector3.new(23.5,6.8,.35),CFrame.new(7,8.2,-33.65),Color3.fromRGB(238,243,241),Enum.Material.Glass,false);smart.Transparency=.02
+    part(root,"Smartboard dark bezel",Vector3.new(19.35,6.85,.24),CFrame.new(5.2,8.2,-33.91),P.blue,Enum.Material.SmoothPlastic,false)
+    part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),CFrame.new(5.2,4.61,-33.26),Color3.fromRGB(208,211,209),Enum.Material.Metal,false)
+    local smart=part(root,"Interactive smartboard",Vector3.new(18.85,6.35,.35),CFrame.new(5.2,8.2,-33.65),Color3.fromRGB(238,243,241),Enum.Material.Glass,false);smart.Transparency=.02
     -- Static architectural smartboard. GalleryPass supplies a non-interactive display.
 
 
