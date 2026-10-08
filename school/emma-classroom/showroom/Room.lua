@@ -123,13 +123,14 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         Vector3.new(2.38,1.90,.22),backCF,tint,Enum.Material.SmoothPlastic,true)
     backCollider.Transparency=1
     backCollider.CanQuery=false
-    -- Adversarial close-up review rejected the four-piece segmented
-    -- backrest: visible horizontal seams made the chair look like stacked
-    -- panels. One softly tapered ellipsoid gives a continuous molded shell
-    -- at iPhone viewing distance with substantially fewer replicated parts.
-    local shell=ball(parent,name.." seamless molded back shell",
-        Vector3.new(2.42,2.02,.31),backCF*CFrame.new(0,.03,-.01),
-        tint:Lerp(P.cream,.12),Enum.Material.SmoothPlastic,false)
+    -- The previous seamless ellipsoid looked like an office stool back, not
+    -- a molded elementary classroom chair. Instead, form a gently rounded
+    -- RECTANGULAR school back with broad shoulders and a single unsegmented
+    -- center. RoundedPanel makes curved corners without horizontal plate seams.
+    -- The existing invisible collider remains the only collidable back piece.
+    local shell=roundedPanel(parent,name.." school back shell",
+        Vector3.new(2.48,1.87,.25),backCF*CFrame.new(0,.04,-.015),
+        tint:Lerp(P.cream,.095),.33,false,false)
     shell.Reflectance=.015
     -- A small recessed grip, inset fasteners and visible chair-frame supports
     -- read as manufactured furniture rather than a colored rectangular wall.
