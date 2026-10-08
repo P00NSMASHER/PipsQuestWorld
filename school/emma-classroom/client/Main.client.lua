@@ -104,6 +104,56 @@ local modeChoices={}
 
 local currentToken:string?=nil
 local busy=false
+
+-- The physical smartboard belongs to the shared world, but its lesson is
+-- personal to this client. Local TextLabel changes never replicate another
+-- student's prompt, hint or score to their classroom.
+local boardSubject: TextLabel?=nil
+local boardQuestion: TextLabel?=nil
+local boardFooter: TextLabel?=nil
+local boardState={subject="Ready for the next teacher…",prompt="You can do hard things, Emma.",choices={},footer="Real schoolwork. One question at a time."}
+local function renderBoard()
+    if not (boardSubject and boardQuestion and boardFooter) then return end
+    boardSubject.Text=boardState.subject
+    local lines={boardState.prompt}
+    for i,v in ipairs(boardState.choices) do
+        lines[#lines+1]=string.char(64+i)..".  "..v
+    end
+    boardQuestion.Text=table.concat(lines,"\\n")
+    boardFooter.Text=boardState.footer
+end
+local function setBoard(state)
+    boardState=state
+    renderBoard()
+end
+
+local function hideUnownedTeacher(model: Instance)
+    if not model:IsA("Model") then return end
+    local owner=model:GetAttribute("OwnerUserId")
+    if type(owner)~="number" or owner==player.UserId then return end
+    local function hide(desc: Instance)
+        if desc:IsA("BasePart") then desc.LocalTransparencyModifier=1
+        elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") or desc:IsA("Highlight") then desc.Enabled=false
+        elseif desc:IsA("Decal") or desc:IsA("Texture") then desc.Transparency=1 end
+    end
+    for _,desc in ipairs(model:GetDescendants()) do hide(desc) end
+    model.DescendantAdded:Connect(hide)
+end
+
+task.spawn(function()
+    local world=Workspace:WaitForChild("EmmaStudyWorld",20)
+    if not world then return end
+    for _,child in ipairs(world:GetChildren()) do hideUnownedTeacher(child) end
+    world.ChildAdded:Connect(hideUnownedTeacher)
+    local smart=world:WaitForChild("Interactive smartboard",20)
+    local boardGui=smart and smart:WaitForChild("QuestionBoard",20)
+    local bg=boardGui and boardGui:WaitForChild("Frame",20)
+    if not bg then return end
+    boardSubject=bg:WaitForChild("Subject",20)
+    boardQuestion=bg:WaitForChild("Question",20)
+    boardFooter=bg:WaitForChild("Footer",20)
+    renderBoard() -- catch up if a question arrived before the world replicated
+end)
 local colors={P.blue,P.teal,P.amber,P.purple}
 local camera=Workspace.CurrentCamera
 local studyView=false
@@ -180,6 +230,7 @@ local function makeAnswer(value:string,index:number)
         if not ok or not res or res.ok==false then feedback.Text="Tap again to send your answer.";return end
         if res.correct==false then
             feedbackHint=res.hint or "Take another look.";feedback.Text="Try again — your stars are safe.";layout()
+            setBoard({subject=boardState.subject,prompt=boardState.prompt,choices=boardState.choices,footer="Hint: "..feedbackHint})
             local old=b.BackgroundColor3;b.BackgroundColor3=P.wrong
             TweenService:Create(b,TweenInfo.new(.45),{BackgroundColor3=old}):Play()
         end
@@ -248,12 +299,14 @@ if player.Character then task.spawn(connectCharacter,player.Character) end
 local function showPayload(payload)
     if type(payload)~="table" then return end
     if payload.kind=="teacher_entering" then
+        setBoard({subject="Ready for the next teacher…",prompt="You can do hard things, Emma.",choices={},footer="Real schoolwork. One question at a time."})
         setProgress(payload.progress)
         currentToken=nil;clearAnswers();hasStudyCard=false;answerBar.Visible=false
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
         enteringText.Text=(payload.teacher or "Teacher").." is coming in…";entering.Visible=true
         layout()
     elseif payload.kind=="question" then
+        setBoard({subject=(payload.subject or "Schoolwork").."  •  "..(payload.teacher or "Teacher"),prompt=payload.prompt or "",choices=payload.choices or {},footer="Choose an answer below. Take your time."})
         skip.Visible=true;entering.Visible=false;currentToken=payload.token;busy=false;feedbackHint="";feedback.Text="Take your time."
         promptText:SetAttribute("Prompt",payload.prompt or "");content.CanvasPosition=Vector2.new()
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
@@ -263,12 +316,14 @@ local function showPayload(payload)
         setProgress(payload.progress)
         hasStudyCard=true;layout();answerBar.Visible=studyView
     elseif payload.kind=="correct" then
+        setBoard({subject="✓ CORRECT!  NICE WORK, EMMA!",prompt=payload.explanation or "Nice work, Emma!",choices={},footer="Another teacher is on the way…"})
         currentToken=nil;clearAnswers();feedbackHint="";feedback.Text="+1 star"
         promptText:SetAttribute("Prompt",payload.explanation or "Nice work, Emma!")
         subjectLine.Text="Correct!";hasStudyCard=true;layout();answerBar.Visible=studyView;skip.Visible=false
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher").."  •  Correct! ★"
         setProgress(payload.progress);starBurst()
     elseif payload.kind=="session_complete" then
+        setBoard({subject="Study session complete ★",prompt="You finished 10 questions, Emma! ★",choices={},footer="Press Do another 10 when you're ready."})
         currentToken=nil;clearAnswers()
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text="Study session complete ★"
         subjectLine.Text="Session complete"
