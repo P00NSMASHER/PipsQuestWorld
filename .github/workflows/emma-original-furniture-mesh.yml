@@ -71,14 +71,12 @@ jobs:
           fi
           # Diagnostic only; absence does not fail furniture generation.
 
-      - name: Prohibit unapproved asset IDs
+      - name: Confirm approved Roblox IDs are staged but not enabled
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
-          grep -q 'ChairModelAssetId = 0' school/emma-classroom/showroom/FurnitureMeshConfig.lua
-          grep -q 'DeskModelAssetId = 0' school/emma-classroom/showroom/FurnitureMeshConfig.lua
-          echo "ABVM_ASSETS_STAGED_ONLY_NO_PUBLISH"
+          python3 school/emma-classroom/showroom/verify_build.py
+          echo "ABVM_TWO_APPROVED_ASSETS_STAGED_RUNTIME_DISABLED_NO_PUBLISH"
 
       - name: Save importable original GLBs and preview
         uses: actions/upload-artifact@v4
