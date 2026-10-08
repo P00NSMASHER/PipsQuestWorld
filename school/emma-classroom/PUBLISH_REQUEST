@@ -1,14 +1,12 @@
-publish-request: 2026-10-08 native-visual-entrance-motion-v62
-scope: visual-only candidate in existing Emma Study Classroom game; never a competing place
-universe-id: 10769455759
-place-id: 114603280760042
-verified-visual-implementation-head: bb66d04c75ebb8afd09395d98329befb2e89ced2
-improvements: preserve Roblox catalog hair texture IDs; gently tint texture; articulate grouped native R15 arms and legs using rest-frame poses; enter from actual side classroom hallway and walk up clear aisle; warm material contrast; blue school chairs
-reviewed-curriculum-commit: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
+publish-request: 2026-10-08 v63 runtime-native-staff-and-full-body-camera
+destination: existing Emma Study Classroom place only (universe 10769455759, place 114603280760042)
+verified-implementation-head: 84ea4d5d5a4b4ca24dbcf8982b9761f75f080916
+render-fixes: native staff VertexColor correctly uses Vector3 (previous Color3 made hair-staff construction fail); missing-NPC runtime errors now reported; studio-only disposable progress enables actual local playtesting; study landscape camera frames entire teacher, no feet cut off; previous native texture preservation and walking animation retained
+verification: local Roblox Studio Play captured actual standard-avatar teachers full body with score HUD/question panel; six exact-head game checks plus independent curriculum contract PASS
+source-curriculum-sha: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
 curriculum-content-sha256: 22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418
-curriculum-items: 357; existing question IDs, answer-key authority and test scope remain unchanged
-verification: 7 exact-head GitHub checks PASS, local Windows Rojo 7.7.1 build and 18-staff geometry harness PASS
-visual-acceptance: NOT VERIFIED in actual Roblox Studio/iPhone; installer prevented rendered screenshot; retain draft PR #309 and request device capture
-authorization: user requested continuing laptop work, fixing extremely poor graphics and making the existing game playable
-release-policy: manual PUBLISH_REQUEST only, no automatic Roblox publication from future curriculum updates
-status: publish candidate; only Roblox publisher determines new version
+curriculum-count: 357 governed questions; server-only answers, no schoolwork/progress pipeline changes
+scope: incremental visually inspected Studio candidate, not full physical iPhone or production DataStore QA approval
+authorization: user requested fixing graphics and making existing game playable while using connected laptop
+publish-boundary: manual PUBLISH_REQUEST only; no automatic curriculum publishing
+status: publish candidate; source/Studio validated, physical-iPhone acceptance still pending
