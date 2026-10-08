@@ -1,0 +1,57 @@
+name: Emma Curriculum Draft-PR Permission Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/emma-curriculum-pr-permission-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  draft-pr-permission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Prove GITHUB_TOKEN can create a harmless draft PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="probe/emma-curriculum-pr-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          file="docs/probes/emma-curriculum-pr-${GITHUB_RUN_ID}.md"
+          git config user.name "Emma Curriculum Permission Probe"
+          git config user.email "actions@users.noreply.github.com"
+          git switch -c "$branch"
+          mkdir -p docs/probes
+          printf '%s\n' "Disposable GitHub Actions permission probe. No learner data, curriculum change, game update, merge or Roblox publication." > "$file"
+          git add -- "$file"
+          git commit -m "Probe draft PR rights (no curriculum changes)"
+          gh auth setup-git
+          git push origin "HEAD:refs/heads/$branch"
+          # Always remove the disposable branch, including after API permission failure.
+          cleanup() {
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          if pr_url="$(gh pr create --base main --head "$branch" --draft \
+              --title "Permission probe: Emma curriculum PR creation (disposable)" \
+              --body "Temporary permissions check only. No curriculum, learner data, production change, automatic merge or Roblox publication.")"; then
+            echo "GITHUB_TOKEN_DRAFT_PR_CREATE_PASS: $pr_url"
+            echo "GITHUB_TOKEN_DRAFT_PR_CREATE_PASS: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+            if ! gh pr close "$pr_url" --delete-branch; then
+              echo "::error::Probe PR was created but automatic cleanup failed. Close $pr_url manually."
+              exit 1
+            fi
+          else
+            echo "::error::GITHUB_TOKEN_DRAFT_PR_CREATE_DENIED: Could push an isolated branch, but draft-PR creation was blocked. Check repository Actions settings (Allow GitHub Actions to create and approve pull requests). No curriculum was changed."
+            exit 1
+          fi
