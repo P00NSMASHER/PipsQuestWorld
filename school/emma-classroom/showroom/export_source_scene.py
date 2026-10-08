@@ -151,6 +151,21 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         # The playable Roblox game still contains its real solid walls/roof.
         lines=[entry for entry in lines if entry[1] not in CUTAWAY_OCCLUDERS]
     names=[v[1] for v in lines]
+    from collections import Counter
+    by_name=Counter(names)
+    geometry_contract={
+        "Student desk top":16,
+        "Student chair contoured back collision":16,
+        "Student chair molded back panel":64,
+        "Student chair molded side return":128,
+        "Student chair underseat frame runner":32,
+    }
+    for component,expected in geometry_contract.items():
+        assert by_name[component]==expected, (
+            f"Physical furniture regression: {component}={by_name[component]}, expected {expected}"
+        )
+    # Avoid converting one cheap school chair into hundreds of parts.
+    assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
         assert required in names, "Missing room object "+required
     # Use an RBXMX scene with exactly the constructed physical parts.
