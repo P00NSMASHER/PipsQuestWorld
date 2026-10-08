@@ -362,7 +362,14 @@ local function buildPracticeMenu(tests)
             modeId=res.modeId or "mix";modeMenu.Visible=false
             -- A question event may have raced the RPC. Do not erase its token.
             local stateOK,state=pcall(function() return request:InvokeServer("state") end)
-            if stateOK and state and state.ok then setProgress(state.progress);if state.question then showPayload(state.question) end end
+            if stateOK and state and state.ok then
+                setProgress(state.progress)
+                if state.completed then
+                    showPayload({kind="session_complete",progress=state.progress,sessionsCompleted=state.sessionsCompleted})
+                elseif state.question then
+                    showPayload(state.question)
+                end
+            end
         end)
     end
     modeMenu.CanvasSize=UDim2.fromOffset(0,#rows*50+12)
@@ -391,7 +398,13 @@ task.spawn(function()
         if ok and res and res.ok then
             entering.Visible=false
             modeId=res.modeId or "mix";buildPracticeMenu(res.tests);setProgress(res.progress)
-            if res.question then showPayload(res.question) end
+            if res.completed then
+                -- A missed final event or re-created HUD must not strand Emma
+                -- after ten answers with no visible "Do another 10" control.
+                showPayload({kind="session_complete",progress=res.progress,sessionsCompleted=res.sessionsCompleted})
+            elseif res.question then
+                showPayload(res.question)
+            end
             return
         end
         enteringText.Text=attempt<5 and "Connecting to your classroom…"
