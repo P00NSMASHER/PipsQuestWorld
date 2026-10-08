@@ -192,9 +192,10 @@ local function answer(player,args)
     World.setBoardCorrect(p.q.explanation or "Nice job!")
     World.setTeacherSpeech(s.teacherModel,nil)
     event:FireClient(player,{kind="correct",teacher=p.teacher.fullName or p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
+    local completedGeneration=s.generation or 0
     task.delay(1.9,function()
         local current=sessions[player.UserId]
-        if current==s then
+        if current==s and (current.generation or 0)==completedGeneration then
             dismissTeacher(s)
             World.resetBoard();startRound(player)
         end
@@ -216,8 +217,9 @@ request.OnServerInvoke=function(player,command,args)
             label=selected.label
         end
         dismissTeacher(s);s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
-        s.stars=0;s.correctThisSession=0;World.resetBoard()
-        task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
+        s.stars=0;s.correctThisSession=0;s.generation=(s.generation or 0)+1;World.resetBoard()
+        local selectedGeneration=s.generation
+        task.defer(function() if sessions[player.UserId]==s and s.generation==selectedGeneration then startRound(player) end end)
         return {ok=true,modeId=args.id,modeLabel=label or "Mix"}
     end
     if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then

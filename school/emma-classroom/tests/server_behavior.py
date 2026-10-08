@@ -40,11 +40,12 @@ local Instance={new=function(class)
     return {}
 end}
 local visualFailure=false
+local enforceSingleTeacher=true
 local teacherModels={}
 local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,setBoardHint=function() end,setBoardCorrect=function() end,
     setTeacherSpeech=function() end,walkTeacher=function() end,
     teacherModel=function()
-        for _,old in ipairs(teacherModels) do assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end
+        for _,old in ipairs(teacherModels) do if enforceSingleTeacher then assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end end
         if visualFailure then error("forced visual constructor failure") end
         local model={SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end}
         table.insert(teacherModels,model);return model
@@ -161,6 +162,26 @@ for index=1,#Questions do
     assert(requests.OnServerInvoke(player,"skip").ok);flush()
 end
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"Selecting or skipping curriculum cannot earn progress")
+-- A second user starts with independent progress, and changing test mode
+-- after a correct answer cannot let its delayed callback replace the new round.
+enforceSingleTeacher=false -- Two player-specific presentations can coexist.
+local player2={UserId=2,CharacterAdded=signal()}
+Players.PlayerAdded.callback(player2)
+assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==0)
+flush()
+local two=requests.OnServerInvoke(player2,"state").question
+local raw
+for _,candidate in ipairs(Questions) do if candidate.prompt==two.prompt and candidate.subject==two.subject then raw=candidate;break end end
+assert(requests.OnServerInvoke(player2,"answer",{token=two.token,index=table.find(two.choices,raw.answer)}).correct)
+assert(requests.OnServerInvoke(player2,"select_test",{id=grammar.id}).ok)
+local eventStart=#events
+flush()
+local questionEvents=0
+for i=eventStart+1,#events do if events[i].kind=="question" then questionEvents+=1 end end
+assert(questionEvents==1,"Old correct-delay callback cannot replace a selected test round")
+assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==1)
+assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"No cross-player progress exposure")
+assert(saved["u:2"].totalCorrect==1 and saved["u:1"].totalCorrect==14)
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end
