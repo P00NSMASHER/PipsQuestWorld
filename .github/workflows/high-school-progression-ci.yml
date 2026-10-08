@@ -14,6 +14,7 @@ on:
       - "scripts/verify-school-pivot.py"
       - ".github/workflows/high-school-progression-ci.yml"
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "school/**"
       - "scripts/verify-school-pivot.py"

@@ -1,0 +1,48 @@
+{
+  "name": "EmmaStudyClassroom",
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": false,
+        "Gravity": 196.2
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Brightness": 2.2,
+        "ClockTime": 10.5,
+        "GlobalShadows": true,
+        "Ambient": [0.62, 0.62, 0.60],
+        "OutdoorAmbient": [0.70, 0.71, 0.69]
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "EmmaStudyShared": {
+        "$path": "emma-classroom/shared"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "EmmaStudy": {
+        "$path": "emma-classroom/server"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$properties": {
+        "CameraMinZoomDistance": 6,
+        "CameraMaxZoomDistance": 22
+      },
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "EmmaStudyClient": {
+          "$path": "emma-classroom/client"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "sourceRepository": "P00NSMASHER/abvmschoolstarworld",
+  "sourceCommit": "aa2fe3fbcb9b25205948073ee284b96910733d79",
+  "sourceBankFingerprint": "dceaf9c2",
+  "rawPoolCounts": {
+    "current": 116,
+    "worksheet": 52,
+    "archive": 129,
+    "practice": 158
+  },
+  "imported": 338,
+  "rooms": {
+    "Grammar": 16,
+    "Math": 121,
+    "Reading": 91,
+    "Religion": 56,
+    "Spelling": 41,
+    "Vocabulary": 13
+  },
+  "duplicatePromptsRemoved": 116,
+  "excluded": [
+    {
+      "sourceTier": "worksheet",
+      "sourceId": "work-writing-0",
+      "reason": "duplicate/empty choice"
+    }
+  ],
+  "sourceFilesSha256": {
+    "data/study-pack.json": "88a12e26228287349c6eeadfd0682a5b073bba9862d7dac0e709be06b2a67c31",
+    "data/schoolwork.json": "39526716b06113d22dbee60bb2f14d39239679f6891ea7ee9af4037305023927",
+    "data/study-archive.json": "c84e09f01f05a37b93a655937292065dc4a2be046a8c0dbdaf9f0e186b7a283d",
+    "star-practice.mjs": "a3ec7572069f91aa32b91f271b74bd84076da107eb3193b0f6be3b34b968632e"
+  },
+  "outputSha256": "760bf172961d38514a61b4087ce9ac9d4c2107529218e37b87a1545930415b0e",
+  "privateMetadataExported": false,
+  "officialStarItems": false,
+  "validation": "schema, answer membership, unique choices/prompts, pinned file hashes and deterministic provenance; not a replacement for independent content review"
+}

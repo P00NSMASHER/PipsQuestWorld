@@ -1,0 +1,12 @@
+publish-request: 2026-10-08 v63 runtime-native-staff-and-full-body-camera
+destination: existing Emma Study Classroom place only (universe 10769455759, place 114603280760042)
+verified-implementation-head: 84ea4d5d5a4b4ca24dbcf8982b9761f75f080916
+render-fixes: native staff VertexColor correctly uses Vector3 (previous Color3 made hair-staff construction fail); missing-NPC runtime errors now reported; studio-only disposable progress enables actual local playtesting; study landscape camera frames entire teacher, no feet cut off; previous native texture preservation and walking animation retained
+verification: local Roblox Studio Play captured actual standard-avatar teachers full body with score HUD/question panel; six exact-head game checks plus independent curriculum contract PASS
+source-curriculum-sha: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
+curriculum-content-sha256: 22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418
+curriculum-count: 357 governed questions; server-only answers, no schoolwork/progress pipeline changes
+scope: incremental visually inspected Studio candidate, not full physical iPhone or production DataStore QA approval
+authorization: user requested fixing graphics and making existing game playable while using connected laptop
+publish-boundary: manual PUBLISH_REQUEST only; no automatic curriculum publishing
+status: publish candidate; source/Studio validated, physical-iPhone acceptance still pending

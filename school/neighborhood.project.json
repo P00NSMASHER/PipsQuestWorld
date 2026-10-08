@@ -1,0 +1,57 @@
+{
+  "name": "PipHighNeighborhood",
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": true,
+        "StreamingTargetRadius": 192,
+        "Gravity": 196.2
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Brightness": 2.2,
+        "ClockTime": 14,
+        "GlobalShadows": true,
+        "Ambient": [
+          0.63,
+          0.66,
+          0.67
+        ],
+        "OutdoorAmbient": [
+          0.65,
+          0.67,
+          0.66
+        ]
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "NeighborhoodShared": {
+        "$path": "neighborhood/shared"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "Neighborhood": {
+        "$path": "neighborhood/server"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$properties": {
+        "CameraMinZoomDistance": 5,
+        "CameraMaxZoomDistance": 24
+      },
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "NeighborhoodClient": {
+          "$path": "neighborhood/client"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,131 @@
+name: Emma Classroom CI
+
+on:
+  push:
+    branches:
+      - rebuild/emma-classroom-study-v1
+    paths:
+      - 'school/emma-classroom/**'
+      - 'school/emma-classroom.project.json'
+      - '.github/workflows/emma-classroom-ci.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-classroom/**'
+      - 'school/emma-classroom.project.json'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Install pinned Luau and Rojo
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tools/luau" "$RUNNER_TEMP/tools/rojo"
+          cd "$RUNNER_TEMP/tools"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120             https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120             https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip -o rojo.zip
+          echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
+          unzip -q luau.zip -d luau
+          unzip -q rojo.zip -d rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
+
+      - name: Compile classroom source
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in school/emma-classroom/shared/*.lua school/emma-classroom/server/*.lua school/emma-classroom/client/*.lua; do
+            "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
+          done
+
+      - name: Enforce tiny-game contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f school/emma-classroom.project.json
+          grep -q 'EmmaStudyClassroom' school/emma-classroom.project.json
+          grep -q 'Data.PlayerName = "Emma"' school/emma-classroom/shared/Data.lua
+          grep -q 'local Questions = {' school/emma-classroom/server/QuestionBank.lua
+          ! grep -q 'answer=' school/emma-classroom/shared/*.lua
+          test "$(grep -c 'priority=' school/emma-classroom/server/QuestionBank.lua)" -ge 100
+          grep -q 'SESSION_GOAL=10' school/emma-classroom/server/Main.server.lua
+          grep -q 'teacherModel' school/emma-classroom/server/Main.server.lua
+          grep -q 'World.walkTeacher' school/emma-classroom/server/Main.server.lua
+          grep -q 'camera.CameraType=Enum.CameraType.Custom' school/emma-classroom/client/Main.client.lua
+          grep -q 'camera.CameraType=Enum.CameraType.Scriptable' school/emma-classroom/client/Main.client.lua
+          grep -q 'viewToggle' school/emma-classroom/client/Main.client.lua
+          grep -q 'hum.WalkSpeed=16' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.WalkSpeed=0' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.JumpPower=0' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'hum.AutoRotate=false' school/emma-classroom/server/Main.server.lua
+          grep -q 'answerBar' school/emma-classroom/client/Main.client.lua
+          grep -q 'Layout.connectionRetryDelay' school/emma-classroom/client/Main.client.lua
+          ! grep -q 'Rejoin to reconnect' school/emma-classroom/client/Main.client.lua
+          ! grep -q 'QuestionCard' school/emma-classroom/client/Main.client.lua
+          grep -q 'Emma desk nameplate' school/emma-classroom/server/World.lua
+          grep -q 'Interactive smartboard' school/emma-classroom/server/World.lua
+          grep -q 'Class values' school/emma-classroom/server/World.lua
+          grep -q 'Staff badge' school/emma-classroom/server/StaffModel.lua
+          grep -q 'Speech' school/emma-classroom/server/World.lua
+          grep -q 'LET YOUR LIGHT SHINE' school/emma-classroom/server/World.lua
+          grep -q 'Staff door jamb' school/emma-classroom/server/World.lua
+          grep -q 'Student work board' school/emma-classroom/server/World.lua
+          grep -q 'Prayer table' school/emma-classroom/server/World.lua
+          grep -q 'Alphabet rug' school/emma-classroom/server/World.lua
+          grep -q 'Supply basket' school/emma-classroom/server/World.lua
+          grep -q 'Tall storage cabinet' school/emma-classroom/server/World.lua
+          ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
+
+      - name: Independently reproduce the exact reviewed ABVM source
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_sha="$(python3 -c 'import json; print(json.load(open("school/emma-classroom/curriculum-receipt.json"))["sourceCommit"])')"
+          [[ "$source_sha" =~ ^[a-f0-9]{40}$ ]]
+          git clone --no-checkout https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm-source"
+          git -C "$RUNNER_TEMP/abvm-source" checkout --detach "$source_sha"
+          test "$(git -C "$RUNNER_TEMP/abvm-source" rev-parse HEAD)" = "$source_sha"
+          (cd "$RUNNER_TEMP/abvm-source" && node --test tests/study-universe.test.mjs)
+          node "$RUNNER_TEMP/abvm-source/scripts/build-study-universe.mjs" "$RUNNER_TEMP/reproduced-curriculum.json"
+          cmp school/emma-classroom/curriculum.json "$RUNNER_TEMP/reproduced-curriculum.json"
+
+      - name: Pinned curriculum importer regressions
+        run: python3 -m unittest discover -s school/emma-classroom/tests -p 'test_curriculum_import.py'
+
+      - name: Question bank and device layout tests
+        run: |
+          "$RUNNER_TEMP/tools/luau/luau" school/emma-classroom/tests/core.spec.lua
+          python3 school/emma-classroom/tests/client_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/server_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+
+      - name: Build isolated place
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxl"
+          test -s "$RUNNER_TEMP/emma-study.rbxl"
+          sha256sum "$RUNNER_TEMP/emma-study.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxlx"
+          python3 school/emma-classroom/tests/verify_place.py "$RUNNER_TEMP/emma-study.rbxlx"
+
+      - name: Save reviewable classroom build
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-classroom-candidate-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/emma-study.rbxl
+            ${{ runner.temp }}/emma-study.rbxlx
+          retention-days: 14
+          if-no-files-found: error

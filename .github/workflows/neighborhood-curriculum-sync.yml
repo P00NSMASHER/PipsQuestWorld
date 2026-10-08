@@ -1,0 +1,59 @@
+name: Refresh Neighborhood ABVM Curriculum
+# pinned pages root
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-earn-v1
+    paths:
+      - 'school/neighborhood/tools/import_abvm.py'
+      - '.github/workflows/neighborhood-curriculum-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: neighborhood-curriculum-sync
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild/school-neighborhood-earn-v1
+          fetch-depth: 0
+
+      - name: Fetch exact ABVM curriculum source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm"
+          git -C "$RUNNER_TEMP/abvm" checkout --detach aa2fe3fbcb9b25205948073ee284b96910733d79
+          test "$(git -C "$RUNNER_TEMP/abvm" rev-parse HEAD)" = "aa2fe3fbcb9b25205948073ee284b96910733d79"
+
+      - name: Generate server-only six-subject bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/neighborhood/tools/import_abvm.py "$RUNNER_TEMP/abvm/pages" \
+            --out school/neighborhood/server/QuestionBank.lua \
+            --receipt school/neighborhood/abvm-import-receipt.json
+          grep -q '"imported": 338' school/neighborhood/abvm-import-receipt.json
+
+      - name: Commit generated curriculum if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- school/neighborhood/server/QuestionBank.lua school/neighborhood/abvm-import-receipt.json; then
+            echo "Pinned curriculum already current."
+            exit 0
+          fi
+          git config user.name "Pip High Curriculum Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add school/neighborhood/server/QuestionBank.lua school/neighborhood/abvm-import-receipt.json
+          git commit -m "Import pinned six-subject ABVM question bank"
+          git push origin HEAD:rebuild/school-neighborhood-earn-v1

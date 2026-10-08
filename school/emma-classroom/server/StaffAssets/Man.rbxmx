@@ -1,0 +1,1239 @@
+<roblox version="4">
+  <Item class="Model">
+    <Properties>
+      <string name="Name">Man</string>
+    </Properties>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0</X>
+          <Y>0.0503786802</Y>
+          <Z>-0.0192478895</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168468</url>
+        </Content>
+        <string name="Name">UpperTorso</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>1.83907783</X>
+          <Y>1.90123844</Y>
+          <Z>1.07331204</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.650378585</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">WaistRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>0.949621439</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">NeckRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-1</X>
+            <Y>0.71262145</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftShoulderRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>1</X>
+            <Y>0.71262145</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightShoulderRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.050378561</Y>
+            <Z>-0.48075211</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">BodyFrontAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.050378561</Y>
+            <Z>0.51924789</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">BodyBackAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-1</X>
+            <Y>0.949621439</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftCollarAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>1</X>
+            <Y>0.949621439</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightCollarAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>0.949621439</Y>
+            <Z>0.0192478895</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">NeckAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0</X>
+          <Y>-0.671826422</Y>
+          <Z>0.0201284885</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168573</url>
+        </Content>
+        <string name="Name">LowerTorso</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>1.67224002</X>
+          <Y>0.632091522</Y>
+          <Z>1.03743505</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.328173578</Y>
+            <Z>-0.0201284885</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RootRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>0.0718264282</Y>
+            <Z>-0.0201284885</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">WaistRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.5</X>
+            <Y>-0.328173578</Y>
+            <Z>-0.0201284885</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftHipRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.5</X>
+            <Y>-0.328173578</Y>
+            <Z>-0.0201284885</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightHipRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.328173578</Y>
+            <Z>-0.0201284885</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">WaistCenterAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.328173578</Y>
+            <Z>-0.520128489</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">WaistFrontAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>-0.328173578</Y>
+            <Z>0.479871511</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">WaistBackAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>1.14777136</X>
+          <Y>0.314835906</Y>
+          <Z>0.0746389627</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168398</url>
+        </Content>
+        <string name="Name">RightUpperArm</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.942632258</X>
+          <Y>1.21264446</Y>
+          <Z>0.758942842</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.14777112</X>
+            <Y>0.448164225</Y>
+            <Z>-0.0746389627</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightShoulderRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.35222888</X>
+            <Y>-0.27983582</Y>
+            <Z>-0.0746389627</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightElbowRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.35222888</X>
+            <Y>0.638164163</Y>
+            <Z>-0.0746389627</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightShoulderAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>1.39370298</X>
+          <Y>-0.219679117</Y>
+          <Z>-0.000861525536</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168400</url>
+        </Content>
+        <string name="Name">RightLowerArm</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.811855078</X>
+          <Y>1.16054547</Y>
+          <Z>0.902270079</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.106297374</X>
+            <Y>0.254679203</Y>
+            <Z>0.000861525536</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightElbowRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.106297374</X>
+            <Y>-0.505320787</Y>
+            <Z>0.000861525536</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightWristRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>1.50631523</X>
+          <Y>-0.903757215</Y>
+          <Z>-0.329129606</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168401</url>
+        </Content>
+        <string name="Name">RightHand</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.753149986</X>
+          <Y>0.890529752</Y>
+          <Z>0.772946119</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.0063148737</X>
+            <Y>0.17875734</Y>
+            <Z>0.329129606</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightWristRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.0063148737</X>
+            <Y>-0.0962426662</Y>
+            <Z>0.329129606</Z>
+            <R00>1</R00>
+            <R01>2.24963964e-032</R01>
+            <R02>-0</R02>
+            <R10>0</R10>
+            <R11>1.83697015e-016</R11>
+            <R12>1</R12>
+            <R20>2.24963964e-032</R20>
+            <R21>-1</R21>
+            <R22>1.83697015e-016</R22>
+          </CoordinateFrame>
+          <string name="Name">RightGripAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-1.14767265</X>
+          <Y>0.314835906</Y>
+          <Z>0.0746387243</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168402</url>
+        </Content>
+        <string name="Name">LeftUpperArm</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.942435682</X>
+          <Y>1.21264458</Y>
+          <Z>0.758942842</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.147672772</X>
+            <Y>0.448164225</Y>
+            <Z>-0.0746387243</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftShoulderRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.352327228</X>
+            <Y>-0.27983582</Y>
+            <Z>-0.0746387243</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftElbowRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.352327228</X>
+            <Y>0.638164163</Y>
+            <Z>-0.0746387243</Z>
+            <R00>1</R00>
+            <R01>1.22464685e-016</R01>
+            <R02>-1.22464685e-016</R02>
+            <R10>-1.22464685e-016</R10>
+            <R11>1</R11>
+            <R12>-1.22464685e-016</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>1.22464685e-016</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftShoulderAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-1.39370251</X>
+          <Y>-0.219678879</Y>
+          <Z>-0.000861763954</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168418</url>
+        </Content>
+        <string name="Name">LeftLowerArm</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.811855137</X>
+          <Y>1.16054547</Y>
+          <Z>0.902270079</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.106297493</X>
+            <Y>0.254678965</Y>
+            <Z>0.000861763954</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftElbowRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.106297493</X>
+            <Y>-0.505321026</Y>
+            <Z>0.000861763954</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftWristRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-1.50631475</X>
+          <Y>-0.903757095</Y>
+          <Z>-0.329129726</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168403</url>
+        </Content>
+        <string name="Name">LeftHand</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.753149986</X>
+          <Y>0.890529752</Y>
+          <Z>0.772946</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.0063148737</X>
+            <Y>0.178757161</Y>
+            <Z>0.329129726</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftWristRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.0063148737</X>
+            <Y>-0.0962428451</Y>
+            <Z>0.329129726</Z>
+            <R00>1</R00>
+            <R01>2.24963964e-032</R01>
+            <R02>-0</R02>
+            <R10>0</R10>
+            <R11>1.83697015e-016</R11>
+            <R12>1</R12>
+            <R20>2.24963964e-032</R20>
+            <R21>-1</R21>
+            <R22>1.83697015e-016</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftGripAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-0.390381813</X>
+          <Y>-1.4356463</Y>
+          <Z>0.0102791786</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168539</url>
+        </Content>
+        <string name="Name">LeftUpperLeg</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.78076601</X>
+          <Y>1.74232078</Y>
+          <Z>0.853598118</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.109618008</X>
+            <Y>0.435646325</Y>
+            <Z>-0.0102791786</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftHipRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.109618008</X>
+            <Y>-0.38635546</Y>
+            <Z>-0.0102791786</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftKneeRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-0.420070171</X>
+          <Y>-2.24189234</Y>
+          <Z>0.0102795959</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168545</url>
+        </Content>
+        <string name="Name">LeftLowerLeg</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.721388996</X>
+          <Y>1.26341236</Y>
+          <Z>0.85359633</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.079929471</X>
+            <Y>0.419890583</Y>
+            <Z>-0.0102795959</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftKneeRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.079929471</X>
+            <Y>-0.506111383</Y>
+            <Z>-0.0102795959</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftAnkleRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>-0.420070648</X>
+          <Y>-2.58799839</Y>
+          <Z>-0.184423655</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168537</url>
+        </Content>
+        <string name="Name">LeftFoot</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.721389413</X>
+          <Y>0.820053577</Y>
+          <Z>1.2430023</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.079928875</X>
+            <Y>-0.160005197</Y>
+            <Z>0.184423655</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftAnkleRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>-0.079928875</X>
+            <Y>-0.412005723</Y>
+            <Z>0.184423655</Z>
+            <R00>1</R00>
+            <R01>-1.50619073e-007</R01>
+            <R02>1.21601351e-013</R02>
+            <R10>1.50619073e-007</R10>
+            <R11>1</R11>
+            <R12>-8.08156699e-007</R12>
+            <R20>1.22464698e-016</R20>
+            <R21>8.08156699e-007</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">LeftFootAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0.390381813</X>
+          <Y>-1.43564081</Y>
+          <Z>0.0102542341</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168571</url>
+        </Content>
+        <string name="Name">RightUpperLeg</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.78076601</X>
+          <Y>1.74231648</Y>
+          <Z>0.853651345</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.109618008</X>
+            <Y>0.435640812</Y>
+            <Z>-0.0102542341</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightHipRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.109618008</X>
+            <Y>-0.386359215</Y>
+            <Z>-0.0102542341</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightKneeRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0.420070171</X>
+          <Y>-2.2418766</Y>
+          <Z>0.0102124512</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168540</url>
+        </Content>
+        <string name="Name">RightLowerLeg</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.721389055</X>
+          <Y>1.26340866</Y>
+          <Z>0.853625894</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.079929471</X>
+            <Y>0.419876575</Y>
+            <Z>-0.0102124512</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightKneeRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.079929471</X>
+            <Y>-0.506123424</Y>
+            <Z>-0.0102124512</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightAnkleRigAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart">
+      <Properties>
+        <CoordinateFrame name="CFrame">
+          <X>0.420070648</X>
+          <Y>-2.58798909</Y>
+          <Z>-0.184518486</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <Content name="MeshId">
+          <url>rbxassetid://8650168542</url>
+        </Content>
+        <string name="Name">RightFoot</string>
+        <Content name="TextureID">
+          <url />
+        </Content>
+        <float name="Transparency">0</float>
+        <Vector3 name="size">
+          <X>0.721389472</X>
+          <Y>0.820072651</Y>
+          <Z>1.24302602</Z>
+        </Vector3>
+      </Properties>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.0799287856</X>
+            <Y>-0.160010934</Y>
+            <Z>0.184518486</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightAnkleRigAttachment</string>
+        </Properties>
+      </Item>
+      <Item class="Attachment">
+        <Properties>
+          <CoordinateFrame name="CFrame">
+            <X>0.0799287856</X>
+            <Y>-0.412010908</Y>
+            <Z>0.184518486</Z>
+            <R00>1</R00>
+            <R01>1.22464672e-016</R01>
+            <R02>-1.22471395e-016</R02>
+            <R10>-1.22471382e-016</R10>
+            <R11>1</R11>
+            <R12>-5.47486197e-005</R12>
+            <R20>1.22464685e-016</R20>
+            <R21>5.47486197e-005</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <string name="Name">RightFootAttachment</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+</roblox>

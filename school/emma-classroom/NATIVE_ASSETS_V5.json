@@ -1,0 +1,77 @@
+{
+  "verified_date": "2026-10-07",
+  "creator": "Roblox (user 1)",
+  "price_robux": 0,
+  "bundles": {
+    "Man": 238,
+    "Woman": 239
+  },
+  "asset_ids": [
+    86499666,
+    86499698,
+    86499716,
+    86499753,
+    86499793,
+    86500008,
+    86500036,
+    86500054,
+    86500064,
+    86500078,
+    376526888,
+    62724852,
+    376548738,
+    62234425,
+    607785314,
+    3670737444,
+    398633812,
+    398633584,
+    86487766
+  ],
+  "source": "Official catalog/economy/assetdelivery APIs. Models stripped to visual body/attachment instances. No asset purchases.",
+  "files": [
+    {
+      "file": "BrownHair.rbxmx",
+      "sha256": "7ba13a2f1648a50d798ba65f0eb4f2de1577e6fa01390e58bf3268784653a981"
+    },
+    {
+      "file": "BunHair.rbxmx",
+      "sha256": "8a43c492dbbdec9eec83e738eadc99f60ccef3397299989b4c7adbac9114bfc1"
+    },
+    {
+      "file": "DenimJacket.rbxmx",
+      "sha256": "f883ee0b393a747d95b7e7a40008de141189b602687f695148acc0681290070c"
+    },
+    {
+      "file": "Jacket.rbxmx",
+      "sha256": "e912aff3f571c00007ce3776831f38815b97780c8a2ed20e129814b2c8b1fad2"
+    },
+    {
+      "file": "Jeans.rbxmx",
+      "sha256": "fd0e06c009b73978df2e16161f6f4fcd1f1580c89e57cbeef46f781b56ff3c22"
+    },
+    {
+      "file": "LongHair.rbxmx",
+      "sha256": "f4bafebfabef1852ce9ac5f6dc6f22bbbed463458f06c4ede3f98d114e6497e1"
+    },
+    {
+      "file": "Man.rbxmx",
+      "sha256": "392b3c7fbd9aa5399c10950d5ee03a49c902040c371132400e1438489ea8d938"
+    },
+    {
+      "file": "PatternShirt.rbxmx",
+      "sha256": "206ef1b60f990b01858a7fdbaf9278eb745eb4eee44dfcd4ba8d9a9df4f35803"
+    },
+    {
+      "file": "ShortHair.rbxmx",
+      "sha256": "ac0bfcad3645a7cc5182a1b0aded6ebabc4a07049f9e67000c58b7843afa9c64"
+    },
+    {
+      "file": "Woman.rbxmx",
+      "sha256": "9d87fea07a589cc692e7e627ec744807fa0c482327ad7a8deadd21829c120ceb"
+    },
+    {
+      "file": "WomanFace.rbxmx",
+      "sha256": "75f676c9739abe3f3c00c1ce6c68d942c6f9fc5ebae8939e6db3a2ceb121c3d7"
+    }
+  ]
+}

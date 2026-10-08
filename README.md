@@ -18,5 +18,5 @@ The old Maze World import remains under `game/` only as frozen historical materi
 - Do not copy another Roblox game's protected map, code, branding, art, audio, or UI.
 - High-level school-life mechanics are fine: schedules, classes, questions, points, free roam, clubs, homes, vehicles, and social spaces.
 - Educational answers are checked on the server. Correct-answer data never goes to clients.
-- Wrong answers teach and encourage; they do not punish or soft-lock play.
+- In the school-neighborhood mode, correct answers build capped streak bonuses; wrong answers teach through explanation/retry and apply capped coin penalties, never below a zero balance or into a play lock.
 - Mobile usability is a first-class acceptance requirement.

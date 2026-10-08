@@ -1,0 +1,50 @@
+name: Neighborhood Roblox Target Preflight
+
+on:
+  push:
+    branches:
+      - rebuild/school-neighborhood-earn-v1
+    paths:
+      - '.github/workflows/neighborhood-target-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-target:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PLACE_ID: "114603280760042"
+    steps:
+      - name: Resolve place to universe
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          body="$(curl --fail-with-body --retry 3 --retry-delay 2 -H 'Accept: application/json' "https://apis.roblox.com/universes/v1/places/${PLACE_ID}/universe")"
+          printf '%s\n' "$body"
+          universe_id="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("universeId") or d.get("universe_id") or "")' <<<"$body")"
+          if [[ ! "$universe_id" =~ ^[0-9]+$ ]]; then
+            echo "::error::Roblox did not return a numeric universeId for place ${PLACE_ID}"
+            exit 1
+          fi
+          echo "universe_id=$universe_id" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Verified Roblox target"
+            echo ""
+            echo "- Place ID: `${PLACE_ID}`"
+            echo "- Universe ID: `${universe_id}`"
+            echo "- Source: Roblox universes API"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify public universe metadata
+        shell: bash
+        env:
+          UNIVERSE_ID: ${{ steps.resolve.outputs.universe_id }}
+        run: |
+          set -euo pipefail
+          body="$(curl --fail-with-body --retry 3 --retry-delay 2 -H 'Accept: application/json' "https://games.roblox.com/v1/games?universeIds=${UNIVERSE_ID}")"
+          printf '%s\n' "$body"
+          python3 -c 'import json,sys; universe=sys.argv[1]; data=json.load(sys.stdin).get("data",[]); assert len(data)==1 and str(data[0].get("id"))==universe, "Universe metadata verification failed"; print("Verified title:",data[0].get("name","")); print("Creator:",(data[0].get("creator") or {}).get("name",""))' "$UNIVERSE_ID" <<<"$body"

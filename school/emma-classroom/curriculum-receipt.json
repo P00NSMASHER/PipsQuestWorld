@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "sourceRepository": "P00NSMASHER/abvmschoolstarworld",
+  "sourceCommit": "377c8e831d77757c1c4773e7c00b9ae7555b9ee2",
+  "contentSha256": "856b28978ee63a4bc7ac1e2ae6c7dda18a8ef287213eba9464179cc0e16ddbb6",
+  "imported": 357,
+  "tiers": {
+    "current": 134,
+    "archive": 65,
+    "star-fallback": 158
+  },
+  "tests": [
+    {
+      "id": "test-2026-10-09-grammar-subject-predicate",
+      "label": "Grammar (subject & predicate)",
+      "date": "2026-10-09",
+      "count": 12,
+      "supported": true
+    },
+    {
+      "id": "test-2026-10-09-spelling-short-i-long-i-handwriting",
+      "label": "Spelling (short i / long i) / Handwriting",
+      "date": "2026-10-09",
+      "count": 9,
+      "supported": true
+    },
+    {
+      "id": "test-2026-10-15-math-subtraction",
+      "label": "Math (subtraction)",
+      "date": "2026-10-15",
+      "count": 19,
+      "supported": true
+    },
+    {
+      "id": "test-2026-10-15-religion-ch-3",
+      "label": "Religion Ch. 3",
+      "date": "2026-10-15",
+      "count": 0,
+      "supported": false
+    },
+    {
+      "id": "test-2026-10-16-phonics-short-vowels",
+      "label": "Phonics (short vowels)",
+      "date": "2026-10-16",
+      "count": 0,
+      "supported": false
+    },
+    {
+      "id": "test-2026-10-16-spelling-long-o-short-handwriting",
+      "label": "Spelling (long o / Short ) / Handwriting",
+      "date": "2026-10-16",
+      "count": 0,
+      "supported": false
+    }
+  ],
+  "privateLearnerDataIncluded": false,
+  "published": false
+}
