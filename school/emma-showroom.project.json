@@ -35,16 +35,10 @@
           "$path": "emma-classroom/showroom/Main.server.lua"
         },
         "World": {
-          "$path": "emma-classroom/server/World.lua"
+          "$path": "emma-classroom/showroom/Room.lua"
         },
         "ArtPass": {
           "$path": "emma-classroom/server/ArtPass.lua"
-        },
-        "StaffModel": {
-          "$path": "emma-classroom/server/StaffModel.lua"
-        },
-        "StaffAssets": {
-          "$path": "emma-classroom/server/StaffAssets"
         },
         "GalleryPass": {
           "$path": "emma-classroom/showroom/GalleryPass.lua"
