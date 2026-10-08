@@ -152,6 +152,17 @@ def run():
     for line in allowed_lines:
         print(line, flush=True)
     if state != "COMPLETE":
+        # Trace only the disposable task's own error. It contains no credentials,
+        # model contents, user records or external game data.
+        err = finished.get("error") or {}
+        code = str(err.get("code", "UNKNOWN"))
+        detail = re.sub(r"[A-Za-z0-9+/=_-]{40,}", "[REDACTED]",
+                        str(err.get("message", "")))[:500]
+        print("NATIVE_ENGINE_TASK_FAILURE", code, detail, flush=True)
+        for message in messages[-12:]:
+            if ("stacktrace" in message.lower() or "attempt to" in message.lower()
+                    or "expected" in message.lower() or "error" in message.lower()):
+                print("NATIVE_ENGINE_DEBUG", message[:450], flush=True)
         raise RuntimeError("Native Roblox Luau engine task state: " + state)
     expected = ("NATIVE_ASSET_MODEL_VERIFIED student_chair",
                 "NATIVE_ASSET_MODEL_VERIFIED student_desk",
