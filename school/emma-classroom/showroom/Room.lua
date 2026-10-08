@@ -191,12 +191,8 @@ local function buildClassroomTexture(root: Instance)
     -- Small pieces of work belong inside framed boards, with breathable margins.
     bulletinBoard(root,"Student work board",-26,9,-33.65,12,7.0,"OUR WORK")
 
-    -- Classroom rules and paper chains on the side wall.
-    local rules={"LISTEN","BE KIND","TRY YOUR BEST","HELP OTHERS","KEEP GOING"}
-    for i,v in ipairs(rules) do
-        sign(root,"Rule card "..i,v,Vector3.new(6.4,2.3,.18),CFrame.new(36.30,14.7-i*2.55,-6)*CFrame.Angles(0,-math.pi/2,0),
-            i%2==0 and Color3.fromRGB(230,239,223) or Color3.fromRGB(244,229,205),P.blue)
-    end
+    -- No oversized individual rules: GalleryPass owns a restrained framed
+    -- values board and keeps this wall clear of overlapping flat panels.
 
     -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
     part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(124,102,79),Enum.Material.Wood)
