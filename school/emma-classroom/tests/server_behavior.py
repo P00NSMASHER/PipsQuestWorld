@@ -19,6 +19,7 @@ local player={UserId=1,CharacterAdded=signal()}
 local Players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function() return {} end}
 local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
 local getFailures,updateFailures,getAttempts,updateAttempts=2,0,0,0
+local studioMode=false
 local store={
     GetAsync=function(_,key)
         getAttempts+=1
@@ -58,7 +59,11 @@ local closeCallback
 local game={GetService=function(_,name)
     if name=="Players" then return Players end
     if name=="ReplicatedStorage" then return service end
-    if name=="DataStoreService" then return {GetDataStore=function() return store end} end
+    if name=="DataStoreService" then return {GetDataStore=function()
+    if studioMode then error("You must publish this place to the web to access DataStore.") end
+    return store
+ end} end
+ if name=="RunService" then return {IsStudio=function() return studioMode end} end
     if name=="HttpService" then return Http end
 end,BindToClose=function(_,callback) closeCallback=callback end}
 local script={Parent=service}
@@ -255,7 +260,31 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
-print("PASS: server grades independently; ten-answer sessions credit immediately through restart/test switches; client recovery metadata is private; stale callbacks cannot overwrite newer rounds; persistence remains monotonic")
+-- Fresh unpublished local place: Roblox throws from GetDataStore before join.
+-- The server must still start its study game, while keeping saved data
+-- absolutely isolated from the published production DataStore adapter.
+studioMode=true
+Players.GetPlayers=function() return {} end
+boot()
+local dev={UserId=3,CharacterAdded=signal()}
+Players.PlayerAdded.callback(dev)
+flush()
+local firstStudio=requests.OnServerInvoke(dev,"state")
+assert(firstStudio.ok and firstStudio.progress.totalCorrect==0)
+flush()
+local demo=requests.OnServerInvoke(dev,"state").question
+assert(demo and demo.answer==nil and demo.token,"Unpublished Studio still presents a server-graded schoolwork question")
+local found
+for _,candidate in ipairs(Questions) do
+    if candidate.prompt==demo.prompt and candidate.subject==demo.subject then found=candidate;break end
+end
+assert(found)
+local response=requests.OnServerInvoke(dev,"answer",{token=demo.token,index=table.find(demo.choices,found.answer)})
+assert(response.ok and response.correct)
+flush()
+assert(requests.OnServerInvoke(dev,"state").progress.totalCorrect==1,"Studio-only session can play and score")
+assert(saved["u:3"]==nil,"Unpublished Studio progress must never write the live DataStore fixture")
+print("PASS: server grading, completed sessions, stale callbacks, per-user persistence, and unpublished Studio session-only playable fallback")
 '''
 fixture=p/'tests/.server-runtime.generated.lua'
 try:

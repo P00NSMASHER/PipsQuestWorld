@@ -10,7 +10,29 @@ local World=require(script.Parent:WaitForChild("World")).build()
 local remotes=Instance.new("Folder");remotes.Name="EmmaClassroomRemotes";remotes.Parent=ReplicatedStorage
 local request=Instance.new("RemoteFunction");request.Name="Request";request.Parent=remotes
 local event=Instance.new("RemoteEvent");event.Name="Event";event.Parent=remotes
-local store=DataStoreService:GetDataStore("EmmaStudyClassroomV1")
+-- Roblox refuses GetDataStore for an unpublished local Studio file. Treat
+-- that environment as a disposable visual/gameplay sandbox rather than
+-- crashing the entire server before the first classroom question.
+-- Published Roblox servers MUST still use the real persistent DataStore.
+local storeOK,storeOrError=pcall(function()
+    return DataStoreService:GetDataStore("EmmaStudyClassroomV1")
+end)
+local store
+if storeOK then
+    store=storeOrError
+else
+    local inStudio=game:GetService("RunService"):IsStudio()
+    if not inStudio then error(storeOrError) end
+    warn("Emma classroom: unpublished Studio playtest uses SESSION-ONLY progress, never live saved progress")
+    local localOnly={}
+    store={
+        GetAsync=function(_,key) return localOnly[key] end,
+        UpdateAsync=function(_,key,change)
+            localOnly[key]=change(localOnly[key])
+            return localOnly[key]
+        end,
+    }
+end
 local sessions={}
 local SESSION_GOAL=10
 local DATASTORE_ATTEMPTS=4
@@ -175,8 +197,10 @@ startRound=function(player)
         model.Parent=World.Root
         s.teacherModel=model
     else
+        -- Never hide constructor failures behind a generic warning. Real
+        -- Roblox runtime errors must be reviewable before visual acceptance.
+        warn("Emma staff appearance failed for "..tostring(teacher.name)..": "..tostring(model))
         model=nil
-        warn("Teacher visual unavailable; question remains usable")
     end
     local choices=shuffle(q.choices)
     local token=HttpService:GenerateGUID(false)

@@ -151,6 +151,9 @@ for _,teacher in ipairs(Data.Teachers) do
         -- TextureId="" code created solid-color blobs despite using mesh assets.
         local hairMesh=accessory.Handle:FindFirstChildOfClass("SpecialMesh")
         assert(type(hairMesh.TextureId)=="string" and hairMesh.TextureId~="","Bundled hair texture was stripped")
+        local vertexColor=hairMesh.VertexColor
+        assert(vertexColor and type(vertexColor.X)=="number" and type(vertexColor.Y)=="number" and type(vertexColor.Z)=="number",
+            "SpecialMesh.VertexColor must be Vector3: Color3 makes real Roblox staff fail to spawn")
         local ha=accessory.Handle.HairAttachment
         near((accessory.Handle.CFrame*CFrame.new(ha.CFrame.Position*m:GetScale())).Position,(head.CFrame*CFrame.new(head.HairAttachment.CFrame.Position*m:GetScale())).Position)
     end
