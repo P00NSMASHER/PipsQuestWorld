@@ -46,6 +46,7 @@ jobs:
         with:
           ref: ${{ needs.route.outputs.branch }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -167,8 +168,9 @@ jobs:
             # Preserve deliberately closed/rejected PRs instead of reopening.
             existing="$(gh pr list --state all --head "$candidate" --limit 100 --json number --jq 'length')"
             if [[ "$existing" != 0 ]]; then
-              echo "RETAINED_CANDIDATE: $candidate has existing PR history; manual review required."
-              exit 0
+              echo "::error::REVIEW_REQUIRED: $candidate has existing PR history. Changed curriculum remains unmerged; explicit review is required before any new candidate."
+              echo "REVIEW_REQUIRED: $candidate retains a previously reviewed or rejected content change outside $TARGET_BRANCH." >> "$GITHUB_STEP_SUMMARY"
+              exit 1
             fi
           else
             git switch -c "$candidate"
@@ -176,17 +178,21 @@ jobs:
             git config user.email "actions@users.noreply.github.com"
             git add -- "${files[@]}"
             git commit -m "Prepare reviewed ABVM curriculum $source_sha"
+            # The ABVM source exporter runs before repository write credentials are installed.
+            gh auth setup-git
             git push origin "HEAD:refs/heads/$candidate"
           fi
-          cat > "$RUNNER_TEMP/curriculum-pr.md" <<BODY
-          Reviewed content-only update for active classroom branch $TARGET_BRANCH, prepared from ABVM commit $source_sha.
+          {
+            printf 'Reviewed content-only update for active classroom branch `%s`, prepared from ABVM commit `%s`.\n\n' "$TARGET_BRANCH" "$source_sha"
+            cat <<'BODY'
 
           Only curriculum.json, the generated server-only QuestionBank.lua and curriculum-receipt.json are changed. Source tests, deterministic export, provenance/answer-key/privacy validation and importer regressions passed. No private learner responses or grades were copied.
 
-          This PR is draft until independently reviewed. The standalone **Emma Curriculum Contract** check can pass while game visuals are actively rebuilt; game/runtime/device checks remain separately required before any Roblox release. Bot-generated PRs may need an independently authorized review action to trigger checks.
+          This PR is draft until independently reviewed. The standalone Emma Curriculum Contract check can pass while game visuals are actively rebuilt; game/runtime/device checks remain separately required before any Roblox release. Bot-generated PRs may need an independently authorized review action to trigger checks.
 
-          **Never auto-merge, edit PUBLISH_REQUEST, publish Roblox, or claim real-device acceptance.**
+          Never auto-merge, edit PUBLISH_REQUEST, publish Roblox, or claim real-device acceptance.
           BODY
+          } > "$RUNNER_TEMP/curriculum-pr.md"
           if ! gh pr create --base "$TARGET_BRANCH" --head "$candidate" --draft \
             --title "Prepare reviewed ABVM schoolwork for Emma" --body-file "$RUNNER_TEMP/curriculum-pr.md"; then
             echo "::error::Prepared content exists on $candidate, but GitHub refused PR creation. Check Actions pull-request creation permission, then rerun; the next scheduled run will retry without rewriting the branch."
