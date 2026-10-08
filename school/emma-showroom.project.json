@@ -38,7 +38,7 @@
           "$path": "emma-classroom/showroom/Room.lua"
         },
         "ArtPass": {
-          "$path": "emma-classroom/server/ArtPass.lua"
+          "$path": "emma-classroom/showroom/ArtPass.lua"
         },
         "GalleryPass": {
           "$path": "emma-classroom/showroom/GalleryPass.lua"
