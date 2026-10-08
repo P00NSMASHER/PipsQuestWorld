@@ -121,7 +121,19 @@ def write_part(parent: ET.Element, entry: list[str], idx: int):
         item_props(props,"Material",str(mapping.get(material.rsplit(".",1)[-1],272)),"token")
     return name
 
-def export_scene(luau: str, output: Path):
+CUTAWAY_OCCLUDERS={
+    "Acoustic ceiling","Ceiling grid line","Ceiling grid cross",
+    "Front wall","Back wall left","Back wall right","Door header wall",
+    "Right wall front","Right wall back","Right door header wall",
+    "Left wall below windows","Left wall above windows","Left window wall pier",
+    "Outdoor sky backdrop","Outdoor hill backdrop",
+    "Hall ceiling","Hall left wall","Hall right wall",
+    "Hall left brick","Hall right brick",
+    "Side hall ceiling","Side hall far wall","Side hall far brick",
+    "Distant brick house","Distant brick roof","Neighbor brick building",
+}
+
+def export_scene(luau: str, output: Path, cutaway: bool=False):
     script=generate_luau()
     with tempfile.TemporaryDirectory(prefix="abvm-geometry-") as folder:
         path=Path(folder)/"scene.lua"
@@ -134,6 +146,10 @@ def export_scene(luau: str, output: Path):
     assert counts and int(counts[-1].split("|")[1]) == len(lines), "Incomplete Luau snapshot"
     assert len(lines) >= 800, "This is not the full actual classroom (only "+str(len(lines))+" parts)"
     assert all(len(row) == 24 for row in lines), "Malformed or incomplete physical transform"
+    if cutaway:
+        # Only the independent CAMERA MODEL omits these massive occluders.
+        # The playable Roblox game still contains its real solid walls/roof.
+        lines=[entry for entry in lines if entry[1] not in CUTAWAY_OCCLUDERS]
     names=[v[1] for v in lines]
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
         assert required in names, "Missing room object "+required
@@ -155,5 +171,6 @@ if __name__ == "__main__":
     args=argparse.ArgumentParser()
     args.add_argument("--luau",required=True)
     args.add_argument("--out",required=True,type=Path)
+    args.add_argument("--cutaway",action="store_true",help="Omit walls/ceiling only from visual QA snapshot")
     opt=args.parse_args()
-    export_scene(opt.luau,opt.out)
+    export_scene(opt.luau,opt.out,cutaway=opt.cutaway)
