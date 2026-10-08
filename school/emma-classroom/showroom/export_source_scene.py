@@ -195,6 +195,30 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
           f"chalkboard={chalk_width:.2f} gap={spacing:.2f} "
           f"frame={frame_width:.2f}")
+    # Repositioned art easel must NOT occlude the actual chalkboard from the
+    # front-facing player camera. Validate exported world geometry after Luau.
+    easel=only("Art easel wooden board")
+    easel_x=float(easel[9]); easel_width=float(easel[6]); easel_z=float(easel[11])
+    chalk_left=chalk_x-chalk_width/2
+    easel_right=easel_x+easel_width/2
+    easel_clearance=chalk_left-easel_right
+    assert 3.0 <= easel_clearance <= 7.0, (
+        f"Easel blocks the chalkboard or was moved unrealistically far: {easel_clearance:.2f}"
+    )
+    assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
+    assert -32.0 < easel_z < -27.0, "Easel no longer belongs in the front-left art corner"
+    easel_poster=only("Easel framed print")
+    easel_ledge=only("Easel display ledge")
+    easel_legs=[row for row in lines if row[1]=="Easel timber support"]
+    easel_stars=[row for row in lines if row[1]=="Golden achievement star"]
+    assert abs(float(easel_poster[9])-easel_x)<.02 and abs(float(easel_ledge[9])-easel_x)<.02
+    assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.8,1.8], (
+        "Art easel wooden supports detached from display"
+    )
+    assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-2.2,0.0,2.2], (
+        "Easel wall stars did not move with the display"
+    )
+    print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f}")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
