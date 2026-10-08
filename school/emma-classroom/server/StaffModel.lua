@@ -61,7 +61,12 @@ function StaffModel.create(teacher)
             -- Keep the real catalog texture (highlights, strands, shadows).
             -- Stripping TextureId turned almost every hairstyle into a flat
             -- plastic-looking silhouette. Tint gently so the texture survives.
-            if mesh then mesh.VertexColor=rgb(teacher.hair):Lerp(Color3.new(1,1,1),.30) end
+            if mesh then
+                local tint=rgb(teacher.hair):Lerp(Color3.new(1,1,1),.30)
+                -- SpecialMesh.VertexColor is Vector3, NOT Color3. Passing
+                -- Color3 throws at runtime and silently drops the whole NPC.
+                mesh.VertexColor=Vector3.new(tint.R,tint.G,tint.B)
+            end
         end
     end
     -- Accessories use familiar small proportions rather than giant facial parts.
