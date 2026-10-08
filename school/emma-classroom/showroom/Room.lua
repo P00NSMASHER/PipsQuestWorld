@@ -184,8 +184,24 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
         part(parent,"Desk foot",Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
     end
-    part(parent,"Desk book tray",Vector3.new(4.75,.12,3.08),CFrame.new(x,2.30,z),Color3.fromRGB(57,59,58),Enum.Material.Metal,false)
-    for _,dx in ipairs({-2.35,2.35}) do part(parent,"Book tray side",Vector3.new(.10,.52,3.08),CFrame.new(x+dx,2.55,z),P.metal,Enum.Material.Metal,false) end
+    -- Match an elementary school desk's thin rim and underdesk wire basket
+    -- rather than a thick floating black platform. These details are non-solid
+    -- and do not change desk collision or the aisle footprints.
+    part(parent,"Desk laminated front bevel",Vector3.new(5.08,.105,.085),
+        CFrame.new(x,3.01,z-1.88),Color3.fromRGB(146,129,107),
+        Enum.Material.SmoothPlastic,false)
+    part(parent,"Desk book tray",Vector3.new(4.75,.10,3.08),
+        CFrame.new(x,2.30,z),Color3.fromRGB(103,109,111),
+        Enum.Material.Metal,false)
+    for _,dx in ipairs({-2.35,2.35}) do
+        part(parent,"Book tray side",Vector3.new(.10,.42,3.08),
+            CFrame.new(x+dx,2.49,z),P.metal,Enum.Material.Metal,false)
+    end
+    cylinder(parent,"Desk shelf front restraint",Vector3.new(4.56,.12,.12),
+        CFrame.new(x,2.36,z-1.44),P.metal,Enum.Material.Metal,false)
+    cylinder(parent,"Desk back steel stretcher",Vector3.new(4.44,.14,.14),
+        CFrame.new(x,1.46,z+1.34),Color3.fromRGB(120,130,134),
+        Enum.Material.Metal,false)
     book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
     local upholstery={
         Color3.fromRGB(67,94,130),Color3.fromRGB(78,107,136),
