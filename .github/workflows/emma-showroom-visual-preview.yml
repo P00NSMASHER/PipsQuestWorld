@@ -70,6 +70,14 @@ jobs:
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
 
+      - name: Emit compact preview images for actual visual inspection
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check 'Pillow==11.3.0'
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/encode_preview.py "$RUNNER_TEMP/visual"
+
       - name: Save real rendered source snapshot for human/AI review
         if: always()
         uses: actions/upload-artifact@v4
