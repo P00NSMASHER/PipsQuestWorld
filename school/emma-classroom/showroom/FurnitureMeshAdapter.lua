@@ -12,7 +12,9 @@ local function safelyLoadVisual(assetId: number, maxParts: number): Model?
         return InsertService:LoadAsset(assetId)
     end)
     if not ok or not raw or not raw:IsA("Model") then
-        if raw and raw:IsA("Instance") then raw:Destroy() end
+        -- pcall returns an error *string* when LoadAsset throws. Never call
+        -- Instance methods on that string during the permission-denied fallback.
+        if typeof(raw) == "Instance" then raw:Destroy() end
         warn("ABVM premium furniture asset could not be loaded from Roblox owner library")
         return nil
     end
