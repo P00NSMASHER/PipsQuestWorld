@@ -168,6 +168,33 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert by_name[component]==expected, (
             f"Physical furniture regression: {component}={by_name[component]}, expected {expected}"
         )
+    # The teaching-wall correction must be proven against ACTUAL Luau-built
+    # physical instances, not only a matching source-text snippet.
+    def only(name):
+        matches=[row for row in lines if row[1]==name]
+        assert len(matches)==1, f"Expected one {name} physical part; got {len(matches)}"
+        return matches[0]
+    smart=only("Interactive smartboard")
+    bezel=only("Smartboard dark bezel")
+    chalk=only("Main chalkboard")
+    frame_x=float(bezel[9]); frame_width=float(bezel[6])
+    smart_x=float(smart[9]); smart_width=float(smart[6])
+    chalk_x=float(chalk[9]); chalk_width=float(chalk[6])
+    spacing=(smart_x-smart_width/2)-(chalk_x+chalk_width/2)
+    assert 18.5 <= smart_width <= 19.2, "The giant pre-redesign Smartboard returned"
+    assert abs(smart_x-5.2)<.02, "Smartboard displaced from framed wall design"
+    assert abs(frame_x-smart_x)<.02 and .3<frame_width-smart_width<.7, (
+        "Physical display and its bezel must stay center-aligned"
+    )
+    assert .7 < spacing < 2.5, f"Chalkboard/Smartboard gap not plausible: {spacing:.3f}"
+    assert abs(float(smart[10])-float(chalk[10])) < 1, "Display heights diverged"
+    trim=[row for row in lines if row[1]=="Smartboard satin aluminum trim"]
+    assert len(trim)==2 and all(abs(float(row[9])-smart_x)<.02
+                                and abs(float(row[6])-19.45)<.05
+                                for row in trim), "Decorative trim no longer follows board geometry"
+    print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
+          f"chalkboard={chalk_width:.2f} gap={spacing:.2f} "
+          f"frame={frame_width:.2f}")
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
