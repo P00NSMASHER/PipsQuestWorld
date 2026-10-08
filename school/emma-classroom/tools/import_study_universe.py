@@ -74,6 +74,7 @@ def convert(bundle, source_sha, previous=None):
         prompts[prompt]=q['answer'];ids[q['id']]=q
     if previous is not None:
         old={q['id']:q for q in previous['questions']}
+        require(set(old).issubset(ids), 'Previously approved question IDs cannot silently disappear; require reviewed retirement')
         for ident,q in ids.items():
             if ident in old:
                 signature=lambda row:(row['subject'],row['skill'],row['prompt'],row['answer'],sorted(row['choices']))
