@@ -62,7 +62,7 @@ local nativeRequire=require
 local require=function(x) if x==Layout then return Layout end;return nativeRequire(x)end
 local question={kind="question",token="q1",prompt="Which word begins with a blend?",subject="Spelling",teacher="Mrs. Benulis",choices={"frog","apple","open"},progress={stars=0,questionNumber=1,goal=10}}
 request.InvokeServer=function(_,cmd)
- if cmd=="state" then return {ok=true,question=question,progress=question.progress} end
+ if cmd=="state" then return {ok=true,question=question,progress=question.progress,tests={{id="grammar",label="Grammar",date="2026-10-09",supported=true},{id="missing",label="Religion Ch. 3",supported=false}}} end
  error(cmd)
 end
 local function boot()
@@ -80,6 +80,23 @@ assert(answerButton(1).Parent.Parent==card,"Answers must not be inside the quest
 toggle.Activated.callback();assert(not card.Visible and workspace.CurrentCamera.CameraType==Enum.CameraType.Custom)
 event.OnClientEvent.callback(question);assert(not card.Visible,"New question cannot cover free-roam controls")
 toggle.Activated.callback();assert(card.Visible)
+-- Four-choice reviewed worksheet/STAR items retain every touch target.
+root.AbsoluteSize={X=568,Y=280}
+local four=table.clone(question);four.choices={"A","B","C","D"}
+event.OnClientEvent.callback(four)
+assert(answerButton(4) and answerButton(4).Size.Y.Offset>=44)
+assert(answerButton(1).Position.Y.Offset==answerButton(2).Position.Y.Offset,"Short landscape uses two columns")
+root.AbsoluteSize={X=844,Y=390}
+event.OnClientEvent.callback(question)
+root.ProgressChip.Activated.callback();assert(root.PracticeMenu.Visible)
+root.PracticeMenu.PracticeMode3.Activated.callback();assert(root.PracticeMenu.Visible,"Unavailable test must not interrupt the question")
+local selected
+request.InvokeServer=function(_,cmd,arg)
+ if cmd=="select_test" then selected=arg.id;return {ok=true,modeId=arg.id} end
+ if cmd=="state" then return {ok=true,question=question,progress=question.progress} end
+ error(cmd)
+end
+root.PracticeMenu.PracticeMode2.Activated.callback();assert(selected=="grammar" and not root.PracticeMenu.Visible)
 local lastToken,lastIndex
 request.InvokeServer=function(_,cmd,arg)
  if cmd=="answer" then lastToken=arg.token;lastIndex=arg.index;return {ok=true,correct=false,hint="Say the first two sounds."} end

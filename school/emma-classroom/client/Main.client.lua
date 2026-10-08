@@ -55,8 +55,8 @@ gui.Parent=player:WaitForChild("PlayerGui")
 local root=Instance.new("Frame");root.Size=UDim2.fromScale(1,1);root.BackgroundTransparency=1;root.Parent=gui
 
 -- One phone-safe question panel. All choices remain visible beside the teacher.
-local progressChip=Instance.new("Frame")
-progressChip.Name="ProgressChip";progressChip.BackgroundColor3=P.green;progressChip.BackgroundTransparency=.04;progressChip.BorderSizePixel=0;progressChip.ZIndex=10;progressChip.Parent=root
+local progressChip=Instance.new("TextButton")
+progressChip.Text="";progressChip.AutoButtonColor=true;progressChip.Name="ProgressChip";progressChip.BackgroundColor3=P.green;progressChip.BackgroundTransparency=.04;progressChip.BorderSizePixel=0;progressChip.ZIndex=10;progressChip.Parent=root
 corner(progressChip,14);stroke(progressChip,P.gold,.18,1.2)
 local progressText=text(progressChip,"★ 0  •  1 / 10",13,P.gold,Enum.Font.GothamBold);progressText.Size=UDim2.fromScale(1,1);progressText.ZIndex=11
 
@@ -88,12 +88,19 @@ content.ScrollBarImageColor3=P.green;content.AutomaticCanvasSize=Enum.AutomaticS
 local promptText=text(content,"",17,P.ink,Enum.Font.GothamBold)
 promptText.Name="QuestionPrompt";promptText.LayoutOrder=0;promptText.TextXAlignment=Enum.TextXAlignment.Left;promptText.TextYAlignment=Enum.TextYAlignment.Top;promptText.ZIndex=32
 local answers=Instance.new("Frame");answers.BackgroundTransparency=1;answers.LayoutOrder=1;answers.ZIndex=31;answers.Parent=answerBar
-local answerList=Instance.new("UIListLayout");answerList.SortOrder=Enum.SortOrder.LayoutOrder;answerList.Padding=UDim.new(0,6);answerList.Parent=answers
+-- Answers use explicit rows; four-choice questions use two columns on short screens.
 local skip=Instance.new("TextButton")
 skip.Name="SkipQuestion";skip.BackgroundColor3=Color3.fromRGB(230,231,225);skip.Text="Skip";skip.TextColor3=P.muted;skip.Font=Enum.Font.GothamBold;skip.TextSize=13;skip.AutoButtonColor=true;skip.ZIndex=32;skip.Parent=answerBar
 corner(skip,10)
 local layout
 local feedbackHint=""
+
+local modeId="mix"
+local modeMenu=Instance.new("ScrollingFrame")
+modeMenu.Name="PracticeMenu";modeMenu.BackgroundColor3=P.cream;modeMenu.BorderSizePixel=0;modeMenu.ScrollBarThickness=4
+modeMenu.Visible=false;modeMenu.ZIndex=60;modeMenu.Parent=root
+corner(modeMenu,12);stroke(modeMenu,P.green,.2,1)
+local modeChoices={}
 
 local currentToken:string?=nil
 local busy=false
@@ -128,7 +135,7 @@ end
 
 local function setProgress(p)
     if not p then return end
-    progressText.Text="★ "..tostring(p.stars or 0).."   •   "..tostring(p.questionNumber or 1).." / "..tostring(p.goal or 10)
+    progressText.Text=(modeId=="mix" and "Mix ▾\n" or "Test prep ▾\n").."★ "..tostring(p.stars or 0).."   •   "..tostring(p.questionNumber or 1).." / "..tostring(p.goal or 10)
 end
 
 local function clearAnswers()
@@ -184,7 +191,8 @@ layout=function()
     local w,h=math.max(1,size.X),math.max(1,size.Y)
     local dims=Layout.panel(w,h)
     if studyView then setStudyCamera() end
-    progressChip.Position=UDim2.fromOffset(12,10);progressChip.Size=UDim2.fromOffset(130,36)
+    progressChip.Position=UDim2.fromOffset(12,10);progressChip.Size=UDim2.fromOffset(130,44)
+    modeMenu.Position=UDim2.fromOffset(12,58);modeMenu.Size=UDim2.fromOffset(math.min(300,w-24),math.min(240,h-70))
     viewToggle.AnchorPoint=Vector2.new(1,0);viewToggle.Position=UDim2.new(1,-12,0,6);viewToggle.Size=UDim2.fromOffset(116,44)
     teacherChip.AnchorPoint=Vector2.new(.5,0);teacherChip.Position=UDim2.new(.5,0,0,10);teacherChip.Size=UDim2.fromOffset(math.max(100,math.min(300,w-280)),36)
     teacherChip.Visible=teacherText.Text~="Teacher" and w>620
@@ -201,7 +209,12 @@ layout=function()
     content.Position=UDim2.fromOffset(12,34);content.Size=UDim2.new(1,-24,0,area.prompt)
     promptText.Size=UDim2.new(1,-6,0,math.max(32,stemH+8))
     answers.Position=UDim2.fromOffset(12,area.answerTop);answers.Size=UDim2.new(1,-24,0,area.answerTotal)
-    for _,b in ipairs(buttons) do b.Size=UDim2.new(1,0,0,area.answerHeight) end
+    table.sort(buttons,function(a,b) return (a.LayoutOrder or 0)<(b.LayoutOrder or 0) end)
+    for i,b in ipairs(buttons) do
+        local column=(i-1)%area.columns;local row=math.floor((i-1)/area.columns)
+        b.Position=UDim2.new(column/area.columns,column*3,0,row*(area.answerHeight+6))
+        b.Size=UDim2.new(1/area.columns,area.columns==2 and -3 or 0,0,area.answerHeight)
+    end
     feedback.Position=UDim2.new(0,12,1,-38);feedback.Size=UDim2.new(1,-94,0,30)
     skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-10,1,-7);skip.Size=UDim2.fromOffset(70,32)
 
@@ -244,7 +257,7 @@ local function showPayload(payload)
         skip.Visible=true;entering.Visible=false;currentToken=payload.token;busy=false;feedbackHint="";feedback.Text="Take your time."
         promptText:SetAttribute("Prompt",payload.prompt or "");content.CanvasPosition=Vector2.new()
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
-        subjectLine.Text=(payload.subject or "Schoolwork").."  •  Tap your answer"
+        subjectLine.Text=(payload.subject or "Schoolwork")..(payload.tier=="star-fallback" and " • Original STAR practice" or payload.tier=="archive" and " • Review" or " • Current lessons")
         clearAnswers()
         for i,v in ipairs(payload.choices or {}) do makeAnswer(v,i) end
         setProgress(payload.progress)
@@ -274,6 +287,32 @@ local function showPayload(payload)
         layout();starBurst()
     end
 end
+local function buildPracticeMenu(tests)
+    for _,b in ipairs(modeChoices) do b:Destroy() end
+    modeChoices={}
+    local rows={{id="mix",label="Mix • current lessons first",supported=true}}
+    for _,t in ipairs(tests or {}) do rows[#rows+1]=t end
+    for i,t in ipairs(rows) do
+        local b=Instance.new("TextButton");b.Name="PracticeMode"..i;b.Position=UDim2.fromOffset(6,(i-1)*50+6)
+        b.Size=UDim2.new(1,-12,0,44);b.BackgroundColor3=t.supported and P.right or P.wrong
+        b.Text=(t.date and t.date.." • " or "")..t.label..(not t.supported and " — material unavailable" or "")
+        b.TextWrapped=true;b.TextSize=12;b.TextColor3=P.ink;b.Font=Enum.Font.GothamBold;b.ZIndex=61;b.Parent=modeMenu;corner(b,8)
+        modeChoices[#modeChoices+1]=b
+        b.Activated:Connect(function()
+            if busy or not t.supported then return end
+            busy=true
+            local ok,res=pcall(function() return request:InvokeServer("select_test",{id=t.id}) end)
+            busy=false
+            if not ok or not res or not res.ok then feedback.Text="That practice is unavailable. Keep studying this question.";return end
+            modeId=res.modeId or "mix";modeMenu.Visible=false
+            -- A question event may have raced the RPC. Do not erase its token.
+            local stateOK,state=pcall(function() return request:InvokeServer("state") end)
+            if stateOK and state and state.ok then setProgress(state.progress);if state.question then showPayload(state.question) end end
+        end)
+    end
+    modeMenu.CanvasSize=UDim2.fromOffset(0,#rows*50+12)
+end
+progressChip.Activated:Connect(function() modeMenu.Visible=not modeMenu.Visible end)
 event.OnClientEvent:Connect(showPayload)
 
 skip.Activated:Connect(function()
@@ -296,7 +335,7 @@ task.spawn(function()
         local ok,res=pcall(function() return request:InvokeServer("state") end)
         if ok and res and res.ok then
             entering.Visible=false
-            setProgress(res.progress)
+            modeId=res.modeId or "mix";buildPracticeMenu(res.tests);setProgress(res.progress)
             if res.question then showPayload(res.question) end
             return
         end

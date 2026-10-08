@@ -115,6 +115,42 @@ assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 visualFailure=false
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14)
+-- Curriculum selection is server governed and never replicates answer keys.
+local state=requests.OnServerInvoke(player,"state")
+assert(#state.tests>0)
+for _,t in ipairs(state.tests) do assert(t.questionIds==nil and t.answer==nil) end
+local beforeToken=state.question.token
+assert(not requests.OnServerInvoke(player,"select_test",{id="invented"}).ok)
+assert(requests.OnServerInvoke(player,"state").question.token==beforeToken)
+local grammar,unavailable
+for _,t in ipairs(Questions.Tests) do
+    if string.find(t.label,"Grammar",1,true) then grammar=t end
+    if not t.supported then unavailable=t end
+end
+assert(grammar and unavailable)
+assert(not requests.OnServerInvoke(player,"select_test",{id=unavailable.id}).ok)
+assert(requests.OnServerInvoke(player,"select_test",{id=grammar.id}).ok);flush()
+for _=1,15 do
+    local presented=pending();local raw
+    for _,candidate in ipairs(Questions) do if candidate.prompt==presented.prompt then raw=candidate;break end end
+    assert(raw.skill=="subject-predicate" and raw.tier~="star-fallback")
+    assert(table.find(grammar.questionIds,raw.id))
+    assert(requests.OnServerInvoke(player,"skip").ok);flush()
+end
+assert(requests.OnServerInvoke(player,"select_test",{id="mix"}).ok);flush()
+local counts={current=0,archive=0,["star-fallback"]=0}
+for _,q in ipairs(Questions) do counts[q.tier]+=1 end
+local shown={}
+for index=1,#Questions do
+    local presented=pending();local raw
+    for _,candidate in ipairs(Questions) do if candidate.prompt==presented.prompt and candidate.subject==presented.subject then raw=candidate;break end end
+    assert(raw and not shown[raw.id],"No repeat before the full curriculum is exhausted")
+    shown[raw.id]=true
+    local tier=index<=counts.current and "current" or index<=counts.current+counts.archive and "archive" or "star-fallback"
+    assert(raw.tier==tier,"Strict current then archive then STAR precedence")
+    assert(requests.OnServerInvoke(player,"skip").ok);flush()
+end
+assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"Selecting or skipping curriculum cannot earn progress")
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end

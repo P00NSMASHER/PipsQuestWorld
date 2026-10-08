@@ -54,3 +54,13 @@ intended, accessories remain attached through turns, soles meet the floor, and
 C-hand contours read cleanly. Source geometry tests are not likeness scores.
 Check the 16 paired desks, clear back-left reading area, separated rugs, inward
 alphabet cards, blinds/curtain folds and coat storage against the real photos.
+
+## Shared curriculum candidate
+
+Before publishing this candidate, capture actual Roblox play and a physical iPhone
+showing Mix/test selection, unavailable test handling, a three-choice and a
+four-choice question in portrait and short landscape, all choices readable, wrong
+hint/retry, correct grading, ten-question completion/restart, movement and Look
+around restoration. Verify leave/rejoin and two-player progress isolation against
+the live DataStore. Record exact source SHA and binary hash with the evidence.
+Headless source/service-double checks are not runtime or device acceptance.
