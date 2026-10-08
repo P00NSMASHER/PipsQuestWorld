@@ -1,6 +1,6 @@
-publish-request: 2026-10-07 native-staff-visible-phone-answers-v5
-scope: bundled native R15 teachers, visible answer buttons, immediate questions, visual-failure recovery, Skip event-race repair, free-roam controls
-candidate: b615a2bbf8550f2554e668574ff039b2b83e3702
-source-binary-sha256: c4ed24dc85da3b15adc57eb6e212a7614747d5e837b566b3a2f7dfe96d69395b
-authorization: user explicitly requested playable release to show Emma at 2026-10-07 19:17 America/New_York
-acceptance: classroom CI and all four required guard suites pass on exact merged source; native rendering and physical-iPhone acceptance remain unverified; laptop offline
+publish-request: 2026-10-07 stable-display-teachers-classroom-details-v6
+scope: no competing native rig joints, disabled display Humanoid simulation, synchronous teacher replacement, neutral study pose, assembled notebook/laptop/globe/cabinet/cart/supply detail
+candidate: 2f361ae0368df66c1bb65fed2449535452275527
+source-binary-sha256: 58c15e4c4ea202917799e66b340083b23f1b59cf6c7d248cdeade102e945dada
+authorization: standing user instruction to upload the Roblox game plus current instruction to fix characters and detail the classroom
+acceptance: four exact-source CI suites pass; source tree matches merged candidate; native rendering and physical-iPhone acceptance UNVERIFIED because laptop offline; version58 recording is FAILED visual evidence
