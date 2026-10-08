@@ -58,3 +58,12 @@ The result establishes that the credential supplied to this job is not authorize
 The workflow now uses **manual dispatch only** and accepts **only the dedicated `ROBLOX_ASSET_API_KEY` secret**, never the place publisher's `ROBLOX_API_KEY`. This prevents duplicate model imports on routine pull-request edits and keeps existing production deploy permissions separate.
 
 **Remaining required authorization:** Supply a creator-authorized Roblox Open Cloud API key for **Assets Read/Write** under the verified DadSharkins creator in GitHub Actions repository secret `ROBLOX_ASSET_API_KEY`. Do not paste credentials in chat. Trigger the existing import workflow once after confirming access, and inspect receipts and moderation status before enabling any visuals. Roblox has not uploaded either model, and native/iPhone visual acceptance has not occurred.
+
+
+## Final authorization diagnostic
+
+Read-only, redacted GitHub Actions check [37814123035](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37814123035) returned `DEDICATED_ASSET_KEY_MISSING`. The reviewed furniture GLBs and image preview generated successfully. Thus the prior HTTP 403 import attempts used the place-publishing secret fallback (`ROBLOX_API_KEY`), which Roblox denied for Model creation. The diagnostic did not display or export either key.
+
+**Required human-controlled credential step:** Create a Roblox Open Cloud API key in the verified creator's account (**DadSharkins**, Roblox user ID `6064228083`) with **Assets Read and Write** access, then save it directly as the GitHub Actions repository secret named `ROBLOX_ASSET_API_KEY`. Do not post it in ChatGPT, a PR, or a repository file.
+
+The import workflow no longer runs automatically on pull-request changes, and no longer falls back to the place-publishing key. Once the dedicated key exists, rerun the failed import job [37813670543](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37813670543), which uses the verified universe creator metadata and will prefer the new dedicated asset key. This should be done only once. Review the returned moderation and ownership data before enabling furniture visuals. No Roblox-owned furniture IDs currently exist in this branch.
