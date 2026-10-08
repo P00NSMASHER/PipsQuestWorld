@@ -1,6 +1,12 @@
-publish-request: 2026-10-07 stable-display-teachers-classroom-details-v6
-scope: no competing native rig joints, disabled display Humanoid simulation, synchronous teacher replacement, neutral study pose, assembled notebook/laptop/globe/cabinet/cart/supply detail
-candidate: 2f361ae0368df66c1bb65fed2449535452275527
-source-binary-sha256: 58c15e4c4ea202917799e66b340083b23f1b59cf6c7d248cdeade102e945dada
-authorization: standing user instruction to upload the Roblox game plus current instruction to fix characters and detail the classroom
-acceptance: four exact-source CI suites pass; source tree matches merged candidate; native rendering and physical-iPhone acceptance UNVERIFIED because laptop offline; version58 recording is FAILED visual evidence
+publish-request: 2026-10-08 reviewed-abvm-357-multiplayer-isolation
+destination: existing Emma Study Classroom Roblox start place (universe 10769455759, place 114603280760042)
+source-branch: rebuild/emma-classroom-study-v1
+verified-classroom-head: 8be57abf0ac72e457dc8abc9fcd7b5e80b38af65
+reviewed-abvm-source: P00NSMASHER/abvmschoolstarworld@42aec22aaf3f3aa82993744fbf1e7064a55d58af
+curriculum: 357 questions (134 current, 65 cumulative, 158 original STAR-style fallback); named test preparation, strict order and server-authoritative grading
+gameplay: personal client smartboards, teacher ownership, multiplayer progress isolation and stale callback guards
+release-checks: six exact-head GitHub checks succeeded, including Emma Classroom CI and mapped place-build preflight
+authorization: user instructed integration into the continuing Roblox game even though more updates are planned
+scope: publish this incremental verified-source build to the existing place only; never auto-publish future curriculum changes
+runtime-acceptance: physical iPhone visuals, live DataStore isolation and actual Roblox gameplay remain unverified; do not claim polished or production-ready
+status: release requested; GitHub Actions publication result is authoritative
