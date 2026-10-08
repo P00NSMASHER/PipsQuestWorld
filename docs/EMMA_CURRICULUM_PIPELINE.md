@@ -75,6 +75,38 @@ question ID, malformed key, rejected teacher-lineage evidence, or unavailable
 GitHub permissions produces a visible failure rather than replacing accepted
 schoolwork. A blocked review leaves the existing accepted bank intact.
 
+## Permission and recovery validation
+
+The scheduled job has `contents: write` and `pull-requests: write`, but
+GitHub repository settings can *separately* forbid the `GITHUB_TOKEN` from
+creating draft PRs. A successful `NO_CHANGE` poll never reaches the PR-creation
+path and therefore does **not** establish that this setting is enabled.
+
+On infrastructure pushes and manual dispatches, the workflow submits a draft-PR
+API request referencing a unique, nonexistent Git head. A rejected missing-head
+request (HTTP 422) is a permission-gate preflight, **not** a real PR creation
+or proof that a future candidate will pass all later steps. HTTP 403 is an
+explicit `PR_CREATE_PERMISSION_DENIED` failure requiring an owner to check
+**Settings > Actions > General > Workflow permissions > Allow GitHub Actions
+to create and approve pull requests**. The pipeline deliberately does not
+use an unreviewed privileged personal token or auto-approval as a workaround.
+
+If source content changes and a candidate branch already exists, the poll
+refetches it, checks a strict three-file allowlist, and compares its full
+generated files with a *freshly validated* ABVM export. A tampered/stale branch
+fails as `CANDIDATE_DRIFT` without being overwritten or reopened. A trusted
+candidate with no prior PR can be submitted again after permissions are fixed;
+any closed/rejected PR retains its historical review decision.
+
+The infrastructure CI now rehearses the real current ABVM `main` exporter,
+importer and one intentionally corrupted server-bank repair in a disposable
+checkout, with no repository writes. That is source-to-consumer validation,
+but not an unattended successful draft-PR creation. A changed-source
+candidate still requires independently triggered checks and human review.
+During game branch migration, the scheduler also verifies the mapped
+ServerScriptService adapter and the runtime's QuestionBank consumer before
+attempting a write.
+
 ## Evidence that is and is not available
 
 On October 8, 2026, the existing exporter and original importer passed their
