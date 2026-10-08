@@ -18,6 +18,8 @@ def build_harness():
     source=source.split("local assets=Instance.new",1)[0]
     adapter=(SOURCES/"FurnitureMeshAdapter.lua").read_text()
     return source + r'''
+-- Roblox warns but does not abort on denied asset access.
+local warn=function(...) end
 -- Enhance the existing tested math/Instance stubs with just the Model
 -- bbox, scale and pivot operations needed for inserted MeshParts.
 function methods:GetBoundingBox()
