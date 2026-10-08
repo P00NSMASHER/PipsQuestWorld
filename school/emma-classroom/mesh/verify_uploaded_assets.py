@@ -60,6 +60,21 @@ def verify() -> None:
     assets = data.get("assets", [])
     if len(assets) != 2 or {item["name"] for item in assets} != expected_names:
         raise RuntimeError("Receipt must contain exactly two original furniture models")
+    # Imported model IDs may be staged in the source, but their runtime must
+    # remain disabled until actual Roblox/iPhone visual acceptance.
+    config=(HERE.parent/"showroom/FurnitureMeshConfig.lua").read_text()
+    if "Enabled = false" not in config:
+        raise RuntimeError("Roblox models enabled without engine acceptance")
+    config_fields={
+        "abvm_student_chair": "ChairModelAssetId",
+        "abvm_student_desk": "DeskModelAssetId",
+    }
+    import re
+    for item in assets:
+        field=config_fields[item["name"]]
+        match=re.search(r"(?m)^\s*"+re.escape(field)+r"\s*=\s*(\d+)\s*,?\s*$",config)
+        if not match or match.group(1)!=item["assetId"]:
+            raise RuntimeError("Configured asset ID does not match independently verified receipt")
     if len({item["assetId"] for item in assets}) != 2:
         raise RuntimeError("Duplicate asset ID in receipt")
     for item in assets:
