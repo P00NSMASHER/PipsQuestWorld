@@ -498,15 +498,47 @@ end
 
 local function buildBackDoorAndHall(root: Instance)
     -- Warm wood classroom doorway with tiny photo-inspired corridor beyond it.
-    part(root,"Door jamb left",Vector3.new(1.1,11.5,1.3),CFrame.new(-8.4,5.75,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Door jamb right",Vector3.new(1.1,11.5,1.3),CFrame.new(8.4,5.75,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Door wood header",Vector3.new(17.9,1.1,1.3),CFrame.new(0,11.25,27.0),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Door transom glass",Vector3.new(15.4,2.4,.24),CFrame.new(0,13.0,26.7),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.32
-    for _,x in ipairs({-4,4}) do
-        local door=part(root,"Open classroom door",Vector3.new(6.5,10,.55),CFrame.new(x,5.3,25.7)*CFrame.Angles(0,math.rad(x<0 and -52 or 52),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
-        local glass=part(root,"Door glass",Vector3.new(3.1,4.6,.18),door.CFrame*CFrame.new(0,1.6,-.35),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.27
+    -- Existing lower back wall had an eighteen-stud opening and huge tilted
+    -- door leaves. Frame a credible double-width school doorway in the same
+    -- original opening, with permanent plastered piers and real paneling.
+    for _,x in ipairs({-7.25,7.25}) do
+        part(root,"Back doorway plaster infill",Vector3.new(3.5,12.8,1.0),
+            CFrame.new(x,6.4,27.0),P.wall,Enum.Material.SmoothPlastic,true)
+        part(root,"Back doorway blue wainscot",Vector3.new(3.56,3.65,.07),
+            CFrame.new(x,1.83,26.45),P.blue,Enum.Material.Wood,false)
     end
-    sign(root,"Welcome over door","WELCOME  •  EMMA'S CLASSROOM",Vector3.new(16,1.6,.2),CFrame.new(0,12.5,25.8),Color3.fromRGB(247,237,207),P.blue)
+    for _,x in ipairs({-5.54,5.54}) do
+        part(root,"Door jamb timber stile",Vector3.new(.76,11.25,1.12),
+            CFrame.new(x,5.63,26.91),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    end
+    part(root,"Door wood header",Vector3.new(11.55,.62,1.12),
+        CFrame.new(0,10.94,26.90),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Door transom glass",Vector3.new(10.22,1.55,.20),
+        CFrame.new(0,12.05,26.70),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.30
+    for _,x in ipairs({-2.75,2.75}) do
+        local door=part(root,"Open classroom door",Vector3.new(4.65,10,.36),
+            CFrame.new(x,5.28,25.96)*CFrame.Angles(0,math.rad(x<0 and -48 or 48),0),
+            Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
+        local glass=part(root,"Door glass",Vector3.new(2.54,4.38,.10),
+            door.CFrame*CFrame.new(0,1.42,-.22),
+            Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
+        glass.Transparency=.29
+        for _,y in ipairs({-1.05,3.89}) do
+            part(root,"Glazed door solid oak rail",Vector3.new(3.0,.22,.12),
+                door.CFrame*CFrame.new(0,y,-.25),
+                Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
+        end
+        for _,dx in ipairs({-1.42,1.42}) do
+            part(root,"Glazed door oak side stile",Vector3.new(.17,4.74,.12),
+                door.CFrame*CFrame.new(dx,1.42,-.25),
+                Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
+        end
+        part(root,"Door lower raised panel",Vector3.new(3.7,2.85,.10),
+            door.CFrame*CFrame.new(0,-2.72,-.24),
+            Color3.fromRGB(142,105,73),Enum.Material.Wood,false)
+    end
+    sign(root,"Welcome over door","EMMA'S CLASSROOM",Vector3.new(10.7,1.20,.16),
+        CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
     part(root,"Hall floor",Vector3.new(18,.5,23),CFrame.new(0,.25,38),Color3.fromRGB(67,68,66),Enum.Material.Slate)
     part(root,"Hall left wall",Vector3.new(1,13,23),CFrame.new(-9,6.5,38),P.blueSoft)
     part(root,"Hall right wall",Vector3.new(1,13,23),CFrame.new(9,6.5,38),P.blueSoft)
