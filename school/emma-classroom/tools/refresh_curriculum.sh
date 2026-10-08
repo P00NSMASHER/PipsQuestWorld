@@ -17,12 +17,20 @@ python3 "$DEST_ROOT/tools/import_study_universe.py" "$STAGE_ROOT/curriculum.json
   --previous-bundle "$DEST_ROOT/curriculum.json" --source-sha "$SOURCE_SHA" \
   --out "$STAGE_ROOT/QuestionBank.lua" --receipt "$STAGE_ROOT/receipt.json"
 
-# A matching JSON bundle alone does NOT mean this pipeline is healthy: an
-# otherwise untouched rebuild can accidentally delete or edit the generated
-# server-only answer bank or its receipt. Verify the complete accepted trio.
-# If the public source commit advanced with byte-identical content, keep the
-# previously accepted source SHA and avoid a meaningless receipt-only PR.
-if cmp -s "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"; then
+# The exporter includes generatedAt in its transport checksum. A new valid
+# timestamp, by itself, must not churn a source receipt or create a false new
+# lesson candidate every time the ABVM app regenerates its study pack.
+# Compare every field EXCEPT generatedAt and the derived contentSha256. All
+# questions, answer keys, provenance, announcements and coverage must match.
+if python3 - "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json" <<'PY'
+import json,sys
+fresh,accepted=(json.load(open(p,encoding="utf-8")) for p in sys.argv[1:])
+for bundle in (fresh,accepted):
+    bundle.pop("generatedAt",None)
+    bundle.pop("contentSha256",None)
+raise SystemExit(0 if fresh==accepted else 1)
+PY
+then
   ACCEPTED_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["sourceCommit"])' "$DEST_ROOT/curriculum-receipt.json")"
   [[ "$ACCEPTED_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo "Invalid accepted receipt source" >&2; exit 1; }
   python3 "$DEST_ROOT/tools/import_study_universe.py" "$DEST_ROOT/curriculum.json" \
@@ -30,10 +38,15 @@ if cmp -s "$STAGE_ROOT/curriculum.json" "$DEST_ROOT/curriculum.json"; then
     --out "$STAGE_ROOT/accepted-QuestionBank.lua" --receipt "$STAGE_ROOT/accepted-receipt.json" >/dev/null
   if cmp -s "$STAGE_ROOT/accepted-QuestionBank.lua" "$DEST_ROOT/server/QuestionBank.lua" &&
      cmp -s "$STAGE_ROOT/accepted-receipt.json" "$DEST_ROOT/curriculum-receipt.json"; then
-    echo "NO_CHANGE: governed content, answer bank and accepted receipt all match."
+    echo "NO_CHANGE: reviewed lessons, bank and receipt match; timestamp-only updates ignored."
     exit 0
   fi
-  echo "REPAIR_REQUIRED: reviewed content matches but generated bank/receipt has drifted."
+  echo "REPAIR_REQUIRED: generated bank/receipt drift; restoring pinned accepted content."
+  cp "$STAGE_ROOT/accepted-QuestionBank.lua" "$DEST_ROOT/server/QuestionBank.lua"
+  cp "$STAGE_ROOT/accepted-receipt.json" "$DEST_ROOT/curriculum-receipt.json"
+  python3 -m unittest discover -s "$DEST_ROOT/tests" -p test_curriculum_import.py
+  echo "REPAIRED_PINNED_CONTENT: no new lesson release needed."
+  exit 0
 fi
 
 # Validate all generated files before editing the working tree. Source provenance,

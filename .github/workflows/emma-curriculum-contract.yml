@@ -68,6 +68,23 @@ jobs:
           bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-equivalent"
           sha256sum "${files[@]}" > "$RUNNER_TEMP/sha-advance.sha256"
           cmp "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/sha-advance.sha256"
+          # A real ABVM content refresh can advance generatedAt without
+          # changing a single reviewed lesson. No draft should be created.
+          python3 - "$RUNNER_TEMP/abvm-equivalent/pages/data/study-pack.json" <<'PY'
+          import datetime,json,sys
+          from pathlib import Path
+          p=Path(sys.argv[1]); wrapper=json.loads(p.read_text(encoding="utf-8"))
+          pack=wrapper.get("pack",wrapper)
+          stamp=datetime.datetime.fromisoformat(pack["generatedAt"].replace("Z","+00:00"))
+          pack["generatedAt"]=(stamp+datetime.timedelta(minutes=1)).isoformat(timespec="milliseconds").replace("+00:00","Z")
+          p.write_text(json.dumps(wrapper,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+          git -C "$RUNNER_TEMP/abvm-equivalent" add pages/data/study-pack.json
+          git -C "$RUNNER_TEMP/abvm-equivalent" -c user.name='Curriculum QA' \
+            -c user.email='qa@users.noreply.github.com' commit -m 'Timestamp-only source refresh fixture'
+          bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-equivalent"
+          sha256sum "${files[@]}" > "$RUNNER_TEMP/timestamp-only.sha256"
+          cmp "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/timestamp-only.sha256"
           printf '\n-- deliberate generated-bank corruption\n' >> server/QuestionBank.lua
           bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
           cmp server/QuestionBank.lua "$GITHUB_WORKSPACE/school/emma-classroom/server/QuestionBank.lua"
@@ -83,4 +100,4 @@ jobs:
           PY
           bash tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
           cmp curriculum-receipt.json "$GITHUB_WORKSPACE/school/emma-classroom/curriculum-receipt.json"
-          echo 'PASS: game-independent data contract, SHA-only no-op and bank/receipt repair.'
+          echo 'PASS: independent data contract, SHA-only and timestamp-only no-op, pinned bank and receipt repair.'
