@@ -6,7 +6,7 @@ on:
     paths:
       - 'school/emma-classroom/showroom/**'
       - 'school/emma-showroom.project.json'
-      - 'school/emma-classroom/server/ArtPass.lua'
+      - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/server/ArtPass.lua; do
+          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" > /dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
