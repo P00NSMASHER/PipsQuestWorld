@@ -165,12 +165,7 @@ local function learningWall(root:Instance)
         orb(group,"Jobs board pushpin",Vector3.new(.13,.13,.13),
             CFrame.new(36.04,12.1-(i-1)*1.56,-34.2),C.brass,Enum.Material.Metal)
     end
-    for i=1,8 do
-        local card=piece(group,"Number learning card",Vector3.new(1.65,1.55,.06),
-            CFrame.new(-32+(i-1)*2.05,10.55,26.32),
-            (i%2==0) and C.cream or Color3.fromRGB(226,239,228),Enum.Material.SmoothPlastic,false)
-        printed(card,tostring(i),Enum.NormalId.Front,C.navy,card.Color)
-    end
+    -- Avoid putting number cards directly over the framed student artwork.
     for i=1,9 do
         piece(group,"Hanging pastel bunting",Vector3.new(2.2,1.3,.08),
             CFrame.new(-32+(i-1)*3.2,16.5,26.32)*CFrame.Angles(0,0,math.rad(i%2==0 and 12 or -12)),
