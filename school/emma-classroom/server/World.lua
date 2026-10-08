@@ -139,8 +139,12 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 5 or -5),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
-    for line=0,6 do
-        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),paper.CFrame*CFrame.new(.03,.010,-.82+line*.25),Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
+    -- Keep three readable rules spread over the page rather than seven
+    -- hairline Parts concentrated into the same small strip on every desk.
+    for line=0,2 do
+        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),
+            paper.CFrame*CFrame.new(.03,.010,-.75+line*.70),
+            Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
     end
     part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
     -- One fine steel binding rail reads crisply at phone scale; the former
