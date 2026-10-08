@@ -526,19 +526,13 @@ function World.build()
     applyLighting(root)
 
     -- Architectural shell.
-    part(root,"Dark varnished classroom floor",Vector3.new(74,1,62),CFrame.new(0,0,-4),P.woodDark,Enum.Material.WoodPlanks)
-    for row=0,8 do
-        for col=0,36 do
-            local x=-36+col*2
-            local start=math.max(-34,-34+row*8-(col%2)*4)
-            local finish=math.min(27,-26+row*8-(col%2)*4)
-            if finish>start then
-                local tint=Color3.fromRGB(124+(col*7+row*3)%13,91+(col*3+row*5)%10,64+(col+row*7)%8)
-                local plank=part(root,"Oak floor board",Vector3.new(1.98,.025,finish-start-.025),CFrame.new(x,.518,(start+finish)/2),tint,Enum.Material.Wood,false)
-                plank.Reflectance=.04;plank.CastShadow=false
-            end
-        end
-    end
+    -- The engine's tiled wood-plank material is more natural at phone scale.
+    -- Retire 300+ overlapping paper-thin floor boards that caused shimmer,
+    -- tiny shadow edges and too many instances for one classroom.
+    local floor=part(root,"Warm oak classroom floor",Vector3.new(74,1,62),
+        CFrame.new(0,0,-4),Color3.fromRGB(157,122,88),Enum.Material.WoodPlanks)
+    floor.Reflectance=.015
+
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)
     part(root,"Back wall right",Vector3.new(28,18,1),CFrame.new(23,9,27),P.wall)
