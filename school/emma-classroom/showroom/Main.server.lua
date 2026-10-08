@@ -5,6 +5,10 @@ local Players=game:GetService("Players")
 local Room=require(script.Parent:WaitForChild("World")).build()
 local GalleryPass=require(script.Parent:WaitForChild("GalleryPass"))
 GalleryPass.decorate(Room.Root)
+-- Owner-created GLB models replace primitive visuals ONLY after authorized
+-- Roblox model IDs load successfully. Otherwise the complete room is intact.
+local FurnitureMeshAdapter=require(script.Parent:WaitForChild("FurnitureMeshAdapter"))
+FurnitureMeshAdapter.apply(Room.Root)
 
 local function preparePlayer(player:Player)
     local function onCharacter(character:Model)
