@@ -51,10 +51,27 @@ publishing is enabled. A live server uses its bundled snapshot until an accepted
 new place version is released. A malformed or unreviewed future source cannot
 replace the last accepted bank.
 
-## Release status
+## Session-completion guarantees
 
-This is source integration only. Static service doubles and a Rojo build do not
-prove actual Roblox play, live DataStore isolation, four-choice readability or the
-new test menu on a physical iPhone. Actual runtime and physical-device evidence for
-the exact candidate is required before publishing. PUBLISH_REQUEST and the Roblox
-publishing workflow are untouched. No new live version is claimed.
+The server credits a ten-answer session as soon as the tenth correct answer is
+graded, in the same operation that increments lifetime correct answers. A student
+may restart, change test modes, or leave before the 1.9-second celebration callback
+and still retain earned completion credit. An interrupted or recreated HUD can
+recover a finished ten-answer session through its own server state and show the
+"Do another 10" control without relying on a missed final RemoteEvent. Stale
+grading callbacks cannot replace a newly selected practice round. Save operations
+retain monotonic per-user lifetime totals; no learner history is exported to ABVM.
+
+## Release and QA boundary
+
+The governed curriculum was first published to the existing Emma classroom
+place in Roblox version 60 through GitHub Actions, with 357 questions and no
+automatic content publishing. Later classroom releases retain the same place,
+source-receipt verification and manual PUBLISH_REQUEST gate. Check the GitHub
+publish run for the actual current version and binary digest, not this document.
+
+Static service doubles, Luau compilation and an isolated Rojo place build do
+not establish actual Roblox play, native staff rendering, live DataStore
+leave/rejoin isolation, or four-choice readability on a physical iPhone.
+Runtime and device acceptance must remain explicitly unverified until
+appropriate recordings and live-session evidence are reviewed.
