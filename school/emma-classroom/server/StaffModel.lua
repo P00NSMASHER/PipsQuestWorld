@@ -118,7 +118,7 @@ function StaffModel.pose(model,phase,walking)
         local anchor=shoulder and Vector3.new(side*.85,.78,0) or Vector3.new(side*.48,-1.0,0)
         local angle=shoulder and -side*swing or side*swing
         local tilt=shoulder and side*armRoll or 0
-        return CFrame.new(anchor)*CFrame.Angles(angle,0,tilt)*CFrame.new(-anchor)
+        return CFrame.new(anchor)*CFrame.Angles(angle,0,tilt)*CFrame.new(anchor*-1)
     end
     local joints={
         leftArm=joint("leftArm"),rightArm=joint("rightArm"),
