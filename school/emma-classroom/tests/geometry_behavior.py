@@ -71,18 +71,7 @@ function methods:Clone()
     return copy
 end
 function methods:BuildRigFromAttachments()
-    -- Engine method is not simulated as a renderer. Check the package's actual
-    -- rig attachment pairs coincide before constructing a staff rest pose.
-    local positions={}
-    for _,part in ipairs(self.Parent:GetChildren()) do
-        if part:IsA("BasePart") then for _,a in ipairs(part:GetChildren()) do
-            if a:IsA("Attachment") and string.find(a.Name,"RigAttachment$") then
-                local v=(part.CFrame*a.CFrame).Position
-                if positions[a.Name] then assert((positions[a.Name]-v).Magnitude<.001,"Disconnected native rig: "..a.Name)
-                else positions[a.Name]=v end
-            end
-        end end
-    end
+    error("Anchored display avatars must not create engine-driven rig joints")
 end
 function methods:SetAttribute(k,v) self.attrs[k]=v end
 function methods:GetAttribute(k) return self.attrs[k] end
@@ -101,6 +90,9 @@ end
 function methods:PivotTo(target)
     local delta=target*self:GetPivot():Inverse()
     for _,d in ipairs(self:GetDescendants()) do if d:IsA("BasePart") then d.CFrame=delta*d.CFrame end end
+    -- Engine PivotTo sets the exact target pivot, avoiding accumulated inverse
+    -- matrix roundoff in this service double over repeated rotations.
+    self.PrimaryPart.CFrame=target
 end
 local Workspace=Instance.new("Folder")
 local Lighting=Instance.new("Folder")
@@ -119,7 +111,7 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==5)
+    assert(m:GetAttribute("StaffGeometryVersion")==6)
     local head=m:FindFirstChild("Head")
     local face=head:FindFirstChild("face")
     assert(face and face:IsA("Decal") and not head:FindFirstChildOfClass("SurfaceGui"),"Use a standard avatar face, no handmade eye/skull overlays")
@@ -127,10 +119,14 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(shape and shape.MeshType==Enum.MeshType.Head and shape.Scale.Y==1.25)
     assert(m:FindFirstChildOfClass("Humanoid").RigType==Enum.HumanoidRigType.R15)
     assert(m:FindFirstChildOfClass("Shirt") and m:FindFirstChildOfClass("Pants"))
+    local hum=m:FindFirstChildOfClass("Humanoid")
+    assert(hum.RequiresNeck==false and hum.EvaluateStateMachine==false and hum.AutoRotate==false)
+    local headRest=(m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position
     local n,nativeN,groups=0,0,{}
     local minY,maxY=math.huge,-math.huge
     for _,d in ipairs(m:GetDescendants()) do
         assert(not d:IsA("Script") and not d:IsA("LocalScript"),"Imported visual assets must contain no scripts")
+        assert(not d:IsA("Motor6D") and not d:IsA("AnimationConstraint") and not d:IsA("Weld"),"No engine transform may compete with the display pose")
         if d:IsA("BasePart") then
             n+=1
             if d:IsA("MeshPart") then nativeN+=1;assert(string.find(d.MeshId,"rbxassetid://")) end
@@ -161,6 +157,12 @@ for _,teacher in ipairs(Data.Teachers) do
     StaffModel.pose(m,1.2,true)
     near((arm.CFrame:Inverse()*hand.CFrame).Position,before)
     if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
+    for frame=0,60 do
+        m:PivotTo(CFrame.new(frame*.13,3.15,-20)*CFrame.Angles(0,frame*.1,0))
+        StaffModel.pose(m,frame*.3,true)
+        near((m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position,headRest)
+        if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
+    end
     local posed=arm.Position;StaffModel.pose(m,1.2,true);near(arm.Position,posed)
     StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
 
@@ -180,6 +182,11 @@ for _,d in ipairs(World.Root:GetDescendants()) do
     counts[d.Name]=(counts[d.Name] or 0)+1
     if d:IsA("BasePart") then assert(d.Size.X>0 and d.Size.Y>0 and d.Size.Z>0,d.Name) end
 end
+assert(counts["Laptop keyboard key"]==40 and counts["Laptop trackpad"]==1)
+assert(counts["Globe meridian cradle"]==24 and counts["Globe continent"]==10)
+assert(counts["Cabinet door panel"]==2 and counts["Cabinet brass hinge"]==4)
+assert(counts["Notebook binding"]==96 and counts["Ruled notebook page"]==16)
+assert(counts["Trash can rib"]==16 and counts["Folded tissue"]==1)
 assert(counts["Oak floor board"]>290 and counts["Teacher inset drawer"]==6)
 assert(counts["Student desk top rounded corner"]==64 and counts["Student chair back rounded corner"]==64)
 assert(counts["Cubbie divider"]==7 and counts["Bin side"]==24)
@@ -199,7 +206,7 @@ for _,d in ipairs(World.Root:GetChildren()) do
         if p.Z>-21 and p.Z<16 then assert(not(p.X-s.X/2<30.4 and p.X+s.X/2>27.6),"Blocked teacher aisle: "..d.Name) end
     end
 end
-print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, native R15 mesh limbs/rig attachments, standard face assets and accessory poses; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
+print("PASS: actual constructors for 18 staff, max "..maxParts.." parts, floor/doorway fit, native R15 mesh limbs, engine animation disabled, coherent heads/accessories over 61 transforms, standard face assets and accessory poses; classroom 16 desks, storage, rugs, windows, board and teacher aisle")
 '''
 def asset_fixtures():
     lines=[]

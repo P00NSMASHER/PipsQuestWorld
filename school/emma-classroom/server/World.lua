@@ -92,8 +92,6 @@ local function book(parent: Instance,x: number,y: number,z: number,color: Color3
     roundedPanel(parent,"Classroom book",Vector3.new(2.15,.18,2.85),cf,color,.10,true,false)
     part(parent,"Book pages",Vector3.new(1.94,.12,2.65),cf*CFrame.new(.015,.14,0),P.cream,Enum.Material.SmoothPlastic,false)
     part(parent,"Notebook spine",Vector3.new(.12,.15,2.85),cf*CFrame.new(-1.04,.14,0),color:Lerp(P.ink,.14),Enum.Material.SmoothPlastic,false)
-    for i=0,5 do part(parent,"Notebook ruled line",Vector3.new(1.6,.012,.017),cf*CFrame.new(.05,.206,-.82+i*.31),Color3.fromRGB(167,184,196),Enum.Material.SmoothPlastic,false) end
-    part(parent,"Notebook margin",Vector3.new(.014,.014,2.35),cf*CFrame.new(-.59,.207,0),Color3.fromRGB(212,136,141),Enum.Material.SmoothPlastic,false)
 end
 
 local function pencilCup(parent: Instance,x: number,y: number,z: number)
@@ -132,12 +130,26 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     schoolChair(parent,"Student chair",x,z+3.9,Color3.fromRGB(47,50,50))
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
     book(parent,x-1.2,3.28,z-.2,notebookColor,math.rad(index%2==0 and 5 or -5))
-    part(parent,"Desk pencil",Vector3.new(.09,.09,1.75),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
+    cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
     local pencilCF=CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0)
     part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
     part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
     local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.6),P.cream,Enum.Material.SmoothPlastic,false)
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
+    local notebookCF=CFrame.new(x-1.2,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 5 or -5),0)
+    local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
+    for line=0,6 do
+        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),paper.CFrame*CFrame.new(.03,.010,-.82+line*.25),Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
+    end
+    part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
+    for ring=0,5 do
+        cylinder(parent,"Notebook binding",Vector3.new(.22,.08,.08),notebookCF*CFrame.new(-.98,.17,-1.02+ring*.4),P.metal,Enum.Material.Metal,false)
+    end
+    for _,dx in ipairs({-2.8,2.8}) do
+        ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.81),P.metal,Enum.Material.Metal,false)
+        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.5),P.ink,Enum.Material.SmoothPlastic,false)
+        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z+1.5),P.ink,Enum.Material.SmoothPlastic,false)
+    end
     if emma then
         local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-2.33)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
         surfaceText(tag,"★ EMMA ★",Enum.NormalId.Back,P.gold,P.green)
@@ -169,22 +181,39 @@ local function buildClassroomTexture(root: Instance)
 
     -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
     part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(124,102,79),Enum.Material.Wood)
-    for y=2,10,2 do
-        part(root,"Cabinet shelf line",Vector3.new(6.4,.12,.18),CFrame.new(31,y,21.02),Color3.fromRGB(77,63,52),Enum.Material.Wood,false)
-    end
+    part(root,"Cabinet center seam",Vector3.new(.065,11.1,.06),CFrame.new(31,6,21.03),Color3.fromRGB(61,48,36),Enum.Material.Wood,false)
     for _,x in ipairs({29.3,32.7}) do
-        ball(root,"Cabinet knob",Vector3.new(.32,.32,.32),CFrame.new(x,6,21),Color3.fromRGB(191,178,145),Enum.Material.Metal,false)
+        part(root,"Cabinet door panel",Vector3.new(3.08,10.9,.10),CFrame.new(x,6,21.03),Color3.fromRGB(152,119,82),Enum.Material.Wood,false)
+        for _,y in ipairs({3.2,8.4}) do
+            part(root,"Cabinet inset panel",Vector3.new(2.60,4.4,.06),CFrame.new(x,y,20.94),Color3.fromRGB(135,105,74),Enum.Material.Wood,false)
+            for _,dx in ipairs({-1.31,1.31}) do part(root,"Cabinet panel stile",Vector3.new(.055,4.55,.045),CFrame.new(x+dx,y,20.90),Color3.fromRGB(178,142,98),Enum.Material.Wood,false) end
+        end
+        part(root,"Cabinet door pull",Vector3.new(.13,1.15,.18),CFrame.new(x+(x<31 and .91 or -.91),6.2,20.79),Color3.fromRGB(180,176,158),Enum.Material.Metal,false)
+        for _,y in ipairs({1.8,10.2}) do part(root,"Cabinet brass hinge",Vector3.new(.14,.42,.15),CFrame.new(x+(x<31 and -1.50 or 1.50),y,20.88),Color3.fromRGB(167,149,101),Enum.Material.Metal,false) end
     end
     local trash=cylinder(root,"Classroom trash can",Vector3.new(3.4,3.1,3.1),CFrame.new(32.8,1.7,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(95,100,101),Enum.Material.Metal,false)
-    trash.Transparency=.05
+    trash.Transparency=0
+    cylinder(root,"Trash can opening",Vector3.new(.035,2.76,2.76),CFrame.new(32.8,3.42,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(32,36,38),Enum.Material.SmoothPlastic,false)
+    for i=0,15 do
+        local a=i*math.pi/8
+        cylinder(root,"Trash can rib",Vector3.new(2.85,.055,.055),CFrame.new(32.8+math.cos(a)*1.55,1.75,-24+math.sin(a)*1.55)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(137,142,141),Enum.Material.Metal,false)
+    end
     local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(22.5,4.05,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
+    part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.66,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
+    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(22.5,4.94,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
     part(root,"Rolling cart top",Vector3.new(5.5,.4,3.2),CFrame.new(-29,3.5,22),Color3.fromRGB(71,105,125),Enum.Material.Metal)
     for _,y in ipairs({1.0,2.1,3.2}) do part(root,"Rolling cart shelf",Vector3.new(5.2,.22,3),CFrame.new(-29,y,22),Color3.fromRGB(82,119,139),Enum.Material.Metal,false) end
     for _,x in ipairs({-31.2,-26.8}) do
         for _,z in ipairs({20.8,23.2}) do cylinder(root,"Cart wheel",Vector3.new(.35,.75,.75),CFrame.new(x,.45,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(45,48,49),Enum.Material.SmoothPlastic,false) end
     end
 
+    for _,x in ipairs({-31.2,-26.8}) do for _,z in ipairs({20.8,23.2}) do
+        cylinder(root,"Cart vertical rail",Vector3.new(3.15,.12,.12),CFrame.new(x,1.9,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(150,165,170),Enum.Material.Metal,false)
+    end end
+    book(root,-29.8,3.82,21.7,P.blue,.05)
+    book(root,-29.8,4.09,21.7,P.green,-.07)
+    part(root,"Cart paper stack",Vector3.new(2.1,.24,2.5),CFrame.new(-27.6,2.35,21.9),P.cream,Enum.Material.SmoothPlastic,false)
     -- A small prayer table / classroom faith corner.
     part(root,"Prayer table",Vector3.new(8,.5,3.5),CFrame.new(-28,3.2,-27),Color3.fromRGB(139,98,64),Enum.Material.Wood)
     for _,x in ipairs({-31,-25}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
@@ -385,17 +414,52 @@ local function buildTeacherDesk(root: Instance)
             part(root,"Teacher drawer handle",Vector3.new(1.02,.10,.18),CFrame.new(x,.84+row*.88,-22.29),P.metal,Enum.Material.Metal,false)
         end
     end
-    local laptop=part(root,"Teacher laptop screen",Vector3.new(4.6,2.8,.22),CFrame.new(26,5.1,-26.1)*CFrame.Angles(math.rad(-8),0,0),Color3.fromRGB(50,70,82),Enum.Material.Glass,false)
-    surfaceText(laptop,"ABVM\nGRADE 2",Enum.NormalId.Back,P.cream,Color3.fromRGB(50,70,82),Enum.Font.GothamBold)
-    part(root,"Teacher laptop base",Vector3.new(4.8,.2,3.1),CFrame.new(26,3.6,-24.9),Color3.fromRGB(88,93,95),Enum.Material.Metal,false)
+    local screenCF=CFrame.new(26,5.1,-26.1)*CFrame.Angles(math.rad(-8),0,0)
+    roundedPanel(root,"Laptop display frame",Vector3.new(4.6,2.8,.20),screenCF,Color3.fromRGB(38,42,48),.12,false,false)
+    local laptop=part(root,"Teacher laptop screen",Vector3.new(4.23,2.40,.025),screenCF*CFrame.new(0,.03,.12),Color3.fromRGB(225,238,236),Enum.Material.SmoothPlastic,false)
+    local display=surfaceText(laptop,"TODAY'S LESSON\nReading • Math • Spelling",Enum.NormalId.Back,P.blue,Color3.fromRGB(225,238,236),Enum.Font.GothamMedium)
+    display.BackgroundTransparency=0
+    ball(root,"Laptop webcam",Vector3.new(.065,.065,.025),screenCF*CFrame.new(0,1.29,.12),P.ink,Enum.Material.Glass,false)
+    roundedPanel(root,"Teacher laptop base",Vector3.new(4.8,.20,3.1),CFrame.new(26,3.55,-24.85),Color3.fromRGB(162,167,173),.14,true,false)
+    local keyboardCF=CFrame.new(26,3.67,-25.20)
+    for row=0,3 do for col=0,9 do
+        part(root,"Laptop keyboard key",Vector3.new(.34,.045,.28),keyboardCF*CFrame.new(-1.82+col*.40,0,-.50+row*.34),Color3.fromRGB(48,51,58),Enum.Material.SmoothPlastic,false)
+    end end
+    part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.68,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
+    roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.68,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
+    cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.69,-26.12),P.metal,Enum.Material.Metal,false)
     pencilCup(root,21.5,4.4,-24.2)
     book(root,29.5,3.62,-24.2,Color3.fromRGB(61,110,78),math.rad(8))
     book(root,29.5,3.95,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
-    -- Globe.
-    ball(root,"Classroom globe",Vector3.new(4.5,4.5,4.5),CFrame.new(18.2,6.1,-29),Color3.fromRGB(72,148,192),Enum.Material.SmoothPlastic,false)
-    part(root,"Globe land",Vector3.new(.25,2.5,1.4),CFrame.new(17,6.4,-31.0)*CFrame.Angles(0,math.rad(20),math.rad(12)),Color3.fromRGB(104,155,76),Enum.Material.Grass,false)
-    part(root,"Globe stand",Vector3.new(.35,3,.35),CFrame.new(18.2,3.8,-29),P.metal,Enum.Material.Metal,false)
-    cylinder(root,"Globe base",Vector3.new(.35,3.2,3.2),CFrame.new(18.2,2.5,-29)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(87,89,88),Enum.Material.Metal,false)
+    -- Tilted globe: continents follow the sphere, with a meridian cradle and
+    -- latitude lines. No rectangular land plate sticking off the sphere.
+    local center=CFrame.new(18.2,5.87,-29)*CFrame.Angles(0,0,math.rad(-23))
+    local radius=1.90
+    ball(root,"Classroom globe",Vector3.new(radius*2,radius*2,radius*2),center,Color3.fromRGB(100,167,191),Enum.Material.SmoothPlastic,false)
+    local function arc(name,r,tilt,color,thickness)
+        local frame=center*CFrame.Angles(tilt,0,0)
+        for i=0,23 do
+            local a,b=i*math.pi/12,(i+1)*math.pi/12
+            local u=(frame*CFrame.new(math.cos(a)*r,math.sin(a)*r,0)).Position
+            local v=(frame*CFrame.new(math.cos(b)*r,math.sin(b)*r,0)).Position
+            local midpoint=(u+v)*.5
+            local cf=CFrame.lookAt(midpoint,v)*CFrame.Angles(0,math.pi/2,0)
+            cylinder(root,name,Vector3.new((v-u).Magnitude+.015,thickness,thickness),cf,color,Enum.Material.Metal,false)
+        end
+    end
+    arc("Globe meridian cradle",2.07,0,Color3.fromRGB(177,155,94),.065)
+    arc("Globe equator",1.91,math.pi/2,Color3.fromRGB(208,219,191),.018)
+    -- Small low-relief land patches: positions are latitude / longitude.
+    for _,patch in ipairs({{48,-110,.83,.61},{28,-100,.60,.75},{-12,-62,.64,1.04},{-38,-67,.37,.65},{45,12,.61,.46},{9,22,.78,1.08},{51,76,1.18,.65},{20,109,.60,.66},{-25,135,.62,.45},{65,-40,.30,.47}}) do
+        local lat,lon=math.rad(patch[1]),math.rad(patch[2])
+        local normal=Vector3.new(math.cos(lat)*math.sin(lon),math.sin(lat),math.cos(lat)*math.cos(lon))
+        local point=(center*CFrame.new(normal*1.83)).Position
+        local cf=CFrame.lookAt(point,center.Position)
+        ball(root,"Globe continent",Vector3.new(patch[3],patch[4],.24),cf,Color3.fromRGB(158,174,111),Enum.Material.SmoothPlastic,false)
+    end
+    cylinder(root,"Globe stand",Vector3.new(.73,.20,.20),CFrame.new(18.2,3.63,-29)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
+    cylinder(root,"Globe base",Vector3.new(.18,2.7,2.7),CFrame.new(18.2,3.34,-29)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(69,74,73),Enum.Material.Metal,false)
+
 end
 
 local function buildBackDoorAndHall(root: Instance)
@@ -576,7 +640,7 @@ end
 
 function World.walkTeacher(model:Model,entering:boolean)
     if model:GetAttribute("QuickStudyEntry") then
-        if model.Parent then World.moveTeacher(model,entering and World.TeacherFront or World.TeacherStudyEntry,.4) end
+        if model.Parent then model:PivotTo(entering and World.TeacherFront or World.TeacherStudyEntry);World.poseTeacher(model,0,false) end
         return
     end
     if entering then
