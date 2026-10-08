@@ -20,8 +20,13 @@ end,__newindex=function(t,k,v)
     t.props[k]=v
 end}
 local Instance={new=function(class) return setmetatable({props={Name=class,ClassName=class,AbsoluteSize={X=844,Y=390}},children={},attrs={},signals={}},meta) end}
-function methods:IsA(k) return self.ClassName==k end
+function methods:IsA(k) return self.ClassName==k or (k=="BasePart" and self.ClassName=="Part") end
 function methods:GetChildren() return table.clone(self.children) end
+function methods:GetDescendants()
+ local out={}
+ local function walk(node) for _,child in ipairs(node.children) do out[#out+1]=child;walk(child) end end
+ walk(self);return out
+end
 function methods:FindFirstChild(k) for _,c in ipairs(self.children) do if c.Name==k then return c end end end
 function methods:FindFirstChildOfClass(k) for _,c in ipairs(self.children) do if c.ClassName==k then return c end end end
 function methods:WaitForChild(k) return self:FindFirstChild(k) end
@@ -31,12 +36,23 @@ function methods:GetPropertyChangedSignal(k) self.signals[k]=self.signals[k] or 
 function methods:Destroy() self.Parent=nil end
 local oldNew=Instance.new
 Instance.new=function(class) local x=oldNew(class);if class=="TextButton" then x.Activated=signal() end;return x end
-local player={CharacterAdded=signal()};local playerGui=Instance.new("Folder")
+local player={UserId=1,CharacterAdded=signal()};local playerGui=Instance.new("Folder")
 player.WaitForChild=function() return playerGui end
 local request,event={}, {OnClientEvent=signal()}
 local remoteFolder={WaitForChild=function(_,n)return n=="Request" and request or event end}
 local replicated={WaitForChild=function(_,n) if n=="EmmaClassroomRemotes" then return remoteFolder end;return {WaitForChild=function()return Layout end} end}
-local workspace={CurrentCamera={GetPropertyChangedSignal=function()return signal()end},GetPropertyChangedSignal=function()return signal()end}
+local workspace=Instance.new("Folder")
+workspace.CurrentCamera={GetPropertyChangedSignal=function()return signal()end}
+local world=Instance.new("Folder");world.Name="EmmaStudyWorld";world.ChildAdded=signal();world.Parent=workspace
+local smart=Instance.new("Part");smart.Name="Interactive smartboard";smart.Parent=world
+local boardGui=Instance.new("SurfaceGui");boardGui.Name="QuestionBoard";boardGui.Parent=smart
+local boardFrame=Instance.new("Frame");boardFrame.Parent=boardGui
+for _,name in ipairs({"Subject","Question","Footer"}) do local label=Instance.new("TextLabel");label.Name=name;label.Parent=boardFrame end
+local foreign=Instance.new("Model");foreign.Name="AnotherStudentTeacher";foreign.DescendantAdded=signal();foreign:SetAttribute("OwnerUserId",2);foreign.Parent=world
+local foreignPart=Instance.new("Part");foreignPart.Parent=foreign
+local foreignSpeech=Instance.new("BillboardGui");foreignSpeech.Enabled=true;foreignSpeech.Parent=foreign
+local own=Instance.new("Model");own.Name="MyTeacher";own.DescendantAdded=signal();own:SetAttribute("OwnerUserId",1);own.Parent=world
+local ownPart=Instance.new("Part");ownPart.Parent=own
 local game={GetService=function(_,n)
  if n=="Players" then return {LocalPlayer=player} end
  if n=="ReplicatedStorage" then return replicated end
@@ -70,7 +86,12 @@ local function boot()
 suffix=r'''
 end
 boot()
-assert(#queue==1);table.remove(queue,1)()
+assert(#queue==2,"Board replica and initial handshake should both be scheduled")
+table.remove(queue,1)();table.remove(queue,1)()
+assert(foreignPart.LocalTransparencyModifier==1 and foreignSpeech.Enabled==false,"Other players' teacher parts and speech must be hidden locally")
+assert(ownPart.LocalTransparencyModifier~=1,"Do not hide the student's own teacher")
+assert(string.find(boardFrame.Question.Text,"Which word begins",1,true),"Personal question should paint the local smartboard")
+assert(string.find(boardFrame.Subject.Text,"Mrs. Benulis",1,true))
 local gui=playerGui.EmmaStudyUI;local root=gui:GetChildren()[1]
 local card=root.AnswerBar;local toggle=root.ViewToggle
 assert(card.Visible and workspace.CurrentCamera.CameraType==Enum.CameraType.Scriptable)
@@ -85,6 +106,7 @@ root.AbsoluteSize={X=568,Y=280}
 local four=table.clone(question);four.choices={"A","B","C","D"}
 event.OnClientEvent.callback(four)
 assert(answerButton(4) and answerButton(4).Size.Y.Offset>=44)
+assert(string.find(boardFrame.Question.Text,"D.  D",1,true),"Four-choice mirror must include last answer")
 assert(answerButton(1).Position.Y.Offset==answerButton(2).Position.Y.Offset,"Short landscape uses two columns")
 root.AbsoluteSize={X=844,Y=390}
 event.OnClientEvent.callback(question)
@@ -109,15 +131,18 @@ request.InvokeServer=function(_,cmd,arg)
 end
 answerButton(2).Activated.callback();assert(lastToken=="q1" and lastIndex==2)
 assert(string.find(card.QuestionAndHint.QuestionPrompt.Text,"Say the first two sounds.",1,true))
+assert(boardFrame.Footer.Text=="Hint: Say the first two sounds.","Hint must remain local to this player")
 card.SkipQuestion.Activated.callback()
 answerButton(1).Activated.callback();assert(lastToken=="q2" and lastIndex==1,"Skip return must not erase the new question token/answers")
 event.OnClientEvent.callback({kind="correct",explanation="Frog begins with fr.",progress={stars=1}})
 assert(not answerButton(1) and card.Visible and not card.SkipQuestion.Visible)
+assert(string.find(boardFrame.Subject.Text,"CORRECT",1,true))
 event.OnClientEvent.callback({kind="session_complete",progress={stars=10}})
 local restart
 for _,c in ipairs(card:GetChildren())do for _,b in ipairs(c:GetChildren())do if b:IsA("TextButton") then restart=b end end end
 assert(restart and restart.Text=="Do another 10")
-print("PASS: actual client receives all choices, restores free-roam controls, preserves question during skip RPC/event race, sends token/index, displays hints/correct/session finish")
+assert(string.find(boardFrame.Subject.Text,"session complete",1,true),"Completion mirrored client-only")
+print("PASS: personal smartboard mirrors prompts, four choices, hints and completion; other players NPCs hidden; client preserves camera/answer/retry flow")
 '''
 fixture=p/'tests/.client-runtime.generated.lua'
 try:
