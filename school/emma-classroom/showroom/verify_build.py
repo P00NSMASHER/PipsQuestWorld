@@ -45,6 +45,8 @@ assert "Vector3.new(5.78,.28,3.86)" in room, "Oversized prototype desk returned"
 assert "Vector3.new(2.5,1.90,.23)" in room, "Oversized prototype chair returned"
 assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
 assert "GalleryPass.decorate(Room.Root)" in main
+assert 'sign(root,"Rule card "' not in room, "Old oversized classroom cards returned"
+assert '"Number learning card"' not in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Rear wall gallery would overlap number cards"
 
 if len(sys.argv) > 1:
     root = ET.parse(sys.argv[1]).getroot()
