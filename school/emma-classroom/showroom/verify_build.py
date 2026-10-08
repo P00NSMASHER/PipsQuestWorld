@@ -41,7 +41,9 @@ assert "StaffModel" not in room and "teacherModel" not in room
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
-assert "Vector3.new(5.78,.28,3.86)" in room, "Oversized prototype desk returned"
+assert "Vector3.new(5.78,.16,3.86)" in room, "Desk rim returned to bulky dark prototype"
+assert "Color3.fromRGB(126,121,109)" in room, "Thin laminate desk surround unexpectedly changed"
+assert "{-.69,2.03,.15,-8}" in room and "{.69,2.13,-.16,9}" in room, "Chair contour taper was lost"
 assert "Vector3.new(2.38,1.90,.22)" in room, "Missing single contoured-back chair collider"
 assert 'name.." molded back panel"' in room and 'name.." molded side return"' in room, "Backrest curved shell missing"
 assert 'name.." underseat frame runner"' in room, "Chair steel runner missing"
