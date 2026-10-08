@@ -1,0 +1,79 @@
+name: Prepare Reviewed Emma Curriculum
+on:
+  schedule:
+    - cron: '25 */4 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/emma-curriculum-refresh.yml']
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: emma-reviewed-curriculum-candidate
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild/emma-classroom-study-v1
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Hold while a curriculum candidate is under review
+        id: pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          count="$(gh api 'repos/${{ github.repository }}/pulls?state=open&base=rebuild%2Femma-classroom-study-v1&per_page=100' --jq '[.[] | select(.head.ref | startswith("curriculum/emma-abvm-"))] | length')"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" != 0 ]; then echo 'An existing curriculum candidate remains under review; accepted content is unchanged.'; fi
+      - name: Export and validate reviewed ABVM main
+        if: steps.pending.outputs.count == '0'
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm-source"
+          bash school/emma-classroom/tools/refresh_curriculum.sh "$RUNNER_TEMP/abvm-source"
+      - name: Prepare a draft content-only PR, never publish
+        if: steps.pending.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          files=(school/emma-classroom/curriculum.json school/emma-classroom/server/QuestionBank.lua school/emma-classroom/curriculum-receipt.json)
+          if git diff --quiet -- "${files[@]}"; then echo 'The accepted source snapshot is already current.'; exit 0; fi
+          source_sha="$(python3 -c 'import json; print(json.load(open("school/emma-classroom/curriculum-receipt.json"))["sourceCommit"])')"
+          [[ "$source_sha" =~ ^[a-f0-9]{40}$ ]]
+          branch="curriculum/emma-abvm-${source_sha:0:12}"
+          # One immutable candidate per source SHA; preserve previously rejected
+          # candidates instead of rewriting or repeatedly reopening them.
+          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then echo 'This source already has a retained candidate; review its existing evidence.'; exit 0; fi
+          git switch -c "$branch"
+          git config user.name 'Emma Curriculum Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -- "${files[@]}"
+          git commit -m "Prepare reviewed ABVM curriculum $source_sha"
+          git push origin "HEAD:refs/heads/$branch"
+          cat > "$RUNNER_TEMP/pr-body.md" <<BODY
+          Refreshes only the shared bundle, server-only question bank and exact-source receipt from reviewed ABVM main at $source_sha.
+
+          Source exporter tests, provenance/privacy/answer checks, deterministic conversion and importer regressions passed before candidate creation. Future ID reuse with changed content is rejected. No private learner history is exported.
+
+          Keep draft until an independent user/controller marks ready and all exact-head classroom/Foundation/Class/Progression checks pass. GitHub-token-created PRs do not themselves trigger those workflows; ready_for_review is explicitly supported by Emma Classroom CI. Full reviewed-source gates remain required. No automatic merge, PUBLISH_REQUEST edit or Roblox publishing occurs. Runtime, live DataStore isolation and physical-iPhone acceptance remain separate release requirements.
+          BODY
+          gh pr create --base rebuild/emma-classroom-study-v1 --head "$branch" --draft \
+            --title 'Refresh reviewed ABVM classroom curriculum' --body-file "$RUNNER_TEMP/pr-body.md"
+      - name: Preserve preparation evidence even if PR creation fails
+        if: always() && steps.pending.outputs.count == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-curriculum-preparation-${{ github.run_id }}
+          path: |
+            school/emma-classroom/curriculum-receipt.json
+          if-no-files-found: warn
+          retention-days: 14
