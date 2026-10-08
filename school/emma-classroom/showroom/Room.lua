@@ -350,13 +350,30 @@ local function buildReadingCorner(root:Instance)
     for _,x in ipairs({-31,-22,-13}) do
         part(root,"Reading shelf upright",Vector3.new(.3,6,2.7),CFrame.new(x,3.2,23.3),P.wood,Enum.Material.Wood)
     end
-    local colors={P.blue,Color3.fromRGB(174,74,82),P.green,P.gold}
+    -- Spines use staggered sizes and restrained classroom-library colors,
+    -- not forty equal-height blocks with identical white labels. Keep the
+    -- existing shelf, capacity and book count; no extra replicated pieces.
+    local colors={
+        P.blue,Color3.fromRGB(151,84,79),P.green,
+        Color3.fromRGB(177,146,79),Color3.fromRGB(81,107,130),
+        Color3.fromRGB(118,98,132),Color3.fromRGB(144,122,95),
+    }
     for row=0,1 do
         for i=1,20 do
             local x=-30.5+(i-1)*.85
-            local height=1.6+(i%3)*.22
-            part(root,"Reading book spine",Vector3.new(.55,height,1.5),CFrame.new(x,.95+row*2.55+height/2,23.3),colors[i%4+1],Enum.Material.SmoothPlastic,false)
-            part(root,"Book spine label",Vector3.new(.3,.14,.03),CFrame.new(x,1.7+row*2.55,22.53),P.cream,Enum.Material.SmoothPlastic,false)
+            local width=.47+((i*3+row)%4)*.075
+            local height=1.45+(i%5)*.14
+            local z=23.3+(((i+row)%3)-1)*.075
+            local lowerShelf=.83+row*2.55
+            local lean=math.rad(((i*7+row*3)%11)-5)
+            local spineFrame=CFrame.new(x,lowerShelf+height/2,z)*
+                CFrame.Angles(0,0,lean)
+            part(root,"Reading book spine",Vector3.new(width,height,1.5),
+                spineFrame,colors[(i*5+row*3)%#colors+1],
+                Enum.Material.SmoothPlastic,false)
+            part(root,"Book spine label",Vector3.new(width*.52,.14,.03),
+                spineFrame*CFrame.new(0,-height*.09,-.765),
+                P.cream,Enum.Material.SmoothPlastic,false)
         end
     end
     -- Six synthetic artwork panels were duplicated on the front chalkboard.
