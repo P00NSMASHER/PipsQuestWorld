@@ -1,14 +1,14 @@
-publish-request: 2026-10-08 completed-session-recovery-v61
-scope: incremental update to EXISTING Emma Classroom Roblox start place; no new game
+publish-request: 2026-10-08 native-visual-entrance-motion-v62
+scope: visual-only candidate in existing Emma Study Classroom game; never a competing place
 universe-id: 10769455759
 place-id: 114603280760042
-verified-code-head: e6d41ba8345d113b4ae748854da02a1f1193c4b2
-curriculum-source-commit: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
+verified-visual-implementation-head: bb66d04c75ebb8afd09395d98329befb2e89ced2
+improvements: preserve Roblox catalog hair texture IDs; gently tint texture; articulate grouped native R15 arms and legs using rest-frame poses; enter from actual side classroom hallway and walk up clear aisle; warm material contrast; blue school chairs
+reviewed-curriculum-commit: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
 curriculum-content-sha256: 22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418
-curriculum-items: 357 (134 current, 65 cumulative, 158 original STAR-style practice)
-change: credit tenth-answer session immediately; keep exactly-once completion notification and recover Do another 10 from server state
-tests: four exact-head PR checks plus mapped-build, preview all passed; preserves per-player smartboards, private server answer keys and monotonic progress
-authorization: user requested finishing original Work and keeping updates integrated into existing continuing Roblox game
-release-control: manual PUBLISH_REQUEST only; do not enable scheduled Roblox publication
-device-evidence: actual iPhone/iPad gameplay, live DataStore disconnect/rejoin, touch targets and teacher rendering not independently verified; no release-quality claim
-status: requested; version number determined from Roblox response to publisher
+curriculum-items: 357; existing question IDs, answer-key authority and test scope remain unchanged
+verification: 7 exact-head GitHub checks PASS, local Windows Rojo 7.7.1 build and 18-staff geometry harness PASS
+visual-acceptance: NOT VERIFIED in actual Roblox Studio/iPhone; installer prevented rendered screenshot; retain draft PR #309 and request device capture
+authorization: user requested continuing laptop work, fixing extremely poor graphics and making the existing game playable
+release-policy: manual PUBLISH_REQUEST only, no automatic Roblox publication from future curriculum updates
+status: publish candidate; only Roblox publisher determines new version
