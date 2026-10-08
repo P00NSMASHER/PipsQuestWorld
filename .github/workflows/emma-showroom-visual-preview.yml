@@ -64,13 +64,20 @@ jobs:
           RHR="$RUNNER_TEMP/rhr-venv/bin/rhr"
           SRC="$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
           mkdir -p "$RUNNER_TEMP/visual"
-          "$RHR" scene "$SRC" --view iso --out "$RUNNER_TEMP/visual/01-isometric.png"
-          "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
-          "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
+          # One geometry upload / render session for every standard camera.
+          "$RHR" scene "$SRC" --views iso,front,top,left,right,back --out "$RUNNER_TEMP/visual/interior.png"
+          mv "$RUNNER_TEMP/visual/interior-iso.png" "$RUNNER_TEMP/visual/01-isometric.png"
+          mv "$RUNNER_TEMP/visual/interior-front.png" "$RUNNER_TEMP/visual/02-front.png"
+          mv "$RUNNER_TEMP/visual/interior-top.png" "$RUNNER_TEMP/visual/03-top.png"
+          # Ground-level positions measured in room source studs, not fabricated renders.
+          "$RHR" scene "$SRC" --camera=0,5.5,18 --look-at=0,7,-33 --out "$RUNNER_TEMP/visual/05-eye-front.png"
+          "$RHR" scene "$SRC" --camera=0,5.5,-17 --look-at=0,6,25 --out "$RUNNER_TEMP/visual/06-eye-back.png"
+          "$RHR" scene "$SRC" --camera=12,5.5,0 --look-at=-36,7,0 --out "$RUNNER_TEMP/visual/07-eye-windows.png"
+          "$RHR" scene "$SRC" --camera=-20,5.5,0 --look-at=35,7,0 --out "$RUNNER_TEMP/visual/08-eye-storage.png"
           "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
-          test -s "$RUNNER_TEMP/visual/01-isometric.png"
-          test -s "$RUNNER_TEMP/visual/02-front.png"
-          test -s "$RUNNER_TEMP/visual/03-top.png"
+          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage; do
+            test -s "$RUNNER_TEMP/visual/$name.png"
+          done
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
