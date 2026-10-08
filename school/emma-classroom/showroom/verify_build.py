@@ -64,7 +64,20 @@ assert "Enabled = false" in mesh_config, "Unreviewed premium meshes enabled with
 assert "ChairModelAssetId = 0" in mesh_config and "DeskModelAssetId = 0" in mesh_config
 assert "if not Config.Enabled then" in mesh_adapter, "Model fallback guard missing"
 assert "instances ~= 16" in mesh_adapter, "All 16 chairs/desks must construct before hiding originals"
-assert 'descendant:IsA("LuaSourceContainer")' in mesh_adapter, "Imported scripts must be rejected"
+assert 'descendant:IsA("LuaSourceContainer")' not in mesh_adapter, "Use strict class allowlist, not partial script denial"
+assert 'descendant:IsA("MeshPart")' in mesh_adapter and 'descendant:IsA("SurfaceAppearance")' in mesh_adapter, "Untrusted assets must be constrained to supported GLB classes"
+assert 'descendant:IsA("Model")' in mesh_adapter and 'descendant:IsA("Folder")' in mesh_adapter
+assert 'if not nested:IsA("SurfaceAppearance") then' in mesh_adapter, "Imported child instances must be sanitized"
+assert 'Student desk edge' in mesh_adapter and 'Student desk top' in mesh_adapter
+assert 'string.sub(name,1,#"Student desk edge")' in mesh_adapter, "RoundedPanel edge corner fragments must disappear"
+assert 'string.sub(name,1,#"Student desk top")' in mesh_adapter, "RoundedPanel top corner fragments must disappear"
+assert "Config.ChairModelAssetId == Config.DeskModelAssetId" in mesh_adapter, "Distinct verified owned model assets required"
+assert 'Vector3.new(2.46,3.774,2.365)' in mesh_adapter
+assert 'Vector3.new(5.78,3.085,3.86)' in mesh_adapter
+assert 'math.abs(size.Y - expected.Y) < .30' in mesh_adapter and 'math.abs(size.Z - expected.Z) < .30' in mesh_adapter, "Bad-axis/scale GLBs must fail closed"
+assert 'SwapFailed_PreservingOriginalFurniture' in mesh_adapter
+assert 'local originals = {}' in mesh_adapter and 'p.Transparency = previous[i]' in mesh_adapter, "A partial furniture swap must restore original visibility"
+assert 'instances ~= 16' in mesh_adapter, "Must stage all 16 chair/desk sets"
 assert 'sign(root,"Rule card "' not in room, "Old oversized classroom cards returned"
 assert 'for i,x in ipairs({-24,-8,12}) do' in room, "Unsupported basket placement returned"
 assert '"Number learning card"' not in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Rear wall gallery would overlap number cards"
