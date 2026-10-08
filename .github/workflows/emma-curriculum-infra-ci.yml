@@ -78,3 +78,19 @@ jobs:
           grep -q 'CANDIDATE_DRIFT' .github/workflows/emma-curriculum-refresh.yml
           grep -q 'CONTENT_CONTRACT_CONNECTED' .github/workflows/emma-curriculum-refresh.yml
           echo 'PASS: every four hours, target-configurable, content-only candidate, no automatic Roblox release.'
+      - name: Verify write-token isolation and explicit blocked-review failure
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          w=Path('.github/workflows/emma-curriculum-refresh.yml').read_text()
+          assert w.count('persist-credentials: false') >= 2, 'Both checkouts must avoid exposing credentials to source exporter'
+          assert 'gh auth setup-git' in w, 'Git write credentials must be acquired after source validations'
+          source_step=w.split('- name: Rebuild content from current reviewed ABVM main', 1)[1].split('- name: Prepare or recover one draft content-only candidate', 1)[0]
+          assert 'GH_TOKEN' not in source_step, 'Untrusted source tests may not receive write token'
+          assert "cat <<'BODY'" in w, 'PR description must never evaluate shell substitutions'
+          assert 'REVIEW_REQUIRED:' in w, 'Closed candidate must be reported as blocked'
+          assert 'PR_CREATE_PERMISSION_DENIED' in w, 'Preserve truthful 403 permission diagnostic'
+          assert 'CANDIDATE_DRIFT' in w, 'Retained candidate checksum comparison must remain'
+          print('PASS: source credentials isolated, PR description literal, review and permission gates preserved')
+          PY
