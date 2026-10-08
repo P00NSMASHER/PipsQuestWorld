@@ -8,7 +8,7 @@ local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(245,242,225),
+    wall=Color3.fromRGB(238,228,207),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
@@ -71,9 +71,16 @@ local function sign(parent: Instance,name: string,text: string,size: Vector3,cf:
 end
 
 local function ceilingLight(parent: Instance,x: number,z: number)
-    local box=part(parent,"Recessed ceiling light",Vector3.new(7.6,.22,2.4),CFrame.new(x,17.72,z),Color3.fromRGB(255,249,220),Enum.Material.Neon,false)
-    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(255,251,242);light.Brightness=.24;light.Range=29;light.Angle=105;light.Shadows=false;light.Parent=box
-    part(parent,"Light trim",Vector3.new(8,.10,2.8),CFrame.new(x,17.80,z),Color3.fromRGB(205,207,202),Enum.Material.Metal,false)
+    -- Actual ceiling fixtures use a recessed matte troffer and a small diffusing
+    -- lens. Nine enormous Neon slabs looked like glowing television panels.
+    part(parent,"Recessed light trim",Vector3.new(6.9,.12,2.03),CFrame.new(x,17.72,z),
+        Color3.fromRGB(207,208,204),Enum.Material.Metal,false)
+    local lens=part(parent,"Frosted fluorescent diffuser",Vector3.new(6.3,.08,1.52),
+        CFrame.new(x,17.59,z),Color3.fromRGB(246,241,223),Enum.Material.Glass,false)
+    lens.Transparency=.10;lens.Reflectance=.005
+    local light=Instance.new("SurfaceLight")
+    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,240,220)
+    light.Brightness=.13;light.Range=25;light.Angle=115;light.Shadows=false;light.Parent=lens
 end
 
 local function plant(parent: Instance,x: number,y: number,z: number,scale: number)
@@ -187,8 +194,11 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     if emma then
         local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-1.98)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
         surfaceText(tag,"★ EMMA ★",Enum.NormalId.Back,P.gold,P.green)
-        cylinder(parent,"Emma pink water bottle",Vector3.new(1.9,.75,.75),CFrame.new(x+2.45,4.23,z+.45)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(225,125,154),Enum.Material.SmoothPlastic,false)
-        part(parent,"Water bottle cap",Vector3.new(.5,.20,.5),CFrame.new(x+2.45,5.25,z+.45),Color3.fromRGB(190,86,124),Enum.Material.SmoothPlastic,false)
+        cylinder(parent,"Emma pink water bottle",Vector3.new(1.10,.55,.55),
+            CFrame.new(x+2.12,3.77,z+.45)*CFrame.Angles(0,0,math.pi/2),
+            Color3.fromRGB(225,125,154),Enum.Material.SmoothPlastic,false)
+        part(parent,"Water bottle cap",Vector3.new(.42,.17,.42),
+            CFrame.new(x+2.12,4.38,z+.45),Color3.fromRGB(190,86,124),Enum.Material.SmoothPlastic,false)
     end
 end
 
@@ -524,14 +534,14 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=1.65;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.63
+    Lighting.ClockTime=10.25;Lighting.Brightness=1.48;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.63
     -- Soft is the current Roblox lighting-style API. Keep compatibility with
     -- engine versions where the enum is unavailable; no external assets.
     pcall(function() Lighting.LightingStyle=Enum.LightingStyle.Soft end)
     Lighting.Ambient=Color3.fromRGB(134,137,139);Lighting.OutdoorAmbient=Color3.fromRGB(161,173,181)
     Lighting.EnvironmentDiffuseScale=.66;Lighting.EnvironmentSpecularScale=.24;Lighting.ExposureCompensation=-.10
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
-    atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.025;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
+    atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.008;atmosphere.Offset=.08;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
     bloom.Name="EmmaClassroomBloom";bloom.Intensity=.03;bloom.Size=20;bloom.Threshold=1.25;bloom.Parent=Lighting
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
@@ -611,8 +621,8 @@ function World.build()
     part(root,"Clock hour hand",Vector3.new(.12,.85,.12),CFrame.new(31.5,15.25,-33.75)*CFrame.Angles(0,0,math.rad(45)),Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
     -- Warm fluorescent lighting.
-    for _,x in ipairs({-22,0,22}) do
-        for _,z in ipairs({-22,0,20}) do ceilingLight(root,x,z) end
+    for _,x in ipairs({-18,18}) do
+        for _,z in ipairs({-22,0,19}) do ceilingLight(root,x,z) end
     end
 
     local spawn=Instance.new("SpawnLocation")
