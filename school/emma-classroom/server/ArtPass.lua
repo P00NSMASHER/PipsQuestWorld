@@ -213,7 +213,7 @@ local function focalTeachingArea(root:Instance)
         CFrame.new(-20.4,6.55,-29.7),C.wood,Enum.Material.Wood,false)
     local poster=piece(group,"Easel framed print",Vector3.new(4.68,4.18,.055),
         wood.CFrame*CFrame.new(0,0,.15),C.mint,Enum.Material.SmoothPlastic,false)
-    printed(poster,"OUR CLASSROOM\\nA PLACE TO GROW",Enum.NormalId.Back,C.navy,C.mint)
+    printed(poster,"OUR CLASSROOM\nA PLACE TO GROW",Enum.NormalId.Back,C.navy,C.mint)
     for _,dx in ipairs({-1.80,1.80}) do
         piece(group,"Easel timber support",Vector3.new(.32,6.2,.35),
             CFrame.new(-20.4+dx,3.2,-29.82),C.woodEdge,Enum.Material.Wood,false)
