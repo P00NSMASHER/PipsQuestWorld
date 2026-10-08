@@ -222,6 +222,37 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Easel wall stars did not move with the display"
     )
     print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f}")
+    # The brown rectangle in the last player-eye render was a physical
+    # bulletin-board defect: cork was behind a full-size wooden front plate.
+    # Assert the actual constructed front-facing depth and human-scale sheets.
+    board_back=only("Student work board thin wood backing")
+    board_cork=only("Student work board exposed cork")
+    assert abs(float(board_cork[6])-9.4)<.02 and abs(float(board_cork[7])-5.65)<.02, (
+        "Oversized cork board returned"
+    )
+    assert float(board_cork[11]) > float(board_back[11])+.10, (
+        "Solid wooden backing hides the classroom cork face"
+    )
+    for name,expected in {
+        "Student work board horizontal wood rail":2,
+        "Student work board vertical wood rail":2,
+        "Pinned student work sheet":3,
+        "Student work colored heading":3,
+        "Student work pencil line":9,
+        "Bulletin board brass pushpin":3,
+    }.items():
+        assert by_name[name]==expected, (
+            f"Student-work display {name} count {by_name[name]} != {expected}"
+        )
+    for card in [row for row in lines if row[1]=="Pinned student work sheet"]:
+        assert float(card[11]) > float(board_cork[11]), (
+            "Pinned student work vanished behind the cork"
+        )
+        assert float(card[6])<2.5 and float(card[7])<3.2, (
+            "Student work should be child-size rather than a floating wall UI"
+        )
+    print("VISIBLE_BULLETIN_BOARD_GEOMETRY_PASS sheets=3 cork_exposed=true")
+
     # Physical backpack audit: verify actual Luau-created silhouettes, hooks,
     # child proportions and mounting on the rear storage wall.
     backpack_contract={
