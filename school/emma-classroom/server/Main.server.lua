@@ -197,8 +197,10 @@ startRound=function(player)
         model.Parent=World.Root
         s.teacherModel=model
     else
+        -- Never hide constructor failures behind a generic warning. Real
+        -- Roblox runtime errors must be reviewable before visual acceptance.
+        warn("Emma staff appearance failed for "..tostring(teacher.name)..": "..tostring(model))
         model=nil
-        warn("Teacher visual unavailable; question remains usable")
     end
     local choices=shuffle(q.choices)
     local token=HttpService:GenerateGUID(false)
