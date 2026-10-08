@@ -40,11 +40,12 @@ local Instance={new=function(class)
     return {}
 end}
 local visualFailure=false
+local enforceSingleTeacher=true
 local teacherModels={}
 local World={Root={},resetBoard=function() end,setBoardQuestion=function() end,setBoardHint=function() end,setBoardCorrect=function() end,
     setTeacherSpeech=function() end,walkTeacher=function() end,
     teacherModel=function()
-        for _,old in ipairs(teacherModels) do assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end
+        for _,old in ipairs(teacherModels) do if enforceSingleTeacher then assert(old.Parent==nil,"Outgoing teacher must be removed before the next teacher is created") end end
         if visualFailure then error("forced visual constructor failure") end
         local model={SetAttribute=function() end,PivotTo=function() end,Destroy=function(self) self.Parent=nil end}
         table.insert(teacherModels,model);return model
@@ -115,6 +116,72 @@ assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 visualFailure=false
 assert(requests.OnServerInvoke(player,"skip").ok);flush();pending()
 assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14)
+-- Curriculum selection is server governed and never replicates answer keys.
+local state=requests.OnServerInvoke(player,"state")
+assert(type(state.tests)=="table")
+for _,t in ipairs(state.tests) do assert(t.questionIds==nil and t.answer==nil) end
+local beforeToken=state.question.token
+assert(not requests.OnServerInvoke(player,"select_test",{id="invented"}).ok)
+assert(requests.OnServerInvoke(player,"state").question.token==beforeToken)
+local grammar,unavailable
+for _,t in ipairs(Questions.Tests) do
+    if string.find(t.label,"Grammar",1,true) then grammar=t end
+    if not t.supported then unavailable=t end
+end
+-- The source calendar is allowed to advance or gain complete coverage.
+-- If no such menu row exists now, exercise the same protocol with a local
+-- server-test fixture made from reviewed bank IDs; never rewrite product data.
+if not grammar then
+    local refs={};for _,q in ipairs(Questions) do if q.skill=="subject-predicate" then refs[#refs+1]=q.id end end
+    grammar={id="fixture-grammar",label="Grammar",questionIds=refs,supported=true};Questions.Tests[#Questions.Tests+1]=grammar
+end
+if not unavailable then
+    unavailable={id="fixture-unavailable",label="Unknown",questionIds={},supported=false};Questions.Tests[#Questions.Tests+1]=unavailable
+end
+assert(grammar and #grammar.questionIds>0 and unavailable)
+assert(not requests.OnServerInvoke(player,"select_test",{id=unavailable.id}).ok)
+assert(requests.OnServerInvoke(player,"select_test",{id=grammar.id}).ok);flush()
+for _=1,15 do
+    local presented=pending();local raw
+    for _,candidate in ipairs(Questions) do if candidate.prompt==presented.prompt then raw=candidate;break end end
+    assert(raw.skill=="subject-predicate" and raw.tier~="star-fallback")
+    assert(table.find(grammar.questionIds,raw.id))
+    assert(requests.OnServerInvoke(player,"skip").ok);flush()
+end
+assert(requests.OnServerInvoke(player,"select_test",{id="mix"}).ok);flush()
+local counts={current=0,archive=0,["star-fallback"]=0}
+for _,q in ipairs(Questions) do counts[q.tier]+=1 end
+local shown={}
+for index=1,#Questions do
+    local presented=pending();local raw
+    for _,candidate in ipairs(Questions) do if candidate.prompt==presented.prompt and candidate.subject==presented.subject then raw=candidate;break end end
+    assert(raw and not shown[raw.id],"No repeat before the full curriculum is exhausted")
+    shown[raw.id]=true
+    local tier=index<=counts.current and "current" or index<=counts.current+counts.archive and "archive" or "star-fallback"
+    assert(raw.tier==tier,"Strict current then archive then STAR precedence")
+    assert(requests.OnServerInvoke(player,"skip").ok);flush()
+end
+assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"Selecting or skipping curriculum cannot earn progress")
+-- A second user starts with independent progress, and changing test mode
+-- after a correct answer cannot let its delayed callback replace the new round.
+enforceSingleTeacher=false -- Two player-specific presentations can coexist.
+local player2={UserId=2,CharacterAdded=signal()}
+Players.PlayerAdded.callback(player2)
+assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==0)
+flush()
+local two=requests.OnServerInvoke(player2,"state").question
+local raw
+for _,candidate in ipairs(Questions) do if candidate.prompt==two.prompt and candidate.subject==two.subject then raw=candidate;break end end
+assert(requests.OnServerInvoke(player2,"answer",{token=two.token,index=table.find(two.choices,raw.answer)}).correct)
+assert(requests.OnServerInvoke(player2,"select_test",{id=grammar.id}).ok)
+local eventStart=#events
+flush()
+local questionEvents=0
+for i=eventStart+1,#events do if events[i].kind=="question" then questionEvents+=1 end end
+assert(questionEvents==1,"Old correct-delay callback cannot replace a selected test round")
+assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==1)
+assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"No cross-player progress exposure")
+assert(saved["u:2"].totalCorrect==1 and saved["u:1"].totalCorrect==14)
 -- A shutdown save is synchronous: it must be durable before BindToClose returns.
 saved["u:1"]={totalCorrect=0,sessionsCompleted=0,skills={}}
 Players.GetPlayers=function() return {player} end

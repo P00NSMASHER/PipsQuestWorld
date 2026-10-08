@@ -9,6 +9,7 @@ on:
       - 'school/emma-classroom.project.json'
       - '.github/workflows/emma-classroom-ci.yml'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'school/emma-classroom/**'
       - 'school/emma-classroom.project.json'
@@ -85,6 +86,22 @@ jobs:
           grep -q 'Supply basket' school/emma-classroom/server/World.lua
           grep -q 'Tall storage cabinet' school/emma-classroom/server/World.lua
           ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
+
+      - name: Independently reproduce the exact reviewed ABVM source
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_sha="$(python3 -c 'import json; print(json.load(open("school/emma-classroom/curriculum-receipt.json"))["sourceCommit"])')"
+          [[ "$source_sha" =~ ^[a-f0-9]{40}$ ]]
+          git clone --no-checkout https://github.com/P00NSMASHER/abvmschoolstarworld "$RUNNER_TEMP/abvm-source"
+          git -C "$RUNNER_TEMP/abvm-source" checkout --detach "$source_sha"
+          test "$(git -C "$RUNNER_TEMP/abvm-source" rev-parse HEAD)" = "$source_sha"
+          (cd "$RUNNER_TEMP/abvm-source" && node --test tests/study-universe.test.mjs)
+          node "$RUNNER_TEMP/abvm-source/scripts/build-study-universe.mjs" "$RUNNER_TEMP/reproduced-curriculum.json"
+          cmp school/emma-classroom/curriculum.json "$RUNNER_TEMP/reproduced-curriculum.json"
+
+      - name: Pinned curriculum importer regressions
+        run: python3 -m unittest discover -s school/emma-classroom/tests -p 'test_curriculum_import.py'
 
       - name: Question bank and device layout tests
         run: |

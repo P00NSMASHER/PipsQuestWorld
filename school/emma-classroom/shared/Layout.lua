@@ -10,11 +10,12 @@ end
 -- Reserve the answers first. Only the question/hint may scroll; choices never
 -- disappear below the fold, including on an iPhone in landscape orientation.
 function Layout.questionArea(panelHeight:number,count:number,desiredPromptHeight:number)
-    local rows=math.max(1,count)
+    local columns=count==4 and panelHeight<310 and 2 or 1
+    local rows=math.max(1,math.ceil(count/columns))
     local available=panelHeight-80
     local prompt=math.max(28,math.min(desiredPromptHeight,available-rows*44-(rows-1)*6-8))
     local answerHeight=math.max(44,math.floor((available-prompt-8-(rows-1)*6)/rows))
-    return {prompt=prompt,answerHeight=answerHeight,answerTop=34+prompt+8,answerTotal=rows*answerHeight+(rows-1)*6}
+    return {columns=columns,prompt=prompt,answerHeight=answerHeight,answerTop=34+prompt+8,answerTotal=rows*answerHeight+(rows-1)*6}
 end
 function Layout.studyCamera(w:number,h:number)
     if w>h then

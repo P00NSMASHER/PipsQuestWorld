@@ -1,13 +1,8 @@
 --!strict
--- GENERATED from P00NSMASHER/abvmschoolstarworld@b9c7e3fcc4c90463eaf05bea0d527b7f72df1688
--- Source: pages/data/study-pack.json • Week of October 5, 2026
--- Gameplay intentionally stays tiny; the curriculum is the part that changes.
+-- Static personalized classroom staff metadata. Curriculum is generated separately
+-- in the server-only QuestionBank module with its exact source receipt.
 local Data = {}
-
 Data.PlayerName = "Emma"
-Data.WeekLabel = "Week of October 5, 2026"
-Data.Focus = "Reading test Oct. 7 • Spelling/Handwriting + Grammar tests Oct. 9 • Math subtraction test Oct. 15"
-Data.SourceCommit = "b9c7e3fcc4c90463eaf05bea0d527b7f72df1688"
 
 Data.Teachers = {
     -- Names/roles transcribed from the supplied labeled directory screenshots.

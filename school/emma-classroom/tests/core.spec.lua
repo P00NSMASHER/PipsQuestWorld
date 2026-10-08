@@ -3,7 +3,8 @@ local Questions=require("../server/QuestionBank")
 local Layout=require("../shared/Layout")
 assert(#Data.Teachers==18,"All labeled staff must be represented")
 assert(Data.Questions==nil,"Shared metadata cannot include the answer bank")
-assert(#Questions==134,"Preserve the reviewed question bank")
+assert(#Questions>=134,"Retain reviewed questions while allowing governed curriculum refreshes")
+assert(Questions.Tests and Questions.ContentSha256,"Shared curriculum receipt and named tests required")
 local names,ids={},{}
 for _,teacher in ipairs(Data.Teachers) do
     assert(not names[teacher.fullName]);names[teacher.fullName]=true
@@ -45,7 +46,7 @@ end
 -- Answers reserve their own visible space, independent of prompt/hint length.
 for _,size in ipairs({{568,280},{724,320},{844,390},{1112,512},{390,760},{375,600},{1024,700}}) do
     local panel=Layout.panel(size[1],size[2])
-    for count=1,3 do for _,promptHeight in ipairs({40,100,500}) do
+    for count=1,4 do for _,promptHeight in ipairs({40,100,500}) do
         local area=Layout.questionArea(panel.height,count,promptHeight)
         assert(area.answerHeight>=44,"Each answer needs a touch target")
         assert(area.answerTop+area.answerTotal<=panel.height-40,"All answers must be above feedback/skip")
@@ -60,4 +61,4 @@ for attempt=1,20 do
     retryDelays[attempt]=delay
 end
 assert(retryDelays[1]==.4 and retryDelays[5]==5 and retryDelays[20]==5)
-print("PASS: 18 staff, 134 valid server-only questions, seven device-safe panels, unobstructed study-camera head bounds and bounded startup recovery")
+print("PASS: 18 staff, governed server-only questions, seven device-safe panels, unobstructed study-camera head bounds and bounded startup recovery")

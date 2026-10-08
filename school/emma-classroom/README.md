@@ -14,20 +14,15 @@ There are no houses, cars, shops, jobs, leaderboards, giant school maps, or curr
 
 ## Curriculum source
 
-Initial question bank generated from:
-`P00NSMASHER/abvmschoolstarworld@b9c7e3fcc4c90463eaf05bea0d527b7f72df1688`
-`pages/data/study-pack.json`
+The reviewed ABVM teacher pack, cumulative archive and original worksheet practice
+are now imported through the deterministic Study Universe v2 exporter. The pinned
+server bank includes 357 questions: 134 current, 65 cumulative and 158 original
+STAR-style fallback. Mix exhausts those tiers in order; the progress chip selects
+named test practice without confusing grammar, spelling, operations or chapters.
 
-Current week: Week of October 5, 2026
-
-Current emphasis:
-- Reading test Wednesday Oct. 7
-- Spelling/Handwriting short-i / long-i test Friday Oct. 9
-- Grammar subject/predicate test Friday Oct. 9
-- Math subtraction test Thursday Oct. 15
-- Current Religion material
-
-The bank contains 134 verified/current questions. Nearer tests are weighted more heavily but the loop still mixes in other current skills.
+See [SHARED_CURRICULUM.md](SHARED_CURRICULUM.md) and the exact source receipt for
+refresh commands, privacy boundaries, automatic-update limits and release gates.
+The live game remains on its previous published bank until runtime/device acceptance.
 
 ## Design rule
 

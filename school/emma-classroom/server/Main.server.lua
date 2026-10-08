@@ -103,20 +103,32 @@ local function chooseTeacher(subject,previous)
     return matching[math.random(1,#matching)]
 end
 
+local tierRank={current=1,archive=2,["star-fallback"]=3}
+local function testCatalog()
+    local out={}
+    for _,t in ipairs(Questions.Tests or {}) do
+        -- Only menu metadata is replicated, never keys or test membership IDs.
+        out[#out+1]={id=t.id,label=t.label,date=t.date,supported=t.supported}
+    end
+    return out
+end
+
 local function chooseQuestion(s)
     local pool={}
-    local total=0
+    local rank=math.huge
     for _,q in ipairs(Questions) do
-        if not s.seen[q.id] then
-            local weight=math.max(1,q.priority or 1)
-            total+=weight
-            pool[#pool+1]={q=q,edge=total}
+        if not s.seen[q.id] and (not s.allowed or s.allowed[q.id]) then
+            local candidate=tierRank[q.tier] or 1
+            if candidate<rank then pool={};rank=candidate end
+            if candidate==rank then pool[#pool+1]=q end
         end
     end
-    if #pool==0 then s.seen={};return chooseQuestion(s) end
-    local roll=math.random()*total
-    for _,entry in ipairs(pool) do if roll<=entry.edge then return entry.q end end
-    return pool[#pool].q
+    if #pool==0 then
+        -- Repeat only after the selected full bank is exhausted, never merely
+        -- after ten questions. Private seen-state remains inside this server.
+        s.seen={};return chooseQuestion(s)
+    end
+    return pool[math.random(1,#pool)]
 end
 
 local function dismissTeacher(s)
@@ -158,7 +170,7 @@ startRound=function(player)
     local token=HttpService:GenerateGUID(false)
     s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
     World.setBoardQuestion(q.subject,teacher.name,q.prompt,choices)
-    event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,choices=choices,token=token,progress=publicProgress(s),focus=Data.Focus})
+    event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=s.modeLabel or "Current ABVM lessons"})
     if model then task.spawn(function() World.walkTeacher(model,true) end) end
 
 end
@@ -166,7 +178,7 @@ end
 local function answer(player,args)
     local s=sessions[player.UserId];if not s or not s.pending then return {ok=false,code="no_question"} end
     local p=s.pending
-    if type(args)~="table" or args.token~=p.token or type(args.index)~="number" then return {ok=false,code="invalid"} end
+    if type(args)~="table" or args.token~=p.token or type(args.index)~="number" or args.index%1~=0 or args.index<1 or args.index>#p.choices then return {ok=false,code="invalid"} end
     local choice=p.choices[args.index]
     if not choice then return {ok=false,code="invalid_choice"} end
     if choice~=p.q.answer then
@@ -180,9 +192,10 @@ local function answer(player,args)
     World.setBoardCorrect(p.q.explanation or "Nice job!")
     World.setTeacherSpeech(s.teacherModel,nil)
     event:FireClient(player,{kind="correct",teacher=p.teacher.fullName or p.teacher.name,explanation=p.q.explanation,progress=publicProgress(s)})
+    local completedGeneration=s.generation or 0
     task.delay(1.9,function()
         local current=sessions[player.UserId]
-        if current==s then
+        if current==s and (current.generation or 0)==completedGeneration then
             dismissTeacher(s)
             World.resetBoard();startRound(player)
         end
@@ -193,8 +206,24 @@ end
 request.OnServerInvoke=function(player,command,args)
     if command=="answer" then return answer(player,args) end
     local s=sessions[player.UserId]
+    if command=="select_test" and s then
+        if s.busy or type(args)~="table" or type(args.id)~="string" then return {ok=false,code="invalid"} end
+        local allowed,label
+        if args.id~="mix" then
+            local selected
+            for _,t in ipairs(Questions.Tests or {}) do if t.id==args.id then selected=t;break end end
+            if not selected or not selected.supported or #selected.questionIds==0 then return {ok=false,code="unavailable"} end
+            allowed={};for _,id in ipairs(selected.questionIds) do allowed[id]=true end
+            label=selected.label
+        end
+        dismissTeacher(s);s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
+        s.stars=0;s.correctThisSession=0;s.generation=(s.generation or 0)+1;World.resetBoard()
+        local selectedGeneration=s.generation
+        task.defer(function() if sessions[player.UserId]==s and s.generation==selectedGeneration then startRound(player) end end)
+        return {ok=true,modeId=args.id,modeLabel=label or "Mix"}
+    end
     if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then
-        dismissTeacher(s);s.pending=nil;s.seen={};s.stars=0;s.correctThisSession=0;World.resetBoard()
+        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;World.resetBoard()
         task.delay(.35,function() startRound(player) end)
         return {ok=true}
     end
@@ -208,8 +237,8 @@ request.OnServerInvoke=function(player,command,args)
             task.defer(function() if sessions[player.UserId]==s then startRound(player) end end)
         end
         local pending=s.pending
-        return {ok=true,progress=publicProgress(s),week=Data.WeekLabel,focus=Data.Focus,
-            question=pending and {kind="question",teacher=pending.teacher.fullName or pending.teacher.name,role=pending.teacher.role,subject=pending.q.subject,prompt=pending.q.prompt,choices=pending.choices,token=pending.token,progress=publicProgress(s)} or nil}
+        return {ok=true,progress=publicProgress(s),week=Questions.WeekLabel,focus=s.modeLabel or "Current ABVM lessons",tests=testCatalog(),modeId=s.modeId or "mix",modeLabel=s.modeLabel or "Mix",
+            question=pending and {kind="question",teacher=pending.teacher.fullName or pending.teacher.name,role=pending.teacher.role,subject=pending.q.subject,prompt=pending.q.prompt,tier=pending.q.tier,choices=pending.choices,token=pending.token,progress=publicProgress(s)} or nil}
     end
     return {ok=false,code="unknown"}
 end
