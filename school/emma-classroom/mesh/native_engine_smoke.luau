@@ -145,7 +145,7 @@ for _,part in ipairs(oldParts) do
     end
 end
 for _,part in ipairs(untouched) do
-    assert(part.Transparency==.2,"Non-furniture artwork changed during visual swap")
+    assert(math.abs(part.Transparency-.2)<.0001,"Non-furniture artwork changed during visual swap")
 end
 assert(testRoot.Parent==nil,"Actual adapter illegally parented test models to Workspace")
 print("NATIVE_ACTUAL_ADAPTER_ACCEPTED models=32 original_colliders_preserved=true")
