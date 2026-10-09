@@ -237,6 +237,27 @@ def assert_no_supply_bin_colliders(rows: list[list[str]]) -> None:
     )
 
 
+def assert_no_corridor_finishing_colliders(rows: list[list[str]]) -> None:
+    # Architecture that terminates the hall is collidable. The thin
+    # noticeboards, rail trim and fixture covers must never become blockers.
+    decorative = {
+        "Rear hall pinned notice", "Rear hall notice heading",
+        "Rear hall brass notice pin", "Rear hall dado cap rail",
+        "Rear hall fluorescent metal surround",
+        "Staff hall framed announcement board",
+        "Staff hall inset cork noticeboard",
+        "Staff hall anonymous paper notice",
+        "Side hall fluorescent metal surround",
+        "Hall fluorescent light", "Side hall fluorescent",
+    }
+    offenders=sorted({row[1] for row in rows
+                      if len(row)>1 and row[1] in decorative})
+    assert not offenders, (
+        "Noncolliding school corridor finishing became a walk obstruction: "
+        + ", ".join(offenders)
+    )
+
+
 def get_source_blockers(luau: str) -> list[Blocker]:
     with tempfile.TemporaryDirectory(prefix="abvm-nav-") as folder:
         path=Path(folder)/"room.lua"
@@ -256,6 +277,7 @@ def get_source_blockers(luau: str) -> list[Blocker]:
     assert_no_mobile_stand_colliders(rows)
     assert_no_window_drapery_colliders(rows)
     assert_no_supply_bin_colliders(rows)
+    assert_no_corridor_finishing_colliders(rows)
     return as_blockers(rows)
 
 
@@ -299,8 +321,19 @@ def self_test():
         raise AssertionError("Colliding bin folder test was accepted")
     except AssertionError as e:
         assert "noncolliding" in str(e)
+    assert_no_corridor_finishing_colliders([flat,tall])
+    for bad_name in ("Rear hall pinned notice",
+                     "Staff hall anonymous paper notice",
+                     "Hall fluorescent light"):
+        try:
+            assert_no_corridor_finishing_colliders([
+                ["NAV",bad_name,*flat[2:]]
+            ])
+            raise AssertionError("Colliding hall decoration was accepted")
+        except AssertionError as e:
+            assert "walk obstruction" in str(e)
     print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, "
-          "open space connects, Smartboard/curtains/storage noncolliding)")
+          "open space connects, Smartboard/curtains/storage/hallways noncolliding)")
 
 
 def main():
