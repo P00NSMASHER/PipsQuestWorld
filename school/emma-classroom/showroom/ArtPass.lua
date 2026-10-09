@@ -174,10 +174,29 @@ local function readingCorner(root:Instance)
         piece(group,"Book spine",Vector3.new(.09,1.64,.28),cf*CFrame.new(-.55,0,-.02),
             C.woodEdge,Enum.Material.SmoothPlastic,false)
     end
-    local lamp=piece(group,"Reading floor lamp stem",Vector3.new(.14,7,.14),CFrame.new(-33.8,4.1,18.7),
-        C.brass,Enum.Material.Metal,false)
-    disk(group,"Reading lamp base",1.25,.16,CFrame.new(-33.8,.7,18.7)*CFrame.Angles(0,0,math.pi/2),C.ink,Enum.Material.Metal)
-    orb(group,"Warm lamp shade",Vector3.new(1.75,1.35,1.75),lamp.CFrame*CFrame.new(0,3.2,0),C.cream,Enum.Material.Glass)
+    -- Eye-level source renders showed a perfectly spherical white shade that
+    -- read as a balloon rather than a real library lamp. Use a shallow
+    -- fabric drum, actual upper/lower binding, and an inset diffuser instead.
+    -- These light fittings are noncolliding, and preserve the lamp footprint.
+    local lampX,lampZ=-33.8,18.7
+    local vertical=CFrame.Angles(0,0,math.pi/2)
+    local lamp=piece(group,"Reading floor lamp stem",Vector3.new(.14,7,.14),
+        CFrame.new(lampX,4.1,lampZ),C.brass,Enum.Material.Metal,false)
+    disk(group,"Reading lamp base",1.25,.16,CFrame.new(lampX,.7,lampZ)*vertical,
+        C.ink,Enum.Material.Metal)
+    disk(group,"Reading fabric drum lampshade",1.85,1.12,
+        CFrame.new(lampX,7.12,lampZ)*vertical,
+        Color3.fromRGB(229,215,186),Enum.Material.Fabric)
+    for _,y in ipairs({6.55,7.69}) do
+        disk(group,"Reading shade sewn binding",1.91,.055,
+            CFrame.new(lampX,y,lampZ)*vertical,
+            Color3.fromRGB(187,172,145),Enum.Material.Fabric)
+    end
+    disk(group,"Reading shade recessed warm diffuser",1.67,.035,
+        CFrame.new(lampX,6.51,lampZ)*vertical,
+        Color3.fromRGB(252,238,208),Enum.Material.SmoothPlastic)
+    orb(group,"Reading lamp top finial",Vector3.new(.22,.13,.22),
+        CFrame.new(lampX,7.78,lampZ),C.brass,Enum.Material.Metal)
     local light=Instance.new("PointLight");light.Color=Color3.fromRGB(255,223,165)
     light.Brightness=.35;light.Range=13;light.Shadows=false;light.Parent=lamp
 end
