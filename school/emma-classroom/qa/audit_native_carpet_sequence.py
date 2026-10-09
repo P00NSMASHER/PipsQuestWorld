@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -57,6 +58,32 @@ def decide(samples: list[dict]) -> dict:
     }
 
 
+def check_camera_consistency(samples: list[dict], width: int) -> dict:
+    """Reject camera motion or rapid zoom without storing any video pixels.
+
+    Distinct decoder frame indices alone do not prove comparable frames:
+    a rotating camera can make two dot-like observations misleading. The
+    verified yellow sun is the same anchored in-world landmark in each frame.
+    If it moves too far or grows substantially, require a static re-recording.
+    """
+    centers=[s.get("sun_center") for s in samples
+             if isinstance(s.get("sun_center"), list)
+             and len(s["sun_center"])==2]
+    areas=[float(s["central_sun_area_pixels"]) for s in samples
+           if isinstance(s.get("central_sun_area_pixels"),(int,float))
+           and s["central_sun_area_pixels"]>0]
+    drift=max((math.dist(a,b) for i,a in enumerate(centers)
+               for b in centers[i+1:]),default=0.0)
+    scale=max(areas)/min(areas) if len(areas)>=2 else 1.0
+    max_drift=max(10.0,width*.014)
+    return {
+        "stable":drift<=max_drift and scale<=1.30,
+        "sun_center_max_drift_px":round(drift,2),
+        "sun_area_max_ratio":round(scale,3),
+        "allowed_drift_px":round(max_drift,2),
+    }
+
+
 def inspect_video(video: Path, seconds: float, offset: float,
                   polygon: list[tuple[int,int]],
                   sun_hint: tuple[int,int]) -> dict:
@@ -68,6 +95,10 @@ def inspect_video(video: Path, seconds: float, offset: float,
         raise ValueError("Cannot read the private local video")
     results=[]
     frame_numbers=[]
+    frame_width=int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    if frame_width<=0:
+        cap.release()
+        raise ValueError("Decoder cannot establish width for frame motion audit")
     try:
         for multiplier in SAMPLE_OFFSETS:
             target = round(seconds + multiplier * offset, 3)
@@ -83,17 +114,23 @@ def inspect_video(video: Path, seconds: float, offset: float,
             for key in ("reason", "defects", "carpet_blue_median_b",
                         "blue_carpet_fraction", "ray_components_large_enough",
                         "cloud_components_large_enough", "sun_ray_angular_sectors",
-                        "cloud_angular_sectors"):
+                        "cloud_angular_sectors", "sun_center",
+                        "central_sun_area_pixels"):
                 if key in result:
                     numeric[key]=result[key]
             results.append(numeric)
     finally:
         cap.release()
     aggregate=decide(results)
+    camera=check_camera_consistency(results,frame_width)
+    if not camera["stable"]:
+        aggregate.update(status="INCONCLUSIVE", confirmed_defects=[],
+                         reason="Rug viewpoint moved or zoomed between sampled frames")
     if len(set(frame_numbers)) != len(frame_numbers):
         aggregate.update(status="INCONCLUSIVE", confirmed_defects=[],
                          reason="Decoder returned repeated frame identities")
     aggregate.update({
+        "camera_comparability":camera,
         "profile":PROFILE,
         "single_frame_detector_profile":FRAME_DETECTOR_PROFILE,
         "center_second":seconds,
@@ -120,6 +157,21 @@ def self_test() -> None:
     assert decide([defective,different,unknown])["status"] == "INCONCLUSIVE"
     assert decide([defective,defective,healthy])["status"] == "FAIL"
     assert decide([healthy,healthy,healthy])["status"] == "REVIEW_REQUIRED"
+    stationary=[
+        {"status":"FAIL", "defects":["CARPET_TOO_DARK"],
+         "sun_center":[500,350], "central_sun_area_pixels":5200},
+        {"status":"FAIL", "defects":["CARPET_TOO_DARK"],
+         "sun_center":[505,351], "central_sun_area_pixels":5270},
+        {"status":"INCONCLUSIVE", "reason":"brief obstruction"},
+    ]
+    assert check_camera_consistency(stationary,1112)["stable"]
+    panned=[dict(s) for s in stationary]
+    panned[1]={**stationary[1], "sun_center":[550,350]}
+    assert not check_camera_consistency(panned,1112)["stable"]
+    zoomed=[dict(s) for s in stationary]
+    zoomed[1]={**stationary[1], "central_sun_area_pixels":8100}
+    assert not check_camera_consistency(zoomed,1112)["stable"]
+    assert check_camera_consistency(stationary,1112)["allowed_drift_px"]<16
     try:
         decide([healthy,unknown])
     except ValueError:
@@ -128,7 +180,8 @@ def self_test() -> None:
         raise AssertionError("Too few frames accepted")
     print("NATIVE_RUG_SEQUENCE_SELF_TEST_PASS repeated_failure=true "
           "single_defect_not_overclaimed=true mixed_frames_inconclusive=true "
-          "missing_frames_fail_closed=true positive_requires_human=true")
+          "missing_frames_fail_closed=true positive_requires_human=true "
+          "camera_pan_rejected=true rapid_zoom_rejected=true")
 
 
 def main() -> int:

@@ -92,7 +92,11 @@ Screening rules are intentionally conservative:
   no frame reports a known defect. A person must still inspect the original
   native video for shape fidelity, readable letters/numbers and movement/FPS.
 - **INCONCLUSIVE** for camera movement, bad regions, mixed one-off failures,
-  or duplicate decoded frames. Do not call these runs passes.
+  or duplicate decoded frames. Do not call these runs passes. The latest
+  reviewer also measures yellow sun-center drift across the three frames
+  (at most 1.4% of frame width, minimum 10px) and sun-area scale change
+  (at most 30%). Significant camera pans or zooms explicitly invalidate
+  consensus, even if two frames separately report the same defect.
 
 On the older private October 9 12:49 recording, frames **11.3, 11.4 and
 11.5 seconds** all independently show the dark rug, dot-like orange rays and
