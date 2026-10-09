@@ -56,6 +56,15 @@ jobs:
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Verify spawn, aisles, reading corner, and hallways from actual Lua collision geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/walkability_audit.py --self-test
+          python3 school/emma-classroom/showroom/walkability_audit.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau" \
+            --out "$RUNNER_TEMP/emma-static-navigation.json"
+
       - name: Assemble showroom rather than the study game
         shell: bash
         run: |
@@ -73,5 +82,6 @@ jobs:
           path: |
             ${{ runner.temp }}/emma-replica.rbxl
             ${{ runner.temp }}/emma-replica.rbxlx
+            ${{ runner.temp }}/emma-static-navigation.json
           retention-days: 14
           if-no-files-found: error
