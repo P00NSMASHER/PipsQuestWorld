@@ -1,12 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-explicitly-requested-full-game-preview-2026-10-09
+reaffirmed-authorization: user-delegated-continuing-iphone-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 9e96ccc8fad794c8343e9b51819b1d23055e2ae5
-notice: User explicitly requested updating the existing Roblox game to see ALL latest classroom improvements; review-only preview, not final visual acceptance
-scope: exact full classroom-only Rojo showroom from the pinned parent SHA; preserve 16 approved desk-chair pairs and mobile first-person controls
-production-furniture-meshes: disabled pending native iPhone visual review
-schoolwork-and-progress: no writes, no imports, no curriculum changes
-release-status: reviewable Roblox preview only; not visual-acceptance signoff
+source-parent-sha: ea99945329327b06afeb7c97cf90849bc2b1af45
+notice: Review-only native iPhone preview of carpet text, cloud shapes and brighter sun after user-uploaded October 9 version-68 gameplay recording
+scope: exact classroom-only Rojo from pinned source parent, preserve 16 desk-chair pairs and first-person movement
+production-furniture-meshes: disabled pending native iPhone visual/collision acceptance
+schoolwork-and-progress: no writes, no quiz or curriculum changes
+release-status: owner-inspection preview; NOT a final quality signoff
