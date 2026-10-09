@@ -127,11 +127,25 @@ local function plant(parent: Instance,x: number,y: number,z: number,scale: numbe
     end
 end
 
-local function book(parent: Instance,x: number,y: number,z: number,color: Color3,rotation: number)
+local function book(parent: Instance,x: number,y: number,z: number,color: Color3,rotation: number,compact: boolean?)
     local cf=CFrame.new(x,y,z)*CFrame.Angles(0,rotation,0)
-    roundedPanel(parent,"Classroom book",Vector3.new(2.15,.18,2.85),cf,color,.10,true,false)
-    part(parent,"Book pages",Vector3.new(1.94,.12,2.65),cf*CFrame.new(.015,.14,0),P.cream,Enum.Material.SmoothPlastic,false)
-    part(parent,"Notebook spine",Vector3.new(.12,.15,2.85),cf*CFrame.new(-1.04,.14,0),color:Lerp(P.ink,.14),Enum.Material.SmoothPlastic,false)
+    -- Exposed notebooks keep their premium rounded cover. The sixteen very
+    -- thin underdesk workbooks are largely hidden behind their wire shelf:
+    -- six rounded-panel pieces did not improve their manufactured silhouette.
+    -- A single square-cut cover is closer to a real .18-stud exercise book
+    -- while retaining the same footprint, visible pages and spine.
+    if compact then
+        part(parent,"Classroom book",Vector3.new(2.15,.18,2.85),cf,
+            color,Enum.Material.SmoothPlastic,false)
+    else
+        roundedPanel(parent,"Classroom book",Vector3.new(2.15,.18,2.85),
+            cf,color,.10,true,false)
+    end
+    part(parent,"Book pages",Vector3.new(1.94,.12,2.65),
+        cf*CFrame.new(.015,.14,0),P.cream,Enum.Material.SmoothPlastic,false)
+    part(parent,"Notebook spine",Vector3.new(.12,.15,2.85),
+        cf*CFrame.new(-1.04,.14,0),color:Lerp(P.ink,.14),
+        Enum.Material.SmoothPlastic,false)
 end
 
 local function pencilCup(parent: Instance,x: number,y: number,z: number)
@@ -255,7 +269,8 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         Enum.Material.Metal,false)
     -- The basket wire top is y=2.3325; the book underside now sits
     -- at y=2.31 instead of visibly hovering above its shelf.
-    book(parent,x,2.40,z,Color3.fromRGB(70,106,133),0)
+    -- Compact ONLY the workbook inside the basket; desktop books stay rounded.
+    book(parent,x,2.40,z,Color3.fromRGB(70,106,133),0,true)
     local upholstery={
         Color3.fromRGB(67,94,130),Color3.fromRGB(78,107,136),
         Color3.fromRGB(65,93,119),Color3.fromRGB(83,109,134),

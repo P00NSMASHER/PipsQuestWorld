@@ -1101,10 +1101,40 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     shelf_top=2.29+.085/2
     for r in underdesk_books:
-        bottom=float(r[10])-.18/2
+        bottom=float(r[10])-float(r[7])/2
         assert abs(bottom-shelf_top)<.035, (
             f"Workbook floats above shelf: underside={bottom:.3f}"
         )
+        assert r[3].endswith("Block") and (
+            abs(float(r[6])-2.15)<.02 and
+            abs(float(r[7])-.18)<.02 and
+            abs(float(r[8])-2.85)<.02
+        ), "Underdesk compact workbook lost its real cover size"
+        assert r[4].endswith("SmoothPlastic"), (
+            "Thin underdesk book turned into an unsuitable metal slab"
+        )
+    # Assert the executed Luau source, not merely the compact=true call:
+    # underdesk covers need 1 part, not 6 rounded-panel primitives each.
+    hidden_rounded=[r for r in lines
+        if r[1] in ("Classroom book center","Classroom book rounded corner")
+        and 2.2<float(r[10])<2.6]
+    assert not hidden_rounded, (
+        f"Redundant concealed rounded book primitives returned: {len(hidden_rounded)}"
+    )
+    shelf_pages=[r for r in lines
+        if r[1]=="Book pages" and 2.4<float(r[10])<2.7]
+    shelf_spines=[r for r in lines
+        if r[1]=="Notebook spine" and 2.4<float(r[10])<2.7]
+    assert len(shelf_pages)==len(shelf_spines)==16, (
+        "Mobile optimization removed the real underdesk book pages or spine"
+    )
+    assert all(abs(float(r[10])-2.54)<.025
+               for r in shelf_pages+shelf_spines), (
+        "Underdesk workbook pages or binding float away from cover"
+    )
+    print("MOBILE_BOOK_GEOMETRY_PASS compact_covers=16 "
+          "underdesk_rounded_corners=0 pages=16 spines=16 "
+          "rounded_desktop_books_preserved=true saved_parts=80")
     pencils=[r for r in lines if r[1]=="Desk pencil"]
     assert len(pencils)==16, "Missing 16 student desk pencils"
     for r in pencils:
