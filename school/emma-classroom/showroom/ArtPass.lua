@@ -167,8 +167,14 @@ local function readingCorner(root:Instance)
             coverFacing*CFrame.new(0,0,-.15),colors[i],Enum.Material.SmoothPlastic,false)
         printed(cover,titles[i],Enum.NormalId.Front,C.cream,colors[i])
         local art=coverFacing*CFrame.new(0,.11,-.214)
+        -- Native v70 and the v71 source camera showed blank white-looking
+        -- pages. The books now face the original wooden library shelf aisle;
+        -- give each existing illustration field a restrained cover-matched
+        -- tint rather than an opaque cream rectangle across its whole face.
+        -- Five existing Parts only, no geometry or title duplication.
         piece(group,"Storybook illustration backing",Vector3.new(.81,.85,.035),
-            art,C.cream,Enum.Material.SmoothPlastic,false)
+            art,colors[i]:Lerp(C.cream,.42),
+            Enum.Material.SmoothPlastic,false)
         if i==1 then
             -- A blue night sky with a sun/planet and distinct orbit silhouette.
             orb(group,"Space planet illustration",Vector3.new(.43,.43,.045),

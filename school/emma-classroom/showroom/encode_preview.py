@@ -12,15 +12,16 @@ folder=Path(sys.argv[1])
 # Every rendered viewpoint is inspectable in the source-only CI log.
 # In particular, source eye-level staff/rear corridor controls used to be
 # rendered and pixel-checked but absent from the compact evidence.
-# The optional 16th rug-overlook is a QA-only unobstructed diagnostic,
-# not a reconstructed iPhone/player-eye camera or a Roblox gameplay feature.
+# QA-only views: the 16th overhead rug and 17th straight-on bookshelf face
+# catch defects missed by the fixed oblique reading-corner screenshots.
+# Neither viewpoint is a Roblox gameplay camera or native iPhone evidence.
 names=("01-isometric","02-front","03-top","04-exterior-control",
        "05-eye-front","06-eye-back","07-eye-windows","08-eye-storage",
        "09-chair-back","10-desk-side","11-storage-close-up",
        "12-reading-rug","13-reading-books",
        "14-eye-staff-door","15-eye-rear-corridor",
-       "16-rug-overlook")
-assert len(names)==16 and len(set(names))==16
+       "16-rug-overlook","17-library-cover-fronts")
+assert len(names)==17 and len(set(names))==17
 print("VISUAL_EVIDENCE_INVENTORY_PASS frames="+str(len(names)),flush=True)
 for n in names:
     path=folder/(n+".png")

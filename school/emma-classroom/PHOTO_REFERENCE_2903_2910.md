@@ -32,3 +32,16 @@ These photographs document a cheer-event arrangement, not a measured empty-class
 
 ## Outstanding
 The classroom-only development candidate now has a freestanding wheeled display in front of a widened chalkboard, with visible perimeter framing. This physical arrangement is supported by the cheer-event photos, **not proven as the permanent daily layout**. Source-derived camera evidence and native Roblox/iPhone visual and collision acceptance remain necessary before publication.
+
+## October 9 built-in storybook face QA
+The formerly separate book stand intersected the photo-verified circular
+carpet. The five original face-out books were moved onto the existing dark
+wooden reading shelf by concurrent development. The October 9 source-render
+camera from the other approach had still shown white backs on the old
+single-sided stand. To prevent such regressions, a new **QA-only seventeenth
+camera** now faces the relocated book fronts directly; physical illustrated
+cover surfaces use their original per-book colors blended with warm paper
+rather than five blank cream panels. Exact built-Luau tests enforce five
+distinctly colored book covers and illustrated fields. This does not
+establish actual Roblox Studio/iPhone acceptance and introduces no new
+physical parts or student photographs.

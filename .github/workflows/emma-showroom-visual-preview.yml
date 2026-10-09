@@ -151,18 +151,23 @@ jobs:
           # downward view is QA-only, never a Roblox gameplay camera.
           # Slight horizontal offset avoids a perfectly vertical view matrix.
           render_eye_checked 16-rug-overlook -24.5,13.6,12.6 -25,0.62,14
+          # v71's 12-reading-rug angle revealed WHITE book backs, while the
+          # next commit moved the five covers into the real built-in shelf.
+          # Observe that shelf HEAD-ON at a standing/child-eye perspective.
+          # This is a QA-only camera, never a gameplay or release-camera change.
+          render_eye_checked 17-library-cover-fronts -24,5.3,15.7 -24,4.15,22.35
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
             echo "Reject blank exterior control; retrying independent exterior camera"
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 16=3_aerial+1_exterior+11_eye+1_rug_diagnostic"
+          echo "VISUAL_FRAME_INVENTORY_PASS 17=3_aerial+1_exterior+12_eye+1_rug_diagnostic"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."

@@ -973,7 +973,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         [-27.0,-25.5,-24.0,-22.5,-21.0]
     ), "Storybook positions no longer follow the existing library shelf"
     shelf_top=float(middle_shelves[0][10])+float(middle_shelves[0][7])/2
+    cover_colors=set()
+    illustration_colors=set()
     for page,cover,illustration,band in zip(pages,covers,illustrations,bands):
+        # The real player approaches from the negative-Z aisle. Prevent
+        # another row of blank white book backs from passing geometry checks.
+        cover_color=tuple(round(float(v),3) for v in cover[12:15])
+        illustration_color=tuple(round(float(v),3)
+                                 for v in illustration[12:15])
+        cover_colors.add(cover_color)
+        illustration_colors.add(illustration_color)
+        assert min(cover_color)<.80 and (
+            min(illustration_color)<.83
+        ), "Storybook returned to a featureless white/cream cover"
         assert abs(float(page[9])-float(cover[9]))<.03, (
             "Book cover detached from its physical white pages"
         )
@@ -1005,6 +1017,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert .055<forward_depth(band)<.105, (
             "Storybook title band is hidden behind cover face"
         )
+    assert len(cover_colors)==len(illustration_colors)==5, (
+        "Five distinctive storybook cover palettes collapsed to one flat color"
+    )
+    print("STORYBOOK_COLOR_VISIBILITY_PASS books=5 "
+          "unique_cover_colors=5 original_art_fields=5 "
+          "blank_cream_panels=0")
     print("IPHONE_STORYBOOK_DEPTH_PASS covers=5 pages_behind=true "
           "art_in_front=true labels_face_room=true existing_wood_shelf=true "
           "rug_unobstructed_by_display_rack=true")
