@@ -52,9 +52,12 @@ assert 'name.." seamless molded back shell"' not in room, "Oval stool prototype 
 assert 'name.." molded back panel"' not in room and "bandProfile={" not in room, "Rejected segmented chair returned"
 assert 'name.." underseat frame runner"' in room, "Chair steel runner missing"
 assert 'gui.CanvasSize=Vector2.new(180,120)' in room, "Carpet mobile text canvas reverted to unreadably large"
-assert 'label.TextSize=92' in room and 'label.TextScaled=false' in room, (
-    "Carpet letters or cloud numbers reverted to tiny scaled text"
-)
+# Carpets have separate intentional sizes: the 26 letter tiles retain
+# 92px, while the 10 cloud numerals grow to 104px for native iPhone legibility.
+# The stronger actual-constructed SurfaceGui audit also verifies both classes.
+assert 'label.TextSize=transparent and 104 or 92' in room and (
+    'label.TextScaled=false' in room
+), "Carpet labels reverted to tiny scaled text or lost their distinct sizes"
 assert 'numeralAnchor.Transparency=1' in room, (
     "White rectangular cloud-label backing returned"
 )
