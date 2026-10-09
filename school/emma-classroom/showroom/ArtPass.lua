@@ -213,8 +213,8 @@ local function studentDeskDetails(root:Instance)
                 for _,side in ipairs({-1,1}) do
                     piece(group,"Desk apron bracket",Vector3.new(.16,.40,.95),CFrame.new(x+side*2.22,2.58,z+.84),
                         C.ink,Enum.Material.Metal,false)
-                    disk(group,"Desk fixing bolt",.13,.035,CFrame.new(x+side*2.22,2.72,z+.71),
-                        C.brass,Enum.Material.Metal)
+                    -- Existing Room.lua assembly bolts already provide the
+                    -- authentic steel fastening. Do not duplicate tiny bolts.
                 end
                 -- A third of desks have a colored supply tray. This is a lived-in
                 -- classroom, not a cloned showroom arrangement.

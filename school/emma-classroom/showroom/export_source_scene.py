@@ -471,6 +471,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         )
     print("CLASSROOM_FURNITURE_SILHOUETTE_PASS chairs=16 returns=32 tray_rails=32")
 
+    # Two redundant decorative bolts per desk were deliberately removed:
+    # Room.lua already builds the desk assembly fasteners. Preserve mobile
+    # geometry by rejecting the old duplicated hardware.
+    assert by_name["Desk fixing bolt"]==0, (
+        "Repeated cosmetic desk bolts needlessly consume the mobile part budget"
+    )
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):

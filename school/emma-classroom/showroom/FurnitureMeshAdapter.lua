@@ -110,7 +110,6 @@ local HIDE_DESK = {
     ["Desk rubber glide"] = true,
     ["Inlaid laminate grain"] = true,
     ["Desk apron bracket"] = true,
-    ["Desk fixing bolt"] = true,
 }
 local function shouldHide(name: string, hasChair: boolean, hasDesk: boolean): boolean
     if hasChair and string.sub(name,1,13)=="Student chair" then
