@@ -96,6 +96,9 @@ jobs:
           # minimum-axis silhouettes, akin to the carpet-dot regression.
           python3 school/emma-classroom/showroom/audit_native_foliage_primitives.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Chair ventilation cannot regress to dot-like flattened Balls.
+          python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"

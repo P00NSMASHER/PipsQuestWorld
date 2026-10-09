@@ -1256,9 +1256,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Three molded ventilation insets lost their symmetric upper positions"
         )
         for vent in attached:
-            assert vent[3].endswith("Ball") and (
+            assert vent[3].endswith("Block") and (
                 vent[4].endswith("SmoothPlastic")
-            ), "Flat rectangular chair stickers returned instead of rounded insets"
+            ), "Native iPhone's minimum-axis Ball dot regression returned"
             assert (abs(float(vent[6])-.18)<.014 and
                     abs(float(vent[7])-.65)<.014 and
                     abs(float(vent[8])-.034)<.010), (
@@ -1273,7 +1273,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             matching.add(id(vent))
     assert len(matching)==48, "Same decorative chair inset counted repeatedly"
     print("PHOTO_CHAIR_VENTS_PASS backs=16 rear_insets=48 "
-          "rounded_ellipsoids=true photo_guided_not_real_holes=true "
+          "native_block_insets=true photo_guided_not_real_holes=true "
           "collision_unchanged=true mobile_parts_saved=80 native_iphone_pending")
 
     tray_rails=[r for r in lines if r[1]=="Book tray side"]

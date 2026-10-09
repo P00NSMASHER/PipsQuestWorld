@@ -196,16 +196,20 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             tint:Lerp(P.cream,.095),Enum.Material.SmoothPlastic,false)
         wing.Reflectance=.015
     end
-    -- Reference school photos show ventilation openings near the upper back
-    -- of the blue molded chairs. The 6-Part hidden handgrip plus two tiny
-    -- rivets looked like featureless toy furniture from child eye level.
-    -- Three rounded, shallow dark ellipsoids represent upper-back molded
-    -- recesses. They replace the prior flat rectangular sticker bars without
-    -- new geometry, changing collision, or pretending to cut true holes.
+    -- Reference photographs show elongated vertical ventilation details on
+    -- molded blue school-chair backs. The old flattened Ball (.18,.65,.034)
+    -- actually renders as a 0.034-stud SPHERE in native Roblox, even though
+    -- independent source renderers draw a tall ellipsoid. Thus every slot
+    -- becomes a nearly invisible dot on real iPhones. Keep the SAME three
+    -- parts per chair but use visible, thin, tall molded-shadow Block insets.
+    -- These simulate recesses, not real through-holes; the existing single
+    -- invisible back collider and all furniture placement remain unchanged.
     for _,dx in ipairs({-.54,0,.54}) do
-        local vent=ball(parent,name.." ventilation inset",
+        local vent=part(parent,name.." ventilation inset",
             Vector3.new(.18,.65,.034),backCF*CFrame.new(dx,.40,.139),
             tint:Lerp(P.ink,.53),Enum.Material.SmoothPlastic,false)
+        vent.Shape=Enum.PartType.Block
+        vent.CanQuery=false
         vent.Reflectance=.005
         vent.CastShadow=false
     end

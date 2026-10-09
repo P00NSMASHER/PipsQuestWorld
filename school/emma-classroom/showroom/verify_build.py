@@ -51,6 +51,9 @@ assert "Vector3.new(2.48,1.87,.25)" in room, "School back shape proportions regr
 assert 'name.." seamless molded back shell"' not in room, "Oval stool prototype returned"
 assert 'name.." molded back panel"' not in room and "bandProfile={" not in room, "Rejected segmented chair returned"
 assert 'name.." underseat frame runner"' in room, "Chair steel runner missing"
+assert 'vent.Shape=Enum.PartType.Block' in room and 'vent.CanQuery=false' in room, (
+    "Student chair native vent silhouette reverted to dot-sized Ball Parts"
+)
 assert 'gui.CanvasSize=Vector2.new(180,120)' in room, "Carpet mobile text canvas reverted to unreadably large"
 # Carpets have separate intentional sizes: the 26 letter tiles retain
 # 92px, while the 10 cloud numerals grow to 104px for native iPhone legibility.
