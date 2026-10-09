@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
   "contentOnly": true,
-  "generatedAt": "2026-10-08T12:38:29.258Z",
+  "generatedAt": "2026-10-08T16:43:51.480Z",
   "schoolTimeZone": "America/New_York",
   "source": {
     "repository": "P00NSMASHER/abvmschoolstarworld",
-    "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+    "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
     "weekLabel": "Week of October 5, 2026"
   },
   "policy": {
@@ -39,7 +39,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -65,7 +65,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -91,7 +91,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -117,7 +117,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -143,7 +143,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -169,7 +169,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -195,7 +195,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -221,7 +221,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -247,7 +247,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -273,7 +273,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -299,7 +299,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -325,7 +325,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -351,7 +351,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -377,7 +377,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -403,7 +403,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -429,7 +429,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -455,7 +455,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -481,7 +481,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -507,7 +507,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -533,7 +533,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -559,7 +559,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -585,7 +585,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -611,7 +611,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -637,7 +637,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -663,7 +663,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -689,7 +689,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -715,7 +715,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -741,7 +741,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -767,7 +767,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -793,7 +793,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -819,7 +819,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -845,7 +845,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -871,7 +871,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -897,7 +897,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -923,7 +923,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -949,7 +949,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -975,7 +975,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1001,7 +1001,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1027,7 +1027,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1053,7 +1053,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1079,7 +1079,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1105,7 +1105,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1131,7 +1131,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1157,7 +1157,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1183,7 +1183,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -1209,7 +1209,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1235,7 +1235,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1261,7 +1261,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1287,7 +1287,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1313,7 +1313,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1339,7 +1339,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1365,7 +1365,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1391,7 +1391,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1417,7 +1417,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -1443,9 +1443,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1469,9 +1469,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1495,9 +1495,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1521,8 +1521,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1547,8 +1547,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1573,8 +1573,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1599,8 +1599,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1625,8 +1625,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1651,8 +1651,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1677,9 +1677,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1703,9 +1703,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1729,9 +1729,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -1755,8 +1755,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1781,8 +1781,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1807,8 +1807,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1833,8 +1833,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1859,8 +1859,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1885,8 +1885,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1911,8 +1911,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1937,8 +1937,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1963,8 +1963,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -1989,9 +1989,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b30919174364998426baa2c690b619adcb577f44d9f1f5a81800b2f6c0540a34",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2015,9 +2015,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b30919174364998426baa2c690b619adcb577f44d9f1f5a81800b2f6c0540a34",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2041,9 +2041,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b30919174364998426baa2c690b619adcb577f44d9f1f5a81800b2f6c0540a34",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2067,9 +2067,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2093,9 +2093,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2119,9 +2119,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2145,9 +2145,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2171,9 +2171,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2197,9 +2197,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2223,9 +2223,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2249,9 +2249,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2275,9 +2275,9 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
-        "evidenceHash": "sha256:b14f8584cc242f45274be90533248ebb4145f807f867335ae526ce06e9006d5d",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
+        "evidenceHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
     },
@@ -2301,8 +2301,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2327,8 +2327,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2353,8 +2353,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2379,8 +2379,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2405,8 +2405,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2431,8 +2431,8 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
-        "captureHash": "33ce4f13e604c075730dc25a3b0ca616b43df9e6356fa828b4508b7ebe814314",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
+        "captureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
         "evidenceHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/religion"
       }
@@ -2457,7 +2457,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2483,7 +2483,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2509,7 +2509,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2535,7 +2535,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2561,7 +2561,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2587,7 +2587,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2613,7 +2613,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2639,7 +2639,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2665,7 +2665,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2691,7 +2691,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2717,7 +2717,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2743,7 +2743,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2769,7 +2769,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2795,7 +2795,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2821,7 +2821,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2847,7 +2847,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2873,7 +2873,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "7e2def2720b013f7186beb750b49fac43104855256d7550f7617d7fc3b3cf331",
         "evidenceHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/tests"
@@ -2899,7 +2899,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -2925,7 +2925,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -2951,7 +2951,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -2977,7 +2977,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3003,7 +3003,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3029,7 +3029,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3055,7 +3055,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3081,7 +3081,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3107,7 +3107,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3133,7 +3133,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3159,7 +3159,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3185,7 +3185,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3211,7 +3211,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3237,7 +3237,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3263,7 +3263,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3289,7 +3289,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3315,7 +3315,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3341,7 +3341,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3367,7 +3367,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3393,7 +3393,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3419,7 +3419,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3445,7 +3445,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3471,7 +3471,7 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
@@ -3497,10 +3497,370 @@
       "tier": "current",
       "provenance": {
         "kind": "teacher-page",
-        "sourceHash": "teacher-pages-add28c21b12272ab4ecf",
+        "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
         "captureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
         "evidenceHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
         "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-01",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"I ___ my homework yesterday.\"",
+      "answer": "did",
+      "explanation": "The spelling word is \"did.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "did",
+        "din",
+        "ded",
+        "dib"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-02",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"A fish swims with a ___.\"",
+      "answer": "fin",
+      "explanation": "The spelling word is \"fin.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "fin",
+        "fen",
+        "fan",
+        "fine"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-03",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"I will ___ one book to read.\"",
+      "answer": "pick",
+      "explanation": "The spelling word is \"pick.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "pick",
+        "pic",
+        "peck",
+        "pikk"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-04",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"Stand in a straight ___ at school.\"",
+      "answer": "line",
+      "explanation": "The spelling word is \"line.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "line",
+        "lin",
+        "lien",
+        "lyn"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-05",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"The sharp ___ of the pencil broke.\"",
+      "answer": "tip",
+      "explanation": "The spelling word is \"tip.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "tip",
+        "tep",
+        "tipe",
+        "tipp"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-06",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"Water travels through a ___.\"",
+      "answer": "pipe",
+      "explanation": "The spelling word is \"pipe.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "pipe",
+        "pip",
+        "pype",
+        "piip"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-07",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"We ___ the colors to make green.\"",
+      "answer": "mix",
+      "explanation": "The spelling word is \"mix.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "mix",
+        "miks",
+        "mixe",
+        "mixx"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-08",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"Four plus one equals ___.\"",
+      "answer": "five",
+      "explanation": "The spelling word is \"five.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "five",
+        "fiv",
+        "fiev",
+        "fiive"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-09",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"Stand by the ___ of the house.\"",
+      "answer": "side",
+      "explanation": "The spelling word is \"side.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "side",
+        "sid",
+        "seid",
+        "syde"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-10",
+      "subject": "Spelling / Handwriting",
+      "skill": "long-short-a",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"The superhero wears a ___.\"",
+      "answer": "cape",
+      "explanation": "The spelling word is \"cape.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "cape",
+        "cap",
+        "caep",
+        "kaip"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-11",
+      "subject": "Spelling / Handwriting",
+      "skill": "short-i-long-i",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"We went on a long ___ up the hill.\"",
+      "answer": "hike",
+      "explanation": "The spelling word is \"hike.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "hike",
+        "hik",
+        "hiik",
+        "hyke"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-12",
+      "subject": "Spelling / Handwriting",
+      "skill": "long-short-a",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"We ___ a cardboard castle.\"",
+      "answer": "made",
+      "explanation": "The spelling word is \"made.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "made",
+        "maid",
+        "maed",
+        "maked"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-13",
+      "subject": "Spelling / Handwriting",
+      "skill": "high-frequency-word-use",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"___ of the players lined up.\"",
+      "answer": "all",
+      "explanation": "The spelling word is \"all.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "all",
+        "al",
+        "oll",
+        "awl"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-14",
+      "subject": "Spelling / Handwriting",
+      "skill": "high-frequency-word-use",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"Do you have ___ markers?\"",
+      "answer": "any",
+      "explanation": "The spelling word is \"any.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "any",
+        "eny",
+        "anie",
+        "aney"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
+      }
+    },
+    {
+      "id": "work-spelling-oct09-15",
+      "subject": "Spelling / Handwriting",
+      "skill": "high-frequency-word-use",
+      "prompt": "Choose the spelling word that correctly completes this sentence: \"The teacher ___ hello each morning.\"",
+      "answer": "says",
+      "explanation": "The spelling word is \"says.\" It completes the sentence correctly.",
+      "sourceFact": "Photo-confirmed weekly spelling words for 2026-10-09",
+      "choices": [
+        "says",
+        "sez",
+        "sayes",
+        "sais"
+      ],
+      "hint": "Read the sentence and listen for the word. Check each letter before choosing.",
+      "questionType": "direct",
+      "difficulty": 2,
+      "dok": 1,
+      "tier": "current",
+      "provenance": {
+        "kind": "reviewed-original-schoolwork",
+        "lessonId": "spelling-oct-09-2026"
       }
     },
     {
@@ -9075,7 +9435,22 @@
       "auto-short-i-long-i-ship-and-grin-d66822",
       "auto-short-i-long-i-sit-and-time-bb5d66",
       "auto-short-i-long-i-slim-d5a1ff",
-      "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042"
+      "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042",
+      "work-spelling-oct09-01",
+      "work-spelling-oct09-02",
+      "work-spelling-oct09-03",
+      "work-spelling-oct09-04",
+      "work-spelling-oct09-05",
+      "work-spelling-oct09-06",
+      "work-spelling-oct09-07",
+      "work-spelling-oct09-08",
+      "work-spelling-oct09-09",
+      "work-spelling-oct09-10",
+      "work-spelling-oct09-11",
+      "work-spelling-oct09-12",
+      "work-spelling-oct09-13",
+      "work-spelling-oct09-14",
+      "work-spelling-oct09-15"
     ]
   },
   "mixedReview": [
@@ -9165,33 +9540,48 @@
     "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042",
     "auto-high-frequency-word-use-what-9f5cb9",
     "auto-religion-mary-church-mary-is-jesus-mother-and-the-mother-of-the-church-e25c69",
+    "work-spelling-oct09-01",
     "auto-main-character-ben-34a10c",
     "auto-religion-mary-church-mary-is-jesus-mother-mary-is-mother-of-the-church-she-is-our-mother-too-b2e3c9",
+    "work-spelling-oct09-02",
     "auto-main-character-maya-fdeb06",
     "auto-religion-original-sin-the-human-tendency-to-sin-connected-with-adam-and-eve-s-sin-93007b",
+    "work-spelling-oct09-03",
     "auto-main-character-most-of-the-important-events-happen-to-or-because-of-ben-61094e",
     "auto-religion-original-sin-the-lesson-connects-their-sin-with-the-human-tendency-to-sin-feef64",
+    "work-spelling-oct09-04",
     "auto-subject-predicate-it-names-what-the-sentence-is-about-d28466",
     "auto-religion-original-sin-their-sin-is-connected-with-the-human-tendency-to-sin-called-original-sin-2fbde6",
+    "work-spelling-oct09-05",
     "auto-subject-predicate-mia-is-the-subject-opened-the-window-is-the-predicate-28f606",
     "auto-religion-sacrament-sign-a-sacred-sign-given-to-the-church-by-jesus-7c78dd",
+    "work-spelling-oct09-06",
     "auto-subject-predicate-my-little-brother-2af298",
     "auto-religion-sacrament-sign-a-sacred-sign-given-to-the-church-by-jesus-add4ec",
+    "work-spelling-oct09-07",
     "auto-subject-predicate-our-class-read-a-new-book-df7483",
     "auto-religion-sacrament-sign-they-are-all-parts-of-the-lesson-s-definition-of-a-sacrament-42b190",
+    "work-spelling-oct09-08",
     "auto-subject-predicate-sing-in-the-tree-741dd3",
     "auto-religion-seed-new-life-a-seed-dies-so-new-life-can-grow-and-jesus-died-so-we-can-have-new-life-in-grace-e3c988",
+    "work-spelling-oct09-09",
     "auto-subject-predicate-stopped-by-the-school-d4895a",
     "auto-religion-seed-new-life-new-life-in-grace-67e8d0",
+    "work-spelling-oct09-10",
     "auto-subject-predicate-subject-the-rabbit-predicate-hopped-across-the-yard-18d487",
     "auto-religion-seed-new-life-the-comparison-connects-death-with-new-life-in-grace-558555",
+    "work-spelling-oct09-11",
     "auto-subject-predicate-the-brown-puppy-1989e0",
     "auto-religion-trinity-father-son-and-holy-spirit-38a717",
+    "work-spelling-oct09-12",
     "auto-suffix-ed-ing-both-keep-the-base-action-jump-and-add-an-ending-70761f",
     "auto-religion-trinity-one-god-in-three-persons-father-son-and-holy-spirit-a3e37c",
+    "work-spelling-oct09-13",
     "auto-suffix-ed-ing-ed-helps-show-the-action-already-happened-1abc05",
     "auto-religion-trinity-the-trinity-7cc1ac",
+    "work-spelling-oct09-14",
     "auto-suffix-ed-ing-jumped-1d568a",
+    "work-spelling-oct09-15",
     "auto-suffix-ed-ing-jumping-93a2ed",
     "auto-suffix-ed-ing-jumping-b8f13d",
     "auto-suffix-ed-ing-looking-7a3e7f",
@@ -9474,7 +9864,22 @@
         "auto-short-i-long-i-ship-and-grin-d66822",
         "auto-short-i-long-i-sit-and-time-bb5d66",
         "auto-short-i-long-i-slim-d5a1ff",
-        "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042"
+        "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042",
+        "work-spelling-oct09-01",
+        "work-spelling-oct09-02",
+        "work-spelling-oct09-03",
+        "work-spelling-oct09-04",
+        "work-spelling-oct09-05",
+        "work-spelling-oct09-06",
+        "work-spelling-oct09-07",
+        "work-spelling-oct09-08",
+        "work-spelling-oct09-09",
+        "work-spelling-oct09-10",
+        "work-spelling-oct09-11",
+        "work-spelling-oct09-12",
+        "work-spelling-oct09-13",
+        "work-spelling-oct09-14",
+        "work-spelling-oct09-15"
       ],
       "supported": true,
       "disclaimer": "Original reviewed skill practice; not hidden teacher-test content or official STAR items."
@@ -9607,7 +10012,8 @@
       "focusSkills": [
         "consonant-blends",
         "long-short-a",
-        "short-i-long-i"
+        "short-i-long-i",
+        "high-frequency-word-use"
       ],
       "questionIds": [
         "auto-consonant-blends-brush-18365e",
@@ -10134,7 +10540,22 @@
         "auto-short-i-long-i-ship-and-grin-d66822",
         "auto-short-i-long-i-sit-and-time-bb5d66",
         "auto-short-i-long-i-slim-d5a1ff",
-        "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042"
+        "auto-short-i-long-i-smile-and-bike-have-long-i-swim-has-short-i-01b042",
+        "work-spelling-oct09-01",
+        "work-spelling-oct09-02",
+        "work-spelling-oct09-03",
+        "work-spelling-oct09-04",
+        "work-spelling-oct09-05",
+        "work-spelling-oct09-06",
+        "work-spelling-oct09-07",
+        "work-spelling-oct09-08",
+        "work-spelling-oct09-09",
+        "work-spelling-oct09-10",
+        "work-spelling-oct09-11",
+        "work-spelling-oct09-12",
+        "work-spelling-oct09-13",
+        "work-spelling-oct09-14",
+        "work-spelling-oct09-15"
       ],
       "answerAuthority": "server-only",
       "sourceOrder": [
@@ -10144,5 +10565,5 @@
       ]
     }
   ],
-  "contentSha256": "856b28978ee63a4bc7ac1e2ae6c7dda18a8ef287213eba9464179cc0e16ddbb6"
+  "contentSha256": "77f286a051867e00b51522667c0f0c290ca6fd0df7f34170756f4791f2c5a632"
 }
