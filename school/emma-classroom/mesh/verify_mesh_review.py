@@ -56,7 +56,13 @@ if len(sys.argv)>1:
         if props is None:continue
         name=props.findtext("./string[@name='Name']")
         if name=="FurnitureMeshConfig":
-            modules.append(props.findtext("./ProtectedString[@name='Source']",default=""))
+            source = props.findtext("./ProtectedString[@name='Source']",default="")
+            if "Enabled = true" not in source:
+                print("REVIEW_SOURCE_ENCODING_DIAGNOSTIC",
+                    [(node.tag,node.attrib.get("name"),len(node.text or ""))
+                     for node in props],flush=True)
+                print("REVIEW_MODULE_SOURCE_START",repr(source[:150]),flush=True)
+            modules.append(source)
     assert len(modules)==1,"Review place must contain exactly one FurnitureMeshConfig module"
     text=modules[0]
     assert "Enabled = true" in text, "Approved furniture not enabled in review binary"
