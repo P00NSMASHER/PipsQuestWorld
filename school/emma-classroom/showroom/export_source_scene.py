@@ -200,11 +200,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Illustrated storybook cover":5,
         "Storybook illustration backing":5,
         "Storybook title band":5,
+        "Reading floor lamp stem":1,
+        "Reading lamp base":1,
+        "Reading fabric drum lampshade":1,
+        "Reading shade sewn binding":2,
+        "Reading shade recessed warm diffuser":1,
+        "Reading lamp top finial":1,
     }
     for component,expected in geometry_contract.items():
         assert by_name[component]==expected, (
             f"Physical furniture regression: {component}={by_name[component]}, expected {expected}"
         )
+    assert by_name["Warm lamp shade"]==0, (
+        "Reading floor lamp regressed to a spherical balloon-like lampshade"
+    )
     # The teaching-wall correction must be proven against ACTUAL Luau-built
     # physical instances, not only a matching source-text snippet.
     def only(name):
