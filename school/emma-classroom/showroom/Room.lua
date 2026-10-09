@@ -536,6 +536,9 @@ local function buildClassroomTexture(root: Instance)
             Vector3.new(length,.10,width),
             CFrame.new(x,.685,z)*CFrame.Angles(0,-angle,0),
             tint,Enum.Material.SmoothPlastic,false)
+        -- Explicit native Block shape also makes the constructed-Luau
+        -- fixture test the same shape the Roblox engine will actually use.
+        ray.Shape=Enum.PartType.Block
         ray.CastShadow=false
         local tipRadius=radius+length/2-.04
         local tip=cylinder(root,"Photo rug sun ray rounded tip",
@@ -555,6 +558,7 @@ local function buildClassroomTexture(root: Instance)
         local body=part(root,"Photo rug number cloud body",
             Vector3.new(1.14,.12,.65),CFrame.new(x,.690,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
+        body.Shape=Enum.PartType.Block
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
             local lobe=cylinder(root,"Photo rug number cloud lobe",
