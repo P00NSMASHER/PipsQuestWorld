@@ -232,9 +232,9 @@ local function studentDeskDetails(root:Instance)
                 piece(group,"Short ruler",Vector3.new(.09,.035,.67),CFrame.new(x+1.90,3.34,z+.86),
                     C.golden,Enum.Material.SmoothPlastic,false)
                 end
-                piece(group,"Chair back accent",Vector3.new(1.62,.26,.045),
-                    CFrame.new(x,2.93,z+4.39)*CFrame.Angles(math.rad(-7),0,0),
-                    accent,Enum.Material.SmoothPlastic,false)
+                -- Leave the molded chair back uninterrupted. The repeated
+                -- colored stripe looked artificial and would survive a future
+                -- premium mesh swap because it is not part of the chair family.
             end
         end
     end
