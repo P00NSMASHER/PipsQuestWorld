@@ -100,6 +100,7 @@ local HIDE_DESK = {
     ["Student desk top"] = true,
     ["Desk tubular leg"] = true,
     ["Desk foot"] = true,
+    ["Desk contoured base runner"] = true,
     ["Desk basket cross wire"] = true,
     ["Desk basket longitudinal wire"] = true,
     ["Book tray side"] = true,

@@ -254,7 +254,22 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         laminates[(index-1)%#laminates+1],.23,true,false)
     for _,dx in ipairs({-2.22,2.22}) do
         cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
-        part(parent,"Desk foot",Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),Color3.fromRGB(76,82,86),Enum.Material.Metal)
+        -- The original T-foot Part remains the EXACT collidable physical
+        -- footprint for all sixteen student desks. At y=.18 it is buried
+        -- under the finished floor (top y=.5), so it was not a believable
+        -- visible base. Replace only its artwork with a rounded steel tube
+        -- resting ON the finished floor. No navigation/collision change.
+        local physicalFoot=part(parent,"Desk foot",
+            Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),
+            Color3.fromRGB(76,82,86),Enum.Material.Metal)
+        physicalFoot.Transparency=1
+        physicalFoot.CanQuery=false
+        physicalFoot.CastShadow=false
+        local runner=cylinder(parent,"Desk contoured base runner",
+            Vector3.new(3.10,.20,.20),
+            CFrame.new(x+dx,.60,z)*CFrame.Angles(0,math.pi/2,0),
+            Color3.fromRGB(133,142,146),Enum.Material.Metal,false)
+        runner.CastShadow=false
     end
     -- Match an elementary school desk's thin rim and underdesk wire basket
     -- rather than a thick floating black platform. These details are non-solid
@@ -331,8 +346,8 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         notebookCF*CFrame.new(-.98,.17,0),P.metal,Enum.Material.Metal,false)
     for _,dx in ipairs({-2.22,2.22}) do
         ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.52),P.metal,Enum.Material.Metal,false)
-        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.30),P.ink,Enum.Material.SmoothPlastic,false)
-        part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z+1.30),P.ink,Enum.Material.SmoothPlastic,false)
+        part(parent,"Desk rubber glide",Vector3.new(.49,.17,.42),CFrame.new(x+dx,.59,z-1.30),P.ink,Enum.Material.SmoothPlastic,false)
+        part(parent,"Desk rubber glide",Vector3.new(.49,.17,.42),CFrame.new(x+dx,.59,z+1.30),P.ink,Enum.Material.SmoothPlastic,false)
     end
     if emma then
         local tag=part(parent,"Emma desk nameplate",Vector3.new(3.8,.55,.16),CFrame.new(x,3.42,z-1.98)*CFrame.Angles(math.rad(-10),0,0),P.green,Enum.Material.SmoothPlastic,false)
