@@ -4,8 +4,10 @@ on:
   push:
     branches:
       - rebuild/emma-classroom-study-v1
+      - visual/emma-classroom-replica-only-20261008
     paths:
       - 'school/emma-classroom/PUBLISH_REQUEST'
+      - 'school/emma-classroom/PREVIEW_REQUEST'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Install pinned Luau and Rojo
@@ -41,20 +44,48 @@ jobs:
           echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
           unzip -q luau.zip -d luau
           unzip -q rojo.zip -d rojo
-          chmod +x luau/luau-compile rojo/rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
 
       - name: Require explicit replica-only release approval and compile showroom
         shell: bash
         run: |
           set -euo pipefail
-          # The previous v63 request was for the rejected study game.
-          # Publishing the replica needs a NEW, explicit marker after visual review.
-          grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
-          grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
+          # A separate one-time preview is authorized by the user to INSPECT
+          # the still-unaccepted classroom on their existing Roblox place.
+          # It is deliberately NOT a visual-acceptance approval. The normal
+          # release branch retains the original 'approved' requirement.
+          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
+            request=school/emma-classroom/PREVIEW_REQUEST
+            test -f "$request"
+            grep -qx 'requested-mode: classroom-progress-preview-only' "$request"
+            grep -qx 'authorization: user-requested-2026-10-08' "$request"
+            grep -qx 'visual-acceptance: pending-real-device-review' "$request"
+            grep -qx 'target-universe: 10769455759' "$request"
+            grep -qx 'target-place: 114603280760042' "$request"
+            # The preview request must be the ONLY file changed by the trigger
+            # commit. The candidate parent is pinned in that request.
+            changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+            test "$changed" = "$request"
+            parent="$(git rev-parse HEAD^)"
+            grep -qx "source-parent-sha: $parent" "$request"
+            echo "USER_AUTHORIZED_PREVIEW_WITHOUT_FINAL_VISUAL_ACCEPTANCE"
+          elif [[ "$GITHUB_REF_NAME" == 'rebuild/emma-classroom-study-v1' ]]; then
+            grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
+            grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
+          else
+            echo "REF_NOT_AUTHORIZED_FOR_PUBLISH"; exit 1
+          fi
           for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
+          python3 school/emma-classroom/tests/furniture_adapter_runtime.py \\
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/walkability_audit.py --self-test
+          python3 school/emma-classroom/showroom/walkability_audit.py \\
+            --luau "$RUNNER_TEMP/tools/luau/luau" \\
+            --out "$RUNNER_TEMP/navigation.json"
+          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
 
       - name: Build replica with NO educational runtime
         shell: bash
@@ -81,6 +112,10 @@ jobs:
           version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["versionNumber"])' "$response")"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
+          echo "Published exact GitHub source $SOURCE_SHA to known Roblox place $PLACE_ID" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
+            echo "PROGRESS PREVIEW ONLY: visual/mobile acceptance remains pending" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Receipt
         if: ${{ always() }}
@@ -91,5 +126,6 @@ jobs:
             ${{ runner.temp }}/place.sha256
             ${{ runner.temp }}/version.txt
             ${{ runner.temp }}/publish-response.json
+            ${{ runner.temp }}/navigation.json
           retention-days: 14
           if-no-files-found: warn
