@@ -76,6 +76,29 @@ local function check()
             "FOLIAGE_NATIVE_WINDOW_INTRUSION")
         assertOutside(p)
     end
+    -- Do not permit a future publish to retain technically valid but
+    -- duplicated ovals. The photographed wooded landscape contains broad
+    -- lateral branches alongside taller narrow foliage masses.
+    local profiles={}
+    local unique=0
+    local tall=0
+    local wide=0
+    for _,set in ipairs({far,near}) do
+        for _,p in ipairs(set) do
+            local profile=string.format("%.2f:%.2f",p.Size.Y,p.Size.Z)
+            if not profiles[profile] then
+                profiles[profile]=true
+                unique=unique+1
+            end
+            if p.Size.Y>p.Size.Z then
+                tall=tall+1
+            else
+                wide=wide+1
+            end
+        end
+    end
+    assert(unique>=30 and tall>=22 and tall<=29 and wide>=9,
+        "FOLIAGE_NATIVE_CLONED_CROWNS_INVALID")
     return far,near
 end
 
@@ -110,6 +133,19 @@ assert(not ok and string.find(tostring(err),
     "FOLIAGE_NATIVE_ROUND_CROWN_INVALID",1,true),
     "FOLIAGE_NATIVE_ROUND_TREE_NOT_REJECTED")
 print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED circular_crown")
+-- A manufactured forest of identical long ovals must be rejected even
+-- if every canopy remains a valid native Cylinder with good clearance.
+local savedCopies={}
+for i=1,12 do
+    savedCopies[i]=near[i].Size
+    near[i].Size=far[1].Size
+end
+ok,err=pcall(check)
+for i=1,12 do near[i].Size=savedCopies[i] end
+assert(not ok and string.find(tostring(err),
+    "FOLIAGE_NATIVE_CLONED_CROWNS_INVALID",1,true),
+    "FOLIAGE_NATIVE_CLONED_FOREST_NOT_REJECTED")
+print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED cloned_canopies")
 local savedCollision=near[1].CanCollide
 near[1].CanCollide=true
 ok,err=pcall(check)
@@ -146,7 +182,7 @@ assert(not ok and string.find(tostring(err),
 print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED rotated_window_intrusion")
 check()
 print("FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc circular_crown "
-    .."collider query shadow rotated_window_intrusion")
+    .."cloned_canopies collider query shadow rotated_window_intrusion")
 '''
 def main() -> None:
     parser=argparse.ArgumentParser()
@@ -166,10 +202,11 @@ def main() -> None:
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED flattened_ball",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED thin_disc",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED circular_crown",
+        "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED cloned_canopies",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED can_query",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED cast_shadow",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED rotated_window_intrusion",
-        "FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc circular_crown collider query shadow rotated_window_intrusion",
+        "FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc circular_crown cloned_canopies collider query shadow rotated_window_intrusion",
     )
     for item in required:
         assert any(line.startswith(item) for line in result.stdout.splitlines()),item
