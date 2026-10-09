@@ -156,18 +156,21 @@ jobs:
           # Observe that shelf HEAD-ON at a standing/child-eye perspective.
           # This is a QA-only camera, never a gameplay or release-camera change.
           render_eye_checked 17-library-cover-fronts -24,5.3,15.7 -24,4.15,22.35
+          # QA-only oblique close-up to inspect the newly native-safe foliage.
+          # Existing fixed 07 two-window camera remains unchanged.
+          render_eye_checked 18-window-foliage-close -28,6,-11 -38.3,8.6,-19
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
             echo "Reject blank exterior control; retrying independent exterior camera"
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 17=3_aerial+1_exterior+12_eye+1_rug_diagnostic"
+          echo "VISUAL_FRAME_INVENTORY_PASS 18=3_aerial+1_exterior+13_eye+1_rug_diagnostic"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
@@ -179,6 +182,13 @@ jobs:
           "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check 'Pillow==11.3.0'
           "$RUNNER_TEMP/rhr-venv/bin/python" \
             school/emma-classroom/showroom/encode_preview.py "$RUNNER_TEMP/visual"
+
+      - name: Verify native-safe tree crowns are visible through both windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_window_foliage.py --self-test
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_window_foliage.py "$RUNNER_TEMP/visual/07-eye-windows.png"
 
       - name: Save real rendered source snapshot for human/AI review
         if: always()
