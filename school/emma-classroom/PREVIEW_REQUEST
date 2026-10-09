@@ -3,7 +3,7 @@ authorization: user-requested-2026-10-08
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 8c047480c993ff021e4e6895ba1d794f96911e23
+source-parent-sha: 1582082f532b719f5e99f751f1fccc78edb9b215
 notice: user wants to see the in-progress classroom in the existing Roblox game
 scope: isolated showroom architecture, 16 child-scale desks/chairs, classroom art, first-person exploration
 production-furniture-meshes: disabled pending native iPhone visual review
