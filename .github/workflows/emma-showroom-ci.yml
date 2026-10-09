@@ -10,6 +10,7 @@ on:
       - 'school/emma-classroom/RELEASE_RECEIPT.json'
       - 'school/emma-classroom/verify_release_receipt.py'
       - 'school/emma-classroom/qa/audit_native_carpet_video.py'
+      - 'school/emma-classroom/qa/audit_native_carpet_sequence.py'
       - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
@@ -45,6 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m py_compile school/emma-classroom/qa/audit_native_carpet_video.py
+          python3 -m py_compile school/emma-classroom/qa/audit_native_carpet_sequence.py
           echo "NATIVE_VIDEO_AUDIT_SYNTAX_PASS private_media_not_in_ci=true"
 
       - name: Reject synthetic video false positives without ever accessing private footage
@@ -57,7 +59,10 @@ jobs:
             "numpy==2.3.5" "opencv-python-headless==4.13.0.92"
           "$RUNNER_TEMP/native-rug-audit-venv/bin/python" \
             school/emma-classroom/qa/audit_native_carpet_video.py --self-test
+          "$RUNNER_TEMP/native-rug-audit-venv/bin/python" \
+            school/emma-classroom/qa/audit_native_carpet_sequence.py --self-test
           echo "NATIVE_VIDEO_SYNTHETIC_CI_PASS private_media_not_accessed=true"
+          echo "NATIVE_VIDEO_SEQUENCE_CI_PASS three_frames_reconciled=true"
 
       - name: Audit last confirmed published Roblox preview without claiming candidate is live
         shell: bash
