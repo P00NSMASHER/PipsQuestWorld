@@ -226,6 +226,17 @@ def assert_no_window_drapery_colliders(rows: list[list[str]]) -> None:
     )
 
 
+def assert_no_supply_bin_colliders(rows: list[list[str]]) -> None:
+    decorative={"Cubbie bin", "Bin side", "Bin front and back",
+                "Bin label", "Stored classroom file folder"}
+    offenders=sorted({row[1] for row in rows if len(row)>1
+                      and row[1] in decorative})
+    assert not offenders, (
+        "Decorative school storage bins/folders must remain noncolliding: "
+        + ", ".join(offenders)
+    )
+
+
 def get_source_blockers(luau: str) -> list[Blocker]:
     with tempfile.TemporaryDirectory(prefix="abvm-nav-") as folder:
         path=Path(folder)/"room.lua"
@@ -244,6 +255,7 @@ def get_source_blockers(luau: str) -> list[Blocker]:
     # into physical walkway colliders, even when six broad routes still pass.
     assert_no_mobile_stand_colliders(rows)
     assert_no_window_drapery_colliders(rows)
+    assert_no_supply_bin_colliders(rows)
     return as_blockers(rows)
 
 
@@ -279,8 +291,16 @@ def self_test():
         raise AssertionError("Colliding drapery self-test was accepted")
     except AssertionError as e:
         assert "noncolliding" in str(e)
+    assert_no_supply_bin_colliders([flat,tall])
+    try:
+        assert_no_supply_bin_colliders([
+            ["NAV","Stored classroom file folder",*flat[2:]]
+        ])
+        raise AssertionError("Colliding bin folder test was accepted")
+    except AssertionError as e:
+        assert "noncolliding" in str(e)
     print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, "
-          "open space connects, mobile Smartboard and curtains cannot collide)")
+          "open space connects, Smartboard/curtains/storage noncolliding)")
 
 
 def main():
