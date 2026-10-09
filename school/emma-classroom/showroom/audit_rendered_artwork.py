@@ -52,7 +52,13 @@ def inspect_rug(im:Image.Image)->dict[str,int]:
             if radius<=26 and warm(color):
                 center+=1
             if 50<radius<80 and warm(color):
-                k=min(15,int((math.atan2(y-cy,x-cx)+math.pi)/(2*math.pi)*16))
+                # Assign each warm pixel to its *nearest authored ray*.
+                # Floor-binning put every 22.5-degree ray ON a sector edge:
+                # adjacent rays then falsely supplied enough pixels to make
+                # one deliberately missing ray pass the visual acceptance.
+                # Preserve the original >=24 pixels and all-16 requirements.
+                angle=math.atan2(y-cy,x-cx)%(2*math.pi)
+                k=int(math.floor(angle*16/(2*math.pi)+.5))%16
                 sectors[k]+=1
             if 75<radius<146 and white_cloud(color):
                 cloud_points.add((x,y))
@@ -110,20 +116,26 @@ def self_test()->None:
         x=cx+int(math.cos(a)*110);y=cy+int(math.sin(a)*110)
         draw.ellipse((x-19,y-12,x+19,y+12),fill=(160,172,188))
     assert inspect_rug(rug)["cloud_groups"]==10
-    # Mutation tests must remove exactly ONE motif, not an entire category:
-    # a weak 11-sector/8-cloud image gate used to let these through.
-    ray_one_missing=rug.copy()
-    d=ImageDraw.Draw(ray_one_missing)
-    a=0.
-    d.line((cx+math.cos(a)*32,cy+math.sin(a)*32,
-            cx+math.cos(a)*74,cy+math.sin(a)*74),
-           fill=(55,99,152),width=15)
-    try:
-        inspect_rug(ray_one_missing)
-    except AssertionError as exc:
-        assert "RUG_SUN_RAYS_MISSING" in str(exc), str(exc)
-    else:
-        raise AssertionError("Single absent sun ray passed visual acceptance")
+    # Test EVERY one-ray mutation. Each of the 16 original positions
+    # must independently produce exactly one absent image sector. The
+    # former boundary-bin test failed to detect the 0-degree deletion.
+    for k in range(16):
+        missing=rug.copy()
+        d=ImageDraw.Draw(missing)
+        a=2*math.pi*k/16
+        d.line((cx+math.cos(a)*32,cy+math.sin(a)*32,
+                cx+math.cos(a)*74,cy+math.sin(a)*74),
+               fill=(55,99,152),width=15)
+        try:
+            inspect_rug(missing)
+        except AssertionError as exc:
+            assert "RUG_SUN_RAYS_MISSING" in str(exc), (
+                f"Wrong error on missing ray {k}: {exc}"
+            )
+        else:
+            raise AssertionError(
+                f"One missing sun ray {k}/16 passed visual acceptance"
+            )
     cloud_one_missing=rug.copy()
     d=ImageDraw.Draw(cloud_one_missing)
     i=0
@@ -179,7 +191,8 @@ def self_test()->None:
     else:
         raise AssertionError("Blank storybook passed")
     print("ARTWORK_PIXEL_NEGATIVE_TESTS_PASS "
-          "single_ray single_cloud missing_rays missing_clouds blank_book")
+          "every_single_ray_16_of_16 single_cloud "
+          "missing_rays missing_clouds blank_book")
 
 def main()->None:
     parser=argparse.ArgumentParser()
