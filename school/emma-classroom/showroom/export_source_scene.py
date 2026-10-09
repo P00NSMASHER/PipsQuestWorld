@@ -122,7 +122,7 @@ def write_part(parent: ET.Element, entry: list[str], idx: int):
     return name
 
 CUTAWAY_OCCLUDERS={
-    "Acoustic ceiling","Ceiling grid line","Ceiling grid cross",
+    "Acoustic ceiling","Acoustic ceiling inset tile","Ceiling grid line","Ceiling grid cross",
     "Front wall","Back wall left","Back wall right","Door header wall",
     "Right wall front","Right wall back","Right door header wall",
     "Left wall below windows","Left wall above windows","Left window wall pier",
