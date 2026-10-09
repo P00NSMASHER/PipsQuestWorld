@@ -194,11 +194,12 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
     -- Reference school photos show ventilation openings near the upper back
     -- of the blue molded chairs. The 6-Part hidden handgrip plus two tiny
     -- rivets looked like featureless toy furniture from child eye level.
-    -- Three shallow rear insets approximate openings visually; they are NOT
-    -- drilled holes or alternative gameplay collision shapes.
+    -- Three rounded, shallow dark ellipsoids represent upper-back molded
+    -- recesses. They replace the prior flat rectangular sticker bars without
+    -- new geometry, changing collision, or pretending to cut true holes.
     for _,dx in ipairs({-.54,0,.54}) do
-        local vent=part(parent,name.." ventilation inset",
-            Vector3.new(.17,.63,.034),backCF*CFrame.new(dx,.40,.139),
+        local vent=ball(parent,name.." ventilation inset",
+            Vector3.new(.18,.65,.034),backCF*CFrame.new(dx,.40,.139),
             tint:Lerp(P.ink,.53),Enum.Material.SmoothPlastic,false)
         vent.Reflectance=.005
         vent.CastShadow=false

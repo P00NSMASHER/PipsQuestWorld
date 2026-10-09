@@ -1104,11 +1104,14 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Three molded ventilation insets lost their symmetric upper positions"
         )
         for vent in attached:
-            assert vent[4].endswith("SmoothPlastic") and (
-                abs(float(vent[6])-.17)<.025 and
-                abs(float(vent[7])-.63)<.025 and
-                abs(float(vent[8])-.034)<.012
-            ), "Molded vent silhouette became an oversized opaque rectangle"
+            assert vent[3].endswith("Ball") and (
+                vent[4].endswith("SmoothPlastic")
+            ), "Flat rectangular chair stickers returned instead of rounded insets"
+            assert (abs(float(vent[6])-.18)<.014 and
+                    abs(float(vent[7])-.65)<.014 and
+                    abs(float(vent[8])-.034)<.010), (
+                "Molded vent outline or shallow visual depth regressed"
+            )
             assert .26<float(vent[10])-y<.49, (
                 "Ventilation insets moved away from upper chair back"
             )
@@ -1118,8 +1121,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             matching.add(id(vent))
     assert len(matching)==48, "Same decorative chair inset counted repeatedly"
     print("PHOTO_CHAIR_VENTS_PASS backs=16 rear_insets=48 "
-          "photo_guided_not_real_holes=true collision_unchanged=true "
-          "mobile_parts_saved=80 native_iphone_pending")
+          "rounded_ellipsoids=true photo_guided_not_real_holes=true "
+          "collision_unchanged=true mobile_parts_saved=80 native_iphone_pending")
 
     tray_rails=[r for r in lines if r[1]=="Book tray side"]
     assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"

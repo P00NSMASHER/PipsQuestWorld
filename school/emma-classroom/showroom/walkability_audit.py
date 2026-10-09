@@ -258,6 +258,15 @@ def assert_no_corridor_finishing_colliders(rows: list[list[str]]) -> None:
     )
 
 
+def assert_no_chair_vent_colliders(rows: list[list[str]]) -> None:
+    offenders=sorted({row[1] for row in rows if len(row)>1
+                      and row[1]=="Student chair ventilation inset"})
+    assert not offenders, (
+        "Decorative chair vents must remain noncolliding: "
+        + ", ".join(offenders)
+    )
+
+
 def get_source_blockers(luau: str) -> list[Blocker]:
     with tempfile.TemporaryDirectory(prefix="abvm-nav-") as folder:
         path=Path(folder)/"room.lua"
@@ -278,6 +287,7 @@ def get_source_blockers(luau: str) -> list[Blocker]:
     assert_no_window_drapery_colliders(rows)
     assert_no_supply_bin_colliders(rows)
     assert_no_corridor_finishing_colliders(rows)
+    assert_no_chair_vent_colliders(rows)
     return as_blockers(rows)
 
 
@@ -332,8 +342,16 @@ def self_test():
             raise AssertionError("Colliding hall decoration was accepted")
         except AssertionError as e:
             assert "walk obstruction" in str(e)
+    assert_no_chair_vent_colliders([flat,tall])
+    try:
+        assert_no_chair_vent_colliders([
+            ["NAV","Student chair ventilation inset",*flat[2:]]
+        ])
+        raise AssertionError("Colliding chair vent test accepted")
+    except AssertionError as exc:
+        assert "noncolliding" in str(exc)
     print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, "
-          "open space connects, Smartboard/curtains/storage/hallways noncolliding)")
+          "open space connects, Smartboard/curtains/storage/halls/chair vents noncolliding)")
 
 
 def main():
