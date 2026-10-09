@@ -59,6 +59,12 @@ assert 'Frosted fluorescent diffuser' in room, "Glaring neon ceiling fixture ret
 assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returned"
 assert 'local center=CFrame.new(20.55,5.87,-26.4)' in room, "Teacher globe moved off its desk"
 assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
+assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on desktop"
+assert "pencilCup(root,21.5,4.08,-24.2)" in room, "Teacher pencil cup hovers above desktop"
+assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
+gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
+assert "CFrame.new(22,3.365,-22.6)" in gallery, "Stationery tray no longer touches teacher desk"
+assert "CFrame.new(30.5,3.315,-24.0)" in gallery, "Teacher papers no longer rest on desk"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main
 mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()

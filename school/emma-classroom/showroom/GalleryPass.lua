@@ -239,19 +239,21 @@ local function physicalDetails(root:Instance,group:Instance)
         end
     end
 
+    -- Desk top y=3.29: keep the underside of trays and paper in physical contact
+    -- with it, while small pencils sit on the tray, not suspended in midair.
     -- Small physical supplies on the teaching desk rather than more HUD labels.
     piece(group,"Teacher desk wooden stationery tray",Vector3.new(2.5,.15,1.6),
-        CFrame.new(22,3.46,-22.6),C.oak,Enum.Material.Wood,false)
+        CFrame.new(22,3.365,-22.6),C.oak,Enum.Material.Wood,false)
     for i=1,6 do
         piece(group,"Teacher wooden colored pencil",Vector3.new(.10,.09,1.18),
-            CFrame.new(21.2+i*.23,3.57,-22.5),
+            CFrame.new(21.2+i*.23,3.49,-22.5),
             ({C.pencil,C.blue,C.green})[(i-1)%3+1],Enum.Material.Wood,false)
     end
     piece(group,"Teacher note paper",Vector3.new(1.75,.04,1.43),
-        CFrame.new(30.5,3.42,-24.0),C.paper,Enum.Material.SmoothPlastic,false)
+        CFrame.new(30.5,3.315,-24.0),C.paper,Enum.Material.SmoothPlastic,false)
     for i=1,4 do
         piece(group,"Teacher note ruled line",Vector3.new(1.46,.009,.025),
-            CFrame.new(30.5,3.45,-24.42+i*.25),C.blue,Enum.Material.SmoothPlastic,false)
+            CFrame.new(30.5,3.345,-24.42+i*.25),C.blue,Enum.Material.SmoothPlastic,false)
     end
 end
 

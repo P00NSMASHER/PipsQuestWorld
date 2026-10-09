@@ -343,10 +343,10 @@ local function buildClassroomTexture(root: Instance)
         local a=i*math.pi/8
         cylinder(root,"Trash can rib",Vector3.new(2.85,.055,.055),CFrame.new(32.8+math.cos(a)*1.55,1.75,-24+math.sin(a)*1.55)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(137,142,141),Enum.Material.Metal,false)
     end
-    local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(22.5,4.05,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
+    local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(22.5,3.89,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
-    part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.66,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
-    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(22.5,4.94,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
+    part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
+    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(22.5,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
     part(root,"Rolling cart top",Vector3.new(5.5,.4,3.2),CFrame.new(-29,3.5,22),Color3.fromRGB(71,105,125),Enum.Material.Metal)
     for _,y in ipairs({1.0,2.1,3.2}) do part(root,"Rolling cart shelf",Vector3.new(5.2,.22,3),CFrame.new(-29,y,22),Color3.fromRGB(82,119,139),Enum.Material.Metal,false) end
     for _,x in ipairs({-31.2,-26.8}) do
@@ -439,9 +439,32 @@ local function buildReadingCorner(root:Instance)
             part(root,"Reading book spine",Vector3.new(width,height,1.5),
                 spineFrame,colors[(i*5+row*3)%#colors+1],
                 Enum.Material.SmoothPlastic,false)
-            part(root,"Book spine label",Vector3.new(width*.52,.14,.03),
-                spineFrame*CFrame.new(0,-height*.09,-.765),
-                P.cream,Enum.Material.SmoothPlastic,false)
+            -- Six selected physical front-facing book covers break up the uniform
+            -- rows of anonymous spines without changing shelving or book count.
+            -- Paper/cover relief faces the room (-Z) and remains non-collidable.
+            local faceOut=(i+row*2)%7==3
+            if faceOut then
+                part(root,"Reading book cover",Vector3.new(width*.92,height*.92,.055),
+                    spineFrame*CFrame.new(0,0,-.79),
+                    colors[((i+row)*3)%#colors+1],Enum.Material.SmoothPlastic,false)
+                part(root,"Reading book cover illustration",Vector3.new(width*.57,height*.38,.024),
+                    spineFrame*CFrame.new(0,.10,-.825),
+                    P.cream,Enum.Material.SmoothPlastic,false)
+                part(root,"Reading book cover title",Vector3.new(width*.67,.11,.025),
+                    spineFrame*CFrame.new(0,-height*.30,-.828),
+                    P.gold,Enum.Material.SmoothPlastic,false)
+            else
+                part(root,"Book spine label",Vector3.new(width*.52,.14,.03),
+                    spineFrame*CFrame.new(0,-height*.09,-.765),
+                    P.cream,Enum.Material.SmoothPlastic,false)
+            end
+        end
+    end
+    -- Thin steel bookends sit on existing shelves rather than adding a new rack.
+    for row=0,1 do
+        for _,x in ipairs({-30.96,-13.94}) do
+            part(root,"Reading shelf metal bookend",Vector3.new(.12,1.55,1.55),
+                CFrame.new(x,1.64+row*2.55,23.3),P.metal,Enum.Material.Metal,false)
         end
     end
     -- Six synthetic artwork panels were duplicated on the front chalkboard.
@@ -615,23 +638,25 @@ local function buildTeacherDesk(root: Instance)
             part(root,"Teacher drawer handle",Vector3.new(1.02,.10,.18),CFrame.new(x,.84+row*.88,-22.29),P.metal,Enum.Material.Metal,false)
         end
     end
-    local screenCF=CFrame.new(26,5.1,-26.1)*CFrame.Angles(math.rad(-8),0,0)
+    -- Seat the laptop and all desk supplies on the real laminate plane (top y=3.29).
+    -- Previously the laptop base and several objects hovered 0.1-0.3 studs.
+    local screenCF=CFrame.new(26,4.94,-26.1)*CFrame.Angles(math.rad(-8),0,0)
     roundedPanel(root,"Laptop display frame",Vector3.new(4.6,2.8,.20),screenCF,Color3.fromRGB(38,42,48),.12,false,false)
     local laptop=part(root,"Teacher laptop screen",Vector3.new(4.23,2.40,.025),screenCF*CFrame.new(0,.03,.12),Color3.fromRGB(225,238,236),Enum.Material.SmoothPlastic,false)
     local display=surfaceText(laptop,"TODAY'S LESSON\nReading • Math • Spelling",Enum.NormalId.Back,P.blue,Color3.fromRGB(225,238,236),Enum.Font.GothamMedium)
     display.BackgroundTransparency=0
     ball(root,"Laptop webcam",Vector3.new(.065,.065,.025),screenCF*CFrame.new(0,1.29,.12),P.ink,Enum.Material.Glass,false)
-    roundedPanel(root,"Teacher laptop base",Vector3.new(4.8,.20,3.1),CFrame.new(26,3.55,-24.85),Color3.fromRGB(162,167,173),.14,true,false)
-    local keyboardCF=CFrame.new(26,3.67,-25.20)
+    roundedPanel(root,"Teacher laptop base",Vector3.new(4.8,.20,3.1),CFrame.new(26,3.39,-24.85),Color3.fromRGB(162,167,173),.14,true,false)
+    local keyboardCF=CFrame.new(26,3.51,-25.20)
     for row=0,3 do for col=0,9 do
         part(root,"Laptop keyboard key",Vector3.new(.34,.045,.28),keyboardCF*CFrame.new(-1.82+col*.40,0,-.50+row*.34),Color3.fromRGB(48,51,58),Enum.Material.SmoothPlastic,false)
     end end
-    part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.68,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
-    roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.68,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
-    cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.69,-26.12),P.metal,Enum.Material.Metal,false)
-    pencilCup(root,21.5,4.4,-24.2)
-    book(root,29.5,3.62,-24.2,Color3.fromRGB(61,110,78),math.rad(8))
-    book(root,29.5,3.95,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
+    part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.52,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
+    roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.52,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
+    cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.53,-26.12),P.metal,Enum.Material.Metal,false)
+    pencilCup(root,21.5,4.08,-24.2)
+    book(root,29.5,3.38,-24.2,Color3.fromRGB(61,110,78),math.rad(8))
+    book(root,29.5,3.64,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
     -- Tilted globe: continents follow the sphere, with a meridian cradle and
     -- latitude lines. No rectangular land plate sticking off the sphere.
     local center=CFrame.new(20.55,5.87,-26.4)*CFrame.Angles(0,0,math.rad(-23))
