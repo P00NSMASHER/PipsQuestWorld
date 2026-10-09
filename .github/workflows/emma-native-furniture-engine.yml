@@ -1,12 +1,9 @@
 name: ABVM Native Roblox Furniture Engine Acceptance
 
+# The approved models and exact showroom adapter already passed native
+# ephemeral engine acceptance. Roblox execution tasks have rate limits:
+# do not automatically rerun on every PR update.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - 'school/emma-classroom/mesh/native_engine_smoke.py'
-      - 'school/emma-classroom/mesh/native_engine_smoke.luau'
-      - '.github/workflows/emma-native-furniture-engine.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,7 +11,7 @@ permissions:
 
 jobs:
   ephemeral-engine-furniture-inspection:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == 'P00NSMASHER/PipsQuestWorld'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
