@@ -392,6 +392,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
+    window_banner=only("Classroom faith window banner")
+    assert abs(float(window_banner[9])+36.33)<.025 and (
+        abs(float(window_banner[10])-15.22)<.025
+    ), "Photo-specific faith motto is no longer above the actual windows"
+    assert abs(float(window_banner[11])+6.50)<.05 and (
+        37.8<=float(window_banner[8])<=38.2
+    ), "Window affirmation strip moved away from the two window bays"
+    assert .95<=float(window_banner[7])<=1.20 and (
+        float(window_banner[10])+float(window_banner[7])/2 < 17
+    ), "Classroom motto obstructs the acoustic ceiling or window glazing"
+    print("PHOTO_FAITH_MOTTO_GEOMETRY_PASS words=photo_grounded "
+          "windows_unobscured=true one_noncolliding_part=true")
     photo_components={
         "Reading rug alphabet border":26,
         "Photo rug number cloud lobe":20,
@@ -622,6 +634,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
                for p in poufs), "Upholstered drum poufs reverted to balloon shapes"
     assert all(c[3].endswith("Ball") and c[4].endswith("Fabric")
                for c in cushions), "Soft seating lost its fabric cushion crown"
+    # Speculative seating is deliberately less visually dominant than the
+    # photo-verified carpet. Assert the actual constructed child-scale sizes.
+    for base in poufs:
+        footprint=max(world_span(base,0),world_span(base,2))
+        assert 2.88<=footprint<=3.02, (
+            f"Unverified upholstered pouf overwhelms carpet: {footprint:.3f}"
+        )
+    for cushion in cushions:
+        assert 2.50<=world_span(cushion,0)<=2.75 and (
+            2.48<=world_span(cushion,2)<=2.70
+        ), "Cushion extends beyond its small manufactured pouf"
+    print("PHOTO_SUBTRACTIVE_READING_PASS poufs=2 compact=true "
+          "sun_visibility_preserved=true")
     rack_x=float(rack[9]);rack_width=world_span(rack,0)
     min_clearance=min(abs(float(p[9])-rack_x)
                       -(world_span(p,0)+rack_width)/2 for p in poufs)

@@ -110,6 +110,10 @@ end
 
 local function readingCorner(root:Instance)
     local group=makeGroup(root,"Cozy story corner")
+    -- The photo references contain no verified upholstered poufs.
+    -- Retain their useful soft-seating silhouettes as small, unobtrusive
+    -- child-scale props rather than two giant pink/blue circular obstacles.
+    -- Actual photo-truth belongs to the alphabet rug and woodwork.
     -- Original eye-height renders showed two oversized stacked ellipsoids:
     -- the reading "seats" were taller than the actual child-scale chairs.
     -- A low upholstered cylindrical ottoman with a softly crowned top has
@@ -122,20 +126,20 @@ local function readingCorner(root:Instance)
     local seats={{x=-31.0,z=12.0,c=C.coral},{x=-26.9,z=19.2,c=C.blue}}
     for _,v in ipairs(seats) do
         local vertical=CFrame.Angles(0,0,math.pi/2)
-        disk(group,"Corduroy floor pouf",3.75,.82,
+        disk(group,"Corduroy floor pouf",2.95,.82,
             CFrame.new(v.x,.97,v.z)*vertical,
             v.c:Lerp(C.cream,.08),Enum.Material.Fabric)
-        orb(group,"Soft seat cushion",Vector3.new(3.30,.36,3.12),
+        orb(group,"Soft seat cushion",Vector3.new(2.63,.32,2.57),
             CFrame.new(v.x,1.48,v.z),
             v.c:Lerp(C.cream,.18),Enum.Material.Fabric)
-        disk(group,"Soft fabric button",.31,.055,
-            CFrame.new(v.x,1.68,v.z)*vertical,C.cream,Enum.Material.Fabric)
+        disk(group,"Soft fabric button",.25,.055,
+            CFrame.new(v.x,1.66,v.z)*vertical,C.cream,Enum.Material.Fabric)
         for _,side in ipairs({-1,1}) do
             -- Two subtle vertical upholstery seams follow the round front.
             -- Unlike the former 2.2-stud straight side piping, these sit on
             -- the upholstered skirt rather than projecting into the aisle.
             piece(group,"Fabric seat piping",Vector3.new(.065,.50,.06),
-                CFrame.new(v.x+side*1.25,.99,v.z-1.38),
+                CFrame.new(v.x+side*.94,.99,v.z-1.03),
                 v.c:Lerp(C.cream,.31),Enum.Material.Fabric,false)
         end
     end

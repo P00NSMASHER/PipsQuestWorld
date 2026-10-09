@@ -218,6 +218,7 @@ def assert_no_window_drapery_colliders(rows: list[list[str]]) -> None:
                       if len(row)>1 and (
                           row[1].startswith("Navy curtain ")
                           or row[1]=="Blue curtain valance"
+                          or row[1]=="Classroom faith window banner"
                       )})
     assert not offenders, (
         "Photo-only school window drapes must remain noncolliding: "

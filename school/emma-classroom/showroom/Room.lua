@@ -1063,6 +1063,15 @@ function World.build()
     for _,z in ipairs({-34.35,26.35}) do part(root,"Blue baseboard",Vector3.new(73,.72,.35),CFrame.new(0,.55,z),P.blue,Enum.Material.Wood,false) end
 
     buildWindows(root)
+    -- Photo IMG_2910: classroom-specific statement above the navy-curtained
+    -- windows. Use a single noncolliding world-space printed strip; neither
+    -- the original school photo nor any child's likeness is redistributed.
+    -- This occupies the painted wall above both existing window openings.
+    local faithBanner=part(root,"Classroom faith window banner",
+        Vector3.new(.12,1.08,38.0),CFrame.new(-36.33,15.22,-6.50),
+        Color3.fromRGB(247,236,216),Enum.Material.SmoothPlastic,false)
+    surfaceText(faithBanner,"I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
+        Enum.NormalId.Right,P.blue,faithBanner.Color,Enum.Font.GothamMedium)
     buildFrontWall(root)
     buildRightWall(root)
     buildTeacherDesk(root)
