@@ -46,6 +46,8 @@ local function check()
         assert(p.Size.X>.70 and p.Size.X<1.50
             and p.Size.Y>1.28 and p.Size.Z>1.25,
             "FOLIAGE_NATIVE_SILHOUETTE_INVALID")
+        assert(math.max(p.Size.Y/p.Size.Z,p.Size.Z/p.Size.Y)>=1.32,
+            "FOLIAGE_NATIVE_ROUND_CROWN_INVALID")
         assert(p.Material==Enum.Material.Grass,
             "FOLIAGE_NATIVE_MATERIAL_INVALID")
         assert(not p.CanCollide and not p.CanTouch and not p.CanQuery,
@@ -62,6 +64,8 @@ local function check()
         assert(p.Size.X>.70 and p.Size.X<1.50
             and p.Size.Y>1.28 and p.Size.Z>1.25,
             "FOLIAGE_NATIVE_SILHOUETTE_INVALID")
+        assert(math.max(p.Size.Y/p.Size.Z,p.Size.Z/p.Size.Y)>=1.32,
+            "FOLIAGE_NATIVE_ROUND_CROWN_INVALID")
         assert(p.Material==Enum.Material.Grass,
             "FOLIAGE_NATIVE_MATERIAL_INVALID")
         assert(not p.CanCollide and not p.CanTouch and not p.CanQuery,
@@ -96,6 +100,16 @@ assert(not ok and string.find(tostring(err),
     "FOLIAGE_NATIVE_SILHOUETTE_INVALID",1,true),
     "FOLIAGE_NATIVE_THIN_DISC_NOT_REJECTED")
 print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED thin_disc")
+-- A return to perfect circular canopy profiles must fail even if all
+-- 38 native Cylinder shapes, positions and collision flags remain valid.
+local savedRound=far[1].Size
+far[1].Size=Vector3.new(savedRound.X,2.10,2.10)
+ok,err=pcall(check)
+far[1].Size=savedRound
+assert(not ok and string.find(tostring(err),
+    "FOLIAGE_NATIVE_ROUND_CROWN_INVALID",1,true),
+    "FOLIAGE_NATIVE_ROUND_TREE_NOT_REJECTED")
+print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED circular_crown")
 local savedCollision=near[1].CanCollide
 near[1].CanCollide=true
 ok,err=pcall(check)
@@ -131,8 +145,8 @@ assert(not ok and string.find(tostring(err),
     "FOLIAGE_NATIVE_ROTATED_INTRUSION_NOT_REJECTED: "..tostring(err))
 print("FOLIAGE_NATIVE_ADVERSARIAL_REJECTED rotated_window_intrusion")
 check()
-print("FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc collider query "
-    .."shadow rotated_window_intrusion")
+print("FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc circular_crown "
+    .."collider query shadow rotated_window_intrusion")
 '''
 def main() -> None:
     parser=argparse.ArgumentParser()
@@ -151,10 +165,11 @@ def main() -> None:
         "FOLIAGE_NATIVE_CONSTRUCTION_PASS",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED flattened_ball",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED thin_disc",
+        "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED circular_crown",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED can_query",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED cast_shadow",
         "FOLIAGE_NATIVE_ADVERSARIAL_REJECTED rotated_window_intrusion",
-        "FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc collider query shadow rotated_window_intrusion",
+        "FOLIAGE_NATIVE_NEGATIVE_TESTS_PASS ball thin_disc circular_crown collider query shadow rotated_window_intrusion",
     )
     for item in required:
         assert any(line.startswith(item) for line in result.stdout.splitlines()),item

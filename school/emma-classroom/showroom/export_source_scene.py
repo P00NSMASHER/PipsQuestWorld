@@ -357,6 +357,22 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert tilted>=30, (
         "Tree crowns reverted to mechanically upright repeated spheres"
     )
+    # Child-eye 18-window-foliage-close revealed repeated round green discs.
+    # Preserve all 38 original native-safe Cylinders but reject profiles
+    # so circular they recreate the original spherical tree silhouettes.
+    crown_aspects=[max(float(p[7])/float(p[8]),float(p[8])/float(p[7]))
+                   for p in crowns]
+    assert min(crown_aspects)>=1.32, (
+        "Tree lobes reverted to round cookie-cutter silhouettes"
+    )
+    upright=sum(float(p[7])>float(p[8]) for p in crowns)
+    wide=len(crowns)-upright
+    assert 22<=upright<=29 and wide>=9, (
+        "Trees no longer combine vertical and horizontal leaf masses"
+    )
+    print("PHOTO_FOLIAGE_SILHOUETTE_PASS crowns=38 native_cylinders=true "
+          f"vertical={upright} horizontal={wide} "
+          f"min_aspect={min(crown_aspects):.2f} same_parts=true")
     heights={round(float(p[10]),2) for p in crowns}
     profiles={(round(float(p[7]),2),round(float(p[8]),2))
               for p in crowns}

@@ -33,6 +33,18 @@ local function canopy(parent:Instance,name:string,size:Vector3,cf:CFrame,color:C
     p.CastShadow=false
     return p
 end
+-- Viewed from the classroom, the window trees previously looked like a
+-- repeated grid of green circular plates. Keep the exact 38 noncolliding
+-- native-safe Cylinder Parts, but vary each crown's Y/Z aspect ratio:
+-- two-thirds upright/narrow and one-third broader/lower branches. Repeated
+-- perfect circles are not supported by the actual leafy reference photos.
+local function leafProfile(height:number,spread:number,treeIndex:number,lobeIndex:number):(number,number)
+    local upright=((treeIndex+lobeIndex)%3)~=0
+    if upright then
+        return math.max(1.34,height*1.28),math.max(1.31,spread*.73)
+    end
+    return math.max(1.34,height*.81),math.max(1.34,spread*1.25)
+end
 local function disk(parent:Instance,name:string,diameter:number,length:number,cf:CFrame,color:Color3,material:Enum.Material?):Part
     local p=piece(parent,name,Vector3.new(length,diameter,diameter),cf,color,material,false)
     p.Shape=Enum.PartType.Cylinder;return p
@@ -101,10 +113,9 @@ local function windowNeighborhood(root:Instance)
                 v[2]*style.height+style.rise+heightShift,
                 v[3]*style.spread+style.shift+stagger
             )*CFrame.Angles(lean,math.rad((k*7+i*11)%29-14),0)
+            local leafY,leafZ=leafProfile(v[5],v[6],i,k)
             canopy(world,"Photo exterior irregular foliage",
-                Vector3.new(v[4],v[5]*(.94+(k%3)*.075),
-                    v[6]*(.87+(i%3)*.085)),
-                cf,
+                Vector3.new(v[4],leafY,leafZ),cf,
                 distantLeaves[(i+k*2-2)%#distantLeaves+1])
         end
     end
@@ -135,10 +146,10 @@ local function windowNeighborhood(root:Instance)
                 v[1]-.06, v[2]+math.cos(k*1.37+i)*.16,
                 v[3]+math.sin(k*1.8+i*.9)*.24
             )*CFrame.Angles(lean,math.rad((k*13+i*7)%25-12),0)
+            local leafY,leafZ=leafProfile(v[5],v[6],i,k)
             canopy(world,"Irregular exterior leaf cluster",
-                Vector3.new(v[4],v[5]*(.92+(i%3)*.07),
-                    v[6]*(.89+(k%3)*.08)),
-                cf,shades[(k+i-2)%#shades+1])
+                Vector3.new(v[4],leafY,leafZ),cf,
+                shades[(k+i-2)%#shades+1])
         end
     end
     -- The genuine photographs show muted sky and vegetation rather than
