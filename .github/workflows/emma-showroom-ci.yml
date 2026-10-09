@@ -9,6 +9,7 @@ on:
       - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
       - 'school/emma-classroom/RELEASE_RECEIPT.json'
       - 'school/emma-classroom/verify_release_receipt.py'
+      - 'school/emma-classroom/qa/audit_native_carpet_video.py'
       - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
@@ -38,6 +39,13 @@ jobs:
           test "$actual" = "$EXPECTED_SOURCE_SHA"
           echo "EXACT_SOURCE_CHECKOUT_PASS sha=$actual"
           printf 'Classroom source tested: %s\n' "$actual" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Syntax-check optional private native video auditor without reading media
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile school/emma-classroom/qa/audit_native_carpet_video.py
+          echo "NATIVE_VIDEO_AUDIT_SYNTAX_PASS private_media_not_in_ci=true"
 
       - name: Audit last confirmed published Roblox preview without claiming candidate is live
         shell: bash
