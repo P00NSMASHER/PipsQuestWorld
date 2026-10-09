@@ -1,12 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-native-rug-dot-repair-preview-2026-10-09
+reaffirmed-authorization: user-delegated-qa-and-next-owner-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 7773727b191da9b121ae97ef570bf3d0d8537106
-notice: Owner-delegated native iPhone defect repair; replace flattened Roblox Ball rug artwork with stable horizontal cloud cylinders and capped sun rays
-scope: exact complete classroom-only Rojo showroom, preserve 16 desks, existing built-in reading bookshelf, curtains, hallway, student data isolation and first-person movement
-production-furniture-meshes: disabled until native Studio and iPhone collision/visual acceptance
-schoolwork-and-progress: no writes, no curricula, question bank or saved-score modification
-release-status: owner progress-preview ONLY; native carpet imagery still pending real-device visual inspection
+source-parent-sha: 8b793c0f5b106d7f5765078f5d710bbf1093c5ec
+notice: Publish native-stable outdoor foliage 38 crown cylinders and preserve all previously accepted classroom-only changes for owner iPhone preview; final visual approval remains pending
+scope: exact classroom-only Rojo project with 16 desk-chair pairs, corrected sun/cloud primitives, five real-wood-shelf storybooks, and 7 original exterior trees beyond both windows
+production-furniture-meshes: disabled until actual Roblox Studio and iPhone visual/collision acceptance
+schoolwork-and-progress: unchanged; no curricula, quiz runtime, child data or saved progress modification
+release-status: review-only owner preview, not production visual signoff or PR merge
