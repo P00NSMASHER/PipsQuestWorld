@@ -51,7 +51,8 @@ local function inspectOne(part,cloud)
     assert(text~=nil,"RUG_LABEL_MISSING "..part.Name)
     assert(text.TextScaled==false and text.TextWrapped==false,
         "RUG_TEXT_SCALING_INVALID "..part.Name)
-    assert(text.TextSize==92,"RUG_FONT_SIZE_INVALID "..part.Name)
+    assert(text.TextSize==(cloud and 104 or 92),
+        "RUG_FONT_SIZE_INVALID "..part.Name)
     assert(text.Font==Enum.Font.GothamBold,
         "RUG_FONT_INVALID "..part.Name)
     assert(text.TextStrokeTransparency<=.46,
@@ -65,8 +66,10 @@ local function inspectOne(part,cloud)
         assert(part.Transparency>=.99 and
             text.BackgroundTransparency==1,
             "RUG_CLOUD_ANCHOR_OPAQUE")
-        assert(text.TextSize==92 and #text.Text>=1,
+        assert(text.TextSize==104 and #text.Text>=1,
             "RUG_NUMBER_CONTENT_INVALID")
+        assert(text.TextColor3.R<.10 and text.TextColor3.B<.36,
+            "RUG_NUMERAL_CONTRAST_INVALID")
     else
         assert(text.BackgroundTransparency<=.05,
             "RUG_LETTER_BACKGROUND_INVALID")
@@ -112,7 +115,7 @@ end
 
 local alphabet,clouds=audit()
 print("RUG_UI_RUNTIME_PASS alphabet=26 clouds=10 canvas=180x120"
-    .." text_size=92 cloud_anchors_transparent=10"
+    .." letter_size=92 numeral_size=104 cloud_anchors_transparent=10"
     .." ordinary_signs_unchanged=true")
 local firstLetter=alphabet[1]
 local firstCloud=clouds[1]

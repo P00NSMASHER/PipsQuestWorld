@@ -642,19 +642,26 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         label_face=y+float(anchor[7])/2
         gap=label_face-tallest
         cloud_face_gaps.append(gap)
-        assert .035<gap<.075, (
-            f"Cloud geometry obscures its own number label: gap={gap:.3f}"
+        assert .055<gap<.090, (
+            f"Number GUI falls inside taller cloud or floats too high: gap={gap:.3f}"
         )
-        assert abs(float(body_matches[0][10])-.680)<.006 and (
-            abs(float(side_matches[0][10])-.690)<.006
-        ), "Native-visible cloud relief shifted from its supported rug surface"
-        assert all(.115<=float(v[7])<=.145 for v in body_matches+side_matches), (
-            "Native iPhone v70 invisible paper-thin cloud returned"
+        assert abs(float(body_matches[0][10])-.735)<.006 and (
+            abs(float(side_matches[0][10])-.740)<.006
+        ), "Native-visible enlarged cloud displaced from the blue rug"
+        assert .215<=float(body_matches[0][7])<=.225 and (
+            all(.235<=float(v[7])<=.245 for v in side_matches)
+        ), "Native v71 failed: cloud relief shrank to tiny white dots"
+        assert (1.65<=float(body_matches[0][6])<=1.75
+                and .95<=float(body_matches[0][8])<=1.02
+                and all(.97<=float(v[6])<=1.03 and
+                        1.01<=float(v[8])<=1.07 for v in side_matches)), (
+            "Cloud silhouettes reverted to undersized repeated spots"
         )
         assert all(float(v[10])-float(v[7])/2>=.615
                    for v in body_matches+side_matches), (
-            "Cloud relief is embedded beneath the alphabet rug"
+            "Raised cloud relief clips through blue rug surface"
         )
+        assert abs(y-.925)<.01, "Cloud number label not raised with white cloud"
     print(f"IPHONE_CLOUD_OCCLUSION_PASS clouds=10 lobes=30 "
           f"number_face_clearance={min(cloud_face_gaps):.3f} "
           "rectangular_number_backings_invisible=true")
@@ -663,9 +670,17 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         float(sun_surface[12])>.94 and float(sun_surface[13])>.70
     ), "iPhone sun reverted to darkened fabric brown"
     carpet=only("Alphabet rug")
-    assert float(carpet[14])>.69, "Alphabet rug returned to nearly black navy"
+    assert carpet[4].endswith("Fabric") and (
+        float(carpet[12])>.40 and float(carpet[13])>.62
+        and float(carpet[14])>.84
+    ), "Native v71 dark rug dye returned or textile rug became plastic"
+    assert abs(float(carpet[6])-.10)<.01 and (
+        abs(float(carpet[7])-14.2)<.01 and
+        abs(float(carpet[8])-14.2)<.01
+    ), "Real circular ABC rug dimensions changed"
     print("IPHONE_CARPET_SHAPES_PASS cloud_rectangles_hidden=true "
-          "cloud_lobes=20 cloud_bodies=10 anchors=10 brighter_sun=true")
+          "cloud_lobes=20 cloud_bodies=10 anchors=10 "
+          "brighter_textile_blue=true larger_white_clouds=true")
     print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
           "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
           "blue_wordwall=true apple_markers=8")
@@ -1054,18 +1069,22 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ray_angles={round(math.atan2(float(r[11])-sun_pos[1],
                                  float(r[9])-sun_pos[0]),3) for r in sun_rays}
     assert len(ray_angles)==16, "Sunburst rays are duplicated or stacked"
-    assert all(abs(float(r[10])-.685)<.005 and (
-        .115<=world_span(r,1)<=.125
+    assert all(abs(float(r[10])-.740)<.005 and (
+        .215<=world_span(r,1)<=.225
     ) for r in sun_rays), (
-        "Native v70 invisible, paper-thin sunburst returned"
+        "Native v71 invisible, dot-like sunburst returned"
     )
     assert all(float(r[10])-world_span(r,1)/2>=.615
                for r in sun_rays), (
-        "Sunburst sinks beneath the carpet instead of resting on it"
+        "Sun rays sink beneath the source-verified textile carpet"
     )
+    long_radii=sorted(round(float(r[6]),2) for r in sun_rays)
+    assert long_radii==[.95]*8+[1.06]*8 and (
+        max(float(r[8]) for r in sun_rays)<=.41
+    ), "Alternating elongated sun petals shrank to tiny orange specks"
     print("IPHONE_NATIVE_RELIEF_GEOMETRY_PASS rays=16 "
-          "clouds=10 ray_thickness=.12 cloud_thickness=.12_to_.14 "
-          "no_added_parts=true")
+          "clouds=10 ray_thickness=.22 cloud_thickness=.22_to_.24 "
+          "native_v71_dot_regression_guarded=true no_added_parts=true")
     print("PHOTO_SUNBURST_DETAIL_PASS rays=16 ellipsoids=true "
           "palette=orange_gold radial_distribution=true")
     sun_outer_radius=max(

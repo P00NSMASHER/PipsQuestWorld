@@ -78,7 +78,10 @@ local function emphasizeRugText(label: TextLabel,transparent: boolean)
     label.BackgroundTransparency=transparent and 1 or .04
     label.TextScaled=false
     label.TextWrapped=false
-    label.TextSize=92
+    -- In the newer native v71 walkthrough the pale cloud numbering still
+    -- disappears at grazing child-eye angles, although Luau UI exists.
+    -- Keep the current letters at 92px; enlarge only the 10 cloud numerals.
+    label.TextSize=transparent and 104 or 92
     label.TextStrokeColor3=Color3.fromRGB(248,244,231)
     label.TextStrokeTransparency=.45
     for _,child in ipairs(label:GetChildren()) do
@@ -469,8 +472,13 @@ local function buildClassroomTexture(root: Instance)
     end
     local flat=CFrame.Angles(0,0,math.pi/2)
     -- A Cylinder Part uses local X as the axis; rotate it to lie on the floor.
+    -- Native iPhone v71 showed this Fabric rug nearly black (#1d2b36
+    -- in a centered video sample), although the source RGB was medium blue
+    -- and the independent renderer showed a much brighter carpet. Raise
+    -- its dye while retaining the photographed diameter and Fabric finish.
+    -- Do not substitute a glossy plastic sheet or add an overlapping decal.
     cylinder(root,"Alphabet rug",Vector3.new(.10,14.2,14.2),
-        CFrame.new(-25,.56,14)*flat,Color3.fromRGB(68,117,181),
+        CFrame.new(-25,.56,14)*flat,Color3.fromRGB(107,165,222),
         Enum.Material.Fabric,false)
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local edgeColors={
@@ -507,15 +515,15 @@ local function buildClassroomTexture(root: Instance)
         local angle=i*math.pi/8
         local broad=i%2==0
         local r=broad and 1.31 or 1.52
-        -- Native iPhone v70 (12:10 recording, 10-13 seconds) exposed only
-        -- the yellow disc: these extremely flattened 0.025-stud Ball shapes
-        -- vanished against textured Fabric on mobile. Give each existing
-        -- petal a shallow but stable 0.12-stud relief, resting on the rug.
-        -- Retain 16 Parts, all world positions, colors and radial layout.
-        local size=broad and Vector3.new(.82,.12,.34)
-            or Vector3.new(.58,.12,.25)
+        -- A *second*, native v71 iPhone walkthrough still rendered these
+        -- .12-stud ellipsoids as tiny orange dots rather than visible sun
+        -- petals. Give the SAME sixteen noncolliding shapes wider radial
+        -- profiles and more legible, low-relief surfaces above the rug.
+        -- No added geometry and no change to center or ray positions.
+        local size=broad and Vector3.new(1.06,.22,.40)
+            or Vector3.new(.95,.22,.34)
         local ray=ball(root,"Photo rug sun ray",size,
-            CFrame.new(-25+math.cos(angle)*r,.685,14+math.sin(angle)*r)*
+            CFrame.new(-25+math.cos(angle)*r,.740,14+math.sin(angle)*r)*
                 CFrame.Angles(0,-angle,0),
             broad and Color3.fromRGB(255,211,84)
                 or Color3.fromRGB(239,140,52),
@@ -526,30 +534,31 @@ local function buildClassroomTexture(root: Instance)
         local angle=i*math.pi/5
         local x=-25+math.cos(angle)*3.62
         local z=14+math.sin(angle)*3.62
-        -- Native iPhone v70 showed NO white numbered clouds at child height,
-        -- though the static scene's paper-thin (.032/.038) Ball test passed.
-        -- Keep the three original lobes and 10 transparent number SurfaceGuis,
-        -- but provide stable low-relief geometry above the Fabric carpet.
-        local cloudTint=Color3.fromRGB(249,249,241)
+        -- Actual native v71 iPhone pixels still showed isolated white
+        -- dots, not the 10 photographed cloud silhouettes. Enlarge the
+        -- original low-relief cloud group and keep it above the textile,
+        -- using exactly the same existing 3 Parts per cloud. Adjacent centers
+        -- are ~2.24 studs apart and these clusters are <=1.70 wide.
+        local cloudTint=Color3.fromRGB(253,252,246)
         local body=ball(root,"Photo rug number cloud body",
-            Vector3.new(1.14,.12,.72),CFrame.new(x,.680,z),
+            Vector3.new(1.70,.22,.98),CFrame.new(x,.735,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
             local lobe=ball(root,"Photo rug number cloud lobe",
-                Vector3.new(.82,.14,.84),
-                CFrame.new(x+side*.35,.690,z+side*.055),
+                Vector3.new(1.00,.24,1.04),
+                CFrame.new(x+side*.35,.740,z+side*.055),
                 cloudTint,Enum.Material.SmoothPlastic,false)
             lobe.CastShadow=false
         end
-        -- Numeric text anchor remains fully invisible; raise its top above
-        -- the newly visible 0.14-stud relief so the GUI cannot be self-occluded.
+        -- Raise the same transparent number anchor to keep it above the
+        -- taller cloud, with no white rectangular label background.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.800,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.925,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Transparency=1
         local numeral=surfaceText(numeralAnchor,tostring(i),
-            Enum.NormalId.Top,Color3.fromRGB(34,66,104),
+            Enum.NormalId.Top,Color3.fromRGB(15,44,79),
             numeralAnchor.Color)
         emphasizeRugText(numeral,true)
     end
