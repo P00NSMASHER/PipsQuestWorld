@@ -133,6 +133,19 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         Vector3.new(2.48,1.87,.25),backCF*CFrame.new(0,.04,-.015),
         tint:Lerp(P.cream,.095),.33,false,false)
     shell.Reflectance=.015
+    -- A very shallow curved return on each lateral edge prevents a chair
+    -- viewed from the side from reading as a flat rectangular board. These
+    -- two same-material wings follow the existing tilted backrest and use
+    -- NO collision; the single established chair collider remains authoritative.
+    -- Premium owned meshes, when approved, hide the entire Student chair family.
+    for _,side in ipairs({-1,1}) do
+        local wing=part(parent,name.." molded side return",
+            Vector3.new(.23,1.48,.28),
+            backCF*CFrame.new(side*1.10,-.13,.055)*
+                CFrame.Angles(0,math.rad(side*16),0),
+            tint:Lerp(P.cream,.095),Enum.Material.SmoothPlastic,false)
+        wing.Reflectance=.015
+    end
     -- A small recessed grip, inset fasteners and visible chair-frame supports
     -- read as manufactured furniture rather than a colored rectangular wall.
     roundedPanel(parent,name.." hand grip",Vector3.new(.96,.14,.027),
@@ -194,8 +207,12 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
             Color3.fromRGB(135,141,143),Enum.Material.Metal,false)
     end
     for _,dx in ipairs({-2.35,2.35}) do
-        part(parent,"Book tray side",Vector3.new(.10,.42,3.08),
-            CFrame.new(x+dx,2.49,z),P.metal,Enum.Material.Metal,false)
+        -- An open bent-steel lip, not the old opaque 0.42-stud side slab,
+        -- so a child can see through the underdesk wire storage basket.
+        -- Keep the original part name for the optional mesh-swap allowlist.
+        cylinder(parent,"Book tray side",Vector3.new(3.06,.095,.095),
+            CFrame.new(x+dx,2.49,z)*CFrame.Angles(0,math.pi/2,0),
+            P.metal,Enum.Material.Metal,false)
     end
     cylinder(parent,"Desk shelf front restraint",Vector3.new(4.56,.12,.12),
         CFrame.new(x,2.36,z-1.44),P.metal,Enum.Material.Metal,false)

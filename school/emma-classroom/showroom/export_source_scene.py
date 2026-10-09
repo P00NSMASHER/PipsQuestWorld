@@ -456,6 +456,21 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         )
     print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true tray=true paper=true")
 
+    # Verify that the optional fallback silhouette update stays lightweight:
+    # two slim molded edge returns per chair, with the existing collidable
+    # chair shell and all original sixteen desks still in place.
+    assert by_name["Student chair molded side return"] == 32, (
+        "Expected exactly two subtle chair edge returns on each of 16 chairs"
+    )
+    tray_rails=[r for r in lines if r[1]=="Book tray side"]
+    assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"
+    for r in tray_rails:
+        assert "Cylinder" in r[3], "Opaque underdesk basket wall returned"
+        assert abs(float(r[6])-3.06)<.015 and float(r[7])<=.105, (
+            "Basket lip is no longer the slim 0.095-stud steel tube"
+        )
+    print("CLASSROOM_FURNITURE_SILHOUETTE_PASS chairs=16 returns=32 tray_rails=32")
+
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
