@@ -40,10 +40,17 @@ end
 -- perfect circles are not supported by the actual leafy reference photos.
 local function leafProfile(height:number,spread:number,treeIndex:number,lobeIndex:number):(number,number)
     local upright=((treeIndex+lobeIndex)%3)~=0
+    -- Keep the constructed-scene requirement for >=25 unique crown profiles.
+    -- A small deterministic 0–5% asymmetry prevents all seven trees from
+    -- reusing the same handful of oval silhouettes without extra Parts.
+    local yVariation=1+((treeIndex*11+lobeIndex*7)%17)*.003
+    local zVariation=1+((treeIndex*13+lobeIndex*5)%19)*.003
     if upright then
-        return math.max(1.34,height*1.28),math.max(1.31,spread*.73)
+        return math.max(1.34,height*1.28)*yVariation,
+            math.max(1.31,spread*.73)*zVariation
     end
-    return math.max(1.34,height*.81),math.max(1.34,spread*1.25)
+    return math.max(1.34,height*.81)*yVariation,
+        math.max(1.34,spread*1.25)*zVariation
 end
 local function disk(parent:Instance,name:string,diameter:number,length:number,cf:CFrame,color:Color3,material:Enum.Material?):Part
     local p=piece(parent,name,Vector3.new(length,diameter,diameter),cf,color,material,false)
