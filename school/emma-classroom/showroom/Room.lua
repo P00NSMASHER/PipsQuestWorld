@@ -227,12 +227,15 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     -- A full solid sheet made every open student desk look as though it had a
     -- second steel tabletop underneath. Use a sparse cross-welded wire shelf
     -- instead. It is visible from a child's eye height but has no collision.
-    for _,dz in ipairs({-1.28,-.64,0,.64,1.28}) do
+    -- Four transverse rods retain a realistic open basket at child eye height
+    -- without filling the view with wires. Across 16 desks, six instead of
+    -- eight crossing rods recovers 32 low-value Parts for mobile headroom.
+    for _,dz in ipairs({-1.28,-.43,.43,1.28}) do
         cylinder(parent,"Desk basket cross wire",Vector3.new(4.58,.085,.085),
             CFrame.new(x,2.29,z+dz),
             Color3.fromRGB(135,141,143),Enum.Material.Metal,false)
     end
-    for _,dx in ipairs({-1.78,0,1.78}) do
+    for _,dx in ipairs({-1.78,1.78}) do
         cylinder(parent,"Desk basket longitudinal wire",Vector3.new(2.88,.085,.085),
             CFrame.new(x+dx,2.27,z)*CFrame.Angles(0,math.pi/2,0),
             Color3.fromRGB(135,141,143),Enum.Material.Metal,false)
