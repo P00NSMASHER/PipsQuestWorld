@@ -717,8 +717,12 @@ local function buildFrontWall(root: Instance)
     -- Keep its established x/y and screen proportions but move it two studs
     -- into the room so its depth, support posts and casters are visible.
     -- Every newly authored cart element is noncolliding and contains no script.
-    part(root,"Smartboard dark bezel",Vector3.new(19.35,6.85,.24),
-        CFrame.new(5.2,8.2,-31.95),P.blue,Enum.Material.SmoothPlastic,false)
+    -- Real IMG_2909/2910 display has a substantial off-white molded frame;
+    -- the previous navy 0.25-stud edge read as a generic dark rectangle.
+    -- Reuse the existing noncolliding backing Part, no new geometry.
+    part(root,"Smartboard white composite bezel",Vector3.new(19.85,7.27,.24),
+        CFrame.new(5.2,8.2,-31.95),
+        Color3.fromRGB(242,244,240),Enum.Material.SmoothPlastic,false)
     part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),
         CFrame.new(5.2,4.61,-31.18),Color3.fromRGB(208,211,209),
         Enum.Material.Metal,false)

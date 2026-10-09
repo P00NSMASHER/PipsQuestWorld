@@ -337,14 +337,16 @@ end
 -- This lives in the world and leaves the question SurfaceGui untouched.
 local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
-    local metal=Color3.fromRGB(232,234,229)
+    local metal=Color3.fromRGB(219,226,226)
     local trim=Color3.fromRGB(217,186,121)
-    for _,y in ipairs({4.79,11.58}) do
-        piece(group,"Smartboard satin aluminum trim",Vector3.new(19.45,.11,.12),
+    -- Match every existing metal highlight to the larger white housing.
+    -- Borders remain slightly inset so they do not read as floating rails.
+    for _,y in ipairs({4.62,11.78}) do
+        piece(group,"Smartboard satin aluminum trim",Vector3.new(19.77,.11,.12),
             CFrame.new(5.2,y,-31.29),metal,Enum.Material.Metal,false)
     end
-    for _,x in ipairs({-4.525,14.925}) do
-        piece(group,"Smartboard protective edge",Vector3.new(.10,6.84,.13),
+    for _,x in ipairs({-4.68,15.08}) do
+        piece(group,"Smartboard protective edge",Vector3.new(.14,7.15,.13),
             CFrame.new(x,8.2,-31.29),metal,Enum.Material.Metal,false)
     end
     piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
