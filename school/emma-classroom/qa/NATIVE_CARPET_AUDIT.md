@@ -59,6 +59,55 @@ An independently generated bright synthetic rug with broader rays/clouds passes 
 fake cloud clusters, clustered orange ray stickers and invalid ROI are rejected
 by the self-test. Thresholds are deliberately conservative, not a claim that pixel segmentation is perceptually sufficient. The private source video, frames, screenshots, file paths, Roblox account screens, identifiers, and EXIF **must never be pushed to GitHub or uploaded to a workflow artifact**.
 
+## Three-frame consensus mode (recommended for a new iPhone walkthrough)
+
+The original `audit_native_carpet_video.py` screens a single frame and remains
+available for historical v2 receipts. Because the camera moves during Roblox
+walkthroughs, it is too easy to select a frame that is momentarily occluded.
+
+Use `audit_native_carpet_sequence.py` for new review recordings. It applies
+the *same* v2 pixel detector to three closely spaced frames, by default
+the manually reviewed time plus/minus **0.10 seconds**. It never uploads
+media, stores decoded images, changes Roblox or guesses the source commit.
+
+```sh
+python3 school/emma-classroom/qa/audit_native_carpet_sequence.py --self-test
+python3 school/emma-classroom/qa/audit_native_carpet_sequence.py \
+  --video /private/local/Roblox_iPhone_review.mp4 \
+  --seconds 11.4 --sample-offset 0.10 \
+  --polygon "340,310;600,275;680,330;750,455;720,510;230,510;200,450;260,350" \
+  --sun-hint 499,383 \
+  --report-json /private/local/three_frame_receipt.json
+```
+
+The coordinates are for the *older known-defective recording only*.
+For a new recording, select the region and sun center visually;
+reusing these coordinates with a different camera angle is invalid.
+
+Screening rules are intentionally conservative:
+
+- **FAIL** only when the *same specific defect* occurs in at least two
+  distinct comparable frames.
+- **REVIEW_REQUIRED** when at least two frames satisfy the pixel screen and
+  no frame reports a known defect. A person must still inspect the original
+  native video for shape fidelity, readable letters/numbers and movement/FPS.
+- **INCONCLUSIVE** for camera movement, bad regions, mixed one-off failures,
+  or duplicate decoded frames. Do not call these runs passes.
+
+On the older private October 9 12:49 recording, frames **11.3, 11.4 and
+11.5 seconds** all independently show the dark rug, dot-like orange rays and
+missing white clouds: three of three FAIL, with repeated defects confirmed.
+Nearby frames taken while the phone camera turns are INCONCLUSIVE.
+The known failure is *not* evidence of the separately published version 72.
+
+The output includes only scalar metrics, statuses, sampling times and the
+recording's SHA-256 fingerprint. It explicitly marks source commit and
+published version as `NOT_VERIFIABLE`; neither can be proven from ordinary
+screen pixels. Do not upload that fingerprint or the private numeric
+receipt unless the user wants to share it. CI runs synthetic tests only,
+never video files.
+
+---
 ## Release controls
 
 Use this test locally on any later iPhone footage. Attach only a plain numeric receipt to the PR after removing paths and identifying details. Release/progress-preview authorization is separate: protect study systems, keep 16 approved fallback desk/chair pairs, keep premium mesh activation disabled, and require native reviewer acceptance before describing a build as visually accepted. Never accept a green static/headless screenshot or this numeric screen as proof of true native rendering quality.
