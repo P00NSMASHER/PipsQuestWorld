@@ -969,14 +969,28 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert abs(float(page[9])-float(cover[9]))<.03, (
             "Book cover detached from its physical white pages"
         )
-        assert .11<float(cover[11])-float(page[11])<.19 and (
-            .04<float(illustration[11])-float(cover[11])<.09
-        ), "Illustrated book cover is behind white page edges, blank on iPhone"
-        assert .05<float(band[11])-float(cover[11])<.11, (
-            "Storybook title band is hidden behind the pages"
+        assert .11<float(cover[11])-float(page[11])<.19, (
+            "Native player sees white page edges instead of colored covers"
         )
-        assert -float(cover[23])>.94, (
+        # Books tilt 15 degrees: the physical artwork and bottom title band
+        # have different Y coordinates. Comparing their raw Z positions to
+        # the cover falsely reports valid pieces as behind the book. Project
+        # the full 3D offsets onto the actual cover-front world normal.
+        outward=[-float(cover[i]) for i in (17,20,23)]
+        assert outward[2]>.94, (
             "Book's FRONT normal does not face the positive-Z player aisle"
+        )
+        def forward_depth(part):
+            return sum((float(part[i])-float(cover[i]))*outward[j]
+                       for j,i in enumerate((9,10,11)))
+        assert -.19<forward_depth(page)<-.11, (
+            "Book pages are no longer physically behind colored cover"
+        )
+        assert .045<forward_depth(illustration)<.090, (
+            "Physical artwork no longer projects in front of book cover"
+        )
+        assert .055<forward_depth(band)<.105, (
+            "Storybook title band is hidden behind cover face"
         )
     print("IPHONE_STORYBOOK_DEPTH_PASS covers=5 pages_behind=true "
           "art_in_front=true labels_face_player=true same_shelf=true")
