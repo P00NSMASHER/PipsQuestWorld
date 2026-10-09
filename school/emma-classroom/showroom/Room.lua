@@ -233,9 +233,13 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     local shift=(index%3-1)*.24
     book(parent,x-1.2+shift,3.28,z-.2,notebookColor,math.rad(index%2==0 and 7 or -6))
     cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
-    local pencilCF=CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(18),0)
-    part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
-    part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
+    -- The original ferrule and eraser were rotated 90 degrees away from
+    -- the pencil's local-X cylinder shaft and floated beside the desk.
+    -- One aligned cap keeps the visible silhouette and saves 16 mobile Parts.
+    local pencilCF=CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(108),0)
+    part(parent,"Desk pencil eraser cap",Vector3.new(.15,.13,.13),
+        pencilCF*CFrame.new(.82,0,0),
+        Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
     local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.40),P.cream,Enum.Material.SmoothPlastic,false)
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2+shift,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 7 or -6),0)
