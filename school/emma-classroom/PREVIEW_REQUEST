@@ -1,11 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
+reaffirmed-authorization: user-explicitly-requested-full-game-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 6676f85f628bbf4fa9dbf33fe3a7806198fa9228
-notice: iPhone walkthrough 21:31 video showed open sky and a floating blue rail at the staff doorway; publish review-only architecture repair
-scope: seal side/rear school corridors, split doorway rail and baseboards, preserve 16 desk-chair pairs and first-person classroom
+source-parent-sha: 9e96ccc8fad794c8343e9b51819b1d23055e2ae5
+notice: User explicitly requested updating the existing Roblox game to see ALL latest classroom improvements; review-only preview, not final visual acceptance
+scope: exact full classroom-only Rojo showroom from the pinned parent SHA; preserve 16 approved desk-chair pairs and mobile first-person controls
 production-furniture-meshes: disabled pending native iPhone visual review
 schoolwork-and-progress: no writes, no imports, no curriculum changes
-release-status: reviewable preview; not visual-acceptance signoff
+release-status: reviewable Roblox preview only; not visual-acceptance signoff
