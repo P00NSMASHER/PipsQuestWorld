@@ -430,6 +430,32 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), "Water bottle extends beyond child desk"
     print(f"EMMA_DESK_BOTTLE_GEOMETRY_PASS height={height:.2f} "
           f"desk_gap={bottom-3.17:.2f} cap_top={cap_y+cap_h/2:.2f}")
+    # Structural contact checks for the ACTUAL Luau-created teaching desk:
+    # surfaces are measured from generated geometry, not string snippets.
+    # The 12.5 x 5.2 stud desktop at y=3.1 with .38 thickness has its
+    # usable surface at y=3.29. RoundedPanel has its thin vertical dimension
+    # in local Z, while ordinary Parts use local Y. The pencil cup is a
+    # cylinder rotated onto the world Y axis (local X is its height).
+    teacher_desk_surface=3.29
+    supported={
+        "Teacher laptop base":8,
+        "Pencil cup":6,
+        "Tissue box":7,
+        "Teacher desk wooden stationery tray":7,
+        "Teacher note paper":7,
+    }
+    for label,height_axis in supported.items():
+        item=only(label)
+        bottom=float(item[10])-float(item[height_axis])/2
+        assert abs(bottom-teacher_desk_surface)<=.035, (
+            f"Unsupported teacher workstation object {label}: "
+            f"bottom={bottom:.3f}, desktop={teacher_desk_surface:.3f}"
+        )
+        assert 18.75<=float(item[9])<=31.25 and -27.6<=float(item[11])<=-22.4, (
+            f"Teacher object {label} exceeds desktop footprint"
+        )
+    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true tray=true paper=true")
+
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
