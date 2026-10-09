@@ -942,6 +942,74 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("PHOTO_STORAGE_CABINETRY_PASS dark_wood=true "
           "open_bins=12 file_folders=6 preserved_backpacks=8 "
           "no_extra_footprints=true")
+    # Real IMG_2903–2910 shows dark, aged framed woodworking: continuous
+    # cabinet openings and raised doors, not disconnected open brown slabs.
+    # These tests inspect all actual Luau-constructed physical trim, with
+    # the original twelve cubbies and five freestanding book covers preserved.
+    architectural_details={
+        "Built-in walnut cubby face stile":7,
+        "Built-in walnut stile routed edge":7,
+        "Built-in horizontal walnut face rail":3,
+        "Built-in horizontal fine molding":3,
+        "Built-in recessed dark toe kick":1,
+        "Built-in deep hardwood cornice":1,
+        "Built-in stepped cornice edge":1,
+        "Tall cabinet recessed panel cross rail":8,
+        "Tall cabinet antiqued keyhole":2,
+        "Tall cabinet hardwood cornice":1,
+        "Tall cabinet cornice routed lip":1,
+        "Tall cabinet recessed toe kick":1,
+        "Library hardwood front pilaster":3,
+        "Library shelf front fascia":3,
+        "Library upper molded cornice":1,
+        "Library cornice highlight":1,
+        "Student chair molded front seat roll":16,
+    }
+    for name,count in architectural_details.items():
+        assert by_name[name]==count, (
+            f"Architectural carpentry detail missing or duplicated: {name}"
+        )
+    cubby_stiles=actual_parts("Built-in walnut cubby face stile")
+    assert sorted(round(float(s[9]),2) for s in cubby_stiles)==[
+        7.50,12.0,16.50,21.0,25.50,30.0,34.50
+    ], "Built-in framed stiles no longer follow original shelf divisions"
+    assert all(abs(float(s[11])-23.53)<.03
+               and abs(float(s[7])-8.02)<.03
+               and s[4].endswith("Wood") for s in cubby_stiles), (
+        "Cabinet frame floats or uses an artificial shiny material"
+    )
+    rail_positions=sorted(round(float(s[10]),2)
+        for s in actual_parts("Built-in horizontal walnut face rail"))
+    assert rail_positions==[.76,4.20,8.25], (
+        "Open cubby rows no longer align with their dark hardwood rails"
+    )
+    cabinet_rails=actual_parts("Tall cabinet recessed panel cross rail")
+    assert all(abs(float(s[11])-20.853)<.03
+               and s[4].endswith("Wood") for s in cabinet_rails), (
+        "Photo-inspired raised cabinet doors lost their panel depth"
+    )
+    library=actual_parts("Library shelf front fascia")
+    assert sorted(round(float(s[10]),2) for s in library)==[
+        .69,3.21,6.19
+    ] and all(abs(float(s[11])-21.82)<.03 for s in library), (
+        "Original reading shelves and their frontal trim became detached"
+    )
+    molded_noses=actual_parts("Student chair molded front seat roll")
+    assert len(molded_noses)==16 and all(
+        abs(float(s[10])-1.515)<.02 and
+        abs(float(s[6])-2.16)<.03 and
+        abs(float(s[7])-.13)<.02 and
+        abs(float(s[8])-.19)<.02 and
+        s[4].endswith("SmoothPlastic") for s in molded_noses
+    ), "Child-scale molded chair seat edge returned to a blunt slab"
+    smart=only("Interactive smartboard")
+    assert smart[4].endswith("SmoothPlastic") and (
+        max(float(v) for v in smart[12:15])<.16
+    ), "Photo-grounded dark matte school smartboard became gray glass"
+    print("PHOTO_MAJOR_CARPENTRY_PASS dark_oak_joinery=44 "
+          "cabinet_bays=12 library_shelves=3 "
+          "photo_molded_chair_noses=16 matte_smartboard=true "
+          "room_footprints_unchanged=true")
     bags=sorted([row for row in lines if row[1]=="Hanging school bag"],
                 key=lambda row:float(row[9]))
     loops=sorted([row for row in lines if row[1]=="Backpack hanging loop"],
