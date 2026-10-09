@@ -1,3 +1,13 @@
+## Canonical release-state clarification — October 8, 2026 (verified GitHub receipt)
+
+**Published classroom preview:** GitHub Actions [run 37870907504](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37870907504) successfully published **Roblox place version 67** from exact source commit `1e67943a0394c4196f630cc5566a1f153ec401b5` to place `114603280760042` on October 9 UTC (October 8 Eastern). The runtime is the classroom-only progress preview, **not** a final visually accepted release.
+
+**Important:** Newer commits in draft PR #339 are *development candidates*. A green Rojo/Luau/GitHub check, source-derived image, or newly staged furniture model is **not evidence of a newer Roblox publication**. The 16 original furniture sets remain fallback; imported premium furniture meshes are still gated (`FurnitureMeshConfig.Enabled=false`). Native iPhone rendering, mobile performance, collision and exact photo parity are not yet certified. The connected Windows machine was offline at the latest check.
+
+The receipt is tracked in [RELEASE_RECEIPT.json](RELEASE_RECEIPT.json) and checked by `verify_release_receipt.py`; CI verifies internal consistency and release gates but cannot query the *current* live Roblox version. Historical sections below that say "live place unchanged" were written **before** the authorized version-67 preview and must not be misread as the latest status. Never publish another candidate from this note alone.
+
+---
+
 ## October 8 — furniture reconstruction and adversarial close-up visual review
 
 **Current source checkpoint:** `4ab68c81456d0fb898ad86429d508b700cc3b3dc`. The new classroom-only chair/desks changes and source-derived previews are archived in [the furniture QA gallery](../../docs/visual-qa/emma-furniture-20261008/README.md).
