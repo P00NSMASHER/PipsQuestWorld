@@ -195,6 +195,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Desk laminated front bevel":16,
         "Desk shelf front restraint":16,
         "Desk back steel stretcher":16,
+        "Desk basket cross wire":80,
+        "Desk basket longitudinal wire":48,
+        "Illustrated storybook cover":5,
+        "Storybook illustration backing":5,
+        "Storybook title band":5,
     }
     for component,expected in geometry_contract.items():
         assert by_name[component]==expected, (
