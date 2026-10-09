@@ -79,23 +79,45 @@ local function showcaseBoards(root:Instance,group:Instance)
         "BE KIND","Be respectful  •  Be your best",Enum.NormalId.Left)
     framedPoster(group,"Classroom encouragement",36.27,13.2,1.0,9.4,3.0,
         "LET YOUR LIGHT SHINE","Assumption BVM Catholic School",Enum.NormalId.Left)
-    -- More believable classroom boards with muted cork and pinned paper, not menus.
+
+    -- Actual IMG_2903/2905/2908: a sky-blue vocabulary board with small
+    -- white cards and a dark-green/red-apple border. Retain the already
+    -- accepted approximate wall location, not an unverified new room plan.
     local board=piece(group,"Class notice board",Vector3.new(.30,5.0,11.2),
-        CFrame.new(36.22,8.0,1.0),Color3.fromRGB(174,134,92),Enum.Material.Fabric,false)
+        CFrame.new(36.22,8.0,1.0),Color3.fromRGB(120,174,207),
+        Enum.Material.Fabric,false)
     for _,z in ipairs({-3.8,5.8}) do
-        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,5.4,.25),CFrame.new(36.03,8,z),C.oak,Enum.Material.Wood,false)
+        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,5.4,.25),
+            CFrame.new(36.03,8,z),C.oak,Enum.Material.Wood,false)
     end
     for _,y in ipairs({5.45,10.55}) do
-        piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,11.6),CFrame.new(36.03,y,1),C.oak,Enum.Material.Wood,false)
+        piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,11.6),
+            CFrame.new(36.03,y,1),C.oak,Enum.Material.Wood,false)
     end
-    for i=1,3 do
-        local z=-2.8+(i-1)*3.8
-        local sheet=piece(group,"Pinned classroom newsletter",Vector3.new(.12,3.2,2.7),
-            CFrame.new(35.95,8,z),C.paper,Enum.Material.SmoothPlastic,false)
-        local ink=({C.green,C.navy,C.blue})[i]
-        printFace(sheet,Enum.NormalId.Left,({"OUR CLASS","READING","ART ROOM"})[i],
-            ({"We belong here","Stories we love","Create and explore"})[i],C.paper,ink)
-        sphere(group,"Brass push pin",Vector3.new(.23,.23,.23),CFrame.new(35.8,9.36,z),C.gold,Enum.Material.Metal)
+    piece(group,"Word wall green garland",Vector3.new(.10,.15,10.8),
+        CFrame.new(35.96,10.41,1),Color3.fromRGB(50,95,62),
+        Enum.Material.Fabric,false)
+    -- Illustrative word-wall signage; NOT curriculum, names or answer keys.
+    local words={"and","are","draw","friend","house",
+        "love","from","they","happy","play",
+        "school","said","with","write","you"}
+    for row=0,2 do
+        for col=0,4 do
+            local z=-3.45+col*2.22
+            local y=9.29-row*1.20
+            local sheet=piece(group,"Word wall word card",Vector3.new(.055,.73,1.49),
+                CFrame.new(35.95,y,z),C.paper,Enum.Material.SmoothPlastic,false)
+            printFace(sheet,Enum.NormalId.Left,words[row*5+col+1],"",C.paper,C.navy)
+        end
+    end
+    for i=0,7 do
+        local z=-3.46+i*1.26
+        sphere(group,"Word wall apple",Vector3.new(.10,.31,.33),
+            CFrame.new(35.91,10.29,z),Color3.fromRGB(186,53,50),
+            Enum.Material.SmoothPlastic)
+        piece(group,"Word wall apple stem",Vector3.new(.07,.13,.05),
+            CFrame.new(35.86,10.49,z),Color3.fromRGB(62,100,61),
+            Enum.Material.SmoothPlastic,false)
     end
 
     local smart=root:FindFirstChild("Interactive smartboard")
