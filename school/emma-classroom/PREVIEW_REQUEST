@@ -1,12 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-continuing-iphone-preview-2026-10-09
+reaffirmed-authorization: user-delegated-next-classroom-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: ea99945329327b06afeb7c97cf90849bc2b1af45
-notice: Review-only native iPhone preview of carpet text, cloud shapes and brighter sun after user-uploaded October 9 version-68 gameplay recording
-scope: exact classroom-only Rojo from pinned source parent, preserve 16 desk-chair pairs and first-person movement
-production-furniture-meshes: disabled pending native iPhone visual/collision acceptance
-schoolwork-and-progress: no writes, no quiz or curriculum changes
-release-status: owner-inspection preview; NOT a final quality signoff
+source-parent-sha: ab9e67b4096de8b6f59bbd4a208e48cd307d7739
+notice: User delegated next mission; publish accumulated classroom-only photo fidelity and unified daylight changes as playable native iPhone owner-review preview
+scope: exact pinned classroom-only Rojo source, 16 desk-chair pairs, dark school wood floor, circular alphabet rug and improved manufactured furnishings
+production-furniture-meshes: disabled until Studio and real iPhone visual-collision acceptance
+schoolwork-and-progress: unchanged; no imports, saved-score writes, new teachers, study UI or gameplay
+release-status: owner progress-preview ONLY, not final visual approval or PR merge
