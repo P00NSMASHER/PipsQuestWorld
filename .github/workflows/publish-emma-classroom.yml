@@ -79,12 +79,9 @@ jobs:
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
-          python3 school/emma-classroom/tests/furniture_adapter_runtime.py \\
-            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
-          python3 school/emma-classroom/showroom/walkability_audit.py \\
-            --luau "$RUNNER_TEMP/tools/luau/luau" \\
-            --out "$RUNNER_TEMP/navigation.json"
+          python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"
           grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
 
       - name: Build replica with NO educational runtime
