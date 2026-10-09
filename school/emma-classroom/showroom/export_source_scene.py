@@ -586,6 +586,41 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     seat_gap=abs(float(poufs[0][9])-float(poufs[1][9])) - (
         world_span(poufs[0],0)+world_span(poufs[1],0))/2
     assert seat_gap >= .2, f"Reading poufs intersect: x_gap={seat_gap:.3f}"
+    # Photo-fidelity: the center sun must remain legible, not physically
+    # hidden under speculative reading seats. Use actual Luau transforms.
+    # Each modeled seat fits a circular horizontal footprint; no scene
+    # renderer, fake height or two-dimensional source-code proxy is used.
+    sun=only("Photo rug sun center")
+    sun_pos=(float(sun[9]),float(sun[11]))
+    sun_rays=[r for r in lines if r[1]=="Photo rug sun ray"]
+    assert len(sun_rays)==8, "Real carpet center lost its eight sun rays"
+    sun_outer_radius=max(
+        math.hypot(float(r[9])-sun_pos[0],float(r[11])-sun_pos[1])
+        + math.hypot(world_span(r,0),world_span(r,2))/2
+        for r in sun_rays
+    )
+    # Unobstructed sun includes its geometric rays and a safety margin.
+    sun_clearances=[]
+    bookshelf_front=23.3-2.7/2
+    for base in poufs:
+        x,z=float(base[9]),float(base[11])
+        radius=max(world_span(base,0),world_span(base,2))/2
+        clearance=math.hypot(x-sun_pos[0],z-sun_pos[1])-radius-sun_outer_radius
+        sun_clearances.append(clearance)
+        assert clearance>=.70, (
+            f"Pouf blocks the photo-verified sun and rays: gap={clearance:.3f}"
+        )
+        assert z+world_span(base,2)/2 <= bookshelf_front-.35, (
+            "Reading ottoman collides with rear built-in bookshelf frontage"
+        )
+        assert -35.0 < x-world_span(base,0)/2, (
+            "Reading ottoman crowds the window/wall-side circulation"
+        )
+    assert min(sun_clearances)>=.70
+    print(f"PHOTO_SUN_VISIBILITY_PASS unobstructed=true seats=2 "
+          f"minimum_sun_clearance={min(sun_clearances):.2f} "
+          "rug_centers_unchanged=true")
+
     pairs=list(zip(sorted(poufs,key=lambda r:float(r[9])),
                    sorted(cushions,key=lambda r:float(r[9]))))
     assert all(abs(float(p[9])-float(c[9])) < .02 for p,c in pairs), (

@@ -20,6 +20,7 @@ These photographs document a cheer-event arrangement, not a measured empty-class
 ## Applied corrections
 - Yellow classroom wall material; darker, satin-finished oak school floor; darker built-in cabinet finish.
 - Circular alphabet/numeral/sun rug and black polka-dot rug, preserving existing room-zone locations rather than inventing a new floor plan.
+- Moved the two speculative, noncolliding upholstered reading poufs to the carpet perimeter so the sun and numbered clouds remain visible. This is a *visual composition correction*, not a claim that poufs were present in the reference photographs. Source-built geometry asserts sun-ray clearance and a free gap before the rear bookshelf.
 - Blue vocabulary wall with small, anonymous word cards and red-apple details in its previously approved approximate wall position.
 - Geometric regression assertions run from the actual constructed Luau scene.
 - No photographic likenesses or images redistributed; no new gameplay, NPCs, data stores, study content, or publication authorization.

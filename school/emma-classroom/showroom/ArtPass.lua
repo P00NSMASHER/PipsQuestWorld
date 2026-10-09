@@ -114,8 +114,12 @@ local function readingCorner(root:Instance)
     -- the reading "seats" were taller than the actual child-scale chairs.
     -- A low upholstered cylindrical ottoman with a softly crowned top has
     -- a recognizable manufactured silhouette without adding meshes or Parts.
-    -- Keep BOTH original centers and all noncollision behavior unchanged.
-    local seats={{x=-29.2,z=13,c=C.coral},{x=-24.7,z=15.1,c=C.blue}}
+    -- October 9 exact-source eye-level render showed the ottomans covering
+    -- the photo-verified sun and numbered clouds on the alphabet carpet.
+    -- Seat locations were never photo-verified: shift the two uncollidable
+    -- seats to the rug perimeter while leaving the rug and all desks fixed.
+    -- Maintain a >0.2-stud gap in X and clearance to the back bookshelf.
+    local seats={{x=-31.0,z=12.0,c=C.coral},{x=-26.9,z=19.2,c=C.blue}}
     for _,v in ipairs(seats) do
         local vertical=CFrame.Angles(0,0,math.pi/2)
         disk(group,"Corduroy floor pouf",3.75,.82,
