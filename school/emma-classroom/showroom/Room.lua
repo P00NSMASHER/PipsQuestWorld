@@ -456,8 +456,14 @@ local function buildClassroomTexture(root: Instance)
         local angle=-math.pi/2+(i-1)*2*math.pi/26
         local x=-25+math.cos(angle)*6.13
         local z=14+math.sin(angle)*6.13
-        local tile=part(root,"Reading rug alphabet border",Vector3.new(1.26,.022,.84),
-            CFrame.new(x,.621,z)*CFrame.Angles(0,-angle,0),
+        -- The photo's A-Z ring is a near-continuous segmented circular band,
+        -- not twenty-six disconnected radial stamp squares. The long axis
+        -- runs tangent to the letter orbit; neighboring centers are 1.48
+        -- studs apart at radius 6.13, so each 1.56-stud section nearly joins.
+        -- Reuse the exact original 26 noncolliding Parts and SurfaceGuis.
+        local tile=part(root,"Reading rug alphabet border",
+            Vector3.new(1.56,.022,1.17),
+            CFrame.new(x,.621,z)*CFrame.Angles(0,-angle-math.pi/2,0),
             edgeColors[(i-1)%#edgeColors+1],Enum.Material.Fabric,false)
         local letter=surfaceText(tile,string.sub(alphabet,i,i),
             Enum.NormalId.Top,P.ink,tile.Color)

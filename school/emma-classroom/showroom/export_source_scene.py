@@ -466,6 +466,54 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Reading rug flower petal"]==0, (
         "Synthetic flower field returned to the real sun/cloud carpet"
     )
+    # Direct photo and October 9 mobile rendering: the prior letter border
+    # looked like detached squares because its long axis pointed outward.
+    # Validate the generated Luau world transforms, not a literal source
+    # code phrase. Preserve 26 parts and 26 original UI labels.
+    tiles=[r for r in lines if r[1]=="Reading rug alphabet border"]
+    assert len(tiles)==26, "Circular carpet no longer has the A-Z border"
+    orbit_radius=6.13
+    orbit_chord=2*orbit_radius*math.sin(math.pi/26)
+    long_sides=[]
+    orbit_angles=[]
+    for tile in tiles:
+        tx=float(tile[9])+25
+        tz=float(tile[11])-14
+        radius=math.hypot(tx,tz)
+        assert abs(radius-orbit_radius)<.03, (
+            "Alphabet border patch drifted away from original carpet"
+        )
+        long_side=float(tile[6])
+        short_side=float(tile[8])
+        assert 1.50<long_side<1.61 and 1.10<short_side<1.25, (
+            f"Alphabet color strip became a detached square: {long_side:.2f}x{short_side:.2f}"
+        )
+        matrix=[float(v) for v in tile[15:24]]
+        # First local axis in the ground plane must be tangent to the orbit.
+        local_x_world=(matrix[0],matrix[6])
+        outward=(tx/radius,tz/radius)
+        alignment=abs(sum(a*b for a,b in zip(local_x_world,outward)))
+        assert alignment<.04, (
+            f"Alphabet section points radially instead of tangentially: {alignment:.3f}"
+        )
+        # Outer corners remain within the original 14.2-stud diameter rug.
+        assert math.hypot(radius+short_side/2,long_side/2)<7.10, (
+            "Letter border projects beyond circular carpet edge"
+        )
+        long_sides.append(long_side)
+        orbit_angles.append(math.atan2(tz,tx)%(2*math.pi))
+    angles=sorted(orbit_angles)
+    gaps=[(angles[(i+1)%26]-angles[i])%(2*math.pi) for i in range(26)]
+    assert all(abs(gap-2*math.pi/26)<.015 for gap in gaps), (
+        "Alphabet perimeter contains missing sections or uneven spacing"
+    )
+    assert min(long_sides)>orbit_chord+.045, (
+        "Alphabet sections again look disconnected at ring centerline"
+    )
+    print("PHOTO_ALPHABET_RING_PASS letters=26 tangential=true "
+          f"arc_chord={orbit_chord:.3f} band_length={min(long_sides):.2f} "
+          "physical_parts_added=0")
+
     # Real October 9 iPhone v68: each number was printed on an opaque,
     # rectangular white label, not inside a rounded cloud. Keep the same
     # ten anchors and 20 cloud lobes but make anchor geometry invisible.
