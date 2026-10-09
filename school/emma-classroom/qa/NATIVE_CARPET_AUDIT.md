@@ -6,7 +6,7 @@ This is an **offline, reviewer-guided screen**, not a replacement for a real Rob
 
 Requires Python 3.10+, NumPy and OpenCV:
 
-\`\`\`sh
+```sh
 python3 -m pip install "numpy>=2,<3" "opencv-python-headless==4.13.0.92"
 python3 school/emma-classroom/qa/audit_native_carpet_video.py --self-test
 python3 school/emma-classroom/qa/audit_native_carpet_video.py \
@@ -15,7 +15,7 @@ python3 school/emma-classroom/qa/audit_native_carpet_video.py \
   --polygon "200,300;620,270;780,380;730,500;220,500" \
   --sun-hint 500,380 \
   --report-json /private/local/results.json
-\`\`\`
+```
 
 The polygon and sun center in the example above are **illustrative coordinates**, not generally valid detections. A reviewer must inspect each new video, select a time when the complete circular rug is in view, trace a polygon over the blue carpet (excluding desks, alphabet border and Roblox UI), and mark the yellow sun center. A noncomparable camera angle should produce **INCONCLUSIVE**, not a fabricated pass.
 
