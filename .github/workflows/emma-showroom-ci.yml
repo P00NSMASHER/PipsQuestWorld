@@ -84,6 +84,13 @@ jobs:
             --out "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
           test -s "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
 
+      - name: Inspect constructed carpet SurfaceGuis and reject known iPhone regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_rug_ui.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |
