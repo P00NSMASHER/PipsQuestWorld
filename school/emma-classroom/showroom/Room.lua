@@ -549,12 +549,33 @@ local function buildReadingCorner(root:Instance)
 end
 
 local function buildCubbies(root: Instance)
-    part(root,"Cubbies wood surround",Vector3.new(27,8,.24),CFrame.new(21,4.2,26.5),Color3.fromRGB(142,103,68),Enum.Material.Wood)
-    for _,y in ipairs({.28,4.2,8.2}) do part(root,"Cubbie open shelf",Vector3.new(27,.22,3),CFrame.new(21,y,25.2),P.wood,Enum.Material.Wood,false) end
-    for i=0,6 do part(root,"Cubbie divider",Vector3.new(.18,8,3),CFrame.new(7.5+i*4.5,4.2,25.2),P.wood,Enum.Material.Wood,false) end
+    -- IMG_2903/2904: the storage room has substantial dark varnished
+    -- school cabinetry. Preserve these established frame dimensions,
+    -- aisle footprints and all 12 bin slots; avoid a toy-store finish.
+    local cabinetWood=Color3.fromRGB(109,76,52)
+    part(root,"Cubbies wood surround",Vector3.new(27,8,.24),
+        CFrame.new(21,4.2,26.5),cabinetWood,Enum.Material.Wood)
+    for _,y in ipairs({.28,4.2,8.2}) do
+        part(root,"Cubbie open shelf",Vector3.new(27,.22,3),
+            CFrame.new(21,y,25.2),cabinetWood,Enum.Material.Wood,false)
+    end
+    for i=0,6 do
+        part(root,"Cubbie divider",Vector3.new(.18,8,3),
+            CFrame.new(7.5+i*4.5,4.2,25.2),
+            cabinetWood,Enum.Material.Wood,false)
+    end
+    -- Photo-informed muted classroom supply tubs: translucent-looking pale
+    -- gray-blue, kraft and sage containers rather than 12 neon toy blocks.
+    -- Unique blue and colored backpacks are left unchanged for continuity.
     local binColors={
-        Color3.fromRGB(67,129,183),Color3.fromRGB(229,112,103),Color3.fromRGB(97,150,90),
-        Color3.fromRGB(233,182,67),Color3.fromRGB(157,105,176),Color3.fromRGB(74,155,148),
+        Color3.fromRGB(112,142,159),Color3.fromRGB(175,187,179),
+        Color3.fromRGB(179,164,132),Color3.fromRGB(113,149,143),
+        Color3.fromRGB(160,169,187),Color3.fromRGB(153,169,173),
+    }
+    local backpackColors={
+        Color3.fromRGB(67,129,183),Color3.fromRGB(229,112,103),
+        Color3.fromRGB(97,150,90),Color3.fromRGB(233,182,67),
+        Color3.fromRGB(157,105,176),Color3.fromRGB(74,155,148),
     }
     local n=0
     for row=0,1 do
@@ -565,8 +586,29 @@ local function buildCubbies(root: Instance)
             local cf=CFrame.new(x,y-.2,24.8)
             part(root,"Cubbie bin",Vector3.new(3.55,.15,2.45),cf*CFrame.new(0,-.60,0),color,Enum.Material.SmoothPlastic,false)
             for _,dx in ipairs({-1.70,1.70}) do part(root,"Bin side",Vector3.new(.15,1.45,2.45),cf*CFrame.new(dx,0,0),color,Enum.Material.SmoothPlastic,false) end
-            for _,dz in ipairs({-1.15,1.15}) do part(root,"Bin front and back",Vector3.new(3.4,1.45,.15),cf*CFrame.new(0,0,dz),color,Enum.Material.SmoothPlastic,false) end
-            roundedPanel(root,"Bin label",Vector3.new(1.2,.43,.025),cf*CFrame.new(0,.18,-1.235),P.cream,.08,false,false)
+            -- Real supply tubs have open tops and lower front lips. Keep
+            -- their back walls tall, but reveal interior folders above the
+            -- shorter front panel, without expanding storage footprints.
+            for _,dz in ipairs({-1.15,1.15}) do
+                local front=dz<0
+                part(root,"Bin front and back",
+                    Vector3.new(3.4,front and 1.08 or 1.45,.15),
+                    cf*CFrame.new(0,front and -.20 or 0,dz),
+                    color,Enum.Material.SmoothPlastic,false)
+            end
+            roundedPanel(root,"Bin label",Vector3.new(1.2,.43,.025),
+                cf*CFrame.new(0,.18,-1.235),P.cream,.08,false,false)
+            if (row+col)%2==0 then
+                -- Six minimally protruding folders provide evidence of use.
+                -- All papers are original low-detail anonymous props, not
+                -- reproduced student assignments or school documents.
+                part(root,"Stored classroom file folder",
+                    Vector3.new(1.68,.82,.07),
+                    cf*CFrame.new(0,.36,-.48),
+                    (row==0) and Color3.fromRGB(223,215,190)
+                        or Color3.fromRGB(196,211,207),
+                    Enum.Material.SmoothPlastic,false)
+            end
         end
     end
     part(root,"Wood coat rail",Vector3.new(26,.65,.38),CFrame.new(21,11.1,26.1),P.woodDark,Enum.Material.Wood,false)
@@ -577,7 +619,7 @@ local function buildCubbies(root: Instance)
         -- Backpacks are upholstered schoolbags with a rounded rectangular
         -- profile, NOT eight identical ellipsoid balloons. All are decorative
         -- and remain supported by the physical coat hooks above the cubbies.
-        local color=binColors[i%#binColors+1]:Lerp(P.woodDark,.10)
+        local color=backpackColors[i%#backpackColors+1]:Lerp(P.woodDark,.10)
         local bagCF=CFrame.new(x,9.62,25.40)
         roundedPanel(root,"Hanging school bag",Vector3.new(1.72,2.10,.58),
             bagCF,color,.28,false,false,Enum.Material.Fabric)
