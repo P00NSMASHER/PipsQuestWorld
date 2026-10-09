@@ -18,7 +18,7 @@ try:
 except ImportError as exc:
     raise SystemExit("Install numpy and opencv-python-headless") from exc
 
-PROFILE="rug-native-v2"
+PROFILE="rug-native-v3"
 BLUE_MEDIAN_MIN=85
 MIN_CLOUDS=8
 MIN_RAYS=8
@@ -54,6 +54,25 @@ def components(mask: np.ndarray, minimum: int) -> list[dict]:
         for i in range(1,count)
         if stats[i,4]>=minimum and stats[i,2]>=7 and stats[i,3]>=6
     ]
+
+
+def ring_coverage(roi: np.ndarray, center: tuple[float,float],
+                  radius: float, sectors: int=36) -> float:
+    """Share of motif's expected radial ring within the reviewed view.
+
+    Missing motifs outside the video or reviewer ROI must NEVER be counted
+    as nonexistent Roblox geometry. This tests visibility, not motif quality.
+    """
+    height,width=roi.shape
+    cx,cy=center
+    count=0
+    for index in range(sectors):
+        angle=2*math.pi*index/sectors
+        x=round(cx+radius*math.cos(angle))
+        y=round(cy+radius*math.sin(angle))
+        if 0<=x<width and 0<=y<height and roi[y,x]:
+            count+=1
+    return count/sectors
 
 
 def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
@@ -94,6 +113,13 @@ def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
         return {"status":"INCONCLUSIVE",
                 "reason":"Detected yellow object differs from reviewed sun"}
     radius=math.sqrt(sun_area/math.pi)
+    # v71 iPhone: only 24/36 directions of the cloud ring were inside the
+    # reviewed image. Report an incomplete view, not twelve absent clouds.
+    # Dark carpet remains independently measurable despite crop.
+    ray_view=ring_coverage(roi,(sun_x,sun_y),radius*2.10)
+    cloud_view=ring_coverage(roi,(sun_x,sun_y),radius*3.00)
+    ray_count_evaluable=ray_view>=.83
+    cloud_count_evaluable=cloud_view>=.83
     rows,cols=np.ogrid[:height,:width]
     distance=np.sqrt((cols-sun_x)**2+(rows-sun_y)**2)
     annulus=((roi>0)&(distance>=radius+5*width/1112)
@@ -124,15 +150,17 @@ def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
     defects=[]
     if median_blue<BLUE_MEDIAN_MIN:
         defects.append("CARPET_TOO_DARK")
-    if len(rays)<MIN_RAYS:
+    if ray_count_evaluable and len(rays)<MIN_RAYS:
         defects.append("SUN_RAYS_STILL_DOT_LIKE")
-    if len(clouds)<MIN_CLOUDS:
+    if cloud_count_evaluable and len(clouds)<MIN_CLOUDS:
         defects.append("CLOUDS_STILL_DOT_LIKE")
     # The screen may be cropped, or there may be stray papers/rays in one
     # quadrant. In either case, do not call it REVIEW_REQUIRED as if ten
     # well-distributed classroom clouds had been found.
+    view_complete=ray_count_evaluable and cloud_count_evaluable
     status="FAIL" if defects else (
-        "REVIEW_REQUIRED" if distributed else "INCONCLUSIVE"
+        "REVIEW_REQUIRED" if distributed and view_complete
+        else "INCONCLUSIVE"
     )
     return {
         "status":status,
@@ -145,6 +173,13 @@ def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
         "sun_ray_angular_sectors":ray_sectors,
         "cloud_angular_sectors":cloud_sectors,
         "geometric_distribution_ok":distributed,
+        "ray_view_coverage":round(ray_view,3),
+        "cloud_view_coverage":round(cloud_view,3),
+        "motif_view_complete":view_complete,
+        "view_limitation":(
+            "Expected motif ring cropped by image or reviewed carpet ROI"
+            if not view_complete else "None"
+        ),
         "sun_center":[round(sun_x,1),round(sun_y,1)],
         "notes":"Thresholds screen obvious regressions only. They do not certify readable numbers, fidelity or FPS.",
     }
@@ -230,6 +265,21 @@ def self_test() -> None:
     fake_rays=screen(quadrant,polygon,hint)
     assert fake_rays["status"] in ("FAIL","INCONCLUSIVE"),fake_rays
 
+    # Simulate a close-up with the sun visible but the cloud ring cropped:
+    # do not falsely classify healthy offscreen clouds as missing.
+    crop=[(110,190),(890,190),(890,420),(110,420)]
+    cropped_good=screen(synth(True),crop,hint)
+    assert (cropped_good["status"]=="INCONCLUSIVE"
+            and cropped_good["cloud_view_coverage"]<.83
+            and "CLOUDS_STILL_DOT_LIKE" not in cropped_good["defects"]
+    ), cropped_good
+    cropped_dark=screen(synth(False),crop,hint)
+    assert (cropped_dark["status"]=="FAIL"
+            and "CARPET_TOO_DARK" in cropped_dark["defects"]
+            and "CLOUDS_STILL_DOT_LIKE" not in cropped_dark["defects"]
+    ), cropped_dark
+    print("NATIVE_RUG_CROP_TEST_PASS out_of_view_clouds_not_claimed "
+          "independently_dark_carpet_still_fails")
     print("NATIVE_RUG_SELF_TEST_PASS dark_and_dot_regressions_rejected=true "
           "improved_synthetic_requires_human_review=true "
           "invalid_roi_inconclusive=true unrelated_papers_rejected=true "

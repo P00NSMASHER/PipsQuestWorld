@@ -22,7 +22,7 @@ from audit_native_carpet_video import (
     self_test as pixel_detector_self_test,
 )
 
-PROFILE = "rug-native-sequence-v1"
+PROFILE = "rug-native-sequence-v2"
 SAMPLE_COUNT = 3
 SAMPLE_OFFSETS = (-1, 0, 1)
 DECISIVE_FRAMES = 2
@@ -77,7 +77,8 @@ def check_camera_consistency(samples: list[dict], width: int) -> dict:
     scale=max(areas)/min(areas) if len(areas)>=2 else 1.0
     max_drift=max(10.0,width*.014)
     return {
-        "stable":drift<=max_drift and scale<=1.30,
+        "stable":(len(centers)>=2 and len(areas)>=2
+                  and drift<=max_drift and scale<=1.30),
         "sun_center_max_drift_px":round(drift,2),
         "sun_area_max_ratio":round(scale,3),
         "allowed_drift_px":round(max_drift,2),
@@ -114,7 +115,9 @@ def inspect_video(video: Path, seconds: float, offset: float,
             for key in ("reason", "defects", "carpet_blue_median_b",
                         "blue_carpet_fraction", "ray_components_large_enough",
                         "cloud_components_large_enough", "sun_ray_angular_sectors",
-                        "cloud_angular_sectors", "sun_center",
+                        "cloud_angular_sectors", "ray_view_coverage",
+                        "cloud_view_coverage", "motif_view_complete",
+                        "view_limitation", "sun_center",
                         "central_sun_area_pixels"):
                 if key in result:
                     numeric[key]=result[key]
@@ -165,6 +168,10 @@ def self_test() -> None:
         {"status":"INCONCLUSIVE", "reason":"brief obstruction"},
     ]
     assert check_camera_consistency(stationary,1112)["stable"]
+    assert not check_camera_consistency(
+        [{"status":"REVIEW_REQUIRED"}, {"status":"REVIEW_REQUIRED"},
+         {"status":"INCONCLUSIVE"}],1112
+    )["stable"], "Missing sun measurements cannot prove camera stability"
     panned=[dict(s) for s in stationary]
     panned[1]={**stationary[1], "sun_center":[550,350]}
     assert not check_camera_consistency(panned,1112)["stable"]
