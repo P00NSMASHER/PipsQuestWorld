@@ -139,14 +139,15 @@ local function showcaseBoards(root:Instance,group:Instance)
                 x<2 and C.slate or C.metal,Enum.Material.SmoothPlastic,false)
         end
     end
-    -- Actual chalkboard remains physically visible beside the smartboard.
-    local chalk=piece(group,"Chalk handwriting panel",Vector3.new(12.6,4.20,.065),
-        CFrame.new(-13.7,8.3,-33.93),Color3.fromRGB(40,51,49),
+    -- Photo-guided large chalkboard remains exposed along the sides of the
+    -- independently wheeled interactive display. This is static scenery.
+    local chalk=piece(group,"Chalk handwriting panel",Vector3.new(4.10,4.20,.065),
+        CFrame.new(-6.75,8.3,-33.93),Color3.fromRGB(40,51,49),
         Enum.Material.SmoothPlastic,false)
     printFace(chalk,Enum.NormalId.Back,"GOOD MORNING!","We learn together.",chalk.Color,C.cream)
-    for i=1,8 do
+    for i=1,4 do
         piece(group,"Chalk dust in tray",Vector3.new(.26,.02,.14),
-            CFrame.new(-18+i*.43,4.20,-33.31),C.cream,Enum.Material.SmoothPlastic,false)
+            CFrame.new(-8.3+i*.43,4.20,-33.31),C.cream,Enum.Material.SmoothPlastic,false)
     end
 end
 

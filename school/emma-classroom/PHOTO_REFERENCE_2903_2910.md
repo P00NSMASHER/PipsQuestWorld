@@ -25,4 +25,4 @@ These photographs document a cheer-event arrangement, not a measured empty-class
 - No photographic likenesses or images redistributed; no new gameplay, NPCs, data stores, study content, or publication authorization.
 
 ## Outstanding
-The photo clearly depicts a wheeled interactive display in front of a larger blackboard; the current classroom-only source uses separately mounted boards. Correcting that placement would be a **major architectural revision** requiring a dedicated comparison and verified player-collision checks. Native Roblox Studio and iPhone visual review, along with a room survey, are still required to declare photographic parity.
+The classroom-only development candidate now has a freestanding wheeled display in front of a widened chalkboard, with visible perimeter framing. This physical arrangement is supported by the cheer-event photos, **not proven as the permanent daily layout**. Source-derived camera evidence and native Roblox/iPhone visual and collision acceptance remain necessary before publication.

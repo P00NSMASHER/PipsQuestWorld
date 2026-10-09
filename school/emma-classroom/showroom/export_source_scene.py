@@ -344,14 +344,24 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     frame_x=float(bezel[9]); frame_width=float(bezel[6])
     smart_x=float(smart[9]); smart_width=float(smart[6])
     chalk_x=float(chalk[9]); chalk_width=float(chalk[6])
-    spacing=(smart_x-smart_width/2)-(chalk_x+chalk_width/2)
-    assert 18.5 <= smart_width <= 19.2, "The giant pre-redesign Smartboard returned"
-    assert abs(smart_x-5.2)<.02, "Smartboard displaced from framed wall design"
+    # The photographed mobile screen sits ahead of a wider chalkboard, not
+    # beside one. Check x alignment and visible blackboard perimeter.
+    chalk_margin=(chalk_width-smart_width)/2
+    assert 18.5 <= smart_width <= 19.2, "Digital display changed width"
+    assert 28.5 <= chalk_width <= 29.5, "Wide chalkboard backing missing"
+    assert abs(smart_x-5.2)<.02 and abs(chalk_x-smart_x)<.05, (
+        "Wheeled screen no longer aligns with chalkboard backdrop"
+    )
     assert abs(frame_x-smart_x)<.02 and .3<frame_width-smart_width<.7, (
         "Physical display and its bezel must stay center-aligned"
     )
-    assert .7 < spacing < 2.5, f"Chalkboard/Smartboard gap not plausible: {spacing:.3f}"
-    assert abs(float(smart[10])-float(chalk[10])) < 1, "Display heights diverged"
+    assert 4.5 <= chalk_margin <= 5.8, (
+        "Blackboard perimeter is obscured by the wheeled screen"
+    )
+    assert float(smart[11])-float(chalk[11])>1.5, (
+        "Wheeled screen collapsed back into the chalkboard plane"
+    )
+    assert abs(float(smart[10])-float(chalk[10]))<1, "Display heights diverged"
     trim=[row for row in lines if row[1]=="Smartboard satin aluminum trim"]
     assert len(trim)==2 and all(abs(float(row[9])-smart_x)<.02
                                 and abs(float(row[6])-19.45)<.05
@@ -400,7 +410,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "behind_display=true roomward_offset=true "
           "noncolliding_parts_in_source=true native_iphone_pending")
     print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
-          f"chalkboard={chalk_width:.2f} gap={spacing:.2f} "
+          f"chalkboard={chalk_width:.2f} exposed_margin={chalk_margin:.2f} "
           f"frame={frame_width:.2f}")
     # Repositioned art easel must NOT occlude the actual chalkboard from the
     # front-facing player camera. Validate exported world geometry after Luau.
@@ -409,8 +419,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     chalk_left=chalk_x-chalk_width/2
     easel_right=easel_x+easel_width/2
     easel_clearance=chalk_left-easel_right
-    assert 6.5 <= easel_clearance <= 9.0, (
-        f"Easel blocks the chalkboard or moved out of the left art corner: {easel_clearance:.2f}"
+    assert 18.0 <= easel_clearance <= 21.0, (
+        f"The photo-guided larger chalkboard intersects the art easel: {easel_clearance:.2f}"
     )
     assert abs(easel_x+31.0)<.02, "The visually dominant prior easel returned"
     assert 4.0 <= easel_width <= 4.4, "Easel must have a compact school-scale silhouette"

@@ -652,23 +652,24 @@ local function buildWindows(root: Instance)
 end
 
 local function buildFrontWall(root: Instance)
-    -- Architectural teaching wall: a realistic separate chalkboard beside the
-    -- existing smartboard, not a 44-stud black plate behind both displays.
-    part(root,"Main chalkboard",Vector3.new(15.8,7.55,.30),CFrame.new(-13.7,8.1,-34.14),Color3.fromRGB(43,54,50),Enum.Material.SmoothPlastic,false)
+    -- IMG_2909/2910 show the freestanding display in front of a much wider
+    -- blackboard. Preserve the structural wall, the photograph's layering,
+    -- and all original student furniture positions; location is provisional.
+    part(root,"Main chalkboard",Vector3.new(29.0,7.55,.30),CFrame.new(5.2,8.1,-34.14),Color3.fromRGB(43,54,50),Enum.Material.SmoothPlastic,false)
     for _,y in ipairs({4.20,12.0}) do
-        part(root,"Chalkboard hardwood horizontal",Vector3.new(16.5,.48,.60),CFrame.new(-13.7,y,-34.0),
+        part(root,"Chalkboard hardwood horizontal",Vector3.new(29.8,.48,.60),CFrame.new(5.2,y,-34.0),
             Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
     end
-    for _,x in ipairs({-21.95,-5.45}) do
+    for _,x in ipairs({-9.7,20.1}) do
         part(root,"Chalkboard hardwood stile",Vector3.new(.42,7.85,.58),CFrame.new(x,8.1,-34.0),
             Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
     end
-    part(root,"Chalk tray",Vector3.new(15.5,.18,.80),CFrame.new(-13.7,4.02,-33.63),Color3.fromRGB(129,92,57),Enum.Material.Wood,false)
+    part(root,"Chalk tray",Vector3.new(29.0,.18,.80),CFrame.new(5.2,4.02,-33.63),Color3.fromRGB(129,92,57),Enum.Material.Wood,false)
     for i=0,3 do
-        part(root,"Chalk stick",Vector3.new(.58,.095,.095),CFrame.new(-19+i*.66,4.16,-33.37),
+        part(root,"Chalk stick",Vector3.new(.58,.095,.095),CFrame.new(-8.6+i*.64,4.16,-33.37),
             P.cream,Enum.Material.SmoothPlastic,false)
     end
-    part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-12,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
+    part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-6.6,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
     -- IMG_2909/2910: the modern white-framed touch display stands on a
     -- wheeled steel support in front of the permanent teaching wall.
     -- Keep its established x/y and screen proportions but move it two studs
