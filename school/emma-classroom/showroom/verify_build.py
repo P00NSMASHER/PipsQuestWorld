@@ -58,7 +58,11 @@ assert 'Vector3.new(1.10,.55,.55)' not in room, "Oversized original water bottle
 assert 'Frosted fluorescent diffuser' in room, "Glaring neon ceiling fixture returned"
 assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returned"
 assert 'local center=CFrame.new(20.55,5.87,-26.4)' in room, "Teacher globe moved off its desk"
-assert "CFrame.new(x,2.93,z+4.39)" in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Desk/chair detailing no longer follows geometry"
+art=(base / "emma-classroom/showroom/ArtPass.lua").read_text()
+assert "Chair back accent" not in art, "Fake colored stripes returned to the 16 molded school chairs"
+assert "for row,z in ipairs({-12,4,19}) do" in art, "Desk prop art no longer follows classroom rows"
+assert "for col,x in ipairs({-24,-16,-8,0,12,20}) do" in art, "Desk prop art no longer follows classroom columns"
+assert "CFrame.new(x,3.179,z+1.33)" in art, "Laminate hardware no longer aligns with actual desk tops"
 assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on desktop"
 assert "pencilCup(root,21.5,4.08,-24.2)" in room, "Teacher pencil cup hovers above desktop"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
