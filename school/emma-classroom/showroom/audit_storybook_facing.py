@@ -27,9 +27,10 @@ local function check()
         assert(gui~=nil and gui.Name=="Printed detail",
             "STORYBOOK_PRINTED_GUI_MISSING")
         assert(gui.Face==Enum.NormalId.Front,"STORYBOOK_FACE_REGRESSION")
-        -- The source-derived math fixture uses row-major local frame;
-        -- Front is local -Z, which must point to the player's +Z aisle.
-        assert(cover.CFrame.m[9]<-.94,"STORYBOOK_WORLD_NORMAL_REVERSED")
+        -- The same Room/Gallery constructor now builds the illustrated
+        -- books on the original wooden shelf, roomward = negative Z.
+        -- Front is local -Z and must point towards the classroom aisle.
+        assert(cover.CFrame.m[9]>.94,"STORYBOOK_WORLD_NORMAL_REVERSED")
         local label=gui:FindFirstChildOfClass("TextLabel")
         assert(label~=nil and #label.Text>2,
             "STORYBOOK_TITLE_MISSING")
@@ -42,16 +43,20 @@ local function check()
             end
         end
         assert(page~=nil,"STORYBOOK_PAGE_MISSING")
-        assert(cover.Position.Z>page.Position.Z+.11,
+        assert(cover.Position.Z<page.Position.Z-.11,
             "STORYBOOK_WHITE_PAGES_IN_FRONT")
+        assert(page.Position.Y>4.15 and page.Position.Y<4.22,
+            "STORYBOOK_NOT_ON_LIBRARY_SHELF")
+        assert(page.Position.Z>22.25 and page.Position.Z<22.45,
+            "STORYBOOK_NOT_ON_LIBRARY_SHELF")
     end
     for _,name in ipairs({"SPACE","PETS","OCEAN","STARS","GARDEN"}) do
         assert(titles[name]==true,"STORYBOOK_TITLE_SET_REGRESSION")
     end
 end
 check()
-print("STORYBOOK_FACING_RUNTIME_PASS covers=5 front=positive_Z "
-    .."original_titles=5 page_backs_hidden=true")
+print("STORYBOOK_FACING_RUNTIME_PASS covers=5 front=negative_Z "
+    .."middle_wood_shelf=true original_titles=5 page_backs_hidden=true")
 local first=nil
 for _,v in ipairs(Room.Root:GetDescendants()) do
     if v:IsA("BasePart") and v.Name=="Illustrated storybook cover" then

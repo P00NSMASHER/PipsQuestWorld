@@ -145,20 +145,22 @@ local function readingCorner(root:Instance)
     -- Even after shrinking/repositioning, they hide parts of the rug in the
     -- child-height camera. Retire them rather than invent more clutter.
     -- Retain all actual shelving, display books and 16 school desk/chair pairs.
-    piece(group,"Child-height book display shelf",Vector3.new(5.9,.24,2.2),CFrame.new(-19.4,2,15),C.wood,Enum.Material.Wood,false)
-    for _,x in ipairs({-21.9,-17}) do
-        piece(group,"Story rack leg",Vector3.new(.34,1.8,.34),CFrame.new(x,1.14,15),C.woodEdge,Enum.Material.Wood,false)
-    end
+    -- The unverified freestanding face-out rack crossed the verified sun/
+    -- cloud carpet in the actual overhead diagnostic, despite passing the
+    -- generic nonblank image gate. Consolidate its five books onto the
+    -- established middle wooden library shelf, not the classroom floor.
+    -- The permanent bookshelves and all student desks/chairs stay in place.
     local titles={"SPACE","PETS","OCEAN","STARS","GARDEN"}
     local colors={C.navy,C.coral,C.blue,C.lilac,C.leaf}
-    -- Native iPhone v70 shows five large BLANK CREAM BACKS at 10-13 seconds.
-    -- The player is on the +Z side of this rack, so cover and illustrated
-    -- relief must face +world Z. Keep the book positions and white page blocks
-    -- but flip ONLY their original authored covers about the local Y axis.
-    -- The SurfaceGui must use Front (local -Z after the half-turn).
+    -- Move all five uniquely illustrated storybooks together into the
+    -- existing middle reading shelf at y=3.2 (shelf top=3.35). Upright book
+    -- bases sit just above that ledge; front-cover relief faces the room's
+    -- negative-Z aisle. Preserve every page, title and cover in source.
+    -- This is a geometric relocation, not a change to children's schoolwork.
     for i=1,5 do
-        local cf=CFrame.new(-21.75+(i-1)*1.17,3,14.75)*CFrame.Angles(math.rad(-15),0,0)
-        local coverFacing=cf*CFrame.Angles(0,math.pi,0)
+        local cf=CFrame.new(-27+(i-1)*1.50,4.18,22.35)*
+            CFrame.Angles(math.rad(-15),0,0)
+        local coverFacing=cf
         piece(group,"Storybook page edges",Vector3.new(1,1.5,.19),
             cf,C.cream,Enum.Material.SmoothPlastic,false)
         local cover=piece(group,"Illustrated storybook cover",Vector3.new(1.1,1.64,.055),

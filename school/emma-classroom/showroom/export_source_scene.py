@@ -940,16 +940,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert all(by_name[name]==0 for name in absent), (
         "Unverified pink/blue poufs returned to obscure the alphabet carpet"
     )
-    rack=only("Child-height book display shelf")
-    assert (abs(float(rack[9])+19.4)<.03
-            and abs(float(rack[10])-2.0)<.03
-            and abs(float(rack[11])-15.0)<.03
-            and abs(float(rack[6])-5.9)<.03
-            and abs(float(rack[8])-2.2)<.03), (
-        "Photo-fidelity cleanup damaged the original story display shelf"
-    )
+    # Overhead visual evidence shows the formerly separate display stand
+    # physically obscured part of the authentic rug. It has no photo-backed
+    # floor position. Five authored face-out books are instead housed on
+    # the existing middle reading shelf. Never delete or copy the books.
+    assert by_name["Child-height book display shelf"]==0 and (
+        by_name["Story rack leg"]==0
+    ), "Unsupported freestanding story rack returned onto the alphabet rug"
+    middle_shelves=[r for r in lines if r[1]=="Reading shelf"
+                    and abs(float(r[10])-3.20)<.025]
+    assert len(middle_shelves)==1 and (
+        abs(float(middle_shelves[0][11])-23.30)<.025
+    ), "Original middle reading shelf missing"
     assert by_name["Illustrated storybook cover"]==5, (
-        "Removing speculative seating deleted the five face-out books"
+        "Five face-out books were lost during story rack removal"
     )
     # v70 native iPhone 10-13s: the player saw five blank cream page backs.
     # Layer all five colored covers/illustrations toward the real +Z aisle
@@ -965,20 +969,29 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(pages)==len(covers)==len(illustrations)==len(bands)==5, (
         "Five recognizable physical library book covers lost"
     )
+    assert [round(float(p[9]),2) for p in pages]==(
+        [-27.0,-25.5,-24.0,-22.5,-21.0]
+    ), "Storybook positions no longer follow the existing library shelf"
+    shelf_top=float(middle_shelves[0][10])+float(middle_shelves[0][7])/2
     for page,cover,illustration,band in zip(pages,covers,illustrations,bands):
         assert abs(float(page[9])-float(cover[9]))<.03, (
             "Book cover detached from its physical white pages"
         )
-        assert .11<float(cover[11])-float(page[11])<.19, (
-            "Native player sees white page edges instead of colored covers"
+        assert -.19<float(cover[11])-float(page[11])<-.11, (
+            "Colored front cover is behind the cream pages at library aisle"
         )
-        # Books tilt 15 degrees: the physical artwork and bottom title band
-        # have different Y coordinates. Comparing their raw Z positions to
-        # the cover falsely reports valid pieces as behind the book. Project
-        # the full 3D offsets onto the actual cover-front world normal.
+        assert 22.24<float(page[11])<22.46 and (
+            abs(float(page[10])-4.18)<.025
+        ), "Face-out books returned to the middle of the carpet"
+        support_clearance=float(page[10])-world_span(page,1)/2-shelf_top
+        assert .02<=support_clearance<=.14, (
+            f"Storybook floats off or clips through its shelf: gap={support_clearance:.3f}"
+        )
+        # On the middle bookcase, the aisle is toward negative-Z.
+        # Source-derived cover normals, not UI screenshots, prove direction.
         outward=[-float(cover[i]) for i in (17,20,23)]
-        assert outward[2]>.94, (
-            "Book's FRONT normal does not face the positive-Z player aisle"
+        assert outward[2]<-.94, (
+            "Storybook's front cover no longer faces the classroom aisle"
         )
         def forward_depth(part):
             return sum((float(part[i])-float(cover[i]))*outward[j]
@@ -993,7 +1006,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Storybook title band is hidden behind cover face"
         )
     print("IPHONE_STORYBOOK_DEPTH_PASS covers=5 pages_behind=true "
-          "art_in_front=true labels_face_player=true same_shelf=true")
+          "art_in_front=true labels_face_room=true existing_wood_shelf=true "
+          "rug_unobstructed_by_display_rack=true")
     carpet=only("Alphabet rug")
     assert carpet[3].endswith("Cylinder") and carpet[4].endswith("Fabric") and (
         abs(float(carpet[9])+25)<.03 and abs(float(carpet[11])-14)<.03
