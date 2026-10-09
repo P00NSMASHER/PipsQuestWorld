@@ -59,9 +59,13 @@ def inspect_rug(im:Image.Image)->dict[str,int]:
     rays=sum(v>=24 for v in sectors)
     clouds=sum(a>=140 for a in connected_areas(cloud_points))
     assert center>=700, f"RUG_CENTER_SUN_MISSING center_pixels={center}"
-    assert rays>=11, f"RUG_SUN_RAYS_MISSING sectors={rays}/16"
-    assert len(cloud_points)>=2500 and clouds>=8, (
-        f"RUG_WHITE_CLOUDS_MISSING pixels={len(cloud_points)} groups={clouds}"
+    # A source render with a single missing ray or numbered cloud must FAIL.
+    # Native QA recorded the completed authored rug at 16 ray sectors and
+    # 10 cloud components. The old 11/16 and 8/10 thresholds concealed
+    # obvious incomplete art despite a green nonblank/image workflow.
+    assert rays==16, f"RUG_SUN_RAYS_MISSING sectors={rays}/16"
+    assert len(cloud_points)>=2500 and clouds==10, (
+        f"RUG_WHITE_CLOUDS_MISSING pixels={len(cloud_points)} groups={clouds}/10"
     )
     return dict(sun_pixels=center,ray_sectors=rays,cloud_pixels=len(cloud_points),
                 cloud_groups=clouds)
@@ -106,6 +110,32 @@ def self_test()->None:
         x=cx+int(math.cos(a)*110);y=cy+int(math.sin(a)*110)
         draw.ellipse((x-19,y-12,x+19,y+12),fill=(160,172,188))
     assert inspect_rug(rug)["cloud_groups"]==10
+    # Mutation tests must remove exactly ONE motif, not an entire category:
+    # a weak 11-sector/8-cloud image gate used to let these through.
+    ray_one_missing=rug.copy()
+    d=ImageDraw.Draw(ray_one_missing)
+    a=0.
+    d.line((cx+math.cos(a)*32,cy+math.sin(a)*32,
+            cx+math.cos(a)*74,cy+math.sin(a)*74),
+           fill=(55,99,152),width=15)
+    try:
+        inspect_rug(ray_one_missing)
+    except AssertionError as exc:
+        assert "RUG_SUN_RAYS_MISSING" in str(exc), str(exc)
+    else:
+        raise AssertionError("Single absent sun ray passed visual acceptance")
+    cloud_one_missing=rug.copy()
+    d=ImageDraw.Draw(cloud_one_missing)
+    i=0
+    a=i*2*math.pi/10
+    x=cx+int(math.cos(a)*110);y=cy+int(math.sin(a)*110)
+    d.ellipse((x-22,y-15,x+22,y+15),fill=(55,99,152))
+    try:
+        inspect_rug(cloud_one_missing)
+    except AssertionError as exc:
+        assert "RUG_WHITE_CLOUDS_MISSING" in str(exc), str(exc)
+    else:
+        raise AssertionError("Single absent numbered cloud passed visual acceptance")
     rayless=Image.new("RGB",SIZE,(37,43,48))
     d=ImageDraw.Draw(rayless)
     d.ellipse((cx-195,cy-195,cx+195,cy+195),fill=(55,99,152))
@@ -148,7 +178,8 @@ def self_test()->None:
         assert "STORYBOOK_3_BLANK_OR_UNILLUSTRATED" in str(exc)
     else:
         raise AssertionError("Blank storybook passed")
-    print("ARTWORK_PIXEL_NEGATIVE_TESTS_PASS missing_rays missing_clouds blank_book")
+    print("ARTWORK_PIXEL_NEGATIVE_TESTS_PASS "
+          "single_ray single_cloud missing_rays missing_clouds blank_book")
 
 def main()->None:
     parser=argparse.ArgumentParser()
