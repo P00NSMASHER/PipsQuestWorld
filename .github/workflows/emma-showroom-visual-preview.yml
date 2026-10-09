@@ -177,20 +177,20 @@ jobs:
           # Assert PNG IHDR dimensions using Python stdlib only; reject a
           # 16:9 capture incorrectly labeled as the phone landscape view.
           python3 - "$PHONE" <<'PY'
-import struct
-import sys
-from pathlib import Path
-header=Path(sys.argv[1]).open("rb").read(24)
-assert header[:8]==bytes((137,80,78,71,13,10,26,10)), (
-    "PHONE_VIEWPORT_REJECT not a PNG image"
-)
-dimensions=struct.unpack(">II",header[16:24])
-assert dimensions==(1112,512), (
-    f"PHONE_VIEWPORT_REJECT expected 1112x512, got {dimensions}"
-)
-print("PHONE_LANDSCAPE_VIEWPORT_PASS 1112x512 "
-      "unchanged_camera_12=true native_roblox_not_certified=true")
-PY
+          import struct
+          import sys
+          from pathlib import Path
+          header=Path(sys.argv[1]).open("rb").read(24)
+          assert header[:8]==bytes((137,80,78,71,13,10,26,10)), (
+              "PHONE_VIEWPORT_REJECT not a PNG image"
+          )
+          dimensions=struct.unpack(">II",header[16:24])
+          assert dimensions==(1112,512), (
+              f"PHONE_VIEWPORT_REJECT expected 1112x512, got {dimensions}"
+          )
+          print("PHONE_LANDSCAPE_VIEWPORT_PASS 1112x512 "
+                "unchanged_camera_12=true native_roblox_not_certified=true")
+          PY
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
             echo "Reject blank exterior control; retrying independent exterior camera"
