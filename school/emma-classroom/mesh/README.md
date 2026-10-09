@@ -1,3 +1,17 @@
+## CURRENT CHECKPOINT: REAL ROBLOX ENGINE TESTED, SEPARATE MESH REVIEW PLACE BUILT (OCTOBER 8)
+
+**Both original furniture models are Roblox approved and creator owned.** No new upload is needed.
+
+- Chair Model `132417338693200`, 4 native MeshParts, engine-corrected bounds **2.460 × 3.774 × 2.365 studs**.
+- Desk Model `75559376486007`, 5 native MeshParts, engine-corrected bounds **5.780 × 3.085 × 3.860 studs**.
+- [Native Roblox disposable engine run 37862268626](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37862268626) passed: real Model load, all **16 desk/chair pairs**, **32 staged models**, source-exact FurnitureMeshAdapter, original collisions preserved and unrelated art untouched. No saved place edits and no gameplay publishing.
+- [Review-only Roblox Rojo binary run 37862596319](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37862596319) passed. Includes downloadable `.rbxl` and `.rbxlx` files using the approved asset IDs and `Enabled=true` **only in the review configuration**, guarded by exact project comparison and XML source verification.
+- Production target `school/emma-showroom.project.json` still maps `showroom/FurnitureMeshConfig.lua` with `Enabled=false`. Release workflow never uses `school/emma-mesh-review.project.json`.
+- After native task retries encountered HTTP **429** from repeated PR-triggered runs, `.github/workflows/emma-native-furniture-engine.yml` was restricted to **manual dispatch only**. The earlier successful engine verification remains valid.
+- **Remaining hard gate:** a real Roblox Studio/iPhone visual inspection and mobile movement/performance/collision check. Native headless Luau confirms engine geometry and integration, not the graphics as rendered to players. No merged PR, no production publish, no changes to educational source or scheduled tasks.
+
+---
+
 ## CURRENT RESULT: ROBLOX UPLOAD APPROVED, MODELS STAGED BUT NOT ACTIVATED (Oct 8)
 
 - **Model import succeeded:** GitHub Actions run [37813670543, attempt 2](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37813670543) uploaded both source-identical GLB assets using the dedicated Roblox Assets API secret. Chair asset ID: **132417338693200**. Desk asset ID: **75559376486007**. Both operation responses reported **Approved**, no Roblox place version was published.
