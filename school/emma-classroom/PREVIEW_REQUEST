@@ -1,12 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-next-classroom-owner-preview-2026-10-09
+reaffirmed-authorization: user-delegated-major-classroom-visual-upgrade-and-iphone-review-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 0183c9459bf8f56dfae5236adeff8a495974a3fd
-notice: Owner-delegated review-only update after latest live v73; inspect 48 native-stable molded chair vent details on iPhone, preserving classroom and carpet
-scope: exact classroom-only Rojo source pinned to parent SHA; do not alter school study systems, student progress, or active schedules
-production-furniture-meshes: disabled until native Studio and iPhone collision/visual acceptance
-schoolwork-and-progress: no writes or imports
-release-status: playable owner-review preview only, NOT final visual signoff or PR merge
+source-parent-sha: 9a2617709d8e07f6b7a8b4bbf6a5605bae39e891
+notice: Owner explicitly said classroom is only halfway to desired quality; publish photograph-guided major oak cabinetry, chair sculpt, metal desk runners, and matte black interactive board for native iPhone visual feedback
+scope: exact classroom-only Rojo project with 16 original desks, chair collision preserved, 12 cubby bins, 40 book spines, six classroom light fixtures, no education runtime
+production-furniture-meshes: disabled until real native visual/collision and mobile performance approval
+schoolwork-and-progress: no writes, no imports, no curriculum or student progress changes
+release-status: OWNER REVIEW PREVIEW ONLY; no final visual acceptance or PR merge
