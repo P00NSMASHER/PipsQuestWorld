@@ -183,6 +183,17 @@ jobs:
           "$RUNNER_TEMP/rhr-venv/bin/python" \
             school/emma-classroom/showroom/encode_preview.py "$RUNNER_TEMP/visual"
 
+      - name: Reject blank carpet artwork and cream storybook faces from actual rendered pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_artwork.py --self-test
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_artwork.py \
+            --rug "$RUNNER_TEMP/visual/16-rug-overlook.png" \
+            --books "$RUNNER_TEMP/visual/17-library-cover-fronts.png"
+
       - name: Verify native-safe tree crowns are visible through both windows
         shell: bash
         run: |
