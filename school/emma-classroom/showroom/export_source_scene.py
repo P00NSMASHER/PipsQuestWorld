@@ -268,6 +268,49 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("PHOTO_WINDOW_GREENERY_PASS trees=4 crown_clusters=20 "
           "prior_trees=3 old_apartments=0 fake_clouds=0 "
           "behind_window_glass=true",flush=True)
+    # Check both built school window bays before camera-only cutaways.
+    # Exterior trees should be visible behind the lightly tinted glass,
+    # while the real navy fabric panels remain fully preserved.
+    panes=actual_parts("Window glass")
+    expected={
+        "Window wood horizontal frame":4,
+        "Window wood vertical frame":4,
+        "Window vertical mullion":6,
+        "Window horizontal mullion":2,
+        "Window timber inner stop":4,
+        "Deep window sill":2,
+        "Window blind slat":32,
+        "Navy curtain fabric panel":4,
+    }
+    assert len(panes)==2 and sorted(round(float(p[11]),2) for p in panes)==[-19,6], (
+        "Both school window glazing openings must remain in place"
+    )
+    for name,count in expected.items():
+        assert len(actual_parts(name))==count, (
+            f"Window component {name} changed count unexpectedly"
+        )
+    for pane in panes:
+        assert pane[4].endswith("Glass") and .64<=float(pane[5])<=.76, (
+            "Glass is too opaque to see the outdoor greenery"
+        )
+        assert abs(float(pane[9])+36.18)<.02 and (
+            abs(float(pane[7])-8.4)<.02 and abs(float(pane[8])-14.2)<.02
+        ), "School window opening changed geometry"
+        rgb=[float(x) for x in pane[12:15]]
+        assert min(rgb)>.87 and max(rgb)-min(rgb)<.07, (
+            "Glass reverted to heavy blue window tint"
+        )
+    for name in expected:
+        if name in ("Window blind slat","Navy curtain fabric panel"):
+            continue
+        for part in actual_parts(name):
+            assert part[4].endswith("Wood"), "Light window sash lost its wood material"
+            rgb=[float(x) for x in part[12:15]]
+            assert min(rgb)>.79 and max(rgb)-min(rgb)<.09, (
+                "Window sash reverted to heavy blue paint"
+            )
+    print("PHOTO_WINDOW_SASH_PASS glass=2 transparency=.68 light_sashes=true "
+          "window_centers_preserved=true blinds_and_curtains_preserved=true")
     # Photo-driven navy drapes must be visible at standing child eye height,
     # gathered at the edges rather than blanketing the daylight and trees.
     # These measurements come from actual constructed Luau Parts, before
