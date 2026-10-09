@@ -1,0 +1,11 @@
+requested-mode: classroom-progress-preview-only
+authorization: user-requested-2026-10-08
+visual-acceptance: pending-real-device-review
+target-universe: 10769455759
+target-place: 114603280760042
+source-parent-sha: 8c047480c993ff021e4e6895ba1d794f96911e23
+notice: user wants to see the in-progress classroom in the existing Roblox game
+scope: isolated showroom architecture, 16 child-scale desks/chairs, classroom art, first-person exploration
+production-furniture-meshes: disabled pending native iPhone visual review
+schoolwork-and-progress: no writes, no imports, no curriculum changes
+release-status: reviewable preview; not visual-acceptance signoff
