@@ -139,7 +139,10 @@ jobs:
           # October 8 iPhone footage exposed blue sky through staff/rear
           # hallway openings. Inspect those exact approaches after every
           # scene edit, not merely the polished teaching-wall cameras.
-          render_eye_checked 14-eye-staff-door 29,5.5,14.5 45.5,6.2,23.8
+          # The former oblique camera at x=29 looked through the tall
+          # cabinet, hiding half of the staff hallway. Aim directly into
+          # the EXISTING staff doorway from an unobstructed classroom point.
+          render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
           render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
