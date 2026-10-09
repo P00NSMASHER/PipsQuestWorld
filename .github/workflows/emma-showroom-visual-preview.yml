@@ -144,18 +144,25 @@ jobs:
           # the EXISTING staff doorway from an unobstructed classroom point.
           render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
           render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
+          # Additional diagnostic: photograph-verified sun, ten numbered clouds,
+          # and 26 surrounding letters are difficult to inspect from the fixed
+          # 12-reading-rug child-eye camera because a chair occludes the view.
+          # Keep camera 12 unchanged for before/after comparisons; this
+          # downward view is QA-only, never a Roblox gameplay camera.
+          # Slight horizontal offset avoids a perfectly vertical view matrix.
+          render_eye_checked 16-rug-overlook -24.5,13.6,12.6 -25,0.62,14
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
             echo "Reject blank exterior control; retrying independent exterior camera"
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 15=3_aerial+1_exterior+11_eye"
+          echo "VISUAL_FRAME_INVENTORY_PASS 16=3_aerial+1_exterior+11_eye+1_rug_diagnostic"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
