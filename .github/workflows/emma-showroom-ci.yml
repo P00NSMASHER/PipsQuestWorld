@@ -56,13 +56,20 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/native-rug-audit-venv"
           "$RUNNER_TEMP/native-rug-audit-venv/bin/python" -m pip install \
             --disable-pip-version-check --no-input --only-binary=:all: \
-            "numpy==2.3.5" "opencv-python-headless==4.13.0.92"
+            "numpy==2.3.5" "opencv-python-headless==4.13.0.92" "Pillow==11.3.0"
           "$RUNNER_TEMP/native-rug-audit-venv/bin/python" \
             school/emma-classroom/qa/audit_native_carpet_video.py --self-test
           "$RUNNER_TEMP/native-rug-audit-venv/bin/python" \
             school/emma-classroom/qa/audit_native_carpet_sequence.py --self-test
           echo "NATIVE_VIDEO_SYNTHETIC_CI_PASS private_media_not_accessed=true"
           echo "NATIVE_VIDEO_SEQUENCE_CI_PASS three_frames_reconciled=true"
+          # This exact-source synthetic pixel mutation test is fast, and
+          # must fail immediately if ANY one of 16 rays, any cloud, or a
+          # single book illustration can disappear without detection.
+          # It checks only invented images; no classroom/private video.
+          "$RUNNER_TEMP/native-rug-audit-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_artwork.py --self-test
+          echo "ARTWORK_ALL_16_RAYS_FAST_CI_PASS synthetic_only=true"
 
       - name: Audit last confirmed published Roblox preview without claiming candidate is live
         shell: bash
