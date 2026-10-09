@@ -4,12 +4,16 @@ This is an **offline, reviewer-guided screen**, not a replacement for a real Rob
 
 ## Versioned numeric receipt
 
-The current screening profile is **`rug-native-v2`**. It supersedes the
-original v1 pixel-count-only audit by requiring cloud ring distance and
-angular distribution around the verified sun. Historical v1 reports should
-retain their v1 profile label and should not be treated as directly
-comparable measurements, even when they identify the same dark/dot-like
-failure. A `REVIEW_REQUIRED` result from v2 still cannot approve a build.
+The current screening profile is **`rug-native-v3`**. It retains v2's
+cloud ring-distance and angular-distribution checks, and adds a **36-sector
+camera-coverage gate**. At least 83% of the expected sun-ray or cloud ring
+must lie within the reviewed polygon before missing shapes can be called a
+defect. Partly off-camera art is **INCONCLUSIVE**, not a false failure.
+Independently measurable carpet darkness can still fail even when cropped.
+
+Historical v1 and v2 receipts retain their own profile labels; v3's cropped
+view results must not be compared as if equivalent. Even a
+`REVIEW_REQUIRED` result cannot approve the game without native inspection.
 
 ## Running locally
 
@@ -39,6 +43,10 @@ The tool identifies the large central sun in that selected area and measures:
 - At least seven of twelve angular sectors must contain substantial cloud
   and sun-ray components; one clustered corner is not a ring. A sample with
   enough blobs but implausible geometry is **INCONCLUSIVE**, not accepted.
+- **Before calling artwork missing**, confirm at least 83% of 36 sampled
+  radial directions lie inside the user-reviewed carpet polygon and image
+  for the relevant ray or cloud ring. A cropped view is insufficient evidence
+  of missing shapes, though actual dark carpet pixels remain measurable.
   These are conservative screening heuristics, never an automatic approval.
 - Source-video SHA-256 to distinguish recordings. The video itself supplies **no proven Roblox source commit**.
 
@@ -65,8 +73,8 @@ The original `audit_native_carpet_video.py` screens a single frame and remains
 available for historical v2 receipts. Because the camera moves during Roblox
 walkthroughs, it is too easy to select a frame that is momentarily occluded.
 
-Use `audit_native_carpet_sequence.py` for new review recordings. It applies
-the *same* v2 pixel detector to three closely spaced frames, by default
+Use `audit_native_carpet_sequence.py` for new review recordings. Its
+`rug-native-sequence-v2` profile applies the *same* v3 pixel detector to three closely spaced frames, by default
 the manually reviewed time plus/minus **0.10 seconds**. It never uploads
 media, stores decoded images, changes Roblox or guesses the source commit.
 
@@ -98,9 +106,14 @@ Screening rules are intentionally conservative:
   (at most 30%). Significant camera pans or zooms explicitly invalidate
   consensus, even if two frames separately report the same defect.
 
-On the older private October 9 12:49 recording, frames **11.3, 11.4 and
-11.5 seconds** all independently show the dark rug, dot-like orange rays and
-missing white clouds: three of three FAIL, with repeated defects confirmed.
+The older private October 9 12:49 recording visually shows the dark rug,
+dot-like orange rays and absent cloud silhouettes. Historical v2 screens
+reported three concurrent defects. However, the reviewed 11.4-second region
+contains only **24 of 36 (67%)** cloud-ring sampling directions, so under v3
+that frame's *missing-cloud count* is **INCONCLUSIVE**: shapes outside the
+screen cannot be measured. Its dark-rug pixels remain independent evidence
+of failure. This is a new screening rule, not an assertion that the older
+recording contains properly visible clouds.
 Nearby frames taken while the phone camera turns are INCONCLUSIVE.
 The known failure is *not* evidence of the separately published version 72.
 
@@ -115,3 +128,13 @@ never video files.
 ## Release controls
 
 Use this test locally on any later iPhone footage. Attach only a plain numeric receipt to the PR after removing paths and identifying details. Release/progress-preview authorization is separate: protect study systems, keep 16 approved fallback desk/chair pairs, keep premium mesh activation disabled, and require native reviewer acceptance before describing a build as visually accepted. Never accept a green static/headless screenshot or this numeric screen as proof of true native rendering quality.
+
+## New version-74 video acceptance
+
+Version 74 is the latest confirmed owner-review publication recorded on
+October 9; no uploaded native iPhone walkthrough has been proven to belong
+to that version. Obtain a short steady clip including the **entire circular
+rug**, all numbered white clouds, sun rays and the alphabet border. If the
+view is cropped, moving or obscured by a chair, return **INCONCLUSIVE**
+instead of fabricating a positive or negative result. Script success never
+certifies reading legibility, photographic identity or mobile FPS.
