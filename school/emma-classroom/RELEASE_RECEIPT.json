@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Historical publication receipt only; does not assert the newest branch head is live or approve future publication",
+  "lastConfirmedPublication": {
+    "versionNumber": 67,
+    "sourceCommit": "1e67943a0394c4196f630cc5566a1f153ec401b5",
+    "workflowRunId": 37870907504,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37870907504",
+    "placeId": "114603280760042",
+    "universeId": "10769455759",
+    "mode": "classroom-progress-preview-only",
+    "visualAcceptance": "pending-real-device-review"
+  },
+  "productionFurnitureMeshesEnabled": false,
+  "nativeIphoneAcceptanceVerified": false,
+  "nextCandidatePolicy": "PR #339 head is an unpublished candidate unless a separate verified successful publish receipt establishes otherwise"
+}
