@@ -151,17 +151,20 @@ local function readingCorner(root:Instance)
     end
     local titles={"SPACE","PETS","OCEAN","STARS","GARDEN"}
     local colors={C.navy,C.coral,C.blue,C.lilac,C.leaf}
-    -- The actual eye-level render found five blank *white* rectangles. Their
-    -- page blocks protruded in front of the illustrated covers when approached
-    -- from the room (negative Z). Give every book a forward-facing cover and
-    -- original, readable-as-shapes artwork independent of SurfaceGui support.
+    -- Native iPhone v70 shows five large BLANK CREAM BACKS at 10-13 seconds.
+    -- The player is on the +Z side of this rack, so cover and illustrated
+    -- relief must face +world Z. Keep the book positions and white page blocks
+    -- but flip ONLY their original authored covers about the local Y axis.
+    -- The SurfaceGui must use Front (local -Z after the half-turn).
     for i=1,5 do
         local cf=CFrame.new(-21.75+(i-1)*1.17,3,14.75)*CFrame.Angles(math.rad(-15),0,0)
-        piece(group,"Storybook page edges",Vector3.new(1,1.5,.19),cf,C.cream,Enum.Material.SmoothPlastic,false)
+        local coverFacing=cf*CFrame.Angles(0,math.pi,0)
+        piece(group,"Storybook page edges",Vector3.new(1,1.5,.19),
+            cf,C.cream,Enum.Material.SmoothPlastic,false)
         local cover=piece(group,"Illustrated storybook cover",Vector3.new(1.1,1.64,.055),
-            cf*CFrame.new(0,0,-.15),colors[i],Enum.Material.SmoothPlastic,false)
-        printed(cover,titles[i],Enum.NormalId.Back,C.cream,colors[i])
-        local art=cf*CFrame.new(0,.11,-.214)
+            coverFacing*CFrame.new(0,0,-.15),colors[i],Enum.Material.SmoothPlastic,false)
+        printed(cover,titles[i],Enum.NormalId.Front,C.cream,colors[i])
+        local art=coverFacing*CFrame.new(0,.11,-.214)
         piece(group,"Storybook illustration backing",Vector3.new(.81,.85,.035),
             art,C.cream,Enum.Material.SmoothPlastic,false)
         if i==1 then
@@ -204,7 +207,8 @@ local function readingCorner(root:Instance)
                 art*CFrame.new(0,.18,-.08),C.golden,Enum.Material.SmoothPlastic)
         end
         piece(group,"Storybook title band",Vector3.new(.84,.18,.05),
-            cf*CFrame.new(0,-.64,-.224),C.navy,Enum.Material.SmoothPlastic,false)
+            coverFacing*CFrame.new(0,-.64,-.224),
+            C.navy,Enum.Material.SmoothPlastic,false)
         piece(group,"Book spine",Vector3.new(.09,1.64,.28),cf*CFrame.new(-.55,0,-.02),
             C.woodEdge,Enum.Material.SmoothPlastic,false)
     end

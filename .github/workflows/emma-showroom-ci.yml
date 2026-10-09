@@ -98,6 +98,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_lighting.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Validate storybook cover-facing in actual constructed Luau
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_storybook_facing.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

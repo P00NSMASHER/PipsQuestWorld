@@ -642,12 +642,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         label_face=y+float(anchor[7])/2
         gap=label_face-tallest
         cloud_face_gaps.append(gap)
-        assert .012<gap<.05, (
+        assert .035<gap<.075, (
             f"Cloud geometry obscures its own number label: gap={gap:.3f}"
         )
-        assert abs(float(body_matches[0][10])-.642)<.006 and (
-            abs(float(side_matches[0][10])-.649)<.006
-        ), "Photo-grounded cloud is no longer low-relief against carpet"
+        assert abs(float(body_matches[0][10])-.680)<.006 and (
+            abs(float(side_matches[0][10])-.690)<.006
+        ), "Native-visible cloud relief shifted from its supported rug surface"
+        assert all(.115<=float(v[7])<=.145 for v in body_matches+side_matches), (
+            "Native iPhone v70 invisible paper-thin cloud returned"
+        )
+        assert all(float(v[10])-float(v[7])/2>=.615
+                   for v in body_matches+side_matches), (
+            "Cloud relief is embedded beneath the alphabet rug"
+        )
     print(f"IPHONE_CLOUD_OCCLUSION_PASS clouds=10 lobes=30 "
           f"number_face_clearance={min(cloud_face_gaps):.3f} "
           "rectangular_number_backings_invisible=true")
@@ -944,6 +951,35 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Illustrated storybook cover"]==5, (
         "Removing speculative seating deleted the five face-out books"
     )
+    # v70 native iPhone 10-13s: the player saw five blank cream page backs.
+    # Layer all five colored covers/illustrations toward the real +Z aisle
+    # while keeping the physical white pages behind them (same book centers).
+    pages=sorted((r for r in lines if r[1]=="Storybook page edges"),
+                 key=lambda r:float(r[9]))
+    covers=sorted((r for r in lines if r[1]=="Illustrated storybook cover"),
+                  key=lambda r:float(r[9]))
+    illustrations=sorted((r for r in lines if r[1]=="Storybook illustration backing"),
+                         key=lambda r:float(r[9]))
+    bands=sorted((r for r in lines if r[1]=="Storybook title band"),
+                 key=lambda r:float(r[9]))
+    assert len(pages)==len(covers)==len(illustrations)==len(bands)==5, (
+        "Five recognizable physical library book covers lost"
+    )
+    for page,cover,illustration,band in zip(pages,covers,illustrations,bands):
+        assert abs(float(page[9])-float(cover[9]))<.03, (
+            "Book cover detached from its physical white pages"
+        )
+        assert .11<float(cover[11])-float(page[11])<.19 and (
+            .04<float(illustration[11])-float(cover[11])<.09
+        ), "Illustrated book cover is behind white page edges, blank on iPhone"
+        assert .05<float(band[11])-float(cover[11])<.11, (
+            "Storybook title band is hidden behind the pages"
+        )
+        assert -float(cover[23])>.94, (
+            "Book's FRONT normal does not face the positive-Z player aisle"
+        )
+    print("IPHONE_STORYBOOK_DEPTH_PASS covers=5 pages_behind=true "
+          "art_in_front=true labels_face_player=true same_shelf=true")
     carpet=only("Alphabet rug")
     assert carpet[3].endswith("Cylinder") and carpet[4].endswith("Fabric") and (
         abs(float(carpet[9])+25)<.03 and abs(float(carpet[11])-14)<.03
@@ -972,9 +1008,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ray_angles={round(math.atan2(float(r[11])-sun_pos[1],
                                  float(r[9])-sun_pos[0]),3) for r in sun_rays}
     assert len(ray_angles)==16, "Sunburst rays are duplicated or stacked"
-    assert all(abs(float(r[10])-.649)<.005 and (
-        world_span(r,1)<.035
-    ) for r in sun_rays), "Sunburst lifts off the photo-grounded carpet"
+    assert all(abs(float(r[10])-.685)<.005 and (
+        .115<=world_span(r,1)<=.125
+    ) for r in sun_rays), (
+        "Native v70 invisible, paper-thin sunburst returned"
+    )
+    assert all(float(r[10])-world_span(r,1)/2>=.615
+               for r in sun_rays), (
+        "Sunburst sinks beneath the carpet instead of resting on it"
+    )
+    print("IPHONE_NATIVE_RELIEF_GEOMETRY_PASS rays=16 "
+          "clouds=10 ray_thickness=.12 cloud_thickness=.12_to_.14 "
+          "no_added_parts=true")
     print("PHOTO_SUNBURST_DETAIL_PASS rays=16 ellipsoids=true "
           "palette=orange_gold radial_distribution=true")
     sun_outer_radius=max(

@@ -507,40 +507,45 @@ local function buildClassroomTexture(root: Instance)
         local angle=i*math.pi/8
         local broad=i%2==0
         local r=broad and 1.31 or 1.52
-        local size=broad and Vector3.new(.82,.027,.34)
-            or Vector3.new(.58,.025,.25)
-        ball(root,"Photo rug sun ray",size,
-            CFrame.new(-25+math.cos(angle)*r,.649,14+math.sin(angle)*r)*
+        -- Native iPhone v70 (12:10 recording, 10-13 seconds) exposed only
+        -- the yellow disc: these extremely flattened 0.025-stud Ball shapes
+        -- vanished against textured Fabric on mobile. Give each existing
+        -- petal a shallow but stable 0.12-stud relief, resting on the rug.
+        -- Retain 16 Parts, all world positions, colors and radial layout.
+        local size=broad and Vector3.new(.82,.12,.34)
+            or Vector3.new(.58,.12,.25)
+        local ray=ball(root,"Photo rug sun ray",size,
+            CFrame.new(-25+math.cos(angle)*r,.685,14+math.sin(angle)*r)*
                 CFrame.Angles(0,-angle,0),
             broad and Color3.fromRGB(255,211,84)
                 or Color3.fromRGB(239,140,52),
             Enum.Material.SmoothPlastic,false)
+        ray.CastShadow=false
     end
     for i=1,10 do
         local angle=i*math.pi/5
         local x=-25+math.cos(angle)*3.62
         local z=14+math.sin(angle)*3.62
-        -- Three overlapping, low-relief, printed-carpet cloud lobes:
-        -- one soft middle and two small asymmetrical shoulders. The 2026-10-09
-        -- iPhone capture showed isolated gray discs instead of the scalloped
-        -- white clouds in IMG_2904/2905. Ten new pieces total, no colliders.
-        local cloudTint=Color3.fromRGB(247,249,241)
+        -- Native iPhone v70 showed NO white numbered clouds at child height,
+        -- though the static scene's paper-thin (.032/.038) Ball test passed.
+        -- Keep the three original lobes and 10 transparent number SurfaceGuis,
+        -- but provide stable low-relief geometry above the Fabric carpet.
+        local cloudTint=Color3.fromRGB(249,249,241)
         local body=ball(root,"Photo rug number cloud body",
-            Vector3.new(1.14,.032,.72),CFrame.new(x,.642,z),
+            Vector3.new(1.14,.12,.72),CFrame.new(x,.680,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
             local lobe=ball(root,"Photo rug number cloud lobe",
-                Vector3.new(.82,.038,.84),
-                CFrame.new(x+side*.35,.649,z+side*.055),
+                Vector3.new(.82,.14,.84),
+                CFrame.new(x+side*.35,.690,z+side*.055),
                 cloudTint,Enum.Material.SmoothPlastic,false)
             lobe.CastShadow=false
         end
-        -- A world-space SurfaceGui still obeys 3D occlusion. The top of the
-        -- transparent number anchor must be ABOVE all three lobes so it is
-        -- not hidden by its own cloud at low child-eye camera angles.
+        -- Numeric text anchor remains fully invisible; raise its top above
+        -- the newly visible 0.14-stud relief so the GUI cannot be self-occluded.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.685,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.800,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Transparency=1
         local numeral=surfaceText(numeralAnchor,tostring(i),
