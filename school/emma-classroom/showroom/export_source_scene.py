@@ -358,28 +358,54 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert float(label[11])>26.0, "Cubbie sign protrudes into the classroom"
     print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
           f"material=Fabric handle_mount_gap=.07 sign_lower_edge={lower_edge:.2f}")
-    # Reading-corner clearance is measured from constructed source geometry.
-    # A blue pouf previously intersected the book rack and a rack leg.
+    # Reading-corner clearance comes from ACTUAL Luau-created geometry.
+    # Cylinder Parts are modeled along their local X axis and then rotated:
+    # blindly reading Size.X as a world-space width underestimates a rotated
+    # upholstered pouf by almost 3 studs. Project the complete transform.
+    def world_span(entry, axis):
+        size=[float(v) for v in entry[6:9]]
+        matrix=[float(v) for v in entry[15:24]]
+        return sum(abs(matrix[axis*3+i])*size[i] for i in range(3))
+
     poufs=[v for v in lines if v[1]=="Corduroy floor pouf"]
     cushions=[v for v in lines if v[1]=="Soft seat cushion"]
     rack=only("Child-height book display shelf")
     assert len(poufs)==2 and len(cushions)==2, "Reading seating count changed"
-    rack_x=float(rack[9]); rack_width=float(rack[6])
+    assert all(p[3].endswith("Cylinder") and p[4].endswith("Fabric")
+               for p in poufs), "Upholstered drum poufs reverted to balloon shapes"
+    assert all(c[3].endswith("Ball") and c[4].endswith("Fabric")
+               for c in cushions), "Soft seating lost its fabric cushion crown"
+    rack_x=float(rack[9]);rack_width=world_span(rack,0)
     min_clearance=min(abs(float(p[9])-rack_x)
-                      -(float(p[6])+rack_width)/2 for p in poufs)
+                      -(world_span(p,0)+rack_width)/2 for p in poufs)
     assert min_clearance >= .15, (
         f"Reading pouf intersects child book display rack: x_gap={min_clearance:.3f}"
     )
     seat_gap=abs(float(poufs[0][9])-float(poufs[1][9])) - (
-        float(poufs[0][6])+float(poufs[1][6]))/2
+        world_span(poufs[0],0)+world_span(poufs[1],0))/2
     assert seat_gap >= .2, f"Reading poufs intersect: x_gap={seat_gap:.3f}"
-    assert all(abs(float(p[9])-float(c[9])) < .02 for p,c in zip(
-        sorted(poufs,key=lambda r:float(r[9])),
-        sorted(cushions,key=lambda r:float(r[9])))), (
+    pairs=list(zip(sorted(poufs,key=lambda r:float(r[9])),
+                   sorted(cushions,key=lambda r:float(r[9]))))
+    assert all(abs(float(p[9])-float(c[9])) < .02 for p,c in pairs), (
         "Cushions no longer share pouf seat center"
     )
+    for base,cushion in pairs:
+        lower=float(base[10])-world_span(base,1)/2
+        base_top=float(base[10])+world_span(base,1)/2
+        cushion_bottom=float(cushion[10])-world_span(cushion,1)/2
+        cushion_top=float(cushion[10])+world_span(cushion,1)/2
+        assert .50 <= lower <= .62, (
+            f"Fabric ottoman floats above or sinks beneath reading rug: {lower:.3f}"
+        )
+        assert cushion_bottom <= base_top+.02, (
+            f"Soft pouf cushion detached from upholstered base: {cushion_bottom:.3f}"
+        )
+        assert 1.55 <= cushion_top <= 1.80, (
+            f"Reading seating no longer matches child chair height: {cushion_top:.3f}"
+        )
     print(f"READING_NOOK_CLEARANCE_PASS pouf_to_rack={min_clearance:.2f} "
-          f"seat_to_seat={seat_gap:.2f} chairs=2")
+          f"seat_to_seat={seat_gap:.2f} chairs=2 lower_child_seats=true "
+          "rotated_world_footprints=true")
     book_spines=[r for r in lines if r[1]=="Reading book spine"]
     book_labels=[r for r in lines if r[1]=="Book spine label"]
     assert len(book_spines)==40 and len(book_labels)==40, (
