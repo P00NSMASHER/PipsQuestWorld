@@ -263,13 +263,8 @@ local function learningWall(root:Instance)
             CFrame.new(-32+(i-1)*3.2,16.5,26.32)*CFrame.Angles(0,0,math.rad(i%2==0 and 12 or -12)),
             ({C.mint,C.coral,C.lilac,C.golden})[i%4+1],Enum.Material.Fabric,false)
     end
-    for _,z in ipairs({-20,6}) do
-        for i=0,2 do
-            local wash=piece(group,"Soft oak floor sunlight",Vector3.new(8,.008,1.05),
-                CFrame.new(-29+i*6,.527,z+2+i*1.3),Color3.fromRGB(255,243,211),Enum.Material.SmoothPlastic,false)
-            wash.Transparency=.975;wash.CastShadow=false
-        end
-    end
+    -- Do not fake sunlit plank highlights with paper-thin overlays. Natural
+    -- window lighting supplies the floor response without z-fighting strips.
 end
 
 -- Frame the actual teaching board instead of adding a giant UI overlay.
