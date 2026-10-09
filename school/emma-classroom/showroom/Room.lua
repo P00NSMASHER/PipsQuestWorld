@@ -511,6 +511,24 @@ local function buildWindows(root: Instance)
             part(root,"Window wood vertical frame",Vector3.new(.5,9.5,.45),CFrame.new(-36.5,9,z+dz),P.blue,Enum.Material.Wood,false)
         end
         part(root,"Deep window sill",Vector3.new(1.8,.35,15.5),CFrame.new(-35.8,4.4,z),P.blue,Enum.Material.Wood,false)
+        -- Shallow internal returns make the glazing sit inside a believable
+        -- thick school wall instead of appearing pasted onto one flat plane.
+        for _,side in ipairs({-1,1}) do
+            part(root,"Window painted plaster reveal",
+                Vector3.new(.76,8.85,.18),
+                CFrame.new(-36.05,9,z+side*7.77),
+                Color3.fromRGB(226,218,199),Enum.Material.SmoothPlastic,false)
+            part(root,"Window timber inner stop",
+                Vector3.new(.19,8.85,.17),
+                CFrame.new(-35.61,9,z+side*7.64),
+                Color3.fromRGB(94,116,147),Enum.Material.Wood,false)
+        end
+        part(root,"Window interior head return",
+            Vector3.new(.76,.20,15.38),CFrame.new(-36.03,13.62,z),
+            Color3.fromRGB(224,215,195),Enum.Material.SmoothPlastic,false)
+        part(root,"Window sill rounded shadow line",
+            Vector3.new(1.36,.055,15.22),CFrame.new(-35.71,4.64,z),
+            Color3.fromRGB(104,91,77),Enum.Material.Wood,false)
         local glass=part(root,"Window glass",Vector3.new(.22,8.4,14.2),CFrame.new(-36.18,9,z),Color3.fromRGB(213,233,238),Enum.Material.Glass,false);glass.Transparency=.35
         for _,dz in ipairs({-4.6,0,4.6}) do part(root,"Window vertical mullion",Vector3.new(.28,8.5,.24),CFrame.new(-36.03,9,z+dz),P.blue,Enum.Material.Wood,false) end
         part(root,"Window horizontal mullion",Vector3.new(.3,.30,14.2),CFrame.new(-36.02,9,z),P.blue,Enum.Material.Wood,false)
@@ -635,6 +653,63 @@ local function buildTeacherDesk(root: Instance)
 
 end
 
+-- Teacher's annotated weekly board, placed between the Smartboard and cross.
+-- All small paper layers are noncolliding and sit on the room-facing cork side.
+-- The lesson print is atmospheric, not connected to any study authority.
+local function buildTeacherPlanningWall(root: Instance)
+    local x,y,z=22.65,8.90,-33.95
+    part(root,"Teacher planning board shallow oak back",
+        Vector3.new(9.4,6.4,.16),CFrame.new(x,y,z-.17),
+        Color3.fromRGB(120,84,57),Enum.Material.Wood,false)
+    part(root,"Teacher planning board woven cork",
+        Vector3.new(8.90,5.94,.08),CFrame.new(x,y,z+.02),
+        Color3.fromRGB(171,133,96),Enum.Material.Fabric,false)
+    for _,dy in ipairs({-3.08,3.08}) do
+        part(root,"Teacher planning board hardwood trim",
+            Vector3.new(9.45,.25,.26),CFrame.new(x,y+dy,z+.14),
+            Color3.fromRGB(102,70,48),Enum.Material.Wood,false)
+    end
+    for _,dx in ipairs({-4.57,4.57}) do
+        part(root,"Teacher planning board hardwood stile",
+            Vector3.new(.24,6.22,.26),CFrame.new(x+dx,y,z+.14),
+            Color3.fromRGB(102,70,48),Enum.Material.Wood,false)
+    end
+    local heading=part(root,"Teacher planning board header",
+        Vector3.new(7.75,.55,.055),CFrame.new(x,y+2.35,z+.12),
+        P.blue,Enum.Material.SmoothPlastic,false)
+    surfaceText(heading,"THIS WEEK",Enum.NormalId.Back,P.cream,heading.Color)
+    local paperTints={
+        Color3.fromRGB(248,243,224),
+        Color3.fromRGB(226,234,231),
+        Color3.fromRGB(242,225,218),
+    }
+    for i,dx in ipairs({-2.75,0,2.75}) do
+        local yOffset=(i==2) and -.12 or .08
+        local sheet=part(root,"Teacher annotated planning sheet",
+            Vector3.new(2.23,3.10,.045),CFrame.new(x+dx,y-.36+yOffset,z+.17),
+            paperTints[i],Enum.Material.SmoothPlastic,false)
+        part(root,"Teacher planning sheet colored tab",
+            Vector3.new(1.72,.22,.035),
+            sheet.CFrame*CFrame.new(0,1.01,.04),
+            ({P.blue,P.green,Color3.fromRGB(178,106,85)})[i],
+            Enum.Material.SmoothPlastic,false)
+        for j=1,4 do
+            part(root,"Teacher handwritten planner line",
+                Vector3.new(1.60-(j%2)*.22,.032,.03),
+                sheet.CFrame*CFrame.new(-.07,.68-j*.45,.052),
+                Color3.fromRGB(142,153,151),Enum.Material.SmoothPlastic,false)
+        end
+        ball(root,"Teacher planner brass pin",
+            Vector3.new(.17,.17,.09),
+            sheet.CFrame*CFrame.new(0,1.48,.10),
+            Color3.fromRGB(190,158,88),Enum.Material.Metal,false)
+    end
+    -- Fine rail below the papers creates a physical shadow; not a walk collider.
+    part(root,"Teacher planner chalk ledge",
+        Vector3.new(8.15,.12,.45),CFrame.new(x,y-3.18,z+.22),
+        Color3.fromRGB(139,99,69),Enum.Material.Wood,false)
+end
+
 local function buildBackDoorAndHall(root: Instance)
     -- Warm wood classroom doorway with tiny photo-inspired corridor beyond it.
     -- Existing lower back wall had an eighteen-stud opening and huge tilted
@@ -679,6 +754,13 @@ local function buildBackDoorAndHall(root: Instance)
     sign(root,"Welcome over door","EMMA'S CLASSROOM",Vector3.new(10.7,1.20,.16),
         CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
     part(root,"Hall floor",Vector3.new(18,.5,23),CFrame.new(0,.25,38),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    part(root,"Classroom doorway brass threshold",
+        Vector3.new(10.02,.045,.24),CFrame.new(0,.556,26.65),
+        Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
+    part(root,"Corridor skirting at left wall",
+        Vector3.new(.16,.55,22.2),CFrame.new(-8.41,.43,38.2),P.blue,Enum.Material.Wood,false)
+    part(root,"Corridor skirting at right wall",
+        Vector3.new(.16,.55,22.2),CFrame.new(8.41,.43,38.2),P.blue,Enum.Material.Wood,false)
     part(root,"Hall left wall",Vector3.new(1,13,23),CFrame.new(-9,6.5,38),P.blueSoft)
     part(root,"Hall right wall",Vector3.new(1,13,23),CFrame.new(9,6.5,38),P.blueSoft)
     part(root,"Hall left brick",Vector3.new(1.1,4.3,23),CFrame.new(-8.5,2.15,38),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
@@ -710,6 +792,9 @@ local function buildTeacherEntry(root: Instance)
     local door=part(root,"Open staff classroom door",Vector3.new(.55,10,6.6),CFrame.new(35.9,5.3,20.2)*CFrame.Angles(0,math.rad(58),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
     local glass=part(root,"Staff door glass",Vector3.new(.18,4.7,3.1),door.CFrame*CFrame.new(-.35,1.6,0),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.28
     part(root,"Side hall floor",Vector3.new(18,.5,20),CFrame.new(45.5,.25,15.5),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    part(root,"Staff doorway brass threshold",
+        Vector3.new(.24,.045,13.35),CFrame.new(37.10,.556,15.5),
+        Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
     part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
@@ -781,6 +866,24 @@ function World.build()
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
     for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
     for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
+    -- Individually toned acoustic-tile insets stop the roof reading as one
+    -- giant blank slab. They finish 0.02 studs below the host ceiling,
+    -- above the existing suspended metal grid, without physical collisions.
+    local tileShades={
+        Color3.fromRGB(236,236,229),
+        Color3.fromRGB(243,241,233),
+        Color3.fromRGB(239,240,235),
+        Color3.fromRGB(234,236,231),
+    }
+    for ix,x in ipairs({-30,-18,-6,6,18,30}) do
+        for iz,z in ipairs({-28,-16,-4,8,20}) do
+            local tile=part(root,"Acoustic ceiling inset tile",
+                Vector3.new(11.72,.025,11.72),CFrame.new(x,17.735,z),
+                tileShades[(ix+iz)%#tileShades+1],
+                Enum.Material.Fabric,false)
+            tile.CastShadow=false
+        end
+    end
     -- Preserve the navy finish without running wood THROUGH an open door.
     -- The original one-piece 61-stud right-hand rail was plainly suspended
     -- across the staff doorway at player eye height in the phone recording.
@@ -798,6 +901,7 @@ function World.build()
     buildFrontWall(root)
     buildRightWall(root)
     buildTeacherDesk(root)
+    buildTeacherPlanningWall(root)
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
     buildClassroomTexture(root)
