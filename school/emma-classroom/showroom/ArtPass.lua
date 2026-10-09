@@ -96,19 +96,29 @@ end
 
 local function readingCorner(root:Instance)
     local group=makeGroup(root,"Cozy story corner")
-    -- Both poufs stay on the same reading rug. The second had overlapped
-    -- the book-display rack and its left leg by about 1.7 studs; shift only
-    -- its x-position to restore a visible .3-stud furniture clearance.
+    -- Original eye-height renders showed two oversized stacked ellipsoids:
+    -- the reading "seats" were taller than the actual child-scale chairs.
+    -- A low upholstered cylindrical ottoman with a softly crowned top has
+    -- a recognizable manufactured silhouette without adding meshes or Parts.
+    -- Keep BOTH original centers and all noncollision behavior unchanged.
     local seats={{x=-29.2,z=13,c=C.coral},{x=-24.7,z=15.1,c=C.blue}}
     for _,v in ipairs(seats) do
-        orb(group,"Corduroy floor pouf",Vector3.new(4.1,1.20,3.6),CFrame.new(v.x,1.14,v.z),v.c,Enum.Material.Fabric)
-        orb(group,"Soft seat cushion",Vector3.new(3.35,.68,2.90),CFrame.new(v.x,1.83,v.z-.12),
-            v.c:Lerp(C.cream,.21),Enum.Material.Fabric)
-        disk(group,"Soft fabric button",.31,.055,CFrame.new(v.x,2.19,v.z)*CFrame.Angles(0,0,math.pi/2),
-            C.cream,Enum.Material.Fabric)
+        local vertical=CFrame.Angles(0,0,math.pi/2)
+        disk(group,"Corduroy floor pouf",3.75,.82,
+            CFrame.new(v.x,.97,v.z)*vertical,
+            v.c:Lerp(C.cream,.08),Enum.Material.Fabric)
+        orb(group,"Soft seat cushion",Vector3.new(3.30,.36,3.12),
+            CFrame.new(v.x,1.48,v.z),
+            v.c:Lerp(C.cream,.18),Enum.Material.Fabric)
+        disk(group,"Soft fabric button",.31,.055,
+            CFrame.new(v.x,1.68,v.z)*vertical,C.cream,Enum.Material.Fabric)
         for _,side in ipairs({-1,1}) do
-            piece(group,"Fabric seat piping",Vector3.new(.075,.085,2.2),CFrame.new(v.x+side*1.60,1.26,v.z),
-                C.cream,Enum.Material.Fabric,false)
+            -- Two subtle vertical upholstery seams follow the round front.
+            -- Unlike the former 2.2-stud straight side piping, these sit on
+            -- the upholstered skirt rather than projecting into the aisle.
+            piece(group,"Fabric seat piping",Vector3.new(.065,.50,.06),
+                CFrame.new(v.x+side*1.25,.99,v.z-1.38),
+                v.c:Lerp(C.cream,.31),Enum.Material.Fabric,false)
         end
     end
     piece(group,"Child-height book display shelf",Vector3.new(5.9,.24,2.2),CFrame.new(-19.4,2,15),C.wood,Enum.Material.Wood,false)
