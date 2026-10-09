@@ -137,6 +137,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_native_rug_primitives.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Reject native flattened-Ball foliage and collidable tree artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_native_foliage_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

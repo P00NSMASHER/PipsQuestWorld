@@ -23,6 +23,16 @@ end
 local function orb(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,material:Enum.Material?):Part
     local p=piece(parent,name,size,cf,color,material,false);p.Shape=Enum.PartType.Ball;return p
 end
+-- Unlike flattened Ball Parts, the horizontal (local-X-axis) Cylinder keeps
+-- full Y/Z crown dimensions in native Roblox. It faces across the window,
+-- where the existing YZ silhouettes and natural overlap are preserved.
+-- Reuse a single Part per foliage section; no mesh IDs or additional objects.
+local function canopy(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3):Part
+    local p=piece(parent,name,size,cf,color,Enum.Material.Grass,false)
+    p.Shape=Enum.PartType.Cylinder
+    p.CastShadow=false
+    return p
+end
 local function disk(parent:Instance,name:string,diameter:number,length:number,cf:CFrame,color:Color3,material:Enum.Material?):Part
     local p=piece(parent,name,Vector3.new(length,diameter,diameter),cf,color,material,false)
     p.Shape=Enum.PartType.Cylinder;return p
@@ -49,8 +59,9 @@ local function windowNeighborhood(root:Instance)
     -- Reference photos IMG_2906/2910 look out over trees and a leafy
     -- green horizon, NOT four nearby apartment facades with repeated windows.
     -- Author foliage from scratch; do not embed reference photos or assets.
-    -- Flattened, overlapping irregular crowns create foliage depth without
-    -- four immense perfect spherical trees. Every part stays beyond the glass.
+    -- Native-v72 rug history showed that flattened Ball Parts can collapse
+    -- visually to dots on iPhone. Use irregular overlapping circular cylinder
+    -- faces, still behind the window glass, rather than flattened Ball Parts.
     local distantLeaves={
         Color3.fromRGB(74,121,82),
         Color3.fromRGB(91,138,89),
@@ -90,13 +101,11 @@ local function windowNeighborhood(root:Instance)
                 v[2]*style.height+style.rise+heightShift,
                 v[3]*style.spread+style.shift+stagger
             )*CFrame.Angles(lean,math.rad((k*7+i*11)%29-14),0)
-            local foliage=orb(world,"Photo exterior irregular foliage",
+            canopy(world,"Photo exterior irregular foliage",
                 Vector3.new(v[4],v[5]*(.94+(k%3)*.075),
                     v[6]*(.87+(i%3)*.085)),
                 cf,
-                distantLeaves[(i+k*2-2)%#distantLeaves+1],
-                Enum.Material.Grass)
-            foliage.CastShadow=false
+                distantLeaves[(i+k*2-2)%#distantLeaves+1])
         end
     end
     for i,z in ipairs({-28.5,-9.5,16.5}) do
@@ -126,11 +135,10 @@ local function windowNeighborhood(root:Instance)
                 v[1]-.06, v[2]+math.cos(k*1.37+i)*.16,
                 v[3]+math.sin(k*1.8+i*.9)*.24
             )*CFrame.Angles(lean,math.rad((k*13+i*7)%25-12),0)
-            local crown=orb(world,"Irregular exterior leaf cluster",
+            canopy(world,"Irregular exterior leaf cluster",
                 Vector3.new(v[4],v[5]*(.92+(i%3)*.07),
                     v[6]*(.89+(k%3)*.08)),
-                cf,shades[(k+i-2)%#shades+1],Enum.Material.Grass)
-            crown.CastShadow=false
+                cf,shades[(k+i-2)%#shades+1])
         end
     end
     -- The genuine photographs show muted sky and vegetation rather than

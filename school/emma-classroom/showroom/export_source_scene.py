@@ -306,10 +306,17 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(outdoor_trees)==4 and len(outdoor_canopies)==20, (
         "Four depth-layered green trees missing from photo-grounded windows"
     )
+    # Inclined leaf discs can project farther toward the glass than their
+    # unrotated X thickness suggests. Test full world-axis extent from the
+    # constructed CFrame instead of treating Size.X as an axis-aligned bound.
+    def projected_x_halfspan(item):
+        size=[float(v) for v in item[6:9]]
+        matrix=[float(v) for v in item[15:24]]
+        return sum(abs(matrix[i])*size[i] for i in range(3))/2
     for item in outdoor_trees+outdoor_canopies:
-        x=float(item[9]);sx=float(item[6])
-        assert -38.8<x< -37.9 and x+sx/2 < -36.60, (
-            "Exterior greenery crosses the classroom glazing into the room"
+        x=float(item[9])
+        assert -38.8<x< -37.9 and x+projected_x_halfspan(item)<-36.60, (
+            "Rotated exterior greenery crosses the classroom glazing"
         )
         assert 4.0<float(item[10])<12.3, (
             "Exterior foliage no longer belongs in the view through windows"
@@ -329,8 +336,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # crowns. Reject uniform canopy stamps from the actual Luau scene.
     near_leaves=actual_parts("Irregular exterior leaf cluster")
     crowns=outdoor_canopies+near_leaves
-    assert len(crowns)==38 and all(p[3].endswith("Ball") for p in crowns), (
-        "Layered 38-part school-window treeline lost its foliage"
+    assert len(crowns)==38 and all(p[3].endswith("Cylinder") for p in crowns), (
+        "Native-v72 flattened Ball foliage returned or 38 crown Parts changed"
+    )
+    assert all(.70<float(p[6])<1.50 and float(p[7])>1.28
+               and float(p[8])>1.25 for p in crowns), (
+        "Window tree crowns shrank to native phone dots"
+    )
+    assert all(float(p[9])+projected_x_halfspan(p)<-36.60 for p in crowns), (
+        "Native-safe leaf discs project through the classroom window"
     )
     assert all(p[4].endswith("Grass") for p in crowns), (
         "Foliage lost the original grass material"
@@ -358,7 +372,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Exterior foliage no longer branches from its trunk"
         )
     print("PHOTO_FOLIAGE_VARIETY_PASS trees=7 lobes=38 "
-          "tilted_crowns="+str(tilted)
+          "native_cylinders=true"
+          " tilted_crowns="+str(tilted)
           +" unique_heights="+str(len(heights))
           +" unique_profiles="+str(len(profiles))
           +" no_new_parts=true behind_glass=true",flush=True)
