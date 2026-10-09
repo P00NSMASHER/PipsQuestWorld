@@ -578,7 +578,10 @@ local function buildWindows(root: Instance)
             end
         end
         part(root,"Radiator body",Vector3.new(1.35,2.6,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(222,221,207),Enum.Material.Metal,false)
-        for rz=-5,5,.5 do part(root,"Radiator fin",Vector3.new(1.48,2.7,.18),CFrame.new(-34.48,1.75,z+rz),Color3.fromRGB(201,204,196),Enum.Material.Metal,false) end
+        -- Ten widely spaced stamped-metal fins per radiator preserve the body
+        -- silhouette while leaving room for higher-impact bookcover details.
+        -- Fewer tiny individual Parts improves mobile replication/draw work.
+        for rz=-4.95,4.95,1.1 do part(root,"Radiator fin",Vector3.new(1.48,2.7,.18),CFrame.new(-34.48,1.75,z+rz),Color3.fromRGB(201,204,196),Enum.Material.Metal,false) end
     end
     -- Warm sunlight washes the front-left classroom corner.
     local sunAnchor=part(root,"Window sun anchor",Vector3.new(.3,.3,.3),CFrame.new(-34,10,-10),Color3.new(1,1,1),Enum.Material.Neon,false);sunAnchor.Transparency=1
