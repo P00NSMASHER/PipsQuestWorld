@@ -204,6 +204,15 @@ def inspect(blockers: list[Blocker]) -> dict:
     }
 
 
+def assert_no_mobile_stand_colliders(rows: list[list[str]]) -> None:
+    offenders=sorted({row[1] for row in rows
+                      if len(row)>1 and row[1].startswith("Mobile smartboard ")})
+    assert not offenders, (
+        "Photo-only Smartboard stand must remain noncolliding: "
+        + ", ".join(offenders)
+    )
+
+
 def get_source_blockers(luau: str) -> list[Blocker]:
     with tempfile.TemporaryDirectory(prefix="abvm-nav-") as folder:
         path=Path(folder)/"room.lua"
@@ -218,6 +227,9 @@ def get_source_blockers(luau: str) -> list[Blocker]:
         "Collision probe lost rows or construction never completed"
     )
     assert 50 < len(rows) < 2000, "Unexpected collider count: "+str(len(rows))
+    # Source construction must never promote photo-only wheeled stand parts
+    # into physical walkway colliders, even when six broad routes still pass.
+    assert_no_mobile_stand_colliders(rows)
     return as_blockers(rows)
 
 
@@ -237,7 +249,16 @@ def self_test():
     except AssertionError as e:
         assert "BLOCKED_SPAWN" in str(e)
     assert Grid([]).connected(START)[0], "Empty room must remain traversable"
-    print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, open space connects)")
+    assert_no_mobile_stand_colliders([flat,tall])
+    try:
+        assert_no_mobile_stand_colliders([
+            ["NAV","Mobile smartboard caster",*flat[2:]]
+        ])
+        raise AssertionError("Colliding rolling Smartboard test was accepted")
+    except AssertionError as e:
+        assert "noncolliding" in str(e)
+    print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, "
+          "open space connects, mobile Smartboard cannot collide)")
 
 
 def main():
