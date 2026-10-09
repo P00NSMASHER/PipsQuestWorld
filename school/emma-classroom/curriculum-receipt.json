@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
   "sourceRepository": "P00NSMASHER/abvmschoolstarworld",
-  "sourceCommit": "377c8e831d77757c1c4773e7c00b9ae7555b9ee2",
-  "contentSha256": "856b28978ee63a4bc7ac1e2ae6c7dda18a8ef287213eba9464179cc0e16ddbb6",
-  "imported": 357,
+  "sourceCommit": "1fe913b4ec6a3e6efc5bb4fb035da3ab0b1c1881",
+  "contentSha256": "77f286a051867e00b51522667c0f0c290ca6fd0df7f34170756f4791f2c5a632",
+  "imported": 372,
   "tiers": {
-    "current": 134,
+    "current": 149,
     "archive": 65,
     "star-fallback": 158
   },
@@ -21,7 +21,7 @@
       "id": "test-2026-10-09-spelling-short-i-long-i-handwriting",
       "label": "Spelling (short i / long i) / Handwriting",
       "date": "2026-10-09",
-      "count": 9,
+      "count": 24,
       "supported": true
     },
     {
