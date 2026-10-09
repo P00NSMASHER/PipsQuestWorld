@@ -1,12 +1,13 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-major-classroom-visual-upgrade-and-iphone-review-2026-10-09
+reaffirmed-authorization: user-delegated-purple-corner-chair-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 9a2617709d8e07f6b7a8b4bbf6a5605bae39e891
-notice: Owner explicitly said classroom is only halfway to desired quality; publish photograph-guided major oak cabinetry, chair sculpt, metal desk runners, and matte black interactive board for native iPhone visual feedback
-scope: exact classroom-only Rojo project with 16 original desks, chair collision preserved, 12 cubby bins, 40 book spines, six classroom light fixtures, no education runtime
-production-furniture-meshes: disabled until real native visual/collision and mobile performance approval
-schoolwork-and-progress: no writes, no imports, no curriculum or student progress changes
-release-status: OWNER REVIEW PREVIEW ONLY; no final visual acceptance or PR merge
+source-parent-sha: 1c4e124e4edeb51507ccf1274b60dd011b3edbc1
+notice: Emma directly reported missing purple chair in classroom corner; publish one separately named violet chair by rear-left window and storage wall for actual iPhone inspection
+scope: exact parent classroom-only Rojo source; one purple corner chair and all 16 approved student desk-chair pairs; preserve camera, rug, educational isolation
+photo-evidence: chair exists by child's report, exact model and location provisional; no user photos or identity replicated
+production-furniture-meshes: disabled pending native visual and collision review
+schoolwork-and-progress: unchanged, no imports, no scoring, no curriculum changes
+release-status: owner progress-preview only; NOT final native visual acceptance; keep PR draft
