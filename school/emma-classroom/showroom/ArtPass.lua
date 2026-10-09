@@ -267,12 +267,46 @@ local function learningWall(root:Instance)
         orb(group,"Jobs board pushpin",Vector3.new(.13,.13,.13),
             CFrame.new(36.04,12.1-(i-1)*1.56,-34.2),C.brass,Enum.Material.Metal)
     end
-    -- Avoid putting number cards directly over the framed student artwork.
-    for i=1,9 do
-        piece(group,"Hanging pastel bunting",Vector3.new(2.2,1.3,.08),
-            CFrame.new(-32+(i-1)*3.2,16.5,26.32)*CFrame.Angles(0,0,math.rad(i%2==0 and 12 or -12)),
-            ({C.mint,C.coral,C.lilac,C.golden})[i%4+1],Enum.Material.Fabric,false)
+    -- The supplied school photos show framed *shape flashcards* and a
+    -- long 0-120 counting strip above substantial dark-wood cabinets.
+    -- Replace the nine generic bunting pieces in their EXISTING positions;
+    -- no photos, children's faces/names or temporary cheer props ship here.
+    local shapes={"CIRCLE","OVAL","TRIANGLE","SQUARE","RECTANGLE",
+        "DIAMOND","PENTAGON","HEXAGON","STAR"}
+    local cardColors={C.mint,C.coral,C.lilac,C.golden,C.blue}
+    for i,name in ipairs(shapes) do
+        local x=-32+(i-1)*3.2
+        local tint=cardColors[(i-1)%#cardColors+1]
+        local card=piece(group,"Photo-guided wall shape card",
+            Vector3.new(2.2,1.3,.08),CFrame.new(x,16.5,26.32),
+            tint,Enum.Material.SmoothPlastic,false)
+        printed(card,name,Enum.NormalId.Front,C.ink,tint)
+        local iconSize=({Vector3.new(.73,.73,.10),Vector3.new(.93,.60,.10),
+            Vector3.new(.72,.80,.08),Vector3.new(.73,.73,.08),
+            Vector3.new(.96,.51,.08),Vector3.new(.75,.75,.08),
+            Vector3.new(.70,.72,.08),Vector3.new(.70,.70,.08),
+            Vector3.new(.69,.75,.08)})[i]
+        -- One low-relief icon per card keeps the geometric reference visible
+        -- to independent renders, which do not reproduce SurfaceGui labels.
+        local cf=CFrame.new(x,16.65,26.22)
+        if i==1 or i==2 then
+            orb(group,"Photo-guided shape icon",iconSize,cf,C.cream,
+                Enum.Material.SmoothPlastic)
+        else
+            piece(group,"Photo-guided shape icon",iconSize,
+                cf*CFrame.Angles(0,0,i==6 and math.rad(45) or 0),
+                C.cream,Enum.Material.SmoothPlastic,false)
+        end
     end
+    local numberLine=piece(group,"Photo-guided cabinet counting strip",
+        Vector3.new(25.6,.86,.10),CFrame.new(20.2,14.55,26.24),
+        Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
+    printed(numberLine,"0  10  20  30  40  50  60  70  80  90  100  110  120",
+        Enum.NormalId.Front,C.navy,numberLine.Color)
+    piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
+        CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
+    piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),
+        CFrame.new(20.2,14.08,26.23),C.leaf,Enum.Material.Wood,false)
     -- Do not fake sunlit plank highlights with paper-thin overlays. Natural
     -- window lighting supplies the floor response without z-fighting strips.
 end
