@@ -268,6 +268,51 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("PHOTO_WINDOW_GREENERY_PASS trees=4 crown_clusters=20 "
           "prior_trees=3 old_apartments=0 fake_clouds=0 "
           "behind_window_glass=true",flush=True)
+    # Photo-driven navy drapes must be visible at standing child eye height,
+    # gathered at the edges rather than blanketing the daylight and trees.
+    # These measurements come from actual constructed Luau Parts, before
+    # any cutaway model removes architectural occluders.
+    window_panels=actual_parts("Navy curtain fabric panel")
+    curtain_pleats=actual_parts("Navy curtain stitched pleat")
+    curtain_ties=actual_parts("Navy curtain cloth tieback")
+    curtain_headers=actual_parts("Blue curtain valance")
+    assert len(window_panels)==4 and len(curtain_pleats)==8 and (
+        len(curtain_ties)==4 and len(curtain_headers)==2
+    ), "Missing photo-grounded two-sided curtains on both school windows"
+    assert not actual_parts("Blue curtain fold"), (
+        "Pencil-thin prototype draperies returned to school windows"
+    )
+    panel_sides={-19:[],6:[]}
+    for part in window_panels:
+        x,y,z=(float(part[i]) for i in (9,10,11))
+        width,height,length=(float(part[i]) for i in (6,7,8))
+        assert part[4].endswith("Fabric") and (
+            abs(x+35.43)<.02 and abs(y-9.05)<.02
+        ), "Navy curtains are floating off the interior window jamb"
+        assert 7.90<=height<=8.10 and 1.40<=length<=1.52, (
+            "Window curtains no longer resemble child-eye-length drapes"
+        )
+        assert width<=.18 and abs(x+36.18)>.65, (
+            "Window curtain geometry blocks or penetrates the glazing"
+        )
+        color=[float(c) for c in part[12:15]]
+        assert color[2]>color[0]*1.5 and color[2]>color[1]*1.3, (
+            "Navy school curtains reverted to bright cartoon-blue paint"
+        )
+        center=min((-19,6),key=lambda c:abs(z-c))
+        assert 5.80 < abs(z-center)-length/2 and (
+            abs(z-center)+length/2 < 7.48
+        ), "Curtains cover the central daylight aperture or protrude beyond the casing"
+        panel_sides[center].append(round(z-center,2))
+    assert all(sorted(dz)==[-6.65,6.65] for dz in panel_sides.values()), (
+        "Each school window must have two symmetric pulled-open side panels"
+    )
+    assert all(.28<float(part[7])<.48 for part in curtain_headers), (
+        "Oversized 1.8-stud curtain valance returned"
+    )
+    print("PHOTO_NAVY_CURTAINS_PASS windows=2 panels=4 pleats=8 "
+          "tiebacks=4 open_center_width_studs=11.8 "
+          "historic_blinds_preserved=true native_iphone_pending")
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.
         # The playable Roblox game still contains its real solid walls/roof.

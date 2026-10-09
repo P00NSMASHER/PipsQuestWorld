@@ -635,15 +635,41 @@ local function buildWindows(root: Instance)
         local glass=part(root,"Window glass",Vector3.new(.22,8.4,14.2),CFrame.new(-36.18,9,z),Color3.fromRGB(213,233,238),Enum.Material.Glass,false);glass.Transparency=.35
         for _,dz in ipairs({-4.6,0,4.6}) do part(root,"Window vertical mullion",Vector3.new(.28,8.5,.24),CFrame.new(-36.03,9,z+dz),P.blue,Enum.Material.Wood,false) end
         part(root,"Window horizontal mullion",Vector3.new(.3,.30,14.2),CFrame.new(-36.02,9,z),P.blue,Enum.Material.Wood,false)
-        part(root,"Blue curtain valance",Vector3.new(.4,1.8,15),CFrame.new(-35.6,13.5,z),Color3.fromRGB(108,131,162),Enum.Material.Fabric,false)
+        -- IMG_2906/2910: navy curtains gathered open on either side of both
+        -- school windows. The old six pencil-thin blue strips were almost
+        -- invisible from the child-eye camera. Keep the central 11+ stud
+        -- daylight aperture unobstructed and the underlying blinds in place.
+        -- These original Fabric details are strictly decorative/noncolliding.
+        part(root,"Blue curtain valance",Vector3.new(.25,.38,15),
+            CFrame.new(-35.50,13.16,z),Color3.fromRGB(54,70,110),
+            Enum.Material.Fabric,false)
         for i=0,15 do
-            local shade=part(root,"Window blind slat",Vector3.new(.14,.10,14.1),CFrame.new(-35.90,12.9-i*.15,z),Color3.fromRGB(221,217,199),Enum.Material.Fabric,false)
+            local shade=part(root,"Window blind slat",Vector3.new(.14,.10,14.1),
+                CFrame.new(-35.90,12.9-i*.15,z),
+                Color3.fromRGB(221,217,199),Enum.Material.Fabric,false)
             shade.Transparency=.12
         end
-        for _,dz in ipairs({-7.0,7.0}) do
-            for fold=0,2 do
-                part(root,"Blue curtain fold",Vector3.new(.24,8.35,.28),CFrame.new(-35.57+fold*.08,9,z+dz+fold*.23),Color3.fromRGB(112-fold*8,132-fold*8,159-fold*8),Enum.Material.Fabric,false)
+        for _,side in ipairs({-1,1}) do
+            local curtainZ=z+side*6.65
+            part(root,"Navy curtain fabric panel",
+                Vector3.new(.15,8.00,1.47),
+                CFrame.new(-35.43,9.05,curtainZ),
+                Color3.fromRGB(51,67,105),Enum.Material.Fabric,false)
+            -- Shallow alternating folds, rather than six dangling poles.
+            -- Two seams per panel provide fabric depth at iPhone distance.
+            for pleat=1,2 do
+                local dz=(pleat==1 and -.37 or .37)
+                part(root,"Navy curtain stitched pleat",
+                    Vector3.new(.08,7.72,.20),
+                    CFrame.new(-35.29,9.04,curtainZ+dz),
+                    pleat==1 and Color3.fromRGB(43,57,91)
+                        or Color3.fromRGB(72,88,124),
+                    Enum.Material.Fabric,false)
             end
+            part(root,"Navy curtain cloth tieback",
+                Vector3.new(.10,.23,1.30),
+                CFrame.new(-35.26,7.70,curtainZ),
+                Color3.fromRGB(135,147,166),Enum.Material.Fabric,false)
         end
         part(root,"Radiator body",Vector3.new(1.35,2.6,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(222,221,207),Enum.Material.Metal,false)
         -- Ten widely spaced stamped-metal fins per radiator preserve the body
