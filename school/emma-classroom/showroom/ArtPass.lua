@@ -315,25 +315,25 @@ end
 -- This lives in the world and leaves the question SurfaceGui untouched.
 local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
-    local metal=Color3.fromRGB(188,198,204)
+    local metal=Color3.fromRGB(232,234,229)
     local trim=Color3.fromRGB(217,186,121)
     for _,y in ipairs({4.79,11.58}) do
         piece(group,"Smartboard satin aluminum trim",Vector3.new(19.45,.11,.12),
-            CFrame.new(5.2,y,-33.26),metal,Enum.Material.Metal,false)
+            CFrame.new(5.2,y,-31.29),metal,Enum.Material.Metal,false)
     end
     for _,x in ipairs({-4.525,14.925}) do
         piece(group,"Smartboard protective edge",Vector3.new(.10,6.84,.13),
-            CFrame.new(x,8.2,-33.26),metal,Enum.Material.Metal,false)
+            CFrame.new(x,8.2,-31.29),metal,Enum.Material.Metal,false)
     end
     piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
-        CFrame.new(5.2,4.44,-32.97),C.cream,Enum.Material.SmoothPlastic,false)
+        CFrame.new(5.2,4.44,-30.99),C.cream,Enum.Material.SmoothPlastic,false)
     local markerColors={C.coral,C.blue,C.mint,C.golden}
     for i,c in ipairs(markerColors) do
         local x=2.95+(i-1)*1.20
         piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
-            CFrame.new(x,4.58,-32.72),c,Enum.Material.SmoothPlastic,false)
+            CFrame.new(x,4.58,-30.74),c,Enum.Material.SmoothPlastic,false)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
-            CFrame.new(x+.39,4.58,-32.72),C.navy,Enum.Material.SmoothPlastic,false)
+            CFrame.new(x+.39,4.58,-30.74),C.navy,Enum.Material.SmoothPlastic,false)
     end
     -- Compact, child-height freestanding classroom art easel. The earlier
     -- five-stud brown rectangle dominated the left side of the teaching wall

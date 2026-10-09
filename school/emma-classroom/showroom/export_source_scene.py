@@ -356,6 +356,49 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(trim)==2 and all(abs(float(row[9])-smart_x)<.02
                                 and abs(float(row[6])-19.45)<.05
                                 for row in trim), "Decorative trim no longer follows board geometry"
+    # Permanent chalkboard and manufactured mobile board remain separate.
+    # Read actual executed Luau physical transforms (not code-string guesses).
+    # This does NOT simulate native Roblox shadowing or phone camera FOV.
+    assert -31.75 <= float(smart[11]) <= -31.59, (
+        "Mobile interactive display returned flush against the back wall"
+    )
+    assert 1.5 <= float(smart[11])-float(chalk[11]) <= 3.0, (
+        "Mobile display should stand forward of the teaching wall"
+    )
+    assert abs(float(bezel[11])-float(smart[11])+.28)<.04, (
+        "Mobile white display housing is no longer behind its glass"
+    )
+    supports=[p for p in lines if p[1]=="Mobile smartboard support post"]
+    collars=[p for p in lines if p[1]=="Mobile smartboard mounting collar"]
+    feet=[p for p in lines if p[1]=="Mobile smartboard rolling foot"]
+    wheels=[p for p in lines if p[1]=="Mobile smartboard caster"]
+    braces=[p for p in lines if p[1]=="Mobile smartboard cross brace"]
+    assert len(supports)==len(collars)==len(feet)==2 and len(wheels)==4, (
+        "Mobile classroom Smartboard support or wheel count changed"
+    )
+    assert len(braces)==1, "Mobile stand is missing its transverse support"
+    for items in (supports,collars,feet):
+        assert sorted(round(float(p[9]),2) for p in items)==[.10,10.30], (
+            "Rolling Smartboard support disconnected from the two screen pylons"
+        )
+    assert sorted(round(float(p[11]),2) for p in wheels)==(
+        [-33.25,-33.25,-31.15,-31.15]
+    ), "Rolling Smartboard has misplaced casters"
+    assert all(.49 < float(p[10])-float(p[7])/2 < .70 for p in supports), (
+        "Rolling Smartboard support collides with visual ground plane"
+    )
+    assert all(abs(float(p[10])-.73)<.01 for p in wheels), (
+        "Mobile caster wheels do not meet the floor"
+    )
+    assert all(float(p[11]) < float(bezel[11]) for p in supports), (
+        "Mobile support posts must be BEHIND screen face, not on top of lessons"
+    )
+    assert by_name["Mobile smartboard support post"]==2 and (
+        by_name["Mobile smartboard caster"]==4
+    )
+    print("PHOTO_MOBILE_SMARTBOARD_GEOMETRY_PASS posts=2 casters=4 "
+          "behind_display=true roomward_offset=true "
+          "noncolliding_parts_in_source=true native_iphone_pending")
     print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
           f"chalkboard={chalk_width:.2f} gap={spacing:.2f} "
           f"frame={frame_width:.2f}")

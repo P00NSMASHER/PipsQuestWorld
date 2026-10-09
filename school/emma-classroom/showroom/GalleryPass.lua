@@ -132,10 +132,10 @@ local function showcaseBoards(root:Instance,group:Instance)
             "ASSUMPTION BVM  •  LEARN  •  CREATE  •  GROW",C.slate,C.paper)
         -- Hardware, not a giant question-card UI.
         piece(group,"Interactive board camera",Vector3.new(.28,.28,.23),
-            CFrame.new(5.2,11.58,-33.35),C.slate,Enum.Material.Metal,false)
+            CFrame.new(5.2,11.58,-31.32),C.slate,Enum.Material.Metal,false)
         for _,x in ipairs({2.6,3.3,4.0}) do
             piece(group,"Interactive board stylus",Vector3.new(.12,.12,1.05),
-                CFrame.new(x,4.79,-33.10)*CFrame.Angles(0,math.rad(90),0),
+                CFrame.new(x,4.79,-30.99)*CFrame.Angles(0,math.rad(90),0),
                 x<2 and C.slate or C.metal,Enum.Material.SmoothPlastic,false)
         end
     end

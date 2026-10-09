@@ -669,9 +669,39 @@ local function buildFrontWall(root: Instance)
             P.cream,Enum.Material.SmoothPlastic,false)
     end
     part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-12,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
-    part(root,"Smartboard dark bezel",Vector3.new(19.35,6.85,.24),CFrame.new(5.2,8.2,-33.91),P.blue,Enum.Material.SmoothPlastic,false)
-    part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),CFrame.new(5.2,4.61,-33.26),Color3.fromRGB(208,211,209),Enum.Material.Metal,false)
-    local smart=part(root,"Interactive smartboard",Vector3.new(18.85,6.35,.35),CFrame.new(5.2,8.2,-33.65),Color3.fromRGB(238,243,241),Enum.Material.Glass,false);smart.Transparency=.02
+    -- IMG_2909/2910: the modern white-framed touch display stands on a
+    -- wheeled steel support in front of the permanent teaching wall.
+    -- Keep its established x/y and screen proportions but move it two studs
+    -- into the room so its depth, support posts and casters are visible.
+    -- Every newly authored cart element is noncolliding and contains no script.
+    part(root,"Smartboard dark bezel",Vector3.new(19.35,6.85,.24),
+        CFrame.new(5.2,8.2,-31.95),P.blue,Enum.Material.SmoothPlastic,false)
+    part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),
+        CFrame.new(5.2,4.61,-31.18),Color3.fromRGB(208,211,209),
+        Enum.Material.Metal,false)
+    local smart=part(root,"Interactive smartboard",Vector3.new(18.85,6.35,.35),
+        CFrame.new(5.2,8.2,-31.67),Color3.fromRGB(238,243,241),
+        Enum.Material.Glass,false);smart.Transparency=.02
+    for _,dx in ipairs({-5.1,5.1}) do
+        local supportX=5.2+dx
+        part(root,"Mobile smartboard support post",Vector3.new(.25,4.35,.26),
+            CFrame.new(supportX,2.85,-32.25),
+            Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
+        part(root,"Mobile smartboard mounting collar",Vector3.new(.72,.36,.35),
+            CFrame.new(supportX,5.0,-32.22),
+            Color3.fromRGB(172,180,181),Enum.Material.Metal,false)
+        part(root,"Mobile smartboard rolling foot",Vector3.new(.30,.18,2.70),
+            CFrame.new(supportX,.79,-32.21),
+            Color3.fromRGB(106,113,117),Enum.Material.Metal,false)
+        for _,casterZ in ipairs({-33.25,-31.15}) do
+            ball(root,"Mobile smartboard caster",Vector3.new(.44,.44,.44),
+                CFrame.new(supportX,.73,casterZ),
+                Color3.fromRGB(57,61,65),Enum.Material.SmoothPlastic,false)
+        end
+    end
+    part(root,"Mobile smartboard cross brace",Vector3.new(10.5,.20,.22),
+        CFrame.new(5.2,2.8,-32.32),
+        Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
     -- Static architectural smartboard. GalleryPass supplies a non-interactive display.
 
 
