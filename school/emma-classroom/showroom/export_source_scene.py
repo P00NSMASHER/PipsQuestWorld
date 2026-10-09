@@ -146,6 +146,38 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert counts and int(counts[-1].split("|")[1]) == len(lines), "Incomplete Luau snapshot"
     assert len(lines) >= 800, "This is not the full actual classroom (only "+str(len(lines))+" parts)"
     assert all(len(row) == 24 for row in lines), "Malformed or incomplete physical transform"
+    # Structural regression for defects proven by the October 8 iPhone video:
+    # real side corridor had open sky beyond its ends, while a blue horizontal
+    # rail visually passed through the center of the open staff doorway.
+    # Inspect ACTUAL constructed physical parts, including full-room walls,
+    # before removing anything for the cutaway visualization.
+    def actual_parts(name):
+        return [row for row in lines if row[1] == name]
+    rear_caps=actual_parts("Rear corridor end wall")
+    side_caps=actual_parts("Side corridor end wall")
+    assert len(rear_caps)==1 and len(side_caps)==2, (
+        "VIDEO_REGRESSION: rear/side corridor exposed to outside sky"
+    )
+    assert abs(float(rear_caps[0][11])-49.40)<.06 and float(rear_caps[0][6])>=17.9, (
+        "VIDEO_REGRESSION: rear hall no longer enclosed to its full width"
+    )
+    side_ends=sorted(round(float(p[11]),2) for p in side_caps)
+    assert side_ends==[5.65,25.35] and all(abs(float(p[9])-45.5)<.06
+                                               and float(p[6])>=17.9 for p in side_caps), (
+        "VIDEO_REGRESSION: side staff hall again lacks its two end walls"
+    )
+    rails=actual_parts("Blue chair rail right")
+    assert len(rails)==2, "VIDEO_REGRESSION: right wall uses a doorway-spanning rail"
+    for rail in rails:
+        z=float(rail[11]); depth=float(rail[8])
+        assert z+depth/2<=8.05 or z-depth/2>=22.95, (
+            "VIDEO_REGRESSION: painted rail intersects staff doorway at standing eye height"
+        )
+    assert len(actual_parts("Blue baseboard"))==5, (
+        "VIDEO_REGRESSION: continuous baseboard spans the staff doorway"
+    )
+    print("IPHONE_PORTAL_GEOMETRY_PASS side_caps=2 rear_cap=1 "
+          "staff_door_trim_clear=true actual_luau_parts=true")
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.
         # The playable Roblox game still contains its real solid walls/roof.
