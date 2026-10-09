@@ -453,11 +453,13 @@ local function buildReadingCorner(root:Instance)
                 part(root,"Reading book cover title",Vector3.new(width*.67,.11,.025),
                     spineFrame*CFrame.new(0,-height*.30,-.828),
                     P.gold,Enum.Material.SmoothPlastic,false)
-            else
-                part(root,"Book spine label",Vector3.new(width*.52,.14,.03),
-                    spineFrame*CFrame.new(0,-height*.09,-.765),
-                    P.cream,Enum.Material.SmoothPlastic,false)
             end
+            -- Keep the existing 40 individual physical spine labels. Move a
+            -- few onto the new cover surface so they remain visible to players.
+            part(root,"Book spine label",Vector3.new(width*.52,.14,.03),
+                spineFrame*CFrame.new(0,faceOut and -height*.30 or -height*.09,
+                    faceOut and -.857 or -.765),
+                P.cream,Enum.Material.SmoothPlastic,false)
         end
     end
     -- Thin steel bookends sit on existing shelves rather than adding a new rack.
