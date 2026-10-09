@@ -159,18 +159,50 @@ jobs:
           # QA-only oblique close-up to inspect the newly native-safe foliage.
           # Existing fixed 07 two-window camera remains unchanged.
           render_eye_checked 18-window-foliage-close -28,6,-11 -38.3,8.6,-19
+          # Match the 1112x512 ASPECT RATIO of the actual iPhone landscape
+          # screen recording using the exact existing camera 12 eye/aim.
+          # This is a QA-only headless capture, NOT the Roblox engine/device
+          # viewport, camera FOV or true native iPhone acceptance.
+          PHONE="$RUNNER_TEMP/visual/19-iphone-landscape-rug.png"
+          render_phone_rug() {
+            "$RHR" scene "$FULL" --viewport 1112x512 \
+              --camera=-27,5.0,4.8 --look-at=-25,2.9,17 --out "$PHONE"
+          }
+          render_phone_rug
+          if ! check_aerial "$PHONE"; then
+            echo "VISUAL_RETRY 19-iphone-landscape-rug: one identical-camera retry"
+            render_phone_rug
+          fi
+          check_aerial "$PHONE"
+          # Assert PNG IHDR dimensions using Python stdlib only; reject a
+          # 16:9 capture incorrectly labeled as the phone landscape view.
+          python3 - "$PHONE" <<'PY'
+import struct
+import sys
+from pathlib import Path
+header=Path(sys.argv[1]).open("rb").read(24)
+assert header[:8]==bytes((137,80,78,71,13,10,26,10)), (
+    "PHONE_VIEWPORT_REJECT not a PNG image"
+)
+dimensions=struct.unpack(">II",header[16:24])
+assert dimensions==(1112,512), (
+    f"PHONE_VIEWPORT_REJECT expected 1112x512, got {dimensions}"
+)
+print("PHONE_LANDSCAPE_VIEWPORT_PASS 1112x512 "
+      "unchanged_camera_12=true native_roblox_not_certified=true")
+PY
           "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
             echo "Reject blank exterior control; retrying independent exterior camera"
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 18=3_aerial+1_exterior+13_eye+1_rug_diagnostic"
+          echo "VISUAL_FRAME_INVENTORY_PASS 19=3_aerial+1_exterior+13_eye+1_rug_diagnostic+1_phone_aspect"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."

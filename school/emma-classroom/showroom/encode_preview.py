@@ -21,8 +21,8 @@ names=("01-isometric","02-front","03-top","04-exterior-control",
        "12-reading-rug","13-reading-books",
        "14-eye-staff-door","15-eye-rear-corridor",
        "16-rug-overlook","17-library-cover-fronts",
-       "18-window-foliage-close")
-assert len(names)==18 and len(set(names))==18
+       "18-window-foliage-close","19-iphone-landscape-rug")
+assert len(names)==19 and len(set(names))==19
 print("VISUAL_EVIDENCE_INVENTORY_PASS frames="+str(len(names)),flush=True)
 for n in names:
     path=folder/(n+".png")
