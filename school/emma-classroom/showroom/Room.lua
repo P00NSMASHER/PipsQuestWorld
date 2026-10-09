@@ -219,7 +219,9 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     cylinder(parent,"Desk back steel stretcher",Vector3.new(4.44,.14,.14),
         CFrame.new(x,1.46,z+1.34),Color3.fromRGB(120,130,134),
         Enum.Material.Metal,false)
-    book(parent,x,2.58,z,Color3.fromRGB(70,106,133),0)
+    -- The basket wire top is y=2.3325; the book underside now sits
+    -- at y=2.31 instead of visibly hovering above its shelf.
+    book(parent,x,2.40,z,Color3.fromRGB(70,106,133),0)
     local upholstery={
         Color3.fromRGB(67,94,130),Color3.fromRGB(78,107,136),
         Color3.fromRGB(65,93,119),Color3.fromRGB(83,109,134),
@@ -230,8 +232,8 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     -- same position; preserve the stationery count without uniform patterns.
     local shift=(index%3-1)*.24
     book(parent,x-1.2+shift,3.28,z-.2,notebookColor,math.rad(index%2==0 and 7 or -6))
-    cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
-    local pencilCF=CFrame.new(x+1.4,3.28,z-.6)*CFrame.Angles(0,math.rad(18),0)
+    cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
+    local pencilCF=CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(18),0)
     part(parent,"Pencil ferrule",Vector3.new(.11,.11,.18),pencilCF*CFrame.new(0,0,.70),P.metal,Enum.Material.Metal,false)
     part(parent,"Pencil eraser",Vector3.new(.10,.10,.17),pencilCF*CFrame.new(0,0,.85),Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
     local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.40),P.cream,Enum.Material.SmoothPlastic,false)

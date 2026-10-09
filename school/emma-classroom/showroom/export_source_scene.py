@@ -477,6 +477,29 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Desk fixing bolt"]==0, (
         "Repeated cosmetic desk bolts needlessly consume the mobile part budget"
     )
+    # Test actual constructed Luau geometry, not source-coordinate snippets.
+    # The original shelf books hovered above their wire trays and the pencil
+    # cylinders floated just above the laminate.
+    underdesk_books=[r for r in lines if r[1]=="Classroom book"
+                     and 2.2<float(r[10])<2.6]
+    assert len(underdesk_books)==16, (
+        f"Missing underdesk workbooks: {len(underdesk_books)} of 16"
+    )
+    shelf_top=2.29+.085/2
+    for r in underdesk_books:
+        bottom=float(r[10])-.18/2
+        assert abs(bottom-shelf_top)<.035, (
+            f"Workbook floats above shelf: underside={bottom:.3f}"
+        )
+    pencils=[r for r in lines if r[1]=="Desk pencil"]
+    assert len(pencils)==16, "Missing 16 student desk pencils"
+    for r in pencils:
+        bottom=float(r[10])-float(r[7])/2
+        assert abs(bottom-3.17)<.015, (
+            f"Desk pencil floats off laminate: bottom={bottom:.3f}"
+        )
+    print("STUDENT_FURNITURE_SUPPORT_PASS books=16 pencils=16")
+
     # Avoid converting one cheap school chair into hundreds of parts.
     assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
