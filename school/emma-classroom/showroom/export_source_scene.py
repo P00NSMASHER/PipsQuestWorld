@@ -641,8 +641,14 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert len(body_matches)==1 and len(side_matches)==2, (
             "Number label detached from its three-lobed cloud"
         )
-        tallest=max(float(v[10])+float(v[7])/2
-                    for v in body_matches+side_matches)
+        # A flat Cylinder's local X is rotated into WORLD Y. Local Size.Y
+        # is its visible DIAMETER, NOT height. Use the constructed CFrame's
+        # world-Y matrix row instead of accepting false cloud intersections.
+        def world_top(v):
+            local_size=[float(v[i]) for i in (6,7,8)]
+            y_axis=[abs(float(v[i])) for i in (18,19,20)]
+            return float(v[10])+sum(a*b for a,b in zip(local_size,y_axis))/2
+        tallest=max(world_top(v) for v in body_matches+side_matches)
         label_face=y+float(anchor[7])/2
         gap=label_face-tallest
         cloud_face_gaps.append(gap)
