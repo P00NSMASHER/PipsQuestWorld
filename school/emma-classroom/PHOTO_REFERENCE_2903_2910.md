@@ -30,6 +30,8 @@ These photographs document a cheer-event arrangement, not a measured empty-class
 - Geometric regression assertions run from the actual constructed Luau scene.
 - No photographic likenesses or images redistributed; no new gameplay, NPCs, data stores, study content, or publication authorization.
 
+- Emma reports a distinctive **purple chair in the corner** that earlier replica builds omitted. The original cheer-event photographs show the adjoining window/storage area but obscure the chair itself; its precise style and placement are not photo-verified. An individually named purple molded corner chair has been added to the rear-left window/storage corner as a **provisional child-approved feature**, clear of the real alphabet rug, existing shelves, and all sixteen desk/chair sets. Await Emma's in-game confirmation of its exact appearance/location.
+
 ## Outstanding
 The classroom-only development candidate now has a freestanding wheeled display in front of a widened chalkboard, with visible perimeter framing. This physical arrangement is supported by the cheer-event photos, **not proven as the permanent daily layout**. Source-derived camera evidence and native Roblox/iPhone visual and collision acceptance remain necessary before publication.
 

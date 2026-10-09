@@ -494,6 +494,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     geometry_contract={
         "Student desk top":16,
         "Student chair contoured back collision":16,
+        "Purple corner chair seat":1,
+        "Purple corner chair school back shell":1,
+        "Purple corner chair contoured back collision":1,
+        "Purple corner chair ventilation inset":3,
+        "Purple corner chair tubular leg":4,
         "Student chair school back shell":16,
         "Student chair school back shell center":16,
         "Student chair school back shell rounded corner":64,
@@ -563,6 +568,43 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
+    # Emma's verbal room correction is stronger evidence of the CHAIR EXISTING
+    # than the partly obstructed event photographs. Exact location and type
+    # remain provisional. Guard the modeled purple color and nonintrusive
+    # window-side corner instead of inventing photographic measurement.
+    corner_seat=only("Purple corner chair seat")
+    corner_back=only("Purple corner chair school back shell")
+    cx,cz=float(corner_seat[9]),float(corner_seat[11])
+    assert abs(cx+33.4)<.025 and abs(cz-23.35)<.025, (
+        "Emma's purple chair left the proposed rear-left window corner"
+    )
+    assert abs(float(corner_back[9])-cx)<.025 and (
+        abs(float(corner_back[11])-(cz+.93))<.05
+    ), "Purple chair's backrest detached from its child-size seat"
+    for component in (corner_seat,corner_back):
+        red,green,blue=(float(component[i]) for i in (12,13,14))
+        assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
+            blue>red>green
+        ), "Purple corner chair reverted to blue or another classroom color"
+    rug_dist=math.hypot(cx+25.0,cz-14.0)
+    assert rug_dist>10.5, (
+        "Purple chair overlaps the real circular sun/ABC carpet"
+    )
+    shelf=only("Reading shelf back")
+    shelf_left=float(shelf[9])-float(shelf[6])/2
+    chair_right=cx+2.48/2
+    assert shelf_left-chair_right>.90, (
+        "Purple chair intersects the original built-in library shelves"
+    )
+    assert cx-2.48/2>-36.0 and cz+1.70<26.0, (
+        "Purple chair intersects exterior classroom walls"
+    )
+    assert by_name["Student chair seat"]==16, (
+        "Emma's separate purple corner chair replaced a student seat"
+    )
+    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
+          "original_student_chairs=16 child_scale=true "
+          "rug_clear=true shelves_clear=true position_provisional=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
         abs(float(window_banner[10])-15.22)<.025

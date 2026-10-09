@@ -1424,6 +1424,17 @@ function World.build()
     buildClassroomTexture(root)
     buildReadingCorner(root)
 
+    -- Emma confirmed a distinct PURPLE chair in the classroom corner.
+    -- The supplied event photographs establish the window/storage area,
+    -- but people obscure the exact chair silhouette and location. Place a
+    -- child-scale purple molded chair in the rear-left window/storage corner
+    -- as a PROVISIONAL review candidate. Reuse the existing vetted chair
+    -- constructor without renaming or moving any of the 16 desk chairs.
+    -- It sits left of the existing library shelves, outside the ABC rug,
+    -- facing the open classroom; placement awaits Emma's native iPhone review.
+    schoolChair(root,"Purple corner chair",-33.4,23.35,
+        Color3.fromRGB(117,73,163))
+
     -- Paired laminate desks from IMG_2913, with an open back-left reading zone.
     -- Emma remains at x=0 so the existing spawn/seat and study camera stay aligned.
     local index=0
