@@ -224,11 +224,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading shade sewn binding":2,
         "Reading shade recessed warm diffuser":1,
         "Reading lamp top finial":1,
+        "Photo-guided wall shape card":9,
+        "Photo-guided shape icon":9,
+        "Photo-guided cabinet counting strip":1,
+        "Counting strip blue top trim":1,
+        "Counting strip green bottom trim":1,
     }
     for component,expected in geometry_contract.items():
         assert by_name[component]==expected, (
             f"Physical furniture regression: {component}={by_name[component]}, expected {expected}"
         )
+    assert by_name["Hanging pastel bunting"]==0, (
+        "Unreferenced generic bunting overlapped photo-grounded shape cards"
+    )
     assert by_name["Warm lamp shade"]==0, (
         "Reading floor lamp regressed to a spherical balloon-like lampshade"
     )
