@@ -488,16 +488,27 @@ local function buildClassroomTexture(root: Instance)
         local angle=i*math.pi/5
         local x=-25+math.cos(angle)*3.62
         local z=14+math.sin(angle)*3.62
-        for _,dx in ipairs({-.29,.29}) do
-            cylinder(root,"Photo rug number cloud lobe",Vector3.new(.025,1.00,1.00),
-                CFrame.new(x+dx,.637,z)*flat,
-                Color3.fromRGB(250,248,237),Enum.Material.Fabric,false)
+        -- Three overlapping, low-relief, printed-carpet cloud lobes:
+        -- one soft middle and two small asymmetrical shoulders. The 2026-10-09
+        -- iPhone capture showed isolated gray discs instead of the scalloped
+        -- white clouds in IMG_2904/2905. Ten new pieces total, no colliders.
+        local cloudTint=Color3.fromRGB(247,249,241)
+        local body=ball(root,"Photo rug number cloud body",
+            Vector3.new(1.14,.032,.72),CFrame.new(x,.642,z),
+            cloudTint,Enum.Material.SmoothPlastic,false)
+        body.CastShadow=false
+        for _,side in ipairs({-1,1}) do
+            local lobe=ball(root,"Photo rug number cloud lobe",
+                Vector3.new(.82,.038,.84),
+                CFrame.new(x+side*.35,.649,z+side*.055),
+                cloudTint,Enum.Material.SmoothPlastic,false)
+            lobe.CastShadow=false
         end
-        -- Keep one invisible, noncolliding anchor for a large dark number.
-        -- The old opaque white rectangular anchor looked like a sticker on
-        -- each circular cloud in actual iPhone gameplay.
+        -- A world-space SurfaceGui still obeys 3D occlusion. The top of the
+        -- transparent number anchor must be ABOVE all three lobes so it is
+        -- not hidden by its own cloud at low child-eye camera angles.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.659,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.685,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Transparency=1
         local numeral=surfaceText(numeralAnchor,tostring(i),

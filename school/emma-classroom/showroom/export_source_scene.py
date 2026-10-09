@@ -450,6 +450,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     photo_components={
         "Reading rug alphabet border":26,
         "Photo rug number cloud lobe":20,
+        "Photo rug number cloud body":10,
         "Photo rug number cloud numeral":10,
         "Photo rug sun center":1,
         "Photo rug sun ray":16,
@@ -470,14 +471,41 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # ten anchors and 20 cloud lobes but make anchor geometry invisible.
     anchors=[v for v in lines if v[1]=="Photo rug number cloud numeral"]
     lobes=[v for v in lines if v[1]=="Photo rug number cloud lobe"]
-    assert len(anchors)==10 and len(lobes)==20
+    bodies=[v for v in lines if v[1]=="Photo rug number cloud body"]
+    assert len(anchors)==len(bodies)==10 and len(lobes)==20
     assert all(float(v[5])>=.99 and v[4].endswith("SmoothPlastic")
                for v in anchors), "White cloud label sticker has returned"
-    assert all(v[4].endswith("Fabric") and (
-        min(float(x) for x in v[12:15])>.90
-    ) for v in lobes), "Rounded off-white fabric clouds regressed"
+    assert all(v[3].endswith("Ball") and v[4].endswith("SmoothPlastic")
+               and min(float(x) for x in v[12:15])>.92
+               for v in lobes+bodies), "Clouds reverted to dark circular fabric patches"
     assert all(.78<float(v[6])<.82 and .56<float(v[8])<.60
                for v in anchors), "Cloud numbering anchor changed child scale"
+    cloud_face_gaps=[]
+    for anchor in anchors:
+        x,y,z=(float(anchor[i]) for i in (9,10,11))
+        body_matches=[v for v in bodies if (
+            abs(float(v[9])-x)<.025 and abs(float(v[11])-z)<.025
+        )]
+        side_matches=[v for v in lobes if (
+            abs(float(v[9])-x)<.40 and abs(float(v[11])-z)<.20
+        )]
+        assert len(body_matches)==1 and len(side_matches)==2, (
+            "Number label detached from its three-lobed cloud"
+        )
+        tallest=max(float(v[10])+float(v[7])/2
+                    for v in body_matches+side_matches)
+        label_face=y+float(anchor[7])/2
+        gap=label_face-tallest
+        cloud_face_gaps.append(gap)
+        assert .012<gap<.05, (
+            f"Cloud geometry obscures its own number label: gap={gap:.3f}"
+        )
+        assert abs(float(body_matches[0][10])-.642)<.006 and (
+            abs(float(side_matches[0][10])-.649)<.006
+        ), "Photo-grounded cloud is no longer low-relief against carpet"
+    print(f"IPHONE_CLOUD_OCCLUSION_PASS clouds=10 lobes=30 "
+          f"number_face_clearance={min(cloud_face_gaps):.3f} "
+          "rectangular_number_backings_invisible=true")
     sun_surface=only("Photo rug sun center")
     assert sun_surface[4].endswith("SmoothPlastic") and (
         float(sun_surface[12])>.94 and float(sun_surface[13])>.70
@@ -485,7 +513,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     carpet=only("Alphabet rug")
     assert float(carpet[14])>.69, "Alphabet rug returned to nearly black navy"
     print("IPHONE_CARPET_SHAPES_PASS cloud_rectangles_hidden=true "
-          "cloud_lobes=20 anchors=10 brighter_sun=true")
+          "cloud_lobes=20 cloud_bodies=10 anchors=10 brighter_sun=true")
     print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
           "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
           "blue_wordwall=true apple_markers=8")

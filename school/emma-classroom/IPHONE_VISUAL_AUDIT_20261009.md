@@ -11,9 +11,10 @@ User-supplied 59-second iPhone Roblox gameplay recording (`ScreenRecording_10-09
 
 ## Applied development corrections
 - Preserve 26 original alphabet tile physical instances but give their already-present SurfaceGui labels an explicit small canvas (180 by 120 pixels), fixed large 92px text and minimal padding.
-- Preserve the existing 20 cloud lobes and ten numeral anchors. Keep the dark numeral GUI visible while making each white rectangular backing part fully transparent. This is not a new gameplay UI.
+- Preserve the existing 20 side lobes and ten transparent numeral anchors. Add one rounded low-relief cloud body per number, making each cloud visibly scalloped without adding gameplay UI.
+- Raise the ten existing transparent numeral surfaces enough above their three physical cloud lobes to prevent self-occlusion of the text by cloud geometry. This is source-verified 3D spacing, not a claim about actual iPhone legibility.
 - Lighten the carpet's blue material color and sun's warm orange/gold colors; use low-reflectance native SmoothPlastic for the 17 sunlight shapes so the sunshine reads in the shadowed room rather than as dark fabric.
-- No added physical Parts, furniture changes, curriculum/gameplay changes, publication authorization, or original photo/video assets.
+- The initial version-69 carpet pass added no Parts. This next development-only three-lobe cloud refinement adds ten small noncolliding pieces, preserving the 3,100-part limit; no furniture changes, curriculum/gameplay changes, publication authorization, or original photo/video assets.
 
 ## Acceptance boundary
 Require exact-head Luau compilation, Rojo build, source geometry and static navigation checks. The independent source renderer does not render native SurfaceGui text reliably; source geometry/CI passing therefore does **not** prove iPhone label readability or color fidelity. Native iPhone re-recording at the identical 49–52 second carpet viewpoint is the necessary acceptance evidence. Do not merge PR #339 or activate the verified but production-disabled original furniture meshes on the basis of these checks.
