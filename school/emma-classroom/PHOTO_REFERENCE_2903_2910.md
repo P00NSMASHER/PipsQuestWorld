@@ -20,6 +20,7 @@ These photographs document a cheer-event arrangement, not a measured empty-class
 ## Applied corrections
 - Yellow classroom wall material; darker, satin-finished oak school floor; darker built-in cabinet finish.
 - Circular alphabet/numeral/sun rug and black polka-dot rug, preserving existing room-zone locations rather than inventing a new floor plan.
+- Replaced eight ruler-shaped yellow bars around the rug's central sun with sixteen noncolliding, subtly elongated orange-and-gold fabric sunburst petals. This is an original geometric approximation of the photographed carpet, **not** a copied classroom photo or a claim of exact printed-carpet artwork.
 - Moved the two speculative, noncolliding upholstered reading poufs to the carpet perimeter so the sun and numbered clouds remain visible. This is a *visual composition correction*, not a claim that poufs were present in the reference photographs. Source-built geometry asserts sun-ray clearance and a free gap before the rear bookshelf.
 - Reduced the poufs from 3.75-stud broad disks to 2.95-stud child-scale seats, with matching modest cushions, buttons and seams. The original reference photos do not verify pouf furniture; these remain optional approximations.
 - Added a lightweight, one-piece, noncolliding wall banner above the existing two windows with the directly photographed religious affirmation: "I am a Child of God. I make a difference!" It contains no child names, portraits or uploaded photo assets.

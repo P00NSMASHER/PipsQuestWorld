@@ -452,7 +452,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Photo rug number cloud lobe":20,
         "Photo rug number cloud numeral":10,
         "Photo rug sun center":1,
-        "Photo rug sun ray":8,
+        "Photo rug sun ray":16,
         "Front rug color dot":25,
         "Word wall word card":15,
         "Word wall apple":8,
@@ -706,7 +706,26 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     sun=only("Photo rug sun center")
     sun_pos=(float(sun[9]),float(sun[11]))
     sun_rays=[r for r in lines if r[1]=="Photo rug sun ray"]
-    assert len(sun_rays)==8, "Real carpet center lost its eight sun rays"
+    assert len(sun_rays)==16, "Photographed sunburst lost its sixteen alternating rays"
+    assert all(r[3].endswith("Ball") and r[4].endswith("Fabric")
+               for r in sun_rays), (
+        "Photo sun rays reverted to a row of flat synthetic rectangles"
+    )
+    ray_colors={tuple(round(float(v),3) for v in r[12:15]) for r in sun_rays}
+    assert len(ray_colors)==2, "Sunburst no longer has both orange and gold threads"
+    ray_radii=[math.hypot(float(r[9])-sun_pos[0],
+                          float(r[11])-sun_pos[1]) for r in sun_rays]
+    assert sum(1 for radius in ray_radii if 1.27<radius<1.36)==8 and (
+        sum(1 for radius in ray_radii if 1.49<radius<1.56)==8
+    ), "Sunburst no longer alternates between two petal lengths"
+    ray_angles={round(math.atan2(float(r[11])-sun_pos[1],
+                                 float(r[9])-sun_pos[0]),3) for r in sun_rays}
+    assert len(ray_angles)==16, "Sunburst rays are duplicated or stacked"
+    assert all(abs(float(r[10])-.649)<.005 and (
+        world_span(r,1)<.035
+    ) for r in sun_rays), "Sunburst lifts off the photo-grounded carpet"
+    print("PHOTO_SUNBURST_DETAIL_PASS rays=16 ellipsoids=true "
+          "palette=orange_gold radial_distribution=true")
     sun_outer_radius=max(
         math.hypot(float(r[9])-sun_pos[0],float(r[11])-sun_pos[1])
         + math.hypot(world_span(r,0),world_span(r,2))/2

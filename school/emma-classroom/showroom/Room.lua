@@ -438,12 +438,23 @@ local function buildClassroomTexture(root: Instance)
     cylinder(root,"Photo rug sun center",Vector3.new(.034,2.05,2.05),
         CFrame.new(-25,.640,14)*flat,Color3.fromRGB(237,166,58),
         Enum.Material.Fabric,false)
-    for i=0,7 do
-        local angle=i*math.pi/4
-        part(root,"Photo rug sun ray",Vector3.new(.55,.019,.22),
-            CFrame.new(-25+math.cos(angle)*1.31,.646,14+math.sin(angle)*1.31)*
-                CFrame.Angles(0,-angle,0),Color3.fromRGB(247,199,81),
-                Enum.Material.Fabric,false)
+    -- The real carpet's sunshine is an orange-and-gold irregular sunburst,
+    -- not eight flat rectangular ruler bars. Reuse the existing radial art
+    -- family with two alternating fabric ellipsoid profiles (16 total).
+    -- These remain noncolliding and leave the real sun and numbered clouds
+    -- exposed; no texture/photo of any child is distributed.
+    for i=0,15 do
+        local angle=i*math.pi/8
+        local broad=i%2==0
+        local r=broad and 1.31 or 1.52
+        local size=broad and Vector3.new(.82,.027,.34)
+            or Vector3.new(.58,.025,.25)
+        ball(root,"Photo rug sun ray",size,
+            CFrame.new(-25+math.cos(angle)*r,.649,14+math.sin(angle)*r)*
+                CFrame.Angles(0,-angle,0),
+            broad and Color3.fromRGB(247,199,81)
+                or Color3.fromRGB(219,112,50),
+            Enum.Material.Fabric,false)
     end
     for i=1,10 do
         local angle=i*math.pi/5
