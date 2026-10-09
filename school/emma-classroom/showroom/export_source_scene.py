@@ -925,36 +925,31 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         matrix=[float(v) for v in entry[15:24]]
         return sum(abs(matrix[axis*3+i])*size[i] for i in range(3))
 
-    poufs=[v for v in lines if v[1]=="Corduroy floor pouf"]
-    cushions=[v for v in lines if v[1]=="Soft seat cushion"]
-    rack=only("Child-height book display shelf")
-    assert len(poufs)==2 and len(cushions)==2, "Reading seating count changed"
-    assert all(p[3].endswith("Cylinder") and p[4].endswith("Fabric")
-               for p in poufs), "Upholstered drum poufs reverted to balloon shapes"
-    assert all(c[3].endswith("Ball") and c[4].endswith("Fabric")
-               for c in cushions), "Soft seating lost its fabric cushion crown"
-    # Speculative seating is deliberately less visually dominant than the
-    # photo-verified carpet. Assert the actual constructed child-scale sizes.
-    for base in poufs:
-        footprint=max(world_span(base,0),world_span(base,2))
-        assert 2.88<=footprint<=3.02, (
-            f"Unverified upholstered pouf overwhelms carpet: {footprint:.3f}"
-        )
-    for cushion in cushions:
-        assert 2.50<=world_span(cushion,0)<=2.75 and (
-            2.48<=world_span(cushion,2)<=2.70
-        ), "Cushion extends beyond its small manufactured pouf"
-    print("PHOTO_SUBTRACTIVE_READING_PASS poufs=2 compact=true "
-          "sun_visibility_preserved=true")
-    rack_x=float(rack[9]);rack_width=world_span(rack,0)
-    min_clearance=min(abs(float(p[9])-rack_x)
-                      -(world_span(p,0)+rack_width)/2 for p in poufs)
-    assert min_clearance >= .15, (
-        f"Reading pouf intersects child book display rack: x_gap={min_clearance:.3f}"
+    # Photo-supported classroom features take priority over speculative
+    # pastel upholstered seats. Keep the authenticated reading furniture,
+    # sun/cloud/letter artwork and established classroom layout intact.
+    absent=("Corduroy floor pouf","Soft seat cushion",
+            "Soft fabric button","Fabric seat piping")
+    assert all(by_name[name]==0 for name in absent), (
+        "Unverified pink/blue poufs returned to obscure the alphabet carpet"
     )
-    seat_gap=abs(float(poufs[0][9])-float(poufs[1][9])) - (
-        world_span(poufs[0],0)+world_span(poufs[1],0))/2
-    assert seat_gap >= .2, f"Reading poufs intersect: x_gap={seat_gap:.3f}"
+    rack=only("Child-height book display shelf")
+    assert (abs(float(rack[9])+19.4)<.03
+            and abs(float(rack[10])-2.0)<.03
+            and abs(float(rack[11])-15.0)<.03
+            and abs(float(rack[6])-5.9)<.03
+            and abs(float(rack[8])-2.2)<.03), (
+        "Photo-fidelity cleanup damaged the original story display shelf"
+    )
+    assert by_name["Illustrated storybook cover"]==5, (
+        "Removing speculative seating deleted the five face-out books"
+    )
+    carpet=only("Alphabet rug")
+    assert carpet[3].endswith("Cylinder") and carpet[4].endswith("Fabric") and (
+        abs(float(carpet[9])+25)<.03 and abs(float(carpet[11])-14)<.03
+    ), "Photo-grounded blue circular rug moved or changed physical silhouette"
+    print("PHOTO_SUBTRACTIVE_READING_PASS speculative_seats=0 "
+          "alphabet_carpet_unchanged=true books_and_shelves_preserved=true")
     # Photo-fidelity: the center sun must remain legible, not physically
     # hidden under speculative reading seats. Use actual Luau transforms.
     # Each modeled seat fits a circular horizontal footprint; no scene
@@ -987,50 +982,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         + math.hypot(world_span(r,0),world_span(r,2))/2
         for r in sun_rays
     )
-    # Unobstructed sun includes its geometric rays and a safety margin.
-    sun_clearances=[]
-    bookshelf_front=23.3-2.7/2
-    for base in poufs:
-        x,z=float(base[9]),float(base[11])
-        radius=max(world_span(base,0),world_span(base,2))/2
-        clearance=math.hypot(x-sun_pos[0],z-sun_pos[1])-radius-sun_outer_radius
-        sun_clearances.append(clearance)
-        assert clearance>=.70, (
-            f"Pouf blocks the photo-verified sun and rays: gap={clearance:.3f}"
-        )
-        assert z+world_span(base,2)/2 <= bookshelf_front-.35, (
-            "Reading ottoman collides with rear built-in bookshelf frontage"
-        )
-        assert -35.0 < x-world_span(base,0)/2, (
-            "Reading ottoman crowds the window/wall-side circulation"
-        )
-    assert min(sun_clearances)>=.70
-    print(f"PHOTO_SUN_VISIBILITY_PASS unobstructed=true seats=2 "
-          f"minimum_sun_clearance={min(sun_clearances):.2f} "
-          "rug_centers_unchanged=true")
-
-    pairs=list(zip(sorted(poufs,key=lambda r:float(r[9])),
-                   sorted(cushions,key=lambda r:float(r[9]))))
-    assert all(abs(float(p[9])-float(c[9])) < .02 for p,c in pairs), (
-        "Cushions no longer share pouf seat center"
-    )
-    for base,cushion in pairs:
-        lower=float(base[10])-world_span(base,1)/2
-        base_top=float(base[10])+world_span(base,1)/2
-        cushion_bottom=float(cushion[10])-world_span(cushion,1)/2
-        cushion_top=float(cushion[10])+world_span(cushion,1)/2
-        assert .50 <= lower <= .62, (
-            f"Fabric ottoman floats above or sinks beneath reading rug: {lower:.3f}"
-        )
-        assert cushion_bottom <= base_top+.02, (
-            f"Soft pouf cushion detached from upholstered base: {cushion_bottom:.3f}"
-        )
-        assert 1.55 <= cushion_top <= 1.80, (
-            f"Reading seating no longer matches child chair height: {cushion_top:.3f}"
-        )
-    print(f"READING_NOOK_CLEARANCE_PASS pouf_to_rack={min_clearance:.2f} "
-          f"seat_to_seat={seat_gap:.2f} chairs=2 lower_child_seats=true "
-          "rotated_world_footprints=true")
+    # Keep the preexisting strict radial sun-ray assertions above. The
+    # photo-verified sun and numbered clouds cannot be covered by invented
+    # poufs because the four decorative seating families are now absent.
+    assert abs(sun_pos[0]-float(carpet[9]))<.025 and (
+        abs(sun_pos[1]-float(carpet[11]))<.025
+    ), "Sun left the center of the photographed ABC carpet"
+    assert by_name["Photo rug number cloud numeral"]==10 and (
+        by_name["Photo rug number cloud lobe"]==20
+        and by_name["Reading rug alphabet border"]==26
+    ), "The real classroom sun/letter/cloud carpet lost a major landmark"
+    print("PHOTO_SUN_VISIBILITY_PASS unobstructed_by_poufs=true "
+          "sun_rays=16 numbered_clouds=10 alphabet_panels=26")
+    print("READING_NOOK_CLEARANCE_PASS speculative_seating=0 "
+          "original_library_furniture_unchanged=true")
     book_spines=[r for r in lines if r[1]=="Reading book spine"]
     book_labels=[r for r in lines if r[1]=="Book spine label"]
     assert len(book_spines)==40 and len(book_labels)==40, (

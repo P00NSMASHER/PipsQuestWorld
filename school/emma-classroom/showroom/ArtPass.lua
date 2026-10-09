@@ -139,39 +139,12 @@ end
 
 local function readingCorner(root:Instance)
     local group=makeGroup(root,"Cozy story corner")
-    -- The photo references contain no verified upholstered poufs.
-    -- Retain their useful soft-seating silhouettes as small, unobtrusive
-    -- child-scale props rather than two giant pink/blue circular obstacles.
-    -- Actual photo-truth belongs to the alphabet rug and woodwork.
-    -- Original eye-height renders showed two oversized stacked ellipsoids:
-    -- the reading "seats" were taller than the actual child-scale chairs.
-    -- A low upholstered cylindrical ottoman with a softly crowned top has
-    -- a recognizable manufactured silhouette without adding meshes or Parts.
-    -- October 9 exact-source eye-level render showed the ottomans covering
-    -- the photo-verified sun and numbered clouds on the alphabet carpet.
-    -- Seat locations were never photo-verified: shift the two uncollidable
-    -- seats to the rug perimeter while leaving the rug and all desks fixed.
-    -- Maintain a >0.2-stud gap in X and clearance to the back bookshelf.
-    local seats={{x=-31.0,z=12.0,c=C.coral},{x=-26.9,z=19.2,c=C.blue}}
-    for _,v in ipairs(seats) do
-        local vertical=CFrame.Angles(0,0,math.pi/2)
-        disk(group,"Corduroy floor pouf",2.95,.82,
-            CFrame.new(v.x,.97,v.z)*vertical,
-            v.c:Lerp(C.cream,.08),Enum.Material.Fabric)
-        orb(group,"Soft seat cushion",Vector3.new(2.63,.32,2.57),
-            CFrame.new(v.x,1.48,v.z),
-            v.c:Lerp(C.cream,.18),Enum.Material.Fabric)
-        disk(group,"Soft fabric button",.25,.055,
-            CFrame.new(v.x,1.66,v.z)*vertical,C.cream,Enum.Material.Fabric)
-        for _,side in ipairs({-1,1}) do
-            -- Two subtle vertical upholstery seams follow the round front.
-            -- Unlike the former 2.2-stud straight side piping, these sit on
-            -- the upholstered skirt rather than projecting into the aisle.
-            piece(group,"Fabric seat piping",Vector3.new(.065,.50,.06),
-                CFrame.new(v.x+side*.94,.99,v.z-1.03),
-                v.c:Lerp(C.cream,.31),Enum.Material.Fabric,false)
-        end
-    end
+    -- The photographed alphabet rug and cloud/sun artwork are permanent,
+    -- recognizable classroom features. No supplied reference establishes
+    -- the two invented pastel upholstered ottomans as classroom furniture.
+    -- Even after shrinking/repositioning, they hide parts of the rug in the
+    -- child-height camera. Retire them rather than invent more clutter.
+    -- Retain all actual shelving, display books and 16 school desk/chair pairs.
     piece(group,"Child-height book display shelf",Vector3.new(5.9,.24,2.2),CFrame.new(-19.4,2,15),C.wood,Enum.Material.Wood,false)
     for _,x in ipairs({-21.9,-17}) do
         piece(group,"Story rack leg",Vector3.new(.34,1.8,.34),CFrame.new(x,1.14,15),C.woodEdge,Enum.Material.Wood,false)
