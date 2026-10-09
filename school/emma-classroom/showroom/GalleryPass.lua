@@ -124,11 +124,18 @@ local function showcaseBoards(root:Instance,group:Instance)
         for _,child in ipairs(smart:GetChildren()) do
             if child:IsA("SurfaceGui") then child:Destroy() end
         end
-        smart.Material=Enum.Material.Glass
-        smart.Color=Color3.fromRGB(49,65,70)
+        -- The real classroom photos show a large dark interactive panel on
+        -- a white wheeled chassis. An almost-black matte active surface is
+        -- more convincing than the generic mid-gray glass rectangle.
+        -- Keep original screen bounds, housing, touch collision and teaching
+        -- wording. No added UI or new lesson controls.
+        smart.Material=Enum.Material.SmoothPlastic
+        smart.Color=Color3.fromRGB(27,34,36)
+        smart.Reflectance=.035
         smart.Transparency=0
+        local screenInk=Color3.fromRGB(31,39,43)
         printFace(smart,Enum.NormalId.Back,"WELCOME TO GRADE 2",
-            "ASSUMPTION BVM  •  LEARN  •  CREATE  •  GROW",C.slate,C.paper)
+            "ASSUMPTION BVM  •  LEARN  •  CREATE  •  GROW",screenInk,C.paper)
         -- Hardware, not a giant question-card UI.
         piece(group,"Interactive board camera",Vector3.new(.28,.28,.23),
             CFrame.new(5.2,11.58,-31.32),C.slate,Enum.Material.Metal,false)

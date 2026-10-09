@@ -181,7 +181,7 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
     -- The existing invisible collider remains the only collidable back piece.
     local shell=roundedPanel(parent,name.." school back shell",
         Vector3.new(2.48,1.87,.25),backCF*CFrame.new(0,.04,-.015),
-        tint:Lerp(P.cream,.095),.33,false,false)
+        tint:Lerp(P.cream,.075),.40,false,false)
     shell.Reflectance=.015
     -- A very shallow curved return on each lateral edge prevents a chair
     -- viewed from the side from reading as a flat rectangular board. These
@@ -190,12 +190,21 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
     -- Premium owned meshes, when approved, hide the entire Student chair family.
     for _,side in ipairs({-1,1}) do
         local wing=part(parent,name.." molded side return",
-            Vector3.new(.23,1.48,.28),
-            backCF*CFrame.new(side*1.10,-.13,.055)*
-                CFrame.Angles(0,math.rad(side*16),0),
-            tint:Lerp(P.cream,.095),Enum.Material.SmoothPlastic,false)
+            Vector3.new(.34,1.54,.34),
+            backCF*CFrame.new(side*1.08,-.13,.065)*
+                CFrame.Angles(0,math.rad(side*21),0),
+            tint:Lerp(P.cream,.12),Enum.Material.SmoothPlastic,false)
         wing.Reflectance=.015
     end
+    -- A continuous shallow front rollover turns the primitive seat slab into
+    -- a believable one-piece molded child-seat profile. It meets the existing
+    -- front edge, cannot block movement, and belongs to the "Student chair"
+    -- family so a future approved mesh swap hides it transactionally.
+    local nose=part(parent,name.." molded front seat roll",
+        Vector3.new(2.16,.13,.19),CFrame.new(x,1.515,z-1.012),
+        tint:Lerp(P.cream,.085),Enum.Material.SmoothPlastic,false)
+    nose.CanQuery=false
+    nose.CastShadow=false
     -- Reference photographs show elongated vertical ventilation details on
     -- molded blue school-chair backs. The old flattened Ball (.18,.65,.034)
     -- actually renders as a 0.034-stud SPHERE in native Roblox, even though
@@ -423,6 +432,34 @@ local function buildClassroomTexture(root: Instance)
         part(root,"Cabinet door pull",Vector3.new(.13,1.15,.18),CFrame.new(x+(x<31 and .91 or -.91),6.2,20.79),Color3.fromRGB(180,176,158),Enum.Material.Metal,false)
         for _,y in ipairs({1.8,10.2}) do part(root,"Cabinet brass hinge",Vector3.new(.14,.42,.15),CFrame.new(x+(x<31 and -1.50 or 1.50),y,20.88),Color3.fromRGB(167,149,101),Enum.Material.Metal,false) end
     end
+    -- The photographed cabinetry is older school carpentry: deep walnut
+    -- framed, raised doors, not one large flat brown box. Build routed panel
+    -- rails against the EXISTING two doors without moving their footprints.
+    local cabinetRim=Color3.fromRGB(94,62,40)
+    local cabinetWarmEdge=Color3.fromRGB(153,111,75)
+    for _,doorX in ipairs({29.3,32.7}) do
+        for _,centerY in ipairs({3.2,8.4}) do
+            for _,dy in ipairs({-2.08,2.08}) do
+                part(root,"Tall cabinet recessed panel cross rail",
+                    Vector3.new(2.76,.17,.075),
+                    CFrame.new(doorX,centerY+dy,20.853),
+                    cabinetRim,Enum.Material.Wood,false)
+            end
+        end
+        part(root,"Tall cabinet antiqued keyhole",
+            Vector3.new(.085,.23,.045),
+            CFrame.new(doorX+(doorX<31 and .90 or -.90),5.38,20.692),
+            Color3.fromRGB(97,76,48),Enum.Material.Metal,false)
+    end
+    part(root,"Tall cabinet hardwood cornice",
+        Vector3.new(7.35,.41,.50),CFrame.new(31,12.25,20.96),
+        cabinetRim,Enum.Material.Wood,false)
+    part(root,"Tall cabinet cornice routed lip",
+        Vector3.new(7.54,.11,.44),CFrame.new(31,12.50,20.77),
+        cabinetWarmEdge,Enum.Material.Wood,false)
+    part(root,"Tall cabinet recessed toe kick",
+        Vector3.new(6.78,.42,.18),CFrame.new(31,.51,20.91),
+        Color3.fromRGB(72,50,37),Enum.Material.Wood,false)
     local trash=cylinder(root,"Classroom trash can",Vector3.new(3.4,3.1,3.1),CFrame.new(32.8,1.7,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(95,100,101),Enum.Material.Metal,false)
     trash.Transparency=0
     cylinder(root,"Trash can opening",Vector3.new(.035,2.76,2.76),CFrame.new(32.8,3.42,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(32,36,38),Enum.Material.SmoothPlastic,false)
@@ -605,6 +642,28 @@ local function buildReadingCorner(root:Instance)
     for _,x in ipairs({-31,-22,-13}) do
         part(root,"Reading shelf upright",Vector3.new(.3,6,2.7),CFrame.new(x,3.2,23.3),P.wood,Enum.Material.Wood)
     end
+    -- Frame the original 18-stud wooden bookcase in the aged oak language
+    -- seen in the reference photos. The thin face trim surrounds existing
+    -- shelves instead of overlaying the individual book faces or changing
+    -- reading-corner collision.
+    local caseFace=Color3.fromRGB(103,72,49)
+    local caseEdge=Color3.fromRGB(148,108,74)
+    for _,x in ipairs({-30.98,-22,-13.02}) do
+        part(root,"Library hardwood front pilaster",
+            Vector3.new(.26,6.02,.19),CFrame.new(x,3.17,21.83),
+            caseFace,Enum.Material.Wood,false)
+    end
+    for _,y in ipairs({.69,3.21,6.19}) do
+        part(root,"Library shelf front fascia",
+            Vector3.new(18.08,.18,.19),CFrame.new(-22,y,21.82),
+            caseFace,Enum.Material.Wood,false)
+    end
+    part(root,"Library upper molded cornice",
+        Vector3.new(18.42,.32,.50),CFrame.new(-22,6.43,22.05),
+        caseFace,Enum.Material.Wood,false)
+    part(root,"Library cornice highlight",
+        Vector3.new(18.5,.055,.34),CFrame.new(-22,6.62,21.89),
+        caseEdge,Enum.Material.Wood,false)
     -- Spines use staggered sizes and restrained classroom-library colors,
     -- not forty equal-height blocks with identical white labels. Keep the
     -- existing shelf, capacity and book count; no extra replicated pieces.
@@ -677,6 +736,38 @@ local function buildCubbies(root: Instance)
             CFrame.new(7.5+i*4.5,4.2,25.2),
             cabinetWood,Enum.Material.Wood,false)
     end
+    -- Architectural carpentry treatment. The actual school storage uses
+    -- substantial dark, framed panels rather than floating plastic bins.
+    -- Keep all twelve existing slots and their exact volumes. These are
+    -- noncolliding thin facings, aligned to dividers/shelf fronts only.
+    local walnutFace=Color3.fromRGB(99,68,46)
+    local walnutHighlight=Color3.fromRGB(145,103,70)
+    for i=0,6 do
+        local x=7.5+i*4.5
+        part(root,"Built-in walnut cubby face stile",
+            Vector3.new(.29,8.02,.22),CFrame.new(x,4.22,23.53),
+            walnutFace,Enum.Material.Wood,false)
+        part(root,"Built-in walnut stile routed edge",
+            Vector3.new(.052,7.86,.029),CFrame.new(x+.092,4.22,23.387),
+            walnutHighlight,Enum.Material.Wood,false)
+    end
+    for _,y in ipairs({.76,4.20,8.25}) do
+        part(root,"Built-in horizontal walnut face rail",
+            Vector3.new(27.24,.24,.23),CFrame.new(21,y,23.52),
+            walnutFace,Enum.Material.Wood,false)
+        part(root,"Built-in horizontal fine molding",
+            Vector3.new(26.86,.055,.032),CFrame.new(21,y+.12,23.376),
+            walnutHighlight,Enum.Material.Wood,false)
+    end
+    part(root,"Built-in recessed dark toe kick",
+        Vector3.new(26.94,.37,.17),CFrame.new(21,.46,23.56),
+        Color3.fromRGB(76,53,38),Enum.Material.Wood,false)
+    part(root,"Built-in deep hardwood cornice",
+        Vector3.new(27.50,.42,.47),CFrame.new(21,8.66,23.88),
+        walnutFace,Enum.Material.Wood,false)
+    part(root,"Built-in stepped cornice edge",
+        Vector3.new(27.74,.10,.35),CFrame.new(21,8.91,23.68),
+        walnutHighlight,Enum.Material.Wood,false)
     -- Photo-informed muted classroom supply tubs: translucent-looking pale
     -- gray-blue, kraft and sage containers rather than 12 neon toy blocks.
     -- Unique blue and colored backpacks are left unchanged for continuity.
