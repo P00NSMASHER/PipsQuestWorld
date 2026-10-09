@@ -7,6 +7,8 @@ on:
       - 'school/emma-classroom/showroom/**'
       - 'school/emma-showroom.project.json'
       - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
+      - 'school/emma-classroom/RELEASE_RECEIPT.json'
+      - 'school/emma-classroom/verify_release_receipt.py'
       - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
@@ -23,6 +25,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Audit last confirmed published Roblox preview without claiming candidate is live
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/verify_release_receipt.py --self-test
+          python3 school/emma-classroom/verify_release_receipt.py
 
       - name: Install pinned Luau and Rojo
         shell: bash
