@@ -130,7 +130,8 @@ CUTAWAY_OCCLUDERS={
     "Hall ceiling","Hall left wall","Hall right wall",
     "Hall left brick","Hall right brick",
     "Side hall ceiling","Side hall far wall","Side hall far brick",
-    "Distant brick house","Distant brick roof","Neighbor brick building",
+    # Keep the constructed forest visible in aerial snapshots so it can be
+    # reviewed. Player-eye screenshots always use the full, uncut room.
 }
 
 def export_scene(luau: str, output: Path, cutaway: bool=False):
@@ -237,6 +238,36 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("PHOTO_CEILING_TROFFERS_PASS count=6 rectangular_lens=true "
           "centers_preserved=true no_new_colliders=true ratio="
           f"{pairs[0][1][6]}/{pairs[0][1][8]}",flush=True)
+    # Photo reference: greenery, not repeated apartment geometry, through
+    # both classroom window openings. Check the REAL, complete constructed
+    # Luau scene before altering anything for aerial preview cutaways.
+    outdoor_trees=actual_parts("Photo exterior oak trunk")
+    outdoor_canopies=actual_parts("Photo exterior irregular foliage")
+    assert len(outdoor_trees)==4 and len(outdoor_canopies)==20, (
+        "Four depth-layered green trees missing from photo-grounded windows"
+    )
+    for item in outdoor_trees+outdoor_canopies:
+        x=float(item[9]);sx=float(item[6])
+        assert -38.8<x< -37.9 and x+sx/2 < -36.60, (
+            "Exterior greenery crosses the classroom glazing into the room"
+        )
+        assert 4.0<float(item[10])<12.3, (
+            "Exterior foliage no longer belongs in the view through windows"
+        )
+    assert all(p[4].endswith("Grass") for p in outdoor_canopies), (
+        "Foliage lost natural leaf material"
+    )
+    for forbidden_name in ("Distant brick house", "Slate roof silhouette",
+                           "Neighbor window", "Soft distant cloud"):
+        assert not actual_parts(forbidden_name), (
+            "Unreferenced apartment / fake cloud returned: "+forbidden_name
+        )
+    assert len(actual_parts("Tree trunk outside"))==3 and (
+        len(actual_parts("Irregular exterior leaf cluster"))==18
+    ), "Original tree depth/detail was lost"
+    print("PHOTO_WINDOW_GREENERY_PASS trees=4 crown_clusters=20 "
+          "prior_trees=3 old_apartments=0 fake_clouds=0 "
+          "behind_window_glass=true",flush=True)
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.
         # The playable Roblox game still contains its real solid walls/roof.

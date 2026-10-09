@@ -46,18 +46,36 @@ end
 local function windowNeighborhood(root:Instance)
     local world=makeGroup(root,"Layered outside neighborhood")
     -- The exterior sits behind the existing windows and glass, never inside.
-    for i,z in ipairs({-24.5,-15.5,1,11.5}) do
-        local tall=(i%2==0) and 4.8 or 6.2
-        local house=piece(world,"Distant brick house",Vector3.new(.36,tall,7),CFrame.new(-38.30,4.6+tall/2,z),
-            (i%2==0) and Color3.fromRGB(181,130,103) or Color3.fromRGB(207,174,133),Enum.Material.Brick,false)
-        piece(world,"Slate roof silhouette",Vector3.new(.55,.44,7.8),house.CFrame*CFrame.new(0,tall/2+.2,0),C.woodEdge,Enum.Material.Slate,false)
-        for floor=0,1 do
-            for col=-1,1 do
-                piece(world,"Neighbor window",Vector3.new(.10,1.10,.85),CFrame.new(-38.02,6.1+floor*2,z+col*1.80),
-                    Color3.fromRGB(212,234,237),Enum.Material.Glass,false)
-                piece(world,"Window sill",Vector3.new(.15,.10,1.13),CFrame.new(-37.96,5.52+floor*2,z+col*1.80),
-                    C.cream,Enum.Material.SmoothPlastic,false)
-            end
+    -- Reference photos IMG_2906/2910 look out over trees and a leafy
+    -- green horizon, NOT four nearby apartment facades with repeated windows.
+    -- Author foliage from scratch; do not embed reference photos or assets.
+    -- Flattened, overlapping irregular crowns create foliage depth without
+    -- four immense perfect spherical trees. Every part stays beyond the glass.
+    local distantLeaves={
+        Color3.fromRGB(74,121,82),
+        Color3.fromRGB(91,138,89),
+        Color3.fromRGB(103,144,92),
+        Color3.fromRGB(68,114,83),
+        Color3.fromRGB(116,151,96),
+        Color3.fromRGB(85,132,86),
+    }
+    local crownSections={
+        {-.17,1.89,-1.43, .87,2.92,2.79},
+        { .12,2.58, .23,1.03,3.05,3.10},
+        {-.23,3.39,1.38, .93,2.51,2.51},
+        { .08,1.52,1.68, .79,2.20,2.39},
+        { .20,3.58,-1.16,.78,2.17,2.45},
+    }
+    for i,z in ipairs({-24.5,-15.5,1.0,11.5}) do
+        local trunk=piece(world,"Photo exterior oak trunk",
+            Vector3.new(.31,4.90,.42),CFrame.new(-38.32,6.36,z),
+            Color3.fromRGB(99,85,65),Enum.Material.Wood,false)
+        for k,v in ipairs(crownSections) do
+            orb(world,"Photo exterior irregular foliage",
+                Vector3.new(v[4],v[5],v[6]),
+                trunk.CFrame*CFrame.new(v[1],v[2]+(i%2)*.13,v[3]),
+                distantLeaves[(i+k-2)%#distantLeaves+1],
+                Enum.Material.Grass)
         end
     end
     for i,z in ipairs({-28.5,-9.5,16.5}) do
@@ -86,12 +104,8 @@ local function windowNeighborhood(root:Instance)
                 shades[(k+i-2)%#shades+1],Enum.Material.Grass)
         end
     end
-    for _,z in ipairs({-20.7,6.8}) do
-        for _,offset in ipairs({-1.3,0,1.3}) do
-            orb(world,"Soft distant cloud",Vector3.new(.42,1.05,2.25),CFrame.new(-38.10,11.8+math.abs(offset)*.18,z+offset),
-                Color3.fromRGB(247,246,230),Enum.Material.SmoothPlastic)
-        end
-    end
+    -- The genuine photographs show muted sky and vegetation rather than
+    -- six toy-like white cloud blobs placed a few studs outside the window.
 end
 
 local function readingCorner(root:Instance)

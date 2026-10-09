@@ -598,9 +598,14 @@ local function buildCubbies(root: Instance)
 end
 
 local function buildWindows(root: Instance)
-    -- Bright stylized outside view so the windows never stare into empty gray space.
-    part(root,"Outdoor sky backdrop",Vector3.new(.35,14,45),CFrame.new(-39,9,-6),Color3.fromRGB(105,188,242),Enum.Material.SmoothPlastic,false)
-    part(root,"Outdoor hill backdrop",Vector3.new(.5,5,45),CFrame.new(-38.7,3.2,-6),Color3.fromRGB(85,139,73),Enum.Material.Grass,false)
+    -- Photo-grounded landscape: muted hazy daylight and a green treeline.
+    -- The old saturated blue sky and apartment-like facades were conspicuous
+    -- through the glazed windows. Keep these original backdrop dimensions and
+    -- the window frames, shutters, radiators and daylight entirely unchanged.
+    part(root,"Outdoor sky backdrop",Vector3.new(.35,14,45),CFrame.new(-39,9,-6),
+        Color3.fromRGB(192,211,216),Enum.Material.SmoothPlastic,false)
+    part(root,"Outdoor hill backdrop",Vector3.new(.5,5,45),CFrame.new(-38.7,3.2,-6),
+        Color3.fromRGB(91,139,92),Enum.Material.Grass,false)
     for _,z in ipairs({-19,6}) do
         for _,dy in ipairs({-4.75,4.75}) do
             part(root,"Window wood horizontal frame",Vector3.new(.5,.45,15.5),CFrame.new(-36.5,9+dy,z),P.blue,Enum.Material.Wood,false)
