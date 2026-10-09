@@ -180,6 +180,66 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("IPHONE_PORTAL_GEOMETRY_PASS side_caps=2 rear_cap=1 "
           "staff_door_trim_clear=true actual_luau_parts=true")
 
+    # The completed 15-view player-height review exposed blank corridor
+    # blue boxes and an empty end-wall corkboard. Confirm original, minimal,
+    # nonidentifying wall décor and realistically recessed lights exist in
+    # the FULL Luau-built scene. No claim that unphotographed corridors match
+    # an architectural survey.
+    rear_notes=actual_parts("Rear hall pinned notice")
+    rear_heads=actual_parts("Rear hall notice heading")
+    rear_pins=actual_parts("Rear hall brass notice pin")
+    rails=actual_parts("Rear hall dado cap rail")
+    staff_frame=actual_parts("Staff hall framed announcement board")
+    staff_cork=actual_parts("Staff hall inset cork noticeboard")
+    staff_papers=actual_parts("Staff hall anonymous paper notice")
+    assert (len(rear_notes),len(rear_heads),len(rear_pins),len(rails),
+            len(staff_frame),len(staff_cork),len(staff_papers))==(
+            3,3,3,2,1,1,2
+    ), "Realistic corridor finish lost a mounted bulletin display or dado rail"
+    assert sorted(round(float(p[9]),2) for p in rear_notes)==[-1.90,0,1.90]
+    assert all(abs(float(p[11])-48.65)<.025 and
+               abs(float(p[7])-1.79)<.025 for p in rear_notes), (
+        "Rear hallway papers float away from the cork board"
+    )
+    assert all(p[4].endswith("SmoothPlastic") for p in rear_notes), (
+        "Paper notices unexpectedly became heavy brickwork"
+    )
+    assert sorted(round(float(p[9]),2) for p in rails)==[-8.38,8.38]
+    assert all(abs(float(p[10])-4.32)<.025 and
+               abs(float(p[8])-21.8)<.025 for p in rails), (
+        "Hall finish rail floats, spans an open doorway, or loses brick dado"
+    )
+    assert (abs(float(staff_frame[0][9])-53.80)<.03 and
+            abs(float(staff_cork[0][9])-53.68)<.03), (
+        "Staff corridor notice board buried in wall or protrudes into hall"
+    )
+    assert sorted(round(float(p[11]),2) for p in staff_papers)==[13.85,17.15]
+    for light_name,frame_name,expected_x,expected_z in (
+        ("Hall fluorescent light","Rear hall fluorescent metal surround",0,36),
+        ("Side hall fluorescent","Side hall fluorescent metal surround",47,15.5),
+    ):
+        lamp=actual_parts(light_name)
+        frame=actual_parts(frame_name)
+        assert len(lamp)==len(frame)==1, (
+            "Missing recessed fixture/surround in school corridor"
+        )
+        lamp,frame=lamp[0],frame[0]
+        assert lamp[4].endswith("Glass") and frame[4].endswith("Metal"), (
+            "Overexposed Neon corridor light or unfinished fixture returned"
+        )
+        assert abs(float(lamp[9])-expected_x)<.02 and (
+            abs(float(lamp[11])-expected_z)<.02
+        ), "Hall ceiling light moved off the existing fixture location"
+        assert abs(float(lamp[10])-12.68)<.025 and (
+            abs(float(frame[10])-12.80)<.025
+        ), "Recessed hall lighting detached from the existing ceiling plane"
+        assert float(lamp[5])<.15 and float(frame[6])>float(lamp[6]), (
+            "Corridor ceiling diffuser hidden or surrounding frame misplaced"
+        )
+    print("SCHOOL_CORRIDOR_FINISH_PASS rear_notices=3 staff_notices=2 "
+          "dado_rails=2 recessed_troffers=2 no_new_rooms=true "
+          "native_iphone_pending",flush=True)
+
     # IMG_2903 through IMG_2910 photo anchors, without copying photos or
     # publishing personal likenesses. Validate wall and floor before
     # cutaway cameras temporarily omit room-shell parts.
