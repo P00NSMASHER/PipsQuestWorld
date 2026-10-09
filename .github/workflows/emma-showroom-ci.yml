@@ -49,6 +49,19 @@ jobs:
           done
           python3 school/emma-classroom/showroom/verify_build.py
 
+      - name: Fail fast on exact-source room geometry and mobile part budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Evaluate the actual classroom Luau constructors before the costly
+          # independent screenshot job. The exporter checks physical layout,
+          # all 16 desk/chair pairs, object support, and the existing <=3100
+          # part budget. Keep the same thresholds used by visual CI.
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau" \
+            --out "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
+          test -s "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |
