@@ -158,6 +158,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Verify Emma's single purple corner chair and child-safe placement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_purple_corner_chair.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

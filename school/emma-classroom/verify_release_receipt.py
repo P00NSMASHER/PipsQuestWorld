@@ -77,6 +77,7 @@ def audit() -> None:
         "python3 school/emma-classroom/showroom/audit_storybook_facing.py",
         "python3 school/emma-classroom/showroom/audit_native_rug_primitives.py",
         "python3 school/emma-classroom/showroom/audit_native_chair_vents.py",
+        "python3 school/emma-classroom/showroom/audit_purple_corner_chair.py",
         "python3 school/emma-classroom/showroom/audit_native_foliage_primitives.py",
         "grep -q 'Enabled = false'",
     ):
