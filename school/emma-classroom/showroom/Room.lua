@@ -608,12 +608,12 @@ local function buildWindows(root: Instance)
         Color3.fromRGB(91,139,92),Enum.Material.Grass,false)
     for _,z in ipairs({-19,6}) do
         for _,dy in ipairs({-4.75,4.75}) do
-            part(root,"Window wood horizontal frame",Vector3.new(.5,.45,15.5),CFrame.new(-36.5,9+dy,z),P.blue,Enum.Material.Wood,false)
+            part(root,"Window wood horizontal frame",Vector3.new(.5,.45,15.5),CFrame.new(-36.5,9+dy,z),Color3.fromRGB(217,223,213),Enum.Material.Wood,false)
         end
         for _,dz in ipairs({-7.6,7.6}) do
-            part(root,"Window wood vertical frame",Vector3.new(.5,9.5,.45),CFrame.new(-36.5,9,z+dz),P.blue,Enum.Material.Wood,false)
+            part(root,"Window wood vertical frame",Vector3.new(.5,9.5,.45),CFrame.new(-36.5,9,z+dz),Color3.fromRGB(217,223,213),Enum.Material.Wood,false)
         end
-        part(root,"Deep window sill",Vector3.new(1.8,.35,15.5),CFrame.new(-35.8,4.4,z),P.blue,Enum.Material.Wood,false)
+        part(root,"Deep window sill",Vector3.new(1.8,.35,15.5),CFrame.new(-35.8,4.4,z),Color3.fromRGB(210,216,207),Enum.Material.Wood,false)
         -- Shallow internal returns make the glazing sit inside a believable
         -- thick school wall instead of appearing pasted onto one flat plane.
         for _,side in ipairs({-1,1}) do
@@ -624,7 +624,7 @@ local function buildWindows(root: Instance)
             part(root,"Window timber inner stop",
                 Vector3.new(.19,8.85,.17),
                 CFrame.new(-35.61,9,z+side*7.64),
-                Color3.fromRGB(94,116,147),Enum.Material.Wood,false)
+                Color3.fromRGB(223,225,213),Enum.Material.Wood,false)
         end
         part(root,"Window interior head return",
             Vector3.new(.76,.20,15.38),CFrame.new(-36.03,13.62,z),
@@ -632,9 +632,9 @@ local function buildWindows(root: Instance)
         part(root,"Window sill rounded shadow line",
             Vector3.new(1.36,.055,15.22),CFrame.new(-35.71,4.64,z),
             Color3.fromRGB(104,91,77),Enum.Material.Wood,false)
-        local glass=part(root,"Window glass",Vector3.new(.22,8.4,14.2),CFrame.new(-36.18,9,z),Color3.fromRGB(213,233,238),Enum.Material.Glass,false);glass.Transparency=.35
-        for _,dz in ipairs({-4.6,0,4.6}) do part(root,"Window vertical mullion",Vector3.new(.28,8.5,.24),CFrame.new(-36.03,9,z+dz),P.blue,Enum.Material.Wood,false) end
-        part(root,"Window horizontal mullion",Vector3.new(.3,.30,14.2),CFrame.new(-36.02,9,z),P.blue,Enum.Material.Wood,false)
+        local glass=part(root,"Window glass",Vector3.new(.22,8.4,14.2),CFrame.new(-36.18,9,z),Color3.fromRGB(233,242,238),Enum.Material.Glass,false);glass.Transparency=.68;glass.Reflectance=.005
+        for _,dz in ipairs({-4.6,0,4.6}) do part(root,"Window vertical mullion",Vector3.new(.28,8.5,.24),CFrame.new(-36.03,9,z+dz),Color3.fromRGB(217,223,213),Enum.Material.Wood,false) end
+        part(root,"Window horizontal mullion",Vector3.new(.3,.30,14.2),CFrame.new(-36.02,9,z),Color3.fromRGB(217,223,213),Enum.Material.Wood,false)
         -- IMG_2906/2910: navy curtains gathered open on either side of both
         -- school windows. The old six pencil-thin blue strips were almost
         -- invisible from the child-eye camera. Keep the central 11+ stud
