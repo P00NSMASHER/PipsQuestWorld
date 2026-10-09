@@ -112,7 +112,9 @@ local function ceilingLight(parent: Instance,x: number,z: number)
     lens.Transparency=.075;lens.Reflectance=.005
     local light=Instance.new("SurfaceLight")
     light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,246,237)
-    light.Brightness=.15;light.Range=25;light.Angle=115;light.Shadows=false;light.Parent=lens
+    -- Light from the actual broad frosted panels, rather than a dim slab.
+    -- Preserve fixture count, range, shadows, and mobile rendering cost.
+    light.Brightness=.24;light.Range=25;light.Angle=115;light.Shadows=false;light.Parent=lens
 end
 
 local function plant(parent: Instance,x: number,y: number,z: number,scale: number)
@@ -1174,20 +1176,28 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=1.48;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.63
+    -- Centralized daytime profile. IMG_2903–2910 show a well-lit yellow
+    -- elementary classroom, not a cool, underexposed exhibition space.
+    -- GalleryPass must not override these values after the room is built.
+    Lighting.ClockTime=10.25;Lighting.Brightness=1.62;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.67
     -- Soft is the current Roblox lighting-style API. Keep compatibility with
     -- engine versions where the enum is unavailable; no external assets.
     pcall(function() Lighting.LightingStyle=Enum.LightingStyle.Soft end)
-    Lighting.Ambient=Color3.fromRGB(134,137,139);Lighting.OutdoorAmbient=Color3.fromRGB(161,173,181)
-    Lighting.EnvironmentDiffuseScale=.66;Lighting.EnvironmentSpecularScale=.24;Lighting.ExposureCompensation=-.10
+    Lighting.Ambient=Color3.fromRGB(162,159,151)
+    Lighting.OutdoorAmbient=Color3.fromRGB(183,185,177)
+    Lighting.EnvironmentDiffuseScale=.72
+    Lighting.EnvironmentSpecularScale=.25
+    Lighting.ExposureCompensation=.04
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
     atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.008;atmosphere.Offset=.08;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
     bloom.Name="EmmaClassroomBloom";bloom.Intensity=.03;bloom.Size=20;bloom.Threshold=1.25;bloom.Parent=Lighting
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
-    -- Quiet contrast and slightly warmer whites reveal native clothing
-    -- textures instead of flattening everything under bright ambient fill.
-    grade.Name="EmmaClassroomGrade";grade.Brightness=.00;grade.Contrast=.065;grade.Saturation=.035;grade.TintColor=Color3.fromRGB(255,252,245);grade.Parent=Lighting
+    -- Daylight-neutral whites, a slight warm wall bounce, and mild contrast.
+    -- No stylized bloom/neon treatment and no second calibration in Gallery.
+    grade.Name="EmmaClassroomGrade"
+    grade.Brightness=.01;grade.Contrast=.055;grade.Saturation=.015
+    grade.TintColor=Color3.fromRGB(255,252,246);grade.Parent=Lighting
     local rays=Lighting:FindFirstChild("EmmaClassroomSunRays") or Instance.new("SunRaysEffect")
     rays.Name="EmmaClassroomSunRays";rays.Intensity=.025;rays.Spread=.8;rays.Parent=Lighting
 end
@@ -1204,7 +1214,8 @@ function World.build()
     -- tiny shadow edges and too many instances for one classroom.
     local floor=part(root,"Warm oak classroom floor",Vector3.new(74,1,62),
         CFrame.new(0,0,-4),Color3.fromRGB(95,68,47),Enum.Material.WoodPlanks)
-    floor.Reflectance=.05
+    -- Subtle varnished-wood response, not a mirror; photos show a dark, polished floor.
+    floor.Reflectance=.08
 
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)

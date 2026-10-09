@@ -1,7 +1,6 @@
 --!strict
 -- Original, photo-guided environmental art for the ABVM classroom replica.
 -- These are physical room details, not a game HUD or interactive lesson UI.
-local Lighting=game:GetService("Lighting")
 local GalleryPass={}
 local C={
     navy=Color3.fromRGB(48,68,100),
@@ -288,15 +287,8 @@ function GalleryPass.decorate(root:Instance)
     pupilWork(group)
     physicalDetails(root,group)
 
-    Lighting.ExposureCompensation=-.17
-    Lighting.EnvironmentDiffuseScale=.69
-    Lighting.EnvironmentSpecularScale=.21
-    local cc=Lighting:FindFirstChild("EmmaClassroomGrade")
-    if cc and cc:IsA("ColorCorrectionEffect") then
-        cc.Contrast=.09
-        cc.Saturation=-.02
-        cc.TintColor=Color3.fromRGB(255,251,244)
-    end
+    -- Lighting is authored exactly once by Room.applyLighting().
+    -- This architectural art pass changes physical details only.
     root:SetAttribute("ExperienceMode","ClassroomOnly_NoQuestionsOrHUD")
     root:SetAttribute("ArtDirection","PhotoGuidedArchitecturalReplica")
     return group
