@@ -113,6 +113,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_storybook_facing.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Reject non-uniform Roblox Ball carpet artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_native_rug_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

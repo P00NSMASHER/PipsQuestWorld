@@ -76,3 +76,27 @@ Human reviewer must see an obviously blue rug, elongated distinguishable
 orange/gold sun rays, ten white cloud shapes and readable numbers.
 Any small dots / navy-black failure remains **visual acceptance FAIL**;
 do not relax the source or image test thresholds to mask it.
+
+
+## Engine-level root cause and corrective action
+Roblox's Creator announcement at
+https://devforum.roblox.com/t/improvements-to-part-shape-size/2443389
+clarifies that `Shape=Ball` renders an actual sphere of diameter equal to
+the **smallest** of the three size axes. Earlier independent renderers
+interpreted e.g. 1.70×0.22×0.98 as a flattened elliptical shape, while the
+native iPhone showed a 0.22-stud DOT. Increasing the other axes could never
+resolve this mismatch.
+
+Corrective development replaces all 16 sun rays with guaranteed elongated
+shallow Blocks plus flat circular cylinder caps (16 additional noncolliding
+Parts), and the ten white clouds with horizontal rectangular centers and
+20 physically wide, floor-facing Cylinders. The carpet size, blue fabric,
+sun center, ten text labels, 26 alphabet letters, all sixteen desks and
+published gameplay remain unchanged. These are ORIGINAL authored primitives,
+not copied photographs or downloaded assets.
+
+The dedicated `audit_native_rug_primitives.py` runs the actual room
+constructor and rejects malformed Ball clouds/rays with adversarial
+mutation; required by both development CI and protected preview publication.
+The actual Roblox game is still pending native acceptance, regardless of
+source geometry or independent-renderer success.

@@ -75,6 +75,7 @@ def audit() -> None:
         "USER_AUTHORIZED_PREVIEW_WITHOUT_FINAL_VISUAL_ACCEPTANCE",
         "python3 school/emma-classroom/showroom/audit_lighting.py",
         "python3 school/emma-classroom/showroom/audit_storybook_facing.py",
+        "python3 school/emma-classroom/showroom/audit_native_rug_primitives.py",
         "grep -q 'Enabled = false'",
     ):
         assert guard in workflow, "Missing gated preview publication rule: " + guard

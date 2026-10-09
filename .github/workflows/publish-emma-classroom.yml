@@ -88,6 +88,10 @@ jobs:
           # SurfaceGui direction and original illustrated physical cover fronts.
           python3 school/emma-classroom/showroom/audit_storybook_facing.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Non-uniform Ball parts render at the MINIMUM axis diameter
+          # on native Roblox clients; ban the dotted rug regression.
+          python3 school/emma-classroom/showroom/audit_native_rug_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"

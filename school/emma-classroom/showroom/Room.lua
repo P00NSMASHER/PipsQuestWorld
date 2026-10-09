@@ -511,50 +511,62 @@ local function buildClassroomTexture(root: Instance)
     -- family with two alternating fabric ellipsoid profiles (16 total).
     -- These remain noncolliding and leave the real sun and numbered clouds
     -- exposed; no texture/photo of any child is distributed.
+
+    -- NATIVE ROBLOX CORRECTION (October 9 iPhone):
+    -- Shape=Ball renders a TRUE SPHERE whose actual diameter is the MINIMUM
+    -- Size axis. Flattened 1.70 x .22 x .98 "clouds" therefore become .22
+    -- stud dots; increasing the wide dimensions does NOT fix this. Roblox
+    -- documented this behavior in "Improvements to Part Shape & Size".
+    -- Use real horizontal Block/Cylinder solids with normal Y thickness.
+    -- The existing Fabric rug, its 26 SurfaceGui letters, radial design and
+    -- every student desk remain unchanged. All relief is noncolliding.
     for i=0,15 do
         local angle=i*math.pi/8
         local broad=i%2==0
-        local r=broad and 1.31 or 1.52
-        -- A *second*, native v71 iPhone walkthrough still rendered these
-        -- .12-stud ellipsoids as tiny orange dots rather than visible sun
-        -- petals. Give the SAME sixteen noncolliding shapes wider radial
-        -- profiles and more legible, low-relief surfaces above the rug.
-        -- No added geometry and no change to center or ray positions.
-        local size=broad and Vector3.new(1.06,.22,.40)
-            or Vector3.new(.95,.22,.34)
-        local ray=ball(root,"Photo rug sun ray",size,
-            CFrame.new(-25+math.cos(angle)*r,.740,14+math.sin(angle)*r)*
-                CFrame.Angles(0,-angle,0),
-            broad and Color3.fromRGB(255,211,84)
-                or Color3.fromRGB(239,140,52),
-            Enum.Material.SmoothPlastic,false)
+        local radius=broad and 1.31 or 1.52
+        local length=broad and .94 or .79
+        local width=broad and .30 or .24
+        local tint=broad and Color3.fromRGB(255,211,84)
+            or Color3.fromRGB(239,140,52)
+        local x=-25+math.cos(angle)*radius
+        local z=14+math.sin(angle)*radius
+        -- Elongated stable ray with a true round cap at its outer end:
+        -- 1 Block + 1 flat Cylinder; avoids non-uniform Ball primitives.
+        local ray=part(root,"Photo rug sun ray",
+            Vector3.new(length,.10,width),
+            CFrame.new(x,.685,z)*CFrame.Angles(0,-angle,0),
+            tint,Enum.Material.SmoothPlastic,false)
         ray.CastShadow=false
+        local tipRadius=radius+length/2-.04
+        local tip=cylinder(root,"Photo rug sun ray rounded tip",
+            Vector3.new(.10,width,width),
+            CFrame.new(-25+math.cos(angle)*tipRadius,.685,
+                14+math.sin(angle)*tipRadius)*flat,
+            tint,Enum.Material.SmoothPlastic,false)
+        tip.CastShadow=false
     end
     for i=1,10 do
         local angle=i*math.pi/5
         local x=-25+math.cos(angle)*3.62
         local z=14+math.sin(angle)*3.62
-        -- Actual native v71 iPhone pixels still showed isolated white
-        -- dots, not the 10 photographed cloud silhouettes. Enlarge the
-        -- original low-relief cloud group and keep it above the textile,
-        -- using exactly the same existing 3 Parts per cloud. Adjacent centers
-        -- are ~2.24 studs apart and these clusters are <=1.70 wide.
         local cloudTint=Color3.fromRGB(253,252,246)
-        local body=ball(root,"Photo rug number cloud body",
-            Vector3.new(1.70,.22,.98),CFrame.new(x,.735,z),
+        -- Center block joins two truly ROUND, horizontal cylinders.
+        -- 3 original Parts per cloud, no paper-thin Ball dimensions.
+        local body=part(root,"Photo rug number cloud body",
+            Vector3.new(1.14,.12,.65),CFrame.new(x,.690,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
-            local lobe=ball(root,"Photo rug number cloud lobe",
-                Vector3.new(1.00,.24,1.04),
-                CFrame.new(x+side*.35,.740,z+side*.055),
+            local lobe=cylinder(root,"Photo rug number cloud lobe",
+                Vector3.new(.12,.94,.94),
+                CFrame.new(x+side*.39,.690,z+side*.055)*flat,
                 cloudTint,Enum.Material.SmoothPlastic,false)
             lobe.CastShadow=false
         end
-        -- Raise the same transparent number anchor to keep it above the
-        -- taller cloud, with no white rectangular label background.
+        -- A transparent, noncolliding number anchor stays CLEAR of the
+        -- actual cylinder faces, not an opaque white rectangular sticker.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.925,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.820,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Transparency=1
         local numeral=surfaceText(numeralAnchor,tostring(i),
