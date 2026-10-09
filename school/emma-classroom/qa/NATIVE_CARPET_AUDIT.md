@@ -24,6 +24,13 @@ The tool identifies the large central sun in that selected area and measures:
 - Median blue-channel value in the carpet pixels (threshold 85 for this screen).
 - Warm-colored ray components of meaningful area (at least 8).
 - White cloud components of meaningful area (at least 8).
+- Cloud components must fall within a source-relative radial ring around
+  the visually selected sun (1.9–4.3 sun radii), not on unrelated classroom
+  papers or window panels.
+- At least seven of twelve angular sectors must contain substantial cloud
+  and sun-ray components; one clustered corner is not a ring. A sample with
+  enough blobs but implausible geometry is **INCONCLUSIVE**, not accepted.
+  These are conservative screening heuristics, never an automatic approval.
 - Source-video SHA-256 to distinguish recordings. The video itself supplies **no proven Roblox source commit**.
 
 The three outcome states are **FAIL** (measured dark/dot-like regression), **INCONCLUSIVE** (viewpoint or region unsuitable), and **REVIEW_REQUIRED** (minimal pixel thresholds met, but a person must check the actual sun/cloud shapes, ten numbers, 26 letters, photographic fidelity, collisions and FPS). **This tool never reports a native-device approval or independently confirms the published Roblox version.**
@@ -39,7 +46,9 @@ A private October 9 landscape iPhone recording, measured at 11.5 seconds with a 
 | Sufficiently large white cloud components | 0 |
 | Screening verdict | **FAIL** on all three conditions |
 
-An independently generated bright synthetic rug with broader rays/clouds passes the numeric thresholds only as **REVIEW_REQUIRED**; synthetic dark/dot-like geometry and invalid ROI are rejected by the self-test. Thresholds are deliberately conservative, not a claim that pixel segmentation is perceptually sufficient. The private source video, frames, screenshots, file paths, Roblox account screens, identifiers, and EXIF **must never be pushed to GitHub or uploaded to a workflow artifact**.
+An independently generated bright synthetic rug with broader rays/clouds passes the numeric thresholds only as **REVIEW_REQUIRED**; synthetic dark/dot-like geometry, unrelated white paper rectangles,
+fake cloud clusters, clustered orange ray stickers and invalid ROI are rejected
+by the self-test. Thresholds are deliberately conservative, not a claim that pixel segmentation is perceptually sufficient. The private source video, frames, screenshots, file paths, Roblox account screens, identifiers, and EXIF **must never be pushed to GitHub or uploaded to a workflow artifact**.
 
 ## Release controls
 

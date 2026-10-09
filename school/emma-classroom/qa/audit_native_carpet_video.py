@@ -22,6 +22,7 @@ PROFILE="rug-native-v1"
 BLUE_MEDIAN_MIN=85
 MIN_CLOUDS=8
 MIN_RAYS=8
+MIN_SECTORS=7
 
 
 def polygon_argument(value: str) -> list[tuple[int,int]]:
@@ -102,7 +103,24 @@ def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
     rays=components(orange,max(55,round(.011*sun_area)))
     white=((saturation<=65)&(brightness>=160)
            &(roi>0)&(distance>=radius*1.8))
-    clouds=components(white,max(105,round(.020*sun_area)))
+    # Size by itself is not enough: unrelated paper rectangles beyond the
+    # circle could previously be counted as ten legitimate rug clouds.
+    # A cloud needs to lie on the photographed ring around the verified sun.
+    white_candidates=components(white,max(105,round(.020*sun_area)))
+    clouds=[item for item in white_candidates
+            if radius*1.90<=math.hypot(
+                item["center"][0]-sun_x,item["center"][1]-sun_y
+            )<=radius*4.30]
+    def angular_sectors(items: list[dict]) -> int:
+        bins=set()
+        for item in items:
+            cx,cy=item["center"]
+            theta=math.atan2(cy-sun_y,cx-sun_x)%(2*math.pi)
+            bins.add(min(11,int(theta*12/(2*math.pi))))
+        return len(bins)
+    ray_sectors=angular_sectors(rays)
+    cloud_sectors=angular_sectors(clouds)
+    distributed=(ray_sectors>=MIN_SECTORS and cloud_sectors>=MIN_SECTORS)
     defects=[]
     if median_blue<BLUE_MEDIAN_MIN:
         defects.append("CARPET_TOO_DARK")
@@ -110,14 +128,23 @@ def screen(frame: np.ndarray, polygon: list[tuple[int,int]],
         defects.append("SUN_RAYS_STILL_DOT_LIKE")
     if len(clouds)<MIN_CLOUDS:
         defects.append("CLOUDS_STILL_DOT_LIKE")
+    # The screen may be cropped, or there may be stray papers/rays in one
+    # quadrant. In either case, do not call it REVIEW_REQUIRED as if ten
+    # well-distributed classroom clouds had been found.
+    status="FAIL" if defects else (
+        "REVIEW_REQUIRED" if distributed else "INCONCLUSIVE"
+    )
     return {
-        "status":"FAIL" if defects else "REVIEW_REQUIRED",
+        "status":status,
         "defects":defects,
         "carpet_blue_median_b":round(median_blue,1),
         "blue_carpet_fraction":round(blue_fraction,3),
         "central_sun_area_pixels":sun_area,
         "ray_components_large_enough":len(rays),
         "cloud_components_large_enough":len(clouds),
+        "sun_ray_angular_sectors":ray_sectors,
+        "cloud_angular_sectors":cloud_sectors,
+        "geometric_distribution_ok":distributed,
         "sun_center":[round(sun_x,1),round(sun_y,1)],
         "notes":"Thresholds screen obvious regressions only. They do not certify readable numbers, fidelity or FPS.",
     }
@@ -159,8 +186,54 @@ def self_test() -> None:
     assert improved["status"]=="REVIEW_REQUIRED",improved
     bad_roi=screen(synth(True),[(5,5),(15,5),(15,15),(5,15)],hint)
     assert bad_roi["status"]=="INCONCLUSIVE",bad_roi
+    # An actual false-positive from the former detector: replacing ten
+    # real cloud silhouettes with ordinary white paper rectangles used to
+    # yield REVIEW_REQUIRED even with no genuine cloud ring present.
+    paper_color=(235,245,250)
+    background=(200,130,95)
+    papers=synth(True)
+    for n in range(10):
+        angle=2*pi*n/10
+        pos=(round(500+120*cos(angle)),round(360+120*sin(angle)))
+        cv2.ellipse(papers,pos,(20,12),0,0,360,background,-1)
+    for n in range(10):
+        px=210+(n%5)*48
+        py=205+(n//5)*55
+        cv2.rectangle(papers,(px,py),(px+29,py+20),paper_color,-1)
+    fake_papers=screen(papers,polygon,hint)
+    assert fake_papers["status"] in ("FAIL","INCONCLUSIVE"),fake_papers
+
+    clustered=synth(True)
+    for n in range(10):
+        angle=2*pi*n/10
+        pos=(round(500+120*cos(angle)),round(360+120*sin(angle)))
+        cv2.ellipse(clustered,pos,(20,12),0,0,360,background,-1)
+    for n in range(10):
+        px=175+(n%5)*64
+        py=285+(n//5)*55
+        cv2.ellipse(clustered,(px,py),(18,9),0,0,360,paper_color,-1)
+    clustered_result=screen(clustered,polygon,hint)
+    assert clustered_result["status"] in ("FAIL","INCONCLUSIVE"),clustered_result
+
+    # Likewise, 16 large orange stickers squeezed into one quadrant are
+    # not a 16-ray sunburst, despite passing the old component-count gate.
+    quadrant=synth(True)
+    for n in range(16):
+        angle=2*pi*n/16
+        pos=(round(500+71*cos(angle)),round(360+71*sin(angle)))
+        cv2.ellipse(quadrant,pos,(15,10),math.degrees(angle),
+                    0,360,background,-1)
+    for px in (545,558,571,584):
+        for py in (330,342,354,366):
+            cv2.rectangle(quadrant,(px,py),(px+8,py+8),
+                          (45,145,238),-1)
+    fake_rays=screen(quadrant,polygon,hint)
+    assert fake_rays["status"] in ("FAIL","INCONCLUSIVE"),fake_rays
+
     print("NATIVE_RUG_SELF_TEST_PASS dark_and_dot_regressions_rejected=true "
-          "improved_scene_requires_human_review=true invalid_roi_inconclusive=true")
+          "improved_synthetic_requires_human_review=true "
+          "invalid_roi_inconclusive=true unrelated_papers_rejected=true "
+          "clustered_clouds_rejected=true quadrant_rays_rejected=true")
 
 
 def video_sha256(path: Path) -> str:
