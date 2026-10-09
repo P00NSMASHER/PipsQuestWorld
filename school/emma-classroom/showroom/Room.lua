@@ -684,6 +684,20 @@ local function buildBackDoorAndHall(root: Instance)
     part(root,"Hall left brick",Vector3.new(1.1,4.3,23),CFrame.new(-8.5,2.15,38),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     part(root,"Hall right brick",Vector3.new(1.1,4.3,23),CFrame.new(8.5,2.15,38),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     part(root,"Hall ceiling",Vector3.new(18,.4,23),CFrame.new(0,13,38),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
+    -- The October 8 iPhone walkthrough showed OPEN SKY at the end of
+    -- this apparently indoor corridor. Close the physical end of the hall,
+    -- then face it with proper brick dado and a recessed school notice.
+    -- Keep the 27-stud classroom entrance clear for normal walking.
+    part(root,"Rear corridor end wall",Vector3.new(18,13,.85),
+        CFrame.new(0,6.5,49.40),P.blueSoft,Enum.Material.SmoothPlastic,true)
+    part(root,"Rear corridor brick dado",Vector3.new(17.75,4.15,.12),
+        CFrame.new(0,2.075,48.90),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    part(root,"Rear corridor navy cap rail",Vector3.new(17.75,.16,.13),
+        CFrame.new(0,4.2,48.82),P.blue,Enum.Material.Wood,false)
+    part(root,"Rear corridor wood bulletin frame",Vector3.new(6.8,3.1,.15),
+        CFrame.new(0,8.25,48.87),Color3.fromRGB(117,83,57),Enum.Material.Wood,false)
+    part(root,"Rear corridor recessed cork",Vector3.new(6.34,2.65,.08),
+        CFrame.new(0,8.25,48.76),Color3.fromRGB(161,123,87),Enum.Material.Fabric,false)
     local hallLight=part(root,"Hall fluorescent light",Vector3.new(6,.22,2),CFrame.new(0,12.72,36),Color3.fromRGB(250,247,225),Enum.Material.Neon,false)
     local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.55;light.Range=16;light.Parent=hallLight
 end
@@ -699,6 +713,20 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
     part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
+    -- Both z ends were entirely open: real iPhone video at 5-7 seconds
+    -- revealed blue sky beside the classroom door and a dangling chair rail.
+    -- Cap only the OUTER corridor ends, not the entrance through x=37.
+    for _,endZ in ipairs({5.65,25.35}) do
+        local interior = endZ < 15.5 and .53 or -.53
+        part(root,"Side corridor end wall",Vector3.new(18,13,.80),
+            CFrame.new(45.5,6.5,endZ),P.blueSoft,Enum.Material.SmoothPlastic,true)
+        part(root,"Side corridor brick dado",Vector3.new(17.7,4.25,.13),
+            CFrame.new(45.5,2.125,endZ+interior),
+            Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+        part(root,"Side corridor navy cap rail",Vector3.new(17.7,.16,.12),
+            CFrame.new(45.5,4.30,endZ+interior*1.12),
+            P.blue,Enum.Material.Wood,false)
+    end
     local hallLight=part(root,"Side hall fluorescent",Vector3.new(6,.22,2),CFrame.new(47,12.72,15.5),Color3.fromRGB(250,247,225),Enum.Material.Neon,false)
     local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.5;light.Range=15;light.Parent=hallLight
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
@@ -753,9 +781,18 @@ function World.build()
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
     for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
     for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
-    for _,x in ipairs({-36.35,36.35}) do part(root,"Blue baseboard",Vector3.new(.35,.72,61),CFrame.new(x,.55,-4),P.blue,Enum.Material.Wood,false) end
+    -- Preserve the navy finish without running wood THROUGH an open door.
+    -- The original one-piece 61-stud right-hand rail was plainly suspended
+    -- across the staff doorway at player eye height in the phone recording.
+    part(root,"Blue baseboard",Vector3.new(.35,.72,61),
+        CFrame.new(-36.35,.55,-4),P.blue,Enum.Material.Wood,false)
+    for _,span in ipairs({{-13.5,42.5},{25,3.5}}) do
+        part(root,"Blue baseboard",Vector3.new(.35,.72,span[2]),
+            CFrame.new(36.35,.55,span[1]),P.blue,Enum.Material.Wood,false)
+        part(root,"Blue chair rail right",Vector3.new(.35,.35,span[2]),
+            CFrame.new(36.32,5.3,span[1]),P.blue,Enum.Material.Wood,false)
+    end
     for _,z in ipairs({-34.35,26.35}) do part(root,"Blue baseboard",Vector3.new(73,.72,.35),CFrame.new(0,.55,z),P.blue,Enum.Material.Wood,false) end
-    part(root,"Blue chair rail right",Vector3.new(.35,.35,61),CFrame.new(36.32,5.3,-4),P.blue,Enum.Material.Wood,false)
 
     buildWindows(root)
     buildFrontWall(root)
