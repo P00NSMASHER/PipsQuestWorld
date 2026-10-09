@@ -191,11 +191,18 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             tint:Lerp(P.cream,.095),Enum.Material.SmoothPlastic,false)
         wing.Reflectance=.015
     end
-    -- A small recessed grip, inset fasteners and visible chair-frame supports
-    -- read as manufactured furniture rather than a colored rectangular wall.
-    roundedPanel(parent,name.." hand grip",Vector3.new(.96,.14,.027),
-        backCF*CFrame.new(0,.58,-.215),tint:Lerp(P.ink,.28),
-        .055,false,false)
+    -- Reference school photos show ventilation openings near the upper back
+    -- of the blue molded chairs. The 6-Part hidden handgrip plus two tiny
+    -- rivets looked like featureless toy furniture from child eye level.
+    -- Three shallow rear insets approximate openings visually; they are NOT
+    -- drilled holes or alternative gameplay collision shapes.
+    for _,dx in ipairs({-.54,0,.54}) do
+        local vent=part(parent,name.." ventilation inset",
+            Vector3.new(.17,.63,.034),backCF*CFrame.new(dx,.40,.139),
+            tint:Lerp(P.ink,.53),Enum.Material.SmoothPlastic,false)
+        vent.Reflectance=.005
+        vent.CastShadow=false
+    end
     for _,dx in ipairs({-.82,.82}) do
         for _,dz in ipairs({-.66,.66}) do
             cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
@@ -213,8 +220,6 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
         cylinder(parent,name.." underseat frame runner",Vector3.new(1.65,.13,.13),
             CFrame.new(x+dx,1.41,z)*CFrame.Angles(0,math.pi/2,0),
             P.metal,Enum.Material.Metal,false)
-        ball(parent,name.." backrest rivet",Vector3.new(.14,.14,.08),
-            backCF*CFrame.new(dx,-.38,-.18),P.metal,Enum.Material.Metal,false)
     end
 end
 local function desk(parent: Instance,x: number,z: number,index: number,emma: boolean)

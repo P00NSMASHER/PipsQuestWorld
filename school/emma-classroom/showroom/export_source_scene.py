@@ -1076,6 +1076,51 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Student chair molded side return"] == 32, (
         "Expected exactly two subtle chair edge returns on each of 16 chairs"
     )
+    # Ref photos show upper-back ventilation slots. Three original dark
+    # manufactured inset shapes per chair replace 8 low-value decorations:
+    # 6 handgrip roundedPanel pieces and 2 rivets. Physical/seat collision
+    # silhouettes are unchanged; no holes are cut in the current fallback.
+    assert by_name["Student chair ventilation inset"]==48, (
+        "Student chair should have three photo-guided insets on each of 16 backs"
+    )
+    for old in ("Student chair hand grip",
+                "Student chair hand grip center",
+                "Student chair hand grip rounded corner",
+                "Student chair backrest rivet"):
+        assert by_name[old]==0, "Old excess chair trim returned: "+old
+    shells=[v for v in lines if v[1]=="Student chair school back shell"]
+    insets=[v for v in lines if v[1]=="Student chair ventilation inset"]
+    assert len(shells)==16
+    matching=set()
+    for shell in shells:
+        x,y,z=(float(shell[i]) for i in (9,10,11))
+        attached=[v for v in insets if (
+            abs(float(v[9])-x)<.62 and abs(float(v[11])-z)<.30
+        )]
+        assert len(attached)==3, (
+            "Student chair ventilation insets missing or detached"
+        )
+        assert sorted(round(float(v[9])-x,2) for v in attached)==[-.54,0,.54], (
+            "Three molded ventilation insets lost their symmetric upper positions"
+        )
+        for vent in attached:
+            assert vent[4].endswith("SmoothPlastic") and (
+                abs(float(vent[6])-.17)<.025 and
+                abs(float(vent[7])-.63)<.025 and
+                abs(float(vent[8])-.034)<.012
+            ), "Molded vent silhouette became an oversized opaque rectangle"
+            assert .26<float(vent[10])-y<.49, (
+                "Ventilation insets moved away from upper chair back"
+            )
+            assert float(vent[5])<.03, (
+                "Chair vent became invisible by transparency"
+            )
+            matching.add(id(vent))
+    assert len(matching)==48, "Same decorative chair inset counted repeatedly"
+    print("PHOTO_CHAIR_VENTS_PASS backs=16 rear_insets=48 "
+          "photo_guided_not_real_holes=true collision_unchanged=true "
+          "mobile_parts_saved=80 native_iphone_pending")
+
     tray_rails=[r for r in lines if r[1]=="Book tray side"]
     assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"
     for r in tray_rails:
