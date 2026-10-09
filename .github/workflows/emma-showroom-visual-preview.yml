@@ -20,7 +20,19 @@ jobs:
       - name: Get exact review head
         uses: actions/checkout@v4
         with:
+          # Never label a synthetic PR merge commit as the classroom head.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Verify exact source revision
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_SOURCE_SHA"
+          echo "EXACT_SOURCE_CHECKOUT_PASS sha=$actual"
+          printf 'Classroom visual source: %s\n' "$actual" >> "$GITHUB_STEP_SUMMARY"
       - name: Install pinned geometry executor
         shell: bash
         run: |
@@ -129,12 +141,18 @@ jobs:
           # scene edit, not merely the polished teaching-wall cameras.
           render_eye_checked 14-eye-staff-door 29,5.5,14.5 45.5,6.2,23.8
           render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
-          "$RHR" scene "$RUNNER_TEMP/emma-classroom-source.rbxmx" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor; do
+          "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
+            echo "Reject blank exterior control; retrying independent exterior camera"
+            "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
+          fi
+          check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
+          echo "VISUAL_FRAME_INVENTORY_PASS 15=3_aerial+1_exterior+11_eye"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
@@ -151,7 +169,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: emma-classroom-geometry-preview-${{ github.sha }}
+          name: emma-classroom-geometry-preview-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             ${{ runner.temp }}/visual/*.png
             ${{ runner.temp }}/emma-classroom-source.rbxmx

@@ -24,7 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # pull_request default is the synthetic merge ref, not the PR head.
+          # Check the same exact source revision being reviewed for release.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Verify exact source revision
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_SOURCE_SHA"
+          echo "EXACT_SOURCE_CHECKOUT_PASS sha=$actual"
+          printf 'Classroom source tested: %s\n' "$actual" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Audit last confirmed published Roblox preview without claiming candidate is live
         shell: bash
@@ -100,7 +113,7 @@ jobs:
       - name: Preserve exact-source preview candidate
         uses: actions/upload-artifact@v4
         with:
-          name: emma-room-replica-${{ github.sha }}
+          name: emma-room-replica-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             ${{ runner.temp }}/emma-replica.rbxl
             ${{ runner.temp }}/emma-replica.rbxlx

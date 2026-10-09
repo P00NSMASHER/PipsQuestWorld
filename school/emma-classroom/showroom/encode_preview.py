@@ -9,7 +9,16 @@ from pathlib import Path
 from PIL import Image
 
 folder=Path(sys.argv[1])
-names=("01-isometric","02-front","03-top","05-eye-front","06-eye-back","07-eye-windows","08-eye-storage","09-chair-back","10-desk-side","11-storage-close-up","12-reading-rug","13-reading-books")
+# Every rendered viewpoint is inspectable in the source-only CI log.
+# In particular, source eye-level staff/rear corridor controls used to be
+# rendered and pixel-checked but absent from the compact evidence.
+names=("01-isometric","02-front","03-top","04-exterior-control",
+       "05-eye-front","06-eye-back","07-eye-windows","08-eye-storage",
+       "09-chair-back","10-desk-side","11-storage-close-up",
+       "12-reading-rug","13-reading-books",
+       "14-eye-staff-door","15-eye-rear-corridor")
+assert len(names)==15 and len(set(names))==15
+print("VISUAL_EVIDENCE_INVENTORY_PASS frames="+str(len(names)),flush=True)
 for n in names:
     path=folder/(n+".png")
     if not path.is_file():
