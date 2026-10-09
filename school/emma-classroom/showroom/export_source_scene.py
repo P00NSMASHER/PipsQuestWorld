@@ -465,6 +465,27 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Reading rug flower petal"]==0, (
         "Synthetic flower field returned to the real sun/cloud carpet"
     )
+    # Real October 9 iPhone v68: each number was printed on an opaque,
+    # rectangular white label, not inside a rounded cloud. Keep the same
+    # ten anchors and 20 cloud lobes but make anchor geometry invisible.
+    anchors=[v for v in lines if v[1]=="Photo rug number cloud numeral"]
+    lobes=[v for v in lines if v[1]=="Photo rug number cloud lobe"]
+    assert len(anchors)==10 and len(lobes)==20
+    assert all(float(v[5])>=.99 and v[4].endswith("SmoothPlastic")
+               for v in anchors), "White cloud label sticker has returned"
+    assert all(v[4].endswith("Fabric") and (
+        min(float(x) for x in v[12:15])>.90
+    ) for v in lobes), "Rounded off-white fabric clouds regressed"
+    assert all(.78<float(v[6])<.82 and .56<float(v[8])<.60
+               for v in anchors), "Cloud numbering anchor changed child scale"
+    sun_surface=only("Photo rug sun center")
+    assert sun_surface[4].endswith("SmoothPlastic") and (
+        float(sun_surface[12])>.94 and float(sun_surface[13])>.70
+    ), "iPhone sun reverted to darkened fabric brown"
+    carpet=only("Alphabet rug")
+    assert float(carpet[14])>.69, "Alphabet rug returned to nearly black navy"
+    print("IPHONE_CARPET_SHAPES_PASS cloud_rectangles_hidden=true "
+          "cloud_lobes=20 anchors=10 brighter_sun=true")
     print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
           "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
           "blue_wordwall=true apple_markers=8")
@@ -769,9 +790,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     sun_pos=(float(sun[9]),float(sun[11]))
     sun_rays=[r for r in lines if r[1]=="Photo rug sun ray"]
     assert len(sun_rays)==16, "Photographed sunburst lost its sixteen alternating rays"
-    assert all(r[3].endswith("Ball") and r[4].endswith("Fabric")
+    assert all(r[3].endswith("Ball") and r[4].endswith("SmoothPlastic")
                for r in sun_rays), (
-        "Photo sun rays reverted to a row of flat synthetic rectangles"
+        "Photo sun rays reverted to dark fabric or flat rectangles"
     )
     ray_colors={tuple(round(float(v),3) for v in r[12:15]) for r in sun_rays}
     assert len(ray_colors)==2, "Sunburst no longer has both orange and gold threads"

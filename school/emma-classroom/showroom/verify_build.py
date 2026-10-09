@@ -51,6 +51,14 @@ assert "Vector3.new(2.48,1.87,.25)" in room, "School back shape proportions regr
 assert 'name.." seamless molded back shell"' not in room, "Oval stool prototype returned"
 assert 'name.." molded back panel"' not in room and "bandProfile={" not in room, "Rejected segmented chair returned"
 assert 'name.." underseat frame runner"' in room, "Chair steel runner missing"
+assert 'gui.CanvasSize=Vector2.new(180,120)' in room, "Carpet mobile text canvas reverted to unreadably large"
+assert 'label.TextSize=92' in room and 'label.TextScaled=false' in room, (
+    "Carpet letters or cloud numbers reverted to tiny scaled text"
+)
+assert 'numeralAnchor.Transparency=1' in room, (
+    "White rectangular cloud-label backing returned"
+)
+assert 'emphasizeRugText(numeral,true)' in room and 'emphasizeRugText(letter,false)' in room
 assert 'Vector3.new(.82,.51,.51)' in room, "Child-size desk water bottle shape regressed"
 assert 'Water bottle tapered shoulder' in room, "Bottle lacks supported neck detail"
 assert 'CFrame.new(bottleX,4.19,bottleZ)' in room, "Bottle cap offset from corrected geometry"

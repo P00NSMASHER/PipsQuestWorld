@@ -65,6 +65,32 @@ local function surfaceText(target: BasePart,text: string,face: Enum.NormalId,tex
     return t
 end
 
+-- The October 9 native iPhone recording showed carpet lettering as tiny
+-- marks. The generic SurfaceGui uses a 1,000px canvas: 3D text then shrinks
+-- heavily on a child-height screen. Limit this exclusively to carpet labels,
+-- with a deliberate font size and a transparent numeral background.
+local function emphasizeRugText(label: TextLabel,transparent: boolean)
+    local gui=label.Parent
+    if gui and gui:IsA("SurfaceGui") then
+        gui.CanvasSize=Vector2.new(180,120)
+        gui.LightInfluence=0
+    end
+    label.BackgroundTransparency=transparent and 1 or .04
+    label.TextScaled=false
+    label.TextWrapped=false
+    label.TextSize=92
+    label.TextStrokeColor3=Color3.fromRGB(248,244,231)
+    label.TextStrokeTransparency=.45
+    for _,child in ipairs(label:GetChildren()) do
+        if child:IsA("UIPadding") then
+            child.PaddingLeft=UDim.new(0,4)
+            child.PaddingRight=UDim.new(0,4)
+            child.PaddingTop=UDim.new(0,2)
+            child.PaddingBottom=UDim.new(0,2)
+        end
+    end
+end
+
 local function sign(parent: Instance,name: string,text: string,size: Vector3,cf: CFrame,bg: Color3,fg: Color3): Part
     local p=part(parent,name,size,cf,bg,Enum.Material.SmoothPlastic,false)
     surfaceText(p,text,cf.Position.Z>20 and Enum.NormalId.Front or Enum.NormalId.Back,fg,bg)
@@ -418,7 +444,7 @@ local function buildClassroomTexture(root: Instance)
     local flat=CFrame.Angles(0,0,math.pi/2)
     -- A Cylinder Part uses local X as the axis; rotate it to lie on the floor.
     cylinder(root,"Alphabet rug",Vector3.new(.10,14.2,14.2),
-        CFrame.new(-25,.56,14)*flat,Color3.fromRGB(42,83,137),
+        CFrame.new(-25,.56,14)*flat,Color3.fromRGB(68,117,181),
         Enum.Material.Fabric,false)
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local edgeColors={
@@ -433,11 +459,13 @@ local function buildClassroomTexture(root: Instance)
         local tile=part(root,"Reading rug alphabet border",Vector3.new(1.26,.022,.84),
             CFrame.new(x,.621,z)*CFrame.Angles(0,-angle,0),
             edgeColors[(i-1)%#edgeColors+1],Enum.Material.Fabric,false)
-        surfaceText(tile,string.sub(alphabet,i,i),Enum.NormalId.Top,P.ink,tile.Color)
+        local letter=surfaceText(tile,string.sub(alphabet,i,i),
+            Enum.NormalId.Top,P.ink,tile.Color)
+        emphasizeRugText(letter,false)
     end
     cylinder(root,"Photo rug sun center",Vector3.new(.034,2.05,2.05),
-        CFrame.new(-25,.640,14)*flat,Color3.fromRGB(237,166,58),
-        Enum.Material.Fabric,false)
+        CFrame.new(-25,.640,14)*flat,Color3.fromRGB(249,190,68),
+        Enum.Material.SmoothPlastic,false)
     -- The real carpet's sunshine is an orange-and-gold irregular sunburst,
     -- not eight flat rectangular ruler bars. Reuse the existing radial art
     -- family with two alternating fabric ellipsoid profiles (16 total).
@@ -452,9 +480,9 @@ local function buildClassroomTexture(root: Instance)
         ball(root,"Photo rug sun ray",size,
             CFrame.new(-25+math.cos(angle)*r,.649,14+math.sin(angle)*r)*
                 CFrame.Angles(0,-angle,0),
-            broad and Color3.fromRGB(247,199,81)
-                or Color3.fromRGB(219,112,50),
-            Enum.Material.Fabric,false)
+            broad and Color3.fromRGB(255,211,84)
+                or Color3.fromRGB(239,140,52),
+            Enum.Material.SmoothPlastic,false)
     end
     for i=1,10 do
         local angle=i*math.pi/5
@@ -463,12 +491,19 @@ local function buildClassroomTexture(root: Instance)
         for _,dx in ipairs({-.29,.29}) do
             cylinder(root,"Photo rug number cloud lobe",Vector3.new(.025,1.00,1.00),
                 CFrame.new(x+dx,.637,z)*flat,
-                Color3.fromRGB(227,236,235),Enum.Material.Fabric,false)
+                Color3.fromRGB(250,248,237),Enum.Material.Fabric,false)
         end
-        local label=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.62,.016,.48),CFrame.new(x,.659,z),
-            Color3.fromRGB(227,236,235),Enum.Material.Fabric,false)
-        surfaceText(label,tostring(i),Enum.NormalId.Top,P.blue,label.Color)
+        -- Keep one invisible, noncolliding anchor for a large dark number.
+        -- The old opaque white rectangular anchor looked like a sticker on
+        -- each circular cloud in actual iPhone gameplay.
+        local numeralAnchor=part(root,"Photo rug number cloud numeral",
+            Vector3.new(.80,.016,.58),CFrame.new(x,.659,z),
+            Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
+        numeralAnchor.Transparency=1
+        local numeral=surfaceText(numeralAnchor,tostring(i),
+            Enum.NormalId.Top,Color3.fromRGB(34,66,104),
+            numeralAnchor.Color)
+        emphasizeRugText(numeral,true)
     end
 
     -- Student supply baskets on the center tables.
