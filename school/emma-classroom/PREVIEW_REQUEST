@@ -1,12 +1,12 @@
 requested-mode: classroom-progress-preview-only
 authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-qa-and-next-owner-preview-2026-10-09
+reaffirmed-authorization: user-delegated-next-classroom-owner-preview-2026-10-09
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 8b793c0f5b106d7f5765078f5d710bbf1093c5ec
-notice: Publish native-stable outdoor foliage 38 crown cylinders and preserve all previously accepted classroom-only changes for owner iPhone preview; final visual approval remains pending
-scope: exact classroom-only Rojo project with 16 desk-chair pairs, corrected sun/cloud primitives, five real-wood-shelf storybooks, and 7 original exterior trees beyond both windows
-production-furniture-meshes: disabled until actual Roblox Studio and iPhone visual/collision acceptance
-schoolwork-and-progress: unchanged; no curricula, quiz runtime, child data or saved progress modification
-release-status: review-only owner preview, not production visual signoff or PR merge
+source-parent-sha: 0183c9459bf8f56dfae5236adeff8a495974a3fd
+notice: Owner-delegated review-only update after latest live v73; inspect 48 native-stable molded chair vent details on iPhone, preserving classroom and carpet
+scope: exact classroom-only Rojo source pinned to parent SHA; do not alter school study systems, student progress, or active schedules
+production-furniture-meshes: disabled until native Studio and iPhone collision/visual acceptance
+schoolwork-and-progress: no writes or imports
+release-status: playable owner-review preview only, NOT final visual signoff or PR merge
