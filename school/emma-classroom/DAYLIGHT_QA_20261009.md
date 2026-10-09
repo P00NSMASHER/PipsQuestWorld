@@ -18,9 +18,11 @@ avoidable second authority.
 - Retain subtle bloom / sun-rays limits and four existing named effects.
 - Slightly refine dark classroom floor varnish response without changing its
   physical height, WoodPlanks material or collision.
-- Add `audit_lighting.py`, executed in exact-head classroom CI, using actual
-  constructed Luau lighting and six diffuser SurfaceLights. Reject darker
-  overrides and duplicate postprocessing. No new physical parts, new
+- Add `audit_lighting.py`, executed in exact-head classroom CI **and**
+  the existing preview-publishing acceptance workflow, using actual constructed
+  Luau lighting and six diffuser SurfaceLights. Reject darker overrides and
+  duplicate postprocessing. Release-provenance self-checks also protect the
+  mandatory lighting gate from accidental removal. No new physical parts, new
   spotlights, textures, camera code, animations, educational systems or child
   images.
 

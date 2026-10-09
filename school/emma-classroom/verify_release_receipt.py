@@ -73,6 +73,7 @@ def audit() -> None:
         'test "$changed" = "$request"',
         'grep -qx "source-parent-sha: $parent" "$request"',
         "USER_AUTHORIZED_PREVIEW_WITHOUT_FINAL_VISUAL_ACCEPTANCE",
+        "python3 school/emma-classroom/showroom/audit_lighting.py",
         "grep -q 'Enabled = false'",
     ):
         assert guard in workflow, "Missing gated preview publication rule: " + guard
