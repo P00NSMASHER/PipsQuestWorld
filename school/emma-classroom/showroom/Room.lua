@@ -72,16 +72,21 @@ local function sign(parent: Instance,name: string,text: string,size: Vector3,cf:
 end
 
 local function ceilingLight(parent: Instance,x: number,z: number)
-    -- Actual ceiling fixtures use a recessed matte troffer and a small diffusing
-    -- lens. Nine enormous Neon slabs looked like glowing television panels.
-    part(parent,"Recessed light trim",Vector3.new(6.9,.12,2.03),CFrame.new(x,17.72,z),
-        Color3.fromRGB(207,208,204),Enum.Material.Metal,false)
-    local lens=part(parent,"Frosted fluorescent diffuser",Vector3.new(6.3,.08,1.52),
-        CFrame.new(x,17.59,z),Color3.fromRGB(246,241,223),Enum.Material.Glass,false)
-    lens.Transparency=.10;lens.Reflectance=.005
+    -- Photos IMG_2903-2910 show broad ~2:1 recessed fluorescent panels,
+    -- not narrow luminous strips. Preserve the six measured fixture centers
+    -- and established ceiling plane; only correct the manufactured profile.
+    -- A frosted inset lens and visible metal reveal read as real troffers.
+    -- Never return to the nine oversized emissive Neon ceiling slabs.
+    part(parent,"Recessed light trim",Vector3.new(6.90,.12,3.56),
+        CFrame.new(x,17.72,z),
+        Color3.fromRGB(209,211,207),Enum.Material.Metal,false)
+    local lens=part(parent,"Frosted fluorescent diffuser",Vector3.new(6.24,.08,3.08),
+        CFrame.new(x,17.59,z),Color3.fromRGB(249,246,238),
+        Enum.Material.Glass,false)
+    lens.Transparency=.075;lens.Reflectance=.005
     local light=Instance.new("SurfaceLight")
-    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,240,220)
-    light.Brightness=.13;light.Range=25;light.Angle=115;light.Shadows=false;light.Parent=lens
+    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,246,237)
+    light.Brightness=.15;light.Range=25;light.Angle=115;light.Shadows=false;light.Parent=lens
 end
 
 local function plant(parent: Instance,x: number,y: number,z: number,scale: number)
