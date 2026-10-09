@@ -325,6 +325,43 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(actual_parts("Tree trunk outside"))==3 and (
         len(actual_parts("Irregular exterior leaf cluster"))==18
     ), "Original tree depth/detail was lost"
+    # Previous player-eye windows revealed mechanically repeated circular
+    # crowns. Reject uniform canopy stamps from the actual Luau scene.
+    near_leaves=actual_parts("Irregular exterior leaf cluster")
+    crowns=outdoor_canopies+near_leaves
+    assert len(crowns)==38 and all(p[3].endswith("Ball") for p in crowns), (
+        "Layered 38-part school-window treeline lost its foliage"
+    )
+    assert all(p[4].endswith("Grass") for p in crowns), (
+        "Foliage lost the original grass material"
+    )
+    assert all(float(p[9])+float(p[6])/2 < -36.60 for p in crowns), (
+        "Foliage intrudes across classroom windows"
+    )
+    tilted=sum(1 for p in crowns
+               if abs(float(p[20]))>.035 or abs(float(p[22]))>.035)
+    assert tilted>=30, (
+        "Tree crowns reverted to mechanically upright repeated spheres"
+    )
+    heights={round(float(p[10]),2) for p in crowns}
+    profiles={(round(float(p[7]),2),round(float(p[8]),2))
+              for p in crowns}
+    assert len(heights)>=30 and len(profiles)>=25, (
+        "Outdoor trees reverted to identical copied canopy silhouettes"
+    )
+    for trunk in outdoor_trees:
+        tx,tz=float(trunk[9]),float(trunk[11])
+        attached=[p for p in outdoor_canopies if (
+            abs(float(p[9])-tx)<.65 and abs(float(p[11])-tz)<4.4
+        )]
+        assert len(attached)>=4, (
+            "Exterior foliage no longer branches from its trunk"
+        )
+    print("PHOTO_FOLIAGE_VARIETY_PASS trees=7 lobes=38 "
+          "tilted_crowns="+str(tilted)
+          +" unique_heights="+str(len(heights))
+          +" unique_profiles="+str(len(profiles))
+          +" no_new_parts=true behind_glass=true",flush=True)
     print("PHOTO_WINDOW_GREENERY_PASS trees=4 crown_clusters=20 "
           "prior_trees=3 old_apartments=0 fake_clouds=0 "
           "behind_window_glass=true",flush=True)

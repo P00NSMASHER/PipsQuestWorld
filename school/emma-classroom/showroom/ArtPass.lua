@@ -66,16 +66,37 @@ local function windowNeighborhood(root:Instance)
         { .08,1.52,1.68, .79,2.20,2.39},
         { .20,3.58,-1.16,.78,2.17,2.45},
     }
+    -- Four photographed outdoor sightlines, but not four duplicated tree
+    -- stamps: deterministic per-tree offsets and elongated, tilted clusters
+    -- give irregular branches rather than repeated green circular balloons.
+    -- All foliage stays behind the glazing. No additional geometry/meshes.
+    local treeProfiles={
+        {rise=.04,lean=-9, spread=.91, height=1.12,shift=-.24},
+        {rise=.24,lean=13, spread=1.09,height=.92, shift=.28},
+        {rise=-.11,lean=-16,spread=1.16,height=1.04,shift=-.05},
+        {rise=.17,lean=7,  spread=.95,height=1.17,shift=.19},
+    }
     for i,z in ipairs({-24.5,-15.5,1.0,11.5}) do
         local trunk=piece(world,"Photo exterior oak trunk",
             Vector3.new(.31,4.90,.42),CFrame.new(-38.32,6.36,z),
             Color3.fromRGB(99,85,65),Enum.Material.Wood,false)
+        local style=treeProfiles[i]
         for k,v in ipairs(crownSections) do
-            orb(world,"Photo exterior irregular foliage",
-                Vector3.new(v[4],v[5],v[6]),
-                trunk.CFrame*CFrame.new(v[1],v[2]+(i%2)*.13,v[3]),
-                distantLeaves[(i+k-2)%#distantLeaves+1],
+            local stagger=math.sin(i*1.30+k*2.10)*.23
+            local heightShift=math.cos(i*.80+k*1.77)*.15
+            local lean=math.rad(style.lean+(k-3)*5)
+            local cf=trunk.CFrame*CFrame.new(
+                v[1]-.05,
+                v[2]*style.height+style.rise+heightShift,
+                v[3]*style.spread+style.shift+stagger
+            )*CFrame.Angles(lean,math.rad((k*7+i*11)%29-14),0)
+            local foliage=orb(world,"Photo exterior irregular foliage",
+                Vector3.new(v[4],v[5]*(.94+(k%3)*.075),
+                    v[6]*(.87+(i%3)*.085)),
+                cf,
+                distantLeaves[(i+k*2-2)%#distantLeaves+1],
                 Enum.Material.Grass)
+            foliage.CastShadow=false
         end
     end
     for i,z in ipairs({-28.5,-9.5,16.5}) do
@@ -98,10 +119,18 @@ local function windowNeighborhood(root:Instance)
             Color3.fromRGB(82,129,88),Color3.fromRGB(132,159,103),
         }
         for k,v in ipairs(clusters) do
-            orb(world,"Irregular exterior leaf cluster",
-                Vector3.new(v[4],v[5],v[6]),
-                trunk.CFrame*CFrame.new(v[1],v[2],v[3]),
-                shades[(k+i-2)%#shades+1],Enum.Material.Grass)
+            -- Vary heights, lean and silhouette on all three older trunks.
+            -- The original six-lobe stamp was duplicated tree-for-tree.
+            local lean=math.rad((i-2)*10+(k-3)*4)
+            local cf=trunk.CFrame*CFrame.new(
+                v[1]-.06, v[2]+math.cos(k*1.37+i)*.16,
+                v[3]+math.sin(k*1.8+i*.9)*.24
+            )*CFrame.Angles(lean,math.rad((k*13+i*7)%25-12),0)
+            local crown=orb(world,"Irregular exterior leaf cluster",
+                Vector3.new(v[4],v[5]*(.92+(i%3)*.07),
+                    v[6]*(.89+(k%3)*.08)),
+                cf,shades[(k+i-2)%#shades+1],Enum.Material.Grass)
+            crown.CastShadow=false
         end
     end
     -- The genuine photographs show muted sky and vegetation rather than
