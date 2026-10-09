@@ -117,13 +117,61 @@ local function readingCorner(root:Instance)
     end
     local titles={"SPACE","PETS","OCEAN","STARS","GARDEN"}
     local colors={C.navy,C.coral,C.blue,C.lilac,C.leaf}
+    -- The actual eye-level render found five blank *white* rectangles. Their
+    -- page blocks protruded in front of the illustrated covers when approached
+    -- from the room (negative Z). Give every book a forward-facing cover and
+    -- original, readable-as-shapes artwork independent of SurfaceGui support.
     for i=1,5 do
         local cf=CFrame.new(-21.75+(i-1)*1.17,3,14.75)*CFrame.Angles(math.rad(-15),0,0)
         piece(group,"Storybook page edges",Vector3.new(1,1.5,.19),cf,C.cream,Enum.Material.SmoothPlastic,false)
-        local cover=piece(group,"Illustrated storybook cover",Vector3.new(1.1,1.64,.05),
-            cf*CFrame.new(0,0,.15),colors[i],Enum.Material.SmoothPlastic,false)
+        local cover=piece(group,"Illustrated storybook cover",Vector3.new(1.1,1.64,.055),
+            cf*CFrame.new(0,0,-.15),colors[i],Enum.Material.SmoothPlastic,false)
         printed(cover,titles[i],Enum.NormalId.Back,C.cream,colors[i])
-        piece(group,"Book spine",Vector3.new(.09,1.64,.28),cf*CFrame.new(-.55,0,.05),
+        local art=cf*CFrame.new(0,.11,-.214)
+        piece(group,"Storybook illustration backing",Vector3.new(.81,.85,.035),
+            art,C.cream,Enum.Material.SmoothPlastic,false)
+        if i==1 then
+            -- A blue night sky with a sun/planet and distinct orbit silhouette.
+            orb(group,"Space planet illustration",Vector3.new(.43,.43,.045),
+                art*CFrame.new(-.08,.08,-.04),C.golden,Enum.Material.SmoothPlastic)
+            piece(group,"Space star illustration",Vector3.new(.31,.10,.045),
+                art*CFrame.new(.20,-.23,-.06)*CFrame.Angles(0,0,math.rad(35)),C.blue,Enum.Material.SmoothPlastic,false)
+        elseif i==2 then
+            -- One broad paw pad and three raised toes.
+            orb(group,"Pet paw main illustration",Vector3.new(.46,.35,.05),
+                art*CFrame.new(0,-.13,-.045),C.ink,Enum.Material.SmoothPlastic)
+            for _,dx in ipairs({-.25,0,.25}) do
+                orb(group,"Pet paw toe illustration",Vector3.new(.16,.17,.04),
+                    art*CFrame.new(dx,.24-math.abs(dx)*.35,-.045),C.ink,Enum.Material.SmoothPlastic)
+            end
+        elseif i==3 then
+            -- Two short layered waterlines and a bright boat mast.
+            for j=1,2 do
+                piece(group,"Ocean illustrated wave",Vector3.new(.66,.13,.04),
+                    art*CFrame.new(0,-.13+(j-1)*.23,-.04),C.blue,Enum.Material.SmoothPlastic,false)
+            end
+            piece(group,"Ocean illustrated sail",Vector3.new(.35,.35,.045),
+                art*CFrame.new(.13,.25,-.05)*CFrame.Angles(0,0,math.rad(30)),C.coral,Enum.Material.SmoothPlastic,false)
+        elseif i==4 then
+            for _,pt in ipairs({{-.22,.20},{.23,.12},{0,-.24}}) do
+                orb(group,"Stars cover constellation",Vector3.new(.21,.21,.045),
+                    art*CFrame.new(pt[1],pt[2],-.05),C.golden,Enum.Material.SmoothPlastic)
+            end
+        else
+            piece(group,"Garden flower stem",Vector3.new(.08,.51,.045),
+                art*CFrame.new(0,-.20,-.045),C.leaf,Enum.Material.SmoothPlastic,false)
+            for k=0,3 do
+                local angle=k*math.pi/2
+                orb(group,"Garden cover flower petal",Vector3.new(.22,.22,.045),
+                    art*CFrame.new(math.cos(angle)*.19,.18+math.sin(angle)*.19,-.05),
+                    C.coral,Enum.Material.SmoothPlastic)
+            end
+            orb(group,"Garden flower center",Vector3.new(.19,.19,.05),
+                art*CFrame.new(0,.18,-.08),C.golden,Enum.Material.SmoothPlastic)
+        end
+        piece(group,"Storybook title band",Vector3.new(.84,.18,.05),
+            cf*CFrame.new(0,-.64,-.224),C.navy,Enum.Material.SmoothPlastic,false)
+        piece(group,"Book spine",Vector3.new(.09,1.64,.28),cf*CFrame.new(-.55,0,-.02),
             C.woodEdge,Enum.Material.SmoothPlastic,false)
     end
     local lamp=piece(group,"Reading floor lamp stem",Vector3.new(.14,7,.14),CFrame.new(-33.8,4.1,18.7),
