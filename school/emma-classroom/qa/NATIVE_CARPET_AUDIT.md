@@ -2,6 +2,15 @@
 
 This is an **offline, reviewer-guided screen**, not a replacement for a real Roblox Studio/iPhone walkthrough or a release approval. It exists because older source-derived renders and constructor tests passed while a real iPhone recording showed a nearly black alphabet rug, dot-like sun rays, and dot-like clouds.
 
+## Versioned numeric receipt
+
+The current screening profile is **`rug-native-v2`**. It supersedes the
+original v1 pixel-count-only audit by requiring cloud ring distance and
+angular distribution around the verified sun. Historical v1 reports should
+retain their v1 profile label and should not be treated as directly
+comparable measurements, even when they identify the same dark/dot-like
+failure. A `REVIEW_REQUIRED` result from v2 still cannot approve a build.
+
 ## Running locally
 
 Requires Python 3.10+, NumPy and OpenCV:

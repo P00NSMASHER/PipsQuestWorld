@@ -18,7 +18,7 @@ try:
 except ImportError as exc:
     raise SystemExit("Install numpy and opencv-python-headless") from exc
 
-PROFILE="rug-native-v1"
+PROFILE="rug-native-v2"
 BLUE_MEDIAN_MIN=85
 MIN_CLOUDS=8
 MIN_RAYS=8
