@@ -215,6 +215,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Desk back steel stretcher":16,
         "Desk basket cross wire":80,
         "Desk basket longitudinal wire":48,
+        "Desk pencil":16,
+        "Desk pencil eraser cap":16,
         "Illustrated storybook cover":5,
         "Storybook illustration backing":5,
         "Storybook title band":5,
@@ -237,6 +239,23 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert by_name["Hanging pastel bunting"]==0, (
         "Unreferenced generic bunting overlapped photo-grounded shape cards"
     )
+    # Original micro ferrules and erasers were detached from the actual
+    # cylinder's local-X axis. The consolidated caps must sit at shaft ends,
+    # not off to one side, and must preserve a 16-stationery set.
+    assert by_name["Pencil ferrule"]==0 and by_name["Pencil eraser"]==0, (
+        "Detached original pencil hardware returned"
+    )
+    pencils=[v for v in lines if v[1]=="Desk pencil"]
+    caps=[v for v in lines if v[1]=="Desk pencil eraser cap"]
+    for cap in caps:
+        px,py,pz=[float(cap[i]) for i in (9,10,11)]
+        separation=min((
+            (px-float(p[9]))**2+(pz-float(p[11]))**2,
+            abs(py-float(p[10]))
+        ) for p in pencils)
+        assert .76**2 <= separation[0] <= .88**2 and separation[1] < .025, (
+            "Pencil eraser cap is not attached to its shaft"
+        )
     assert by_name["Warm lamp shade"]==0, (
         "Reading floor lamp regressed to a spherical balloon-like lampshade"
     )
