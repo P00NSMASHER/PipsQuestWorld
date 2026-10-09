@@ -572,6 +572,7 @@ local function buildClassroomTexture(root: Instance)
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
             Vector3.new(.80,.016,.58),CFrame.new(x,.820,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
+        numeralAnchor.Shape=Enum.PartType.Block
         numeralAnchor.Transparency=1
         local numeral=surfaceText(numeralAnchor,tostring(i),
             Enum.NormalId.Top,Color3.fromRGB(15,44,79),
