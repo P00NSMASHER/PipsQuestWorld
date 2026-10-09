@@ -196,6 +196,47 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert photo_floor[0][4].endswith("WoodPlanks"), (
         "Real classroom floor is wooden, not laminate stone or generic slate"
     )
+    # Actual Luau-built ceiling evidence, BEFORE any preview-only cutaway.
+    # The supplied classroom photos show broad 2:1 recessed fluorescent
+    # troffers. The previous 6.9x2.03 frames read as narrow glowing strips.
+    # This checks size, overhead height, placement, material and count without
+    # altering the strict mobile part budget or the separate navigation audit.
+    trims=actual_parts("Recessed light trim")
+    lenses=actual_parts("Frosted fluorescent diffuser")
+    assert len(trims)==len(lenses)==6, "Classroom ceiling fixture count changed"
+    expected_centers=sorted((round(x,2),round(z,2)) for x in (-18,18)
+                            for z in (-22,0,19))
+    actual_centers=sorted((round(float(p[9]),2),round(float(p[11]),2))
+                          for p in trims)
+    assert actual_centers==expected_centers, (
+        "Photo-grounded troffers moved out of the known ceiling grid"
+    )
+    pairs=sorted(zip(trims,lenses),key=lambda pair:(
+        round(float(pair[0][9]),2),round(float(pair[0][11]),2)))
+    for trim,lens in pairs:
+        width,depth=float(trim[6]),float(trim[8])
+        lens_width,lens_depth=float(lens[6]),float(lens[8])
+        ratio=lens_width/lens_depth
+        assert 1.75 <= width/depth <= 2.10, "Ceiling surround reverted to strips"
+        assert 1.80 <= ratio <= 2.25, "Fluorescent diffuser not rectangular"
+        assert .16 <= (width-lens_width)/2 <= .40, (
+            "Inset fluorescent lens detached from metal surround"
+        )
+        assert .15 <= (depth-lens_depth)/2 <= .34, (
+            "Lens does not fit the troffer's short edge"
+        )
+        assert abs(float(lens[9])-float(trim[9]))<.01 and (
+            abs(float(lens[11])-float(trim[11]))<.01
+        ), "Frosted diffuser shifted away from its ceiling fitting"
+        assert 17.55 <= float(lens[10]) <= 17.63 and (
+            17.69 <= float(trim[10]) <= 17.75
+        ), "Fluorescent light fixture dropped into the player camera"
+        assert trim[4].endswith("Metal") and lens[4].endswith("Glass"), (
+            "Fixture material became a glaring emissive slab"
+        )
+    print("PHOTO_CEILING_TROFFERS_PASS count=6 rectangular_lens=true "
+          "centers_preserved=true no_new_colliders=true ratio="
+          f"{pairs[0][1][6]}/{pairs[0][1][8]}",flush=True)
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.
         # The playable Roblox game still contains its real solid walls/roof.
