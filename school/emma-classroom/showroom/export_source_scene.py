@@ -178,6 +178,24 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     print("IPHONE_PORTAL_GEOMETRY_PASS side_caps=2 rear_cap=1 "
           "staff_door_trim_clear=true actual_luau_parts=true")
+
+    # IMG_2903 through IMG_2910 photo anchors, without copying photos or
+    # publishing personal likenesses. Validate wall and floor before
+    # cutaway cameras temporarily omit room-shell parts.
+    photo_wall=actual_parts("Front wall")
+    photo_floor=actual_parts("Warm oak classroom floor")
+    assert len(photo_wall)==1 and len(photo_floor)==1
+    wall_rgb=[float(x) for x in photo_wall[0][12:15]]
+    floor_rgb=[float(x) for x in photo_floor[0][12:15]]
+    assert wall_rgb[0]>.93 and wall_rgb[1]>.88 and .67<wall_rgb[2]<.78, (
+        "Photo-grounded warm yellow walls regressed"
+    )
+    assert .32<floor_rgb[0]<.43 and .22<floor_rgb[1]<.32 and floor_rgb[2]<.24, (
+        "Photo-grounded dark brown wooden floor regressed"
+    )
+    assert photo_floor[0][4].endswith("WoodPlanks"), (
+        "Real classroom floor is wooden, not laminate stone or generic slate"
+    )
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.
         # The playable Roblox game still contains its real solid walls/roof.
@@ -220,6 +238,38 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         matches=[row for row in lines if row[1]==name]
         assert len(matches)==1, f"Expected one {name} physical part; got {len(matches)}"
         return matches[0]
+
+    # Low-risk indoor features independently visible in the activity photos.
+    # Existing rug centers remain unchanged; activity photos do not prove
+    # which furnishings were moved for the cheer class.
+    rug=only("Alphabet rug")
+    assert rug[3].endswith("Cylinder") and 14<float(rug[7])<14.5, (
+        "Circular alphabet rug reverted to a rectangular shape"
+    )
+    word_wall=only("Class notice board")
+    assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
+    photo_components={
+        "Reading rug alphabet border":26,
+        "Photo rug number cloud lobe":20,
+        "Photo rug number cloud numeral":10,
+        "Photo rug sun center":1,
+        "Photo rug sun ray":8,
+        "Front rug color dot":25,
+        "Word wall word card":15,
+        "Word wall apple":8,
+        "Word wall apple stem":8,
+    }
+    for component,expected in photo_components.items():
+        assert by_name[component]==expected, (
+            f"Photo-guided element missing: {component}={by_name[component]}"
+        )
+    assert by_name["Reading rug flower petal"]==0, (
+        "Synthetic flower field returned to the real sun/cloud carpet"
+    )
+    print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
+          "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
+          "blue_wordwall=true apple_markers=8")
+
     smart=only("Interactive smartboard")
     bezel=only("Smartboard dark bezel")
     chalk=only("Main chalkboard")
