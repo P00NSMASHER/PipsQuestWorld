@@ -1048,8 +1048,45 @@ local function buildBackDoorAndHall(root: Instance)
         CFrame.new(0,8.25,48.87),Color3.fromRGB(117,83,57),Enum.Material.Wood,false)
     part(root,"Rear corridor recessed cork",Vector3.new(6.34,2.65,.08),
         CFrame.new(0,8.25,48.76),Color3.fromRGB(161,123,87),Enum.Material.Fabric,false)
-    local hallLight=part(root,"Hall fluorescent light",Vector3.new(6,.22,2),CFrame.new(0,12.72,36),Color3.fromRGB(250,247,225),Enum.Material.Neon,false)
-    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.55;light.Range=16;light.Parent=hallLight
+    -- Fifteen-view child-eye QA: this noticeboard was only an empty brown
+    -- square at the end of a sealed blue corridor. Supply a few believable,
+    -- anonymous notices instead of inventing inaccessible doors/rooms.
+    local hallPapers={
+        Color3.fromRGB(245,240,217),
+        Color3.fromRGB(227,237,232),
+        Color3.fromRGB(240,230,221),
+    }
+    for i,px in ipairs({-1.90,0,1.90}) do
+        local h=(i==2) and .12 or 0
+        part(root,"Rear hall pinned notice",Vector3.new(1.46,1.79,.035),
+            CFrame.new(px,8.17+h,48.65),hallPapers[i],
+            Enum.Material.SmoothPlastic,false)
+        part(root,"Rear hall notice heading",Vector3.new(1.08,.15,.04),
+            CFrame.new(px,8.82+h,48.61),
+            (i==2) and P.green or P.blue,
+            Enum.Material.SmoothPlastic,false)
+        ball(root,"Rear hall brass notice pin",Vector3.new(.14,.14,.09),
+            CFrame.new(px,9.10+h,48.58),
+            Color3.fromRGB(190,160,91),Enum.Material.Metal,false)
+    end
+    -- Oak/blue cap rails make the transition between brick dado and
+    -- painted plaster read as a finished real school interior.
+    for _,px in ipairs({-8.38,8.38}) do
+        part(root,"Rear hall dado cap rail",Vector3.new(.22,.13,21.8),
+            CFrame.new(px,4.32,38.05),
+            Color3.fromRGB(79,98,128),Enum.Material.Wood,false)
+    end
+    -- Recessed fluorescent troffer replaces the overexposed Neon square.
+    part(root,"Rear hall fluorescent metal surround",Vector3.new(6.45,.16,2.55),
+        CFrame.new(0,12.80,36),Color3.fromRGB(193,200,200),
+        Enum.Material.Metal,false)
+    local hallLight=part(root,"Hall fluorescent light",Vector3.new(5.97,.07,2.10),
+        CFrame.new(0,12.68,36),Color3.fromRGB(242,242,234),
+        Enum.Material.Glass,false)
+    hallLight.Transparency=.065
+    local light=Instance.new("SurfaceLight")
+    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(251,243,227)
+    light.Brightness=.42;light.Range=16;light.Shadows=false;light.Parent=hallLight
 end
 
 local function buildTeacherEntry(root: Instance)
@@ -1080,8 +1117,29 @@ local function buildTeacherEntry(root: Instance)
             CFrame.new(45.5,4.30,endZ+interior*1.12),
             P.blue,Enum.Material.Wood,false)
     end
-    local hallLight=part(root,"Side hall fluorescent",Vector3.new(6,.22,2),CFrame.new(47,12.72,15.5),Color3.fromRGB(250,247,225),Enum.Material.Neon,false)
-    local light=Instance.new("SurfaceLight");light.Face=Enum.NormalId.Bottom;light.Brightness=.5;light.Range=15;light.Parent=hallLight
+    -- Facing-wall school notices break up the blank corridor without
+    -- claiming a photographed or navigable room beyond the capped hall.
+    part(root,"Staff hall framed announcement board",Vector3.new(.16,3.35,5.90),
+        CFrame.new(53.80,7.74,15.50),Color3.fromRGB(109,79,55),
+        Enum.Material.Wood,false)
+    part(root,"Staff hall inset cork noticeboard",Vector3.new(.07,2.99,5.52),
+        CFrame.new(53.68,7.74,15.50),Color3.fromRGB(165,134,103),
+        Enum.Material.Fabric,false)
+    for _,pz in ipairs({13.85,17.15}) do
+        part(root,"Staff hall anonymous paper notice",Vector3.new(.025,1.73,1.75),
+            CFrame.new(53.61,7.70,pz),
+            Color3.fromRGB(243,239,218),Enum.Material.SmoothPlastic,false)
+    end
+    part(root,"Side hall fluorescent metal surround",Vector3.new(6.45,.16,2.55),
+        CFrame.new(47,12.80,15.5),Color3.fromRGB(193,200,200),
+        Enum.Material.Metal,false)
+    local hallLight=part(root,"Side hall fluorescent",Vector3.new(5.97,.07,2.10),
+        CFrame.new(47,12.68,15.5),Color3.fromRGB(242,242,234),
+        Enum.Material.Glass,false)
+    hallLight.Transparency=.065
+    local light=Instance.new("SurfaceLight")
+    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(251,243,227)
+    light.Brightness=.42;light.Range=15;light.Shadows=false;light.Parent=hallLight
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
