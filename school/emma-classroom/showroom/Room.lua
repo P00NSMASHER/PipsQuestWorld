@@ -8,7 +8,7 @@ local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(238,228,207),
+    wall=Color3.fromRGB(248,233,183),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
@@ -344,10 +344,10 @@ local function buildClassroomTexture(root: Instance)
     -- values board and keeps this wall clear of overlapping flat panels.
 
     -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
-    part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(124,102,79),Enum.Material.Wood)
+    part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(96,65,45),Enum.Material.Wood)
     part(root,"Cabinet center seam",Vector3.new(.065,11.1,.06),CFrame.new(31,6,21.03),Color3.fromRGB(61,48,36),Enum.Material.Wood,false)
     for _,x in ipairs({29.3,32.7}) do
-        part(root,"Cabinet door panel",Vector3.new(3.08,10.9,.10),CFrame.new(x,6,21.03),Color3.fromRGB(152,119,82),Enum.Material.Wood,false)
+        part(root,"Cabinet door panel",Vector3.new(3.08,10.9,.10),CFrame.new(x,6,21.03),Color3.fromRGB(119,81,55),Enum.Material.Wood,false)
         for _,y in ipairs({3.2,8.4}) do
             part(root,"Cabinet inset panel",Vector3.new(2.60,4.4,.06),CFrame.new(x,y,20.94),Color3.fromRGB(135,105,74),Enum.Material.Wood,false)
             for _,dx in ipairs({-1.31,1.31}) do part(root,"Cabinet panel stile",Vector3.new(.055,4.55,.045),CFrame.new(x+dx,y,20.90),Color3.fromRGB(178,142,98),Enum.Material.Wood,false) end
@@ -387,33 +387,68 @@ local function buildClassroomTexture(root: Instance)
     part(root,"Prayer cross horizontal",Vector3.new(1.8,.45,.28),CFrame.new(-28,5.7,-27),Color3.fromRGB(112,77,48),Enum.Material.Wood,false)
     book(root,-30,3.72,-27,Color3.fromRGB(92,61,42),0)
 
-    -- Separate rug zones visible in IMG_2910: colored dots at the front,
-    -- alphabet/flower reading carpet at the back. No overlapping rug surfaces.
-    part(root,"Front teaching rug",Vector3.new(16,.10,9),CFrame.new(-25,.56,-20),Color3.fromRGB(47,58,66),Enum.Material.Fabric,false)
-    local dots={Color3.fromRGB(208,85,91),Color3.fromRGB(96,151,179),Color3.fromRGB(218,182,81),Color3.fromRGB(145,127,165)}
-    for row=0,2 do
-        for col=0,4 do cylinder(root,"Front rug color dot",Vector3.new(.025,1.5,1.5),CFrame.new(-31+col*3,.63,-23+row*3)*CFrame.Angles(0,0,math.pi/2),dots[(row+col)%4+1],Enum.Material.Fabric,false) end
-    end
-    local rug=part(root,"Alphabet rug",Vector3.new(18,.10,12),CFrame.new(-25,.56,14),Color3.fromRGB(55,85,125),Enum.Material.Fabric,false)
-    local letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for i=1,26 do
-        local x,z
-        if i<=8 then x=-32.8+(i-1)*2.22;z=8.9
-        elseif i<=13 then x=-16.9;z=10.7+(i-9)*1.72
-        elseif i<=21 then x=-17.2-(i-14)*2.22;z=19.1
-        else x=-33.1;z=17.4-(i-22)*1.72 end
-        local tile=part(root,"Reading rug alphabet border",Vector3.new(1.52,.02,1.52),CFrame.new(x,.63,z),Color3.fromRGB(192,199,150),Enum.Material.Fabric,false)
-        surfaceText(tile,string.sub(letters,i,i),Enum.NormalId.Top,P.blue,tile.Color)
-    end
-    for row=0,1 do
+
+    -- Photo-grounded IMG_2904/2905/2908/2910: black polka dots and round
+    -- alphabet/sun/cloud carpet. Preserve both established center positions:
+    -- the event photos cannot establish daily desk and carpet locations.
+    part(root,"Front teaching rug",Vector3.new(16,.10,9),CFrame.new(-25,.56,-20),
+        Color3.fromRGB(35,38,43),Enum.Material.Fabric,false)
+    local dotTints={
+        Color3.fromRGB(219,105,102),Color3.fromRGB(109,163,200),
+        Color3.fromRGB(238,204,89),Color3.fromRGB(157,139,187),
+        Color3.fromRGB(148,199,168),Color3.fromRGB(231,164,95),
+    }
+    for row=0,4 do
         for col=0,4 do
-            local x,z=-30+col*2.5,11.8+row*3.8
-            for petal=0,5 do
-                local t=petal*math.pi/3
-                cylinder(root,"Reading rug flower petal",Vector3.new(.025,.82,.82),CFrame.new(x+math.cos(t)*.52,.64,z+math.sin(t)*.52)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(166,184,194),Enum.Material.Fabric,false)
-            end
-            cylinder(root,"Reading rug flower center",Vector3.new(.028,.62,.62),CFrame.new(x,.66,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(226,211,151),Enum.Material.Fabric,false)
+            cylinder(root,"Front rug color dot",Vector3.new(.026,1.32,1.32),
+                CFrame.new(-31+col*3,.632,-23.6+row*1.70)*
+                    CFrame.Angles(0,0,math.pi/2),
+                dotTints[(row*3+col)%#dotTints+1],Enum.Material.Fabric,false)
         end
+    end
+    local flat=CFrame.Angles(0,0,math.pi/2)
+    -- A Cylinder Part uses local X as the axis; rotate it to lie on the floor.
+    cylinder(root,"Alphabet rug",Vector3.new(.10,14.2,14.2),
+        CFrame.new(-25,.56,14)*flat,Color3.fromRGB(42,83,137),
+        Enum.Material.Fabric,false)
+    local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local edgeColors={
+        Color3.fromRGB(224,150,96),Color3.fromRGB(239,198,96),
+        Color3.fromRGB(148,185,165),Color3.fromRGB(142,176,203),
+        Color3.fromRGB(186,151,185),Color3.fromRGB(214,122,108),
+    }
+    for i=1,26 do
+        local angle=-math.pi/2+(i-1)*2*math.pi/26
+        local x=-25+math.cos(angle)*6.13
+        local z=14+math.sin(angle)*6.13
+        local tile=part(root,"Reading rug alphabet border",Vector3.new(1.26,.022,.84),
+            CFrame.new(x,.621,z)*CFrame.Angles(0,-angle,0),
+            edgeColors[(i-1)%#edgeColors+1],Enum.Material.Fabric,false)
+        surfaceText(tile,string.sub(alphabet,i,i),Enum.NormalId.Top,P.ink,tile.Color)
+    end
+    cylinder(root,"Photo rug sun center",Vector3.new(.034,2.05,2.05),
+        CFrame.new(-25,.640,14)*flat,Color3.fromRGB(237,166,58),
+        Enum.Material.Fabric,false)
+    for i=0,7 do
+        local angle=i*math.pi/4
+        part(root,"Photo rug sun ray",Vector3.new(.55,.019,.22),
+            CFrame.new(-25+math.cos(angle)*1.31,.646,14+math.sin(angle)*1.31)*
+                CFrame.Angles(0,-angle,0),Color3.fromRGB(247,199,81),
+                Enum.Material.Fabric,false)
+    end
+    for i=1,10 do
+        local angle=i*math.pi/5
+        local x=-25+math.cos(angle)*3.62
+        local z=14+math.sin(angle)*3.62
+        for _,dx in ipairs({-.29,.29}) do
+            cylinder(root,"Photo rug number cloud lobe",Vector3.new(.025,1.00,1.00),
+                CFrame.new(x+dx,.637,z)*flat,
+                Color3.fromRGB(227,236,235),Enum.Material.Fabric,false)
+        end
+        local label=part(root,"Photo rug number cloud numeral",
+            Vector3.new(.62,.016,.48),CFrame.new(x,.659,z),
+            Color3.fromRGB(227,236,235),Enum.Material.Fabric,false)
+        surfaceText(label,tostring(i),Enum.NormalId.Top,P.blue,label.Color)
     end
 
     -- Student supply baskets on the center tables.
@@ -906,8 +941,8 @@ function World.build()
     -- Retire 300+ overlapping paper-thin floor boards that caused shimmer,
     -- tiny shadow edges and too many instances for one classroom.
     local floor=part(root,"Warm oak classroom floor",Vector3.new(74,1,62),
-        CFrame.new(0,0,-4),Color3.fromRGB(157,122,88),Enum.Material.WoodPlanks)
-    floor.Reflectance=.015
+        CFrame.new(0,0,-4),Color3.fromRGB(95,68,47),Enum.Material.WoodPlanks)
+    floor.Reflectance=.05
 
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)
