@@ -56,7 +56,11 @@ if len(sys.argv)>1:
         if props is None:continue
         name=props.findtext("./string[@name='Name']")
         if name=="FurnitureMeshConfig":
-            source = props.findtext("./ProtectedString[@name='Source']",default="")
+            # Rojo v7.7.1 serializes Lua ModuleScript Source as a normal
+            # <string name="Source">, while some Roblox XML exports use
+            # <ProtectedString>. Both encode actual script text.
+            source = (props.findtext("./ProtectedString[@name='Source']",default="")
+                      or props.findtext("./string[@name='Source']",default=""))
             if "Enabled = true" not in source:
                 print("REVIEW_SOURCE_ENCODING_DIAGNOSTIC",
                     [(node.tag,node.attrib.get("name"),len(node.text or ""))
