@@ -643,6 +643,46 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             f"Child-scale backpack/storage count mismatch: {component}="
             f"{by_name[component]} expected {expected}"
         )
+    # Photo-grounded classroom built-ins, assessed using actual executed
+    # Luau Parts rather than source snippets. The real wall has aged dark
+    # cabinetry and practical open storage instead of neon identical boxes.
+    cabinet=only("Cubbies wood surround")
+    shelves=[v for v in lines if v[1]=="Cubbie open shelf"]
+    dividers=[v for v in lines if v[1]=="Cubbie divider"]
+    tote_faces=[v for v in lines if v[1]=="Bin front and back"]
+    tote_sides=[v for v in lines if v[1]=="Bin side"]
+    files=[v for v in lines if v[1]=="Stored classroom file folder"]
+    assert len(shelves)==3 and len(dividers)==7 and (
+        len(tote_faces)==24 and len(tote_sides)==24
+    ), "Original open school cabinetry geometry was replaced or duplicated"
+    assert len(files)==6, "Six restrained classroom document folders are missing"
+    wood_items=[cabinet]+shelves+dividers
+    assert all(v[4].endswith("Wood") and
+               .38<float(v[12])<.47 for v in wood_items), (
+        "Photo-inspired dark wooden built-ins became light toy shelving"
+    )
+    fronts=[v for v in tote_faces if abs(float(v[11])-23.65)<.03]
+    backs=[v for v in tote_faces if abs(float(v[11])-25.95)<.03]
+    assert len(fronts)==len(backs)==12, "Open bin front and back faces misplaced"
+    assert all(abs(float(v[7])-1.08)<.025 for v in fronts) and (
+        all(abs(float(v[7])-1.45)<.025 for v in backs)
+    ), "School storage-bin fronts returned to tall sealed toy boxes"
+    bins=[v for v in lines if v[1]=="Cubbie bin"]
+    assert len(bins)==12, "Twelve established storage bins changed count"
+    assert all(max(float(x) for x in v[12:15])<.78 and (
+        max(float(x) for x in v[12:15])
+        -min(float(x) for x in v[12:15])<.30
+    ) for v in bins), "Harsh toy-bin palette returned to photo-based storage"
+    expected_file_x=[9.75,14.25,18.75,23.25,27.75,32.25]
+    assert sorted(round(float(v[9]),2) for v in files)==expected_file_x, (
+        "Classroom folders duplicated or left their original bin positions"
+    )
+    assert all(abs(float(v[11])-24.32)<.025 and (
+        abs(float(v[7])-.82)<.025
+    ) for v in files), "Classroom file dividers float outside storage totes"
+    print("PHOTO_STORAGE_CABINETRY_PASS dark_wood=true "
+          "open_bins=12 file_folders=6 preserved_backpacks=8 "
+          "no_extra_footprints=true")
     bags=sorted([row for row in lines if row[1]=="Hanging school bag"],
                 key=lambda row:float(row[9]))
     loops=sorted([row for row in lines if row[1]=="Backpack hanging loop"],
