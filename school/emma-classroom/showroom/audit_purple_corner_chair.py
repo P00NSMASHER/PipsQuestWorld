@@ -44,9 +44,11 @@ local function check()
         and math.abs(center.Z+19.60)<.03
         and math.abs(center.Y-1.62)<.03,
         "PURPLE_CHAIR_CORNER_POSITION_INVALID")
-    assert(math.abs(back.Position.X-center.X)<.03
-        and math.abs(back.Position.Z-(center.Z+.93))<.06,
-        "PURPLE_CHAIR_BACK_DETACHED")
+    -- The unique chair now faces +X toward the worktable; its backrest
+    -- must sit on the -X (window) side, not toward the table or into the aisle.
+    assert(math.abs(back.Position.X-(center.X-.93))<.06
+        and math.abs(back.Position.Z-center.Z)<.04,
+        "PURPLE_CHAIR_BACK_MUST_FACE_AWAY_FROM_WORKTABLE")
     local c=seat.Color
     assert(c.B>.57 and c.B<.78 and c.R>.40 and c.R<.60
         and c.G>.20 and c.G<.43 and c.B>c.R and c.R>c.G,
@@ -87,6 +89,15 @@ local function check()
         "PURPLE_CHAIR_WORKTABLE_MISSING_OR_MISPLACED")
     assert(center.X+1.25 < tableTop.Position.X-tableTop.Size.X/2,
         "PURPLE_CHAIR_INTERSECTS_WINDOW_WORKTABLE")
+    -- With the entire family rotated around the seat, the forward seat roll
+    -- must now be closer to the table than the seat center (not toward glass).
+    local front=one("Purple corner chair molded front seat roll")
+    assert(front.Position.X>center.X+.90
+        and math.abs(front.Position.Z-center.Z)<.04,
+        "PURPLE_CHAIR_SEAT_FACES_AWAY_FROM_WORKTABLE")
+    assert(front.Position.X+front.Size.Z/2 <
+        tableTop.Position.X-tableTop.Size.X/2-.30,
+        "PURPLE_CHAIR_FRONT_CLIPS_WORKTABLE")
     -- Protect the real student tables from the newly added furniture.
     for _,desk in ipairs(parts("Student desk edge")) do
         local xGap=math.abs(desk.Position.X-tableTop.Position.X)
@@ -103,7 +114,7 @@ local seat,collider=check()
 print("EMMA_PURPLE_CHAIR_RUNTIME_PASS purple_chairs=1 "
     .."original_student_seats=16 chair_style=molded "
     .."color=violet window_storage_corner=true "
-    .."rug_clear=true radiator_clear=true photo_workstation=true "
+    .."rug_clear=true radiator_clear=true faces_worktable=true photo_workstation=true "
     .."coordinates_provisional=true")
 local previousColor=seat.Color
 seat.Color=Color3.fromRGB(52,73,108)
