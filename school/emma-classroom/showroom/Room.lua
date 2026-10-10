@@ -332,14 +332,36 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2+shift,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 7 or -6),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
-    -- Keep three readable rules spread over the page rather than seven
-    -- hairline Parts concentrated into the same small strip on every desk.
+    -- The 48 ultra-thin metal-free pencil rules and 16 red margins were
+    -- expensive replicated Parts that contribute virtually nothing to
+    -- the player-eye source render. Keep the EXACT 16 notebook pages, and
+    -- put readable ruled PAPER GRAPHICS on their top faces instead.
+    -- Saves 64 physical Parts so the photo hallway can contain real
+    -- dimensional paper displays without raising the 3,100-part limit.
+    local notebookPrint=Instance.new("SurfaceGui")
+    notebookPrint.Name="OriginalNotebookPaperRules"
+    notebookPrint.Face=Enum.NormalId.Top
+    notebookPrint.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    notebookPrint.CanvasSize=Vector2.new(224,298)
+    notebookPrint.LightInfluence=.12
+    notebookPrint.Parent=paper
     for line=0,2 do
-        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),
-            paper.CFrame*CFrame.new(.03,.010,-.75+line*.70),
-            Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
+        local rule=Instance.new("Frame")
+        rule.Name="NotebookPrintedBlueRule"
+        rule.Size=UDim2.fromScale(.83,.009)
+        rule.Position=UDim2.fromScale(.09,.205+line*.282)
+        rule.BorderSizePixel=0
+        rule.BackgroundColor3=Color3.fromRGB(149,180,205)
+        rule.BackgroundTransparency=.08
+        rule.Parent=notebookPrint
     end
-    part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
+    local margin=Instance.new("Frame")
+    margin.Name="NotebookPrintedRedMargin"
+    margin.Size=UDim2.fromScale(.011,.90)
+    margin.Position=UDim2.fromScale(.185,.05)
+    margin.BorderSizePixel=0
+    margin.BackgroundColor3=Color3.fromRGB(218,133,143)
+    margin.Parent=notebookPrint
     -- One fine steel binding rail reads crisply at phone scale; the former
     -- 96 microscopic rings bloated scene replication without visual benefit.
     part(parent,"Notebook binding rail",Vector3.new(.11,.075,2.40),
@@ -1623,26 +1645,38 @@ local function buildBackDoorAndHall(root: Instance)
         tile.Text=letter;tile.Parent=welcomeArt
     end
 
-    -- A wood suspension rail and 23 ROTATED paper frames. Original printed
-    -- student assignments, names, faces and event data are NOT reproduced.
+    -- The owner-provided hallway photographs show 23 individual children's
+    -- paper sheets hung as WHITE DIAMONDS on this wood rail. The previous
+    -- implementation was 100% SurfaceGui on the distant blue wall; the
+    -- independent *actual-room* renderer rendered a totally bare corridor.
+    -- Real thin paper Parts preserve the defining photographed silhouette
+    -- in Roblox *and* in renderer QA. No photographed assignment or identity
+    -- is copied: captions are original, intentionally anonymous pencil lines.
     hp("Photo hall student work hanging rail",Vector3.new(83,.16,.17),
         CFrame.new(0,10.54,48.69),Color3.fromRGB(167,130,88),
         Enum.Material.Wood,false)
-    local paperGui=imageSurface(rear,"Anonymous rotated schoolwork",
-        Enum.NormalId.Front,2160,260)
     for i=-11,11 do
-        local sheet=paintedRectangle(paperGui,"Photo hall anonymous diamond paper",
-            UDim2.fromOffset(36,42),
-            UDim2.fromOffset(math.floor(1080+i*3.55*20),86),
-            paperColor)
-        sheet.AnchorPoint=Vector2.new(.5,.5)
-        sheet.Rotation=45
-        for line=1,3 do
-            local stroke=paintedRectangle(sheet,"Anonymous pencil guideline",
-                UDim2.fromScale(.55,.017),
-                UDim2.fromScale(.20,.22+line*.17),
-                Color3.fromRGB(185,190,189))
-            stroke.BackgroundTransparency=.1
+        local tint=(i%3==0) and Color3.fromRGB(247,245,235)
+            or ((i%3==1) and Color3.fromRGB(242,241,230)
+                or Color3.fromRGB(235,237,232))
+        local diamond=hp("Photo hall anonymous diamond student display",
+            Vector3.new(1.90,2.18,.055),
+            CFrame.new(i*3.55,9.05,48.52)*
+                CFrame.Angles(0,0,math.rad(45)),
+            tint,Enum.Material.SmoothPlastic,false)
+        diamond.Reflectance=.02
+        diamond.CastShadow=true
+        diamond:SetAttribute("Source","Anonymous original paper artwork")
+        diamond:SetAttribute("OriginalStudentData",false)
+        local paperArt=imageSurface(diamond,"Anonymous paper pencil strokes",
+            Enum.NormalId.Front,190,218)
+        for n=1,3 do
+            local line=paintedRectangle(paperArt,
+                "Invented pale handwritten guideline",
+                UDim2.fromScale(.66,.012),
+                UDim2.fromScale(.17,.24+n*.15),
+                Color3.fromRGB(187,193,190))
+            line.BackgroundTransparency=.18
         end
     end
 
