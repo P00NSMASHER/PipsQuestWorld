@@ -150,7 +150,6 @@ for _,lamp in ipairs(expect("Photo hall fluorescent diffuser",5)) do
         "PHOTO_HALL_ILLUMINATION_REGRESSION")
     gui(lamp,"Inset silver fluorescent rim",Enum.NormalId.Bottom)
 end
-local left=one("Photo hall end cap")
 local endGui=nil
 for _,cap in ipairs(caps) do
     local g=cap:FindFirstChild("Photo hallway yellow end-window motif")
