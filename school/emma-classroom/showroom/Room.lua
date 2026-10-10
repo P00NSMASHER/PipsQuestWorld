@@ -1509,7 +1509,12 @@ local function buildBackDoorAndHall(root: Instance)
         Color3.fromRGB(201,141,72),Color3.fromRGB(181,121,60),
     }
     local function dado(name:string,size:Vector3,cf:CFrame,face:Enum.NormalId)
-        local p=hp(name,size,cf,mortar,Enum.Material.SmoothPlastic,false)
+        -- Warm ochre glazed-brick BASE is visible even where third-party
+        -- renderers or low-detail clients omit the staggered SurfaceGui.
+        -- Dark mortar and color variation are still drawn by the GUI on top.
+        local p=hp(name,size,cf,Color3.fromRGB(192,132,63),
+            Enum.Material.SmoothPlastic,false)
+        p.Reflectance=.055
         local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
             and size.Z or size.X
         local pixels=math.max(50,math.floor(w*22))
