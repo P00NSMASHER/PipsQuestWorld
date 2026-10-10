@@ -536,6 +536,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading shade recessed warm diffuser":1,
         "Reading lamp top finial":1,
         "Photo-guided wall shape card":9,
+        "Photo-guided right cabinet shape card":8,
         "Photo-guided shape icon":9,
         "Photo-guided cabinet counting strip":1,
         "Counting strip blue top trim":1,

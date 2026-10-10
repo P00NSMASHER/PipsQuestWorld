@@ -254,3 +254,24 @@ illustration moved across the word label. Third-party static snapshots do
 **not** render SurfaceGui contents, so only a future actual Roblox/iPhone
 preview can establish appearance or reading comfort. The daily furniture
 layout and word-wall locations are unchanged.
+
+## October 10 — continue the shape-card frieze over both wooden cabinets
+
+The exact-head 21-view static screenshot shows colored shape flashcards only
+over the left bookcase, while owner classroom photographs show colorful shape
+education displays extending across the built-in storage wall. The new
+candidate adds **8 original noncolliding panels** on the right-hand cabinet
+(x = 9.8 to 30.8 studs), leaving the center doorway entirely unblocked;
+17 total decorative shape cards now span the two separate cabinet groups.
+Each card has an original built-in SurfaceGui illustration and generic
+geometric word, drawn from native UI Frames, TextLabels and UICorner—not a
+copied school assignment, asset ID, photo of a child or teacher curriculum.
+
+Only eight additional physical Parts are introduced. Expected part budget:
+3,078 + 8 = **3,086 / 3,100**. A constructed-Luau test verifies the 8
+card centers, colors/captions, art, noncollision and door clearance, and
+deliberately mutates a card onto the doorway or into a collider to confirm
+fail-closed behavior. Independent static rendering is useful for the color
+panels but does not render SurfaceGui graphics. Actual iPhone visual
+inspection is still needed before approval; shapes and wording are not
+claimed exact reproductions of the photographed classroom materials.

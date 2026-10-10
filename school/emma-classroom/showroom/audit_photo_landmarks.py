@@ -138,6 +138,39 @@ local function verify()
         assert(p.Position.X+p.Size.X/2 < -9.0 and p.Position.X-p.Size.X/2>-37,
             "PHOTO_WOOD_SHAPES_OVER_REAR_DOORWAY")
     end
+
+    -- Distinct teaching-color panels continue over the photo-confirmed
+    -- RIGHT cabinet while the source's real central door remains open.
+    local rightCards=parts("Photo-guided right cabinet shape card")
+    local rightNames={"CIRCLE","OVAL","SQUARE","DIAMOND",
+        "RECTANGLE","CROSS","CAPSULE","ARCH"}
+    assert(#rightCards==8,"PHOTO_RIGHT_SHAPE_COUNT_INVALID")
+    table.sort(rightCards,function(a,b) return a.Position.X<b.Position.X end)
+    for i,card in ipairs(rightCards) do
+        assert(math.abs(card.Position.X-(9.8+(i-1)*3.0))<.03
+            and math.abs(card.Position.Y-16.48)<.03
+            and math.abs(card.Position.Z-26.32)<.03
+            and card.Position.X-card.Size.X/2>7.2
+            and card.Position.X+card.Size.X/2<33.2,
+            "PHOTO_RIGHT_SHAPE_CARD_OVER_DOOR")
+        assert(card.Anchored and not card.CanCollide
+            and not card.CanTouch and not card.CanQuery,
+            "PHOTO_RIGHT_SHAPE_CARD_COLLIDES")
+        local gui=card:FindFirstChild("RightCabinetShapeArt")
+        assert(gui and gui:IsA("SurfaceGui")
+            and gui.Face==Enum.NormalId.Front
+            and gui.CanvasSize[1]==360 and gui.CanvasSize[2]==200,
+            "PHOTO_RIGHT_SHAPE_ART_GUI_INVALID")
+        local ground=gui:FindFirstChild("ShapeCardGround")
+        local shape=ground and ground:FindFirstChild("ShapePicture")
+        local caption=ground and ground:FindFirstChild("ShapeCaption")
+        assert(ground and shape and shape:IsA("Frame") and
+            shape.BackgroundTransparency==0 and
+            caption and caption:IsA("TextLabel") and
+            caption.Text==rightNames[i] and
+            caption.TextScaled and caption.BackgroundTransparency==1,
+            "PHOTO_RIGHT_SHAPE_ART_CONTENT_INVALID")
+    end
     local decorative={
         "Library built-in display backing",
         "Library built-in dark inset frame stile",
@@ -240,7 +273,7 @@ local function verify()
 end
 local inset,left=verify()
 print("PHOTO_WOOD_LANDMARK_RUNTIME_PASS builtins=2 inset=1 "
-    .."paper=3 distinct_number_ranges=true cards=9 "
+    .."paper=3 distinct_number_ranges=true cards=17 "
     .."doorway_clear=true original_desks=16")
 local saved=inset.CanCollide
 inset.CanCollide=true
@@ -278,6 +311,23 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WOOD_UNVERIFIED_GRADE_BANNER_RETURNED",1,true),
     "PHOTO_WOOD_GRADE_BANNER_REINTRODUCTION_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner")
+local rightCard=parts("Photo-guided right cabinet shape card")[1]
+local oldRightCF=rightCard.CFrame
+rightCard.CFrame=CFrame.new(2.0,16.48,26.32)
+ok,err=pcall(verify)
+rightCard.CFrame=oldRightCF
+assert(not ok and string.find(tostring(err),
+    "PHOTO_RIGHT_SHAPE_CARD_OVER_DOOR",1,true),
+    "PHOTO_RIGHT_SHAPE_DOORWAY_REGRESSION_NOT_REJECTED")
+print("PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED doorway")
+local oldRightCollision=rightCard.CanCollide
+rightCard.CanCollide=true
+ok,err=pcall(verify)
+rightCard.CanCollide=oldRightCollision
+assert(not ok and string.find(tostring(err),
+    "PHOTO_RIGHT_SHAPE_CARD_COLLIDES",1,true),
+    "PHOTO_RIGHT_SHAPE_COLLISION_NOT_REJECTED")
+print("PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED collidable_card")
 local label=left:FindFirstChildOfClass("SurfaceGui"):FindFirstChildOfClass("TextLabel")
 local textBefore=label.Text
 label.Text="0  20  10"
@@ -328,7 +378,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth grade_banner flipchart laptop fan")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location right_shapes number_order number_units panel_depth grade_banner flipchart laptop fan")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -346,6 +396,8 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
+        "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED doorway",
+        "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED collidable_card",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
@@ -358,6 +410,7 @@ def main() -> None:
         if line.startswith(("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
+            "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
 if __name__=="__main__":

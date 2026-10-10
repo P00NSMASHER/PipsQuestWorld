@@ -37,6 +37,9 @@ a manifest with `notNativeIphoneAcceptance=true`.
   high shape cards and original opening are not overlapping the doorway.
   Do not overlay these displays with the previous oversized navy Grade 2
   welcome banner, which is not present in the photographed wall treatment.
+  The colorful shape-card band reaches both wooden cabinetry groups
+  without crossing the real central doorway. The original right-hand
+  picture shapes must be readable on actual iPhone.
   The frieze shows the consecutive **0–120** numbers (not only multiples
   of ten), and the upper dark panel physically joins the lower wood case.
 - [ ] **Blue word wall:** Blue board is bright enough to see at child eye
