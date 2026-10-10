@@ -330,7 +330,11 @@ jobs:
             02-wordwall-table 22,5,-2 35.5,6.5,1
           render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
             03-rugs-cutaway -5,35,-4 -25,0,-3
-          echo "FAST_PHOTO_NONBLANK_PASS 3 source-derived views"
+          # Fixed child-eye architectural check on the real clock relocated
+          # onto the yellow window pier. Existing 21-camera views stay fixed.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            04-window-clock 3,5,-6.5 -36,11.6,-6.5
+          echo "FAST_PHOTO_NONBLANK_PASS 4 source-derived views"
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
@@ -342,8 +346,9 @@ jobs:
           from pathlib import Path
           from PIL import Image,ImageDraw
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
-          names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway")
-          out=Image.new("RGB",(1000,1060),(244,244,240))
+          names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
+                 "04-window-clock")
+          out=Image.new("RGB",(1000,1410),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
           for i,name in enumerate(names):
