@@ -108,3 +108,13 @@ omits SurfaceGuis, so its screenshots will show plain ivory and must not
 be accepted as evidence of checked-pattern fidelity. Native Roblox/iPhone
 inspection is still required. Added constructed-Luau tests for five
 correctly faced pattern surfaces, support, desk clearance and mutations.
+
+## October 10 — original green word-wall heading
+A supplied full-size classroom photo explicitly shows a small **green paper
+“First Grade word wall” label** above the blue apple board. The prior game
+placed a generic oversized “LET YOUR LIGHT SHINE” poster directly above
+the word-wall. This pass repurposes the same two physical sign Parts as a
+small pale-green “FIRST GRADE / WORD WALL” title, with no extra Parts or
+new player UI. “First Grade” reproduces historical visible scenery, not
+the current grade, teacher materials, or curriculum authority. Native
+iPhone readability is pending and this is not final visual acceptance.
