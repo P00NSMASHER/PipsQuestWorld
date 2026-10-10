@@ -52,7 +52,7 @@ local function verify()
             elseif c.Name=="NotebookPrintedRedMargin" then
                 margin+=1
                 assert(c.BackgroundColor3.R>c.BackgroundColor3.G
-                    and c.Size[1]==0,
+                    and c.Size[1]>.005 and c.Size[1]<.02,
                     "NOTEBOOK_PRINTED_RED_MARGIN_LOST")
             else
                 error("NOTEBOOK_UNEXPECTED_STUDENT_CONTENT")
