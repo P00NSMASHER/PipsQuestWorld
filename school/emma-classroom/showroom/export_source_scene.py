@@ -578,9 +578,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
         "Emma's purple chair left the photo-identified AC window corner"
     )
-    assert abs(float(corner_back[9])-cx)<.025 and (
-        abs(float(corner_back[11])-(cz+.93))<.05
-    ), "Purple chair's backrest detached from its child-size seat"
+    # The singular photo-corner seat is rotated to face +X toward the
+    # workstation; the back remains against the window (-X).
+    assert abs(float(corner_back[9])-(cx-.93))<.05 and (
+        abs(float(corner_back[11])-cz)<.04
+    ), "Purple chair backrest no longer faces the A/C wall"
     for component in (corner_seat,corner_back):
         red,green,blue=(float(component[i]) for i in (12,13,14))
         assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
@@ -616,6 +618,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert cx+1.25<tx-float(worktable[6])/2, (
         "Photo worktable intersects the purple chair seat"
     )
+    front=only("Purple corner chair molded front seat roll")
+    assert float(front[9])>cx+.90 and (
+        abs(float(front[11])-cz)<.04
+    ), "Photo corner purple chair points away from the actual workstation"
+    assert float(front[9])+float(front[8])/2<(
+        tx-float(worktable[6])/2-.30
+    ), "Purple chair front roll clips the workstation"
     for desk in (row for row in lines if row[1]=="Student desk edge"):
         x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
         assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
@@ -630,8 +639,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
           "original_student_chairs=16 child_scale=true "
-          "rug_clear=true ac_adjacent=true workstation_clear=true "
-          "position_provisional=true")
+          "rug_clear=true ac_adjacent=true faces_worktable=true "
+          "workstation_clear=true position_provisional=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
         abs(float(window_banner[10])-15.22)<.025
