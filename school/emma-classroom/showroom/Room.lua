@@ -1543,6 +1543,22 @@ function World.build()
     -- Do not alter the 16 matching student desk chairs or the alphabet rug.
     schoolChair(root,"Purple corner chair",-32.45,-19.60,
         Color3.fromRGB(117,73,163))
+    -- The conventional student chairs face the teaching wall (-Z). This
+    -- unique chair belongs beside a window-side worktable at greater X.
+    -- Rotate ONLY its already-constructed physical family around its own
+    -- floor pivot so the seat faces the tabletop (+X) while its back rests
+    -- toward the A/C wall. Do not rotate any student seat or cabinet.
+    -- This orientation is a photo-guided owner-review candidate: the person
+    -- in the original photo obscures the precise molded chair silhouette.
+    local purplePivot=CFrame.new(-32.45,0,-19.60)
+    local purpleTurn=purplePivot*CFrame.Angles(0,-math.pi/2,0)*
+        CFrame.new(32.45,0,19.60)
+    for _,object in ipairs(root:GetDescendants()) do
+        if object:IsA("BasePart") and
+            string.sub(object.Name,1,#"Purple corner chair")=="Purple corner chair" then
+            object.CFrame=purpleTurn*object.CFrame
+        end
+    end
 
     -- Paired laminate desks from IMG_2913, with an open back-left reading zone.
     -- Emma remains at x=0 so the existing spawn/seat and study camera stay aligned.
