@@ -352,7 +352,12 @@ jobs:
           # Native-independent source view of the school window-pier clock.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             04-window-clock 3,5,-6.5 -36,11.6,-6.5
-          echo "FAST_PHOTO_NONBLANK_PASS 4 source-derived views"
+          # Photo-anchored transparent doorway. This exact child-eye camera
+          # showed two solid oak slabs before the aperture fix. Fast failure
+          # feedback is essential; keep the same 24-hall-door angle for parity.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            05-open-glass-doors 4,5.5,40 0,6.9,26.8
+          echo "FAST_PHOTO_NONBLANK_PASS 5 source-derived views"
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
@@ -365,8 +370,8 @@ jobs:
           from PIL import Image,ImageDraw
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
           names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
-                 "04-window-clock")
-          out=Image.new("RGB",(1000,1410),(244,244,240))
+                 "04-window-clock","05-open-glass-doors")
+          out=Image.new("RGB",(1000,1760),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
           for i,name in enumerate(names):
