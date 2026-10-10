@@ -42,9 +42,11 @@ a manifest with `notNativeIphoneAcceptance=true`.
   picture shapes must be readable on actual iPhone.
   The frieze shows the consecutive **0–120** numbers (not only multiples
   of ten), and the upper dark panel physically joins the lower wood case.
-- [ ] **Blue word wall:** Blue board is bright enough to see at child eye
-  height; two rows of red A–Z apple markers and small word slips render
-  legibly. The green historic **First Grade Word Wall** sign is small,
+- [ ] **Blue word wall:** The enlarged blue board is a dominant wall
+  landmark rather than a small isolated panel; it remains clearly between
+  the class-values display and staff doorway. Two rows of red A–Z apple
+  markers, original word slips and full-width garland render legibly
+  at child eye height. The green historic **First Grade Word Wall** sign is small,
   centered above the board, not an oversized generic encouragement panel.
 - [ ] **Gingham table:** Under the word wall, the table visually shows
   red/ivory checked fabric on the top AND hanging vertical apron faces,

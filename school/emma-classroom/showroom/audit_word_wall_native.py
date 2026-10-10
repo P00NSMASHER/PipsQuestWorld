@@ -30,6 +30,23 @@ local function check()
         and board.Color.B>.78 and board.Color.B>board.Color.R
         and not board.CanCollide and board.Anchored,
         "PHOTO_WORD_WALL_BLUE_MATERIAL_INVALID")
+    assert(math.abs(board.Position.Y-7.4)<.03
+        and math.abs(board.Position.Z+2.5)<.03
+        and math.abs(board.Size.Y-6.2)<.03
+        and math.abs(board.Size.Z-18.0)<.03,
+        "PHOTO_WORD_WALL_TOO_SMALL_OR_MISALIGNED")
+    -- The wall span (-35..8) has a framed values poster near -18 and
+    -- staff jamb at +8.3. A centered board may not cross either.
+    local poster=parts("ABVM classroom values oak surround")
+    local door=parts("Staff door jamb front")
+    assert(#poster==1 and #door==1,
+        "PHOTO_WORD_WALL_SURROUNDING_LANDMARKS_MISSING")
+    local boardMin=board.Position.Z-board.Size.Z/2
+    local boardMax=board.Position.Z+board.Size.Z/2
+    local posterMax=poster[1].Position.Z+poster[1].Size.Z/2
+    assert(boardMin>posterMax+1.3
+        and boardMax<door[1].Position.Z-door[1].Size.Z/2-1.0,
+        "PHOTO_WORD_WALL_COVERS_VALUES_OR_STAFF_DOOR")
     local title=parts("Photo word wall title paper art")
     assert(#title==1,"PHOTO_WORD_WALL_TITLE_COUNT_INVALID")
     title=title[1]
@@ -59,6 +76,9 @@ local function check()
         and backbone[1].Anchored and not backbone[1].CanCollide,
         "PHOTO_WORD_WALL_GARLAND_BACKBONE_INVALID")
     local minZ,maxZ=math.huge,-math.huge
+    assert(#parts("Noticeboard vertical oak frame")==2
+        and #parts("Noticeboard horizontal oak frame")==2,
+        "PHOTO_WORD_WALL_FRAME_COUNT_INVALID")
     local colors={}
     for _,p in ipairs(foliage) do
         assert(p.Shape==Enum.PartType.Cylinder
@@ -68,8 +88,9 @@ local function check()
             and not p.CastShadow,
             "PHOTO_WORD_WALL_GARLAND_COLLISION_OR_SHAPE_INVALID")
         assert(math.abs(p.Position.X-35.83)<.03
-            and p.Position.Y>10.61 and p.Position.Y<10.72
-            and p.Position.Z>-4.3 and p.Position.Z<6.3,
+            and p.Position.Y>10.58 and p.Position.Y<10.70
+            and p.Position.Z>boardMin+.60
+            and p.Position.Z<boardMax-.60,
             "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME")
         -- A tilted leaf has a larger vertical projection than Size.Y/2.
         -- Evaluate the orientation-aware bounding-box half-height rather
@@ -78,17 +99,17 @@ local function check()
         local halfY=(math.abs(m[4])*p.Size.X
             +math.abs(m[5])*p.Size.Y
             +math.abs(m[6])*p.Size.Z)/2
-        assert(p.Position.Y-halfY>10.44
+        assert(p.Position.Y-halfY>10.38
             and p.Position.Y+halfY<title.Position.Y-title.Size.Y/2-.02,
             "PHOTO_WORD_WALL_GARLAND_OBSCURES_LETTERS_OR_TITLE")
         assert(p.Size.X>=.10 and p.Size.Y>=.28
-            and p.Size.Z>.80 and p.Size.Z<1.15,
+            and p.Size.Z>1.20 and p.Size.Z<1.52,
             "PHOTO_WORD_WALL_GARLAND_DENSITY_INVALID")
         minZ=math.min(minZ,p.Position.Z)
         maxZ=math.max(maxZ,p.Position.Z)
         colors[string.format("%.2f",p.Color.G)]=true
     end
-    assert(maxZ-minZ>9.7,
+    assert(maxZ-minZ>15.5,
         "PHOTO_WORD_WALL_GARLAND_TOO_SHORT")
     local paletteSize=0
     for _ in pairs(colors) do paletteSize+=1 end
@@ -106,7 +127,10 @@ local function check()
             and not p.CanTouch and not p.CanQuery,
             "PHOTO_WORD_WALL_NATIVE_APPLE_SHAPE_INVALID")
         assert(math.abs(p.Position.X-35.91)<.05
-            and p.Position.Z>-4.10 and p.Position.Z<5.75,
+            and p.Position.Z>boardMin+.70
+            and p.Position.Z<boardMax-.70
+            and p.Position.Y>board.Position.Y-board.Size.Y/2+.20
+            and p.Position.Y<board.Position.Y+board.Size.Y/2-.14,
             "PHOTO_WORD_WALL_APPLE_OUTSIDE_BOARD")
         local gui=p:FindFirstChildOfClass("SurfaceGui")
         assert(gui and gui.Face==Enum.NormalId.Left,
@@ -125,6 +149,20 @@ local function check()
     for i=65,90 do
         assert(found[string.char(i)],"PHOTO_WORD_WALL_MISSING_LETTER")
     end
+    -- No fake geometry may hang in midair over the enlarged board.
+    for _,p in ipairs(parts("Word wall word card")) do
+        assert(p.Position.Z-p.Size.Z/2>boardMin+.19
+            and p.Position.Z+p.Size.Z/2<boardMax-.19
+            and p.Position.Y-p.Size.Y/2>board.Position.Y-board.Size.Y/2+.35
+            and p.Position.Y+p.Size.Y/2<board.Position.Y+board.Size.Y/2-.55,
+            "PHOTO_WORD_WALL_WORD_CARD_OUTSIDE_FRAME")
+    end
+    for _,frame in ipairs(parts("Noticeboard vertical oak frame")) do
+        assert(frame.Position.Z>boardMin-.15
+            and frame.Position.Z<boardMax+.15
+            and math.abs(frame.Position.Y-board.Position.Y)<.03,
+            "PHOTO_WORD_WALL_FRAME_DISCONNECTED")
+    end
     assert(#parts("Word wall word card")==15
         and #parts("Window glass")==2
         and #parts("Student desk top")==16,
@@ -134,9 +172,17 @@ end
 local board,markers,foliage=check()
 print("PHOTO_WORD_WALL_RUNTIME_PASS blue_smooth=true "
     .."native_cylinder_apples=26 rows=2 garland_tufts=13 no_collisions=true ")
+local previousSize=board.Size
+board.Size=Vector3.new(.30,6.2,11.2)
+local ok,err=pcall(check)
+board.Size=previousSize
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WORD_WALL_TOO_SMALL_OR_MISALIGNED",1,true),
+    "PHOTO_WORD_WALL_SMALL_BOARD_REINTRODUCTION_NOT_REJECTED")
+print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED small_board")
 local material=board.Material
 board.Material=Enum.Material.Fabric
-local ok,err=pcall(check)
+ok,err=pcall(check)
 board.Material=material
 assert(not ok and string.find(tostring(err),
     "PHOTO_WORD_WALL_BLUE_MATERIAL_INVALID",1,true),
@@ -187,7 +233,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WORD_WALL_TILTED_FOLIAGE_OVERLAP_NOT_REJECTED")
 print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED tilted_foliage")
 check()
-print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading garland_collide garland_position tilted_foliage")
+print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS geometry frame lettering garland material shape")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -202,6 +248,7 @@ def main() -> None:
         raise RuntimeError("Constructed word-wall QA failed:\n"
             +result.stderr[-3200:]+"\n"+result.stdout[-2500:])
     for marker in ("PHOTO_WORD_WALL_RUNTIME_PASS",
+                   "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED small_board",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED fabric_backing",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED flattened_ball",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading",

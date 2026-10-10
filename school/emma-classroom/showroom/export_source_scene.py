@@ -585,6 +585,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
+    assert abs(float(word_wall[7])-6.2)<.03 and (
+        abs(float(word_wall[8])-18.0)<.03
+        and abs(float(word_wall[10])-7.4)<.03
+        and abs(float(word_wall[11])+2.5)<.03
+    ), "Photo word wall regressed to the small isolated board"
     # Emma identified the purple chair BESIDE the photographed seated adult,
     # gray supply cabinet, dark filing cabinet and lower-left window AC. The
     # earlier rear-reading-corner coordinate was a guessed placement, not a

@@ -275,3 +275,30 @@ fail-closed behavior. Independent static rendering is useful for the color
 panels but does not render SurfaceGui graphics. Actual iPhone visual
 inspection is still needed before approval; shapes and wording are not
 claimed exact reproductions of the photographed classroom materials.
+
+## October 10 — scale the primary blue word wall to the real classroom photos
+
+The current exact-PR-head fast eye-level render showed the original 11.2 x
+5.0 stud word wall stranded on a much larger empty yellow side wall. In the
+actual school photographs, the light-blue A–Z apple word wall is a DOMINANT
+fixture behind the red/white checkered table. The existing model has a
+solid right-front wall from z=-35..+8, with a separate class-values display
+near z=-18 and a real staff doorway beginning at z≈8.3.
+
+This pass reuses the **same physical board, four oak frame Parts, green
+garland/13 leaves, 15 anonymous word-card slips and 26 A–Z apple markers**;
+no new physics objects, meshes or photo textures. Enlarges the blue board
+from **11.2 × 5.0** to **18.0 × 6.2** studs while keeping top around y=10.5.
+The board now spans z=-11.5..+6.5, safely between the values display and
+the staff-door jamb. The existing green header moves to the center of the
+wider board; garland, slips, apple rows and frame shift/reflow to fill it.
+The checkered table remains offset under the doorway-side half of the wall
+without being moved. User-event photographs cannot prove its daily location,
+so this is a visible scale/location candidate, not a measured floor plan.
+
+Constructed Luau and exact-source export tests assert enlarged dimensions,
+values/door clearance, all 26 apple letters on board, 15 slips, full-length
+evergreen garland, position of frame trim, and table under the new board.
+A negative test rejects reinstating the undersized 11.2-stud board. CI
+headless render cannot certify native Roblox/iPhone color, lettering or
+gingham textures; final owner visual sign-off still required.

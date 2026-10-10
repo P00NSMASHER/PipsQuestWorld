@@ -118,7 +118,7 @@ local function showcaseBoards(root:Instance,group:Instance)
     -- visually unrelated to this photographed corner. Reuse its existing
     -- TWO physical Parts, but make the title child-sized and correctly green.
     -- This historic grade label is room scenery, NOT lesson/test authority.
-    framedPoster(group,"Photo word wall title",36.27,11.48,1.0,5.4,1.20,
+    framedPoster(group,"Photo word wall title",36.27,11.48,-2.5,5.4,1.20,
         "FIRST GRADE\nWORD WALL","",Enum.NormalId.Left,
         Color3.fromRGB(158,201,140))
 
@@ -126,27 +126,33 @@ local function showcaseBoards(root:Instance,group:Instance)
     -- two rows of red apple alphabet markers and pale word slips.
     -- The old Fabric backing read as nearly black on native iPhone v78;
     -- SmoothPlastic preserves the blue under Roblox's mobile material pass.
-    -- Keep existing footprint, mounting, heading and anonymous word cards.
-    local board=piece(group,"Class notice board",Vector3.new(.30,5.0,11.2),
-        CFrame.new(36.22,8.0,1.0),Color3.fromRGB(120,174,207),
+    -- Wide photos show this is a LARGE blue focal board, not a small 11.2-stud
+    -- board stranded between blank walls. Expand only into the safe SOLID
+    -- right-front wall run: z=-11.5 to +6.5, bounded by a values display
+    -- (ending near -14) and the real staff-door jamb (starting at +8.3).
+    -- Lower edge descends toward the photographed checkered table; top stays
+    -- below the title. Keep ALL existing 1+4 frame/board Parts.
+    local board=piece(group,"Class notice board",Vector3.new(.30,6.2,18.0),
+        CFrame.new(36.22,7.4,-2.5),Color3.fromRGB(120,174,207),
         Enum.Material.SmoothPlastic,false)
     board.Reflectance=0
-    for _,z in ipairs({-3.8,5.8}) do
-        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,5.4,.25),
-            CFrame.new(36.03,8,z),C.oak,Enum.Material.Wood,false)
+    for _,z in ipairs({-11.4,6.4}) do
+        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,6.6,.25),
+            CFrame.new(36.03,7.4,z),C.oak,Enum.Material.Wood,false)
     end
-    for _,y in ipairs({5.45,10.55}) do
-        piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,11.6),
-            CFrame.new(36.03,y,1),C.oak,Enum.Material.Wood,false)
+    for _,y in ipairs({4.16,10.64}) do
+        piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,18.4),
+            CFrame.new(36.03,y,-2.5),C.oak,Enum.Material.Wood,false)
     end
-    -- The real photo has a dense evergreen garland, not one flat painted
-    -- bar. Keep the original 10.8-stud green structural band, and add only
-    -- thirteen small native Cylinder foliage tufts at the TOP of the board.
+    -- The real photo has dense evergreen foliage across the full width.
+    -- Resize the same structural band and reuse the same thirteen native
+    -- Cylinder foliage tufts on the enlarged board, rather than adding new
+    -- physics instances or external mesh assets.
     -- They have uneven sizes/leans and multiple subdued green tones. None
     -- overlaps the apple-letter row at y=10.13 or the paper title above.
     -- No mesh assets, school images, scripts or gameplay are introduced.
-    piece(group,"Word wall green garland",Vector3.new(.10,.15,10.8),
-        CFrame.new(35.96,10.41,1),Color3.fromRGB(50,95,62),
+    piece(group,"Word wall green garland",Vector3.new(.10,.15,17.6),
+        CFrame.new(35.96,10.41,-2.5),Color3.fromRGB(50,95,62),
         Enum.Material.SmoothPlastic,false)
     local evergreen={
         Color3.fromRGB(39,81,53),Color3.fromRGB(54,102,62),
@@ -155,12 +161,12 @@ local function showcaseBoards(root:Instance,group:Instance)
     for i=0,12 do
         local offset=((i*7)%5-2)*.037
         local y=10.65+((i*3)%4)*.003
-        local z=-4.10+i*.84+offset
+        local z=-10.75+i*1.37+offset
         local sizeY=.29+((i*5)%4)*.013
-        local sizeZ=.83+((i*3)%4)*.07
+        local sizeZ=1.25+((i*3)%4)*.07
         local leaf=piece(group,"Word wall evergreen garland tuft",
             Vector3.new(.13,sizeY,sizeZ),
-            CFrame.new(35.83,y,z)*
+            CFrame.new(35.83,y-.025,z)*
                 CFrame.Angles(math.rad((i%5-2)*2),0,0),
             evergreen[(i%#evergreen)+1],
             Enum.Material.SmoothPlastic,false)
@@ -173,9 +179,9 @@ local function showcaseBoards(root:Instance,group:Instance)
         "school","said","with","write","you"}
     for row=0,2 do
         for col=0,4 do
-            local z=-3.45+col*2.22
-            local y=9.29-row*1.20
-            local sheet=piece(group,"Word wall word card",Vector3.new(.055,.73,1.49),
+            local z=-10.20+col*3.65
+            local y=9.10-row*1.53
+            local sheet=piece(group,"Word wall word card",Vector3.new(.055,.73,2.20),
                 CFrame.new(35.95,y,z),C.paper,Enum.Material.SmoothPlastic,false)
             printFace(sheet,Enum.NormalId.Left,words[row*5+col+1],"",C.paper,C.navy)
         end
@@ -189,8 +195,8 @@ local function showcaseBoards(root:Instance,group:Instance)
     for row=0,1 do
         for col=0,12 do
             local i=row*13+col+1
-            local z=-3.70+col*.75
-            local y=(row==0) and 10.13 or 5.91
+            local z=-10.48+col*1.30
+            local y=(row==0) and 10.13 or 4.82
             local apple=piece(group,"Word wall apple",
                 Vector3.new(.085,.43,.43),CFrame.new(35.91,y,z),
                 Color3.fromRGB(189,61,55),Enum.Material.SmoothPlastic,false)
