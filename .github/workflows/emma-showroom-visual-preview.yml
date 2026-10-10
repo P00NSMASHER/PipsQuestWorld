@@ -144,10 +144,9 @@ jobs:
           # the EXISTING staff doorway from an unobstructed classroom point.
           render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
           render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
-          # New October 10 photo-mapped hallway: actual room construction,
-          # non-cutaway child-eye views from both turns at the real doorway.
-          # Brick SurfaceGui tile colors are not reproduced by headless RHR;
-          # these shots prove the geometry/scale only, not native texture parity.
+          # October 10 photo hallway: actual Luau-constructed, non-cutaway
+          # native-player-height stills from the opened classroom entrance.
+          # Independent renderer cannot certify SurfaceGui brick/glass lettering.
           render_eye_checked 22-hall-look-left 0,5.5,32 -42,7.0,38
           render_eye_checked 23-hall-look-right 0,5.5,32 42,7.0,38
           render_eye_checked 24-hall-door-from-corridor 4,5.5,40 0,6.9,26.8
@@ -256,5 +255,142 @@ jobs:
             ${{ runner.temp }}/visual/*.png
             ${{ runner.temp }}/emma-classroom-source.rbxmx
             ${{ runner.temp }}/emma-classroom-cutaway.rbxmx
+          retention-days: 14
+          if-no-files-found: warn
+
+  # Lightweight 3-camera geometry review runs in parallel with full suite.
+  fast-geometry-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout real PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact source
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+          echo "FAST_PHOTO_SOURCE_PASS sha=$EXPECTED_SOURCE_SHA"
+      - name: Install checksum-verified Luau and static renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          mkdir -p luau
+          unzip -q luau.zip -d luau
+          chmod +x luau/luau
+          python3 -m venv "$RUNNER_TEMP/photo-venv"
+          "$RUNNER_TEMP/photo-venv/bin/pip" install \
+            --disable-pip-version-check --pre \
+            'roblox-headless-renderer==1.0.0rc1' 'Pillow==12.0.0'
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            "$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py" --self-test
+      - name: Construct complete and cutaway original Luau room
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/actual-room.rbxmx"
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/cutaway.rbxmx" --cutaway
+          test -s "$RUNNER_TEMP/actual-room.rbxmx"
+          test -s "$RUNNER_TEMP/cutaway.rbxmx"
+      - name: Capture three fixed full-geometry viewpoints
+        shell: bash
+        env:
+          RHR_CACHE_DIR: ${{ runner.temp }}/rhr-fast-cache
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/photo-review"
+          RHR="$RUNNER_TEMP/photo-venv/bin/rhr"
+          CHECK="$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py"
+          # The third-party renderer can occasionally return a completely
+          # white 1920x1080 image without reporting an error. Keep the
+          # independent strict pixel gate, but retry the SAME camera once.
+          # A second blank attempt still fails; no success is fabricated.
+          render_checked() {
+            local source="$1" label="$2" eye="$3" aim="$4"
+            local image="$RUNNER_TEMP/photo-review/$label.png"
+            "$RHR" scene "$source" --camera="$eye" \
+              --look-at="$aim" --out "$image"
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              echo "FAST_PHOTO_RETRY_SAME_CAMERA $label"
+              "$RHR" scene "$source" --camera="$eye" \
+                --look-at="$aim" --out "$image"
+            fi
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              # Renderer occasionally generates blank white independent of
+              # the room. Retry only the same architectural target from
+              # a second predeclared player-height camera; do not skip
+              # image validation or accept a blank alternative.
+              if [[ "$label" == "01-back-builtins" ]]; then
+                echo "FAST_PHOTO_ALTERNATIVE_BACK_BUILTINS_CAMERA"
+                "$RHR" scene "$source" --camera=-3,6.3,9 \
+                  --look-at=-22,10,25.8 --out "$image"
+              else
+                echo "FAST_PHOTO_NO_ALTERNATE_FOR $label"
+              fi
+            fi
+            "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"
+          }
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            01-back-builtins -4,5.6,6 -22,7.7,25
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            02-wordwall-table 22,5,-2 35.5,6.5,1
+          render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
+            03-rugs-cutaway -5,35,-4 -25,0,-3
+          echo "FAST_PHOTO_NONBLANK_PASS 3 source-derived views"
+      - name: Write evidence manifest and compact contact sheet
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/photo-venv/bin/python" - <<'PY'
+          import os,hashlib,json
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
+          names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway")
+          out=Image.new("RGB",(1000,1060),(244,244,240))
+          draw=ImageDraw.Draw(out)
+          files=[]
+          for i,name in enumerate(names):
+              path=root/(name+".png")
+              img=Image.open(path).convert("RGB")
+              w,h=img.size
+              img.thumbnail((970,310))
+              out.paste(img,((1000-img.width)//2,i*350+25))
+              draw.text((12,i*350+4),name,fill=(38,42,47))
+              files.append({"camera":name,"originalWidth":w,"originalHeight":h,
+                  "sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
+          out.save(root/"contact-sheet.jpg",quality=86)
+          manifest={"sourceSha":os.environ["SOURCE_SHA"],
+              "evidence":"source-derived static third-party renderer",
+              "notNativeRoblox":True,
+              "notNativeIphoneAcceptance":True,
+              "doesNotRenderSurfaceGuiTextOrGingham":True,
+              "referencePhotographsOfPeopleExcluded":True,
+              "files":files}
+          (root/"manifest.json").write_text(
+              json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
+          print("FAST_PHOTO_CONTACT_SHEET_PASS")
+          PY
+      - name: Preserve whatever real images were produced
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-fast-photo-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/photo-review/
           retention-days: 14
           if-no-files-found: warn
