@@ -679,22 +679,23 @@ local function buildReadingCorner(root:Instance)
     part(root,"Library cornice highlight",
         Vector3.new(18.5,.055,.34),CFrame.new(-22,6.62,21.89),
         caseEdge,Enum.Material.Wood,false)
-    -- The photo-defined wooden wall is not a new freestanding cabinet.
-    -- This noncolliding dark teaching inset continues the EXISTING left
-    -- reading-case silhouette upward toward the counting and shape strips.
-    -- It lives on the -Z-facing back wall, entirely LEFT of the real doorway.
+    -- Source-camera review exposed a suspended yellow-wall gap between
+    -- this inset and the photo-grounded OLD-OAK lower bookcase. Reuse the
+    -- exact six existing wood/display Parts at the same front face as the
+    -- original bookcase, seat its bottom rail onto the library cornice,
+    -- and leave the opening for the rear classroom doorway unchanged.
     local inset=part(root,"Library built-in display backing",
-        Vector3.new(18.05,4.20,.12),CFrame.new(-22,10.05,26.10),
+        Vector3.new(18.05,5.58,.12),CFrame.new(-22,9.40,22.05),
         Color3.fromRGB(46,49,48),Enum.Material.SmoothPlastic,false)
     inset.Reflectance=.005
     for _,x in ipairs({-31.12,-12.88}) do
         part(root,"Library built-in dark inset frame stile",
-            Vector3.new(.28,4.54,.20),CFrame.new(x,10.05,25.94),
+            Vector3.new(.28,5.86,.20),CFrame.new(x,9.50,21.81),
             caseFace,Enum.Material.Wood,false)
     end
-    for _,y in ipairs({7.80,12.30}) do
+    for _,y in ipairs({6.62,12.28}) do
         part(root,"Library built-in dark inset frame rail",
-            Vector3.new(18.48,.23,.23),CFrame.new(-22,y,25.94),
+            Vector3.new(18.48,.23,.23),CFrame.new(-22,y,21.81),
             caseFace,Enum.Material.Wood,false)
     end
     -- Three intentionally anonymous paper specimens. The supplied event
@@ -705,10 +706,10 @@ local function buildReadingCorner(root:Instance)
             Color3.fromRGB(232,225,219),
         }
         part(root,"Library built-in anonymous paper",
-            Vector3.new(2.85,2.05,.045),CFrame.new(x,10.05,25.965),
+            Vector3.new(2.85,2.05,.045),CFrame.new(x,10.05,21.73),
             papers[i],Enum.Material.SmoothPlastic,false)
         part(root,"Library built-in paper heading",
-            Vector3.new(2.05,.12,.03),CFrame.new(x,10.64,25.918),
+            Vector3.new(2.05,.12,.03),CFrame.new(x,10.64,21.68),
             Color3.fromRGB(117,146,157),Enum.Material.SmoothPlastic,false)
     end
 

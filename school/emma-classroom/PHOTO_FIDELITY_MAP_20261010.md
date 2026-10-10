@@ -126,3 +126,15 @@ sign-off. The older [VISUAL_ACCEPTANCE.md](VISUAL_ACCEPTANCE.md) remains the
 legacy study-game acceptance and has different NPC/question requirements.
 Do not count independent 3D pixels as an approval for SurfaceGui lettering
 or the procedural gingham checks.
+
+## October 10 — close the wooden library's suspended panel gap
+
+The source-rendered back-wall view clearly showed a large, bare-yellow band
+between the six-stud bookcase and the dark teaching inset, even though the
+photographed classroom has continuous old-oak framing. The **existing** dark
+inset, two frame stiles, two frame rails, and anonymous paper cards now share
+the lower library's front depth; the bottom frame touches its original upper
+cornice. No new physical Parts, no moved doors or desks, and no schoolwork
+photos. The constructed-Luau test explicitly rejects a repeat of the old
+four-stud rearward panel offset. Exact room dimensions remain approximate;
+Roblox/iPhone visual parity still requires native review.
