@@ -394,7 +394,6 @@ end
 local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
     local metal=Color3.fromRGB(219,226,226)
-    local trim=Color3.fromRGB(217,186,121)
     -- Match every existing metal highlight to the larger white housing.
     -- Borders remain slightly inset so they do not read as floating rails.
     for _,y in ipairs({4.62,11.78}) do
@@ -415,26 +414,50 @@ local function focalTeachingArea(root:Instance)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
             CFrame.new(x+.39,4.58,-30.74),C.navy,Enum.Material.SmoothPlastic,false)
     end
-    -- Compact, child-height freestanding classroom art easel. The earlier
-    -- five-stud brown rectangle dominated the left side of the teaching wall
-    -- in actual player-eye source renders. Preserve a display but reduce its
-    -- silhouette, push it toward the left corner and align every support.
+    -- The photo references show a white dry-erase teaching flipchart on a
+    -- blue wheeled frame, not a large invented wooden achievement poster.
+    -- Retain this provisional corner position and original board dimensions;
+    -- the cheer event does not establish its usual daily furniture location.
     local easelX=-31.0
     local easelZ=-30.8
-    local wood=piece(group,"Art easel wooden board",Vector3.new(4.2,3.6,.22),
-        CFrame.new(easelX,6.15,easelZ),C.wood,Enum.Material.Wood,false)
-    local poster=piece(group,"Easel framed print",Vector3.new(3.66,3.05,.055),
-        wood.CFrame*CFrame.new(0,0,.15),C.mint,Enum.Material.SmoothPlastic,false)
-    printed(poster,"OUR CLASSROOM\nA PLACE TO GROW",Enum.NormalId.Back,C.navy,C.mint)
+    local white=Color3.fromRGB(222,227,225)
+    local cartBlue=Color3.fromRGB(58,102,145)
+    local housing=piece(group,"Photo flipchart white housing",
+        Vector3.new(4.2,3.6,.22),CFrame.new(easelX,6.15,easelZ),
+        white,Enum.Material.SmoothPlastic,false)
+    local face=piece(group,"Photo flipchart dry erase face",
+        Vector3.new(3.66,3.05,.055),
+        housing.CFrame*CFrame.new(0,0,.15),
+        Color3.fromRGB(246,247,239),Enum.Material.SmoothPlastic,false)
+    -- Neutral, nearly empty magnetic surface: no personal schoolwork
+    -- or event-only cheer instructions are reproduced in the game.
+    printed(face,"","",Enum.NormalId.Back,C.navy,face.Color)
     for _,dx in ipairs({-1.46,1.46}) do
-        piece(group,"Easel timber support",Vector3.new(.27,4.60,.29),
-            CFrame.new(easelX+dx,2.42,easelZ-.12),C.woodEdge,Enum.Material.Wood,false)
+        piece(group,"Photo flipchart blue cart support",
+            Vector3.new(.27,4.60,.29),
+            CFrame.new(easelX+dx,2.42,easelZ-.12),
+            cartBlue,Enum.Material.Metal,false)
+        orb(group,"Photo flipchart rubber wheel",
+            Vector3.new(.44,.44,.44),
+            CFrame.new(easelX+dx,.49,easelZ-.12),
+            Color3.fromRGB(47,51,54),Enum.Material.SmoothPlastic)
     end
-    piece(group,"Easel display ledge",Vector3.new(4.48,.17,.56),
-        CFrame.new(easelX,4.36,easelZ+.34),C.woodEdge,Enum.Material.Wood,false)
-    for _,dx in ipairs({-1.55,0,1.55}) do
-        orb(group,"Golden achievement star",Vector3.new(.34,.34,.095),
-            CFrame.new(easelX+dx,8.33,easelZ+.23),trim,Enum.Material.Metal)
+    piece(group,"Photo flipchart marker tray",
+        Vector3.new(4.48,.17,.56),CFrame.new(easelX,4.36,easelZ+.34),
+        Color3.fromRGB(176,185,189),Enum.Material.Metal,false)
+    piece(group,"Photo flipchart lower blue shelf",
+        Vector3.new(3.30,.16,1.02),CFrame.new(easelX,1.14,easelZ-.12),
+        cartBlue,Enum.Material.Metal,false)
+    local magnetColors={
+        Color3.fromRGB(79,141,98),
+        Color3.fromRGB(78,137,172),
+        Color3.fromRGB(227,184,82),
+    }
+    for i,dx in ipairs({-1.55,0,1.55}) do
+        piece(group,"Photo flipchart colored magnet",
+            Vector3.new(.30,.30,.07),
+            CFrame.new(easelX+dx,6.95,easelZ+.23),
+            magnetColors[i],Enum.Material.SmoothPlastic,false)
     end
 end
 

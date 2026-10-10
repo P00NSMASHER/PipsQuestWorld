@@ -80,3 +80,13 @@ same 26 preexisting alphabet Parts using clearer uppercase/lowercase labels
 and original generic example words. No new physical Parts, school photographs,
 private student work, quiz data or game UI. Native Roblox/iPhone legibility
 must still be reviewed; the examples are not source-governed school material.
+
+## October 10 — portable whiteboard correction
+The supplied event photographs show a pale rolling dry-erase board on a blue
+metal cart near the word-wall side. The source currently draws a fictional
+wooden achievement easel. This pass repurposes the same footprint and primary
+display Parts into white SmoothPlastic board and blue support, preserving
+collision-free placement. Two small wheels plus one lower shelf are added; the
+three old star details become modest colored magnets, and event writing is
+not reproduced. The portable board's daily location is **unverified**; do
+not move it to its cheer-day photo coordinates without native owner review.

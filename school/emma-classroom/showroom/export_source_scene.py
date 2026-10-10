@@ -963,7 +963,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           f"frame={frame_width:.2f}")
     # Repositioned art easel must NOT occlude the actual chalkboard from the
     # front-facing player camera. Validate exported world geometry after Luau.
-    easel=only("Art easel wooden board")
+    easel=only("Photo flipchart white housing")
     easel_x=float(easel[9]); easel_width=float(easel[6]); easel_z=float(easel[11])
     chalk_left=chalk_x-chalk_width/2
     easel_right=easel_x+easel_width/2
@@ -976,18 +976,36 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert 3.4 <= float(easel[7]) <= 3.8, "Oversized brown display returned"
     assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
     assert -32.0 < easel_z < -29.0, "Easel no longer belongs in the front-left art corner"
-    easel_poster=only("Easel framed print")
-    easel_ledge=only("Easel display ledge")
-    easel_legs=[row for row in lines if row[1]=="Easel timber support"]
-    easel_stars=[row for row in lines if row[1]=="Golden achievement star"]
+    easel_poster=only("Photo flipchart dry erase face")
+    easel_ledge=only("Photo flipchart marker tray")
+    easel_legs=[row for row in lines if row[1]=="Photo flipchart blue cart support"]
+    easel_stars=[row for row in lines if row[1]=="Photo flipchart colored magnet"]
     assert abs(float(easel_poster[9])-easel_x)<.02 and abs(float(easel_ledge[9])-easel_x)<.02
     assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.46,1.46], (
-        "Art easel wooden supports detached from display"
+        "Photo flipchart blue cart supports detached from board"
     )
     assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-1.55,0.0,1.55], (
-        "Easel wall stars did not move with the display"
+        "Photo flipchart colored magnets detached from board"
     )
-    print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f}")
+    assert easel[4].endswith("SmoothPlastic") and easel_poster[4].endswith("SmoothPlastic"), (
+        "Photographed white dry-erase board regressed to a wooden poster"
+    )
+    assert min(float(easel[i]) for i in (12,13,14))>.85 and (
+        min(float(easel_poster[i]) for i in (12,13,14))>.93
+    ), "Photo flipchart white surfaces became dark colored"
+    wheels=[row for row in lines if row[1]=="Photo flipchart rubber wheel"]
+    shelf=only("Photo flipchart lower blue shelf")
+    assert len(wheels)==2 and all(.25<float(w[10])<.8 for w in wheels), (
+        "The photo flipchart cart lost floor-contact wheels"
+    )
+    assert abs(float(shelf[9])-easel_x)<.02 and 1.0<float(shelf[10])<1.3, (
+        "The photo flipchart cart shelf is disconnected"
+    )
+    assert all(float(s[7])<.5 for s in easel_stars), (
+        "The photo flipchart regained oversized star decorations"
+    )
+    print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f} "
+          "photo_flipchart_white=true wheels=2")
     # The brown rectangle in the last player-eye render was a physical
     # bulletin-board defect: cork was behind a full-size wooden front plate.
     # Assert the actual constructed front-facing depth and human-scale sheets.
