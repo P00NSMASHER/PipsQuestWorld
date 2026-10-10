@@ -37,6 +37,33 @@ local function verify()
             "PHOTO_LITERACY_CONTENT")
         assert(g.CanvasSize[1]==260 and g.CanvasSize[2]==170,
             "PHOTO_LITERACY_READABILITY_CANVAS")
+        -- The real photographs have small colored illustrations on the
+        -- alphabet cards. Source renders omit SurfaceGuis, so inspect
+        -- actual constructed UI geometry and absence of external assets.
+        local image=g:FindFirstChild("PhonicsIllustrationField")
+        assert(image and image:IsA("Frame")
+            and image.BackgroundTransparency<.1
+            and image.Position[1]>.45 and image.Position[1]<.55
+            and image.Position[2]<.12
+            and image.Size[1]>.40 and image.Size[1]<.49,
+            "PHOTO_LITERACY_ILLUSTRATION_PLACEMENT_INVALID")
+        local shape=image:FindFirstChild("PhonicsIllustrationBody")
+        local detail=image:FindFirstChild("PhonicsIllustrationDetail")
+        assert(shape and shape:IsA("Frame")
+            and detail and detail:IsA("Frame")
+            and shape.BackgroundTransparency<.1
+            and shape.Size[1]>.30 and shape.Size[2]>.45
+            and shape.BackgroundColor3.R>=0
+            and shape.BackgroundColor3.R<=1,
+            "PHOTO_LITERACY_ILLUSTRATION_MISSING")
+        assert(letter.Position[1]<.1 and letter.Size[1]<.44
+            and word.Position[2]>.60 and word.Size[2]<.32,
+            "PHOTO_LITERACY_ILLUSTRATION_OBSCURES_LABELS")
+        for _,child in ipairs(image:GetDescendants()) do
+            assert(not child:IsA("ImageLabel")
+                and not child:IsA("ImageButton"),
+                "PHOTO_LITERACY_UNAPPROVED_IMAGE_ASSET")
+        end
     end
     local banners=collect("Handwriting alphabet strip")
     assert(#banners==1 and banners[1].Size.X==29
@@ -71,8 +98,27 @@ ok,err=pcall(verify)
 banner.CFrame=before
 assert(not ok and string.find(tostring(err),"PHOTO_HANDWRITING_GEOMETRY",1,true),
     "PHOTO_LITERACY_BAD_BANNER_NOT_REJECTED")
+local icon=tile:FindFirstChildOfClass("SurfaceGui")
+    :FindFirstChild("PhonicsIllustrationField")
+local body=icon:FindFirstChild("PhonicsIllustrationBody")
+local savedTransparency=body.BackgroundTransparency
+body.BackgroundTransparency=1
+ok,err=pcall(verify)
+body.BackgroundTransparency=savedTransparency
+assert(not ok and string.find(tostring(err),
+    "PHOTO_LITERACY_ILLUSTRATION_MISSING",1,true),
+    "PHOTO_LITERACY_INVISIBLE_ICON_NOT_REJECTED")
+print("PHOTO_LITERACY_ADVERSARIAL_REJECTED hidden_icon")
+local oldFieldPosition=icon.Position
+icon.Position=UDim2.fromScale(.05,.70)
+ok,err=pcall(verify)
+icon.Position=oldFieldPosition
+assert(not ok and string.find(tostring(err),
+    "PHOTO_LITERACY_ILLUSTRATION_PLACEMENT_INVALID",1,true),
+    "PHOTO_LITERACY_ICON_OVER_LABEL_NOT_REJECTED")
+print("PHOTO_LITERACY_ADVERSARIAL_REJECTED icon_covers_word")
 verify()
-print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example and banner")
+print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -89,6 +135,8 @@ def main():
             +run.stderr[-3000:]+"\n"+run.stdout[-1500:])
     required=("PHOTO_LITERACY_RUNTIME_PASS",
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED example",
+      "PHOTO_LITERACY_ADVERSARIAL_REJECTED hidden_icon",
+      "PHOTO_LITERACY_ADVERSARIAL_REJECTED icon_covers_word",
       "PHOTO_LITERACY_NEGATIVE_TESTS_PASS")
     for marker in required:
         assert any(s.startswith(marker) for s in run.stdout.splitlines()),marker

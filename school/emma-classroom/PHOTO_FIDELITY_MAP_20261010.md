@@ -232,3 +232,25 @@ only −4 to +4 degrees, and the tuft height is lowered slightly. Constructed
 Luau QA explicitly computes the world-vertical oriented-box extent from the
 CFrame rotation matrix; a deliberately exaggerated tilted tuft must fail.
 The current source is still an unapproved Roblox/iPhone visual candidate.
+
+## October 10 — original illustrated phonics panels (picture-card fidelity)
+
+Actual classroom photos show colored mini-picture cards above the teaching
+chalkboard. The game previously used the same 26 flat cards with `Aa` plus
+a generic text example, leaving the illustrated half visually empty. This
+pass **reuses the exact same 26 wall Parts** and native SurfaceGuis, dividing
+each card into a legible letter region, an original colored pictogram region
+and a bottom example word. All 26 concepts have distinct object-related
+palette choices; simple geometric silhouettes are **original scenery**, not
+copies of the teacher's underlying classroom card art, hidden homework,
+or licensed image assets. The illustration uses only native Roblox Frame,
+UICorner and TextLabel instances: zero new physical Parts and no network
+assets or gameplay code.
+
+Constructed-Luau regression tests require picture-field placement, visible
+object silhouettes, labels unoccluded and no ImageLabels/external texture
+asset references. Deliberate mutations must reject a hidden icon and an
+illustration moved across the word label. Third-party static snapshots do
+**not** render SurfaceGui contents, so only a future actual Roblox/iPhone
+preview can establish appearance or reading comfort. The daily furniture
+layout and word-wall locations are unchanged.

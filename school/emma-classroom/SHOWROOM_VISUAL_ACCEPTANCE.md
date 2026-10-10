@@ -50,6 +50,8 @@ a manifest with `notNativeIphoneAcceptance=true`.
 - [ ] **Teaching wall:** Larger chalkboard is visible behind the wheeled,
   white-framed Smartboard. Alphabet/handwriting panel is legible; 26
   small phonics cards stay on solid teaching wall and out of ceiling.
+  The cards show distinct original color pictograms beside readable
+  upper/lowercase letters, with the example words unobscured.
   Photo-backed white dry-erase flipchart has blue supports and wheels,
   not a fictional wooden award plaque.
 - [ ] **Floor and ceiling:** Dark fine-grain polished wood floor does not

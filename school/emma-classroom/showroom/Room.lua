@@ -1156,6 +1156,45 @@ local function buildFrontWall(root: Instance)
         Color3.fromRGB(224,238,227),Color3.fromRGB(240,228,209),
         Color3.fromRGB(220,232,240),Color3.fromRGB(239,220,218),
     }
+    -- Photo A-Z cards contain small color illustrations above the real
+    -- classroom chalkboard. Draw ORIGINAL icon-like relief in the existing
+    -- cards' SurfaceGuis: do not reproduce teacher-owned artwork or add
+    -- external image assets. The icons are decorative, not curriculum.
+    -- Each silhouette is a distinct compact theme paired with its word.
+    local iconColors={
+        Color3.fromRGB(202,65,63),   -- apple
+        Color3.fromRGB(55,106,165),  -- ball
+        Color3.fromRGB(199,141,74),  -- cat
+        Color3.fromRGB(148,101,68),  -- dog
+        Color3.fromRGB(238,210,145), -- egg
+        Color3.fromRGB(48,144,173),  -- fish
+        Color3.fromRGB(147,149,135), -- goat
+        Color3.fromRGB(129,85,167),  -- hat
+        Color3.fromRGB(130,197,219), -- igloo
+        Color3.fromRGB(163,58,89),   -- jam
+        Color3.fromRGB(236,162,63),  -- kite
+        Color3.fromRGB(69,147,97),   -- leaf
+        Color3.fromRGB(247,201,91),  -- moon
+        Color3.fromRGB(157,110,69),  -- nest
+        Color3.fromRGB(189,125,62),  -- owl
+        Color3.fromRGB(226,142,162), -- pig
+        Color3.fromRGB(143,114,200), -- queen
+        Color3.fromRGB(80,144,189),  -- rain
+        Color3.fromRGB(230,168,51),  -- sun
+        Color3.fromRGB(67,129,75),   -- tree
+        Color3.fromRGB(101,121,191), -- umbrella
+        Color3.fromRGB(164,96,52),   -- violin
+        Color3.fromRGB(59,153,171),  -- whale
+        Color3.fromRGB(89,124,135),  -- x-ray
+        Color3.fromRGB(203,112,140), -- yarn
+        Color3.fromRGB(61,67,73),    -- zebra
+    }
+    local pictogramKinds={
+        "round","round","ears","ears","oval","fish","horns","cap",
+        "igloo","jar","kite","leaf","moon","nest","owl","round",
+        "crown","drops","sun","tree","umbrella","violin",
+        "fish","square","round","stripes",
+    }
     for i=1,26 do
         local x=-31.2+(i-1)*2.38
         local tint=palettes[(i-1)%#palettes+1]
@@ -1166,7 +1205,8 @@ local function buildFrontWall(root: Instance)
         local big=surfaceText(tile,letter..string.lower(letter),
             Enum.NormalId.Back,P.blue,tint,Enum.Font.GothamBold)
         big.Name="PhonicsLetter"
-        big.Size=UDim2.fromScale(1,.64)
+        big.Size=UDim2.fromScale(.41,.51)
+        big.Position=UDim2.fromScale(.025,.065)
         big.BackgroundTransparency=1
         big.TextWrapped=false
         local surface=big.Parent
@@ -1174,14 +1214,70 @@ local function buildFrontWall(root: Instance)
             surface.CanvasSize=Vector2.new(260,170)
             surface.LightInfluence=.08
         end
+        -- Each picture card has a small illustrated field with its own
+        -- varied color/shape. UI primitives carry no physical Parts and
+        -- avoid unreliable unsupported Unicode emoji at phone scale.
+        local frame=Instance.new("Frame")
+        frame.Name="PhonicsIllustrationField"
+        frame.Position=UDim2.fromScale(.485,.085)
+        frame.Size=UDim2.fromScale(.445,.48)
+        frame.BackgroundColor3=Color3.fromRGB(249,248,239)
+        frame.BorderSizePixel=0
+        frame.Parent=surface
+        local fieldRound=Instance.new("UICorner")
+        fieldRound.CornerRadius=UDim.new(0,9)
+        fieldRound.Parent=frame
+        local kind=pictogramKinds[i]
+        local body=Instance.new("Frame")
+        body.Name="PhonicsIllustrationBody"
+        body.Position=UDim2.fromScale(.205,.18)
+        body.Size=UDim2.fromScale(.58,.64)
+        if kind=="leaf" or kind=="violin" then
+            body.Size=UDim2.fromScale(.42,.66)
+            body.Position=UDim2.fromScale(.29,.18)
+            body.Rotation=32
+        elseif kind=="kite" or kind=="crown" then
+            body.Size=UDim2.fromScale(.48,.57)
+            body.Position=UDim2.fromScale(.26,.20)
+            body.Rotation=45
+        elseif kind=="drops" or kind=="stripes" then
+            body.Size=UDim2.fromScale(.38,.69)
+            body.Position=UDim2.fromScale(.31,.15)
+        elseif kind=="cap" or kind=="nest" or kind=="umbrella" then
+            body.Size=UDim2.fromScale(.76,.48)
+            body.Position=UDim2.fromScale(.12,.30)
+        end
+        body.BackgroundColor3=iconColors[i]
+        body.BorderSizePixel=0
+        body.Parent=frame
+        local bodyRound=Instance.new("UICorner")
+        bodyRound.CornerRadius=UDim.new(0,kind=="square" and 5 or 23)
+        bodyRound.Parent=body
+        local accent=Instance.new("Frame")
+        accent.Name="PhonicsIllustrationDetail"
+        accent.Size=UDim2.fromScale(.19,.17)
+        accent.Position=UDim2.fromScale(.57,.20)
+        accent.BackgroundColor3=Color3.fromRGB(244,244,233)
+        if kind=="fruit" or kind=="tree" or kind=="leaf" then
+            accent.BackgroundColor3=Color3.fromRGB(64,126,71)
+            accent.Position=UDim2.fromScale(.48,.09)
+        elseif kind=="moon" or kind=="sun" then
+            accent.BackgroundColor3=Color3.fromRGB(251,233,154)
+            accent.Position=UDim2.fromScale(.61,.44)
+        end
+        accent.BorderSizePixel=0
+        accent.Parent=frame
+        local accentRound=Instance.new("UICorner")
+        accentRound.CornerRadius=UDim.new(1,0)
+        accentRound.Parent=accent
         local word=Instance.new("TextLabel")
         word.Name="PhonicsExample"
         word.Text=examples[i]
         word.Font=Enum.Font.GothamMedium
         word.TextColor3=Color3.fromRGB(52,69,81)
         word.BackgroundTransparency=1
-        word.Position=UDim2.fromScale(.04,.67)
-        word.Size=UDim2.fromScale(.92,.28)
+        word.Position=UDim2.fromScale(.035,.665)
+        word.Size=UDim2.fromScale(.93,.28)
         word.TextScaled=true
         word.TextWrapped=false
         word.Parent=surface
