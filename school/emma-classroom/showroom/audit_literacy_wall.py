@@ -59,6 +59,12 @@ local function verify()
         assert(letter.Position[1]<.1 and letter.Size[1]<.44
             and word.Position[2]>.60 and word.Size[2]<.32,
             "PHOTO_LITERACY_ILLUSTRATION_OBSCURES_LABELS")
+        local padding=letter:FindFirstChildOfClass("UIPadding")
+        assert(padding and padding.PaddingLeft[2]==4
+            and padding.PaddingRight[2]==4
+            and padding.PaddingTop[2]==2
+            and padding.PaddingBottom[2]==2,
+            "PHOTO_LITERACY_LETTER_PADDING_TOO_LARGE")
         for _,child in ipairs(image:GetDescendants()) do
             assert(not child:IsA("ImageLabel")
                 and not child:IsA("ImageButton"),
@@ -117,8 +123,18 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_LITERACY_ILLUSTRATION_PLACEMENT_INVALID",1,true),
     "PHOTO_LITERACY_ICON_OVER_LABEL_NOT_REJECTED")
 print("PHOTO_LITERACY_ADVERSARIAL_REJECTED icon_covers_word")
+local letter=tile:FindFirstChildOfClass("SurfaceGui"):FindFirstChild("PhonicsLetter")
+local padding=letter:FindFirstChildOfClass("UIPadding")
+local oldPadding=padding.PaddingLeft
+padding.PaddingLeft=UDim.new(0,32)
+ok,err=pcall(verify)
+padding.PaddingLeft=oldPadding
+assert(not ok and string.find(tostring(err),
+    "PHOTO_LITERACY_LETTER_PADDING_TOO_LARGE",1,true),
+    "PHOTO_LITERACY_OVERSIZED_LETTER_PADDING_NOT_REJECTED")
+print("PHOTO_LITERACY_ADVERSARIAL_REJECTED oversized_letter_padding")
 verify()
-print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word")
+print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word letter_padding")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -137,6 +153,7 @@ def main():
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED example",
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED hidden_icon",
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED icon_covers_word",
+      "PHOTO_LITERACY_ADVERSARIAL_REJECTED oversized_letter_padding",
       "PHOTO_LITERACY_NEGATIVE_TESTS_PASS")
     for marker in required:
         assert any(s.startswith(marker) for s in run.stdout.splitlines()),marker

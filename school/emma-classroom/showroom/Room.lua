@@ -1190,7 +1190,7 @@ local function buildFrontWall(root: Instance)
         Color3.fromRGB(61,67,73),    -- zebra
     }
     local pictogramKinds={
-        "round","round","ears","ears","oval","fish","horns","cap",
+        "fruit","round","ears","ears","oval","fish","horns","cap",
         "igloo","jar","kite","leaf","moon","nest","owl","round",
         "crown","drops","sun","tree","umbrella","violin",
         "fish","square","round","stripes",
@@ -1209,6 +1209,16 @@ local function buildFrontWall(root: Instance)
         big.Position=UDim2.fromScale(.025,.065)
         big.BackgroundTransparency=1
         big.TextWrapped=false
+        -- Generic full-width signage uses 32-pixel horizontal insets.
+        -- On a 41%-width phonics-letter cell that would hide most of Aa.
+        for _,child in ipairs(big:GetChildren()) do
+            if child:IsA("UIPadding") then
+                child.PaddingLeft=UDim.new(0,4)
+                child.PaddingRight=UDim.new(0,4)
+                child.PaddingTop=UDim.new(0,2)
+                child.PaddingBottom=UDim.new(0,2)
+            end
+        end
         local surface=big.Parent
         if surface and surface:IsA("SurfaceGui") then
             surface.CanvasSize=Vector2.new(260,170)
