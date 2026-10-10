@@ -231,9 +231,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Real-school wood doors were replaced by a generic surface"
     )
     for lamp in lamps:
-        assert lamp[4].endswith("Glass") and
-               abs(float(lamp[11])-38)<.025 and
-               abs(float(lamp[10])-12.85)<.025, (
+        assert (lamp[4].endswith("Glass") and
+                abs(float(lamp[11])-38)<.025 and
+                abs(float(lamp[10])-12.85)<.025), (
             "Hall fluorescent diffuser off continuous ceiling"
         )
     # Brick courses, floor grout, paper diamonds, mullions, shamrock shapes
