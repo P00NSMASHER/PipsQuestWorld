@@ -284,7 +284,7 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/photo-venv"
           "$RUNNER_TEMP/photo-venv/bin/pip" install \
             --disable-pip-version-check --pre \
-            'roblox-headless-renderer==1.0.0rc1' 'Pillow==11.3.0'
+            'roblox-headless-renderer==1.0.0rc1' 'Pillow==12.0.0'
           "$RUNNER_TEMP/photo-venv/bin/python" \
             "$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py" --self-test
       - name: Construct complete and cutaway original Luau room
