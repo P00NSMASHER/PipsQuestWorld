@@ -28,12 +28,14 @@ STEP = 0.75
 AVATAR_RADIUS = 1.0  # Conservative nominal Roblox character footprint.
 BODY_BOTTOM = 0.85
 BODY_TOP = 5.75
-X_MIN, X_MAX = -35.0, 54.0
+X_MIN, X_MAX = -55.0, 55.0
 Z_MIN, Z_MAX = -32.0, 48.0
 START = (5.0, 24.0)
 GOALS = {
     "front_teaching_wall": (5.0, -24.0),
     "rear_entry_hallway": (0.0, 36.0),
+    "photo_hallway_left": (-43.0, 38.0),
+    "photo_hallway_right": (43.0, 38.0),
     "window_wall": (-32.0, 1.0),
     "reading_corner_approach": (-29.0, -23.0),
     "right_side_aisle": (28.0, -11.0),
