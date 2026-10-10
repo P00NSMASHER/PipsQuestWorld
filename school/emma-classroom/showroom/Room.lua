@@ -1540,8 +1540,18 @@ local function buildBackDoorAndHall(root: Instance)
     local welcome=hp("Photo hall vertical welcome plaque",
         Vector3.new(1.15,7.5,.09),CFrame.new(-10.5,8,27.8),
         Color3.fromRGB(39,40,40),Enum.Material.SmoothPlastic,false)
-    surfaceText(welcome,"WELCOME",Enum.NormalId.Back,paperColor,
-        welcome.Color,Enum.Font.GothamBold)
+    local welcomeArt=imageSurface(welcome,"Stacked WELCOME lettering",
+        Enum.NormalId.Back,115,750)
+    for i,letter in ipairs({"W","E","L","C","O","M","E"}) do
+        local tile=Instance.new("TextLabel")
+        tile.Name="Vertical school welcome letter"
+        tile.Size=UDim2.fromScale(.94,1/7)
+        tile.Position=UDim2.fromScale(.03,(i-1)/7)
+        tile.BackgroundTransparency=1
+        tile.Font=Enum.Font.GothamBold
+        tile.TextColor3=paperColor;tile.TextScaled=true
+        tile.Text=letter;tile.Parent=welcomeArt
+    end
 
     -- A wood suspension rail and 23 ROTATED paper frames. Original printed
     -- student assignments, names, faces and event data are NOT reproduced.
