@@ -108,3 +108,44 @@ omits SurfaceGuis, so its screenshots will show plain ivory and must not
 be accepted as evidence of checked-pattern fidelity. Native Roblox/iPhone
 inspection is still required. Added constructed-Luau tests for five
 correctly faced pattern surfaces, support, desk clearance and mutations.
+
+## October 10 — original green word-wall heading
+A supplied full-size classroom photo explicitly shows a small **green paper
+“First Grade word wall” label** above the blue apple board. The prior game
+placed a generic oversized “LET YOUR LIGHT SHINE” poster directly above
+the word-wall. This pass repurposes the same two physical sign Parts as a
+small pale-green “FIRST GRADE / WORD WALL” title, with no extra Parts or
+new player UI. “First Grade” reproduces historical visible scenery, not
+the current grade, teacher materials, or curriculum authority. Native
+iPhone readability is pending and this is not final visual acceptance.
+
+## Native acceptance ownership
+Use [SHOWROOM_VISUAL_ACCEPTANCE.md](SHOWROOM_VISUAL_ACCEPTANCE.md) for the
+current *classroom-only* source/photo reconciliation and pending iPhone
+sign-off. The older [VISUAL_ACCEPTANCE.md](VISUAL_ACCEPTANCE.md) remains the
+legacy study-game acceptance and has different NPC/question requirements.
+Do not count independent 3D pixels as an approval for SurfaceGui lettering
+or the procedural gingham checks.
+
+## October 10 — close the wooden library's suspended panel gap
+
+The source-rendered back-wall view clearly showed a large, bare-yellow band
+between the six-stud bookcase and the dark teaching inset, even though the
+photographed classroom has continuous old-oak framing. The **existing** dark
+inset, two frame stiles, two frame rails, and anonymous paper cards now share
+the lower library's front depth; the bottom frame touches its original upper
+cornice. No new physical Parts, no moved doors or desks, and no schoolwork
+photos. The constructed-Luau test explicitly rejects a repeat of the old
+four-stud rearward panel offset. Exact room dimensions remain approximate;
+Roblox/iPhone visual parity still requires native review.
+
+## October 10 — window-pier school clock correction
+The supplied classroom photographs show the small analog white clock mounted
+between the two broad navy-curtained windows. The old source mistakenly
+placed the complete five-piece clock assembly over the front chalkboard.
+The existing clock, rim, dial, and two hands are now mounted on the yellow
+inter-window pier (model x≈-36.38, y≈11.60, z≈-6.50). The native Cylinder
+face and hands turn toward the classroom interior (+X), not into the glass.
+No Parts added, no window/curtain geometry changed, no student photographs
+stored. The independent Luau runtime now rejects moving it back to the
+teaching wall. Native phone visual acceptance remains pending.

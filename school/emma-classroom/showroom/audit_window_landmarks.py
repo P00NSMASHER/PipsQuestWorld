@@ -75,6 +75,36 @@ local function check()
         and #parts("Photo AC control dial")==2
         and #parts("Photo AC control fascia")==1,
         "WINDOW_CUE_AC_FACE_INCOMPLETE")
+    -- The owner-provided window-wall photo shows the white analog clock
+    -- between the two school windows. The former front-wall clock was a
+    -- provenance error; verify the actual physically constructed five-part
+    -- assembly rather than a text-only code search.
+    local clock=one("Classroom wall clock")
+    local rim=one("Clock rim")
+    local dial=one("Clock visible dial")
+    local minute=one("Clock minute hand")
+    local hour=one("Clock hour hand")
+    assert(clock.Shape==Enum.PartType.Cylinder
+        and math.abs(clock.Position.X+36.38)<.03
+        and math.abs(clock.Position.Y-11.60)<.03
+        and math.abs(clock.Position.Z+6.50)<.03,
+        "PHOTO_WINDOW_CLOCK_LOCATION_INVALID")
+    assert(clock.Position.Z>left.Position.Z+8
+        and clock.Position.Z<faith.Position.Z-7
+        and clock.Position.X<-35.8,
+        "PHOTO_WINDOW_CLOCK_NOT_BETWEEN_WINDOWS")
+    local matrix=clock.CFrame.m
+    assert(matrix and matrix[1]>.98,
+        "PHOTO_WINDOW_CLOCK_FACING_AWAY_FROM_ROOM")
+    assert(math.abs(rim.Position.X-clock.Position.X)<.03
+        and dial.Position.X>clock.Position.X+.18
+        and minute.Position.X>dial.Position.X+.06
+        and hour.Position.X>dial.Position.X+.06,
+        "PHOTO_WINDOW_CLOCK_FACE_ASSEMBLY_INVALID")
+    for _,p in ipairs({clock,rim,dial,minute,hour}) do
+        assert(p.Anchored and not p.CanCollide and not p.CanTouch,
+            "PHOTO_WINDOW_CLOCK_DECOR_COLLIDES")
+    end
     local seen={"Classroom faith window banner","Smore faith headline",
         "Smore classroom main title","Smore mural pine trunk",
         "Smore mural green canopy","Photo window air conditioner housing",
@@ -92,9 +122,9 @@ local function check()
         #parts("Purple corner chair seat")==1 and
         #parts("Student desk top")==16,
         "WINDOW_CUE_ORIGINAL_ROOM_REGRESSION")
-    return left,ac
+    return left,ac,clock
 end
-local left,ac=check()
+local left,ac,clock=check()
 print("WINDOW_CUE_RUNTIME_PASS banners=2 pines=2 "
     .."photo_ac=1 louvers=5 controls=2 collision_free=true "
     .."windows=2 purple_chair=1 desk_pairs=16")
@@ -122,8 +152,16 @@ label.Text=saved
 assert(not ok and string.find(tostring(err),
     "WINDOW_CUE_WORDING_INVALID",1,true),
     "WINDOW_CUE_WRONG_TEXT_NOT_REJECTED")
+local originalClock=clock.CFrame
+clock.CFrame=CFrame.new(31.5,15.1,-34)*CFrame.Angles(0,math.pi/2,0)
+ok,err=pcall(check)
+clock.CFrame=originalClock
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WINDOW_CLOCK_LOCATION_INVALID",1,true),
+    "PHOTO_WINDOW_CLOCK_FRONT_WALL_REGRESSION_NOT_REJECTED")
+print("WINDOW_CUE_ADVERSARIAL_REJECTED front_wall_clock")
 check()
-print("WINDOW_CUE_NEGATIVE_TESTS_PASS collision location lettering")
+print("WINDOW_CUE_NEGATIVE_TESTS_PASS collision location lettering clock")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -141,6 +179,7 @@ def main():
     required=("WINDOW_CUE_RUNTIME_PASS",
               "WINDOW_CUE_ADVERSARIAL_REJECTED collidable_ac",
               "WINDOW_CUE_ADVERSARIAL_REJECTED wrong_window",
+              "WINDOW_CUE_ADVERSARIAL_REJECTED front_wall_clock",
               "WINDOW_CUE_NEGATIVE_TESTS_PASS")
     for marker in required:
         assert any(row.startswith(marker) for row in r.stdout.splitlines()),marker

@@ -90,15 +90,16 @@ local function gingham(face:BasePart,side:Enum.NormalId,columns:number,rows:numb
     end
 end
 
-local function framedPoster(group:Instance,name:string,x:number,y:number,z:number,w:number,h:number,title:string,caption:string,face:Enum.NormalId)
+local function framedPoster(group:Instance,name:string,x:number,y:number,z:number,w:number,h:number,title:string,caption:string,face:Enum.NormalId,background:Color3?)
     local side=face==Enum.NormalId.Left
+    local paperTone=background or C.paper
     local frameSize=side and Vector3.new(.32,h+.35,w+.35) or Vector3.new(w+.35,h+.35,.26)
     local frontSize=side and Vector3.new(.34,h,w) or Vector3.new(w,h,.28)
     local frame=piece(group,name.." oak surround",frameSize,CFrame.new(x,y,z),C.oak,Enum.Material.Wood,false)
     local front=piece(group,name.." paper art",frontSize,
         CFrame.new(x+(side and -.20 or 0),y,z+(side and 0 or -.18)),
-        C.paper,Enum.Material.SmoothPlastic,false)
-    printFace(front,face,title,caption,C.paper,C.navy)
+        paperTone,Enum.Material.SmoothPlastic,false)
+    printFace(front,face,title,caption,paperTone,C.navy)
     return frame
 end
 
@@ -112,8 +113,14 @@ local function showcaseBoards(root:Instance,group:Instance)
     end
     framedPoster(group,"ABVM classroom values",36.27,10.1,-18.0,7.5,5.0,
         "BE KIND","Be respectful  •  Be your best",Enum.NormalId.Left)
-    framedPoster(group,"Classroom encouragement",36.27,13.2,1.0,9.4,3.0,
-        "LET YOUR LIGHT SHINE","Assumption BVM Catholic School",Enum.NormalId.Left)
+    -- Photo evidence: small pale-green FIRST GRADE WORD WALL card directly
+    -- above the apple board; the prior 9.4x3 giant generic slogan was
+    -- visually unrelated to this photographed corner. Reuse its existing
+    -- TWO physical Parts, but make the title child-sized and correctly green.
+    -- This historic grade label is room scenery, NOT lesson/test authority.
+    framedPoster(group,"Photo word wall title",36.27,11.48,1.0,5.4,1.20,
+        "FIRST GRADE\nWORD WALL","",Enum.NormalId.Left,
+        Color3.fromRGB(158,201,140))
 
     -- Real photos: a BRIGHT blue first-grade word wall with green garland,
     -- two rows of red apple alphabet markers and pale word slips.

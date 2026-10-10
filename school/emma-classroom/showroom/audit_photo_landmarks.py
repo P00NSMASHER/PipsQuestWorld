@@ -52,13 +52,31 @@ local function verify()
         and math.abs(cubbies.Position.X-21)<.03
         and math.abs(shelf.Position.Z-cubbies.Position.Z)<2.5,
         "PHOTO_WOOD_BUILTINS_NOT_ON_SAME_BACK_WALL")
+    local cornice=one("Library upper molded cornice")
+    local upperShelf=one("Reading shelf back")
+    local frameRails=parts("Library built-in dark inset frame rail")
     assert(math.abs(inset.Position.X+22)<.03
-        and math.abs(inset.Position.Y-10.05)<.03
-        and math.abs(inset.Position.Z-26.10)<.03
-        and inset.Size.X>18 and inset.Size.Y>=4.2,
+        and math.abs(inset.Position.Y-9.40)<.03
+        and math.abs(inset.Position.Z-cornice.Position.Z)<.03
+        and inset.Size.X>18 and inset.Size.Y>5.5,
         "PHOTO_WOOD_INSET_GEOMETRY_INVALID")
-    assert(inset.Position.Y-inset.Size.Y/2>6.7,
-        "PHOTO_WOOD_INSET_COVERS_EXISTING_READING_BOOKS")
+    local lowerEdge=inset.Position.Y-inset.Size.Y/2
+    local corniceTop=cornice.Position.Y+cornice.Size.Y/2
+    assert(math.abs(lowerEdge-corniceTop)<.12
+        and math.abs(inset.Position.Z-upperShelf.Position.Z)<2.5,
+        "PHOTO_WOOD_SUSPENDED_PANEL_GAP")
+    assert(#frameRails==2,"PHOTO_WOOD_DARK_FRAME_RAIL_COUNT")
+    local lowest=math.min(frameRails[1].Position.Y,frameRails[2].Position.Y)
+    assert(math.abs(lowest-corniceTop)<.16
+        and math.abs(frameRails[1].Position.Z-cornice.Position.Z)<.30
+        and math.abs(frameRails[2].Position.Z-cornice.Position.Z)<.30,
+        "PHOTO_WOOD_DARK_FRAME_DISCONNECTED")
+    assert(lowerEdge>6.40,"PHOTO_WOOD_INSET_COVERS_EXISTING_READING_BOOKS")
+    for _,p in ipairs(parts("Library built-in anonymous paper")) do
+        assert(p.Position.Z<inset.Position.Z-.18
+            and p.Position.Z>inset.Position.Z-.45,
+            "PHOTO_WOOD_PAPER_HIDDEN_BEHIND_FRAME")
+    end
     assert(#parts("Library built-in dark inset frame stile")==2
         and #parts("Library built-in dark inset frame rail")==2
         and #parts("Library built-in anonymous paper")==3
@@ -145,6 +163,15 @@ ok,err=pcall(verify)
 label.Text=textBefore
 assert(not ok and string.find(tostring(err),"PHOTO_WOOD_COUNTING_SEQUENCE_INVALID",1,true),
     "PHOTO_WOOD_WRONG_NUMBER_ORDER_NOT_REJECTED")
+local backing=one("Library built-in display backing")
+local oldCF=backing.CFrame
+backing.CFrame=CFrame.new(-22,9.40,26.10)
+ok,err=pcall(verify)
+backing.CFrame=oldCF
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WOOD_INSET_GEOMETRY_INVALID",1,true),
+    "PHOTO_WOOD_HOVERING_PANEL_NOT_REJECTED")
+print("PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -155,7 +182,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order flipchart")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order panel_depth flipchart")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -172,6 +199,7 @@ def main() -> None:
     markers=("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
+        "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:

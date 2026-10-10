@@ -30,6 +30,24 @@ local function check()
         and board.Color.B>.78 and board.Color.B>board.Color.R
         and not board.CanCollide and board.Anchored,
         "PHOTO_WORD_WALL_BLUE_MATERIAL_INVALID")
+    local title=parts("Photo word wall title paper art")
+    assert(#title==1,"PHOTO_WORD_WALL_TITLE_COUNT_INVALID")
+    title=title[1]
+    local titleFrame=title:FindFirstChildOfClass("SurfaceGui")
+    local titleBackground=titleFrame and titleFrame:FindFirstChildOfClass("Frame")
+    local heading=titleBackground and titleBackground:FindFirstChild("DecorativeHeading")
+    assert(title.Color.G>.76 and title.Color.G>title.Color.R
+        and title.Color.G>title.Color.B
+        and title.Material==Enum.Material.SmoothPlastic
+        and math.abs(title.Position.Y-11.48)<.03
+        and math.abs(title.Position.Z-board.Position.Z)<.03
+        and title.Position.Y>board.Position.Y+board.Size.Y/2
+        and math.abs(title.Size.Z-5.4)<.03
+        and math.abs(title.Size.Y-1.20)<.03,
+        "PHOTO_WORD_WALL_TITLE_GEOMETRY_INVALID")
+    assert(titleFrame and titleFrame.Face==Enum.NormalId.Left
+        and heading and heading.Text=="FIRST GRADE\nWORD WALL",
+        "PHOTO_WORD_WALL_TITLE_TEXT_INVALID")
     local markers=parts("Word wall apple")
     local stems=parts("Word wall apple stem")
     assert(#markers==26 and #stems==26,
@@ -87,8 +105,20 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WORD_WALL_NATIVE_APPLE_SHAPE_INVALID",1,true),
     "PHOTO_WORD_WALL_FLATTENED_BALL_NOT_REJECTED")
 print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED flattened_ball")
+local sign=parts("Photo word wall title paper art")[1]
+local gui=sign:FindFirstChildOfClass("SurfaceGui")
+local layer=gui:FindFirstChildOfClass("Frame")
+local headline=layer:FindFirstChild("DecorativeHeading")
+local oldText=headline.Text
+headline.Text="WELCOME"
+ok,err=pcall(check)
+headline.Text=oldText
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WORD_WALL_TITLE_TEXT_INVALID",1,true),
+    "PHOTO_WORD_WALL_GENERIC_TITLE_NOT_REJECTED")
+print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading")
 check()
-print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape")
+print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -105,6 +135,7 @@ def main() -> None:
     for marker in ("PHOTO_WORD_WALL_RUNTIME_PASS",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED fabric_backing",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED flattened_ball",
+                   "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading",
                    "PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS"):
         assert any(x.startswith(marker) for x in result.stdout.splitlines()),marker
     for line in result.stdout.splitlines():
