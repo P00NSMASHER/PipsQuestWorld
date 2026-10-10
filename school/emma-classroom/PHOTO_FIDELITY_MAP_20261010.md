@@ -53,6 +53,18 @@ lighting schedule, but assigns the tiles and grid native
 metallic overhead response. Exact Luau constructor checks reject the old
 Fabric/Metal regression; *actual new native iPhone rendering is still pending*.
 
+## October 10 — mobile word-wall backing and apple visibility
+The real word wall is bright sky blue with two rows of red apple alphabet
+markers. Native iPhone v78 shows a nearly black board and former flattened
+Ball apple pieces that can shrink to dots because Roblox uses the smallest
+Ball Size axis. The room's **existing** word-wall footprint is preserved,
+with a smooth non-Fabric blue backing. Twenty-six small, native-facing,
+noncolliding round Cylinder apples replace eight minimum-axis Ball dots;
+the physical objects and attached labels are anonymous A-Z signage only.
+A constructed Luau native-material/count/legibility audit guards against
+Fabric and flattened Ball regressions. iPhone results still require an
+actual Roblox capture before visual approval.
+
 ## Test and release gates
 - Actual Luau construction geometry and negative tests: `showroom/audit_photo_landmarks.py`.
 - Same-source Roblox build: `school/emma-showroom.project.json` / `.github/workflows/emma-showroom-ci.yml`.

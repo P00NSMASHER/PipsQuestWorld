@@ -722,8 +722,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Photo rug sun ray rounded tip":16,
         "Front rug color dot":25,
         "Word wall word card":15,
-        "Word wall apple":8,
-        "Word wall apple stem":8,
+        "Word wall apple":26,
+        "Word wall apple stem":26,
     }
     for component,expected in photo_components.items():
         assert by_name[component]==expected, (
@@ -863,7 +863,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "brighter_textile_blue=true larger_white_clouds=true")
     print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
           "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
-          "blue_wordwall=true apple_markers=8")
+          "blue_wordwall=true apple_markers=26")
 
     smart=only("Interactive smartboard")
     bezel=only("Smartboard white composite bezel")

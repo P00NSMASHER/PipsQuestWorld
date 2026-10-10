@@ -110,6 +110,8 @@ jobs:
           # Exact photo landmark geometry, joinery and doorway clearance.
           python3 school/emma-classroom/showroom/audit_photo_landmarks.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_word_wall_native.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"
