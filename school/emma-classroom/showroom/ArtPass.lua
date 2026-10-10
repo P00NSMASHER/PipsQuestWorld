@@ -337,7 +337,9 @@ local function learningWall(root:Instance)
         "DIAMOND","PENTAGON","HEXAGON","STAR"}
     local cardColors={C.mint,C.coral,C.lilac,C.golden,C.blue}
     for i,name in ipairs(shapes) do
-        local x=-32+(i-1)*3.2
+        -- Keep all nine cards over SOLID back-wall carpentry. The former
+        -- 3.2-stud spacing drifted the final cards over the rear doorway.
+        local x=-32+(i-1)*2.35
         local tint=cardColors[(i-1)%#cardColors+1]
         local card=piece(group,"Photo-guided wall shape card",
             Vector3.new(2.2,1.3,.08),CFrame.new(x,16.5,26.32),
@@ -360,10 +362,24 @@ local function learningWall(root:Instance)
                 C.cream,Enum.Material.SmoothPlastic,false)
         end
     end
+    -- Match the real long cabinet-side numbered teaching frieze without
+    -- spanning the central door. The older right cabinet strip remains in
+    -- its existing approved location, and the two ranges are not duplicated.
+    local leftNumbers=piece(group,"Library counting strip backing",
+        Vector3.new(18.8,.86,.10),CFrame.new(-22,14.55,26.24),
+        Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
+    printed(leftNumbers,"0  10  20  30  40  50  60",
+        Enum.NormalId.Front,C.navy,leftNumbers.Color)
+    piece(group,"Library counting strip top rail",
+        Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
+        C.blue,Enum.Material.Wood,false)
+    piece(group,"Library counting strip bottom rail",
+        Vector3.new(19.05,.085,.11),CFrame.new(-22,14.08,26.23),
+        C.leaf,Enum.Material.Wood,false)
     local numberLine=piece(group,"Photo-guided cabinet counting strip",
         Vector3.new(25.6,.86,.10),CFrame.new(20.2,14.55,26.24),
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
-    printed(numberLine,"0  10  20  30  40  50  60  70  80  90  100  110  120",
+    printed(numberLine,"70  80  90  100  110  120",
         Enum.NormalId.Front,C.navy,numberLine.Color)
     piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
         CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
