@@ -987,6 +987,57 @@ local function buildWindows(root: Instance)
     local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,246,225);sun.Brightness=.50;sun.Range=48;sun.Shadows=true;sun.Parent=sunAnchor
 end
 
+-- Photo-specific grouping from the newly supplied cheer classroom image:
+-- a gray tall cabinet and narrow black files left of the AC window, with a
+-- worktable in front of the seated adult. No people, game UI, or new gameplay.
+-- Photo perspective is incomplete; coordinates remain owner-review candidates.
+local function buildPhotoWindowWorkstation(root: Instance)
+    local gray=Color3.fromRGB(126,135,140)
+    local dark=Color3.fromRGB(46,49,52)
+    part(root,"Photo gray corner storage cabinet",
+        Vector3.new(2.55,10.8,4.1),CFrame.new(-34.05,5.55,-30.50),
+        gray,Enum.Material.Metal,true)
+    part(root,"Photo gray cabinet front",
+        Vector3.new(.10,9.75,3.80),CFrame.new(-32.72,5.55,-30.50),
+        Color3.fromRGB(137,147,152),Enum.Material.Metal,false)
+    for _,y in ipairs({2.9,8.3}) do
+        part(root,"Photo gray cabinet pull",
+            Vector3.new(.15,.86,.15),CFrame.new(-32.60,y,-29.17),
+            Color3.fromRGB(64,72,78),Enum.Material.Metal,false)
+    end
+    part(root,"Photo black filing cabinet",
+        Vector3.new(2.45,5.40,2.10),CFrame.new(-34.10,3.12,-26.25),
+        dark,Enum.Material.Metal,true)
+    for _,y in ipairs({1.65,3.30,4.95}) do
+        part(root,"Photo filing drawer face",
+            Vector3.new(.075,1.35,1.90),CFrame.new(-32.83,y,-26.25),
+            Color3.fromRGB(57,60,63),Enum.Material.Metal,false)
+        part(root,"Photo filing drawer pull",
+            Vector3.new(.12,.14,.68),CFrame.new(-32.73,y,-26.25),
+            Color3.fromRGB(166,174,179),Enum.Material.Metal,false)
+    end
+    -- Surface stands between the purple chair and the student workstations,
+    -- without covering the school rug or the existing front-row desks.
+    part(root,"Photo window worktable",
+        Vector3.new(6.20,.28,4.00),CFrame.new(-27.50,3.16,-19.60),
+        Color3.fromRGB(150,170,178),Enum.Material.SmoothPlastic,true)
+    for _,x in ipairs({-30.04,-24.96}) do
+        for _,z in ipairs({-21.12,-18.08}) do
+            part(root,"Photo worktable metal leg",
+                Vector3.new(.18,2.92,.18),CFrame.new(x,1.49,z),
+                Color3.fromRGB(88,93,95),Enum.Material.Metal,true)
+        end
+    end
+    -- Only a few anonymous school papers: avoid turning a real corner into a
+    -- decorative exhibition or implying a specific pupil's work.
+    part(root,"Photo worktable paper stack",
+        Vector3.new(1.75,.10,1.08),CFrame.new(-26.65,3.38,-20.45),
+        Color3.fromRGB(243,241,235),Enum.Material.SmoothPlastic,false)
+    part(root,"Photo worktable book",
+        Vector3.new(1.10,.22,1.48),CFrame.new(-29.15,3.42,-18.85),
+        Color3.fromRGB(52,73,108),Enum.Material.SmoothPlastic,false)
+end
+
 local function buildFrontWall(root: Instance)
     -- IMG_2909/2910 show the freestanding display in front of a much wider
     -- blackboard. Preserve the structural wall, the photograph's layering,
@@ -1482,16 +1533,15 @@ function World.build()
     buildTeacherEntry(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
+    buildPhotoWindowWorkstation(root)
 
-    -- Emma confirmed a distinct PURPLE chair in the classroom corner.
-    -- The supplied event photographs establish the window/storage area,
-    -- but people obscure the exact chair silhouette and location. Place a
-    -- child-scale purple molded chair in the rear-left window/storage corner
-    -- as a PROVISIONAL review candidate. Reuse the existing vetted chair
-    -- constructor without renaming or moving any of the 16 desk chairs.
-    -- It sits left of the existing library shelves, outside the ABC rug,
-    -- facing the open classroom; placement awaits Emma's native iPhone review.
-    schoolChair(root,"Purple corner chair",-33.4,23.35,
+    -- Emma identified the purple chair where an adult is sitting beside the
+    -- visible window AC and cabinets in her cheer photo. The prior candidate
+    -- at z=+23 was the opposite reading corner, not this photographed corner.
+    -- Move ONLY the unique chair to the AC-side workstation; its silhouette
+    -- remains provisional because the occupied chair is hidden in the photo.
+    -- Do not alter the 16 matching student desk chairs or the alphabet rug.
+    schoolChair(root,"Purple corner chair",-32.45,-19.60,
         Color3.fromRGB(117,73,163))
 
     -- Paired laminate desks from IMG_2913, with an open back-left reading zone.
