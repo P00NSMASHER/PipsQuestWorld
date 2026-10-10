@@ -195,54 +195,51 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
 
     # New photographic hallway landmarks replace exact named placeholders.
     floor=actual_parts("Photo hall polished square stone floor")
-    grid=actual_parts("Photo hall stone tile joint")
-    brick=actual_parts("Photo hall rear glazed brick")
+    rear_brick=actual_parts("Photo hall rear glazed brick")
     classroom_brick=actual_parts("Photo hall classroom exterior glazed brick")
     outside_brick=actual_parts("Photo hall front outer glazed brick")
+    end_brick=(actual_parts("Photo hall left end glazed brick")
+               +actual_parts("Photo hall right end glazed brick"))
     ceiling=actual_parts("Photo hall ivory ceiling")
-    paper=actual_parts("Photo hall anonymous diamond student display")
-    sun=actual_parts("Photo hall end sunrise circle")
     oak=actual_parts("Photo hall adjacent oak door")
-    glazing=actual_parts("Photo hall adjacent frosted glazing")
-    clover=actual_parts("Photo hallway green glass shamrock")
-    assert (len(floor),len(brick),len(classroom_brick),len(outside_brick),
-            len(ceiling),len(paper),len(sun),len(oak),len(glazing),len(clover))==(
-            1,1,2,2,1,23,1,2,2,8
-    ), "HALLWAY_PHOTO_LANDMARKS_MISSING"
-    assert len(grid)>=25 and all(float(p[10])>.50 for p in grid), (
-        "Photo-stone floor grout lines missing or below surface"
-    )
-    assert floor[0][4].endswith("SmoothPlastic") and float(floor[0][6])==108, (
-        "Polished square-tile corridor floor lost its continuous structure"
-    )
+    lamps=actual_parts("Photo hall fluorescent diffuser")
+    assert (len(floor),len(rear_brick),len(classroom_brick),
+            len(outside_brick),len(end_brick),len(ceiling),
+            len(oak),len(lamps))==(1,1,2,2,2,1,2,5), (
+                "HALLWAY_PHOTO_STRUCTURE_MISSING"
+            )
+    assert floor[0][4].endswith("SmoothPlastic") and (
+        float(floor[0][6])==108
+    ), "Polished square-tile corridor floor lost its continuous structure"
     assert all(p[4].endswith("SmoothPlastic") and
-               abs(float(p[10])-2.125)<.03 for p in brick+classroom_brick+outside_brick), (
+               abs(float(p[10])-2.125)<.03
+               for p in rear_brick+classroom_brick+outside_brick+end_brick), (
         "Warm glazed brick dado lifted or roughened"
     )
     assert float(ceiling[0][10])>13.1 and float(ceiling[0][6])>107, (
         "HALLWAY_CEILING_LOST"
     )
-    assert all(abs(float(p[11])-48.58)<.035 and
-               p[4].endswith("SmoothPlastic") for p in paper), (
-        "Diamond work display mispositioned or material changed"
+    assert len(actual_parts("Photo hall student work hanging rail"))==1
+    assert len(actual_parts("Photo hall vertical welcome plaque"))==1
+    assert len(actual_parts("Photo hall rear dado cap"))==1
+    assert len(actual_parts("Photo hall front dado cap"))==2
+    assert len(actual_parts("Classroom doorway brass threshold"))==1
+    assert len(actual_parts("Door glass"))==2, (
+        "Original walkable classroom entrance glazing was removed"
     )
-    assert all(p[4].endswith("Glass") for p in glazing), (
-        "Adjacent wood-and-glass door glazing was removed"
+    assert all(p[4].endswith("Wood") for p in oak), (
+        "Real-school wood doors were replaced by a generic surface"
     )
-    assert len(actual_parts("Photo hall vertical welcome plaque"))==1, (
-        "Narrow near-classroom WELCOME sign is missing"
-    )
-    assert len(actual_parts("Photo hall rear dado cap"))==1 and (
-        len(actual_parts("Photo hall front dado cap"))==4
-    ), "Photo hallway datum trim lost"
-    assert len(actual_parts("Photo hall fluorescent diffuser"))==5
-    assert len(actual_parts("Photo hall fluorescent trim"))==5
-    for lamp in actual_parts("Photo hall fluorescent diffuser"):
-        assert lamp[4].endswith("Glass") and abs(float(lamp[11])-38)<.025, (
+    for lamp in lamps:
+        assert lamp[4].endswith("Glass") and
+               abs(float(lamp[11])-38)<.025 and
+               abs(float(lamp[10])-12.85)<.025, (
             "Hall fluorescent diffuser off continuous ceiling"
         )
-    for frame in actual_parts("Photo hall fluorescent trim"):
-        assert frame[4].endswith("Metal") and abs(float(frame[11])-38)<.025
+    # Brick courses, floor grout, paper diamonds, mullions, shamrock shapes
+    # and sun rays are now native SurfaceGui Frames, not physical Parts.
+    # The separate constructed-Luau audit tests their full UI structure.
+
     staff_frame=actual_parts("Staff hall framed announcement board")
     staff_cork=actual_parts("Staff hall inset cork noticeboard")
     staff_papers=actual_parts("Staff hall anonymous paper notice")
@@ -259,9 +256,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         staff_surround[0][4].endswith("Metal")
     ), "Side hall recess replaced with overexposed fixture"
     print("SCHOOL_CORRIDOR_FINISH_PASS long_hall=108_studs "
-          "photo_diamonds=23 glazed_brick_segments=5 actual_brick_facings=7 "
-          "recessed_troffers=6 staff_hall_preserved=true "
-          "native_iphone_pending",flush=True)
+          "glazed_brick_facings=7 main_diffusers=5 staff_hall_preserved=true "
+          "photo_patterns_in_UI_not_physical_parts=true native_iphone_pending",flush=True)
 
     # IMG_2903 through IMG_2910 photo anchors, without copying photos or
     # publishing personal likenesses. Validate wall and floor before
