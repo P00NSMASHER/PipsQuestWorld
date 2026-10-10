@@ -1,0 +1,80 @@
+name: ABVM One-Time Roblox Model Import
+
+# Model uploads are side effects: do not auto-run for every PR edit.
+# Explicit dispatch only after a dedicated creator-authorized Assets API key
+# is present. Do not fall back to place-publishing keys.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-original-mesh-cloud-import
+  cancel-in-progress: false
+
+jobs:
+  import-two-original-models-only:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Confirm explicit one-time original furniture import scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'request: upload-two-original-abvm-furniture-models-only' school/emma-classroom/mesh/CLOUD_IMPORT_REQUEST.md
+          grep -qx 'production-release: prohibited' school/emma-classroom/mesh/CLOUD_IMPORT_REQUEST.md
+          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
+          echo "AUTHORIZATION_BOUNDARY_TWO_MODELS_ONLY_NO_PLACE_PUBLICATION"
+
+      - name: Install mesh and HTTP libraries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/cloud-model-env"
+          "$RUNNER_TEMP/cloud-model-env/bin/pip" install --disable-pip-version-check \
+            'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'networkx==3.5' 'requests==2.32.5'
+
+      - name: Confirm dedicated Assets API key is available
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ "${#ROBLOX_ASSET_API_KEY}" -lt 20 ]; then
+            echo "BLOCKED_DEDICATED_ROBLOX_ASSET_KEY_MISSING"
+            exit 1
+          fi
+          echo "DEDICATED_ROBLOX_ASSET_KEY_PRESENT"
+
+      - name: Regenerate exact original GLB binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/cloud-model-env/bin/python" school/emma-classroom/mesh/build_meshes.py --out "$RUNNER_TEMP/models"
+
+      - name: Upload only when creator ownership and key permissions are verified
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/cloud-model-env/bin/python" \
+            school/emma-classroom/mesh/cloud_import.py \
+            --folder "$RUNNER_TEMP/models" \
+            --out "$RUNNER_TEMP/roblox-asset-receipt.json"
+          test -s "$RUNNER_TEMP/roblox-asset-receipt.json"
+
+      - name: Preserve authorization receipt without altering the live game
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-opencloud-import-${{ github.sha }}
+          path: ${{ runner.temp }}/roblox-asset-receipt.json
+          retention-days: 30
+          if-no-files-found: warn

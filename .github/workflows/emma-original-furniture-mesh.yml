@@ -1,0 +1,107 @@
+name: ABVM Original Furniture Mesh Assets
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-classroom/mesh/**'
+      - 'school/emma-classroom/showroom/FurnitureMesh*.lua'
+      - 'school/emma-showroom.project.json'
+      - '.github/workflows/emma-original-furniture-mesh.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-inspect-original-models:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install pinned open-source mesh generator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/mesh-env"
+          "$RUNNER_TEMP/mesh-env/bin/pip" install --disable-pip-version-check \
+            'trimesh==4.11.1' 'numpy==2.3.5' 'scipy==1.16.2' 'networkx==3.5' 'matplotlib==3.10.8' 'Pillow==11.3.0' 'requests==2.32.5'
+
+      - name: Export authored chair and desk GLB candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/mesh-env/bin/python" \
+            school/emma-classroom/mesh/build_meshes.py --out "$RUNNER_TEMP/abvm-models"
+          for name in abvm_student_chair abvm_student_desk; do
+            test -s "$RUNNER_TEMP/abvm-models/$name.glb"
+          done
+          "$RUNNER_TEMP/mesh-env/bin/python" - <<'PY'
+          import json,os
+          from pathlib import Path
+          manifest=json.loads((Path(os.environ["RUNNER_TEMP"])/"abvm-models/manifest.json").read_text())
+          assert manifest["new_assets_not_published"] is True
+          assert {m["name"] for m in manifest["models"]} == {"abvm_student_chair","abvm_student_desk"}
+          for item in manifest["models"]:
+              assert 2 <= item["triangles"] <= 4000
+              assert .1<min(item["size_studs"]) and max(item["size_studs"])<7
+          print("ABVM_GLBS_GEOMETRY_VERIFIED")
+          PY
+
+      - name: Render original geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/mesh-env/bin/python" \
+            school/emma-classroom/mesh/preview_meshes.py --dir "$RUNNER_TEMP/abvm-models"
+          test -s "$RUNNER_TEMP/abvm-models/furniture-mesh-preview.png"
+
+      - name: Check dedicated Roblox asset key presence without exposing credentials
+        shell: bash
+        env:
+          DEDICATED_ASSET_KEY_CONFIGURED: ${{ secrets.ROBLOX_ASSET_API_KEY != '' }}
+        run: |
+          if [ "$DEDICATED_ASSET_KEY_CONFIGURED" = "true" ]; then
+            echo "DEDICATED_ASSET_KEY_PRESENT"
+          else
+            echo "DEDICATED_ASSET_KEY_MISSING"
+          fi
+          # Diagnostic only; absence does not fail furniture generation.
+
+      - name: Prove duplicate Roblox asset creation is blocked without API access
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ""
+        run: |
+          set -euo pipefail
+          if "$RUNNER_TEMP/mesh-env/bin/python" school/emma-classroom/mesh/cloud_import.py \
+            --folder "$RUNNER_TEMP/abvm-models" \
+            --out "$RUNNER_TEMP/do-not-create-asset.json" \
+            > "$RUNNER_TEMP/no-duplicate.log" 2>&1; then
+            echo "ERROR: Already imported furniture was permitted to upload again"
+            exit 1
+          fi
+          grep -q 'ORIGINAL_FURNITURE_ALREADY_IMPORTED' "$RUNNER_TEMP/no-duplicate.log"
+          test ! -f "$RUNNER_TEMP/do-not-create-asset.json"
+          echo "PASS_DUPLICATE_CREATION_BLOCKED_BEFORE_ROBLOX_NETWORK_OR_TOKEN"
+
+      - name: Confirm approved Roblox IDs are staged but not enabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/verify_build.py
+          echo "ABVM_TWO_APPROVED_ASSETS_STAGED_RUNTIME_DISABLED_NO_PUBLISH"
+
+      - name: Save importable original GLBs and preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-original-furniture-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/abvm-models/*.glb
+            ${{ runner.temp }}/abvm-models/*.png
+            ${{ runner.temp }}/abvm-models/*.json
+          retention-days: 30
+          if-no-files-found: error

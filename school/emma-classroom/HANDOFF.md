@@ -1,3 +1,117 @@
+## Canonical release-state clarification — October 8, 2026 (verified GitHub receipt)
+
+**Published classroom preview:** GitHub Actions [run 37870907504](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37870907504) successfully published **Roblox place version 67** from exact source commit `1e67943a0394c4196f630cc5566a1f153ec401b5` to place `114603280760042` on October 9 UTC (October 8 Eastern). The runtime is the classroom-only progress preview, **not** a final visually accepted release.
+
+**Important:** Newer commits in draft PR #339 are *development candidates*. A green Rojo/Luau/GitHub check, source-derived image, or newly staged furniture model is **not evidence of a newer Roblox publication**. The 16 original furniture sets remain fallback; imported premium furniture meshes are still gated (`FurnitureMeshConfig.Enabled=false`). Native iPhone rendering, mobile performance, collision and exact photo parity are not yet certified. The connected Windows machine was offline at the latest check.
+
+The receipt is tracked in [RELEASE_RECEIPT.json](RELEASE_RECEIPT.json) and checked by `verify_release_receipt.py`; CI verifies internal consistency and release gates but cannot query the *current* live Roblox version. Historical sections below that say "live place unchanged" were written **before** the authorized version-67 preview and must not be misread as the latest status. Never publish another candidate from this note alone.
+
+---
+
+## October 8 — furniture reconstruction and adversarial close-up visual review
+
+**Current source checkpoint:** `4ab68c81456d0fb898ad86429d508b700cc3b3dc`. The new classroom-only chair/desks changes and source-derived previews are archived in [the furniture QA gallery](../../docs/visual-qa/emma-furniture-20261008/README.md).
+
+Implemented: Reworked all 16 chairs with single continuous rounded physical shells and invisibly simple collision; rejected an intermediate multi-panel shell after inspecting actual rendered close-ups because it visibly resembled stacked plates. Added underseat steel runners, thin laminate desk edge, front bevel, slimmer underdesk baskets, and support stretchers. Retained all desk positions, classroom-only first-person movement and isolated schoolwork systems. Fixed blank aerial preview false positives with an explicit camera and pixel occupancy check.
+
+Actually tested: Luau compilation, Rojo binary/XML assembly, schoolwork-runtime exclusion, executed Luau scene constructors, 2,688-part geometry budget, and all six exact-source GitHub workflow checks including the independent visual screenshots (run 37798089586). Verified actual image pixels for front, back, isometric, chair and desk close-ups. A four-piece chair-back attempt was *rejected by visual QA*, and its screenshots were retained.
+
+Not tested/known remaining limitations: Native Roblox rendering on Studio/iPhone, true seat collision or mobile fps, exact photo-to-world room measurements. Current continuous chairs still look too oval to meet a premium professionally meshed chair target; desks remain original part geometry, not production imported meshes. **No production publish / PR merge**. Keep the draft until native capture and substantive visual quality acceptance.
+
+---
+
+# CURRENT DIRECTION: classroom replica only (October 8, 2026)
+
+## Continued geometry/visual iteration, no laptop
+
+Based on the rejected October 8 phone capture and a simplified offline 3D model built
+from the actual room's **source coordinates**, not from imaginary marketing renders:
+
+- Resized all 16 physical student tabletops from 7 x 4.6 to 5.78 x 3.86
+  studs (laminate top 5.72 x 3.80). Updated lower trays, metal legs, glides,
+  desk edges and sign placement accordingly. Same desk count and aisle topology.
+- Reduced every oversized chair from 2.9 wide to 2.5 wide, with smaller
+  molded backs, handhold, hardware and re-aligned accents. Chairs remain
+  solid physical colliders, not image props.
+- Horizontal gaps between the 8-stud-center neighboring desktops increase
+  from roughly 1 stud to 2.28 studs. This is static dimensional evidence,
+  **not** an independently measured Roblox walk collision clearance.
+- Moved three supply baskets from unsupported mid-gap x=-20,-4,16 onto actual
+  middle-row table centers x=-24,-8,12, preventing floating school supplies.
+- Removed five remaining oversized flat rule cards that overlapped the
+  new right-wall framed boards; removed eight back-wall number cards that
+  clipped into the student artwork gallery.
+- Forked ArtPass inside the showroom, preserving the original education
+  game/study mode sources and independent ABVM schoolwork update pipeline.
+- Original still-to-check visual limitations: room height, exact furniture
+  silhouette, smoothness of part-built hardware, Roblox surface/decal visibility,
+  clipping in running engine, physical iPhone FOV and performance.
+- Independent previews: source-derived 3D bounding proxies and a measured
+  floor plan were created outside Roblox for visual/spatial correction;
+  they **are not** native game captures or an exact imported/engine-rendered
+  copy of all Roblox pieces. Available in the originating ChatGPT task
+  as PNG and glTF assets, not assumed as acceptance evidence.
+
+The showroom build CI compiles the actual shipped scripts and builds an RBXL
+and RBXLX. The independent place guard checks no question bank, quiz remotes,
+study UI, or study persistence is included. Live place remains unchanged;
+publication requires a new specific user-approved acceptance marker.
+
+
+
+The October 8 iPhone recording rejects v63's quiz-first classroom. The user
+explicitly stopped the question/teacher/UI work. New single objective: build
+the highest-quality recognizable ABVM classroom environment we can and show
+actual Roblox renders before approving a live version.
+
+New build target: **school/emma-showroom.project.json**.
+This is NOT the old school/emma-classroom.project.json study mode.
+
+Implemented in the replica candidate:
+- Compiled runtime contains only the room, two non-interactive art passes,
+  spawn bootstrap, and native first-person exploration.
+- No QuestionBank, EmmaStudy client/server scripts, progress UI, teaching
+  NPCs, answer remotes, score handling or DataStore are included in the
+  showcase place.
+- Maintains the photographed room cues: warm walls, navy trim, timber floor,
+  double classroom doors/hall glimpse, chalkboard and Smartboard,
+  16 paired desks, tall wood windows, radiator, cubbies, reading corner,
+  teacher desk, crucifix and school motto.
+- Replaces oversize wall values signs and question board with human-scale
+  non-interactive wall art, physical fixtures, small notice boards and
+  ambient classroom details; no screen-covering UI.
+- Spawn is in a clear rear aisle, not an invisible seat. Native mobile
+  thumbstick/jump/camera movement stays functional.
+- Keeps the old educational files in the repository without bundling them.
+  Existing content-refresh jobs are not renamed, stopped or rewritten.
+- Publisher targets this showroom only; requires a NEW
+  `requested-mode: classroom-replica-only` marker AND
+  `visual-acceptance: approved` in PUBLISH_REQUEST. Existing v63
+  marker cannot silently release this build.
+
+Verification status:
+- GitHub source writes are complete. Independent exact-source Luau/Rojo CI
+  and built-place XML screening are required and not yet described as passing.
+- Actual Roblox Studio or published-place screenshots, iPhone movement,
+  part lighting/material appearance, and physical reference-parity are
+  **NOT verified** by source edits.
+- Do NOT publish, merge or describe this as polished until a real Roblox render
+  and hallway/window/desk walkthrough meets visual acceptance.
+
+Visual acceptance sequence:
+1. Capture iPhone entry view showing the front board and the whole room with
+   no study widgets or staff NPCs.
+2. Walk through the center and right aisles without collision traps, sitting,
+   teleporting or controls stealing focus.
+3. Compare yellow/cream walls, blue trim, desk/chair proportions, window
+   wall, reading corner, doorway and ABVM board treatment to the saved real
+   classroom photographs. Reject any generic/primitive-looking elements.
+4. Check phone frame time, materials, lighting, distance-readability and
+   clipping before release. Favor correcting the actual 3D geometry rather
+   than adding menus or more graphics test infrastructure.
+
+---
+
 ## Current continuation — stable display avatars / classroom objects (v6)
 
 Version 58 failed the user's real recording: detached/missing heads during swaps,

@@ -52,7 +52,7 @@ local UDim={new=function(...) return {...} end}
 local UDim2={new=function(...) return {...} end,fromScale=function(...) return {...} end,fromOffset=function(...)return {...}end}
 local Vector2={new=function(...)return {...}end}
 local methods={}
-local instanceMeta={__index=function(t,k) if k=="Position" then return t.props.CFrame.Position end;if methods[k] then return methods[k] end;if t.props[k]~=nil then return t.props[k] end;return methods.FindFirstChild(t,k) end,__newindex=function(t,k,v)
+local instanceMeta={__index=function(t,k) if k=="Position" then return t.props.Position or t.props.CFrame.Position end;if methods[k] then return methods[k] end;if t.props[k]~=nil then return t.props[k] end;return methods.FindFirstChild(t,k) end,__newindex=function(t,k,v)
     if k=="Parent" then
         local old=t.props.Parent
         if old then local n=table.find(old.children,t);if n then table.remove(old.children,n) end end
@@ -111,7 +111,7 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==6)
+    assert(m:GetAttribute("StaffGeometryVersion")==7)
     local head=m:FindFirstChild("Head")
     local face=head:FindFirstChild("face")
     assert(face and face:IsA("Decal") and not head:FindFirstChildOfClass("SurfaceGui"),"Use a standard avatar face, no handmade eye/skull overlays")
@@ -141,12 +141,14 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
     assert(groups.leftArm==3 and groups.rightArm==3 and groups.leftLeg==3 and groups.rightLeg==3)
+    assert(groups.head and groups.head>=1,"Head must share a synchronized pose frame with hair/glasses")
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
     assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.2)
     assert(not m:FindFirstChild("Ear") and not m:FindFirstChild("Connected hair cap") and not m:FindFirstChild("Smooth beard chin"),"Never reuse rejected procedural head/hair shapes")
     local accessory=m:FindFirstChildOfClass("Accessory")
     if teacher.hairStyle=="balding" then assert(not accessory) else
         assert(accessory and accessory.Handle:FindFirstChildOfClass("SpecialMesh"))
+        assert(accessory.Handle:GetAttribute("PoseGroup")=="head","Hair must follow every head turn")
         -- Keep highlights and strand detail of native catalog hair. The former
         -- TextureId="" code created solid-color blobs despite using mesh assets.
         local hairMesh=accessory.Handle:FindFirstChildOfClass("SpecialMesh")
@@ -169,7 +171,8 @@ for _,teacher in ipairs(Data.Teachers) do
     for frame=0,60 do
         m:PivotTo(CFrame.new(frame*.13,3.15,-20)*CFrame.Angles(0,frame*.1,0))
         StaffModel.pose(m,frame*.3,true)
-        near((m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position,headRest)
+        assert(((m:FindFirstChild("UpperTorso").CFrame:Inverse()*head.CFrame).Position-headRest).Magnitude<.12,
+            "Gentle neck turn must not detach or move the head far from its shoulders")
         if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
     end
     StaffModel.pose(m,1.2,true)
@@ -178,14 +181,28 @@ for _,teacher in ipairs(Data.Teachers) do
     near(arm.Position,posed) -- repeated SAME walking phase is deterministic
     StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
     assert((m:FindFirstChild("LeftHand").CFrame:Inverse()*arm.CFrame).Position.Magnitude>0)
-    -- Non-walking neutral pose must exactly restore every separate mesh joint.
+    -- A restrained idle must visibly differ from rest, then reset cleanly.
     StaffModel.pose(m,2.7,false)
-    near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
+    assert((arm.Position-(m:GetPivot()*arm:GetAttribute("RestCF")).Position).Magnitude>.001,"No idle arm motion")
+    if accessory then near((head.CFrame:Inverse()*accessory.Handle.CFrame).Position,hairBefore) end
+    StaffModel.pose(m,0,false);near(arm.Position,(m:GetPivot()*arm:GetAttribute("RestCF")).Position)
 
 end
-local script={Parent={WaitForChild=function(_,name)assert(name=="StaffModel");return StaffModel end}}
+local function loadArtPass()
+'''
+middle=r'''
+end
+local ArtPass=loadArtPass()
+local script={Parent={WaitForChild=function(_,name)
+    if name=="StaffModel" then return StaffModel end
+    if name=="ArtPass" then return ArtPass end
+    error("Unknown module: "..name)
+end}}
 local nativeRequire=require
-local require=function(module) if module==StaffModel then return StaffModel end;return nativeRequire(module) end
+local require=function(module)
+    if module==StaffModel or module==ArtPass then return module end
+    return nativeRequire(module)
+end
 local function loadWorld()
 '''
 finish=r'''
@@ -193,7 +210,8 @@ end
 local World=loadWorld()
 World.build()
 local counts={}
-assert(#World.Root:GetDescendants()<3000,"Classroom object budget exceeded")
+local objectCount=#World.Root:GetDescendants()
+assert(objectCount<3000,"Classroom object budget exceeded: "..tostring(objectCount))
 for _,d in ipairs(World.Root:GetDescendants()) do
     counts[d.Name]=(counts[d.Name] or 0)+1
     if d:IsA("BasePart") then assert(d.Size.X>0 and d.Size.Y>0 and d.Size.Z>0,d.Name) end
@@ -201,9 +219,9 @@ end
 assert(counts["Laptop keyboard key"]==40 and counts["Laptop trackpad"]==1)
 assert(counts["Globe meridian cradle"]==24 and counts["Globe continent"]==10)
 assert(counts["Cabinet door panel"]==2 and counts["Cabinet brass hinge"]==4)
-assert(counts["Notebook binding"]==96 and counts["Ruled notebook page"]==16)
+assert(counts["Notebook binding"]==nil and counts["Notebook binding rail"]==16 and counts["Ruled notebook page"]==16)
 assert(counts["Trash can rib"]==16 and counts["Folded tissue"]==1)
-assert(counts["Oak floor board"]>290 and counts["Teacher inset drawer"]==6)
+assert(counts["Oak floor board"]==nil and counts["Warm oak classroom floor"]==1 and counts["Teacher inset drawer"]==6,"Native oak material must replace duplicated tile instances")
 assert(counts["Student desk top rounded corner"]==64 and counts["Student chair back rounded corner"]==64)
 assert(counts["Cubbie divider"]==7 and counts["Bin side"]==24)
 assert(counts["Student desk top"]==16 and counts["Emma desk nameplate"]==1)
@@ -211,6 +229,11 @@ assert(counts["Metal coat hook"]==8 and counts["Hanging school bag"]==8)
 assert(counts["Reading rug alphabet border"]==26 and counts["Reading rug flower center"]==10)
 assert(counts["Window blind slat"]==32 and counts["Blue curtain fold"]==12)
 assert(counts["Color dot reading rug"]==nil,"Rug layers must not overlap")
+assert(counts["Distant brick house"]==4 and counts["Soft distant cloud"]==6)
+assert(counts["Soft seat cushion"]==2 and counts["Illustrated storybook cover"]==5)
+assert(counts["Stationery tray"]==16 and counts["Chair back accent"]==16)
+assert(counts["Daily helper job card"]==4 and counts["Number learning card"]==8)
+assert(counts["Room-wide grade 2 welcome"]==1)
 assert(World.BoardQuestion.Parent.Parent.Face==Enum.NormalId.Back)
 assert(World.BoardQuestion.Parent.Parent.CanvasSize[2]==math.floor(1200*6.8/23.5),"Smartboard text must retain its physical aspect ratio")
 local alphabet=World.Root:FindFirstChild("Alphabet tile")
@@ -254,7 +277,7 @@ def asset_fixtures():
     return '\n'.join(lines)
 fixture=p/'tests/.geometry-runtime.generated.lua'
 try:
-    fixture.write_text(harness.replace("__ASSET_FIXTURES__",asset_fixtures())+(p/'server/StaffModel.lua').read_text()+tests+(p/'server/World.lua').read_text()+finish)
+    fixture.write_text(harness.replace("__ASSET_FIXTURES__",asset_fixtures())+(p/'server/StaffModel.lua').read_text()+tests+(p/'server/ArtPass.lua').read_text()+middle+(p/'server/World.lua').read_text()+finish)
     subprocess.run([args.luau,str(fixture)],check=True)
 finally:
     fixture.unlink(missing_ok=True)

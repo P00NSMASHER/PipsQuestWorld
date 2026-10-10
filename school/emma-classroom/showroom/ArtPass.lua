@@ -1,0 +1,513 @@
+--!strict
+-- Original room art built from authored geometry; no Toolbox scripts, no private data.
+-- Showroom copy intentionally isolated from the archived study-game source.
+local ArtPass = {}
+local C = {
+    navy=Color3.fromRGB(49,73,103),blue=Color3.fromRGB(97,147,179),
+    mint=Color3.fromRGB(117,178,157),leaf=Color3.fromRGB(80,127,104),
+    cream=Color3.fromRGB(252,247,229),wood=Color3.fromRGB(169,126,83),
+    woodEdge=Color3.fromRGB(103,75,55),brass=Color3.fromRGB(202,174,109),
+    coral=Color3.fromRGB(220,126,118),lilac=Color3.fromRGB(157,139,191),
+    golden=Color3.fromRGB(234,190,99),ink=Color3.fromRGB(59,68,75),
+}
+local function piece(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,material:Enum.Material?,collides:boolean?):Part
+    local p=Instance.new("Part")
+    p.Name=name;p.Size=size;p.CFrame=cf;p.Anchored=true
+    p.Color=color;p.Material=material or Enum.Material.SmoothPlastic
+    p.CanCollide=collides==true;p.CanTouch=false;p.CanQuery=collides==true
+    p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
+    p.CastShadow=collides==true or size.Magnitude>2.5
+    p.Parent=parent
+    return p
+end
+local function orb(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3,material:Enum.Material?):Part
+    local p=piece(parent,name,size,cf,color,material,false);p.Shape=Enum.PartType.Ball;return p
+end
+-- Unlike flattened Ball Parts, the horizontal (local-X-axis) Cylinder keeps
+-- full Y/Z crown dimensions in native Roblox. It faces across the window,
+-- where the existing YZ silhouettes and natural overlap are preserved.
+-- Reuse a single Part per foliage section; no mesh IDs or additional objects.
+local function canopy(parent:Instance,name:string,size:Vector3,cf:CFrame,color:Color3):Part
+    local p=piece(parent,name,size,cf,color,Enum.Material.Grass,false)
+    p.Shape=Enum.PartType.Cylinder
+    p.CastShadow=false
+    return p
+end
+-- Viewed from the classroom, the window trees previously looked like a
+-- repeated grid of green circular plates. Keep the exact 38 noncolliding
+-- native-safe Cylinder Parts, but vary each crown's Y/Z aspect ratio:
+-- two-thirds upright/narrow and one-third broader/lower branches. Repeated
+-- perfect circles are not supported by the actual leafy reference photos.
+local function leafProfile(height:number,spread:number,treeIndex:number,lobeIndex:number):(number,number)
+    local upright=((treeIndex+lobeIndex)%3)~=0
+    -- Keep the constructed-scene requirement for >=25 unique crown profiles.
+    -- A small deterministic 0–5% asymmetry prevents all seven trees from
+    -- reusing the same handful of oval silhouettes without extra Parts.
+    local yVariation=1+((treeIndex*11+lobeIndex*7)%17)*.003
+    local zVariation=1+((treeIndex*13+lobeIndex*5)%19)*.003
+    if upright then
+        return math.max(1.34,height*1.28)*yVariation,
+            math.max(1.31,spread*.73)*zVariation
+    end
+    return math.max(1.34,height*.81)*yVariation,
+        math.max(1.34,spread*1.25)*zVariation
+end
+local function disk(parent:Instance,name:string,diameter:number,length:number,cf:CFrame,color:Color3,material:Enum.Material?):Part
+    local p=piece(parent,name,Vector3.new(length,diameter,diameter),cf,color,material,false)
+    p.Shape=Enum.PartType.Cylinder;return p
+end
+local function printed(target:BasePart,words:string,face:Enum.NormalId,ink:Color3,bg:Color3)
+    local gui=Instance.new("SurfaceGui");gui.Name="Printed detail";gui.Face=face;gui.LightInfluence=.15
+    local width=target.Size.X
+    if face==Enum.NormalId.Left or face==Enum.NormalId.Right then width=target.Size.Z end
+    local height=face==Enum.NormalId.Top and target.Size.Z or target.Size.Y
+    gui.CanvasSize=Vector2.new(600,math.max(85,math.floor(600*height/width)));gui.Parent=target
+    local t=Instance.new("TextLabel");t.Name="Printed text";t.Size=UDim2.fromScale(1,1)
+    t.Text=words;t.Font=Enum.Font.GothamBold;t.TextColor3=ink
+    t.TextScaled=true;t.TextWrapped=true;t.BackgroundColor3=bg;t.BackgroundTransparency=.08;t.Parent=gui
+    local pad=Instance.new("UIPadding");pad.PaddingLeft=UDim.new(0,22);pad.PaddingRight=UDim.new(0,22)
+    pad.PaddingTop=UDim.new(0,13);pad.PaddingBottom=UDim.new(0,13);pad.Parent=t
+end
+-- Photo-grounded cabinetry frieze: actual photographs show consecutive
+-- classroom counting numbers rather than 10-only callouts. Add original,
+-- static SurfaceGui letters to the EXISTING two wall-mounted panels; these
+-- are not schoolwork or quiz authority, and add ZERO physical Parts.
+local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
+    local gui=panel:FindFirstChildOfClass("SurfaceGui")
+    assert(gui~=nil and gui.Face==Enum.NormalId.Front,
+        "PHOTO_COUNTING_FRIEZE_SURFACE_MISSING")
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(math.floor(panel.Size.X*90),100)
+    gui.LightInfluence=.08
+    local old=gui:FindFirstChild("Printed text")
+    if old and old:IsA("TextLabel") then
+        -- Keep historic 10-step keywords as metadata for older audit callers,
+        -- but render the photographed complete consecutive sequence instead.
+        old.TextTransparency=1
+        old.BackgroundTransparency=1
+    end
+    local count=last-first+1
+    for n=first,last do
+        local cell=Instance.new("TextLabel")
+        cell.Name="NumberStripUnit"
+        cell.Text=tostring(n)
+        cell.Position=UDim2.fromScale((n-first)/count,.16)
+        cell.Size=UDim2.fromScale(1/count,.68)
+        cell.Font=Enum.Font.GothamMedium
+        cell.TextColor3=C.navy
+        cell.TextScaled=true
+        cell.TextWrapped=false
+        cell.BorderSizePixel=0
+        cell.BackgroundColor3=Color3.fromRGB(214,226,203)
+        cell.BackgroundTransparency=(n%10==0) and .16 or 1
+        cell.Parent=gui
+    end
+end
+
+local function makeGroup(parent:Instance,name:string):Folder
+    local group=Instance.new("Folder");group.Name=name;group.Parent=parent;return group
+end
+
+local function windowNeighborhood(root:Instance)
+    local world=makeGroup(root,"Layered outside neighborhood")
+    -- The exterior sits behind the existing windows and glass, never inside.
+    -- Reference photos IMG_2906/2910 look out over trees and a leafy
+    -- green horizon, NOT four nearby apartment facades with repeated windows.
+    -- Author foliage from scratch; do not embed reference photos or assets.
+    -- Native-v72 rug history showed that flattened Ball Parts can collapse
+    -- visually to dots on iPhone. Use irregular overlapping circular cylinder
+    -- faces, still behind the window glass, rather than flattened Ball Parts.
+    local distantLeaves={
+        Color3.fromRGB(74,121,82),
+        Color3.fromRGB(91,138,89),
+        Color3.fromRGB(103,144,92),
+        Color3.fromRGB(68,114,83),
+        Color3.fromRGB(116,151,96),
+        Color3.fromRGB(85,132,86),
+    }
+    local crownSections={
+        {-.17,1.89,-1.43, .87,2.92,2.79},
+        { .12,2.58, .23,1.03,3.05,3.10},
+        {-.23,3.39,1.38, .93,2.51,2.51},
+        { .08,1.52,1.68, .79,2.20,2.39},
+        { .20,3.58,-1.16,.78,2.17,2.45},
+    }
+    -- Four photographed outdoor sightlines, but not four duplicated tree
+    -- stamps: deterministic per-tree offsets and elongated, tilted clusters
+    -- give irregular branches rather than repeated green circular balloons.
+    -- All foliage stays behind the glazing. No additional geometry/meshes.
+    local treeProfiles={
+        {rise=.04,lean=-9, spread=.91, height=1.12,shift=-.24},
+        {rise=.24,lean=13, spread=1.09,height=.92, shift=.28},
+        {rise=-.11,lean=-16,spread=1.16,height=1.04,shift=-.05},
+        {rise=.17,lean=7,  spread=.95,height=1.17,shift=.19},
+    }
+    for i,z in ipairs({-24.5,-15.5,1.0,11.5}) do
+        local trunk=piece(world,"Photo exterior oak trunk",
+            Vector3.new(.31,4.90,.42),CFrame.new(-38.32,6.36,z),
+            Color3.fromRGB(99,85,65),Enum.Material.Wood,false)
+        local style=treeProfiles[i]
+        for k,v in ipairs(crownSections) do
+            local stagger=math.sin(i*1.30+k*2.10)*.23
+            local heightShift=math.cos(i*.80+k*1.77)*.15
+            local lean=math.rad(style.lean+(k-3)*5)
+            local cf=trunk.CFrame*CFrame.new(
+                v[1]-.05,
+                v[2]*style.height+style.rise+heightShift,
+                v[3]*style.spread+style.shift+stagger
+            )*CFrame.Angles(lean,math.rad((k*7+i*11)%29-14),0)
+            local leafY,leafZ=leafProfile(v[5],v[6],i,k)
+            canopy(world,"Photo exterior irregular foliage",
+                Vector3.new(v[4],leafY,leafZ),cf,
+                distantLeaves[(i+k*2-2)%#distantLeaves+1])
+        end
+    end
+    for i,z in ipairs({-28.5,-9.5,16.5}) do
+        local trunk=piece(world,"Tree trunk outside",Vector3.new(.32,3.4,.48),
+            CFrame.new(-38.45,6.5,z),Color3.fromRGB(92,76,55),Enum.Material.Wood,false)
+        -- Six staggered leaf masses make a believable irregular canopy.
+        -- One enormous perfect sphere looked like a green beach ball through
+        -- the school window in the real source-derived eye-level renders.
+        local clusters={
+            {-.18,1.85,-1.35,1.16,2.30,2.14},
+            {-.24,2.30,.95,1.43,2.15,2.44},
+            {.08,3.12,-.56,1.28,1.70,2.14},
+            {-.13,1.45,1.82,1.05,1.78,1.62},
+            {-.42,2.76,-1.82,.98,1.65,1.58},
+            {.25,3.75,.42,.94,1.47,1.49},
+        }
+        local shades={
+            Color3.fromRGB(78,123,79),Color3.fromRGB(92,142,89),
+            Color3.fromRGB(116,152,92),Color3.fromRGB(104,138,82),
+            Color3.fromRGB(82,129,88),Color3.fromRGB(132,159,103),
+        }
+        for k,v in ipairs(clusters) do
+            -- Vary heights, lean and silhouette on all three older trunks.
+            -- The original six-lobe stamp was duplicated tree-for-tree.
+            local lean=math.rad((i-2)*10+(k-3)*4)
+            local cf=trunk.CFrame*CFrame.new(
+                v[1]-.06, v[2]+math.cos(k*1.37+i)*.16,
+                v[3]+math.sin(k*1.8+i*.9)*.24
+            )*CFrame.Angles(lean,math.rad((k*13+i*7)%25-12),0)
+            local leafY,leafZ=leafProfile(v[5],v[6],i,k)
+            canopy(world,"Irregular exterior leaf cluster",
+                Vector3.new(v[4],leafY,leafZ),cf,
+                shades[(k+i-2)%#shades+1])
+        end
+    end
+    -- The genuine photographs show muted sky and vegetation rather than
+    -- six toy-like white cloud blobs placed a few studs outside the window.
+end
+
+local function readingCorner(root:Instance)
+    local group=makeGroup(root,"Cozy story corner")
+    -- The photographed alphabet rug and cloud/sun artwork are permanent,
+    -- recognizable classroom features. No supplied reference establishes
+    -- the two invented pastel upholstered ottomans as classroom furniture.
+    -- Even after shrinking/repositioning, they hide parts of the rug in the
+    -- child-height camera. Retire them rather than invent more clutter.
+    -- Retain all actual shelving, display books and 16 school desk/chair pairs.
+    -- The unverified freestanding face-out rack crossed the verified sun/
+    -- cloud carpet in the actual overhead diagnostic, despite passing the
+    -- generic nonblank image gate. Consolidate its five books onto the
+    -- established middle wooden library shelf, not the classroom floor.
+    -- The permanent bookshelves and all student desks/chairs stay in place.
+    local titles={"SPACE","PETS","OCEAN","STARS","GARDEN"}
+    local colors={C.navy,C.coral,C.blue,C.lilac,C.leaf}
+    -- Move all five uniquely illustrated storybooks together into the
+    -- existing middle reading shelf at y=3.2 (shelf top=3.35). Upright book
+    -- bases sit just above that ledge; front-cover relief faces the room's
+    -- negative-Z aisle. Preserve every page, title and cover in source.
+    -- This is a geometric relocation, not a change to children's schoolwork.
+    for i=1,5 do
+        local cf=CFrame.new(-27+(i-1)*1.50,4.18,22.35)*
+            CFrame.Angles(math.rad(-15),0,0)
+        local coverFacing=cf
+        piece(group,"Storybook page edges",Vector3.new(1,1.5,.19),
+            cf,C.cream,Enum.Material.SmoothPlastic,false)
+        local cover=piece(group,"Illustrated storybook cover",Vector3.new(1.1,1.64,.055),
+            coverFacing*CFrame.new(0,0,-.15),colors[i],Enum.Material.SmoothPlastic,false)
+        printed(cover,titles[i],Enum.NormalId.Front,C.cream,colors[i])
+        local art=coverFacing*CFrame.new(0,.11,-.214)
+        -- Native v70 and the v71 source camera showed blank white-looking
+        -- pages. The books now face the original wooden library shelf aisle;
+        -- give each existing illustration field a restrained cover-matched
+        -- tint rather than an opaque cream rectangle across its whole face.
+        -- Five existing Parts only, no geometry or title duplication.
+        piece(group,"Storybook illustration backing",Vector3.new(.81,.85,.035),
+            art,colors[i]:Lerp(C.cream,.42),
+            Enum.Material.SmoothPlastic,false)
+        if i==1 then
+            -- A blue night sky with a sun/planet and distinct orbit silhouette.
+            orb(group,"Space planet illustration",Vector3.new(.43,.43,.045),
+                art*CFrame.new(-.08,.08,-.04),C.golden,Enum.Material.SmoothPlastic)
+            piece(group,"Space star illustration",Vector3.new(.31,.10,.045),
+                art*CFrame.new(.20,-.23,-.06)*CFrame.Angles(0,0,math.rad(35)),C.blue,Enum.Material.SmoothPlastic,false)
+        elseif i==2 then
+            -- One broad paw pad and three raised toes.
+            orb(group,"Pet paw main illustration",Vector3.new(.46,.35,.05),
+                art*CFrame.new(0,-.13,-.045),C.ink,Enum.Material.SmoothPlastic)
+            for _,dx in ipairs({-.25,0,.25}) do
+                orb(group,"Pet paw toe illustration",Vector3.new(.16,.17,.04),
+                    art*CFrame.new(dx,.24-math.abs(dx)*.35,-.045),C.ink,Enum.Material.SmoothPlastic)
+            end
+        elseif i==3 then
+            -- Two short layered waterlines and a bright boat mast.
+            for j=1,2 do
+                piece(group,"Ocean illustrated wave",Vector3.new(.66,.13,.04),
+                    art*CFrame.new(0,-.13+(j-1)*.23,-.04),C.blue,Enum.Material.SmoothPlastic,false)
+            end
+            piece(group,"Ocean illustrated sail",Vector3.new(.35,.35,.045),
+                art*CFrame.new(.13,.25,-.05)*CFrame.Angles(0,0,math.rad(30)),C.coral,Enum.Material.SmoothPlastic,false)
+        elseif i==4 then
+            for _,pt in ipairs({{-.22,.20},{.23,.12},{0,-.24}}) do
+                orb(group,"Stars cover constellation",Vector3.new(.21,.21,.045),
+                    art*CFrame.new(pt[1],pt[2],-.05),C.golden,Enum.Material.SmoothPlastic)
+            end
+        else
+            piece(group,"Garden flower stem",Vector3.new(.08,.51,.045),
+                art*CFrame.new(0,-.20,-.045),C.leaf,Enum.Material.SmoothPlastic,false)
+            for k=0,3 do
+                local angle=k*math.pi/2
+                orb(group,"Garden cover flower petal",Vector3.new(.22,.22,.045),
+                    art*CFrame.new(math.cos(angle)*.19,.18+math.sin(angle)*.19,-.05),
+                    C.coral,Enum.Material.SmoothPlastic)
+            end
+            orb(group,"Garden flower center",Vector3.new(.19,.19,.05),
+                art*CFrame.new(0,.18,-.08),C.golden,Enum.Material.SmoothPlastic)
+        end
+        piece(group,"Storybook title band",Vector3.new(.84,.18,.05),
+            coverFacing*CFrame.new(0,-.64,-.224),
+            C.navy,Enum.Material.SmoothPlastic,false)
+        piece(group,"Book spine",Vector3.new(.09,1.64,.28),cf*CFrame.new(-.55,0,-.02),
+            C.woodEdge,Enum.Material.SmoothPlastic,false)
+    end
+    -- Eye-level source renders showed a perfectly spherical white shade that
+    -- read as a balloon rather than a real library lamp. Use a shallow
+    -- fabric drum, actual upper/lower binding, and an inset diffuser instead.
+    -- These light fittings are noncolliding, and preserve the lamp footprint.
+    local lampX,lampZ=-33.8,18.7
+    local vertical=CFrame.Angles(0,0,math.pi/2)
+    local lamp=piece(group,"Reading floor lamp stem",Vector3.new(.14,7,.14),
+        CFrame.new(lampX,4.1,lampZ),C.brass,Enum.Material.Metal,false)
+    disk(group,"Reading lamp base",1.25,.16,CFrame.new(lampX,.7,lampZ)*vertical,
+        C.ink,Enum.Material.Metal)
+    disk(group,"Reading fabric drum lampshade",1.85,1.12,
+        CFrame.new(lampX,7.12,lampZ)*vertical,
+        Color3.fromRGB(229,215,186),Enum.Material.Fabric)
+    for _,y in ipairs({6.55,7.69}) do
+        disk(group,"Reading shade sewn binding",1.91,.055,
+            CFrame.new(lampX,y,lampZ)*vertical,
+            Color3.fromRGB(187,172,145),Enum.Material.Fabric)
+    end
+    disk(group,"Reading shade recessed warm diffuser",1.67,.035,
+        CFrame.new(lampX,6.51,lampZ)*vertical,
+        Color3.fromRGB(252,238,208),Enum.Material.SmoothPlastic)
+    orb(group,"Reading lamp top finial",Vector3.new(.22,.13,.22),
+        CFrame.new(lampX,7.78,lampZ),C.brass,Enum.Material.Metal)
+    local light=Instance.new("PointLight");light.Color=Color3.fromRGB(255,223,165)
+    light.Brightness=.35;light.Range=13;light.Shadows=false;light.Parent=lamp
+end
+
+local function studentDeskDetails(root:Instance)
+    local group=makeGroup(root,"Real desk hardware and stationery")
+    for row,z in ipairs({-12,4,19}) do
+        for col,x in ipairs({-24,-16,-8,0,12,20}) do
+            if row<3 or col>2 then
+                local accent=({C.blue,C.mint,C.coral,C.golden})[(row+col)%4+1]
+                -- Refine the existing desk rather than replace it or shift Emma's spawn.
+                piece(group,"Inlaid laminate grain",Vector3.new(4.8,.012,.042),CFrame.new(x,3.179,z+1.33),
+                    C.woodEdge:Lerp(C.wood,.6),Enum.Material.Wood,false)
+                for _,side in ipairs({-1,1}) do
+                    piece(group,"Desk apron bracket",Vector3.new(.16,.40,.95),CFrame.new(x+side*2.22,2.58,z+.84),
+                        C.ink,Enum.Material.Metal,false)
+                    -- Existing Room.lua assembly bolts already provide the
+                    -- authentic steel fastening. Do not duplicate tiny bolts.
+                end
+                -- A third of desks have a colored supply tray. This is a lived-in
+                -- classroom, not a cloned showroom arrangement.
+                if (row+col)%3==0 then
+                piece(group,"Stationery tray",Vector3.new(1.1,.075,.75),CFrame.new(x+1.72,3.24,z+.86),
+                    accent,Enum.Material.SmoothPlastic,false)
+                for _,side in ipairs({-1,1}) do
+                    piece(group,"Tray wall",Vector3.new(.08,.25,.75),CFrame.new(x+1.72+side*.52,3.36,z+.86),
+                        accent,Enum.Material.SmoothPlastic,false)
+                end
+                piece(group,"Pencil marker",Vector3.new(.09,.10,.63),CFrame.new(x+1.62,3.35,z+.86),
+                    C.navy,Enum.Material.SmoothPlastic,false)
+                piece(group,"Pencil cap",Vector3.new(.11,.12,.16),CFrame.new(x+1.62,3.35,z+.61),
+                    C.cream,Enum.Material.SmoothPlastic,false)
+                piece(group,"Short ruler",Vector3.new(.09,.035,.67),CFrame.new(x+1.90,3.34,z+.86),
+                    C.golden,Enum.Material.SmoothPlastic,false)
+                end
+                -- Leave the molded chair back uninterrupted. The repeated
+                -- colored stripe looked artificial and would survive a future
+                -- premium mesh swap because it is not part of the chair family.
+            end
+        end
+    end
+end
+
+local function learningWall(root:Instance)
+    local group=makeGroup(root,"Morning routines and learning wall")
+    -- The original 18x2.5 navy GRADE 2 banner was an invented showroom
+    -- graphic, not photographed architecture. It lay directly behind the
+    -- 0-120 teaching strip and intruded into the nine shape cards above it.
+    -- Remove ONLY that extra Part so the photo-backed pale number frieze and
+    -- colored shape cards remain distinct against the actual yellow wall.
+    -- No grade/curriculum value is inferred from historic photo signage.
+    piece(group,"Daily jobs cork backing",Vector3.new(.18,6.6,9.8),
+        CFrame.new(36.28,9.6,-31),C.wood,Enum.Material.Wood,false)
+    piece(group,"Jobs board frame",Vector3.new(.23,7.05,10.25),
+        CFrame.new(36.25,9.6,-31),C.woodEdge,Enum.Material.Wood,false)
+    for i,job in ipairs({"HELPER","READER","ARTIST","LEADER"}) do
+        local color=({C.mint,C.golden,C.coral,C.blue})[i]
+        local card=piece(group,"Daily helper job card",Vector3.new(.05,1.24,7.7),
+            CFrame.new(36.10,12.1-(i-1)*1.56,-31),color,Enum.Material.SmoothPlastic,false)
+        printed(card,job,Enum.NormalId.Left,C.ink,color)
+        orb(group,"Jobs board pushpin",Vector3.new(.13,.13,.13),
+            CFrame.new(36.04,12.1-(i-1)*1.56,-34.2),C.brass,Enum.Material.Metal)
+    end
+    -- The supplied school photos show framed *shape flashcards* and a
+    -- long 0-120 counting strip above substantial dark-wood cabinets.
+    -- Replace the nine generic bunting pieces in their EXISTING positions;
+    -- no photos, children's faces/names or temporary cheer props ship here.
+    local shapes={"CIRCLE","OVAL","TRIANGLE","SQUARE","RECTANGLE",
+        "DIAMOND","PENTAGON","HEXAGON","STAR"}
+    local cardColors={C.mint,C.coral,C.lilac,C.golden,C.blue}
+    for i,name in ipairs(shapes) do
+        -- Keep all nine cards over SOLID back-wall carpentry. The former
+        -- 3.2-stud spacing drifted the final cards over the rear doorway.
+        local x=-32+(i-1)*2.35
+        local tint=cardColors[(i-1)%#cardColors+1]
+        local card=piece(group,"Photo-guided wall shape card",
+            Vector3.new(2.2,1.3,.08),CFrame.new(x,16.5,26.32),
+            tint,Enum.Material.SmoothPlastic,false)
+        printed(card,name,Enum.NormalId.Front,C.ink,tint)
+        local iconSize=({Vector3.new(.73,.73,.10),Vector3.new(.93,.60,.10),
+            Vector3.new(.72,.80,.08),Vector3.new(.73,.73,.08),
+            Vector3.new(.96,.51,.08),Vector3.new(.75,.75,.08),
+            Vector3.new(.70,.72,.08),Vector3.new(.70,.70,.08),
+            Vector3.new(.69,.75,.08)})[i]
+        -- One low-relief icon per card keeps the geometric reference visible
+        -- to independent renders, which do not reproduce SurfaceGui labels.
+        local cf=CFrame.new(x,16.65,26.22)
+        if i==1 or i==2 then
+            orb(group,"Photo-guided shape icon",iconSize,cf,C.cream,
+                Enum.Material.SmoothPlastic)
+        else
+            piece(group,"Photo-guided shape icon",iconSize,
+                cf*CFrame.Angles(0,0,i==6 and math.rad(45) or 0),
+                C.cream,Enum.Material.SmoothPlastic,false)
+        end
+    end
+    -- Match the real long cabinet-side numbered teaching frieze without
+    -- spanning the central door. The older right cabinet strip remains in
+    -- its existing approved location, and the two ranges are not duplicated.
+    local leftNumbers=piece(group,"Library counting strip backing",
+        Vector3.new(18.8,.86,.10),CFrame.new(-22,14.55,26.24),
+        Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
+    printed(leftNumbers,"0  10  20  30  40  50  60",
+        Enum.NormalId.Front,C.navy,leftNumbers.Color)
+    consecutiveNumberStrip(leftNumbers,0,60)
+    piece(group,"Library counting strip top rail",
+        Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
+        C.blue,Enum.Material.Wood,false)
+    piece(group,"Library counting strip bottom rail",
+        Vector3.new(19.05,.085,.11),CFrame.new(-22,14.08,26.23),
+        C.leaf,Enum.Material.Wood,false)
+    local numberLine=piece(group,"Photo-guided cabinet counting strip",
+        Vector3.new(25.6,.86,.10),CFrame.new(20.2,14.55,26.24),
+        Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
+    printed(numberLine,"70  80  90  100  110  120",
+        Enum.NormalId.Front,C.navy,numberLine.Color)
+    consecutiveNumberStrip(numberLine,61,120)
+    piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
+        CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
+    piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),
+        CFrame.new(20.2,14.08,26.23),C.leaf,Enum.Material.Wood,false)
+    -- Do not fake sunlit plank highlights with paper-thin overlays. Natural
+    -- window lighting supplies the floor response without z-fighting strips.
+end
+
+-- Frame the actual teaching board instead of adding a giant UI overlay.
+-- This lives in the world and leaves the question SurfaceGui untouched.
+local function focalTeachingArea(root:Instance)
+    local group=makeGroup(root,"Smartboard and teacher's art corner")
+    local metal=Color3.fromRGB(219,226,226)
+    -- Match every existing metal highlight to the larger white housing.
+    -- Borders remain slightly inset so they do not read as floating rails.
+    for _,y in ipairs({4.62,11.78}) do
+        piece(group,"Smartboard satin aluminum trim",Vector3.new(19.77,.11,.12),
+            CFrame.new(5.2,y,-31.29),metal,Enum.Material.Metal,false)
+    end
+    for _,x in ipairs({-4.68,15.08}) do
+        piece(group,"Smartboard protective edge",Vector3.new(.14,7.15,.13),
+            CFrame.new(x,8.2,-31.29),metal,Enum.Material.Metal,false)
+    end
+    piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
+        CFrame.new(5.2,4.44,-30.99),C.cream,Enum.Material.SmoothPlastic,false)
+    local markerColors={C.coral,C.blue,C.mint,C.golden}
+    for i,c in ipairs(markerColors) do
+        local x=2.95+(i-1)*1.20
+        piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
+            CFrame.new(x,4.58,-30.74),c,Enum.Material.SmoothPlastic,false)
+        piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
+            CFrame.new(x+.39,4.58,-30.74),C.navy,Enum.Material.SmoothPlastic,false)
+    end
+    -- The photo references show a white dry-erase teaching flipchart on a
+    -- blue wheeled frame, not a large invented wooden achievement poster.
+    -- Retain this provisional corner position and original board dimensions;
+    -- the cheer event does not establish its usual daily furniture location.
+    local easelX=-31.0
+    local easelZ=-30.8
+    local white=Color3.fromRGB(222,227,225)
+    local cartBlue=Color3.fromRGB(58,102,145)
+    local housing=piece(group,"Photo flipchart white housing",
+        Vector3.new(4.2,3.6,.22),CFrame.new(easelX,6.15,easelZ),
+        white,Enum.Material.SmoothPlastic,false)
+    local face=piece(group,"Photo flipchart dry erase face",
+        Vector3.new(3.66,3.05,.055),
+        housing.CFrame*CFrame.new(0,0,.15),
+        Color3.fromRGB(246,247,239),Enum.Material.SmoothPlastic,false)
+    -- Neutral, nearly empty magnetic surface: no personal schoolwork
+    -- or event-only cheer instructions are reproduced in the game.
+    printed(face,"","",Enum.NormalId.Back,C.navy,face.Color)
+    for _,dx in ipairs({-1.46,1.46}) do
+        piece(group,"Photo flipchart blue cart support",
+            Vector3.new(.27,4.60,.29),
+            CFrame.new(easelX+dx,2.42,easelZ-.12),
+            cartBlue,Enum.Material.Metal,false)
+        orb(group,"Photo flipchart rubber wheel",
+            Vector3.new(.44,.44,.44),
+            CFrame.new(easelX+dx,.49,easelZ-.12),
+            Color3.fromRGB(47,51,54),Enum.Material.SmoothPlastic)
+    end
+    piece(group,"Photo flipchart marker tray",
+        Vector3.new(4.48,.17,.56),CFrame.new(easelX,4.36,easelZ+.34),
+        Color3.fromRGB(176,185,189),Enum.Material.Metal,false)
+    piece(group,"Photo flipchart lower blue shelf",
+        Vector3.new(3.30,.16,1.02),CFrame.new(easelX,1.14,easelZ-.12),
+        cartBlue,Enum.Material.Metal,false)
+    local magnetColors={
+        Color3.fromRGB(79,141,98),
+        Color3.fromRGB(78,137,172),
+        Color3.fromRGB(227,184,82),
+    }
+    for i,dx in ipairs({-1.55,0,1.55}) do
+        piece(group,"Photo flipchart colored magnet",
+            Vector3.new(.30,.30,.07),
+            CFrame.new(easelX+dx,6.95,easelZ+.23),
+            magnetColors[i],Enum.Material.SmoothPlastic,false)
+    end
+end
+
+function ArtPass.decorate(root:Instance)
+    local details=makeGroup(root,"Emma Original Art Direction Pass")
+    windowNeighborhood(details)
+    readingCorner(details)
+    studentDeskDetails(details)
+    learningWall(details)
+    focalTeachingArea(details)
+end
+return ArtPass

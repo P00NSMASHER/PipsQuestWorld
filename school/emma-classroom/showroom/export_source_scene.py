@@ -1,0 +1,1640 @@
+#!/usr/bin/env python3
+"""Snapshot the REAL showroom Luau-created physical parts, without Studio.
+
+Uses the existing tested Luau math/Instance doubles only to construct the
+actual showroom scripts. This is not the Roblox engine or its renderer.
+Snapshot contains physical parts and their true source geometry/colours.
+Dynamic SurfaceGui text/assets/shadows and engine runtime remain unverified.
+"""
+from __future__ import annotations
+
+import argparse
+import math
+import subprocess
+import tempfile
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]  # repository/school
+SCHOOL = ROOT / "school"
+SHOWROOM = SCHOOL / "emma-classroom" / "showroom"
+TEMPLATE = SCHOOL / "emma-classroom" / "tests" / "geometry_behavior.py"
+
+def generate_luau() -> str:
+    tests = TEMPLATE.read_text(encoding="utf-8")
+    assert "harness=r'''" in tests and "local assets=Instance.new" in tests, "geometry test fixture changed"
+    fixture = tests.split("harness=r'''", 1)[1].split("'''", 1)[0]
+    fixture = fixture.split("local assets=Instance.new", 1)[0]
+    # Load the actual same Luau modules as the classroom-only Rojo project.
+    art = (SHOWROOM / "ArtPass.lua").read_text(encoding="utf-8")
+    room = (SHOWROOM / "Room.lua").read_text(encoding="utf-8")
+    gallery = (SHOWROOM / "GalleryPass.lua").read_text(encoding="utf-8")
+    script = fixture + "\n" + """
+local function loadArtPass()
+""" + art + """
+end
+local ArtPass=loadArtPass()
+local script={Parent={WaitForChild=function(_,name)
+    assert(name=="ArtPass","Only real showroom art is permitted")
+    return ArtPass
+end}}
+local nativeRequire=require
+local require=function(module)
+    if module==ArtPass then return ArtPass end
+    return nativeRequire(module)
+end
+local function loadRoom()
+""" + room + """
+end
+local Room=loadRoom()
+local function loadGallery()
+""" + gallery + """
+end
+local GalleryPass=loadGallery()
+Room.build()
+GalleryPass.decorate(Room.Root)
+
+local total=0
+for _,part in ipairs(Room.Root:GetDescendants()) do
+    if part:IsA("BasePart") then
+        total+=1
+        local cf=part.CFrame
+        local m=cf.m
+        local c=part.Color or Color3.fromRGB(160,160,160)
+        local size=part.Size
+        local p=cf.Position
+        local safeName=string.gsub(tostring(part.Name),"[|\\r\\n]"," ")
+        local fields={
+            "PART",safeName,tostring(part.ClassName),
+            tostring(part.Shape or "Block"),tostring(part.Material or "SmoothPlastic"),
+            string.format("%.6f",part.Transparency or 0),
+            string.format("%.6f",size.X),string.format("%.6f",size.Y),string.format("%.6f",size.Z),
+            string.format("%.6f",p.X),string.format("%.6f",p.Y),string.format("%.6f",p.Z),
+            string.format("%.6f",c.R),string.format("%.6f",c.G),string.format("%.6f",c.B),
+        }
+        for i=1,9 do fields[#fields+1]=string.format("%.6f",m[i]) end
+        print(table.concat(fields,"|"))
+    end
+end
+print("SCENE_COUNT|"..total)
+"""
+    return script
+
+def item_props(parent: ET.Element, name: str, v: str, tag: str = "string"):
+    ET.SubElement(parent, tag, {"name": name}).text = v
+
+def write_part(parent: ET.Element, entry: list[str], idx: int):
+    (_, name, cls, shape, material, alpha, sx, sy, sz, x, y, z,
+     red, green, blue, *matrix) = entry
+    assert cls in {"Part", "Seat", "SpawnLocation", "MeshPart"}
+    # Mesh assets cannot be loaded by independent renderers without an
+    # authorized asset resolver. Use source-visible Part shape fallback.
+    node = ET.SubElement(parent, "Item", {"class": "Part", "referent": "RBX"+str(idx)})
+    props = ET.SubElement(node, "Properties")
+    item_props(props, "Name", name)
+    item_props(props, "Anchored", "true", "bool")
+    item_props(props, "CanCollide", "false", "bool")
+    item_props(props, "Transparency", alpha, "float")
+    col = ET.SubElement(props, "Color3", {"name": "Color"})
+    for key, val in zip("RGB", (red, green, blue)):
+        ET.SubElement(col, key).text = val
+    size = ET.SubElement(props, "Vector3", {"name": "Size"})
+    for key, val in zip("XYZ", (sx, sy, sz)):
+        ET.SubElement(size, key).text = val
+    transform = ET.SubElement(props, "CoordinateFrame", {"name": "CFrame"})
+    for key, val in zip("XYZ", (x, y, z)):
+        ET.SubElement(transform, key).text = val
+    for key, val in zip(
+        ["R00","R01","R02","R10","R11","R12","R20","R21","R22"], matrix
+    ):
+        ET.SubElement(transform, key).text = val
+    # Roblox's PartType enum uses Ball=0, Block=1, Cylinder=2.
+    kind = shape.rsplit(".", 1)[-1]
+    item_props(props, "shape", str({"Ball": 0, "Block": 1, "Cylinder": 2}.get(kind, 1)), "token")
+    if material:
+        mapping = {
+            "Plastic":256,"SmoothPlastic":272,"Neon":288,"Wood":512,
+            "WoodPlanks":528,"Slate":800,"Concrete":816,"Brick":848,
+            "Metal":1088,"Grass":1280,"Sand":1296,"Fabric":1312,
+            "Glass":1568
+        }
+        item_props(props,"Material",str(mapping.get(material.rsplit(".",1)[-1],272)),"token")
+    return name
+
+CUTAWAY_OCCLUDERS={
+    "Acoustic ceiling","Acoustic ceiling inset tile","Ceiling grid line","Ceiling grid cross",
+    "Front wall","Back wall left","Back wall right","Door header wall",
+    "Right wall front","Right wall back","Right door header wall",
+    "Left wall below windows","Left wall above windows","Left window wall pier",
+    "Outdoor sky backdrop","Outdoor hill backdrop",
+    "Hall ceiling","Hall left wall","Hall right wall",
+    "Hall left brick","Hall right brick",
+    "Side hall ceiling","Side hall far wall","Side hall far brick",
+    # Keep the constructed forest visible in aerial snapshots so it can be
+    # reviewed. Player-eye screenshots always use the full, uncut room.
+}
+
+def export_scene(luau: str, output: Path, cutaway: bool=False):
+    script=generate_luau()
+    with tempfile.TemporaryDirectory(prefix="abvm-geometry-") as folder:
+        path=Path(folder)/"scene.lua"
+        path.write_text(script,encoding="utf-8")
+        proc=subprocess.run([luau,str(path)],capture_output=True,text=True,timeout=100)
+    if proc.returncode:
+        raise RuntimeError("Actual Luau showroom construction failed:\n"+proc.stderr[-6000:]+"\n"+proc.stdout[-2000:])
+    lines=[line.split("|") for line in proc.stdout.splitlines() if line.startswith("PART|")]
+    counts=[line for line in proc.stdout.splitlines() if line.startswith("SCENE_COUNT|")]
+    assert counts and int(counts[-1].split("|")[1]) == len(lines), "Incomplete Luau snapshot"
+    assert len(lines) >= 800, "This is not the full actual classroom (only "+str(len(lines))+" parts)"
+    assert all(len(row) == 24 for row in lines), "Malformed or incomplete physical transform"
+    # Structural regression for defects proven by the October 8 iPhone video:
+    # real side corridor had open sky beyond its ends, while a blue horizontal
+    # rail visually passed through the center of the open staff doorway.
+    # Inspect ACTUAL constructed physical parts, including full-room walls,
+    # before removing anything for the cutaway visualization.
+    def actual_parts(name):
+        return [row for row in lines if row[1] == name]
+    rear_caps=actual_parts("Rear corridor end wall")
+    side_caps=actual_parts("Side corridor end wall")
+    assert len(rear_caps)==1 and len(side_caps)==2, (
+        "VIDEO_REGRESSION: rear/side corridor exposed to outside sky"
+    )
+    assert abs(float(rear_caps[0][11])-49.40)<.06 and float(rear_caps[0][6])>=17.9, (
+        "VIDEO_REGRESSION: rear hall no longer enclosed to its full width"
+    )
+    side_ends=sorted(round(float(p[11]),2) for p in side_caps)
+    assert side_ends==[5.65,25.35] and all(abs(float(p[9])-45.5)<.06
+                                               and float(p[6])>=17.9 for p in side_caps), (
+        "VIDEO_REGRESSION: side staff hall again lacks its two end walls"
+    )
+    rails=actual_parts("Blue chair rail right")
+    assert len(rails)==2, "VIDEO_REGRESSION: right wall uses a doorway-spanning rail"
+    for rail in rails:
+        z=float(rail[11]); depth=float(rail[8])
+        assert z+depth/2<=8.05 or z-depth/2>=22.95, (
+            "VIDEO_REGRESSION: painted rail intersects staff doorway at standing eye height"
+        )
+    assert len(actual_parts("Blue baseboard"))==5, (
+        "VIDEO_REGRESSION: continuous baseboard spans the staff doorway"
+    )
+    print("IPHONE_PORTAL_GEOMETRY_PASS side_caps=2 rear_cap=1 "
+          "staff_door_trim_clear=true actual_luau_parts=true")
+
+    # The completed 15-view player-height review exposed blank corridor
+    # blue boxes and an empty end-wall corkboard. Confirm original, minimal,
+    # nonidentifying wall décor and realistically recessed lights exist in
+    # the FULL Luau-built scene. No claim that unphotographed corridors match
+    # an architectural survey.
+    rear_notes=actual_parts("Rear hall pinned notice")
+    rear_heads=actual_parts("Rear hall notice heading")
+    rear_pins=actual_parts("Rear hall brass notice pin")
+    rails=actual_parts("Rear hall dado cap rail")
+    staff_frame=actual_parts("Staff hall framed announcement board")
+    staff_cork=actual_parts("Staff hall inset cork noticeboard")
+    staff_papers=actual_parts("Staff hall anonymous paper notice")
+    assert (len(rear_notes),len(rear_heads),len(rear_pins),len(rails),
+            len(staff_frame),len(staff_cork),len(staff_papers))==(
+            3,3,3,2,1,1,2
+    ), "Realistic corridor finish lost a mounted bulletin display or dado rail"
+    assert sorted(round(float(p[9]),2) for p in rear_notes)==[-1.90,0,1.90]
+    assert all(abs(float(p[11])-48.65)<.025 and
+               abs(float(p[7])-1.79)<.025 for p in rear_notes), (
+        "Rear hallway papers float away from the cork board"
+    )
+    assert all(p[4].endswith("SmoothPlastic") for p in rear_notes), (
+        "Paper notices unexpectedly became heavy brickwork"
+    )
+    assert sorted(round(float(p[9]),2) for p in rails)==[-8.38,8.38]
+    assert all(abs(float(p[10])-4.32)<.025 and
+               abs(float(p[8])-21.8)<.025 for p in rails), (
+        "Hall finish rail floats, spans an open doorway, or loses brick dado"
+    )
+    assert (abs(float(staff_frame[0][9])-53.80)<.03 and
+            abs(float(staff_cork[0][9])-53.68)<.03), (
+        "Staff corridor notice board buried in wall or protrudes into hall"
+    )
+    assert sorted(round(float(p[11]),2) for p in staff_papers)==[13.85,17.15]
+    for light_name,frame_name,expected_x,expected_z in (
+        ("Hall fluorescent light","Rear hall fluorescent metal surround",0,36),
+        ("Side hall fluorescent","Side hall fluorescent metal surround",47,15.5),
+    ):
+        lamp=actual_parts(light_name)
+        frame=actual_parts(frame_name)
+        assert len(lamp)==len(frame)==1, (
+            "Missing recessed fixture/surround in school corridor"
+        )
+        lamp,frame=lamp[0],frame[0]
+        assert lamp[4].endswith("Glass") and frame[4].endswith("Metal"), (
+            "Overexposed Neon corridor light or unfinished fixture returned"
+        )
+        assert abs(float(lamp[9])-expected_x)<.02 and (
+            abs(float(lamp[11])-expected_z)<.02
+        ), "Hall ceiling light moved off the existing fixture location"
+        assert abs(float(lamp[10])-12.68)<.025 and (
+            abs(float(frame[10])-12.80)<.025
+        ), "Recessed hall lighting detached from the existing ceiling plane"
+        assert float(lamp[5])<.15 and float(frame[6])>float(lamp[6]), (
+            "Corridor ceiling diffuser hidden or surrounding frame misplaced"
+        )
+    print("SCHOOL_CORRIDOR_FINISH_PASS rear_notices=3 staff_notices=2 "
+          "dado_rails=2 recessed_troffers=2 no_new_rooms=true "
+          "native_iphone_pending",flush=True)
+
+    # IMG_2903 through IMG_2910 photo anchors, without copying photos or
+    # publishing personal likenesses. Validate wall and floor before
+    # cutaway cameras temporarily omit room-shell parts.
+    photo_wall=actual_parts("Front wall")
+    photo_floor=actual_parts("Warm oak classroom floor")
+    assert len(photo_wall)==1 and len(photo_floor)==1
+    wall_rgb=[float(x) for x in photo_wall[0][12:15]]
+    floor_rgb=[float(x) for x in photo_floor[0][12:15]]
+    assert wall_rgb[0]>.93 and wall_rgb[1]>.88 and .67<wall_rgb[2]<.78, (
+        "Photo-grounded warm yellow walls regressed"
+    )
+    assert .30<floor_rgb[0]<.36 and .20<floor_rgb[1]<.26 and .15<floor_rgb[2]<.21, (
+        "Photo-grounded dark varnished floor color regressed"
+    )
+    assert photo_floor[0][4].endswith(".Wood"), (
+        "Photo-grounded fine-grain wood floor regressed to oversized plank seams"
+    )
+    # Actual constructed scene: photo ceiling is 30 white smooth-tile insets
+    # with pale painted T-bars, not native Fabric shading dark plank grooves.
+    ceiling_tiles=actual_parts("Acoustic ceiling inset tile")
+    ceiling_grid=actual_parts("Ceiling grid line")+actual_parts("Ceiling grid cross")
+    assert len(ceiling_tiles)==30 and len(ceiling_grid)==10, (
+        "Photo ceiling tile count or T-bar layout regressed"
+    )
+    assert all(p[4].endswith("SmoothPlastic") for p in ceiling_tiles+ceiling_grid), (
+        "Dark grooved Fabric/Metal ceiling returned to classroom"
+    )
+    assert all(float(p[12])>.85 and float(p[13])>.85 and float(p[14])>.83
+               for p in ceiling_tiles+ceiling_grid), (
+        "Photo ceiling pale painted tiles and grids changed to dark surfaces"
+    )
+    print("PHOTO_CEILING_TILE_SHADER_PASS tiles=30 painted_bars=10 "
+          "smooth_white=true non_native_visual_review=true",flush=True)
+    # Actual Luau-built ceiling evidence, BEFORE any preview-only cutaway.
+    # The supplied classroom photos show broad 2:1 recessed fluorescent
+    # troffers. The previous 6.9x2.03 frames read as narrow glowing strips.
+    # This checks size, overhead height, placement, material and count without
+    # altering the strict mobile part budget or the separate navigation audit.
+    trims=actual_parts("Recessed light trim")
+    lenses=actual_parts("Frosted fluorescent diffuser")
+    assert len(trims)==len(lenses)==6, "Classroom ceiling fixture count changed"
+    expected_centers=sorted((round(x,2),round(z,2)) for x in (-18,18)
+                            for z in (-22,0,19))
+    actual_centers=sorted((round(float(p[9]),2),round(float(p[11]),2))
+                          for p in trims)
+    assert actual_centers==expected_centers, (
+        "Photo-grounded troffers moved out of the known ceiling grid"
+    )
+    pairs=sorted(zip(trims,lenses),key=lambda pair:(
+        round(float(pair[0][9]),2),round(float(pair[0][11]),2)))
+    for trim,lens in pairs:
+        width,depth=float(trim[6]),float(trim[8])
+        lens_width,lens_depth=float(lens[6]),float(lens[8])
+        ratio=lens_width/lens_depth
+        assert 1.75 <= width/depth <= 2.10, "Ceiling surround reverted to strips"
+        assert 1.80 <= ratio <= 2.25, "Fluorescent diffuser not rectangular"
+        assert .16 <= (width-lens_width)/2 <= .40, (
+            "Inset fluorescent lens detached from metal surround"
+        )
+        assert .15 <= (depth-lens_depth)/2 <= .34, (
+            "Lens does not fit the troffer's short edge"
+        )
+        assert abs(float(lens[9])-float(trim[9]))<.01 and (
+            abs(float(lens[11])-float(trim[11]))<.01
+        ), "Frosted diffuser shifted away from its ceiling fitting"
+        assert 17.55 <= float(lens[10]) <= 17.63 and (
+            17.69 <= float(trim[10]) <= 17.75
+        ), "Fluorescent light fixture dropped into the player camera"
+        assert trim[4].endswith("Metal") and lens[4].endswith("Glass"), (
+            "Fixture material became a glaring emissive slab"
+        )
+    print("PHOTO_CEILING_TROFFERS_PASS count=6 rectangular_lens=true "
+          "centers_preserved=true no_new_colliders=true ratio="
+          f"{pairs[0][1][6]}/{pairs[0][1][8]}",flush=True)
+    # Photo reference: greenery, not repeated apartment geometry, through
+    # both classroom window openings. Check the REAL, complete constructed
+    # Luau scene before altering anything for aerial preview cutaways.
+    outdoor_trees=actual_parts("Photo exterior oak trunk")
+    outdoor_canopies=actual_parts("Photo exterior irregular foliage")
+    assert len(outdoor_trees)==4 and len(outdoor_canopies)==20, (
+        "Four depth-layered green trees missing from photo-grounded windows"
+    )
+    # Inclined leaf discs can project farther toward the glass than their
+    # unrotated X thickness suggests. Test full world-axis extent from the
+    # constructed CFrame instead of treating Size.X as an axis-aligned bound.
+    def projected_x_halfspan(item):
+        size=[float(v) for v in item[6:9]]
+        matrix=[float(v) for v in item[15:24]]
+        return sum(abs(matrix[i])*size[i] for i in range(3))/2
+    for item in outdoor_trees+outdoor_canopies:
+        x=float(item[9])
+        assert -38.8<x< -37.9 and x+projected_x_halfspan(item)<-36.60, (
+            "Rotated exterior greenery crosses the classroom glazing"
+        )
+        assert 4.0<float(item[10])<12.3, (
+            "Exterior foliage no longer belongs in the view through windows"
+        )
+    assert all(p[4].endswith("Grass") for p in outdoor_canopies), (
+        "Foliage lost natural leaf material"
+    )
+    for forbidden_name in ("Distant brick house", "Slate roof silhouette",
+                           "Neighbor window", "Soft distant cloud"):
+        assert not actual_parts(forbidden_name), (
+            "Unreferenced apartment / fake cloud returned: "+forbidden_name
+        )
+    assert len(actual_parts("Tree trunk outside"))==3 and (
+        len(actual_parts("Irregular exterior leaf cluster"))==18
+    ), "Original tree depth/detail was lost"
+    # Previous player-eye windows revealed mechanically repeated circular
+    # crowns. Reject uniform canopy stamps from the actual Luau scene.
+    near_leaves=actual_parts("Irregular exterior leaf cluster")
+    crowns=outdoor_canopies+near_leaves
+    assert len(crowns)==38 and all(p[3].endswith("Cylinder") for p in crowns), (
+        "Native-v72 flattened Ball foliage returned or 38 crown Parts changed"
+    )
+    assert all(.70<float(p[6])<1.50 and float(p[7])>1.28
+               and float(p[8])>1.25 for p in crowns), (
+        "Window tree crowns shrank to native phone dots"
+    )
+    assert all(float(p[9])+projected_x_halfspan(p)<-36.60 for p in crowns), (
+        "Native-safe leaf discs project through the classroom window"
+    )
+    assert all(p[4].endswith("Grass") for p in crowns), (
+        "Foliage lost the original grass material"
+    )
+    assert all(float(p[9])+float(p[6])/2 < -36.60 for p in crowns), (
+        "Foliage intrudes across classroom windows"
+    )
+    tilted=sum(1 for p in crowns
+               if abs(float(p[20]))>.035 or abs(float(p[22]))>.035)
+    assert tilted>=30, (
+        "Tree crowns reverted to mechanically upright repeated spheres"
+    )
+    # Child-eye 18-window-foliage-close revealed repeated round green discs.
+    # Preserve all 38 original native-safe Cylinders but reject profiles
+    # so circular they recreate the original spherical tree silhouettes.
+    crown_aspects=[max(float(p[7])/float(p[8]),float(p[8])/float(p[7]))
+                   for p in crowns]
+    assert min(crown_aspects)>=1.32, (
+        "Tree lobes reverted to round cookie-cutter silhouettes"
+    )
+    upright=sum(float(p[7])>float(p[8]) for p in crowns)
+    wide=len(crowns)-upright
+    assert 22<=upright<=29 and wide>=9, (
+        "Trees no longer combine vertical and horizontal leaf masses"
+    )
+    print("PHOTO_FOLIAGE_SILHOUETTE_PASS crowns=38 native_cylinders=true "
+          f"vertical={upright} horizontal={wide} "
+          f"min_aspect={min(crown_aspects):.2f} same_parts=true")
+    heights={round(float(p[10]),2) for p in crowns}
+    profiles={(round(float(p[7]),2),round(float(p[8]),2))
+              for p in crowns}
+    assert len(heights)>=30 and len(profiles)>=25, (
+        "Outdoor trees reverted to identical copied canopy silhouettes"
+    )
+    for trunk in outdoor_trees:
+        tx,tz=float(trunk[9]),float(trunk[11])
+        attached=[p for p in outdoor_canopies if (
+            abs(float(p[9])-tx)<.65 and abs(float(p[11])-tz)<4.4
+        )]
+        assert len(attached)>=4, (
+            "Exterior foliage no longer branches from its trunk"
+        )
+    print("PHOTO_FOLIAGE_VARIETY_PASS trees=7 lobes=38 "
+          "native_cylinders=true"
+          " tilted_crowns="+str(tilted)
+          +" unique_heights="+str(len(heights))
+          +" unique_profiles="+str(len(profiles))
+          +" no_new_parts=true behind_glass=true",flush=True)
+    print("PHOTO_WINDOW_GREENERY_PASS trees=4 crown_clusters=20 "
+          "prior_trees=3 old_apartments=0 fake_clouds=0 "
+          "behind_window_glass=true",flush=True)
+    # Check both built school window bays before camera-only cutaways.
+    # Exterior trees should be visible behind the lightly tinted glass,
+    # while the real navy fabric panels remain fully preserved.
+    panes=actual_parts("Window glass")
+    expected={
+        "Window wood horizontal frame":4,
+        "Window wood vertical frame":4,
+        "Window vertical mullion":6,
+        "Window horizontal mullion":2,
+        "Window timber inner stop":4,
+        "Deep window sill":2,
+        "Window blind slat":32,
+        "Navy curtain fabric panel":4,
+    }
+    assert len(panes)==2 and sorted(round(float(p[11]),2) for p in panes)==[-19,6], (
+        "Both school window glazing openings must remain in place"
+    )
+    for name,count in expected.items():
+        assert len(actual_parts(name))==count, (
+            f"Window component {name} changed count unexpectedly"
+        )
+    for pane in panes:
+        assert pane[4].endswith("Glass") and .64<=float(pane[5])<=.76, (
+            "Glass is too opaque to see the outdoor greenery"
+        )
+        assert abs(float(pane[9])+36.18)<.02 and (
+            abs(float(pane[7])-8.4)<.02 and abs(float(pane[8])-14.2)<.02
+        ), "School window opening changed geometry"
+        rgb=[float(x) for x in pane[12:15]]
+        assert min(rgb)>.87 and max(rgb)-min(rgb)<.07, (
+            "Glass reverted to heavy blue window tint"
+        )
+    for name in expected:
+        if name in ("Window blind slat","Navy curtain fabric panel"):
+            continue
+        for part in actual_parts(name):
+            assert part[4].endswith("Wood"), "Light window sash lost its wood material"
+            rgb=[float(x) for x in part[12:15]]
+            assert min(rgb)>.79 and max(rgb)-min(rgb)<.09, (
+                "Window sash reverted to heavy blue paint"
+            )
+    print("PHOTO_WINDOW_SASH_PASS glass=2 transparency=.68 light_sashes=true "
+          "window_centers_preserved=true blinds_and_curtains_preserved=true")
+    # Photo-driven navy drapes must be visible at standing child eye height,
+    # gathered at the edges rather than blanketing the daylight and trees.
+    # These measurements come from actual constructed Luau Parts, before
+    # any cutaway model removes architectural occluders.
+    window_panels=actual_parts("Navy curtain fabric panel")
+    curtain_pleats=actual_parts("Navy curtain stitched pleat")
+    curtain_ties=actual_parts("Navy curtain cloth tieback")
+    curtain_headers=actual_parts("Blue curtain valance")
+    assert len(window_panels)==4 and len(curtain_pleats)==8 and (
+        len(curtain_ties)==4 and len(curtain_headers)==2
+    ), "Missing photo-grounded two-sided curtains on both school windows"
+    assert not actual_parts("Blue curtain fold"), (
+        "Pencil-thin prototype draperies returned to school windows"
+    )
+    panel_sides={-19:[],6:[]}
+    for part in window_panels:
+        x,y,z=(float(part[i]) for i in (9,10,11))
+        width,height,length=(float(part[i]) for i in (6,7,8))
+        assert part[4].endswith("Fabric") and (
+            abs(x+35.43)<.02 and abs(y-9.05)<.02
+        ), "Navy curtains are floating off the interior window jamb"
+        assert 7.90<=height<=8.10 and 1.40<=length<=1.52, (
+            "Window curtains no longer resemble child-eye-length drapes"
+        )
+        assert width<=.18 and abs(x+36.18)>.65, (
+            "Window curtain geometry blocks or penetrates the glazing"
+        )
+        color=[float(c) for c in part[12:15]]
+        assert color[2]>color[0]*1.5 and color[2]>color[1]*1.3, (
+            "Navy school curtains reverted to bright cartoon-blue paint"
+        )
+        center=min((-19,6),key=lambda c:abs(z-c))
+        assert 5.80 < abs(z-center)-length/2 and (
+            abs(z-center)+length/2 < 7.48
+        ), "Curtains cover the central daylight aperture or protrude beyond the casing"
+        panel_sides[center].append(round(z-center,2))
+    assert all(sorted(dz)==[-6.65,6.65] for dz in panel_sides.values()), (
+        "Each school window must have two symmetric pulled-open side panels"
+    )
+    assert all(.28<float(part[7])<.48 for part in curtain_headers), (
+        "Oversized 1.8-stud curtain valance returned"
+    )
+    print("PHOTO_NAVY_CURTAINS_PASS windows=2 panels=4 pleats=8 "
+          "tiebacks=4 open_center_width_studs=11.8 "
+          "historic_blinds_preserved=true native_iphone_pending")
+    if cutaway:
+        # Only the independent CAMERA MODEL omits these massive occluders.
+        # The playable Roblox game still contains its real solid walls/roof.
+        lines=[entry for entry in lines if entry[1] not in CUTAWAY_OCCLUDERS]
+    names=[v[1] for v in lines]
+    from collections import Counter
+    by_name=Counter(names)
+    geometry_contract={
+        "Student desk top":16,
+        "Student chair contoured back collision":16,
+        "Purple corner chair seat":1,
+        "Purple corner chair school back shell":1,
+        "Purple corner chair contoured back collision":1,
+        "Purple corner chair ventilation inset":3,
+        "Purple corner chair tubular leg":4,
+        "Student chair school back shell":16,
+        "Student chair school back shell center":16,
+        "Student chair school back shell rounded corner":64,
+        "Student chair underseat frame runner":32,
+        "Desk laminated front bevel":16,
+        "Desk shelf front restraint":16,
+        "Desk back steel stretcher":16,
+        "Desk basket cross wire":64,
+        "Desk basket longitudinal wire":32,
+        "Desk pencil":16,
+        "Desk pencil eraser cap":16,
+        "Illustrated storybook cover":5,
+        "Storybook illustration backing":5,
+        "Storybook title band":5,
+        "Reading floor lamp stem":1,
+        "Reading lamp base":1,
+        "Reading fabric drum lampshade":1,
+        "Reading shade sewn binding":2,
+        "Reading shade recessed warm diffuser":1,
+        "Reading lamp top finial":1,
+        "Photo-guided wall shape card":9,
+        "Photo-guided shape icon":9,
+        "Photo-guided cabinet counting strip":1,
+        "Counting strip blue top trim":1,
+        "Counting strip green bottom trim":1,
+    }
+    for component,expected in geometry_contract.items():
+        assert by_name[component]==expected, (
+            f"Physical furniture regression: {component}={by_name[component]}, expected {expected}"
+        )
+    assert by_name["Hanging pastel bunting"]==0, (
+        "Unreferenced generic bunting overlapped photo-grounded shape cards"
+    )
+    # Original micro ferrules and erasers were detached from the actual
+    # cylinder's local-X axis. The consolidated caps must sit at shaft ends,
+    # not off to one side, and must preserve a 16-stationery set.
+    assert by_name["Pencil ferrule"]==0 and by_name["Pencil eraser"]==0, (
+        "Detached original pencil hardware returned"
+    )
+    pencils=[v for v in lines if v[1]=="Desk pencil"]
+    caps=[v for v in lines if v[1]=="Desk pencil eraser cap"]
+    for cap in caps:
+        px,py,pz=[float(cap[i]) for i in (9,10,11)]
+        separation=min((
+            (px-float(p[9]))**2+(pz-float(p[11]))**2,
+            abs(py-float(p[10]))
+        ) for p in pencils)
+        assert .76**2 <= separation[0] <= .88**2 and separation[1] < .025, (
+            "Pencil eraser cap is not attached to its shaft"
+        )
+    assert by_name["Warm lamp shade"]==0, (
+        "Reading floor lamp regressed to a spherical balloon-like lampshade"
+    )
+    # The teaching-wall correction must be proven against ACTUAL Luau-built
+    # physical instances, not only a matching source-text snippet.
+    def only(name):
+        matches=[row for row in lines if row[1]==name]
+        assert len(matches)==1, f"Expected one {name} physical part; got {len(matches)}"
+        return matches[0]
+
+    # Low-risk indoor features independently visible in the activity photos.
+    # Existing rug centers remain unchanged; activity photos do not prove
+    # which furnishings were moved for the cheer class.
+    rug=only("Alphabet rug")
+    assert rug[3].endswith("Cylinder") and 14<float(rug[7])<14.5, (
+        "Circular alphabet rug reverted to a rectangular shape"
+    )
+    word_wall=only("Class notice board")
+    assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
+    # Emma identified the purple chair BESIDE the photographed seated adult,
+    # gray supply cabinet, dark filing cabinet and lower-left window AC. The
+    # earlier rear-reading-corner coordinate was a guessed placement, not a
+    # photo-backed final decision. Chair TYPE is still occluded/provisional.
+    corner_seat=only("Purple corner chair seat")
+    corner_back=only("Purple corner chair school back shell")
+    cx,cz=float(corner_seat[9]),float(corner_seat[11])
+    assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
+        "Emma's purple chair left the photo-identified AC window corner"
+    )
+    # The singular photo-corner seat is rotated to face +X toward the
+    # workstation; the back remains against the window (-X).
+    assert abs(float(corner_back[9])-(cx-.93))<.05 and (
+        abs(float(corner_back[11])-cz)<.04
+    ), "Purple chair backrest no longer faces the A/C wall"
+    for component in (corner_seat,corner_back):
+        red,green,blue=(float(component[i]) for i in (12,13,14))
+        assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
+            blue>red>green
+        ), "Purple corner chair reverted to blue or another classroom color"
+    rug_dist=math.hypot(cx+25.0,cz-14.0)
+    assert rug_dist>10.5, (
+        "Purple chair overlaps the real circular sun/ABC carpet"
+    )
+    ac=only("Photo window air conditioner housing")
+    assert abs(cz-float(ac[11]))<1.2, (
+        "Purple chair is no longer adjacent to the photographed window AC"
+    )
+    radiator=[row for row in lines if row[1]=="Radiator body"
+              and abs(float(row[11])-float(ac[11]))<.1]
+    assert len(radiator)==1 and (
+        cx-1.25>float(radiator[0][9])+float(radiator[0][6])/2+.5
+    ), "Purple chair clips the metal radiator below the school AC"
+    gray=only("Photo gray corner storage cabinet")
+    files=only("Photo black filing cabinet")
+    worktable=only("Photo window worktable")
+    assert abs(float(gray[9])+34.05)<.03 and (
+        abs(float(gray[11])+30.50)<.03
+    ), "Photo gray cupboard lost the window-wall storage position"
+    assert abs(float(files[9])+34.10)<.03 and (
+        abs(float(files[11])+26.25)<.03
+        and by_name["Photo filing drawer face"]==3
+    ), "Photo black filing drawers missing or misplaced"
+    tx,tz=float(worktable[9]),float(worktable[11])
+    assert abs(tx+27.50)<.03 and abs(tz+19.60)<.03 and (
+        by_name["Photo worktable metal leg"]==4
+    ), "Photo worktable no longer beside the purple chair"
+    assert cx+1.25<tx-float(worktable[6])/2, (
+        "Photo worktable intersects the purple chair seat"
+    )
+    front=only("Purple corner chair molded front seat roll")
+    assert float(front[9])>cx+.90 and (
+        abs(float(front[11])-cz)<.04
+    ), "Photo corner purple chair points away from the actual workstation"
+    assert float(front[9])+float(front[8])/2<(
+        tx-float(worktable[6])/2-.30
+    ), "Purple chair front roll clips the workstation"
+    for desk in (row for row in lines if row[1]=="Student desk edge"):
+        x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
+        assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
+                or z_gap>(float(desk[8])+float(worktable[8]))/2+.25), (
+            "Photo worktable intersects a preexisting student desk"
+        )
+    assert cx-1.25>-34.4 and -26<cz<-16, (
+        "Purple chair intersects exterior classroom walls"
+    )
+    assert by_name["Student chair seat"]==16, (
+        "Emma's separate purple corner chair replaced a student seat"
+    )
+    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
+          "original_student_chairs=16 child_scale=true "
+          "rug_clear=true ac_adjacent=true faces_worktable=true "
+          "workstation_clear=true position_provisional=true")
+    window_banner=only("Classroom faith window banner")
+    assert abs(float(window_banner[9])+36.33)<.025 and (
+        abs(float(window_banner[10])-15.22)<.025
+    ), "Right-window faith motto no longer follows the photographed wall"
+    assert abs(float(window_banner[11])-6)<.05 and (
+        17.40<=float(window_banner[8])<=17.60
+    ), "Right-window faith banner reverted to a single 38-stud generic strip"
+    assert .95<=float(window_banner[7])<=1.20 and (
+        float(window_banner[10])+float(window_banner[7])/2 < 17
+    ), "Classroom motto obstructs acoustic ceiling or window"
+    smore=only("Smore classroom main title")
+    smore_headline=only("Smore faith headline")
+    assert abs(float(smore[11])+19)<.025 and (
+        abs(float(smore_headline[11])+19)<.025
+    ), "S'more photo wall lost its original LEFT-window location"
+    assert float(smore[10])<float(smore_headline[10]) and (
+        14.90<float(smore[10])<15.55 and 15.90<float(smore_headline[10])<16.50
+    ), "S'more mural phrase moved below the school window or into ceiling"
+    assert by_name["Smore mural pine trunk"]==2 and (
+        by_name["Smore mural green canopy"]==4
+    ), "Distinct two-pine S'more decoration disappeared"
+    unit=only("Photo window air conditioner housing")
+    grill=only("Photo AC inset front grille")
+    assert abs(float(unit[9])+35.55)<.03 and (
+        abs(float(unit[10])-5.23)<.03
+        and abs(float(unit[11])+19)<.03
+    ), "Photo-grounded AC left the lower LEFT window"
+    assert 1.00<float(unit[6])<1.11 and (
+        1.20<float(unit[7])<1.30 and 4.70<float(unit[8])<4.90
+    ), "Window AC became an implausibly oversized box"
+    assert abs((float(unit[10])-float(unit[7])/2)-4.61)<.03, (
+        "Window AC stopped resting just above the original sill"
+    )
+    assert float(grill[9])>float(unit[9])+.50, (
+        "Window AC ventilation faces the glass instead of the room"
+    )
+    assert by_name["Photo AC horizontal vent louver"]==5 and (
+        by_name["Photo AC control dial"]==2
+        and by_name["Photo AC control fascia"]==1
+    ), "Original school window AC lost its front-facing ventilation"
+    assert all(float(v[9])>-36.2 for v in lines
+        if v[1].startswith(("Photo AC ","Photo window air conditioner"))), (
+        "AC furniture passed through the original glass pane"
+    )
+    for name in ("Classroom faith window banner","Smore faith headline",
+                 "Smore classroom main title","Photo window air conditioner housing",
+                 "Photo AC inset front grille","Photo AC horizontal vent louver",
+                 "Photo AC control fascia","Photo AC control dial",
+                 "Smore mural pine trunk","Smore mural green canopy"):
+        assert all(float(part[5])<=.01 for part in lines if part[1]==name), (
+            "Photo decorative detail became collidable: "+name
+        )
+    print("PHOTO_WINDOW_CORNER_PASS distinct_banners=2 smore_pines=2 "
+          "left_window_ac=1 louvers=5 control_dials=2 "
+          "glazing_unchanged=true collision_verified_by_runtime_gate=true")
+    photo_components={
+        "Reading rug alphabet border":26,
+        "Photo rug number cloud lobe":20,
+        "Photo rug number cloud body":10,
+        "Photo rug number cloud numeral":10,
+        "Photo rug sun center":1,
+        "Photo rug sun ray":16,
+        "Photo rug sun ray rounded tip":16,
+        "Front rug color dot":25,
+        "Word wall word card":15,
+        "Word wall apple":26,
+        "Word wall apple stem":26,
+    }
+    for component,expected in photo_components.items():
+        assert by_name[component]==expected, (
+            f"Photo-guided element missing: {component}={by_name[component]}"
+        )
+    assert by_name["Reading rug flower petal"]==0, (
+        "Synthetic flower field returned to the real sun/cloud carpet"
+    )
+    # Direct photo and October 9 mobile rendering: the prior letter border
+    # looked like detached squares because its long axis pointed outward.
+    # Validate the generated Luau world transforms, not a literal source
+    # code phrase. Preserve 26 parts and 26 original UI labels.
+    tiles=[r for r in lines if r[1]=="Reading rug alphabet border"]
+    assert len(tiles)==26, "Circular carpet no longer has the A-Z border"
+    orbit_radius=6.13
+    orbit_chord=2*orbit_radius*math.sin(math.pi/26)
+    long_sides=[]
+    orbit_angles=[]
+    for tile in tiles:
+        tx=float(tile[9])+25
+        tz=float(tile[11])-14
+        radius=math.hypot(tx,tz)
+        assert abs(radius-orbit_radius)<.03, (
+            "Alphabet border patch drifted away from original carpet"
+        )
+        long_side=float(tile[6])
+        short_side=float(tile[8])
+        assert 1.50<long_side<1.61 and 1.10<short_side<1.25, (
+            f"Alphabet color strip became a detached square: {long_side:.2f}x{short_side:.2f}"
+        )
+        matrix=[float(v) for v in tile[15:24]]
+        # First local axis in the ground plane must be tangent to the orbit.
+        local_x_world=(matrix[0],matrix[6])
+        outward=(tx/radius,tz/radius)
+        alignment=abs(sum(a*b for a,b in zip(local_x_world,outward)))
+        assert alignment<.04, (
+            f"Alphabet section points radially instead of tangentially: {alignment:.3f}"
+        )
+        # Outer corners remain within the original 14.2-stud diameter rug.
+        assert math.hypot(radius+short_side/2,long_side/2)<7.10, (
+            "Letter border projects beyond circular carpet edge"
+        )
+        long_sides.append(long_side)
+        orbit_angles.append(math.atan2(tz,tx)%(2*math.pi))
+    angles=sorted(orbit_angles)
+    gaps=[(angles[(i+1)%26]-angles[i])%(2*math.pi) for i in range(26)]
+    assert all(abs(gap-2*math.pi/26)<.015 for gap in gaps), (
+        "Alphabet perimeter contains missing sections or uneven spacing"
+    )
+    assert min(long_sides)>orbit_chord+.045, (
+        "Alphabet sections again look disconnected at ring centerline"
+    )
+    print("PHOTO_ALPHABET_RING_PASS letters=26 tangential=true "
+          f"arc_chord={orbit_chord:.3f} band_length={min(long_sides):.2f} "
+          "physical_parts_added=0")
+
+    # Real October 9 iPhone v68: each number was printed on an opaque,
+    # rectangular white label, not inside a rounded cloud. Keep the same
+    # ten anchors and 20 cloud lobes but make anchor geometry invisible.
+    anchors=[v for v in lines if v[1]=="Photo rug number cloud numeral"]
+    lobes=[v for v in lines if v[1]=="Photo rug number cloud lobe"]
+    bodies=[v for v in lines if v[1]=="Photo rug number cloud body"]
+    assert len(anchors)==len(bodies)==10 and len(lobes)==20
+    assert all(float(v[5])>=.99 and v[4].endswith("SmoothPlastic")
+               for v in anchors), "White cloud label sticker has returned"
+    assert all(v[3].endswith("Cylinder") and v[4].endswith("SmoothPlastic")
+               and min(float(x) for x in v[12:15])>.92 for v in lobes), (
+        "Native engine requires TRUE flat cylinders, not minimum-axis Ball dots"
+    )
+    assert all(v[3].endswith("Block") and v[4].endswith("SmoothPlastic")
+               for v in bodies), "Cloud body reverted to a flattened Ball dot"
+    assert all(.78<float(v[6])<.82 and .56<float(v[8])<.60
+               for v in anchors), "Cloud numbering anchor changed child scale"
+    cloud_face_gaps=[]
+    for anchor in anchors:
+        x,y,z=(float(anchor[i]) for i in (9,10,11))
+        body_matches=[v for v in bodies if (
+            abs(float(v[9])-x)<.025 and abs(float(v[11])-z)<.025
+        )]
+        side_matches=[v for v in lobes if (
+            abs(float(v[9])-x)<.40 and abs(float(v[11])-z)<.20
+        )]
+        assert len(body_matches)==1 and len(side_matches)==2, (
+            "Number label detached from its three-lobed cloud"
+        )
+        # A flat Cylinder's local X is rotated into WORLD Y. Local Size.Y
+        # is its visible DIAMETER, NOT height. Use the constructed CFrame's
+        # world-Y matrix row instead of accepting false cloud intersections.
+        def world_top(v):
+            local_size=[float(v[i]) for i in (6,7,8)]
+            y_axis=[abs(float(v[i])) for i in (18,19,20)]
+            return float(v[10])+sum(a*b for a,b in zip(local_size,y_axis))/2
+        tallest=max(world_top(v) for v in body_matches+side_matches)
+        label_face=y+float(anchor[7])/2
+        gap=label_face-tallest
+        cloud_face_gaps.append(gap)
+        assert .055<gap<.090, (
+            f"Number GUI falls inside taller cloud or floats too high: gap={gap:.3f}"
+        )
+        assert abs(float(body_matches[0][10])-.690)<.006 and (
+            all(abs(float(v[10])-.690)<.006 for v in side_matches)
+        ), "Flat cloud geometry left the horizontal rug surface"
+        assert .115<=float(body_matches[0][7])<=.125 and (
+            all(.115<=float(v[6])<=.125 for v in side_matches)
+        ), "Native cylinders are no longer flat with a stable height axis"
+        assert (1.12<=float(body_matches[0][6])<=1.16
+                and .63<=float(body_matches[0][8])<=.67
+                and all(.92<=float(v[7])<=.96 and
+                        .92<=float(v[8])<=.96 for v in side_matches)), (
+            "Cloud bodies stopped being wide, native-scale solid shapes"
+        )
+        assert all(float(v[10])-.06>=.62 for v in body_matches+side_matches), (
+            "Cloud face sinks beneath the actual floor rug"
+        )
+        assert all(abs(float(v[18]))>.99 for v in side_matches), (
+            "Cloud Cylinder local-X axis is not vertically oriented"
+        )
+        assert abs(y-.820)<.01, "Number label no longer above cloud shapes"
+    print(f"IPHONE_CLOUD_OCCLUSION_PASS clouds=10 lobes=30 "
+          f"number_face_clearance={min(cloud_face_gaps):.3f} "
+          "rectangular_number_backings_invisible=true")
+    sun_surface=only("Photo rug sun center")
+    assert sun_surface[4].endswith("SmoothPlastic") and (
+        float(sun_surface[12])>.94 and float(sun_surface[13])>.70
+    ), "iPhone sun reverted to darkened fabric brown"
+    carpet=only("Alphabet rug")
+    assert carpet[4].endswith("Fabric") and (
+        float(carpet[12])>.40 and float(carpet[13])>.62
+        and float(carpet[14])>.84
+    ), "Native v71 dark rug dye returned or textile rug became plastic"
+    assert abs(float(carpet[6])-.10)<.01 and (
+        abs(float(carpet[7])-14.2)<.01 and
+        abs(float(carpet[8])-14.2)<.01
+    ), "Real circular ABC rug dimensions changed"
+    print("IPHONE_CARPET_SHAPES_PASS cloud_rectangles_hidden=true "
+          "cloud_lobes=20 cloud_bodies=10 anchors=10 "
+          "brighter_textile_blue=true larger_white_clouds=true")
+    print("PHOTO_REFERENCE_GEOMETRY_PASS yellow_walls=true dark_wood=true "
+          "circular_sun_alphabet=true number_clouds=10 dot_rug=25 "
+          "blue_wordwall=true apple_markers=26")
+
+    smart=only("Interactive smartboard")
+    bezel=only("Smartboard white composite bezel")
+    chalk=only("Main chalkboard")
+    frame_x=float(bezel[9]); frame_width=float(bezel[6])
+    smart_x=float(smart[9]); smart_width=float(smart[6])
+    chalk_x=float(chalk[9]); chalk_width=float(chalk[6])
+    # The photographed mobile screen sits ahead of a wider chalkboard, not
+    # beside one. Check x alignment and visible blackboard perimeter.
+    chalk_margin=(chalk_width-smart_width)/2
+    assert 18.5 <= smart_width <= 19.2, "Digital display changed width"
+    assert 28.5 <= chalk_width <= 29.5, "Wide chalkboard backing missing"
+    assert abs(smart_x-5.2)<.02 and abs(chalk_x-smart_x)<.05, (
+        "Wheeled screen no longer aligns with chalkboard backdrop"
+    )
+    assert abs(frame_x-smart_x)<.02 and .94<frame_width-smart_width<1.10, (
+        "Photo-accurate white housing must remain centered with a wide visible border"
+    )
+    assert 7.20 <= float(bezel[7]) <= 7.35 and (
+        bezel[4].endswith("SmoothPlastic")
+    ), "Photo-guided molded display frame has lost its full-height smooth housing"
+    frame_rgb=[float(x) for x in bezel[12:15]]
+    assert min(frame_rgb)>.92 and max(frame_rgb)-min(frame_rgb)<.035, (
+        "The chalkboard's white-framed interactive screen reverted to a dark bezel"
+    )
+    assert abs((frame_width-smart_width)/2-.50)<.06 and (
+        abs((float(bezel[7])-float(smart[7]))/2-.46)<.06
+    ), "White interactive screen housing edge is too thin at child eye height"
+    assert 4.5 <= chalk_margin <= 5.8, (
+        "Blackboard perimeter is obscured by the wheeled screen"
+    )
+    assert float(smart[11])-float(chalk[11])>1.5, (
+        "Wheeled screen collapsed back into the chalkboard plane"
+    )
+    assert abs(float(smart[10])-float(chalk[10]))<1, "Display heights diverged"
+    trim=[row for row in lines if row[1]=="Smartboard satin aluminum trim"]
+    assert len(trim)==2 and all(abs(float(row[9])-smart_x)<.02
+                                and abs(float(row[6])-19.77)<.05
+                                for row in trim), "Decorative trim no longer follows white board geometry"
+    assert sorted(round(float(row[10]),2) for row in trim)==[4.62,11.78], (
+        "White Smartboard top and bottom hardware detached from molded surround"
+    )
+    side_rails=[row for row in lines if row[1]=="Smartboard protective edge"]
+    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-4.68,15.08], (
+        "The two white Smartboard side rails detached from the larger composite housing"
+    )
+    assert all(abs(float(row[7])-7.15)<.03 for row in side_rails), (
+        "White side rails reverted to stubby colored props"
+    )
+    print("PHOTO_WHITE_SMARTBOARD_HOUSING_PASS border_x=.50 border_y=.46 "
+          "white_composite=true chrome_rails=4 same_support_geometry=true")
+    # Permanent chalkboard and manufactured mobile board remain separate.
+    # Read actual executed Luau physical transforms (not code-string guesses).
+    # This does NOT simulate native Roblox shadowing or phone camera FOV.
+    assert -31.75 <= float(smart[11]) <= -31.59, (
+        "Mobile interactive display returned flush against the back wall"
+    )
+    assert 1.5 <= float(smart[11])-float(chalk[11]) <= 3.0, (
+        "Mobile display should stand forward of the teaching wall"
+    )
+    assert abs(float(bezel[11])-float(smart[11])+.28)<.04, (
+        "Mobile white display housing is no longer behind its glass"
+    )
+    supports=[p for p in lines if p[1]=="Mobile smartboard support post"]
+    collars=[p for p in lines if p[1]=="Mobile smartboard mounting collar"]
+    feet=[p for p in lines if p[1]=="Mobile smartboard rolling foot"]
+    wheels=[p for p in lines if p[1]=="Mobile smartboard caster"]
+    braces=[p for p in lines if p[1]=="Mobile smartboard cross brace"]
+    assert len(supports)==len(collars)==len(feet)==2 and len(wheels)==4, (
+        "Mobile classroom Smartboard support or wheel count changed"
+    )
+    assert len(braces)==1, "Mobile stand is missing its transverse support"
+    for items in (supports,collars,feet):
+        assert sorted(round(float(p[9]),2) for p in items)==[.10,10.30], (
+            "Rolling Smartboard support disconnected from the two screen pylons"
+        )
+    assert sorted(round(float(p[11]),2) for p in wheels)==(
+        [-33.25,-33.25,-31.15,-31.15]
+    ), "Rolling Smartboard has misplaced casters"
+    assert all(.49 < float(p[10])-float(p[7])/2 < .70 for p in supports), (
+        "Rolling Smartboard support collides with visual ground plane"
+    )
+    assert all(abs(float(p[10])-.73)<.01 for p in wheels), (
+        "Mobile caster wheels do not meet the floor"
+    )
+    assert all(float(p[11]) < float(bezel[11]) for p in supports), (
+        "Mobile support posts must be BEHIND screen face, not on top of lessons"
+    )
+    assert by_name["Mobile smartboard support post"]==2 and (
+        by_name["Mobile smartboard caster"]==4
+    )
+    print("PHOTO_MOBILE_SMARTBOARD_GEOMETRY_PASS posts=2 casters=4 "
+          "behind_display=true roomward_offset=true "
+          "noncolliding_parts_in_source=true native_iphone_pending")
+    print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
+          f"chalkboard={chalk_width:.2f} exposed_margin={chalk_margin:.2f} "
+          f"frame={frame_width:.2f}")
+    # Repositioned art easel must NOT occlude the actual chalkboard from the
+    # front-facing player camera. Validate exported world geometry after Luau.
+    easel=only("Photo flipchart white housing")
+    easel_x=float(easel[9]); easel_width=float(easel[6]); easel_z=float(easel[11])
+    chalk_left=chalk_x-chalk_width/2
+    easel_right=easel_x+easel_width/2
+    easel_clearance=chalk_left-easel_right
+    assert 18.0 <= easel_clearance <= 21.0, (
+        f"The photo-guided larger chalkboard intersects the art easel: {easel_clearance:.2f}"
+    )
+    assert abs(easel_x+31.0)<.02, "The visually dominant prior easel returned"
+    assert 4.0 <= easel_width <= 4.4, "Easel must have a compact school-scale silhouette"
+    assert 3.4 <= float(easel[7]) <= 3.8, "Oversized brown display returned"
+    assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
+    assert -32.0 < easel_z < -29.0, "Easel no longer belongs in the front-left art corner"
+    easel_poster=only("Photo flipchart dry erase face")
+    easel_ledge=only("Photo flipchart marker tray")
+    easel_legs=[row for row in lines if row[1]=="Photo flipchart blue cart support"]
+    easel_stars=[row for row in lines if row[1]=="Photo flipchart colored magnet"]
+    assert abs(float(easel_poster[9])-easel_x)<.02 and abs(float(easel_ledge[9])-easel_x)<.02
+    assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.46,1.46], (
+        "Photo flipchart blue cart supports detached from board"
+    )
+    assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-1.55,0.0,1.55], (
+        "Photo flipchart colored magnets detached from board"
+    )
+    assert easel[4].endswith("SmoothPlastic") and easel_poster[4].endswith("SmoothPlastic"), (
+        "Photographed white dry-erase board regressed to a wooden poster"
+    )
+    assert min(float(easel[i]) for i in (12,13,14))>.85 and (
+        min(float(easel_poster[i]) for i in (12,13,14))>.93
+    ), "Photo flipchart white surfaces became dark colored"
+    wheels=[row for row in lines if row[1]=="Photo flipchart rubber wheel"]
+    shelf=only("Photo flipchart lower blue shelf")
+    assert len(wheels)==2 and all(.25<float(w[10])<.8 for w in wheels), (
+        "The photo flipchart cart lost floor-contact wheels"
+    )
+    assert abs(float(shelf[9])-easel_x)<.02 and 1.0<float(shelf[10])<1.3, (
+        "The photo flipchart cart shelf is disconnected"
+    )
+    assert all(float(s[7])<.5 for s in easel_stars), (
+        "The photo flipchart regained oversized star decorations"
+    )
+    print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f} "
+          "photo_flipchart_white=true wheels=2")
+    # The brown rectangle in the last player-eye render was a physical
+    # bulletin-board defect: cork was behind a full-size wooden front plate.
+    # Assert the actual constructed front-facing depth and human-scale sheets.
+    board_back=only("Student work board thin wood backing")
+    board_cork=only("Student work board exposed cork")
+    assert abs(float(board_cork[6])-9.4)<.02 and abs(float(board_cork[7])-5.65)<.02, (
+        "Oversized cork board returned"
+    )
+    assert float(board_cork[11]) > float(board_back[11])+.10, (
+        "Solid wooden backing hides the classroom cork face"
+    )
+    for name,expected in {
+        "Student work board horizontal wood rail":2,
+        "Student work board vertical wood rail":2,
+        "Pinned student work sheet":3,
+        "Student work colored heading":3,
+        "Student work pencil line":9,
+        "Bulletin board brass pushpin":3,
+    }.items():
+        assert by_name[name]==expected, (
+            f"Student-work display {name} count {by_name[name]} != {expected}"
+        )
+    for card in [row for row in lines if row[1]=="Pinned student work sheet"]:
+        assert float(card[11]) > float(board_cork[11]), (
+            "Pinned student work vanished behind the cork"
+        )
+        assert float(card[6])<2.5 and float(card[7])<3.2, (
+            "Student work should be child-size rather than a floating wall UI"
+        )
+    print("VISIBLE_BULLETIN_BOARD_GEOMETRY_PASS sheets=3 cork_exposed=true")
+
+    # Physical backpack audit: verify actual Luau-created silhouettes, hooks,
+    # child proportions and mounting on the rear storage wall.
+    backpack_contract={
+        "Hanging school bag":8,
+        "Hanging school bag center":8,
+        "Hanging school bag rounded corner":32,
+        "Backpack shoulder strap":16,
+        "Backpack hanging loop":8,
+        "Backpack upper flap":8,
+        "Backpack front pocket":8,
+        "Backpack pocket zipper":8,
+        "Backpack zipper pull":8,
+        "Metal coat hook":8,
+        "Cubbie bin":12,
+    }
+    for component,expected in backpack_contract.items():
+        assert by_name[component]==expected, (
+            f"Child-scale backpack/storage count mismatch: {component}="
+            f"{by_name[component]} expected {expected}"
+        )
+    # Photo-grounded classroom built-ins, assessed using actual executed
+    # Luau Parts rather than source snippets. The real wall has aged dark
+    # cabinetry and practical open storage instead of neon identical boxes.
+    cabinet=only("Cubbies wood surround")
+    shelves=[v for v in lines if v[1]=="Cubbie open shelf"]
+    dividers=[v for v in lines if v[1]=="Cubbie divider"]
+    tote_faces=[v for v in lines if v[1]=="Bin front and back"]
+    tote_sides=[v for v in lines if v[1]=="Bin side"]
+    files=[v for v in lines if v[1]=="Stored classroom file folder"]
+    assert len(shelves)==3 and len(dividers)==7 and (
+        len(tote_faces)==24 and len(tote_sides)==24
+    ), "Original open school cabinetry geometry was replaced or duplicated"
+    assert len(files)==6, "Six restrained classroom document folders are missing"
+    wood_items=[cabinet]+shelves+dividers
+    assert all(v[4].endswith("Wood") and
+               .38<float(v[12])<.47 for v in wood_items), (
+        "Photo-inspired dark wooden built-ins became light toy shelving"
+    )
+    fronts=[v for v in tote_faces if abs(float(v[11])-23.65)<.03]
+    backs=[v for v in tote_faces if abs(float(v[11])-25.95)<.03]
+    assert len(fronts)==len(backs)==12, "Open bin front and back faces misplaced"
+    assert all(abs(float(v[7])-1.08)<.025 for v in fronts) and (
+        all(abs(float(v[7])-1.45)<.025 for v in backs)
+    ), "School storage-bin fronts returned to tall sealed toy boxes"
+    bins=[v for v in lines if v[1]=="Cubbie bin"]
+    assert len(bins)==12, "Twelve established storage bins changed count"
+    assert all(max(float(x) for x in v[12:15])<.78 and (
+        max(float(x) for x in v[12:15])
+        -min(float(x) for x in v[12:15])<.30
+    ) for v in bins), "Harsh toy-bin palette returned to photo-based storage"
+    expected_file_x=[9.75,14.25,18.75,23.25,27.75,32.25]
+    assert sorted(round(float(v[9]),2) for v in files)==expected_file_x, (
+        "Classroom folders duplicated or left their original bin positions"
+    )
+    assert all(abs(float(v[11])-24.32)<.025 and (
+        abs(float(v[7])-.82)<.025
+    ) for v in files), "Classroom file dividers float outside storage totes"
+    print("PHOTO_STORAGE_CABINETRY_PASS dark_wood=true "
+          "open_bins=12 file_folders=6 preserved_backpacks=8 "
+          "no_extra_footprints=true")
+    # Real IMG_2903–2910 shows dark, aged framed woodworking: continuous
+    # cabinet openings and raised doors, not disconnected open brown slabs.
+    # These tests inspect all actual Luau-constructed physical trim, with
+    # the original twelve cubbies and five freestanding book covers preserved.
+    architectural_details={
+        "Built-in walnut cubby face stile":7,
+        "Built-in walnut stile routed edge":7,
+        "Built-in horizontal walnut face rail":3,
+        "Built-in horizontal fine molding":3,
+        "Built-in recessed dark toe kick":1,
+        "Built-in deep hardwood cornice":1,
+        "Built-in stepped cornice edge":1,
+        "Tall cabinet recessed panel cross rail":8,
+        "Tall cabinet antiqued keyhole":2,
+        "Tall cabinet hardwood cornice":1,
+        "Tall cabinet cornice routed lip":1,
+        "Tall cabinet recessed toe kick":1,
+        "Library hardwood front pilaster":3,
+        "Library shelf front fascia":3,
+        "Library upper molded cornice":1,
+        "Library cornice highlight":1,
+        "Student chair molded front seat roll":16,
+    }
+    for name,count in architectural_details.items():
+        assert by_name[name]==count, (
+            f"Architectural carpentry detail missing or duplicated: {name}"
+        )
+    cubby_stiles=actual_parts("Built-in walnut cubby face stile")
+    assert sorted(round(float(s[9]),2) for s in cubby_stiles)==[
+        7.50,12.0,16.50,21.0,25.50,30.0,34.50
+    ], "Built-in framed stiles no longer follow original shelf divisions"
+    assert all(abs(float(s[11])-23.53)<.03
+               and abs(float(s[7])-8.02)<.03
+               and s[4].endswith("Wood") for s in cubby_stiles), (
+        "Cabinet frame floats or uses an artificial shiny material"
+    )
+    rail_positions=sorted(round(float(s[10]),2)
+        for s in actual_parts("Built-in horizontal walnut face rail"))
+    assert rail_positions==[.76,4.20,8.25], (
+        "Open cubby rows no longer align with their dark hardwood rails"
+    )
+    cabinet_rails=actual_parts("Tall cabinet recessed panel cross rail")
+    assert all(abs(float(s[11])-20.853)<.03
+               and s[4].endswith("Wood") for s in cabinet_rails), (
+        "Photo-inspired raised cabinet doors lost their panel depth"
+    )
+    library=actual_parts("Library shelf front fascia")
+    assert sorted(round(float(s[10]),2) for s in library)==[
+        .69,3.21,6.19
+    ] and all(abs(float(s[11])-21.82)<.03 for s in library), (
+        "Original reading shelves and their frontal trim became detached"
+    )
+    molded_noses=actual_parts("Student chair molded front seat roll")
+    assert len(molded_noses)==16 and all(
+        abs(float(s[10])-1.515)<.02 and
+        abs(float(s[6])-2.16)<.03 and
+        abs(float(s[7])-.13)<.02 and
+        abs(float(s[8])-.19)<.02 and
+        s[4].endswith("SmoothPlastic") for s in molded_noses
+    ), "Child-scale molded chair seat edge returned to a blunt slab"
+    smart=only("Interactive smartboard")
+    assert smart[4].endswith("SmoothPlastic") and (
+        max(float(v) for v in smart[12:15])<.16
+    ), "Photo-grounded dark matte school smartboard became gray glass"
+    print("PHOTO_MAJOR_CARPENTRY_PASS dark_oak_joinery=44 "
+          "cabinet_bays=12 library_shelves=3 "
+          "photo_molded_chair_noses=16 matte_smartboard=true "
+          "room_footprints_unchanged=true")
+    bags=sorted([row for row in lines if row[1]=="Hanging school bag"],
+                key=lambda row:float(row[9]))
+    loops=sorted([row for row in lines if row[1]=="Backpack hanging loop"],
+                 key=lambda row:float(row[9]))
+    hooks=sorted([row for row in lines if row[1]=="Metal coat hook"],
+                 key=lambda row:float(row[9]))
+    for bag,loop,hook in zip(bags,loops,hooks):
+        assert abs(float(bag[9])-float(hook[9])) < .03, "Backpack drifted off its coat hook"
+        assert abs(float(loop[9])-float(hook[9])) < .03, "Bag hanger does not meet coat hook"
+        assert abs(float(loop[10])-float(hook[10])) <= .18, "Bag handle floats below its hook"
+        assert abs(float(bag[10])-9.62) < .03, "Backpack slipped from child-scale mounting height"
+        assert abs(float(bag[11])-25.40) < .03, "Backpack protrudes into the classroom walkway"
+        assert abs(float(bag[6])-1.16)<.03 and abs(float(bag[7])-2.10)<.03, (
+            "Rounded backpack body or height changed unexpectedly"
+        )
+        assert "Ball" not in bag[3], "Rejected ellipsoid/backpack balloon returned"
+    for label in ("Hanging school bag",
+                  "Hanging school bag center",
+                  "Hanging school bag rounded corner"):
+        for row in (item for item in lines if item[1]==label):
+            assert str(row[4]).endswith("Fabric"), (
+                f"Backpack panel {label} is plastic, not textile fabric"
+            )
+    label=only("Cubbies label")
+    lower_edge=float(label[10])-float(label[7])/2
+    artwork_top=9.6+4.8/2
+    bag_top=9.62+2.10/2
+    assert float(label[6])<=19.1 and float(label[7])<=1.0, (
+        "Oversized front-floating cubby sign returned"
+    )
+    assert 12.45 <= lower_edge < 13.0, (
+        f"Storage sign obscures lower backpacks or conflicts with wall: {lower_edge:.2f}"
+    )
+    assert lower_edge > max(artwork_top,bag_top)+.25, (
+        "Storage motto overlaps student art, coat hooks or backpacks"
+    )
+    assert float(label[11])>26.0, "Cubbie sign protrudes into the classroom"
+    print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
+          f"material=Fabric handle_mount_gap=.07 sign_lower_edge={lower_edge:.2f}")
+    # Reading-corner clearance comes from ACTUAL Luau-created geometry.
+    # Cylinder Parts are modeled along their local X axis and then rotated:
+    # blindly reading Size.X as a world-space width underestimates a rotated
+    # upholstered pouf by almost 3 studs. Project the complete transform.
+    def world_span(entry, axis):
+        size=[float(v) for v in entry[6:9]]
+        matrix=[float(v) for v in entry[15:24]]
+        return sum(abs(matrix[axis*3+i])*size[i] for i in range(3))
+
+    # Photo-supported classroom features take priority over speculative
+    # pastel upholstered seats. Keep the authenticated reading furniture,
+    # sun/cloud/letter artwork and established classroom layout intact.
+    absent=("Corduroy floor pouf","Soft seat cushion",
+            "Soft fabric button","Fabric seat piping")
+    assert all(by_name[name]==0 for name in absent), (
+        "Unverified pink/blue poufs returned to obscure the alphabet carpet"
+    )
+    # Overhead visual evidence shows the formerly separate display stand
+    # physically obscured part of the authentic rug. It has no photo-backed
+    # floor position. Five authored face-out books are instead housed on
+    # the existing middle reading shelf. Never delete or copy the books.
+    assert by_name["Child-height book display shelf"]==0 and (
+        by_name["Story rack leg"]==0
+    ), "Unsupported freestanding story rack returned onto the alphabet rug"
+    middle_shelves=[r for r in lines if r[1]=="Reading shelf"
+                    and abs(float(r[10])-3.20)<.025]
+    assert len(middle_shelves)==1 and (
+        abs(float(middle_shelves[0][11])-23.30)<.025
+    ), "Original middle reading shelf missing"
+    assert by_name["Illustrated storybook cover"]==5, (
+        "Five face-out books were lost during story rack removal"
+    )
+    # v70 native iPhone 10-13s: the player saw five blank cream page backs.
+    # Layer all five colored covers/illustrations toward the real +Z aisle
+    # while keeping the physical white pages behind them (same book centers).
+    pages=sorted((r for r in lines if r[1]=="Storybook page edges"),
+                 key=lambda r:float(r[9]))
+    covers=sorted((r for r in lines if r[1]=="Illustrated storybook cover"),
+                  key=lambda r:float(r[9]))
+    illustrations=sorted((r for r in lines if r[1]=="Storybook illustration backing"),
+                         key=lambda r:float(r[9]))
+    bands=sorted((r for r in lines if r[1]=="Storybook title band"),
+                 key=lambda r:float(r[9]))
+    assert len(pages)==len(covers)==len(illustrations)==len(bands)==5, (
+        "Five recognizable physical library book covers lost"
+    )
+    assert [round(float(p[9]),2) for p in pages]==(
+        [-27.0,-25.5,-24.0,-22.5,-21.0]
+    ), "Storybook positions no longer follow the existing library shelf"
+    shelf_top=float(middle_shelves[0][10])+float(middle_shelves[0][7])/2
+    cover_colors=set()
+    illustration_colors=set()
+    for page,cover,illustration,band in zip(pages,covers,illustrations,bands):
+        # The real player approaches from the negative-Z aisle. Prevent
+        # another row of blank white book backs from passing geometry checks.
+        cover_color=tuple(round(float(v),3) for v in cover[12:15])
+        illustration_color=tuple(round(float(v),3)
+                                 for v in illustration[12:15])
+        cover_colors.add(cover_color)
+        illustration_colors.add(illustration_color)
+        assert min(cover_color)<.80 and (
+            min(illustration_color)<.83
+        ), "Storybook returned to a featureless white/cream cover"
+        assert abs(float(page[9])-float(cover[9]))<.03, (
+            "Book cover detached from its physical white pages"
+        )
+        assert -.19<float(cover[11])-float(page[11])<-.11, (
+            "Colored front cover is behind the cream pages at library aisle"
+        )
+        assert 22.24<float(page[11])<22.46 and (
+            abs(float(page[10])-4.18)<.025
+        ), "Face-out books returned to the middle of the carpet"
+        support_clearance=float(page[10])-world_span(page,1)/2-shelf_top
+        assert .02<=support_clearance<=.14, (
+            f"Storybook floats off or clips through its shelf: gap={support_clearance:.3f}"
+        )
+        # On the middle bookcase, the aisle is toward negative-Z.
+        # Source-derived cover normals, not UI screenshots, prove direction.
+        outward=[-float(cover[i]) for i in (17,20,23)]
+        assert outward[2]<-.94, (
+            "Storybook's front cover no longer faces the classroom aisle"
+        )
+        def forward_depth(part):
+            return sum((float(part[i])-float(cover[i]))*outward[j]
+                       for j,i in enumerate((9,10,11)))
+        assert -.19<forward_depth(page)<-.11, (
+            "Book pages are no longer physically behind colored cover"
+        )
+        assert .045<forward_depth(illustration)<.090, (
+            "Physical artwork no longer projects in front of book cover"
+        )
+        assert .055<forward_depth(band)<.105, (
+            "Storybook title band is hidden behind cover face"
+        )
+    assert len(cover_colors)==len(illustration_colors)==5, (
+        "Five distinctive storybook cover palettes collapsed to one flat color"
+    )
+    print("STORYBOOK_COLOR_VISIBILITY_PASS books=5 "
+          "unique_cover_colors=5 original_art_fields=5 "
+          "blank_cream_panels=0")
+    print("IPHONE_STORYBOOK_DEPTH_PASS covers=5 pages_behind=true "
+          "art_in_front=true labels_face_room=true existing_wood_shelf=true "
+          "rug_unobstructed_by_display_rack=true")
+    carpet=only("Alphabet rug")
+    assert carpet[3].endswith("Cylinder") and carpet[4].endswith("Fabric") and (
+        abs(float(carpet[9])+25)<.03 and abs(float(carpet[11])-14)<.03
+    ), "Photo-grounded blue circular rug moved or changed physical silhouette"
+    print("PHOTO_SUBTRACTIVE_READING_PASS speculative_seats=0 "
+          "alphabet_carpet_unchanged=true books_and_shelves_preserved=true")
+    # Photo-fidelity: the center sun must remain legible, not physically
+    # hidden under speculative reading seats. Use actual Luau transforms.
+    # Each modeled seat fits a circular horizontal footprint; no scene
+    # renderer, fake height or two-dimensional source-code proxy is used.
+    sun=only("Photo rug sun center")
+    sun_pos=(float(sun[9]),float(sun[11]))
+    sun_rays=[r for r in lines if r[1]=="Photo rug sun ray"]
+    assert len(sun_rays)==16, "Photographed sunburst lost its sixteen alternating rays"
+    assert all(r[3].endswith("Block") and r[4].endswith("SmoothPlastic")
+               for r in sun_rays), (
+        "Native sun rays must be elongated Blocks, not flattened Ball dots"
+    )
+    tips=[r for r in lines if r[1]=="Photo rug sun ray rounded tip"]
+    assert len(tips)==16 and all(
+        t[3].endswith("Cylinder") and t[4].endswith("SmoothPlastic")
+        and .095<=float(t[6])<=.105 and abs(float(t[18]))>.99
+        for t in tips
+    ), "Native sun-ray rounded ends must be horizontal Cylinders"
+    ray_colors={tuple(round(float(v),3) for v in r[12:15]) for r in sun_rays}
+    assert len(ray_colors)==2, "Sunburst no longer has both orange and gold threads"
+    ray_radii=[math.hypot(float(r[9])-sun_pos[0],
+                          float(r[11])-sun_pos[1]) for r in sun_rays]
+    assert sum(1 for radius in ray_radii if 1.27<radius<1.36)==8 and (
+        sum(1 for radius in ray_radii if 1.49<radius<1.56)==8
+    ), "Sunburst no longer alternates between two petal lengths"
+    ray_angles={round(math.atan2(float(r[11])-sun_pos[1],
+                                 float(r[9])-sun_pos[0]),3) for r in sun_rays}
+    assert len(ray_angles)==16, "Sunburst rays are duplicated or stacked"
+    assert all(abs(float(r[10])-.685)<.005 and (
+        .095<=world_span(r,1)<=.105
+    ) for r in sun_rays), (
+        "Sun rays are no longer shallow, native-visible solid artwork"
+    )
+    assert all(float(r[10])-world_span(r,1)/2>=.62
+               for r in sun_rays+tips), (
+        "Sun-ray body or round tip sinks into the real rug surface"
+    )
+    long_radii=sorted(round(float(r[6]),2) for r in sun_rays)
+    assert long_radii==[.79]*8+[.94]*8 and (
+        max(float(r[8]) for r in sun_rays)<=.31
+    ), "Sun rays reverted to malformed tiny or oversized geometry"
+    for ray in sun_rays:
+        dx=float(ray[9])-sun_pos[0]
+        dz=float(ray[11])-sun_pos[1]
+        radius=math.hypot(dx,dz)
+        x_axis=[float(ray[15]),float(ray[21])]
+        assert abs((x_axis[0]*dx+x_axis[1]*dz)/radius)>.99, (
+            "Long ray axis no longer points toward the sun center"
+        )
+    print("IPHONE_NATIVE_PRIMITIVE_GEOMETRY_PASS rays=16 round_caps=16 "
+          "cloud_blocks=10 cloud_cylinders=20 all_balls_eliminated=true")
+    print("PHOTO_SUNBURST_DETAIL_PASS rays=16 solid_capsules=true "
+          "palette=orange_gold radial_distribution=true")
+    sun_outer_radius=max(
+        math.hypot(float(r[9])-sun_pos[0],float(r[11])-sun_pos[1])
+        + math.hypot(world_span(r,0),world_span(r,2))/2
+        for r in sun_rays
+    )
+    # Keep the preexisting strict radial sun-ray assertions above. The
+    # photo-verified sun and numbered clouds cannot be covered by invented
+    # poufs because the four decorative seating families are now absent.
+    assert abs(sun_pos[0]-float(carpet[9]))<.025 and (
+        abs(sun_pos[1]-float(carpet[11]))<.025
+    ), "Sun left the center of the photographed ABC carpet"
+    assert by_name["Photo rug number cloud numeral"]==10 and (
+        by_name["Photo rug number cloud lobe"]==20
+        and by_name["Reading rug alphabet border"]==26
+    ), "The real classroom sun/letter/cloud carpet lost a major landmark"
+    print("PHOTO_SUN_VISIBILITY_PASS unobstructed_by_poufs=true "
+          "sun_rays=16 numbered_clouds=10 alphabet_panels=26")
+    print("READING_NOOK_CLEARANCE_PASS speculative_seating=0 "
+          "original_library_furniture_unchanged=true")
+    book_spines=[r for r in lines if r[1]=="Reading book spine"]
+    book_labels=[r for r in lines if r[1]=="Book spine label"]
+    assert len(book_spines)==40 and len(book_labels)==40, (
+        "Keep 40 reading books and their original individual labels"
+    )
+    book_heights={round(float(r[7]),3) for r in book_spines}
+    book_widths={round(float(r[6]),3) for r in book_spines}
+    assert len(book_heights)>=5 and len(book_widths)>=4, (
+        "Repeating identical shelf-book blocks instead of varied library books"
+    )
+    for r in book_spines:
+        bottom=float(r[10])-float(r[7])/2
+        assert min(abs(bottom-.83),abs(bottom-3.38))<.025, (
+            f"Reading shelf book base is visibly floating: y={bottom:.3f}"
+        )
+    print(f"READING_BOOKCASE_VARIATION_PASS books={len(book_spines)} "
+          f"widths={len(book_widths)} heights={len(book_heights)}")
+    # The pink water bottle was a tall, visually distracting column in
+    # multiple player-eye screenshots. Audit actual built dimensions and
+    # surface contact, not merely the source string.
+    bottle=only("Emma pink water bottle")
+    shoulder=only("Water bottle tapered shoulder")
+    cap=only("Water bottle cap")
+    bottle_x,bottle_y,bottle_z=(float(bottle[i]) for i in (9,10,11))
+    height=float(bottle[6])  # Cylinder axis is local X, rotated onto world Y.
+    bottom=bottle_y-height/2
+    top=bottle_y+height/2
+    shoulder_y,shoulder_h=float(shoulder[10]),float(shoulder[6])
+    cap_y,cap_h=float(cap[10]),float(cap[7])
+    assert .78<=height<=.85 and abs(float(bottle[7])-.51)<.02, (
+        "Oversized water bottle returned"
+    )
+    assert abs(bottom-3.17)<.035, f"Bottle not supported by desktop: y={bottom:.3f}"
+    assert (shoulder_y-shoulder_h/2)<=top+.015, "Bottle shoulder floats"
+    assert (cap_y-cap_h/2)<=(shoulder_y+shoulder_h/2)+.015, (
+        "Bottle cap floats above its neck"
+    )
+    assert cap_y+cap_h/2<4.30, "Water bottle again obscures the central view"
+    assert all(abs(float(p[9])-bottle_x)<.005 and
+               abs(float(p[11])-bottle_z)<.005 for p in (shoulder,cap)), (
+        "Shoulder/cap shifted off bottle center"
+    )
+    assert abs(bottle_x-2.12)<.03 and abs(bottle_z-4.45)<.03, (
+        "Water bottle no longer stands on Emma's desk"
+    )
+    assert bottle_x+float(bottle[7])/2 < 2.86 and (
+        abs(bottle_z-4)+float(bottle[8])/2<1.90
+    ), "Water bottle extends beyond child desk"
+    print(f"EMMA_DESK_BOTTLE_GEOMETRY_PASS height={height:.2f} "
+          f"desk_gap={bottom-3.17:.2f} cap_top={cap_y+cap_h/2:.2f}")
+    # Structural contact checks for the ACTUAL Luau-created teaching desk:
+    # surfaces are measured from generated geometry, not string snippets.
+    # The 12.5 x 5.2 stud desktop at y=3.1 with .38 thickness has its
+    # usable surface at y=3.29. RoundedPanel has its thin vertical dimension
+    # in local Z, while ordinary Parts use local Y. The pencil cup is a
+    # cylinder rotated onto the world Y axis (local X is its height).
+    teacher_desk_surface=3.29
+    supported={
+        "Teacher laptop base":8,
+        "Pencil cup":6,
+        "Tissue box":7,
+        "Teacher desk wooden stationery tray":7,
+        "Teacher note paper":7,
+    }
+    for label,height_axis in supported.items():
+        item=only(label)
+        bottom=float(item[10])-float(item[height_axis])/2
+        assert abs(bottom-teacher_desk_surface)<=.035, (
+            f"Unsupported teacher workstation object {label}: "
+            f"bottom={bottom:.3f}, desktop={teacher_desk_surface:.3f}"
+        )
+        assert 18.75<=float(item[9])<=31.25 and -27.6<=float(item[11])<=-22.4, (
+            f"Teacher object {label} exceeds desktop footprint"
+        )
+    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true tray=true paper=true")
+
+    # Verify that the optional fallback silhouette update stays lightweight:
+    # two slim molded edge returns per chair, with the existing collidable
+    # chair shell and all original sixteen desks still in place.
+    assert by_name["Student chair molded side return"] == 32, (
+        "Expected exactly two subtle chair edge returns on each of 16 chairs"
+    )
+    # Ref photos show upper-back ventilation slots. Three original dark
+    # manufactured inset shapes per chair replace 8 low-value decorations:
+    # 6 handgrip roundedPanel pieces and 2 rivets. Physical/seat collision
+    # silhouettes are unchanged; no holes are cut in the current fallback.
+    assert by_name["Student chair ventilation inset"]==48, (
+        "Student chair should have three photo-guided insets on each of 16 backs"
+    )
+    for old in ("Student chair hand grip",
+                "Student chair hand grip center",
+                "Student chair hand grip rounded corner",
+                "Student chair backrest rivet"):
+        assert by_name[old]==0, "Old excess chair trim returned: "+old
+    shells=[v for v in lines if v[1]=="Student chair school back shell"]
+    insets=[v for v in lines if v[1]=="Student chair ventilation inset"]
+    assert len(shells)==16
+    matching=set()
+    for shell in shells:
+        x,y,z=(float(shell[i]) for i in (9,10,11))
+        attached=[v for v in insets if (
+            abs(float(v[9])-x)<.62 and abs(float(v[11])-z)<.30
+        )]
+        assert len(attached)==3, (
+            "Student chair ventilation insets missing or detached"
+        )
+        assert sorted(round(float(v[9])-x,2) for v in attached)==[-.54,0,.54], (
+            "Three molded ventilation insets lost their symmetric upper positions"
+        )
+        for vent in attached:
+            assert vent[3].endswith("Block") and (
+                vent[4].endswith("SmoothPlastic")
+            ), "Native iPhone's minimum-axis Ball dot regression returned"
+            assert (abs(float(vent[6])-.18)<.014 and
+                    abs(float(vent[7])-.65)<.014 and
+                    abs(float(vent[8])-.034)<.010), (
+                "Molded vent outline or shallow visual depth regressed"
+            )
+            assert .26<float(vent[10])-y<.49, (
+                "Ventilation insets moved away from upper chair back"
+            )
+            assert float(vent[5])<.03, (
+                "Chair vent became invisible by transparency"
+            )
+            matching.add(id(vent))
+    assert len(matching)==48, "Same decorative chair inset counted repeatedly"
+    print("PHOTO_CHAIR_VENTS_PASS backs=16 rear_insets=48 "
+          "native_block_insets=true photo_guided_not_real_holes=true "
+          "collision_unchanged=true mobile_parts_saved=80 native_iphone_pending")
+
+    # Visible manufactured school-desk legs must meet a finish at y=.5.
+    # The old broad foot remains an invisible collider of identical size;
+    # two open rounded steel runners and four glides now sit at floor height.
+    runners=[r for r in lines if r[1]=="Desk contoured base runner"]
+    feet=[r for r in lines if r[1]=="Desk foot"]
+    glides=[r for r in lines if r[1]=="Desk rubber glide"]
+    assert len(runners)==len(feet)==32 and len(glides)==64, (
+        "Sixteen desk bases lost their two runner/glide assemblies"
+    )
+    assert all(float(r[5])>=.99 and
+               abs(float(r[10])-.18)<.015 for r in feet), (
+        "Original collision footprint became visible or moved off geometry"
+    )
+    assert all(r[3].endswith("Cylinder") and
+               r[4].endswith("Metal") and
+               abs(float(r[10])-.60)<.02 and
+               abs(float(r[6])-3.10)<.02 and
+               abs(float(r[7])-.20)<.02
+               for r in runners), (
+        "Elementary desk runner reverted to a buried rectangular steel slab"
+    )
+    assert all(abs(float(r[10])-.59)<.02
+               and r[4].endswith("SmoothPlastic")
+               for r in glides), (
+        "Rubber desk runner glides are no longer supported on finished floor"
+    )
+    print("PHOTO_MANUFACTURED_DESK_BASE_PASS desks=16 "
+          "invisible_original_foot_colliders=32 "
+          "rounded_visible_runners=32 floor_supported_glides=64 "
+          "original_navigation_preserved=true")
+    tray_rails=[r for r in lines if r[1]=="Book tray side"]
+    assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"
+    for r in tray_rails:
+        assert "Cylinder" in r[3], "Opaque underdesk basket wall returned"
+        assert abs(float(r[6])-3.06)<.015 and float(r[7])<=.105, (
+            "Basket lip is no longer the slim 0.095-stud steel tube"
+        )
+    print("CLASSROOM_FURNITURE_SILHOUETTE_PASS chairs=16 returns=32 tray_rails=32")
+
+    # Two redundant decorative bolts per desk were deliberately removed:
+    # Room.lua already builds the desk assembly fasteners. Preserve mobile
+    # geometry by rejecting the old duplicated hardware.
+    assert by_name["Desk fixing bolt"]==0, (
+        "Repeated cosmetic desk bolts needlessly consume the mobile part budget"
+    )
+    # Test actual constructed Luau geometry, not source-coordinate snippets.
+    # The original shelf books hovered above their wire trays and the pencil
+    # cylinders floated just above the laminate.
+    underdesk_books=[r for r in lines if r[1]=="Classroom book"
+                     and 2.2<float(r[10])<2.6]
+    assert len(underdesk_books)==16, (
+        f"Missing underdesk workbooks: {len(underdesk_books)} of 16"
+    )
+    shelf_top=2.29+.085/2
+    for r in underdesk_books:
+        bottom=float(r[10])-float(r[7])/2
+        assert abs(bottom-shelf_top)<.035, (
+            f"Workbook floats above shelf: underside={bottom:.3f}"
+        )
+        assert r[3].endswith("Block") and (
+            abs(float(r[6])-2.15)<.02 and
+            abs(float(r[7])-.18)<.02 and
+            abs(float(r[8])-2.85)<.02
+        ), "Underdesk compact workbook lost its real cover size"
+        assert r[4].endswith("SmoothPlastic"), (
+            "Thin underdesk book turned into an unsuitable metal slab"
+        )
+    # Assert the executed Luau source, not merely the compact=true call:
+    # underdesk covers need 1 part, not 6 rounded-panel primitives each.
+    hidden_rounded=[r for r in lines
+        if r[1] in ("Classroom book center","Classroom book rounded corner")
+        and 2.2<float(r[10])<2.6]
+    assert not hidden_rounded, (
+        f"Redundant concealed rounded book primitives returned: {len(hidden_rounded)}"
+    )
+    shelf_pages=[r for r in lines
+        if r[1]=="Book pages" and 2.4<float(r[10])<2.7]
+    shelf_spines=[r for r in lines
+        if r[1]=="Notebook spine" and 2.4<float(r[10])<2.7]
+    assert len(shelf_pages)==len(shelf_spines)==16, (
+        "Mobile optimization removed the real underdesk book pages or spine"
+    )
+    assert all(abs(float(r[10])-2.54)<.025
+               for r in shelf_pages+shelf_spines), (
+        "Underdesk workbook pages or binding float away from cover"
+    )
+    print("MOBILE_BOOK_GEOMETRY_PASS compact_covers=16 "
+          "underdesk_rounded_corners=0 pages=16 spines=16 "
+          "rounded_desktop_books_preserved=true saved_parts=80")
+    pencils=[r for r in lines if r[1]=="Desk pencil"]
+    assert len(pencils)==16, "Missing 16 student desk pencils"
+    for r in pencils:
+        bottom=float(r[10])-float(r[7])/2
+        assert abs(bottom-3.17)<.015, (
+            f"Desk pencil floats off laminate: bottom={bottom:.3f}"
+        )
+    print("STUDENT_FURNITURE_SUPPORT_PASS books=16 pencils=16")
+
+    # Avoid converting one cheap school chair into hundreds of parts.
+    assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
+    for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
+        assert required in names, "Missing room object "+required
+    # Use an RBXMX scene with exactly the constructed physical parts.
+    root=ET.Element("roblox",{"version":"4"})
+    ET.SubElement(root,"External").text="null"
+    ET.SubElement(root,"External").text="nil"
+    model=ET.SubElement(root,"Item",{"class":"Model","referent":"RBX0"})
+    p=ET.SubElement(model,"Properties")
+    item_props(p,"Name","ABVM_CLASSROOM_SOURCE_SNAPSHOT")
+    for idx, row in enumerate(lines,1):
+        write_part(model,row,idx)
+    ET.indent(root,space="  ")
+    output.parent.mkdir(parents=True,exist_ok=True)
+    ET.ElementTree(root).write(output,encoding="utf-8",xml_declaration=True)
+    print("SNAPSHOT_OK",len(lines),"physical parts",output)
+
+if __name__ == "__main__":
+    args=argparse.ArgumentParser()
+    args.add_argument("--luau",required=True)
+    args.add_argument("--out",required=True,type=Path)
+    args.add_argument("--cutaway",action="store_true",help="Omit walls/ceiling only from visual QA snapshot")
+    opt=args.parse_args()
+    export_scene(opt.luau,opt.out,cutaway=opt.cutaway)
