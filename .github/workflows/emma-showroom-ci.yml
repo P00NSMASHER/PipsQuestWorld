@@ -186,6 +186,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Check printed notebook graphics replacing 64 micro Parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_notebook_rule_surfaces.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Execute October 10 real-hallway photo fidelity and no-collision probe
         shell: bash
         run: |
