@@ -220,6 +220,16 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "HALLWAY_CEILING_LOST"
     )
     assert len(actual_parts("Photo hall student work hanging rail"))==1
+    diamonds=actual_parts("Photo hall anonymous diamond student display")
+    assert len(diamonds)==23 and all(
+        p[4].endswith("SmoothPlastic") and
+        abs(float(p[10])-9.05)<.03 and
+        abs(float(p[11])-48.52)<.03
+        for p in diamonds
+    ), "Physical 23-paper hallway display missing or floating"
+    assert len(actual_parts("Notebook ruled line"))==0 and (
+        len(actual_parts("Notebook red margin"))==0
+    ), "64 microscopic notebook Parts unexpectedly restored"
     assert len(actual_parts("Photo hall vertical welcome plaque"))==1
     assert len(actual_parts("Photo hall rear dado cap"))==1
     assert len(actual_parts("Photo hall front dado cap"))==2
@@ -257,7 +267,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), "Side hall recess replaced with overexposed fixture"
     print("SCHOOL_CORRIDOR_FINISH_PASS long_hall=108_studs "
           "glazed_brick_facings=7 main_diffusers=5 staff_hall_preserved=true "
-          "photo_patterns_in_UI_not_physical_parts=true native_iphone_pending",flush=True)
+          "photo_schoolwork_papers=23 physical=true notebook_parts_saved=64 "
+          "native_iphone_pending",flush=True)
 
     # IMG_2903 through IMG_2910 photo anchors, without copying photos or
     # publishing personal likenesses. Validate wall and floor before
