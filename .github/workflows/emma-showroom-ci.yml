@@ -165,6 +165,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_purple_corner_chair.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Verify photographed window corner and reject collidable props
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_window_landmarks.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

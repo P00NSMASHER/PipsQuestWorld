@@ -659,7 +659,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         )
     print("PHOTO_WINDOW_CORNER_PASS distinct_banners=2 smore_pines=2 "
           "left_window_ac=1 louvers=5 control_dials=2 "
-          "glazing_unchanged=true collision_free=true")
+          "glazing_unchanged=true collision_verified_by_runtime_gate=true")
     photo_components={
         "Reading rug alphabet border":26,
         "Photo rug number cloud lobe":20,

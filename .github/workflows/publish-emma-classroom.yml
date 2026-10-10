@@ -103,6 +103,10 @@ jobs:
           # fallback chair, not a 17th student desk seat or mesh-swap target.
           python3 school/emma-classroom/showroom/audit_purple_corner_chair.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Real classroom has separate left-window S'more signage and
+          # right-window affirmation, plus the compact left-window AC.
+          python3 school/emma-classroom/showroom/audit_window_landmarks.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"
