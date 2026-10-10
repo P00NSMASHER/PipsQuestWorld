@@ -96,6 +96,21 @@ local function verify()
                 "PHOTO_WOOD_NEW_DETAIL_COLLIDES "..name)
         end
     end
+    local chart=one("Photo flipchart white housing")
+    local board=one("Photo flipchart dry erase face")
+    assert(chart.Material==Enum.Material.SmoothPlastic
+        and board.Material==Enum.Material.SmoothPlastic
+        and chart.Color.R>.85 and board.Color.R>.93,
+        "PHOTO_FLIPCHART_WHITE_FINISH_INVALID")
+    assert(#parts("Photo flipchart blue cart support")==2
+        and #parts("Photo flipchart rubber wheel")==2
+        and #parts("Photo flipchart lower blue shelf")==1
+        and #parts("Photo flipchart colored magnet")==3,
+        "PHOTO_FLIPCHART_ASSEMBLY_INCOMPLETE")
+    assert(math.abs(chart.Position.X+31)<.03
+        and math.abs(chart.Position.Z+30.8)<.03
+        and not chart.CanCollide and not board.CanCollide,
+        "PHOTO_FLIPCHART_COLLISION_OR_POSITION_INVALID")
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
         and #parts("Purple corner chair seat")==1
@@ -130,8 +145,17 @@ ok,err=pcall(verify)
 label.Text=textBefore
 assert(not ok and string.find(tostring(err),"PHOTO_WOOD_COUNTING_SEQUENCE_INVALID",1,true),
     "PHOTO_WOOD_WRONG_NUMBER_ORDER_NOT_REJECTED")
+local chart=one("Photo flipchart white housing")
+local oldMaterial=chart.Material
+chart.Material=Enum.Material.Wood
+ok,err=pcall(verify)
+chart.Material=oldMaterial
+assert(not ok and string.find(tostring(err),
+    "PHOTO_FLIPCHART_WHITE_FINISH_INVALID",1,true),
+    "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order")
+print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order flipchart")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -148,12 +172,14 @@ def main() -> None:
     markers=("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
+        "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
         assert any(line.startswith(marker) for line in r.stdout.splitlines()),marker
     for line in r.stdout.splitlines():
         if line.startswith(("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
+            "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
 if __name__=="__main__":
