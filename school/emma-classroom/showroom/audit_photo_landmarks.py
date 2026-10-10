@@ -35,6 +35,37 @@ local function signText(target)
     assert(label,"PHOTO_WOOD_STRIP_TEXT_MISSING")
     return label.Text
 end
+local function numberedStrip(target,first,last)
+    local gui=target:FindFirstChildOfClass("SurfaceGui")
+    assert(gui and gui.Face==Enum.NormalId.Front
+        and gui.SizingMode==Enum.SurfaceGuiSizingMode.FixedSize,
+        "PHOTO_WOOD_NUMBER_STRIP_SURFACE_INVALID")
+    local original=gui:FindFirstChild("Printed text")
+    assert(original and original.TextTransparency>=.99
+        and original.BackgroundTransparency>=.99,
+        "PHOTO_WOOD_TENTH_ONLY_LABEL_VISIBLE")
+    local units={}
+    for _,label in ipairs(gui:GetChildren()) do
+        if label.Name=="NumberStripUnit" then
+            table.insert(units,label)
+        end
+    end
+    local count=last-first+1
+    assert(#units==count,"PHOTO_WOOD_COUNTING_CELLS_INVALID")
+    table.sort(units,function(a,b)
+        return a.Position[1]<b.Position[1]
+    end)
+    for index,cell in ipairs(units) do
+        local expected=first+index-1
+        assert(cell:IsA("TextLabel") and
+            cell.Text==tostring(expected)
+            and cell.TextScaled and not cell.TextWrapped
+            and math.abs(cell.Position[1]-(index-1)/count)<.002
+            and math.abs(cell.Size[1]-1/count)<.002,
+            "PHOTO_WOOD_COUNTING_CELLS_INVALID")
+    end
+    return units
+end
 local function verify()
     -- Older left-wall art frames used the exact same area as the new inset.
     -- Only the three right-of-door generic art frames may remain.
@@ -89,6 +120,8 @@ local function verify()
     assert(signText(left)=="0  10  20  30  40  50  60"
         and signText(right)=="70  80  90  100  110  120",
         "PHOTO_WOOD_COUNTING_SEQUENCE_INVALID")
+    numberedStrip(left,0,60)
+    numberedStrip(right,61,120)
     assert(left.Position.X+left.Size.X/2 < -9.4
         and right.Position.X-right.Size.X/2 > 7.0,
         "PHOTO_WOOD_COUNTING_STRIP_HIDES_DOOR_OPENING")
@@ -156,6 +189,15 @@ left.CFrame=before
 assert(not ok and string.find(tostring(err),"PHOTO_WOOD_TWO_STRIPS_MISALIGNED",1,true),
     "PHOTO_WOOD_WRONG_LOCATION_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved")
+local units=numberedStrip(left,0,60)
+local oldNumber=units[12].Text
+units[12].Text="WRONG"
+ok,err=pcall(verify)
+units[12].Text=oldNumber
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WOOD_COUNTING_CELLS_INVALID",1,true),
+    "PHOTO_WOOD_MISSING_CONSECUTIVE_NUMBER_NOT_REJECTED")
+print("PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit")
 local label=left:FindFirstChildOfClass("SurfaceGui"):FindFirstChildOfClass("TextLabel")
 local textBefore=label.Text
 label.Text="0  20  10"
@@ -182,7 +224,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order panel_depth flipchart")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -200,6 +242,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
+        "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:

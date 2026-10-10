@@ -149,3 +149,16 @@ face and hands turn toward the classroom interior (+X), not into the glass.
 No Parts added, no window/curtain geometry changed, no student photographs
 stored. The independent Luau runtime now rejects moving it back to the
 teaching wall. Native phone visual acceptance remains pending.
+
+## October 10 — sequential 0–120 photo counting strip
+The actual classroom has consecutive numerical flashcards above the continuous
+dark-wood cabinetry. Previously the same two model friezes displayed only
+tenth milestones (0,10,…,120), a noticeably abbreviated classroom detail.
+The existing two SurfaceGuis now render distinct small, original **0–60**
+and **61–120** consecutive number cells, with subtly marked tens. The old
+source phrases remain hidden to preserve compatibility with the historic
+geometry/sourcing tests. This adds 121 inexpensive TextLabels but **zero
+physical Parts**; cards are static scenery and do not supply learning/test
+content. An exact-Luau negative mutation now rejects missing or out-of-order
+number cells. Independent geometric renders omit SurfaceGui text: native
+Roblox/iPhone legibility is still pending owner review.
