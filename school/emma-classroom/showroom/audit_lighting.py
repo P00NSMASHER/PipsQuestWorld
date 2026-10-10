@@ -83,8 +83,10 @@ local function profile()
             uniqueCenters[key]=true
         elseif p.Name=="Warm oak classroom floor" then
             floorCount+=1
-            assert(close(p.Reflectance,.08,.015)
-                and p.Material==Enum.Material.WoodPlanks,
+            assert(close(p.Reflectance,.10,.015)
+                and p.Material==Enum.Material.Wood
+                and p.Color.R>.30 and p.Color.R<.36
+                and p.Color.G>.20 and p.Color.G<.26,
                 "LIGHTING_FLOOR_FINISH_REGRESSION")
         end
     end
@@ -118,7 +120,23 @@ assert(not ok and string.find(tostring(err),
     "LIGHTING_NEGATIVE_DUPLICATE_NOT_REJECTED")
 print("DAYLIGHT_ADVERSARIAL_REJECTED duplicate_bloom")
 assert(profile()==6,"Lighting profile failed after adversarial restoration")
-print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect")
+-- A WoodPlanks reintroduction passed green Luau builds before native phone
+-- photos exposed oversized cartoon floor seams. Verify it now fails closed.
+local floor=nil
+for _,p in ipairs(Room.Root:GetDescendants()) do
+    if p.Name=="Warm oak classroom floor" then floor=p break end
+end
+assert(floor,"LIGHTING_MISSING_FLOOR_IN_NEGATIVE_PROBE")
+local previous= floor.Material
+floor.Material=Enum.Material.WoodPlanks
+ok,err=pcall(profile)
+floor.Material=previous
+assert(not ok and string.find(tostring(err),
+    "LIGHTING_FLOOR_FINISH_REGRESSION",1,true),
+    "LIGHTING_WOODPLANKS_REGRESSION_NOT_REJECTED")
+assert(profile()==6,"Floor profile did not recover after adverse mutation")
+print("DAYLIGHT_ADVERSARIAL_REJECTED oversized_woodplanks")
+print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect woodplanks")
 '''
 
 def main():
@@ -138,6 +156,7 @@ def main():
     for code in ("DAYLIGHT_RUNTIME_PASS",
                  "DAYLIGHT_ADVERSARIAL_REJECTED dark_gallery_override",
                  "DAYLIGHT_ADVERSARIAL_REJECTED duplicate_bloom",
+                 "DAYLIGHT_ADVERSARIAL_REJECTED oversized_woodplanks",
                  "DAYLIGHT_NEGATIVE_TESTS_PASS"):
         assert any(line.startswith(code) for line in output), (
             "Lighting acceptance evidence missing: "+code)

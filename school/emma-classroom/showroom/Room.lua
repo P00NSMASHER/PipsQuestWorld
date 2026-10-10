@@ -1467,13 +1467,16 @@ function World.build()
     applyLighting(root)
 
     -- Architectural shell.
-    -- The engine's tiled wood-plank material is more natural at phone scale.
-    -- Retire 300+ overlapping paper-thin floor boards that caused shimmer,
-    -- tiny shadow edges and too many instances for one classroom.
+    -- October 10 real-room photos and v78 native iPhone footage show that
+    -- Roblox WoodPlanks exaggerates giant seams across the activity area.
+    -- The actual classroom has tightly finished, dark varnished hardwood.
+    -- Use the native fine-grain Wood material on the SAME one-piece floor:
+    -- zero extra Parts, overlays, decals, seams or collision changes.
     local floor=part(root,"Warm oak classroom floor",Vector3.new(74,1,62),
-        CFrame.new(0,0,-4),Color3.fromRGB(95,68,47),Enum.Material.WoodPlanks)
-    -- Subtle varnished-wood response, not a mirror; photos show a dark, polished floor.
-    floor.Reflectance=.08
+        CFrame.new(0,0,-4),Color3.fromRGB(83,59,45),Enum.Material.Wood)
+    -- Mild worn-varnish sheen, not a polished mirror. True native Roblox
+    -- material/lighting confirmation must come from an iPhone screenshot.
+    floor.Reflectance=.10
 
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)

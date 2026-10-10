@@ -251,11 +251,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert wall_rgb[0]>.93 and wall_rgb[1]>.88 and .67<wall_rgb[2]<.78, (
         "Photo-grounded warm yellow walls regressed"
     )
-    assert .32<floor_rgb[0]<.43 and .22<floor_rgb[1]<.32 and floor_rgb[2]<.24, (
-        "Photo-grounded dark brown wooden floor regressed"
+    assert .30<floor_rgb[0]<.36 and .20<floor_rgb[1]<.26 and .15<floor_rgb[2]<.21, (
+        "Photo-grounded dark varnished floor color regressed"
     )
-    assert photo_floor[0][4].endswith("WoodPlanks"), (
-        "Real classroom floor is wooden, not laminate stone or generic slate"
+    assert photo_floor[0][4].endswith(".Wood"), (
+        "Photo-grounded fine-grain wood floor regressed to oversized plank seams"
     )
     # Actual Luau-built ceiling evidence, BEFORE any preview-only cutaway.
     # The supplied classroom photos show broad 2:1 recessed fluorescent

@@ -31,6 +31,17 @@ Source: `school/emma-classroom/showroom/Room.lua`, inspected PR #339 parent `d1b
 ## Fidelity confidence and what's not established
 The photographs show a cheer activity setup. They do **not** document permanent daily placement of the chairs, Smartboard, teacher equipment, easel, mats, and rugs. No real-world tape measurements, complete four-wall panoramic survey, or unoccupied purple-chair picture was supplied. The shell/world-axis mapping is the existing model's coordinate convention, **not** verified true-to-scale survey data.
 
+## October 10 next visual correction: varnished floor surface
+The owner's native phone recording shows heavily exaggerated plank joints in the game.
+The real photos show smaller, tighter, much darker polished wood boards.
+The *existing one-piece floor* changed from Roblox `WoodPlanks` to fine-grain
+`Wood`, RGB (83,59,45), reflectance 0.10. This is a photographic inference,
+not a claim of matching actual measured gloss or texture.
+No new Parts, textures, uploaded photo assets, or geometry changes.
+`audit_lighting.py` now rejects a reversion to `WoodPlanks`,
+and `export_source_scene.py` verifies the actual source material and color.
+Owner's native Roblox/iPhone visual acceptance is still required.
+
 ## Test and release gates
 - Actual Luau construction geometry and negative tests: `showroom/audit_photo_landmarks.py`.
 - Same-source Roblox build: `school/emma-showroom.project.json` / `.github/workflows/emma-showroom-ci.yml`.
