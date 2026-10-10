@@ -308,21 +308,28 @@ jobs:
           mkdir -p "$RUNNER_TEMP/photo-review"
           RHR="$RUNNER_TEMP/photo-venv/bin/rhr"
           CHECK="$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py"
-          "$RHR" scene "$RUNNER_TEMP/actual-room.rbxmx" \
-            --camera=-4,5.6,6 --look-at=-22,7.7,25 \
-            --out "$RUNNER_TEMP/photo-review/01-back-builtins.png"
-          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
-            "$RUNNER_TEMP/photo-review/01-back-builtins.png"
-          "$RHR" scene "$RUNNER_TEMP/actual-room.rbxmx" \
-            --camera=22,5,-2 --look-at=35.5,6.5,1 \
-            --out "$RUNNER_TEMP/photo-review/02-wordwall-table.png"
-          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
-            "$RUNNER_TEMP/photo-review/02-wordwall-table.png"
-          "$RHR" scene "$RUNNER_TEMP/cutaway.rbxmx" \
-            --camera=-5,35,-4 --look-at=-25,0,-3 \
-            --out "$RUNNER_TEMP/photo-review/03-rugs-cutaway.png"
-          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
-            "$RUNNER_TEMP/photo-review/03-rugs-cutaway.png"
+          # The third-party renderer can occasionally return a completely
+          # white 1920x1080 image without reporting an error. Keep the
+          # independent strict pixel gate, but retry the SAME camera once.
+          # A second blank attempt still fails; no success is fabricated.
+          render_checked() {
+            local source="$1" label="$2" eye="$3" aim="$4"
+            local image="$RUNNER_TEMP/photo-review/$label.png"
+            "$RHR" scene "$source" --camera="$eye" \
+              --look-at="$aim" --out "$image"
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              echo "FAST_PHOTO_RETRY_SAME_CAMERA $label"
+              "$RHR" scene "$source" --camera="$eye" \
+                --look-at="$aim" --out "$image"
+            fi
+            "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"
+          }
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            01-back-builtins -4,5.6,6 -22,7.7,25
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            02-wordwall-table 22,5,-2 35.5,6.5,1
+          render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
+            03-rugs-cutaway -5,35,-4 -25,0,-3
           echo "FAST_PHOTO_NONBLANK_PASS 3 source-derived views"
       - name: Write evidence manifest and compact contact sheet
         shell: bash
