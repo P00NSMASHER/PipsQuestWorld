@@ -179,6 +179,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_photo_landmarks.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Execute October 10 real-hallway photo fidelity and no-collision probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_photo.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Verify photo-grounded word wall and native-safe apple lettering
         shell: bash
         run: |
