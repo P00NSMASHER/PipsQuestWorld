@@ -1333,27 +1333,60 @@ local function buildBackDoorAndHall(root: Instance)
         CFrame.new(0,10.94,26.90),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Door transom glass",Vector3.new(10.22,1.55,.20),
         CFrame.new(0,12.05,26.70),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.30
+    -- Source-derived October 10 hallway screenshots proved that a single
+    -- opaque ten-stud Wood slab sat BEHIND each translucent "Door glass".
+    -- Transparency could never reveal the classroom. Form a REAL aperture:
+    -- the one original door Part becomes the lower solid panel; reuse the
+    -- existing two oak rails and two side stiles as the upper timber frame.
+    -- Only two slim middle crossbars and two brass pulls add physical Parts.
+    -- Keep the same open-leaf rotation, threshold and NO-COLLISION policy.
     for _,x in ipairs({-2.75,2.75}) do
-        local door=part(root,"Open classroom door",Vector3.new(4.65,10,.36),
-            CFrame.new(x,5.28,25.96)*CFrame.Angles(0,math.rad(x<0 and -48 or 48),0),
+        local leafCF=CFrame.new(x,5.28,25.96)*
+            CFrame.Angles(0,math.rad(x<0 and -48 or 48),0)
+        -- Relative bottom -5 and top -.74 of the original ten-stud door.
+        local door=part(root,"Open classroom door",Vector3.new(4.65,4.26,.36),
+            leafCF*CFrame.new(0,-2.87,0),
             Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
+        door:SetAttribute("OpenLeaf","Lower solid panel; glass aperture above")
         local glass=part(root,"Door glass",Vector3.new(2.54,4.38,.10),
-            door.CFrame*CFrame.new(0,1.42,-.22),
+            leafCF*CFrame.new(0,1.42,-.06),
             Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
         glass.Transparency=.29
-        for _,y in ipairs({-1.05,3.89}) do
-            part(root,"Glazed door solid oak rail",Vector3.new(3.0,.22,.12),
-                door.CFrame*CFrame.new(0,y,-.25),
+        glass.Reflectance=.025
+        glass.CastShadow=false
+        glass:SetAttribute("GlazedOpening","No opaque slab behind this pane")
+        -- Reuse the original two rail Parts: a lower glass sill and tall
+        -- upper timber lintel, both matching the original leaf outline.
+        for _,rail in ipairs({
+            {name="Sill",y=-.88,height=.32},
+            {name="Top",y=4.35,height=1.30},
+        }) do
+            local p=part(root,"Glazed door solid oak rail",
+                Vector3.new(4.65,rail.height,.36),
+                leafCF*CFrame.new(0,rail.y,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
+            p:SetAttribute("DoorRailType",rail.name)
         end
-        for _,dx in ipairs({-1.42,1.42}) do
-            part(root,"Glazed door oak side stile",Vector3.new(.17,4.74,.12),
-                door.CFrame*CFrame.new(dx,1.42,-.25),
+        -- Widen ONLY the existing pair of very thin side stiles. This fills
+        -- the margins outside the true glass cut-out without obscuring it.
+        for _,dx in ipairs({-1.80,1.80}) do
+            part(root,"Glazed door oak side stile",
+                Vector3.new(1.05,4.38,.36),
+                leafCF*CFrame.new(dx,1.42,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
         end
         part(root,"Door lower raised panel",Vector3.new(3.7,2.85,.10),
-            door.CFrame*CFrame.new(0,-2.72,-.24),
+            leafCF*CFrame.new(0,-2.72,-.24),
             Color3.fromRGB(142,105,73),Enum.Material.Wood,false)
+        -- Photo: wood crossbar visually separates the two glazed lights.
+        -- The clear glazing remains a full pane with thin frame in front.
+        part(root,"Glazed door glass divider",Vector3.new(2.54,.18,.14),
+            leafCF*CFrame.new(0,1.42,-.17),
+            Color3.fromRGB(121,84,54),Enum.Material.Wood,false)
+        -- Near-leaf narrow vintage pull, photo-guided but not door physics.
+        part(root,"Glazed door brass pull",Vector3.new(.14,.70,.16),
+            leafCF*CFrame.new(x<0 and 2.06 or -2.06,-.60,-.27),
+            Color3.fromRGB(181,153,103),Enum.Material.Metal,false)
     end
     sign(root,"Welcome over door","EMMA'S CLASSROOM",Vector3.new(10.7,1.20,.16),
         CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
