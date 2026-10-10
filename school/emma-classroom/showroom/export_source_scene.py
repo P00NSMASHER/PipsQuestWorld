@@ -608,15 +608,58 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
         abs(float(window_banner[10])-15.22)<.025
-    ), "Photo-specific faith motto is no longer above the actual windows"
-    assert abs(float(window_banner[11])+6.50)<.05 and (
-        37.8<=float(window_banner[8])<=38.2
-    ), "Window affirmation strip moved away from the two window bays"
+    ), "Right-window faith motto no longer follows the photographed wall"
+    assert abs(float(window_banner[11])-6)<.05 and (
+        17.40<=float(window_banner[8])<=17.60
+    ), "Right-window faith banner reverted to a single 38-stud generic strip"
     assert .95<=float(window_banner[7])<=1.20 and (
         float(window_banner[10])+float(window_banner[7])/2 < 17
-    ), "Classroom motto obstructs the acoustic ceiling or window glazing"
-    print("PHOTO_FAITH_MOTTO_GEOMETRY_PASS words=photo_grounded "
-          "windows_unobscured=true one_noncolliding_part=true")
+    ), "Classroom motto obstructs acoustic ceiling or window"
+    smore=only("Smore classroom main title")
+    smore_headline=only("Smore faith headline")
+    assert abs(float(smore[11])+19)<.025 and (
+        abs(float(smore_headline[11])+19)<.025
+    ), "S'more photo wall lost its original LEFT-window location"
+    assert float(smore[10])<float(smore_headline[10]) and (
+        14.90<float(smore[10])<15.55 and 15.90<float(smore_headline[10])<16.50
+    ), "S'more mural phrase moved below the school window or into ceiling"
+    assert by_name["Smore mural pine trunk"]==2 and (
+        by_name["Smore mural green canopy"]==4
+    ), "Distinct two-pine S'more decoration disappeared"
+    unit=only("Photo window air conditioner housing")
+    grill=only("Photo AC inset front grille")
+    assert abs(float(unit[9])+35.55)<.03 and (
+        abs(float(unit[10])-5.23)<.03
+        and abs(float(unit[11])+19)<.03
+    ), "Photo-grounded AC left the lower LEFT window"
+    assert 1.00<float(unit[6])<1.11 and (
+        1.20<float(unit[7])<1.30 and 4.70<float(unit[8])<4.90
+    ), "Window AC became an implausibly oversized box"
+    assert abs((float(unit[10])-float(unit[7])/2)-4.61)<.03, (
+        "Window AC stopped resting just above the original sill"
+    )
+    assert float(grill[9])>float(unit[9])+.50, (
+        "Window AC ventilation faces the glass instead of the room"
+    )
+    assert by_name["Photo AC horizontal vent louver"]==5 and (
+        by_name["Photo AC control dial"]==2
+        and by_name["Photo AC control fascia"]==1
+    ), "Original school window AC lost its front-facing ventilation"
+    assert all(float(v[9])>-36.2 for v in lines
+        if v[1].startswith(("Photo AC ","Photo window air conditioner"))), (
+        "AC furniture passed through the original glass pane"
+    )
+    for name in ("Classroom faith window banner","Smore faith headline",
+                 "Smore classroom main title","Photo window air conditioner housing",
+                 "Photo AC inset front grille","Photo AC horizontal vent louver",
+                 "Photo AC control fascia","Photo AC control dial",
+                 "Smore mural pine trunk","Smore mural green canopy"):
+        assert all(float(part[5])<=.01 for part in lines if part[1]==name), (
+            "Photo decorative detail became collidable: "+name
+        )
+    print("PHOTO_WINDOW_CORNER_PASS distinct_banners=2 smore_pines=2 "
+          "left_window_ac=1 louvers=5 control_dials=2 "
+          "glazing_unchanged=true collision_free=true")
     photo_components={
         "Reading rug alphabet border":26,
         "Photo rug number cloud lobe":20,

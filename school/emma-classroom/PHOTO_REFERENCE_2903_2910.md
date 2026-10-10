@@ -47,3 +47,8 @@ rather than five blank cream panels. Exact built-Luau tests enforce five
 distinctly colored book covers and illustrated fields. This does not
 establish actual Roblox Studio/iPhone acceptance and introduces no new
 physical parts or student photographs.
+
+## October 9 — distinctive window-side fidelity
+- A closer owner-provided real classroom photograph documents **JESUS LOVES YOU S'MORE**, with a pair of small green trees, above the *left* window. The separate faith affirmation appears over the other window. The previous replica spread a generic 38-stud banner across both windows; the new original low-relief lettering separates the two areas without embedding any original photos or names.
+- The photo also confirms a warm gray/beige **window-mounted air conditioner** in the lower left window. An original, noncolliding metal housing with stamped ventilation and two small control dials now rests just above the existing window sill. Both original windows, glazed openings, curtains, radiators and full room layout are preserved.
+- Window objects are a review candidate, not a measured permanent classroom architectural survey; native Roblox/iPhone visual acceptance remains pending.

@@ -948,6 +948,39 @@ local function buildWindows(root: Instance)
         -- silhouette while leaving room for higher-impact bookcover details.
         -- Fewer tiny individual Parts improves mobile replication/draw work.
         for rz=-4.95,4.95,1.1 do part(root,"Radiator fin",Vector3.new(1.48,2.7,.18),CFrame.new(-34.48,1.75,z+rz),Color3.fromRGB(201,204,196),Enum.Material.Metal,false) end
+        if z==-19 then
+            -- Real photo: compact beige window AC at the LOWER LEFT window,
+            -- just inside the opening above its original wood sill. Model a
+            -- steel enclosure and restrained stamped grille, not an oversized
+            -- block or a glowing UI. All pieces are static and noncolliding.
+            local acColor=Color3.fromRGB(213,210,193)
+            local housing=part(root,"Photo window air conditioner housing",
+                Vector3.new(1.05,1.24,4.80),
+                CFrame.new(-35.55,5.23,z),acColor,Enum.Material.Metal,false)
+            housing.Reflectance=.015
+            part(root,"Photo AC inset front grille",
+                Vector3.new(.08,.85,3.85),
+                CFrame.new(-34.975,5.29,z-.42),
+                Color3.fromRGB(155,158,152),Enum.Material.Metal,false)
+            for row=0,4 do
+                part(root,"Photo AC horizontal vent louver",
+                    Vector3.new(.05,.065,3.70),
+                    CFrame.new(-34.913,5.00+row*.145,z-.42),
+                    Color3.fromRGB(92,100,102),Enum.Material.Metal,false)
+            end
+            part(root,"Photo AC control fascia",
+                Vector3.new(.085,.85,.68),
+                CFrame.new(-34.970,5.29,z+2.0),
+                Color3.fromRGB(230,224,206),
+                Enum.Material.SmoothPlastic,false)
+            for _,y in ipairs({5.08,5.49}) do
+                cylinder(root,"Photo AC control dial",
+                    Vector3.new(.08,.18,.18),
+                    CFrame.new(-34.895,y,z+2.0)*CFrame.Angles(0,math.pi/2,0),
+                    Color3.fromRGB(82,88,91),
+                    Enum.Material.SmoothPlastic,false)
+            end
+        end
     end
     -- Warm sunlight washes the front-left classroom corner.
     local sunAnchor=part(root,"Window sun anchor",Vector3.new(.3,.3,.3),CFrame.new(-34,10,-10),Color3.new(1,1,1),Enum.Material.Neon,false);sunAnchor.Transparency=1
@@ -1406,15 +1439,41 @@ function World.build()
     for _,z in ipairs({-34.35,26.35}) do part(root,"Blue baseboard",Vector3.new(73,.72,.35),CFrame.new(0,.55,z),P.blue,Enum.Material.Wood,false) end
 
     buildWindows(root)
-    -- Photo IMG_2910: classroom-specific statement above the navy-curtained
-    -- windows. Use a single noncolliding world-space printed strip; neither
-    -- the original school photo nor any child's likeness is redistributed.
-    -- This occupies the painted wall above both existing window openings.
+    -- Photo references: the two windows do NOT share one 38-stud banner.
+    -- Near z=-19, the wall says JESUS LOVES YOU S'MORE above the left window;
+    -- near z=6, "I am a child of God. I make a difference!" is above the
+    -- other window. Preserve both photograph-backed phrases as distinct
+    -- low-relief indoor signs; no child's likeness, name or photo asset.
     local faithBanner=part(root,"Classroom faith window banner",
-        Vector3.new(.12,1.08,38.0),CFrame.new(-36.33,15.22,-6.50),
+        Vector3.new(.12,1.08,17.5),CFrame.new(-36.33,15.22,6),
         Color3.fromRGB(247,236,216),Enum.Material.SmoothPlastic,false)
     surfaceText(faithBanner,"I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         Enum.NormalId.Right,P.blue,faithBanner.Color,Enum.Font.GothamMedium)
+    local smoreTop=part(root,"Smore faith headline",
+        Vector3.new(.12,.48,11.1),CFrame.new(-36.30,16.21,-19),
+        Color3.fromRGB(247,233,184),Enum.Material.SmoothPlastic,false)
+    surfaceText(smoreTop,"JESUS LOVES YOU",Enum.NormalId.Right,
+        Color3.fromRGB(120,60,50),smoreTop.Color,Enum.Font.GothamBold)
+    local smoreTitle=part(root,"Smore classroom main title",
+        Vector3.new(.14,.84,7.9),CFrame.new(-36.28,15.39,-19),
+        Color3.fromRGB(227,190,115),Enum.Material.Wood,false)
+    surfaceText(smoreTitle,"S'MORE",Enum.NormalId.Right,
+        Color3.fromRGB(65,45,34),smoreTitle.Color,Enum.Font.GothamBold)
+    -- Two understated camping trees, not generic holiday decorations.
+    -- Tiny original wood/foliage shapes echo the photo's S'more sign.
+    for _,z in ipairs({-25.75,-12.25}) do
+        part(root,"Smore mural pine trunk",Vector3.new(.095,.65,.16),
+            CFrame.new(-36.20,15.65,z),Color3.fromRGB(108,75,49),
+            Enum.Material.Wood,false)
+        for tier=0,1 do
+            local canopy=part(root,"Smore mural green canopy",
+                Vector3.new(.10,.39,.70-tier*.18),
+                CFrame.new(-36.17,15.94+tier*.25,z),
+                Color3.fromRGB(55+tier*14,112+tier*6,66),
+                Enum.Material.Fabric,false)
+            canopy.CastShadow=false
+        end
+    end
     buildFrontWall(root)
     buildRightWall(root)
     buildTeacherDesk(root)
