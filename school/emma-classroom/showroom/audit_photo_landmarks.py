@@ -36,6 +36,13 @@ local function signText(target)
     return label.Text
 end
 local function verify()
+    -- Older left-wall art frames used the exact same area as the new inset.
+    -- Only the three right-of-door generic art frames may remain.
+    assert(#parts("Student art walnut frame")==3,
+        "PHOTO_WOOD_GALLERY_OVERLAYS_DARK_INSET")
+    for _,p in ipairs(parts("Student art walnut frame")) do
+        assert(p.Position.X>9,"PHOTO_WOOD_GALLERY_INSET_OVERLAP")
+    end
     local shelf=one("Reading shelf back")
     local cubbies=one("Cubbies wood surround")
     local inset=one("Library built-in display backing")

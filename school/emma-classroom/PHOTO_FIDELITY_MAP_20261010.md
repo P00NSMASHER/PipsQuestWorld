@@ -23,9 +23,10 @@ Source: `school/emma-classroom/showroom/Room.lua`, inspected PR #339 parent `d1b
 1. Improve **the existing left reading case**, not a duplicate freestanding cabinet. Install a shallow, dark built-in display inset above its shelves, aligned with the right cubby cabinet across the room's rear wall.
 2. Retain the real central doorway entirely; never extend dark display panels through the doorway.
 3. Put nine existing shape cards over solid wall to the doorway's left. Do not add more parts for cards.
-4. Add a small left-hand numeric strip (0–60) above the bookcase; change the existing right strip to the subsequent 70–120 range to avoid duplicate teaching numbers.
-5. Use *anonymous*, hand-authored paper rectangles, not reproduced photographs, actual students' work, names, or other personal school data.
-6. Preserve current visual style, both rugs, curtains/AC, 16 desk/chair pairs, unique provisional purple chair, doors, navigation, and <=3,100 physical parts.
+4. Retire the three old decorative left-of-door framed gallery pictures that overlay the dark notice inset; retain the three original right-of-door generic artworks. This is source cleanup, not use of real children's assignments.
+5. Add a small left-hand numeric strip (0–60) above the bookcase; change the existing right strip to the subsequent 70–120 range to avoid duplicate teaching numbers.
+6. Use *anonymous*, hand-authored paper rectangles, not reproduced photographs, actual students' work, names, or other personal school data.
+7. Preserve current visual style, both rugs, curtains/AC, 16 desk/chair pairs, unique provisional purple chair, doors, navigation, and <=3,100 physical parts.
 
 ## Fidelity confidence and what's not established
 The photographs show a cheer activity setup. They do **not** document permanent daily placement of the chairs, Smartboard, teacher equipment, easel, mats, and rugs. No real-world tape measurements, complete four-wall panoramic survey, or unoccupied purple-chair picture was supplied. The shell/world-axis mapping is the existing model's coordinate convention, **not** verified true-to-scale survey data.

@@ -160,7 +160,11 @@ end
 local function pupilWork(group:Instance)
     -- The back-wall student gallery is modeled as anonymous crayon art:
     -- no children's names, portraits, uploads, or real work are redistributed.
-    local positions={-29,-22,-15,14,21,28}
+    -- The three former left-of-door gallery frames visually buried the
+    -- photo-grounded dark built-in notice inset. Reuse that new single inset
+    -- with anonymous pinned papers instead, preserving only the original
+    -- right-of-door artwork grouping. This is a subtractive art cleanup.
+    local positions={14,21,28}
     local colors={
         Color3.fromRGB(189,205,220),Color3.fromRGB(233,196,158),
         Color3.fromRGB(184,212,185),Color3.fromRGB(226,196,202),
