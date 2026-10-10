@@ -19,10 +19,10 @@ preview publication. Never use an older live-game capture to approve later
 unpublished source. Record device orientation and approximate camera position
 for each native view; do not synthesize Roblox engine frames.
 
-The existing 21-view headless renderer and the parallel three-view camera
+The existing 21-view headless renderer and the parallel four-view camera
 provide useful geometric debugging. They **cannot** simulate Roblox native
 lighting, precise materials, SurfaceGui lettering/checkers, touch controls,
-device physics, frame-rate or photo-parity. The three-view artifact includes
+device physics, frame-rate or photo-parity. The four-view artifact includes
 a manifest with `notNativeIphoneAcceptance=true`.
 
 ## Native inspection checklist — permanent scenery
@@ -30,9 +30,15 @@ a manifest with `notNativeIphoneAcceptance=true`.
 - [ ] **Windows / AC:** Two windows with navy drapes; lower-left window AC
   is immediately recognizable; both radiators are beneath the windows.
   Wood returns, curtains and wall signs are not sunk behind the glass.
+  The original five-piece white analog clock faces into the classroom from
+  the yellow pier between the two windows, rather than the front chalkboard.
 - [ ] **Wooden built-ins:** Tall dark timber display/shelves/cubbies
   read as a coherent built-in wall. Black teaching inset, number frieze,
   high shape cards and original opening are not overlapping the doorway.
+  Do not overlay these displays with the previous oversized navy Grade 2
+  welcome banner, which is not present in the photographed wall treatment.
+  The frieze shows the consecutive **0–120** numbers (not only multiples
+  of ten), and the upper dark panel physically joins the lower wood case.
 - [ ] **Blue word wall:** Blue board is bright enough to see at child eye
   height; two rows of red A–Z apple markers and small word slips render
   legibly. The green historic **First Grade Word Wall** sign is small,

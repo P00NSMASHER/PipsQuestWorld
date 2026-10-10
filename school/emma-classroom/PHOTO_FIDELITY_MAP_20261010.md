@@ -149,3 +149,86 @@ face and hands turn toward the classroom interior (+X), not into the glass.
 No Parts added, no window/curtain geometry changed, no student photographs
 stored. The independent Luau runtime now rejects moving it back to the
 teaching wall. Native phone visual acceptance remains pending.
+
+## October 10 — sequential 0–120 photo counting strip
+The actual classroom has consecutive numerical flashcards above the continuous
+dark-wood cabinetry. Previously the same two model friezes displayed only
+tenth milestones (0,10,…,120), a noticeably abbreviated classroom detail.
+The existing two SurfaceGuis now render distinct small, original **0–60**
+and **61–120** consecutive number cells, with subtly marked tens. The old
+source phrases remain hidden to preserve compatibility with the historic
+geometry/sourcing tests. This adds 121 inexpensive TextLabels but **zero
+physical Parts**; cards are static scenery and do not supply learning/test
+content. An exact-Luau negative mutation now rejects missing or out-of-order
+number cells. Independent geometric renders omit SurfaceGui text: native
+Roblox/iPhone legibility is still pending owner review.
+
+## October 10 — recover mobile physical-part budget from teacher laptop
+The photo-fidelity scene was at 3,090/3,100 physical Parts. The existing
+decorative laptop had **40 separate tiny 3D keyboard keys** invisible at
+child-eye gameplay distance. Replaced only those keys with a single grounded,
+noncolliding keyboard face and 40 native SurfaceGui 2D keycap rectangles.
+It saves **39 physical Parts** without moving the laptop, existing space bar
+or trackpad, and no personal schoolwork/UI is introduced. The source-derived
+renderer will show a dark keyboard surface because it does not emulate
+SurfaceGuis; the native Roblox engine must be inspected before treating
+keycap fidelity as visually accepted. The exact-Luau QA checks complete
+4×10 art and rejects a dropped keycap.
+
+## October 10 — classroom floor fan (provisional event-day fixture)
+The real user-supplied classroom photograph shows a pale gray/silver portable
+fan on the teaching-wall side. Its exact **daily** floor location is unknown:
+the photo was captured during cheer activity. The draft now includes a
+static 15-Part fan silhouette near the front teaching display—weighted
+base, steel stem, translucent circular guard, three fan blades, center hub
+and six protective grille bars. It uses no external meshes, personal photos,
+scripts, or moving gameplay parts. Every part is noncolliding and can be
+removed/repositioned after native iPhone inspection. Constructed-source
+regression tests preserve the fan silhouette, orientation and accessibility.
+
+## October 10 — remove the unphotographed navy Grade 2 wall banner
+
+The completed 21-view source geometry render (commit
+`fa6b2bb6e1a5bac58ba79ab29ebf41f3569e7425`) showed a
+large dark navy 18×2.5-stud banner behind the photo-backed left
+counting strip, vertically overlapping the shape-card band. The
+owner's real classroom photographs establish a light consecutive-number
+frieze and individual colored geometry cards above the old wooden built-ins,
+**not** an extra full-width Grade 2 slogan panel in that location.
+
+Removed one speculative noncolliding Part from the existing ArtPass and left
+the original nine cards, 121 consecutive in-world number labels, trim,
+doorway and geometry untouched. A constructed-Luau mutation recreates the
+obsolete panel and must fail before merge or publication. This removal
+does not mean the real room has no grade signage elsewhere. Static
+screenshots omit most native SurfaceGui lettering; actual iPhone review
+is still required.
+
+## October 10 — native evergreen foliage on the blue word wall
+
+The real photos show a thick dark-green evergreen garland along the upper
+border of the blue word wall. Previously the 3D room contained only a
+10.8-stud thin green strip, visible as a rigid rod in the full 21-view
+source-derived camera. Retained the same original band and added **13
+noncolliding, shadowless, native Cylinder leaf tufts**, with original muted
+green color and deterministic irregular spacing/rotation. Leaves remain
+above both red-letter apple rows and below the historic green paper heading.
+They are static classroom scenery; the source photographs include identifiable
+people and are not copied into the public repo or game.
+
+The exact-source CI run measured **3,078 physical Parts**, within the 3,100
+mobile limit. The existing word-wall constructed-Luau QA now verifies
+the full foliage count, placement, color variation, visibility separation,
+and collision-safe materials; mutations must reject an interactive/collidable
+leaf or foliage dropped over the apple letters. This remains a photo-guided
+inference pending native Roblox/iPhone visual acceptance.
+
+### Rotation-aware native-foliage clearance refinement
+The initial irregular 7–14 degree leaf tilt produced an orientation-dependent
+vertical bounding box that could cover the green paper header in Roblox,
+although the naïve size-only QA passed. To keep the photo-style scalloped
+silhouette **without occluding the title or apple lettering**, tilt now varies
+only −4 to +4 degrees, and the tuft height is lowered slightly. Constructed
+Luau QA explicitly computes the world-vertical oriented-box extent from the
+CFrame rotation matrix; a deliberately exaggerated tilted tuft must fail.
+The current source is still an unapproved Roblox/iPhone visual candidate.

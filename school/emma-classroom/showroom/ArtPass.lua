@@ -68,6 +68,42 @@ local function printed(target:BasePart,words:string,face:Enum.NormalId,ink:Color
     local pad=Instance.new("UIPadding");pad.PaddingLeft=UDim.new(0,22);pad.PaddingRight=UDim.new(0,22)
     pad.PaddingTop=UDim.new(0,13);pad.PaddingBottom=UDim.new(0,13);pad.Parent=t
 end
+-- Photo-grounded cabinetry frieze: actual photographs show consecutive
+-- classroom counting numbers rather than 10-only callouts. Add original,
+-- static SurfaceGui letters to the EXISTING two wall-mounted panels; these
+-- are not schoolwork or quiz authority, and add ZERO physical Parts.
+local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
+    local gui=panel:FindFirstChildOfClass("SurfaceGui")
+    assert(gui~=nil and gui.Face==Enum.NormalId.Front,
+        "PHOTO_COUNTING_FRIEZE_SURFACE_MISSING")
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(math.floor(panel.Size.X*90),100)
+    gui.LightInfluence=.08
+    local old=gui:FindFirstChild("Printed text")
+    if old and old:IsA("TextLabel") then
+        -- Keep historic 10-step keywords as metadata for older audit callers,
+        -- but render the photographed complete consecutive sequence instead.
+        old.TextTransparency=1
+        old.BackgroundTransparency=1
+    end
+    local count=last-first+1
+    for n=first,last do
+        local cell=Instance.new("TextLabel")
+        cell.Name="NumberStripUnit"
+        cell.Text=tostring(n)
+        cell.Position=UDim2.fromScale((n-first)/count,.16)
+        cell.Size=UDim2.fromScale(1/count,.68)
+        cell.Font=Enum.Font.GothamMedium
+        cell.TextColor3=C.navy
+        cell.TextScaled=true
+        cell.TextWrapped=false
+        cell.BorderSizePixel=0
+        cell.BackgroundColor3=Color3.fromRGB(214,226,203)
+        cell.BackgroundTransparency=(n%10==0) and .16 or 1
+        cell.Parent=gui
+    end
+end
+
 local function makeGroup(parent:Instance,name:string):Folder
     local group=Instance.new("Folder");group.Name=name;group.Parent=parent;return group
 end
@@ -314,9 +350,12 @@ end
 
 local function learningWall(root:Instance)
     local group=makeGroup(root,"Morning routines and learning wall")
-    local welcome=piece(group,"Room-wide grade 2 welcome",Vector3.new(18,2.5,.18),
-        CFrame.new(-22.4,14.7,26.31),C.navy,Enum.Material.Wood,false)
-    printed(welcome,"GRADE 2  •  READ  •  WONDER  •  GROW",Enum.NormalId.Front,C.cream,C.navy)
+    -- The original 18x2.5 navy GRADE 2 banner was an invented showroom
+    -- graphic, not photographed architecture. It lay directly behind the
+    -- 0-120 teaching strip and intruded into the nine shape cards above it.
+    -- Remove ONLY that extra Part so the photo-backed pale number frieze and
+    -- colored shape cards remain distinct against the actual yellow wall.
+    -- No grade/curriculum value is inferred from historic photo signage.
     piece(group,"Daily jobs cork backing",Vector3.new(.18,6.6,9.8),
         CFrame.new(36.28,9.6,-31),C.wood,Enum.Material.Wood,false)
     piece(group,"Jobs board frame",Vector3.new(.23,7.05,10.25),
@@ -370,6 +409,7 @@ local function learningWall(root:Instance)
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(leftNumbers,"0  10  20  30  40  50  60",
         Enum.NormalId.Front,C.navy,leftNumbers.Color)
+    consecutiveNumberStrip(leftNumbers,0,60)
     piece(group,"Library counting strip top rail",
         Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
         C.blue,Enum.Material.Wood,false)
@@ -381,6 +421,7 @@ local function learningWall(root:Instance)
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(numberLine,"70  80  90  100  110  120",
         Enum.NormalId.Front,C.navy,numberLine.Color)
+    consecutiveNumberStrip(numberLine,61,120)
     piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
         CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
     piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),

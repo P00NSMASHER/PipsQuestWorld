@@ -52,7 +52,7 @@ local UDim={new=function(...) return {...} end}
 local UDim2={new=function(...) return {...} end,fromScale=function(...) return {...} end,fromOffset=function(...)return {...}end}
 local Vector2={new=function(...)return {...}end}
 local methods={}
-local instanceMeta={__index=function(t,k) if k=="Position" then return t.props.CFrame.Position end;if methods[k] then return methods[k] end;if t.props[k]~=nil then return t.props[k] end;return methods.FindFirstChild(t,k) end,__newindex=function(t,k,v)
+local instanceMeta={__index=function(t,k) if k=="Position" then return t.props.Position or t.props.CFrame.Position end;if methods[k] then return methods[k] end;if t.props[k]~=nil then return t.props[k] end;return methods.FindFirstChild(t,k) end,__newindex=function(t,k,v)
     if k=="Parent" then
         local old=t.props.Parent
         if old then local n=table.find(old.children,t);if n then table.remove(old.children,n) end end
