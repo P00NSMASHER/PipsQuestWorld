@@ -138,3 +138,14 @@ cornice. No new physical Parts, no moved doors or desks, and no schoolwork
 photos. The constructed-Luau test explicitly rejects a repeat of the old
 four-stud rearward panel offset. Exact room dimensions remain approximate;
 Roblox/iPhone visual parity still requires native review.
+
+## October 10 — window-pier school clock correction
+The supplied classroom photographs show the small analog white clock mounted
+between the two broad navy-curtained windows. The old source mistakenly
+placed the complete five-piece clock assembly over the front chalkboard.
+The existing clock, rim, dial, and two hands are now mounted on the yellow
+inter-window pier (model x≈-36.38, y≈11.60, z≈-6.50). The native Cylinder
+face and hands turn toward the classroom interior (+X), not into the glass.
+No Parts added, no window/curtain geometry changed, no student photographs
+stored. The independent Luau runtime now rejects moving it back to the
+teaching wall. Native phone visual acceptance remains pending.

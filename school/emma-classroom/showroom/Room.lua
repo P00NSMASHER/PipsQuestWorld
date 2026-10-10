@@ -1666,12 +1666,27 @@ function World.build()
     -- Lived-in details.
     plant(root,-31,.1,20,.85)
     plant(root,-30,8.2,-29,.55)
-    -- Small wall clock.
-    local clock=cylinder(root,"Classroom wall clock",Vector3.new(.25,3.2,3.2),CFrame.new(31.5,15.1,-34)*CFrame.Angles(0,math.pi/2,0),Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
-    cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),clock.CFrame,Color3.fromRGB(61,63,63),Enum.Material.Metal,false)
-    cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),clock.CFrame*CFrame.new(-.22,0,0),Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
-    part(root,"Clock minute hand",Vector3.new(.12,1.25,.12),CFrame.new(31.5,15.55,-33.78)*CFrame.Angles(0,0,math.rad(-20)),Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
-    part(root,"Clock hour hand",Vector3.new(.12,.85,.12),CFrame.new(31.5,15.25,-33.75)*CFrame.Angles(0,0,math.rad(45)),Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
+    -- Actual classroom photo: the analog white clock hangs on the broad
+    -- yellow WALL PIER between the two navy-curtained windows, not over
+    -- the front chalkboard. Reuse the existing FIVE Parts with no new clock
+    -- assets or physical footprint. A Roblox Cylinder faces along local X;
+    -- the window-side pier faces positive world X into the classroom.
+    local clock=cylinder(root,"Classroom wall clock",
+        Vector3.new(.25,3.2,3.2),CFrame.new(-36.38,11.60,-6.50),
+        Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
+    cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),
+        clock.CFrame,Color3.fromRGB(61,63,63),Enum.Material.Metal,false)
+    cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),
+        clock.CFrame*CFrame.new(.22,0,0),
+        Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
+    -- Clock hands project toward +X and rotate in the Y/Z clock-face
+    -- plane, rather than burying themselves in the wall or facing a window.
+    part(root,"Clock minute hand",Vector3.new(.12,1.25,.12),
+        CFrame.new(-36.05,11.92,-6.53)*CFrame.Angles(math.rad(-22),0,0),
+        Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
+    part(root,"Clock hour hand",Vector3.new(.12,.85,.12),
+        CFrame.new(-36.03,11.77,-6.72)*CFrame.Angles(math.rad(48),0,0),
+        Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
     -- Warm fluorescent lighting.
     for _,x in ipairs({-18,18}) do
