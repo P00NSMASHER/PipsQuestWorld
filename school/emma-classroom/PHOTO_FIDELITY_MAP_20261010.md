@@ -185,3 +185,21 @@ and six protective grille bars. It uses no external meshes, personal photos,
 scripts, or moving gameplay parts. Every part is noncolliding and can be
 removed/repositioned after native iPhone inspection. Constructed-source
 regression tests preserve the fan silhouette, orientation and accessibility.
+
+## October 10 — remove the unphotographed navy Grade 2 wall banner
+
+The completed 21-view source geometry render (commit
+`fa6b2bb6e1a5bac58ba79ab29ebf41f3569e7425`) showed a
+large dark navy 18×2.5-stud banner behind the photo-backed left
+counting strip, vertically overlapping the shape-card band. The
+owner's real classroom photographs establish a light consecutive-number
+frieze and individual colored geometry cards above the old wooden built-ins,
+**not** an extra full-width Grade 2 slogan panel in that location.
+
+Removed one speculative noncolliding Part from the existing ArtPass and left
+the original nine cards, 121 consecutive in-world number labels, trim,
+doorway and geometry untouched. A constructed-Luau mutation recreates the
+obsolete panel and must fail before merge or publication. This removal
+does not mean the real room has no grade signage elsewhere. Static
+screenshots omit most native SurfaceGui lettering; actual iPhone review
+is still required.

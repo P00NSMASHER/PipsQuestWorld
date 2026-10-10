@@ -67,6 +67,13 @@ local function numberedStrip(target,first,last)
     return units
 end
 local function verify()
+    -- The photo shows counting labels directly on the yellow wall below
+    -- the colored shape cards, not a giant extra navy grade-wide poster.
+    -- The old 18x2.5 panel occupied y=13.45..15.95 and obscured the actual
+    -- number strip's vertical neighborhood at y=14.55. Removal is
+    -- SUBTRACTIVE: do not replace it with another unverified wall display.
+    assert(#parts("Room-wide grade 2 welcome")==0,
+        "PHOTO_WOOD_UNVERIFIED_GRADE_BANNER_RETURNED")
     -- Older left-wall art frames used the exact same area as the new inset.
     -- Only the three right-of-door generic art frames may remain.
     assert(#parts("Student art walnut frame")==3,
@@ -258,6 +265,19 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WOOD_COUNTING_CELLS_INVALID",1,true),
     "PHOTO_WOOD_MISSING_CONSECUTIVE_NUMBER_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit")
+local obsolete=Instance.new("Part")
+obsolete.Name="Room-wide grade 2 welcome"
+obsolete.Size=Vector3.new(18,2.5,.18)
+obsolete.CFrame=CFrame.new(-22.4,14.7,26.31)
+obsolete.Anchored=true
+obsolete.CanCollide=false
+obsolete.Parent=Room.Root
+ok,err=pcall(verify)
+obsolete:Destroy()
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WOOD_UNVERIFIED_GRADE_BANNER_RETURNED",1,true),
+    "PHOTO_WOOD_GRADE_BANNER_REINTRODUCTION_NOT_REJECTED")
+print("PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner")
 local label=left:FindFirstChildOfClass("SurfaceGui"):FindFirstChildOfClass("TextLabel")
 local textBefore=label.Text
 label.Text="0  20  10"
@@ -308,7 +328,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart laptop fan")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth grade_banner flipchart laptop fan")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -327,6 +347,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
+        "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",

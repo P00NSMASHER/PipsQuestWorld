@@ -350,9 +350,12 @@ end
 
 local function learningWall(root:Instance)
     local group=makeGroup(root,"Morning routines and learning wall")
-    local welcome=piece(group,"Room-wide grade 2 welcome",Vector3.new(18,2.5,.18),
-        CFrame.new(-22.4,14.7,26.31),C.navy,Enum.Material.Wood,false)
-    printed(welcome,"GRADE 2  •  READ  •  WONDER  •  GROW",Enum.NormalId.Front,C.cream,C.navy)
+    -- The original 18x2.5 navy GRADE 2 banner was an invented showroom
+    -- graphic, not photographed architecture. It lay directly behind the
+    -- 0-120 teaching strip and intruded into the nine shape cards above it.
+    -- Remove ONLY that extra Part so the photo-backed pale number frieze and
+    -- colored shape cards remain distinct against the actual yellow wall.
+    -- No grade/curriculum value is inferred from historic photo signage.
     piece(group,"Daily jobs cork backing",Vector3.new(.18,6.6,9.8),
         CFrame.new(36.28,9.6,-31),C.wood,Enum.Material.Wood,false)
     piece(group,"Jobs board frame",Vector3.new(.23,7.05,10.25),
