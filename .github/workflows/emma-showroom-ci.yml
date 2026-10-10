@@ -193,6 +193,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_literacy_wall.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Check photo-grounded gingham table pattern, colliders and walkways
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_checkered_table.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

@@ -90,3 +90,21 @@ collision-free placement. Two small wheels plus one lower shelf are added; the
 three old star details become modest colored magnets, and event writing is
 not reproduced. The portable board's daily location is **unverified**; do
 not move it to its cheer-day photo coordinates without native owner review.
+
+## October 10 — word-wall checked table, original procedural textile
+New wide photos show a small **red-and-ivory gingham-covered classroom table**
+below the large blue apple word wall. Its exact usual floor coordinates are
+not verified because the photos were taken during a cheer event. The model
+therefore adds an owner-review candidate below the known word-wall plane,
+outside the existing 16 student desk footprints.
+
+The tabletop and four thin hanging aprons use an **original checkered
+SurfaceGui** composed from colored Roblox Frames (no photo, decal ID, or
+commercial fabric texture). There is one tabletop, four steel legs and four
+fabric apron Parts: **nine additional physical Parts**, under the strict
+3,100-part mobile limit. The aprons are non-colliding; the tabletop and
+four legs are intentionally collidable. The independent headless 3D renderer
+omits SurfaceGuis, so its screenshots will show plain ivory and must not
+be accepted as evidence of checked-pattern fidelity. Native Roblox/iPhone
+inspection is still required. Added constructed-Luau tests for five
+correctly faced pattern surfaces, support, desk clearance and mutations.

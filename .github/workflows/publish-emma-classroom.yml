@@ -112,6 +112,8 @@ jobs:
             --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_literacy_wall.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_checkered_table.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_word_wall_native.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"

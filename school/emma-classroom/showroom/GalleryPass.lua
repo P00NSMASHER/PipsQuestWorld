@@ -54,6 +54,42 @@ local function printFace(target:BasePart,face:Enum.NormalId,title:string,small:s
     return gui
 end
 
+-- Native SurfaceGui gingham, drawn as alternating original colored Frames.
+-- This uses no photographs, uploaded texture IDs, or hundreds of physical
+-- voxel checks. The independently rendered static preview cannot display
+-- SurfaceGui pixels; visual sign-off requires an actual Roblox phone capture.
+local function gingham(face:BasePart,side:Enum.NormalId,columns:number,rows:number)
+    local gui=Instance.new("SurfaceGui")
+    gui.Name="PhotoGingham"
+    gui.Face=side
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.LightInfluence=.3
+    local width=(side==Enum.NormalId.Left or side==Enum.NormalId.Right)
+        and face.Size.Z or face.Size.X
+    local height=(side==Enum.NormalId.Top) and face.Size.Z or face.Size.Y
+    gui.CanvasSize=Vector2.new(math.floor(width*72),math.floor(height*72))
+    gui.Parent=face
+    local backing=Instance.new("Frame")
+    backing.Name="GinghamIvory"
+    backing.Size=UDim2.fromScale(1,1)
+    backing.BackgroundColor3=Color3.fromRGB(249,242,229)
+    backing.BorderSizePixel=0
+    backing.Parent=gui
+    for r=0,rows-1 do
+        for c=0,columns-1 do
+            if (r+c)%2==0 then
+                local check=Instance.new("Frame")
+                check.Name="GinghamRed"
+                check.Size=UDim2.fromScale(1/columns,1/rows)
+                check.Position=UDim2.fromScale(c/columns,r/rows)
+                check.BackgroundColor3=Color3.fromRGB(173,58,60)
+                check.BorderSizePixel=0
+                check.Parent=backing
+            end
+        end
+    end
+end
+
 local function framedPoster(group:Instance,name:string,x:number,y:number,z:number,w:number,h:number,title:string,caption:string,face:Enum.NormalId)
     local side=face==Enum.NormalId.Left
     local frameSize=side and Vector3.new(.32,h+.35,w+.35) or Vector3.new(w+.35,h+.35,.26)
@@ -137,6 +173,47 @@ local function showcaseBoards(root:Instance,group:Instance)
                 Enum.Material.SmoothPlastic,false)
         end
     end
+
+    -- A visually distinctive photographed landmark: the red/ivory checked
+    -- teaching/supply table below the blue word wall. Its *daily* exact
+    -- position remains provisional because photographs show a cheer event.
+    -- Keep it against the confirmed word-wall side, well away from the
+    -- existing x=20 student desks. Decorative fabric aprons never collide.
+    local center=Vector3.new(33.2,2.92,1.0)
+    local ivory=Color3.fromRGB(249,242,229)
+    local metal=Color3.fromRGB(116,120,121)
+    local top=piece(group,"Photo gingham word wall table top",
+        Vector3.new(4.2,.22,7.6),CFrame.new(center),
+        ivory,Enum.Material.SmoothPlastic,true)
+    gingham(top,Enum.NormalId.Top,6,10)
+    for _,dx in ipairs({-1.71,1.71}) do
+        for _,dz in ipairs({-3.32,3.32}) do
+            piece(group,"Photo gingham table steel leg",
+                Vector3.new(.16,2.30,.16),
+                CFrame.new(center.X+dx,1.67,center.Z+dz),
+                metal,Enum.Material.Metal,true)
+        end
+    end
+    local left=piece(group,"Photo gingham table aisle apron",
+        Vector3.new(.07,1.24,7.54),
+        CFrame.new(center.X-2.065,2.21,center.Z),
+        ivory,Enum.Material.Fabric,false)
+    gingham(left,Enum.NormalId.Left,10,3)
+    local right=piece(group,"Photo gingham table wall apron",
+        Vector3.new(.07,1.24,7.54),
+        CFrame.new(center.X+2.065,2.21,center.Z),
+        ivory,Enum.Material.Fabric,false)
+    gingham(right,Enum.NormalId.Right,10,3)
+    local near=piece(group,"Photo gingham table near apron",
+        Vector3.new(4.10,1.24,.07),
+        CFrame.new(center.X,2.21,center.Z-3.745),
+        ivory,Enum.Material.Fabric,false)
+    gingham(near,Enum.NormalId.Front,6,3)
+    local far=piece(group,"Photo gingham table far apron",
+        Vector3.new(4.10,1.24,.07),
+        CFrame.new(center.X,2.21,center.Z+3.745),
+        ivory,Enum.Material.Fabric,false)
+    gingham(far,Enum.NormalId.Back,6,3)
 
     local smart=root:FindFirstChild("Interactive smartboard")
     if smart and smart:IsA("BasePart") then
