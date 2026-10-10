@@ -364,6 +364,16 @@ jobs:
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             06-hall-paper-rail 0,5.5,34 -36,9,48.52
           echo "FAST_PHOTO_NONBLANK_PASS 6 source-derived views"
+      - name: Require real visible diagonal paper silhouettes in hallway screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_papers.py --self-test
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
+            "$RUNNER_TEMP/photo-review/06-hall-paper-rail.png"
+
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
