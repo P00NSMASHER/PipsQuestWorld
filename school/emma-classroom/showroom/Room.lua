@@ -698,19 +698,113 @@ local function buildReadingCorner(root:Instance)
             Vector3.new(18.48,.23,.23),CFrame.new(-22,y,21.81),
             caseFace,Enum.Material.Wood,false)
     end
-    -- Three intentionally anonymous paper specimens. The supplied event
-    -- photos contain real children's work; that text/art is NOT reproduced.
-    for i,x in ipairs({-27.4,-22.0,-16.6}) do
-        local papers={
-            Color3.fromRGB(235,232,216),Color3.fromRGB(220,231,225),
-            Color3.fromRGB(232,225,219),
-        }
-        part(root,"Library built-in anonymous paper",
-            Vector3.new(2.85,2.05,.045),CFrame.new(x,10.05,21.73),
-            papers[i],Enum.Material.SmoothPlastic,false)
+    -- PHOTO: the dark noticeboard is not three sparse identical white
+    -- rectangles. It contains a distinctive tall RED pocket chart on the
+    -- left and clustered small pastel classroom papers on the right.
+    -- Reuse the SAME three flat paper Parts + three heading Parts. Their
+    -- native SurfaceGui artwork depicts only original, anonymous stationery.
+    -- Never reproduce children's names, graded work, photos or exact texts.
+    local notices={
+        {x=-27.4,y=9.55,w=3.12,h=3.30,
+            tone=Color3.fromRGB(163,52,58),
+            stripe=Color3.fromRGB(244,220,180)},
+        {x=-22.0,y=9.95,w=3.38,h=2.52,
+            tone=Color3.fromRGB(234,222,194),
+            stripe=Color3.fromRGB(103,147,147)},
+        {x=-16.6,y=9.65,w=3.05,h=2.78,
+            tone=Color3.fromRGB(216,228,211),
+            stripe=Color3.fromRGB(139,166,117)},
+    }
+    for i,spec in ipairs(notices) do
+        local paper=part(root,"Library built-in anonymous paper",
+            Vector3.new(spec.w,spec.h,.045),
+            CFrame.new(spec.x,spec.y,21.73),spec.tone,
+            Enum.Material.SmoothPlastic,false)
+        paper.CastShadow=false
         part(root,"Library built-in paper heading",
-            Vector3.new(2.05,.12,.03),CFrame.new(x,10.64,21.68),
-            Color3.fromRGB(117,146,157),Enum.Material.SmoothPlastic,false)
+            Vector3.new(2.05,.12,.03),
+            CFrame.new(spec.x,spec.y+spec.h/2-.34,21.68),
+            spec.stripe,Enum.Material.SmoothPlastic,false)
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="AnonymousNoticeArt"
+        gui.Face=Enum.NormalId.Front
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(420,430)
+        gui.LightInfluence=.12
+        gui.Parent=paper
+        local layout=Instance.new("Frame")
+        layout.Name="NoticeArtLayout"
+        layout.Size=UDim2.fromScale(1,1)
+        layout.BackgroundTransparency=1
+        layout.BorderSizePixel=0
+        layout.Parent=gui
+        if i==1 then
+            -- Red teacher pocket organizer; 3 tiers × 2 anonymous slips.
+            -- Native UI Frames are much lighter than 6 miniature Parts.
+            for row=0,2 do
+                for col=0,1 do
+                    local slip=Instance.new("Frame")
+                    slip.Name="PocketChartCard"
+                    slip.Size=UDim2.fromScale(.35,.145)
+                    slip.Position=UDim2.fromScale(.09+col*.46,.20+row*.235)
+                    slip.BackgroundColor3=(row+col)%2==0
+                        and Color3.fromRGB(246,241,216)
+                        or Color3.fromRGB(219,226,218)
+                    slip.BackgroundTransparency=0
+                    slip.BorderSizePixel=0
+                    slip.Parent=layout
+                    local line=Instance.new("Frame")
+                    line.Name="PocketChartLine"
+                    line.Size=UDim2.fromScale(.69,.075)
+                    line.Position=UDim2.fromScale(.15,.41)
+                    line.BackgroundColor3=Color3.fromRGB(114,139,140)
+                    line.BackgroundTransparency=0
+                    line.BorderSizePixel=0
+                    line.Parent=slip
+                end
+            end
+        else
+            -- Uneven, layered original color worksheets/picture cards:
+            -- same deliberate "busy elementary classroom" silhouette as
+            -- the photos without transcribing any real pupil's work.
+            local swatches={
+                Color3.fromRGB(250,247,232),
+                Color3.fromRGB(233,231,219),
+                Color3.fromRGB(238,224,211),
+                Color3.fromRGB(223,233,229),
+            }
+            for j=1,4 do
+                local card=Instance.new("Frame")
+                card.Name="AnonymousPinboardCard"
+                card.Position=UDim2.fromScale(
+                    .08+((j-1)%2)*.46,.16+math.floor((j-1)/2)*.38)
+                card.Size=UDim2.fromScale(j%2==0 and .37 or .41,.29)
+                card.BackgroundColor3=swatches[(j+i-2)%#swatches+1]
+                card.BackgroundTransparency=0
+                card.BorderSizePixel=0
+                card.Parent=layout
+                local marker=Instance.new("Frame")
+                marker.Name="AnonymousColorHeading"
+                marker.Position=UDim2.fromScale(.12,.17)
+                marker.Size=UDim2.fromScale(.67,.12)
+                marker.BackgroundColor3=(j%2==0)
+                    and Color3.fromRGB(151,181,166)
+                    or Color3.fromRGB(184,151,121)
+                marker.BackgroundTransparency=0
+                marker.BorderSizePixel=0
+                marker.Parent=card
+                for n=1,2 do
+                    local rule=Instance.new("Frame")
+                    rule.Name="AnonymousPaperRule"
+                    rule.Position=UDim2.fromScale(.12,.39+n*.15)
+                    rule.Size=UDim2.fromScale(n==1 and .72 or .57,.05)
+                    rule.BackgroundColor3=Color3.fromRGB(175,178,170)
+                    rule.BackgroundTransparency=0
+                    rule.BorderSizePixel=0
+                    rule.Parent=card
+                end
+            end
+        end
     end
 
     -- Spines use staggered sizes and restrained classroom-library colors,

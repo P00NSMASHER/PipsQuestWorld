@@ -302,3 +302,29 @@ evergreen garland, position of frame trim, and table under the new board.
 A negative test rejects reinstating the undersized 11.2-stud board. CI
 headless render cannot certify native Roblox/iPhone color, lettering or
 gingham textures; final owner visual sign-off still required.
+
+## October 10 — red pocket organizer and fuller black noticeboard
+
+The owner-provided cheer-day classroom photographs show the tall dark inset
+above the aged wooden bookcase filled with a distinctive vertical **red
+classroom pocket chart** on the left and clustered, varied paper/word displays
+to its right. The prior 21-camera Roblox source-derived render showed three
+identical blank, floating off-white sheets with enormous black gaps.
+
+This targeted pass **reuses the exact three existing physical paper Parts,
+their three heading strips and the black noticeboard**. The left paper
+is now a taller brick-red pocket organizer with six anonymous pale insert
+slips; the middle/right panels have different pale paper colors, varied
+sizes, original little color headings and four abstract tiny paper cards
+each. All smaller detail is generated with native Roblox
+`SurfaceGui`/`Frame` primitives; no new `BasePart`, private student
+data, photographs, assignments, `ImageLabel`, external texture asset ID,
+scripts or gameplay UI. Existing bookcases, 17 upper shape cards, complete
+0–120 counting strip, entrance and all desk/rug coordinates remain fixed.
+
+A constructed-Luau QA assertion checks the brick-red physical chart,
+three varied sheets and precisely six pocket inserts/eight anonymous
+pinboard mini-cards. Mutations fail closed if the chart returns to beige or
+one insert goes missing. Because the independent static renderer omits
+`SurfaceGui`, its photographic proof is limited to the larger red 3D
+chart/sheet silhouette. Native Roblox/iPhone visibility remains pending.

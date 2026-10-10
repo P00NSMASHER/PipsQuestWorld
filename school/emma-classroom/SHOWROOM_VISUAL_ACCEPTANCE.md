@@ -40,6 +40,9 @@ a manifest with `notNativeIphoneAcceptance=true`.
   The colorful shape-card band reaches both wooden cabinetry groups
   without crossing the real central doorway. The original right-hand
   picture shapes must be readable on actual iPhone.
+  The upper dark display contains a visible vertical red pocket-chart
+  organizer and varied anonymous school papers; it should not look like
+  three identical blank cards. All smaller slips are child-scale and legible.
   The frieze shows the consecutive **0–120** numbers (not only multiples
   of ten), and the upper dark panel physically joins the lower wood case.
 - [ ] **Blue word wall:** The enlarged blue board is a dominant wall
