@@ -1,0 +1,131 @@
+name: Emma Classroom Fast Photo Review
+
+# Pull-request triggered and manually dispatchable. Never scheduled.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-showroom.project.json'
+      - 'school/emma-classroom/showroom/**'
+      - '.github/workflows/emma-showroom-fast-visual.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fast-geometry-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout real PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact source
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+          echo "FAST_PHOTO_SOURCE_PASS sha=$EXPECTED_SOURCE_SHA"
+      - name: Install checksum-verified Luau and static renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          mkdir -p luau
+          unzip -q luau.zip -d luau
+          chmod +x luau/luau
+          python3 -m venv "$RUNNER_TEMP/photo-venv"
+          "$RUNNER_TEMP/photo-venv/bin/pip" install \
+            --disable-pip-version-check --pre \
+            'roblox-headless-renderer==1.0.0rc1' 'Pillow==11.3.0'
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            "$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py" --self-test
+      - name: Construct complete and cutaway original Luau room
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/actual-room.rbxmx"
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/cutaway.rbxmx" --cutaway
+          test -s "$RUNNER_TEMP/actual-room.rbxmx"
+          test -s "$RUNNER_TEMP/cutaway.rbxmx"
+      - name: Capture three fixed full-geometry viewpoints
+        shell: bash
+        env:
+          RHR_CACHE_DIR: ${{ runner.temp }}/rhr-fast-cache
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/photo-review"
+          RHR="$RUNNER_TEMP/photo-venv/bin/rhr"
+          CHECK="$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py"
+          "$RHR" scene "$RUNNER_TEMP/actual-room.rbxmx" \
+            --camera=-4,5.6,6 --look-at=-22,7.7,25 \
+            --out "$RUNNER_TEMP/photo-review/01-back-builtins.png"
+          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
+            "$RUNNER_TEMP/photo-review/01-back-builtins.png"
+          "$RHR" scene "$RUNNER_TEMP/actual-room.rbxmx" \
+            --camera=22,5,-2 --look-at=35.5,6.5,1 \
+            --out "$RUNNER_TEMP/photo-review/02-wordwall-table.png"
+          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
+            "$RUNNER_TEMP/photo-review/02-wordwall-table.png"
+          "$RHR" scene "$RUNNER_TEMP/cutaway.rbxmx" \
+            --camera=-5,35,-4 --look-at=-25,0,-3 \
+            --out "$RUNNER_TEMP/photo-review/03-rugs-cutaway.png"
+          "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" \
+            "$RUNNER_TEMP/photo-review/03-rugs-cutaway.png"
+          echo "FAST_PHOTO_NONBLANK_PASS 3 source-derived views"
+      - name: Write evidence manifest and compact contact sheet
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/photo-venv/bin/python" - <<'PY'
+          import os,hashlib,json
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
+          names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway")
+          out=Image.new("RGB",(1000,1060),(244,244,240))
+          draw=ImageDraw.Draw(out)
+          files=[]
+          for i,name in enumerate(names):
+              path=root/(name+".png")
+              img=Image.open(path).convert("RGB")
+              w,h=img.size
+              img.thumbnail((970,310))
+              out.paste(img,((1000-img.width)//2,i*350+25))
+              draw.text((12,i*350+4),name,fill=(38,42,47))
+              files.append({"camera":name,"originalWidth":w,"originalHeight":h,
+                  "sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
+          out.save(root/"contact-sheet.jpg",quality=86)
+          manifest={"sourceSha":os.environ["SOURCE_SHA"],
+              "evidence":"source-derived static third-party renderer",
+              "notNativeRoblox":True,
+              "notNativeIphoneAcceptance":True,
+              "doesNotRenderSurfaceGuiTextOrGingham":True,
+              "referencePhotographsOfPeopleExcluded":True,
+              "files":files}
+          (root/"manifest.json").write_text(
+              json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
+          print("FAST_PHOTO_CONTACT_SHEET_PASS")
+          PY
+      - name: Preserve whatever real images were produced
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-fast-photo-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/photo-review/
+          retention-days: 14
+          if-no-files-found: warn
