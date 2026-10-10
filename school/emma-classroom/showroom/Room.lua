@@ -1222,6 +1222,7 @@ local function buildFrontWall(root: Instance)
         frame.Position=UDim2.fromScale(.485,.085)
         frame.Size=UDim2.fromScale(.445,.48)
         frame.BackgroundColor3=Color3.fromRGB(249,248,239)
+        frame.BackgroundTransparency=0
         frame.BorderSizePixel=0
         frame.Parent=surface
         local fieldRound=Instance.new("UICorner")
@@ -1248,6 +1249,7 @@ local function buildFrontWall(root: Instance)
             body.Position=UDim2.fromScale(.12,.30)
         end
         body.BackgroundColor3=iconColors[i]
+        body.BackgroundTransparency=0
         body.BorderSizePixel=0
         body.Parent=frame
         local bodyRound=Instance.new("UICorner")
@@ -1265,6 +1267,7 @@ local function buildFrontWall(root: Instance)
             accent.BackgroundColor3=Color3.fromRGB(251,233,154)
             accent.Position=UDim2.fromScale(.61,.44)
         end
+        accent.BackgroundTransparency=0
         accent.BorderSizePixel=0
         accent.Parent=frame
         local accentRound=Instance.new("UICorner")
