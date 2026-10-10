@@ -70,3 +70,13 @@ actual Roblox capture before visual approval.
 - Same-source Roblox build: `school/emma-showroom.project.json` / `.github/workflows/emma-showroom-ci.yml`.
 - Source-only rendered rear-wall camera in `.github/workflows/emma-showroom-visual-preview.yml`; headless colors do not prove native Roblox.
 - A human must review real iPhone screenshots against the source photographs before final visual acceptance. Keep PR #339 draft; no automated final publish or curriculum modifications.
+
+## October 10 — teaching-wall literacy/frieze
+The original cheer-day photographs reveal a navy handwriting/alphabet banner
+and individual sound/letter picture cards above the teaching surface. This
+pass replaces one dominant generic wall slogan with a **decorative** lowercase
+alphabet strip (original serif font, native Roblox asset) and enriches the
+same 26 preexisting alphabet Parts using clearer uppercase/lowercase labels
+and original generic example words. No new physical Parts, school photographs,
+private student work, quiz data or game UI. Native Roblox/iPhone legibility
+must still be reviewed; the examples are not source-governed school material.

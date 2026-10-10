@@ -186,6 +186,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_word_wall_native.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Verify photo-inspired handwriting and 26 phonics cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_literacy_wall.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Exercise furniture activation and transactional rollback in Luau
         shell: bash
         run: |

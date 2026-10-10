@@ -1133,12 +1133,57 @@ local function buildFrontWall(root: Instance)
     -- Cross, motto, alphabet strip and classroom values from the target concept.
     part(root,"Classroom cross vertical",Vector3.new(1,4.8,.45),CFrame.new(32,10,-33.9),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
     part(root,"Classroom cross horizontal",Vector3.new(3.5,1,.45),CFrame.new(32,10.7,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
-    sign(root,"Light banner","LET YOUR LIGHT SHINE  •  MATTHEW 5:16",Vector3.new(29,2.0,.2),CFrame.new(-6,15.0,-33.85),Color3.fromRGB(248,239,213),Color3.fromRGB(78,65,48))
-    local letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    -- Photographed chalkboard: a dark-blue handwritten alphabet frieze
+    -- and 26 small phonics cards, not a generic giant slogan.
+    -- Reuse EXACTLY 27 existing physical Parts. These original example words
+    -- are purely scenery, NOT a teacher's curriculum or children's work.
+    local banner=part(root,"Handwriting alphabet strip",
+        Vector3.new(29,1.45,.2),CFrame.new(-6,15.0,-33.85),
+        Color3.fromRGB(43,75,111),Enum.Material.SmoothPlastic,false)
+    local writing=surfaceText(banner,
+        "a b c d e f g h i j k l m n o p q r s t u v w x y z",
+        Enum.NormalId.Back,P.cream,banner.Color,Enum.Font.Garamond)
+    writing.Name="HandwritingSequence"
+    writing.TextWrapped=false
+    local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local examples={
+        "apple","ball","cat","dog","egg","fish","goat","hat","igloo",
+        "jam","kite","leaf","moon","nest","owl","pig","queen","rain",
+        "sun","tree","umbrella","violin","whale","x-ray","yarn","zebra",
+    }
+    local palettes={
+        Color3.fromRGB(224,238,227),Color3.fromRGB(240,228,209),
+        Color3.fromRGB(220,232,240),Color3.fromRGB(239,220,218),
+    }
     for i=1,26 do
         local x=-31.2+(i-1)*2.38
-        local tile=part(root,"Alphabet tile",Vector3.new(2.15,1.4,.18),CFrame.new(x,13.4,-33.78),i%2==0 and Color3.fromRGB(228,231,226) or Color3.fromRGB(213,225,229),Enum.Material.SmoothPlastic,false)
-        surfaceText(tile,string.sub(letters,i,i)..string.lower(string.sub(letters,i,i)),Enum.NormalId.Back,P.blue,tile.Color,Enum.Font.GothamBold)
+        local tint=palettes[(i-1)%#palettes+1]
+        local tile=part(root,"Alphabet tile",
+            Vector3.new(2.15,1.4,.18),CFrame.new(x,13.4,-33.78),
+            tint,Enum.Material.SmoothPlastic,false)
+        local letter=string.sub(alphabet,i,i)
+        local big=surfaceText(tile,letter..string.lower(letter),
+            Enum.NormalId.Back,P.blue,tint,Enum.Font.GothamBold)
+        big.Name="PhonicsLetter"
+        big.Size=UDim2.fromScale(1,.64)
+        big.BackgroundTransparency=1
+        big.TextWrapped=false
+        local surface=big.Parent
+        if surface and surface:IsA("SurfaceGui") then
+            surface.CanvasSize=Vector2.new(260,170)
+            surface.LightInfluence=.08
+        end
+        local word=Instance.new("TextLabel")
+        word.Name="PhonicsExample"
+        word.Text=examples[i]
+        word.Font=Enum.Font.GothamMedium
+        word.TextColor3=Color3.fromRGB(52,69,81)
+        word.BackgroundTransparency=1
+        word.Position=UDim2.fromScale(.04,.67)
+        word.Size=UDim2.fromScale(.92,.28)
+        word.TextScaled=true
+        word.TextWrapped=false
+        word.Parent=surface
     end
 end
 
