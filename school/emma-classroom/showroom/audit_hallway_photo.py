@@ -139,7 +139,16 @@ end
 assert(paper==23,"PHOTO_HALL_ORIGINAL_DIAMOND_SHEETS_LOST")
 assert(#pieces("Photo hall anonymous diamond student display")==0,
     "PHOTO_HALL_PAPERS_MUST_NOT_WASTE_PHYSICAL_PARTS")
-one("Photo hall vertical welcome plaque")
+local welcome=one("Photo hall vertical welcome plaque")
+local letters=gui(welcome,"Stacked WELCOME lettering",Enum.NormalId.Back)
+local expectedWelcome={"W","E","L","C","O","M","E"}
+local actual=letters:GetChildren()
+assert(#actual==7,"PHOTO_HALL_WELCOME_NOT_STACKED")
+for i,letter in ipairs(expectedWelcome) do
+    assert(actual[i].Name=="Vertical school welcome letter"
+        and actual[i].Text==letter,
+        "PHOTO_HALL_WELCOME_LETTER_SEQUENCING")
+end
 local ceiling=one("Photo hall ivory ceiling")
 assert(not ceiling.CanCollide and ceiling.Size.X>=108,
     "PHOTO_HALL_CEILING_NOT_ENCLOSED")
