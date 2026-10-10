@@ -139,9 +139,34 @@ local function showcaseBoards(root:Instance,group:Instance)
         piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,11.6),
             CFrame.new(36.03,y,1),C.oak,Enum.Material.Wood,false)
     end
+    -- The real photo has a dense evergreen garland, not one flat painted
+    -- bar. Keep the original 10.8-stud green structural band, and add only
+    -- thirteen small native Cylinder foliage tufts at the TOP of the board.
+    -- They have uneven sizes/leans and multiple subdued green tones. None
+    -- overlaps the apple-letter row at y=10.13 or the paper title above.
+    -- No mesh assets, school images, scripts or gameplay are introduced.
     piece(group,"Word wall green garland",Vector3.new(.10,.15,10.8),
         CFrame.new(35.96,10.41,1),Color3.fromRGB(50,95,62),
-        Enum.Material.Fabric,false)
+        Enum.Material.SmoothPlastic,false)
+    local evergreen={
+        Color3.fromRGB(39,81,53),Color3.fromRGB(54,102,62),
+        Color3.fromRGB(42,92,58),Color3.fromRGB(66,106,68),
+    }
+    for i=0,12 do
+        local offset=((i*7)%5-2)*.037
+        local y=10.66+((i*3)%4)*.012
+        local z=-4.10+i*.84+offset
+        local sizeY=.29+((i*5)%4)*.013
+        local sizeZ=.83+((i*3)%4)*.07
+        local leaf=piece(group,"Word wall evergreen garland tuft",
+            Vector3.new(.13,sizeY,sizeZ),
+            CFrame.new(35.83,y,z)*
+                CFrame.Angles(math.rad((i%5-2)*7),0,0),
+            evergreen[(i%#evergreen)+1],
+            Enum.Material.SmoothPlastic,false)
+        leaf.Shape=Enum.PartType.Cylinder
+        leaf.CastShadow=false
+    end
     -- Illustrative word-wall signage; NOT curriculum, names or answer keys.
     local words={"and","are","draw","friend","house",
         "love","from","they","happy","play",

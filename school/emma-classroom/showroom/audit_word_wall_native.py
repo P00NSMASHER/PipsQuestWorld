@@ -48,6 +48,44 @@ local function check()
     assert(titleFrame and titleFrame.Face==Enum.NormalId.Left
         and heading and heading.Text=="FIRST GRADE\nWORD WALL",
         "PHOTO_WORD_WALL_TITLE_TEXT_INVALID")
+    -- The photographed top edge is a dark leafy evergreen garland.
+    -- It must be visually raised, naturally varied, noncolliding and
+    -- unobtrusive to both the apple row and the heading above.
+    local backbone=parts("Word wall green garland")
+    local foliage=parts("Word wall evergreen garland tuft")
+    assert(#backbone==1 and #foliage==13,
+        "PHOTO_WORD_WALL_GARLAND_COUNT_INVALID")
+    assert(backbone[1].Material==Enum.Material.SmoothPlastic
+        and backbone[1].Anchored and not backbone[1].CanCollide,
+        "PHOTO_WORD_WALL_GARLAND_BACKBONE_INVALID")
+    local minZ,maxZ=math.huge,-math.huge
+    local colors={}
+    for _,p in ipairs(foliage) do
+        assert(p.Shape==Enum.PartType.Cylinder
+            and p.Material==Enum.Material.SmoothPlastic
+            and p.Anchored and not p.CanCollide
+            and not p.CanTouch and not p.CanQuery
+            and not p.CastShadow,
+            "PHOTO_WORD_WALL_GARLAND_COLLISION_OR_SHAPE_INVALID")
+        assert(math.abs(p.Position.X-35.83)<.03
+            and p.Position.Y>10.61 and p.Position.Y<10.72
+            and p.Position.Z>-4.3 and p.Position.Z<6.3,
+            "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME")
+        assert(p.Position.Y-p.Size.Y/2>10.47
+            and p.Position.Y+p.Size.Y/2<title.Position.Y-title.Size.Y/2,
+            "PHOTO_WORD_WALL_GARLAND_OBSCURES_LETTERS_OR_TITLE")
+        assert(p.Size.X>=.10 and p.Size.Y>=.28
+            and p.Size.Z>.80 and p.Size.Z<1.15,
+            "PHOTO_WORD_WALL_GARLAND_DENSITY_INVALID")
+        minZ=math.min(minZ,p.Position.Z)
+        maxZ=math.max(maxZ,p.Position.Z)
+        colors[string.format("%.2f",p.Color.G)]=true
+    end
+    assert(maxZ-minZ>9.7,
+        "PHOTO_WORD_WALL_GARLAND_TOO_SHORT")
+    local paletteSize=0
+    for _ in pairs(colors) do paletteSize+=1 end
+    assert(paletteSize>=3,"PHOTO_WORD_WALL_GARLAND_UNIFORM_TONE")
     local markers=parts("Word wall apple")
     local stems=parts("Word wall apple stem")
     assert(#markers==26 and #stems==26,
@@ -84,11 +122,11 @@ local function check()
         and #parts("Window glass")==2
         and #parts("Student desk top")==16,
         "PHOTO_WORD_WALL_CLASSROOM_REGRESSION")
-    return board,markers
+    return board,markers,foliage
 end
-local board,markers=check()
+local board,markers,foliage=check()
 print("PHOTO_WORD_WALL_RUNTIME_PASS blue_smooth=true "
-    .."native_cylinder_apples=26 rows=2 no_collisions=true ")
+    .."native_cylinder_apples=26 rows=2 garland_tufts=13 no_collisions=true ")
 local material=board.Material
 board.Material=Enum.Material.Fabric
 local ok,err=pcall(check)
@@ -117,8 +155,24 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WORD_WALL_TITLE_TEXT_INVALID",1,true),
     "PHOTO_WORD_WALL_GENERIC_TITLE_NOT_REJECTED")
 print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading")
+local previously=foliage[1].CanCollide
+foliage[1].CanCollide=true
+ok,err=pcall(check)
+foliage[1].CanCollide=previously
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WORD_WALL_GARLAND_COLLISION_OR_SHAPE_INVALID",1,true),
+    "PHOTO_WORD_WALL_COLLIDING_GARLAND_NOT_REJECTED")
+print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED collidable_garland")
+local oldPosition=foliage[1].CFrame
+foliage[1].CFrame=CFrame.new(35.83,10.10,foliage[1].Position.Z)
+ok,err=pcall(check)
+foliage[1].CFrame=oldPosition
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME",1,true),
+    "PHOTO_WORD_WALL_GARLAND_COVERING_APPLES_NOT_REJECTED")
+print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED low_garland")
 check()
-print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading")
+print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading garland_collide garland_position")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -136,6 +190,8 @@ def main() -> None:
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED fabric_backing",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED flattened_ball",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading",
+                   "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED collidable_garland",
+                   "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED low_garland",
                    "PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS"):
         assert any(x.startswith(marker) for x in result.stdout.splitlines()),marker
     for line in result.stdout.splitlines():

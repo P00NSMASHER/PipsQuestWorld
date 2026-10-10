@@ -203,3 +203,22 @@ obsolete panel and must fail before merge or publication. This removal
 does not mean the real room has no grade signage elsewhere. Static
 screenshots omit most native SurfaceGui lettering; actual iPhone review
 is still required.
+
+## October 10 — native evergreen foliage on the blue word wall
+
+The real photos show a thick dark-green evergreen garland along the upper
+border of the blue word wall. Previously the 3D room contained only a
+10.8-stud thin green strip, visible as a rigid rod in the full 21-view
+source-derived camera. Retained the same original band and added **13
+noncolliding, shadowless, native Cylinder leaf tufts**, with original muted
+green color and deterministic irregular spacing/rotation. Leaves remain
+above both red-letter apple rows and below the historic green paper heading.
+They are static classroom scenery; the source photographs include identifiable
+people and are not copied into the public repo or game.
+
+The source's physical-part count should rise from 3,066 to **3,079** (still
+below the 3,100 limit). The existing word-wall constructed-Luau QA now verifies
+the full foliage count, placement, color variation, visibility separation,
+and collision-safe materials; mutations must reject an interactive/collidable
+leaf or foliage dropped over the apple letters. This remains a photo-guided
+inference pending native Roblox/iPhone visual acceptance.
