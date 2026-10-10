@@ -133,18 +133,57 @@ assert(count>=300,"PHOTO_HALL_BRICK_DETAIL_TOO_SPARSE "..count)
 expect("Photo hall rear dado cap",1)
 expect("Photo hall front dado cap",2)
 expect("Photo hall student work hanging rail",1)
-local paperUI=gui(rear,"Anonymous rotated schoolwork",Enum.NormalId.Front)
-local paper=0
-for _,p in ipairs(paperUI:GetChildren()) do
-    if p.Name=="Photo hall anonymous diamond paper" then
-        assert(p.Rotation==45 and #p:GetChildren()==3,
-            "PHOTO_HALL_PAPER_NOT_ANONYMOUS_DIAMOND")
-        paper+=1
+-- The six photographs show real white paper hanging as diagonals.
+-- Previous UI-only paper rendered as a completely bare wall in the
+-- original camera captures. Require 23 dimensional NONCOLLIDING Parts.
+local sheets=expect("Photo hall anonymous diamond student display",23)
+table.sort(sheets,function(a,b)return a.Position.X<b.Position.X end)
+local function checkSheets()
+    for i,p in ipairs(sheets) do
+        local m=p.CFrame.m
+        assert(math.abs(p.Position.X-((i-12)*3.55))<.045
+            and near(p.Position.Y,9.05) and near(p.Position.Z,48.52),
+            "PHOTO_HALL_PAPER_POSITION_OR_SPACING_INVALID")
+        assert(math.abs(m[1]-.7071068)<.04
+            and math.abs(m[2]+.7071068)<.04
+            and math.abs(m[4]-.7071068)<.04
+            and p.Size.X>1.8 and p.Size.Y>2.1,
+            "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY")
+        assert(not p.CanCollide and p.CanQuery==false
+            and p.CastShadow==true
+            and p.Material==Enum.Material.SmoothPlastic,
+            "PHOTO_HALL_PAPER_PHYSICAL_COLLISION_OR_MATERIAL")
+        assert(p:GetAttribute("OriginalStudentData")==false
+            and p:GetAttribute("Source")=="Anonymous original paper artwork",
+            "PHOTO_HALL_PRIVATE_STUDENT_ASSIGNMENT_FORBIDDEN")
+        local g=gui(p,"Anonymous paper pencil strokes",Enum.NormalId.Front)
+        assert(#g:GetChildren()==3,
+            "PHOTO_HALL_ANONYMOUS_PENCIL_GUIDELINES_LOST")
+        for _,line in ipairs(g:GetChildren()) do
+            assert(line.Name=="Invented pale handwritten guideline",
+                "PHOTO_HALL_PERSONAL_DATA_PUBLISHED")
+        end
     end
 end
-assert(paper==23,"PHOTO_HALL_ORIGINAL_DIAMOND_SHEETS_LOST")
-assert(#pieces("Photo hall anonymous diamond student display")==0,
-    "PHOTO_HALL_PAPERS_MUST_NOT_WASTE_PHYSICAL_PARTS")
+checkSheets()
+local bad=sheets[1]
+local collide=bad.CanCollide
+bad.CanCollide=true
+local ok,err=pcall(checkSheets)
+bad.CanCollide=collide
+assert(not ok and string.find(tostring(err),
+    "PHOTO_HALL_PAPER_PHYSICAL_COLLISION_OR_MATERIAL",1,true),
+    "PHOTO_HALL_COLLIDABLE_SHEET_REGRESSION_NOT_REJECTED")
+print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED collider")
+local oldCF=bad.CFrame
+bad.CFrame=CFrame.new(-39.05,9.05,48.52)
+ok,err=pcall(checkSheets)
+bad.CFrame=oldCF
+assert(not ok and string.find(tostring(err),
+    "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY",1,true),
+    "PHOTO_HALL_FLAT_SHEET_REGRESSION_NOT_REJECTED")
+print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED rotation")
+checkSheets()
 local welcome=one("Photo hall vertical welcome plaque")
 local letters=gui(welcome,"Stacked WELCOME lettering",Enum.NormalId.Back)
 local expectedWelcome={"W","E","L","C","O","M","E"}
@@ -187,7 +226,7 @@ end
 assert(notices==1,"PHOTO_HALL_FAR_ANNOUNCEMENT_LOST")
 print("HALLWAY_SOURCE_PROBE_PASS rear_corridor=108_studs "
     .."tile_grid=25x6 bond_tiles="..count
-    .." paper_diamonds=23 frosted_oak_doors=2 "
+    .." physical_paper_diamonds=23 frosted_oak_doors=2 "
     .."in_game_children_identifiable=none native_iPhone_review_pending=true")
 '''
 
