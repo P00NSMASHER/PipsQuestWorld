@@ -42,6 +42,17 @@ No new Parts, textures, uploaded photo assets, or geometry changes.
 and `export_source_scene.py` verifies the actual source material and color.
 Owner's native Roblox/iPhone visual acceptance is still required.
 
+## October 10 phone-visible dark-ceiling defect and candidate fix
+The October 10 iPhone video shows nearly black, vertically grooved ceiling
+panels, unlike the real white acoustic suspended ceiling in the school
+photographs. The existing 30 inset parts were `Fabric` and the ten thin
+grid bars were metallic, despite bright source RGB. The candidate retains
+all 30 tiles, ten bars, positions, six fluorescent diffusers and unchanged
+lighting schedule, but assigns the tiles and grid native
+`SmoothPlastic` with near-white colors to avoid cloth grooves and dark
+metallic overhead response. Exact Luau constructor checks reject the old
+Fabric/Metal regression; *actual new native iPhone rendering is still pending*.
+
 ## Test and release gates
 - Actual Luau construction geometry and negative tests: `showroom/audit_photo_landmarks.py`.
 - Same-source Roblox build: `school/emma-showroom.project.json` / `.github/workflows/emma-showroom-ci.yml`.

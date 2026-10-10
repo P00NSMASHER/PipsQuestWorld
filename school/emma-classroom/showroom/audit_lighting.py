@@ -70,6 +70,8 @@ local function profile()
         "LIGHTING_GRADE_REGRESSION")
     local lightCount=0
     local floorCount=0
+    local ceilingTiles=0
+    local ceilingGrid=0
     local uniqueCenters={}
     for _,p in ipairs(Room.Root:GetDescendants()) do
         if p.Name=="Frosted fluorescent diffuser" then
@@ -81,6 +83,20 @@ local function profile()
             local key=tostring(p.Position.X)..","..tostring(p.Position.Z)
             assert(not uniqueCenters[key],"LIGHTING_DUPLICATE_CEILING_LIGHT")
             uniqueCenters[key]=true
+        elseif p.Name=="Acoustic ceiling inset tile" then
+            ceilingTiles+=1
+            assert(p.Material==Enum.Material.SmoothPlastic
+                and p.Color.R>.90 and p.Color.G>.90
+                and p.Position.Y>17.70 and p.Position.Y<17.76
+                and p.CanCollide==false and p.CastShadow==false,
+                "LIGHTING_DARK_GROOVED_CEILING_REGRESSION")
+        elseif p.Name=="Ceiling grid line" or p.Name=="Ceiling grid cross" then
+            ceilingGrid+=1
+            assert(p.Material==Enum.Material.SmoothPlastic
+                and p.Color.R>.86 and p.Color.G>.86
+                and p.Position.Y>17.66 and p.Position.Y<17.74
+                and not p.CanCollide,
+                "LIGHTING_DARK_GRID_REGRESSION")
         elseif p.Name=="Warm oak classroom floor" then
             floorCount+=1
             assert(close(p.Reflectance,.10,.015)
@@ -90,7 +106,8 @@ local function profile()
                 "LIGHTING_FLOOR_FINISH_REGRESSION")
         end
     end
-    assert(lightCount==6 and floorCount==1,
+    assert(lightCount==6 and floorCount==1
+        and ceilingTiles==30 and ceilingGrid==10,
         "LIGHTING_ROOM_FIXTURE_COUNT_REGRESSION")
     return lightCount
 end
@@ -136,7 +153,23 @@ assert(not ok and string.find(tostring(err),
     "LIGHTING_WOODPLANKS_REGRESSION_NOT_REJECTED")
 assert(profile()==6,"Floor profile did not recover after adverse mutation")
 print("DAYLIGHT_ADVERSARIAL_REJECTED oversized_woodplanks")
-print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect woodplanks")
+-- Fail closed against the original visually proven dark Fabric tile shader,
+-- rather than accepting a misleading high-RGB value alone.
+local tile=nil
+for _,p in ipairs(Room.Root:GetDescendants()) do
+    if p.Name=="Acoustic ceiling inset tile" then tile=p break end
+end
+assert(tile,"LIGHTING_MISSING_CEILING_TILE")
+local tileMaterial=tile.Material
+tile.Material=Enum.Material.Fabric
+ok,err=pcall(profile)
+tile.Material=tileMaterial
+assert(not ok and string.find(tostring(err),
+    "LIGHTING_DARK_GROOVED_CEILING_REGRESSION",1,true),
+    "LIGHTING_FABRIC_CEILING_REGRESSION_NOT_REJECTED")
+assert(profile()==6,"Ceiling profile did not recover after adverse mutation")
+print("DAYLIGHT_ADVERSARIAL_REJECTED dark_fabric_ceiling")
+print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect woodplanks fabric_ceiling")
 '''
 
 def main():
@@ -157,6 +190,7 @@ def main():
                  "DAYLIGHT_ADVERSARIAL_REJECTED dark_gallery_override",
                  "DAYLIGHT_ADVERSARIAL_REJECTED duplicate_bloom",
                  "DAYLIGHT_ADVERSARIAL_REJECTED oversized_woodplanks",
+                 "DAYLIGHT_ADVERSARIAL_REJECTED dark_fabric_ceiling",
                  "DAYLIGHT_NEGATIVE_TESTS_PASS"):
         assert any(line.startswith(code) for line in output), (
             "Lighting acceptance evidence missing: "+code)

@@ -257,6 +257,22 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert photo_floor[0][4].endswith(".Wood"), (
         "Photo-grounded fine-grain wood floor regressed to oversized plank seams"
     )
+    # Actual constructed scene: photo ceiling is 30 white smooth-tile insets
+    # with pale painted T-bars, not native Fabric shading dark plank grooves.
+    ceiling_tiles=actual_parts("Acoustic ceiling inset tile")
+    ceiling_grid=actual_parts("Ceiling grid line")+actual_parts("Ceiling grid cross")
+    assert len(ceiling_tiles)==30 and len(ceiling_grid)==10, (
+        "Photo ceiling tile count or T-bar layout regressed"
+    )
+    assert all(p[4].endswith("SmoothPlastic") for p in ceiling_tiles+ceiling_grid), (
+        "Dark grooved Fabric/Metal ceiling returned to classroom"
+    )
+    assert all(float(p[12])>.85 and float(p[13])>.85 and float(p[14])>.83
+               for p in ceiling_tiles+ceiling_grid), (
+        "Photo ceiling pale painted tiles and grids changed to dark surfaces"
+    )
+    print("PHOTO_CEILING_TILE_SHADER_PASS tiles=30 painted_bars=10 "
+          "smooth_white=true non_native_visual_review=true",flush=True)
     # Actual Luau-built ceiling evidence, BEFORE any preview-only cutaway.
     # The supplied classroom photos show broad 2:1 recessed fluorescent
     # troffers. The previous 6.9x2.03 frames read as narrow glowing strips.

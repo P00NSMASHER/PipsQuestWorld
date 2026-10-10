@@ -1492,11 +1492,17 @@ function World.build()
     part(root,"Right wall back",Vector3.new(1,18,4),CFrame.new(37,9,25),P.wall)
     part(root,"Right door header wall",Vector3.new(1,5,15),CFrame.new(37,15.5,15.5),P.wall)
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
-    for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
-    for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(195,198,195),Enum.Material.Metal,false) end
-    -- Individually toned acoustic-tile insets stop the roof reading as one
-    -- giant blank slab. They finish 0.02 studs below the host ceiling,
-    -- above the existing suspended metal grid, without physical collisions.
+    -- The real ceiling has thin, PALE white-painted T-bars, not the dark
+    -- high-contrast exposed-metal rails seen in iPhone v78. All ten grid
+    -- strips retain their positions and are fully noncolliding.
+    for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
+    for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
+    -- Photo-grounded smooth white acoustic tiles: the prior Fabric shader
+    -- rendered as a DARK heavily grooved ceiling in real iPhone footage,
+    -- despite bright RGB constants and green headless render checks.
+    -- SmoothPlastic on the existing 30 insets removes simulated cloth grooves.
+    -- No extra geometry, replacement lights, or fake luminance overlays.
+    -- Insets remain just below the host slab and above the T-bar grid.
     local tileShades={
         Color3.fromRGB(236,236,229),
         Color3.fromRGB(243,241,233),
@@ -1508,7 +1514,7 @@ function World.build()
             local tile=part(root,"Acoustic ceiling inset tile",
                 Vector3.new(11.72,.025,11.72),CFrame.new(x,17.735,z),
                 tileShades[(ix+iz)%#tileShades+1],
-                Enum.Material.Fabric,false)
+                Enum.Material.SmoothPlastic,false)
             tile.CastShadow=false
         end
     end
