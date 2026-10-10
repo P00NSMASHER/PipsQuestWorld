@@ -144,6 +144,12 @@ jobs:
           # the EXISTING staff doorway from an unobstructed classroom point.
           render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
           render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
+          # October 10 photo hallway: actual Luau-constructed, non-cutaway
+          # native-player-height stills from the opened classroom entrance.
+          # Independent renderer cannot certify SurfaceGui brick/glass lettering.
+          render_eye_checked 22-hall-look-left 0,5.5,32 -42,7.0,38
+          render_eye_checked 23-hall-look-right 0,5.5,32 42,7.0,38
+          render_eye_checked 24-hall-door-from-corridor 4,5.5,40 0,6.9,26.8
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
@@ -204,12 +210,12 @@ jobs:
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins 22-hall-look-left 23-hall-look-right 24-hall-door-from-corridor; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 21=3_aerial+1_exterior+15_eye+1_rug_diagnostic+1_phone_aspect"
+          echo "VISUAL_FRAME_INVENTORY_PASS 24=3_aerial+1_exterior+18_eye+1_rug_diagnostic+1_phone_aspect"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
@@ -322,6 +328,19 @@ jobs:
               "$RHR" scene "$source" --camera="$eye" \
                 --look-at="$aim" --out "$image"
             fi
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              # Renderer occasionally generates blank white independent of
+              # the room. Retry only the same architectural target from
+              # a second predeclared player-height camera; do not skip
+              # image validation or accept a blank alternative.
+              if [[ "$label" == "01-back-builtins" ]]; then
+                echo "FAST_PHOTO_ALTERNATIVE_BACK_BUILTINS_CAMERA"
+                "$RHR" scene "$source" --camera=-3,6.3,9 \
+                  --look-at=-22,10,25.8 --out "$image"
+              else
+                echo "FAST_PHOTO_NO_ALTERNATE_FOR $label"
+              fi
+            fi
             "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"
           }
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
@@ -330,11 +349,15 @@ jobs:
             02-wordwall-table 22,5,-2 35.5,6.5,1
           render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
             03-rugs-cutaway -5,35,-4 -25,0,-3
-          # Fixed child-eye architectural check on the real clock relocated
-          # onto the yellow window pier. Existing 21-camera views stay fixed.
+          # Native-independent source view of the school window-pier clock.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             04-window-clock 3,5,-6.5 -36,11.6,-6.5
-          echo "FAST_PHOTO_NONBLANK_PASS 4 source-derived views"
+          # Photo-anchored transparent doorway. This exact child-eye camera
+          # showed two solid oak slabs before the aperture fix. Fast failure
+          # feedback is essential; keep the same 24-hall-door angle for parity.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            05-open-glass-doors 4,5.5,40 0,6.9,26.8
+          echo "FAST_PHOTO_NONBLANK_PASS 5 source-derived views"
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
@@ -347,8 +370,8 @@ jobs:
           from PIL import Image,ImageDraw
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
           names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
-                 "04-window-clock")
-          out=Image.new("RGB",(1000,1410),(244,244,240))
+                 "04-window-clock","05-open-glass-doors")
+          out=Image.new("RGB",(1000,1760),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
           for i,name in enumerate(names):
