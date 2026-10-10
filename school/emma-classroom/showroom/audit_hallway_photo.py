@@ -109,6 +109,12 @@ for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
         assert(not wall.CanCollide and wall.Material==Enum.Material.SmoothPlastic,
             "PHOTO_HALL_BRICK_BECAME_PHYSICAL_COLLIDER")
+        -- If SurfaceGuis are hidden by an independent renderer or device
+        -- LOD, the shell should be warm gold, NOT dark-brown mortar.
+        assert(wall.Color.R>.70 and wall.Color.G>.45 and
+            wall.Color.B>.18 and wall.Color.B<.34
+            and wall.Reflectance>.04,
+            "PHOTO_HALL_GOLDEN_BRICK_FALLBACK_LOST")
         local g=wall:FindFirstChild("Photo glazed offset brick bond")
         assert(g and g:IsA("SurfaceGui"),
             "PHOTO_HALL_BRICK_GUI_MISSING")
