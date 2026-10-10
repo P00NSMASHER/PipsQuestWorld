@@ -162,6 +162,32 @@ local function verify()
         and math.abs(chart.Position.Z+30.8)<.03
         and not chart.CanCollide and not board.CanCollide,
         "PHOTO_FLIPCHART_COLLISION_OR_POSITION_INVALID")
+    -- The teacher laptop formerly replicated 40 microscopic keyboard
+    -- Parts for minimal visual return. Retain the same supported deck with
+    -- a native noninteractive SurfaceGui 4x10 manufactured key pattern.
+    local keyboard=one("Laptop native keyboard panel")
+    assert(#parts("Laptop keyboard key")==0
+        and math.abs(keyboard.Position.X-26)<.02
+        and math.abs(keyboard.Position.Y-3.51)<.02
+        and math.abs(keyboard.Position.Z+25.20)<.02
+        and not keyboard.CanCollide and keyboard.Anchored,
+        "PHOTO_LAPTOP_KEYBOARD_PHYSICAL_REGRESSION")
+    local keyboardGui=keyboard:FindFirstChild("LaptopKeyboardDetail")
+    local keyboardBg=keyboardGui and keyboardGui:FindFirstChild("LaptopKeyboardBackground")
+    assert(keyboardGui and keyboardGui:IsA("SurfaceGui")
+        and keyboardGui.Face==Enum.NormalId.Top
+        and keyboardGui.CanvasSize[1]==840
+        and keyboardGui.CanvasSize[2]==290
+        and keyboardBg and keyboardBg:IsA("Frame"),
+        "PHOTO_LAPTOP_NATIVE_KEYCAP_GUI_MISSING")
+    local keyCount=0
+    for _,key in ipairs(keyboardBg:GetChildren()) do
+        if key.Name=="LaptopKeycap" then
+            assert(key:IsA("Frame"),"PHOTO_LAPTOP_KEYCAP_WRONG_TYPE")
+            keyCount+=1
+        end
+    end
+    assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
         and #parts("Purple corner chair seat")==1
@@ -214,6 +240,21 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WOOD_INSET_GEOMETRY_INVALID",1,true),
     "PHOTO_WOOD_HOVERING_PANEL_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing")
+local keyboard=one("Laptop native keyboard panel")
+local board=keyboard:FindFirstChild("LaptopKeyboardDetail"):FindFirstChild("LaptopKeyboardBackground")
+local oneKey=nil
+for _,k in ipairs(board:GetChildren()) do
+    if k.Name=="LaptopKeycap" then oneKey=k break end
+end
+assert(oneKey,"PHOTO_LAPTOP_KEYCAP_NEGATIVE_FIXTURE_MISSING")
+local oldName=oneKey.Name
+oneKey.Name="LostKeycap"
+ok,err=pcall(verify)
+oneKey.Name=oldName
+assert(not ok and string.find(tostring(err),
+    "PHOTO_LAPTOP_KEYCAP_COUNT_INVALID",1,true),
+    "PHOTO_LAPTOP_DROPPED_KEYCAP_NOT_REJECTED")
+print("PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -224,7 +265,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart laptop")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -243,6 +284,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
+        "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:

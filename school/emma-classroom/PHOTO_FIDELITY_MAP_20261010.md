@@ -162,3 +162,15 @@ physical Parts**; cards are static scenery and do not supply learning/test
 content. An exact-Luau negative mutation now rejects missing or out-of-order
 number cells. Independent geometric renders omit SurfaceGui text: native
 Roblox/iPhone legibility is still pending owner review.
+
+## October 10 — recover mobile physical-part budget from teacher laptop
+The photo-fidelity scene was at 3,090/3,100 physical Parts. The existing
+decorative laptop had **40 separate tiny 3D keyboard keys** invisible at
+child-eye gameplay distance. Replaced only those keys with a single grounded,
+noncolliding keyboard face and 40 native SurfaceGui 2D keycap rectangles.
+It saves **39 physical Parts** without moving the laptop, existing space bar
+or trackpad, and no personal schoolwork/UI is introduced. The source-derived
+renderer will show a dark keyboard surface because it does not emulate
+SurfaceGuis; the native Roblox engine must be inspected before treating
+keycap fidelity as visually accepted. The exact-Luau QA checks complete
+4×10 art and rejects a dropped keycap.

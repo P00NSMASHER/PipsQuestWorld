@@ -1216,10 +1216,41 @@ local function buildTeacherDesk(root: Instance)
     display.BackgroundTransparency=0
     ball(root,"Laptop webcam",Vector3.new(.065,.065,.025),screenCF*CFrame.new(0,1.29,.12),P.ink,Enum.Material.Glass,false)
     roundedPanel(root,"Teacher laptop base",Vector3.new(4.8,.20,3.1),CFrame.new(26,3.39,-24.85),Color3.fromRGB(162,167,173),.14,true,false)
+    -- The previous 40 individually replicated 3D keycaps were tiny and
+    -- indistinguishable in the native iPhone classroom walkthrough. Retain
+    -- all forty manufactured key shapes as static in-world SurfaceGui Frames
+    -- on ONE supported noncolliding keyboard deck, saving 39 physical Parts.
+    -- This is decorative laptop artwork, not any educational/gameplay UI.
     local keyboardCF=CFrame.new(26,3.51,-25.20)
-    for row=0,3 do for col=0,9 do
-        part(root,"Laptop keyboard key",Vector3.new(.34,.045,.28),keyboardCF*CFrame.new(-1.82+col*.40,0,-.50+row*.34),Color3.fromRGB(48,51,58),Enum.Material.SmoothPlastic,false)
-    end end
+    local keyboard=part(root,"Laptop native keyboard panel",
+        Vector3.new(4.20,.025,1.45),keyboardCF,
+        Color3.fromRGB(51,56,60),Enum.Material.SmoothPlastic,false)
+    keyboard.CastShadow=false
+    local keyGui=Instance.new("SurfaceGui")
+    keyGui.Name="LaptopKeyboardDetail"
+    keyGui.Face=Enum.NormalId.Top
+    keyGui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    keyGui.CanvasSize=Vector2.new(840,290)
+    keyGui.LightInfluence=.10
+    keyGui.Parent=keyboard
+    local backing=Instance.new("Frame")
+    backing.Name="LaptopKeyboardBackground"
+    backing.Size=UDim2.fromScale(1,1)
+    backing.BackgroundColor3=Color3.fromRGB(49,52,57)
+    backing.BorderSizePixel=0
+    backing.Parent=keyGui
+    for row=0,3 do
+        for col=0,9 do
+            local key=Instance.new("Frame")
+            key.Name="LaptopKeycap"
+            key.Position=UDim2.fromScale(.067+col*.089,.085+row*.224)
+            key.Size=UDim2.fromScale(.074,.155)
+            local shade=74+((row+col)%3)*5
+            key.BackgroundColor3=Color3.fromRGB(shade,shade+3,shade+6)
+            key.BorderSizePixel=0
+            key.Parent=backing
+        end
+    end
     part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.52,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
     roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.52,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
     cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.53,-26.12),P.metal,Enum.Material.Metal,false)
