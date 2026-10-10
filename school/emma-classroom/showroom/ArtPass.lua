@@ -401,6 +401,88 @@ local function learningWall(root:Instance)
                 C.cream,Enum.Material.SmoothPlastic,false)
         end
     end
+
+    -- Authentic photos place a band of bright geometry teaching cards over
+    -- BOTH sections of old wooden cabinetry. The existing nine 3D cards
+    -- cover only the left bookcase; this lightweight continuation covers the
+    -- right, with a real center-door gap. Wording is generic illustrative
+    -- decoration rather than verified teacher lesson content.
+    -- Exactly 8 noncolliding physical card panels; the shape silhouettes
+    -- use only native SurfaceGui Frames, not texture assets or child photos.
+    local rightShapes={"CIRCLE","OVAL","SQUARE","DIAMOND",
+        "RECTANGLE","CROSS","CAPSULE","ARCH"}
+    local rightColors={C.coral,C.golden,C.blue,C.mint,C.lilac}
+    for i,name in ipairs(rightShapes) do
+        local x=9.8+(i-1)*3.0
+        local tone=rightColors[(i+1)%#rightColors+1]
+        local card=piece(group,"Photo-guided right cabinet shape card",
+            Vector3.new(2.35,1.27,.08),CFrame.new(x,16.48,26.32),
+            tone,Enum.Material.SmoothPlastic,false)
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="RightCabinetShapeArt"
+        gui.Face=Enum.NormalId.Front
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(360,200)
+        gui.LightInfluence=.12
+        gui.Parent=card
+        local ground=Instance.new("Frame")
+        ground.Name="ShapeCardGround"
+        ground.Size=UDim2.fromScale(1,1)
+        ground.BackgroundColor3=tone
+        ground.BackgroundTransparency=0
+        ground.BorderSizePixel=0
+        ground.Parent=gui
+        local picture=Instance.new("Frame")
+        picture.Name="ShapePicture"
+        picture.Size=UDim2.fromScale(.36,.56)
+        picture.Position=UDim2.fromScale(.32,.08)
+        picture.BackgroundColor3=C.cream
+        picture.BackgroundTransparency=0
+        picture.BorderSizePixel=0
+        if name=="OVAL" or name=="RECTANGLE" or name=="CAPSULE" then
+            picture.Size=UDim2.fromScale(.51,.37)
+            picture.Position=UDim2.fromScale(.245,.18)
+        elseif name=="DIAMOND" then
+            picture.Size=UDim2.fromScale(.29,.50)
+            picture.Position=UDim2.fromScale(.355,.10)
+            picture.Rotation=45
+        elseif name=="CROSS" then
+            picture.Size=UDim2.fromScale(.18,.52)
+            picture.Position=UDim2.fromScale(.41,.09)
+        elseif name=="ARCH" then
+            picture.Size=UDim2.fromScale(.47,.52)
+            picture.Position=UDim2.fromScale(.265,.09)
+        end
+        picture.Parent=ground
+        local corner=Instance.new("UICorner")
+        corner.CornerRadius=UDim.new(0,
+            (name=="SQUARE" or name=="RECTANGLE" or name=="CROSS") and 3 or 22)
+        if name=="CIRCLE" or name=="OVAL" or name=="CAPSULE" or name=="ARCH" then
+            corner.CornerRadius=UDim.new(1,0)
+        end
+        corner.Parent=picture
+        if name=="CROSS" then
+            local bar=Instance.new("Frame")
+            bar.Name="ShapeCrossbar"
+            bar.Size=UDim2.fromScale(.55,.11)
+            bar.Position=UDim2.fromScale(.225,.30)
+            bar.BackgroundColor3=C.cream
+            bar.BackgroundTransparency=0
+            bar.BorderSizePixel=0
+            bar.Parent=ground
+        end
+        local caption=Instance.new("TextLabel")
+        caption.Name="ShapeCaption"
+        caption.Size=UDim2.fromScale(.94,.23)
+        caption.Position=UDim2.fromScale(.03,.73)
+        caption.Font=Enum.Font.GothamBold
+        caption.Text=name
+        caption.TextColor3=C.ink
+        caption.BackgroundTransparency=1
+        caption.TextScaled=true
+        caption.TextWrapped=false
+        caption.Parent=ground
+    end
     -- Match the real long cabinet-side numbered teaching frieze without
     -- spanning the central door. The older right cabinet strip remains in
     -- its existing approved location, and the two ranges are not duplicated.
