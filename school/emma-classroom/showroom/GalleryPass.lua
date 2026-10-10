@@ -154,14 +154,14 @@ local function showcaseBoards(root:Instance,group:Instance)
     }
     for i=0,12 do
         local offset=((i*7)%5-2)*.037
-        local y=10.66+((i*3)%4)*.012
+        local y=10.65+((i*3)%4)*.003
         local z=-4.10+i*.84+offset
         local sizeY=.29+((i*5)%4)*.013
         local sizeZ=.83+((i*3)%4)*.07
         local leaf=piece(group,"Word wall evergreen garland tuft",
             Vector3.new(.13,sizeY,sizeZ),
             CFrame.new(35.83,y,z)*
-                CFrame.Angles(math.rad((i%5-2)*7),0,0),
+                CFrame.Angles(math.rad((i%5-2)*2),0,0),
             evergreen[(i%#evergreen)+1],
             Enum.Material.SmoothPlastic,false)
         leaf.Shape=Enum.PartType.Cylinder

@@ -71,8 +71,15 @@ local function check()
             and p.Position.Y>10.61 and p.Position.Y<10.72
             and p.Position.Z>-4.3 and p.Position.Z<6.3,
             "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME")
-        assert(p.Position.Y-p.Size.Y/2>10.47
-            and p.Position.Y+p.Size.Y/2<title.Position.Y-title.Size.Y/2,
+        -- A tilted leaf has a larger vertical projection than Size.Y/2.
+        -- Evaluate the orientation-aware bounding-box half-height rather
+        -- than falsely accepting a tuft that covers the green title.
+        local m=p.CFrame.m
+        local halfY=(math.abs(m[4])*p.Size.X
+            +math.abs(m[5])*p.Size.Y
+            +math.abs(m[6])*p.Size.Z)/2
+        assert(p.Position.Y-halfY>10.44
+            and p.Position.Y+halfY<title.Position.Y-title.Size.Y/2-.02,
             "PHOTO_WORD_WALL_GARLAND_OBSCURES_LETTERS_OR_TITLE")
         assert(p.Size.X>=.10 and p.Size.Y>=.28
             and p.Size.Z>.80 and p.Size.Z<1.15,
@@ -171,8 +178,16 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME",1,true),
     "PHOTO_WORD_WALL_GARLAND_COVERING_APPLES_NOT_REJECTED")
 print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED low_garland")
+local originalFrame=foliage[1].CFrame
+foliage[1].CFrame=originalFrame*CFrame.Angles(math.rad(30),0,0)
+ok,err=pcall(check)
+foliage[1].CFrame=originalFrame
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WORD_WALL_GARLAND_OBSCURES_LETTERS_OR_TITLE",1,true),
+    "PHOTO_WORD_WALL_TILTED_FOLIAGE_OVERLAP_NOT_REJECTED")
+print("PHOTO_WORD_WALL_ADVERSARIAL_REJECTED tilted_foliage")
 check()
-print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading garland_collide garland_position")
+print("PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS material shape heading garland_collide garland_position tilted_foliage")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -192,6 +207,7 @@ def main() -> None:
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED generic_heading",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED collidable_garland",
                    "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED low_garland",
+                   "PHOTO_WORD_WALL_ADVERSARIAL_REJECTED tilted_foliage",
                    "PHOTO_WORD_WALL_NEGATIVE_TESTS_PASS"):
         assert any(x.startswith(marker) for x in result.stdout.splitlines()),marker
     for line in result.stdout.splitlines():

@@ -216,9 +216,19 @@ above both red-letter apple rows and below the historic green paper heading.
 They are static classroom scenery; the source photographs include identifiable
 people and are not copied into the public repo or game.
 
-The source's physical-part count should rise from 3,066 to **3,079** (still
-below the 3,100 limit). The existing word-wall constructed-Luau QA now verifies
+The exact-source CI run measured **3,078 physical Parts**, within the 3,100
+mobile limit. The existing word-wall constructed-Luau QA now verifies
 the full foliage count, placement, color variation, visibility separation,
 and collision-safe materials; mutations must reject an interactive/collidable
 leaf or foliage dropped over the apple letters. This remains a photo-guided
 inference pending native Roblox/iPhone visual acceptance.
+
+### Rotation-aware native-foliage clearance refinement
+The initial irregular 7–14 degree leaf tilt produced an orientation-dependent
+vertical bounding box that could cover the green paper header in Roblox,
+although the naïve size-only QA passed. To keep the photo-style scalloped
+silhouette **without occluding the title or apple lettering**, tilt now varies
+only −4 to +4 degrees, and the tuft height is lowered slightly. Constructed
+Luau QA explicitly computes the world-vertical oriented-box extent from the
+CFrame rotation matrix; a deliberately exaggerated tilted tuft must fail.
+The current source is still an unapproved Roblox/iPhone visual candidate.
