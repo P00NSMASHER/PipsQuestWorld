@@ -1,8 +1,8 @@
 # Emma classroom: focused early geometry render
 
 The 21-camera headless rendering workflow remains the full diagnostic suite,
-but often takes much longer than source validation. This event-triggered
-three-view comparison runs separately for quicker evidence of gross geometry
+but often takes much longer than source validation. A parallel job in the existing event-triggered visual workflow runs
+three views separately for quicker evidence of gross geometry
 problems and provides a compact contact sheet with a fixed SHA and image hashes.
 
 **Cameras** (stud coordinates):
@@ -18,3 +18,6 @@ be used as native iPhone visual acceptance or an authorization to publish.
 
 No photos of identifiable school children are uploaded to the public GitHub
 repository. The workflow never receives a Roblox production credential.
+
+The standalone workflow file from the initial prototype was retired in
+favor of a parallel job in the existing PR-triggered visual workflow.
