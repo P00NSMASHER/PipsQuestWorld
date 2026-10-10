@@ -35,7 +35,7 @@ local function verify()
         assert(letter and letter.Text==c..string.lower(c)
             and word and word.Text==expected[i],
             "PHOTO_LITERACY_CONTENT")
-        assert(g.CanvasSize.X==260 and g.CanvasSize.Y==170,
+        assert(g.CanvasSize[1]==260 and g.CanvasSize[2]==170,
             "PHOTO_LITERACY_READABILITY_CANVAS")
     end
     local banners=collect("Handwriting alphabet strip")
