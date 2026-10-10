@@ -568,15 +568,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
-    # Emma's verbal room correction is stronger evidence of the CHAIR EXISTING
-    # than the partly obstructed event photographs. Exact location and type
-    # remain provisional. Guard the modeled purple color and nonintrusive
-    # window-side corner instead of inventing photographic measurement.
+    # Emma identified the purple chair BESIDE the photographed seated adult,
+    # gray supply cabinet, dark filing cabinet and lower-left window AC. The
+    # earlier rear-reading-corner coordinate was a guessed placement, not a
+    # photo-backed final decision. Chair TYPE is still occluded/provisional.
     corner_seat=only("Purple corner chair seat")
     corner_back=only("Purple corner chair school back shell")
     cx,cz=float(corner_seat[9]),float(corner_seat[11])
-    assert abs(cx+33.4)<.025 and abs(cz-23.35)<.025, (
-        "Emma's purple chair left the proposed rear-left window corner"
+    assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
+        "Emma's purple chair left the photo-identified AC window corner"
     )
     assert abs(float(corner_back[9])-cx)<.025 and (
         abs(float(corner_back[11])-(cz+.93))<.05
@@ -590,13 +590,39 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert rug_dist>10.5, (
         "Purple chair overlaps the real circular sun/ABC carpet"
     )
-    shelf=only("Reading shelf back")
-    shelf_left=float(shelf[9])-float(shelf[6])/2
-    chair_right=cx+2.48/2
-    assert shelf_left-chair_right>.90, (
-        "Purple chair intersects the original built-in library shelves"
+    ac=only("Photo window air conditioner housing")
+    assert abs(cz-float(ac[11]))<1.2, (
+        "Purple chair is no longer adjacent to the photographed window AC"
     )
-    assert cx-2.48/2>-36.0 and cz+1.70<26.0, (
+    radiator=[row for row in lines if row[1]=="Radiator body"
+              and abs(float(row[11])-float(ac[11]))<.1]
+    assert len(radiator)==1 and (
+        cx-1.25>float(radiator[0][9])+float(radiator[0][6])/2+.5
+    ), "Purple chair clips the metal radiator below the school AC"
+    gray=only("Photo gray corner storage cabinet")
+    files=only("Photo black filing cabinet")
+    worktable=only("Photo window worktable")
+    assert abs(float(gray[9])+34.05)<.03 and (
+        abs(float(gray[11])+30.50)<.03
+    ), "Photo gray cupboard lost the window-wall storage position"
+    assert abs(float(files[9])+34.10)<.03 and (
+        abs(float(files[11])+26.25)<.03
+        and by_name["Photo filing drawer face"]==3
+    ), "Photo black filing drawers missing or misplaced"
+    tx,tz=float(worktable[9]),float(worktable[11])
+    assert abs(tx+27.50)<.03 and abs(tz+19.60)<.03 and (
+        by_name["Photo worktable metal leg"]==4
+    ), "Photo worktable no longer beside the purple chair"
+    assert cx+1.25<tx-float(worktable[6])/2, (
+        "Photo worktable intersects the purple chair seat"
+    )
+    for desk in (row for row in lines if row[1]=="Student desk edge"):
+        x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
+        assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
+                or z_gap>(float(desk[8])+float(worktable[8]))/2+.25), (
+            "Photo worktable intersects a preexisting student desk"
+        )
+    assert cx-1.25>-34.4 and -26<cz<-16, (
         "Purple chair intersects exterior classroom walls"
     )
     assert by_name["Student chair seat"]==16, (
@@ -604,7 +630,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
           "original_student_chairs=16 child_scale=true "
-          "rug_clear=true shelves_clear=true position_provisional=true")
+          "rug_clear=true ac_adjacent=true workstation_clear=true "
+          "position_provisional=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
         abs(float(window_banner[10])-15.22)<.025
