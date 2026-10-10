@@ -118,3 +118,11 @@ small pale-green “FIRST GRADE / WORD WALL” title, with no extra Parts or
 new player UI. “First Grade” reproduces historical visible scenery, not
 the current grade, teacher materials, or curriculum authority. Native
 iPhone readability is pending and this is not final visual acceptance.
+
+## Native acceptance ownership
+Use [SHOWROOM_VISUAL_ACCEPTANCE.md](SHOWROOM_VISUAL_ACCEPTANCE.md) for the
+current *classroom-only* source/photo reconciliation and pending iPhone
+sign-off. The older [VISUAL_ACCEPTANCE.md](VISUAL_ACCEPTANCE.md) remains the
+legacy study-game acceptance and has different NPC/question requirements.
+Do not count independent 3D pixels as an approval for SurfaceGui lettering
+or the procedural gingham checks.
