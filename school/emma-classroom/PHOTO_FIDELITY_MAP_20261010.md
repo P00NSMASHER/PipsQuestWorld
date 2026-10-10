@@ -174,3 +174,14 @@ renderer will show a dark keyboard surface because it does not emulate
 SurfaceGuis; the native Roblox engine must be inspected before treating
 keycap fidelity as visually accepted. The exact-Luau QA checks complete
 4×10 art and rejects a dropped keycap.
+
+## October 10 — classroom floor fan (provisional event-day fixture)
+The real user-supplied classroom photograph shows a pale gray/silver portable
+fan on the teaching-wall side. Its exact **daily** floor location is unknown:
+the photo was captured during cheer activity. The draft now includes a
+static 15-Part fan silhouette near the front teaching display—weighted
+base, steel stem, translucent circular guard, three fan blades, center hub
+and six protective grille bars. It uses no external meshes, personal photos,
+scripts, or moving gameplay parts. Every part is noncolliding and can be
+removed/repositioned after native iPhone inspection. Constructed-source
+regression tests preserve the fan silhouette, orientation and accessibility.

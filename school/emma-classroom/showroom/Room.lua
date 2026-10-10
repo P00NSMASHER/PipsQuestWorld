@@ -1719,6 +1719,57 @@ function World.build()
         CFrame.new(-36.03,11.77,-6.72)*CFrame.Angles(math.rad(48),0,0),
         Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
+    -- The classroom photos show a portable silver fan by the teaching wall.
+    -- A PHOTO-BASED equipment candidate, not proof of its normal-day resting
+    -- location. Exactly fifteen original noncolliding Roblox solids.
+    local fanX,fanZ=31.0,-31.40
+    local silver=Color3.fromRGB(161,168,172)
+    local foot=cylinder(root,"Photo portable fan weighted foot",
+        Vector3.new(.16,1.65,1.65),
+        CFrame.new(fanX,.62,fanZ)*CFrame.Angles(0,0,math.pi/2),
+        Color3.fromRGB(112,117,121),Enum.Material.SmoothPlastic,false)
+    foot.CastShadow=false
+    part(root,"Photo portable fan upright",
+        Vector3.new(.22,2.10,.22),CFrame.new(fanX,1.69,fanZ),
+        Color3.fromRGB(122,127,130),Enum.Material.Metal,false)
+    cylinder(root,"Photo portable fan neck collar",
+        Vector3.new(.36,.42,.42),
+        CFrame.new(fanX,2.67,fanZ)*CFrame.Angles(0,0,math.pi/2),
+        silver,Enum.Material.Metal,false)
+    -- A Cylinder's local-X normal faces -worldZ into the open room.
+    local faceCF=CFrame.new(fanX,3.10,fanZ)*
+        CFrame.Angles(0,math.pi/2,0)
+    local back=cylinder(root,"Photo portable fan back guard",
+        Vector3.new(.08,2.70,2.70),faceCF*CFrame.new(-.08,0,0),
+        Color3.fromRGB(193,198,198),Enum.Material.SmoothPlastic,false)
+    back.Transparency=.78
+    back.CastShadow=false
+    for i=0,2 do
+        local blade=part(root,"Photo portable fan blade",
+            Vector3.new(.06,1.13,.45),
+            faceCF*CFrame.new(.09,0,0)*
+                CFrame.Angles(i*2*math.pi/3,0,0)*CFrame.new(0,.52,0),
+            Color3.fromRGB(177+i*6,188+i*3,190),
+            Enum.Material.SmoothPlastic,false)
+        blade.CastShadow=false
+    end
+    cylinder(root,"Photo portable fan center hub",
+        Vector3.new(.15,.48,.48),faceCF*CFrame.new(.20,0,0),
+        Color3.fromRGB(115,123,125),Enum.Material.Metal,false)
+    for i=0,5 do
+        local spoke=part(root,"Photo portable fan safety grille spoke",
+            Vector3.new(.046,2.58,.052),
+            faceCF*CFrame.new(.30,0,0)*
+                CFrame.Angles(math.rad(i*30),0,0),
+            silver,Enum.Material.Metal,false)
+        spoke.CastShadow=false
+    end
+    local front=cylinder(root,"Photo portable fan translucent face",
+        Vector3.new(.025,2.80,2.80),faceCF*CFrame.new(.29,0,0),
+        Color3.fromRGB(213,215,213),Enum.Material.SmoothPlastic,false)
+    front.Transparency=.96
+    front.CastShadow=false
+
     -- Warm fluorescent lighting.
     for _,x in ipairs({-18,18}) do
         for _,z in ipairs({-22,0,19}) do ceilingLight(root,x,z) end

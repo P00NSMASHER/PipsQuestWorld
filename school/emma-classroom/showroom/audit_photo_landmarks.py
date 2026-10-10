@@ -188,6 +188,40 @@ local function verify()
         end
     end
     assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
+    -- Provisional photographed portable fan; preserve clear desk aisles.
+    local fan=one("Photo portable fan back guard")
+    local base=one("Photo portable fan weighted foot")
+    local stem=one("Photo portable fan upright")
+    local face=one("Photo portable fan translucent face")
+    assert(math.abs(fan.Position.X-31)<.03
+        and math.abs(fan.Position.Y-3.10)<.03
+        and math.abs(fan.Position.Z+31.40)<.15
+        and math.abs(base.Position.Y-.62)<.03
+        and math.abs(stem.Position.X-fan.Position.X)<.03,
+        "PHOTO_PORTABLE_FAN_POSITION_INVALID")
+    assert(fan.Shape==Enum.PartType.Cylinder
+        and face.Shape==Enum.PartType.Cylinder
+        and face.Transparency>.90
+        and #parts("Photo portable fan blade")==3
+        and #parts("Photo portable fan safety grille spoke")==6
+        and #parts("Photo portable fan neck collar")==1
+        and #parts("Photo portable fan center hub")==1,
+        "PHOTO_PORTABLE_FAN_SILHOUETTE_INCOMPLETE")
+    assert(math.abs(fan.CFrame.m[1])<.05,
+        "PHOTO_PORTABLE_FAN_FACES_AWAY_FROM_CLASSROOM")
+    for _,name in ipairs({"Photo portable fan weighted foot",
+        "Photo portable fan upright","Photo portable fan neck collar",
+        "Photo portable fan back guard","Photo portable fan blade",
+        "Photo portable fan center hub","Photo portable fan safety grille spoke",
+        "Photo portable fan translucent face"}) do
+        for _,p in ipairs(parts(name)) do
+            assert(p.Anchored and not p.CanCollide and not p.CanTouch,
+                "PHOTO_PORTABLE_FAN_BLOCKS_AISLE")
+        end
+    end
+    local teacherDesk=one("Teacher desk top")
+    assert(math.abs(teacherDesk.Position.Z-fan.Position.Z)>5.0,
+        "PHOTO_PORTABLE_FAN_OVERLAPS_TEACHER_DESK")
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
         and #parts("Purple corner chair seat")==1
@@ -255,6 +289,15 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_LAPTOP_KEYCAP_COUNT_INVALID",1,true),
     "PHOTO_LAPTOP_DROPPED_KEYCAP_NOT_REJECTED")
 print("PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap")
+local portable=one("Photo portable fan back guard")
+local oldCollision=portable.CanCollide
+portable.CanCollide=true
+ok,err=pcall(verify)
+portable.CanCollide=oldCollision
+assert(not ok and string.find(tostring(err),
+    "PHOTO_PORTABLE_FAN_BLOCKS_AISLE",1,true),
+    "PHOTO_PORTABLE_FAN_COLLISION_NOT_REJECTED")
+print("PHOTO_FAN_ADVERSARIAL_REJECTED collider")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -265,7 +308,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart laptop")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location number_order number_units panel_depth flipchart laptop fan")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -285,6 +328,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
+        "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
