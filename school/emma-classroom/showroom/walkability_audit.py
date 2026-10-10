@@ -249,6 +249,7 @@ def assert_no_corridor_finishing_colliders(rows: list[list[str]]) -> None:
         "Staff hall framed announcement board",
         "Staff hall inset cork noticeboard",
         "Staff hall anonymous paper notice",
+        "Photo hall anonymous diamond student display",
         "Side hall fluorescent metal surround",
         "Hall fluorescent light", "Side hall fluorescent",
     }
@@ -334,7 +335,8 @@ def self_test():
     except AssertionError as e:
         assert "noncolliding" in str(e)
     assert_no_corridor_finishing_colliders([flat,tall])
-    for bad_name in ("Rear hall pinned notice",
+    for bad_name in ("Photo hall anonymous diamond student display",
+                     "Rear hall pinned notice",
                      "Staff hall anonymous paper notice",
                      "Hall fluorescent light"):
         try:
