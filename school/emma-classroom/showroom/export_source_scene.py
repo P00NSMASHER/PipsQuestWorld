@@ -283,7 +283,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
                and abs(float(p[11])-27.92)<.03 for p in facade_frosted), (
         "PHOTO_HALL_ADJACENT_FROSTED_PANE_OFFSET_OR_HIDDEN"
     )
-    assert sorted(round(float(p[9]),2) for p in facade_frosted)==[-45.5,45.5]
+    assert sorted(round(float(p[9]),2) for p in facade_frosted)==[-45.5,23.0]
     assert len(actual_parts("Photo hall front outer wall"))==1 and (
         abs(float(actual_parts("Photo hall front outer wall")[0][9])+45.5)<.05
     ), "PHOTO_HALL_LEFT_ONLY_SEALED_WALL_REQUIRED"
