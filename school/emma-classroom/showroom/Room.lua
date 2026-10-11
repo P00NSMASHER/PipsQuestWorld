@@ -8,7 +8,13 @@ local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(248,233,183),
+    -- Photo paint is a stronger classroom-yellow than the pale khaki seen
+    -- in source eye-level captures. Preserve daylight brightness and wall
+    -- topology but modestly lower BLUE in the same native Color3, increasing
+    -- warm yellow saturation without altering any physical Parts/materials.
+    -- A photograph is not a calibrated paint swatch: this is a candidate
+    -- pending the actual Roblox iPhone material/lighting review.
+    wall=Color3.fromRGB(246,232,165),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
@@ -540,12 +546,23 @@ local function buildClassroomTexture(root: Instance)
         Color3.fromRGB(238,204,89),Color3.fromRGB(157,139,187),
         Color3.fromRGB(148,199,168),Color3.fromRGB(231,164,95),
     }
+    -- Real class photo: staggered multicolored dots, not a rigid 5x5 grid.
+    -- Reuse all 25 noncolliding Cylinder Parts on the unchanged 16x9 rug.
+    local rowOffsetsX={.30,-.36,.43,-.26,.15}
     for row=0,4 do
         for col=0,4 do
-            cylinder(root,"Front rug color dot",Vector3.new(.026,1.32,1.32),
-                CFrame.new(-31+col*3,.632,-23.6+row*1.70)*
-                    CFrame.Angles(0,0,math.pi/2),
-                dotTints[(row*3+col)%#dotTints+1],Enum.Material.Fabric,false)
+            local x=-31+col*3+rowOffsetsX[row+1]+
+                (((row*7+col*13)%11)-5)*.074
+            local z=-23.45+row*1.70+
+                (((row*9+col*5)%7)-3)*.068
+            local diameter=1.12+((row*3+col*7)%5)*.042
+            local dot=cylinder(root,"Front rug color dot",
+                Vector3.new(.026,diameter,diameter),
+                CFrame.new(x,.632,z)*CFrame.Angles(0,0,math.pi/2),
+                dotTints[(row*7+col*11+row*col*3)%#dotTints+1],
+                Enum.Material.Fabric,false)
+            dot.CanQuery=false
+            dot.CastShadow=false
         end
     end
     local flat=CFrame.Angles(0,0,math.pi/2)
@@ -664,10 +681,13 @@ local function buildClassroomTexture(root: Instance)
     -- mid-gap between neighboring tables and the bins appeared to float.
     for i,x in ipairs({-24,-8,12}) do
         local color=basketColors[i]
-        part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,4.8),color,Enum.Material.SmoothPlastic,false)
-        for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,4.8+dz),color,Enum.Material.SmoothPlastic,false) end
-        for _,dx in ipairs({-1.33,1.33}) do part(root,"Basket end rim",Vector3.new(.13,.65,1.6),CFrame.new(x+dx,3.55,4.8),color,Enum.Material.SmoothPlastic,false) end
-        for j=0,3 do part(root,"Basket pencil",Vector3.new(.09,.09,2.2),CFrame.new(x-.75+j*.42,3.36,4.8)*CFrame.Angles(0,math.rad(75+j*7),0),P.gold,Enum.Material.SmoothPlastic,false) end
+        -- Keep the original basket and its rims/pencils ON the relocated
+        -- middle-row desk, not floating at its vacated z=4 position.
+        local trayZ=(x==-24) and 2.4 or 4.8
+        part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,trayZ),color,Enum.Material.SmoothPlastic,false)
+        for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,trayZ+dz),color,Enum.Material.SmoothPlastic,false) end
+        for _,dx in ipairs({-1.33,1.33}) do part(root,"Basket end rim",Vector3.new(.13,.65,1.6),CFrame.new(x+dx,3.55,trayZ),color,Enum.Material.SmoothPlastic,false) end
+        for j=0,3 do part(root,"Basket pencil",Vector3.new(.09,.09,2.2),CFrame.new(x-.75+j*.42,3.36,trayZ)*CFrame.Angles(0,math.rad(75+j*7),0),P.gold,Enum.Material.SmoothPlastic,false) end
     end
 end
 
@@ -720,19 +740,113 @@ local function buildReadingCorner(root:Instance)
             Vector3.new(18.48,.23,.23),CFrame.new(-22,y,21.81),
             caseFace,Enum.Material.Wood,false)
     end
-    -- Three intentionally anonymous paper specimens. The supplied event
-    -- photos contain real children's work; that text/art is NOT reproduced.
-    for i,x in ipairs({-27.4,-22.0,-16.6}) do
-        local papers={
-            Color3.fromRGB(235,232,216),Color3.fromRGB(220,231,225),
-            Color3.fromRGB(232,225,219),
-        }
-        part(root,"Library built-in anonymous paper",
-            Vector3.new(2.85,2.05,.045),CFrame.new(x,10.05,21.73),
-            papers[i],Enum.Material.SmoothPlastic,false)
+    -- PHOTO: the dark noticeboard is not three sparse identical white
+    -- rectangles. It contains a distinctive tall RED pocket chart on the
+    -- left and clustered small pastel classroom papers on the right.
+    -- Reuse the SAME three flat paper Parts + three heading Parts. Their
+    -- native SurfaceGui artwork depicts only original, anonymous stationery.
+    -- Never reproduce children's names, graded work, photos or exact texts.
+    local notices={
+        {x=-27.4,y=9.55,w=3.12,h=3.30,
+            tone=Color3.fromRGB(163,52,58),
+            stripe=Color3.fromRGB(244,220,180)},
+        {x=-22.0,y=9.95,w=3.38,h=2.52,
+            tone=Color3.fromRGB(234,222,194),
+            stripe=Color3.fromRGB(103,147,147)},
+        {x=-16.6,y=9.65,w=3.05,h=2.78,
+            tone=Color3.fromRGB(216,228,211),
+            stripe=Color3.fromRGB(139,166,117)},
+    }
+    for i,spec in ipairs(notices) do
+        local paper=part(root,"Library built-in anonymous paper",
+            Vector3.new(spec.w,spec.h,.045),
+            CFrame.new(spec.x,spec.y,21.73),spec.tone,
+            Enum.Material.SmoothPlastic,false)
+        paper.CastShadow=false
         part(root,"Library built-in paper heading",
-            Vector3.new(2.05,.12,.03),CFrame.new(x,10.64,21.68),
-            Color3.fromRGB(117,146,157),Enum.Material.SmoothPlastic,false)
+            Vector3.new(2.05,.12,.03),
+            CFrame.new(spec.x,spec.y+spec.h/2-.34,21.68),
+            spec.stripe,Enum.Material.SmoothPlastic,false)
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="AnonymousNoticeArt"
+        gui.Face=Enum.NormalId.Front
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(420,430)
+        gui.LightInfluence=.12
+        gui.Parent=paper
+        local layout=Instance.new("Frame")
+        layout.Name="NoticeArtLayout"
+        layout.Size=UDim2.fromScale(1,1)
+        layout.BackgroundTransparency=1
+        layout.BorderSizePixel=0
+        layout.Parent=gui
+        if i==1 then
+            -- Red teacher pocket organizer; 3 tiers × 2 anonymous slips.
+            -- Native UI Frames are much lighter than 6 miniature Parts.
+            for row=0,2 do
+                for col=0,1 do
+                    local slip=Instance.new("Frame")
+                    slip.Name="PocketChartCard"
+                    slip.Size=UDim2.fromScale(.35,.145)
+                    slip.Position=UDim2.fromScale(.09+col*.46,.20+row*.235)
+                    slip.BackgroundColor3=(row+col)%2==0
+                        and Color3.fromRGB(246,241,216)
+                        or Color3.fromRGB(219,226,218)
+                    slip.BackgroundTransparency=0
+                    slip.BorderSizePixel=0
+                    slip.Parent=layout
+                    local line=Instance.new("Frame")
+                    line.Name="PocketChartLine"
+                    line.Size=UDim2.fromScale(.69,.075)
+                    line.Position=UDim2.fromScale(.15,.41)
+                    line.BackgroundColor3=Color3.fromRGB(114,139,140)
+                    line.BackgroundTransparency=0
+                    line.BorderSizePixel=0
+                    line.Parent=slip
+                end
+            end
+        else
+            -- Uneven, layered original color worksheets/picture cards:
+            -- same deliberate "busy elementary classroom" silhouette as
+            -- the photos without transcribing any real pupil's work.
+            local swatches={
+                Color3.fromRGB(250,247,232),
+                Color3.fromRGB(233,231,219),
+                Color3.fromRGB(238,224,211),
+                Color3.fromRGB(223,233,229),
+            }
+            for j=1,4 do
+                local card=Instance.new("Frame")
+                card.Name="AnonymousPinboardCard"
+                card.Position=UDim2.fromScale(
+                    .08+((j-1)%2)*.46,.16+math.floor((j-1)/2)*.38)
+                card.Size=UDim2.fromScale(j%2==0 and .37 or .41,.29)
+                card.BackgroundColor3=swatches[(j+i-2)%#swatches+1]
+                card.BackgroundTransparency=0
+                card.BorderSizePixel=0
+                card.Parent=layout
+                local marker=Instance.new("Frame")
+                marker.Name="AnonymousColorHeading"
+                marker.Position=UDim2.fromScale(.12,.17)
+                marker.Size=UDim2.fromScale(.67,.12)
+                marker.BackgroundColor3=(j%2==0)
+                    and Color3.fromRGB(151,181,166)
+                    or Color3.fromRGB(184,151,121)
+                marker.BackgroundTransparency=0
+                marker.BorderSizePixel=0
+                marker.Parent=card
+                for n=1,2 do
+                    local rule=Instance.new("Frame")
+                    rule.Name="AnonymousPaperRule"
+                    rule.Position=UDim2.fromScale(.12,.39+n*.15)
+                    rule.Size=UDim2.fromScale(n==1 and .72 or .57,.05)
+                    rule.BackgroundColor3=Color3.fromRGB(175,178,170)
+                    rule.BackgroundTransparency=0
+                    rule.BorderSizePixel=0
+                    rule.Parent=card
+                end
+            end
+        end
     end
 
     -- Spines use staggered sizes and restrained classroom-library colors,
@@ -977,27 +1091,42 @@ local function buildWindows(root: Instance)
                 Color3.fromRGB(221,217,199),Enum.Material.Fabric,false)
             shade.Transparency=.12
         end
+        -- Actual photos show LOOSE navy drapes pulled aside, not four tall
+        -- featureless flat shutter plates. Preserve all 4 panels, 8 seams
+        -- and 4 tiebacks, but gently fan the existing fabrics apart.
+        -- The same large central daylight opening stays usable from iPhone
+        -- child-height views. No new Parts, scripts, textures or meshes.
         for _,side in ipairs({-1,1}) do
             local curtainZ=z+side*6.65
-            part(root,"Navy curtain fabric panel",
-                Vector3.new(.15,8.00,1.47),
-                CFrame.new(-35.43,9.05,curtainZ),
+            local panelCF=CFrame.new(-35.43,9.05,curtainZ)*
+                CFrame.Angles(math.rad(side*3),0,0)
+            local panel=part(root,"Navy curtain fabric panel",
+                Vector3.new(.15,8.00,1.47),panelCF,
                 Color3.fromRGB(51,67,105),Enum.Material.Fabric,false)
-            -- Shallow alternating folds, rather than six dangling poles.
-            -- Two seams per panel provide fabric depth at iPhone distance.
+            panel.CanQuery=false
+            -- Two visible deep, contrasting FABRIC gathers per panel, not
+            -- pencil-thin straight lines. Small opposite rotation gives a
+            -- scalloped edge and real manufactured volume at eye height.
             for pleat=1,2 do
                 local dz=(pleat==1 and -.37 or .37)
-                part(root,"Navy curtain stitched pleat",
-                    Vector3.new(.08,7.72,.20),
-                    CFrame.new(-35.29,9.04,curtainZ+dz),
-                    pleat==1 and Color3.fromRGB(43,57,91)
-                        or Color3.fromRGB(72,88,124),
+                local angle=math.rad(side*(pleat==1 and -7 or 6))
+                local foldCF=CFrame.new(-35.22,9.04,curtainZ+dz)*
+                    CFrame.Angles(angle,0,
+                        math.rad((pleat==1 and -2 or 2)))
+                local gather=part(root,"Navy curtain stitched pleat",
+                    Vector3.new(.15,7.65,.25),foldCF,
+                    pleat==1 and Color3.fromRGB(39,52,85)
+                        or Color3.fromRGB(79,94,130),
                     Enum.Material.Fabric,false)
+                gather.CastShadow=false
+                gather.CanQuery=false
             end
-            part(root,"Navy curtain cloth tieback",
-                Vector3.new(.10,.23,1.30),
-                CFrame.new(-35.26,7.70,curtainZ),
-                Color3.fromRGB(135,147,166),Enum.Material.Fabric,false)
+            local belt=part(root,"Navy curtain cloth tieback",
+                Vector3.new(.13,.27,1.30),
+                CFrame.new(-35.13,7.70,curtainZ),
+                Color3.fromRGB(92,106,141),
+                Enum.Material.Fabric,false)
+            belt.CanQuery=false
         end
         part(root,"Radiator body",Vector3.new(1.35,2.6,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(222,221,207),Enum.Material.Metal,false)
         -- Ten widely spaced stamped-metal fins per radiator preserve the body
@@ -2141,7 +2270,16 @@ function World.build()
     for row,z in ipairs({-12,4,19}) do
         for col,x in ipairs({-24,-16,-8,0,12,20}) do
             if row<3 or col>2 then
-                index+=1;desk(root,x,z,index,row==2 and col==4)
+                -- Actual rug photo and same-SHA eye-level render confirm
+                -- that the near-left middle-row chair covered numbered
+                -- clouds on the circular ABC/sun reading rug. Move ONLY
+                -- its complete desk+chair pair 2.4 studs toward the front.
+                -- All sixteen student pairs remain intact; the other fifteen
+                -- desk positions, two rug anchors, doors and spawn are fixed.
+                -- This is a small, reviewable clearance repair rather than
+                -- a guessed wholesale rearrangement of cheer-day furniture.
+                local safeZ=(row==2 and col==1) and 1.6 or z
+                index+=1;desk(root,x,safeZ,index,row==2 and col==4)
             end
         end
     end
@@ -2161,11 +2299,54 @@ function World.build()
     local clock=cylinder(root,"Classroom wall clock",
         Vector3.new(.25,3.2,3.2),CFrame.new(-36.38,11.60,-6.50),
         Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
-    cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),
-        clock.CFrame,Color3.fromRGB(61,63,63),Enum.Material.Metal,false)
-    cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),
+    -- The actual inter-window clock has a distinctive RED outer ring and
+    -- an analog numeral dial. Preserve the established 5 physical Parts,
+    -- but restore the clock's true painted frame and original native face art.
+    -- A Cylinder's positive local X cap faces into the classroom (+world X).
+    local clockRim=cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),
+        clock.CFrame,Color3.fromRGB(169,59,62),
+        Enum.Material.SmoothPlastic,false)
+    clockRim.CastShadow=false
+    local clockDial=cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),
         clock.CFrame*CFrame.new(.22,0,0),
         Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
+    local clockGUI=Instance.new("SurfaceGui")
+    clockGUI.Name="PhotoSchoolClockFace"
+    clockGUI.Face=Enum.NormalId.Right
+    clockGUI.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    clockGUI.CanvasSize=Vector2.new(384,384)
+    clockGUI.LightInfluence=.02
+    clockGUI.Parent=clockDial
+    for n=1,12 do
+        -- 12 top, 3 right, 6 bottom, 9 left. UI-only elements carry no
+        -- physics. Static numbers are a real-room visual reference only,
+        -- not a live clock or a timer.
+        local theta=n*math.pi/6
+        local nx=.5+.372*math.sin(theta)
+        local ny=.5-.372*math.cos(theta)
+        local digit=Instance.new("TextLabel")
+        digit.Name="ClockHourNumeral"
+        digit.Text=tostring(n)
+        digit.Font=Enum.Font.GothamBold
+        digit.TextColor3=Color3.fromRGB(51,55,57)
+        digit.TextScaled=true
+        digit.TextWrapped=false
+        digit.BackgroundTransparency=1
+        digit.Position=UDim2.fromScale(nx-.073,ny-.064)
+        digit.Size=UDim2.fromScale(.146,.128)
+        digit.Parent=clockGUI
+        local tick=Instance.new("Frame")
+        tick.Name="ClockHourTick"
+        tick.Position=UDim2.fromScale(
+            .5+.451*math.sin(theta)-.006,
+            .5-.451*math.cos(theta)-.025)
+        tick.Size=UDim2.fromScale(.012,.05)
+        tick.Rotation=n*30
+        tick.BackgroundColor3=Color3.fromRGB(74,77,78)
+        tick.BackgroundTransparency=0
+        tick.BorderSizePixel=0
+        tick.Parent=clockGUI
+    end
     -- Clock hands project toward +X and rotate in the Y/Z clock-face
     -- plane, rather than burying themselves in the wall or facing a window.
     part(root,"Clock minute hand",Vector3.new(.12,1.25,.12),
