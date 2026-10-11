@@ -81,6 +81,27 @@ local function verify()
         "a b c d e f g h i j k l m n o p q r s t u v w x y z"
         and lettering.Font==Enum.Font.Garamond,
         "PHOTO_HANDWRITING_CONTENT")
+    -- Photograph-backed teaching surfaces should default to an inactive
+    -- dark Smartboard and quiet chalkboard. Generic grade/slogan splash
+    -- text is not a permanent physical room landmark.
+    local smart=collect("Interactive smartboard")
+    local chalk=collect("Chalk handwriting panel")
+    assert(#smart==1 and #chalk==1,
+        "PHOTO_TEACHING_SURFACES_MISSING")
+    assert(smart[1].Material==Enum.Material.SmoothPlastic
+        and smart[1].Color.R<.13 and smart[1].Color.G<.17
+        and smart[1].Color.B<.18
+        and not smart[1].CanCollide,
+        "PHOTO_TEACHING_SMARTBOARD_MATTE_REGRESSION")
+    assert(chalk[1].Material==Enum.Material.SmoothPlastic
+        and chalk[1].Color.R<.20 and not chalk[1].CanCollide,
+        "PHOTO_TEACHING_CHALKBOARD_MATTE_REGRESSION")
+    for _,surface in ipairs({smart[1],chalk[1]}) do
+        for _,child in ipairs(surface:GetChildren()) do
+            assert(not child:IsA("SurfaceGui"),
+                "PHOTO_TEACHING_FAKE_GRADE_SLIDE_REINTRODUCED")
+        end
+    end
     assert(#collect("Student chair seat")==16
         and #collect("Student desk top")==16
         and #collect("Purple corner chair seat")==1,
@@ -89,7 +110,30 @@ local function verify()
 end
 local tile,banner=verify()
 print("PHOTO_LITERACY_RUNTIME_PASS phonics=26 handwriting=1 "
-    .."source_only=true curriculum_authority=false")
+    .."smartboard=blank chalkboard=blank source_only=true "
+    .."curriculum_authority=false")
+local smart=collect("Interactive smartboard")[1]
+local fakeSlide=Instance.new("SurfaceGui")
+fakeSlide.Name="Grade2WelcomeSplash"
+fakeSlide.Face=Enum.NormalId.Back
+fakeSlide.Parent=smart
+local ok,err=pcall(verify)
+fakeSlide:Destroy()
+assert(not ok and string.find(tostring(err),
+    "PHOTO_TEACHING_FAKE_GRADE_SLIDE_REINTRODUCED",1,true),
+    "PHOTO_TEACHING_SMARTBOARD_FAKE_SPLASH_NOT_REJECTED")
+print("PHOTO_LITERACY_ADVERSARIAL_REJECTED invented_grade_slide")
+local chalk=collect("Chalk handwriting panel")[1]
+local fakeChalk=Instance.new("SurfaceGui")
+fakeChalk.Name="InventedGoodMorning"
+fakeChalk.Face=Enum.NormalId.Back
+fakeChalk.Parent=chalk
+ok,err=pcall(verify)
+fakeChalk:Destroy()
+assert(not ok and string.find(tostring(err),
+    "PHOTO_TEACHING_FAKE_GRADE_SLIDE_REINTRODUCED",1,true),
+    "PHOTO_TEACHING_CHALKBOARD_FAKE_SLOGAN_NOT_REJECTED")
+print("PHOTO_LITERACY_ADVERSARIAL_REJECTED invented_chalk_message")
 local label=tile:FindFirstChildOfClass("SurfaceGui"):FindFirstChild("PhonicsExample")
 local old=label.Text
 label.Text="INCORRECT"
@@ -134,7 +178,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_LITERACY_OVERSIZED_LETTER_PADDING_NOT_REJECTED")
 print("PHOTO_LITERACY_ADVERSARIAL_REJECTED oversized_letter_padding")
 verify()
-print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word letter_padding")
+print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word letter_padding invented_splash invented_chalk")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -154,6 +198,8 @@ def main():
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED hidden_icon",
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED icon_covers_word",
       "PHOTO_LITERACY_ADVERSARIAL_REJECTED oversized_letter_padding",
+      "PHOTO_LITERACY_ADVERSARIAL_REJECTED invented_grade_slide",
+      "PHOTO_LITERACY_ADVERSARIAL_REJECTED invented_chalk_message",
       "PHOTO_LITERACY_NEGATIVE_TESTS_PASS")
     for marker in required:
         assert any(s.startswith(marker) for s in run.stdout.splitlines()),marker
