@@ -378,6 +378,19 @@ jobs:
             school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
             "$RUNNER_TEMP/photo-review/06-hall-paper-rail.png"
 
+      - name: Prove gold window frame, dark panes, and eight radial sunburst rays are visible
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The generic nonblank check alone was a false-acceptance risk:
+          # it would pass a corridor with a missing/hidden yellow window.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_end_window.py --self-test
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_end_window.py \
+            "$RUNNER_TEMP/photo-review/07-hall-yellow-end-window.png"
+          echo "HALL_END_WINDOW_CAMERA_SEMANTIC_GATE_PASS headless_only=true native_iphone_pending=true"
+
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
