@@ -42,6 +42,14 @@ a manifest with `notNativeIphoneAcceptance=true`.
   Verify that neither corridor transition exposes outdoor sky or clips
   the character through the door frame. This must be checked in actual
   Roblox on iPhone; the static route model alone is insufficient.
+- [ ] **Actual staff-door glazing:** Look at the open LEFT staff-door leaf
+  from the classroom and again from the corridor. Its oak upper frame has
+  a physically open glazed aperture, two real side stiles, a horizontal
+  divider and one brass pull; the former 10-stud opaque wood slab must
+  **not** be visible through the glass. Move through the original doorway
+  without an invisible frame collision. Verify both views in native Roblox:
+  static renderer transparency and CI source geometry alone cannot certify
+  the glass material or phone lighting.
 - [ ] **Windows / AC:** Two windows with genuinely *gathered* navy drapes,
   dark alternating folds and low cloth tiebacks. At least eleven studs of
   daylight opening remain visible across each window; no curtains flatten
