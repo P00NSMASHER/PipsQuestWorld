@@ -1,13 +1,14 @@
-requested-mode: classroom-progress-preview-only
-authorization: user-requested-2026-10-08
-reaffirmed-authorization: user-delegated-classroom-replica-continuation-2026-10-10
+requested-mode: classroom-and-hallway-preview-only
+authorization: user-approved-2026-10-11-hallway-preview
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-parent-sha: 3d75a254122cdd8c3387166662c87beb6a1244e6
-notice: Owner-delegated progress-preview to inspect Emma's corrected photo-window workstation and purple chair on native iPhone; not permission to mark visual acceptance
-scope: classroom-only Rojo source at pinned parent; left air-conditioned window, purple chair facing the worktable, adjacent gray cabinet and black filing drawers; all sixteen original student seats preserved
-photo-evidence: child-reported chair existence is confirmed; occupied chair silhouette, fine floor position and material are still provisional pending native visual check
-production-furniture-meshes: disabled pending native Studio/iPhone visual-collision acceptance
-schoolwork-and-progress: no curriculum, quizzes, score writes or imports
-release-status: owner progress-preview only; NOT final visual signoff; keep PR draft
+source-branch: visual/emma-hallway-photo-faithful-20261010
+build-project: school/emma-showroom.project.json
+source-parent-sha: 85667b0aea54a39d50d0ed8db38e9ef3d7a8d84d
+scope: October 10 photo-grounded ABVM classroom and hallway preview, not the old quiz classroom
+privacy: original student work and children's likenesses are not bundled in the public place
+excluded-runtime: no study HUD, choice buttons, quiz remotes, answer bank or learner scores
+production-furniture-meshes: disabled pending native Roblox Studio/mobile acceptance
+release-status: explicit owner-approved progress preview, not final visual acceptance
+follow-up: review full-room appearance, hallway doors, iPhone controls and collisions on native device
