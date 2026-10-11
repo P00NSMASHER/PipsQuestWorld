@@ -240,6 +240,45 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert all(p[4].endswith("Wood") for p in oak), (
         "Real-school wood doors were replaced by a generic surface"
     )
+    # The *previous* 2 adjacent facades looked like solid black rectangles:
+    # UI-only fake glass was invisible in the third-party source renderer.
+    # New glass, oak stiles, transoms and brass must be real native Parts.
+    facade_frosted=actual_parts("Photo hall adjacent frosted door glass")
+    facade_stiles=actual_parts("Photo hall adjacent oak side stile")
+    facade_top=actual_parts("Photo hall adjacent oak upper lintel")
+    facade_sills=actual_parts("Photo hall adjacent oak glass sill")
+    facade_bars=actual_parts("Photo hall adjacent oak glass crossbar")
+    facade_raise=actual_parts("Photo hall adjacent lower raised wood panel")
+    facade_plates=actual_parts("Photo hall adjacent brass push plate")
+    facade_pulls=actual_parts("Photo hall adjacent brass pull")
+    assert tuple(map(len,(facade_frosted,facade_stiles,facade_top,
+                          facade_sills,facade_bars,facade_raise,
+                          facade_plates,facade_pulls)))==(2,4,2,2,2,2,2,2), (
+        "PHOTO_HALL_ADJACENT_NATIVE_DOOR_PARTS_MISSING"
+    )
+    assert all(p[4].endswith("Glass") and .13<float(p[5])<.49
+               for p in facade_frosted), (
+        "PHOTO_HALL_ADJACENT_GLASS_NOT_REAL_TRANSPARENT_GEOMETRY"
+    )
+    assert all(p[4].endswith("Wood") for p in
+               facade_stiles+facade_top+facade_sills+facade_bars+facade_raise)
+    assert all(p[4].endswith("Metal") for p in facade_plates+facade_pulls)
+    assert all(float(p[7])<4.5 and abs(float(p[10])-2.665)<.03
+               for p in oak), (
+        "PHOTO_HALL_ADJACENT_OLD_OPAQUE_TEN_STUD_WOOD_SLAB_RETURNED"
+    )
+    assert all(7.60<float(p[10])<7.67
+               and abs(float(p[11])-27.92)<.03 for p in facade_frosted), (
+        "PHOTO_HALL_ADJACENT_FROSTED_PANE_OFFSET_OR_HIDDEN"
+    )
+    assert sorted(round(float(p[9]),2) for p in facade_frosted)==[-45.5,45.5]
+    assert len(actual_parts("Photo hall front outer wall"))==2, (
+        "PHOTO_HALL_ADJACENT_SEALED_WALL_REMOVED"
+    )
+    print("PHOTO_HALL_ADJACENT_NATIVE_FACADE_SCENE_PASS two_glazed_doors=true "
+          "native_new_parts=18 sealed_walls=true no_extra_rooms=true "
+          "visual_renderer_must_inspect_actual_panes=true",flush=True)
+
     for lamp in lamps:
         assert (lamp[4].endswith("Glass") and
                 abs(float(lamp[11])-38)<.025 and
