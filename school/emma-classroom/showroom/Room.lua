@@ -524,12 +524,23 @@ local function buildClassroomTexture(root: Instance)
         Color3.fromRGB(238,204,89),Color3.fromRGB(157,139,187),
         Color3.fromRGB(148,199,168),Color3.fromRGB(231,164,95),
     }
+    -- Real class photo: staggered multicolored dots, not a rigid 5x5 grid.
+    -- Reuse all 25 noncolliding Cylinder Parts on the unchanged 16x9 rug.
+    local rowOffsetsX={.30,-.36,.43,-.26,.15}
     for row=0,4 do
         for col=0,4 do
-            cylinder(root,"Front rug color dot",Vector3.new(.026,1.32,1.32),
-                CFrame.new(-31+col*3,.632,-23.6+row*1.70)*
-                    CFrame.Angles(0,0,math.pi/2),
-                dotTints[(row*3+col)%#dotTints+1],Enum.Material.Fabric,false)
+            local x=-31+col*3+rowOffsetsX[row+1]+
+                (((row*7+col*13)%11)-5)*.074
+            local z=-23.45+row*1.70+
+                (((row*9+col*5)%7)-3)*.068
+            local diameter=1.12+((row*3+col*7)%5)*.042
+            local dot=cylinder(root,"Front rug color dot",
+                Vector3.new(.026,diameter,diameter),
+                CFrame.new(x,.632,z)*CFrame.Angles(0,0,math.pi/2),
+                dotTints[(row*7+col*11+row*col*3)%#dotTints+1],
+                Enum.Material.Fabric,false)
+            dot.CanQuery=false
+            dot.CastShadow=false
         end
     end
     local flat=CFrame.Angles(0,0,math.pi/2)
