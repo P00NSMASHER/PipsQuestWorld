@@ -363,7 +363,11 @@ jobs:
           # diagonal 3D paper silhouettes on the long corridor wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             06-hall-paper-rail 0,5.5,34 -36,9,48.52
-          echo "FAST_PHOTO_NONBLANK_PASS 6 source-derived views"
+          # Fixed, full-geometry photo-window camera: sees the real 3D
+          # mustard sash and sunburst at the distant sealed left end wall.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            07-hall-yellow-end-window 0,5.7,38 -54,7.35,38
+          echo "FAST_PHOTO_NONBLANK_PASS 7 source-derived views"
       - name: Require real visible diagonal paper silhouettes in hallway screenshot
         shell: bash
         run: |
@@ -387,8 +391,8 @@ jobs:
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
           names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
                  "04-window-clock","05-open-glass-doors",
-                 "06-hall-paper-rail")
-          out=Image.new("RGB",(1000,2110),(244,244,240))
+                 "06-hall-paper-rail","07-hall-yellow-end-window")
+          out=Image.new("RGB",(1000,len(names)*350+10),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
           for i,name in enumerate(names):
