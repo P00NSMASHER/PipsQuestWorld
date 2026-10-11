@@ -107,6 +107,64 @@ class FloorSupport:
         return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
 
 
+def assert_continuous_floor_segment(
+    a: tuple[float, float] | list[float],
+    b: tuple[float, float] | list[float],
+    floors: list[FloorSupport],
+) -> None:
+    """Require no unsupported slit between adjacent grid nodes.
+
+    The existing grid tests only the centers of cells separated by STEP.
+    Two centers may rest on separate slabs despite a narrow uncovered gap
+    between them. Intersect each real floor rectangle with the entire
+    cardinal route segment and require its union to cover the interval.
+
+    This proves continuous source-modeled support under the *route
+    centerline*, not the full avatar foot/contact patch or native physics.
+    """
+    eps = 1e-6
+    x0, z0 = map(float, a)
+    x1, z1 = map(float, b)
+    assert all(math.isfinite(v) for v in (x0, z0, x1, z1)), (
+        "ROUTE_SEGMENT_NONFINITE")
+    dx, dz = abs(x1 - x0), abs(z1 - z0)
+    assert (dx <= eps) != (dz <= eps), (
+        "ROUTE_SEGMENT_NONCARDINAL_OR_ZERO")
+    assert max(dx, dz) <= STEP + eps, "ROUTE_SEGMENT_SKIPPED_GRID_STEP"
+    assert floors, "ROUTE_SEGMENT_FLOOR_EVIDENCE_MISSING"
+
+    if dx > eps:
+        lo, hi = sorted((x0, x1))
+        intervals = [
+            (max(lo, f.xmin), min(hi, f.xmax))
+            for f in floors
+            if f.zmin - eps <= z0 <= f.zmax + eps
+            and f.xmax >= lo and f.xmin <= hi
+        ]
+    else:
+        lo, hi = sorted((z0, z1))
+        intervals = [
+            (max(lo, f.zmin), min(hi, f.zmax))
+            for f in floors
+            if f.xmin - eps <= x0 <= f.xmax + eps
+            and f.zmax >= lo and f.zmin <= hi
+        ]
+
+    covered_until = lo
+    for begin, end in sorted(intervals):
+        if end <= covered_until + eps:
+            continue
+        if begin > covered_until + eps:
+            break
+        covered_until = max(covered_until, end)
+        if covered_until >= hi - eps:
+            return
+    raise AssertionError(
+        f"UNSUPPORTED_ROUTE_SEGMENT_GAP {tuple(a)}->{tuple(b)} "
+        f"covered_to={covered_until:.5f} required_to={hi:.5f}"
+    )
+
+
 def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
     """Read the real Luau-generated collidable floor parts, never source guesses."""
     floors = {}
@@ -255,11 +313,21 @@ def inspect(blockers: list[Blocker],
     if failures:
         raise AssertionError("BLOCKED_NAVIGATION "+ " | ".join(failures))
     assert len(routes)==len(GOALS), "Incomplete route acceptance"
+    segment_count = 0
     if floors is not None:
         for name,route in routes.items():
+            points = route["waypoints"]
             assert all(any(f.supports(x,z) for f in floors)
-                       for x,z in route["waypoints"]), (
+                       for x,z in points), (
                 "UNSUPPORTED_ROUTE_WAYPOINT " + name)
+            for a, b in zip(points, points[1:]):
+                try:
+                    assert_continuous_floor_segment(a, b, floors)
+                except AssertionError as exc:
+                    raise AssertionError(
+                        f"UNSUPPORTED_ROUTE_CONTINUITY route={name} {exc}"
+                    ) from exc
+                segment_count += 1
     # Floor support and the existing door-collision routing MUST both hold.
     # A scenic surface/decorative rug is not an acceptable bridge.
     # A merely reachable hallway is not enough: two doors used to connect
@@ -292,6 +360,8 @@ def inspect(blockers: list[Blocker],
         "blockers":len(blockers),
         "structural_support_floors": sorted(f.name for f in floors) if floors is not None else None,
         "all_waypoints_floor_supported": floors is not None,
+        "all_route_segments_continuously_supported": floors is not None,
+        "validated_route_segments": segment_count,
         "start":list(START),
         "routes":routes,
     }
@@ -484,6 +554,57 @@ def self_test():
         raise AssertionError("Colliding chair vent test accepted")
     except AssertionError as exc:
         assert "noncolliding" in str(exc)
+    # The old 0.75-stud grid sees both endpoints as safe while missing the
+    # narrow actual void between them. Analytic interval coverage must fail.
+    gap_floors = [
+        FloorSupport("before", -1, .29, -1, 1, .5),
+        FloorSupport("after", .47, 2, -1, 1, .5),
+    ]
+    assert all(any(f.supports(x, 0) for f in gap_floors) for x in (0, STEP)), (
+        "GAP_FIXTURE_DID_NOT_FOOL_ORIGINAL_GRID")
+    try:
+        assert_continuous_floor_segment((0, 0), (STEP, 0), gap_floors)
+    except AssertionError as exc:
+        assert "UNSUPPORTED_ROUTE_SEGMENT_GAP" in str(exc)
+    else:
+        raise AssertionError("SUB_GRID_FLOOR_GAP_FALSELY_ACCEPTED")
+    # Exact touching slabs and overlapping slabs have zero missing support.
+    for edge in (.29, .52):
+        continuous = [
+            FloorSupport("before", -1, edge, -1, 1, .5),
+            FloorSupport("after", .29, 2, -1, 1, .5),
+        ]
+        assert_continuous_floor_segment((0, 0), (STEP, 0), continuous)
+        assert_continuous_floor_segment((STEP, 0), (0, 0), continuous)
+    # A narrow z-axis gap must not slip through the x-axis-only case.
+    z_gap = [
+        FloorSupport("south", -1, 1, -1, .29, .5),
+        FloorSupport("north", -1, 1, .47, 2, .5),
+    ]
+    try:
+        assert_continuous_floor_segment((0, 0), (0, STEP), z_gap)
+    except AssertionError as exc:
+        assert "UNSUPPORTED_ROUTE_SEGMENT_GAP" in str(exc)
+    else:
+        raise AssertionError("Z_AXIS_SUB_GRID_GAP_FALSELY_ACCEPTED")
+    for a, b, evidence, error in [
+        ((0, 0), (STEP, 0), [], "FLOOR_EVIDENCE_MISSING"),
+        ((0, 0), (STEP, STEP), gap_floors, "NONCARDINAL"),
+        ((0, 0), (0, 0), gap_floors, "NONCARDINAL"),
+        ((0, 0), (STEP * 2, 0), gap_floors, "SKIPPED_GRID_STEP"),
+        ((0, 0), (STEP, 0),
+         [FloorSupport("short", -1, .1, -1, 1, .5)], "SEGMENT_GAP"),
+    ]:
+        try:
+            assert_continuous_floor_segment(a, b, evidence)
+        except AssertionError as exc:
+            assert error in str(exc), (error, str(exc))
+        else:
+            raise AssertionError("BAD_ROUTE_SEGMENT_FALSELY_ACCEPTED " + error)
+    print("CONTINUOUS_FLOOR_ADVERSARIAL_PASS "
+          "sub_grid_x_and_z_gaps,missing_floor,diagonal,zero_step,"
+          "skipped_step,unsupported_end_rejected=true")
+
     print("STATIC_NAV_SELF_TEST_PASS structural_floor_support_enforced=true "
           "unsupported_void_and_missing_floor_rejected=true "
           "colliders_and_decorative_obstructions_checked=true")
@@ -521,6 +642,11 @@ def main():
               "end="+str(route["endpoint"]),flush=True)
     print("SUPPORTED_ROUTE_SOURCE_PASS three_constructed_collidable_floors=true "
           "all_nine_routes_floor_supported=true",flush=True)
+    print("CONTINUOUS_FLOOR_ROUTE_PASS "
+          "routes=" + str(len(result["routes"])) +
+          " cardinal_segments=" + str(result["validated_route_segments"]) +
+          " all_route_centerlines_source_supported=true "
+          "native_roblox_device_qa_still_required=true", flush=True)
     print("DOORWAY_ROUTING_NAV_PASS left_staff_to_long_hall=true "
           "right_rear_supply_closet_sealed=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
