@@ -248,9 +248,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(photo_wall)==1 and len(photo_floor)==1
     wall_rgb=[float(x) for x in photo_wall[0][12:15]]
     floor_rgb=[float(x) for x in photo_floor[0][12:15]]
-    assert wall_rgb[0]>.93 and wall_rgb[1]>.88 and .67<wall_rgb[2]<.78, (
-        "Photo-grounded warm yellow walls regressed"
-    )
+    assert wall_rgb[0]>.95 and wall_rgb[1]>.89 and .62<wall_rgb[2]<.67 and (
+        wall_rgb[2]/wall_rgb[0]<.70
+    ), "Photo-grounded saturated classroom yellow walls regressed"
     assert .30<floor_rgb[0]<.36 and .20<floor_rgb[1]<.26 and .15<floor_rgb[2]<.21, (
         "Photo-grounded dark varnished floor color regressed"
     )

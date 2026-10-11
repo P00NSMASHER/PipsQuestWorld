@@ -8,7 +8,13 @@ local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(248,233,183),
+    -- Photo paint is a stronger classroom-yellow than the pale khaki seen
+    -- in source eye-level captures. Preserve daylight brightness and wall
+    -- topology but modestly lower BLUE in the same native Color3, increasing
+    -- warm yellow saturation without altering any physical Parts/materials.
+    -- A photograph is not a calibrated paint swatch: this is a candidate
+    -- pending the actual Roblox iPhone material/lighting review.
+    wall=Color3.fromRGB(246,232,165),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),

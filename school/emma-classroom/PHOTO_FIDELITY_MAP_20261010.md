@@ -328,3 +328,26 @@ pinboard mini-cards. Mutations fail closed if the chart returns to beige or
 one insert goes missing. Because the independent static renderer omits
 `SurfaceGui`, its photographic proof is limited to the larger red 3D
 chart/sheet silhouette. Native Roblox/iPhone visibility remains pending.
+
+## October 10 — modest photo-grounded classroom-yellow paint correction
+
+Side-by-side review of the owner's actual classroom photographs and the full
+21-view source-derived screenshot showed the render's walls reading as
+desaturated khaki rather than the real classroom's warm, visibly yellow paint.
+The shared room shell palette moves cautiously from RGB **(248,233,183)**
+to **(246,232,165)**. This reduces the blue/red color ratio from ≈0.74
+to ≈0.67, similar to illuminated unobstructed yellow-wall samples visible
+in the supplied phone photos. The photo is NOT a calibrated paint/color
+measurement; do not claim exact color matching.
+
+Only the single `P.wall` Color3 value changes. The same fourteen existing
+plaster shell Parts (including inter-window piers, door header/infill and
+upper/lower walls) inherit the change, with zero new Parts, material changes,
+collision changes, furniture movement, UI/gameplay data or external assets.
+Existing daylight, ceiling, navy trim, real-word signage and school floor
+stay identical. The constructed-Luau lighting test asserts paint uniformity,
+precise RGB, photo-appropriate blue/red ratio and the shell part count;
+a deliberate mutation back to the pale-washed original must fail.
+The geometric scene exporter independently checks wall tint.
+The source-derived renderer is NOT native Roblox; iPhone owner approval of
+actual exposure and warmth remains required before final acceptance.

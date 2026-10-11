@@ -68,12 +68,37 @@ local function profile()
         and close(grade.Saturation,.015,.015)
         and grade.TintColor.R>.98 and grade.TintColor.B>.94,
         "LIGHTING_GRADE_REGRESSION")
+    -- All fourteen shell/plaster components use the ONE photo-yellow
+    -- paint, so no isolated pale-washed wall can regress unnoticed.
+    local shellNames={
+        ["Front wall"]=true,
+        ["Back wall left"]=true,["Back wall right"]=true,
+        ["Door header wall"]=true,
+        ["Left wall below windows"]=true,
+        ["Left wall above windows"]=true,
+        ["Left window wall pier"]=true,
+        ["Right wall front"]=true,["Right wall back"]=true,
+        ["Right door header wall"]=true,
+        ["Back doorway plaster infill"]=true,
+    }
+    local paintedShell=0
     local lightCount=0
     local floorCount=0
     local ceilingTiles=0
     local ceilingGrid=0
     local uniqueCenters={}
     for _,p in ipairs(Room.Root:GetDescendants()) do
+        if shellNames[p.Name] then
+            paintedShell+=1
+            local color=p.Color
+            assert(p.Material==Enum.Material.SmoothPlastic
+                and close(color.R,246/255,.004)
+                and close(color.G,232/255,.004)
+                and close(color.B,165/255,.004)
+                and color.R>color.G and color.G>color.B
+                and color.B/color.R<.70,
+                "LIGHTING_CLASSROOM_WALL_COLOR_REGRESSION")
+        end
         if p.Name=="Frosted fluorescent diffuser" then
             lightCount+=1
             local l=p:FindFirstChildOfClass("SurfaceLight")
@@ -106,6 +131,7 @@ local function profile()
                 "LIGHTING_FLOOR_FINISH_REGRESSION")
         end
     end
+    assert(paintedShell==14,"LIGHTING_SHELL_PARTS_MISSING")
     assert(lightCount==6 and floorCount==1
         and ceilingTiles==30 and ceilingGrid==10,
         "LIGHTING_ROOM_FIXTURE_COUNT_REGRESSION")
@@ -169,7 +195,21 @@ assert(not ok and string.find(tostring(err),
     "LIGHTING_FABRIC_CEILING_REGRESSION_NOT_REJECTED")
 assert(profile()==6,"Ceiling profile did not recover after adverse mutation")
 print("DAYLIGHT_ADVERSARIAL_REJECTED dark_fabric_ceiling")
-print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect woodplanks fabric_ceiling")
+local wall=nil
+for _,p in ipairs(Room.Root:GetDescendants()) do
+    if p.Name=="Front wall" then wall=p break end
+end
+assert(wall,"LIGHTING_MISSING_FRONT_WALL_FOR_PALETTE_TEST")
+local originalWall=wall.Color
+wall.Color=Color3.fromRGB(248,233,183)
+ok,err=pcall(profile)
+wall.Color=originalWall
+assert(not ok and string.find(tostring(err),
+    "LIGHTING_CLASSROOM_WALL_COLOR_REGRESSION",1,true),
+    "LIGHTING_BLEACHED_PAINT_REGRESSION_NOT_REJECTED")
+assert(profile()==6,"Yellow paint profile did not recover after mutation")
+print("DAYLIGHT_ADVERSARIAL_REJECTED pale_washed_wall")
+print("DAYLIGHT_NEGATIVE_TESTS_PASS exposure_override duplicate_effect woodplanks fabric_ceiling warm_wall")
 '''
 
 def main():
@@ -191,6 +231,7 @@ def main():
                  "DAYLIGHT_ADVERSARIAL_REJECTED duplicate_bloom",
                  "DAYLIGHT_ADVERSARIAL_REJECTED oversized_woodplanks",
                  "DAYLIGHT_ADVERSARIAL_REJECTED dark_fabric_ceiling",
+                 "DAYLIGHT_ADVERSARIAL_REJECTED pale_washed_wall",
                  "DAYLIGHT_NEGATIVE_TESTS_PASS"):
         assert any(line.startswith(code) for line in output), (
             "Lighting acceptance evidence missing: "+code)

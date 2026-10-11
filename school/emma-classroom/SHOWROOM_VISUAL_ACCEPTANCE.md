@@ -62,6 +62,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
   upper/lowercase letters, with the example words unobscured.
   Photo-backed white dry-erase flipchart has blue supports and wheels,
   not a fictional wooden award plaque.
+- [ ] **Classroom-yellow walls:** The paint should read recognizably
+  warm yellow—not the former pale khaki color—on an actual iPhone in
+  daylight. Windows, door piers, and rear cabinetry must have consistent
+  paint; compare real photos under roughly similar viewing angles.
 - [ ] **Floor and ceiling:** Dark fine-grain polished wood floor does not
   show exaggerated Roblox plank seams. Pale ceiling tiles and narrow
   gray grid are bright and unbroken; six frosted troffers look like
