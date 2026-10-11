@@ -11,7 +11,7 @@ from collections import deque
 from pathlib import Path
 from PIL import Image, ImageDraw
 
-CAMERA_CROP = (0, 145, 925, 570)  # Fixed 06-hall-paper-rail child-eye camera.
+CAMERA_CROP = (0, 145, 925, 570)  # Fixed 07 full-hall child-eye camera.
 MIN_CONNECTED_AREAS = 6
 MIN_AREA_PIXELS = 900
 MIN_TOTAL_PAPER_PIXELS = 25000
