@@ -114,6 +114,17 @@ jobs:
             --luau "$RUNNER_TEMP/tools/luau/luau"
           echo "HALLWAY_NO_EXTRA_PARTS_NO_STUDENT_PHOTOS_CI_PASS"
 
+      - name: Fail closed on unsupported floor or open sky at the left hallway turn
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Source-built 3D checks supplement the 2D avatar route audit:
+          # the old hallway floor and ceiling stopped 1.25 studs short.
+          # Counterexample mutations prove the gap detector actually fails.
+          python3 school/emma-classroom/showroom/audit_left_hall_junction.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "LEFT_HALL_FLOOR_AND_CEILING_CONTINUITY_CI_PASS native_phone_pending=true"
+
       - name: Fail fast on exact-source room geometry and mobile part budget
         shell: bash
         run: |
