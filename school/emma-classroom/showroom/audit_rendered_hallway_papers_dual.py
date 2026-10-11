@@ -107,6 +107,12 @@ def self_test() -> None:
     expect_rejected(gallery, blank, "BARE_WALL")
     expect_rejected(overview, gallery, "GALLERY_CAMERA_MISSING")
     expect_rejected(overview, overview, "GALLERY_CAMERA_MISSING")
+    # Same raw RGB image, even if independently encoded, is not two views.
+    expect_rejected(gallery, gallery, "IDENTICAL_RENDERED_PIXELS")
+    # Distinct valid-sized views with the wrong perspective relationship
+    # must be rejected rather than passing each camera in isolation.
+    expect_rejected(gallery, invented_test_frame(6, 55, 75, 100, 125),
+                    "WRONG_PERSPECTIVE_OR_SWAPPED")
     expect_rejected(gallery.resize((1112, 512)), overview, "VIEWPORT_CHANGED")
     expect_rejected(invented_test_frame(6, 53, 70, 85, 130),
                     overview, "GALLERY_CAMERA_MISSING")
@@ -118,7 +124,8 @@ def self_test() -> None:
                     overview, "GALLERY_CAMERA_MISSING")
     print("HALL_DUAL_CAMERA_SELF_TEST_PASS "
           "missing_gallery,missing_overview,swapped,duplicated,"
-          "small_viewport,one_missing_each,weak_gallery_rejected=true")
+          "duplicates,perspective_ratio,small_viewport,"
+          "one_missing_each,weak_gallery_rejected=true")
 
 
 def main() -> None:
