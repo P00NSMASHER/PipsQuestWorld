@@ -143,13 +143,18 @@ jobs:
           # cabinet, hiding half of the staff hallway. Aim directly into
           # the EXISTING staff doorway from an unobstructed classroom point.
           render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
-          render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
-          # October 10 photo hallway: actual Luau-constructed, non-cutaway
-          # native-player-height stills from the opened classroom entrance.
-          # Independent renderer cannot certify SurfaceGui brick/glass lettering.
-          render_eye_checked 22-hall-look-left 0,5.5,32 -42,7.0,38
-          render_eye_checked 23-hall-look-right 0,5.5,32 42,7.0,38
-          render_eye_checked 24-hall-door-from-corridor 4,5.5,40 0,6.9,26.8
+          # The rear double doorway is now the SUPPLY CLOSET, not a hall.
+          # Inspect its physical shelf/rear closure from inside the closet.
+          render_eye_checked 15-eye-closet-shelves 0,5.5,30 0,7.5,35.15
+          # October 11 topology: x~0,z32 is INSIDE the enclosed supply
+          # closet and cannot be called a hallway viewpoint. Both gallery
+          # views now start on the ACTUAL contiguous school hallway floor.
+          # This is uncut Luau scene geometry, never a Roblox phone capture.
+          render_eye_checked 22-hall-look-left 18,5.5,38 -42,7.0,38
+          render_eye_checked 23-hall-look-right 18,5.5,38 50,7.0,38
+          # Reverse view toward the only connected left/staff doorway:
+          # hallway (x43,z34) -> side passage (x43,z16).
+          render_eye_checked 24-hall-entry-from-gallery 43,5.5,34 43,6.9,17
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
@@ -210,7 +215,7 @@ jobs:
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins 22-hall-look-left 23-hall-look-right 24-hall-door-from-corridor; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-closet-shelves 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins 22-hall-look-left 23-hall-look-right 24-hall-entry-from-gallery; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
@@ -352,17 +357,18 @@ jobs:
           # Native-independent source view of the school window-pier clock.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             04-window-clock 3,5,-6.5 -36,11.6,-6.5
-          # Photo-anchored transparent doorway. This exact child-eye camera
-          # showed two solid oak slabs before the aperture fix. Fast failure
-          # feedback is essential; keep the same 24-hall-door angle for parity.
+          # The rear double oak leaves open into an enclosed closet.
+          # Old x4,z40 camera hit its SOLID rear wall, so it was a false
+          # proxy for the door. Look outward from inside the actual closet.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            05-open-glass-doors 4,5.5,40 0,6.9,26.8
-          # This corridor camera matches the new physically modeled
-          # student-work rail, whose 23 sheets were invisible as wall GUI.
-          # Unlike a SurfaceGui-only test this headless view must show white
-          # diagonal 3D paper silhouettes on the long corridor wall.
+            05-closet-double-doors 0,5.5,31 0,6.9,26.8
+          # x0,z34 is now INSIDE the right supply closet. Keep an
+          # independent photo-student-work view from the TRUE walkable
+          # hallway: move player camera beyond sealed closet at z40.
+          # Must still SHOW at least six individually rendered white paper
+          # diamonds; the semantic image-pixel gate remains fail-closed.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            06-hall-paper-rail 0,5.5,34 -36,9,48.52
+            06-hall-paper-rail 0,5.5,40 -36,9,48.52
           # Fixed, full-geometry photo-window camera: sees the real 3D
           # mustard sash and sunburst at the distant sealed left end wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
@@ -427,7 +433,7 @@ jobs:
           from PIL import Image,ImageDraw
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
           names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
-                 "04-window-clock","05-open-glass-doors",
+                 "04-window-clock","05-closet-double-doors",
                  "06-hall-paper-rail","07-hall-yellow-end-window",
                  "08-hall-adjacent-oak-door",
                  "09-hall-left-floor-roof-junction")
