@@ -27,11 +27,16 @@ a manifest with `notNativeIphoneAcceptance=true`.
 
 ## Native inspection checklist — permanent scenery
 
-- [ ] **Windows / AC:** Two windows with navy drapes; lower-left window AC
+- [ ] **Windows / AC:** Two windows with genuinely *gathered* navy drapes,
+  dark alternating folds and low cloth tiebacks. At least eleven studs of
+  daylight opening remain visible across each window; no curtains flatten
+  into rigid vertical bars or obstruct the glass. Lower-left window AC
   is immediately recognizable; both radiators are beneath the windows.
   Wood returns, curtains and wall signs are not sunk behind the glass.
-  The original five-piece white analog clock faces into the classroom from
+  The original five-piece analog clock faces into the classroom from
   the yellow pier between the two windows, rather than the front chalkboard.
+  Its outer rim is muted red and the white dial shows twelve distinct hour
+  numerals and short ticks, without missing markings or inverted text.
 - [ ] **Wooden built-ins:** Tall dark timber display/shelves/cubbies
   read as a coherent built-in wall. Black teaching inset, number frieze,
   high shape cards and original opening are not overlapping the doorway.
@@ -40,30 +45,48 @@ a manifest with `notNativeIphoneAcceptance=true`.
   The colorful shape-card band reaches both wooden cabinetry groups
   without crossing the real central doorway. The original right-hand
   picture shapes must be readable on actual iPhone.
+  The upper dark display contains a visible vertical red pocket-chart
+  organizer and varied anonymous school papers; it should not look like
+  three identical blank cards. All smaller slips are child-scale and legible.
   The frieze shows the consecutive **0–120** numbers (not only multiples
   of ten), and the upper dark panel physically joins the lower wood case.
-- [ ] **Blue word wall:** Blue board is bright enough to see at child eye
-  height; two rows of red A–Z apple markers and small word slips render
-  legibly. The green historic **First Grade Word Wall** sign is small,
+- [ ] **Blue word wall:** The enlarged blue board is a dominant wall
+  landmark rather than a small isolated panel; it remains clearly between
+  the class-values display and staff doorway. Two rows of red A–Z apple
+  markers, original word slips and full-width garland render legibly
+  at child eye height. The green historic **First Grade Word Wall** sign is small,
   centered above the board, not an oversized generic encouragement panel.
 - [ ] **Gingham table:** Under the word wall, the table visually shows
   red/ivory checked fabric on the top AND hanging vertical apron faces,
   not a plain white box. SurfaceGui checks are legible from an iPhone
   and do not shimmer or interfere with nearby walking routes.
 - [ ] **Teaching wall:** Larger chalkboard is visible behind the wheeled,
-  white-framed Smartboard. Alphabet/handwriting panel is legible; 26
+  white-framed Smartboard. The idle Smartboard is dark/blank and does not
+  display a fabricated permanent "WELCOME TO GRADE 2" slide. The exposed
+  chalkboard likewise has no generic invented "GOOD MORNING!" graphic.
+  Alphabet/handwriting panel is legible; 26
   small phonics cards stay on solid teaching wall and out of ceiling.
   The cards show distinct original color pictograms beside readable
   upper/lowercase letters, with the example words unobscured.
   Photo-backed white dry-erase flipchart has blue supports and wheels,
   not a fictional wooden award plaque.
+- [ ] **Classroom-yellow walls:** The paint should read recognizably
+  warm yellow—not the former pale khaki color—on an actual iPhone in
+  daylight. Windows, door piers, and rear cabinetry must have consistent
+  paint; compare real photos under roughly similar viewing angles.
 - [ ] **Floor and ceiling:** Dark fine-grain polished wood floor does not
   show exaggerated Roblox plank seams. Pale ceiling tiles and narrow
   gray grid are bright and unbroken; six frosted troffers look like
   broad school fluorescent fixtures rather than emissive neon panels.
 - [ ] **Both rugs:** Circular sun/number/ABC rug has readable letters,
-  ten numbered clouds and visible orange sunburst. Separate black
-  rectangular polka-dot rug uses colored round dots. Both are accessible.
+  ten numbered clouds and visible orange sunburst. No blue student desk
+  chair is planted on the sun or lower letter/cloud border; verify the
+  one minimally moved middle-row desk remains naturally paired with its
+  chair and the existing supply basket is supported on that tabletop. Separate black
+  rectangular polka-dot rug has 25 different-size, naturally staggered
+  colored circles instead of the old rigid grid. Dots stay inside its edge,
+  visibly round and nonoverlapping. Both are accessible in their unchanged
+  provisional everyday positions.
 - [ ] **Navigation:** First-person iPhone camera, movement thumbstick and
   jump button work; spawn, windows, bookcases, teacher wall, right aisle
   and both existing doors remain physically reachable. Check corners,
