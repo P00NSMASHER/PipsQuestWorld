@@ -233,9 +233,15 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
                 CFrame.new(x+dx,.76,z+dz)*CFrame.Angles(0,0,math.pi/2),
                 P.metal,Enum.Material.Metal,true)
-            cylinder(parent,name.." rubber foot",Vector3.new(.19,.20,.20),
-                CFrame.new(x+dx,.13,z+dz)*CFrame.Angles(0,0,math.pi/2),
-                P.ink,Enum.Material.SmoothPlastic,false)
+            -- Source-constructed geometry audit: the former decorative
+            -- .19-stud rubber foot was centered at y=.13 with a rotated
+            -- vertical half-extent .095; its top (.225) was entirely
+            -- BELOW the finished classroom floor top (.50). All four per
+            -- student chair (64 across 16 seats) were permanently hidden
+            -- and noncolliding, yet cost Roblox 64 replicated Parts.
+            -- The full metal leg remains collidable, reaches down through
+            -- the finished floor, and provides the identical visible shape
+            -- and walking physics. Do not recreate submerged micro-parts.
         end
         cylinder(parent,name.." back support",Vector3.new(2.20,.13,.13),
             CFrame.new(x+dx,2.47,z+.73)*CFrame.Angles(0,0,math.pi/2),
