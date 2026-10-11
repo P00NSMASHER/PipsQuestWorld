@@ -1,14 +1,16 @@
 requested-mode: classroom-and-hallway-preview-only
 authorization: user-approved-2026-10-11-hallway-preview
+reaffirmed-authorization: user-directed-left-door-hallway-right-door-closet-2026-10-11
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
 build-project: school/emma-showroom.project.json
 source-branch: visual/emma-hallway-photo-faithful-20261010
-source-parent-sha: 6bb025688ee513a7139ed794bf1cd1933ceb72ac
-scope: Photo-grounded ABVM classroom, Oct 10 corridor, authentic workstation, refinished rugs, cabinet/word wall, true glass oak doors
-release-intent: One-time owner-authorized native Roblox iPhone preview; not final appearance approval
-educational-runtime: no quiz, grading, personal student history, or score writes
-furniture-meshes: disabled pending creator-owned asset and native visual acceptance
-testing-receipt: Source Luau construction, 3086-part budget, 16 chairs, hallway collision grid, lighting and photo geometries passed
-preview-status: built as preview only, native iPhone review required
+source-parent-sha: f12ac52dd437c5418f1858b5a3d4096bf56c13c5
+scope: Existing Emma classroom; LEFT Welcome-ABVM-staff door opens into connected photographed school hallway; RIGHT wood-glass double doorway leads solely into enclosed classroom supply closet with three shelves and three labeled storage tubs
+routing-proof: left doorway to side hallway and long corridor is unobstructed; old right rear hallway connection removed and closed with solid closet rear wall
+source-validation: exact-source showroom compile, constructed closet sealing plus negative tests, left staff portal traversal, conservatively computed navigation, true glass, privacy, <=3100 parts and corrected native iPhone regressions
+excluded-runtime: no old quiz, answer overlay, study bank, learner score writes, or remote grading
+privacy: photo-inspired anonymous architecture and school decorations; no children's identities, homework photos, or teacher likenesses
+furniture-meshes: disabled pending actual Roblox iPhone visual acceptance
+release-status: retry of owner-approved corrected doorway preview after first attempt safely stopped at a navigation threshold
