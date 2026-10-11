@@ -58,9 +58,15 @@ local function verify()
         and math.abs(top.Size.X-4.2)<.03
         and math.abs(top.Size.Z-7.6)<.03,
         "GINGHAM_TABLE_GEOMETRY_INVALID")
+    -- The enlarged blue board now extends from z=-11.5 to +6.5.
+    -- The table remains deliberately OFFSET toward the staff-door side,
+    -- still entirely under that photographed board, without shifting any
+    -- desk, doorway or teacher circulation.
     assert(top.Position.X+top.Size.X/2<36.0
-        and math.abs(top.Position.Z-wall.Position.Z)<.03
-        and math.abs(top.Position.X-wall.Position.X)<3.4,
+        and math.abs(top.Position.Z-wall.Position.Z-3.5)<.03
+        and math.abs(top.Position.X-wall.Position.X)<3.4
+        and top.Position.Z-top.Size.Z/2>wall.Position.Z-wall.Size.Z/2
+        and top.Position.Z+top.Size.Z/2<wall.Position.Z+wall.Size.Z/2,
         "GINGHAM_TABLE_NOT_BELOW_WORD_WALL")
     assert(top.CanCollide and top.Anchored
         and #parts("Photo gingham table steel leg")==4,
