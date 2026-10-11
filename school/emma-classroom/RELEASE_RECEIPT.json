@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
-  "purpose": "Verified historical Roblox publication receipt only; later branch edits are not automatically live, and native iPhone acceptance is pending",
+  "purpose": "Verified Roblox publication receipt, not automatic proof of subsequent source publication or native iPhone visual acceptance",
   "lastConfirmedPublication": {
-    "versionNumber": 80,
-    "sourceCommit": "f367bb91b237773acd86225c48309463f8404e4b",
-    "workflowRunId": 38114396801,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38114396801",
+    "versionNumber": 81,
+    "sourceCommit": "5dd8e046e6b679f7cb81ad0afcb5e830fd91bdd3",
+    "workflowRunId": 38114630662,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38114630662",
     "placeId": "114603280760042",
     "universeId": "10769455759",
     "mode": "classroom-and-hallway-preview-only",
-    "visualAcceptance": "pending-real-device-review"
+    "visualAcceptance": "pending-real-device-review",
+    "binarySha256": "ebbecf46cfa2a7a21d42970aef4dee46d1c5e214258b81822f4278f4211f7703"
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "Any commits after exact published v80 f367bb91 are an unpublished candidate until another successful place publication; static CI cannot certify native iPhone acceptance"
+  "nextCandidatePolicy": "Any commit after exact published v81 source 5dd8e046e6b679f7cb81ad0afcb5e830fd91bdd3 is an unpublished candidate until another successful place publication; source-rendered tests alone are not native Roblox/iPhone acceptance"
 }
