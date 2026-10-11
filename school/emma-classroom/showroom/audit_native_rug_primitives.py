@@ -15,6 +15,71 @@ from pathlib import Path
 from export_source_scene import generate_luau
 
 PROBE = r'''
+-- Original activity rug is a 16x9 black rectangle. Its photograph shows
+-- staggered colored spots, not a mechanically perfect chessboard.
+local function dotcheck()
+    local rug=nil
+    local spots={}
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then
+            if p.Name=="Front teaching rug" then
+                assert(rug==nil,"RUG_PHOTO_DUPLICATE_MAT")
+                rug=p
+            elseif p.Name=="Front rug color dot" then
+                table.insert(spots,p)
+            end
+        end
+    end
+    assert(rug and #spots==25 and
+        math.abs(rug.Position.X+25)<.03 and
+        math.abs(rug.Position.Z+20)<.03 and
+        math.abs(rug.Size.X-16)<.03 and
+        math.abs(rug.Size.Z-9)<.03,
+        "RUG_PHOTO_MAT_OR_COUNT_INVALID")
+    local xs,zs,sizes,tones={},{},{},{}
+    local stagger=0
+    for i,p in ipairs(spots) do
+        local x,z=p.Position.X,p.Position.Z
+        local radius=p.Size.Y/2
+        assert(p.Shape==Enum.PartType.Cylinder
+            and p.Material==Enum.Material.Fabric
+            and p.Anchored and not p.CanCollide
+            and not p.CanTouch and not p.CanQuery
+            and not p.CastShadow
+            and math.abs(p.CFrame.m[4])>.99
+            and math.abs(p.Position.Y-.632)<.03
+            and p.Size.X<.035 and radius>.54 and radius<.66,
+            "RUG_PHOTO_DOT_PHYSICS_INVALID")
+        assert(x-radius>rug.Position.X-rug.Size.X/2+.18
+            and x+radius<rug.Position.X+rug.Size.X/2-.18
+            and z-radius>rug.Position.Z-rug.Size.Z/2+.18
+            and z+radius<rug.Position.Z+rug.Size.Z/2-.18,
+            "RUG_PHOTO_DOT_OUTSIDE_RUG")
+        local nearest=math.floor((x+31)/3+.5)
+        if math.abs(x-(-31+nearest*3))>.18 then stagger+=1 end
+        xs[string.format("%.2f",x)]=true
+        zs[string.format("%.2f",z)]=true
+        sizes[string.format("%.2f",p.Size.Y)]=true
+        tones[string.format("%.2f:%.2f:%.2f",p.Color.R,
+            p.Color.G,p.Color.B)]=true
+        for j=1,i-1 do
+            local q=spots[j]
+            local dx,dz=x-q.Position.X,z-q.Position.Z
+            local gap=math.sqrt(dx*dx+dz*dz)-(p.Size.Y+q.Size.Y)/2
+            assert(gap>.10,"RUG_PHOTO_DOT_OVERLAP")
+        end
+    end
+    local nx,nz,ns,nt=0,0,0,0
+    for _ in pairs(xs) do nx+=1 end
+    for _ in pairs(zs) do nz+=1 end
+    for _ in pairs(sizes) do ns+=1 end
+    for _ in pairs(tones) do nt+=1 end
+    assert(stagger>=15 and nx>=20 and nz>=20
+        and ns>=5 and nt>=5,
+        "RUG_PHOTO_REGULAR_GRID_RETURNED")
+    return spots
+end
+
 local function check()
     local rays, tips, centers, lobes, labels={},{},{},{},{}
     for _,v in ipairs(Room.Root:GetDescendants()) do
@@ -90,8 +155,48 @@ rays[1].Shape=saved
 assert(not ok and string.find(tostring(err),
     "RUG_NATIVE_FLATTENED_BALL_RAY",1,true),
     "RUG_NATIVE_BALL_RAY_NOT_REJECTED")
+local spots=dotcheck()
+print("RUG_PHOTO_POLKADOT_PASS dots=25 unique_spots=true "
+    .."diameters=5 palette>=5 minimum_gap>.10 grid=false")
+local oldSpot=spots[1].CFrame
+spots[1].CFrame=spots[2].CFrame
+ok,err=pcall(dotcheck)
+spots[1].CFrame=oldSpot
+assert(not ok and string.find(tostring(err),
+    "RUG_PHOTO_DOT_OVERLAP",1,true),
+    "RUG_PHOTO_OVERLAP_NOT_REJECTED")
+print("RUG_NATIVE_ADVERSARIAL_REJECTED overlapping_spots")
+spots[1].CFrame=CFrame.new(-34,.632,-22)*
+    CFrame.Angles(0,0,math.pi/2)
+ok,err=pcall(dotcheck)
+spots[1].CFrame=oldSpot
+assert(not ok and string.find(tostring(err),
+    "RUG_PHOTO_DOT_OUTSIDE_RUG",1,true),
+    "RUG_PHOTO_EDGE_MUTATION_NOT_REJECTED")
+print("RUG_NATIVE_ADVERSARIAL_REJECTED outside_rug")
+table.sort(spots,function(a,b)
+    if math.abs(a.Position.Z-b.Position.Z)<.45 then
+        return a.Position.X<b.Position.X
+    end
+    return a.Position.Z<b.Position.Z
+end)
+local frames={}
+for i,p in ipairs(spots) do
+    frames[i]=p.CFrame
+    local row=math.floor((i-1)/5)
+    local col=(i-1)%5
+    p.CFrame=CFrame.new(-31+col*3,.632,-23.45+row*1.70)*
+        CFrame.Angles(0,0,math.pi/2)
+end
+ok,err=pcall(dotcheck)
+for i,p in ipairs(spots) do p.CFrame=frames[i] end
+assert(not ok and string.find(tostring(err),
+    "RUG_PHOTO_REGULAR_GRID_RETURNED",1,true),
+    "RUG_PHOTO_GRID_REVERSION_NOT_REJECTED "..tostring(err))
+print("RUG_NATIVE_ADVERSARIAL_REJECTED uniform_grid")
+dotcheck()
 check()
-print("RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball")
+print("RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -108,12 +213,17 @@ def main():
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
     markers=("RUG_NATIVE_PRIMITIVES_PASS",
              "RUG_NATIVE_ADVERSARIAL_REJECTED flattened_cloud_ball",
-             "RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball")
+             "RUG_PHOTO_POLKADOT_PASS",
+             "RUG_NATIVE_ADVERSARIAL_REJECTED overlapping_spots",
+             "RUG_NATIVE_ADVERSARIAL_REJECTED outside_rug",
+             "RUG_NATIVE_ADVERSARIAL_REJECTED uniform_grid",
+             "RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid")
     lines=result.stdout.splitlines()
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_NATIVE_PRIMITIVES_PASS",
+        if line.startswith(("RUG_PHOTO_POLKADOT_PASS",
+                            "RUG_NATIVE_PRIMITIVES_PASS",
                             "RUG_NATIVE_ADVERSARIAL_REJECTED",
                             "RUG_NATIVE_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
