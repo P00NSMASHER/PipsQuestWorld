@@ -1,22 +1,15 @@
 {
   "schemaVersion": 2,
   "sourceRepository": "P00NSMASHER/abvmschoolstarworld",
-  "sourceCommit": "42aec22aaf3f3aa82993744fbf1e7064a55d58af",
-  "contentSha256": "22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418",
-  "imported": 357,
+  "sourceCommit": "7cdc2047855ccf5b849e8e8d67e765164864a583",
+  "contentSha256": "8aff95892e8b11a0b541f27ad6e1674ed637538585fd05b0757ab6db762f4d06",
+  "imported": 372,
   "tiers": {
-    "current": 134,
+    "current": 149,
     "archive": 65,
     "star-fallback": 158
   },
   "tests": [
-    {
-      "id": "test-2026-10-07-reading",
-      "label": "Reading",
-      "date": "2026-10-07",
-      "count": 60,
-      "supported": true
-    },
     {
       "id": "test-2026-10-09-grammar-subject-predicate",
       "label": "Grammar (subject & predicate)",
@@ -28,7 +21,7 @@
       "id": "test-2026-10-09-spelling-short-i-long-i-handwriting",
       "label": "Spelling (short i / long i) / Handwriting",
       "date": "2026-10-09",
-      "count": 9,
+      "count": 24,
       "supported": true
     },
     {
