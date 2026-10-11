@@ -30,8 +30,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
 - [ ] **Windows / AC:** Two windows with navy drapes; lower-left window AC
   is immediately recognizable; both radiators are beneath the windows.
   Wood returns, curtains and wall signs are not sunk behind the glass.
-  The original five-piece white analog clock faces into the classroom from
+  The original five-piece analog clock faces into the classroom from
   the yellow pier between the two windows, rather than the front chalkboard.
+  Its outer rim is muted red and the white dial shows twelve distinct hour
+  numerals and short ticks, without missing markings or inverted text.
 - [ ] **Wooden built-ins:** Tall dark timber display/shelves/cubbies
   read as a coherent built-in wall. Black teaching inset, number frieze,
   high shape cards and original opening are not overlapping the doorway.

@@ -1914,11 +1914,54 @@ function World.build()
     local clock=cylinder(root,"Classroom wall clock",
         Vector3.new(.25,3.2,3.2),CFrame.new(-36.38,11.60,-6.50),
         Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
-    cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),
-        clock.CFrame,Color3.fromRGB(61,63,63),Enum.Material.Metal,false)
-    cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),
+    -- The actual inter-window clock has a distinctive RED outer ring and
+    -- an analog numeral dial. Preserve the established 5 physical Parts,
+    -- but restore the clock's true painted frame and original native face art.
+    -- A Cylinder's positive local X cap faces into the classroom (+world X).
+    local clockRim=cylinder(root,"Clock rim",Vector3.new(.34,3.55,3.55),
+        clock.CFrame,Color3.fromRGB(169,59,62),
+        Enum.Material.SmoothPlastic,false)
+    clockRim.CastShadow=false
+    local clockDial=cylinder(root,"Clock visible dial",Vector3.new(.08,3.17,3.17),
         clock.CFrame*CFrame.new(.22,0,0),
         Color3.fromRGB(242,242,237),Enum.Material.SmoothPlastic,false)
+    local clockGUI=Instance.new("SurfaceGui")
+    clockGUI.Name="PhotoSchoolClockFace"
+    clockGUI.Face=Enum.NormalId.Right
+    clockGUI.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    clockGUI.CanvasSize=Vector2.new(384,384)
+    clockGUI.LightInfluence=.02
+    clockGUI.Parent=clockDial
+    for n=1,12 do
+        -- 12 top, 3 right, 6 bottom, 9 left. UI-only elements carry no
+        -- physics. Static numbers are a real-room visual reference only,
+        -- not a live clock or a timer.
+        local theta=n*math.pi/6
+        local nx=.5+.372*math.sin(theta)
+        local ny=.5-.372*math.cos(theta)
+        local digit=Instance.new("TextLabel")
+        digit.Name="ClockHourNumeral"
+        digit.Text=tostring(n)
+        digit.Font=Enum.Font.GothamBold
+        digit.TextColor3=Color3.fromRGB(51,55,57)
+        digit.TextScaled=true
+        digit.TextWrapped=false
+        digit.BackgroundTransparency=1
+        digit.Position=UDim2.fromScale(nx-.073,ny-.064)
+        digit.Size=UDim2.fromScale(.146,.128)
+        digit.Parent=clockGUI
+        local tick=Instance.new("Frame")
+        tick.Name="ClockHourTick"
+        tick.Position=UDim2.fromScale(
+            .5+.451*math.sin(theta)-.006,
+            .5-.451*math.cos(theta)-.025)
+        tick.Size=UDim2.fromScale(.012,.05)
+        tick.Rotation=n*30
+        tick.BackgroundColor3=Color3.fromRGB(74,77,78)
+        tick.BackgroundTransparency=0
+        tick.BorderSizePixel=0
+        tick.Parent=clockGUI
+    end
     -- Clock hands project toward +X and rotate in the Y/Z clock-face
     -- plane, rather than burying themselves in the wall or facing a window.
     part(root,"Clock minute hand",Vector3.new(.12,1.25,.12),

@@ -101,6 +101,50 @@ local function check()
         and minute.Position.X>dial.Position.X+.06
         and hour.Position.X>dial.Position.X+.06,
         "PHOTO_WINDOW_CLOCK_FACE_ASSEMBLY_INVALID")
+    -- The actual school's white analog clock has a red outer rim. The
+    -- original 5-Part draft clock had a dark gray ring and blank dial.
+    assert(rim.Material==Enum.Material.SmoothPlastic
+        and rim.Color.R>.62 and rim.Color.R<.71
+        and rim.Color.G>.20 and rim.Color.G<.27
+        and rim.Color.B>.21 and rim.Color.B<.28,
+        "PHOTO_WINDOW_CLOCK_RED_RIM_REGRESSION")
+    local face= dial:FindFirstChild("PhotoSchoolClockFace")
+    assert(face and face:IsA("SurfaceGui")
+        and face.Face==Enum.NormalId.Right
+        and face.SizingMode==Enum.SurfaceGuiSizingMode.FixedSize
+        and face.CanvasSize[1]==384 and face.CanvasSize[2]==384,
+        "PHOTO_WINDOW_CLOCK_DIAL_FACING_AWAY")
+    local nCount,tickCount,seenNumbers=0,0,{}
+    for _,node in ipairs(face:GetChildren()) do
+        if node.Name=="ClockHourNumeral" then
+            nCount+=1
+            local n=tonumber(node.Text)
+            assert(n and n>=1 and n<=12 and not seenNumbers[n]
+                and node:IsA("TextLabel")
+                and node.BackgroundTransparency==1
+                and node.TextScaled and not node.TextWrapped,
+                "PHOTO_WINDOW_CLOCK_NUMBER_ORDER_INVALID")
+            seenNumbers[n]=true
+            local theta=n*math.pi/6
+            local x=.5+.372*math.sin(theta)-.073
+            local y=.5-.372*math.cos(theta)-.064
+            assert(math.abs(node.Position[1]-x)<.003
+                and math.abs(node.Position[2]-y)<.003
+                and node.Size[1]>.14 and node.Size[2]>.12,
+                "PHOTO_WINDOW_CLOCK_NUMBER_PLACEMENT_INVALID")
+        elseif node.Name=="ClockHourTick" then
+            tickCount+=1
+            assert(node:IsA("Frame")
+                and node.BackgroundTransparency==0
+                and node.Size[1]<.02 and node.Size[2]<.06,
+                "PHOTO_WINDOW_CLOCK_TICK_INVALID")
+        end
+    end
+    assert(nCount==12 and tickCount==12,
+        "PHOTO_WINDOW_CLOCK_FACE_DETAILS_MISSING")
+    for n=1,12 do
+        assert(seenNumbers[n],"PHOTO_WINDOW_CLOCK_FACE_DETAILS_MISSING")
+    end
     for _,p in ipairs({clock,rim,dial,minute,hour}) do
         assert(p.Anchored and not p.CanCollide and not p.CanTouch,
             "PHOTO_WINDOW_CLOCK_DECOR_COLLIDES")
@@ -160,8 +204,42 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WINDOW_CLOCK_LOCATION_INVALID",1,true),
     "PHOTO_WINDOW_CLOCK_FRONT_WALL_REGRESSION_NOT_REJECTED")
 print("WINDOW_CUE_ADVERSARIAL_REJECTED front_wall_clock")
+local rim=one("Clock rim")
+local oldRimColor=rim.Color
+rim.Color=Color3.fromRGB(61,63,63)
+ok,err=pcall(check)
+rim.Color=oldRimColor
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WINDOW_CLOCK_RED_RIM_REGRESSION",1,true),
+    "PHOTO_WINDOW_CLOCK_OLD_GRAY_RIM_NOT_REJECTED")
+print("WINDOW_CUE_ADVERSARIAL_REJECTED old_gray_clock_rim")
+local dial=one("Clock visible dial")
+local clockGUI=dial:FindFirstChild("PhotoSchoolClockFace")
+local label
+for _,child in ipairs(clockGUI:GetChildren()) do
+    if child.Name=="ClockHourNumeral" and child.Text=="12" then
+        label=child break
+    end
+end
+assert(label,"PHOTO_WINDOW_CLOCK_TEST_12_MISSING")
+local beforeNumeral=label.Text
+label.Text="13"
+ok,err=pcall(check)
+label.Text=beforeNumeral
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WINDOW_CLOCK_NUMBER_ORDER_INVALID",1,true),
+    "PHOTO_WINDOW_CLOCK_BAD_NUMBER_NOT_REJECTED")
+print("WINDOW_CUE_ADVERSARIAL_REJECTED wrong_analog_numeral")
+local oldFace=clockGUI.Face
+clockGUI.Face=Enum.NormalId.Left
+ok,err=pcall(check)
+clockGUI.Face=oldFace
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WINDOW_CLOCK_DIAL_FACING_AWAY",1,true),
+    "PHOTO_WINDOW_CLOCK_REVERSED_GUI_NOT_REJECTED")
+print("WINDOW_CUE_ADVERSARIAL_REJECTED reversed_analog_dial")
 check()
-print("WINDOW_CUE_NEGATIVE_TESTS_PASS collision location lettering clock")
+print("WINDOW_CUE_NEGATIVE_TESTS_PASS collision location lettering clock rim numerals face")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -180,6 +258,9 @@ def main():
               "WINDOW_CUE_ADVERSARIAL_REJECTED collidable_ac",
               "WINDOW_CUE_ADVERSARIAL_REJECTED wrong_window",
               "WINDOW_CUE_ADVERSARIAL_REJECTED front_wall_clock",
+              "WINDOW_CUE_ADVERSARIAL_REJECTED old_gray_clock_rim",
+              "WINDOW_CUE_ADVERSARIAL_REJECTED wrong_analog_numeral",
+              "WINDOW_CUE_ADVERSARIAL_REJECTED reversed_analog_dial",
               "WINDOW_CUE_NEGATIVE_TESTS_PASS")
     for marker in required:
         assert any(row.startswith(marker) for row in r.stdout.splitlines()),marker

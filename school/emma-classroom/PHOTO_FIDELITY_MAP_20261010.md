@@ -351,3 +351,24 @@ a deliberate mutation back to the pale-washed original must fail.
 The geometric scene exporter independently checks wall tint.
 The source-derived renderer is NOT native Roblox; iPhone owner approval of
 actual exposure and warmth remains required before final acceptance.
+
+## October 10 — red-rimmed analog clock and native numbers
+
+The owner's photographs of the two broad navy-curtained windows establish a
+small **red-trimmed white analog classroom clock** on the yellow inter-window
+pier. The game had moved its five physical clock Parts to the correct
+location but still drew an empty white dial with an almost-black metallic
+ring. This pass retains all **five existing BaseParts**, changes the rim to
+muted red painted SmoothPlastic, and uses an original noninteractive
+`SurfaceGui` on the same circular white dial with **12 properly placed
+hour numerals and 12 small black hour ticks** (twelve at top, three at right).
+The existing two actual dark metal hands stay unchanged and in front of
+the dial. No external images, photo copies, child/schoolwork data, animation,
+timer, physics objects or new physical Parts.
+
+Constructed Luau now checks rim hue/material, right-facing 384×384 UI canvas,
+12 unique 1–12 numbers, their correct circular angular arrangement, tick
+count and anchoring/noncollision. Negative mutations reject reverting to
+the dark gray rim, changing 12 to 13, or reversing the dial onto the wall.
+The source renderer can show the red rim but does not render the SurfaceGui
+labels/ticks, so this is still subject to a native iPhone readability check.
