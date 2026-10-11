@@ -1920,8 +1920,11 @@ local function buildBackDoorAndHall(root: Instance)
     -- implementation was 100% SurfaceGui on the distant blue wall; the
     -- independent *actual-room* renderer rendered a totally bare corridor.
     -- Real thin paper Parts preserve the defining photographed silhouette
-    -- in Roblox *and* in renderer QA. No photographed assignment or identity
-    -- is copied: captions are original, intentionally anonymous pencil lines.
+    -- in Roblox *and* in renderer QA. No photographed assignment, identity,
+    -- photographed child handwriting, or school class content is copied.
+    -- Original low-cost crayon/pencil abstractions vary the anonymous gallery:
+    -- three soft ruled lines plus three small colored geometry marks per
+    -- sheet. All ink is native SurfaceGui, with NO additional physical Parts.
     hp("Photo hall student work hanging rail",Vector3.new(83,.16,.17),
         CFrame.new(0,10.54,48.69),Color3.fromRGB(167,130,88),
         Enum.Material.Wood,false)
@@ -1938,6 +1941,18 @@ local function buildBackDoorAndHall(root: Instance)
         diamond.CastShadow=true
         diamond:SetAttribute("Source","Anonymous original paper artwork")
         diamond:SetAttribute("OriginalStudentData",false)
+        -- The styles and geometry are invented, not transcribed homework.
+        -- Five gently varied palettes create original miniature pencil
+        -- abstractions without typography, names, faces or uploaded images.
+        local artStyle=((i+11)%5)+1
+        diamond:SetAttribute("AnonymousArtStyle",artStyle)
+        local pencilTints={
+            Color3.fromRGB(101,143,162),
+            Color3.fromRGB(168,129,91),
+            Color3.fromRGB(119,163,131),
+            Color3.fromRGB(183,144,89),
+            Color3.fromRGB(151,124,163),
+        }
         local paperArt=imageSurface(diamond,"Anonymous paper pencil strokes",
             Enum.NormalId.Front,190,218)
         for n=1,3 do
@@ -1947,6 +1962,16 @@ local function buildBackDoorAndHall(root: Instance)
                 UDim2.fromScale(.17,.24+n*.15),
                 Color3.fromRGB(187,193,190))
             line.BackgroundTransparency=.18
+        end
+        for mark=1,3 do
+            local crayon=paintedRectangle(paperArt,
+                "Anonymous original colored pencil motif",
+                UDim2.fromScale(.14+.025*(mark%2),.033),
+                UDim2.fromScale(.19+(mark-1)*.20,
+                    .115+((artStyle+mark)%3)*.038),
+                pencilTints[((artStyle+mark-2)%#pencilTints)+1])
+            crayon.Rotation=((i+mark*7+22)%43)-21
+            crayon.BackgroundTransparency=.12
         end
     end
 
