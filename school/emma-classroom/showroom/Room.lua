@@ -2134,13 +2134,27 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Staff door header",Vector3.new(1.3,1.0,15.4),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     local door=part(root,"Open staff classroom door",Vector3.new(.55,10,6.6),CFrame.new(35.9,5.3,20.2)*CFrame.Angles(0,math.rad(58),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
     local glass=part(root,"Staff door glass",Vector3.new(.18,4.7,3.1),door.CFrame*CFrame.new(-.35,1.6,0),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.28
-    part(root,"Side hall floor",Vector3.new(18,.5,20),CFrame.new(45.5,.25,15.5),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    -- The photo corridor starts at z=26.75; the old staff hallway floor
+    -- ended at z=25.5, leaving a 1.25-stud unsupported gap at the ONLY
+    -- classroom-to-hall exit. Extend the existing floor north to z=27.30
+    -- without adding a physical Part. Keep its south edge at z=5.50.
+    -- Its top lies .02 stud below the main polished tile to avoid
+    -- coplanar overlapping surfaces flickering in native Roblox.
+    part(root,"Side hall floor",Vector3.new(18,.48,21.8),
+        CFrame.new(45.5,.24,16.4),Color3.fromRGB(67,68,66),Enum.Material.Slate)
     part(root,"Staff doorway brass threshold",
         Vector3.new(.24,.045,13.35),CFrame.new(37.10,.556,15.5),
         Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
     part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
+    -- The original side ceiling stopped at the SAME z=25.5 seam and
+    -- exposed sky above the new turning route. Extend it to z=27.30,
+    -- overlapping the ivory photo hall roof (begins z=26.75).
+    -- Its underside is .02 stud below the main ceiling, preventing
+    -- exactly coplanar surfaces while preserving visual enclosure.
+    part(root,"Side hall ceiling",Vector3.new(18,.36,21.8),
+        CFrame.new(45.5,13.18,16.4),
+        Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
     -- Leave the NORTH end open into the main 108-stud corridor: previously
     -- the cap at z=25.35 completely blocked the screenshot's LEFT doorway
     -- from reaching the photographed hall behind the classroom.
