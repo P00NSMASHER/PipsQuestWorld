@@ -319,6 +319,17 @@ jobs:
             --luau "$RUNNER_TEMP/luau/luau"
           echo "HALL_CAMERA_OWNED_BY_WALKABLE_SCENE_PASS"
 
+      - name: Fail fast on dual-paper-view synthetic regressions before any 3D rendering
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The dual-view checker depends on the preexisting paper-shape
+          # gate. Run its adversarial fixtures while the renderer is idle,
+          # so a faulty expectation does not waste six minutes of renders.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py --self-test
+          echo "HALL_DUAL_CAMERA_FIXTURE_FAST_PASS"
+
       - name: Capture three fixed full-geometry viewpoints
         shell: bash
         env:
@@ -409,7 +420,6 @@ jobs:
             "$FAST/07-hall-yellow-end-window.png"
           # The two exposures must not be duplicate PNGs, swapped views,
           # a single fake paper panel, or a weak/occluded gallery closeup.
-          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py --self-test
           "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py \
             --gallery "$FAST/06-hall-paper-rail.png" \
             --overview "$FAST/07-hall-yellow-end-window.png"
