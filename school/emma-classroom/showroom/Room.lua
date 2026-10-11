@@ -1717,26 +1717,58 @@ local function buildBackDoorAndHall(root: Instance)
         end
     end
 
-    -- Adjacent closed school doors are facades, never fake enterable
-    -- classrooms. One flat oak carrier per door, not 6+ separate blockers.
+    -- The independent October 10 player-eye render exposed these two
+    -- facades as almost featureless near-black rectangles: their previous
+    -- "frosted glass" and hardware were ONLY invisible SurfaceGui overlays.
+    -- Replace the flat drawings with shallow, actual Roblox-native Parts.
+    -- Keep the existing structural front wall BEHIND each door; they are
+    -- intentionally closed architectural facades, not speculative rooms.
+    -- 9 extra noncolliding Parts per door (18 added to the scene total).
     for _,x in ipairs({-45.5,45.5}) do
+        -- Reuse the original physical door Part as its solid bottom panel.
+        -- The upper portion is an actual glazing aperture, not a transparent
+        -- square stuck over a ten-stud opaque wooden board.
         local door=hp("Photo hall adjacent oak door",
-            Vector3.new(6.45,10,.14),CFrame.new(x,5.5,27.79),
+            Vector3.new(6.45,4.33,.14),CFrame.new(x,2.665,27.79),
             darkOak,Enum.Material.Wood,false)
-        local gui=imageSurface(door,"Frosted glass and oak door trim",
-            Enum.NormalId.Back,450,700)
-        paintedRectangle(gui,"School door frosted glazing",
-            UDim2.fromScale(.73,.51),UDim2.fromScale(.135,.09),
-            Color3.fromRGB(187,202,202))
-        paintedRectangle(gui,"School door oak center rail",
-            UDim2.fromScale(.87,.035),UDim2.fromScale(.065,.58),
-            Color3.fromRGB(149,102,60))
-        paintedRectangle(gui,"School door brass push plate",
-            UDim2.fromScale(.05,.15),UDim2.fromScale(.80,.69),
-            Color3.fromRGB(181,161,118))
-        paintedRectangle(gui,"School door lower raised panel",
-            UDim2.fromScale(.73,.20),UDim2.fromScale(.135,.73),
-            Color3.fromRGB(140,96,62))
+        door:SetAttribute("ArchitecturalFacade","Closed; no extra classroom")
+
+        local pane=hp("Photo hall adjacent frosted door glass",
+            Vector3.new(4.96,4.88,.11),CFrame.new(x,7.635,27.92),
+            Color3.fromRGB(187,205,201),Enum.Material.Glass,false)
+        pane.Transparency=.30
+        pane.Reflectance=.018
+        pane:SetAttribute("GlassAperture","Upper opening has no solid wood backing")
+
+        -- Framing parts sit ahead of the older sealed wall; low-relief detail
+        -- stays visible from a child's hallway-height view, without physics.
+        for _,dx in ipairs({-2.865,2.865}) do
+            hp("Photo hall adjacent oak side stile",
+                Vector3.new(.72,4.96,.26),
+                CFrame.new(x+dx,7.62,27.98),
+                Color3.fromRGB(122,82,52),Enum.Material.Wood,false)
+        end
+        hp("Photo hall adjacent oak upper lintel",
+            Vector3.new(6.45,.40,.26),CFrame.new(x,10.30,27.98),
+            Color3.fromRGB(119,81,53),Enum.Material.Wood,false)
+        hp("Photo hall adjacent oak glass sill",
+            Vector3.new(6.45,.34,.26),CFrame.new(x,5.0,27.98),
+            Color3.fromRGB(126,84,53),Enum.Material.Wood,false)
+        hp("Photo hall adjacent oak glass crossbar",
+            Vector3.new(4.97,.18,.19),CFrame.new(x,7.58,28.02),
+            Color3.fromRGB(126,84,53),Enum.Material.Wood,false)
+
+        -- One restrained molded panel, brass plate, and actual metal pull.
+        hp("Photo hall adjacent lower raised wood panel",
+            Vector3.new(5.03,3.15,.075),CFrame.new(x,2.66,27.91),
+            Color3.fromRGB(147,103,68),Enum.Material.Wood,false)
+        local gripX=x+(x<0 and 2.02 or -2.02)
+        hp("Photo hall adjacent brass push plate",
+            Vector3.new(.25,.90,.085),CFrame.new(gripX,3.45,28.025),
+            Color3.fromRGB(177,151,100),Enum.Material.Metal,false)
+        hp("Photo hall adjacent brass pull",
+            Vector3.new(.13,.58,.11),CFrame.new(gripX,3.46,28.115),
+            Color3.fromRGB(201,178,122),Enum.Material.Metal,false)
     end
     local welcome=hp("Photo hall vertical welcome plaque",
         Vector3.new(1.15,7.5,.09),CFrame.new(-10.5,8,27.8),
