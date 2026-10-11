@@ -237,8 +237,9 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             -- .19-stud rubber foot was centered at y=.13 with a rotated
             -- vertical half-extent .095; its top (.225) was entirely
             -- BELOW the finished classroom floor top (.50). All four per
-            -- student chair (64 across 16 seats) were permanently hidden
-            -- and noncolliding, yet cost Roblox 64 replicated Parts.
+            -- normal student chair (64 across 16 desks) PLUS the one
+            -- purple corner chair (4 more) were permanently hidden and
+            -- noncolliding, yet cost Roblox 68 replicated Parts.
             -- The full metal leg remains collidable, reaches down through
             -- the finished floor, and provides the identical visible shape
             -- and walking physics. Do not recreate submerged micro-parts.
