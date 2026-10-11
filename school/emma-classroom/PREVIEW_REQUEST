@@ -6,11 +6,11 @@ target-universe: 10769455759
 target-place: 114603280760042
 build-project: school/emma-showroom.project.json
 source-branch: visual/emma-hallway-photo-faithful-20261010
-source-parent-sha: f689ab00c26d1148ef0eb8e5f2866e3572983fde
+source-parent-sha: f12ac52dd437c5418f1858b5a3d4096bf56c13c5
 scope: Existing Emma classroom; LEFT Welcome-ABVM-staff door opens into connected photographed school hallway; RIGHT wood-glass double doorway leads solely into enclosed classroom supply closet with three shelves and three labeled storage tubs
 routing-proof: left doorway to side hallway and long corridor is unobstructed; old right rear hallway connection removed and closed with solid closet rear wall
-source-validation: release workflow must compile true showroom Luau, run real-source hallway photo audit and negative closet wall mutations, test navigation with conservative avatar bounds, verify <=3100 Parts, and build only classroom replica
+source-validation: exact-source showroom compile, constructed closet sealing plus negative tests, left staff portal traversal, conservatively computed navigation, true glass, privacy, <=3100 parts and corrected native iPhone regressions
 excluded-runtime: no old quiz, answer overlay, study bank, learner score writes, or remote grading
 privacy: photo-inspired anonymous architecture and school decorations; no children's identities, homework photos, or teacher likenesses
 furniture-meshes: disabled pending actual Roblox iPhone visual acceptance
-release-status: owner-requested one-time playable preview, not final visual acceptance
+release-status: retry of owner-approved corrected doorway preview after first attempt safely stopped at a navigation threshold
