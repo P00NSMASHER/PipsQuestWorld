@@ -103,6 +103,17 @@ jobs:
           done
           python3 school/emma-classroom/showroom/verify_build.py
 
+      - name: Check original anonymous hallway art and mobile UI draw budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Independent from the rest of the classroom image tests, so a
+          # concurrently modified word wall does not hide hallway regressions.
+          # These are source-constructed limits, NOT measured phone FPS.
+          python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "HALLWAY_NO_EXTRA_PARTS_NO_STUDENT_PHOTOS_CI_PASS"
+
       - name: Fail fast on exact-source room geometry and mobile part budget
         shell: bash
         run: |
