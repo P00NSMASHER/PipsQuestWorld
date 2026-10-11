@@ -1,14 +1,16 @@
 requested-mode: classroom-and-hallway-preview-only
 authorization: user-approved-2026-10-11-hallway-preview
+reaffirmed-authorization: user-directed-left-door-hallway-right-door-closet-2026-10-11
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
 build-project: school/emma-showroom.project.json
 source-branch: visual/emma-hallway-photo-faithful-20261010
-source-parent-sha: 6bb025688ee513a7139ed794bf1cd1933ceb72ac
-scope: Photo-grounded ABVM classroom, Oct 10 corridor, authentic workstation, refinished rugs, cabinet/word wall, true glass oak doors
-release-intent: One-time owner-authorized native Roblox iPhone preview; not final appearance approval
-educational-runtime: no quiz, grading, personal student history, or score writes
-furniture-meshes: disabled pending creator-owned asset and native visual acceptance
-testing-receipt: Source Luau construction, 3086-part budget, 16 chairs, hallway collision grid, lighting and photo geometries passed
-preview-status: built as preview only, native iPhone review required
+source-parent-sha: f689ab00c26d1148ef0eb8e5f2866e3572983fde
+scope: Existing Emma classroom; LEFT Welcome-ABVM-staff door opens into connected photographed school hallway; RIGHT wood-glass double doorway leads solely into enclosed classroom supply closet with three shelves and three labeled storage tubs
+routing-proof: left doorway to side hallway and long corridor is unobstructed; old right rear hallway connection removed and closed with solid closet rear wall
+source-validation: release workflow must compile true showroom Luau, run real-source hallway photo audit and negative closet wall mutations, test navigation with conservative avatar bounds, verify <=3100 Parts, and build only classroom replica
+excluded-runtime: no old quiz, answer overlay, study bank, learner score writes, or remote grading
+privacy: photo-inspired anonymous architecture and school decorations; no children's identities, homework photos, or teacher likenesses
+furniture-meshes: disabled pending actual Roblox iPhone visual acceptance
+release-status: owner-requested one-time playable preview, not final visual acceptance
