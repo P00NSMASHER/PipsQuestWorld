@@ -116,8 +116,11 @@ def self_test() -> None:
     expect_rejected(gallery.resize((1112, 512)), overview, "VIEWPORT_CHANGED")
     expect_rejected(invented_test_frame(6, 53, 70, 85, 130),
                     overview, "GALLERY_CAMERA_MISSING")
+    # Five visible papers fail the EXISTING source-pixel silhouette gate
+    # first; test its actual upstream error rather than expecting our later
+    # dual-view threshold to run.
     expect_rejected(gallery, invented_test_frame(5, 38, 75, 100, 125),
-                    "OVERVIEW_CAMERA_MISSING")
+                    "BARE_WALL")
     # A visually similar but too-small oblique view must not be allowed to
     # borrow credibility from the strong yellow-window overview.
     expect_rejected(invented_test_frame(7, 39, 51, 85, 130),
