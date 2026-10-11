@@ -470,3 +470,32 @@ requiring at least 0.12 studs between those bounds and the circular
 the basket on its moved desk. Negative tests restore the old obstructing
 chair position or leave the basket on the old desktop; each must fail.
 Native Roblox/iPhone camera evidence remains pending owner signoff.
+
+## October 11 — back-left supply cart stops covering the round rug
+
+The exact previous classroom source render `03-rugs-cutaway.png` showed
+a large pale-blue/turquoise **rolling cart** overlapping the circular
+A–Z/cloud/sun activity rug even after the obstructing student chair was
+corrected. The source snapshot confirmed the cause: the original cart
+top at (x=-29,z=22), size 5.5×3.2, penetrated the rug by ~0.58 studs.
+
+A deliberately bounded correction relocates the SAME wheeled cart to the
+back-left storage corner at x=-33.6,z=23.5 and turns its long 5.5-stud
+axis parallel to the rear wall (new top footprint 3.2×5.5). Its three
+metal shelves, four caster wheels, four upright rails, two books and paper
+stack move together, preserving the physical Part count. The candidate
+cart fits within the existing room shell and to the left of the bookcase,
+without hitting the reading floor lamp. Predicted minimum top-to-rug
+clearance is ~2.62 studs; exact constructed-Luau QA decides PASS/FAIL.
+The school's normal-day storage-cart position is not independently
+photographically proven, so this remains an owner-review candidate,
+not a survey claim. No real people/photos, schoolwork, external assets,
+scripts or other student furniture changed.
+
+The existing `audit_native_rug_primitives.py` now inspects actual
+cart geometry, connection/levels of its 3 shelves, 4 wheels, 4 rails,
+the supported paper stack, room/back-wall/lamp clearance and the
+original circle-rug bounds. Negative tests restore the old overlapping
+cart position, detach a wheel, and abandon the paper stack behind;
+all are required to fail. This supplements the earlier 16 student
+desk/chair rug clearance and six standard route checks.

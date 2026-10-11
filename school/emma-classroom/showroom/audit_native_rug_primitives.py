@@ -219,6 +219,103 @@ local function checkReadingRugClearance()
         "RUG_READING_BASKET_OR_PAIR_DISCONNECTED")
     return movedSeat,movedBasket,nearest
 end
+-- A different obstruction remained after the blue chair was cleared:
+-- the *rolling supply cart* overlapped the round sun/cloud rug. Test
+-- exact constructed scene geometry rather than only seat/chair families.
+local function checkSupplyCartClearance()
+    local function named(name)
+        local parts={}
+        for _,p in ipairs(Room.Root:GetDescendants()) do
+            if p:IsA("BasePart") and p.Name==name then
+                table.insert(parts,p)
+            end
+        end
+        return parts
+    end
+    local function one(name)
+        local hits=named(name)
+        assert(#hits==1,"RUG_STORAGE_CART_PART_COUNT_INVALID "..name)
+        return hits[1]
+    end
+    local mat=one("Alphabet rug")
+    local top=one("Rolling cart top")
+    local shelves=named("Rolling cart shelf")
+    local wheels=named("Cart wheel")
+    local rails=named("Cart vertical rail")
+    local papers=one("Cart paper stack")
+    local lamp=one("Reading fabric drum lampshade")
+    local library=one("Reading shelf back")
+    assert(#shelves==3 and #wheels==4 and #rails==4,
+        "RUG_STORAGE_CART_COMPONENTS_SPLIT")
+    local function halfspan(part,axis)
+        local m,s=part.CFrame.m,part.Size
+        local offset=(axis-1)*3
+        return (math.abs(m[offset+1])*s.X
+            +math.abs(m[offset+2])*s.Y
+            +math.abs(m[offset+3])*s.Z)/2
+    end
+    local function rugGap(part)
+        local hx,hz=halfspan(part,1),halfspan(part,3)
+        local dx=math.max(0,math.abs(part.Position.X-mat.Position.X)-hx)
+        local dz=math.max(0,math.abs(part.Position.Z-mat.Position.Z)-hz)
+        return math.sqrt(dx*dx+dz*dz)-mat.Size.Y/2
+    end
+    local cartGap=rugGap(top)
+    assert(cartGap>2.0,"RUG_STORAGE_CART_COVERS_ALPHABET")
+    assert(math.abs(top.Position.X+33.6)<.025
+        and math.abs(top.Position.Y-3.5)<.025
+        and math.abs(top.Position.Z-23.5)<.025
+        and math.abs(top.Size.X-3.2)<.025
+        and math.abs(top.Size.Z-5.5)<.025
+        and top.Anchored and top.CanCollide,
+        "RUG_STORAGE_CART_PLACEMENT_INVALID")
+    local frontZ=top.Position.Z-halfspan(top,3)
+    local rearZ=top.Position.Z+halfspan(top,3)
+    local leftX=top.Position.X-halfspan(top,1)
+    local rightX=top.Position.X+halfspan(top,1)
+    assert(leftX>-36.45 and rearZ<26.40
+        and rightX<library.Position.X-library.Size.X/2-.5
+        and frontZ>lamp.Position.Z+lamp.Size.Z/2+.5,
+        "RUG_STORAGE_CART_CLIPS_LIBRARY_OR_LAMP")
+    local levels={}
+    for _,shelf in ipairs(shelves) do
+        assert(math.abs(shelf.Position.X-top.Position.X)<.025
+            and math.abs(shelf.Position.Z-top.Position.Z)<.025
+            and math.abs(shelf.Size.X-3.0)<.025
+            and math.abs(shelf.Size.Z-5.2)<.025
+            and not shelf.CanCollide,
+            "RUG_STORAGE_CART_COMPONENTS_SPLIT")
+        assert(rugGap(shelf)>2.0,
+            "RUG_STORAGE_CART_COVERS_ALPHABET")
+        levels[string.format("%.1f",shelf.Position.Y)]=true
+    end
+    assert(levels["1.0"] and levels["2.1"] and levels["3.2"],
+        "RUG_STORAGE_CART_SHELF_LEVELS_INVALID")
+    local positions={}
+    for _,family in ipairs({wheels,rails}) do
+        for _,part in ipairs(family) do
+            local dx=math.abs(part.Position.X-top.Position.X)
+            local dz=math.abs(part.Position.Z-top.Position.Z)
+            assert(math.abs(dx-1.2)<.03
+                and math.abs(dz-2.2)<.03 and part.Anchored
+                and not part.CanCollide,
+                "RUG_STORAGE_CART_COMPONENTS_SPLIT")
+            assert(rugGap(part)>1.8,
+                "RUG_STORAGE_CART_COVERS_ALPHABET")
+        end
+    end
+    assert(math.abs(papers.Position.X-(top.Position.X+.4))<.03
+        and math.abs(papers.Position.Z-(top.Position.Z+.8))<.03
+        and math.abs(papers.Position.Y-2.35)<.03
+        and papers.Position.Y-papers.Size.Y/2>2.21
+        and math.abs(papers.Position.X-top.Position.X)+
+            papers.Size.X/2<top.Size.X/2
+        and math.abs(papers.Position.Z-top.Position.Z)+
+            papers.Size.Z/2<top.Size.Z/2,
+        "RUG_STORAGE_CART_SUPPLIES_FLOATING")
+    return top,wheels,papers,cartGap
+end
+
 local rays,lobes=check()
 print("RUG_NATIVE_PRIMITIVES_PASS rays=16 caps=16 "
     .."cloud_bodies=10 flat_cylinder_lobes=20 "
@@ -238,6 +335,36 @@ rays[1].Shape=saved
 assert(not ok and string.find(tostring(err),
     "RUG_NATIVE_FLATTENED_BALL_RAY",1,true),
     "RUG_NATIVE_BALL_RAY_NOT_REJECTED")
+local cart,wheels,paper,cartGap=checkSupplyCartClearance()
+print(string.format("RUG_STORAGE_CART_CLEAR_PASS "
+    .."round_rug_clearance=%.2f studs cart_shelves=3 "
+    .."wheels=4 rails=4 supplies_supported=true",cartGap))
+local oldCart=cart.CFrame
+cart.CFrame=CFrame.new(-29,3.5,22)
+local oldCartOk,oldCartErr=pcall(checkSupplyCartClearance)
+cart.CFrame=oldCart
+assert(not oldCartOk and string.find(tostring(oldCartErr),
+    "RUG_STORAGE_CART_COVERS_ALPHABET",1,true),
+    "RUG_STORAGE_CART_OLD_CARPET_OVERLAP_NOT_REJECTED")
+print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED rug_intrusion")
+local oldWheel=wheels[1].CFrame
+wheels[1].CFrame=CFrame.new(-31.2,.45,20.8)*
+    CFrame.Angles(0,0,math.pi/2)
+local wheelOK,wheelErr=pcall(checkSupplyCartClearance)
+wheels[1].CFrame=oldWheel
+assert(not wheelOK and string.find(tostring(wheelErr),
+    "RUG_STORAGE_CART_COMPONENTS_SPLIT",1,true),
+    "RUG_STORAGE_CART_DETACHED_WHEEL_NOT_REJECTED")
+print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_wheel")
+local oldPaper=paper.CFrame
+paper.CFrame=CFrame.new(-27.6,2.35,21.9)
+local paperOK,paperErr=pcall(checkSupplyCartClearance)
+paper.CFrame=oldPaper
+assert(not paperOK and string.find(tostring(paperErr),
+    "RUG_STORAGE_CART_SUPPLIES_FLOATING",1,true),
+    "RUG_STORAGE_CART_FLOATING_PAPERS_NOT_REJECTED")
+print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED floating_papers")
+checkSupplyCartClearance()
 local movedSeat,movedBasket,clearance=checkReadingRugClearance()
 print(string.format("RUG_READING_OPEN_FLOOR_PASS student_pairs=16 "
     .."round_rug_unchanged=true nearest_clearance_studs=%.2f "
@@ -317,7 +444,11 @@ def main():
     if result.returncode:
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
-    markers=("RUG_READING_OPEN_FLOOR_PASS",
+    markers=("RUG_STORAGE_CART_CLEAR_PASS",
+             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED rug_intrusion",
+             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_wheel",
+             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED floating_papers",
+             "RUG_READING_OPEN_FLOOR_PASS",
              "RUG_READING_ADVERSARIAL_REJECTED chair_over_clouds",
              "RUG_READING_ADVERSARIAL_REJECTED basket_left_behind",
              "RUG_NATIVE_PRIMITIVES_PASS",
@@ -331,7 +462,9 @@ def main():
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_READING_OPEN_FLOOR_PASS",
+        if line.startswith(("RUG_STORAGE_CART_CLEAR_PASS",
+                            "RUG_STORAGE_CART_ADVERSARIAL_REJECTED",
+                            "RUG_READING_OPEN_FLOOR_PASS",
                             "RUG_READING_ADVERSARIAL_REJECTED",
                             "RUG_PHOTO_POLKADOT_PASS",
                             "RUG_NATIVE_PRIMITIVES_PASS",
