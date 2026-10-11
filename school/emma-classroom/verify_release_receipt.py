@@ -7,6 +7,7 @@ state from a candidate branch head.
 """
 from __future__ import annotations
 
+import argparse
 import copy
 import json
 import re
@@ -17,6 +18,11 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 RECEIPT = HERE / "RELEASE_RECEIPT.json"
 HEX40 = re.compile(r"[0-9a-f]{40}")
+HEX64 = re.compile(r"[0-9a-f]{64}")
+IMMUTABLE_PUBLISH_FIELDS = (
+    "sourceCommit", "workflowRunId", "workflowUrl", "placeId",
+    "universeId", "mode", "visualAcceptance", "binarySha256",
+)
 
 
 def validate_receipt(data: dict) -> dict:
@@ -25,7 +31,12 @@ def validate_receipt(data: dict) -> dict:
     assert isinstance(latest, dict), "Missing recorded publication"
     assert type(latest.get("versionNumber")) is int and latest["versionNumber"] >= 1
     assert type(latest.get("workflowRunId")) is int and latest["workflowRunId"] > 0
-    assert HEX40.fullmatch(latest.get("sourceCommit", "")), "Not an exact source SHA"
+    assert isinstance(latest.get("sourceCommit"), str) and (
+        HEX40.fullmatch(latest["sourceCommit"])
+    ), "Not an exact source SHA"
+    assert isinstance(latest.get("binarySha256"), str) and (
+        HEX64.fullmatch(latest["binarySha256"])
+    ), "Published binary SHA-256 must be a real 64-character digest"
     assert latest.get("placeId") == "114603280760042"
     assert latest.get("universeId") == "10769455759"
     assert latest.get("mode") in ("classroom-progress-preview-only",
@@ -45,8 +56,52 @@ def validate_receipt(data: dict) -> dict:
     return latest
 
 
-def audit() -> None:
-    latest = validate_receipt(json.loads(RECEIPT.read_text(encoding="utf-8")))
+def compare_publication_receipts(candidate: dict, base: dict) -> str:
+    """Detect rollback/evidence substitution against a comparable base branch.
+
+    This is consistency checking, not verification that a *newer* publication
+    actually happened. Only a successful publish run and its binary artifact
+    can establish that. The baseline comes from the PR base branch, not an
+    untrusted filename or self-declared candidate publication.
+    """
+    current=validate_receipt(candidate)
+    previous=validate_receipt(base)
+    now,then=current["versionNumber"],previous["versionNumber"]
+    assert now>=then, (
+        f"RELEASE_RECEIPT_VERSION_ROLLBACK candidate_v={now} base_v={then}"
+    )
+    if now==then:
+        for field in IMMUTABLE_PUBLISH_FIELDS:
+            assert current[field]==previous[field], (
+                f"RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH {field}"
+            )
+        return "same_verified_publication_as_base"
+    # A later version must not reuse the previous version's source SHA,
+    # workflow run ID or published binary. CI cannot independently attest
+    # a new Roblox API publication merely because these strings changed.
+    assert current["workflowRunId"]>previous["workflowRunId"], (
+        "RELEASE_RECEIPT_NEW_VERSION_RUN_NOT_LATER"
+    )
+    assert current["sourceCommit"]!=previous["sourceCommit"], (
+        "RELEASE_RECEIPT_NEW_VERSION_SOURCE_UNCHANGED"
+    )
+    assert current["binarySha256"]!=previous["binarySha256"], (
+        "RELEASE_RECEIPT_NEW_VERSION_BINARY_UNCHANGED"
+    )
+    return "newer_reported_requires_independent_publish_artifact_verification"
+
+
+def audit(compare_base: Path | None = None) -> None:
+    candidate=json.loads(RECEIPT.read_text(encoding="utf-8"))
+    latest = validate_receipt(candidate)
+    if compare_base is not None:
+        base=json.loads(compare_base.read_text(encoding="utf-8"))
+        status=compare_publication_receipts(candidate,base)
+        print("RELEASE_PR_BASE_MONOTONIC_PASS",
+              "base_version="+str(base["lastConfirmedPublication"]["versionNumber"]),
+              "candidate_version="+str(latest["versionNumber"]),
+              "comparison="+status,
+              "native_phone_acceptance_not_inferred",flush=True)
     preview = (HERE / "PREVIEW_REQUEST").read_text(encoding="utf-8")
     request_lines = preview.splitlines()
     modes = {
@@ -136,6 +191,7 @@ def self_test() -> None:
     cases = (
         ("versionNumber", 0),
         ("sourceCommit", "not-a-sha"),
+        ("binarySha256", "not-a-real-256-bit-digest"),
         ("workflowRunId", -1),
         ("visualAcceptance", "approved"),
         ("mode", "legacy-neighborhood-game"),
@@ -156,15 +212,78 @@ def self_test() -> None:
         except AssertionError:
             continue
         raise AssertionError("Unsupported release approval accepted: " + field)
-    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status and activation rejected")
+    # A current PR must never roll the parent branch's verified release
+    # history backwards, nor substitute a new source/run/hash for the SAME
+    # Roblox version number. None of these test fixtures publish anything.
+    old=copy.deepcopy(original)
+    old_pub=old["lastConfirmedPublication"]
+    old_pub["versionNumber"]=max(1,old_pub["versionNumber"]-1)
+    old_pub["workflowRunId"]=max(1,old_pub["workflowRunId"]-1)
+    old_pub["workflowUrl"]=(
+        "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
+        +str(old_pub["workflowRunId"]))
+    old_pub["sourceCommit"]="a"*40
+    old_pub["binarySha256"]="b"*64
+    try:
+        compare_publication_receipts(old,original)
+    except AssertionError as exc:
+        assert "RELEASE_RECEIPT_VERSION_ROLLBACK" in str(exc)
+    else:
+        raise AssertionError("Backward version was accepted")
+    assert compare_publication_receipts(original,original)==(
+        "same_verified_publication_as_base"
+    )
+    for name,field,changed in (
+        ("source_swap","sourceCommit","e"*40),
+        ("binary_swap","binarySha256","f"*64),
+        ("publish_run_swap","workflowRunId",original["lastConfirmedPublication"]["workflowRunId"]+1),
+    ):
+        forged=copy.deepcopy(original)
+        forged["lastConfirmedPublication"][field]=changed
+        if field=="workflowRunId":
+            forged["lastConfirmedPublication"]["workflowUrl"]=(
+                "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
+                +str(changed))
+        try:
+            compare_publication_receipts(forged,original)
+        except AssertionError as exc:
+            assert "SAME_VERSION_EVIDENCE_MISMATCH" in str(exc), (name,exc)
+        else:
+            raise AssertionError("Equal-version forged publisher accepted: "+name)
+    forward=copy.deepcopy(original)
+    fw=forward["lastConfirmedPublication"]
+    fw["versionNumber"]+=1
+    fw["workflowRunId"]+=1
+    fw["workflowUrl"]=(
+        "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
+        +str(fw["workflowRunId"]))
+    fw["sourceCommit"]="c"*40
+    fw["binarySha256"]="d"*64
+    assert compare_publication_receipts(forward,original).startswith(
+        "newer_reported_requires_independent_publish_artifact_verification"
+    )
+    forward["nativeIphoneAcceptanceVerified"]=True
+    try:
+        compare_publication_receipts(forward,original)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("False native iPhone approval accepted")
+    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, activation, "
+          "v81_rollback, same_version_source_run_hash_swap, native_approval_rejected")
 
 
 if __name__ == "__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--self-test",action="store_true")
+    parser.add_argument("--compare-base",type=Path,default=None,
+                        help="PR target branch's committed release receipt JSON")
+    args=parser.parse_args()
     try:
-        if "--self-test" in sys.argv:
+        if args.self_test:
             self_test()
         else:
-            audit()
+            audit(compare_base=args.compare_base)
     except (AssertionError, KeyError, ValueError) as exc:
         print("RELEASE_PROVENANCE_FAIL", str(exc), file=sys.stderr)
         sys.exit(1)
