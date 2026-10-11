@@ -372,3 +372,26 @@ count and anchoring/noncollision. Negative mutations reject reverting to
 the dark gray rim, changing 12 to 13, or reversing the dial onto the wall.
 The source renderer can show the red rim but does not render the SurfaceGui
 labels/ticks, so this is still subject to a native iPhone readability check.
+
+## October 10 — navy curtains as real gathered school fabric
+
+The latest 21-view independently rendered child-eye window wall still
+showed four rigid navy vertical shutter-like slabs instead of the loosely
+folded, pulled-open navy curtains visible in the owner's photographs.
+**Reuse the existing four curtain panels, eight pleats and four tiebacks**
+across the two original windows. Angle the panels only 3 degrees to
+preserve the window light; deepen and offset the two existing pleat
+silhouettes on each side, with alternating navy tones and 6–7 degree
+fold rotation. Widen/recolor the existing tieback strips, without adding
+Parts, furniture, photos, texture assets or scripts.
+
+Constructed-Luau geometry checks now validate full oriented-panel
+projections using CFrame's row-major rotation matrix, preserving at
+least **11 studs of unobstructed daylight** per school window. Source
+exporter independently calculates rotated Y/Z extents and rejects
+flat, off-jamb, collidable or oversized drapery, while tests deliberately
+reset a drape or fold to straight and move a curtain toward the glazing.
+All dressings retain `Fabric`, the original 4+8+4 counts, noncollision
+and two navy-curtained school-window locations. The *native* Roblox
+mobile materials and sunlight remain acceptance-gated; a source-derived
+renderer is insufficient to claim real fabric parity.

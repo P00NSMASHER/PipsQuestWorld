@@ -490,6 +490,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert 5.80 < abs(z-center)-length/2 and (
             abs(z-center)+length/2 < 7.48
         ), "Curtains cover the central daylight aperture or protrude beyond the casing"
+        # Window aperture must be checked from the actual ROTATED 3D
+        # silhouette, not the old straight-panel Size.Z shortcut.
+        matrix=[float(v) for v in part[15:24]]
+        projectedZ=(abs(matrix[6])*width
+            +abs(matrix[7])*height
+            +abs(matrix[8])*length)/2
+        direction=1 if z>center else -1
+        assert .045<direction*matrix[7]<.060, (
+            "Photo-gathered curtain panels flattened into window shutters"
+        )
+        assert abs(z-center)-projectedZ>5.5 and (
+            abs(z-center)+projectedZ<7.78
+        ), "Rotated navy drapes close the natural light or clip casings"
         panel_sides[center].append(round(z-center,2))
     assert all(sorted(dz)==[-6.65,6.65] for dz in panel_sides.values()), (
         "Each school window must have two symmetric pulled-open side panels"
@@ -497,8 +510,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert all(.28<float(part[7])<.48 for part in curtain_headers), (
         "Oversized 1.8-stud curtain valance returned"
     )
+    assert all(float(fold[6])>=.14 and float(fold[7])>7.6
+        and float(fold[8])>=.24
+        and abs(float(fold[9])+35.22)<.03
+        and abs(float(fold[22]))>.09
+        for fold in curtain_pleats), (
+        "Photo-gathered deep pleat shadows became straight pencil lines"
+    )
+    assert all(float(belt[7])>=.26 and
+        abs(float(belt[9])+35.13)<.03
+        for belt in curtain_ties), (
+        "Navy fabric tieback detached from deep pleated panels"
+    )
     print("PHOTO_NAVY_CURTAINS_PASS windows=2 panels=4 pleats=8 "
-          "tiebacks=4 open_center_width_studs=11.8 "
+          "tiebacks=4 open_center_width_studs>=11.0 gathered_folds=true "
           "historic_blinds_preserved=true native_iphone_pending")
     if cutaway:
         # Only the independent CAMERA MODEL omits these massive occluders.

@@ -27,7 +27,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
 
 ## Native inspection checklist — permanent scenery
 
-- [ ] **Windows / AC:** Two windows with navy drapes; lower-left window AC
+- [ ] **Windows / AC:** Two windows with genuinely *gathered* navy drapes,
+  dark alternating folds and low cloth tiebacks. At least eleven studs of
+  daylight opening remain visible across each window; no curtains flatten
+  into rigid vertical bars or obstruct the glass. Lower-left window AC
   is immediately recognizable; both radiators are beneath the windows.
   Wood returns, curtains and wall signs are not sunk behind the glass.
   The original five-piece analog clock faces into the classroom from

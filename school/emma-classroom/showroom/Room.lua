@@ -1055,27 +1055,42 @@ local function buildWindows(root: Instance)
                 Color3.fromRGB(221,217,199),Enum.Material.Fabric,false)
             shade.Transparency=.12
         end
+        -- Actual photos show LOOSE navy drapes pulled aside, not four tall
+        -- featureless flat shutter plates. Preserve all 4 panels, 8 seams
+        -- and 4 tiebacks, but gently fan the existing fabrics apart.
+        -- The same large central daylight opening stays usable from iPhone
+        -- child-height views. No new Parts, scripts, textures or meshes.
         for _,side in ipairs({-1,1}) do
             local curtainZ=z+side*6.65
-            part(root,"Navy curtain fabric panel",
-                Vector3.new(.15,8.00,1.47),
-                CFrame.new(-35.43,9.05,curtainZ),
+            local panelCF=CFrame.new(-35.43,9.05,curtainZ)*
+                CFrame.Angles(math.rad(side*3),0,0)
+            local panel=part(root,"Navy curtain fabric panel",
+                Vector3.new(.15,8.00,1.47),panelCF,
                 Color3.fromRGB(51,67,105),Enum.Material.Fabric,false)
-            -- Shallow alternating folds, rather than six dangling poles.
-            -- Two seams per panel provide fabric depth at iPhone distance.
+            panel.CanQuery=false
+            -- Two visible deep, contrasting FABRIC gathers per panel, not
+            -- pencil-thin straight lines. Small opposite rotation gives a
+            -- scalloped edge and real manufactured volume at eye height.
             for pleat=1,2 do
                 local dz=(pleat==1 and -.37 or .37)
-                part(root,"Navy curtain stitched pleat",
-                    Vector3.new(.08,7.72,.20),
-                    CFrame.new(-35.29,9.04,curtainZ+dz),
-                    pleat==1 and Color3.fromRGB(43,57,91)
-                        or Color3.fromRGB(72,88,124),
+                local angle=math.rad(side*(pleat==1 and -7 or 6))
+                local foldCF=CFrame.new(-35.22,9.04,curtainZ+dz)*
+                    CFrame.Angles(angle,0,
+                        math.rad((pleat==1 and -2 or 2)))
+                local gather=part(root,"Navy curtain stitched pleat",
+                    Vector3.new(.15,7.65,.25),foldCF,
+                    pleat==1 and Color3.fromRGB(39,52,85)
+                        or Color3.fromRGB(79,94,130),
                     Enum.Material.Fabric,false)
+                gather.CastShadow=false
+                gather.CanQuery=false
             end
-            part(root,"Navy curtain cloth tieback",
-                Vector3.new(.10,.23,1.30),
-                CFrame.new(-35.26,7.70,curtainZ),
-                Color3.fromRGB(135,147,166),Enum.Material.Fabric,false)
+            local belt=part(root,"Navy curtain cloth tieback",
+                Vector3.new(.13,.27,1.30),
+                CFrame.new(-35.13,7.70,curtainZ),
+                Color3.fromRGB(92,106,141),
+                Enum.Material.Fabric,false)
+            belt.CanQuery=false
         end
         part(root,"Radiator body",Vector3.new(1.35,2.6,11.7),CFrame.new(-35.2,1.75,z),Color3.fromRGB(222,221,207),Enum.Material.Metal,false)
         -- Ten widely spaced stamped-metal fins per radiator preserve the body
