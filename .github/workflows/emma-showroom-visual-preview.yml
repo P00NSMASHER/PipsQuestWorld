@@ -310,6 +310,15 @@ jobs:
             --out "$RUNNER_TEMP/cutaway.rbxmx" --cutaway
           test -s "$RUNNER_TEMP/actual-room.rbxmx"
           test -s "$RUNNER_TEMP/cutaway.rbxmx"
+      - name: Verify current hallway and closet camera provenance before expensive screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --self-test
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py \
+            --luau "$RUNNER_TEMP/luau/luau"
+          echo "HALL_CAMERA_OWNED_BY_WALKABLE_SCENE_PASS"
+
       - name: Capture three fixed full-geometry viewpoints
         shell: bash
         env:
