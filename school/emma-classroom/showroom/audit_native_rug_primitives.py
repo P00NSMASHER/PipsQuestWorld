@@ -408,6 +408,63 @@ local function checkReadingCornerPlant()
     return plant,leaves,minimum
 end
 
+-- The moved cart and the downsized plant are individually clear of the
+-- ABC rug, but they are now adjacent. Guard their mutual clearance too.
+-- The cart/plant closest pair is roughly .29 studs apart in the previous
+-- real constructed RBXMX after applying these two source transforms.
+-- This is conservative 2D rotated OBB geometry, not native Roblox physics.
+local function checkCartPlantClearance()
+    local cartParts,plantParts={},{}
+    local cartNames={
+        ["Rolling cart top"]=true,
+        ["Rolling cart shelf"]=true,
+        ["Cart wheel"]=true,
+        ["Cart vertical rail"]=true,
+    }
+    for _,part in ipairs(Room.Root:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local name=part.Name
+            if cartNames[name] then
+                table.insert(cartParts,part)
+            elseif name=="Plant pot"
+                and math.abs(part.Position.X+31)<.10
+                and math.abs(part.Position.Z-20)<.10 then
+                table.insert(plantParts,part)
+            elseif name=="Plant leaf"
+                and part.Position.X>-33 and part.Position.X< -29
+                and part.Position.Z>18 and part.Position.Z<22
+                and part.Position.Y<5 then
+                table.insert(plantParts,part)
+            end
+        end
+    end
+    assert(#cartParts==12 and #plantParts==6,
+        "RUG_CART_PLANT_COMPONENT_COUNTS_CHANGED")
+    local function halfwidth(part,axis)
+        local m,s=part.CFrame.m,part.Size
+        local offset=(axis-1)*3
+        return (math.abs(m[offset+1])*s.X
+            +math.abs(m[offset+2])*s.Y
+            +math.abs(m[offset+3])*s.Z)/2
+    end
+    local nearest=math.huge
+    for _,cart in ipairs(cartParts) do
+        for _,plant in ipairs(plantParts) do
+            local gapX=math.max(0,
+                math.abs(cart.Position.X-plant.Position.X)
+                -halfwidth(cart,1)-halfwidth(plant,1))
+            local gapZ=math.max(0,
+                math.abs(cart.Position.Z-plant.Position.Z)
+                -halfwidth(cart,3)-halfwidth(plant,3))
+            local gap=math.sqrt(gapX*gapX+gapZ*gapZ)
+            nearest=math.min(nearest,gap)
+            assert(gap>.20,
+                "RUG_CART_PLANT_VISUAL_INTERSECTION")
+        end
+    end
+    return nearest,plantParts
+end
+
 local rays,lobes=check()
 print("RUG_NATIVE_PRIMITIVES_PASS rays=16 caps=16 "
     .."cloud_bodies=10 flat_cylinder_lobes=20 "
@@ -481,6 +538,26 @@ print("RUG_READING_ADVERSARIAL_REJECTED oversized_plant")
 checkSupplyCartClearance()
 checkReadingCornerPlant()
 
+local cartPlantGap,cartPlantPieces=checkCartPlantClearance()
+print(string.format("RUG_CART_PLANT_GAP_PASS cart_parts=12 plant_parts=6 "
+    .."min_clearance_studs=%.2f",cartPlantGap))
+local collisionLeaf=nil
+for _,item in ipairs(cartPlantPieces) do
+    if item.Name=="Plant leaf" then
+        collisionLeaf=item
+        break
+    end
+end
+assert(collisionLeaf,"RUG_CART_PLANT_TEST_LEAF_MISSING")
+local formerLeafCF=collisionLeaf.CFrame
+collisionLeaf.CFrame=CFrame.new(-32.0,2.0,20.80)
+local nearOK,nearErr=pcall(checkCartPlantClearance)
+collisionLeaf.CFrame=formerLeafCF
+assert(not nearOK and string.find(tostring(nearErr),
+    "RUG_CART_PLANT_VISUAL_INTERSECTION",1,true),
+    "RUG_CART_PLANT_OVERLAP_NOT_REJECTED")
+print("RUG_CART_PLANT_ADVERSARIAL_REJECTED overlapping_leaf")
+checkCartPlantClearance()
 local movedSeat,movedBasket,clearance=checkReadingRugClearance()
 print(string.format("RUG_READING_OPEN_FLOOR_PASS student_pairs=16 "
     .."round_rug_unchanged=true nearest_clearance_studs=%.2f "
@@ -560,7 +637,9 @@ def main():
     if result.returncode:
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
-    markers=("RUG_READING_PLANT_CLEAR_PASS",
+    markers=("RUG_CART_PLANT_GAP_PASS",
+             "RUG_CART_PLANT_ADVERSARIAL_REJECTED overlapping_leaf",
+             "RUG_READING_PLANT_CLEAR_PASS",
              "RUG_READING_ADVERSARIAL_REJECTED oversized_plant",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book",
              "RUG_STORAGE_CART_CLEAR_PASS",
@@ -581,7 +660,9 @@ def main():
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_READING_PLANT_CLEAR_PASS",
+        if line.startswith(("RUG_CART_PLANT_GAP_PASS",
+                            "RUG_CART_PLANT_ADVERSARIAL_REJECTED",
+                            "RUG_READING_PLANT_CLEAR_PASS",
                             "RUG_READING_ADVERSARIAL_REJECTED",
                             "RUG_STORAGE_CART_CLEAR_PASS",
                             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED",
