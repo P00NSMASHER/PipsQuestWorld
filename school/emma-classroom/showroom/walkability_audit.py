@@ -6,7 +6,9 @@ the renderer. This is NOT Roblox physics, a native camera render, or a phone
 test. We inspect CanCollide and transforms, conservatively project rotated
 part bounds onto the floor, and require a connected route from the spawn to
 all major parts of the classroom. Static floors and overhead fixtures do not
-obstruct a standing avatar.
+obstruct a standing avatar. A walk route must also have source-constructed,
+collidable floor beneath every sampled cell; otherwise a 2D path can falsely
+cross a void at the left classroom-to-hallway junction.
 
 Do not lower clearance thresholds or substitute cutaway scene geometry to
 manufacture a pass. A red result requires inspection of the named blockers.
@@ -83,6 +85,53 @@ class Blocker:
         return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
 
 
+# Only these three structural, collidable floors support movement in the
+# assembled classroom-only place. Decorative closet laminate and area rugs
+# cannot substitute for an actual load-bearing floor.
+SUPPORT_FLOOR_NAMES = frozenset({
+    "Warm oak classroom floor",
+    "Side hall floor",
+    "Photo hall polished square stone floor",
+})
+
+@dataclass(frozen=True)
+class FloorSupport:
+    name: str
+    xmin: float
+    xmax: float
+    zmin: float
+    zmax: float
+    top: float
+
+    def supports(self, x: float, z: float) -> bool:
+        return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
+
+
+def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
+    """Read the real Luau-generated collidable floor parts, never source guesses."""
+    floors = {}
+    for row in rows:
+        if len(row) < 2 or row[1] not in SUPPORT_FLOOR_NAMES:
+            continue
+        assert len(row) == 17, "SUPPORT_FLOOR_MALFORMED_EVIDENCE"
+        _, name, *raw = row
+        assert name not in floors, "SUPPORT_FLOOR_DUPLICATE " + name
+        sx, sy, sz, px, py, pz, *matrix = map(float, raw)
+        assert all(math.isfinite(v) for v in (sx, sy, sz, px, py, pz, *matrix)), (
+            "SUPPORT_FLOOR_NONFINITE " + name)
+        assert sx > 0 and sy > 0 and sz > 0, "SUPPORT_FLOOR_ZERO_DIMENSION " + name
+        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        assert all(abs(a-b) < 0.001 for a, b in zip(matrix, identity)), (
+            "SUPPORT_FLOOR_TILTED_UNMODELED " + name)
+        top = py + sy / 2
+        assert abs(top-0.5) <= 0.08, "SUPPORT_FLOOR_BAD_ELEVATION " + name
+        floors[name] = FloorSupport(name, px-sx/2, px+sx/2,
+                                    pz-sz/2, pz+sz/2, top)
+    assert set(floors) == SUPPORT_FLOOR_NAMES, (
+        "SUPPORT_FLOOR_MISSING " + str(sorted(SUPPORT_FLOOR_NAMES-set(floors))))
+    return [floors[name] for name in sorted(floors)]
+
+
 def as_blockers(rows: list[list[str]]) -> list[Blocker]:
     result = []
     for row in rows:
@@ -109,7 +158,8 @@ def values_as_float(values: list[str]):
 
 
 class Grid:
-    def __init__(self, blockers: list[Blocker]):
+    def __init__(self, blockers: list[Blocker],
+                 floors: list[FloorSupport] | None = None):
         self.w = int(math.floor((X_MAX-X_MIN)/STEP))+1
         self.h = int(math.floor((Z_MAX-Z_MIN)/STEP))+1
         self.blocked: set[tuple[int,int]] = set()
@@ -121,6 +171,14 @@ class Grid:
             for x in range(xa,xb+1):
                 for z in range(za,zb+1):
                     self.blocked.add((x,z))
+        if floors is not None:
+            assert floors, "SUPPORT_FLOORS_REQUIRED"
+            for ix in range(self.w):
+                x = X_MIN + ix*STEP
+                for iz in range(self.h):
+                    z = Z_MIN + iz*STEP
+                    if not any(f.supports(x,z) for f in floors):
+                        self.blocked.add((ix,iz))
 
     def xy(self, point: tuple[float,float]) -> tuple[int,int]:
         x,z = point
@@ -164,9 +222,10 @@ class Grid:
         return choice
 
 
-def inspect(blockers: list[Blocker]) -> dict:
+def inspect(blockers: list[Blocker],
+            floors: list[FloorSupport] | None = None) -> dict:
     assert blockers, "No physical colliders exported; source probe is not valid"
-    grid=Grid(blockers)
+    grid=Grid(blockers, floors)
     try:
         distance,previous=grid.connected(START)
     except AssertionError:
@@ -196,6 +255,13 @@ def inspect(blockers: list[Blocker]) -> dict:
     if failures:
         raise AssertionError("BLOCKED_NAVIGATION "+ " | ".join(failures))
     assert len(routes)==len(GOALS), "Incomplete route acceptance"
+    if floors is not None:
+        for name,route in routes.items():
+            assert all(any(f.supports(x,z) for f in floors)
+                       for x,z in route["waypoints"]), (
+                "UNSUPPORTED_ROUTE_WAYPOINT " + name)
+    # Floor support and the existing door-collision routing MUST both hold.
+    # A scenic surface/decorative rug is not an acceptable bridge.
     # A merely reachable hallway is not enough: two doors used to connect
     # to it. Now BOTH long photo-hall routes MUST enter via the left-side
     # staff doorway, visit its physical corridor and turn north.
@@ -224,6 +290,8 @@ def inspect(blockers: list[Blocker]) -> dict:
         "avatar_radius_studs":AVATAR_RADIUS,
         "reachable_cells":len(distance),
         "blockers":len(blockers),
+        "structural_support_floors": sorted(f.name for f in floors) if floors is not None else None,
+        "all_waypoints_floor_supported": floors is not None,
         "start":list(START),
         "routes":routes,
     }
@@ -302,7 +370,7 @@ def assert_no_chair_vent_colliders(rows: list[list[str]]) -> None:
     )
 
 
-def get_source_blockers(luau: str) -> list[Blocker]:
+def get_source_geometry(luau: str) -> tuple[list[Blocker],list[FloorSupport]]:
     with tempfile.TemporaryDirectory(prefix="abvm-nav-") as folder:
         path=Path(folder)/"room.lua"
         path.write_text(generate_luau()+"\n"+NAV_PROBE,encoding="utf-8")
@@ -323,7 +391,12 @@ def get_source_blockers(luau: str) -> list[Blocker]:
     assert_no_supply_bin_colliders(rows)
     assert_no_corridor_finishing_colliders(rows)
     assert_no_chair_vent_colliders(rows)
-    return as_blockers(rows)
+    return as_blockers(rows), as_floor_supports(rows)
+
+
+def get_source_blockers(luau: str) -> list[Blocker]:
+    # Preserve compatibility with child-eye camera provenance checks.
+    return get_source_geometry(luau)[0]
 
 
 def self_test():
@@ -342,6 +415,31 @@ def self_test():
     except AssertionError as e:
         assert "BLOCKED_SPAWN" in str(e)
     assert Grid([]).connected(START)[0], "Empty room must remain traversable"
+    # A void is not a hallway, even without a collidable wall. Preserve
+    # the historical obstacle-only grid for its other documented uses.
+    support = FloorSupport("fixture", START[0]-2, START[0]+2,
+                           START[1]-2, START[1]+2, 0.5)
+    supported = Grid([], [support])
+    safe,_ = supported.connected(START)
+    assert supported.xy(START) in safe, "SUPPORTED_START_REJECTED"
+    assert supported.xy((START[0]+4, START[1])) not in safe, (
+        "UNSUPPORTED_VOID_WAS_TRAVERSABLE")
+    try:
+        Grid([], []).connected(START)
+    except AssertionError as exc:
+        assert "SUPPORT_FLOORS_REQUIRED" in str(exc)
+    else:
+        raise AssertionError("EMPTY_SUPPORT_LIST_ACCEPTED")
+    # Floor evidence must be complete and from actual collidable geometry.
+    fixture_names = sorted(SUPPORT_FLOOR_NAMES)
+    fixtures = [[*flat[:1], name, *flat[2:]] for name in fixture_names]
+    assert len(as_floor_supports(fixtures)) == 3
+    try:
+        as_floor_supports(fixtures[:2])
+    except AssertionError as exc:
+        assert "SUPPORT_FLOOR_MISSING" in str(exc)
+    else:
+        raise AssertionError("MISSING_REAL_FLOOR_ACCEPTED")
     assert_no_mobile_stand_colliders([flat,tall])
     try:
         assert_no_mobile_stand_colliders([
@@ -386,8 +484,9 @@ def self_test():
         raise AssertionError("Colliding chair vent test accepted")
     except AssertionError as exc:
         assert "noncolliding" in str(exc)
-    print("STATIC_NAV_SELF_TEST_PASS (floor ignored, blocked spawn fails, "
-          "open space connects, Smartboard/curtains/storage/halls/chair vents noncolliding)")
+    print("STATIC_NAV_SELF_TEST_PASS structural_floor_support_enforced=true "
+          "unsupported_void_and_missing_floor_rejected=true "
+          "colliders_and_decorative_obstructions_checked=true")
 
 
 def main():
@@ -401,10 +500,27 @@ def main():
         return
     if not args.luau:
         p.error("--luau required unless --self-test")
-    result=inspect(get_source_blockers(args.luau))
+    blockers,floors=get_source_geometry(args.luau)
+    result=inspect(blockers,floors)
+    # Use the ACTUAL source geometry to reject the former 1.25-stud seam.
+    # A clear 2D aisle is not safe if no physical floor supports its turn.
+    former=[FloorSupport(f.name,f.xmin,f.xmax,f.zmin,
+                         25.5 if f.name=="Side hall floor" else f.zmax,
+                         f.top) for f in floors]
+    try:
+        inspect(blockers,former)
+    except AssertionError as exc:
+        assert "BLOCKED_NAVIGATION" in str(exc) or "LEFT_STAFF" in str(exc), (
+            "FLOOR_GAP_NEGATIVE_UNEXPECTED " + str(exc))
+    else:
+        raise AssertionError("FORMER_UNSUPPORTED_JUNCTION_FALSELY_ACCEPTED")
+    print("SUPPORTED_ROUTE_ADVERSARIAL_PASS former_1.25_stud_gap_rejected=true",
+          flush=True)
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
               "end="+str(route["endpoint"]),flush=True)
+    print("SUPPORTED_ROUTE_SOURCE_PASS three_constructed_collidable_floors=true "
+          "all_nine_routes_floor_supported=true",flush=True)
     print("DOORWAY_ROUTING_NAV_PASS left_staff_to_long_hall=true "
           "right_rear_supply_closet_sealed=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
