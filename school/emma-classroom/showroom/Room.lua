@@ -514,18 +514,40 @@ local function buildClassroomTexture(root: Instance)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
     part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
     part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(22.5,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
-    part(root,"Rolling cart top",Vector3.new(5.5,.4,3.2),CFrame.new(-29,3.5,22),Color3.fromRGB(71,105,125),Enum.Material.Metal)
-    for _,y in ipairs({1.0,2.1,3.2}) do part(root,"Rolling cart shelf",Vector3.new(5.2,.22,3),CFrame.new(-29,y,22),Color3.fromRGB(82,119,139),Enum.Material.Metal,false) end
-    for _,x in ipairs({-31.2,-26.8}) do
-        for _,z in ipairs({20.8,23.2}) do cylinder(root,"Cart wheel",Vector3.new(.35,.75,.75),CFrame.new(x,.45,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(45,48,49),Enum.Material.SmoothPlastic,false) end
+    -- The real classroom pictures show the alphabet/sun rug as open
+    -- activity space. Source-rendered geometry revealed that the original
+    -- rolling cart top at (-29,22) crossed the carpet by ~0.58 studs,
+    -- even after its nearby student-chair obstruction was repaired.
+    -- Move this SAME original cart into the unused back-left storage
+    -- corner and turn its long axis parallel to the LEFT classroom wall.
+    -- Keep every shelf, wheel, rail, book and paper stack connected.
+    -- This is a provisional placement, NOT a surveyed school floorplan.
+    -- Footprint (x=-35.2..-32.0, z=20.75..26.25) remains inside the
+    -- shell, left of the bookcase and clear of the reading floor lamp.
+    local cartX,cartZ=-33.6,23.5
+    part(root,"Rolling cart top",Vector3.new(3.2,.4,5.5),
+        CFrame.new(cartX,3.5,cartZ),
+        Color3.fromRGB(71,105,125),Enum.Material.Metal)
+    for _,y in ipairs({1.0,2.1,3.2}) do
+        part(root,"Rolling cart shelf",Vector3.new(3.0,.22,5.2),
+            CFrame.new(cartX,y,cartZ),
+            Color3.fromRGB(82,119,139),Enum.Material.Metal,false)
     end
-
-    for _,x in ipairs({-31.2,-26.8}) do for _,z in ipairs({20.8,23.2}) do
-        cylinder(root,"Cart vertical rail",Vector3.new(3.15,.12,.12),CFrame.new(x,1.9,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(150,165,170),Enum.Material.Metal,false)
-    end end
-    book(root,-29.8,3.82,21.7,P.blue,.05)
-    book(root,-29.8,4.09,21.7,P.green,-.07)
-    part(root,"Cart paper stack",Vector3.new(2.1,.24,2.5),CFrame.new(-27.6,2.35,21.9),P.cream,Enum.Material.SmoothPlastic,false)
+    for _,x in ipairs({cartX-1.2,cartX+1.2}) do
+        for _,z in ipairs({cartZ-2.2,cartZ+2.2}) do
+            cylinder(root,"Cart wheel",Vector3.new(.35,.75,.75),
+                CFrame.new(x,.45,z)*CFrame.Angles(0,0,math.pi/2),
+                Color3.fromRGB(45,48,49),Enum.Material.SmoothPlastic,false)
+            cylinder(root,"Cart vertical rail",Vector3.new(3.15,.12,.12),
+                CFrame.new(x,1.9,z)*CFrame.Angles(0,0,math.pi/2),
+                Color3.fromRGB(150,165,170),Enum.Material.Metal,false)
+        end
+    end
+    book(root,cartX-.1,3.82,cartZ-1.0,P.blue,.05)
+    book(root,cartX-.1,4.09,cartZ-1.0,P.green,-.07)
+    part(root,"Cart paper stack",Vector3.new(2.1,.24,2.5),
+        CFrame.new(cartX+.4,2.35,cartZ+.8),
+        P.cream,Enum.Material.SmoothPlastic,false)
     -- A small prayer table / classroom faith corner.
     part(root,"Prayer table",Vector3.new(8,.5,3.5),CFrame.new(-28,3.2,-27),Color3.fromRGB(139,98,64),Enum.Material.Wood)
     for _,x in ipairs({-31,-25}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
@@ -2394,7 +2416,7 @@ function World.build()
     ArtPass.decorate(root)
 
     -- Lived-in details.
-    plant(root,-31,.1,20,.85)
+    plant(root,-31,.1,20,.65)
     plant(root,-30,8.2,-29,.55)
     -- Actual classroom photo: the analog white clock hangs on the broad
     -- yellow WALL PIER between the two navy-curtained windows, not over

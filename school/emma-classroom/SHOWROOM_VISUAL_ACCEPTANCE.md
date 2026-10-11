@@ -82,7 +82,12 @@ a manifest with `notNativeIphoneAcceptance=true`.
   ten numbered clouds and visible orange sunburst. No blue student desk
   chair is planted on the sun or lower letter/cloud border; verify the
   one minimally moved middle-row desk remains naturally paired with its
-  chair and the existing supply basket is supported on that tabletop. Separate black
+  chair and the existing supply basket is supported on that tabletop.
+  The rolling blue supply cart is parked along the left wall beside
+  the wooden bookcase, does not cover the ABC/sun rug or hit the nearby
+  floor lamp, and its wheels, books, shelves and paper stack remain
+  together. The small adjacent potted plant's leaves must also stay
+  clear of the circular rug. Separate black
   rectangular polka-dot rug has 25 different-size, naturally staggered
   colored circles instead of the old rigid grid. Dots stay inside its edge,
   visibly round and nonoverlapping. Both are accessible in their unchanged
