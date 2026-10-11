@@ -1,6 +1,17 @@
 name: Emma Classroom Replica CI
 
 on:
+  # Some connected-app branch writes do not produce a pull_request synchronize
+  # run, leaving the newest classroom geometry without exact-head evidence.
+  # This is a READ-ONLY QA fallback, never the retired Roblox publisher.
+  push:
+    branches:
+      - visual/emma-classroom-replica-only-20261008
+    paths:
+      - 'school/emma-classroom/showroom/**'
+      - 'school/emma-showroom.project.json'
+      - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
+      - '.github/workflows/emma-showroom-ci.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
