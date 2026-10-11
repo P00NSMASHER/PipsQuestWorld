@@ -78,6 +78,32 @@ jobs:
           python3 school/emma-classroom/verify_release_receipt.py --self-test
           python3 school/emma-classroom/verify_release_receipt.py
 
+      - name: Reject publication rollback versus latest PR base branch
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          # Check the LIVE HEAD of this review target branch, not merely
+          # its stale merge-base SHA. Release metadata must never regress
+          # when a stacked classroom/hallway PR is eventually merged.
+          # This is public repository evidence, never a Roblox API query.
+          [[ "$PR_BASE_REF" =~ ^[a-zA-Z0-9._/-]+$ ]]
+          git fetch --no-tags --depth=1 origin "refs/heads/$PR_BASE_REF"
+          base_sha="$(git rev-parse FETCH_HEAD)"
+          base_receipt="school/emma-classroom/RELEASE_RECEIPT.json"
+          if git cat-file -e "$base_sha:$base_receipt" 2>/dev/null; then
+            git show "$base_sha:$base_receipt" > "$RUNNER_TEMP/base-release-receipt.json"
+            python3 school/emma-classroom/verify_release_receipt.py \
+              --compare-base "$RUNNER_TEMP/base-release-receipt.json"
+            echo "RELEASE_PR_NO_ROLLBACK_PASS parent_sha=$base_sha"
+          else
+            # An archive-only base without this receipt cannot establish
+            # which version was last published; never claim a comparison.
+            echo "RELEASE_PR_BASE_WITHOUT_RECEIPT_UNVERIFIED base_sha=$base_sha"
+          fi
+
       - name: Install pinned Luau and Rojo
         shell: bash
         run: |
