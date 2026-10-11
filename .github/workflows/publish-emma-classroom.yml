@@ -1,14 +1,14 @@
-name: Publish ABVM Classroom Replica
+name: Publish Emma Classroom and Photo Hallway Preview
 
+# Only this explicitly requested, one-commit preview lane can publish the
+# current Emma Roblox place. Historic study/neighborhood/replica lanes are
+# separately guarded against overwriting this preview.
 on:
   push:
     branches:
-      - rebuild/emma-classroom-study-v1
-      - visual/emma-classroom-replica-only-20261008
+      - visual/emma-hallway-photo-faithful-20261010
     paths:
-      - 'school/emma-classroom/PUBLISH_REQUEST'
       - 'school/emma-classroom/PREVIEW_REQUEST'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 18
     env:
       UNIVERSE_ID: '10769455759'
       PLACE_ID: '114603280760042'
@@ -46,35 +46,32 @@ jobs:
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau luau/luau-compile rojo/rojo
 
-      - name: Require explicit replica-only release approval and compile showroom
+      - name: Require one-time approved photo-classroom and hallway preview request
         shell: bash
         run: |
           set -euo pipefail
-          # A separate one-time preview is authorized by the user to INSPECT
-          # the still-unaccepted classroom on their existing Roblox place.
-          # It is deliberately NOT a visual-acceptance approval. The normal
-          # release branch retains the original 'approved' requirement.
-          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
-            request=school/emma-classroom/PREVIEW_REQUEST
-            test -f "$request"
-            grep -qx 'requested-mode: classroom-progress-preview-only' "$request"
-            grep -qx 'authorization: user-requested-2026-10-08' "$request"
-            grep -qx 'visual-acceptance: pending-real-device-review' "$request"
-            grep -qx 'target-universe: 10769455759' "$request"
-            grep -qx 'target-place: 114603280760042' "$request"
-            # The preview request must be the ONLY file changed by the trigger
-            # commit. The candidate parent is pinned in that request.
-            changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
-            test "$changed" = "$request"
-            parent="$(git rev-parse HEAD^)"
-            grep -qx "source-parent-sha: $parent" "$request"
-            echo "USER_AUTHORIZED_PREVIEW_WITHOUT_FINAL_VISUAL_ACCEPTANCE"
-          elif [[ "$GITHUB_REF_NAME" == 'rebuild/emma-classroom-study-v1' ]]; then
-            grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
-            grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
-          else
-            echo "REF_NOT_AUTHORIZED_FOR_PUBLISH"; exit 1
-          fi
+          # The only authorized writer to the shared Emma place is the
+          # reviewed photo-guided classroom+hallway source, never the
+          # quiz game or the old classroom-only parent PR.
+          test "$GITHUB_EVENT_NAME" = 'push'
+          test "$GITHUB_REF_NAME" = 'visual/emma-hallway-photo-faithful-20261010'
+          request=school/emma-classroom/PREVIEW_REQUEST
+          test -f "$request"
+          grep -qx 'requested-mode: classroom-and-hallway-preview-only' "$request"
+          grep -qx 'authorization: user-approved-2026-10-11-hallway-preview' "$request"
+          grep -qx 'visual-acceptance: pending-real-device-review' "$request"
+          grep -qx 'target-universe: 10769455759' "$request"
+          grep -qx 'target-place: 114603280760042' "$request"
+          grep -qx 'build-project: school/emma-showroom.project.json' "$request"
+          grep -qx 'source-branch: visual/emma-hallway-photo-faithful-20261010' "$request"
+          changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          test "$changed" = "$request"
+          source_parent="$(git rev-parse HEAD^)"
+          grep -qx "source-parent-sha: $source_parent" "$request"
+          test -f school/emma-classroom/showroom/audit_hallway_photo.py
+          test -f school/emma-classroom/showroom/audit_glazed_door_aperture.py
+          echo "EXPLICIT_CLASSROOM_HALLWAY_PREVIEW_GUARD_PASS source_parent=$source_parent"
+          echo "This is a live-device preview, not final Roblox visual acceptance."
           for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
@@ -116,6 +113,15 @@ jobs:
             --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_word_wall_native.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Photo-grounded October 10 corridor and iPhone artifact regressions.
+          python3 school/emma-classroom/showroom/audit_hallway_photo.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_notebook_rule_surfaces.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_rug_ui.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"
@@ -147,9 +153,8 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
           echo "Published exact GitHub source $SOURCE_SHA to known Roblox place $PLACE_ID" >> "$GITHUB_STEP_SUMMARY"
-          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
-            echo "PROGRESS PREVIEW ONLY: visual/mobile acceptance remains pending" >> "$GITHUB_STEP_SUMMARY"
-          fi
+          echo "CLASSROOM + OCTOBER 10 HALLWAY PREVIEW ONLY" >> "$GITHUB_STEP_SUMMARY"
+          echo "Mobile engine, collisions, legibility and frame rate must be reviewed in Roblox on iPhone." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Receipt
         if: ${{ always() }}
