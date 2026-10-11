@@ -1,12 +1,14 @@
-publish-request: 2026-10-08 v63 runtime-native-staff-and-full-body-camera
+publish-request: 2026-10-11 v64 governed-curriculum-refresh
 destination: existing Emma Study Classroom place only (universe 10769455759, place 114603280760042)
-verified-implementation-head: 84ea4d5d5a4b4ca24dbcf8982b9761f75f080916
-render-fixes: native staff VertexColor correctly uses Vector3 (previous Color3 made hair-staff construction fail); missing-NPC runtime errors now reported; studio-only disposable progress enables actual local playtesting; study landscape camera frames entire teacher, no feet cut off; previous native texture preservation and walking animation retained
-verification: local Roblox Studio Play captured actual standard-avatar teachers full body with score HUD/question panel; six exact-head game checks plus independent curriculum contract PASS
-source-curriculum-sha: 42aec22aaf3f3aa82993744fbf1e7064a55d58af
-curriculum-content-sha256: 22a58efa105065c4bddd3c4c2b2a0c764f3b58a68492710a8ea8d9e5a372a418
-curriculum-count: 357 governed questions; server-only answers, no schoolwork/progress pipeline changes
-scope: incremental visually inspected Studio candidate, not full physical iPhone or production DataStore QA approval
-authorization: user requested fixing graphics and making existing game playable while using connected laptop
-publish-boundary: manual PUBLISH_REQUEST only; no automatic curriculum publishing
-status: publish candidate; source/Studio validated, physical-iPhone acceptance still pending
+verified-implementation-head: b51db5571b4958947cadad50f369ea0b9fdee854
+verified-content-head: c01a053341458e264a9b7549915f89bfecf67023
+change: publish the already-reviewed ABVM curriculum refresh from PR #340; no classroom, staff, UI, scoring, movement, camera, persistence, DataStore schema, asset, or environment change
+verification: current exact content head has nine successful GitHub checks, including Emma Classroom CI, reviewed-content contract, mapped place build, static preview, foundation, class/education, and progression guards
+source-curriculum-sha: 377c8e831d77757c1c4773e7c00b9ae7555b9ee2
+curriculum-content-sha256: 856b28978ee63a4bc7ac1e2ae6c7dda18a8ef287213eba9464179cc0e16ddbb6
+curriculum-count: 357 governed questions; 134 current, 65 cumulative reviewed, 158 original STAR-style fallback; server-only answer keys
+privacy-boundary: public governed curriculum only; no learner history, private observations, credentials, or cross-app progress
+scope: content-only exact-branch release to the existing classroom; preserves version-63 runtime implementation and evidence boundaries
+authorization: existing classroom product-director task permits bounded improvements on the authoritative branch
+publish-boundary: manual PUBLISH_REQUEST only; no scheduled or automatic future curriculum publishing
+status: publish candidate; device-level full-session and live DataStore acceptance remain pending and are not claimed
