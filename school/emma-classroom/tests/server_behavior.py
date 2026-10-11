@@ -17,8 +17,9 @@ local task={spawn=function(f,...) local a=table.pack(...);table.insert(queue,fun
 local function signal() return {Connect=function(self,f) self.callback=f end} end
 local player={UserId=1,CharacterAdded=signal()}
 local Players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function() return {} end}
+player.Parent=Players
 local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
-local getFailures,updateFailures,getAttempts,updateAttempts=2,0,0,0
+local getFailures,updateFailures,getAttempts,updateAttempts=5,0,0,0
 local studioMode=false
 local store={
     GetAsync=function(_,key)
@@ -80,7 +81,7 @@ end
 boot()
 Players.PlayerAdded.callback(player)
 flush()
-assert(getAttempts==3,"Progress load must retry transient DataStore failures")
+assert(getAttempts==6,"Exhausted load batch must retry instead of creating zero progress")
 assert(#events==0,"Wait for the client handshake before emitting a round")
 local first=requests.OnServerInvoke(player,"state")
 assert(first.ok and first.progress.stars==0 and first.progress.totalCorrect==4)
