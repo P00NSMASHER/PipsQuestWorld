@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "purpose": "Historical publication receipt only; does not assert the newest branch head is live or approve future publication",
+  "purpose": "Verified historical Roblox publication receipt only; later branch edits are not automatically live, and native iPhone acceptance is pending",
   "lastConfirmedPublication": {
-    "versionNumber": 77,
-    "sourceCommit": "04d8e318b5ab1bd4ba28aa1f6e8a35ce6cc280db",
-    "workflowRunId": 38013672747,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38013672747",
+    "versionNumber": 80,
+    "sourceCommit": "f367bb91b237773acd86225c48309463f8404e4b",
+    "workflowRunId": 38114396801,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38114396801",
     "placeId": "114603280760042",
     "universeId": "10769455759",
-    "mode": "classroom-progress-preview-only",
+    "mode": "classroom-and-hallway-preview-only",
     "visualAcceptance": "pending-real-device-review"
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "PR #339 head is an unpublished candidate unless a separate verified successful publish receipt establishes otherwise"
+  "nextCandidatePolicy": "Any commits after exact published v80 f367bb91 are an unpublished candidate until another successful place publication; static CI cannot certify native iPhone acceptance"
 }
