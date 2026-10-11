@@ -37,6 +37,7 @@ local sessions={}
 local SESSION_GOAL=10
 local DATASTORE_ATTEMPTS=4
 local DATASTORE_RETRY_SECONDS=.35
+local LOAD_RETRY_SECONDS=5
 
 local function retryDataStore(operationName,operation)
     local lastError
@@ -63,16 +64,25 @@ local function publicProgress(s)
 end
 
 local function loadProgress(player)
-    local data={totalCorrect=0,sessionsCompleted=0,skills={}}
-    local ok,result=retryDataStore("progress load",function()
-        return store:GetAsync("u:"..player.UserId)
-    end)
-    if ok and type(result)=="table" then
-        data.totalCorrect=tonumber(result.totalCorrect) or 0
-        data.sessionsCompleted=tonumber(result.sessionsCompleted) or 0
-        data.skills=type(result.skills)=="table" and result.skills or {}
+    -- A failed read is not evidence of zero progress. Stay unavailable and
+    -- retry while the player is connected; the client already presents an
+    -- honest in-place "progress is safe" recovery state.
+    while player.Parent==Players do
+        local ok,result=retryDataStore("progress load",function()
+            return store:GetAsync("u:"..player.UserId)
+        end)
+        if ok then
+            local data={totalCorrect=0,sessionsCompleted=0,skills={}}
+            if type(result)=="table" then
+                data.totalCorrect=tonumber(result.totalCorrect) or 0
+                data.sessionsCompleted=tonumber(result.sessionsCompleted) or 0
+                data.skills=type(result.skills)=="table" and result.skills or {}
+            end
+            return data
+        end
+        task.wait(LOAD_RETRY_SECONDS)
     end
-    return data
+    return nil
 end
 
 local function saveProgress(player,s,awaitCompletion:boolean?)
@@ -293,6 +303,7 @@ end
 
 local function join(player)
     local saved=loadProgress(player)
+    if not saved then return end
     local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
     sessions[player.UserId]=s
     local function place(character)

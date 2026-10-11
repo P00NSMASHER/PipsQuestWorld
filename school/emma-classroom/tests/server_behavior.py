@@ -17,8 +17,9 @@ local task={spawn=function(f,...) local a=table.pack(...);table.insert(queue,fun
 local function signal() return {Connect=function(self,f) self.callback=f end} end
 local player={UserId=1,CharacterAdded=signal()}
 local Players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function() return {} end}
+player.Parent=Players
 local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
-local getFailures,updateFailures,getAttempts,updateAttempts=2,0,0,0
+local getFailures,updateFailures,getAttempts,updateAttempts=5,0,0,0
 local studioMode=false
 local store={
     GetAsync=function(_,key)
@@ -80,7 +81,7 @@ end
 boot()
 Players.PlayerAdded.callback(player)
 flush()
-assert(getAttempts==3,"Progress load must retry transient DataStore failures")
+assert(getAttempts==6,"Exhausted load batch must retry instead of creating zero progress")
 assert(#events==0,"Wait for the client handshake before emitting a round")
 local first=requests.OnServerInvoke(player,"state")
 assert(first.ok and first.progress.stars==0 and first.progress.totalCorrect==4)
@@ -176,7 +177,7 @@ assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"Select
 -- A second user starts with independent progress, and changing test mode
 -- after a correct answer cannot let its delayed callback replace the new round.
 enforceSingleTeacher=false -- Two player-specific presentations can coexist.
-local player2={UserId=2,CharacterAdded=signal()}
+local player2={UserId=2,CharacterAdded=signal(),Parent=Players}
 Players.PlayerAdded.callback(player2)
 assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==0)
 flush()
@@ -266,7 +267,7 @@ assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer ski
 studioMode=true
 Players.GetPlayers=function() return {} end
 boot()
-local dev={UserId=3,CharacterAdded=signal()}
+local dev={UserId=3,CharacterAdded=signal(),Parent=Players}
 Players.PlayerAdded.callback(dev)
 flush()
 local firstStudio=requests.OnServerInvoke(dev,"state")
