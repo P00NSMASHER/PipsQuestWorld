@@ -716,7 +716,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         abs(float(word_wall[8])-18.0)<.03
         and abs(float(word_wall[10])-7.4)<.03
         and abs(float(word_wall[11])+2.5)<.03
-    ), "Photo word wall regressed to the small isolated board"
+    ), ("Photo word wall regressed to the small isolated board: " +
+        "observed sy={0} sz={1} y={2} z={3}".format(
+            word_wall[7],word_wall[8],word_wall[10],word_wall[11]))
     # Emma identified the purple chair BESIDE the photographed seated adult,
     # gray supply cabinet, dark filing cabinet and lower-left window AC. The
     # earlier rear-reading-corner coordinate was a guessed placement, not a
