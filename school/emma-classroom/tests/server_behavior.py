@@ -177,7 +177,7 @@ assert(requests.OnServerInvoke(player,"state").progress.totalCorrect==14,"Select
 -- A second user starts with independent progress, and changing test mode
 -- after a correct answer cannot let its delayed callback replace the new round.
 enforceSingleTeacher=false -- Two player-specific presentations can coexist.
-local player2={UserId=2,CharacterAdded=signal()}
+local player2={UserId=2,CharacterAdded=signal(),Parent=Players}
 Players.PlayerAdded.callback(player2)
 assert(requests.OnServerInvoke(player2,"state").progress.totalCorrect==0)
 flush()
@@ -267,7 +267,7 @@ assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer ski
 studioMode=true
 Players.GetPlayers=function() return {} end
 boot()
-local dev={UserId=3,CharacterAdded=signal()}
+local dev={UserId=3,CharacterAdded=signal(),Parent=Players}
 Players.PlayerAdded.callback(dev)
 flush()
 local firstStudio=requests.OnServerInvoke(dev,"state")
