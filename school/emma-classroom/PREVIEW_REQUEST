@@ -3,12 +3,12 @@ authorization: user-approved-2026-10-11-hallway-preview
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
-source-branch: visual/emma-hallway-photo-faithful-20261010
 build-project: school/emma-showroom.project.json
-source-parent-sha: 85667b0aea54a39d50d0ed8db38e9ef3d7a8d84d
-scope: October 10 photo-grounded ABVM classroom and hallway preview, not the old quiz classroom
-privacy: original student work and children's likenesses are not bundled in the public place
-excluded-runtime: no study HUD, choice buttons, quiz remotes, answer bank or learner scores
-production-furniture-meshes: disabled pending native Roblox Studio/mobile acceptance
-release-status: explicit owner-approved progress preview, not final visual acceptance
-follow-up: review full-room appearance, hallway doors, iPhone controls and collisions on native device
+source-branch: visual/emma-hallway-photo-faithful-20261010
+source-parent-sha: 6bb025688ee513a7139ed794bf1cd1933ceb72ac
+scope: Photo-grounded ABVM classroom, Oct 10 corridor, authentic workstation, refinished rugs, cabinet/word wall, true glass oak doors
+release-intent: One-time owner-authorized native Roblox iPhone preview; not final appearance approval
+educational-runtime: no quiz, grading, personal student history, or score writes
+furniture-meshes: disabled pending creator-owned asset and native visual acceptance
+testing-receipt: Source Luau construction, 3086-part budget, 16 chairs, hallway collision grid, lighting and photo geometries passed
+preview-status: built as preview only, native iPhone review required
