@@ -68,18 +68,96 @@ assert(#pieces("Rear corridor end wall")==0 and
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Open classroom door",2)
 expect("Photo hall classroom exterior blue-gray paint",2)
-expect("Photo hall adjacent oak door",2)
-local picturedDoors=expect("Photo hall adjacent oak door",2)
-for _,door in ipairs(picturedDoors) do
-    assert(not door.CanCollide and door.Material==Enum.Material.Wood,
-        "PHOTO_HALL_DECORATIVE_DOOR_BLOCKS")
-    local pictured=gui(door,"Frosted glass and oak door trim",
-        Enum.NormalId.Back)
-    assert(pictured:FindFirstChild("School door frosted glazing")
-        and pictured:FindFirstChild("School door oak center rail")
-        and pictured:FindFirstChild("School door brass push plate"),
-        "PHOTO_HALL_OAK_DOOR_DETAILS_MISSING")
+-- Closed neighboring doors must be physical oak-and-frosted-glass
+-- facades rather than UI pictures that render as opaque dark rectangles.
+local facades=expect("Photo hall adjacent oak door",2)
+local panels=expect("Photo hall adjacent frosted door glass",2)
+local stiles=expect("Photo hall adjacent oak side stile",4)
+local lintels=expect("Photo hall adjacent oak upper lintel",2)
+local sills=expect("Photo hall adjacent oak glass sill",2)
+local bars=expect("Photo hall adjacent oak glass crossbar",2)
+local raised=expect("Photo hall adjacent lower raised wood panel",2)
+local plates=expect("Photo hall adjacent brass push plate",2)
+local pulls=expect("Photo hall adjacent brass pull",2)
+local sealed=expect("Photo hall front outer wall",2)
+table.sort(facades,function(a,b)return a.Position.X<b.Position.X end)
+table.sort(panels,function(a,b)return a.Position.X<b.Position.X end)
+local function checkClosedOakDoors()
+    expect("Photo hall adjacent oak side stile",4)
+    expect("Photo hall adjacent frosted door glass",2)
+    for i,lower in ipairs(facades) do
+        local glass=panels[i]
+        assert(lower.Material==Enum.Material.Wood
+            and lower.Size.Y<4.5 and near(lower.Position.Y,2.665)
+            and lower:GetAttribute("ArchitecturalFacade")
+                =="Closed; no extra classroom",
+            "PHOTO_HALL_ADJACENT_OPAQUE_BACKING_RETURNED")
+        assert(glass.Material==Enum.Material.Glass
+            and glass.Transparency>.13 and glass.Transparency<.49
+            and near(glass.Size.Y,4.88)
+            and math.abs(glass.Position.X-lower.Position.X)<.05
+            and glass.Position.Z>lower.Position.Z
+            and glass.Position.Y-glass.Size.Y/2
+                >lower.Position.Y+lower.Size.Y/2
+            and glass:GetAttribute("GlassAperture")
+                =="Upper opening has no solid wood backing",
+            "PHOTO_HALL_ADJACENT_GLASS_APERTURE_LOST")
+        local wall=sealed[1]
+        if math.abs(wall.Position.X-lower.Position.X)>.10 then wall=sealed[2] end
+        assert(wall.CanCollide and wall.Size.Y>=12.9
+            and math.abs(wall.Position.X-lower.Position.X)<.1
+            and wall.Position.Z<lower.Position.Z,
+            "PHOTO_HALL_ADJACENT_SEALED_WALL_LOST")
+        assert(not glass.CanCollide and not glass.CanQuery
+            and not lower.CanCollide and not lower.CanQuery,
+            "PHOTO_HALL_ADJACENT_DOOR_COLLIDER")
+        assert(not lower:FindFirstChild("Frosted glass and oak door trim"),
+            "PHOTO_HALL_ADJACENT_UI_DUPLICATE")
+    end
+    for _,group in ipairs({stiles,lintels,sills,bars,raised,plates,pulls}) do
+        for _,item in ipairs(group) do
+            assert(not item.CanCollide and not item.CanQuery,
+                "PHOTO_HALL_ADJACENT_DOOR_COLLIDER")
+            assert(item.Material==Enum.Material.Wood or
+                item.Material==Enum.Material.Metal,
+                "PHOTO_HALL_ADJACENT_DETAIL_BECAME_UI")
+        end
+    end
+    for _,s in ipairs(stiles) do
+        assert(near(s.Size.X,.72) and s.Size.Y>4.8,
+            "PHOTO_HALL_ADJACENT_STILE_SHAPE_MISSING")
+    end
 end
+checkClosedOakDoors()
+-- Verify intentional counterexamples fail against constructed Luau parts.
+local originalSize=facades[1].Size
+facades[1].Size=Vector3.new(6.45,10,.14)
+local ok,err=pcall(checkClosedOakDoors)
+facades[1].Size=originalSize
+assert(not ok and string.find(tostring(err),"OPAQUE_BACKING_RETURNED",1,true),
+    "PHOTO_HALL_ADJACENT_OPAQUE_SLAB_MUTATION_ACCEPTED")
+local originalAlpha=panels[1].Transparency
+panels[1].Transparency=0
+ok,err=pcall(checkClosedOakDoors)
+panels[1].Transparency=originalAlpha
+assert(not ok and string.find(tostring(err),"GLASS_APERTURE_LOST",1,true),
+    "PHOTO_HALL_ADJACENT_SOLID_GLASS_MUTATION_ACCEPTED")
+pulls[1].CanCollide=true
+ok,err=pcall(checkClosedOakDoors)
+pulls[1].CanCollide=false
+assert(not ok and string.find(tostring(err),"DOOR_COLLIDER",1,true),
+    "PHOTO_HALL_ADJACENT_COLLIDING_HARDWARE_MUTATION_ACCEPTED")
+local originalName=stiles[1].Name
+stiles[1].Name="Missing oak stile mutation"
+ok,err=pcall(checkClosedOakDoors)
+stiles[1].Name=originalName
+assert(not ok and string.find(tostring(err),"PHOTO_HALL_PART_COUNT",1,true),
+    "PHOTO_HALL_ADJACENT_MISSING_STILE_MUTATION_ACCEPTED")
+checkClosedOakDoors()
+print("PHOTO_HALL_ADJACENT_NATIVE_OAK_DOORS_PASS closed=2 actual_glass=2 "
+    .."stiles=4 trim_rails=6 raised=2 brass=4 new_parts=18 "
+    .."sealed_walls=true no_collision=true "
+    .."mutations=opaque,glass,hardware,stile")
 local glass=expect("Door glass",2)
 for _,panel in ipairs(glass) do
     local faces=0
