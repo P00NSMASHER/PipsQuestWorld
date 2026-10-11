@@ -421,3 +421,24 @@ Adversarial tests deliberately attach a fabricated Smartboard grade splash
 and a fake chalk slogan, both of which must fail. Native Roblox/iPhone
 visual acceptance remains pending; static renders omit SurfaceGui content
 and cannot demonstrate the exact removal visually.
+
+## October 10 — photo-guided scatter of 25 polka-dot rug spots
+
+The classroom photo shows a black rectangular activity rug with gently
+staggered, slightly varied-diameter multicolored circles. The original game
+rendered a visibly rigid 5-by-5 lattice of identical 1.32-stud dots. The same
+25 existing native Fabric Cylinders now have deterministic row offsets,
+position jitter, 1.12–1.288-stud diameters, and the existing six pastel
+colors. The 16-by-9 rug footprint, physical part count, orientation,
+circulation, desk furniture, and unverified everyday rug location remain
+unchanged. All decorative dots disable collision, touch, queries, and
+per-dot shadows; no school photos or uploaded images appear in the public
+repo. This is pattern refinement, not a claim about the normal class's exact
+furniture layout.
+
+The existing constructed-Luau rug audit now validates all 25 shapes and
+colors, at least 20 unique x/z positions, five distinct sizes and five
+colors, a visible row stagger, 0.18-stud rug-edge clearance, and over
+0.10-stud nonoverlap. Deliberate test mutations overlap two dots, place
+one outside the rug, and restore a strict lattice; all must be rejected.
+Actual Roblox/iPhone material and photo parity are still review-gated.

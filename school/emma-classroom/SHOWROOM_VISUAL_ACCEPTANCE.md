@@ -80,7 +80,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
   broad school fluorescent fixtures rather than emissive neon panels.
 - [ ] **Both rugs:** Circular sun/number/ABC rug has readable letters,
   ten numbered clouds and visible orange sunburst. Separate black
-  rectangular polka-dot rug uses colored round dots. Both are accessible.
+  rectangular polka-dot rug has 25 different-size, naturally staggered
+  colored circles instead of the old rigid grid. Dots stay inside its edge,
+  visibly round and nonoverlapping. Both are accessible in their unchanged
+  provisional everyday positions.
 - [ ] **Navigation:** First-person iPhone camera, movement thumbstick and
   jump button work; spawn, windows, bookcases, teacher wall, right aisle
   and both existing doors remain physically reachable. Check corners,
