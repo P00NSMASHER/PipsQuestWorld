@@ -53,11 +53,14 @@ local function summarize()
         if obj.ClassName=="SurfaceGui" then
             guis+=1
             if firstGui==nil then firstGui=obj end
-            assert(obj.CanvasSize and obj.CanvasSize.X>0
-                and obj.CanvasSize.Y>0,
+            -- Native Vector2 uses X/Y. The pinned source-construction
+            -- fixture models Vector2 as numeric [1]/[2].
+            local w=obj.CanvasSize and (obj.CanvasSize.X or obj.CanvasSize[1])
+            local h=obj.CanvasSize and (obj.CanvasSize.Y or obj.CanvasSize[2])
+            assert(w and h and w>0 and h>0,
                 "HALL_MOBILE_INVALID_RENDER_CANVAS")
-            surfacePixels+=obj.CanvasSize.X*obj.CanvasSize.Y
-            assert(obj.CanvasSize.X*obj.CanvasSize.Y<=LIMIT_CANVAS,
+            surfacePixels+=w*h
+            assert(w*h<=LIMIT_CANVAS,
                 "HALL_MOBILE_OVERSIZED_SINGLE_SURFACE")
             assert(obj.AlwaysOnTop~=true,
                 "HALL_MOBILE_UI_ALWAYS_ON_TOP_INVALID")
