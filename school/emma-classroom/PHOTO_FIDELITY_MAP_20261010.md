@@ -499,3 +499,24 @@ original circle-rug bounds. Negative tests restore the old overlapping
 cart position, detach a wheel, and abandon the paper stack behind;
 all are required to fail. This supplements the earlier 16 student
 desk/chair rug clearance and six standard route checks.
+
+## October 11 — verify every cart supply and clear the last potted plant edge
+
+An independent **previously verified source RBXMX** inspection revealed the
+newly repositioned cart has calculated +2.624-stud clearance from the round
+rug, but a decorative `Plant leaf` near (-31,20) still grazes the rug
+by about 0.024 studs. Keep that original plant/position and shrink only
+its scale from .85 to .65. Its five leaves and pot (six physical Parts)
+remain intact; their closest oriented bounding-box rug clearance is
+predicted to improve to ~0.299 studs. The cart's long axis is along the
+**left** classroom wall (not parallel to the rear bookcase).
+
+The previous cart QA checked three shelves, four wheels, four rails and
+paper stack but accidentally omitted its TWO actual books. It now binds
+both cart-relative `Classroom book` objects, both page sets and spines,
+and verifies the books are on the relocated tabletop at heights 3.82
+and 4.09 studs. Negative tests deliberately abandon one book in the old
+position and restore the potted plant to its large original size. Zero
+physical Parts or lesson content added, no user photographs committed.
+**Pending** exact-head GitHub Actions verification: source geometry
+calculations are independent of native Roblox physics/iPhone rendering.

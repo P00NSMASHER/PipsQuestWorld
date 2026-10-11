@@ -497,7 +497,7 @@ local function buildClassroomTexture(root: Instance)
     -- rolling cart top at (-29,22) crossed the carpet by ~0.58 studs,
     -- even after its nearby student-chair obstruction was repaired.
     -- Move this SAME original cart into the unused back-left storage
-    -- corner and turn its long axis parallel to the rear classroom wall.
+    -- corner and turn its long axis parallel to the LEFT classroom wall.
     -- Keep every shelf, wheel, rail, book and paper stack connected.
     -- This is a provisional placement, NOT a surveyed school floorplan.
     -- Footprint (x=-35.2..-32.0, z=20.75..26.25) remains inside the
@@ -1963,8 +1963,11 @@ function World.build()
     -- Keep it separate from gameplay, board content and curriculum systems.
     ArtPass.decorate(root)
 
-    -- Lived-in details.
-    plant(root,-31,.1,20,.85)
+    -- Lived-in details. The original left reading-corner plant's broad
+    -- leaves grazed the A-Z activity rug by .02 stud in the source render.
+    -- A smaller instance of the SAME 6-Part plant clears the rug and
+    -- keeps its original spot; no extra parts or new geometry architecture.
+    plant(root,-31,.1,20,.65)
     plant(root,-30,8.2,-29,.55)
     -- Actual classroom photo: the analog white clock hangs on the broad
     -- yellow WALL PIER between the two navy-curtained windows, not over
