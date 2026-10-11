@@ -33,7 +33,8 @@ Z_MIN, Z_MAX = -32.0, 48.0
 START = (5.0, 24.0)
 GOALS = {
     "front_teaching_wall": (5.0, -24.0),
-    "rear_entry_hallway": (0.0, 36.0),
+    "right_supply_closet_interior": (0.0, 31.0),
+    "left_staff_hall_turn": (45.5, 29.0),
     "photo_hallway_left": (-43.0, 38.0),
     "photo_hallway_right": (43.0, 38.0),
     "window_wall": (-32.0, 1.0),
@@ -195,6 +196,24 @@ def inspect(blockers: list[Blocker]) -> dict:
     if failures:
         raise AssertionError("BLOCKED_NAVIGATION "+ " | ".join(failures))
     assert len(routes)==len(GOALS), "Incomplete route acceptance"
+    # A merely reachable hallway is not enough: two doors used to connect
+    # to it. Now BOTH long photo-hall routes MUST enter via the left-side
+    # staff doorway, visit its physical corridor and turn north.
+    for name in ("photo_hallway_left","photo_hallway_right"):
+        points=routes[name]["waypoints"]
+        assert any(x>=40 and 10<=z<=24 for x,z in points), (
+            "LEFT_STAFF_HALL_MISSING_FROM_ROUTE: "+name
+        )
+        assert any(x>=40 and 27<=z<=34 for x,z in points), (
+            "LEFT_STAFF_TURN_INTO_LONG_HALL_BLOCKED: "+name
+        )
+    assert all(x<37.5 for x,z in routes["right_supply_closet_interior"]["waypoints"]), (
+        "RIGHT_CLOSET_MUST_BE_REACHED_FROM_CLASSROOM_NOT_HALL"
+    )
+    assert any(b.name=="Supply closet solid rear wall" and b.covers(0.0,36.05)
+               for b in blockers), (
+        "REAR_CLOSET_WALL_MISSING_RIGHT_DOUBLE_DOOR_LEAKS_TO_HALL"
+    )
     return {
         "mode":"source-derived static approximate footprints; not native Roblox physics",
         "grid_studs":STEP,
@@ -382,6 +401,8 @@ def main():
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
               "end="+str(route["endpoint"]),flush=True)
+    print("DOORWAY_ROUTING_NAV_PASS left_staff_to_long_hall=true "
+          "right_rear_supply_closet_sealed=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
           "source_colliders="+str(result["blockers"]),
           "NATIVE_ROBLOX_DEVICE_QA_STILL_REQUIRED",flush=True)
