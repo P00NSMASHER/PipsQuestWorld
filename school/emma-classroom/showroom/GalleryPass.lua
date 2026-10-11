@@ -258,18 +258,20 @@ local function showcaseBoards(root:Instance,group:Instance)
         for _,child in ipairs(smart:GetChildren()) do
             if child:IsA("SurfaceGui") then child:Destroy() end
         end
-        -- The real classroom photos show a large dark interactive panel on
-        -- a white wheeled chassis. An almost-black matte active surface is
-        -- more convincing than the generic mid-gray glass rectangle.
-        -- Keep original screen bounds, housing, touch collision and teaching
-        -- wording. No added UI or new lesson controls.
+        -- Real classroom photo evidence shows a large WHITE wheeled
+        -- Smartboard with a dark inactive screen. The older fabricated
+        -- "WELCOME TO GRADE 2" slide was not present in the classroom
+        -- reference and created a false permanent grade/lesson claim.
+        -- Keep the exact photographed screen, chassis, orientation and
+        -- original matte finish, but show its screen blank BY DEFAULT.
+        -- No image, lesson UI, quiz controls or changed physical Parts.
         smart.Material=Enum.Material.SmoothPlastic
         smart.Color=Color3.fromRGB(27,34,36)
         smart.Reflectance=.035
         smart.Transparency=0
-        local screenInk=Color3.fromRGB(31,39,43)
-        printFace(smart,Enum.NormalId.Back,"WELCOME TO GRADE 2",
-            "ASSUMPTION BVM  •  LEARN  •  CREATE  •  GROW",screenInk,C.paper)
+        -- Never add a fake permanent grade splash to this blank panel.
+        -- Future authenticated schoolwork/lesson UI is a separate,
+        -- explicitly governed feature, not static photo-fidelity art.
         -- Hardware, not a giant question-card UI.
         piece(group,"Interactive board camera",Vector3.new(.28,.28,.23),
             CFrame.new(5.2,11.58,-31.32),C.slate,Enum.Material.Metal,false)
@@ -279,12 +281,13 @@ local function showcaseBoards(root:Instance,group:Instance)
                 x<2 and C.slate or C.metal,Enum.Material.SmoothPlastic,false)
         end
     end
-    -- Photo-guided large chalkboard remains exposed along the sides of the
-    -- independently wheeled interactive display. This is static scenery.
+    -- The photo-guided chalkboard is exposed beside the rolling Smartboard.
+    -- The prior invented "GOOD MORNING!" graphic is not supported by the
+    -- source photos. Keep the same existing dark chalk surface and all
+    -- hardware/eraser/chalk dust, with no persistent classroom message.
     local chalk=piece(group,"Chalk handwriting panel",Vector3.new(4.10,4.20,.065),
         CFrame.new(-6.75,8.3,-33.93),Color3.fromRGB(40,51,49),
         Enum.Material.SmoothPlastic,false)
-    printFace(chalk,Enum.NormalId.Back,"GOOD MORNING!","We learn together.",chalk.Color,C.cream)
     for i=1,4 do
         piece(group,"Chalk dust in tray",Vector3.new(.26,.02,.14),
             CFrame.new(-8.3+i*.43,4.20,-33.31),C.cream,Enum.Material.SmoothPlastic,false)

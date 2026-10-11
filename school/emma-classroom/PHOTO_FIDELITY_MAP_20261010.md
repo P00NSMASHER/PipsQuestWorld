@@ -395,3 +395,29 @@ All dressings retain `Fabric`, the original 4+8+4 counts, noncollision
 and two navy-curtained school-window locations. The *native* Roblox
 mobile materials and sunlight remain acceptance-gated; a source-derived
 renderer is insufficient to claim real fabric parity.
+
+## October 10 — eliminate invented grade-slide content from the teaching wall
+
+The real classroom photographs show a white-framed rolling Smartboard
+either with a blank/dark screen or temporarily displaying cheer instructions;
+the chalkboard is dark and mostly unmarked during the same event. The
+existing replica permanently displayed **“WELCOME TO GRADE 2 / ASSUMPTION
+BVM • LEARN • CREATE • GROW”** on the Smartboard and a separate
+**“GOOD MORNING! / We learn together.”** chalk-panel slogan. Neither is a
+photographed permanent fixture; fixed grade wording is especially
+inaccurate as this place is about a real evolving school classroom.
+
+This pass is intentionally SUBTRACTIVE: remove the invented in-world
+`SurfaceGui` text from the Smartboard and the decorative chalk panel.
+Keep the same matte-dark screen, white wheeled chassis, 26 phonics cards,
+chalkboard, chalk tray, mobile nav, scene Part count, and empty state as a
+legible neutral permanent room. No new geometry, student photos, lessons,
+assets, game interfaces or personal information. The separate governed
+schoolwork/quiz systems are not integrated into this classroom-only target.
+
+`audit_literacy_wall.py` now verifies the two original dark teaching
+surfaces are constructed and carry no persistent sign `SurfaceGui`.
+Adversarial tests deliberately attach a fabricated Smartboard grade splash
+and a fake chalk slogan, both of which must fail. Native Roblox/iPhone
+visual acceptance remains pending; static renders omit SurfaceGui content
+and cannot demonstrate the exact removal visually.

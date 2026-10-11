@@ -61,7 +61,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
   not a plain white box. SurfaceGui checks are legible from an iPhone
   and do not shimmer or interfere with nearby walking routes.
 - [ ] **Teaching wall:** Larger chalkboard is visible behind the wheeled,
-  white-framed Smartboard. Alphabet/handwriting panel is legible; 26
+  white-framed Smartboard. The idle Smartboard is dark/blank and does not
+  display a fabricated permanent "WELCOME TO GRADE 2" slide. The exposed
+  chalkboard likewise has no generic invented "GOOD MORNING!" graphic.
+  Alphabet/handwriting panel is legible; 26
   small phonics cards stay on solid teaching wall and out of ceiling.
   The cards show distinct original color pictograms beside readable
   upper/lowercase letters, with the example words unobscured.
