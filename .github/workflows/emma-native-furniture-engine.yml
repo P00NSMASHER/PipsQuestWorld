@@ -1,0 +1,51 @@
+name: ABVM Native Roblox Furniture Engine Acceptance
+
+# The approved models and exact showroom adapter already passed native
+# ephemeral engine acceptance. Roblox execution tasks have rate limits:
+# do not automatically rerun on every PR update.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ephemeral-engine-furniture-inspection:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Independently verify both approved creator-owned model IDs
+        shell: bash
+        env:
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/mesh/verify_uploaded_assets.py
+          python3 -m py_compile school/emma-classroom/mesh/native_engine_smoke.py
+          # Config must remain disabled; no release changes.
+          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
+          echo "NATIVE_SMOKE_PREFLIGHT_NO_PRODUCTION_PUBLISH"
+
+      - name: Inspect actual Roblox model parts, scale and 16 locations in a disposable engine task
+        shell: bash
+        env:
+          ROBLOX_QA_API_KEY: ${{ secrets.ROBLOX_QA_API_KEY }}
+          ROBLOX_PLACE_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+          ROBLOX_ASSET_API_KEY: ${{ secrets.ROBLOX_ASSET_API_KEY }}
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/mesh/native_engine_smoke.py
+
+      - name: Retain engine-only acceptance receipts without modifying any place
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-native-furniture-smoke-${{ github.sha }}
+          path: ${{ runner.temp }}/abvm-native-engine-receipt.json
+          retention-days: 21
+          if-no-files-found: warn

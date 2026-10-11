@@ -206,7 +206,30 @@ startRound=function(player)
     local token=HttpService:GenerateGUID(false)
     s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
     event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=s.modeLabel or "Current ABVM lessons"})
-    if model then task.spawn(function() World.walkTeacher(model,true) end) end
+    if model then
+        task.spawn(function()
+            World.walkTeacher(model,true)
+            -- Once the teacher reaches the board, use a restrained head turn
+            -- and breathing idle on the *same* native hair/face/head frame.
+            -- Throttle anchored-pose replication and disconnect at replacement.
+            local heartbeat=game:GetService("RunService").Heartbeat
+            if not heartbeat or not model.Parent then return end
+            local started=os.clock()
+            local last=0
+            local connection
+            connection=heartbeat:Connect(function()
+                if not model.Parent or sessions[player.UserId]~=s or s.teacherModel~=model then
+                    connection:Disconnect()
+                    return
+                end
+                local now=os.clock()
+                if now-last>=.10 then
+                    last=now
+                    World.poseTeacher(model,now-started,false)
+                end
+            end)
+        end)
+    end
 
 end
 

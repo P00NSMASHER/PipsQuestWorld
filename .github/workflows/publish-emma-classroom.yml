@@ -1,11 +1,13 @@
-name: Publish Emma Study Classroom
+name: Publish ABVM Classroom Replica
 
 on:
   push:
     branches:
       - rebuild/emma-classroom-study-v1
+      - visual/emma-classroom-replica-only-20261008
     paths:
       - 'school/emma-classroom/PUBLISH_REQUEST'
+      - 'school/emma-classroom/PREVIEW_REQUEST'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Install pinned Luau and Rojo
@@ -41,26 +44,92 @@ jobs:
           echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
           unzip -q luau.zip -d luau
           unzip -q rojo.zip -d rojo
-          chmod +x luau/luau-compile rojo/rojo
+          chmod +x luau/luau luau/luau-compile rojo/rojo
 
-      - name: Verify tiny classroom source
+      - name: Require explicit replica-only release approval and compile showroom
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/shared/*.lua school/emma-classroom/server/*.lua school/emma-classroom/client/*.lua; do
+          # A separate one-time preview is authorized by the user to INSPECT
+          # the still-unaccepted classroom on their existing Roblox place.
+          # It is deliberately NOT a visual-acceptance approval. The normal
+          # release branch retains the original 'approved' requirement.
+          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
+            request=school/emma-classroom/PREVIEW_REQUEST
+            test -f "$request"
+            grep -qx 'requested-mode: classroom-progress-preview-only' "$request"
+            grep -qx 'authorization: user-requested-2026-10-08' "$request"
+            grep -qx 'visual-acceptance: pending-real-device-review' "$request"
+            grep -qx 'target-universe: 10769455759' "$request"
+            grep -qx 'target-place: 114603280760042' "$request"
+            # The preview request must be the ONLY file changed by the trigger
+            # commit. The candidate parent is pinned in that request.
+            changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+            test "$changed" = "$request"
+            parent="$(git rev-parse HEAD^)"
+            grep -qx "source-parent-sha: $parent" "$request"
+            echo "USER_AUTHORIZED_PREVIEW_WITHOUT_FINAL_VISUAL_ACCEPTANCE"
+          elif [[ "$GITHUB_REF_NAME" == 'rebuild/emma-classroom-study-v1' ]]; then
+            grep -qx 'requested-mode: classroom-replica-only' school/emma-classroom/PUBLISH_REQUEST
+            grep -qx 'visual-acceptance: approved' school/emma-classroom/PUBLISH_REQUEST
+          else
+            echo "REF_NOT_AUTHORIZED_FOR_PUBLISH"; exit 1
+          fi
+          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
-          grep -q 'SESSION_GOAL=10' school/emma-classroom/server/Main.server.lua
-          grep -q 'Data.PlayerName = "Emma"' school/emma-classroom/shared/Data.lua
-          ! grep -R -E 'Garage|Leaderboards|vehicle_|home_estate|ABVM SCHOOL SHOP' school/emma-classroom
+          python3 school/emma-classroom/showroom/verify_build.py
+          # Keep lighting acceptance as a release prerequisite, not merely
+          # an optional screenshot check. This runs the actual Luau room and
+          # gallery constructors with the same pinned executable as CI.
+          python3 school/emma-classroom/showroom/audit_lighting.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Native iPhone v70 exposed blank-facing storybooks. Assert actual
+          # SurfaceGui direction and original illustrated physical cover fronts.
+          python3 school/emma-classroom/showroom/audit_storybook_facing.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Non-uniform Ball parts render at the MINIMUM axis diameter
+          # on native Roblox clients; ban the dotted rug regression.
+          python3 school/emma-classroom/showroom/audit_native_rug_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Native phone: previous foliage Balls were flattened to thin
+          # minimum-axis silhouettes, akin to the carpet-dot regression.
+          python3 school/emma-classroom/showroom/audit_native_foliage_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Chair ventilation cannot regress to dot-like flattened Balls.
+          python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # The child-reported purple corner chair is a separate, approved
+          # fallback chair, not a 17th student desk seat or mesh-swap target.
+          python3 school/emma-classroom/showroom/audit_purple_corner_chair.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Real classroom has separate left-window S'more signage and
+          # right-window affirmation, plus the compact left-window AC.
+          python3 school/emma-classroom/showroom/audit_window_landmarks.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          # Exact photo landmark geometry, joinery and doorway clearance.
+          python3 school/emma-classroom/showroom/audit_photo_landmarks.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_literacy_wall.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_checkered_table.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_word_wall_native.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/furniture_adapter_runtime.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/walkability_audit.py --self-test
+          python3 school/emma-classroom/showroom/walkability_audit.py --luau "$RUNNER_TEMP/tools/luau/luau" --out "$RUNNER_TEMP/navigation.json"
+          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
 
-      - name: Build Emma classroom only
+      - name: Build replica with NO educational runtime
         shell: bash
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-study.rbxl"
-          test -s "$RUNNER_TEMP/emma-study.rbxl"
-          sha256sum "$RUNNER_TEMP/emma-study.rbxl" | tee "$RUNNER_TEMP/place.sha256"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxl"
+          test -s "$RUNNER_TEMP/emma-replica.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxlx"
+          python3 school/emma-classroom/showroom/verify_build.py "$RUNNER_TEMP/emma-replica.rbxlx"
+          sha256sum "$RUNNER_TEMP/emma-replica.rbxl" | tee "$RUNNER_TEMP/place.sha256"
 
       - name: Publish exact classroom binary
         id: publish
@@ -71,21 +140,26 @@ jobs:
           set -euo pipefail
           test -n "$ROBLOX_API_KEY"
           response="$RUNNER_TEMP/publish-response.json"
-          code="$(curl --silent --show-error --location             --output "$response" --write-out '%{http_code}'             --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/octet-stream'             --data-binary @"$RUNNER_TEMP/emma-study.rbxl")"
+          code="$(curl --silent --show-error --location             --output "$response" --write-out '%{http_code}'             --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header 'Content-Type: application/octet-stream'             --data-binary @"$RUNNER_TEMP/emma-replica.rbxl")"
           cat "$response"
           test "$code" -ge 200 -a "$code" -lt 300
           version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["versionNumber"])' "$response")"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
+          echo "Published exact GitHub source $SOURCE_SHA to known Roblox place $PLACE_ID" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$GITHUB_REF_NAME" == 'visual/emma-classroom-replica-only-20261008' ]]; then
+            echo "PROGRESS PREVIEW ONLY: visual/mobile acceptance remains pending" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Receipt
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: emma-study-publish-${{ github.run_id }}
+          name: emma-replica-publish-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/place.sha256
             ${{ runner.temp }}/version.txt
             ${{ runner.temp }}/publish-response.json
+            ${{ runner.temp }}/navigation.json
           retention-days: 14
           if-no-files-found: warn

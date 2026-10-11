@@ -1,0 +1,382 @@
+name: Emma Classroom Visual Snapshot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'school/emma-showroom.project.json'
+      - 'school/emma-classroom/showroom/**'
+      - '.github/workflows/emma-showroom-visual-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshot-constructed-luau-room:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Get exact review head
+        uses: actions/checkout@v4
+        with:
+          # Never label a synthetic PR merge commit as the classroom head.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact source revision
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_SOURCE_SHA"
+          echo "EXACT_SOURCE_CHECKOUT_PASS sha=$actual"
+          printf 'Classroom visual source: %s\n' "$actual" >> "$GITHUB_STEP_SUMMARY"
+      - name: Install pinned geometry executor
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          mkdir -p luau
+          unzip -q luau.zip -d luau
+          chmod +x luau/luau
+
+      - name: Evaluate actual classroom constructor into a STATIC scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          test -s "$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/emma-classroom-cutaway.rbxmx" --cutaway
+          test -s "$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
+
+      - name: Install sandboxed independent headless renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/rhr-venv"
+          "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check \
+            --pre 'roblox-headless-renderer==1.0.0rc1'
+          "$RUNNER_TEMP/rhr-venv/bin/rhr" --help | head -30
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_preview.py --self-test
+
+      - name: Render interior cutaway and exterior control screenshots
+        shell: bash
+        env:
+          RHR_CACHE_DIR: ${{ runner.temp }}/rhr-cache
+        run: |
+          set -euo pipefail
+          RHR="$RUNNER_TEMP/rhr-venv/bin/rhr"
+          SRC="$RUNNER_TEMP/emma-classroom-cutaway.rbxmx"
+          mkdir -p "$RUNNER_TEMP/visual"
+          # Keep aerial renders independent. The six-view batch once returned
+          # nearly all-white PNGs despite reporting success.
+          # The same source sometimes produces a white isometric PNG.
+          # Retain the strict image check and try an independent camera once,
+          # rather than accepting a visually blank output as a successful render.
+          check_aerial() {
+            "$RUNNER_TEMP/rhr-venv/bin/python" \
+              school/emma-classroom/showroom/check_preview.py "$1"
+          }
+          "$RHR" scene "$SRC" --camera=65,50,65 --look-at=0,6,-4 --out "$RUNNER_TEMP/visual/01-isometric.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/01-isometric.png"; then
+            echo "Reject blank isometric; retrying with independent opposite camera"
+            "$RHR" scene "$SRC" --camera=-62,48,61 --look-at=0,6,-4 --out "$RUNNER_TEMP/visual/01-isometric.png"
+          fi
+          "$RHR" scene "$SRC" --view front --out "$RUNNER_TEMP/visual/02-front.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/02-front.png"; then
+            echo "Reject blank front; retrying fixed eye-independent aerial camera"
+            "$RHR" scene "$SRC" --camera=0,10,85 --look-at=0,7,-4 --out "$RUNNER_TEMP/visual/02-front.png"
+          fi
+          "$RHR" scene "$SRC" --view top --out "$RUNNER_TEMP/visual/03-top.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/03-top.png"; then
+            echo "Reject blank overhead; retrying fixed high camera"
+            "$RHR" scene "$SRC" --camera=0,92,-4 --look-at=0,0,-4 --out "$RUNNER_TEMP/visual/03-top.png"
+          fi
+          # Every final camera MUST still pass the identical pixel gate.
+          for name in 01-isometric 02-front 03-top; do
+            check_aerial "$RUNNER_TEMP/visual/$name.png"
+          done
+          # Ground-level positions measured in room source studs.
+          # Use the FULL classroom here. Cutaway previews are only for aerial shots;
+          # otherwise dark voids replace real walls at the player eye position.
+          FULL="$RUNNER_TEMP/emma-classroom-source.rbxmx"
+          # Every player-eye camera is checked too. Previously only the
+          # aerial camera gate checked pixels, so blank close-ups could silently
+          # enter a passing build. One same-camera retry keeps comparisons fair.
+          render_eye_checked() {
+            local label="$1"
+            local eye="$2"
+            local aim="$3"
+            local output="$RUNNER_TEMP/visual/$label.png"
+            "$RHR" scene "$FULL" --camera="$eye" --look-at="$aim" --out "$output"
+            if ! check_aerial "$output"; then
+              echo "VISUAL_RETRY $label: first camera image was blank; one identical-camera retry"
+              "$RHR" scene "$FULL" --camera="$eye" --look-at="$aim" --out "$output"
+            fi
+            check_aerial "$output"
+          }
+          render_eye_checked 05-eye-front 0,5.5,18 0,7,-33
+          render_eye_checked 06-eye-back 0,5.5,-17 0,6,25
+          render_eye_checked 07-eye-windows 12,5.5,0 -36,7,0
+          render_eye_checked 08-eye-storage -20,5.5,0 35,7,0
+          # Furniture detail views: same real source, same camera each run.
+          render_eye_checked 09-chair-back 4.5,4.3,12.6 0,2.4,6.5
+          render_eye_checked 10-desk-side 7,4.0,8.2 0,2.4,6.2
+          # Storage geometry review from the actual Luau-built classroom.
+          render_eye_checked 11-storage-close-up 20,7.8,9 20,9.7,25.3
+          # Reading area: same source, two fixed eye-level viewpoints before and after.
+          render_eye_checked 12-reading-rug -27,5.0,4.8 -25,2.9,17
+          render_eye_checked 13-reading-books -10,5.2,14 -23,3.1,23
+          # October 8 iPhone footage exposed blue sky through staff/rear
+          # hallway openings. Inspect those exact approaches after every
+          # scene edit, not merely the polished teaching-wall cameras.
+          # The former oblique camera at x=29 looked through the tall
+          # cabinet, hiding half of the staff hallway. Aim directly into
+          # the EXISTING staff doorway from an unobstructed classroom point.
+          render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
+          render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
+          # Additional diagnostic: photograph-verified sun, ten numbered clouds,
+          # and 26 surrounding letters are difficult to inspect from the fixed
+          # 12-reading-rug child-eye camera because a chair occludes the view.
+          # Keep camera 12 unchanged for before/after comparisons; this
+          # downward view is QA-only, never a Roblox gameplay camera.
+          # Slight horizontal offset avoids a perfectly vertical view matrix.
+          render_eye_checked 16-rug-overlook -24.5,13.6,12.6 -25,0.62,14
+          # v71's 12-reading-rug angle revealed WHITE book backs, while the
+          # next commit moved the five covers into the real built-in shelf.
+          # Observe that shelf HEAD-ON at a standing/child-eye perspective.
+          # This is a QA-only camera, never a gameplay or release-camera change.
+          render_eye_checked 17-library-cover-fronts -24,5.3,15.7 -24,4.15,22.35
+          # QA-only oblique close-up to inspect the newly native-safe foliage.
+          # Existing fixed 07 two-window camera remains unchanged.
+          render_eye_checked 18-window-foliage-close -28,6,-11 -38.3,8.6,-19
+          # Photo-specific window workstation: from the open classroom aisle,
+          # frame the relocated violet chair, metal storage, worktable and A/C
+          # in one honest, uncut source-derived view. This view is QA-only.
+          render_eye_checked 20-window-chair-workstation -20,5.3,-10 -33,4,-21
+          # Fixed eye-height evidence for the wooden inset, shelf/cubby joinery
+          # and two-number-strip layout. This is not a native Roblox screenshot.
+          render_eye_checked 21-back-builtins -3,6.3,9 -22,10.0,25.8
+          # Match the 1112x512 ASPECT RATIO of the actual iPhone landscape
+          # screen recording using the exact existing camera 12 eye/aim.
+          # This is a QA-only headless capture, NOT the Roblox engine/device
+          # viewport, camera FOV or true native iPhone acceptance.
+          PHONE="$RUNNER_TEMP/visual/19-iphone-landscape-rug.png"
+          render_phone_rug() {
+            "$RHR" scene "$FULL" --viewport 1112x512 \
+              --camera=-27,5.0,4.8 --look-at=-25,2.9,17 --out "$PHONE"
+          }
+          render_phone_rug
+          if ! check_aerial "$PHONE"; then
+            echo "VISUAL_RETRY 19-iphone-landscape-rug: one identical-camera retry"
+            render_phone_rug
+          fi
+          check_aerial "$PHONE"
+          # Assert PNG IHDR dimensions using Python stdlib only; reject a
+          # 16:9 capture incorrectly labeled as the phone landscape view.
+          python3 - "$PHONE" <<'PY'
+          import struct
+          import sys
+          from pathlib import Path
+          header=Path(sys.argv[1]).open("rb").read(24)
+          assert header[:8]==bytes((137,80,78,71,13,10,26,10)), (
+              "PHONE_VIEWPORT_REJECT not a PNG image"
+          )
+          dimensions=struct.unpack(">II",header[16:24])
+          assert dimensions==(1112,512), (
+              f"PHONE_VIEWPORT_REJECT expected 1112x512, got {dimensions}"
+          )
+          print("PHONE_LANDSCAPE_VIEWPORT_PASS 1112x512 "
+                "unchanged_camera_12=true native_roblox_not_certified=true")
+          PY
+          "$RHR" scene "$FULL" --view iso --out "$RUNNER_TEMP/visual/04-exterior-control.png"
+          if ! check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"; then
+            echo "Reject blank exterior control; retrying independent exterior camera"
+            "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
+          fi
+          check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins; do
+            test -s "$RUNNER_TEMP/visual/$name.png"
+          done
+          # Final frame validation was performed above after bounded retries.
+          # A blank image still fails this job and blocks visual acceptance.
+          echo "VISUAL_FRAME_INVENTORY_PASS 21=3_aerial+1_exterior+15_eye+1_rug_diagnostic+1_phone_aspect"
+          sha256sum "$RUNNER_TEMP"/visual/*.png
+          echo "These are source-derived third-party renderer snapshots."
+          echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
+
+      - name: Emit compact preview images for actual visual inspection
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/pip" install --disable-pip-version-check 'Pillow==11.3.0'
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/encode_preview.py "$RUNNER_TEMP/visual"
+
+      - name: Reject blank carpet artwork and cream storybook faces from actual rendered pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_artwork.py --self-test
+          "$RUNNER_TEMP/rhr-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_artwork.py \
+            --rug "$RUNNER_TEMP/visual/16-rug-overlook.png" \
+            --books "$RUNNER_TEMP/visual/17-library-cover-fronts.png"
+
+      - name: Verify native-safe tree crowns are visible through both windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_window_foliage.py --self-test
+          "$RUNNER_TEMP/rhr-venv/bin/python" school/emma-classroom/showroom/check_window_foliage.py "$RUNNER_TEMP/visual/07-eye-windows.png"
+
+      - name: Save real rendered source snapshot for human/AI review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-classroom-geometry-preview-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/visual/*.png
+            ${{ runner.temp }}/emma-classroom-source.rbxmx
+            ${{ runner.temp }}/emma-classroom-cutaway.rbxmx
+          retention-days: 14
+          if-no-files-found: warn
+
+  # Lightweight 3-camera geometry review runs in parallel with full suite.
+  fast-geometry-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout real PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact source
+        shell: bash
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_SHA"
+          echo "FAST_PHOTO_SOURCE_PASS sha=$EXPECTED_SOURCE_SHA"
+      - name: Install checksum-verified Luau and static renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
+          mkdir -p luau
+          unzip -q luau.zip -d luau
+          chmod +x luau/luau
+          python3 -m venv "$RUNNER_TEMP/photo-venv"
+          "$RUNNER_TEMP/photo-venv/bin/pip" install \
+            --disable-pip-version-check --pre \
+            'roblox-headless-renderer==1.0.0rc1' 'Pillow==12.0.0'
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            "$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py" --self-test
+      - name: Construct complete and cutaway original Luau room
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/actual-room.rbxmx"
+          python3 school/emma-classroom/showroom/export_source_scene.py \
+            --luau "$RUNNER_TEMP/luau/luau" \
+            --out "$RUNNER_TEMP/cutaway.rbxmx" --cutaway
+          test -s "$RUNNER_TEMP/actual-room.rbxmx"
+          test -s "$RUNNER_TEMP/cutaway.rbxmx"
+      - name: Capture three fixed full-geometry viewpoints
+        shell: bash
+        env:
+          RHR_CACHE_DIR: ${{ runner.temp }}/rhr-fast-cache
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/photo-review"
+          RHR="$RUNNER_TEMP/photo-venv/bin/rhr"
+          CHECK="$GITHUB_WORKSPACE/school/emma-classroom/showroom/check_preview.py"
+          # The third-party renderer can occasionally return a completely
+          # white 1920x1080 image without reporting an error. Keep the
+          # independent strict pixel gate, but retry the SAME camera once.
+          # A second blank attempt still fails; no success is fabricated.
+          render_checked() {
+            local source="$1" label="$2" eye="$3" aim="$4"
+            local image="$RUNNER_TEMP/photo-review/$label.png"
+            "$RHR" scene "$source" --camera="$eye" \
+              --look-at="$aim" --out "$image"
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              echo "FAST_PHOTO_RETRY_SAME_CAMERA $label"
+              "$RHR" scene "$source" --camera="$eye" \
+                --look-at="$aim" --out "$image"
+            fi
+            "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"
+          }
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            01-back-builtins -4,5.6,6 -22,7.7,25
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            02-wordwall-table 22,5,-2 35.5,6.5,1
+          render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
+            03-rugs-cutaway -5,35,-4 -25,0,-3
+          # Fixed child-eye architectural check on the real clock relocated
+          # onto the yellow window pier. Existing 21-camera views stay fixed.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            04-window-clock 3,5,-6.5 -36,11.6,-6.5
+          echo "FAST_PHOTO_NONBLANK_PASS 4 source-derived views"
+      - name: Write evidence manifest and compact contact sheet
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/photo-venv/bin/python" - <<'PY'
+          import os,hashlib,json
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
+          names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
+                 "04-window-clock")
+          out=Image.new("RGB",(1000,1410),(244,244,240))
+          draw=ImageDraw.Draw(out)
+          files=[]
+          for i,name in enumerate(names):
+              path=root/(name+".png")
+              img=Image.open(path).convert("RGB")
+              w,h=img.size
+              img.thumbnail((970,310))
+              out.paste(img,((1000-img.width)//2,i*350+25))
+              draw.text((12,i*350+4),name,fill=(38,42,47))
+              files.append({"camera":name,"originalWidth":w,"originalHeight":h,
+                  "sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
+          out.save(root/"contact-sheet.jpg",quality=86)
+          manifest={"sourceSha":os.environ["SOURCE_SHA"],
+              "evidence":"source-derived static third-party renderer",
+              "notNativeRoblox":True,
+              "notNativeIphoneAcceptance":True,
+              "doesNotRenderSurfaceGuiTextOrGingham":True,
+              "referencePhotographsOfPeopleExcluded":True,
+              "files":files}
+          (root/"manifest.json").write_text(
+              json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
+          print("FAST_PHOTO_CONTACT_SHEET_PASS")
+          PY
+      - name: Preserve whatever real images were produced
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emma-fast-photo-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/photo-review/
+          retention-days: 14
+          if-no-files-found: warn

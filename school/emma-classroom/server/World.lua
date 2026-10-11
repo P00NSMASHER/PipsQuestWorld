@@ -4,10 +4,11 @@ local Lighting=game:GetService("Lighting")
 local TweenService=game:GetService("TweenService")
 
 local StaffModel=require(script.Parent:WaitForChild("StaffModel"))
+local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
 local World={}
 
 local P={
-    wall=Color3.fromRGB(239,233,207),
+    wall=Color3.fromRGB(245,242,225),
     blue=Color3.fromRGB(52,73,108),
     blueSoft=Color3.fromRGB(101,132,147),
     green=Color3.fromRGB(28,82,59),
@@ -138,13 +139,18 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 5 or -5),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
-    for line=0,6 do
-        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),paper.CFrame*CFrame.new(.03,.010,-.82+line*.25),Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
+    -- Keep three readable rules spread over the page rather than seven
+    -- hairline Parts concentrated into the same small strip on every desk.
+    for line=0,2 do
+        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),
+            paper.CFrame*CFrame.new(.03,.010,-.75+line*.70),
+            Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
     end
     part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
-    for ring=0,5 do
-        cylinder(parent,"Notebook binding",Vector3.new(.22,.08,.08),notebookCF*CFrame.new(-.98,.17,-1.02+ring*.4),P.metal,Enum.Material.Metal,false)
-    end
+    -- One fine steel binding rail reads crisply at phone scale; the former
+    -- 96 microscopic rings bloated scene replication without visual benefit.
+    part(parent,"Notebook binding rail",Vector3.new(.11,.075,2.40),
+        notebookCF*CFrame.new(-.98,.17,0),P.metal,Enum.Material.Metal,false)
     for _,dx in ipairs({-2.8,2.8}) do
         ball(parent,"Desk assembly bolt",Vector3.new(.13,.13,.07),CFrame.new(x+dx,2.68,z-1.81),P.metal,Enum.Material.Metal,false)
         part(parent,"Desk rubber glide",Vector3.new(.63,.18,.58),CFrame.new(x+dx,.19,z-1.5),P.ink,Enum.Material.SmoothPlastic,false)
@@ -500,9 +506,12 @@ local function buildTeacherEntry(root: Instance)
 end
 
 local function applyLighting(root: Instance)
-    Lighting.ClockTime=10.25;Lighting.Brightness=1.5;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.55
-    Lighting.Ambient=Color3.fromRGB(110,114,120);Lighting.OutdoorAmbient=Color3.fromRGB(150,163,182)
-    Lighting.EnvironmentDiffuseScale=.55;Lighting.EnvironmentSpecularScale=.20;Lighting.ExposureCompensation=-.18
+    Lighting.ClockTime=10.25;Lighting.Brightness=1.65;Lighting.GlobalShadows=true;Lighting.ShadowSoftness=.63
+    -- Soft is the current Roblox lighting-style API. Keep compatibility with
+    -- engine versions where the enum is unavailable; no external assets.
+    pcall(function() Lighting.LightingStyle=Enum.LightingStyle.Soft end)
+    Lighting.Ambient=Color3.fromRGB(134,137,139);Lighting.OutdoorAmbient=Color3.fromRGB(161,173,181)
+    Lighting.EnvironmentDiffuseScale=.66;Lighting.EnvironmentSpecularScale=.24;Lighting.ExposureCompensation=-.10
     local atmosphere=Lighting:FindFirstChild("EmmaClassroomAtmosphere") or Instance.new("Atmosphere")
     atmosphere.Name="EmmaClassroomAtmosphere";atmosphere.Density=.025;atmosphere.Offset=.15;atmosphere.Color=Color3.fromRGB(221,230,235);atmosphere.Decay=Color3.fromRGB(188,192,185);atmosphere.Haze=.15;atmosphere.Glare=.05;atmosphere.Parent=Lighting
     local bloom=Lighting:FindFirstChild("EmmaClassroomBloom") or Instance.new("BloomEffect")
@@ -510,7 +519,7 @@ local function applyLighting(root: Instance)
     local grade=Lighting:FindFirstChild("EmmaClassroomGrade") or Instance.new("ColorCorrectionEffect")
     -- Quiet contrast and slightly warmer whites reveal native clothing
     -- textures instead of flattening everything under bright ambient fill.
-    grade.Name="EmmaClassroomGrade";grade.Brightness=-.012;grade.Contrast=.095;grade.Saturation=-.035;grade.TintColor=Color3.fromRGB(255,250,241);grade.Parent=Lighting
+    grade.Name="EmmaClassroomGrade";grade.Brightness=.00;grade.Contrast=.065;grade.Saturation=.035;grade.TintColor=Color3.fromRGB(255,252,245);grade.Parent=Lighting
     local rays=Lighting:FindFirstChild("EmmaClassroomSunRays") or Instance.new("SunRaysEffect")
     rays.Name="EmmaClassroomSunRays";rays.Intensity=.025;rays.Spread=.8;rays.Parent=Lighting
 end
@@ -518,22 +527,17 @@ end
 function World.build()
     local old=Workspace:FindFirstChild("EmmaStudyWorld");if old then old:Destroy() end
     local root=Instance.new("Folder");root.Name="EmmaStudyWorld";root.Parent=Workspace
+    root:SetAttribute("ArtDirection","EmmaRoomOriginalArtV9")
     applyLighting(root)
 
     -- Architectural shell.
-    part(root,"Dark varnished classroom floor",Vector3.new(74,1,62),CFrame.new(0,0,-4),P.woodDark,Enum.Material.WoodPlanks)
-    for row=0,8 do
-        for col=0,36 do
-            local x=-36+col*2
-            local start=math.max(-34,-34+row*8-(col%2)*4)
-            local finish=math.min(27,-26+row*8-(col%2)*4)
-            if finish>start then
-                local tint=Color3.fromRGB(124+(col*7+row*3)%13,91+(col*3+row*5)%10,64+(col+row*7)%8)
-                local plank=part(root,"Oak floor board",Vector3.new(1.98,.025,finish-start-.025),CFrame.new(x,.518,(start+finish)/2),tint,Enum.Material.Wood,false)
-                plank.Reflectance=.04;plank.CastShadow=false
-            end
-        end
-    end
+    -- The engine's tiled wood-plank material is more natural at phone scale.
+    -- Retire 300+ overlapping paper-thin floor boards that caused shimmer,
+    -- tiny shadow edges and too many instances for one classroom.
+    local floor=part(root,"Warm oak classroom floor",Vector3.new(74,1,62),
+        CFrame.new(0,0,-4),Color3.fromRGB(157,122,88),Enum.Material.WoodPlanks)
+    floor.Reflectance=.015
+
     part(root,"Front wall",Vector3.new(74,18,1),CFrame.new(0,9,-35),P.wall)
     part(root,"Back wall left",Vector3.new(28,18,1),CFrame.new(-23,9,27),P.wall)
     part(root,"Back wall right",Vector3.new(28,18,1),CFrame.new(23,9,27),P.wall)
@@ -573,6 +577,10 @@ function World.build()
             end
         end
     end
+
+    -- Original room kit decorates the real Rojo place. No AI render or preview.
+    -- Keep it separate from gameplay, board content and curriculum systems.
+    ArtPass.decorate(root)
 
     -- Lived-in details.
     plant(root,-31,.1,20,.85)

@@ -1,0 +1,472 @@
+# Emma classroom: 10 October photo-grounded layout map (Phase 0)
+
+## Evidence handling
+The October 10, 2026 cheer-day photographs and the 44-second iPhone Roblox recording were reviewed in the owner's conversation. **Originals contain identifiable children and adults; they are intentionally not committed to this public repo.** This document records only non-identifying architectural observations. Do not embed full event photos in the game or use their people as NPCs.
+
+## Existing game's coordinate basis
+Source: `school/emma-classroom/showroom/Room.lua`, inspected PR #339 parent `d1b5cdaefa385eef6ba814c535b7acdae834788a`.
+
+| Game landmark | Established source location | Confidence / observation |
+| --- | --- | --- |
+| Architectural shell | x -37..+37, z -35..+27; height about 18 studs | Verified source, not a measured real-world floor plan |
+| Real-window candidate wall | x ≈ -37; windows at z=-19 and +6 | Source-verified; photos confirm two curtained windows, lower-left AC and radiators |
+| Lower-left photographed AC | (-35.55, 5.23, -19) | Photo supports type and window; exact coordinate source-defined |
+| Front teaching wall | z ≈ -35 | Source-verified; photos show dark chalkboard and mobile white-framed Smartboard |
+| Back built-in wall | z ≈ +27; existing bookcase x -31..-13, cubbies x 7.5..34.5, doorway in center | Strong photo evidence for long dark-wood built-ins; **assignment of exact side/window orientation remains a provisional room-model interpretation** |
+| Blue vocabulary word wall | x ≈ +36, z around +1 | Strong photo evidence for board style; wall assignment photo-perspective provisional |
+| Circular sun/number/ABC rug | game at (-25, 0.6, +14) | Photos confirm appearance, not normal-day position |
+| Rectangular black polka-dot rug | game near (-25, 0.6, -20) | Photos confirm appearance, not normal-day position |
+| 16 student desks with molded chairs | existing source grid; not changed by this phase | Current baseline preserved; cheer event rearranged chairs |
+| Single purple chair | (-32.45, ~1.62, -19.60), rotated toward workstation | Child reports chair exists; occupied photo obscures chair styling and precise location |
+
+## October 10 change contract
+1. Improve **the existing left reading case**, not a duplicate freestanding cabinet. Install a shallow, dark built-in display inset above its shelves, aligned with the right cubby cabinet across the room's rear wall.
+2. Retain the real central doorway entirely; never extend dark display panels through the doorway.
+3. Put nine existing shape cards over solid wall to the doorway's left. Do not add more parts for cards.
+4. Retire the three old decorative left-of-door framed gallery pictures that overlay the dark notice inset; retain the three original right-of-door generic artworks. This is source cleanup, not use of real children's assignments.
+5. Add a small left-hand numeric strip (0–60) above the bookcase; change the existing right strip to the subsequent 70–120 range to avoid duplicate teaching numbers.
+6. Use *anonymous*, hand-authored paper rectangles, not reproduced photographs, actual students' work, names, or other personal school data.
+7. Preserve current visual style, both rugs, curtains/AC, 16 desk/chair pairs, unique provisional purple chair, doors, navigation, and <=3,100 physical parts.
+
+## Fidelity confidence and what's not established
+The photographs show a cheer activity setup. They do **not** document permanent daily placement of the chairs, Smartboard, teacher equipment, easel, mats, and rugs. No real-world tape measurements, complete four-wall panoramic survey, or unoccupied purple-chair picture was supplied. The shell/world-axis mapping is the existing model's coordinate convention, **not** verified true-to-scale survey data.
+
+## October 10 next visual correction: varnished floor surface
+The owner's native phone recording shows heavily exaggerated plank joints in the game.
+The real photos show smaller, tighter, much darker polished wood boards.
+The *existing one-piece floor* changed from Roblox `WoodPlanks` to fine-grain
+`Wood`, RGB (83,59,45), reflectance 0.10. This is a photographic inference,
+not a claim of matching actual measured gloss or texture.
+No new Parts, textures, uploaded photo assets, or geometry changes.
+`audit_lighting.py` now rejects a reversion to `WoodPlanks`,
+and `export_source_scene.py` verifies the actual source material and color.
+Owner's native Roblox/iPhone visual acceptance is still required.
+
+## October 10 phone-visible dark-ceiling defect and candidate fix
+The October 10 iPhone video shows nearly black, vertically grooved ceiling
+panels, unlike the real white acoustic suspended ceiling in the school
+photographs. The existing 30 inset parts were `Fabric` and the ten thin
+grid bars were metallic, despite bright source RGB. The candidate retains
+all 30 tiles, ten bars, positions, six fluorescent diffusers and unchanged
+lighting schedule, but assigns the tiles and grid native
+`SmoothPlastic` with near-white colors to avoid cloth grooves and dark
+metallic overhead response. Exact Luau constructor checks reject the old
+Fabric/Metal regression; *actual new native iPhone rendering is still pending*.
+
+## October 10 — mobile word-wall backing and apple visibility
+The real word wall is bright sky blue with two rows of red apple alphabet
+markers. Native iPhone v78 shows a nearly black board and former flattened
+Ball apple pieces that can shrink to dots because Roblox uses the smallest
+Ball Size axis. The room's **existing** word-wall footprint is preserved,
+with a smooth non-Fabric blue backing. Twenty-six small, native-facing,
+noncolliding round Cylinder apples replace eight minimum-axis Ball dots;
+the physical objects and attached labels are anonymous A-Z signage only.
+A constructed Luau native-material/count/legibility audit guards against
+Fabric and flattened Ball regressions. iPhone results still require an
+actual Roblox capture before visual approval.
+
+## Test and release gates
+- Actual Luau construction geometry and negative tests: `showroom/audit_photo_landmarks.py`.
+- Same-source Roblox build: `school/emma-showroom.project.json` / `.github/workflows/emma-showroom-ci.yml`.
+- Source-only rendered rear-wall camera in `.github/workflows/emma-showroom-visual-preview.yml`; headless colors do not prove native Roblox.
+- A human must review real iPhone screenshots against the source photographs before final visual acceptance. Keep PR #339 draft; no automated final publish or curriculum modifications.
+
+## October 10 — teaching-wall literacy/frieze
+The original cheer-day photographs reveal a navy handwriting/alphabet banner
+and individual sound/letter picture cards above the teaching surface. This
+pass replaces one dominant generic wall slogan with a **decorative** lowercase
+alphabet strip (original serif font, native Roblox asset) and enriches the
+same 26 preexisting alphabet Parts using clearer uppercase/lowercase labels
+and original generic example words. No new physical Parts, school photographs,
+private student work, quiz data or game UI. Native Roblox/iPhone legibility
+must still be reviewed; the examples are not source-governed school material.
+
+## October 10 — portable whiteboard correction
+The supplied event photographs show a pale rolling dry-erase board on a blue
+metal cart near the word-wall side. The source currently draws a fictional
+wooden achievement easel. This pass repurposes the same footprint and primary
+display Parts into white SmoothPlastic board and blue support, preserving
+collision-free placement. Two small wheels plus one lower shelf are added; the
+three old star details become modest colored magnets, and event writing is
+not reproduced. The portable board's daily location is **unverified**; do
+not move it to its cheer-day photo coordinates without native owner review.
+
+## October 10 — word-wall checked table, original procedural textile
+New wide photos show a small **red-and-ivory gingham-covered classroom table**
+below the large blue apple word wall. Its exact usual floor coordinates are
+not verified because the photos were taken during a cheer event. The model
+therefore adds an owner-review candidate below the known word-wall plane,
+outside the existing 16 student desk footprints.
+
+The tabletop and four thin hanging aprons use an **original checkered
+SurfaceGui** composed from colored Roblox Frames (no photo, decal ID, or
+commercial fabric texture). There is one tabletop, four steel legs and four
+fabric apron Parts: **nine additional physical Parts**, under the strict
+3,100-part mobile limit. The aprons are non-colliding; the tabletop and
+four legs are intentionally collidable. The independent headless 3D renderer
+omits SurfaceGuis, so its screenshots will show plain ivory and must not
+be accepted as evidence of checked-pattern fidelity. Native Roblox/iPhone
+inspection is still required. Added constructed-Luau tests for five
+correctly faced pattern surfaces, support, desk clearance and mutations.
+
+## October 10 — original green word-wall heading
+A supplied full-size classroom photo explicitly shows a small **green paper
+“First Grade word wall” label** above the blue apple board. The prior game
+placed a generic oversized “LET YOUR LIGHT SHINE” poster directly above
+the word-wall. This pass repurposes the same two physical sign Parts as a
+small pale-green “FIRST GRADE / WORD WALL” title, with no extra Parts or
+new player UI. “First Grade” reproduces historical visible scenery, not
+the current grade, teacher materials, or curriculum authority. Native
+iPhone readability is pending and this is not final visual acceptance.
+
+## Native acceptance ownership
+Use [SHOWROOM_VISUAL_ACCEPTANCE.md](SHOWROOM_VISUAL_ACCEPTANCE.md) for the
+current *classroom-only* source/photo reconciliation and pending iPhone
+sign-off. The older [VISUAL_ACCEPTANCE.md](VISUAL_ACCEPTANCE.md) remains the
+legacy study-game acceptance and has different NPC/question requirements.
+Do not count independent 3D pixels as an approval for SurfaceGui lettering
+or the procedural gingham checks.
+
+## October 10 — close the wooden library's suspended panel gap
+
+The source-rendered back-wall view clearly showed a large, bare-yellow band
+between the six-stud bookcase and the dark teaching inset, even though the
+photographed classroom has continuous old-oak framing. The **existing** dark
+inset, two frame stiles, two frame rails, and anonymous paper cards now share
+the lower library's front depth; the bottom frame touches its original upper
+cornice. No new physical Parts, no moved doors or desks, and no schoolwork
+photos. The constructed-Luau test explicitly rejects a repeat of the old
+four-stud rearward panel offset. Exact room dimensions remain approximate;
+Roblox/iPhone visual parity still requires native review.
+
+## October 10 — window-pier school clock correction
+The supplied classroom photographs show the small analog white clock mounted
+between the two broad navy-curtained windows. The old source mistakenly
+placed the complete five-piece clock assembly over the front chalkboard.
+The existing clock, rim, dial, and two hands are now mounted on the yellow
+inter-window pier (model x≈-36.38, y≈11.60, z≈-6.50). The native Cylinder
+face and hands turn toward the classroom interior (+X), not into the glass.
+No Parts added, no window/curtain geometry changed, no student photographs
+stored. The independent Luau runtime now rejects moving it back to the
+teaching wall. Native phone visual acceptance remains pending.
+
+## October 10 — sequential 0–120 photo counting strip
+The actual classroom has consecutive numerical flashcards above the continuous
+dark-wood cabinetry. Previously the same two model friezes displayed only
+tenth milestones (0,10,…,120), a noticeably abbreviated classroom detail.
+The existing two SurfaceGuis now render distinct small, original **0–60**
+and **61–120** consecutive number cells, with subtly marked tens. The old
+source phrases remain hidden to preserve compatibility with the historic
+geometry/sourcing tests. This adds 121 inexpensive TextLabels but **zero
+physical Parts**; cards are static scenery and do not supply learning/test
+content. An exact-Luau negative mutation now rejects missing or out-of-order
+number cells. Independent geometric renders omit SurfaceGui text: native
+Roblox/iPhone legibility is still pending owner review.
+
+## October 10 — recover mobile physical-part budget from teacher laptop
+The photo-fidelity scene was at 3,090/3,100 physical Parts. The existing
+decorative laptop had **40 separate tiny 3D keyboard keys** invisible at
+child-eye gameplay distance. Replaced only those keys with a single grounded,
+noncolliding keyboard face and 40 native SurfaceGui 2D keycap rectangles.
+It saves **39 physical Parts** without moving the laptop, existing space bar
+or trackpad, and no personal schoolwork/UI is introduced. The source-derived
+renderer will show a dark keyboard surface because it does not emulate
+SurfaceGuis; the native Roblox engine must be inspected before treating
+keycap fidelity as visually accepted. The exact-Luau QA checks complete
+4×10 art and rejects a dropped keycap.
+
+## October 10 — classroom floor fan (provisional event-day fixture)
+The real user-supplied classroom photograph shows a pale gray/silver portable
+fan on the teaching-wall side. Its exact **daily** floor location is unknown:
+the photo was captured during cheer activity. The draft now includes a
+static 15-Part fan silhouette near the front teaching display—weighted
+base, steel stem, translucent circular guard, three fan blades, center hub
+and six protective grille bars. It uses no external meshes, personal photos,
+scripts, or moving gameplay parts. Every part is noncolliding and can be
+removed/repositioned after native iPhone inspection. Constructed-source
+regression tests preserve the fan silhouette, orientation and accessibility.
+
+## October 10 — remove the unphotographed navy Grade 2 wall banner
+
+The completed 21-view source geometry render (commit
+`fa6b2bb6e1a5bac58ba79ab29ebf41f3569e7425`) showed a
+large dark navy 18×2.5-stud banner behind the photo-backed left
+counting strip, vertically overlapping the shape-card band. The
+owner's real classroom photographs establish a light consecutive-number
+frieze and individual colored geometry cards above the old wooden built-ins,
+**not** an extra full-width Grade 2 slogan panel in that location.
+
+Removed one speculative noncolliding Part from the existing ArtPass and left
+the original nine cards, 121 consecutive in-world number labels, trim,
+doorway and geometry untouched. A constructed-Luau mutation recreates the
+obsolete panel and must fail before merge or publication. This removal
+does not mean the real room has no grade signage elsewhere. Static
+screenshots omit most native SurfaceGui lettering; actual iPhone review
+is still required.
+
+## October 10 — native evergreen foliage on the blue word wall
+
+The real photos show a thick dark-green evergreen garland along the upper
+border of the blue word wall. Previously the 3D room contained only a
+10.8-stud thin green strip, visible as a rigid rod in the full 21-view
+source-derived camera. Retained the same original band and added **13
+noncolliding, shadowless, native Cylinder leaf tufts**, with original muted
+green color and deterministic irregular spacing/rotation. Leaves remain
+above both red-letter apple rows and below the historic green paper heading.
+They are static classroom scenery; the source photographs include identifiable
+people and are not copied into the public repo or game.
+
+The exact-source CI run measured **3,078 physical Parts**, within the 3,100
+mobile limit. The existing word-wall constructed-Luau QA now verifies
+the full foliage count, placement, color variation, visibility separation,
+and collision-safe materials; mutations must reject an interactive/collidable
+leaf or foliage dropped over the apple letters. This remains a photo-guided
+inference pending native Roblox/iPhone visual acceptance.
+
+### Rotation-aware native-foliage clearance refinement
+The initial irregular 7–14 degree leaf tilt produced an orientation-dependent
+vertical bounding box that could cover the green paper header in Roblox,
+although the naïve size-only QA passed. To keep the photo-style scalloped
+silhouette **without occluding the title or apple lettering**, tilt now varies
+only −4 to +4 degrees, and the tuft height is lowered slightly. Constructed
+Luau QA explicitly computes the world-vertical oriented-box extent from the
+CFrame rotation matrix; a deliberately exaggerated tilted tuft must fail.
+The current source is still an unapproved Roblox/iPhone visual candidate.
+
+## October 10 — original illustrated phonics panels (picture-card fidelity)
+
+Actual classroom photos show colored mini-picture cards above the teaching
+chalkboard. The game previously used the same 26 flat cards with `Aa` plus
+a generic text example, leaving the illustrated half visually empty. This
+pass **reuses the exact same 26 wall Parts** and native SurfaceGuis, dividing
+each card into a legible letter region, an original colored pictogram region
+and a bottom example word. All 26 concepts have distinct object-related
+palette choices; simple geometric silhouettes are **original scenery**, not
+copies of the teacher's underlying classroom card art, hidden homework,
+or licensed image assets. The illustration uses only native Roblox Frame,
+UICorner and TextLabel instances: zero new physical Parts and no network
+assets or gameplay code.
+
+Constructed-Luau regression tests require picture-field placement, visible
+object silhouettes, labels unoccluded and no ImageLabels/external texture
+asset references. Deliberate mutations must reject a hidden icon and an
+illustration moved across the word label. Third-party static snapshots do
+**not** render SurfaceGui contents, so only a future actual Roblox/iPhone
+preview can establish appearance or reading comfort. The daily furniture
+layout and word-wall locations are unchanged.
+
+## October 10 — continue the shape-card frieze over both wooden cabinets
+
+The exact-head 21-view static screenshot shows colored shape flashcards only
+over the left bookcase, while owner classroom photographs show colorful shape
+education displays extending across the built-in storage wall. The new
+candidate adds **8 original noncolliding panels** on the right-hand cabinet
+(x = 9.8 to 30.8 studs), leaving the center doorway entirely unblocked;
+17 total decorative shape cards now span the two separate cabinet groups.
+Each card has an original built-in SurfaceGui illustration and generic
+geometric word, drawn from native UI Frames, TextLabels and UICorner—not a
+copied school assignment, asset ID, photo of a child or teacher curriculum.
+
+Only eight additional physical Parts are introduced. Expected part budget:
+3,078 + 8 = **3,086 / 3,100**. A constructed-Luau test verifies the 8
+card centers, colors/captions, art, noncollision and door clearance, and
+deliberately mutates a card onto the doorway or into a collider to confirm
+fail-closed behavior. Independent static rendering is useful for the color
+panels but does not render SurfaceGui graphics. Actual iPhone visual
+inspection is still needed before approval; shapes and wording are not
+claimed exact reproductions of the photographed classroom materials.
+
+## October 10 — scale the primary blue word wall to the real classroom photos
+
+The current exact-PR-head fast eye-level render showed the original 11.2 x
+5.0 stud word wall stranded on a much larger empty yellow side wall. In the
+actual school photographs, the light-blue A–Z apple word wall is a DOMINANT
+fixture behind the red/white checkered table. The existing model has a
+solid right-front wall from z=-35..+8, with a separate class-values display
+near z=-18 and a real staff doorway beginning at z≈8.3.
+
+This pass reuses the **same physical board, four oak frame Parts, green
+garland/13 leaves, 15 anonymous word-card slips and 26 A–Z apple markers**;
+no new physics objects, meshes or photo textures. Enlarges the blue board
+from **11.2 × 5.0** to **18.0 × 6.2** studs while keeping top around y=10.5.
+The board now spans z=-11.5..+6.5, safely between the values display and
+the staff-door jamb. The existing green header moves to the center of the
+wider board; garland, slips, apple rows and frame shift/reflow to fill it.
+The checkered table remains offset under the doorway-side half of the wall
+without being moved. User-event photographs cannot prove its daily location,
+so this is a visible scale/location candidate, not a measured floor plan.
+
+Constructed Luau and exact-source export tests assert enlarged dimensions,
+values/door clearance, all 26 apple letters on board, 15 slips, full-length
+evergreen garland, position of frame trim, and table under the new board.
+A negative test rejects reinstating the undersized 11.2-stud board. CI
+headless render cannot certify native Roblox/iPhone color, lettering or
+gingham textures; final owner visual sign-off still required.
+
+## October 10 — red pocket organizer and fuller black noticeboard
+
+The owner-provided cheer-day classroom photographs show the tall dark inset
+above the aged wooden bookcase filled with a distinctive vertical **red
+classroom pocket chart** on the left and clustered, varied paper/word displays
+to its right. The prior 21-camera Roblox source-derived render showed three
+identical blank, floating off-white sheets with enormous black gaps.
+
+This targeted pass **reuses the exact three existing physical paper Parts,
+their three heading strips and the black noticeboard**. The left paper
+is now a taller brick-red pocket organizer with six anonymous pale insert
+slips; the middle/right panels have different pale paper colors, varied
+sizes, original little color headings and four abstract tiny paper cards
+each. All smaller detail is generated with native Roblox
+`SurfaceGui`/`Frame` primitives; no new `BasePart`, private student
+data, photographs, assignments, `ImageLabel`, external texture asset ID,
+scripts or gameplay UI. Existing bookcases, 17 upper shape cards, complete
+0–120 counting strip, entrance and all desk/rug coordinates remain fixed.
+
+A constructed-Luau QA assertion checks the brick-red physical chart,
+three varied sheets and precisely six pocket inserts/eight anonymous
+pinboard mini-cards. Mutations fail closed if the chart returns to beige or
+one insert goes missing. Because the independent static renderer omits
+`SurfaceGui`, its photographic proof is limited to the larger red 3D
+chart/sheet silhouette. Native Roblox/iPhone visibility remains pending.
+
+## October 10 — modest photo-grounded classroom-yellow paint correction
+
+Side-by-side review of the owner's actual classroom photographs and the full
+21-view source-derived screenshot showed the render's walls reading as
+desaturated khaki rather than the real classroom's warm, visibly yellow paint.
+The shared room shell palette moves cautiously from RGB **(248,233,183)**
+to **(246,232,165)**. This reduces the blue/red color ratio from ≈0.74
+to ≈0.67, similar to illuminated unobstructed yellow-wall samples visible
+in the supplied phone photos. The photo is NOT a calibrated paint/color
+measurement; do not claim exact color matching.
+
+Only the single `P.wall` Color3 value changes. The same fourteen existing
+plaster shell Parts (including inter-window piers, door header/infill and
+upper/lower walls) inherit the change, with zero new Parts, material changes,
+collision changes, furniture movement, UI/gameplay data or external assets.
+Existing daylight, ceiling, navy trim, real-word signage and school floor
+stay identical. The constructed-Luau lighting test asserts paint uniformity,
+precise RGB, photo-appropriate blue/red ratio and the shell part count;
+a deliberate mutation back to the pale-washed original must fail.
+The geometric scene exporter independently checks wall tint.
+The source-derived renderer is NOT native Roblox; iPhone owner approval of
+actual exposure and warmth remains required before final acceptance.
+
+## October 10 — red-rimmed analog clock and native numbers
+
+The owner's photographs of the two broad navy-curtained windows establish a
+small **red-trimmed white analog classroom clock** on the yellow inter-window
+pier. The game had moved its five physical clock Parts to the correct
+location but still drew an empty white dial with an almost-black metallic
+ring. This pass retains all **five existing BaseParts**, changes the rim to
+muted red painted SmoothPlastic, and uses an original noninteractive
+`SurfaceGui` on the same circular white dial with **12 properly placed
+hour numerals and 12 small black hour ticks** (twelve at top, three at right).
+The existing two actual dark metal hands stay unchanged and in front of
+the dial. No external images, photo copies, child/schoolwork data, animation,
+timer, physics objects or new physical Parts.
+
+Constructed Luau now checks rim hue/material, right-facing 384×384 UI canvas,
+12 unique 1–12 numbers, their correct circular angular arrangement, tick
+count and anchoring/noncollision. Negative mutations reject reverting to
+the dark gray rim, changing 12 to 13, or reversing the dial onto the wall.
+The source renderer can show the red rim but does not render the SurfaceGui
+labels/ticks, so this is still subject to a native iPhone readability check.
+
+## October 10 — navy curtains as real gathered school fabric
+
+The latest 21-view independently rendered child-eye window wall still
+showed four rigid navy vertical shutter-like slabs instead of the loosely
+folded, pulled-open navy curtains visible in the owner's photographs.
+**Reuse the existing four curtain panels, eight pleats and four tiebacks**
+across the two original windows. Angle the panels only 3 degrees to
+preserve the window light; deepen and offset the two existing pleat
+silhouettes on each side, with alternating navy tones and 6–7 degree
+fold rotation. Widen/recolor the existing tieback strips, without adding
+Parts, furniture, photos, texture assets or scripts.
+
+Constructed-Luau geometry checks now validate full oriented-panel
+projections using CFrame's row-major rotation matrix, preserving at
+least **11 studs of unobstructed daylight** per school window. Source
+exporter independently calculates rotated Y/Z extents and rejects
+flat, off-jamb, collidable or oversized drapery, while tests deliberately
+reset a drape or fold to straight and move a curtain toward the glazing.
+All dressings retain `Fabric`, the original 4+8+4 counts, noncollision
+and two navy-curtained school-window locations. The *native* Roblox
+mobile materials and sunlight remain acceptance-gated; a source-derived
+renderer is insufficient to claim real fabric parity.
+
+## October 10 — eliminate invented grade-slide content from the teaching wall
+
+The real classroom photographs show a white-framed rolling Smartboard
+either with a blank/dark screen or temporarily displaying cheer instructions;
+the chalkboard is dark and mostly unmarked during the same event. The
+existing replica permanently displayed **“WELCOME TO GRADE 2 / ASSUMPTION
+BVM • LEARN • CREATE • GROW”** on the Smartboard and a separate
+**“GOOD MORNING! / We learn together.”** chalk-panel slogan. Neither is a
+photographed permanent fixture; fixed grade wording is especially
+inaccurate as this place is about a real evolving school classroom.
+
+This pass is intentionally SUBTRACTIVE: remove the invented in-world
+`SurfaceGui` text from the Smartboard and the decorative chalk panel.
+Keep the same matte-dark screen, white wheeled chassis, 26 phonics cards,
+chalkboard, chalk tray, mobile nav, scene Part count, and empty state as a
+legible neutral permanent room. No new geometry, student photos, lessons,
+assets, game interfaces or personal information. The separate governed
+schoolwork/quiz systems are not integrated into this classroom-only target.
+
+`audit_literacy_wall.py` now verifies the two original dark teaching
+surfaces are constructed and carry no persistent sign `SurfaceGui`.
+Adversarial tests deliberately attach a fabricated Smartboard grade splash
+and a fake chalk slogan, both of which must fail. Native Roblox/iPhone
+visual acceptance remains pending; static renders omit SurfaceGui content
+and cannot demonstrate the exact removal visually.
+
+## October 10 — photo-guided scatter of 25 polka-dot rug spots
+
+The classroom photo shows a black rectangular activity rug with gently
+staggered, slightly varied-diameter multicolored circles. The original game
+rendered a visibly rigid 5-by-5 lattice of identical 1.32-stud dots. The same
+25 existing native Fabric Cylinders now have deterministic row offsets,
+position jitter, 1.12–1.288-stud diameters, and the existing six pastel
+colors. The 16-by-9 rug footprint, physical part count, orientation,
+circulation, desk furniture, and unverified everyday rug location remain
+unchanged. All decorative dots disable collision, touch, queries, and
+per-dot shadows; no school photos or uploaded images appear in the public
+repo. This is pattern refinement, not a claim about the normal class's exact
+furniture layout.
+
+The existing constructed-Luau rug audit now validates all 25 shapes and
+colors, at least 20 unique x/z positions, five distinct sizes and five
+colors, a visible row stagger, 0.18-stud rug-edge clearance, and over
+0.10-stud nonoverlap. Deliberate test mutations overlap two dots, place
+one outside the rug, and restore a strict lattice; all must be rejected.
+Actual Roblox/iPhone material and photo parity are still review-gated.
+
+## October 11 — protect the circular sun/cloud rug from the blue desk chair
+
+The owner-provided activity photographs show the round blue alphabet rug
+as open floor used by children. The exact source 21-camera image
+`12-reading-rug.png` at draft head `40085286a4b05dd005ae07e34edca0fafd5a8995` showed a BLUE molded
+student chair planted across the lower clouds and colorful letter border.
+Source inspection identified its desk pair at x=-24, middle row z=4.0;
+that chair sat at z=7.48 and intruded roughly 1.7 studs onto the rug.
+
+Conservatively relocate **only that desk/seat pair** by 2.4 studs toward
+the teaching wall (desk center z=1.6; seat center z=5.08; rear backrest
+center z=6.01). The other 15 desk/seat pairs stay exactly as before, as do
+the circular rug at (-25,14), 25 staggered dots on the black mat, room
+entrances, clock, windows, and school desk game controls. The *same*
+small colored supply basket and all its rim/pencil pieces follow the moved
+desk, preventing unsupported floating stationary supplies. Part count and
+physics types are unchanged. This is a minimal **floor-clearance safety
+repair**, not a claim about the school's permanent desk seating diagram
+(which event photos cannot settle).
+
+Constructed-Luau regression now calculates rotation-aware 2D bounding
+boxes for all 16 student seats, 16 backrest colliders, and 16 desk tops,
+requiring at least 0.12 studs between those bounds and the circular
+7.1-stud rug radius. It guards the 16 paired sets, both rug anchors and
+the basket on its moved desk. Negative tests restore the old obstructing
+chair position or leave the basket on the old desktop; each must fail.
+Native Roblox/iPhone camera evidence remains pending owner signoff.

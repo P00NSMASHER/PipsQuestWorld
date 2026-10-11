@@ -1,0 +1,68 @@
+{
+  "name": "ABVMClassroomMeshReview_NOT_FOR_PUBLISH",
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "StreamingEnabled": false,
+        "Gravity": 196.2
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Brightness": 1.55,
+        "ClockTime": 10.25,
+        "GlobalShadows": true,
+        "Ambient": [
+          0.52,
+          0.54,
+          0.53
+        ],
+        "OutdoorAmbient": [
+          0.62,
+          0.65,
+          0.68
+        ]
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "ClassroomReplica": {
+        "$className": "Folder",
+        "Main": {
+          "$path": "emma-classroom/showroom/Main.server.lua"
+        },
+        "World": {
+          "$path": "emma-classroom/showroom/Room.lua"
+        },
+        "ArtPass": {
+          "$path": "emma-classroom/showroom/ArtPass.lua"
+        },
+        "GalleryPass": {
+          "$path": "emma-classroom/showroom/GalleryPass.lua"
+        },
+        "FurnitureMeshAdapter": {
+          "$path": "emma-classroom/showroom/FurnitureMeshAdapter.lua"
+        },
+        "FurnitureMeshConfig": {
+          "$path": "emma-classroom/mesh/FurnitureMeshReviewConfig.lua"
+        }
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$properties": {
+        "CameraMinZoomDistance": 0.5,
+        "CameraMaxZoomDistance": 16
+      },
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "ClassroomView": {
+          "$path": "emma-classroom/showroom/View.client.lua"
+        }
+      }
+    }
+  }
+}

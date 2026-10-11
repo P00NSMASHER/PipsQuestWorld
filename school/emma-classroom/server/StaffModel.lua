@@ -14,7 +14,7 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",6)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",7)
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
@@ -51,9 +51,12 @@ function StaffModel.create(teacher)
         if d:IsA("JointInstance") or d:IsA("Constraint") then d:Destroy() end
     end
     if teacher.hairStyle~="balding" then
-        local hairName=male and (teacher.name=="Mr. Yordy" and "BrownHair" or "ShortHair") or (teacher.hairStyle=="short" and "BunHair" or "LongHair")
+        local hairName=male and (teacher.name=="Mr. Yordy" and "BrownHair" or "ShortHair") or ((teacher.hairStyle=="short" or teacher.hairStyle=="bob") and "BunHair" or "LongHair")
         local accessory=assets:WaitForChild(hairName):Clone();accessory.Parent=model
         local handle=accessory:FindFirstChild("Handle")
+        -- Hair is a single rigid piece of the head during procedural gait.
+        -- It must inherit head yaw rather than stay behind as a floating prop.
+        if handle then handle:SetAttribute("PoseGroup","head") end
         local attachment=handle and handle:FindFirstChild("HairAttachment")
         if handle and attachment then
             handle.CFrame=head.CFrame*head.HairAttachment.CFrame*attachment.CFrame:Inverse()
@@ -73,6 +76,7 @@ function StaffModel.create(teacher)
     if teacher.glasses then
         local function bar(name,size,cf)
             local p=Instance.new("Part");p.Name=name;p.Size=size;p.CFrame=head.CFrame*cf;p.Color=Color3.fromRGB(29,27,30);p.Parent=model
+            p:SetAttribute("PoseGroup","head")
         end
         for _,x in ipairs({-.30,.30}) do
             bar("Glasses top",Vector3.new(.48,.035,.035),CFrame.new(x,.13,-.64))
@@ -80,6 +84,35 @@ function StaffModel.create(teacher)
             for _,side in ipairs({-1,1}) do bar("Glasses side",Vector3.new(.035,.24,.035),CFrame.new(x+side*.24,.01,-.64)) end
         end
         bar("Glasses bridge",Vector3.new(.13,.035,.035),CFrame.new(0,.06,-.64))
+    end
+    -- Clothing details follow the existing official R15 torso meshes, not a
+    -- procedural replacement head or a block-body avatar.
+    local upper=model:FindFirstChild("UpperTorso")
+    if upper and upper:IsA("BasePart") then
+        local function stitch(name,size,offset,color)
+            local p=Instance.new("Part")
+            p.Name=name;p.Size=size;p.CFrame=upper.CFrame*offset
+            p.Color=color;p.Material=Enum.Material.SmoothPlastic
+            p.Parent=model
+            return p
+        end
+        local dark=Color3.fromRGB(29,52,69)
+        local warm=Color3.fromRGB(235,223,200)
+        if teacher.clothing=="suit" then
+            -- Principal: jacket lapels, tie and knot at ordinary avatar scale.
+            stitch("Jacket lapel left",Vector3.new(.17,.70,.045),CFrame.new(-.38,.12,-.54)*CFrame.Angles(0,0,math.rad(-17)),warm)
+            stitch("Jacket lapel right",Vector3.new(.17,.70,.045),CFrame.new(.38,.12,-.54)*CFrame.Angles(0,0,math.rad(17)),warm)
+            stitch("Navy tie",Vector3.new(.19,.66,.06),CFrame.new(0,.05,-.62),dark)
+            stitch("Tie knot",Vector3.new(.28,.18,.07),CFrame.new(0,.48,-.64),Color3.fromRGB(79,117,142))
+        elseif teacher.clothing=="cardigan" or teacher.clothing=="blazer" then
+            stitch("Cardigan seam",Vector3.new(.045,.83,.045),CFrame.new(0,-.17,-.58),warm)
+            for _,y in ipairs({-.4,-.15,.10}) do
+                stitch("Cardigan button",Vector3.new(.10,.10,.05),CFrame.new(0,y,-.62),Color3.fromRGB(192,169,123))
+            end
+        elseif teacher.clothing=="polo" then
+            stitch("Polo collar left",Vector3.new(.32,.14,.05),CFrame.new(-.23,.57,-.52)*CFrame.Angles(0,0,math.rad(14)),warm)
+            stitch("Polo collar right",Vector3.new(.32,.14,.05),CFrame.new(.23,.57,-.52)*CFrame.Angles(0,0,math.rad(-14)),warm)
+        end
     end
     -- Staff badge remains a small world-space name, never a screen-sized banner.
     local label=Instance.new("BillboardGui");label.Name="TeacherName";label.Size=UDim2.fromScale(4.2,.5);label.StudsOffset=Vector3.new(0,3.25,0)
@@ -99,6 +132,7 @@ function StaffModel.create(teacher)
             p.Anchored=true;p.CanCollide=false;p.CanTouch=false;p.CanQuery=false;p.Massless=true
             if p~=root then p.CFrame=CFrame.new(0,shift,0)*p.CFrame end
             p:SetAttribute("RestCF",root.CFrame:Inverse()*p.CFrame)
+            if p==head then p:SetAttribute("PoseGroup","head") end
             local side=string.find(p.Name,"Left") and "left" or (string.find(p.Name,"Right") and "right" or nil)
             if side and (string.find(p.Name,"Arm") or string.find(p.Name,"Hand")) then p:SetAttribute("PoseGroup",side.."Arm") end
             if side and (string.find(p.Name,"Leg") or string.find(p.Name,"Foot")) then p:SetAttribute("PoseGroup",side.."Leg") end
@@ -108,15 +142,18 @@ function StaffModel.create(teacher)
     return model
 end
 
--- Articulated display gait without new engine rig joints. Bundled R15 mesh
--- limbs stay connected as groups, including their hands and feet. The rest
--- pose remains the single immutable authority; poses never accumulate drift.
+-- Native R15 mesh display pose: every moving head-adjacent prop uses the same
+-- neck transform. Still requires Roblox runtime verification before a release.
+-- Immutable rest poses prevent drift after many arrivals and departures.
 -- This is built from the existing licensed/native avatar meshes rather than
 -- primitive replacement limbs or uncontrolled humanoid animations.
 function StaffModel.pose(model,phase,walking)
     local pivot=model:GetPivot()
-    local swing=walking and math.sin(phase*.46)*.23 or 0
-    local armRoll=walking and math.sin(phase*.23)*.045 or 0
+    local swing=walking and math.sin(phase*.46)*.23 or math.sin(phase*1.1)*.025
+    local armRoll=walking and math.sin(phase*.23)*.045 or math.sin(phase*.7)*.017
+    local neck=Vector3.new(0,1.05,0)
+    local yaw=walking and math.sin(phase*.20)*.025 or math.sin(phase*.65)*.050
+    local headTurn=CFrame.new(neck)*CFrame.Angles(0,yaw,0)*CFrame.new(neck*-1)
     local function joint(group)
         local shoulder=(group=="leftArm" or group=="rightArm")
         local side=(group=="leftArm" or group=="leftLeg") and -1 or 1
@@ -127,7 +164,7 @@ function StaffModel.pose(model,phase,walking)
     end
     local joints={
         leftArm=joint("leftArm"),rightArm=joint("rightArm"),
-        leftLeg=joint("leftLeg"),rightLeg=joint("rightLeg")
+        leftLeg=joint("leftLeg"),rightLeg=joint("rightLeg"),head=headTurn
     }
     for _,part in ipairs(model:GetDescendants()) do
         if part:IsA("BasePart") and part~=model.PrimaryPart then
