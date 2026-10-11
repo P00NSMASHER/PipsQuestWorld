@@ -125,6 +125,15 @@ jobs:
             --luau "$RUNNER_TEMP/tools/luau/luau"
           echo "LEFT_HALL_FLOOR_AND_CEILING_CONTINUITY_CI_PASS native_phone_pending=true"
 
+      - name: Reject hallway screenshot cameras left inside the new supply closet
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --self-test
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "HALL_REAL_GEOMETRY_CAMERA_PROVENANCE_PASS"
+
       - name: Fail fast on exact-source room geometry and mobile part budget
         shell: bash
         run: |
