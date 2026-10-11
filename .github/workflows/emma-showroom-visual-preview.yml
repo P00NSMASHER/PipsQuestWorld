@@ -396,6 +396,20 @@ jobs:
             "$RUNNER_TEMP/photo-review/07-hall-yellow-end-window.png"
           echo "HALL_END_WINDOW_CAMERA_SEMANTIC_GATE_PASS headless_only=true native_iphone_pending=true"
 
+      - name: Prove neighboring oak door frame, frosted panes, brass, and raised panel are actually rendered
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Separate from generic nonblank screenshot and source-only Part
+          # counts. This semantic gate detects invisible panes, a missing
+          # crossbar, disappearing pull, and false opaque wall facades.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_oak_doors.py --self-test
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_oak_doors.py \
+            "$RUNNER_TEMP/photo-review/08-hall-adjacent-oak-door.png"
+          echo "PHOTO_HALL_OAK_DOOR_PIXEL_GATE_PASS real_source_only=true native_iphone_pending=true"
+
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
