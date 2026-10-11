@@ -1811,38 +1811,59 @@ local function buildBackDoorAndHall(root: Instance)
         light.Parent=lens
     end
 
-    -- Far mustard-framed transom with hand-authored sunburst. Attach thin
-    -- Graphics to solid end cap so the corridor cannot expose outdoor sky.
-    local endGui=imageSurface(leftCap,"Photo hallway yellow end-window motif",
-        Enum.NormalId.Right,450,260)
-    local sash=paintedRectangle(endGui,"Mustard window frame",
-        UDim2.fromOffset(300,175),UDim2.fromOffset(75,25),
-        Color3.fromRGB(214,166,63))
-    paintedRectangle(sash,"Dark frosted upper glazing",
-        UDim2.fromScale(.93,.90),UDim2.fromScale(.035,.05),
-        Color3.fromRGB(57,70,69))
-    for _,x in ipairs({.33,.67}) do
-        paintedRectangle(sash,"Yellow vertical glazing bar",
-            UDim2.fromScale(.022,.91),UDim2.fromScale(x,.045),
-            Color3.fromRGB(227,187,86))
+    -- The photographs' mustard-yellow paned end window is a DEFINING
+    -- architectural landmark, not merely a flat label on the far wall.
+    -- The original UI-only motif was invisible to source-derived 3D QA.
+    -- Build a shallow, 17-Part native facade on the INNER face of the
+    -- EXISTING solid end cap (interior face x=-53.55). Never create a
+    -- genuine opening to outside: the six photos do not establish one.
+    -- Every frame, pane and sun ray is noncolliding and nonquerying.
+    local endWindowGlass=hp("Photo hall yellow window glazing",
+        Vector3.new(.12,8.32,14.68),CFrame.new(-53.38,7.35,38),
+        Color3.fromRGB(55,69,68),Enum.Material.Glass,false)
+    endWindowGlass.Transparency=.14
+    endWindowGlass.Reflectance=.045
+    endWindowGlass:SetAttribute("ArchitecturalFacade","Enclosed end-cap glazing")
+
+    local yellow=Color3.fromRGB(214,166,63)
+    local yellowHighlight=Color3.fromRGB(227,187,86)
+    for _,y in ipairs({3.12,11.58}) do
+        hp("Photo hall yellow sash horizontal",
+            Vector3.new(.28,.30,15.24),CFrame.new(-53.19,y,38),
+            yellow,Enum.Material.Wood,false)
     end
-    paintedRectangle(sash,"Yellow horizontal glazing bar",
-        UDim2.fromScale(.94,.03),UDim2.fromScale(.03,.52),
-        Color3.fromRGB(227,187,86))
-    local sun=paintedRectangle(sash,"Photo hall abstract sunrise",
-        UDim2.fromOffset(44,44),UDim2.fromOffset(132,19),
-        Color3.fromRGB(243,208,51))
-    local sunCorner=Instance.new("UICorner")
-    sunCorner.CornerRadius=UDim.new(1,0);sunCorner.Parent=sun
+    for _,z in ipairs({30.38,45.62}) do
+        hp("Photo hall yellow sash vertical",
+            Vector3.new(.28,8.76,.30),CFrame.new(-53.19,7.35,z),
+            yellow,Enum.Material.Wood,false)
+    end
+    for _,z in ipairs({35.45,40.55}) do
+        hp("Photo hall yellow glazed divider vertical",
+            Vector3.new(.18,8.32,.15),CFrame.new(-53.12,7.35,z),
+            yellowHighlight,Enum.Material.Wood,false)
+    end
+    hp("Photo hall yellow glazed divider horizontal",
+        Vector3.new(.18,.16,14.72),CFrame.new(-53.12,7.42,38),
+        yellowHighlight,Enum.Material.Wood,false)
+
+    -- Nine separate original sunburst primitives (one circular center,
+    -- eight radial short rays). These are anonymous geometric ornament:
+    -- no photographed child, student paper, asset ID or personal data.
+    local sun=hp("Photo hall dimensional sunburst center",
+        Vector3.new(.18,.76,.76),CFrame.new(-53.03,9.55,38),
+        Color3.fromRGB(243,208,51),Enum.Material.SmoothPlastic,false)
+    sun.Shape=Enum.PartType.Ball
     for i=0,7 do
-        local a=i*math.pi/4
-        local ray=paintedRectangle(sash,"Photo hall drawn sun ray",
-            UDim2.fromOffset(5,15),
-            UDim2.fromOffset(math.floor(153+math.sin(a)*39),
-                math.floor(40-math.cos(a)*39)),
-            Color3.fromRGB(242,204,65))
-        ray.Rotation=i*45
+        local angle=i*math.pi/4
+        hp("Photo hall dimensional sunburst ray",
+            Vector3.new(.11,.13,.54),
+            CFrame.new(-53.02,9.55+math.sin(angle)*1.01,
+                38+math.cos(angle)*1.01)*CFrame.Angles(-angle,0,0),
+            Color3.fromRGB(242,204,65),Enum.Material.SmoothPlastic,false)
     end
+    -- Window assembly adds 17 static Parts: low-cost enough to remain
+    -- within the source-built 3,100 mobile Part cap. 3D source renders
+    -- will show the landmark even without third-party SurfaceGui support.
     local noticeGui=imageSurface(rightCap,"Original school noticeboard",
         Enum.NormalId.Left,450,260)
     local board=paintedRectangle(noticeGui,"Oak school announcement frame",
