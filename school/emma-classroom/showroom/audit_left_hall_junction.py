@@ -62,6 +62,15 @@ local function check()
     local prS,prN=boundsZ(photoRoof)
     local floorOverlap=math.min(flN,pmN)-math.max(flS,pmS)
     local roofOverlap=math.min(roofN,prN)-math.max(roofS,prS)
+    local horizontalOverlap=math.min(
+        sideFloor.Position.X+sideFloor.Size.X/2,
+        photoFloor.Position.X+photoFloor.Size.X/2)
+        -math.max(sideFloor.Position.X-sideFloor.Size.X/2,
+            photoFloor.Position.X-photoFloor.Size.X/2)
+    assert(near(sideFloor.Position.X,45.5)
+        and near(sideRoof.Position.X,45.5)
+        and horizontalOverlap>=17.3,
+        "LEFT_HALL_JUNCTION_FLOOR_NOT_BENEATH_TURN")
     assert(near(flS,5.5) and near(pmS,26.75)
         and floorOverlap>=.3 and floorOverlap<1.2
         and sideFloor.Size.X>=17.8
