@@ -204,21 +204,77 @@ for _,lamp in ipairs(expect("Photo hall fluorescent diffuser",5)) do
         "PHOTO_HALL_ILLUMINATION_REGRESSION")
     gui(lamp,"Inset silver fluorescent rim",Enum.NormalId.Bottom)
 end
-local endGui=nil
-for _,cap in ipairs(caps) do
-    local g=cap:FindFirstChild("Photo hallway yellow end-window motif")
-    if g then endGui=g;break end
+-- The far-end landmark must be actual 3D geometry on the existing
+-- CLOSED structural end wall. UI-only faux windows were never visible
+-- in independent source-derived screenshots.
+local function assertDimensionalEndWindow()
+    local glazing=one("Photo hall yellow window glazing")
+    assert(not glazing.CanCollide and not glazing.CanQuery
+        and glazing.Material==Enum.Material.Glass
+        and near(glazing.Size.Y,8.32) and near(glazing.Size.Z,14.68)
+        and glazing.Transparency>0 and glazing.Transparency<.35
+        and glazing.Position.X>leftCap.Position.X+.45
+        and glazing:GetAttribute("ArchitecturalFacade")=="Enclosed end-cap glazing",
+        "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST")
+
+    local horizontal=expect("Photo hall yellow sash horizontal",2)
+    local vertical=expect("Photo hall yellow sash vertical",2)
+    local mullions=expect("Photo hall yellow glazed divider vertical",2)
+    local transom=one("Photo hall yellow glazed divider horizontal")
+    assert(not transom.CanCollide and not transom.CanQuery
+        and near(transom.Position.Y,7.42),
+        "PHOTO_HALL_END_WINDOW_TRANSOM_LOST")
+    for _,bar in ipairs(horizontal) do
+        assert(not bar.CanCollide and not bar.CanQuery
+            and bar.Material==Enum.Material.Wood and bar.Size.Z>=15,
+            "PHOTO_HALL_END_WINDOW_FRAME_NOT_NATIVE")
+    end
+    for _,bar in ipairs(vertical) do
+        assert(not bar.CanCollide and not bar.CanQuery
+            and bar.Material==Enum.Material.Wood and bar.Size.Y>=8.7,
+            "PHOTO_HALL_END_WINDOW_FRAME_NOT_NATIVE")
+    end
+    for _,bar in ipairs(mullions) do
+        assert(not bar.CanCollide and not bar.CanQuery
+            and bar.Material==Enum.Material.Wood,
+            "PHOTO_HALL_END_WINDOW_MUNTINS_MISSING")
+    end
+
+    local sun=one("Photo hall dimensional sunburst center")
+    assert(sun.Shape==Enum.PartType.Ball and not sun.CanCollide
+        and not sun.CanQuery and near(sun.Position.Y,9.55),
+        "PHOTO_HALL_3D_SUN_CENTER_MISSING")
+    for _,ray in ipairs(expect("Photo hall dimensional sunburst ray",8)) do
+        assert(not ray.CanCollide and not ray.CanQuery
+            and ray.Material==Enum.Material.SmoothPlastic
+            and math.abs(ray.Position.Y-9.55)<=1.05
+            and math.abs(ray.Position.Z-38)<=1.05
+            and ray.Position.X>leftCap.Position.X+.45,
+            "PHOTO_HALL_3D_SUN_RAY_MISSING_OR_BLOCKING")
+    end
+    assert(not leftCap:FindFirstChild("Photo hallway yellow end-window motif"),
+        "PHOTO_HALL_OLD_UI_WINDOW_DUPLICATED")
+    return glazing
 end
-assert(endGui and endGui.Face==Enum.NormalId.Right,
-    "PHOTO_HALL_YELLOW_GLASS_END_MISSING")
-local sash=endGui:FindFirstChild("Mustard window frame")
-assert(sash and sash:FindFirstChild("Photo hall abstract sunrise"),
-    "PHOTO_HALL_YELLOW_SUNBURST_LOST")
-local rays=0
-for _,c in ipairs(sash:GetChildren()) do
-    if c.Name=="Photo hall drawn sun ray" then rays+=1 end
-end
-assert(rays==8,"PHOTO_HALL_SUN_RAYS_MISSING")
+local endWindow=assertDimensionalEndWindow()
+-- Adversarial mutants: a solid pane or an absent ray must fail this exact
+-- assembled Luau test rather than quietly pass the visual vocabulary.
+endWindow.CanCollide=true
+local okWindow,errWindow=pcall(assertDimensionalEndWindow)
+endWindow.CanCollide=false
+assert(not okWindow and string.find(tostring(errWindow),
+    "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST",1,true),
+    "PHOTO_HALL_END_WINDOW_COLLIDER_MUTATION_UNDETECTED")
+local testRay=expect("Photo hall dimensional sunburst ray",8)[1]
+testRay.Name="Temporarily missing sunray in test"
+okWindow,errWindow=pcall(assertDimensionalEndWindow)
+testRay.Name="Photo hall dimensional sunburst ray"
+assert(not okWindow and string.find(tostring(errWindow),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "PHOTO_HALL_END_WINDOW_MISSING_RAY_MUTATION_UNDETECTED")
+assertDimensionalEndWindow()
+print("PHOTO_HALL_DIMENSIONAL_END_WINDOW_PASS sealed=true native_parts=17 "
+    .."no_window_collision=true missing_rays_rejected=true")
 local notices=0
 for _,cap in ipairs(caps) do
     if cap:FindFirstChild("Original school noticeboard") then notices+=1 end
