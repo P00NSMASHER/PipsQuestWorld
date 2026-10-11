@@ -234,12 +234,33 @@ local function checkSheets()
         assert(p:GetAttribute("OriginalStudentData")==false
             and p:GetAttribute("Source")=="Anonymous original paper artwork",
             "PHOTO_HALL_PRIVATE_STUDENT_ASSIGNMENT_FORBIDDEN")
+        local style=p:GetAttribute("AnonymousArtStyle")
+        assert(style==((i-1)%5)+1,
+            "PHOTO_HALL_ANONYMOUS_ART_VARIATION_OR_ORDER_LOST")
         local g=gui(p,"Anonymous paper pencil strokes",Enum.NormalId.Front)
-        assert(#g:GetChildren()==3,
+        assert(g.CanvasSize.X==190 and g.CanvasSize.Y==218,
+            "PHOTO_HALL_PAPER_MOBILE_CANVAS_CHANGED")
+        local guidelines=0
+        local motifs=0
+        for _,mark in ipairs(g:GetChildren()) do
+            assert(mark:IsA("Frame") and mark.BackgroundTransparency<.45,
+                "PHOTO_HALL_PAPER_ART_INVISIBLE_OR_UNSAFE")
+            if mark.Name=="Invented pale handwritten guideline" then
+                guidelines+=1
+            elseif mark.Name=="Anonymous original colored pencil motif" then
+                motifs+=1
+                assert(mark.Rotation>=-21 and mark.Rotation<=21,
+                    "PHOTO_HALL_PAPER_CRAYON_MOTIF_ROTATION_INVALID")
+                assert(mark.BackgroundColor3.R>.30
+                    and mark.BackgroundColor3.G>.33
+                    and mark.BackgroundColor3.B>.30,
+                    "PHOTO_HALL_PAPER_CRAYON_PALETTE_INVALID")
+            else
+                error("PHOTO_HALL_PRIVATE_STUDENT_ASSIGNMENT_OR_IMAGE_FORBIDDEN")
+            end
+        end
+        assert(guidelines==3 and motifs==3,
             "PHOTO_HALL_ANONYMOUS_PENCIL_GUIDELINES_LOST")
-        for _,line in ipairs(g:GetChildren()) do
-            assert(line.Name=="Invented pale handwritten guideline",
-                "PHOTO_HALL_PERSONAL_DATA_PUBLISHED")
         end
     end
 end
@@ -261,7 +282,42 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY",1,true),
     "PHOTO_HALL_FLAT_SHEET_REGRESSION_NOT_REJECTED")
 print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED rotation")
+local originalStyle=bad:GetAttribute("AnonymousArtStyle")
+bad:SetAttribute("AnonymousArtStyle",0)
+ok,err=pcall(checkSheets)
+bad:SetAttribute("AnonymousArtStyle",originalStyle)
+assert(not ok and string.find(tostring(err),
+    "PHOTO_HALL_ANONYMOUS_ART_VARIATION_OR_ORDER_LOST",1,true),
+    "PHOTO_HALL_UNIFORM_OR_UNKNOWN_ART_MUTATION_NOT_REJECTED")
+print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED missing_original_art_style")
+local artGui=bad:FindFirstChild("Anonymous paper pencil strokes")
+local originalMotif=nil
+for _,mark in ipairs(artGui:GetChildren()) do
+    if mark.Name=="Anonymous original colored pencil motif" then
+        originalMotif=mark
+        break
+    end
+end
+assert(originalMotif,"PHOTO_HALL_ANONYMOUS_ART_NEGATIVE_TEST_SETUP")
+originalMotif.Name="Unapproved image payload"
+ok,err=pcall(checkSheets)
+originalMotif.Name="Anonymous original colored pencil motif"
+assert(not ok and string.find(tostring(err),
+    "PHOTO_HALL_PRIVATE_STUDENT_ASSIGNMENT_OR_IMAGE_FORBIDDEN",1,true),
+    "PHOTO_HALL_UNAPPROVED_IMAGE_MUTATION_NOT_REJECTED")
+print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED unapproved_art_payload")
+local originalOpacity=originalMotif.BackgroundTransparency
+originalMotif.BackgroundTransparency=1
+ok,err=pcall(checkSheets)
+originalMotif.BackgroundTransparency=originalOpacity
+assert(not ok and string.find(tostring(err),
+    "PHOTO_HALL_PAPER_ART_INVISIBLE_OR_UNSAFE",1,true),
+    "PHOTO_HALL_INVISIBLE_ART_MUTATION_NOT_REJECTED")
+print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED invisible_art")
 checkSheets()
+print("PHOTO_HALL_ANONYMOUS_ART_RUNTIME_PASS sheets=23 styles=5 "
+    .."pencil_guidelines=69 anonymous_colored_marks=69 "
+    .."no_source_photos_or_child_identifiers=true extra_physical_parts=0")
 local welcome=one("Photo hall vertical welcome plaque")
 local letters=gui(welcome,"Stacked WELCOME lettering",Enum.NormalId.Back)
 local expectedWelcome={"W","E","L","C","O","M","E"}
