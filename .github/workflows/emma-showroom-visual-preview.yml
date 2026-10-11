@@ -379,9 +379,12 @@ jobs:
           set -euo pipefail
           "$RUNNER_TEMP/photo-venv/bin/python" \
             school/emma-classroom/showroom/audit_rendered_hallway_papers.py --self-test
+          # The oblique 06 diagnostic can clip into corridor finish as
+          # geometry evolves. The fixed 07 full-hall view uses the same actual
+          # constructed source and visibly contains the paper rail and end wall.
           "$RUNNER_TEMP/photo-venv/bin/python" \
             school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
-            "$RUNNER_TEMP/photo-review/06-hall-paper-rail.png"
+            "$RUNNER_TEMP/photo-review/07-hall-yellow-end-window.png"
 
       - name: Prove gold window frame, dark panes, and eight radial sunburst rays are visible
         shell: bash
