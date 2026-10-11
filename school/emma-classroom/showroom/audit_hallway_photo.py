@@ -62,7 +62,15 @@ for _,wall in ipairs(caps) do
     assert(wall.CanCollide and math.abs(wall.Position.X)>=53.9,
         "PHOTO_HALL_END_SKY_GAP")
 end
-expect("Side corridor end wall",2)
+local south=expect("Side corridor end wall",1)[1]
+assert(near(south.Position.Z,5.65) and south.CanCollide,
+    "LEFT_STAFF_CORRIDOR_SOUTH_CAP_LOST")
+local returnWall=one("Left hallway outside corner return")
+assert(returnWall.CanCollide and returnWall.Position.X>53.8
+    and returnWall.Position.Z>25.5,"LEFT_HALL_CORNER_EXTERIOR_GAP")
+assert(#pieces("Photo hall front outer wall")==1
+    and near(one("Photo hall front outer wall").Position.X,-45.5),
+    "LEFT_HALL_PASSAGE_HAS_BLOCKING_REAR_WALL")
 assert(#pieces("Rear corridor end wall")==0 and
        #pieces("Hall left wall")==0,
        "OLD_DEAD_END_HALLWAY_RETURNED")
@@ -79,7 +87,10 @@ local bars=expect("Photo hall adjacent oak glass crossbar",2)
 local raised=expect("Photo hall adjacent lower raised wood panel",2)
 local plates=expect("Photo hall adjacent brass push plate",2)
 local pulls=expect("Photo hall adjacent brass pull",2)
-local sealed=expect("Photo hall front outer wall",2)
+local sealed=expect("Photo hall front outer wall",1)
+local classroomRear=one("Back wall right")
+assert(classroomRear.CanCollide and near(classroomRear.Position.X,23),
+    "CLOSED_NEIGHBOR_CLASSROOM_WALL_LOST")
 table.sort(facades,function(a,b)return a.Position.X<b.Position.X end)
 table.sort(panels,function(a,b)return a.Position.X<b.Position.X end)
 local function checkClosedOakDoors()
@@ -102,8 +113,7 @@ local function checkClosedOakDoors()
             and glass:GetAttribute("GlassAperture")
                 =="Upper opening has no solid wood backing",
             "PHOTO_HALL_ADJACENT_GLASS_APERTURE_LOST")
-        local wall=sealed[1]
-        if math.abs(wall.Position.X-lower.Position.X)>.10 then wall=sealed[2] end
+        local wall=lower.Position.X<0 and sealed[1] or classroomRear
         assert(wall.CanCollide and wall.Size.Y>=12.9
             and math.abs(wall.Position.X-lower.Position.X)<.1
             and wall.Position.Z<lower.Position.Z,
@@ -129,6 +139,55 @@ local function checkClosedOakDoors()
     end
 end
 checkClosedOakDoors()
+assert(near(facades[1].Position.X,-45.5)
+    and near(facades[2].Position.X,23),
+    "LEFT_HALL_OPENING_OBSTRUCTED_BY_OLD_FAKE_DOOR")
+-- Back double oak leaves must open into an actual ENCLOSED supply closet,
+-- not the main corridor. The original staff-side LEFT opening is the
+-- navigable hallway route. Require true collision walls and visible storage.
+local closet=Room.Root:FindFirstChild("ClassroomSupplyCloset")
+assert(closet and closet:GetAttribute("Purpose")
+    =="Classroom supplies only; not a hallway",
+    "RIGHT_DOOR_SUPPLY_CLOSET_FOLDER_MISSING")
+local function checkCloset()
+    local walls=expect("Supply closet side wall",2)
+    table.sort(walls,function(a,b)return a.Position.X<b.Position.X end)
+    assert(walls[1].CanCollide and walls[2].CanCollide
+        and near(walls[1].Position.X,-5.95)
+        and near(walls[2].Position.X,5.95)
+        and near(walls[1].Position.Z,31.70)
+        and walls[1].Size.Z>=8.55,
+        "RIGHT_CLOSET_SIDE_WALLS_NOT_SEALED")
+    local back=one("Supply closet solid rear wall")
+    assert(back.CanCollide and near(back.Position.Z,36.05)
+        and back.Size.X>12.40 and back.Size.Y>=12.9,
+        "RIGHT_CLOSET_REAR_WALL_NOT_SEALED")
+    expect("Supply closet oak shelf",3)
+    local tubs=expect("Supply closet labeled storage tub",3)
+    for _,tub in ipairs(tubs) do
+        assert(not tub.CanCollide and
+            tub:FindFirstChild("Anonymous classroom supply category"),
+            "RIGHT_CLOSET_STORAGE_PROPS_MISSING_OR_BLOCKING")
+    end
+    expect("Supply closet warm laminate floor",1)
+    local sign=one("Welcome over door")
+    local label=sign:FindFirstChild("Surface")
+    assert(label and label:FindFirstChildOfClass("TextLabel")
+       and label:FindFirstChildOfClass("TextLabel").Text=="CLASSROOM CLOSET",
+       "RIGHT_DOOR_CLOSET_SIGN_NOT_VISIBLE")
+    return back
+end
+local closetBack=checkCloset()
+closetBack.CanCollide=false
+local safe,reason=pcall(checkCloset)
+closetBack.CanCollide=true
+assert(not safe and string.find(tostring(reason),
+    "RIGHT_CLOSET_REAR_WALL_NOT_SEALED",1,true),
+    "CLOSET_OPEN_REAR_MUTATION_NOT_CAUGHT")
+checkCloset()
+print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
+    .."school_hall_connected=true back_double_doors_are_supply_closet=true "
+    .."closet_walls=3 shelves=3 rear_wall_mutation_rejected=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)
@@ -156,7 +215,7 @@ assert(not ok and string.find(tostring(err),"PHOTO_HALL_PART_COUNT",1,true),
 checkClosedOakDoors()
 print("PHOTO_HALL_ADJACENT_NATIVE_OAK_DOORS_PASS closed=2 actual_glass=2 "
     .."stiles=4 trim_rails=6 raised=2 brass=4 new_parts=18 "
-    .."sealed_walls=true no_collision=true "
+    .."sealed_walls=true no_collision=true relocated_fake_door=true "
     .."mutations=opaque,glass,hardware,stile")
 local glass=expect("Door glass",2)
 for _,panel in ipairs(glass) do
@@ -178,7 +237,7 @@ end
 local segments={
     {"Photo hall rear glazed brick",1},
     {"Photo hall classroom exterior glazed brick",2},
-    {"Photo hall front outer glazed brick",2},
+    {"Photo hall front outer glazed brick",1},
     {"Photo hall left end glazed brick",1},
     {"Photo hall right end glazed brick",1},
 }
