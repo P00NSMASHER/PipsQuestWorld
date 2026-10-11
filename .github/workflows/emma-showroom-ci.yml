@@ -11,6 +11,8 @@ on:
       - 'school/emma-classroom/showroom/**'
       - 'school/emma-showroom.project.json'
       - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
+      - 'school/emma-classroom/verify_release_receipt.py'
+      - '.github/workflows/publish-emma-classroom.yml'
       - '.github/workflows/emma-showroom-ci.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
