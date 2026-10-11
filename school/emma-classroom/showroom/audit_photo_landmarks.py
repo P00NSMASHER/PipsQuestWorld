@@ -120,6 +120,63 @@ local function verify()
         and #parts("Library built-in anonymous paper")==3
         and #parts("Library built-in paper heading")==3,
         "PHOTO_WOOD_INSET_COMPONENTS_MISSING")
+    -- Real interior photos reveal a red vertical chart at the left edge
+    -- and uneven, anonymous classroom papers across the black display.
+    -- The old three plain beige rectangles were missing its focal color.
+    local posters=parts("Library built-in anonymous paper")
+    local headings=parts("Library built-in paper heading")
+    assert(#posters==3 and #headings==3,
+        "PHOTO_WOOD_NOTICE_PAPER_COUNT_INVALID")
+    table.sort(posters,function(a,b) return a.Position.X<b.Position.X end)
+    table.sort(headings,function(a,b) return a.Position.X<b.Position.X end)
+    local reds=posters[1].Color
+    assert(math.abs(posters[1].Position.X+27.4)<.03
+        and math.abs(posters[1].Position.Y-9.55)<.03
+        and math.abs(posters[1].Size.Y-3.30)<.03
+        and reds.R>.60 and reds.R>.2+reds.G and reds.R>.2+reds.B,
+        "PHOTO_WOOD_RED_POCKET_CHART_MISSING")
+    local expectedY={9.55,9.95,9.65}
+    for i,paper in ipairs(posters) do
+        assert(math.abs(paper.Position.Y-expectedY[i])<.03
+            and paper.Size.Y>2.4 and paper.Size.Y<3.4
+            and paper.Position.Y-paper.Size.Y/2>corniceTop+.25
+            and paper.Position.Y+paper.Size.Y/2<12.0
+            and headings[i].Position.Y>paper.Position.Y
+            and headings[i].Position.Y<
+                paper.Position.Y+paper.Size.Y/2,
+            "PHOTO_WOOD_NOTICE_PAPERS_OVERLAP_FRAME")
+        local gui=paper:FindFirstChild("AnonymousNoticeArt")
+        local layout=gui and gui:FindFirstChild("NoticeArtLayout")
+        assert(gui and gui:IsA("SurfaceGui")
+            and gui.Face==Enum.NormalId.Front
+            and gui.SizingMode==Enum.SurfaceGuiSizingMode.FixedSize
+            and gui.CanvasSize[1]==420 and gui.CanvasSize[2]==430
+            and layout and layout:IsA("Frame")
+            and layout.BackgroundTransparency==1,
+            "PHOTO_WOOD_NOTICE_ART_MISSING")
+        local slots,cards=0,0
+        for _,node in ipairs(layout:GetDescendants()) do
+            assert(not node:IsA("ImageLabel")
+                and not node:IsA("ImageButton")
+                and not node:IsA("TextLabel"),
+                "PHOTO_WOOD_NOTICE_PRIVATE_OR_EXTERNAL_ASSET")
+            if node.Name=="PocketChartCard" then
+                slots+=1
+                assert(node:IsA("Frame") and node.BackgroundTransparency==0,
+                    "PHOTO_WOOD_POCKET_SLIP_INVISIBLE")
+            elseif node.Name=="AnonymousPinboardCard" then
+                cards+=1
+            end
+        end
+        if i==1 then
+            assert(slots==6 and cards==0,
+                "PHOTO_WOOD_POCKET_SLOTS_MISSING")
+        else
+            assert(slots==0 and cards==4,
+                "PHOTO_WOOD_ANONYMOUS_PINBOARD_INCOMPLETE")
+        end
+    end
+
     assert(math.abs(left.Position.X+22)<.03
         and math.abs(right.Position.X-20.2)<.03
         and math.abs(left.Position.Y-right.Position.Y)<.03,
@@ -273,7 +330,7 @@ local function verify()
 end
 local inset,left=verify()
 print("PHOTO_WOOD_LANDMARK_RUNTIME_PASS builtins=2 inset=1 "
-    .."paper=3 distinct_number_ranges=true cards=17 "
+    .."paper=3 red_pocket_slips=6 pinboard_cards=8 distinct_number_ranges=true cards=17 "
     .."doorway_clear=true original_desks=16")
 local saved=inset.CanCollide
 inset.CanCollide=true
@@ -344,6 +401,35 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_WOOD_INSET_GEOMETRY_INVALID",1,true),
     "PHOTO_WOOD_HOVERING_PANEL_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing")
+-- Verify the red teacher chart cannot silently revert to three
+-- identical blank sheets, and must retain six original pocket slips.
+local pinboards=parts("Library built-in anonymous paper")
+table.sort(pinboards,function(a,b) return a.Position.X<b.Position.X end)
+local pocket=pinboards[1]
+local originalTone=pocket.Color
+pocket.Color=Color3.fromRGB(233,231,220)
+ok,err=pcall(verify)
+pocket.Color=originalTone
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WOOD_RED_POCKET_CHART_MISSING",1,true),
+    "PHOTO_WOOD_CHART_COLOR_REGRESSION_NOT_REJECTED")
+print("PHOTO_WOOD_ADVERSARIAL_REJECTED missing_red_chart")
+local layout=pocket:FindFirstChild("AnonymousNoticeArt")
+    :FindFirstChild("NoticeArtLayout")
+local slip
+for _,node in ipairs(layout:GetChildren()) do
+    if node.Name=="PocketChartCard" then slip=node break end
+end
+assert(slip,"PHOTO_WOOD_POCKET_MUTATION_FIXTURE_MISSING")
+local originalSlipName=slip.Name
+slip.Name="LostPocket"
+ok,err=pcall(verify)
+slip.Name=originalSlipName
+assert(not ok and string.find(tostring(err),
+    "PHOTO_WOOD_POCKET_SLOTS_MISSING",1,true),
+    "PHOTO_WOOD_MISSING_POCKET_NOT_REJECTED")
+print("PHOTO_WOOD_ADVERSARIAL_REJECTED lost_pocket_slip")
+
 local keyboard=one("Laptop native keyboard panel")
 local board=keyboard:FindFirstChild("LaptopKeyboardDetail"):FindFirstChild("LaptopKeyboardBackground")
 local oneKey=nil
@@ -378,7 +464,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
 print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location right_shapes number_order number_units panel_depth grade_banner flipchart laptop fan")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location right_shapes number_order number_units panel_depth grade_banner red_chart pocket_slips flipchart laptop fan")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -396,6 +482,8 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
+        "PHOTO_WOOD_ADVERSARIAL_REJECTED missing_red_chart",
+        "PHOTO_WOOD_ADVERSARIAL_REJECTED lost_pocket_slip",
         "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED doorway",
         "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED collidable_card",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED scrambled_number_unit",
