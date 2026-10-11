@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import unittest
 
@@ -10,11 +11,20 @@ spec.loader.exec_module(adapter)
 
 class TargetTests(unittest.TestCase):
     def setUp(self):
-        self.good = {"schemaVersion": 1, "activeBranch": "rebuild/emma-classroom-study-v1",
+        self.good = {"schemaVersion": 1, "activeBranch": "visual/emma-hallway-photo-faithful-20261010",
                      "contractRoot": "school/emma-classroom"}
 
     def test_real_consumer(self):
         self.assertEqual(adapter.resolve(self.good), self.good["activeBranch"])
+
+    def test_current_config_follows_the_live_emma_classroom_branch(self):
+        config_file = Path(__file__).resolve().parents[1] / "emma-curriculum-target.json"
+        config = json.loads(config_file.read_text(encoding="utf-8"))
+        self.assertEqual(
+            adapter.resolve(config),
+            "visual/emma-hallway-photo-faithful-20261010",
+            "Do not divert future Emma schoolwork to the archived quiz game.",
+        )
 
     def test_new_visual_game_branch_requires_only_config_review(self):
         config = dict(self.good, activeBranch="rebuild/emma-classroom-v2")
