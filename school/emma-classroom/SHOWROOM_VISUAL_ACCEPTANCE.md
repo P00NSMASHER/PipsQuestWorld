@@ -5,11 +5,14 @@
 supersede the study-game/teacher/question checklist in
 `school/emma-classroom/VISUAL_ACCEPTANCE.md`.
 
-**Status as of October 10:** SOURCE BUILD & LU AU STATIC CHECKS PASS;
-**NATIVE ROBLOX/IPHONE VISUAL ACCEPTANCE IS PENDING.**
-The latest publicly confirmed playable progress preview was v78. An
-unmerged PR candidate, a GitHub checkmark, and a static third-party render
-are **not evidence** that these edits are running on the live Roblox place.
+**Status as of October 11:** The existing Emma Roblox place
+`114603280760042` was successfully published as **version 82**, from
+exact commit `4a834d1e90253f3f5cced709fe16a878896126c5`.
+[Verified Roblox publisher run](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38115148189).
+Exact-source build, photo-grounded doorway construction, sealed closet
+mutation test, and conservative navigation routes passed in that run.
+**NATIVE ROBLOX/IPHONE VISUAL ACCEPTANCE IS STILL PENDING.**
+PR changes after the published commit are not live merely because CI passes.
 
 ## Evidence for each candidate
 For each candidate, record its *exact* full Git commit SHA, constructed room
@@ -27,6 +30,18 @@ a manifest with `notNativeIphoneAcceptance=true`.
 
 ## Native inspection checklist — permanent scenery
 
+- [ ] **Left hallway / right supply closet:** From inside Emma's classroom,
+  use the LEFT opening with the `WELCOME • ABVM STAFF` sign. Walk through
+  that side passage, turn onto the long charcoal-tile/amber-brick hallway,
+  and confirm free movement in both directions. The far-left sunburst window
+  and 23 anonymous student-paper diamonds remain visible. Back inside, the
+  RIGHT wood-and-glass double doors, now marked `CLASSROOM CLOSET`,
+  open only into a shallow, solid-walled supply closet: three shelves and
+  three labeled bins must be visible. You must **not** be able to reach
+  the long hallway through the closet or walk through its back wall.
+  Verify that neither corridor transition exposes outdoor sky or clips
+  the character through the door frame. This must be checked in actual
+  Roblox on iPhone; the static route model alone is insufficient.
 - [ ] **Windows / AC:** Two windows with genuinely *gathered* navy drapes,
   dark alternating folds and low cloth tiebacks. At least eleven studs of
   daylight opening remain visible across each window; no curtains flatten
