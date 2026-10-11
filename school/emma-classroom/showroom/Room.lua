@@ -659,10 +659,13 @@ local function buildClassroomTexture(root: Instance)
     -- mid-gap between neighboring tables and the bins appeared to float.
     for i,x in ipairs({-24,-8,12}) do
         local color=basketColors[i]
-        part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,4.8),color,Enum.Material.SmoothPlastic,false)
-        for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,4.8+dz),color,Enum.Material.SmoothPlastic,false) end
-        for _,dx in ipairs({-1.33,1.33}) do part(root,"Basket end rim",Vector3.new(.13,.65,1.6),CFrame.new(x+dx,3.55,4.8),color,Enum.Material.SmoothPlastic,false) end
-        for j=0,3 do part(root,"Basket pencil",Vector3.new(.09,.09,2.2),CFrame.new(x-.75+j*.42,3.36,4.8)*CFrame.Angles(0,math.rad(75+j*7),0),P.gold,Enum.Material.SmoothPlastic,false) end
+        -- Keep the original basket and its rims/pencils ON the relocated
+        -- middle-row desk, not floating at its vacated z=4 position.
+        local trayZ=(x==-24) and 2.4 or 4.8
+        part(root,"Supply basket",Vector3.new(2.8,.11,1.8),CFrame.new(x,3.24,trayZ),color,Enum.Material.SmoothPlastic,false)
+        for _,dz in ipairs({-.83,.83}) do part(root,"Basket long rim",Vector3.new(2.8,.65,.13),CFrame.new(x,3.55,trayZ+dz),color,Enum.Material.SmoothPlastic,false) end
+        for _,dx in ipairs({-1.33,1.33}) do part(root,"Basket end rim",Vector3.new(.13,.65,1.6),CFrame.new(x+dx,3.55,trayZ),color,Enum.Material.SmoothPlastic,false) end
+        for j=0,3 do part(root,"Basket pencil",Vector3.new(.09,.09,2.2),CFrame.new(x-.75+j*.42,3.36,trayZ)*CFrame.Angles(0,math.rad(75+j*7),0),P.gold,Enum.Material.SmoothPlastic,false) end
     end
 end
 
@@ -1920,7 +1923,16 @@ function World.build()
     for row,z in ipairs({-12,4,19}) do
         for col,x in ipairs({-24,-16,-8,0,12,20}) do
             if row<3 or col>2 then
-                index+=1;desk(root,x,z,index,row==2 and col==4)
+                -- Actual rug photo and same-SHA eye-level render confirm
+                -- that the near-left middle-row chair covered numbered
+                -- clouds on the circular ABC/sun reading rug. Move ONLY
+                -- its complete desk+chair pair 2.4 studs toward the front.
+                -- All sixteen student pairs remain intact; the other fifteen
+                -- desk positions, two rug anchors, doors and spawn are fixed.
+                -- This is a small, reviewable clearance repair rather than
+                -- a guessed wholesale rearrangement of cheer-day furniture.
+                local safeZ=(row==2 and col==1) and 1.6 or z
+                index+=1;desk(root,x,safeZ,index,row==2 and col==4)
             end
         end
     end

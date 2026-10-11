@@ -136,6 +136,89 @@ local function check()
     end
     return rays,lobes
 end
+-- Real photo: the numbered sun-and-cloud reading rug is open floor space.
+-- Exact previously rendered source showed the student chair at (-24,7.48)
+-- covering its lower letters/clouds. Resolve only that pair's clearance;
+-- keep all original rug coordinates and other fifteen student pairs.
+local function checkReadingRugClearance()
+    local mat=nil
+    local seats,backs,desks,baskets={},{},{},{}
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then
+            if p.Name=="Alphabet rug" then
+                assert(mat==nil,"RUG_CLEARANCE_MULTIPLE_ALPHABET_RUGS")
+                mat=p
+            elseif p.Name=="Student chair seat" then
+                table.insert(seats,p)
+            elseif p.Name=="Student chair contoured back collision" then
+                table.insert(backs,p)
+            elseif p.Name=="Student desk top" then
+                table.insert(desks,p)
+            elseif p.Name=="Supply basket" then
+                table.insert(baskets,p)
+            end
+        end
+    end
+    assert(mat and #seats==16 and #backs==16 and #desks==16
+        and #baskets==3,
+        "RUG_READING_ORIGINAL_FURNITURE_COUNT_CHANGED")
+    assert(math.abs(mat.Position.X+25)<.025
+        and math.abs(mat.Position.Z-14)<.025
+        and math.abs(mat.Size.Y-14.2)<.025,
+        "RUG_READING_CARPET_ANCHOR_CHANGED")
+    local radius=mat.Size.Y/2
+    local function edgeDistance(part)
+        local m,s=part.CFrame.m,part.Size
+        local halfX=(math.abs(m[1])*s.X+math.abs(m[2])*s.Y
+            +math.abs(m[3])*s.Z)/2
+        local halfZ=(math.abs(m[7])*s.X+math.abs(m[8])*s.Y
+            +math.abs(m[9])*s.Z)/2
+        local dx=math.max(0,math.abs(part.Position.X-mat.Position.X)-halfX)
+        local dz=math.max(0,math.abs(part.Position.Z-mat.Position.Z)-halfZ)
+        return math.sqrt(dx*dx+dz*dz)-radius
+    end
+    local nearest=math.huge
+    for _,family in ipairs({seats,backs,desks}) do
+        for _,part in ipairs(family) do
+            local gap=edgeDistance(part)
+            nearest=math.min(nearest,gap)
+            assert(gap>.12,"RUG_READING_FURNITURE_OCCLUDES_CLOUDS")
+        end
+    end
+    local movedSeat,movedDesk,movedBack,movedBasket
+    for _,seat in ipairs(seats) do
+        if math.abs(seat.Position.X+24)<.03
+            and seat.Position.Z>0 and seat.Position.Z<10 then
+            movedSeat=seat
+        end
+    end
+    for _,desk in ipairs(desks) do
+        if math.abs(desk.Position.X+24)<.03
+            and desk.Position.Z>0 and desk.Position.Z<10 then
+            movedDesk=desk
+        end
+    end
+    for _,back in ipairs(backs) do
+        if math.abs(back.Position.X+24)<.03
+            and back.Position.Z>0 and back.Position.Z<10 then
+            movedBack=back
+        end
+    end
+    for _,basket in ipairs(baskets) do
+        if math.abs(basket.Position.X+24)<.03 then
+            movedBasket=basket
+        end
+    end
+    assert(movedSeat and movedDesk and movedBack and movedBasket,
+        "RUG_READING_ADJUSTED_PAIR_OR_BASKET_MISSING")
+    assert(math.abs(movedDesk.Position.Z-1.60)<.03
+        and math.abs(movedSeat.Position.Z-5.08)<.03
+        and math.abs(movedBack.Position.Z-6.01)<.04
+        and math.abs(movedBasket.Position.Z-2.40)<.03
+        and math.abs(movedBasket.Position.Y-3.24)<.03,
+        "RUG_READING_BASKET_OR_PAIR_DISCONNECTED")
+    return movedSeat,movedBasket,nearest
+end
 local rays,lobes=check()
 print("RUG_NATIVE_PRIMITIVES_PASS rays=16 caps=16 "
     .."cloud_bodies=10 flat_cylinder_lobes=20 "
@@ -155,6 +238,10 @@ rays[1].Shape=saved
 assert(not ok and string.find(tostring(err),
     "RUG_NATIVE_FLATTENED_BALL_RAY",1,true),
     "RUG_NATIVE_BALL_RAY_NOT_REJECTED")
+local movedSeat,movedBasket,clearance=checkReadingRugClearance()
+print(string.format("RUG_READING_OPEN_FLOOR_PASS student_pairs=16 "
+    .."round_rug_unchanged=true nearest_clearance_studs=%.2f "
+    .."one_supported_basket=true",clearance))
 local spots=dotcheck()
 print("RUG_PHOTO_POLKADOT_PASS dots=25 unique_spots=true "
     .."diameters=5 palette>=5 minimum_gap>.10 grid=false")
@@ -196,7 +283,26 @@ assert(not ok and string.find(tostring(err),
 print("RUG_NATIVE_ADVERSARIAL_REJECTED uniform_grid")
 dotcheck()
 check()
-print("RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid")
+-- Fail closed on the exact old chair position that was seen covering the
+-- circular rug in the owner-facing screenshot.
+local oldChairCF=movedSeat.CFrame
+movedSeat.CFrame=CFrame.new(-24,1.62,7.48)
+local okReading,errReading=pcall(checkReadingRugClearance)
+movedSeat.CFrame=oldChairCF
+assert(not okReading and string.find(tostring(errReading),
+    "RUG_READING_FURNITURE_OCCLUDES_CLOUDS",1,true),
+    "RUG_READING_OLD_CLOUD_BLOCKING_CHAIR_NOT_REJECTED")
+print("RUG_READING_ADVERSARIAL_REJECTED chair_over_clouds")
+local oldBasketCF=movedBasket.CFrame
+movedBasket.CFrame=CFrame.new(-24,3.24,4.8)
+okReading,errReading=pcall(checkReadingRugClearance)
+movedBasket.CFrame=oldBasketCF
+assert(not okReading and string.find(tostring(errReading),
+    "RUG_READING_BASKET_OR_PAIR_DISCONNECTED",1,true),
+    "RUG_READING_UNSUPPORTED_BASKET_NOT_REJECTED")
+print("RUG_READING_ADVERSARIAL_REJECTED basket_left_behind")
+checkReadingRugClearance()
+print("RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid reading_access")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -211,18 +317,23 @@ def main():
     if result.returncode:
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
-    markers=("RUG_NATIVE_PRIMITIVES_PASS",
+    markers=("RUG_READING_OPEN_FLOOR_PASS",
+             "RUG_READING_ADVERSARIAL_REJECTED chair_over_clouds",
+             "RUG_READING_ADVERSARIAL_REJECTED basket_left_behind",
+             "RUG_NATIVE_PRIMITIVES_PASS",
              "RUG_NATIVE_ADVERSARIAL_REJECTED flattened_cloud_ball",
              "RUG_PHOTO_POLKADOT_PASS",
              "RUG_NATIVE_ADVERSARIAL_REJECTED overlapping_spots",
              "RUG_NATIVE_ADVERSARIAL_REJECTED outside_rug",
              "RUG_NATIVE_ADVERSARIAL_REJECTED uniform_grid",
-             "RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid")
+             "RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid reading_access")
     lines=result.stdout.splitlines()
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_PHOTO_POLKADOT_PASS",
+        if line.startswith(("RUG_READING_OPEN_FLOOR_PASS",
+                            "RUG_READING_ADVERSARIAL_REJECTED",
+                            "RUG_PHOTO_POLKADOT_PASS",
                             "RUG_NATIVE_PRIMITIVES_PASS",
                             "RUG_NATIVE_ADVERSARIAL_REJECTED",
                             "RUG_NATIVE_NEGATIVE_TESTS_PASS")):

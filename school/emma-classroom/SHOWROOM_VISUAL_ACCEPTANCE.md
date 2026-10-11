@@ -79,7 +79,10 @@ a manifest with `notNativeIphoneAcceptance=true`.
   gray grid are bright and unbroken; six frosted troffers look like
   broad school fluorescent fixtures rather than emissive neon panels.
 - [ ] **Both rugs:** Circular sun/number/ABC rug has readable letters,
-  ten numbered clouds and visible orange sunburst. Separate black
+  ten numbered clouds and visible orange sunburst. No blue student desk
+  chair is planted on the sun or lower letter/cloud border; verify the
+  one minimally moved middle-row desk remains naturally paired with its
+  chair and the existing supply basket is supported on that tabletop. Separate black
   rectangular polka-dot rug has 25 different-size, naturally staggered
   colored circles instead of the old rigid grid. Dots stay inside its edge,
   visibly round and nonoverlapping. Both are accessible in their unchanged

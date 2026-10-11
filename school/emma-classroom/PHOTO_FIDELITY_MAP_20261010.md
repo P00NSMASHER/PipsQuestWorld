@@ -442,3 +442,31 @@ colors, a visible row stagger, 0.18-stud rug-edge clearance, and over
 0.10-stud nonoverlap. Deliberate test mutations overlap two dots, place
 one outside the rug, and restore a strict lattice; all must be rejected.
 Actual Roblox/iPhone material and photo parity are still review-gated.
+
+## October 11 — protect the circular sun/cloud rug from the blue desk chair
+
+The owner-provided activity photographs show the round blue alphabet rug
+as open floor used by children. The exact source 21-camera image
+`12-reading-rug.png` at draft head `40085286a4b05dd005ae07e34edca0fafd5a8995` showed a BLUE molded
+student chair planted across the lower clouds and colorful letter border.
+Source inspection identified its desk pair at x=-24, middle row z=4.0;
+that chair sat at z=7.48 and intruded roughly 1.7 studs onto the rug.
+
+Conservatively relocate **only that desk/seat pair** by 2.4 studs toward
+the teaching wall (desk center z=1.6; seat center z=5.08; rear backrest
+center z=6.01). The other 15 desk/seat pairs stay exactly as before, as do
+the circular rug at (-25,14), 25 staggered dots on the black mat, room
+entrances, clock, windows, and school desk game controls. The *same*
+small colored supply basket and all its rim/pencil pieces follow the moved
+desk, preventing unsupported floating stationary supplies. Part count and
+physics types are unchanged. This is a minimal **floor-clearance safety
+repair**, not a claim about the school's permanent desk seating diagram
+(which event photos cannot settle).
+
+Constructed-Luau regression now calculates rotation-aware 2D bounding
+boxes for all 16 student seats, 16 backrest colliders, and 16 desk tops,
+requiring at least 0.12 studs between those bounds and the circular
+7.1-stud rug radius. It guards the 16 paired sets, both rug anchors and
+the basket on its moved desk. Negative tests restore the old obstructing
+chair position or leave the basket on the old desktop; each must fail.
+Native Roblox/iPhone camera evidence remains pending owner signoff.
