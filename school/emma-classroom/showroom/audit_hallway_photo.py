@@ -261,7 +261,6 @@ local function checkSheets()
         end
         assert(guidelines==3 and motifs==3,
             "PHOTO_HALL_ANONYMOUS_PENCIL_GUIDELINES_LOST")
-        end
     end
 end
 checkSheets()
