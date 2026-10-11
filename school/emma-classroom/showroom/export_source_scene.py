@@ -246,9 +246,42 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
                 abs(float(lamp[10])-12.85)<.025), (
             "Hall fluorescent diffuser off continuous ceiling"
         )
-    # Brick courses, floor grout, paper diamonds, mullions, shamrock shapes
-    # and sun rays are now native SurfaceGui Frames, not physical Parts.
-    # The separate constructed-Luau audit tests their full UI structure.
+    # The photo's golden, sunburst-patterned end window is genuine geometry,
+    # not SurfaceGui-only artwork. Verify that the constructed third-party
+    # scene can actually SEE its frames, dark glass and individual rays.
+    end_glass=actual_parts("Photo hall yellow window glazing")
+    end_h=actual_parts("Photo hall yellow sash horizontal")
+    end_v=actual_parts("Photo hall yellow sash vertical")
+    end_m=actual_parts("Photo hall yellow glazed divider vertical")
+    end_t=actual_parts("Photo hall yellow glazed divider horizontal")
+    end_sun=actual_parts("Photo hall dimensional sunburst center")
+    end_rays=actual_parts("Photo hall dimensional sunburst ray")
+    assert tuple(map(len,(end_glass,end_h,end_v,end_m,end_t,end_sun,end_rays)))==(
+        1,2,2,2,1,1,8
+    ), "PHOTO_END_WINDOW_NOT_17_NATIVE_3D_PARTS"
+    pane=end_glass[0]
+    assert pane[4].endswith("Glass") and (
+        abs(float(pane[9])+53.38)<.03
+        and abs(float(pane[10])-7.35)<.03
+        and abs(float(pane[11])-38)<.03
+        and float(pane[7])>=8.3 and float(pane[8])>=14.6
+    ), "PHOTO_END_WINDOW_GLAZING_NOT_INSIDE_SEALED_END_CAP"
+    assert all(p[4].endswith("Wood") for p in end_h+end_v+end_m+end_t)
+    assert all(-53.5<float(p[9])<-52.8 for p in (
+        end_glass+end_h+end_v+end_m+end_t+end_sun+end_rays
+    )), "PHOTO_END_WINDOW_3D_PROPS_INSIDE_SOLID_CAP"
+    assert all(abs(float(p[10])-9.55)<=1.05 for p in end_rays), (
+        "PHOTO_END_WINDOW_RAYS_FLOAT_OUTSIDE_TOP_PANE"
+    )
+    assert not actual_parts("Photo hallway yellow end-window motif"), (
+        "Old flat wall-graphic window unexpectedly became physical"
+    )
+    print("PHOTO_END_WINDOW_3D_SCENE_PASS parts=17 native_glass=true "
+          "eight_sunrays=true cap_stays_enclosed=true",flush=True)
+    # Mortar courses, floor grout, shamrock symbols, paper pencil guidelines
+    # and WELCOME letters remain low-draw-cost SurfaceGui primitives.
+    # The physical paper diamonds and yellow end-window are true 3D Parts;
+    # only native Roblox can verify the final Glass and UI visual treatment.
 
     staff_frame=actual_parts("Staff hall framed announcement board")
     staff_cork=actual_parts("Staff hall inset cork noticeboard")
