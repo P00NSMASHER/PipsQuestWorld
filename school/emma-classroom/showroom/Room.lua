@@ -1679,8 +1679,61 @@ local function buildBackDoorAndHall(root: Instance)
             leafCF*CFrame.new(x<0 and 2.06 or -2.06,-.60,-.27),
             Color3.fromRGB(181,153,103),Enum.Material.Metal,false)
     end
-    sign(root,"Welcome over door","EMMA'S CLASSROOM",Vector3.new(10.7,1.20,.16),
+    sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
         CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
+    -- Owner's October 11 iPhone screenshot fixes the doorway topology:
+    -- classroom rear DOUBLE DOORS lead only into a self-contained SUPPLY CLOSET.
+    -- The LEFT doorway (the ABVM staff entrance at x=37) is the ONLY
+    -- classroom-to-school-hall connection. Keep original closet door art
+    -- and the fully preserved 108-stud hallway beyond this sealed room.
+    local closet=Instance.new("Folder")
+    closet.Name="ClassroomSupplyCloset"
+    closet:SetAttribute("Purpose","Classroom supplies only; not a hallway")
+    closet.Parent=root
+    local closetWall=Color3.fromRGB(233,220,178)
+    local closetOak=Color3.fromRGB(126,90,58)
+    local function cp(name:string,size:Vector3,cf:CFrame,
+        color:Color3,material:Enum.Material?,collides:boolean?):Part
+        return part(closet,name,size,cf,color,material,collides)
+    end
+    -- Left/right walls begin behind the original oak doorway jambs and
+    -- run to the closed rear wall. Students may enter this shallow closet,
+    -- but cannot walk through it into the school hallway.
+    for _,x in ipairs({-5.95,5.95}) do
+        cp("Supply closet side wall",Vector3.new(.66,13,8.60),
+            CFrame.new(x,6.5,31.70),closetWall,Enum.Material.SmoothPlastic,true)
+    end
+    cp("Supply closet solid rear wall",Vector3.new(12.48,13,.72),
+        CFrame.new(0,6.5,36.05),closetWall,Enum.Material.SmoothPlastic,true)
+    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,8.33),
+        CFrame.new(0,.529,31.54),Color3.fromRGB(166,133,103),
+        Enum.Material.Wood,false)
+    -- Three realistic shelves and a few colored classroom supply tubs.
+    -- Thin loose props are noncolliding; the rear wall is a true barrier.
+    for i,y in ipairs({3.05,5.50,7.95}) do
+        cp("Supply closet oak shelf",Vector3.new(9.9,.24,1.18),
+            CFrame.new(0,y,34.91),closetOak,Enum.Material.Wood,false)
+        local tub=cp("Supply closet labeled storage tub",
+            Vector3.new(2.28,1.02,.88),
+            CFrame.new((i-2)*2.72,y+.65,34.85),
+            ({Color3.fromRGB(91,134,147),Color3.fromRGB(169,125,113),
+              Color3.fromRGB(117,143,106)})[i],
+            Enum.Material.SmoothPlastic,false)
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="Anonymous classroom supply category"
+        gui.Face=Enum.NormalId.Front
+        gui.CanvasSize=Vector2.new(240,100)
+        gui.Parent=tub
+        local label=Instance.new("TextLabel")
+        label.Name="Supply tub category"
+        label.Size=UDim2.fromScale(1,1)
+        label.BackgroundTransparency=1
+        label.Font=Enum.Font.GothamBold
+        label.TextScaled=true
+        label.TextColor3=Color3.fromRGB(255,251,232)
+        label.Text=({"ART","PAPER","GAMES"})[i]
+        label.Parent=gui
+    end
     -- OWNER-SUPPLIED SIX PHOTOS: corridor architecture, not event-day people.
     -- Long corridor scales and X direction are explicitly PROVISIONAL.
     -- Artistic tile/assignment geometry is authored with SurfaceGui Frames
@@ -1744,10 +1797,11 @@ local function buildBackDoorAndHall(root: Instance)
 
     local rear=hp("Photo hall rear blue-gray wall",Vector3.new(108,13,.90),
         CFrame.new(0,6.5,49.25),blueGray,Enum.Material.SmoothPlastic,true)
-    for _,x in ipairs({-45.5,45.5}) do
-        hp("Photo hall front outer wall",Vector3.new(17,13,.90),
-            CFrame.new(x,6.5,26.95),blueGray,Enum.Material.SmoothPlastic,true)
-    end
+    -- The right (x>37) front corridor wall is deliberately OPEN: the side
+    -- staff entrance now turns into this long hallway without a fake door or
+    -- any collidable partition. Keep the sealed left front end only.
+    hp("Photo hall front outer wall",Vector3.new(17,13,.90),
+        CFrame.new(-45.5,6.5,26.95),blueGray,Enum.Material.SmoothPlastic,true)
     local leftCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
         CFrame.new(-54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
     local rightCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
@@ -1803,11 +1857,11 @@ local function buildBackDoorAndHall(root: Instance)
             Vector3.new(27.85,4.25,.075),CFrame.new(x,2.125,27.66),
             Enum.NormalId.Back)
     end
-    for _,x in ipairs({-45.5,45.5}) do
-        dado("Photo hall front outer glazed brick",
-            Vector3.new(16.75,4.25,.075),CFrame.new(x,2.125,27.66),
-            Enum.NormalId.Back)
-    end
+    -- Don't draw glazed brick across the new hallway entry from the left
+    -- ABVM staff doorway. Only the sealed negative-X wall gets a facing.
+    dado("Photo hall front outer glazed brick",
+        Vector3.new(16.75,4.25,.075),CFrame.new(-45.5,2.125,27.66),
+        Enum.NormalId.Back)
     dado("Photo hall left end glazed brick",
         Vector3.new(.075,4.25,22),CFrame.new(-53.49,2.125,38),
         Enum.NormalId.Right)
@@ -1817,11 +1871,14 @@ local function buildBackDoorAndHall(root: Instance)
     hp("Photo hall rear dado cap",Vector3.new(107.2,.16,.16),
         CFrame.new(0,4.34,48.66),Color3.fromRGB(162,124,79),
         Enum.Material.Wood,false)
-    for _,x in ipairs({-31.5,31.5}) do
-        hp("Photo hall front dado cap",Vector3.new(44.5,.16,.14),
-            CFrame.new(x,4.34,27.73),Color3.fromRGB(162,124,79),
-            Enum.Material.Wood,false)
-    end
+    -- No decorative cap or handrail may float across the 17-stud LEFT
+    -- hallway entry (x=37..54) where the staff corridor bends north.
+    hp("Photo hall front dado cap",Vector3.new(44.5,.16,.14),
+        CFrame.new(-31.5,4.34,27.73),Color3.fromRGB(162,124,79),
+        Enum.Material.Wood,false)
+    hp("Photo hall front dado cap",Vector3.new(27.0,.16,.14),
+        CFrame.new(23,4.34,27.73),Color3.fromRGB(162,124,79),
+        Enum.Material.Wood,false)
 
     -- Both faces of the ACTUAL existing glass leaves receive tiny, anonymous
     -- green shamrock artwork. Four circular UI lobes and one stem each.
@@ -1853,7 +1910,11 @@ local function buildBackDoorAndHall(root: Instance)
     -- Keep the existing structural front wall BEHIND each door; they are
     -- intentionally closed architectural facades, not speculative rooms.
     -- 9 extra noncolliding Parts per door (18 added to the scene total).
-    for _,x in ipairs({-45.5,45.5}) do
+    -- The old second closed facade stood in the corridor entrance at
+    -- x=+45.5, directly in front of the LEFT classroom exit. Relocate
+    -- that anonymous nearby school-door facade to the existing, genuinely
+    -- solid classroom wall at x=+23. The x=45.5 turning route stays OPEN.
+    for _,x in ipairs({-45.5,23.0}) do
         -- Reuse the original physical door Part as its solid bottom panel.
         -- The upper portion is an actual glazing aperture, not a transparent
         -- square stuck over a ten-stud opaque wooden board.
@@ -2080,10 +2141,11 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
     part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
     part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
-    -- Both z ends were entirely open: real iPhone video at 5-7 seconds
-    -- revealed blue sky beside the classroom door and a dangling chair rail.
-    -- Cap only the OUTER corridor ends, not the entrance through x=37.
-    for _,endZ in ipairs({5.65,25.35}) do
+    -- Leave the NORTH end open into the main 108-stud corridor: previously
+    -- the cap at z=25.35 completely blocked the screenshot's LEFT doorway
+    -- from reaching the photographed hall behind the classroom.
+    -- The south z=5.65 end stays a solid, finished boundary.
+    for _,endZ in ipairs({5.65}) do
         local interior = endZ < 15.5 and .53 or -.53
         part(root,"Side corridor end wall",Vector3.new(18,13,.80),
             CFrame.new(45.5,6.5,endZ),P.blueSoft,Enum.Material.SmoothPlastic,true)
@@ -2094,6 +2156,10 @@ local function buildTeacherEntry(root: Instance)
             CFrame.new(45.5,4.30,endZ+interior*1.12),
             P.blue,Enum.Material.Wood,false)
     end
+    -- Bridge the small exterior-wall seam where staff hall meets the
+    -- photo hallway, without narrowing the turning passage.
+    part(root,"Left hallway outside corner return",Vector3.new(.88,13,2.20),
+        CFrame.new(54.12,6.5,26.26),P.blueSoft,Enum.Material.SmoothPlastic,true)
     -- Facing-wall school notices break up the blank corridor without
     -- claiming a photographed or navigable room beyond the capped hall.
     part(root,"Staff hall framed announcement board",Vector3.new(.16,3.35,5.90),
