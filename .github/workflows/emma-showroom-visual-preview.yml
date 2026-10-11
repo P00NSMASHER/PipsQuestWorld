@@ -1,6 +1,17 @@
 name: Emma Classroom Visual Snapshot
 
 on:
+  # The exact-source Luau CI already runs for connected-app branch pushes,
+  # but these can bypass the PR synchronize event. Render geometry at that
+  # very same commit without running the heavy 21-view job on every push.
+  push:
+    branches:
+      - visual/emma-classroom-replica-only-20261008
+    paths:
+      - 'school/emma-classroom/showroom/*.lua'
+      - 'school/emma-classroom/showroom/export_source_scene.py'
+      - 'school/emma-showroom.project.json'
+      - '.github/workflows/emma-showroom-visual-preview.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -14,6 +25,10 @@ permissions:
 
 jobs:
   screenshot-constructed-luau-room:
+    # Full 21 views stay in the existing PR / explicit-manual review gate.
+    # Ordinary branch pushes execute ONLY the fast 4-view job below, reducing
+    # repeated runner time while still producing exact-source visual evidence.
+    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 18
     steps:
@@ -254,6 +269,8 @@ jobs:
 
   # Lightweight 3-camera geometry review runs in parallel with full suite.
   fast-geometry-review:
+    # Read-only, source-derived and independent of the full screenshot job.
+    # Always uses the real committing SHA, never a PR synthetic merge SHA.
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
