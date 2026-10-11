@@ -207,6 +207,8 @@ end
 -- The far-end landmark must be actual 3D geometry on the existing
 -- CLOSED structural end wall. UI-only faux windows were never visible
 -- in independent source-derived screenshots.
+local leftCap=caps[1].Position.X<0 and caps[1] or caps[2]
+assert(leftCap and leftCap.Position.X<0,"PHOTO_HALL_LEFT_ENDCAP_NOT_FOUND")
 local function assertDimensionalEndWindow()
     local glazing=one("Photo hall yellow window glazing")
     assert(not glazing.CanCollide and not glazing.CanQuery
