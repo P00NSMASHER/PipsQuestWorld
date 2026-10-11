@@ -238,7 +238,11 @@ local function checkSheets()
         assert(style==((i-1)%5)+1,
             "PHOTO_HALL_ANONYMOUS_ART_VARIATION_OR_ORDER_LOST")
         local g=gui(p,"Anonymous paper pencil strokes",Enum.NormalId.Front)
-        assert(g.CanvasSize.X==190 and g.CanvasSize.Y==218,
+        -- The standalone Luau constructor harness represents Vector2
+        -- as an array; native Roblox supplies named X/Y fields.
+        local gw=g.CanvasSize.X or g.CanvasSize[1]
+        local gh=g.CanvasSize.Y or g.CanvasSize[2]
+        assert(gw==190 and gh==218,
             "PHOTO_HALL_PAPER_MOBILE_CANVAS_CHANGED")
         local guidelines=0
         local motifs=0
