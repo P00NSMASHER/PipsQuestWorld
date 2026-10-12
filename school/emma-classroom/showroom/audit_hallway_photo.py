@@ -279,7 +279,7 @@ local function checkHallwayBackDoorInfill()
     local header=one("Photo hall rear doorway header exterior blue-gray paint")
     assert(near(header.Position.X,0) and near(header.Position.Y,15.5)
         and near(header.Position.Z,27.565)
-        and near(header.Size.X,18) and near(header.Size.Y,5)
+        and near(header.Size.X,11) and near(header.Size.Y,5)
         and header.Color.B>header.Color.R
         and not header.CanCollide and not header.CanQuery,
         "HALL_INFILL_HEADER_YELLOW_OR_COLLIDING")

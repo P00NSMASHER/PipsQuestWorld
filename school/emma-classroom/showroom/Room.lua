@@ -1898,7 +1898,7 @@ local function buildBackDoorAndHall(root: Instance)
     -- One thin school-facing header facade hides the yellow upper header
     -- from the corridor without recoloring the original interior.
     hp("Photo hall rear doorway header exterior blue-gray paint",
-        Vector3.new(18,5,.09),CFrame.new(0,15.5,27.565),
+        Vector3.new(11,5,.09),CFrame.new(0,15.5,27.565),
         blueGray,Enum.Material.SmoothPlastic,false)
 
     -- Finish the exposed OUTSIDE face of the existing x=37 staff doorway
