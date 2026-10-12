@@ -34,6 +34,10 @@ else
     }
 end
 local sessions={}
+-- PlayerAdded and the startup GetPlayers sweep can observe the same arrival
+-- while GetAsync is yielding. Track the owning Player instance so one live
+-- join consumes one read, while a departed owner never blocks a reconnect.
+local joining={}
 local SESSION_GOAL=10
 local DATASTORE_ATTEMPTS=4
 local DATASTORE_RETRY_SECONDS=.35
@@ -356,17 +360,22 @@ request.OnServerInvoke=function(player,command,args)
 end
 
 local function join(player)
-    -- PlayerAdded is connected before the startup GetPlayers sweep. A player
-    -- arriving on that boundary can be observed by both paths; never launch a
-    -- second load once this server already owns an active session.
-    if sessions[player.UserId] then return end
+    local userId=player.UserId
+    if sessions[userId] then return end
+    local activeJoin=joining[userId]
+    -- The same live Player can arrive through PlayerAdded and the startup
+    -- sweep. Do not spend a second DataStore read while the first is in flight.
+    if activeJoin and activeJoin.player.Parent==Players then return end
+    local ticket={player=player}
+    joining[userId]=ticket
     local saved=loadProgress(player)
-    -- Two loads can still overlap before either one publishes its session.
-    -- Whichever completed first owns the live session; a later stale read must
-    -- not reset in-memory answers earned while it was yielding.
-    if not saved or sessions[player.UserId] then return end
+    -- PlayerRemoving may release this ticket so a rapid reconnect can take
+    -- ownership. A late read from the departed Player must never publish.
+    if joining[userId]~=ticket then return end
+    joining[userId]=nil
+    if not saved or sessions[userId] then return end
     local s={player=player,stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
-    sessions[player.UserId]=s
+    sessions[userId]=s
     local function place(character)
         local root=character:WaitForChild("HumanoidRootPart",10)
         if root then character:PivotTo(World.Spawn) end
@@ -384,6 +393,8 @@ end
 Players.PlayerAdded:Connect(join)
 for _,p in ipairs(Players:GetPlayers()) do task.spawn(join,p) end
 Players.PlayerRemoving:Connect(function(player)
+    local activeJoin=joining[player.UserId]
+    if activeJoin and activeJoin.player==player then joining[player.UserId]=nil end
     local s=sessions[player.UserId]
     -- Release only this Player instance before the bounded write. A rapid
     -- reconnect must be allowed to load while the departing save waits, and a
