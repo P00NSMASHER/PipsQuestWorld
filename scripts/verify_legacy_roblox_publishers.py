@@ -4,14 +4,9 @@
 This audits the default-branch PR tree and the original deployment/installer refs.
 It NEVER uses a Roblox credential and NEVER contacts the Roblox API.
 """
-import base64
-import json
-import os
 from pathlib import Path
+import subprocess
 import sys
-from urllib.error import HTTPError
-from urllib.parse import quote
-from urllib.request import Request, urlopen
 
 OLD_UNIVERSE = "10768955678"
 OLD_PLACE = "87245440673982"
@@ -49,38 +44,41 @@ def check(condition, message):
     if not condition:
         raise RuntimeError(message)
 
-def github_json(api_path):
-    repo = os.environ.get("GITHUB_REPOSITORY", "P00NSMASHER/PipsQuestWorld")
-    url = "https://api.github.com/repos/" + repo + "/" + api_path
-    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
-    token = os.environ.get("GITHUB_TOKEN", "")
-    if token:
-        headers["Authorization"] = "Bearer " + token
-    request = Request(url, headers=headers)
-    try:
-        with urlopen(request, timeout=18) as response:
-            return json.load(response)
-    except HTTPError as error:
-        if error.code == 404:
-            return None  # A removed historical branch or file cannot publish.
-        raise
+def git_output(*args):
+    result = subprocess.run(
+        ["git", *args], capture_output=True, text=True, check=True, timeout=60
+    )
+    return result.stdout
+
+def fetch_remote_branch(branch):
+    # Read-only shallow partial fetch; preserves checkout's authenticated transport.
+    remote_ref = "refs/remotes/origin/" + branch
+    subprocess.run(
+        ["git", "-c", "protocol.version=2", "fetch",
+         "--no-tags", "--quiet", "--depth=1", "--filter=blob:none",
+         "origin", "+refs/heads/" + branch + ":" + remote_ref],
+        capture_output=True, text=True, check=True, timeout=120
+    )
+    return remote_ref
 
 def fetch_file(branch, name):
-    path = "contents/.github/workflows/" + quote(name, safe="")
-    ref = "?ref=" + quote(branch, safe="")
-    data = github_json(path + ref)
-    if data is None:
-        return None
-    check(data.get("encoding") == "base64", "Unexpected GitHub file encoding: " + branch + "/" + name)
-    body = base64.b64decode(data["content"]).decode("utf-8")
-    return data["sha"], body
+    ref = "refs/remotes/origin/" + branch
+    path = ".github/workflows/" + name
+    try:
+        sha = git_output("rev-parse", ref + ":" + path).strip()
+        body = git_output("show", ref + ":" + path)
+        return sha, body
+    except subprocess.CalledProcessError:
+        return None  # Deleted old workflow is inherently safe.
 
 def branch_workflow_names(branch):
-    data = github_json("contents/.github/workflows?ref=" + quote(branch, safe=""))
-    if data is None:
-        return set()
-    check(isinstance(data, list), "Unexpected workflow listing for " + branch)
-    return {entry["name"] for entry in data if entry.get("type") == "file" and entry["name"].endswith((".yml", ".yaml"))}
+    ref = fetch_remote_branch(branch)
+    paths = git_output("ls-tree", "-r", "--name-only", ref, ".github/workflows").splitlines()
+    return {
+        name[len(".github/workflows/"):]
+        for name in paths
+        if name.startswith(".github/workflows/") and name.endswith((".yml", ".yaml"))
+    }
 
 def audit_retired(branch, file, sha, body):
     identity = branch + "/" + file
@@ -134,6 +132,7 @@ def audit_emma(body):
     check(OLD_PLACE not in body and OLD_UNIVERSE not in body, "Emma publisher targeting old place")
 
 def audit_current_emma():
+    fetch_remote_branch(EMMA_BRANCH)
     remote = fetch_file(EMMA_BRANCH, EMMA_FILE)
     check(remote is not None, "Current Emma publisher missing")
     audit_emma(remote[1])
