@@ -326,37 +326,50 @@ assert(saved["u:4"].totalCorrect==1 and saved["u:4"].sessionsCompleted==2,"Norma
 assert(saved["u:4"].skills.broken==nil and saved["u:4"].skills[""]==nil,"Malformed skill rows must be healed, not recopied")
 assert(saved["u:4"].skills.reading.correct==0 and saved["u:4"].skills.spelling.correct==3,"Valid legacy skills remain monotonic and nonnegative")
 
--- PlayerAdded and the startup GetPlayers sweep can observe the same arrival.
--- If the first load becomes playable while the older read is still yielding,
--- that stale completion must not replace the active session and erase progress.
+-- PlayerAdded and the startup GetPlayers sweep can observe the same arrival
+-- while GetAsync is yielded. The second path must reuse the in-flight owner,
+-- not spend another read or expose an incomplete session.
 local duplicate={UserId=6,CharacterAdded=signal(),Parent=Players}
 saved["u:6"]={totalCorrect=8,sessionsCompleted=0,skills={}}
+local duplicateLoads=getAttempts
 getHook=function()
     Players.PlayerAdded.callback(duplicate)
-    assert(requests.OnServerInvoke(duplicate,"state").progress.totalCorrect==8)
-    flush()
-    local active=requests.OnServerInvoke(duplicate,"state").question
-    local activeRaw
-    for _,candidate in ipairs(Questions) do
-        if candidate.prompt==active.prompt and candidate.subject==active.subject then activeRaw=candidate;break end
-    end
-    assert(activeRaw)
-    assert(requests.OnServerInvoke(duplicate,"answer",{token=active.token,index=table.find(active.choices,activeRaw.answer)}).correct)
-    flush()
-    assert(saved["u:6"].totalCorrect==9,"First completed join must persist its earned answer")
+    assert(not requests.OnServerInvoke(duplicate,"state").ok,"Duplicate startup join must wait for the owning load")
 end
 Players.PlayerAdded.callback(duplicate)
+assert(getAttempts==duplicateLoads+1,"One live arrival must consume exactly one DataStore read")
 local duplicateState=requests.OnServerInvoke(duplicate,"state")
-assert(duplicateState.progress.totalCorrect==9,"Late duplicate join must not reset the active session")
+assert(duplicateState.progress.totalCorrect==8,"Owning join must publish the saved progress")
+flush()
+local active=requests.OnServerInvoke(duplicate,"state").question
+local activeRaw
+for _,candidate in ipairs(Questions) do
+    if candidate.prompt==active.prompt and candidate.subject==active.subject then activeRaw=candidate;break end
+end
+assert(activeRaw)
+assert(requests.OnServerInvoke(duplicate,"answer",{token=active.token,index=table.find(active.choices,activeRaw.answer)}).correct)
+flush()
+assert(saved["u:6"].totalCorrect==9 and requests.OnServerInvoke(duplicate,"state").progress.totalCorrect==9,
+    "Join deduplication must preserve earned progress")
 
--- A DataStore read can finish after PlayerRemoving already ran. That late
--- success must not recreate a ghost session for a player who left mid-load.
+-- A departed in-flight owner must release its ticket immediately. A rapid
+-- reconnect with the same UserId can load, while the old result is discarded.
 local departed={UserId=5,CharacterAdded=signal(),Parent=Players}
+local replacement
 saved["u:5"]={totalCorrect=12,sessionsCompleted=1,skills={math={correct=12}}}
 disconnectOnGet=departed
+getHook=function()
+    replacement={UserId=5,CharacterAdded=signal(),Parent=Players}
+    Players.PlayerAdded.callback(replacement)
+end
+local reconnectLoads=getAttempts
 Players.PlayerAdded.callback(departed)
+assert(getAttempts==reconnectLoads+2,"Departed owner and replacement each require one distinct read")
 local departedState=requests.OnServerInvoke(departed,"state")
 assert(not departedState.ok,"A late load must not resurrect a departed player's session")
+local replacementState=requests.OnServerInvoke(replacement,"state")
+assert(replacementState.ok and replacementState.progress.totalCorrect==12,
+    "Departed owner must not block the replacement player's load")
 
 -- Fresh unpublished local place: Roblox throws from GetDataStore before join.
 -- The server must still start its study game, while keeping saved data
