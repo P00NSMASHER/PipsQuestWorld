@@ -53,6 +53,23 @@ local function retryDataStore(operationName,operation)
     return false,nil
 end
 
+local function normalizeCount(value)
+    local n=tonumber(value)
+    if not n or n~=n or n==math.huge or n==-math.huge then return 0 end
+    return math.max(0,math.floor(n))
+end
+
+local function normalizeSkills(value)
+    local clean={}
+    if type(value)~="table" then return clean end
+    for skillName,storedSkill in pairs(value) do
+        if type(skillName)=="string" and skillName~="" and type(storedSkill)=="table" then
+            clean[skillName]={correct=normalizeCount(storedSkill.correct)}
+        end
+    end
+    return clean
+end
+
 local function shuffle(list)
     local out=table.clone(list)
     for i=#out,2,-1 do local j=math.random(1,i);out[i],out[j]=out[j],out[i] end
@@ -74,9 +91,11 @@ local function loadProgress(player)
         if ok then
             local data={totalCorrect=0,sessionsCompleted=0,skills={}}
             if type(result)=="table" then
-                data.totalCorrect=tonumber(result.totalCorrect) or 0
-                data.sessionsCompleted=tonumber(result.sessionsCompleted) or 0
-                data.skills=type(result.skills)=="table" and result.skills or {}
+                -- Treat DataStore bytes as untrusted legacy input. One damaged
+                -- skill row must never make every future save fail.
+                data.totalCorrect=normalizeCount(result.totalCorrect)
+                data.sessionsCompleted=normalizeCount(result.sessionsCompleted)
+                data.skills=normalizeSkills(result.skills)
             end
             return data
         end
@@ -100,17 +119,21 @@ local function saveProgress(player,s,awaitCompletion:boolean?)
         return retryDataStore("progress save",function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
-                old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,target.totalCorrect)
-                old.sessionsCompleted=math.max(tonumber(old.sessionsCompleted) or 0,target.sessionsCompleted)
-                local mergedSkills=type(old.skills)=="table" and table.clone(old.skills) or {}
+                old.totalCorrect=math.max(normalizeCount(old.totalCorrect),normalizeCount(target.totalCorrect))
+                old.sessionsCompleted=math.max(normalizeCount(old.sessionsCompleted),normalizeCount(target.sessionsCompleted))
+                -- Heal malformed legacy rows instead of copying them back to
+                -- the store forever. Valid skill tables remain monotonic.
+                local mergedSkills=normalizeSkills(old.skills)
                 for skillName,snapshotSkill in pairs(target.skills) do
-                    local oldSkill=type(mergedSkills[skillName])=="table" and mergedSkills[skillName] or {}
-                    local nextSkill=table.clone(oldSkill)
-                    nextSkill.correct=math.max(
-                        tonumber(oldSkill.correct) or 0,
-                        tonumber(snapshotSkill.correct) or 0
-                    )
-                    mergedSkills[skillName]=nextSkill
+                    if type(skillName)=="string" and skillName~="" and type(snapshotSkill)=="table" then
+                        local oldSkill=mergedSkills[skillName] or {}
+                        local nextSkill=table.clone(oldSkill)
+                        nextSkill.correct=math.max(
+                            normalizeCount(oldSkill.correct),
+                            normalizeCount(snapshotSkill.correct)
+                        )
+                        mergedSkills[skillName]=nextSkill
+                    end
                 end
                 old.skills=mergedSkills
                 old.updatedAt=os.time()

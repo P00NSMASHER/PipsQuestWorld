@@ -267,6 +267,35 @@ Players.PlayerRemoving.callback(player);flush()
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
+-- A malformed legacy record must load fail-closed, remain playable, and heal
+-- on the next write instead of crashing every future persistence attempt.
+saved["u:4"]={
+    totalCorrect=-9,
+    sessionsCompleted="2",
+    skills={
+        [""]={correct=99},
+        broken="not-a-table",
+        reading={correct=-4},
+        spelling={correct="3"},
+    },
+}
+local legacy={UserId=4,CharacterAdded=signal(),Parent=Players}
+Players.PlayerAdded.callback(legacy)
+local legacyState=requests.OnServerInvoke(legacy,"state")
+assert(legacyState.progress.totalCorrect==0 and legacyState.sessionsCompleted==2,"Legacy counters must be normalized without inventing progress")
+flush()
+local legacyQuestion=requests.OnServerInvoke(legacy,"state").question
+local legacyRaw
+for _,candidate in ipairs(Questions) do
+    if candidate.prompt==legacyQuestion.prompt and candidate.subject==legacyQuestion.subject then legacyRaw=candidate;break end
+end
+assert(legacyRaw)
+assert(requests.OnServerInvoke(legacy,"answer",{token=legacyQuestion.token,index=table.find(legacyQuestion.choices,legacyRaw.answer)}).correct)
+flush()
+assert(saved["u:4"].totalCorrect==1 and saved["u:4"].sessionsCompleted==2,"Normalized legacy record must save new progress")
+assert(saved["u:4"].skills.broken==nil and saved["u:4"].skills[""]==nil,"Malformed skill rows must be healed, not recopied")
+assert(saved["u:4"].skills.reading.correct==0 and saved["u:4"].skills.spelling.correct==3,"Valid legacy skills remain monotonic and nonnegative")
+
 -- Fresh unpublished local place: Roblox throws from GetDataStore before join.
 -- The server must still start its study game, while keeping saved data
 -- absolutely isolated from the published production DataStore adapter.
