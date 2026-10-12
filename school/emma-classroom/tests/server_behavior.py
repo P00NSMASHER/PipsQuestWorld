@@ -22,6 +22,7 @@ local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
 local getFailures,updateFailures,getAttempts,updateAttempts=5,0,0,0
 local disconnectOnGet
 local getHook
+local updateHook
 local studioMode=false
 local store={
     GetAsync=function(_,key)
@@ -44,6 +45,9 @@ local store={
     UpdateAsync=function(_,key,f)
         updateAttempts+=1
         if updateFailures>0 then updateFailures-=1;error("forced transient UpdateAsync failure") end
+        if updateHook then
+            local hook=updateHook;updateHook=nil;hook()
+        end
         saved[key]=f(saved[key]);return saved[key]
     end,
 }
@@ -277,7 +281,19 @@ assert(saved["u:1"].totalCorrect==14 and saved["u:1"].sessionsCompleted==1)
 saved["u:1"].totalCorrect=20
 saved["u:1"].sessionsCompleted=3
 saved["u:1"].skills.legacy={correct=9}
+-- PlayerRemoving performs a bounded synchronous write. A rapid reconnect can
+-- arrive while that UpdateAsync is yielded: it must claim a fresh session,
+-- and the old callback must neither reject nor clear the replacement.
+local rejoined
+updateHook=function()
+    rejoined={UserId=1,CharacterAdded=signal(),Parent=Players}
+    Players.PlayerAdded.callback(rejoined)
+    local rejoinedState=requests.OnServerInvoke(rejoined,"state")
+    assert(rejoinedState.ok and rejoinedState.progress.totalCorrect==20,"Reconnect must load while departing save is in flight")
+end
+player.Parent=nil
 Players.PlayerRemoving.callback(player);flush()
+assert(rejoined and requests.OnServerInvoke(rejoined,"state").ok,"Departing callback must preserve the replacement session")
 assert(saved["u:1"].totalCorrect==20,"Stale save cannot regress lifetime total")
 assert(saved["u:1"].sessionsCompleted==3,"Stale save cannot regress completed sessions")
 assert(saved["u:1"].skills.legacy.correct==9,"Stale save must preserve newer skill progress")
