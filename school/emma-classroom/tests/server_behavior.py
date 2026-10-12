@@ -20,11 +20,17 @@ local Players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function(
 player.Parent=Players
 local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
 local getFailures,updateFailures,getAttempts,updateAttempts=5,0,0,0
+local disconnectOnGet
 local studioMode=false
 local store={
     GetAsync=function(_,key)
         getAttempts+=1
         if getFailures>0 then getFailures-=1;error("forced transient GetAsync failure") end
+        if disconnectOnGet then
+            local departing=disconnectOnGet;disconnectOnGet=nil
+            departing.Parent=nil
+            Players.PlayerRemoving.callback(departing)
+        end
         return saved[key]
     end,
     UpdateAsync=function(_,key,f)
@@ -295,6 +301,15 @@ flush()
 assert(saved["u:4"].totalCorrect==1 and saved["u:4"].sessionsCompleted==2,"Normalized legacy record must save new progress")
 assert(saved["u:4"].skills.broken==nil and saved["u:4"].skills[""]==nil,"Malformed skill rows must be healed, not recopied")
 assert(saved["u:4"].skills.reading.correct==0 and saved["u:4"].skills.spelling.correct==3,"Valid legacy skills remain monotonic and nonnegative")
+
+-- A DataStore read can finish after PlayerRemoving already ran. That late
+-- success must not recreate a ghost session for a player who left mid-load.
+local departed={UserId=5,CharacterAdded=signal(),Parent=Players}
+saved["u:5"]={totalCorrect=12,sessionsCompleted=1,skills={math={correct=12}}}
+disconnectOnGet=departed
+Players.PlayerAdded.callback(departed)
+local departedState=requests.OnServerInvoke(departed,"state")
+assert(not departedState.ok,"A late load must not resurrect a departed player's session")
 
 -- Fresh unpublished local place: Roblox throws from GetDataStore before join.
 -- The server must still start its study game, while keeping saved data

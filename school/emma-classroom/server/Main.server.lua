@@ -89,6 +89,10 @@ local function loadProgress(player)
             return store:GetAsync("u:"..player.UserId)
         end)
         if ok then
+            -- GetAsync can yield long enough for PlayerRemoving to run before
+            -- this join finishes. Never resurrect a departed player's session
+            -- from a late successful read.
+            if player.Parent~=Players then return nil end
             local data={totalCorrect=0,sessionsCompleted=0,skills={}}
             if type(result)=="table" then
                 -- Treat DataStore bytes as untrusted legacy input. One damaged
