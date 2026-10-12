@@ -80,7 +80,7 @@ expect("Open classroom door",2)
 local function checkExteriorStaffReturn()
     local upper=expect("Photo hall classroom exterior blue-gray paint",2)
     for _,p in ipairs(upper) do
-        assert(near(p.Size.Y,13.5) and near(p.Position.Y,11.25)
+        assert(near(p.Size.Y,13.75) and near(p.Position.Y,11.125)
             and p.Material==Enum.Material.SmoothPlastic
             and not p.CanCollide and not p.CanQuery,
             "HALL_UPPER_REAR_CLASSROOM_YELLOW_BAND_RETURNED")
