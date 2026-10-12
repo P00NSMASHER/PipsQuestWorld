@@ -1719,21 +1719,69 @@ local function buildBackDoorAndHall(root: Instance)
     closet.Name="ClassroomSupplyCloset"
     closet:SetAttribute("Purpose","Classroom supplies only; not a hallway")
     closet.Parent=root
-    local closetWall=Color3.fromRGB(233,220,178)
+    -- Closet interior: warm classroom plaster. Exterior: exposed to the
+    -- photographed blue-gray/ochre-brick school hallway. The old single
+    -- pale-yellow wall color was visible as an enormous featureless beige
+    -- freestanding box from the REAL hallway; fixing only its camera would
+    -- mask the game's visual problem instead of improving the geometry.
+    --
+    -- Keep the THREE original collidable walls and their exact world
+    -- positions/seals. Only their outside base color changes. Native,
+    -- physically thin NONCOLLIDING finish skins preserve the original warm
+    -- closet interior and establish the same glazed-brick dado/wood cap
+    -- treatment as the school corridor. No user photo/texture upload.
+    local closetInterior=Color3.fromRGB(233,220,178)
+    local closetExterior=Color3.fromRGB(107,117,125)
+    local closetBrick=Color3.fromRGB(192,132,63)
     local closetOak=Color3.fromRGB(126,90,58)
     local function cp(name:string,size:Vector3,cf:CFrame,
         color:Color3,material:Enum.Material?,collides:boolean?):Part
         return part(closet,name,size,cf,color,material,collides)
     end
-    -- Left/right walls begin behind the original oak doorway jambs and
-    -- run to the closed rear wall. Students may enter this shallow closet,
-    -- but cannot walk through it into the school hallway.
+    local function finish(name:string,size:Vector3,cf:CFrame,
+        color:Color3,material:Enum.Material):Part
+        local skin=cp(name,size,cf,color,material,false)
+        skin.CanQuery=false
+        skin.CanTouch=false
+        skin.CastShadow=false
+        return skin
+    end
+    -- Original side and back walls remain sealed and are the ONLY
+    -- colliders. Child-eye wallpaper/trim cannot create hidden obstacles.
     for _,x in ipairs({-5.95,5.95}) do
         cp("Supply closet side wall",Vector3.new(.66,13,8.60),
-            CFrame.new(x,6.5,31.70),closetWall,Enum.Material.SmoothPlastic,true)
+            CFrame.new(x,6.5,31.70),closetExterior,
+            Enum.Material.SmoothPlastic,true)
+        local side=(x<0) and -1 or 1
+        finish("Supply closet interior warm plaster",
+            Vector3.new(.08,13,8.46),
+            CFrame.new(x-side*.375,6.5,31.70),
+            closetInterior,Enum.Material.SmoothPlastic)
+        -- Brick and thin timber rail face OUT into the photographed
+        -- corridor, not into the storage closet or its double doorway.
+        local brick=finish("Supply closet exterior glazed-brick dado",
+            Vector3.new(.09,4.26,8.52),
+            CFrame.new(x+side*.395,2.13,31.70),
+            closetBrick,Enum.Material.Brick)
+        brick.Reflectance=.035
+        finish("Supply closet exterior oak cap rail",
+            Vector3.new(.13,.15,8.52),
+            CFrame.new(x+side*.435,4.35,31.70),
+            Color3.fromRGB(112,77,50),Enum.Material.Wood)
     end
     cp("Supply closet solid rear wall",Vector3.new(12.48,13,.72),
-        CFrame.new(0,6.5,36.05),closetWall,Enum.Material.SmoothPlastic,true)
+        CFrame.new(0,6.5,36.05),closetExterior,
+        Enum.Material.SmoothPlastic,true)
+    finish("Supply closet interior warm plaster",Vector3.new(12.24,13,.08),
+        CFrame.new(0,6.5,35.645),
+        closetInterior,Enum.Material.SmoothPlastic)
+    local backBrick=finish("Supply closet exterior glazed-brick dado",
+        Vector3.new(12.40,4.26,.09),CFrame.new(0,2.13,36.455),
+        closetBrick,Enum.Material.Brick)
+    backBrick.Reflectance=.035
+    finish("Supply closet exterior oak cap rail",
+        Vector3.new(12.40,.15,.13),CFrame.new(0,4.35,36.48),
+        Color3.fromRGB(112,77,50),Enum.Material.Wood)
     cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,8.33),
         CFrame.new(0,.529,31.54),Color3.fromRGB(166,133,103),
         Enum.Material.Wood,false)
