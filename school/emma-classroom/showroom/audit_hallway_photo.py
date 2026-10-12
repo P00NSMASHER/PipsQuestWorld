@@ -188,6 +188,115 @@ checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
     .."closet_walls=3 shelves=3 rear_wall_mutation_rejected=true")
+
+-- Source-rendered camera 22 revealed the genuine gameplay problem: the
+-- solid closet's beige unpainted exterior projected as an enormous box
+-- into the photographed blue-gray/ochre corridor. This audit verifies
+-- the REAL room constructor now finishes all exposed faces without hiding
+-- the actual closet, weakening its seals or making decorative skins solid.
+local function sameColor(actual,want)
+    return math.abs(actual.R-want.R)<.015
+       and math.abs(actual.G-want.G)<.015
+       and math.abs(actual.B-want.B)<.015
+end
+local function checkClosetHallFinishes()
+    local exterior=Color3.fromRGB(107,117,125)
+    local cream=Color3.fromRGB(233,220,178)
+    local amber=Color3.fromRGB(192,132,63)
+    local baseSides=expect("Supply closet side wall",2)
+    local baseRear=one("Supply closet solid rear wall")
+    for _,p in ipairs(baseSides) do
+        assert(p.CanCollide and sameColor(p.Color,exterior)
+            and p.Material==Enum.Material.SmoothPlastic,
+            "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED")
+    end
+    assert(baseRear.CanCollide and sameColor(baseRear.Color,exterior),
+        "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED")
+
+    local inside=expect("Supply closet interior warm plaster",3)
+    table.sort(inside,function(a,b)return a.Position.X<b.Position.X end)
+    assert(near(inside[1].Position.X,-5.575)
+        and near(inside[2].Position.X,0)
+        and near(inside[3].Position.X,5.575)
+        and near(inside[2].Position.Z,35.645),
+        "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING")
+    for _,p in ipairs(inside) do
+        assert(sameColor(p.Color,cream)
+            and p.Material==Enum.Material.SmoothPlastic
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING_OR_BLOCKING")
+    end
+
+    local dado=expect("Supply closet exterior glazed-brick dado",3)
+    table.sort(dado,function(a,b)return a.Position.X<b.Position.X end)
+    assert(near(dado[1].Position.X,-6.345)
+        and near(dado[2].Position.X,0)
+        and near(dado[3].Position.X,6.345)
+        and near(dado[2].Position.Z,36.455),
+        "SUPPLY_CLOSET_DADO_NOT_FACING_REAL_HALL")
+    for _,p in ipairs(dado) do
+        assert(sameColor(p.Color,amber)
+            and p.Material==Enum.Material.Brick
+            and near(p.Size.Y,4.26)
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_FINISH_COLLIDER_OR_WRONG_BRICK")
+    end
+
+    local trim=expect("Supply closet exterior oak cap rail",3)
+    for _,p in ipairs(trim) do
+        assert(p.Material==Enum.Material.Wood
+            and near(p.Position.Y,4.35)
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_EXTERIOR_CAP_RAIL_LOST")
+    end
+    local parts=0
+    for _,obj in ipairs(Room.Root:GetDescendants()) do
+        if obj:IsA("BasePart") then parts+=1 end
+    end
+    assert(parts<=3050,"SUPPLY_CLOSET_FINISH_MOBILE_BUDGET_REGRESSED")
+    return baseRear,inside,dado,trim,parts
+end
+
+local extBack,insideFinish,brickFinish,capFinish,finishedCount=
+    checkClosetHallFinishes()
+local oldExtColor=extBack.Color
+extBack.Color=Color3.fromRGB(233,220,178)
+local okFinish,errFinish=pcall(checkClosetHallFinishes)
+extBack.Color=oldExtColor
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED",1,true),
+    "CLOSET_OLD_BEIGE_EXTERIOR_FALSELY_ACCEPTED")
+
+local oldBrickCollider=brickFinish[1].CanCollide
+brickFinish[1].CanCollide=true
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+brickFinish[1].CanCollide=oldBrickCollider
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_FINISH_COLLIDER_OR_WRONG_BRICK",1,true),
+    "CLOSET_BRICK_WALKWAY_COLLIDER_FALSELY_ACCEPTED")
+
+local oldInsideX=insideFinish[1].Position
+insideFinish[1].Position=Vector3.new(-4.70,6.5,31.70)
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+insideFinish[1].Position=oldInsideX
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING",1,true),
+    "CLOSET_WARM_INTERIOR_FALSELY_ACCEPTED")
+
+local oldCapName=capFinish[1].Name
+capFinish[1].Name="test-only removed exterior oak cap"
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+capFinish[1].Name=oldCapName
+assert(not okFinish and string.find(tostring(errFinish),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "CLOSET_CAP_MISSING_FALSELY_ACCEPTED")
+checkClosetHallFinishes()
+print("CLOSET_HALL_EXTERIOR_FINISH_SOURCE_PASS exterior_blue_gray=true "
+    .."ochre_native_brick_dado=3 oak_caps=3 "
+    .."interior_warm_plaster=3 original_three_closure_walls=true "
+    .."nine_new_decorative_parts=true part_count="..finishedCount
+    .." occlusion_color_and_collision_mutations_rejected=true "
+    .."native_iphone_review_still_required=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)
