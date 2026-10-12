@@ -215,6 +215,17 @@ jobs:
           python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Audit submerged chair geometry and reserve 70 mobile Parts of headroom
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Four buried caps per 16 student chairs + the purple corner chair. 
+          # Inspect ACTUAL Luau-constructed legs and enforce 68 invisible Parts
+          # stay removed; reject five independent regression mutations.
+          python3 school/emma-classroom/showroom/audit_buried_chair_parts.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "BURIED_CHAIR_MOBILE_OPTIMIZATION_CI_PASS source_only=true native_phone_pending=true"
+
       - name: Verify Emma's single purple corner chair and child-safe placement
         shell: bash
         run: |

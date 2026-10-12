@@ -233,9 +233,16 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
                 CFrame.new(x+dx,.76,z+dz)*CFrame.Angles(0,0,math.pi/2),
                 P.metal,Enum.Material.Metal,true)
-            cylinder(parent,name.." rubber foot",Vector3.new(.19,.20,.20),
-                CFrame.new(x+dx,.13,z+dz)*CFrame.Angles(0,0,math.pi/2),
-                P.ink,Enum.Material.SmoothPlastic,false)
+            -- Source-constructed geometry audit: the former decorative
+            -- .19-stud rubber foot was centered at y=.13 with a rotated
+            -- vertical half-extent .095; its top (.225) was entirely
+            -- BELOW the finished classroom floor top (.50). All four per
+            -- normal student chair (64 across 16 desks) PLUS the one
+            -- purple corner chair (4 more) were permanently hidden and
+            -- noncolliding, yet cost Roblox 68 replicated Parts.
+            -- The full metal leg remains collidable, reaches down through
+            -- the finished floor, and provides the identical visible shape
+            -- and walking physics. Do not recreate submerged micro-parts.
         end
         cylinder(parent,name.." back support",Vector3.new(2.20,.13,.13),
             CFrame.new(x+dx,2.47,z+.73)*CFrame.Angles(0,0,math.pi/2),
@@ -2154,8 +2161,53 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,8.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,22.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door header",Vector3.new(1.3,1.0,15.4),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    local door=part(root,"Open staff classroom door",Vector3.new(.55,10,6.6),CFrame.new(35.9,5.3,20.2)*CFrame.Angles(0,math.rad(58),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
-    local glass=part(root,"Staff door glass",Vector3.new(.18,4.7,3.1),door.CFrame*CFrame.new(-.35,1.6,0),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.28
+    -- The sole route from Emma's classroom into the long photo hallway
+    -- uses this left/staff entrance. The old transparent glass was overlaid
+    -- on a FULL-HEIGHT OPAQUE WOOD slab, so no light could pass through it.
+    -- Preserve the original 58-degree open-leaf hinge and 6.6-stud width;
+    -- repurpose the existing door Part into the lower solid panel. Construct
+    -- a real open aperture ABOVE it with just six additional noncolliding
+    -- wood/metal pieces, staying below the 3,100-Part mobile ceiling.
+    local leafCF=CFrame.new(35.9,5.3,20.2)*
+        CFrame.Angles(0,math.rad(58),0)
+    local frameOak=Color3.fromRGB(115,80,52)
+    local door=part(root,"Open staff classroom door",
+        Vector3.new(.55,4.30,6.6),leafCF*CFrame.new(0,-2.85,0),
+        Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
+    door:SetAttribute("StaffDoorPanel","Lower opaque wood; upper true glass aperture")
+    local glass=part(root,"Staff door glass",
+        Vector3.new(.16,4.32,4.60),leafCF*CFrame.new(-.38,1.64,0),
+        Color3.fromRGB(206,219,216),Enum.Material.Glass,false)
+    glass.Transparency=.28
+    glass.Reflectance=.025
+    glass.CastShadow=false
+    glass:SetAttribute("GlazedOpening","No full-height opaque wood behind the glass")
+    -- Continuous sill and head rail frame a genuinely empty glass opening.
+    -- The original bottom/top of the leaf stay at y=.30 and y=10.30.
+    for _,rail in ipairs({
+        {type="Sill",y=-.65,height=.40},
+        {type="Head",y=4.35,height=1.40},
+    }) do
+        local p=part(root,"Staff door oak rail",
+            Vector3.new(.55,rail.height,6.6),
+            leafCF*CFrame.new(0,rail.y,0),
+            frameOak,Enum.Material.Wood,false)
+        p:SetAttribute("StaffDoorRail",rail.type)
+    end
+    for _,dz in ipairs({-2.80,2.80}) do
+        part(root,"Staff door oak side stile",
+            Vector3.new(.54,4.32,1.00),
+            leafCF*CFrame.new(-.02,1.64,dz),
+            frameOak,Enum.Material.Wood,false)
+    end
+    -- Thin real oak crossbar and single vertical brass pull read correctly
+    -- in the 3D source renderer (unlike a SurfaceGui-only door drawing).
+    part(root,"Staff door glazing crossbar",
+        Vector3.new(.16,.18,4.64),leafCF*CFrame.new(-.49,1.64,0),
+        Color3.fromRGB(122,86,56),Enum.Material.Wood,false)
+    part(root,"Staff door brass pull",
+        Vector3.new(.15,.72,.16),leafCF*CFrame.new(-.50,-1.20,-2.60),
+        Color3.fromRGB(190,160,100),Enum.Material.Metal,false)
     -- The photo corridor starts at z=26.75; the old staff hallway floor
     -- ended at z=25.5, leaving a 1.25-stud unsupported gap at the ONLY
     -- classroom-to-hall exit. Extend the existing floor north to z=27.30
