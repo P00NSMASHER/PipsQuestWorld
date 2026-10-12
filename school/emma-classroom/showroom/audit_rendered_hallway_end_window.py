@@ -34,6 +34,29 @@ GLASS_AREAS = {
 SUN_REGION = (920, 484, 1001, 532)
 SUN_CENTER_REGION = (948, 496, 975, 519)
 
+# The original 07 camera at x=0 was obstructed by the rear supply
+# closet wall. The reviewed x=-6 diagnostic camera looks at the SAME
+# physical yellow window from a closer position. Pixel checks must
+# move/scale with this known camera instead of failing because the
+# unchanged real architectural frame grows in perspective.
+REFERENCE_CAMERA_X = 0.0
+REVIEW_CAMERA_X = -6.0
+WINDOW_TARGET_X = -54.0
+PERSPECTIVE_SCALE = (REFERENCE_CAMERA_X-WINDOW_TARGET_X) / (
+    REVIEW_CAMERA_X-WINDOW_TARGET_X)
+WINDOW_ANCHOR = (960, 540)
+
+
+def scaled_point(x: float, y: float) -> tuple[int, int]:
+    return (round(WINDOW_ANCHOR[0] + (x-WINDOW_ANCHOR[0])*PERSPECTIVE_SCALE),
+            round(WINDOW_ANCHOR[1] + (y-WINDOW_ANCHOR[1])*PERSPECTIVE_SCALE))
+
+
+def scaled_rect(box: tuple[int, int, int, int]) -> tuple[int, int, int, int]:
+    x0, y0, x1, y1 = box
+    return (*scaled_point(x0, y0), *scaled_point(x1, y1))
+
+
 
 def golden_sash(rgb: tuple[int, int, int]) -> bool:
     r, g, b = rgb
@@ -63,7 +86,7 @@ def inspect(image: Image.Image) -> dict:
     pixels = image.convert("RGB").load()
     frame_counts = {}
     for label, (rect, minimum) in FRAME_BANDS.items():
-        count = count_pixels(pixels, rect, golden_sash)
+        count = count_pixels(pixels, scaled_rect(rect), golden_sash)
         frame_counts[label] = count
         if count < minimum:
             raise AssertionError(
@@ -72,28 +95,28 @@ def inspect(image: Image.Image) -> dict:
 
     glass_counts = {}
     for label, rect in GLASS_AREAS.items():
-        count = count_pixels(pixels, rect, dark_glazing)
+        count = count_pixels(pixels, scaled_rect(rect), dark_glazing)
         glass_counts[label] = count
         if count < 450:
             raise AssertionError(
                 f"HALL_END_WINDOW_DARK_GLAZING_MISSING {label} "
                 f"dark_pixels={count}")
 
-    center_count = count_pixels(pixels, SUN_CENTER_REGION, bright_sun)
+    center_count = count_pixels(pixels, scaled_rect(SUN_CENTER_REGION), bright_sun)
     if center_count < 30:
         raise AssertionError(
             f"HALL_END_WINDOW_SUNBURST_CENTER_MISSING bright_pixels={center_count}")
 
-    cx, cy = SUN_CENTER
+    cx, cy = scaled_point(*SUN_CENTER)
     sector_counts = [0] * 8
-    x0, y0, x1, y1 = SUN_REGION
+    x0, y0, x1, y1 = scaled_rect(SUN_REGION)
     for y in range(y0, y1):
         for x in range(x0, x1):
             if not bright_sun(pixels[x, y]):
                 continue
             dx, dy = x-cx, y-cy
             distance = math.hypot(dx, dy)
-            if 14 <= distance <= 45:
+            if 14*PERSPECTIVE_SCALE <= distance <= 45*PERSPECTIVE_SCALE:
                 angle = (math.atan2(dy, dx) + math.pi/8) % (2 * math.pi)
                 sector = int(angle * 4 / math.pi)
                 sector_counts[sector] += 1
@@ -116,23 +139,23 @@ def synthetic_window(missing_ray: int | None = None,
                      sash_color=(106, 90, 35)) -> Image.Image:
     image = Image.new("RGB", VIEWPORT, (53, 66, 79))
     draw = ImageDraw.Draw(image)
-    draw.rectangle((852, 482, 1068, 599), fill=pane_color)
+    draw.rectangle(scaled_rect((852, 482, 1068, 599)), fill=pane_color)
     for rect in ((846, 476, 1073, 483), (846, 597, 1073, 603),
                  (846, 477, 853, 600), (1066, 477, 1073, 600),
                  (923, 481, 929, 599), (993, 481, 999, 599),
                  (852, 535, 1068, 541)):
-        draw.rectangle(rect, fill=sash_color)
-    draw.ellipse((953, 499, 967, 513), fill=(128, 118, 39))
+        draw.rectangle(scaled_rect(rect), fill=sash_color)
+    draw.ellipse(scaled_rect((953, 499, 967, 513)),
+                 fill=(128, 118, 39))
     cx, cy = SUN_CENTER
     for i in range(8):
         if i == missing_ray:
             continue
         angle = i * math.pi / 4
-        draw.line((round(cx+15*math.cos(angle)),
-                   round(cy+15*math.sin(angle)),
-                   round(cx+24*math.cos(angle)),
-                   round(cy+24*math.sin(angle))),
-                  fill=(128, 118, 39), width=3)
+        a = scaled_point(cx+15*math.cos(angle), cy+15*math.sin(angle))
+        b = scaled_point(cx+24*math.cos(angle), cy+24*math.sin(angle))
+        draw.line((*a, *b), fill=(128, 118, 39),
+                  width=round(3*PERSPECTIVE_SCALE))
     return image
 
 
@@ -161,11 +184,13 @@ def self_test() -> None:
         expect_rejected(synthetic_window(missing_ray=i),
                         "SUNBURST_RAY_SECTORS_MISSING")
     erased_sun = good.copy()
-    ImageDraw.Draw(erased_sun).rectangle((934, 484, 986, 532),
+    ImageDraw.Draw(erased_sun).rectangle(scaled_rect((934, 484, 986, 532)),
                                           fill=(55, 72, 80))
     expect_rejected(erased_sun, "SUNBURST_CENTER_MISSING")
     for factor in (0.85, 0.95, 1.1):
         inspect(ImageEnhance.Brightness(good).enhance(factor))
+    assert abs(PERSPECTIVE_SCALE - 1.125) < .001, (
+        "END_WINDOW_CAMERA_SCALE_DRIFT")
     print("PHOTO_END_WINDOW_SEMANTIC_SELF_TEST_PASS "
           "blank brown_fake floodfill shifted 8_missing_rays erased_sun "
           "exposure_variants_rejected_or_accepted_as_expected=true")

@@ -104,11 +104,11 @@ def check_role(name: str, cam: Camera) -> None:
         elif name in ("07-hall-yellow-end-window",):
             assert tx<=-53 and 36<=tz<=40, (
                 "HALL_CAMERA_YELLOW_WINDOW_AIM_MISSES_END")
-            # The original x=0 camera still passed as walkable but showed
-            # the closet's SOLID ochre rear wall across >1/3 of the pixels.
-            # Preserve the same yellow-window target from an unobstructed
-            # point slightly west of the closet's projected side edge.
-            assert x<=-3.5 and 37<=z<=41, (
+            # The original x=0 eye showed a closet wall over ~40% of
+            # pixels; x=-4 still showed ~21%. Move the fixed QA eye west
+            # of the projected closet rear wall while preserving the actual
+            # window target and hallway routing.
+            assert x<=-5.8 and 37<=z<=41, (
                 "HALL_CAMERA_OVERVIEW_OLD_CLOSET_WALL_OCCLUSION")
         elif name=="08-hall-adjacent-oak-door":
             assert tx<=-40 and 26<=tz<=30, (
@@ -152,7 +152,7 @@ def self_test() -> None:
     example={
         "05-closet-double-doors":Camera((0,5.5,31),(0,6.9,26.8)),
         "06-hall-paper-rail":Camera((0,5.5,40),(-36,9,48.52)),
-        "07-hall-yellow-end-window":Camera((-4,5.7,38),(-54,7.35,38)),
+        "07-hall-yellow-end-window":Camera((-6,5.7,38),(-54,7.35,38)),
         "08-hall-adjacent-oak-door":Camera((-41.8,5.6,39),(-45.5,6.8,27.85)),
         "09-hall-left-floor-roof-junction":Camera((42,5.5,22),(44,6,38)),
         "15-eye-closet-shelves":Camera((0,5.5,30),(0,7.5,35.15)),
@@ -174,6 +174,8 @@ def self_test() -> None:
             ("06-hall-paper-rail",Camera((0,17.5,40),(-36,9,48.52))),
         "old_overview_obstructed_by_closet_rear_wall":
             ("07-hall-yellow-end-window",Camera((0,5.7,38),(-54,7.35,38))),
+        "partial_occlusion_intermediate_camera":
+            ("07-hall-yellow-end-window",Camera((-4,5.7,38),(-54,7.35,38))),
     }
     for reason,(name,incorrect) in mutation_specs.items():
         changed=dict(example)

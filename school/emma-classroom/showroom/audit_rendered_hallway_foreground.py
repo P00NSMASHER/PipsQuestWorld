@@ -13,8 +13,8 @@ from PIL import Image, ImageDraw
 
 VIEWPORT = (1920, 1080)
 SAMPLE = 8
-MAX_FRAME_NEUTRAL = 0.23
-MAX_RIGHT_HALF_NEUTRAL = 0.46
+MAX_FRAME_NEUTRAL = 0.14
+MAX_RIGHT_HALF_NEUTRAL = 0.28
 
 
 def closet_wall_color(rgb: tuple[int, int, int]) -> bool:

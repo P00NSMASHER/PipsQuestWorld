@@ -389,12 +389,12 @@ jobs:
           # diamonds; the semantic image-pixel gate remains fail-closed.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             06-hall-paper-rail 0,5.5,40 -36,9,48.52
-          # The former x=0 eye filled ~40% of this window-overview frame
-          # with the nearby SEALED closet's rear wall. Shift the
-          # diagnostic camera west without moving room geometry, target,
-          # yellow sash or the camera's child-height elevation.
+          # Original x=0 view was ~40% closet-wall color, x=-4 was ~21%.
+          # Move this source-review eye farther west of the closet wall.
+          # Do not remove the REAL closet wall, change the yellow-window
+          # target, or alter any playable geometry.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            07-hall-yellow-end-window -4,5.7,38 -54,7.35,38
+            07-hall-yellow-end-window -6,5.7,38 -54,7.35,38
           # Actual full-scene view of the left-hand neighboring CLOSED
           # oak-and-glass facade. No cutaway, invisible UI, fake opening,
           # or overlay model. Verify native geometry from child-eye height.
