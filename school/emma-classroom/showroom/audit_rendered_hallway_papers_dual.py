@@ -23,7 +23,7 @@ MIN_GALLERY_REGIONS = 7
 MIN_GALLERY_PALE_PIXELS = 50000
 MIN_OVERVIEW_REGIONS = 6
 MIN_OVERVIEW_PALE_PIXELS = 25000
-MIN_PERSPECTIVE_RATIO = 1.20
+MIN_PERSPECTIVE_RATIO = 1.30
 
 
 def metrics(gallery: Image.Image, overview: Image.Image) -> dict:
@@ -47,7 +47,12 @@ def metrics(gallery: Image.Image, overview: Image.Image) -> dict:
     overview_digest = sha256(overview.convert("RGB").tobytes()).digest()
     if gallery_digest == overview_digest:
         raise AssertionError("HALL_DUAL_CAMERA_IDENTICAL_RENDERED_PIXELS")
-    if gallery_regions <= overview_regions or (
+    # Both real source cameras can now resolve seven paper components.
+    # Region count alone does not establish camera identity; require
+    # independent nonduplicate RGB content, >=7 gallery sheets, >=6
+    # overview sheets and a STRONGER 1.30x near/far pixel advantage.
+    # A swapped camera still fails the relative area direction check.
+    if gallery_regions < overview_regions or (
         gallery_pixels <= overview_pixels * MIN_PERSPECTIVE_RATIO
     ):
         raise AssertionError(
@@ -60,6 +65,7 @@ def metrics(gallery: Image.Image, overview: Image.Image) -> dict:
         "gallery_pale_pixels": gallery_pixels,
         "overview_regions": overview_regions,
         "overview_pale_pixels": overview_pixels,
+        "near_far_pixel_ratio": round(gallery_pixels / overview_pixels, 3),
         "independent_cameras": True,
         "source_derived_only": True,
         "native_iphone_qa_required": True,
@@ -102,6 +108,18 @@ def self_test() -> None:
     result = metrics(gallery, overview)
     assert result["gallery_regions"] == 7
     assert result["overview_regions"] == 6
+    # A new real full-geometry x=-6 window camera sees seven individual
+    # papers, same count as the oblique view, but the latter still has
+    # >1.30x actual visible paper pixels. Count equality is valid.
+    far_seven = invented_test_frame(7, 36, 59, 90, 125)
+    equal_components = metrics(gallery, far_seven)
+    assert equal_components["gallery_regions"] == 7
+    assert equal_components["overview_regions"] == 7
+    assert equal_components["near_far_pixel_ratio"] > MIN_PERSPECTIVE_RATIO
+    # Two equally crowded/sized independent views are NOT a credible
+    # near/far comparison; reject even with matching 7-component counts.
+    expect_rejected(gallery, invented_test_frame(7, 47, 65, 85, 130),
+                    "WRONG_PERSPECTIVE_OR_SWAPPED")
     blank = Image.new("RGB", VIEWPORT, (53, 66, 79))
     expect_rejected(blank, overview, "BARE_WALL")
     expect_rejected(gallery, blank, "BARE_WALL")
@@ -128,7 +146,8 @@ def self_test() -> None:
     print("HALL_DUAL_CAMERA_SELF_TEST_PASS "
           "missing_gallery,missing_overview,swapped,duplicated,"
           "duplicates,perspective_ratio,small_viewport,"
-          "one_missing_each,weak_gallery_rejected=true")
+          "one_missing_each,weak_gallery,equal_count_weak_ratio_rejected=true "
+          "equal_count_strong_ratio_accepted=true")
 
 
 def main() -> None:
@@ -149,6 +168,7 @@ def main() -> None:
               f"gallery_pale={result['gallery_pale_pixels']} "
               f"overview_areas={result['overview_regions']} "
               f"overview_pale={result['overview_pale_pixels']} "
+              f"near_far_ratio={result['near_far_pixel_ratio']:.3f} "
               "two_independent_actual_source_views=true "
               "native_iphone_qa_pending=true")
     elif not args.self_test:
