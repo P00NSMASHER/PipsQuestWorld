@@ -228,6 +228,109 @@ print("HALL_DOOR_END_SOURCE_PASS two_full_height_blue_gray_returns=true "
     .."original_two_collidable_rear_walls=true "
     .."no_added_colliders=true part_count="..endParts
     .." yellow,brick_collision,trim_and_position_mutations_rejected=true")
+-- Source-built proof: the wide yellow panels alongside the back double
+-- doors were the ORIGINAL x=+/-7.25 plaster infill, not the already fixed
+-- narrow x-facing wall ends. Ensure z-facing paint, brick, and oak reach
+-- the true opening without changing classroom-facing originals or colliders.
+local function checkHallwayBackDoorInfill()
+    local originals=expect("Back doorway plaster infill",2)
+    table.sort(originals,function(a,b)return a.Position.X<b.Position.X end)
+    for i,sgn in ipairs({-1,1}) do
+        local p=originals[i]
+        assert(p.CanCollide and near(p.Position.X,sgn*7.25)
+            and near(p.Position.Z,27) and near(p.Size.X,3.5)
+            and p.Color.R>.94 and p.Color.G>.85 and p.Color.B<.70,
+            "HALL_CLASSROOM_WARM_INFILL_ORIGINAL_LOST")
+    end
+    local baseHeader=one("Door header wall")
+    assert(baseHeader.CanCollide and near(baseHeader.Position.Y,15.5)
+        and baseHeader.Color.R>.94 and baseHeader.Color.G>.85,
+        "HALL_CLASSROOM_WARM_HEADER_ORIGINAL_LOST")
+    local paint=expect("Photo hall classroom exterior blue-gray paint",2)
+    local brick=expect("Photo hall classroom exterior glazed brick",2)
+    local caps=expect("Photo hall front dado cap",2)
+    table.sort(paint,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(brick,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(caps,function(a,b)return a.Position.X<b.Position.X end)
+    for i,sgn in ipairs({-1,1}) do
+        local p=paint[i]
+        assert(near(p.Position.X,sgn*21.25)
+            and near(p.Position.Y,11.125)
+            and near(p.Size.X,31.50) and near(p.Size.Y,13.75)
+            and near(p.Position.Z,27.565)
+            and p.Color.B>p.Color.R
+            and not p.CanCollide and not p.CanQuery,
+            "HALL_INFILL_OLD_SHORT_PLASTER")
+        local b=brick[i]
+        assert(near(b.Position.X,sgn*21.25)
+            and near(b.Size.X,31.35) and near(b.Position.Y,2.125)
+            and not b.CanCollide and not b.CanQuery,
+            "HALL_INFILL_OLD_SHORT_BRICK")
+    end
+    assert(caps[1].Position.X+caps[1].Size.X/2 < -5.5
+        and caps[2].Position.X-caps[2].Size.X/2 > 5.5
+        and not caps[1].CanCollide and not caps[2].CanCollide,
+        "HALL_CAP_BLOCKS_CLASSROOM_DOORWAY")
+    assert(near(caps[1].Position.X,-29.65)
+        and near(caps[1].Size.X,48.20)
+        and near(caps[2].Position.X,21.05)
+        and near(caps[2].Size.X,30.90),
+        "HALL_INFILL_OLD_SHORT_OAK_CAP")
+    local header=one("Photo hall rear doorway header exterior blue-gray paint")
+    assert(near(header.Position.X,0) and near(header.Position.Y,15.5)
+        and near(header.Position.Z,27.565)
+        and near(header.Size.X,18) and near(header.Size.Y,5)
+        and header.Color.B>header.Color.R
+        and not header.CanCollide and not header.CanQuery,
+        "HALL_INFILL_HEADER_YELLOW_OR_COLLIDING")
+    local parts=0
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then parts+=1 end
+    end
+    assert(parts<=3050,"HALL_INFILL_MOBILE_HEADROOM_LOST")
+    return originals,paint,brick,caps,header,parts
+end
+local infillBase,infillPaint,infillBrick,infillCaps,infillHeader,partCount=
+    checkHallwayBackDoorInfill()
+local function rejectInfillMutation(change,restore,expectedName)
+    change()
+    local ok,err=pcall(checkHallwayBackDoorInfill)
+    restore()
+    assert(not ok and string.find(tostring(err),expectedName,1,true),
+        "HALL_INFILL_MUTATION_FALSE_ACCEPT "..expectedName..": "..tostring(err))
+end
+local oldPaintSize=infillPaint[2].Size
+rejectInfillMutation(
+    function() infillPaint[2].Size=Vector3.new(28,13.75,.09) end,
+    function() infillPaint[2].Size=oldPaintSize end,
+    "HALL_INFILL_OLD_SHORT_PLASTER")
+local oldBrickSize=infillBrick[1].Size
+rejectInfillMutation(
+    function() infillBrick[1].Size=Vector3.new(27.85,4.25,.075) end,
+    function() infillBrick[1].Size=oldBrickSize end,
+    "HALL_INFILL_OLD_SHORT_BRICK")
+local oldCapSize=infillCaps[2].Size
+rejectInfillMutation(
+    function() infillCaps[2].Size=Vector3.new(42,.16,.14) end,
+    function() infillCaps[2].Size=oldCapSize end,
+    "HALL_CAP_BLOCKS_CLASSROOM_DOORWAY")
+local oldHeaderCollision=infillHeader.CanCollide
+rejectInfillMutation(
+    function() infillHeader.CanCollide=true end,
+    function() infillHeader.CanCollide=oldHeaderCollision end,
+    "HALL_INFILL_HEADER_YELLOW_OR_COLLIDING")
+local oldInfillColor=infillBase[1].Color
+rejectInfillMutation(
+    function() infillBase[1].Color=Color3.fromRGB(107,117,125) end,
+    function() infillBase[1].Color=oldInfillColor end,
+    "HALL_CLASSROOM_WARM_INFILL_ORIGINAL_LOST")
+checkHallwayBackDoorInfill()
+print("HALL_DOUBLE_DOOR_INFILL_EXTERIOR_PASS "
+    .."warm_original_walls_and_header_preserved=true "
+    .."existing_two_plaster_two_brick_two_oak_spans_extended=true "
+    .."one_noncolliding_header_overlay=true "
+    .."five_adversarial_mutations_rejected=true "
+    .."physical_part_count="..partCount)
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
