@@ -37,17 +37,40 @@ local function pattern(p,face,columns,rows)
     assert(bg and bg:IsA("Frame")
         and bg.BackgroundColor3.R>.93,
         "GINGHAM_IVORY_BACKING_INVALID")
-    local count=0
+    local warp,weft=0,0
     for _,child in ipairs(bg:GetChildren()) do
-        if child.Name=="GinghamRed" and child:IsA("Frame") then
-            count+=1
+        assert(child.Name~="GinghamRed","GINGHAM_FLAT_CHECKERBOARD_RETURNED")
+        if child.Name=="GinghamWarp" or child.Name=="GinghamWeft" then
+            assert(child:IsA("Frame"),"GINGHAM_STRIPE_TYPE_INVALID")
             local c=child.BackgroundColor3
             assert(c.R>.63 and c.R<.75 and c.G<.29 and c.B<.30,
                 "GINGHAM_CHECK_COLOR_INVALID")
+            assert(math.abs(child.BackgroundTransparency-.42)<.001,
+                "GINGHAM_WEAVE_OPACITY_INVALID")
+            if child.Name=="GinghamWarp" then
+                assert(math.abs(child.Size[1]-1/columns)<.001
+                    and child.Size[2]==1
+                    and math.abs(child.Position[1]-warp*2/columns)<.001
+                    and child.Position[2]==0,"GINGHAM_WARP_SPACING_INVALID")
+                warp+=1
+            else
+                assert(child.Size[1]==1
+                    and math.abs(child.Size[2]-1/rows)<.001
+                    and child.Position[1]==0
+                    and math.abs(child.Position[2]-weft*2/rows)<.001,
+                    "GINGHAM_WEFT_SPACING_INVALID")
+                weft+=1
+            end
         end
     end
-    assert(count==columns*rows/2,
-        "GINGHAM_PATTERN_TILE_COUNT_INVALID "..p.Name)
+    assert(warp==math.ceil(columns/2) and weft==math.ceil(rows/2),
+        "GINGHAM_WEAVE_STRIPE_COUNT_INVALID "..p.Name)
+    -- Check scale continuity between desktop and hanging aprons.
+    local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
+        and p.Size.Z or p.Size.X
+    local h=(face==Enum.NormalId.Top) and p.Size.Z or p.Size.Y
+    assert(w/columns>.30 and w/columns<.36
+        and h/rows>.30 and h/rows<.36,"GINGHAM_CHECK_SCALE_INVALID")
 end
 local function verify()
     local top=only("Photo gingham word wall table top")
@@ -77,12 +100,12 @@ local function verify()
             and leg.Position.Y+leg.Size.Y/2<=top.Position.Y,
             "GINGHAM_TABLE_LEG_COLLISION_INVALID")
     end
-    pattern(top,Enum.NormalId.Top,6,10)
+    pattern(top,Enum.NormalId.Top,12,22)
     for _,spec in ipairs({
-        {"Photo gingham table aisle apron",Enum.NormalId.Left,10,3},
-        {"Photo gingham table wall apron",Enum.NormalId.Right,10,3},
-        {"Photo gingham table near apron",Enum.NormalId.Front,6,3},
-        {"Photo gingham table far apron",Enum.NormalId.Back,6,3},
+        {"Photo gingham table aisle apron",Enum.NormalId.Left,22,4},
+        {"Photo gingham table wall apron",Enum.NormalId.Right,22,4},
+        {"Photo gingham table near apron",Enum.NormalId.Front,12,4},
+        {"Photo gingham table far apron",Enum.NormalId.Back,12,4},
     }) do
         local apron=only(spec[1])
         assert(apron.Anchored and not apron.CanCollide and
@@ -125,6 +148,25 @@ assert(not ok and string.find(tostring(err),
     "GINGHAM_NATIVE_GUI_MISSING",1,true),
     "GINGHAM_MISSING_APRON_FACE_NOT_REJECTED")
 print("GINGHAM_TABLE_ADVERSARIAL_REJECTED wrong_facing_apron")
+local bg=top:FindFirstChild("PhotoGingham"):FindFirstChild("GinghamIvory")
+local warp=bg:FindFirstChild("GinghamWarp")
+warp.BackgroundTransparency=0
+ok,err=pcall(verify)
+warp.BackgroundTransparency=.42
+assert(not ok and string.find(tostring(err),"GINGHAM_WEAVE_OPACITY_INVALID",1,true),
+    "GINGHAM_OPAQUE_CHECKER_FALSE_ACCEPT")
+local weft=bg:FindFirstChild("GinghamWeft")
+weft.Parent=nil
+ok,err=pcall(verify)
+weft.Parent=bg
+assert(not ok,"GINGHAM_LOST_WEFT_FALSE_ACCEPT")
+-- Restore child ordering used by the deterministic stripe-spacing check.
+for _,child in ipairs(bg:GetChildren()) do
+    if child.Name=="GinghamWeft" and child~=weft then
+        child.Parent=nil;child.Parent=bg
+    end
+end
+print("GINGHAM_TABLE_ADVERSARIAL_REJECTED opaque_or_missing_weave")
 verify()
 print("GINGHAM_TABLE_NEGATIVE_TESTS_PASS collider apron_face")
 '''
@@ -153,3 +195,4 @@ def main():
             print(line,flush=True)
 if __name__=="__main__":
     main()
+

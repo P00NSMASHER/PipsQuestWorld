@@ -2638,30 +2638,32 @@ function World.build()
         CFrame.new(-36.03,11.77,-6.72)*CFrame.Angles(math.rad(48),0,0),
         Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
-    -- The classroom photos show a portable silver fan by the teaching wall.
-    -- A PHOTO-BASED equipment candidate, not proof of its normal-day resting
-    -- location. Exactly fifteen original noncolliding Roblox solids.
+    -- IMG_2910: a low off-white BOX FAN with circular grille, not the
+    -- previously guessed pedestal fan. Keep the same teaching-wall corner;
+    -- thirteen original noncolliding Parts replace the former fifteen.
+    -- Fine concentric grille detail is native UI, not dozens of colliders.
     local fanX,fanZ=31.0,-31.40
-    local silver=Color3.fromRGB(161,168,172)
-    local foot=cylinder(root,"Photo portable fan weighted foot",
-        Vector3.new(.16,1.65,1.65),
-        CFrame.new(fanX,.62,fanZ)*CFrame.Angles(0,0,math.pi/2),
-        Color3.fromRGB(112,117,121),Enum.Material.SmoothPlastic,false)
-    foot.CastShadow=false
-    part(root,"Photo portable fan upright",
-        Vector3.new(.22,2.10,.22),CFrame.new(fanX,1.69,fanZ),
-        Color3.fromRGB(122,127,130),Enum.Material.Metal,false)
-    cylinder(root,"Photo portable fan neck collar",
-        Vector3.new(.36,.42,.42),
-        CFrame.new(fanX,2.67,fanZ)*CFrame.Angles(0,0,math.pi/2),
-        silver,Enum.Material.Metal,false)
-    -- A Cylinder's local-X normal faces -worldZ into the open room.
-    local faceCF=CFrame.new(fanX,3.10,fanZ)*
-        CFrame.Angles(0,math.pi/2,0)
+    local fanIvory=Color3.fromRGB(219,218,205)
+    for _,side in ipairs({-1,1}) do
+        part(root,"Photo box fan housing side",Vector3.new(.23,3.34,.64),
+            CFrame.new(fanX+side*1.555,2.38,fanZ),
+            fanIvory,Enum.Material.SmoothPlastic,false)
+        part(root,"Photo box fan housing rail",Vector3.new(2.88,.23,.64),
+            CFrame.new(fanX,2.38+side*1.555,fanZ),
+            fanIvory,Enum.Material.SmoothPlastic,false)
+        part(root,"Photo box fan floor foot",Vector3.new(.62,.20,.93),
+            CFrame.new(fanX+side*1.14,.60,fanZ),
+            Color3.fromRGB(193,193,181),Enum.Material.SmoothPlastic,false)
+    end
+    part(root,"Photo box fan carry handle",Vector3.new(.90,.13,.22),
+        CFrame.new(fanX,4.11,fanZ),fanIvory,Enum.Material.SmoothPlastic,false)
+    -- Positive local X faces +world Z, toward the classroom rather than
+    -- into the teaching wall. Blades and grille layer in that same direction.
+    local faceCF=CFrame.new(fanX,2.38,fanZ+.20)*
+        CFrame.Angles(0,-math.pi/2,0)
     local back=cylinder(root,"Photo portable fan back guard",
-        Vector3.new(.08,2.70,2.70),faceCF*CFrame.new(-.08,0,0),
-        Color3.fromRGB(193,198,198),Enum.Material.SmoothPlastic,false)
-    back.Transparency=.78
+        Vector3.new(.08,2.94,2.94),faceCF,
+        Color3.fromRGB(120,126,122),Enum.Material.SmoothPlastic,false)
     back.CastShadow=false
     for i=0,2 do
         local blade=part(root,"Photo portable fan blade",
@@ -2674,20 +2676,34 @@ function World.build()
     end
     cylinder(root,"Photo portable fan center hub",
         Vector3.new(.15,.48,.48),faceCF*CFrame.new(.20,0,0),
-        Color3.fromRGB(115,123,125),Enum.Material.Metal,false)
-    for i=0,5 do
-        local spoke=part(root,"Photo portable fan safety grille spoke",
-            Vector3.new(.046,2.58,.052),
-            faceCF*CFrame.new(.30,0,0)*
-                CFrame.Angles(math.rad(i*30),0,0),
-            silver,Enum.Material.Metal,false)
-        spoke.CastShadow=false
-    end
+        fanIvory,Enum.Material.SmoothPlastic,false)
     local front=cylinder(root,"Photo portable fan translucent face",
-        Vector3.new(.025,2.80,2.80),faceCF*CFrame.new(.29,0,0),
-        Color3.fromRGB(213,215,213),Enum.Material.SmoothPlastic,false)
+        Vector3.new(.025,2.98,2.98),faceCF*CFrame.new(.29,0,0),
+        fanIvory,Enum.Material.SmoothPlastic,false)
     front.Transparency=.96
     front.CastShadow=false
+    local grille=Instance.new("SurfaceGui")
+    grille.Name="PhotoBoxFanGrille";grille.Face=Enum.NormalId.Right
+    grille.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    grille.CanvasSize=Vector2.new(384,384);grille.LightInfluence=.4
+    grille.Parent=front
+    for i=0,15 do
+        local spoke=Instance.new("Frame");spoke.Name="FanGrilleSpoke"
+        spoke.Position=UDim2.fromScale(.497,.045)
+        spoke.Size=UDim2.fromScale(.006,.91);spoke.Rotation=i*11.25
+        spoke.BorderSizePixel=0;spoke.BackgroundColor3=fanIvory
+        spoke.Parent=grille
+    end
+    for _,radius in ipairs({.29,.57,.85,.97}) do
+        local ring=Instance.new("Frame");ring.Name="FanGrilleRing"
+        ring.Position=UDim2.fromScale((1-radius)/2,(1-radius)/2)
+        ring.Size=UDim2.fromScale(radius,radius)
+        ring.BackgroundTransparency=1;ring.BorderSizePixel=0;ring.Parent=grille
+        local circle=Instance.new("UICorner")
+        circle.CornerRadius=UDim.new(.5,0);circle.Parent=ring
+        local stroke=Instance.new("UIStroke")
+        stroke.Color=fanIvory;stroke.Thickness=2;stroke.Parent=ring
+    end
 
     -- Warm fluorescent lighting.
     for _,x in ipairs({-18,18}) do
@@ -2705,3 +2721,4 @@ end
 
 -- No teachers, questions, quiz remotes, saved scores, or runtime UI in the replica build.
 return World
+

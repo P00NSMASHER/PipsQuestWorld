@@ -1,4 +1,62 @@
-## Canonical release-state clarification — October 8, 2026 (verified GitHub receipt)
+## October 12, 2026 — owner-requested classroom photo detail candidate
+
+Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.
+This is implementation under the direct photo-match request, **not independent
+QA approval, a merge, or a new Roblox publication**. The canonical receipt is
+still the successfully published v83 QA preview; older release notes below are
+historical, not current publication authority.
+
+Implemented from private review of all eight IMG_2903–2910 references:
+
+- Restore the missing rectangular blue alphabet/sun rug, alongside the round
+  alphabet rug and black polka-dot rug. One thin noncolliding fabric Part carries
+  original vector artwork: A–Z once, ten numbered clouds, sixteen sun rays.
+  Its provisional clear-floor position preserves all sixteen desk/chair pairs.
+- Refine all five red/white tablecloth surfaces from coarse checker squares to
+  finer crossing translucent gingham threads (ivory, rose, deeper-red crossings).
+  This reduces the table's UI-instance count instead of adding physical checks.
+- Replace the incorrectly inferred pedestal fan with the photographed low,
+  off-white square box-fan silhouette: floor feet, housing, handle, blades and
+  front SurfaceGui grille. No new collider or animated fan script.
+- No children/adults, gym mat, source photographs, names, external textures or
+  private schoolwork added. No lesson/gameplay archive or publishing marker edits.
+
+Actually tested in a materialized exact-base source snapshot:
+
+- Luau 0.741 compilation of every shipped showroom Lua script.
+- All **19** constructed-scene `audit_*.py --luau` suites, including existing
+  lighting, mobile complexity, windows, doors, lettering, furniture and rugs.
+- Added negative tests reject repeated alphabet letters, rug collision/overlap,
+  upside-down artwork, missing/opaque gingham threads, floating fan feet and a
+  backward fan grille. Existing negative tests and thresholds remain intact.
+- Scene export: **3,048 physical Parts**, down from 3,049 at the base; both the
+  general 3,100 and stricter 3,050 existing gates pass. All 16 desk/chair pairs stay.
+- Navigation self-tests and all nine source-constructed routes pass; furniture
+  adapter fallback, permission-denial, partial rollback and atomic activation tests
+  pass. These are test doubles, not native Roblox physics or FPS observations.
+- Rojo 7.7.1 binary/XML build and assembled classroom-only exclusion guard pass.
+  Candidate RBXL SHA256: `37dfbbc799c2fe7186550545f90b6ab857888efbbbb1aa2e0f00802ce0a41ba0`.
+- Release-receipt audit and its forged/rollback self-tests pass, still identifying
+  v83. Existing synthetic artwork mutation suite passes.
+
+Remaining review gates:
+
+- Obtain the six exact-new-head GitHub workflow results and independent review.
+  Local results are not replacements for those required checks. Optional private
+  video-auditor self-tests were not completed locally (OpenCV is absent); CI keeps
+  its existing pinned environment and gates.
+- Native iPhone/iPad review of the new rug/table/fan SurfaceGuis, readability,
+  lighting and frame time. Source/headless geometry previews cannot display this
+  SurfaceGui artwork or certify native controls/camera. Prior v83 footage is not
+  acceptance of these changed details.
+- The separately recorded request for a straight outward hallway from the staff
+  door remains with the hallway/product owner. This detail pass leaves all hallway
+  and closet geometry unchanged; it does **not** resolve that layout requirement.
+- Keep PR draft and v83 publication untouched until owner-controlled acceptance.
+
+---
+
+## Historical release-state clarification — October 8, 2026 (verified GitHub receipt)
 
 **Published classroom preview:** GitHub Actions [run 37870907504](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37870907504) successfully published **Roblox place version 67** from exact source commit `1e67943a0394c4196f630cc5566a1f153ec401b5` to place `114603280760042` on October 9 UTC (October 8 Eastern). The runtime is the classroom-only progress preview, **not** a final visually accepted release.
 
@@ -193,3 +251,4 @@ address those concrete defects; they are not a rendered visual pass. Physical
 iPhone, real Play-mode question loop and final likeness still need inspection.
 At 1:11 PM the user requested background-only operation; Studio was minimized
 and remaining source/check work continued without bringing it forward.
+

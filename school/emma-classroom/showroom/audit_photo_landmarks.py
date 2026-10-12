@@ -285,31 +285,46 @@ local function verify()
         end
     end
     assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
-    -- Provisional photographed portable fan; preserve clear desk aisles.
+    -- IMG_2910 shows a LOW BOX FAN, not a tall round pedestal fan.
+    -- Preserve noncollision and desk clearance while checking that silhouette.
     local fan=one("Photo portable fan back guard")
-    local base=one("Photo portable fan weighted foot")
-    local stem=one("Photo portable fan upright")
     local face=one("Photo portable fan translucent face")
     assert(math.abs(fan.Position.X-31)<.03
-        and math.abs(fan.Position.Y-3.10)<.03
-        and math.abs(fan.Position.Z+31.40)<.15
-        and math.abs(base.Position.Y-.62)<.03
-        and math.abs(stem.Position.X-fan.Position.X)<.03,
+        and math.abs(fan.Position.Y-2.38)<.03
+        and math.abs(fan.Position.Z+31.20)<.03,
         "PHOTO_PORTABLE_FAN_POSITION_INVALID")
     assert(fan.Shape==Enum.PartType.Cylinder
         and face.Shape==Enum.PartType.Cylinder
         and face.Transparency>.90
         and #parts("Photo portable fan blade")==3
-        and #parts("Photo portable fan safety grille spoke")==6
-        and #parts("Photo portable fan neck collar")==1
-        and #parts("Photo portable fan center hub")==1,
+        and #parts("Photo portable fan center hub")==1
+        and #parts("Photo box fan housing side")==2
+        and #parts("Photo box fan housing rail")==2
+        and #parts("Photo box fan floor foot")==2
+        and #parts("Photo box fan carry handle")==1
+        and #parts("Photo portable fan upright")==0
+        and #parts("Photo portable fan weighted foot")==0
+        and #parts("Photo portable fan neck collar")==0,
         "PHOTO_PORTABLE_FAN_SILHOUETTE_INCOMPLETE")
-    assert(math.abs(fan.CFrame.m[1])<.05,
+    assert(fan.CFrame.m[7]>.99 and face.Position.Z>fan.Position.Z,
         "PHOTO_PORTABLE_FAN_FACES_AWAY_FROM_CLASSROOM")
-    for _,name in ipairs({"Photo portable fan weighted foot",
-        "Photo portable fan upright","Photo portable fan neck collar",
+    for _,foot in ipairs(parts("Photo box fan floor foot")) do
+        assert(math.abs(foot.Position.Y-foot.Size.Y/2-.50)<.01,
+            "PHOTO_BOX_FAN_FLOATS_ABOVE_FLOOR")
+    end
+    local grille=face:FindFirstChild("PhotoBoxFanGrille")
+    assert(grille and grille.Face==Enum.NormalId.Right,
+        "PHOTO_BOX_FAN_GRILLE_MISSING")
+    local spokes,rings=0,0
+    for _,d in ipairs(grille:GetChildren()) do
+        if d.Name=="FanGrilleSpoke" then spokes+=1 end
+        if d.Name=="FanGrilleRing" then rings+=1 end
+    end
+    assert(spokes==16 and rings==4,"PHOTO_BOX_FAN_GRILLE_INCOMPLETE")
+    for _,name in ipairs({"Photo box fan housing side","Photo box fan housing rail",
+        "Photo box fan floor foot","Photo box fan carry handle",
         "Photo portable fan back guard","Photo portable fan blade",
-        "Photo portable fan center hub","Photo portable fan safety grille spoke",
+        "Photo portable fan center hub",
         "Photo portable fan translucent face"}) do
         for _,p in ipairs(parts(name)) do
             assert(p.Anchored and not p.CanCollide and not p.CanTouch,
@@ -454,6 +469,21 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_PORTABLE_FAN_BLOCKS_AISLE",1,true),
     "PHOTO_PORTABLE_FAN_COLLISION_NOT_REJECTED")
 print("PHOTO_FAN_ADVERSARIAL_REJECTED collider")
+local foot=parts("Photo box fan floor foot")[1]
+local oldFoot=foot.CFrame
+foot.CFrame=oldFoot*CFrame.new(0,1,0)
+ok,err=pcall(verify)
+foot.CFrame=oldFoot
+assert(not ok and string.find(tostring(err),"PHOTO_BOX_FAN_FLOATS_ABOVE_FLOOR",1,true),
+    "PHOTO_BOX_FAN_FLOAT_FALSE_ACCEPT")
+local grille=one("Photo portable fan translucent face"):FindFirstChild("PhotoBoxFanGrille")
+local oldGrilleFace=grille.Face
+grille.Face=Enum.NormalId.Left
+ok,err=pcall(verify)
+grille.Face=oldGrilleFace
+assert(not ok and string.find(tostring(err),"PHOTO_BOX_FAN_GRILLE_MISSING",1,true),
+    "PHOTO_BOX_FAN_BACKWARD_GRILLE_FALSE_ACCEPT")
+print("PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -490,6 +520,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
+        "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
@@ -498,8 +529,10 @@ def main() -> None:
         if line.startswith(("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
+            "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED",
             "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
 if __name__=="__main__":
     main()
+
