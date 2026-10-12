@@ -279,7 +279,8 @@ startRound=function(player)
 end
 
 local function answer(player,args)
-    local s=sessions[player.UserId];if not s or not s.pending then return {ok=false,code="no_question"} end
+    local s=sessions[player.UserId]
+    if not s or s.player~=player or not s.pending then return {ok=false,code="no_question"} end
     local p=s.pending
     if type(args)~="table" or args.token~=p.token or type(args.index)~="number" or args.index%1~=0 or args.index<1 or args.index>#p.choices then return {ok=false,code="invalid"} end
     local choice=p.choices[args.index]
@@ -314,6 +315,10 @@ end
 request.OnServerInvoke=function(player,command,args)
     if command=="answer" then return answer(player,args) end
     local s=sessions[player.UserId]
+    -- A rapid reconnect may reuse the UserId while an obsolete client RPC is
+    -- still unwinding. Only the Player instance that owns this live session
+    -- may read or mutate its question/progress state.
+    if s and s.player~=player then return {ok=false,code="stale_session"} end
     if command=="select_test" and s then
         if s.busy or type(args)~="table" or type(args.id)~="string" then return {ok=false,code="invalid"} end
         local allowed,label
