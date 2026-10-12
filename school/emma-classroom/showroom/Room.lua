@@ -1911,6 +1911,31 @@ local function buildBackDoorAndHall(root: Instance)
         Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,25),
         Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
 
+    -- The x=+/-9 INNER ENDS of the two original classroom rear walls
+    -- are one-stud exposed return faces at the former double-door entry.
+    -- The photo-hall renderer still shows one of these original yellow
+    -- end-grain faces as an oversized pale vertical strip beside the
+    -- otherwise completed school-hall closet exterior. Previous flat
+    -- z-facing paint does not cover these perpendicular x-facing ends.
+    -- Add exactly six thin, noncolliding original finish Parts; never
+    -- move walls, widen/narrow door collision or repaint classroom-facing
+    -- surfaces. All geometry remains outside the printable school photos.
+    for _,side in ipairs({-1,1}) do
+        local edgeX=side*8.445
+        hp("Photo hall doorway inner wall end plaster",
+            Vector3.new(.10,18,1.12),CFrame.new(edgeX,9,27.0),
+            blueGray,Enum.Material.SmoothPlastic,false)
+        local edgeBrick=hp("Photo hall doorway inner wall end brick",
+            Vector3.new(.115,4.25,1.12),
+            CFrame.new(edgeX-side*.04,2.125,27.0),
+            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+        edgeBrick.Reflectance=.035
+        hp("Photo hall doorway inner wall end oak cap",
+            Vector3.new(.135,.16,1.15),
+            CFrame.new(edgeX-side*.06,4.34,27.0),
+            Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
+    end
+
     -- A true 6-course staggered bond and subtle ochre tone differences.
     -- The graphic lives on seven noncolliding flat dado carriers, and is
     -- fully independent of marketplace image uploads / texture IDs.

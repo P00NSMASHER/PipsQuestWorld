@@ -145,6 +145,89 @@ print("HALL_STAFF_RETURN_FINISH_SOURCE_PASS "
     .."blue_gray_side_return=true original_shell_collidable=true "
     .."three_noncolliding_parts=true corridor_brick_dado_and_oak_cap=true "
     .."four_adversarial_mutations_rejected=true")
+
+-- The earlier flat rear paint panels cannot cover the PERPENDICULAR
+-- yellow x-facing return at either edge of the old double-door jamb.
+-- Validate all six constructed finish parts and retain original walls.
+local function checkDoorwayEndFinishes()
+    local plaster=expect("Photo hall doorway inner wall end plaster",2)
+    local bricks=expect("Photo hall doorway inner wall end brick",2)
+    local caps=expect("Photo hall doorway inner wall end oak cap",2)
+    table.sort(plaster,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(bricks,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(caps,function(a,b)return a.Position.X<b.Position.X end)
+    for i,side in ipairs({-1,1}) do
+        local base=one(side<0 and "Back wall left" or "Back wall right")
+        assert(base.CanCollide and near(base.Position.X,side*23)
+            and near(base.Position.Z,27)
+            and near(base.Size.Y,18),
+            "HALL_ORIGINAL_CLASSROOM_REAR_WALL_LOST")
+        local endX=side*8.445
+        local upper=plaster[i]
+        local lower=bricks[i]
+        local cap=caps[i]
+        assert(near(upper.Position.X,endX)
+            and near(upper.Position.Z,27)
+            and near(upper.Size.Y,18)
+            and near(upper.Size.Z,1.12)
+            and upper.Color.B>upper.Color.R
+            and upper.Material==Enum.Material.SmoothPlastic
+            and not upper.CanCollide and not upper.CanQuery,
+            "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED")
+        assert(near(lower.Position.X,endX-side*.04)
+            and near(lower.Position.Y,2.125)
+            and near(lower.Size.Y,4.25)
+            and lower.Material==Enum.Material.Brick
+            and not lower.CanCollide and not lower.CanQuery,
+            "HALL_DOOR_END_BRICK_REGRESSED")
+        assert(near(cap.Position.X,endX-side*.06)
+            and near(cap.Position.Y,4.34)
+            and cap.Material==Enum.Material.Wood
+            and not cap.CanCollide and not cap.CanQuery,
+            "HALL_DOOR_END_OAK_CAP_MISSING")
+    end
+    local allParts=0
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then allParts+=1 end
+    end
+    assert(allParts<=3050,"HALL_DOOR_END_EXCEEDED_RESERVED_PART_HEADROOM")
+    return plaster,bricks,caps,allParts
+end
+local endPlaster,endBricks,endCaps,endParts=checkDoorwayEndFinishes()
+local oldEdgeColor=endPlaster[2].Color
+endPlaster[2].Color=Color3.fromRGB(246,232,165)
+local okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endPlaster[2].Color=oldEdgeColor
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED",1,true),
+    "HALL_DOOR_END_YELLOW_MUTATION_FALSE_ACCEPT")
+local oldBrickCollide=endBricks[1].CanCollide
+endBricks[1].CanCollide=true
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endBricks[1].CanCollide=oldBrickCollide
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_BRICK_REGRESSED",1,true),
+    "HALL_DOOR_END_BRICK_COLLIDER_MUTATION_FALSE_ACCEPT")
+local oldCapName=endCaps[1].Name
+endCaps[1].Name="test: remove jamb cap"
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endCaps[1].Name=oldCapName
+assert(not okEnd and string.find(tostring(errEnd),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "HALL_DOOR_END_CAP_MISSING_MUTATION_FALSE_ACCEPT")
+local oldEndPos=endPlaster[1].Position
+endPlaster[1].Position=Vector3.new(-7.70,9,27)
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endPlaster[1].Position=oldEndPos
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED",1,true),
+    "HALL_DOOR_END_MISPLACED_MUTATION_FALSE_ACCEPT")
+checkDoorwayEndFinishes()
+print("HALL_DOOR_END_SOURCE_PASS two_full_height_blue_gray_returns=true "
+    .."ochre_dado_and_oak_cap_both_edges=true "
+    .."original_two_collidable_rear_walls=true "
+    .."no_added_colliders=true part_count="..endParts
+    .." yellow,brick_collision,trim_and_position_mutations_rejected=true")
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
