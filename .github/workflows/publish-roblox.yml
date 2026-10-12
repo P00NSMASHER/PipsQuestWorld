@@ -12,11 +12,15 @@ permissions:
   contents: read
 
 concurrency:
-  group: roblox-publish-pip-high
+  group: roblox-place-87245440673982
   cancel-in-progress: false
 
 jobs:
   publish:
+    # Retired fixed-source release: both historical workflows target the
+    # same Roblox place with incompatible SHAs. The current Emma classroom
+    # producer owns new publication; require its independently reviewed lane.
+    if: ${{ false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
