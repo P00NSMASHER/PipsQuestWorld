@@ -356,8 +356,15 @@ request.OnServerInvoke=function(player,command,args)
 end
 
 local function join(player)
+    -- PlayerAdded is connected before the startup GetPlayers sweep. A player
+    -- arriving on that boundary can be observed by both paths; never launch a
+    -- second load once this server already owns an active session.
+    if sessions[player.UserId] then return end
     local saved=loadProgress(player)
-    if not saved then return end
+    -- Two loads can still overlap before either one publishes its session.
+    -- Whichever completed first owns the live session; a later stale read must
+    -- not reset in-memory answers earned while it was yielding.
+    if not saved or sessions[player.UserId] then return end
     local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
     sessions[player.UserId]=s
     local function place(character)

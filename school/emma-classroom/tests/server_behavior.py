@@ -21,6 +21,7 @@ player.Parent=Players
 local saved,events={ ["u:1"]={totalCorrect=4,sessionsCompleted=0,skills={}} },{}
 local getFailures,updateFailures,getAttempts,updateAttempts=5,0,0,0
 local disconnectOnGet
+local getHook
 local studioMode=false
 local store={
     GetAsync=function(_,key)
@@ -31,7 +32,14 @@ local store={
             departing.Parent=nil
             Players.PlayerRemoving.callback(departing)
         end
-        return saved[key]
+        local result=saved[key]
+        if getHook then
+            -- Model a yielded DataStore read returning the older bytes it saw
+            -- before a second join loaded, played and persisted newer state.
+            if type(result)=="table" then result=table.clone(result) end
+            local hook=getHook;getHook=nil;hook()
+        end
+        return result
     end,
     UpdateAsync=function(_,key,f)
         updateAttempts+=1
@@ -301,6 +309,29 @@ flush()
 assert(saved["u:4"].totalCorrect==1 and saved["u:4"].sessionsCompleted==2,"Normalized legacy record must save new progress")
 assert(saved["u:4"].skills.broken==nil and saved["u:4"].skills[""]==nil,"Malformed skill rows must be healed, not recopied")
 assert(saved["u:4"].skills.reading.correct==0 and saved["u:4"].skills.spelling.correct==3,"Valid legacy skills remain monotonic and nonnegative")
+
+-- PlayerAdded and the startup GetPlayers sweep can observe the same arrival.
+-- If the first load becomes playable while the older read is still yielding,
+-- that stale completion must not replace the active session and erase progress.
+local duplicate={UserId=6,CharacterAdded=signal(),Parent=Players}
+saved["u:6"]={totalCorrect=8,sessionsCompleted=0,skills={}}
+getHook=function()
+    Players.PlayerAdded.callback(duplicate)
+    assert(requests.OnServerInvoke(duplicate,"state").progress.totalCorrect==8)
+    flush()
+    local active=requests.OnServerInvoke(duplicate,"state").question
+    local activeRaw
+    for _,candidate in ipairs(Questions) do
+        if candidate.prompt==active.prompt and candidate.subject==active.subject then activeRaw=candidate;break end
+    end
+    assert(activeRaw)
+    assert(requests.OnServerInvoke(duplicate,"answer",{token=active.token,index=table.find(active.choices,activeRaw.answer)}).correct)
+    flush()
+    assert(saved["u:6"].totalCorrect==9,"First completed join must persist its earned answer")
+end
+Players.PlayerAdded.callback(duplicate)
+local duplicateState=requests.OnServerInvoke(duplicate,"state")
+assert(duplicateState.progress.totalCorrect==9,"Late duplicate join must not reset the active session")
 
 -- A DataStore read can finish after PlayerRemoving already ran. That late
 -- success must not recreate a ghost session for a player who left mid-load.
