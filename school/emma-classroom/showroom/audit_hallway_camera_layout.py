@@ -16,7 +16,8 @@ from pathlib import Path
 import re
 from typing import NamedTuple
 
-from walkability_audit import get_source_blockers
+from walkability_audit import (Blocker, FloorSupport, Grid, START,
+                               get_source_geometry)
 
 ROOT=Path(__file__).resolve().parents[3]
 WORKFLOW=ROOT/".github"/"workflows"/"emma-showroom-visual-preview.yml"
@@ -114,13 +115,31 @@ def check_role(name: str, cam: Camera) -> None:
             assert tx>=37.5 and tz<25.5, (
                 "HALL_CAMERA_MISSES_ONLY_CONNECTED_EXIT")
 
-def inspect(cameras: dict[str,Camera], blockers=None) -> None:
+def inspect(cameras: dict[str,Camera], blockers=None, floors=None) -> None:
     assert set(cameras)==set(REGISTERED), "HALL_CAMERA_INVENTORY_REGRESSION"
     for name,cam in cameras.items():
         check_role(name,cam)
         if blockers is not None:
             bad=sorted(set(b.name for b in blockers if b.covers(cam.eye[0],cam.eye[2])))
             assert not bad, "HALL_CAMERA_EYE_INSIDE_REAL_COLLIDER "+name+":"+repr(bad[:8])
+    if floors is not None:
+        # Only the collidable floors actually constructed by Room.lua are
+        # accepted; a visible poster, tile grout or preview-only prop is not
+        # evidence of support. Existing per-camera geometry/role gates remain.
+        assert blockers is not None, "HALL_CAMERA_NAV_COLLIDERS_REQUIRED"
+        grid=Grid(blockers,floors)
+        reachable,_=grid.connected(START)
+        for name,cam in cameras.items():
+            point=(cam.eye[0],cam.eye[2])
+            assert any(f.supports(*point) for f in floors), (
+                "HALL_CAMERA_EYE_HAS_NO_STRUCTURAL_FLOOR "+name)
+            # The source renderer can draw an image from an isolated room
+            # that Emma cannot physically walk to. A connected, full-geometry
+            # approximate player grid must lead near each camera as well.
+            cell=grid.closest_reachable(point,reachable,radius=1.5)
+            assert cell is not None, (
+                "HALL_CAMERA_UNREACHABLE_FROM_CLASSROOM "+name)
+
 
 def self_test() -> None:
     # Synthetic, publicly safe camera location mutation fixtures.
@@ -157,6 +176,39 @@ def self_test() -> None:
             pass
         else:
             raise AssertionError("HALL_CAMERA_NEGATIVE_TEST_ACCEPTED "+reason)
+    # Connectivity is a distinct issue from a nonblank or collider-free
+    # screenshot: the old straight-through hall could show nice rendered
+    # evidence from a physically disconnected room. Use only invented floors.
+    all_floor=FloorSupport("synthetic joined structural floor",
+                           -56,56,-33,50,.5)
+    inspect(example,[],[all_floor])
+    try:
+        inspect(example,None,[all_floor])
+    except AssertionError as exc:
+        assert "NAV_COLLIDERS_REQUIRED" in str(exc)
+    else:
+        raise AssertionError("HALL_CAMERA_NAV_WITHOUT_COLLIDERS_ACCEPTED")
+    # All nine rendered eyes have support in the control case. Removing
+    # support from the long hall must fail even if the camera image isn't blank.
+    classroom_only=FloorSupport("synthetic classroom-only floor",
+                                -56,56,-33,27,.5)
+    try:
+        inspect(example,[],[classroom_only])
+    except AssertionError as exc:
+        assert "EYE_HAS_NO_STRUCTURAL_FLOOR" in str(exc)
+    else:
+        raise AssertionError("HALL_CAMERA_UNSUPPORTED_GALLERY_ACCEPTED")
+    # A continuous picture-perfect floor under the gallery is insufficient
+    # if a solid wall isolates the gallery from the actual classroom spawn.
+    sealed=Blocker("synthetic sealed portal",-56,56,26,27)
+    try:
+        inspect(example,[sealed],[all_floor])
+    except AssertionError as exc:
+        assert "UNREACHABLE_FROM_CLASSROOM" in str(exc)
+    else:
+        raise AssertionError("HALL_CAMERA_SEALED_GALLERY_ACCEPTED")
+    print("HALL_CAMERA_REACHABILITY_NEGATIVE_PASS "
+          "missing_floor,blocked_route,missing_colliders_rejected=true")
     print("HALL_CAMERA_LAYOUT_SELF_TEST_PASS "
           "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true")
 
@@ -172,10 +224,12 @@ def main() -> None:
     if not args.luau:
         ap.error("--luau required unless --self-test")
     cameras=read_cameras(WORKFLOW.read_text(encoding="utf-8"))
-    blockers=get_source_blockers(args.luau)
-    inspect(cameras,blockers)
+    blockers,floors=get_source_geometry(args.luau)
+    inspect(cameras,blockers,floors)
     print("HALL_CAMERA_REAL_SCENE_PASS cameras="+str(len(cameras))
           +" real_colliders="+str(len(blockers))
+          +" structural_floors="+str(len(floors))
+          +" all_nine_views_physically_reachable_on_source_grid=true"
           +" closet_and_hall_distinguished=true"
           +" stale_camera_regression_rejected=true"
           +" native_iphone_acceptance=false")
