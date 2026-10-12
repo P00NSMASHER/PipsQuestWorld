@@ -1883,17 +1883,23 @@ local function buildBackDoorAndHall(root: Instance)
         CFrame.new(-54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
     local rightCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
         CFrame.new(54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
-    -- The original rear plaster facade ended at y=13, leaving yellow
-    -- classroom wall visible from the school corridor ABOVE the hall's
-    -- photo ceiling and at oblique door angles. Extend the EXISTING two
-    -- noncolliding facade panels up to the actual 18-stud classroom shell,
-    -- while retaining the lower amber brick/cap and warm interior walls.
-    -- This changes no structural walls or left staff-door opening.
-    for _,x in ipairs({-23,23}) do
+    -- The x=+/-7.25 original yellow Back doorway plaster infill remained
+    -- visible from the photo corridor because existing z-facing paint
+    -- stopped at x=+/-9. Reuse BOTH existing blue-gray panels, extending
+    -- to the edge of the actual 11-stud double-door opening, x=+/-5.5.
+    -- Starting at y=4.25 also closes the old narrow yellow band above dado.
+    -- Original classroom-facing warm collidable walls remain untouched.
+    for _,side in ipairs({-1,1}) do
         hp("Photo hall classroom exterior blue-gray paint",
-            Vector3.new(28,13.5,.09),CFrame.new(x,11.25,27.565),
+            Vector3.new(31.50,13.75,.09),
+            CFrame.new(side*21.25,11.125,27.565),
             blueGray,Enum.Material.SmoothPlastic,false)
     end
+    -- One thin school-facing header facade hides the yellow upper header
+    -- from the corridor without recoloring the original interior.
+    hp("Photo hall rear doorway header exterior blue-gray paint",
+        Vector3.new(11,5,.09),CFrame.new(0,15.5,27.565),
+        blueGray,Enum.Material.SmoothPlastic,false)
 
     -- Finish the exposed OUTSIDE face of the existing x=37 staff doorway
     -- return. The source-derived hallway camera saw this original yellow
@@ -1974,10 +1980,12 @@ local function buildBackDoorAndHall(root: Instance)
     end
     dado("Photo hall rear glazed brick",Vector3.new(107,4.25,.075),
         CFrame.new(0,2.125,48.735),Enum.NormalId.Front)
-    for _,x in ipairs({-23,23}) do
+    -- Extend these existing two glazed dados over the same exposed
+    -- yellow infill, without crossing the double-door opening.
+    for _,side in ipairs({-1,1}) do
         dado("Photo hall classroom exterior glazed brick",
-            Vector3.new(27.85,4.25,.075),CFrame.new(x,2.125,27.66),
-            Enum.NormalId.Back)
+            Vector3.new(31.35,4.25,.075),
+            CFrame.new(side*21.25,2.125,27.66),Enum.NormalId.Back)
     end
     -- Don't draw glazed brick across the new hallway entry from the left
     -- ABVM staff doorway. Only the sealed negative-X wall gets a facing.
@@ -1995,11 +2003,13 @@ local function buildBackDoorAndHall(root: Instance)
         Enum.Material.Wood,false)
     -- No decorative cap or handrail may float across the 17-stud LEFT
     -- hallway entry (x=37..54) where the staff corridor bends north.
-    hp("Photo hall front dado cap",Vector3.new(44.5,.16,.14),
-        CFrame.new(-31.5,4.34,27.73),Color3.fromRGB(162,124,79),
+    -- Reuse both oak rails: now each finishes at the matching plaster/
+    -- brick edge, outside x=+/-5.5. No rail crosses a doorway.
+    hp("Photo hall front dado cap",Vector3.new(48.20,.16,.14),
+        CFrame.new(-29.65,4.34,27.73),Color3.fromRGB(162,124,79),
         Enum.Material.Wood,false)
-    hp("Photo hall front dado cap",Vector3.new(27.0,.16,.14),
-        CFrame.new(23,4.34,27.73),Color3.fromRGB(162,124,79),
+    hp("Photo hall front dado cap",Vector3.new(30.90,.16,.14),
+        CFrame.new(21.05,4.34,27.73),Color3.fromRGB(162,124,79),
         Enum.Material.Wood,false)
 
     -- Both faces of the ACTUAL existing glass leaves receive tiny, anonymous
