@@ -365,7 +365,7 @@ local function join(player)
     -- Whichever completed first owns the live session; a later stale read must
     -- not reset in-memory answers earned while it was yielding.
     if not saved or sessions[player.UserId] then return end
-    local s={stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
+    local s={player=player,stars=0,correctThisSession=0,totalCorrect=saved.totalCorrect,sessionsCompleted=saved.sessionsCompleted,skills=saved.skills,seen={},pending=nil,teacherModel=nil,busy=false,sessionCompleteReported=false,sessionCompleteSent=false}
     sessions[player.UserId]=s
     local function place(character)
         local root=character:WaitForChild("HumanoidRootPart",10)
@@ -384,7 +384,15 @@ end
 Players.PlayerAdded:Connect(join)
 for _,p in ipairs(Players:GetPlayers()) do task.spawn(join,p) end
 Players.PlayerRemoving:Connect(function(player)
-    local s=sessions[player.UserId];if s then dismissTeacher(s);saveProgress(player,s,true) end;sessions[player.UserId]=nil
+    local s=sessions[player.UserId]
+    -- Release only this Player instance before the bounded write. A rapid
+    -- reconnect must be allowed to load while the departing save waits, and a
+    -- stale removal callback must never clear the replacement session.
+    if s and s.player==player then
+        sessions[player.UserId]=nil
+        dismissTeacher(s)
+        saveProgress(player,s,true)
+    end
 end)
 
 game:BindToClose(function()
