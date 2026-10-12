@@ -106,7 +106,9 @@ for step=1,10 do
     local miss=requests.OnServerInvoke(player,"answer",{token=q.token,index=wrong})
     assert(miss.ok and miss.correct==false and miss.answer==nil)
     assert(requests.OnServerInvoke(player,"state").progress.stars==step-1,"No wrong-answer penalty or reward")
-    if step==1 then updateFailures=2 end
+    -- Cross an entire four-attempt save batch. The live session must retain
+    -- the newest snapshot and retry until this simulated outage recovers.
+    if step==1 then updateFailures=5 end
     local hit=requests.OnServerInvoke(player,"answer",{token=q.token,index=correct})
     assert(hit.ok and hit.correct)
     assert(not requests.OnServerInvoke(player,"answer",{token=q.token,index=correct}).ok,"Replay cannot earn another star")
@@ -116,9 +118,13 @@ for step=1,10 do
         assert(events[#events].kind=="correct","Celebration has not yet fired; completion must already be committed")
     end
     flush()
+    if step==1 then
+        assert(updateAttempts>=6,"Exhausted save batch must retry while the session remains live")
+        assert(saved["u:1"].totalCorrect==5,"Recovered save must durably include the earned answer")
+    end
     assert(requests.OnServerInvoke(player,"state").progress.stars==step)
 end
-assert(updateAttempts>=3,"Progress save must retry transient DataStore failures")
+assert(updateAttempts>=6,"Progress save must survive an outage longer than one retry batch")
 assert(events[#events].kind=="session_complete")
 assert(saved["u:1"].totalCorrect==14 and saved["u:1"].sessionsCompleted==1)
 assert(requests.OnServerInvoke(player,"restart").ok);flush()

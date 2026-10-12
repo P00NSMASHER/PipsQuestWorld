@@ -88,20 +88,22 @@ end
 local function saveProgress(player,s,awaitCompletion:boolean?)
     -- Every correct answer can schedule a save. DataStore requests may finish in
     -- a different order, so snapshots and writes must both be monotonic: an
-    -- older completion is never allowed to erase newer lifetime progress.
+    -- older completion is never allowed to erase newer lifetime progress. Keep
+    -- the newest unsaved snapshot queued after a full retry batch fails; a live
+    -- session must not silently abandon earned progress during a longer outage.
     local snapshot={
         totalCorrect=math.max(0,tonumber(s.totalCorrect) or 0),
         sessionsCompleted=math.max(0,tonumber(s.sessionsCompleted) or 0),
         skills=table.clone(s.skills),
     }
-    local function writeSnapshot()
+    local function writeSnapshot(target)
         return retryDataStore("progress save",function()
             store:UpdateAsync("u:"..player.UserId,function(old)
                 old=type(old)=="table" and old or {}
-                old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,snapshot.totalCorrect)
-                old.sessionsCompleted=math.max(tonumber(old.sessionsCompleted) or 0,snapshot.sessionsCompleted)
+                old.totalCorrect=math.max(tonumber(old.totalCorrect) or 0,target.totalCorrect)
+                old.sessionsCompleted=math.max(tonumber(old.sessionsCompleted) or 0,target.sessionsCompleted)
                 local mergedSkills=type(old.skills)=="table" and table.clone(old.skills) or {}
-                for skillName,snapshotSkill in pairs(snapshot.skills) do
+                for skillName,snapshotSkill in pairs(target.skills) do
                     local oldSkill=type(mergedSkills[skillName])=="table" and mergedSkills[skillName] or {}
                     local nextSkill=table.clone(oldSkill)
                     nextSkill.correct=math.max(
@@ -116,7 +118,32 @@ local function saveProgress(player,s,awaitCompletion:boolean?)
             end)
         end)
     end
-    if awaitCompletion then writeSnapshot() else task.spawn(writeSnapshot) end
+    if awaitCompletion then
+        -- PlayerRemoving / BindToClose still make a bounded synchronous attempt.
+        -- The monotonic UpdateAsync merge makes this safe alongside an older
+        -- in-flight worker.
+        s.saveSnapshot=nil
+        writeSnapshot(snapshot)
+        return
+    end
+    s.saveSnapshot=snapshot
+    if s.saveWorkerRunning then return end
+    s.saveWorkerRunning=true
+    task.spawn(function()
+        while sessions[player.UserId]==s and player.Parent==Players do
+            local pending=s.saveSnapshot
+            if not pending then break end
+            local ok=writeSnapshot(pending)
+            if ok then
+                -- A newer answer may have replaced the pending snapshot while
+                -- UpdateAsync yielded. Never clear that newer work.
+                if s.saveSnapshot==pending then s.saveSnapshot=nil end
+            else
+                task.wait(LOAD_RETRY_SECONDS)
+            end
+        end
+        s.saveWorkerRunning=false
+    end)
 end
 
 local function chooseTeacher(subject,previous)
