@@ -75,7 +75,262 @@ assert(#pieces("Rear corridor end wall")==0 and
        #pieces("Hall left wall")==0,
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Open classroom door",2)
-expect("Photo hall classroom exterior blue-gray paint",2)
+-- Fix the real remaining yellow wall sliver seen by the source hall camera.
+-- Check constructed geometry, not just a literal comment in Room.lua.
+local function checkExteriorStaffReturn()
+    local upper=expect("Photo hall classroom exterior blue-gray paint",2)
+    for _,p in ipairs(upper) do
+        assert(near(p.Size.Y,13.75) and near(p.Position.Y,11.125)
+            and p.Material==Enum.Material.SmoothPlastic
+            and not p.CanCollide and not p.CanQuery,
+            "HALL_UPPER_REAR_CLASSROOM_YELLOW_BAND_RETURNED")
+    end
+    local wall=one("Right wall back")
+    assert(wall.CanCollide and near(wall.Position.X,37)
+        and near(wall.Position.Z,25),
+        "HALL_STAFF_RETURN_ORIGINAL_SHELL_LOST")
+    local finish=one("Photo hall staff return blue-gray plaster")
+    local brick=one("Photo hall staff return glazed brick")
+    local cap=one("Photo hall staff return oak cap")
+    assert(near(finish.Position.X,37.56)
+        and near(finish.Position.Y,9)
+        and near(finish.Size.Y,18)
+        and finish.Color.B > finish.Color.R
+        and not finish.CanCollide and not finish.CanQuery,
+        "HALL_STAFF_RETURN_PLASTER_NOT_FACING_CORRIDOR")
+    assert(near(brick.Position.X,37.65)
+        and near(brick.Position.Y,2.125)
+        and near(brick.Size.Y,4.25)
+        and brick.Material==Enum.Material.Brick
+        and not brick.CanCollide and not brick.CanQuery,
+        "HALL_STAFF_RETURN_BRICK_MISSING_OR_BLOCKING")
+    assert(near(cap.Position.Y,4.34)
+        and cap.Material==Enum.Material.Wood
+        and not cap.CanCollide and not cap.CanQuery,
+        "HALL_STAFF_RETURN_OAK_CAP_MISSING_OR_BLOCKING")
+    return upper,finish,brick,cap
+end
+local upperReturn,plasterReturn,brickReturn,capReturn=checkExteriorStaffReturn()
+local oldUpperY=upperReturn[1].Size
+upperReturn[1].Size=Vector3.new(28,8.6,.09)
+local accepted,reason=pcall(checkExteriorStaffReturn)
+upperReturn[1].Size=oldUpperY
+assert(not accepted and string.find(tostring(reason),
+    "HALL_UPPER_REAR_CLASSROOM_YELLOW_BAND_RETURNED",1,true),
+    "HALL_UPPER_YELLOW_BAND_MUTATION_FALSELY_ACCEPTED")
+local oldPlaster=plasterReturn.Color
+plasterReturn.Color=Color3.fromRGB(246,232,165)
+accepted,reason=pcall(checkExteriorStaffReturn)
+plasterReturn.Color=oldPlaster
+assert(not accepted and string.find(tostring(reason),
+    "HALL_STAFF_RETURN_PLASTER_NOT_FACING_CORRIDOR",1,true),
+    "HALL_STAFF_RETURN_YELLOW_PAINT_FALSELY_ACCEPTED")
+local oldBrickCollision=brickReturn.CanCollide
+brickReturn.CanCollide=true
+accepted,reason=pcall(checkExteriorStaffReturn)
+brickReturn.CanCollide=oldBrickCollision
+assert(not accepted and string.find(tostring(reason),
+    "HALL_STAFF_RETURN_BRICK_MISSING_OR_BLOCKING",1,true),
+    "HALL_STAFF_RETURN_COLLIDING_DADO_FALSELY_ACCEPTED")
+local oldCapName=capReturn.Name
+capReturn.Name="test removed return cap"
+accepted,reason=pcall(checkExteriorStaffReturn)
+capReturn.Name=oldCapName
+assert(not accepted and string.find(tostring(reason),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "HALL_STAFF_RETURN_CAP_MISSING_FALSELY_ACCEPTED")
+checkExteriorStaffReturn()
+print("HALL_STAFF_RETURN_FINISH_SOURCE_PASS "
+    .."two_upper_rear_plaster_panels_extended=true "
+    .."blue_gray_side_return=true original_shell_collidable=true "
+    .."three_noncolliding_parts=true corridor_brick_dado_and_oak_cap=true "
+    .."four_adversarial_mutations_rejected=true")
+
+-- The earlier flat rear paint panels cannot cover the PERPENDICULAR
+-- yellow x-facing return at either edge of the old double-door jamb.
+-- Validate all six constructed finish parts and retain original walls.
+local function checkDoorwayEndFinishes()
+    local plaster=expect("Photo hall doorway inner wall end plaster",2)
+    local bricks=expect("Photo hall doorway inner wall end brick",2)
+    local caps=expect("Photo hall doorway inner wall end oak cap",2)
+    table.sort(plaster,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(bricks,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(caps,function(a,b)return a.Position.X<b.Position.X end)
+    for i,side in ipairs({-1,1}) do
+        local base=one(side<0 and "Back wall left" or "Back wall right")
+        assert(base.CanCollide and near(base.Position.X,side*23)
+            and near(base.Position.Z,27)
+            and near(base.Size.Y,18),
+            "HALL_ORIGINAL_CLASSROOM_REAR_WALL_LOST")
+        local endX=side*8.445
+        local upper=plaster[i]
+        local lower=bricks[i]
+        local cap=caps[i]
+        assert(near(upper.Position.X,endX)
+            and near(upper.Position.Z,27)
+            and near(upper.Size.Y,18)
+            and near(upper.Size.Z,1.12)
+            and upper.Color.B>upper.Color.R
+            and upper.Material==Enum.Material.SmoothPlastic
+            and not upper.CanCollide and not upper.CanQuery,
+            "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED")
+        assert(near(lower.Position.X,endX-side*.04)
+            and near(lower.Position.Y,2.125)
+            and near(lower.Size.Y,4.25)
+            and lower.Material==Enum.Material.Brick
+            and not lower.CanCollide and not lower.CanQuery,
+            "HALL_DOOR_END_BRICK_REGRESSED")
+        assert(near(cap.Position.X,endX-side*.06)
+            and near(cap.Position.Y,4.34)
+            and cap.Material==Enum.Material.Wood
+            and not cap.CanCollide and not cap.CanQuery,
+            "HALL_DOOR_END_OAK_CAP_MISSING")
+    end
+    local allParts=0
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then allParts+=1 end
+    end
+    assert(allParts<=3050,"HALL_DOOR_END_EXCEEDED_RESERVED_PART_HEADROOM")
+    return plaster,bricks,caps,allParts
+end
+local endPlaster,endBricks,endCaps,endParts=checkDoorwayEndFinishes()
+local oldEdgeColor=endPlaster[2].Color
+endPlaster[2].Color=Color3.fromRGB(246,232,165)
+local okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endPlaster[2].Color=oldEdgeColor
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED",1,true),
+    "HALL_DOOR_END_YELLOW_MUTATION_FALSE_ACCEPT")
+local oldBrickCollide=endBricks[1].CanCollide
+endBricks[1].CanCollide=true
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endBricks[1].CanCollide=oldBrickCollide
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_BRICK_REGRESSED",1,true),
+    "HALL_DOOR_END_BRICK_COLLIDER_MUTATION_FALSE_ACCEPT")
+local oldCapName=endCaps[1].Name
+endCaps[1].Name="test: remove jamb cap"
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endCaps[1].Name=oldCapName
+assert(not okEnd and string.find(tostring(errEnd),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "HALL_DOOR_END_CAP_MISSING_MUTATION_FALSE_ACCEPT")
+local oldEndPos=endPlaster[1].Position
+endPlaster[1].Position=Vector3.new(-7.70,9,27)
+okEnd,errEnd=pcall(checkDoorwayEndFinishes)
+endPlaster[1].Position=oldEndPos
+assert(not okEnd and string.find(tostring(errEnd),
+    "HALL_DOOR_END_YELLOW_RETURN_REINTRODUCED",1,true),
+    "HALL_DOOR_END_MISPLACED_MUTATION_FALSE_ACCEPT")
+checkDoorwayEndFinishes()
+print("HALL_DOOR_END_SOURCE_PASS two_full_height_blue_gray_returns=true "
+    .."ochre_dado_and_oak_cap_both_edges=true "
+    .."original_two_collidable_rear_walls=true "
+    .."no_added_colliders=true part_count="..endParts
+    .." yellow,brick_collision,trim_and_position_mutations_rejected=true")
+-- Source-built proof: the wide yellow panels alongside the back double
+-- doors were the ORIGINAL x=+/-7.25 plaster infill, not the already fixed
+-- narrow x-facing wall ends. Ensure z-facing paint, brick, and oak reach
+-- the true opening without changing classroom-facing originals or colliders.
+local function checkHallwayBackDoorInfill()
+    local originals=expect("Back doorway plaster infill",2)
+    table.sort(originals,function(a,b)return a.Position.X<b.Position.X end)
+    for i,sgn in ipairs({-1,1}) do
+        local p=originals[i]
+        assert(p.CanCollide and near(p.Position.X,sgn*7.25)
+            and near(p.Position.Z,27) and near(p.Size.X,3.5)
+            and p.Color.R>.94 and p.Color.G>.85 and p.Color.B<.70,
+            "HALL_CLASSROOM_WARM_INFILL_ORIGINAL_LOST")
+    end
+    local baseHeader=one("Door header wall")
+    assert(baseHeader.CanCollide and near(baseHeader.Position.Y,15.5)
+        and baseHeader.Color.R>.94 and baseHeader.Color.G>.85,
+        "HALL_CLASSROOM_WARM_HEADER_ORIGINAL_LOST")
+    local paint=expect("Photo hall classroom exterior blue-gray paint",2)
+    local brick=expect("Photo hall classroom exterior glazed brick",2)
+    local caps=expect("Photo hall front dado cap",2)
+    table.sort(paint,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(brick,function(a,b)return a.Position.X<b.Position.X end)
+    table.sort(caps,function(a,b)return a.Position.X<b.Position.X end)
+    for i,sgn in ipairs({-1,1}) do
+        local p=paint[i]
+        assert(near(p.Position.X,sgn*21.25)
+            and near(p.Position.Y,11.125)
+            and near(p.Size.X,31.50) and near(p.Size.Y,13.75)
+            and near(p.Position.Z,27.565)
+            and p.Color.B>p.Color.R
+            and not p.CanCollide and not p.CanQuery,
+            "HALL_INFILL_OLD_SHORT_PLASTER")
+        local b=brick[i]
+        assert(near(b.Position.X,sgn*21.25)
+            and near(b.Size.X,31.35) and near(b.Position.Y,2.125)
+            and not b.CanCollide and not b.CanQuery,
+            "HALL_INFILL_OLD_SHORT_BRICK")
+    end
+    assert(caps[1].Position.X+caps[1].Size.X/2 < -5.5
+        and caps[2].Position.X-caps[2].Size.X/2 > 5.5
+        and not caps[1].CanCollide and not caps[2].CanCollide,
+        "HALL_CAP_BLOCKS_CLASSROOM_DOORWAY")
+    assert(near(caps[1].Position.X,-29.65)
+        and near(caps[1].Size.X,48.20)
+        and near(caps[2].Position.X,21.05)
+        and near(caps[2].Size.X,30.90),
+        "HALL_INFILL_OLD_SHORT_OAK_CAP")
+    local header=one("Photo hall rear doorway header exterior blue-gray paint")
+    assert(near(header.Position.X,0) and near(header.Position.Y,15.5)
+        and near(header.Position.Z,27.565)
+        and near(header.Size.X,11) and near(header.Size.Y,5)
+        and header.Color.B>header.Color.R
+        and not header.CanCollide and not header.CanQuery,
+        "HALL_INFILL_HEADER_YELLOW_OR_COLLIDING")
+    local parts=0
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") then parts+=1 end
+    end
+    assert(parts<=3050,"HALL_INFILL_MOBILE_HEADROOM_LOST")
+    return originals,paint,brick,caps,header,parts
+end
+local infillBase,infillPaint,infillBrick,infillCaps,infillHeader,partCount=
+    checkHallwayBackDoorInfill()
+local function rejectInfillMutation(change,restore,expectedName)
+    change()
+    local ok,err=pcall(checkHallwayBackDoorInfill)
+    restore()
+    assert(not ok and string.find(tostring(err),expectedName,1,true),
+        "HALL_INFILL_MUTATION_FALSE_ACCEPT "..expectedName..": "..tostring(err))
+end
+local oldPaintSize=infillPaint[2].Size
+rejectInfillMutation(
+    function() infillPaint[2].Size=Vector3.new(28,13.75,.09) end,
+    function() infillPaint[2].Size=oldPaintSize end,
+    "HALL_INFILL_OLD_SHORT_PLASTER")
+local oldBrickSize=infillBrick[1].Size
+rejectInfillMutation(
+    function() infillBrick[1].Size=Vector3.new(27.85,4.25,.075) end,
+    function() infillBrick[1].Size=oldBrickSize end,
+    "HALL_INFILL_OLD_SHORT_BRICK")
+local oldCapSize=infillCaps[2].Size
+rejectInfillMutation(
+    function() infillCaps[2].Size=Vector3.new(42,.16,.14) end,
+    function() infillCaps[2].Size=oldCapSize end,
+    "HALL_CAP_BLOCKS_CLASSROOM_DOORWAY")
+local oldHeaderCollision=infillHeader.CanCollide
+rejectInfillMutation(
+    function() infillHeader.CanCollide=true end,
+    function() infillHeader.CanCollide=oldHeaderCollision end,
+    "HALL_INFILL_HEADER_YELLOW_OR_COLLIDING")
+local oldInfillColor=infillBase[1].Color
+rejectInfillMutation(
+    function() infillBase[1].Color=Color3.fromRGB(107,117,125) end,
+    function() infillBase[1].Color=oldInfillColor end,
+    "HALL_CLASSROOM_WARM_INFILL_ORIGINAL_LOST")
+checkHallwayBackDoorInfill()
+print("HALL_DOUBLE_DOOR_INFILL_EXTERIOR_PASS "
+    .."warm_original_walls_and_header_preserved=true "
+    .."existing_two_plaster_two_brick_two_oak_spans_extended=true "
+    .."one_noncolliding_header_overlay=true "
+    .."five_adversarial_mutations_rejected=true "
+    .."physical_part_count="..partCount)
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
@@ -188,6 +443,115 @@ checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
     .."closet_walls=3 shelves=3 rear_wall_mutation_rejected=true")
+
+-- Source-rendered camera 22 revealed the genuine gameplay problem: the
+-- solid closet's beige unpainted exterior projected as an enormous box
+-- into the photographed blue-gray/ochre corridor. This audit verifies
+-- the REAL room constructor now finishes all exposed faces without hiding
+-- the actual closet, weakening its seals or making decorative skins solid.
+local function sameColor(actual,want)
+    return math.abs(actual.R-want.R)<.015
+       and math.abs(actual.G-want.G)<.015
+       and math.abs(actual.B-want.B)<.015
+end
+local function checkClosetHallFinishes()
+    local exterior=Color3.fromRGB(107,117,125)
+    local cream=Color3.fromRGB(233,220,178)
+    local amber=Color3.fromRGB(192,132,63)
+    local baseSides=expect("Supply closet side wall",2)
+    local baseRear=one("Supply closet solid rear wall")
+    for _,p in ipairs(baseSides) do
+        assert(p.CanCollide and sameColor(p.Color,exterior)
+            and p.Material==Enum.Material.SmoothPlastic,
+            "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED")
+    end
+    assert(baseRear.CanCollide and sameColor(baseRear.Color,exterior),
+        "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED")
+
+    local inside=expect("Supply closet interior warm plaster",3)
+    table.sort(inside,function(a,b)return a.Position.X<b.Position.X end)
+    assert(near(inside[1].Position.X,-5.575)
+        and near(inside[2].Position.X,0)
+        and near(inside[3].Position.X,5.575)
+        and near(inside[2].Position.Z,35.645),
+        "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING")
+    for _,p in ipairs(inside) do
+        assert(sameColor(p.Color,cream)
+            and p.Material==Enum.Material.SmoothPlastic
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING_OR_BLOCKING")
+    end
+
+    local dado=expect("Supply closet exterior glazed-brick dado",3)
+    table.sort(dado,function(a,b)return a.Position.X<b.Position.X end)
+    assert(near(dado[1].Position.X,-6.345)
+        and near(dado[2].Position.X,0)
+        and near(dado[3].Position.X,6.345)
+        and near(dado[2].Position.Z,36.455),
+        "SUPPLY_CLOSET_DADO_NOT_FACING_REAL_HALL")
+    for _,p in ipairs(dado) do
+        assert(sameColor(p.Color,amber)
+            and p.Material==Enum.Material.Brick
+            and near(p.Size.Y,4.26)
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_FINISH_COLLIDER_OR_WRONG_BRICK")
+    end
+
+    local trim=expect("Supply closet exterior oak cap rail",3)
+    for _,p in ipairs(trim) do
+        assert(p.Material==Enum.Material.Wood
+            and near(p.Position.Y,4.35)
+            and not p.CanCollide and not p.CanQuery and not p.CanTouch,
+            "SUPPLY_CLOSET_EXTERIOR_CAP_RAIL_LOST")
+    end
+    local parts=0
+    for _,obj in ipairs(Room.Root:GetDescendants()) do
+        if obj:IsA("BasePart") then parts+=1 end
+    end
+    assert(parts<=3050,"SUPPLY_CLOSET_FINISH_MOBILE_BUDGET_REGRESSED")
+    return baseRear,inside,dado,trim,parts
+end
+
+local extBack,insideFinish,brickFinish,capFinish,finishedCount=
+    checkClosetHallFinishes()
+local oldExtColor=extBack.Color
+extBack.Color=Color3.fromRGB(233,220,178)
+local okFinish,errFinish=pcall(checkClosetHallFinishes)
+extBack.Color=oldExtColor
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_EXTERIOR_CREAM_WALL_REINTRODUCED",1,true),
+    "CLOSET_OLD_BEIGE_EXTERIOR_FALSELY_ACCEPTED")
+
+local oldBrickCollider=brickFinish[1].CanCollide
+brickFinish[1].CanCollide=true
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+brickFinish[1].CanCollide=oldBrickCollider
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_FINISH_COLLIDER_OR_WRONG_BRICK",1,true),
+    "CLOSET_BRICK_WALKWAY_COLLIDER_FALSELY_ACCEPTED")
+
+local oldInsideX=insideFinish[1].Position
+insideFinish[1].Position=Vector3.new(-4.70,6.5,31.70)
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+insideFinish[1].Position=oldInsideX
+assert(not okFinish and string.find(tostring(errFinish),
+    "SUPPLY_CLOSET_INTERIOR_PLASTER_MISSING",1,true),
+    "CLOSET_WARM_INTERIOR_FALSELY_ACCEPTED")
+
+local oldCapName=capFinish[1].Name
+capFinish[1].Name="test-only removed exterior oak cap"
+okFinish,errFinish=pcall(checkClosetHallFinishes)
+capFinish[1].Name=oldCapName
+assert(not okFinish and string.find(tostring(errFinish),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "CLOSET_CAP_MISSING_FALSELY_ACCEPTED")
+checkClosetHallFinishes()
+print("CLOSET_HALL_EXTERIOR_FINISH_SOURCE_PASS exterior_blue_gray=true "
+    .."ochre_native_brick_dado=3 oak_caps=3 "
+    .."interior_warm_plaster=3 original_three_closure_walls=true "
+    .."nine_new_decorative_parts=true part_count="..finishedCount
+    .." occlusion_color_and_collision_mutations_rejected=true "
+    .."native_iphone_review_still_required=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)

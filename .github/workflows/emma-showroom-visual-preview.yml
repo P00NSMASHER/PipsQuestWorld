@@ -389,10 +389,12 @@ jobs:
           # diamonds; the semantic image-pixel gate remains fail-closed.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             06-hall-paper-rail 0,5.5,40 -36,9,48.52
-          # Fixed, full-geometry photo-window camera: sees the real 3D
-          # mustard sash and sunburst at the distant sealed left end wall.
+          # Original x=0 view was ~40% closet-wall color, x=-4 was ~21%.
+          # Move this source-review eye farther west of the closet wall.
+          # Do not remove the REAL closet wall, change the yellow-window
+          # target, or alter any playable geometry.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            07-hall-yellow-end-window 0,5.7,38 -54,7.35,38
+            07-hall-yellow-end-window -6,5.7,38 -54,7.35,38
           # Actual full-scene view of the left-hand neighboring CLOSED
           # oak-and-glass facade. No cutaway, invisible UI, fake opening,
           # or overlay model. Verify native geometry from child-eye height.
@@ -404,6 +406,20 @@ jobs:
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             09-hall-left-floor-roof-junction 42,5.5,22 44,6,38
           echo "FAST_PHOTO_NONBLANK_PASS 9 source-derived views"
+      - name: Reject excessive foreground closet-wall occlusion in window overview
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Exact-source photo-window camera must not be dominated by a
+          # physically present but unintended foreground supply-closet wall.
+          # Existing 06/07 paper silhouettes and yellow-window semantic
+          # checks remain independent, and are NOT relaxed.
+          PY="$RUNNER_TEMP/photo-venv/bin/python"
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_foreground.py --self-test
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_foreground.py \
+            "$RUNNER_TEMP/photo-review/07-hall-yellow-end-window.png"
+          echo "PHOTO_HALL_OVERVIEW_NOT_BLOCKED_BY_CLOSET_PASS native_iphone_pending=true"
+
       - name: Prove 23 photo-hall papers appear in two independent real camera views
         shell: bash
         run: |
