@@ -266,8 +266,9 @@ layout=function()
         b.Position=UDim2.new(column/area.columns,column*3,0,row*(area.answerHeight+6))
         b.Size=UDim2.new(1/area.columns,area.columns==2 and -3 or 0,0,area.answerHeight)
     end
-    feedback.Position=UDim2.new(0,12,1,-38);feedback.Size=UDim2.new(1,-94,0,30)
-    skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-10,1,-7);skip.Size=UDim2.fromOffset(70,32)
+    feedback.Position=UDim2.new(0,12,1,-38);feedback.Size=UDim2.new(1,-106,0,30)
+    -- Match the 44px minimum used by every primary phone choice/control.
+    skip.AnchorPoint=Vector2.new(1,1);skip.Position=UDim2.new(1,-10,1,-7);skip.Size=UDim2.fromOffset(76,44)
 
 end
 root:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)

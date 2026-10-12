@@ -95,6 +95,7 @@ assert(string.find(boardFrame.Subject.Text,"Mrs. Benulis",1,true))
 local gui=playerGui.EmmaStudyUI;local root=gui:GetChildren()[1]
 local card=root.AnswerBar;local toggle=root.ViewToggle
 assert(card.Visible and workspace.CurrentCamera.CameraType==Enum.CameraType.Scriptable)
+assert(card.SkipQuestion.Size.Y.Offset>=44,"Skip must retain a full-size phone touch target")
 local function answerButton(n) for _,c in ipairs(card:GetChildren())do for _,b in ipairs(c:GetChildren())do if b.Name=="Answer"..n then return b end end end end
 assert(answerButton(1) and answerButton(2) and answerButton(3))
 assert(answerButton(1).Parent.Parent==card,"Answers must not be inside the question ScrollingFrame")
