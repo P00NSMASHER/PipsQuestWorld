@@ -1883,13 +1883,33 @@ local function buildBackDoorAndHall(root: Instance)
         CFrame.new(-54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
     local rightCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
         CFrame.new(54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
-    -- Paint only the CORRIDOR-facing side of original pale-yellow classroom
-    -- back wall; don't change Emma's existing interior or cut new doorways.
+    -- The original rear plaster facade ended at y=13, leaving yellow
+    -- classroom wall visible from the school corridor ABOVE the hall's
+    -- photo ceiling and at oblique door angles. Extend the EXISTING two
+    -- noncolliding facade panels up to the actual 18-stud classroom shell,
+    -- while retaining the lower amber brick/cap and warm interior walls.
+    -- This changes no structural walls or left staff-door opening.
     for _,x in ipairs({-23,23}) do
         hp("Photo hall classroom exterior blue-gray paint",
-            Vector3.new(28,8.6,.09),CFrame.new(x,8.7,27.565),
+            Vector3.new(28,13.5,.09),CFrame.new(x,11.25,27.565),
             blueGray,Enum.Material.SmoothPlastic,false)
     end
+
+    -- Finish the exposed OUTSIDE face of the existing x=37 staff doorway
+    -- return. The source-derived hallway camera saw this original yellow
+    -- wall as an oversized cream strip by the entrance. Three low-cost
+    -- decorative Parts face the hallway; the ORIGINAL collidable
+    -- "Right wall back" and yellow room-facing paint are untouched.
+    hp("Photo hall staff return blue-gray plaster",
+        Vector3.new(.09,18,4),CFrame.new(37.56,9,25),
+        blueGray,Enum.Material.SmoothPlastic,false)
+    local returnBrick=hp("Photo hall staff return glazed brick",
+        Vector3.new(.095,4.25,3.90),CFrame.new(37.65,2.125,25),
+        Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+    returnBrick.Reflectance=.035
+    hp("Photo hall staff return oak cap",
+        Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,25),
+        Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
 
     -- A true 6-course staggered bond and subtle ochre tone differences.
     -- The graphic lives on seven noncolliding flat dado carriers, and is

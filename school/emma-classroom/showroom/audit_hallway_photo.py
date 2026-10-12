@@ -75,7 +75,76 @@ assert(#pieces("Rear corridor end wall")==0 and
        #pieces("Hall left wall")==0,
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Open classroom door",2)
-expect("Photo hall classroom exterior blue-gray paint",2)
+-- Fix the real remaining yellow wall sliver seen by the source hall camera.
+-- Check constructed geometry, not just a literal comment in Room.lua.
+local function checkExteriorStaffReturn()
+    local upper=expect("Photo hall classroom exterior blue-gray paint",2)
+    for _,p in ipairs(upper) do
+        assert(near(p.Size.Y,13.5) and near(p.Position.Y,11.25)
+            and p.Material==Enum.Material.SmoothPlastic
+            and not p.CanCollide and not p.CanQuery,
+            "HALL_UPPER_REAR_CLASSROOM_YELLOW_BAND_RETURNED")
+    end
+    local wall=one("Right wall back")
+    assert(wall.CanCollide and near(wall.Position.X,37)
+        and near(wall.Position.Z,25),
+        "HALL_STAFF_RETURN_ORIGINAL_SHELL_LOST")
+    local finish=one("Photo hall staff return blue-gray plaster")
+    local brick=one("Photo hall staff return glazed brick")
+    local cap=one("Photo hall staff return oak cap")
+    assert(near(finish.Position.X,37.56)
+        and near(finish.Position.Y,9)
+        and near(finish.Size.Y,18)
+        and finish.Color.B > finish.Color.R
+        and not finish.CanCollide and not finish.CanQuery,
+        "HALL_STAFF_RETURN_PLASTER_NOT_FACING_CORRIDOR")
+    assert(near(brick.Position.X,37.65)
+        and near(brick.Position.Y,2.125)
+        and near(brick.Size.Y,4.25)
+        and brick.Material==Enum.Material.Brick
+        and not brick.CanCollide and not brick.CanQuery,
+        "HALL_STAFF_RETURN_BRICK_MISSING_OR_BLOCKING")
+    assert(near(cap.Position.Y,4.34)
+        and cap.Material==Enum.Material.Wood
+        and not cap.CanCollide and not cap.CanQuery,
+        "HALL_STAFF_RETURN_OAK_CAP_MISSING_OR_BLOCKING")
+    return upper,finish,brick,cap
+end
+local upperReturn,plasterReturn,brickReturn,capReturn=checkExteriorStaffReturn()
+local oldUpperY=upperReturn[1].Size
+upperReturn[1].Size=Vector3.new(28,8.6,.09)
+local accepted,reason=pcall(checkExteriorStaffReturn)
+upperReturn[1].Size=oldUpperY
+assert(not accepted and string.find(tostring(reason),
+    "HALL_UPPER_REAR_CLASSROOM_YELLOW_BAND_RETURNED",1,true),
+    "HALL_UPPER_YELLOW_BAND_MUTATION_FALSELY_ACCEPTED")
+local oldPlaster=plasterReturn.Color
+plasterReturn.Color=Color3.fromRGB(246,232,165)
+accepted,reason=pcall(checkExteriorStaffReturn)
+plasterReturn.Color=oldPlaster
+assert(not accepted and string.find(tostring(reason),
+    "HALL_STAFF_RETURN_PLASTER_NOT_FACING_CORRIDOR",1,true),
+    "HALL_STAFF_RETURN_YELLOW_PAINT_FALSELY_ACCEPTED")
+local oldBrickCollision=brickReturn.CanCollide
+brickReturn.CanCollide=true
+accepted,reason=pcall(checkExteriorStaffReturn)
+brickReturn.CanCollide=oldBrickCollision
+assert(not accepted and string.find(tostring(reason),
+    "HALL_STAFF_RETURN_BRICK_MISSING_OR_BLOCKING",1,true),
+    "HALL_STAFF_RETURN_COLLIDING_DADO_FALSELY_ACCEPTED")
+local oldCapName=capReturn.Name
+capReturn.Name="test removed return cap"
+accepted,reason=pcall(checkExteriorStaffReturn)
+capReturn.Name=oldCapName
+assert(not accepted and string.find(tostring(reason),
+    "PHOTO_HALL_PART_COUNT",1,true),
+    "HALL_STAFF_RETURN_CAP_MISSING_FALSELY_ACCEPTED")
+checkExteriorStaffReturn()
+print("HALL_STAFF_RETURN_FINISH_SOURCE_PASS "
+    .."two_upper_rear_plaster_panels_extended=true "
+    .."blue_gray_side_return=true original_shell_collidable=true "
+    .."three_noncolliding_parts=true corridor_brick_dado_and_oak_cap=true "
+    .."four_adversarial_mutations_rejected=true")
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
