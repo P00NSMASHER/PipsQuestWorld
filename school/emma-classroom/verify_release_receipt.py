@@ -56,6 +56,26 @@ def validate_receipt(data: dict) -> dict:
     return latest
 
 
+def validate_comparable_base_receipt(data: dict) -> dict:
+    """Validate a base receipt, including the one legacy pre-digest format.
+
+    Candidate receipts always use validate_receipt() and therefore always
+    require the published binary digest. A historic PR base may omit that
+    field because it predates binary provenance; all of its other release
+    and safety assertions remain subject to the strict validator.
+    """
+    latest = data.get("lastConfirmedPublication")
+    assert isinstance(latest, dict), "Missing recorded publication"
+    if "binarySha256" in latest:
+        return validate_receipt(data)
+
+    legacy = copy.deepcopy(data)
+    legacy["lastConfirmedPublication"]["binarySha256"] = "0" * 64
+    checked = copy.deepcopy(validate_receipt(legacy))
+    checked["binarySha256"] = None
+    return checked
+
+
 def compare_publication_receipts(candidate: dict, base: dict) -> str:
     """Detect rollback/evidence substitution against a comparable base branch.
 
@@ -65,16 +85,20 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
     untrusted filename or self-declared candidate publication.
     """
     current=validate_receipt(candidate)
-    previous=validate_receipt(base)
+    previous=validate_comparable_base_receipt(base)
     now,then=current["versionNumber"],previous["versionNumber"]
     assert now>=then, (
         f"RELEASE_RECEIPT_VERSION_ROLLBACK candidate_v={now} base_v={then}"
     )
     if now==then:
         for field in IMMUTABLE_PUBLISH_FIELDS:
+            if field == "binarySha256" and previous[field] is None:
+                continue
             assert current[field]==previous[field], (
                 f"RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH {field}"
             )
+        if previous["binarySha256"] is None:
+            return "same_legacy_publication_base_without_binary_digest"
         return "same_verified_publication_as_base"
     # A later version must not reuse the previous version's source SHA,
     # workflow run ID or published binary. CI cannot independently attest
@@ -85,10 +109,15 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
     assert current["sourceCommit"]!=previous["sourceCommit"], (
         "RELEASE_RECEIPT_NEW_VERSION_SOURCE_UNCHANGED"
     )
-    assert current["binarySha256"]!=previous["binarySha256"], (
-        "RELEASE_RECEIPT_NEW_VERSION_BINARY_UNCHANGED"
+    if previous["binarySha256"] is not None:
+        assert current["binarySha256"]!=previous["binarySha256"], (
+            "RELEASE_RECEIPT_NEW_VERSION_BINARY_UNCHANGED"
+        )
+        return "newer_reported_requires_independent_publish_artifact_verification"
+    return (
+        "newer_reported_vs_legacy_base_requires_independent_"
+        "publish_artifact_verification"
     )
-    return "newer_reported_requires_independent_publish_artifact_verification"
 
 
 def audit(compare_base: Path | None = None) -> None:
@@ -233,6 +262,25 @@ def self_test() -> None:
     assert compare_publication_receipts(original,original)==(
         "same_verified_publication_as_base"
     )
+    legacy_same=copy.deepcopy(original)
+    legacy_same["lastConfirmedPublication"].pop("binarySha256")
+    assert compare_publication_receipts(original,legacy_same)==(
+        "same_legacy_publication_base_without_binary_digest"
+    )
+    legacy_old=copy.deepcopy(old)
+    legacy_old["lastConfirmedPublication"].pop("binarySha256")
+    assert compare_publication_receipts(original,legacy_old).startswith(
+        "newer_reported_vs_legacy_base_requires_independent_"
+        "publish_artifact_verification"
+    )
+    malformed_legacy=copy.deepcopy(legacy_old)
+    malformed_legacy["lastConfirmedPublication"]["binarySha256"]="not-a-digest"
+    try:
+        validate_comparable_base_receipt(malformed_legacy)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Malformed historic binary digest was accepted")
     for name,field,changed in (
         ("source_swap","sourceCommit","e"*40),
         ("binary_swap","binarySha256","f"*64),
@@ -270,7 +318,8 @@ def self_test() -> None:
     else:
         raise AssertionError("False native iPhone approval accepted")
     print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, activation, "
-          "v81_rollback, same_version_source_run_hash_swap, native_approval_rejected")
+          "v81_rollback, same_version_source_run_hash_swap, "
+          "legacy_base_digest_compatibility, native_approval_rejected")
 
 
 if __name__ == "__main__":
