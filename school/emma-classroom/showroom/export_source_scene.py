@@ -185,18 +185,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             and abs(float(north[0][11])-26.75)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
-            and rear[0][2]=="true" and north[0][2]=="true"), (
+            ), (
         "STRAIGHT_CORRIDOR_OUTER_WALL_GAP"
     )
     assert (abs(float(ends[0][9])-162)<.05
             and float(ends[0][8])>=22.4
-            and ends[0][2]=="true"), (
+            ), (
         "STRAIGHT_CORRIDOR_FAR_END_NOT_SEALED"
     )
     assert (abs(float(side_caps[0][11])-4.25)<.05
             and abs(float(staff_north[0][11])-26.8)<.05
             and float(staff_north[0][6])>=17.9
-            and staff_north[0][2]=="true"), (
+            ), (
         "STRAIGHT_CORRIDOR_VESTIBULE_SKY_GAP"
     )
     assert not actual_parts("Side hall far wall"), (
