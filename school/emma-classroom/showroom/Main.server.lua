@@ -9,6 +9,11 @@ GalleryPass.decorate(Room.Root)
 -- Roblox model IDs load successfully. Otherwise the complete room is intact.
 local FurnitureMeshAdapter=require(script.Parent:WaitForChild("FurnitureMeshAdapter"))
 FurnitureMeshAdapter.apply(Room.Root)
+-- Configure the optional material; native texture streaming never gates spawn.
+local finishOk=pcall(Room.applyPhotoFloorFinish,Room.Root)
+if not finishOk then
+    warn("Classroom floor finish unavailable; retaining native wood.")
+end
 
 local function preparePlayer(player:Player)
     local function onCharacter(character:Model)

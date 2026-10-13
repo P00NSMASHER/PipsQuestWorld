@@ -37,6 +37,13 @@ local function printFace(target:BasePart,face:Enum.NormalId,title:string,small:s
     gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
     local wide=(face==Enum.NormalId.Left or face==Enum.NormalId.Right) and target.Size.Z or target.Size.X
     gui.CanvasSize=Vector2.new(900,math.max(100,math.floor(900*target.Size.Y/wide)))
+    -- Small physical labels need a proportional canvas: TextScaled caps at
+    -- 100px, so a 900px apple canvas makes a correct letter almost invisible.
+    if target.Name=="Word wall apple" or target.Name=="Word wall word card"
+        or target.Name=="Photo word wall title paper art" then
+        local pixels=math.clamp(math.floor(wide*100),96,540)
+        gui.CanvasSize=Vector2.new(pixels,math.max(64,math.floor(pixels*target.Size.Y/wide)))
+    end
     gui.Parent=target
     local backdrop=Instance.new("Frame")
     backdrop.BackgroundColor3=bg;backdrop.BorderSizePixel=0;backdrop.Size=UDim2.fromScale(1,1);backdrop.Parent=gui
@@ -51,6 +58,24 @@ local function printFace(target:BasePart,face:Enum.NormalId,title:string,small:s
     sub.Position=UDim2.fromScale(.08,.66);sub.BackgroundTransparency=1
     sub.Font=Enum.Font.GothamMedium;sub.TextColor3=ink
     sub.TextScaled=true;sub.TextWrapped=true;sub.Text=small;sub.Parent=backdrop
+    -- Native Studio review: single-word/letter labels used only 41% of
+    -- their tiny card height while reserving space for an EMPTY caption.
+    -- Fill the existing card instead of enlarging classroom geometry.
+    if small=="" then
+        heading.Size=UDim2.fromScale(.90,.84)
+        heading.Position=UDim2.fromScale(.05,.08)
+        heading.TextWrapped=true -- Native TextScaled requires wrapping to stay enabled.
+        sub.Visible=false
+    end
+    -- A SurfaceGui's rectangular fill hid the round native apple beneath
+    -- a red square. Match its existing circular face without more Parts.
+    if target.Name=="Word wall apple" then
+        backdrop.ClipsDescendants=true
+        local corner=Instance.new("UICorner")
+        corner.Name="AppleRoundedPrintMask"
+        corner.CornerRadius=UDim.new(.5,0)
+        corner.Parent=backdrop
+    end
     return gui
 end
 

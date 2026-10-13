@@ -95,8 +95,8 @@ local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
         cell.Size=UDim2.fromScale(1/count,.68)
         cell.Font=Enum.Font.GothamMedium
         cell.TextColor3=C.navy
-        cell.TextScaled=true
         cell.TextWrapped=false
+        cell.TextScaled=true
         cell.BorderSizePixel=0
         cell.BackgroundColor3=Color3.fromRGB(214,226,203)
         cell.BackgroundTransparency=(n%10==0) and .16 or 1
@@ -480,8 +480,8 @@ local function learningWall(root:Instance)
         caption.Text=name
         caption.TextColor3=C.ink
         caption.BackgroundTransparency=1
-        caption.TextScaled=true
         caption.TextWrapped=false
+        caption.TextScaled=true
         caption.Parent=ground
     end
     -- Match the real long cabinet-side numbered teaching frieze without

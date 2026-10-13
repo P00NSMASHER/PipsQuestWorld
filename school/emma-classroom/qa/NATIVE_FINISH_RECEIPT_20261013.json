@@ -1,0 +1,242 @@
+{
+  "recordedUtc": "2026-10-13T04:14:34.533698+00:00",
+  "baseCommit": "e3c7de1f16774569c76f2720fd30d51c12c78424",
+  "sourceFiles": {
+    "school/emma-classroom/showroom/Room.lua": "b5afdbb17ce73df182f2dcb9a28143de3a51538ac7ab362fad27eae9b482aeb4",
+    "school/emma-classroom/showroom/ArtPass.lua": "a596b0e658cf02141193694f3504fc7f5ec9f524346d7c7ab88c1bb4b32c51e2",
+    "school/emma-classroom/showroom/GalleryPass.lua": "7d3fff1292833654145ac0ff4346c0b6ad7a40d1d5b84d1053b31dea6c768c73",
+    "school/emma-classroom/showroom/Main.server.lua": "64f05a01e34e59b148c4df8b1a9862baab3ffe27e3134beb35f835f7fe04d435",
+    "school/emma-showroom.project.json": "70407b0497669d27bb6ef9fa07655ce95b728780bf588dc4f2e814be680c26c1"
+  },
+  "buildSha256": "8625f235e69e23f5940f639fae853807c5b16c58f5ab6d9fe4d750656bf30d01",
+  "checks": [
+    {
+      "test": "audit_hallway_mobile_complexity",
+      "passed": true,
+      "seconds": 0.28
+    },
+    {
+      "test": "audit_left_hall_junction",
+      "passed": true,
+      "seconds": 0.78
+    },
+    {
+      "test": "audit_hallway_camera_layout",
+      "passed": true,
+      "seconds": 0.19
+    },
+    {
+      "test": "audit_rug_ui",
+      "passed": true,
+      "seconds": 0.19
+    },
+    {
+      "test": "audit_lighting",
+      "passed": true,
+      "seconds": 0.2
+    },
+    {
+      "test": "audit_storybook_facing",
+      "passed": true,
+      "seconds": 0.19
+    },
+    {
+      "test": "audit_native_rug_primitives",
+      "passed": true,
+      "seconds": 0.6
+    },
+    {
+      "test": "audit_native_foliage_primitives",
+      "passed": true,
+      "seconds": 0.24
+    },
+    {
+      "test": "audit_native_chair_vents",
+      "passed": true,
+      "seconds": 0.24
+    },
+    {
+      "test": "audit_buried_chair_parts",
+      "passed": true,
+      "seconds": 0.44
+    },
+    {
+      "test": "audit_purple_corner_chair",
+      "passed": true,
+      "seconds": 0.54
+    },
+    {
+      "test": "audit_window_landmarks",
+      "passed": true,
+      "seconds": 2.11
+    },
+    {
+      "test": "audit_photo_landmarks",
+      "passed": true,
+      "seconds": 3.8
+    },
+    {
+      "test": "audit_glazed_door_aperture",
+      "passed": true,
+      "seconds": 0.24
+    },
+    {
+      "test": "audit_notebook_rule_surfaces",
+      "passed": true,
+      "seconds": 0.16
+    },
+    {
+      "test": "audit_hallway_photo",
+      "passed": true,
+      "seconds": 0.8
+    },
+    {
+      "test": "audit_word_wall_native",
+      "passed": true,
+      "seconds": 0.58
+    },
+    {
+      "test": "audit_literacy_wall",
+      "passed": true,
+      "seconds": 0.4
+    },
+    {
+      "test": "audit_checkered_table",
+      "passed": true,
+      "seconds": 0.44
+    },
+    {
+      "test": "walkability_audit",
+      "passed": true,
+      "seconds": 0.4
+    },
+    {
+      "test": "verify_build",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "test": "verify_build-built",
+      "passed": true,
+      "seconds": 0.01
+    },
+    {
+      "test": "furniture_adapter_runtime",
+      "passed": true,
+      "seconds": 0.05
+    },
+    {
+      "test": "verify_release_receipt-self",
+      "passed": true,
+      "seconds": 0.01
+    },
+    {
+      "test": "verify_release_receipt",
+      "passed": true,
+      "seconds": 0.01
+    }
+  ],
+  "nativeResults": {
+    "runtime": {
+      "nativePlay": true,
+      "deskCount": 16,
+      "materialConfigured": true,
+      "startupCompleted": true,
+      "parts": 3050
+    },
+    "mat": {
+      "blueMatPanels": 3,
+      "native": true,
+      "deskLayoutUnchanged": true,
+      "parts": 3050
+    },
+    "typography": {
+      "restoredScaling": {
+        "PhonicsExample": 26,
+        "PhonicsLetter": 26,
+        "HandwritingSequence": 1,
+        "ShapeCaption": 8,
+        "NumberStripUnit": 121
+      },
+      "native": true,
+      "proportionalWordWallCanvases": 41
+    },
+    "walk": {
+      "noTeleports": true,
+      "seconds": 15.301875100005418,
+      "maxLateralDeviation": 0.1465167999267578,
+      "walkedBothDirections": true,
+      "nativePlay": true,
+      "waypoints": {
+        "1": {
+          "z": 15.51,
+          "x": 59.42
+        },
+        "3": {
+          "z": 15.5,
+          "x": 141.32
+        },
+        "2": {
+          "z": 15.5,
+          "x": 99.01
+        },
+        "5": {
+          "z": 15.5,
+          "x": 60.8
+        },
+        "4": {
+          "z": 15.5,
+          "x": 100.83
+        },
+        "6": {
+          "z": 15.5,
+          "x": 44.18
+        }
+      }
+    },
+    "simulator": {
+      "viewport": "733, 391",
+      "active": "iphone_16",
+      "physicalPhone": false,
+      "resolution": "852, 393"
+    },
+    "phoneRuntime": {
+      "nativePlay": true,
+      "deskCount": 16,
+      "materialConfigured": true,
+      "startupCompleted": true,
+      "parts": 3050
+    },
+    "console": {
+      "consoleErrors": 0
+    },
+    "reset": {
+      "studioReset": true,
+      "device": "default"
+    }
+  },
+  "screenshotsSavedPrivately": [
+    {
+      "name": "result-mat-image-1.jpg",
+      "sha256": "3f1fa7fd878d62b07be5d376fa760b696c1c23c239d6e28f78921fa595becdcc"
+    },
+    {
+      "name": "result-wordwall-image-1.jpg",
+      "sha256": "093a8e144ec633f93b8484bac224ecf72c3c603ae2b169e4cecbd9167bac3a19"
+    },
+    {
+      "name": "result-straight-hall-1.jpg",
+      "sha256": "98f830dd0a761d53b01a3618a8c30a709342b994389c88e3f3e4d2b0c904fde4"
+    },
+    {
+      "name": "result-phone-view-confirmed-1.jpg",
+      "sha256": "d1d7fe8c71e38c033f9e7b699b29bd1a33a643d61dab5341ad8189fa32d471af"
+    }
+  ],
+  "physicalIphoneTested": false,
+  "published": false,
+  "remaining": [
+    "Physical iPhone frame-rate and asset permission checks",
+    "Further photo comparison of architectural proportions, cabinet trim, ceiling and furniture finish"
+  ]
+}

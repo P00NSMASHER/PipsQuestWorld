@@ -63,6 +63,21 @@
           "$path": "emma-classroom/showroom/View.client.lua"
         }
       }
+    },
+    "MaterialService": {
+      "$className": "MaterialService",
+      "EmmaClassroomOak": {
+        "$className": "MaterialVariant",
+        "$properties": {
+          "BaseMaterial": "Wood",
+          "MaterialPattern": "Regular",
+          "StudsPerTile": 5,
+          "ColorMap": "rbxassetid://79489601440793",
+          "NormalMap": "rbxassetid://103095967513906",
+          "RoughnessMap": "rbxassetid://118947892080900",
+          "MetalnessMap": "rbxassetid://98424816027237"
+        }
+      }
     }
   }
 }

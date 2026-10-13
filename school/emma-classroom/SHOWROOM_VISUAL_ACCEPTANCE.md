@@ -1,4 +1,38 @@
 # Emma's classroom-only replica — native visual acceptance
+## Current owner brief — photo fidelity is the deliverable
+
+The owner's restated original brief governs the next build. Make the room
+immediately recognizable as Emma's photographed classroom, not a generic
+classroom. Passing build tests or staying under a part budget is necessary
+engineering evidence, never a substitute for visual fidelity.
+
+This iteration preserves the existing classroom layout and evenly spaced
+desks. Do not infer the permanent furniture layout from the temporary cheer
+event; refine details and finishes without a wholesale rearrangement.
+
+- Match pale-yellow walls, dark polished hardwood, gray/white acoustic ceiling
+  tiles with rectangular fluorescent panels, and a continuous wood-framed
+  built-in storage wall with open shelves/cubbies.
+- Match the teaching wall, rolling smartboard/chalkboard, dark-curtained windows,
+  shape posters, counting strip, blue word wall and apple/word-card details.
+- Make the activity area readable: round alphabet/sun rug, black colored-dot
+  rug, and the BLUE TUMBLING MATS explicitly included in this latest brief.
+  This reinstates mats over earlier no-mat instructions. Retain child-sized
+  chairs at their existing desks; do not move them to the walls.
+- Use believable trim, materials, furniture proportions and restrained lighting.
+  Reuse efficient repeated geometry; do not fill the room with bulky primitives.
+- Focus on the environment. Do not reproduce the photographed people or upload
+  their photos as textures. No NPCs are needed to meet this brief.
+- Preserve the separately approved STRAIGHT hallway outside the left staff door
+  and the enclosed right-side supply closet; these must not obstruct one another.
+
+Completion requires actual native front/side/activity-area screenshots compared
+with the supplied photographs and an in-game walkthrough. Record real-phone
+performance separately from Studio emulation. No polished/finished claim from
+code, part counts, downloaded assets or passing automated checks alone.
+
+The dated status and older checklists below are historical. Conflicts are
+resolved in favor of this current owner brief and the straight-hall correction.
 
 **Scope:** PR #339's explorable classroom-only Rojo project
 (`school/emma-showroom.project.json`). This acceptance sheet does **not**
@@ -32,7 +66,7 @@ a manifest with `notNativeIphoneAcceptance=true`.
 
 - [ ] **Left hallway / right supply closet:** From inside Emma's classroom,
   use the LEFT opening with the `WELCOME • ABVM STAFF` sign. Walk through
-  that side passage, turn onto the long charcoal-tile/amber-brick hallway,
+  directly into the long straight charcoal-tile/amber-brick hallway,
   and confirm free movement in both directions. The far-left sunburst window
   and 23 anonymous student-paper diamonds remain visible. Back inside, the
   RIGHT wood-and-glass double doors, now marked `CLASSROOM CLOSET`,

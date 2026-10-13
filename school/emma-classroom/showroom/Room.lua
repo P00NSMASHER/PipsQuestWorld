@@ -1326,6 +1326,7 @@ local function buildFrontWall(root: Instance)
         Enum.NormalId.Back,P.cream,banner.Color,Enum.Font.Garamond)
     writing.Name="HandwritingSequence"
     writing.TextWrapped=false
+    writing.TextScaled=true
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local examples={
         "apple","ball","cat","dog","egg","fish","goat","hat","igloo",
@@ -1389,6 +1390,7 @@ local function buildFrontWall(root: Instance)
         big.Position=UDim2.fromScale(.025,.065)
         big.BackgroundTransparency=1
         big.TextWrapped=false
+        big.TextScaled=true
         -- Generic full-width signage uses 32-pixel horizontal insets.
         -- On a 41%-width phonics-letter cell that would hide most of Aa.
         for _,child in ipairs(big:GetChildren()) do
@@ -1471,8 +1473,8 @@ local function buildFrontWall(root: Instance)
         word.BackgroundTransparency=1
         word.Position=UDim2.fromScale(.035,.665)
         word.Size=UDim2.fromScale(.93,.28)
-        word.TextScaled=true
         word.TextWrapped=false
+        word.TextScaled=true
         word.Parent=surface
     end
 end
@@ -2498,6 +2500,30 @@ local function alignHallwayWithStaffExit(root: Instance)
     assert(sheet==2,"Staff corridor anonymous notices missing")
 end
 
+-- Latest owner brief reinstates the blue folding practice mat.
+-- Three thin native panels beside the front activity rugs; existing desks,
+-- walking colliders and hallway stay unchanged. Binding is SurfaceGui art.
+local function buildPhotoFoldingMat(root:Instance)
+    for i=0,2 do
+        local panel=part(root,"Blue folding tumbling mat panel",
+            Vector3.new(4.0,.24,2.95),CFrame.new(-17.1,.62,-25+i*3),
+            Color3.fromRGB(40+i*2,81+i*2,164+i*3),Enum.Material.SmoothPlastic,false)
+        panel.CanTouch=false;panel.CanQuery=false;panel.Reflectance=.04
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="VinylStitchedBinding";gui.Face=Enum.NormalId.Top
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(400,295);gui.LightInfluence=.8;gui.Parent=panel
+        local seam=Instance.new("Frame")
+        seam.Name="InsetSewnPerimeter";seam.Size=UDim2.fromScale(.965,.952)
+        seam.Position=UDim2.fromScale(.0175,.024)
+        seam.BackgroundTransparency=1;seam.BorderSizePixel=1
+        seam.BorderColor3=Color3.fromRGB(119,151,204);seam.Parent=gui
+        local piping=Instance.new("UIStroke")
+        piping.Name="VinylEdgeBinding";piping.Thickness=2
+        piping.Color=Color3.fromRGB(29,61,127);piping.Parent=seam
+    end
+end
+
 local function applyLighting(root: Instance)
     -- Centralized daytime profile. IMG_2903–2910 show a well-lit yellow
     -- elementary classroom, not a cool, underexposed exhibition space.
@@ -2641,6 +2667,7 @@ function World.build()
     alignHallwayWithStaffExit(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
+    buildPhotoFoldingMat(root)
     buildPhotoWindowWorkstation(root)
 
     -- Emma identified the purple chair where an adult is sitting beside the
@@ -2733,8 +2760,8 @@ function World.build()
         digit.Text=tostring(n)
         digit.Font=Enum.Font.GothamBold
         digit.TextColor3=Color3.fromRGB(51,55,57)
-        digit.TextScaled=true
         digit.TextWrapped=false
+        digit.TextScaled=true
         digit.BackgroundTransparency=1
         digit.Position=UDim2.fromScale(nx-.073,ny-.064)
         digit.Size=UDim2.fromScale(.146,.128)
@@ -2839,6 +2866,27 @@ function World.build()
     World.Root=root
     World.Spawn=spawn.CFrame
     return World
+end
+
+-- Original oak maps enhance only the existing floor; keep native Wood if unavailable.
+function World.applyPhotoFloorFinish(root:Instance):boolean
+    local floor=root:FindFirstChild("Warm oak classroom floor")
+    if not (floor and floor:IsA("BasePart")) then return false end
+    floor.MaterialVariant=""
+    floor.Material=Enum.Material.Wood
+    floor.Color=Color3.fromRGB(83,59,45)
+    root:SetAttribute("FloorFinishStatus","NativeWoodFallback")
+    local variant=game:GetService("MaterialService"):FindFirstChild("EmmaClassroomOak")
+    if not (variant and variant:IsA("MaterialVariant")) then return false end
+    -- Texture map properties are Plugin-only. Runtime scripts assign the
+    -- authored variant by name; maps are validated in the built project.
+    -- Never read ColorMap/NormalMap here: doing so stops server startup.
+    if not root.Parent then return false end
+    floor.MaterialVariant=variant.Name
+    -- Neutralize the original texture's orange cast to match worn dark oak.
+    floor.Color=Color3.fromRGB(160,177,187)
+    root:SetAttribute("FloorFinishStatus","ConfiguredForTextureStreaming")
+    return true
 end
 
 -- No teachers, questions, quiz remotes, saved scores, or runtime UI in the replica build.

@@ -252,3 +252,14 @@ iPhone, real Play-mode question loop and final likeness still need inspection.
 At 1:11 PM the user requested background-only operation; Studio was minimized
 and remaining source/check work continued without bringing it forward.
 
+
+
+## October 13 native finish iteration
+- Preserved the existing sixteen desk pairs and straight staff hallway.
+- Restored native scaling on counting/phonics labels and enlarged word-wall lettering.
+- Applied the original oak material via runtime-safe variant assignment; no Plugin-only map reads during server startup.
+- Restored a three-panel blue practice mat beside the front activity rugs (latest owner brief).
+- Exact current candidate: 3,050 physical parts, 25/25 classroom source/build checks; native Play construction, typography, mats, and a full out-and-back hallway walk pass.
+- Studio iPhone 16 landscape simulation passes startup; the captured scene and touch controls were visually inspected. This is NOT a physical-iPhone FPS result. Console empty after checks.
+- Evidence: `qa/NATIVE_FINISH_RECEIPT_20261013.json`; native tests in `qa/native-detail-*.luau`, `qa/native-folding-mat.luau`, and `qa/native-straight-hall-walk.luau`.
+- No merge, live publication, marker edits or schedule changes. More architectural/furniture refinement and physical-device validation remain; do not label this the completed photo replica.
