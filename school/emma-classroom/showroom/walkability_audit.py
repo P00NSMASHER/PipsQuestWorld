@@ -178,8 +178,16 @@ def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
         assert all(math.isfinite(v) for v in (sx, sy, sz, px, py, pz, *matrix)), (
             "SUPPORT_FLOOR_NONFINITE " + name)
         assert sx > 0 and sy > 0 and sz > 0, "SUPPORT_FLOOR_ZERO_DIMENSION " + name
-        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
-        assert all(abs(a-b) < 0.001 for a, b in zip(matrix, identity)), (
+        # The corridor is translated/rotated 180 degrees as a rigid scene
+        # assembly. A floor with yaw 180 stays horizontal and has identical
+        # AABB support; the old identity-only test incorrectly rejected it.
+        # Continue rejecting ANY floor pitch, roll or 90-degree axis swap.
+        assert (abs(abs(matrix[0])-1) < .001 and
+                abs(matrix[4]-1) < .001 and
+                abs(abs(matrix[8])-1) < .001 and
+                matrix[0]*matrix[8] > 0 and
+                all(abs(matrix[i]) < .001
+                    for i in (1,2,3,5,6,7))), (
             "SUPPORT_FLOOR_TILTED_UNMODELED " + name)
         top = py + sy / 2
         assert abs(top-0.5) <= 0.08, "SUPPORT_FLOOR_BAD_ELEVATION " + name
@@ -504,6 +512,19 @@ def self_test():
     fixture_names = sorted(SUPPORT_FLOOR_NAMES)
     fixtures = [[*flat[:1], name, *flat[2:]] for name in fixture_names]
     assert len(as_floor_supports(fixtures)) == 3
+    # Same horizontal slab turned exactly 180 degrees is still physical
+    # support. Reject a slight tip instead of silently granting air routes.
+    rotated = list(fixtures[0])
+    rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
+    assert len(as_floor_supports([rotated,*fixtures[1:]]))==3
+    tipped = list(fixtures[0])
+    tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
+    try:
+        as_floor_supports([tipped,*fixtures[1:]])
+    except AssertionError as exc:
+        assert "SUPPORT_FLOOR_TILTED_UNMODELED" in str(exc)
+    else:
+        raise AssertionError("TILTED_REAL_FLOOR_FALSELY_SUPPORTED")
     try:
         as_floor_supports(fixtures[:2])
     except AssertionError as exc:
