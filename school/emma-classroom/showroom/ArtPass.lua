@@ -458,9 +458,10 @@ local function learningWall(root:Instance)
         corner.CornerRadius=UDim.new(0,
             (name=="SQUARE" or name=="RECTANGLE" or name=="CROSS") and 3 or 22)
         if name=="CIRCLE" or name=="OVAL" or name=="CAPSULE" or name=="ARCH" then
-            corner.CornerRadius=UDim.new(1,0)
+            corner.CornerRadius=UDim.new(1,0);corner.Parent=picture
+        else
+            corner.Parent=picture
         end
-        corner.Parent=picture
         if name=="CROSS" then
             local bar=Instance.new("Frame")
             bar.Name="ShapeCrossbar"
@@ -554,7 +555,7 @@ local function focalTeachingArea(root:Instance)
         Color3.fromRGB(246,247,239),Enum.Material.SmoothPlastic,false)
     -- Neutral, nearly empty magnetic surface: no personal schoolwork
     -- or event-only cheer instructions are reproduced in the game.
-    printed(face,"","",Enum.NormalId.Back,C.navy,face.Color)
+    printed(face,"",Enum.NormalId.Back,C.navy,face.Color)
     for _,dx in ipairs({-1.46,1.46}) do
         piece(group,"Photo flipchart blue cart support",
             Vector3.new(.27,4.60,.29),
@@ -565,11 +566,11 @@ local function focalTeachingArea(root:Instance)
             CFrame.new(easelX+dx,.49,easelZ-.12),
             Color3.fromRGB(47,51,54),Enum.Material.SmoothPlastic)
     end
-    piece(group,"Photo flipchart marker tray",
-        Vector3.new(4.48,.17,.56),CFrame.new(easelX,4.36,easelZ+.34),
+    piece(group,"Photo flipchart marker tray",Vector3.new(4.48,.17,.56),
+        CFrame.new(easelX,4.36,easelZ+.34),
         Color3.fromRGB(176,185,189),Enum.Material.Metal,false)
-    piece(group,"Photo flipchart lower blue shelf",
-        Vector3.new(3.30,.16,1.02),CFrame.new(easelX,1.14,easelZ-.12),
+    piece(group,"Photo flipchart lower blue shelf",Vector3.new(3.30,.16,1.02),
+        CFrame.new(easelX,1.14,easelZ-.12),
         cartBlue,Enum.Material.Metal,false)
     local magnetColors={
         Color3.fromRGB(79,141,98),
