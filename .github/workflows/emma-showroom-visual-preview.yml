@@ -385,13 +385,16 @@ jobs:
           # Exact rendered artifact fb2b115... showed only FOUR individual
           # paper silhouettes in 06: the former close view aimed too directly
           # at the nearby rail and cropped the rest off the left half-screen.
-          # Shoot along the long west-to-east rail from 9 studs off its face,
-          # exposing multiple distinct anonymous sheets in the fixed crop.
+          # Source-render trial c10a07d at (100,5.5,14)->(151,8,8)
+          # improved 06 from 4 to 7 visible diamonds (55,781 pale pixels),
+          # but 07 ALSO shows 7 and the strict dual-view hierarchy rejects
+          # equal counts. Use a broader 11-stud-offset oblique corridor angle
+          # to show more independent sheets without changing detector limits.
           # Preserve BOTH individual pixel gates and the strict dual-camera
           # 7-region / 50k-pixel / 1.20x-perspective acceptance thresholds.
           # This is third-party source renderer evidence, NOT native phone QA.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            06-hall-paper-rail 100,5.5,14 151,8,8
+            06-hall-paper-rail 100,5.5,16 130,8,9
           # Fixed, full-geometry photo-window camera: sees the real 3D
           # mustard sash and sunburst at the distant sealed left end wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
