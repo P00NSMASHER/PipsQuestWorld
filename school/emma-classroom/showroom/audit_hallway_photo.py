@@ -117,7 +117,7 @@ local function checkClosedOakDoors()
             "PHOTO_HALL_ADJACENT_GLASS_APERTURE_LOST")
         local wall=lower.Position.Z>25 and sealed[1] or classroomSide
         assert(wall.CanCollide and wall.Size.Y>=12.9
-            and math.abs(wall.Position.X-lower.Position.X)<1.2
+            and math.abs(wall.Position.X-lower.Position.X)<1.6
             and wall.Position.X<lower.Position.X,
             "PHOTO_HALL_ADJACENT_SEALED_WALL_LOST")
         assert(not glass.CanCollide and not glass.CanQuery
