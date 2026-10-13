@@ -24,8 +24,9 @@ event; refine details and finishes without a wholesale rearrangement.
   Reuse efficient repeated geometry; do not fill the room with bulky primitives.
 - Focus on the environment. Do not reproduce the photographed people or upload
   their photos as textures. No NPCs are needed to meet this brief.
-- Preserve the separately approved STRAIGHT hallway outside the left staff door
-  and the enclosed right-side supply closet; these must not obstruct one another.
+- Preserve the owner-corrected PERPENDICULAR cross-corridor outside the left
+  staff door and the enclosed right-side supply closet; these must not obstruct
+  or connect to one another.
 
 Completion requires actual native front/side/activity-area screenshots compared
 with the supplied photographs and an in-game walkthrough. Record real-phone
@@ -33,7 +34,7 @@ performance separately from Studio emulation. No polished/finished claim from
 code, part counts, downloaded assets or passing automated checks alone.
 
 The dated status and older checklists below are historical. Conflicts are
-resolved in favor of this current owner brief and the straight-hall correction.
+resolved in favor of this current owner brief and the perpendicular-hall correction.
 
 **Scope:** PR #339's explorable classroom-only Rojo project
 (`school/emma-showroom.project.json`). This acceptance sheet does **not**
@@ -67,8 +68,8 @@ a manifest with `notNativeIphoneAcceptance=true`.
 
 - [ ] **Left hallway / right supply closet:** From inside Emma's classroom,
   use the LEFT opening with the `WELCOME • ABVM STAFF` sign. Walk through
-  directly into the long straight charcoal-tile/amber-brick hallway,
-  and confirm free movement in both directions. The far-left sunburst window
+  into the cross-corridor, make the supported 90-degree turn into the long
+  charcoal-tile/amber-brick hallway, and confirm free movement in both directions. The far-left sunburst window
   and 23 anonymous student-paper diamonds remain visible. Back inside, the
   RIGHT wood-and-glass double doors, now marked `CLASSROOM CLOSET`,
   open only into a shallow, solid-walled supply closet: three shelves and
