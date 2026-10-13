@@ -150,11 +150,11 @@ jobs:
           # closet and cannot be called a hallway viewpoint. Both gallery
           # views now start on the ACTUAL contiguous school hallway floor.
           # This is uncut Luau scene geometry, never a Roblox phone capture.
-          render_eye_checked 22-hall-look-left 18,5.5,38 -42,7.0,38
-          render_eye_checked 23-hall-look-right 18,5.5,38 50,7.0,38
+          render_eye_checked 22-hall-look-left 48.5,5.5,-2.5 48.5,7.0,57.5
+          render_eye_checked 23-hall-look-right 48.5,5.5,-2.5 48.5,7.0,-34.5
           # Reverse view toward the only connected left/staff doorway:
-          # hallway (x43,z34) -> perpendicular side passage (x43,z17).
-          render_eye_checked 24-hall-entry-from-gallery 43,5.5,34 43,6.9,17
+          # cross-hall (x48.5,z18.5) -> west through staff doorway (x34.5,z15.5).
+          render_eye_checked 24-hall-entry-from-gallery 48.5,5.5,18.5 34.5,6.9,15.5
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
@@ -382,11 +382,11 @@ jobs:
           # proxy for the door. Look outward from inside the actual closet.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             05-closet-double-doors 0,5.5,31 0,6.9,26.8
-          # Exact rendered artifact fb2b115... showed only FOUR individual
+          # Previous four-paper source render showed incomplete silhouettes;
           # paper silhouettes in 06: the former close view aimed too directly
           # at the nearby rail and cropped the rest off the left half-screen.
-          # Source-render trial c10a07d at (100,5.5,14)->(151,8,8)
-          # improved 06 from 4 to 7 visible diamonds (55,781 pale pixels),
+          # Preserve original 06/07 optical perspective after rigid hallway rotation.
+          # Previous optical trial improved 06 from 4 to 7 visible diamonds,
           # but 07 ALSO shows 7 and the strict dual-view hierarchy rejects
           # equal counts. Use a broader 11-stud-offset oblique corridor angle
           # to show more independent sheets without changing detector limits.
@@ -394,21 +394,21 @@ jobs:
           # 7-region / 50k-pixel / 1.20x-perspective acceptance thresholds.
           # This is third-party source renderer evidence, NOT native phone QA.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            06-hall-paper-rail 8,5.5,37.5 -22,8,44.5
+            06-hall-paper-rail 48,5.5,7.5 55,8,37.5
           # Fixed, full-geometry photo-window camera: sees the real 3D
           # mustard sash and sunburst at the distant sealed left end wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            07-hall-yellow-end-window 0,5.7,38 -54,7.35,38
+            07-hall-yellow-end-window 48.5,5.7,15.5 48.5,7.35,69.5
           # Actual full-scene view of the left-hand neighboring CLOSED
           # oak-and-glass facade. No cutaway, invisible UI, fake opening,
           # or overlay model. Verify native geometry from child-eye height.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            08-hall-adjacent-oak-door -41.8,5.6,39 -45.5,6.8,27.85
+            08-hall-adjacent-oak-door 49.5,5.6,57.3 38.35,6.8,61
           # Native-independent child-eye evidence for the critical LEFT
           # classroom doorway turn. Actual Luau scene, not a cutaway:
           # old floor/roof stopped 1.25 studs before the photo hallway.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            09-hall-left-floor-roof-junction 42,5.5,22 44,6,38
+            09-hall-left-floor-roof-junction 39.0,5.5,15.5 59.2,6.0,15.5
           echo "FAST_PHOTO_NONBLANK_PASS 9 source-derived views"
       - name: Prove 23 photo-hall papers appear in two independent real camera views
         shell: bash
