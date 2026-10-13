@@ -2419,6 +2419,19 @@ local function alignHallwayWithStaffExit(root: Instance)
         board.Face=Enum.NormalId.Left
     end
     nearCap:Destroy()
+    -- October 12 native-baseline and exact-source screenshot regression:
+    -- Removing the collision end cap DID NOT remove its separate SurfaceGui
+    -- brick-dado carrier. That noncolliding 22-stud-wide, 4.25-stud-tall
+    -- opaque veneer was left at x=54.51 ACROSS the player's straight
+    -- exit and visibly hid the lower half of the new corridor. Remove
+    -- ONLY that obsolete NEAR-cap facing. The opposite named glazed-brick
+    -- carrier stays on the sealed far wall. No new physical Parts.
+    local obsoleteNearBrick=hall:FindFirstChild("Photo hall right end glazed brick")
+    assert(obsoleteNearBrick and obsoleteNearBrick:IsA("BasePart")
+        and obsoleteNearBrick.Position.X<56
+        and obsoleteNearBrick.Size.Z>=21.9,
+        "STRAIGHT_HALL_OLD_END_DADO_NOT_AT_EXPECTED_ENTRY")
+    obsoleteNearBrick:Destroy()
 
     -- The earlier corridor borrowed the classroom's rear wall. After moving
     -- it outside the staff door, close the missing north wall with ONE large
