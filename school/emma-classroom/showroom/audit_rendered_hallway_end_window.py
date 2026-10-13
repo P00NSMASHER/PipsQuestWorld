@@ -15,17 +15,20 @@ from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 VIEWPORT = (1920, 1080)
 SUN_CENTER = (960, 506)
-# ROI/calibration: actual 07-hall-yellow-end-window.png from commit
-# 633bbccb19e2160ca548622c0435b17be50f7838. Permit modest light
-# variation; do not claim validity for an unrelated camera/FOV.
+# Fixed ROI remeasured on exact 1920x1080 direct-corridor 07 evidence from
+# PR #351 commit fb2b115. The straight-hall transform moves the original
+# yellow window by approximately +25 px to the right inside this camera.
+# Every structural band retains its original minimum pixel count; blank,
+# shifted, pane-colored, missing-ray, and exposure mutations must still fail
+# or pass as intentionally specified. Not native Roblox acceptance.
 FRAME_BANDS = {
-    "top": ((850, 476, 1070, 486), 350),
-    "bottom": ((850, 596, 1070, 605), 350),
-    "left": ((845, 484, 862, 597), 170),
-    "right": ((1059, 484, 1078, 597), 170),
-    "mullion_left": ((918, 487, 935, 590), 120),
-    "mullion_right": ((989, 487, 1008, 590), 120),
-    "crossbar": ((852, 528, 1068, 546), 135),
+    "top": ((867, 483, 1070, 501), 350),
+    "bottom": ((867, 586, 1070, 603), 350),
+    "left": ((865, 485, 882, 600), 170),
+    "right": ((1057, 485, 1078, 600), 170),
+    "mullion_left": ((929, 485, 943, 597), 120),
+    "mullion_right": ((992, 485, 1007, 597), 120),
+    "crossbar": ((863, 531, 1074, 552), 135),
 }
 GLASS_AREAS = {
     "left_upper": (876, 493, 912, 526),
@@ -116,11 +119,11 @@ def synthetic_window(missing_ray: int | None = None,
                      sash_color=(106, 90, 35)) -> Image.Image:
     image = Image.new("RGB", VIEWPORT, (53, 66, 79))
     draw = ImageDraw.Draw(image)
-    draw.rectangle((852, 482, 1068, 599), fill=pane_color)
-    for rect in ((846, 476, 1073, 483), (846, 597, 1073, 603),
-                 (846, 477, 853, 600), (1066, 477, 1073, 600),
-                 (923, 481, 929, 599), (993, 481, 999, 599),
-                 (852, 535, 1068, 541)):
+    draw.rectangle((871, 486, 1067, 597), fill=pane_color)
+    for rect in ((871, 486, 1067, 493), (871, 590, 1067, 597),
+                 (871, 486, 877, 598), (1061, 486, 1067, 598),
+                 (934, 486, 941, 598), (999, 486, 1006, 598),
+                 (871, 537, 1067, 543)):
         draw.rectangle(rect, fill=sash_color)
     draw.ellipse((953, 499, 967, 513), fill=(128, 118, 39))
     cx, cy = SUN_CENTER
