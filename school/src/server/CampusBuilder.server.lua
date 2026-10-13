@@ -334,9 +334,6 @@ for roomName, room in pairs(SchoolConfig.Rooms) do
         spawn.Parent = roomSpawns
     elseif roomName == "Library" then
         buildClassroom(roomName, room.position, Color3.fromRGB(70, 138, 116))
-        for i = -2, 2 do
-            makePart("Bookshelf", Vector3.new(3, 9, 10), CFrame.new(room.position.X + i * 10, 4.8, room.position.Z - 13), Color3.fromRGB(98, 70, 52), Enum.Material.Wood)
-        end
     else
         buildClassroom(roomName, room.position, (room.position.X < 0) and accentA or accentB)
     end
@@ -371,10 +368,26 @@ for offset = -1, 1 do
     makePart("SocialDisplayPanel", Vector3.new(8, 5, 0.2), CFrame.new(social.X + offset * 10, 8, social.Z - 20.15), Color3.fromRGB(210, 205, 186), Enum.Material.SmoothPlastic)
 end
 
-local library = SchoolConfig.Rooms.Library.position
-makePart("LibraryReadingTableA", Vector3.new(16, 2.5, 7), CFrame.new(library.X - 11, 1.8, library.Z + 8), Color3.fromRGB(140, 102, 70), Enum.Material.Wood)
-makePart("LibraryReadingTableB", Vector3.new(16, 2.5, 7), CFrame.new(library.X + 11, 1.8, library.Z + 8), Color3.fromRGB(140, 102, 70), Enum.Material.Wood)
-makePart("LibraryCheckout", Vector3.new(18, 4, 5), CFrame.new(library.X, 2.5, library.Z + 15), Color3.fromRGB(93, 70, 54), Enum.Material.Wood)
+-- Keep the historical `Library` room key as a stable travel seam, but dress the
+-- player-facing room as the Culinary Lab named in SchoolConfig.
+local culinary = SchoolConfig.Rooms.Library.position
+for _, station in ipairs({
+    { suffix = "A", x = -14, z = 5 },
+    { suffix = "B", x = 0, z = 5 },
+    { suffix = "C", x = 14, z = 5 },
+}) do
+    makePart("CulinaryIsland" .. station.suffix, Vector3.new(11, 3, 6), CFrame.new(culinary.X + station.x, 2, culinary.Z + station.z), Color3.fromRGB(126, 139, 143), Enum.Material.Metal)
+    makePart("CulinaryWorktop" .. station.suffix, Vector3.new(11.5, 0.45, 6.5), CFrame.new(culinary.X + station.x, 3.7, culinary.Z + station.z), Color3.fromRGB(236, 232, 218), Enum.Material.Marble)
+    local cooktop = makePart("CulinaryCooktop" .. station.suffix, Vector3.new(4.5, 0.12, 3.5), CFrame.new(culinary.X + station.x - 2.2, 3.99, culinary.Z + station.z), Color3.fromRGB(35, 42, 48), Enum.Material.SmoothPlastic)
+    cooktop.CanCollide = false
+    local sink = makePart("CulinarySink" .. station.suffix, Vector3.new(3.5, 0.16, 2.8), CFrame.new(culinary.X + station.x + 2.6, 4.0, culinary.Z + station.z), Color3.fromRGB(94, 113, 120), Enum.Material.Metal)
+    sink.CanCollide = false
+end
+makePart("CulinaryDemoCounter", Vector3.new(24, 3.2, 5.5), CFrame.new(culinary.X, 2.1, culinary.Z - 12), Color3.fromRGB(112, 126, 132), Enum.Material.Metal)
+makePart("CulinaryDemoTop", Vector3.new(24.5, 0.5, 6), CFrame.new(culinary.X, 3.95, culinary.Z - 12), Color3.fromRGB(236, 232, 218), Enum.Material.Marble)
+for offset = -1, 1 do
+    makePart("CulinaryWallOven" .. tostring(offset + 2), Vector3.new(6, 7, 3), CFrame.new(culinary.X + offset * 9, 4.2, culinary.Z - 18), Color3.fromRGB(72, 78, 84), Enum.Material.Metal)
+end
 
 local cafeteria = SchoolConfig.Rooms.Cafeteria.position
 makePart("ServingCounter", Vector3.new(44, 4, 5), CFrame.new(cafeteria.X, 2.5, cafeteria.Z - 15), Color3.fromRGB(151, 159, 166), Enum.Material.Metal)

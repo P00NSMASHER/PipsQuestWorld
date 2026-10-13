@@ -122,6 +122,12 @@ hasCampus('centerCircle.Shape = Enum.PartType.Cylinder', "round gym center mark"
 hasCampus('centerLine.CanCollide = false', "gym floor line cannot snag players")
 hasCampus('"GymBleacher" .. tostring(row + 1)', "gym spectator seating")
 hasCampus('"PIP HIGH  00  -  00  VISITORS"', "gym scoreboard")
+hasCampus('"CulinaryIsland" .. station.suffix', "culinary lab student stations")
+hasCampus('"CulinaryCooktop" .. station.suffix', "culinary lab cooktops")
+hasCampus('"CulinarySink" .. station.suffix', "culinary lab sinks")
+hasCampus('"CulinaryWallOven" .. tostring(offset + 2)', "culinary lab wall ovens")
+assert(not campusSource:find('"Bookshelf"', 1, true), "Culinary Lab must not retain library bookshelves")
+assert(not campusSource:find('"LibraryReadingTable', 1, true), "Culinary Lab must not retain reading tables")
 
 local stairWidth = tonumber(campusSource:match('local corridorStairWidth = ([-%d%.]+)'))
 local stairRailX = tonumber(campusSource:match('local corridorStairRailX = ([-%d%.]+)'))
