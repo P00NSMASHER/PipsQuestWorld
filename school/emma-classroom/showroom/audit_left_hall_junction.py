@@ -96,6 +96,22 @@ local function check()
     assert(#parts("Side hall far wall")==0
         and #parts("Photo hall end cap")==1,
         "LEFT_HALL_JUNCTION_OLD_CROSS_WALL_RETURNED")
+    -- A visible brick carrier is still an architectural obstruction
+    -- EVEN IF CanCollide=false. The screenshot at source fb2b115 showed
+    -- the old x54.51 end-cap veneer concealing the lower 4.25 studs of
+    -- an otherwise walkable straight hall. Test independent of its name,
+    -- collision flag and generic nonblank screenshot checks.
+    assert(#parts("Photo hall right end glazed brick")==0,
+        "LEFT_HALL_JUNCTION_GHOST_BRICK_VENEER_RETURNED")
+    for _,p in ipairs(root:GetDescendants()) do
+        if p:IsA("BasePart")
+            and math.abs(p.Position.X-54.5)<1.0
+            and math.abs(p.Position.Z-15.5)<2.0
+            and p.Size.X<1.0 and p.Size.Z>=12.0
+            and p.Size.Y>=3.0 then
+            error("LEFT_HALL_JUNCTION_OPAQUE_PARTITION_IN_EXIT "..p.Name)
+        end
+    end
     -- A reintroduced collidable wall across the centerline at the former
     -- x=54.5 dead end must fail even if all floors and side walls remain.
     for _,p in ipairs(root:GetDescendants()) do
@@ -154,9 +170,30 @@ rejectMutation(
     function() longNorth.CanCollide=false end,
     function() longNorth.CanCollide=true end,
     "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP","long_hall_north_wall_missing")
+-- These two tests are deliberately NONCOLLIDING barriers. The ordinary
+-- navigation route checker would accept both, while the player's rendered
+-- corridor would be obscured by an opaque brown half-wall.
+local ghost=Instance.new("Part")
+ghost.Name="Photo hall right end glazed brick"
+ghost.Size=Vector3.new(.075,4.25,22)
+ghost.CFrame=CFrame.new(54.51,2.125,15.50)
+ghost.CanCollide=false
+rejectMutation(
+    function() ghost.Parent=root end,
+    function() ghost.Parent=nil end,
+    "LEFT_HALL_JUNCTION_GHOST_BRICK_VENEER_RETURNED",
+    "noncolliding_near_cap_veneer")
+ghost.Name="Unexpected anonymous visual partition"
+rejectMutation(
+    function() ghost.Parent=root end,
+    function() ghost.Parent=nil end,
+    "LEFT_HALL_JUNCTION_OPAQUE_PARTITION_IN_EXIT",
+    "renamed_noncolliding_masonry_barrier")
+ghost:Destroy()
 check()
 print("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS "
-    .."floor,ceiling,step,closet_wall,north_wall_rejected=true")
+    .."floor,ceiling,step,closet_wall,north_wall,"
+    .."noncolliding_veneer,renamed_noncolliding_partition_rejected=true")
 '''
 
 def run(luau: str) -> list[str]:
@@ -173,7 +210,7 @@ def run(luau: str) -> list[str]:
     assert any(line.startswith("LEFT_HALL_JUNCTION_SOURCE_PASS") for line in lines)
     assert any(line.startswith("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS") for line in lines)
     assert sum(line.startswith("LEFT_HALL_JUNCTION_NEGATIVE_REJECTED ")
-               for line in lines)==5
+               for line in lines)==7
     return [line for line in lines
             if line.startswith("LEFT_HALL_JUNCTION_")]
 
