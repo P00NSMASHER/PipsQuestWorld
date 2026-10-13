@@ -30,19 +30,19 @@ STEP = 0.75
 AVATAR_RADIUS = 1.0  # Conservative nominal Roblox character footprint.
 BODY_BOTTOM = 0.85
 BODY_TOP = 5.75
-X_MIN, X_MAX = -55.0, 55.0
-Z_MIN, Z_MAX = -32.0, 48.0
+X_MIN, X_MAX = -55.0, 65.0
+Z_MIN, Z_MAX = -42.0, 75.0
 START = (5.0, 24.0)
 GOALS = {
     "front_teaching_wall": (5.0, -24.0),
     "right_supply_closet_interior": (0.0, 31.0),
-    "left_staff_hall_turn": (45.5, 29.0),
-    "photo_hallway_left": (-43.0, 38.0),
-    "photo_hallway_right": (43.0, 38.0),
+    "cross_hall_staff_threshold": (38.5, 15.5),
+    "photo_hallway_south": (48.5, -29.0),
+    "photo_hallway_north": (48.5, 62.0),
     "window_wall": (-32.0, 1.0),
     "reading_corner_approach": (-29.0, -23.0),
     "right_side_aisle": (28.0, -11.0),
-    "side_staff_hallway": (44.0, 15.5),
+    "cross_hall_midpoint": (48.5, 15.5),
 }
 
 # Extra Luau probe is appended to the *actual* constructor snapshot. The
@@ -180,21 +180,25 @@ def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
         assert all(math.isfinite(v) for v in (sx, sy, sz, px, py, pz, *matrix)), (
             "SUPPORT_FLOOR_NONFINITE " + name)
         assert sx > 0 and sy > 0 and sz > 0, "SUPPORT_FLOOR_ZERO_DIMENSION " + name
-        # The corridor is translated/rotated 180 degrees as a rigid scene
-        # assembly. A floor with yaw 180 stays horizontal and has identical
-        # AABB support; the old identity-only test incorrectly rejected it.
-        # Continue rejecting ANY floor pitch, roll or 90-degree axis swap.
-        assert (abs(abs(matrix[0])-1) < .001 and
-                abs(matrix[4]-1) < .001 and
-                abs(abs(matrix[8])-1) < .001 and
-                matrix[0]*matrix[8] > 0 and
-                all(abs(matrix[i]) < .001
-                    for i in (1,2,3,5,6,7))), (
+        # Floor pitch or roll is forbidden. A 90-degree native yaw is
+        # supported for the ONE photo hall: its 108-stud X axis becomes
+        # world Z. Keep all other structural support parts axis-aligned.
+        flat = (abs(matrix[4]-1) < .001 and
+                all(abs(matrix[i])<.001 for i in (1,3,5,7)))
+        axis = (abs(abs(matrix[0])-1)<.001 and
+                abs(abs(matrix[8])-1)<.001 and
+                abs(matrix[2])<.001 and abs(matrix[6])<.001)
+        cross = (abs(matrix[0])<.001 and abs(matrix[8])<.001 and
+                 abs(abs(matrix[2])-1)<.001 and
+                 abs(abs(matrix[6])-1)<.001)
+        assert flat and (axis or
+                         (name=="Photo hall polished square stone floor" and cross)), (
             "SUPPORT_FLOOR_TILTED_UNMODELED " + name)
         top = py + sy / 2
         assert abs(top-0.5) <= 0.08, "SUPPORT_FLOOR_BAD_ELEVATION " + name
-        floors[name] = FloorSupport(name, px-sx/2, px+sx/2,
-                                    pz-sz/2, pz+sz/2, top)
+        fx,fz = (sz,sx) if cross else (sx,sz)
+        floors[name] = FloorSupport(name, px-fx/2, px+fx/2,
+                                    pz-fz/2, pz+fz/2, top)
     assert set(floors) == SUPPORT_FLOOR_NAMES, (
         "SUPPORT_FLOOR_MISSING " + str(sorted(SUPPORT_FLOOR_NAMES-set(floors))))
     return [floors[name] for name in sorted(floors)]
@@ -338,15 +342,15 @@ def inspect(blockers: list[Blocker],
                         f"UNSUPPORTED_ROUTE_CONTINUITY route={name} {exc}"
                     ) from exc
                 segment_count += 1
-    # Both long-hall routes must exit through the left staff doorway,
-    # enter the north/south cross-corridor, and make the 90-degree turn.
-    for name in ("photo_hallway_left","photo_hallway_right"):
+    # This is NOT the former north-turn passage. Both long arms of the
+    # photo hall must be reached immediately across the staff threshold.
+    for name in ("photo_hallway_south","photo_hallway_north"):
         points=routes[name]["waypoints"]
-        assert any(x>=37.5 and 10<=z<=24 for x,z in points), (
-            "LEFT_STAFF_HALL_MISSING_FROM_ROUTE: "+name
+        assert any(37.5<=x<=50 and 8<=z<=23 for x,z in points), (
+            "CROSS_HALL_STAFF_THRESHOLD_MISSING: "+name
         )
-        assert any(x>=37.5 and 27<=z<=34 for x,z in points), (
-            "LEFT_STAFF_PERPENDICULAR_TURN_BLOCKED: "+name
+        assert any(45<=x<=52 and -31<=z<=64 for x,z in points), (
+            "CROSS_HALL_PERPENDICULAR_AXIS_BLOCKED: "+name
         )
     assert all(x<37.5 for x,z in routes["right_supply_closet_interior"]["waypoints"]), (
         "RIGHT_CLOSET_MUST_BE_REACHED_FROM_CLASSROOM_NOT_HALL"
@@ -472,7 +476,44 @@ def get_source_blockers(luau: str) -> list[Blocker]:
     return get_source_geometry(luau)[0]
 
 
-def self_test():
+def assert_cross_staff_corridor(blockers: list[Blocker],
+                               floors: list[FloorSupport]) -> None:
+    """Source-only analytic 2-stud-wide route across the threshold and both
+    +/-Z gallery arms; fail even for invisible subgrid gaps."""
+    assert floors, "CROSS_HALL_FLOOR_EVIDENCE_MISSING"
+    for x in (47.5,48.5,49.5):
+        for wall in blockers:
+            if (wall.xmin <= x <= wall.xmax and wall.zmin <= 63
+                    and wall.zmax >= -29):
+                raise AssertionError("CROSS_HALL_AXIS_COLLIDER "+wall.name)
+        ranges=sorted((max(-29,f.zmin),min(63,f.zmax))
+                      for f in floors if f.xmin<=x<=f.xmax
+                      and f.zmax>=-29 and f.zmin<=63)
+        edge=-29
+        for a,b in ranges:
+            if b<=edge+1e-6: continue
+            if a>edge+1e-6: break
+            edge=max(edge,b)
+        assert edge>=63-1e-6, "CROSS_HALL_UNSUPPORTED_Z_AXIS"
+    for z in (14.5,15.5,16.5):
+        ranges=sorted((max(36.5,f.xmin),min(48.5,f.xmax))
+                      for f in floors if f.zmin<=z<=f.zmax
+                      and f.xmax>=36.5 and f.xmin<=48.5)
+        edge=36.5
+        for a,b in ranges:
+            if b<=edge+1e-6: continue
+            if a>edge+1e-6: break
+            edge=max(edge,b)
+        assert edge>=48.5-1e-6, "CROSS_HALL_UNSUPPORTED_THRESHOLD"
+        for wall in blockers:
+            if (wall.zmin<=z<=wall.zmax
+                    and wall.xmin<=48.5 and wall.xmax>=39.0):
+                raise AssertionError("CROSS_HALL_THRESHOLD_COLLIDER "+wall.name)
+    assert any(w.name=="Photo hall rear blue-gray wall"
+               and w.covers(59.75,15.5) for w in blockers), (
+        "CROSS_HALL_OPPOSITE_WALL_MISSING")
+
+
     # A floor below the character cannot close a corridor.
     flat=["NAV","floor","20","1","20","0","0","0",
           "1","0","0","0","1","0","0","0","1"]
@@ -512,6 +553,12 @@ def self_test():
     rotated = list(fixtures[0])
     rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
     assert len(as_floor_supports([rotated,*fixtures[1:]]))==4
+    quarter=list(fixtures[0])
+    quarter[-9:]=["0","0","1","0","1","0","-1","0","0"]
+    rotated_support=as_floor_supports([quarter,*fixtures[1:]])
+    assert len(rotated_support)==4 and any(
+        f.name=="Photo hall polished square stone floor"
+        for f in rotated_support), "CROSS_HALL_ROTATED_FLOOR_REJECTED"
     tipped = list(fixtures[0])
     tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
     try:
@@ -639,19 +686,22 @@ def main():
         p.error("--luau required unless --self-test")
     blockers,floors=get_source_geometry(args.luau)
     result=inspect(blockers,floors)
-    # Reopen the former 1.25-stud northbound seam. A clear 2D aisle is
-    # unsafe if the perpendicular turn has no physical floor beneath it.
-    former=[FloorSupport(f.name,f.xmin,f.xmax,f.zmin,
-                         25.5 if f.name=="Side hall floor" else f.zmax,
-                         f.top) for f in floors]
+    assert_cross_staff_corridor(blockers,floors)
+    # A 0.45-stud missing bridge near the threshold must be rejected
+    # even if the 0.75-stud sampled route hops across it.
+    former=[FloorSupport(f.name,f.xmin,
+                         36.8 if f.name=="Side hall floor" else f.xmax,
+                         f.zmin,f.zmax,f.top) for f in floors]
     try:
-        inspect(blockers,former)
+        assert_cross_staff_corridor(blockers,former)
     except AssertionError as exc:
-        assert "BLOCKED_NAVIGATION" in str(exc) or "LEFT_STAFF" in str(exc), (
-            "FLOOR_GAP_NEGATIVE_UNEXPECTED " + str(exc))
+        assert "CROSS_HALL_UNSUPPORTED_THRESHOLD" in str(exc), str(exc)
     else:
-        raise AssertionError("FORMER_UNSUPPORTED_JUNCTION_FALSELY_ACCEPTED")
-    print("SUPPORTED_ROUTE_ADVERSARIAL_PASS former_1.25_stud_gap_rejected=true",
+        raise AssertionError("CROSS_HALL_SUBGRID_THRESHOLD_GAP_FALSELY_ACCEPTED")
+    print("SUPPORTED_ROUTE_ADVERSARIAL_PASS cross_hall_threshold_gap_rejected=true",
+          flush=True)
+    print("CROSS_HALL_CENTERLINE_SOURCE_PASS perpendicular_Z_axis=true "
+          "avatar_footprint_supported=true native_device_pending=true",
           flush=True)
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
@@ -663,7 +713,7 @@ def main():
           " cardinal_segments=" + str(result["validated_route_segments"]) +
           " all_route_centerlines_source_supported=true "
           "native_roblox_device_qa_still_required=true", flush=True)
-    print("DOORWAY_ROUTING_NAV_PASS perpendicular_left_staff_exit=true "
+    print("DOORWAY_ROUTING_NAV_PASS immediate_left_right_cross_hall=true "
           "right_rear_supply_closet_sealed=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
           "source_colliders="+str(result["blockers"]),
