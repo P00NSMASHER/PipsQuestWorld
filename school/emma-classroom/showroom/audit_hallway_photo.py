@@ -178,7 +178,9 @@ local function checkCloset()
     assert(closetFloor.CanCollide and
         closetFloor.Position.Y+closetFloor.Size.Y/2>.50
         and closetFloor.Position.Y+closetFloor.Size.Y/2<.58
-        and closetFloor.Size.X>=11.2 and closetFloor.Size.Z>=8.2,
+        and closetFloor.Size.X>=11.2 and closetFloor.Size.Z>=8.9
+        and closetFloor.Position.Z-closetFloor.Size.Z/2<=26.85
+        and closetFloor.Position.Z+closetFloor.Size.Z/2>=35.6,
         "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING")
     local sign=one("Welcome over door")
     local label=sign:FindFirstChild("Surface")
@@ -202,6 +204,14 @@ closetFloor.CanCollide=true
 assert(not floorSafe and string.find(tostring(floorReason),
     "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING",1,true),
     "CLOSET_UNSUPPORTED_FLOOR_MUTATION_NOT_CAUGHT")
+checkCloset()
+local beforeFloorSize=closetFloor.Size
+closetFloor.Size=Vector3.new(11.30,.045,8.33)
+local seamSafe,seamReason=pcall(checkCloset)
+closetFloor.Size=beforeFloorSize
+assert(not seamSafe and string.find(tostring(seamReason),
+    "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING",1,true),
+    "CLOSET_UNSUPPORTED_THRESHOLD_SEAM_MUTATION_NOT_CAUGHT")
 checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
