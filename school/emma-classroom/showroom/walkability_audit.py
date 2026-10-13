@@ -514,6 +514,7 @@ def assert_cross_staff_corridor(blockers: list[Blocker],
         "CROSS_HALL_OPPOSITE_WALL_MISSING")
 
 
+def self_test():
     # A floor below the character cannot close a corridor.
     flat=["NAV","floor","20","1","20","0","0","0",
           "1","0","0","0","1","0","0","0","1"]
