@@ -1003,14 +1003,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         label_face=y+float(anchor[7])/2
         gap=label_face-tallest
         cloud_face_gaps.append(gap)
-        assert .055<gap<.090, (
+        # Native October 13 review flattens the artwork to printed-textile
+        # depth. Preserve positive clearance, invisible anchors and exact
+        # native shapes; reject the former raised clouds/floating .820 labels.
+        # This narrower interval replaces the old raised-foam calibration.
+        assert .014<gap<.023, (
             f"Number GUI falls inside taller cloud or floats too high: gap={gap:.3f}"
         )
-        assert abs(float(body_matches[0][10])-.690)<.006 and (
-            all(abs(float(v[10])-.690)<.006 for v in side_matches)
+        assert abs(float(body_matches[0][10])-.635)<.004 and (
+            all(abs(float(v[10])-.635)<.004 for v in side_matches)
         ), "Flat cloud geometry left the horizontal rug surface"
-        assert .115<=float(body_matches[0][7])<=.125 and (
-            all(.115<=float(v[6])<=.125 for v in side_matches)
+        assert .019<=float(body_matches[0][7])<=.026 and (
+            all(.019<=float(v[6])<=.026 for v in side_matches)
         ), "Native cylinders are no longer flat with a stable height axis"
         assert (1.12<=float(body_matches[0][6])<=1.16
                 and .63<=float(body_matches[0][8])<=.67
@@ -1018,13 +1022,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
                         .92<=float(v[8])<=.96 for v in side_matches)), (
             "Cloud bodies stopped being wide, native-scale solid shapes"
         )
-        assert all(float(v[10])-.06>=.62 for v in body_matches+side_matches), (
+        assert all(float(v[10])-(world_top(v)-float(v[10]))>=.62
+                   for v in body_matches+side_matches), (
             "Cloud face sinks beneath the actual floor rug"
         )
         assert all(abs(float(v[18]))>.99 for v in side_matches), (
             "Cloud Cylinder local-X axis is not vertically oriented"
         )
-        assert abs(y-.820)<.01, "Number label no longer above cloud shapes"
+        assert abs(y-.656)<.006, "Number label no longer above cloud shapes"
+        assert label_face-.610<=.061, "Number label floats above printed textile"
     print(f"IPHONE_CLOUD_OCCLUSION_PASS clouds=10 lobes=30 "
           f"number_face_clearance={min(cloud_face_gaps):.3f} "
           "rectangular_number_backings_invisible=true")
@@ -1511,7 +1517,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     tips=[r for r in lines if r[1]=="Photo rug sun ray rounded tip"]
     assert len(tips)==16 and all(
         t[3].endswith("Cylinder") and t[4].endswith("SmoothPlastic")
-        and .095<=float(t[6])<=.105 and abs(float(t[18]))>.99
+        and .019<=float(t[6])<=.026 and abs(float(t[18]))>.99
         for t in tips
     ), "Native sun-ray rounded ends must be horizontal Cylinders"
     ray_colors={tuple(round(float(v),3) for v in r[12:15]) for r in sun_rays}
@@ -1524,8 +1530,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ray_angles={round(math.atan2(float(r[11])-sun_pos[1],
                                  float(r[9])-sun_pos[0]),3) for r in sun_rays}
     assert len(ray_angles)==16, "Sunburst rays are duplicated or stacked"
-    assert all(abs(float(r[10])-.685)<.005 and (
-        .095<=world_span(r,1)<=.105
+    assert all(abs(float(r[10])-.638)<.004 and (
+        .019<=world_span(r,1)<=.026
     ) for r in sun_rays), (
         "Sun rays are no longer shallow, native-visible solid artwork"
     )

@@ -1,4 +1,4 @@
-## October 12, 2026 — owner-requested classroom photo detail candidate
+## October 12, 2026 â€” owner-requested classroom photo detail candidate
 
 Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.
 This is implementation under the direct photo-match request, **not independent
@@ -6,11 +6,11 @@ QA approval, a merge, or a new Roblox publication**. The canonical receipt is
 still the successfully published v83 QA preview; older release notes below are
 historical, not current publication authority.
 
-Implemented from private review of all eight IMG_2903–2910 references:
+Implemented from private review of all eight IMG_2903â€“2910 references:
 
 - Restore the missing rectangular blue alphabet/sun rug, alongside the round
   alphabet rug and black polka-dot rug. One thin noncolliding fabric Part carries
-  original vector artwork: A–Z once, ten numbered clouds, sixteen sun rays.
+  original vector artwork: Aâ€“Z once, ten numbered clouds, sixteen sun rays.
   Its provisional clear-floor position preserves all sixteen desk/chair pairs.
 - Refine all five red/white tablecloth surfaces from coarse checker squares to
   finer crossing translucent gingham threads (ivory, rose, deeper-red crossings).
@@ -56,7 +56,7 @@ Remaining review gates:
 
 ---
 
-## Historical release-state clarification — October 8, 2026 (verified GitHub receipt)
+## Historical release-state clarification â€” October 8, 2026 (verified GitHub receipt)
 
 **Published classroom preview:** GitHub Actions [run 37870907504](https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/37870907504) successfully published **Roblox place version 67** from exact source commit `1e67943a0394c4196f630cc5566a1f153ec401b5` to place `114603280760042` on October 9 UTC (October 8 Eastern). The runtime is the classroom-only progress preview, **not** a final visually accepted release.
 
@@ -66,7 +66,7 @@ The receipt is tracked in [RELEASE_RECEIPT.json](RELEASE_RECEIPT.json) and check
 
 ---
 
-## October 8 — furniture reconstruction and adversarial close-up visual review
+## October 8 â€” furniture reconstruction and adversarial close-up visual review
 
 **Current source checkpoint:** `4ab68c81456d0fb898ad86429d508b700cc3b3dc`. The new classroom-only chair/desks changes and source-derived previews are archived in [the furniture QA gallery](../../docs/visual-qa/emma-furniture-20261008/README.md).
 
@@ -170,7 +170,7 @@ Visual acceptance sequence:
 
 ---
 
-## Current continuation — stable display avatars / classroom objects (v6)
+## Current continuation â€” stable display avatars / classroom objects (v6)
 
 Version 58 failed the user's real recording: detached/missing heads during swaps,
 poor staff likeness and an unfinished room. This continuation removes native rig
@@ -243,7 +243,7 @@ portrait-level rendering or a measured exact classroom replica.
 
 ## Authorized native Studio check and visible fixes
 
-At 1:00–1:11 PM Eastern the user authorized foreground laptop use. Native Studio
+At 1:00â€“1:11 PM Eastern the user authorized foreground laptop use. Native Studio
 constructed all 18 staff and the room successfully, then rendered the three
 portrait-target staff. The render failed the final visual target: noisy Fabric,
 stretched SurfaceGui lettering and rounded hair bumps. Follow-up source fixes
@@ -272,3 +272,5 @@ and remaining source/check work continued without bringing it forward.
 - Evidence: `qa/ARCHITECTURAL_REFINEMENT_RECEIPT_20261013.json` and matching review note.
 - Original mesh experiment rejected; adapter remains disabled. Photo-fidelity work and physical-iPhone performance remain unfinished.
 - Saved a new Documents review file; no merge or Roblox publication.
+
+Complete-export follow-up: 27/27 expanded checks now pass. Strict exporter calibration updated for flat rug print; four bad-geometry mutations rejected in `showroom/audit_flat_rug_source.py`, which is wired into CI. This follow-up changes no runtime geometry.

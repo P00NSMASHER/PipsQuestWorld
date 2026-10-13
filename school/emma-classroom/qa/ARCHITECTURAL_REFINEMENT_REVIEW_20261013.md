@@ -20,3 +20,7 @@ Approved original chair/desk mesh models loaded, but the exploratory runtime exc
 
 ## Remaining
 Further architectural and furniture fidelity, more calibrated mobile lighting review, real-phone frame-rate and published asset delivery validation. Existing PR stays draft; no publication or marker/schedule changes.
+
+
+## Complete-export CI follow-up
+The first push failed the full exporter, which was not included in the original 25-command local runner. It still required the old raised cloud height, .820-stud floating number anchors and thick ray caps. The same failure was reproduced locally before changes. No game code was altered to satisfy the old shape. Instead, narrow geometry guards now enforce the actual native-verified thin artwork, positive number clearance, nonburied geometry, original shapes/counts and original collision rules. A full-export regression rejects old raised clouds, floating labels, sunken clouds and opaque number stickers. The new audit is part of Classroom Replica CI. The expanded local runner passes 27/27 checks, including full scene export. Historical red CI is preserved.

@@ -11,127 +11,137 @@
     {
       "test": "audit_hallway_mobile_complexity",
       "passed": true,
-      "seconds": 0.74
+      "seconds": 0.28
     },
     {
       "test": "audit_left_hall_junction",
       "passed": true,
-      "seconds": 2.31
+      "seconds": 0.75
     },
     {
       "test": "audit_hallway_camera_layout",
       "passed": true,
-      "seconds": 0.52
+      "seconds": 0.18
     },
     {
       "test": "audit_rug_ui",
       "passed": true,
-      "seconds": 0.55
+      "seconds": 0.19
     },
     {
       "test": "audit_lighting",
       "passed": true,
-      "seconds": 0.8
+      "seconds": 0.2
     },
     {
       "test": "audit_storybook_facing",
       "passed": true,
-      "seconds": 0.56
+      "seconds": 0.17
     },
     {
       "test": "audit_native_rug_primitives",
       "passed": true,
-      "seconds": 1.79
+      "seconds": 0.61
     },
     {
       "test": "audit_native_foliage_primitives",
       "passed": true,
-      "seconds": 0.72
+      "seconds": 0.23
     },
     {
       "test": "audit_native_chair_vents",
       "passed": true,
-      "seconds": 0.64
+      "seconds": 0.24
     },
     {
       "test": "audit_buried_chair_parts",
       "passed": true,
-      "seconds": 1.25
+      "seconds": 0.56
     },
     {
       "test": "audit_purple_corner_chair",
       "passed": true,
-      "seconds": 1.02
+      "seconds": 0.55
     },
     {
       "test": "audit_window_landmarks",
       "passed": true,
-      "seconds": 4.45
+      "seconds": 1.79
     },
     {
       "test": "audit_photo_landmarks",
       "passed": true,
-      "seconds": 8.32
+      "seconds": 3.68
     },
     {
       "test": "audit_glazed_door_aperture",
       "passed": true,
-      "seconds": 0.59
+      "seconds": 0.27
     },
     {
       "test": "audit_notebook_rule_surfaces",
       "passed": true,
-      "seconds": 0.42
+      "seconds": 0.18
     },
     {
       "test": "audit_hallway_photo",
       "passed": true,
-      "seconds": 1.62
+      "seconds": 0.9
     },
     {
       "test": "audit_word_wall_native",
       "passed": true,
-      "seconds": 1.45
+      "seconds": 0.64
     },
     {
       "test": "audit_literacy_wall",
       "passed": true,
-      "seconds": 0.92
+      "seconds": 0.38
     },
     {
       "test": "audit_checkered_table",
       "passed": true,
-      "seconds": 1.17
+      "seconds": 0.45
     },
     {
       "test": "walkability_audit",
       "passed": true,
-      "seconds": 1.23
+      "seconds": 0.44
+    },
+    {
+      "test": "audit_flat_rug_source",
+      "passed": true,
+      "seconds": 1.41
+    },
+    {
+      "test": "export_source_scene",
+      "passed": true,
+      "seconds": 0.59
     },
     {
       "test": "verify_build",
       "passed": true,
-      "seconds": 0.04
+      "seconds": 0.01
     },
     {
       "test": "verify_build-built",
       "passed": true,
-      "seconds": 0.04
+      "seconds": 0.01
     },
     {
       "test": "furniture_adapter_runtime",
       "passed": true,
-      "seconds": 0.17
+      "seconds": 0.06
     },
     {
       "test": "verify_release_receipt-self",
       "passed": true,
-      "seconds": 0.02
+      "seconds": 0.01
     },
     {
       "test": "verify_release_receipt",
       "passed": true,
-      "seconds": 0.05
+      "seconds": 0.01
     }
   ],
   "nativeResults": {
@@ -300,5 +310,14 @@
     },
     "consoleErrors": 0,
     "sha256": "47c9fdddd3e6fbe4b2c1c458dae1454b0b2c9e1da1ab8d5dc653830e9ec14ae8"
+  },
+  "exporterFollowup": {
+    "initialCiCommit": "d124c089f778b93a13507d85a8f72aae7fec0f52",
+    "initialCiRun": 38362289679,
+    "failure": "Full exporter retained obsolete raised-cloud/ray dimensions and label clearance",
+    "gameCodeChangedForFollowup": false,
+    "repair": "Narrow strict guards to native-verified printed-textile dimensions and positive label clearance; preserve all shape/count/collision checks",
+    "coverage": "Full scene export and four deliberate old/invalid-geometry mutations now tested in CI",
+    "resultLog": "FLAT_RUG_COMPLETE_EXPORT_PASS\nFLAT_RUG_SOURCE_NEGATIVE_REJECTED old_raised_clouds\nFLAT_RUG_SOURCE_NEGATIVE_REJECTED floating_numbers\nFLAT_RUG_SOURCE_NEGATIVE_REJECTED sunken_clouds\nFLAT_RUG_SOURCE_NEGATIVE_REJECTED opaque_number_stickers\nFLAT_RUG_SOURCE_REGRESSION_PASS full_export_and_four_mutations=true\n"
   }
 }
