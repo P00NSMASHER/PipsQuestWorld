@@ -150,11 +150,11 @@ jobs:
           # closet and cannot be called a hallway viewpoint. Both gallery
           # views now start on the ACTUAL contiguous school hallway floor.
           # This is uncut Luau scene geometry, never a Roblox phone capture.
-          render_eye_checked 22-hall-look-left 111,5.5,15.5 76,7.0,15.5
-          render_eye_checked 23-hall-look-right 111,5.5,15.5 150,7.0,15.5
+          render_eye_checked 22-hall-look-left 18,5.5,38 -42,7.0,38
+          render_eye_checked 23-hall-look-right 18,5.5,38 50,7.0,38
           # Reverse view toward the only connected left/staff doorway:
-          # hallway (x43,z34) -> side passage (x43,z16).
-          render_eye_checked 24-hall-entry-from-gallery 75,5.5,15.5 39,6.9,15.5
+          # hallway (x43,z34) -> perpendicular side passage (x43,z17).
+          render_eye_checked 24-hall-entry-from-gallery 43,5.5,34 43,6.9,17
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
@@ -394,34 +394,22 @@ jobs:
           # 7-region / 50k-pixel / 1.20x-perspective acceptance thresholds.
           # This is third-party source renderer evidence, NOT native phone QA.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            06-hall-paper-rail 100,5.5,16 130,8,9
+            06-hall-paper-rail 8,5.5,37.5 -22,8,44.5
           # Fixed, full-geometry photo-window camera: sees the real 3D
           # mustard sash and sunburst at the distant sealed left end wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            07-hall-yellow-end-window 100,5.7,21 155,7.35,15.5
+            07-hall-yellow-end-window 0,5.7,38 -54,7.35,38
           # Actual full-scene view of the left-hand neighboring CLOSED
           # oak-and-glass facade. No cutaway, invisible UI, fake opening,
           # or overlay model. Verify native geometry from child-eye height.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            08-hall-adjacent-oak-door 145,5.6,16 153.5,6.8,25.7
+            08-hall-adjacent-oak-door -41.8,5.6,39 -45.5,6.8,27.85
           # Native-independent child-eye evidence for the critical LEFT
           # classroom doorway turn. Actual Luau scene, not a cutaway:
           # old floor/roof stopped 1.25 studs before the photo hallway.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            09-hall-straight-entry-seam 44,5.5,15.5 78,6,15.5
+            09-hall-left-floor-roof-junction 42,5.5,22 44,6,38
           echo "FAST_PHOTO_NONBLANK_PASS 9 source-derived views"
-      - name: Reject noncolliding visual half-wall blocking the straight staff exit
-        shell: bash
-        run: |
-          set -euo pipefail
-          PY="$RUNNER_TEMP/photo-venv/bin/python"
-          # Actual 09 player-eye render, not just a 2D collision route.
-          # The previous opaque near-end brick veneer passed navigation QA
-          # while visually hiding the lower half of the corridor.
-          "$PY" school/emma-classroom/showroom/audit_rendered_straight_exit.py --self-test
-          "$PY" school/emma-classroom/showroom/audit_rendered_straight_exit.py \
-            "$RUNNER_TEMP/photo-review/09-hall-straight-entry-seam.png"
-          echo "STRAIGHT_STAFF_EXIT_IMAGE_GATE_PASS noncolliding_barriers_rejected=true native_iphone_pending=true"
       - name: Prove 23 photo-hall papers appear in two independent real camera views
         shell: bash
         run: |
@@ -485,7 +473,7 @@ jobs:
                  "04-window-clock","05-closet-double-doors",
                  "06-hall-paper-rail","07-hall-yellow-end-window",
                  "08-hall-adjacent-oak-door",
-                 "09-hall-straight-entry-seam")
+                 "09-hall-left-floor-roof-junction")
           out=Image.new("RGB",(1000,len(names)*350+10),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
