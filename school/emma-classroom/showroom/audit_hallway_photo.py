@@ -267,8 +267,14 @@ local segments={
     {"Photo hall classroom exterior glazed brick",2},
     {"Photo hall front outer glazed brick",1},
     {"Photo hall left end glazed brick",1},
-    {"Photo hall right end glazed brick",1},
+    {"Photo hall right end glazed brick",0},
 }
+-- A previous version removed the old x=54 west end-cap collider but left
+-- its separate 4.25-stud-tall opaque brick SurfaceGui carrier in the open
+-- staff doorway. Require ZERO near-cap decorative masonry, regardless of
+-- CanCollide. The opposite far-end brick carrier is retained.
+assert(#pieces("Photo hall right end glazed brick")==0,
+    "PHOTO_HALL_OPAQUE_STAFF_EXIT_VENEER_RETURNED")
 local count=0
 for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
