@@ -2410,7 +2410,7 @@ local function alignHallwayWithStaffExit(root: Instance)
     local board=nearCap:FindFirstChild("Original school noticeboard")
     if board then
         board.Parent=farCap
-        board.Face=Enum.NormalId.Right
+        board.Face=Enum.NormalId.Left
     end
     nearCap:Destroy()
 
