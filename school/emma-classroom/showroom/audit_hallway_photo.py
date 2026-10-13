@@ -174,7 +174,12 @@ local function checkCloset()
             tub:FindFirstChild("Anonymous classroom supply category"),
             "RIGHT_CLOSET_STORAGE_PROPS_MISSING_OR_BLOCKING")
     end
-    expect("Supply closet warm laminate floor",1)
+    local closetFloor=one("Supply closet warm laminate floor")
+    assert(closetFloor.CanCollide and
+        closetFloor.Position.Y+closetFloor.Size.Y/2>.50
+        and closetFloor.Position.Y+closetFloor.Size.Y/2<.58
+        and closetFloor.Size.X>=11.2 and closetFloor.Size.Z>=8.2,
+        "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING")
     local sign=one("Welcome over door")
     local label=sign:FindFirstChild("Surface")
     assert(label and label:FindFirstChildOfClass("TextLabel")
@@ -190,9 +195,17 @@ assert(not safe and string.find(tostring(reason),
     "RIGHT_CLOSET_REAR_WALL_NOT_SEALED",1,true),
     "CLOSET_OPEN_REAR_MUTATION_NOT_CAUGHT")
 checkCloset()
+local closetFloor=one("Supply closet warm laminate floor")
+closetFloor.CanCollide=false
+local floorSafe,floorReason=pcall(checkCloset)
+closetFloor.CanCollide=true
+assert(not floorSafe and string.find(tostring(floorReason),
+    "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING",1,true),
+    "CLOSET_UNSUPPORTED_FLOOR_MUTATION_NOT_CAUGHT")
+checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
-    .."closet_walls=3 shelves=3 rear_wall_mutation_rejected=true")
+    .."closet_walls=3 shelves=3 rear_wall_and_floor_mutations_rejected=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)
