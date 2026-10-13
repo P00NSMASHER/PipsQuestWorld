@@ -225,14 +225,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     rear_brick=actual_parts("Photo hall rear glazed brick")
     classroom_brick=actual_parts("Photo hall classroom exterior glazed brick")
     outside_brick=actual_parts("Photo hall front outer glazed brick")
-    end_brick=(actual_parts("Photo hall left end glazed brick")
-               +actual_parts("Photo hall right end glazed brick"))
+    # Only the enclosed far-end brick veneer survives the straight axis
+    # rebuild. Old x54 near-cap facing obscured the player camera without
+    # ever being a collision blocker.
+    assert not actual_parts("Photo hall right end glazed brick"), (
+        "STRAIGHT_HALL_OPAQUE_NONCOLLIDING_STAFF_EXIT_FACE_RETURNED")
+    end_brick=actual_parts("Photo hall left end glazed brick")
     ceiling=actual_parts("Photo hall ivory ceiling")
     oak=actual_parts("Photo hall adjacent oak door")
     lamps=actual_parts("Photo hall fluorescent diffuser")
     assert (len(floor),len(rear_brick),len(classroom_brick),
             len(outside_brick),len(end_brick),len(ceiling),
-            len(oak),len(lamps))==(1,1,2,1,2,1,2,5), (
+            len(oak),len(lamps))==(1,1,2,1,1,1,2,5), (
                 "HALLWAY_PHOTO_STRUCTURE_MISSING"
             )
     assert floor[0][4].endswith("SmoothPlastic") and (
