@@ -98,8 +98,13 @@ def check_role(name: str, cam: Camera) -> None:
         assert inside(main) and not inside(closet), (
             "HALL_CAMERA_INSIDE_SUPPLY_CLOSET_NOT_GALLERY "+name)
         if name=="06-hall-paper-rail":
-            assert tx>=105 and tz<=5.1, (
-                "HALL_CAMERA_PAPER_AIM_MISSES_RELOCATED_RAIL")
+            # Proven source-render failure on PR #351: eye at (112,5.5,17)
+            # aimed at (125,9,4.98) leaves only 4 full-size paper diamonds
+            # inside the existing fixed, left-half image crop. Avoid aiming
+            # nearly perpendicular to the rail or standing too far back.
+            assert 90<=x<=110 and 11<=z<=15.5 and tx>=145 and (
+                7<=tz<=11 and abs(tx-x)>=35
+            ), "HALL_CAMERA_PAPER_AIM_TOO_SHORT_OR_OFF_GALLERY"
         elif name=="07-hall-yellow-end-window":
             assert tx>=150 and 12<=tz<=19, (
                 "HALL_CAMERA_YELLOW_WINDOW_AIM_MISSES_FAR_END")
@@ -126,7 +131,7 @@ def self_test() -> None:
     # Synthetic, publicly safe camera location mutation fixtures.
     example={
         "05-closet-double-doors":Camera((0,5.5,31),(0,6.9,26.8)),
-        "06-hall-paper-rail":Camera((112,5.5,17),(125,9,4.98)),
+        "06-hall-paper-rail":Camera((100,5.5,14),(151,8,8)),
         "07-hall-yellow-end-window":Camera((100,5.7,21),(155,7.35,15.5)),
         "08-hall-adjacent-oak-door":Camera((145,5.6,16),(153.5,6.8,25.7)),
         "09-hall-straight-entry-seam":Camera((44,5.5,15.5),(78,6,15.5)),
@@ -146,7 +151,11 @@ def self_test() -> None:
         "wrong_turn_aim":
             ("24-hall-entry-from-gallery",Camera((75,5.5,15.5),(75,7,38))),
         "not_child_eye":
-            ("06-hall-paper-rail",Camera((112,17.5,17),(125,9,4.98))),
+            ("06-hall-paper-rail",Camera((100,17.5,14),(151,8,8))),
+        "old_four_sheets_false_accept":
+            ("06-hall-paper-rail",Camera((112,5.5,17),(125,9,4.98))),
+        "camera_crosses_gallery_centerline":
+            ("06-hall-paper-rail",Camera((100,5.5,20),(151,8,8))),
     }
     for reason,(name,incorrect) in mutation_specs.items():
         changed=dict(example)
@@ -158,7 +167,8 @@ def self_test() -> None:
         else:
             raise AssertionError("HALL_CAMERA_NEGATIVE_TEST_ACCEPTED "+reason)
     print("HALL_CAMERA_LAYOUT_SELF_TEST_PASS "
-          "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true")
+          "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true "
+          "old_four_sheets_view_and_wrong_distance_rejected=true")
 
 def main() -> None:
     ap=argparse.ArgumentParser()
