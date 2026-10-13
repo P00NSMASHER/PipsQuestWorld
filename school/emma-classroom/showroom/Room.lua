@@ -26,10 +26,26 @@ local P={
     metal=Color3.fromRGB(120,126,129),
 }
 
+local varnishedJoinery={
+    ["Cabinet inset panel"]=true,["Cabinet panel stile"]=true,
+    ["Tall cabinet recessed panel cross rail"]=true,["Tall cabinet hardwood cornice"]=true,
+    ["Tall cabinet cornice routed lip"]=true,["Built-in walnut cubby face stile"]=true,
+    ["Built-in walnut stile routed edge"]=true,["Built-in horizontal walnut face rail"]=true,
+    ["Built-in horizontal fine molding"]=true,["Built-in deep hardwood cornice"]=true,
+    ["Built-in stepped cornice edge"]=true,
+}
+
 local function part(parent: Instance,name: string,size: Vector3,cf: CFrame,color: Color3,material: Enum.Material?,collide: boolean?): Part
     local p=Instance.new("Part")
     p.Name=name;p.Size=size;p.CFrame=cf;p.Anchored=true
     p.Color=color;p.Material=material or Enum.Material.SmoothPlastic
+    -- Existing geometry only: brushed school-chair steel and worn cabinet varnish.
+    if p.Material==Enum.Material.Metal and (string.sub(name,1,13)=="Student chair"
+        or name=="Desk tubular leg" or name=="Desk contoured base runner") then
+        p.Color=Color3.fromRGB(181,185,185);p.Reflectance=.13
+    elseif varnishedJoinery[name] and p.Material==Enum.Material.Wood then
+        p.Reflectance=.055
+    end
     p.CanCollide=collide~=false;p.CanTouch=collide~=false
     p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
     p.Parent=parent
@@ -119,6 +135,22 @@ local function ceilingLight(parent: Instance,x: number,z: number)
         CFrame.new(x,17.59,z),Color3.fromRGB(249,246,238),
         Enum.Material.Glass,false)
     lens.Transparency=.075;lens.Reflectance=.005
+    -- An illuminated frosted lens, not the grey unlit slab seen in native QA.
+    -- Surface art stays on the physical bottom face, respects occlusion, and
+    -- does not add another light, physics Part, texture dependency or HUD.
+    local frost=Instance.new("SurfaceGui")
+    frost.Name="FrostedPanelFace";frost.Face=Enum.NormalId.Bottom
+    frost.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    frost.CanvasSize=Vector2.new(312,154)
+    frost.LightInfluence=0;frost.Brightness=1.1;frost.AlwaysOnTop=false
+    frost.MaxDistance=100;frost.Parent=lens
+    local face=Instance.new("Frame")
+    face.Name="PrismaticFrost";face.Size=UDim2.fromScale(1,1)
+    face.BackgroundColor3=Color3.fromRGB(250,249,242)
+    face.BorderSizePixel=0;face.Parent=frost
+    local seal=Instance.new("UIStroke")
+    seal.Name="DiffuserGasket";seal.Thickness=1.5
+    seal.Color=Color3.fromRGB(202,205,200);seal.Parent=face
     local light=Instance.new("SurfaceLight")
     light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,246,237)
     -- Light from the actual broad frosted panels, rather than a dim slab.
@@ -644,6 +676,8 @@ local function buildClassroomTexture(root: Instance)
     -- Use real horizontal Block/Cylinder solids with normal Y thickness.
     -- The existing Fabric rug, its 26 SurfaceGui letters, radial design and
     -- every student desk remain unchanged. All relief is noncolliding.
+    -- Printed carpet, not foam: keep art within .06 studs of the textile.
+    -- The prior .12-stud clouds and floating numerals read as raised toys.
     for i=0,15 do
         local angle=i*math.pi/8
         local broad=i%2==0
@@ -657,8 +691,8 @@ local function buildClassroomTexture(root: Instance)
         -- Elongated stable ray with a true round cap at its outer end:
         -- 1 Block + 1 flat Cylinder; avoids non-uniform Ball primitives.
         local ray=part(root,"Photo rug sun ray",
-            Vector3.new(length,.10,width),
-            CFrame.new(x,.685,z)*CFrame.Angles(0,-angle,0),
+            Vector3.new(length,.022,width),
+            CFrame.new(x,.638,z)*CFrame.Angles(0,-angle,0),
             tint,Enum.Material.SmoothPlastic,false)
         -- Explicit native Block shape also makes the constructed-Luau
         -- fixture test the same shape the Roblox engine will actually use.
@@ -666,8 +700,8 @@ local function buildClassroomTexture(root: Instance)
         ray.CastShadow=false
         local tipRadius=radius+length/2-.04
         local tip=cylinder(root,"Photo rug sun ray rounded tip",
-            Vector3.new(.10,width,width),
-            CFrame.new(-25+math.cos(angle)*tipRadius,.685,
+            Vector3.new(.022,width,width),
+            CFrame.new(-25+math.cos(angle)*tipRadius,.638,
                 14+math.sin(angle)*tipRadius)*flat,
             tint,Enum.Material.SmoothPlastic,false)
         tip.CastShadow=false
@@ -680,21 +714,21 @@ local function buildClassroomTexture(root: Instance)
         -- Center block joins two truly ROUND, horizontal cylinders.
         -- 3 original Parts per cloud, no paper-thin Ball dimensions.
         local body=part(root,"Photo rug number cloud body",
-            Vector3.new(1.14,.12,.65),CFrame.new(x,.690,z),
+            Vector3.new(1.14,.022,.65),CFrame.new(x,.635,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
         body.Shape=Enum.PartType.Block
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
             local lobe=cylinder(root,"Photo rug number cloud lobe",
-                Vector3.new(.12,.94,.94),
-                CFrame.new(x+side*.39,.690,z+side*.055)*flat,
+                Vector3.new(.022,.94,.94),
+                CFrame.new(x+side*.39,.635,z+side*.055)*flat,
                 cloudTint,Enum.Material.SmoothPlastic,false)
             lobe.CastShadow=false
         end
         -- A transparent, noncolliding number anchor stays CLEAR of the
         -- actual cylinder faces, not an opaque white rectangular sticker.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.820,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.656,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Shape=Enum.PartType.Block
         numeralAnchor.Transparency=1
@@ -2585,9 +2619,9 @@ function World.build()
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
     -- The real ceiling has thin, PALE white-painted T-bars, not the dark
     -- high-contrast exposed-metal rails seen in iPhone v78. All ten grid
-    -- strips retain their positions and are fully noncolliding.
+    -- strips remain noncolliding. Cross-rails now align to tile edges.
     for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
-    for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
+    for _,z in ipairs({-22,-10,2,14,26}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.685,z),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
     -- Photo-grounded smooth white acoustic tiles: the prior Fabric shader
     -- rendered as a DARK heavily grooved ceiling in real iPhone footage,
     -- despite bright RGB constants and green headless render checks.

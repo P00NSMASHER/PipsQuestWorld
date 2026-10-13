@@ -406,7 +406,9 @@ end
 local function physicalDetails(root:Instance,group:Instance)
     -- Original trim and hardware at eye height makes the room read as a building,
     -- rather than a pile of bright blocks.
-    for _,x in ipairs({-32.9,32.9}) do
+    -- Side trim abuts the inner plaster surface at x=+/-36.5.
+    -- Previously +/-32.9 suspended two long white rails inside the room.
+    for _,x in ipairs({-36.55,36.55}) do
         piece(group,"Wall-to-ceiling crown molding",Vector3.new(.52,.30,60.4),
             CFrame.new(x,17.45,-4),C.cream,Enum.Material.Wood,false)
     end

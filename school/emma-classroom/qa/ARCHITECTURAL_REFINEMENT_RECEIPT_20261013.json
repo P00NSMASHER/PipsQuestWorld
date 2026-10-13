@@ -1,0 +1,304 @@
+{
+  "recordedUtc": "2026-10-13T07:20:57.459034+00:00",
+  "baseCommit": "abcc9d94d22cc4a79d28a21dc405fb1c5f45fc3d",
+  "sourceSha256": {
+    "school/emma-classroom/showroom/Room.lua": "0969c4eadc6a7ec22e21cf865842fd0b4310d60453a960296d65d82f85a753d9",
+    "school/emma-classroom/showroom/GalleryPass.lua": "2ac9e15e315e415071c7923f92868be787d26fa1e7540c58869fd5b3d5cee961",
+    "school/emma-classroom/showroom/FurnitureMeshConfig.lua": "572f4259831ae98c1677bcaf26db839090c1328b5380c2bbffce77a31f0d9210"
+  },
+  "buildSha256": "47c9fdddd3e6fbe4b2c1c458dae1454b0b2c9e1da1ab8d5dc653830e9ec14ae8",
+  "sourceChecks": [
+    {
+      "test": "audit_hallway_mobile_complexity",
+      "passed": true,
+      "seconds": 0.74
+    },
+    {
+      "test": "audit_left_hall_junction",
+      "passed": true,
+      "seconds": 2.31
+    },
+    {
+      "test": "audit_hallway_camera_layout",
+      "passed": true,
+      "seconds": 0.52
+    },
+    {
+      "test": "audit_rug_ui",
+      "passed": true,
+      "seconds": 0.55
+    },
+    {
+      "test": "audit_lighting",
+      "passed": true,
+      "seconds": 0.8
+    },
+    {
+      "test": "audit_storybook_facing",
+      "passed": true,
+      "seconds": 0.56
+    },
+    {
+      "test": "audit_native_rug_primitives",
+      "passed": true,
+      "seconds": 1.79
+    },
+    {
+      "test": "audit_native_foliage_primitives",
+      "passed": true,
+      "seconds": 0.72
+    },
+    {
+      "test": "audit_native_chair_vents",
+      "passed": true,
+      "seconds": 0.64
+    },
+    {
+      "test": "audit_buried_chair_parts",
+      "passed": true,
+      "seconds": 1.25
+    },
+    {
+      "test": "audit_purple_corner_chair",
+      "passed": true,
+      "seconds": 1.02
+    },
+    {
+      "test": "audit_window_landmarks",
+      "passed": true,
+      "seconds": 4.45
+    },
+    {
+      "test": "audit_photo_landmarks",
+      "passed": true,
+      "seconds": 8.32
+    },
+    {
+      "test": "audit_glazed_door_aperture",
+      "passed": true,
+      "seconds": 0.59
+    },
+    {
+      "test": "audit_notebook_rule_surfaces",
+      "passed": true,
+      "seconds": 0.42
+    },
+    {
+      "test": "audit_hallway_photo",
+      "passed": true,
+      "seconds": 1.62
+    },
+    {
+      "test": "audit_word_wall_native",
+      "passed": true,
+      "seconds": 1.45
+    },
+    {
+      "test": "audit_literacy_wall",
+      "passed": true,
+      "seconds": 0.92
+    },
+    {
+      "test": "audit_checkered_table",
+      "passed": true,
+      "seconds": 1.17
+    },
+    {
+      "test": "walkability_audit",
+      "passed": true,
+      "seconds": 1.23
+    },
+    {
+      "test": "verify_build",
+      "passed": true,
+      "seconds": 0.04
+    },
+    {
+      "test": "verify_build-built",
+      "passed": true,
+      "seconds": 0.04
+    },
+    {
+      "test": "furniture_adapter_runtime",
+      "passed": true,
+      "seconds": 0.17
+    },
+    {
+      "test": "verify_release_receipt-self",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "test": "verify_release_receipt",
+      "passed": true,
+      "seconds": 0.05
+    }
+  ],
+  "nativeResults": {
+    "ceiling": {
+      "litDiffusers": 6,
+      "native": true,
+      "wallMountedCrowns": 4,
+      "tileBoundaryRails": 5
+    },
+    "rug": {
+      "maxReliefStuds": 0.05400001537054777,
+      "flatPrintedArtwork": true,
+      "counts": {
+        "Photo rug sun ray rounded tip": 16,
+        "Photo rug number cloud lobe": 20,
+        "Photo rug number cloud body": 10,
+        "Photo rug number cloud numeral": 10,
+        "Photo rug sun center": 1,
+        "Photo rug sun ray": 16
+      },
+      "native": true
+    },
+    "finishes": {
+      "brushedSteelPieces": 192,
+      "native": true,
+      "varnishedJoineryPieces": 44
+    },
+    "runtime": {
+      "nativePlay": true,
+      "deskCount": 16,
+      "materialConfigured": true,
+      "startupCompleted": true,
+      "parts": 3050
+    },
+    "walk": {
+      "noTeleports": true,
+      "seconds": 15.339403200079687,
+      "maxLateralDeviation": 0.12067317962646484,
+      "walkedBothDirections": true,
+      "nativePlay": true,
+      "waypoints": {
+        "1": {
+          "z": 15.51,
+          "x": 58.86
+        },
+        "3": {
+          "z": 15.5,
+          "x": 141.32
+        },
+        "2": {
+          "z": 15.5,
+          "x": 99.61
+        },
+        "5": {
+          "z": 15.5,
+          "x": 60.73
+        },
+        "4": {
+          "z": 15.5,
+          "x": 100.59
+        },
+        "6": {
+          "z": 15.5,
+          "x": 43.16
+        }
+      }
+    },
+    "simulator": {
+      "device": "iphone_16",
+      "physicalPhone": false,
+      "resolution": "852, 393"
+    },
+    "phoneRuntime": {
+      "nativePlay": true,
+      "deskCount": 16,
+      "materialConfigured": true,
+      "startupCompleted": true,
+      "parts": 3050
+    },
+    "console": {
+      "consoleErrors": 0
+    },
+    "reset": {
+      "device": "default",
+      "reset": true
+    }
+  },
+  "privateScreenshotHashes": {
+    "ceiling-before-1.jpg": "46f4a3de6fb8abecdcf6c17b19a146da62a9171c9fff2f82366280ff7aced8f7",
+    "ceiling-after-1.jpg": "db4cacbba554c12df8a740c82d30b62ea81ce71a91300998712177635a76c95b",
+    "flat-rug-before-1.jpg": "04e5be899428ee53d06f7c404b1b76bc3b2112f5b7b46d9dba3611e8d844a499",
+    "flat-rug-after-1.jpg": "f482691d808dd614e534e158a4563b4d426efc5ed616a1d4c798caa9639a55d7",
+    "chair-finished-original-1.jpg": "afaff7dbd1590129ecd97bd484a8afc92dfbc28da6b3dfa984eed87c09147b04",
+    "refinement-phone-image-1.jpg": "4d4ee497a0d3956e12b9ba182601d1c5bf38c525efc4d77963785c6ed7ec518c"
+  },
+  "cleanup": {
+    "freeMemoryBeforeKiB": 1196720,
+    "freeMemoryAfterKiB": 2222404,
+    "closed": [
+      "saved duplicate Studio window",
+      "idle Edge without renderer tabs",
+      "two OpenWith dialogs"
+    ],
+    "preserved": [
+      "unsaved work before closing",
+      "active Studio",
+      "remote access",
+      "system/security services",
+      "other running project services"
+    ],
+    "awakeRequest": "Temporary display/system request, refreshed only during current work; no security/power-policy edits"
+  },
+  "originalMeshTrial": {
+    "adopted": false,
+    "sourceActivationStillDisabled": true,
+    "reasons": [
+      "3194 total physical parts exceeded current budget",
+      "untextured grey meshes",
+      "asset streaming temporarily hid working furniture"
+    ],
+    "restoration": "Stopped trial and restarted native Play; original furniture restored with 3050 parts"
+  },
+  "physicalIphoneTested": false,
+  "published": false,
+  "completePhotoFidelity": false,
+  "reopenedSavedFile": {
+    "fileName": "Emma_Classroom_Refined_20261013.rbxlx",
+    "nativeChecks": {
+      "native-detail-runtime": {
+        "nativePlay": true,
+        "deskCount": 16,
+        "materialConfigured": true,
+        "startupCompleted": true,
+        "parts": 3050
+      },
+      "native-ceiling-joinery": {
+        "litDiffusers": 6,
+        "native": true,
+        "wallMountedCrowns": 4,
+        "tileBoundaryRails": 5
+      },
+      "native-flat-rug-print": {
+        "maxReliefStuds": 0.05400001537054777,
+        "flatPrintedArtwork": true,
+        "counts": {
+          "Photo rug number cloud body": 10,
+          "Photo rug number cloud lobe": 20,
+          "Photo rug sun ray": 16,
+          "Photo rug sun ray rounded tip": 16,
+          "Photo rug sun center": 1,
+          "Photo rug number cloud numeral": 10
+        },
+        "native": true
+      },
+      "native-furniture-finishes": {
+        "brushedSteelPieces": 192,
+        "native": true,
+        "varnishedJoineryPieces": 44
+      },
+      "native-folding-mat": {
+        "blueMatPanels": 3,
+        "native": true,
+        "deskLayoutUnchanged": true,
+        "parts": 3050
+      }
+    },
+    "consoleErrors": 0,
+    "sha256": "47c9fdddd3e6fbe4b2c1c458dae1454b0b2c9e1da1ab8d5dc653830e9ec14ae8"
+  }
+}

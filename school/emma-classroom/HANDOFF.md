@@ -263,3 +263,12 @@ and remaining source/check work continued without bringing it forward.
 - Studio iPhone 16 landscape simulation passes startup; the captured scene and touch controls were visually inspected. This is NOT a physical-iPhone FPS result. Console empty after checks.
 - Evidence: `qa/NATIVE_FINISH_RECEIPT_20261013.json`; native tests in `qa/native-detail-*.luau`, `qa/native-folding-mat.luau`, and `qa/native-straight-hall-walk.luau`.
 - No merge, live publication, marker edits or schedule changes. More architectural/furniture refinement and physical-device validation remain; do not label this the completed photo replica.
+
+
+## October 13 architectural finish pass
+- Corrected ceiling light faces, cross-rail alignment and floating side trim.
+- Flattened raised rug graphics; polished existing steel and cabinet joinery without new Parts.
+- 25/25 existing source/build checks and new native regression tests pass; native no-teleport hallway walk and iPhone 16 simulator repeated successfully.
+- Evidence: `qa/ARCHITECTURAL_REFINEMENT_RECEIPT_20261013.json` and matching review note.
+- Original mesh experiment rejected; adapter remains disabled. Photo-fidelity work and physical-iPhone performance remain unfinished.
+- Saved a new Documents review file; no merge or Roblox publication.
