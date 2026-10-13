@@ -382,13 +382,16 @@ jobs:
           # proxy for the door. Look outward from inside the actual closet.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             05-closet-double-doors 0,5.5,31 0,6.9,26.8
-          # x0,z34 is now INSIDE the right supply closet. Keep an
-          # independent photo-student-work view from the TRUE walkable
-          # hallway: move player camera beyond sealed closet at z40.
-          # Must still SHOW at least six individually rendered white paper
-          # diamonds; the semantic image-pixel gate remains fail-closed.
+          # Exact rendered artifact fb2b115... showed only FOUR individual
+          # paper silhouettes in 06: the former close view aimed too directly
+          # at the nearby rail and cropped the rest off the left half-screen.
+          # Shoot along the long west-to-east rail from 9 studs off its face,
+          # exposing multiple distinct anonymous sheets in the fixed crop.
+          # Preserve BOTH individual pixel gates and the strict dual-camera
+          # 7-region / 50k-pixel / 1.20x-perspective acceptance thresholds.
+          # This is third-party source renderer evidence, NOT native phone QA.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
-            06-hall-paper-rail 112,5.5,17 125,9,4.98
+            06-hall-paper-rail 100,5.5,14 151,8,8
           # Fixed, full-geometry photo-window camera: sees the real 3D
           # mustard sash and sunburst at the distant sealed left end wall.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
