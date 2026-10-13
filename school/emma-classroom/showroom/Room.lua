@@ -1785,9 +1785,11 @@ local function buildBackDoorAndHall(root: Instance)
     -- The earlier photo hall floor happened to underpin this closet.
     -- Moving that hall to the staff exit exposes an unsupported void unless
     -- the already-authored closet floor becomes REAL walkable structure.
-    -- Its top (.5515) is just .0515 above the classroom oak floor (.50).
-    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,8.33),
-        CFrame.new(0,.529,31.54),Color3.fromRGB(166,133,103),
+    -- It overlaps the classroom's oak-floor edge by .325 stud, so no
+    -- hidden gap exists under the threshold. Its top (.5515) is just
+    -- .0515 above the original classroom floor (.50).
+    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,9.05),
+        CFrame.new(0,.529,31.175),Color3.fromRGB(166,133,103),
         Enum.Material.Wood,true)
     -- Three realistic shelves and a few colored classroom supply tubs.
     -- Thin loose props are noncolliding; the rear wall is a true barrier.
