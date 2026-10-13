@@ -60,6 +60,10 @@ local function check()
     assert(bridge.CanCollide and not bridgeRoof.CanCollide
         and bridge.Position.X-bridge.Size.X/2<=36.99
         and bridge.Position.X+bridge.Size.X/2>=37.26
+        and bridgeRoof.Position.X-bridgeRoof.Size.X/2<=36.99
+        and bridgeRoof.Position.X+bridgeRoof.Size.X/2>=37.26
+        and bridgeRoof.Position.Z-bridgeRoof.Size.Z/2<=8.0
+        and bridgeRoof.Position.Z+bridgeRoof.Size.Z/2>=23.0
         and bridge.Position.Z-bridge.Size.Z/2<=8.0
         and bridge.Position.Z+bridge.Size.Z/2>=23.0
         and roof.Position.Y-roof.Size.Y/2<13.05
