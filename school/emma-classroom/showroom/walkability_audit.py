@@ -167,6 +167,60 @@ def assert_continuous_floor_segment(
     )
 
 
+def assert_straight_staff_corridor(
+    blockers: list[Blocker],
+    floors: list[FloorSupport],
+    *,
+    start_x: float = 39.0,
+    far_x: float = 150.0,
+    center_z: float = 15.5,
+) -> None:
+    """Prove an actual uninterrupted eastbound walking tube, not a BFS detour.
+
+    Ordinary reachability can pass a corridor containing a central divider
+    because its route can weave around the wall. Here the player's nominal
+    2-stud diameter must fit a SINGLE +X centerline from just outside the
+    staff threshold to the distant photo gallery. Blocks are already inflated
+    by AVATAR_RADIUS. Analytically union the source-constructed floor edges,
+    also at the lateral edges of the standing footprint, to detect subgrid
+    unsupported strips which a sample-only check could overlook.
+
+    This is conservative source geometry, NOT native Roblox physics.
+    """
+    assert start_x >= 38 and far_x <= 160 and far_x > start_x + 90, (
+        "STRAIGHT_HALL_INVALID_PROOF_SPAN")
+    assert floors, "STRAIGHT_HALL_FLOOR_EVIDENCE_MISSING"
+    for obstacle in blockers:
+        if (obstacle.xmax >= start_x and obstacle.xmin <= far_x
+                and obstacle.zmin <= center_z <= obstacle.zmax):
+            raise AssertionError(
+                f"STRAIGHT_HALL_CENTERLINE_BLOCKED {obstacle.name} "
+                f"x={obstacle.xmin:.2f}..{obstacle.xmax:.2f}")
+
+    # Support both edges and the center of the full avatar foot patch,
+    # across the entire 111-stud route. No 0.75-stud grid hiding gaps.
+    for z in (center_z - AVATAR_RADIUS, center_z,
+              center_z + AVATAR_RADIUS):
+        intervals = sorted((max(start_x, floor.xmin),
+                            min(far_x, floor.xmax))
+                           for floor in floors
+                           if floor.zmin <= z <= floor.zmax
+                           and floor.xmax >= start_x
+                           and floor.xmin <= far_x)
+        edge = start_x
+        for lo, hi in intervals:
+            if hi <= edge + 1e-6:
+                continue
+            if lo > edge + 1e-6:
+                break
+            edge = max(edge, hi)
+            if edge >= far_x - 1e-6:
+                break
+        assert edge >= far_x - 1e-6, (
+            f"STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT z={z:.2f} "
+            f"supported_until_x={edge:.5f}")
+
+
 def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
     """Read the real Luau-generated collidable floor parts, never source guesses."""
     floors = {}
@@ -628,6 +682,44 @@ def self_test():
           "sub_grid_x_and_z_gaps,missing_floor,diagonal,zero_step,"
           "skipped_step,unsupported_end_rejected=true")
 
+    # Four adversarial source-equivalent fixtures prove that a reachable
+    # corridor cannot conceal a turn, missing floor strip or side-foot void.
+    tube_floors = [
+        FloorSupport("staff", 36.5, 54.5, 4.25, 27.3, .48),
+        FloorSupport("gallery", 54.0, 162.0, 4.25, 26.75, .50),
+    ]
+    assert_straight_staff_corridor([], tube_floors)
+    straight_mutations = [
+        ("mid_gallery_divider",
+         [Blocker("synthetic cross-wall", 87.0, 89.0, 14.5, 16.5)],
+         tube_floors,
+         "STRAIGHT_HALL_CENTERLINE_BLOCKED"),
+        ("staff_to_gallery_subgrid_gap",
+         [],
+         [FloorSupport("staff", 36.5, 53.8, 4.25, 27.3, .48),
+          tube_floors[1]],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+        ("unsupported_outer_foot",
+         [],
+         [FloorSupport("staff", 36.5, 54.5, 15.0, 16.0, .48),
+          FloorSupport("gallery", 54.0, 162.0, 15.0, 16.0, .50)],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+        ("gallery_offset_out_of_line",
+         [],
+         [tube_floors[0],
+          FloorSupport("gallery", 54.0, 162.0, 27.5, 48.0, .50)],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+    ]
+    for label, synthetic_blockers, synthetic_floors, expected in straight_mutations:
+        try:
+            assert_straight_staff_corridor(synthetic_blockers, synthetic_floors)
+        except AssertionError as exc:
+            assert expected in str(exc), (label, str(exc))
+        else:
+            raise AssertionError("STRAIGHT_HALL_NEGATIVE_TEST_ACCEPTED " + label)
+    print("STRAIGHT_HALL_CENTERLINE_SELF_TEST_PASS "
+          "wall,gap,footprint,offset_gallery_rejected=true")
+
     print("STATIC_NAV_SELF_TEST_PASS structural_floor_support_enforced=true "
           "unsupported_void_and_missing_floor_rejected=true "
           "colliders_and_decorative_obstructions_checked=true")
@@ -646,6 +738,10 @@ def main():
         p.error("--luau required unless --self-test")
     blockers,floors=get_source_geometry(args.luau)
     result=inspect(blockers,floors)
+    assert_straight_staff_corridor(blockers,floors)
+    print("STRAIGHT_HALL_CENTERLINE_SOURCE_PASS no_turns=true "
+          "source_colliders_clear=true avatar_footprint_fully_supported=true "
+          "native_roblox_device_qa_still_required=true",flush=True)
     # Deliberately reopen a physical x-axis gap at the old eastbound seam.
     # This catches "air routes" on the nominal 0.75-stud navigation grid.
     former=[FloorSupport(f.name,f.xmin,
@@ -663,7 +759,7 @@ def main():
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
               "end="+str(route["endpoint"]),flush=True)
-    print("SUPPORTED_ROUTE_SOURCE_PASS three_constructed_collidable_floors=true "
+    print("SUPPORTED_ROUTE_SOURCE_PASS four_constructed_collidable_floors=true "
           "all_nine_routes_floor_supported=true",flush=True)
     print("CONTINUOUS_FLOOR_ROUTE_PASS "
           "routes=" + str(len(result["routes"])) +
