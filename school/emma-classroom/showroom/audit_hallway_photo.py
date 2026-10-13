@@ -285,9 +285,9 @@ local function checkSheets()
             and near(p.Position.Y,9.05) and near(p.Position.X,59.02),
             "PHOTO_HALL_PAPER_POSITION_OR_SPACING_INVALID")
         assert(math.abs(m[1])<.04
-            and math.abs(m[3]-1)<.04
-            and math.abs(m[4]+.7071068)<.04
-            and math.abs(m[7]+.7071068)<.04
+            and math.abs(math.abs(m[3])-1)<.04
+            and math.abs(math.abs(m[4])-.7071068)<.04
+            and math.abs(math.abs(m[7])-.7071068)<.04
             and p.Size.X>1.8 and p.Size.Y>2.1,
             "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY")
         assert(not p.CanCollide and p.CanQuery==false
