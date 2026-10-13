@@ -2,12 +2,8 @@
 """Semantic pixel QA of the fixed adjacent-oak-door hallway camera.
 
 Applies only to the 1920x1080 source-derived headless view
-08-hall-adjacent-oak-door. Rectangles were independently recalibrated on
-the full-source straight-gallery screenshot at PR #351 fb2b115, not
-the older perpendicular-hall camera. All original visibility minima,
-independent panes, brass, panel relief and adversarial mutations remain.
-Does NOT certify native Roblox, iPhone frame rate, real-world
-dimensions, or original-photo parity.
+08-hall-adjacent-oak-door. Does NOT certify native Roblox, iPhone frame
+rate, real-world dimensions, or original-photo parity.
 """
 from __future__ import annotations
 
@@ -17,20 +13,20 @@ from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 VIEWPORT=(1920,1080)
 WOOD={
-    "top_lintel":((810,260,1150,375),4000),
-    "left_stile":((815,335,880,750),5500),
-    "right_stile":((1060,335,1150,790),7000),
-    "center_crossbar":((850,490,1090,538),1600),
-    "lower_sill":((820,650,1150,738),12000),
-    "raised_panel":((830,715,1145,1030),20000),
+    "top_lintel":((770,245,1190,325),4000),
+    "left_stile":((750,310,830,660),5500),
+    "right_stile":((1095,300,1200,670),7000),
+    "center_crossbar":((815,470,1135,505),1600),
+    "lower_sill":((750,630,1210,710),12000),
+    "raised_panel":((820,780,1110,950),20000),
 }
 GLASS={
-    "upper_pane":((865,335,1080,480),10000),
-    "lower_pane":((865,520,1080,655),10000),
+    "upper_pane":((830,345,1100,450),10000),
+    "lower_pane":((830,515,1100,630),10000),
 }
-BRASS_REGION=(1030,720,1090,860)
-PANEL_CORE=(865,745,1070,980)
-PANEL_BORDER=(831,745,854,970)
+BRASS_REGION=(1060,715,1130,820)
+PANEL_CORE=(845,790,1068,900)
+PANEL_BORDER=(785,785,805,905)
 
 
 def is_wood(v):
@@ -98,12 +94,12 @@ def inspect(image):
 def synthetic_door():
     im=Image.new("RGB",VIEWPORT,(53,66,79))
     d=ImageDraw.Draw(im)
-    d.rectangle((816,265,1148,1030),fill=(56,41,29))
-    d.rectangle((855,338,1095,493),fill=(108,139,152))
-    d.rectangle((855,508,1095,655),fill=(108,139,152))
-    d.rectangle((845,490,1105,525),fill=(70,53,38))
-    d.rectangle((860,737,1120,1000),fill=(73,55,39))
-    d.rectangle((1039,741,1060,825),fill=(138,140,106))
+    d.rectangle((760,250,1185,975),fill=(56,41,29))
+    d.rectangle((805,315,1125,475),fill=(108,139,152))
+    d.rectangle((805,499,1125,647),fill=(108,139,152))
+    d.rectangle((795,468,1133,496),fill=(70,53,38))
+    d.rectangle((815,730,1140,935),fill=(73,55,39))
+    d.rectangle((1075,735,1095,815),fill=(138,140,106))
     return im
 
 
@@ -127,12 +123,12 @@ def self_test():
         out=sample.copy()
         ImageDraw.Draw(out).rectangle(rect,fill=color)
         return out
-    reject(painted((855,338,1095,493),(56,41,29)),"GLASS_INVISIBLE")
-    reject(painted((855,508,1095,655),(53,66,79)),"GLASS_INVISIBLE")
-    reject(painted((845,490,1105,538),(108,139,152)),"3D_WOOD_MISSING")
-    reject(painted((1035,735,1068,830),(73,55,39)),"BRASS_HANDLE_INVISIBLE")
-    flat=painted((860,737,1120,1000),(56,41,29))
-    ImageDraw.Draw(flat).rectangle((1039,741,1060,825),fill=(138,140,106))
+    reject(painted((802,311,1129,477),(56,41,29)),"GLASS_INVISIBLE")
+    reject(painted((802,498,1129,649),(53,66,79)),"GLASS_INVISIBLE")
+    reject(painted((805,466,1135,497),(108,139,152)),"3D_WOOD_MISSING")
+    reject(painted((1070,730,1102,819),(73,55,39)),"BRASS_HANDLE_INVISIBLE")
+    flat=painted((815,730,1140,935),(56,41,29))
+    ImageDraw.Draw(flat).rectangle((1075,735,1095,815),fill=(138,140,106))
     reject(flat,"LOWER_PANEL_FLAT")
     reject(sample.resize((1112,512)),"VIEWPORT_CHANGED")
     for factor in (.85,.95,1.10):
