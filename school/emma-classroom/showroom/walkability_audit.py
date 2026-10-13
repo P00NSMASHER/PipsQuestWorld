@@ -85,11 +85,13 @@ class Blocker:
         return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
 
 
-# Only these three structural, collidable floors support movement in the
-# assembled classroom-only place. Decorative closet laminate and area rugs
-# cannot substitute for an actual load-bearing floor.
+# Four genuine collidable floors support the classroom, closet, staff
+# vestibule and long gallery. The preexisting closet laminate is now
+# walkable: the relocated photo-gallery slab no longer sits beneath it.
+# Decorative area rugs and noncolliding scenery never grant support.
 SUPPORT_FLOOR_NAMES = frozenset({
     "Warm oak classroom floor",
+    "Supply closet warm laminate floor",
     "Side hall floor",
     "Photo hall polished square stone floor",
 })
@@ -511,12 +513,12 @@ def self_test():
     # Floor evidence must be complete and from actual collidable geometry.
     fixture_names = sorted(SUPPORT_FLOOR_NAMES)
     fixtures = [[*flat[:1], name, *flat[2:]] for name in fixture_names]
-    assert len(as_floor_supports(fixtures)) == 3
+    assert len(as_floor_supports(fixtures)) == 4
     # Same horizontal slab turned exactly 180 degrees is still physical
     # support. Reject a slight tip instead of silently granting air routes.
     rotated = list(fixtures[0])
     rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
-    assert len(as_floor_supports([rotated,*fixtures[1:]]))==3
+    assert len(as_floor_supports([rotated,*fixtures[1:]]))==4
     tipped = list(fixtures[0])
     tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
     try:
