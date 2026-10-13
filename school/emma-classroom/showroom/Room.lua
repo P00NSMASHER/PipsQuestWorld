@@ -2534,30 +2534,9 @@ local function alignHallwayWithStaffExit(root: Instance)
     assert(sheet==2,"Staff corridor anonymous notices missing")
 end
 
--- Latest owner brief reinstates the blue folding practice mat.
--- Three thin native panels beside the front activity rugs; existing desks,
--- walking colliders and hallway stay unchanged. Binding is SurfaceGui art.
-local function buildPhotoFoldingMat(root:Instance)
-    for i=0,2 do
-        local panel=part(root,"Blue folding tumbling mat panel",
-            Vector3.new(4.0,.24,2.95),CFrame.new(-17.1,.62,-25+i*3),
-            Color3.fromRGB(40+i*2,81+i*2,164+i*3),Enum.Material.SmoothPlastic,false)
-        panel.CanTouch=false;panel.CanQuery=false;panel.Reflectance=.04
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="VinylStitchedBinding";gui.Face=Enum.NormalId.Top
-        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-        gui.CanvasSize=Vector2.new(400,295);gui.LightInfluence=.8;gui.Parent=panel
-        local seam=Instance.new("Frame")
-        seam.Name="InsetSewnPerimeter";seam.Size=UDim2.fromScale(.965,.952)
-        seam.Position=UDim2.fromScale(.0175,.024)
-        seam.BackgroundTransparency=1;seam.BorderSizePixel=1
-        seam.BorderColor3=Color3.fromRGB(119,151,204);seam.Parent=gui
-        local piping=Instance.new("UIStroke")
-        piping.Name="VinylEdgeBinding";piping.Thickness=2
-        piping.Color=Color3.fromRGB(29,61,127);piping.Parent=seam
-    end
-end
-
+-- The owner's October 12 photo-match scope explicitly excludes the gym/tumbling mat.
+-- Keep the photographed architectural room, rugs and furniture, but do not construct
+-- or package any folding practice-mat geometry.
 local function applyLighting(root: Instance)
     -- Centralized daytime profile. IMG_2903–2910 show a well-lit yellow
     -- elementary classroom, not a cool, underexposed exhibition space.
@@ -2701,7 +2680,6 @@ function World.build()
     alignHallwayWithStaffExit(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
-    buildPhotoFoldingMat(root)
     buildPhotoWindowWorkstation(root)
 
     -- Emma identified the purple chair where an adult is sitting beside the

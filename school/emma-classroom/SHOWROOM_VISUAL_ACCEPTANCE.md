@@ -16,9 +16,10 @@ event; refine details and finishes without a wholesale rearrangement.
 - Match the teaching wall, rolling smartboard/chalkboard, dark-curtained windows,
   shape posters, counting strip, blue word wall and apple/word-card details.
 - Make the activity area readable: round alphabet/sun rug, black colored-dot
-  rug, and the BLUE TUMBLING MATS explicitly included in this latest brief.
-  This reinstates mats over earlier no-mat instructions. Retain child-sized
-  chairs at their existing desks; do not move them to the walls.
+  rug, and the rectangular blue alphabet/sun rug. The owner's October 12 scope
+  explicitly excludes children and the gym/tumbling mat; do not construct or
+  package folding practice-mat panels. Retain child-sized chairs at their
+  existing desks; do not move them to the walls.
 - Use believable trim, materials, furniture proportions and restrained lighting.
   Reuse efficient repeated geometry; do not fill the room with bulky primitives.
 - Focus on the environment. Do not reproduce the photographed people or upload

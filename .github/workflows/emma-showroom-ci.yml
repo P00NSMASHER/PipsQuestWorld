@@ -173,6 +173,17 @@ jobs:
             --out "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
           test -s "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
 
+      - name: Reject excluded gym or tumbling mat from the constructed candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fq 'Blue folding tumbling mat panel' "$RUNNER_TEMP/emma-room-ci-source.rbxmx" \
+             || grep -Fq 'VinylStitchedBinding' "$RUNNER_TEMP/emma-room-ci-source.rbxmx"; then
+            echo 'GYM_TUMBLING_MAT_SCOPE_VIOLATION' >&2
+            exit 1
+          fi
+          echo 'NO_GYM_TUMBLING_MAT_CI_PASS owner_scope_preserved=true'
+
       - name: Inspect constructed carpet SurfaceGuis and reject known iPhone regressions
         shell: bash
         run: |
