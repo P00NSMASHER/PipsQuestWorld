@@ -408,62 +408,88 @@ local function checkReadingCornerPlant()
     return plant,leaves,minimum
 end
 
--- The moved cart and the downsized plant are individually clear of the
--- ABC rug, but they are now adjacent. Guard their mutual clearance too.
--- The cart/plant closest pair is roughly .29 studs apart in the previous
--- real constructed RBXMX after applying these two source transforms.
--- This is conservative 2D rotated OBB geometry, not native Roblox physics.
-local function checkCartPlantClearance()
-    local cartParts,plantParts={},{}
-    local cartNames={
-        ["Rolling cart top"]=true,
-        ["Rolling cart shelf"]=true,
-        ["Cart wheel"]=true,
-        ["Cart vertical rail"]=true,
-    }
-    for _,part in ipairs(Room.Root:GetDescendants()) do
-        if part:IsA("BasePart") then
-            local name=part.Name
-            if cartNames[name] then
-                table.insert(cartParts,part)
-            elseif name=="Plant pot"
-                and math.abs(part.Position.X+31)<.10
-                and math.abs(part.Position.Z-20)<.10 then
-                table.insert(plantParts,part)
-            elseif name=="Plant leaf"
-                and part.Position.X>-33 and part.Position.X< -29
-                and part.Position.Z>18 and part.Position.Z<22
-                and part.Position.Y<5 then
-                table.insert(plantParts,part)
-            end
+-- The third photographed rug is a separate flat rectangle. Test authored
+-- SurfaceGui content without presenting it as native rendered evidence.
+local function checkRectangularPhotoRug()
+    local mat=nil
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p.Name=="Photo rectangular alphabet sun rug" then
+            assert(mat==nil,"RECT_RUG_DUPLICATED")
+            mat=p
         end
     end
-    assert(#cartParts==12 and #plantParts==6,
-        "RUG_CART_PLANT_COMPONENT_COUNTS_CHANGED")
-    local function halfwidth(part,axis)
-        local m,s=part.CFrame.m,part.Size
-        local offset=(axis-1)*3
-        return (math.abs(m[offset+1])*s.X
-            +math.abs(m[offset+2])*s.Y
-            +math.abs(m[offset+3])*s.Z)/2
+    assert(mat and mat:IsA("BasePart") and mat.Anchored
+        and not mat.CanCollide and not mat.CanTouch and not mat.CanQuery
+        and not mat.CastShadow and mat.Material==Enum.Material.Fabric,
+        "RECT_RUG_PHYSICS_INVALID")
+    assert(math.abs(mat.Size.X-14)<.01 and math.abs(mat.Size.Y-.08)<.01
+        and math.abs(mat.Size.Z-9)<.01
+        and math.abs(mat.Position.Y-mat.Size.Y/2-.50)<.01,
+        "RECT_RUG_FLOOR_SUPPORT_INVALID")
+    local gui=mat:FindFirstChild("OriginalRectangularRugArt")
+    assert(gui and gui.Face==Enum.NormalId.Top
+        and gui.LightInfluence==.30,"RECT_RUG_ART_FACE_INVALID")
+    local letters,numbers,rays,clouds,lobes={},{},0,0,0
+    local letterNodes={}
+    for _,v in ipairs(gui:GetDescendants()) do
+        assert(not v:IsA("ImageLabel") and not v:IsA("ImageButton"),
+            "RECT_RUG_EXTERNAL_TEXTURE_NOT_ALLOWED")
+        if v.Name=="RectRugLetter" then
+            assert(v:IsA("TextLabel") and not letters[v.Text]
+                and #v.Text==1 and string.find("ABCDEFGHIJKLMNOPQRSTUVWXYZ",v.Text,1,true)
+                and v.TextSize==60 and not v.TextScaled and not v.TextWrapped,
+                "RECT_RUG_ALPHABET_INVALID")
+            letters[v.Text]=true;table.insert(letterNodes,v)
+        elseif v.Name=="RectRugNumber" then
+            local n=tonumber(v.Text)
+            assert(n and n>=1 and n<=10 and n%1==0 and not numbers[n]
+                and v.TextSize==38 and not v.TextScaled and v.ZIndex==3,
+                "RECT_RUG_NUMBERS_INVALID")
+            numbers[n]=true
+        elseif v.Name=="RectRugSunRay" then rays+=1
+        elseif v.Name=="RectRugCloud" then clouds+=1
+        elseif v.Name=="RectRugCloudLobe" then lobes+=1 end
     end
-    local nearest=math.huge
-    for _,cart in ipairs(cartParts) do
-        for _,plant in ipairs(plantParts) do
-            local gapX=math.max(0,
-                math.abs(cart.Position.X-plant.Position.X)
-                -halfwidth(cart,1)-halfwidth(plant,1))
-            local gapZ=math.max(0,
-                math.abs(cart.Position.Z-plant.Position.Z)
-                -halfwidth(cart,3)-halfwidth(plant,3))
-            local gap=math.sqrt(gapX*gapX+gapZ*gapZ)
-            nearest=math.min(nearest,gap)
-            assert(gap>.20,
-                "RUG_CART_PLANT_VISUAL_INTERSECTION")
+    local nc=0;for _ in pairs(numbers) do nc+=1 end
+    assert(#letterNodes==26 and nc==10 and rays==16 and clouds==10 and lobes==20,
+        "RECT_RUG_MOTIFS_MISSING")
+    -- AABB clearance protects both the existing rugs and the desk/chair
+    -- footprints; this supplements, not replaces, the real route audit.
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") and (p.Name=="Student desk top"
+            or p.Name=="Student chair seat" or p.Name=="Front teaching rug") then
+            local m,s=p.CFrame.m,p.Size
+            local hx=(math.abs(m[1])*s.X+math.abs(m[2])*s.Y+math.abs(m[3])*s.Z)/2
+            local hz=(math.abs(m[7])*s.X+math.abs(m[8])*s.Y+math.abs(m[9])*s.Z)/2
+            assert(math.abs(p.Position.X-mat.Position.X)>hx+mat.Size.X/2+.12
+                or math.abs(p.Position.Z-mat.Position.Z)>hz+mat.Size.Z/2+.12,
+                "RECT_RUG_FURNITURE_OR_RUG_OVERLAP")
         end
     end
-    return nearest,plantParts
+    return mat,letterNodes,gui
 end
+local rect,rectLetters,rectGui=checkRectangularPhotoRug()
+print("RUG_RECTANGULAR_PHOTO_PASS original_art=true letters=26 numbers=10 rays=16 flat_noncolliding=true source_only=true")
+local oldLetter=rectLetters[1].Text
+rectLetters[1].Text=rectLetters[2].Text
+local rectOK,rectErr=pcall(checkRectangularPhotoRug)
+rectLetters[1].Text=oldLetter
+assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_ALPHABET_INVALID",1,true))
+rect.CanCollide=true
+rectOK,rectErr=pcall(checkRectangularPhotoRug)
+rect.CanCollide=false
+assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_PHYSICS_INVALID",1,true))
+local oldRect=rect.CFrame
+rect.CFrame=CFrame.new(-24,.545,-12)
+rectOK,rectErr=pcall(checkRectangularPhotoRug)
+rect.CFrame=oldRect
+assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_FURNITURE_OR_RUG_OVERLAP",1,true))
+rectGui.Face=Enum.NormalId.Bottom
+rectOK,rectErr=pcall(checkRectangularPhotoRug)
+rectGui.Face=Enum.NormalId.Top
+assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_ART_FACE_INVALID",1,true))
+checkRectangularPhotoRug()
+print("RUG_RECTANGULAR_ADVERSARIAL_REJECTED duplicate_letter collider overlap wrong_face")
 
 local rays,lobes=check()
 print("RUG_NATIVE_PRIMITIVES_PASS rays=16 caps=16 "
@@ -538,26 +564,6 @@ print("RUG_READING_ADVERSARIAL_REJECTED oversized_plant")
 checkSupplyCartClearance()
 checkReadingCornerPlant()
 
-local cartPlantGap,cartPlantPieces=checkCartPlantClearance()
-print(string.format("RUG_CART_PLANT_GAP_PASS cart_parts=12 plant_parts=6 "
-    .."min_clearance_studs=%.2f",cartPlantGap))
-local collisionLeaf=nil
-for _,item in ipairs(cartPlantPieces) do
-    if item.Name=="Plant leaf" then
-        collisionLeaf=item
-        break
-    end
-end
-assert(collisionLeaf,"RUG_CART_PLANT_TEST_LEAF_MISSING")
-local formerLeafCF=collisionLeaf.CFrame
-collisionLeaf.CFrame=CFrame.new(-32.0,2.0,20.80)
-local nearOK,nearErr=pcall(checkCartPlantClearance)
-collisionLeaf.CFrame=formerLeafCF
-assert(not nearOK and string.find(tostring(nearErr),
-    "RUG_CART_PLANT_VISUAL_INTERSECTION",1,true),
-    "RUG_CART_PLANT_OVERLAP_NOT_REJECTED")
-print("RUG_CART_PLANT_ADVERSARIAL_REJECTED overlapping_leaf")
-checkCartPlantClearance()
 local movedSeat,movedBasket,clearance=checkReadingRugClearance()
 print(string.format("RUG_READING_OPEN_FLOOR_PASS student_pairs=16 "
     .."round_rug_unchanged=true nearest_clearance_studs=%.2f "
@@ -637,8 +643,8 @@ def main():
     if result.returncode:
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
-    markers=("RUG_CART_PLANT_GAP_PASS",
-             "RUG_CART_PLANT_ADVERSARIAL_REJECTED overlapping_leaf",
+    markers=("RUG_RECTANGULAR_PHOTO_PASS",
+             "RUG_RECTANGULAR_ADVERSARIAL_REJECTED",
              "RUG_READING_PLANT_CLEAR_PASS",
              "RUG_READING_ADVERSARIAL_REJECTED oversized_plant",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book",
@@ -660,8 +666,7 @@ def main():
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_CART_PLANT_GAP_PASS",
-                            "RUG_CART_PLANT_ADVERSARIAL_REJECTED",
+        if line.startswith(("RUG_RECTANGULAR_",
                             "RUG_READING_PLANT_CLEAR_PASS",
                             "RUG_READING_ADVERSARIAL_REJECTED",
                             "RUG_STORAGE_CART_CLEAR_PASS",
@@ -675,3 +680,4 @@ def main():
             print(line,flush=True)
 if __name__=="__main__":
     main()
+

@@ -10,14 +10,17 @@ Eight reference photographs, supplied directly in the conversation: IMG_2903 thr
 - Large blue vocabulary bulletin board with green edging, red apple heading markers and white word cards (one photo contains a historic grade-specific label; not a curriculum authority).
 - Blue molded-plastic elementary chairs supported by narrow gray tubular-metal frames; school windows with navy/dark-blue curtains and radiators below.
 - Blue **circular** carpet with multicolored A–Z perimeter, white numbered clouds and a prominent orange/yellow central sun.
+- A distinct **rectangular blue alphabet/sun carpet**, visible separately from the circular rug and black dot rug. This third carpet was missing from the earlier inventory.
 - Separate black rectangular carpet with densely arranged pastel colored polka dots.
 - Dark chalkboard, handwriting/cursive alphabet strip and interactive whiteboard seen on a **wheeled stand**, at least during the photographed event.
 - A white rolling easel and a red-and-white checked tablecloth visible during the event.
+- A low off-white **square box fan** near the teaching/teacher area, not a tall pedestal fan. Tablecloth checks are a fine woven gingham, with lighter single-thread and darker crossing areas.
 
 ## Reference accuracy boundaries
 These photographs document a cheer-event arrangement, not a measured empty-classroom architectural survey. The exact permanent desk, chair, rug, Smartboard, and easel positions are **not verified**. Never relocate the 16 approved desk/chair pairs or structural walls solely from these pictures. A visible grade-specific word wall may predate the current school year; displayed word cards are strictly decorative, not lesson/answer authority.
 
 ## Applied corrections
+- October 12 reinspection: added the third rectangular rug as one noncolliding fabric Part with original vector alphabet/cloud/sun artwork; refined the tablecloth's crossing gingham threads; replaced the unsupported pedestal-fan silhouette with a low square box fan. No original image pixels, people or gym mat were imported. Native appearance and precise permanent positions remain unverified.
 - Yellow classroom wall material; darker, satin-finished oak school floor; darker built-in cabinet finish.
 - Circular alphabet/numeral/sun rug and black polka-dot rug, preserving existing room-zone locations rather than inventing a new floor plan.
 - Improved the existing twenty-six alphabet perimeter tiles: longer sides now follow the tangent of the circular ring, rather than making separated radial color squares. Preserves all twenty-six GUI letter labels, tile instances and verified carpet/rug center. This remains an original geometric approximation; no commercial rug texture or photo file is redistributed.
@@ -52,3 +55,4 @@ physical parts or student photographs.
 - A closer owner-provided real classroom photograph documents **JESUS LOVES YOU S'MORE**, with a pair of small green trees, above the *left* window. The separate faith affirmation appears over the other window. The previous replica spread a generic 38-stud banner across both windows; the new original low-relief lettering separates the two areas without embedding any original photos or names.
 - The photo also confirms a warm gray/beige **window-mounted air conditioner** in the lower left window. An original, noncolliding metal housing with stamped ventilation and two small control dials now rests just above the existing window sill. Both original windows, glazed openings, curtains, radiators and full room layout are preserved.
 - Window objects are a review candidate, not a measured permanent classroom architectural survey; native Roblox/iPhone visual acceptance remains pending.
+

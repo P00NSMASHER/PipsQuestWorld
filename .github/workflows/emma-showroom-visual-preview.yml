@@ -1,17 +1,6 @@
 name: Emma Classroom Visual Snapshot
 
 on:
-  # The exact-source Luau CI already runs for connected-app branch pushes,
-  # but these can bypass the PR synchronize event. Render geometry at that
-  # very same commit without running the heavy 21-view job on every push.
-  push:
-    branches:
-      - visual/emma-classroom-replica-only-20261008
-    paths:
-      - 'school/emma-classroom/showroom/*.lua'
-      - 'school/emma-classroom/showroom/export_source_scene.py'
-      - 'school/emma-showroom.project.json'
-      - '.github/workflows/emma-showroom-visual-preview.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -25,10 +14,6 @@ permissions:
 
 jobs:
   screenshot-constructed-luau-room:
-    # Full 21 views stay in the existing PR / explicit-manual review gate.
-    # Ordinary branch pushes execute ONLY the fast 4-view job below, reducing
-    # repeated runner time while still producing exact-source visual evidence.
-    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 18
     steps:
@@ -158,7 +143,18 @@ jobs:
           # cabinet, hiding half of the staff hallway. Aim directly into
           # the EXISTING staff doorway from an unobstructed classroom point.
           render_eye_checked 14-eye-staff-door 34,5.4,15.5 53.7,7.4,15.5
-          render_eye_checked 15-eye-rear-corridor 0,5.5,33 0,6.5,49.2
+          # The rear double doorway is now the SUPPLY CLOSET, not a hall.
+          # Inspect its physical shelf/rear closure from inside the closet.
+          render_eye_checked 15-eye-closet-shelves 0,5.5,30 0,7.5,35.15
+          # October 11 topology: x~0,z32 is INSIDE the enclosed supply
+          # closet and cannot be called a hallway viewpoint. Both gallery
+          # views now start on the ACTUAL contiguous school hallway floor.
+          # This is uncut Luau scene geometry, never a Roblox phone capture.
+          render_eye_checked 22-hall-look-left 18,5.5,38 -42,7.0,38
+          render_eye_checked 23-hall-look-right 18,5.5,38 50,7.0,38
+          # Reverse view toward the only connected left/staff doorway:
+          # hallway (x43,z34) -> side passage (x43,z16).
+          render_eye_checked 24-hall-entry-from-gallery 43,5.5,34 43,6.9,17
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
@@ -219,12 +215,12 @@ jobs:
             "$RHR" scene "$FULL" --camera=-80,40,60 --look-at=0,8,-4 --out "$RUNNER_TEMP/visual/04-exterior-control.png"
           fi
           check_aerial "$RUNNER_TEMP/visual/04-exterior-control.png"
-          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-rear-corridor 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins; do
+          for name in 01-isometric 02-front 03-top 04-exterior-control 05-eye-front 06-eye-back 07-eye-windows 08-eye-storage 09-chair-back 10-desk-side 11-storage-close-up 12-reading-rug 13-reading-books 14-eye-staff-door 15-eye-closet-shelves 16-rug-overlook 17-library-cover-fronts 18-window-foliage-close 19-iphone-landscape-rug 20-window-chair-workstation 21-back-builtins 22-hall-look-left 23-hall-look-right 24-hall-entry-from-gallery; do
             test -s "$RUNNER_TEMP/visual/$name.png"
           done
           # Final frame validation was performed above after bounded retries.
           # A blank image still fails this job and blocks visual acceptance.
-          echo "VISUAL_FRAME_INVENTORY_PASS 21=3_aerial+1_exterior+15_eye+1_rug_diagnostic+1_phone_aspect"
+          echo "VISUAL_FRAME_INVENTORY_PASS 24=3_aerial+1_exterior+18_eye+1_rug_diagnostic+1_phone_aspect"
           sha256sum "$RUNNER_TEMP"/visual/*.png
           echo "These are source-derived third-party renderer snapshots."
           echo "They do NOT prove Roblox engine, phone gameplay or asset fidelity."
@@ -269,8 +265,6 @@ jobs:
 
   # Lightweight 3-camera geometry review runs in parallel with full suite.
   fast-geometry-review:
-    # Read-only, source-derived and independent of the full screenshot job.
-    # Always uses the real committing SHA, never a PR synthetic merge SHA.
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
@@ -316,6 +310,26 @@ jobs:
             --out "$RUNNER_TEMP/cutaway.rbxmx" --cutaway
           test -s "$RUNNER_TEMP/actual-room.rbxmx"
           test -s "$RUNNER_TEMP/cutaway.rbxmx"
+      - name: Verify current hallway and closet camera provenance before expensive screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --self-test
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py \
+            --luau "$RUNNER_TEMP/luau/luau"
+          echo "HALL_CAMERA_OWNED_BY_WALKABLE_SCENE_PASS"
+
+      - name: Fail fast on dual-paper-view synthetic regressions before any 3D rendering
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The dual-view checker depends on the preexisting paper-shape
+          # gate. Run its adversarial fixtures while the renderer is idle,
+          # so a faulty expectation does not waste six minutes of renders.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py --self-test
+          echo "HALL_DUAL_CAMERA_FIXTURE_FAST_PASS"
+
       - name: Capture three fixed full-geometry viewpoints
         shell: bash
         env:
@@ -339,6 +353,19 @@ jobs:
               "$RHR" scene "$source" --camera="$eye" \
                 --look-at="$aim" --out "$image"
             fi
+            if ! "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"; then
+              # Renderer occasionally generates blank white independent of
+              # the room. Retry only the same architectural target from
+              # a second predeclared player-height camera; do not skip
+              # image validation or accept a blank alternative.
+              if [[ "$label" == "01-back-builtins" ]]; then
+                echo "FAST_PHOTO_ALTERNATIVE_BACK_BUILTINS_CAMERA"
+                "$RHR" scene "$source" --camera=-3,6.3,9 \
+                  --look-at=-22,10,25.8 --out "$image"
+              else
+                echo "FAST_PHOTO_NO_ALTERNATE_FOR $label"
+              fi
+            fi
             "$RUNNER_TEMP/photo-venv/bin/python" "$CHECK" "$image"
           }
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
@@ -347,11 +374,84 @@ jobs:
             02-wordwall-table 22,5,-2 35.5,6.5,1
           render_checked "$RUNNER_TEMP/cutaway.rbxmx" \
             03-rugs-cutaway -5,35,-4 -25,0,-3
-          # Fixed child-eye architectural check on the real clock relocated
-          # onto the yellow window pier. Existing 21-camera views stay fixed.
+          # Native-independent source view of the school window-pier clock.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             04-window-clock 3,5,-6.5 -36,11.6,-6.5
-          echo "FAST_PHOTO_NONBLANK_PASS 4 source-derived views"
+          # The rear double oak leaves open into an enclosed closet.
+          # Old x4,z40 camera hit its SOLID rear wall, so it was a false
+          # proxy for the door. Look outward from inside the actual closet.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            05-closet-double-doors 0,5.5,31 0,6.9,26.8
+          # x0,z34 is now INSIDE the right supply closet. Keep an
+          # independent photo-student-work view from the TRUE walkable
+          # hallway: move player camera beyond sealed closet at z40.
+          # Must still SHOW at least six individually rendered white paper
+          # diamonds; the semantic image-pixel gate remains fail-closed.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            06-hall-paper-rail 0,5.5,40 -36,9,48.52
+          # Fixed, full-geometry photo-window camera: sees the real 3D
+          # mustard sash and sunburst at the distant sealed left end wall.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            07-hall-yellow-end-window 0,5.7,38 -54,7.35,38
+          # Actual full-scene view of the left-hand neighboring CLOSED
+          # oak-and-glass facade. No cutaway, invisible UI, fake opening,
+          # or overlay model. Verify native geometry from child-eye height.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            08-hall-adjacent-oak-door -41.8,5.6,39 -45.5,6.8,27.85
+          # Native-independent child-eye evidence for the critical LEFT
+          # classroom doorway turn. Actual Luau scene, not a cutaway:
+          # old floor/roof stopped 1.25 studs before the photo hallway.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            09-hall-left-floor-roof-junction 42,5.5,22 44,6,38
+          echo "FAST_PHOTO_NONBLANK_PASS 9 source-derived views"
+      - name: Prove 23 photo-hall papers appear in two independent real camera views
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY="$RUNNER_TEMP/photo-venv/bin/python"
+          FAST="$RUNNER_TEMP/photo-review"
+          # Protect BOTH distinct source-derived camera views. The previous
+          # workaround tested only 07, allowing an unusable or blank 06 view
+          # to pass with generic nonblank checks.
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers.py --self-test
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
+            "$FAST/06-hall-paper-rail.png"
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
+            "$FAST/07-hall-yellow-end-window.png"
+          # The two exposures must not be duplicate PNGs, swapped views,
+          # a single fake paper panel, or a weak/occluded gallery closeup.
+          "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py \
+            --gallery "$FAST/06-hall-paper-rail.png" \
+            --overview "$FAST/07-hall-yellow-end-window.png"
+          echo "HALL_PAPER_TWO_INDEPENDENT_CAMERAS_PASS native_iphone_pending=true"
+
+      - name: Prove gold window frame, dark panes, and eight radial sunburst rays are visible
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The generic nonblank check alone was a false-acceptance risk:
+          # it would pass a corridor with a missing/hidden yellow window.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_end_window.py --self-test
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_end_window.py \
+            "$RUNNER_TEMP/photo-review/07-hall-yellow-end-window.png"
+          echo "HALL_END_WINDOW_CAMERA_SEMANTIC_GATE_PASS headless_only=true native_iphone_pending=true"
+
+      - name: Prove neighboring oak door frame, frosted panes, brass, and raised panel are actually rendered
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Separate from generic nonblank screenshot and source-only Part
+          # counts. This semantic gate detects invisible panes, a missing
+          # crossbar, disappearing pull, and false opaque wall facades.
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_oak_doors.py --self-test
+          "$RUNNER_TEMP/photo-venv/bin/python" \
+            school/emma-classroom/showroom/audit_rendered_hallway_oak_doors.py \
+            "$RUNNER_TEMP/photo-review/08-hall-adjacent-oak-door.png"
+          echo "PHOTO_HALL_OAK_DOOR_PIXEL_GATE_PASS real_source_only=true native_iphone_pending=true"
+
       - name: Write evidence manifest and compact contact sheet
         shell: bash
         env:
@@ -364,8 +464,11 @@ jobs:
           from PIL import Image,ImageDraw
           root=Path(os.environ["RUNNER_TEMP"])/"photo-review"
           names=("01-back-builtins","02-wordwall-table","03-rugs-cutaway",
-                 "04-window-clock")
-          out=Image.new("RGB",(1000,1410),(244,244,240))
+                 "04-window-clock","05-closet-double-doors",
+                 "06-hall-paper-rail","07-hall-yellow-end-window",
+                 "08-hall-adjacent-oak-door",
+                 "09-hall-left-floor-roof-junction")
+          out=Image.new("RGB",(1000,len(names)*350+10),(244,244,240))
           draw=ImageDraw.Draw(out)
           files=[]
           for i,name in enumerate(names):

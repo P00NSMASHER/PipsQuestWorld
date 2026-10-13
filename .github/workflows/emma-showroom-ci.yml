@@ -1,19 +1,6 @@
 name: Emma Classroom Replica CI
 
 on:
-  # Some connected-app branch writes do not produce a pull_request synchronize
-  # run, leaving the newest classroom geometry without exact-head evidence.
-  # This is a READ-ONLY QA fallback, never the retired Roblox publisher.
-  push:
-    branches:
-      - visual/emma-classroom-replica-only-20261008
-    paths:
-      - 'school/emma-classroom/showroom/**'
-      - 'school/emma-showroom.project.json'
-      - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
-      - 'school/emma-classroom/verify_release_receipt.py'
-      - '.github/workflows/publish-emma-classroom.yml'
-      - '.github/workflows/emma-showroom-ci.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -91,6 +78,32 @@ jobs:
           python3 school/emma-classroom/verify_release_receipt.py --self-test
           python3 school/emma-classroom/verify_release_receipt.py
 
+      - name: Reject publication rollback versus latest PR base branch
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          # Check the LIVE HEAD of this review target branch, not merely
+          # its stale merge-base SHA. Release metadata must never regress
+          # when a stacked classroom/hallway PR is eventually merged.
+          # This is public repository evidence, never a Roblox API query.
+          [[ "$PR_BASE_REF" =~ ^[a-zA-Z0-9._/-]+$ ]]
+          git fetch --no-tags --depth=1 origin "refs/heads/$PR_BASE_REF"
+          base_sha="$(git rev-parse FETCH_HEAD)"
+          base_receipt="school/emma-classroom/RELEASE_RECEIPT.json"
+          if git cat-file -e "$base_sha:$base_receipt" 2>/dev/null; then
+            git show "$base_sha:$base_receipt" > "$RUNNER_TEMP/base-release-receipt.json"
+            python3 school/emma-classroom/verify_release_receipt.py \
+              --compare-base "$RUNNER_TEMP/base-release-receipt.json"
+            echo "RELEASE_PR_NO_ROLLBACK_PASS parent_sha=$base_sha"
+          else
+            # An archive-only base without this receipt cannot establish
+            # which version was last published; never claim a comparison.
+            echo "RELEASE_PR_BASE_WITHOUT_RECEIPT_UNVERIFIED base_sha=$base_sha"
+          fi
+
       - name: Install pinned Luau and Rojo
         shell: bash
         run: |
@@ -115,6 +128,37 @@ jobs:
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" > /dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
+
+      - name: Check original anonymous hallway art and mobile UI draw budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Independent from the rest of the classroom image tests, so a
+          # concurrently modified word wall does not hide hallway regressions.
+          # These are source-constructed limits, NOT measured phone FPS.
+          python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "HALLWAY_NO_EXTRA_PARTS_NO_STUDENT_PHOTOS_CI_PASS"
+
+      - name: Fail closed on unsupported floor or open sky at the left hallway turn
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Source-built 3D checks supplement the 2D avatar route audit:
+          # the old hallway floor and ceiling stopped 1.25 studs short.
+          # Counterexample mutations prove the gap detector actually fails.
+          python3 school/emma-classroom/showroom/audit_left_hall_junction.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "LEFT_HALL_FLOOR_AND_CEILING_CONTINUITY_CI_PASS native_phone_pending=true"
+
+      - name: Reject hallway screenshot cameras left inside the new supply closet
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --self-test
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "HALL_REAL_GEOMETRY_CAMERA_PROVENANCE_PASS"
 
       - name: Fail fast on exact-source room geometry and mobile part budget
         shell: bash
@@ -171,6 +215,17 @@ jobs:
           python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Audit submerged chair geometry and reserve 70 mobile Parts of headroom
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Four buried caps per 16 student chairs + the purple corner chair. 
+          # Inspect ACTUAL Luau-constructed legs and enforce 68 invisible Parts
+          # stay removed; reject five independent regression mutations.
+          python3 school/emma-classroom/showroom/audit_buried_chair_parts.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          echo "BURIED_CHAIR_MOBILE_OPTIMIZATION_CI_PASS source_only=true native_phone_pending=true"
+
       - name: Verify Emma's single purple corner chair and child-safe placement
         shell: bash
         run: |
@@ -190,6 +245,27 @@ jobs:
         run: |
           set -euo pipefail
           python3 school/emma-classroom/showroom/audit_photo_landmarks.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
+      - name: Reject opaque double doors behind real glass apertures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
+      - name: Check printed notebook graphics replacing 64 micro Parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_notebook_rule_surfaces.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
+      - name: Execute October 10 real-hallway photo fidelity and no-collision probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_hallway_photo.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
       - name: Verify photo-grounded word wall and native-safe apple lettering

@@ -233,9 +233,16 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             cylinder(parent,name.." tubular leg",Vector3.new(1.43,.14,.14),
                 CFrame.new(x+dx,.76,z+dz)*CFrame.Angles(0,0,math.pi/2),
                 P.metal,Enum.Material.Metal,true)
-            cylinder(parent,name.." rubber foot",Vector3.new(.19,.20,.20),
-                CFrame.new(x+dx,.13,z+dz)*CFrame.Angles(0,0,math.pi/2),
-                P.ink,Enum.Material.SmoothPlastic,false)
+            -- Source-constructed geometry audit: the former decorative
+            -- .19-stud rubber foot was centered at y=.13 with a rotated
+            -- vertical half-extent .095; its top (.225) was entirely
+            -- BELOW the finished classroom floor top (.50). All four per
+            -- normal student chair (64 across 16 desks) PLUS the one
+            -- purple corner chair (4 more) were permanently hidden and
+            -- noncolliding, yet cost Roblox 68 replicated Parts.
+            -- The full metal leg remains collidable, reaches down through
+            -- the finished floor, and provides the identical visible shape
+            -- and walking physics. Do not recreate submerged micro-parts.
         end
         cylinder(parent,name.." back support",Vector3.new(2.20,.13,.13),
             CFrame.new(x+dx,2.47,z+.73)*CFrame.Angles(0,0,math.pi/2),
@@ -338,14 +345,36 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
     local notebookCF=CFrame.new(x-1.2+shift,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 7 or -6),0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
-    -- Keep three readable rules spread over the page rather than seven
-    -- hairline Parts concentrated into the same small strip on every desk.
+    -- The 48 ultra-thin metal-free pencil rules and 16 red margins were
+    -- expensive replicated Parts that contribute virtually nothing to
+    -- the player-eye source render. Keep the EXACT 16 notebook pages, and
+    -- put readable ruled PAPER GRAPHICS on their top faces instead.
+    -- Saves 64 physical Parts so the photo hallway can contain real
+    -- dimensional paper displays without raising the 3,100-part limit.
+    local notebookPrint=Instance.new("SurfaceGui")
+    notebookPrint.Name="OriginalNotebookPaperRules"
+    notebookPrint.Face=Enum.NormalId.Top
+    notebookPrint.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    notebookPrint.CanvasSize=Vector2.new(224,298)
+    notebookPrint.LightInfluence=.12
+    notebookPrint.Parent=paper
     for line=0,2 do
-        part(parent,"Notebook ruled line",Vector3.new(1.61,.004,.014),
-            paper.CFrame*CFrame.new(.03,.010,-.75+line*.70),
-            Color3.fromRGB(146,180,209),Enum.Material.SmoothPlastic,false)
+        local rule=Instance.new("Frame")
+        rule.Name="NotebookPrintedBlueRule"
+        rule.Size=UDim2.fromScale(.83,.009)
+        rule.Position=UDim2.fromScale(.09,.205+line*.282)
+        rule.BorderSizePixel=0
+        rule.BackgroundColor3=Color3.fromRGB(149,180,205)
+        rule.BackgroundTransparency=.08
+        rule.Parent=notebookPrint
     end
-    part(parent,"Notebook red margin",Vector3.new(.014,.004,2.30),paper.CFrame*CFrame.new(-.59,.012,0),Color3.fromRGB(218,133,143),Enum.Material.SmoothPlastic,false)
+    local margin=Instance.new("Frame")
+    margin.Name="NotebookPrintedRedMargin"
+    margin.Size=UDim2.fromScale(.011,.90)
+    margin.Position=UDim2.fromScale(.185,.05)
+    margin.BorderSizePixel=0
+    margin.BackgroundColor3=Color3.fromRGB(218,133,143)
+    margin.Parent=notebookPrint
     -- One fine steel binding rail reads crisply at phone scale; the former
     -- 96 microscopic rings bloated scene replication without visual benefit.
     part(parent,"Notebook binding rail",Vector3.new(.11,.075,2.40),
@@ -1624,96 +1653,610 @@ local function buildBackDoorAndHall(root: Instance)
         CFrame.new(0,10.94,26.90),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Door transom glass",Vector3.new(10.22,1.55,.20),
         CFrame.new(0,12.05,26.70),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.30
+    -- Source-derived October 10 hallway screenshots proved that a single
+    -- opaque ten-stud Wood slab sat BEHIND each translucent "Door glass".
+    -- Transparency could never reveal the classroom. Form a REAL aperture:
+    -- the one original door Part becomes the lower solid panel; reuse the
+    -- existing two oak rails and two side stiles as the upper timber frame.
+    -- Only two slim middle crossbars and two brass pulls add physical Parts.
+    -- Keep the same open-leaf rotation, threshold and NO-COLLISION policy.
     for _,x in ipairs({-2.75,2.75}) do
-        local door=part(root,"Open classroom door",Vector3.new(4.65,10,.36),
-            CFrame.new(x,5.28,25.96)*CFrame.Angles(0,math.rad(x<0 and -48 or 48),0),
+        local leafCF=CFrame.new(x,5.28,25.96)*
+            CFrame.Angles(0,math.rad(x<0 and -48 or 48),0)
+        -- Relative bottom -5 and top -.74 of the original ten-stud door.
+        local door=part(root,"Open classroom door",Vector3.new(4.65,4.26,.36),
+            leafCF*CFrame.new(0,-2.87,0),
             Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
+        door:SetAttribute("OpenLeaf","Lower solid panel; glass aperture above")
         local glass=part(root,"Door glass",Vector3.new(2.54,4.38,.10),
-            door.CFrame*CFrame.new(0,1.42,-.22),
+            leafCF*CFrame.new(0,1.42,-.06),
             Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
         glass.Transparency=.29
-        for _,y in ipairs({-1.05,3.89}) do
-            part(root,"Glazed door solid oak rail",Vector3.new(3.0,.22,.12),
-                door.CFrame*CFrame.new(0,y,-.25),
+        glass.Reflectance=.025
+        glass.CastShadow=false
+        glass:SetAttribute("GlazedOpening","No opaque slab behind this pane")
+        -- Reuse the original two rail Parts: a lower glass sill and tall
+        -- upper timber lintel, both matching the original leaf outline.
+        for _,rail in ipairs({
+            {name="Sill",y=-.88,height=.32},
+            {name="Top",y=4.35,height=1.30},
+        }) do
+            local p=part(root,"Glazed door solid oak rail",
+                Vector3.new(4.65,rail.height,.36),
+                leafCF*CFrame.new(0,rail.y,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
+            p:SetAttribute("DoorRailType",rail.name)
         end
-        for _,dx in ipairs({-1.42,1.42}) do
-            part(root,"Glazed door oak side stile",Vector3.new(.17,4.74,.12),
-                door.CFrame*CFrame.new(dx,1.42,-.25),
+        -- Widen ONLY the existing pair of very thin side stiles. This fills
+        -- the margins outside the true glass cut-out without obscuring it.
+        for _,dx in ipairs({-1.80,1.80}) do
+            part(root,"Glazed door oak side stile",
+                Vector3.new(1.05,4.38,.36),
+                leafCF*CFrame.new(dx,1.42,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
         end
         part(root,"Door lower raised panel",Vector3.new(3.7,2.85,.10),
-            door.CFrame*CFrame.new(0,-2.72,-.24),
+            leafCF*CFrame.new(0,-2.72,-.24),
             Color3.fromRGB(142,105,73),Enum.Material.Wood,false)
+        -- Photo: wood crossbar visually separates the two glazed lights.
+        -- The clear glazing remains a full pane with thin frame in front.
+        part(root,"Glazed door glass divider",Vector3.new(2.54,.18,.14),
+            leafCF*CFrame.new(0,1.42,-.17),
+            Color3.fromRGB(121,84,54),Enum.Material.Wood,false)
+        -- Near-leaf narrow vintage pull, photo-guided but not door physics.
+        part(root,"Glazed door brass pull",Vector3.new(.14,.70,.16),
+            leafCF*CFrame.new(x<0 and 2.06 or -2.06,-.60,-.27),
+            Color3.fromRGB(181,153,103),Enum.Material.Metal,false)
     end
-    sign(root,"Welcome over door","EMMA'S CLASSROOM",Vector3.new(10.7,1.20,.16),
+    sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
         CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
-    part(root,"Hall floor",Vector3.new(18,.5,23),CFrame.new(0,.25,38),Color3.fromRGB(67,68,66),Enum.Material.Slate)
-    part(root,"Classroom doorway brass threshold",
-        Vector3.new(10.02,.045,.24),CFrame.new(0,.556,26.65),
-        Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
-    part(root,"Corridor skirting at left wall",
-        Vector3.new(.16,.55,22.2),CFrame.new(-8.41,.43,38.2),P.blue,Enum.Material.Wood,false)
-    part(root,"Corridor skirting at right wall",
-        Vector3.new(.16,.55,22.2),CFrame.new(8.41,.43,38.2),P.blue,Enum.Material.Wood,false)
-    part(root,"Hall left wall",Vector3.new(1,13,23),CFrame.new(-9,6.5,38),P.blueSoft)
-    part(root,"Hall right wall",Vector3.new(1,13,23),CFrame.new(9,6.5,38),P.blueSoft)
-    part(root,"Hall left brick",Vector3.new(1.1,4.3,23),CFrame.new(-8.5,2.15,38),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Hall right brick",Vector3.new(1.1,4.3,23),CFrame.new(8.5,2.15,38),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Hall ceiling",Vector3.new(18,.4,23),CFrame.new(0,13,38),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
-    -- The October 8 iPhone walkthrough showed OPEN SKY at the end of
-    -- this apparently indoor corridor. Close the physical end of the hall,
-    -- then face it with proper brick dado and a recessed school notice.
-    -- Keep the 27-stud classroom entrance clear for normal walking.
-    part(root,"Rear corridor end wall",Vector3.new(18,13,.85),
-        CFrame.new(0,6.5,49.40),P.blueSoft,Enum.Material.SmoothPlastic,true)
-    part(root,"Rear corridor brick dado",Vector3.new(17.75,4.15,.12),
-        CFrame.new(0,2.075,48.90),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Rear corridor navy cap rail",Vector3.new(17.75,.16,.13),
-        CFrame.new(0,4.2,48.82),P.blue,Enum.Material.Wood,false)
-    part(root,"Rear corridor wood bulletin frame",Vector3.new(6.8,3.1,.15),
-        CFrame.new(0,8.25,48.87),Color3.fromRGB(117,83,57),Enum.Material.Wood,false)
-    part(root,"Rear corridor recessed cork",Vector3.new(6.34,2.65,.08),
-        CFrame.new(0,8.25,48.76),Color3.fromRGB(161,123,87),Enum.Material.Fabric,false)
-    -- Fifteen-view child-eye QA: this noticeboard was only an empty brown
-    -- square at the end of a sealed blue corridor. Supply a few believable,
-    -- anonymous notices instead of inventing inaccessible doors/rooms.
-    local hallPapers={
-        Color3.fromRGB(245,240,217),
-        Color3.fromRGB(227,237,232),
-        Color3.fromRGB(240,230,221),
-    }
-    for i,px in ipairs({-1.90,0,1.90}) do
-        local h=(i==2) and .12 or 0
-        part(root,"Rear hall pinned notice",Vector3.new(1.46,1.79,.035),
-            CFrame.new(px,8.17+h,48.65),hallPapers[i],
-            Enum.Material.SmoothPlastic,false)
-        part(root,"Rear hall notice heading",Vector3.new(1.08,.15,.04),
-            CFrame.new(px,8.82+h,48.61),
-            (i==2) and P.green or P.blue,
-            Enum.Material.SmoothPlastic,false)
-        ball(root,"Rear hall brass notice pin",Vector3.new(.14,.14,.09),
-            CFrame.new(px,9.10+h,48.58),
-            Color3.fromRGB(190,160,91),Enum.Material.Metal,false)
+    -- Owner's October 11 iPhone screenshot fixes the doorway topology:
+    -- classroom rear DOUBLE DOORS lead only into a self-contained SUPPLY CLOSET.
+    -- The LEFT doorway (the ABVM staff entrance at x=37) is the ONLY
+    -- classroom-to-school-hall connection. Keep original closet door art
+    -- and the fully preserved 108-stud hallway beyond this sealed room.
+    local closet=Instance.new("Folder")
+    closet.Name="ClassroomSupplyCloset"
+    closet:SetAttribute("Purpose","Classroom supplies only; not a hallway")
+    closet.Parent=root
+    -- Closet interior: warm classroom plaster. Exterior: exposed to the
+    -- photographed blue-gray/ochre-brick school hallway. The old single
+    -- pale-yellow wall color was visible as an enormous featureless beige
+    -- freestanding box from the REAL hallway; fixing only its camera would
+    -- mask the game's visual problem instead of improving the geometry.
+    --
+    -- Keep the THREE original collidable walls and their exact world
+    -- positions/seals. Only their outside base color changes. Native,
+    -- physically thin NONCOLLIDING finish skins preserve the original warm
+    -- closet interior and establish the same glazed-brick dado/wood cap
+    -- treatment as the school corridor. No user photo/texture upload.
+    local closetInterior=Color3.fromRGB(233,220,178)
+    local closetExterior=Color3.fromRGB(107,117,125)
+    local closetBrick=Color3.fromRGB(192,132,63)
+    local closetOak=Color3.fromRGB(126,90,58)
+    local function cp(name:string,size:Vector3,cf:CFrame,
+        color:Color3,material:Enum.Material?,collides:boolean?):Part
+        return part(closet,name,size,cf,color,material,collides)
     end
-    -- Oak/blue cap rails make the transition between brick dado and
-    -- painted plaster read as a finished real school interior.
-    for _,px in ipairs({-8.38,8.38}) do
-        part(root,"Rear hall dado cap rail",Vector3.new(.22,.13,21.8),
-            CFrame.new(px,4.32,38.05),
-            Color3.fromRGB(79,98,128),Enum.Material.Wood,false)
+    local function finish(name:string,size:Vector3,cf:CFrame,
+        color:Color3,material:Enum.Material):Part
+        local skin=cp(name,size,cf,color,material,false)
+        skin.CanQuery=false
+        skin.CanTouch=false
+        skin.CastShadow=false
+        return skin
     end
-    -- Recessed fluorescent troffer replaces the overexposed Neon square.
-    part(root,"Rear hall fluorescent metal surround",Vector3.new(6.45,.16,2.55),
-        CFrame.new(0,12.80,36),Color3.fromRGB(193,200,200),
+    -- Original side and back walls remain sealed and are the ONLY
+    -- colliders. Child-eye wallpaper/trim cannot create hidden obstacles.
+    for _,x in ipairs({-5.95,5.95}) do
+        cp("Supply closet side wall",Vector3.new(.66,13,8.60),
+            CFrame.new(x,6.5,31.70),closetExterior,
+            Enum.Material.SmoothPlastic,true)
+        local side=(x<0) and -1 or 1
+        finish("Supply closet interior warm plaster",
+            Vector3.new(.08,13,8.46),
+            CFrame.new(x-side*.375,6.5,31.70),
+            closetInterior,Enum.Material.SmoothPlastic)
+        -- Brick and thin timber rail face OUT into the photographed
+        -- corridor, not into the storage closet or its double doorway.
+        local brick=finish("Supply closet exterior glazed-brick dado",
+            Vector3.new(.09,4.26,8.52),
+            CFrame.new(x+side*.395,2.13,31.70),
+            closetBrick,Enum.Material.Brick)
+        brick.Reflectance=.035
+        finish("Supply closet exterior oak cap rail",
+            Vector3.new(.13,.15,8.52),
+            CFrame.new(x+side*.435,4.35,31.70),
+            Color3.fromRGB(112,77,50),Enum.Material.Wood)
+    end
+    cp("Supply closet solid rear wall",Vector3.new(12.48,13,.72),
+        CFrame.new(0,6.5,36.05),closetExterior,
+        Enum.Material.SmoothPlastic,true)
+    finish("Supply closet interior warm plaster",Vector3.new(12.24,13,.08),
+        CFrame.new(0,6.5,35.645),
+        closetInterior,Enum.Material.SmoothPlastic)
+    local backBrick=finish("Supply closet exterior glazed-brick dado",
+        Vector3.new(12.40,4.26,.09),CFrame.new(0,2.13,36.455),
+        closetBrick,Enum.Material.Brick)
+    backBrick.Reflectance=.035
+    finish("Supply closet exterior oak cap rail",
+        Vector3.new(12.40,.15,.13),CFrame.new(0,4.35,36.48),
+        Color3.fromRGB(112,77,50),Enum.Material.Wood)
+    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,8.33),
+        CFrame.new(0,.529,31.54),Color3.fromRGB(166,133,103),
+        Enum.Material.Wood,false)
+    -- Three realistic shelves and a few colored classroom supply tubs.
+    -- Thin loose props are noncolliding; the rear wall is a true barrier.
+    for i,y in ipairs({3.05,5.50,7.95}) do
+        cp("Supply closet oak shelf",Vector3.new(9.9,.24,1.18),
+            CFrame.new(0,y,34.91),closetOak,Enum.Material.Wood,false)
+        local tub=cp("Supply closet labeled storage tub",
+            Vector3.new(2.28,1.02,.88),
+            CFrame.new((i-2)*2.72,y+.65,34.85),
+            ({Color3.fromRGB(91,134,147),Color3.fromRGB(169,125,113),
+              Color3.fromRGB(117,143,106)})[i],
+            Enum.Material.SmoothPlastic,false)
+        local gui=Instance.new("SurfaceGui")
+        gui.Name="Anonymous classroom supply category"
+        gui.Face=Enum.NormalId.Front
+        gui.CanvasSize=Vector2.new(240,100)
+        gui.Parent=tub
+        local label=Instance.new("TextLabel")
+        label.Name="Supply tub category"
+        label.Size=UDim2.fromScale(1,1)
+        label.BackgroundTransparency=1
+        label.Font=Enum.Font.GothamBold
+        label.TextScaled=true
+        label.TextColor3=Color3.fromRGB(255,251,232)
+        label.Text=({"ART","PAPER","GAMES"})[i]
+        label.Parent=gui
+    end
+    -- OWNER-SUPPLIED SIX PHOTOS: corridor architecture, not event-day people.
+    -- Long corridor scales and X direction are explicitly PROVISIONAL.
+    -- Artistic tile/assignment geometry is authored with SurfaceGui Frames
+    -- to leave the existing 3,100-physical-Part iPhone budget unchanged.
+    local hall=Instance.new("Folder")
+    hall.Name="PhotographedHallway"
+    hall:SetAttribute("Reference","2026-10-10 anonymous hallway architecture")
+    hall:SetAttribute("ScaleConfidence","provisional")
+    hall.Parent=root
+    local blueGray=Color3.fromRGB(107,117,125)
+    local darkOak=Color3.fromRGB(112,77,50)
+    local paperColor=Color3.fromRGB(243,241,232)
+    local mortar=Color3.fromRGB(106,74,49)
+    local function hp(name:string,size:Vector3,cf:CFrame,color:Color3,
+        material:Enum.Material?,solid:boolean?):Part
+        local p=part(hall,name,size,cf,color,material,solid)
+        if solid==false then p.CanQuery=false;p.CastShadow=false end
+        return p
+    end
+    local function imageSurface(target:BasePart,name:string,face:Enum.NormalId,
+        wide:number,tall:number):SurfaceGui
+        local gui=Instance.new("SurfaceGui")
+        gui.Name=name;gui.Face=face;gui.LightInfluence=.34
+        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        gui.CanvasSize=Vector2.new(wide,tall);gui.Parent=target
+        return gui
+    end
+    local function paintedRectangle(parent:Instance,name:string,
+        size:UDim2,pos:UDim2,color:Color3):Frame
+        local f=Instance.new("Frame")
+        f.Name=name;f.Size=size;f.Position=pos
+        f.BorderSizePixel=0;f.BackgroundColor3=color;f.Parent=parent
+        return f
+    end
+
+    -- One safe physical floor: the native Top SurfaceGui draws narrow
+    -- square-tile grout at ~4.5-stud centers without 28 extra Parts.
+    local floor=hp("Photo hall polished square stone floor",
+        Vector3.new(108,.50,22.5),CFrame.new(0,.25,38),
+        Color3.fromRGB(75,73,70),Enum.Material.SmoothPlastic,true)
+    floor.Reflectance=.085
+    local floorGui=imageSurface(floor,"Photo square-stone tile grout",
+        Enum.NormalId.Top,2160,450)
+    for x=0,24 do
+        local line=paintedRectangle(floorGui,"Stone long tile joint",
+            UDim2.fromOffset(1,450),UDim2.fromOffset(x*90,0),
+            Color3.fromRGB(38,37,36))
+        line.BackgroundTransparency=.44
+    end
+    for z=0,5 do
+        local line=paintedRectangle(floorGui,"Stone cross tile joint",
+            UDim2.fromOffset(2160,1),UDim2.fromOffset(0,z*90),
+            Color3.fromRGB(38,37,36))
+        line.BackgroundTransparency=.44
+    end
+    -- Existing real wood-and-glass entrance and open double leaf retain
+    -- their exact shapes, free walking clearance and level brass threshold.
+    hp("Classroom doorway brass threshold",Vector3.new(10.02,.045,.24),
+        CFrame.new(0,.556,26.65),Color3.fromRGB(169,145,88),
         Enum.Material.Metal,false)
-    local hallLight=part(root,"Hall fluorescent light",Vector3.new(5.97,.07,2.10),
-        CFrame.new(0,12.68,36),Color3.fromRGB(242,242,234),
-        Enum.Material.Glass,false)
-    hallLight.Transparency=.065
-    local light=Instance.new("SurfaceLight")
-    light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(251,243,227)
-    light.Brightness=.42;light.Range=16;light.Shadows=false;light.Parent=hallLight
+
+    local rear=hp("Photo hall rear blue-gray wall",Vector3.new(108,13,.90),
+        CFrame.new(0,6.5,49.25),blueGray,Enum.Material.SmoothPlastic,true)
+    -- The right (x>37) front corridor wall is deliberately OPEN: the side
+    -- staff entrance now turns into this long hallway without a fake door or
+    -- any collidable partition. Keep the sealed left front end only.
+    hp("Photo hall front outer wall",Vector3.new(17,13,.90),
+        CFrame.new(-45.5,6.5,26.95),blueGray,Enum.Material.SmoothPlastic,true)
+    local leftCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
+        CFrame.new(-54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
+    local rightCap=hp("Photo hall end cap",Vector3.new(.9,13,22.5),
+        CFrame.new(54,6.5,38),blueGray,Enum.Material.SmoothPlastic,true)
+    -- The x=+/-7.25 original yellow Back doorway plaster infill remained
+    -- visible from the photo corridor because existing z-facing paint
+    -- stopped at x=+/-9. Reuse BOTH existing blue-gray panels, extending
+    -- to the edge of the actual 11-stud double-door opening, x=+/-5.5.
+    -- Starting at y=4.25 also closes the old narrow yellow band above dado.
+    -- Original classroom-facing warm collidable walls remain untouched.
+    for _,side in ipairs({-1,1}) do
+        hp("Photo hall classroom exterior blue-gray paint",
+            Vector3.new(31.50,13.75,.09),
+            CFrame.new(side*21.25,11.125,27.565),
+            blueGray,Enum.Material.SmoothPlastic,false)
+    end
+    -- One thin school-facing header facade hides the yellow upper header
+    -- from the corridor without recoloring the original interior.
+    hp("Photo hall rear doorway header exterior blue-gray paint",
+        Vector3.new(11,5,.09),CFrame.new(0,15.5,27.565),
+        blueGray,Enum.Material.SmoothPlastic,false)
+
+    -- Finish the exposed OUTSIDE face of the existing x=37 staff doorway
+    -- return. The source-derived hallway camera saw this original yellow
+    -- wall as an oversized cream strip by the entrance. Three low-cost
+    -- decorative Parts face the hallway; the ORIGINAL collidable
+    -- "Right wall back" and yellow room-facing paint are untouched.
+    hp("Photo hall staff return blue-gray plaster",
+        Vector3.new(.09,18,4),CFrame.new(37.56,9,25),
+        blueGray,Enum.Material.SmoothPlastic,false)
+    local returnBrick=hp("Photo hall staff return glazed brick",
+        Vector3.new(.095,4.25,3.90),CFrame.new(37.65,2.125,25),
+        Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+    returnBrick.Reflectance=.035
+    hp("Photo hall staff return oak cap",
+        Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,25),
+        Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
+
+    -- The x=+/-9 INNER ENDS of the two original classroom rear walls
+    -- are one-stud exposed return faces at the former double-door entry.
+    -- The photo-hall renderer still shows one of these original yellow
+    -- end-grain faces as an oversized pale vertical strip beside the
+    -- otherwise completed school-hall closet exterior. Previous flat
+    -- z-facing paint does not cover these perpendicular x-facing ends.
+    -- Add exactly six thin, noncolliding original finish Parts; never
+    -- move walls, widen/narrow door collision or repaint classroom-facing
+    -- surfaces. All geometry remains outside the printable school photos.
+    for _,side in ipairs({-1,1}) do
+        local edgeX=side*8.445
+        hp("Photo hall doorway inner wall end plaster",
+            Vector3.new(.10,18,1.12),CFrame.new(edgeX,9,27.0),
+            blueGray,Enum.Material.SmoothPlastic,false)
+        local edgeBrick=hp("Photo hall doorway inner wall end brick",
+            Vector3.new(.115,4.25,1.12),
+            CFrame.new(edgeX-side*.04,2.125,27.0),
+            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+        edgeBrick.Reflectance=.035
+        hp("Photo hall doorway inner wall end oak cap",
+            Vector3.new(.135,.16,1.15),
+            CFrame.new(edgeX-side*.06,4.34,27.0),
+            Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
+    end
+
+    -- A true 6-course staggered bond and subtle ochre tone differences.
+    -- The graphic lives on seven noncolliding flat dado carriers, and is
+    -- fully independent of marketplace image uploads / texture IDs.
+    local bricks={
+        Color3.fromRGB(188,123,54),Color3.fromRGB(196,134,61),
+        Color3.fromRGB(211,148,68),Color3.fromRGB(174,111,48),
+        Color3.fromRGB(201,141,72),Color3.fromRGB(181,121,60),
+    }
+    local function dado(name:string,size:Vector3,cf:CFrame,face:Enum.NormalId)
+        -- Warm ochre glazed-brick BASE is visible even where third-party
+        -- renderers or low-detail clients omit the staggered SurfaceGui.
+        -- Dark mortar and color variation are still drawn by the GUI on top.
+        local p=hp(name,size,cf,Color3.fromRGB(192,132,63),
+            Enum.Material.SmoothPlastic,false)
+        p.Reflectance=.055
+        local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
+            and size.Z or size.X
+        local pixels=math.max(50,math.floor(w*22))
+        local gui=imageSurface(p,"Photo glazed offset brick bond",face,pixels,100)
+        local field=paintedRectangle(gui,"Warm mortar field",
+            UDim2.fromScale(1,1),UDim2.fromScale(0,0),mortar)
+        field.ClipsDescendants=true
+        local brickW=78
+        for row=0,5 do
+            local offset=(row%2==0) and 0 or -brickW/2
+            for col=0,math.ceil(pixels/brickW)+1 do
+                local px=math.floor(offset+col*brickW+2)
+                if px<pixels and px+brickW>0 then
+                    paintedRectangle(field,"Photo glazed brick",
+                        UDim2.fromOffset(brickW-3,14),
+                        UDim2.fromOffset(px,math.floor(row*100/6+1)),
+                        bricks[((row*7+col*3)%#bricks)+1])
+                end
+            end
+        end
+    end
+    dado("Photo hall rear glazed brick",Vector3.new(107,4.25,.075),
+        CFrame.new(0,2.125,48.735),Enum.NormalId.Front)
+    -- Extend these existing two glazed dados over the same exposed
+    -- yellow infill, without crossing the double-door opening.
+    for _,side in ipairs({-1,1}) do
+        dado("Photo hall classroom exterior glazed brick",
+            Vector3.new(31.35,4.25,.075),
+            CFrame.new(side*21.25,2.125,27.66),Enum.NormalId.Back)
+    end
+    -- Don't draw glazed brick across the new hallway entry from the left
+    -- ABVM staff doorway. Only the sealed negative-X wall gets a facing.
+    dado("Photo hall front outer glazed brick",
+        Vector3.new(16.75,4.25,.075),CFrame.new(-45.5,2.125,27.66),
+        Enum.NormalId.Back)
+    dado("Photo hall left end glazed brick",
+        Vector3.new(.075,4.25,22),CFrame.new(-53.49,2.125,38),
+        Enum.NormalId.Right)
+    dado("Photo hall right end glazed brick",
+        Vector3.new(.075,4.25,22),CFrame.new(53.49,2.125,38),
+        Enum.NormalId.Left)
+    hp("Photo hall rear dado cap",Vector3.new(107.2,.16,.16),
+        CFrame.new(0,4.34,48.66),Color3.fromRGB(162,124,79),
+        Enum.Material.Wood,false)
+    -- No decorative cap or handrail may float across the 17-stud LEFT
+    -- hallway entry (x=37..54) where the staff corridor bends north.
+    -- Reuse both oak rails: now each finishes at the matching plaster/
+    -- brick edge, outside x=+/-5.5. No rail crosses a doorway.
+    hp("Photo hall front dado cap",Vector3.new(48.20,.16,.14),
+        CFrame.new(-29.65,4.34,27.73),Color3.fromRGB(162,124,79),
+        Enum.Material.Wood,false)
+    hp("Photo hall front dado cap",Vector3.new(30.90,.16,.14),
+        CFrame.new(21.05,4.34,27.73),Color3.fromRGB(162,124,79),
+        Enum.Material.Wood,false)
+
+    -- Both faces of the ACTUAL existing glass leaves receive tiny, anonymous
+    -- green shamrock artwork. Four circular UI lobes and one stem each.
+    for _,obj in ipairs(root:GetChildren()) do
+        if obj.Name=="Door glass" and obj:IsA("BasePart") then
+            for _,face in ipairs({Enum.NormalId.Front,Enum.NormalId.Back}) do
+                local gui=imageSurface(obj,"Photo green shamrock on glass",
+                    face,300,440)
+                for _,xy in ipairs({{105,90},{151,90},{128,54},{128,132}}) do
+                    local petal=paintedRectangle(gui,"Shamrock leaf",
+                        UDim2.fromOffset(53,53),
+                        UDim2.fromOffset(xy[1],xy[2]),
+                        Color3.fromRGB(46,119,67))
+                    local corner=Instance.new("UICorner")
+                    corner.CornerRadius=UDim.new(1,0);corner.Parent=petal
+                end
+                local stem=paintedRectangle(gui,"Shamrock stem",
+                    UDim2.fromOffset(9,60),UDim2.fromOffset(142,165),
+                    Color3.fromRGB(46,119,67))
+                stem.Rotation=-17
+            end
+        end
+    end
+
+    -- The independent October 10 player-eye render exposed these two
+    -- facades as almost featureless near-black rectangles: their previous
+    -- "frosted glass" and hardware were ONLY invisible SurfaceGui overlays.
+    -- Replace the flat drawings with shallow, actual Roblox-native Parts.
+    -- Keep the existing structural front wall BEHIND each door; they are
+    -- intentionally closed architectural facades, not speculative rooms.
+    -- 9 extra noncolliding Parts per door (18 added to the scene total).
+    -- The old second closed facade stood in the corridor entrance at
+    -- x=+45.5, directly in front of the LEFT classroom exit. Relocate
+    -- that anonymous nearby school-door facade to the existing, genuinely
+    -- solid classroom wall at x=+23. The x=45.5 turning route stays OPEN.
+    for _,x in ipairs({-45.5,23.0}) do
+        -- Reuse the original physical door Part as its solid bottom panel.
+        -- The upper portion is an actual glazing aperture, not a transparent
+        -- square stuck over a ten-stud opaque wooden board.
+        local door=hp("Photo hall adjacent oak door",
+            Vector3.new(6.45,4.33,.14),CFrame.new(x,2.665,27.79),
+            darkOak,Enum.Material.Wood,false)
+        door:SetAttribute("ArchitecturalFacade","Closed; no extra classroom")
+
+        local pane=hp("Photo hall adjacent frosted door glass",
+            Vector3.new(4.96,4.88,.11),CFrame.new(x,7.635,27.92),
+            Color3.fromRGB(187,205,201),Enum.Material.Glass,false)
+        pane.Transparency=.30
+        pane.Reflectance=.018
+        pane:SetAttribute("GlassAperture","Upper opening has no solid wood backing")
+
+        -- Framing parts sit ahead of the older sealed wall; low-relief detail
+        -- stays visible from a child's hallway-height view, without physics.
+        for _,dx in ipairs({-2.865,2.865}) do
+            hp("Photo hall adjacent oak side stile",
+                Vector3.new(.72,4.96,.26),
+                CFrame.new(x+dx,7.62,27.98),
+                Color3.fromRGB(122,82,52),Enum.Material.Wood,false)
+        end
+        hp("Photo hall adjacent oak upper lintel",
+            Vector3.new(6.45,.40,.26),CFrame.new(x,10.30,27.98),
+            Color3.fromRGB(119,81,53),Enum.Material.Wood,false)
+        hp("Photo hall adjacent oak glass sill",
+            Vector3.new(6.45,.34,.26),CFrame.new(x,5.0,27.98),
+            Color3.fromRGB(126,84,53),Enum.Material.Wood,false)
+        hp("Photo hall adjacent oak glass crossbar",
+            Vector3.new(4.97,.18,.19),CFrame.new(x,7.58,28.02),
+            Color3.fromRGB(126,84,53),Enum.Material.Wood,false)
+
+        -- One restrained molded panel, brass plate, and actual metal pull.
+        hp("Photo hall adjacent lower raised wood panel",
+            Vector3.new(5.03,3.15,.075),CFrame.new(x,2.66,27.91),
+            Color3.fromRGB(147,103,68),Enum.Material.Wood,false)
+        local gripX=x+(x<0 and 2.02 or -2.02)
+        hp("Photo hall adjacent brass push plate",
+            Vector3.new(.25,.90,.085),CFrame.new(gripX,3.45,28.025),
+            Color3.fromRGB(177,151,100),Enum.Material.Metal,false)
+        hp("Photo hall adjacent brass pull",
+            Vector3.new(.13,.58,.11),CFrame.new(gripX,3.46,28.115),
+            Color3.fromRGB(201,178,122),Enum.Material.Metal,false)
+    end
+    local welcome=hp("Photo hall vertical welcome plaque",
+        Vector3.new(1.15,7.5,.09),CFrame.new(-10.5,8,27.8),
+        Color3.fromRGB(39,40,40),Enum.Material.SmoothPlastic,false)
+    local welcomeArt=imageSurface(welcome,"Stacked WELCOME lettering",
+        Enum.NormalId.Back,115,750)
+    for i,letter in ipairs({"W","E","L","C","O","M","E"}) do
+        local tile=Instance.new("TextLabel")
+        tile.Name="Vertical school welcome letter"
+        tile.Size=UDim2.fromScale(.94,1/7)
+        tile.Position=UDim2.fromScale(.03,(i-1)/7)
+        tile.BackgroundTransparency=1
+        tile.Font=Enum.Font.GothamBold
+        tile.TextColor3=paperColor;tile.TextScaled=true
+        tile.Text=letter;tile.Parent=welcomeArt
+    end
+
+    -- The owner-provided hallway photographs show 23 individual children's
+    -- paper sheets hung as WHITE DIAMONDS on this wood rail. The previous
+    -- implementation was 100% SurfaceGui on the distant blue wall; the
+    -- independent *actual-room* renderer rendered a totally bare corridor.
+    -- Real thin paper Parts preserve the defining photographed silhouette
+    -- in Roblox *and* in renderer QA. No photographed assignment, identity,
+    -- photographed child handwriting, or school class content is copied.
+    -- Original low-cost crayon/pencil abstractions vary the anonymous gallery:
+    -- three soft ruled lines plus three small colored geometry marks per
+    -- sheet. All ink is native SurfaceGui, with NO additional physical Parts.
+    hp("Photo hall student work hanging rail",Vector3.new(83,.16,.17),
+        CFrame.new(0,10.54,48.69),Color3.fromRGB(167,130,88),
+        Enum.Material.Wood,false)
+    for i=-11,11 do
+        local tint=(i%3==0) and Color3.fromRGB(247,245,235)
+            or ((i%3==1) and Color3.fromRGB(242,241,230)
+                or Color3.fromRGB(235,237,232))
+        local diamond=hp("Photo hall anonymous diamond student display",
+            Vector3.new(1.90,2.18,.055),
+            CFrame.new(i*3.55,9.05,48.52)*
+                CFrame.Angles(0,0,math.rad(45)),
+            tint,Enum.Material.SmoothPlastic,false)
+        diamond.Reflectance=.02
+        diamond.CastShadow=true
+        diamond:SetAttribute("Source","Anonymous original paper artwork")
+        diamond:SetAttribute("OriginalStudentData",false)
+        -- The styles and geometry are invented, not transcribed homework.
+        -- Five gently varied palettes create original miniature pencil
+        -- abstractions without typography, names, faces or uploaded images.
+        local artStyle=((i+11)%5)+1
+        diamond:SetAttribute("AnonymousArtStyle",artStyle)
+        local pencilTints={
+            Color3.fromRGB(101,143,162),
+            Color3.fromRGB(168,129,91),
+            Color3.fromRGB(119,163,131),
+            Color3.fromRGB(183,144,89),
+            Color3.fromRGB(151,124,163),
+        }
+        local paperArt=imageSurface(diamond,"Anonymous paper pencil strokes",
+            Enum.NormalId.Front,190,218)
+        for n=1,3 do
+            local line=paintedRectangle(paperArt,
+                "Invented pale handwritten guideline",
+                UDim2.fromScale(.66,.012),
+                UDim2.fromScale(.17,.24+n*.15),
+                Color3.fromRGB(187,193,190))
+            line.BackgroundTransparency=.18
+        end
+        for mark=1,3 do
+            local crayon=paintedRectangle(paperArt,
+                "Anonymous original colored pencil motif",
+                UDim2.fromScale(.14+.025*(mark%2),.033),
+                UDim2.fromScale(.19+(mark-1)*.20,
+                    .115+((artStyle+mark)%3)*.038),
+                pencilTints[((artStyle+mark-2)%#pencilTints)+1])
+            crayon.Rotation=((i+mark*7+22)%43)-21
+            crayon.BackgroundTransparency=.12
+        end
+    end
+
+    -- No open sky: a flat ivory acoustical ceiling and five pale, slim
+    -- fluorescent diffusers with real downward SurfaceLight children.
+    hp("Photo hall ivory ceiling",Vector3.new(108,.36,22.5),
+        CFrame.new(0,13.2,38),Color3.fromRGB(237,236,226),
+        Enum.Material.SmoothPlastic,false)
+    for _,x in ipairs({-43,-22,0,22,43}) do
+        local lens=hp("Photo hall fluorescent diffuser",
+            Vector3.new(6.14,.08,2.04),CFrame.new(x,12.85,38),
+            Color3.fromRGB(244,242,232),Enum.Material.Glass,false)
+        lens.Transparency=.06
+        local rim=imageSurface(lens,"Inset silver fluorescent rim",
+            Enum.NormalId.Bottom,614,204)
+        paintedRectangle(rim,"Frosted diffuser center",
+            UDim2.fromScale(.92,.85),UDim2.fromScale(.04,.075),
+            Color3.fromRGB(242,240,228))
+        local light=Instance.new("SurfaceLight")
+        light.Face=Enum.NormalId.Bottom
+        light.Color=Color3.fromRGB(252,246,235)
+        light.Brightness=.42;light.Range=19;light.Shadows=false
+        light.Parent=lens
+    end
+
+    -- The photographs' mustard-yellow paned end window is a DEFINING
+    -- architectural landmark, not merely a flat label on the far wall.
+    -- The original UI-only motif was invisible to source-derived 3D QA.
+    -- Build a shallow, 17-Part native facade on the INNER face of the
+    -- EXISTING solid end cap (interior face x=-53.55). Never create a
+    -- genuine opening to outside: the six photos do not establish one.
+    -- Every frame, pane and sun ray is noncolliding and nonquerying.
+    local endWindowGlass=hp("Photo hall yellow window glazing",
+        Vector3.new(.12,8.32,14.68),CFrame.new(-53.38,7.35,38),
+        Color3.fromRGB(55,69,68),Enum.Material.Glass,false)
+    endWindowGlass.Transparency=.14
+    endWindowGlass.Reflectance=.045
+    endWindowGlass:SetAttribute("ArchitecturalFacade","Enclosed end-cap glazing")
+
+    local yellow=Color3.fromRGB(214,166,63)
+    local yellowHighlight=Color3.fromRGB(227,187,86)
+    for _,y in ipairs({3.12,11.58}) do
+        hp("Photo hall yellow sash horizontal",
+            Vector3.new(.28,.30,15.24),CFrame.new(-53.19,y,38),
+            yellow,Enum.Material.Wood,false)
+    end
+    for _,z in ipairs({30.38,45.62}) do
+        hp("Photo hall yellow sash vertical",
+            Vector3.new(.28,8.76,.30),CFrame.new(-53.19,7.35,z),
+            yellow,Enum.Material.Wood,false)
+    end
+    for _,z in ipairs({35.45,40.55}) do
+        hp("Photo hall yellow glazed divider vertical",
+            Vector3.new(.18,8.32,.15),CFrame.new(-53.12,7.35,z),
+            yellowHighlight,Enum.Material.Wood,false)
+    end
+    hp("Photo hall yellow glazed divider horizontal",
+        Vector3.new(.18,.16,14.72),CFrame.new(-53.12,7.42,38),
+        yellowHighlight,Enum.Material.Wood,false)
+
+    -- Nine separate original sunburst primitives (one circular center,
+    -- eight radial short rays). These are anonymous geometric ornament:
+    -- no photographed child, student paper, asset ID or personal data.
+    local sun=hp("Photo hall dimensional sunburst center",
+        Vector3.new(.18,.76,.76),CFrame.new(-53.03,9.55,38),
+        Color3.fromRGB(243,208,51),Enum.Material.SmoothPlastic,false)
+    sun.Shape=Enum.PartType.Ball
+    for i=0,7 do
+        local angle=i*math.pi/4
+        hp("Photo hall dimensional sunburst ray",
+            Vector3.new(.11,.13,.54),
+            CFrame.new(-53.02,9.55+math.sin(angle)*1.01,
+                38+math.cos(angle)*1.01)*CFrame.Angles(-angle,0,0),
+            Color3.fromRGB(242,204,65),Enum.Material.SmoothPlastic,false)
+    end
+    -- Window assembly adds 17 static Parts: low-cost enough to remain
+    -- within the source-built 3,100 mobile Part cap. 3D source renders
+    -- will show the landmark even without third-party SurfaceGui support.
+    local noticeGui=imageSurface(rightCap,"Original school noticeboard",
+        Enum.NormalId.Left,450,260)
+    local board=paintedRectangle(noticeGui,"Oak school announcement frame",
+        UDim2.fromOffset(120,85),UDim2.fromOffset(165,38),darkOak)
+    paintedRectangle(board,"Cork facing",
+        UDim2.fromScale(.93,.90),UDim2.fromScale(.035,.05),
+        Color3.fromRGB(155,124,94))
+    for _,x in ipairs({.12,.56}) do
+        paintedRectangle(board,"Anonymous pale school flyer",
+            UDim2.fromScale(.32,.57),UDim2.fromScale(x,.21),
+            Color3.fromRGB(241,237,221))
+    end
+    -- Photographed children, event-day money, and food-drive bags remain
+    -- outside this public place and repository.
 end
 
 local function buildTeacherEntry(root: Instance)
@@ -1721,19 +2264,79 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,8.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,22.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door header",Vector3.new(1.3,1.0,15.4),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    local door=part(root,"Open staff classroom door",Vector3.new(.55,10,6.6),CFrame.new(35.9,5.3,20.2)*CFrame.Angles(0,math.rad(58),0),Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
-    local glass=part(root,"Staff door glass",Vector3.new(.18,4.7,3.1),door.CFrame*CFrame.new(-.35,1.6,0),Color3.fromRGB(206,219,216),Enum.Material.Glass,false);glass.Transparency=.28
-    part(root,"Side hall floor",Vector3.new(18,.5,20),CFrame.new(45.5,.25,15.5),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    -- The sole route from Emma's classroom into the long photo hallway
+    -- uses this left/staff entrance. The old transparent glass was overlaid
+    -- on a FULL-HEIGHT OPAQUE WOOD slab, so no light could pass through it.
+    -- Preserve the original 58-degree open-leaf hinge and 6.6-stud width;
+    -- repurpose the existing door Part into the lower solid panel. Construct
+    -- a real open aperture ABOVE it with just six additional noncolliding
+    -- wood/metal pieces, staying below the 3,100-Part mobile ceiling.
+    local leafCF=CFrame.new(35.9,5.3,20.2)*
+        CFrame.Angles(0,math.rad(58),0)
+    local frameOak=Color3.fromRGB(115,80,52)
+    local door=part(root,"Open staff classroom door",
+        Vector3.new(.55,4.30,6.6),leafCF*CFrame.new(0,-2.85,0),
+        Color3.fromRGB(124,87,57),Enum.Material.Wood,false)
+    door:SetAttribute("StaffDoorPanel","Lower opaque wood; upper true glass aperture")
+    local glass=part(root,"Staff door glass",
+        Vector3.new(.16,4.32,4.60),leafCF*CFrame.new(-.38,1.64,0),
+        Color3.fromRGB(206,219,216),Enum.Material.Glass,false)
+    glass.Transparency=.28
+    glass.Reflectance=.025
+    glass.CastShadow=false
+    glass:SetAttribute("GlazedOpening","No full-height opaque wood behind the glass")
+    -- Continuous sill and head rail frame a genuinely empty glass opening.
+    -- The original bottom/top of the leaf stay at y=.30 and y=10.30.
+    for _,rail in ipairs({
+        {type="Sill",y=-.65,height=.40},
+        {type="Head",y=4.35,height=1.40},
+    }) do
+        local p=part(root,"Staff door oak rail",
+            Vector3.new(.55,rail.height,6.6),
+            leafCF*CFrame.new(0,rail.y,0),
+            frameOak,Enum.Material.Wood,false)
+        p:SetAttribute("StaffDoorRail",rail.type)
+    end
+    for _,dz in ipairs({-2.80,2.80}) do
+        part(root,"Staff door oak side stile",
+            Vector3.new(.54,4.32,1.00),
+            leafCF*CFrame.new(-.02,1.64,dz),
+            frameOak,Enum.Material.Wood,false)
+    end
+    -- Thin real oak crossbar and single vertical brass pull read correctly
+    -- in the 3D source renderer (unlike a SurfaceGui-only door drawing).
+    part(root,"Staff door glazing crossbar",
+        Vector3.new(.16,.18,4.64),leafCF*CFrame.new(-.49,1.64,0),
+        Color3.fromRGB(122,86,56),Enum.Material.Wood,false)
+    part(root,"Staff door brass pull",
+        Vector3.new(.15,.72,.16),leafCF*CFrame.new(-.50,-1.20,-2.60),
+        Color3.fromRGB(190,160,100),Enum.Material.Metal,false)
+    -- The photo corridor starts at z=26.75; the old staff hallway floor
+    -- ended at z=25.5, leaving a 1.25-stud unsupported gap at the ONLY
+    -- classroom-to-hall exit. Extend the existing floor north to z=27.30
+    -- without adding a physical Part. Keep its south edge at z=5.50.
+    -- Its top lies .02 stud below the main polished tile to avoid
+    -- coplanar overlapping surfaces flickering in native Roblox.
+    part(root,"Side hall floor",Vector3.new(18,.48,21.8),
+        CFrame.new(45.5,.24,16.4),Color3.fromRGB(67,68,66),Enum.Material.Slate)
     part(root,"Staff doorway brass threshold",
         Vector3.new(.24,.045,13.35),CFrame.new(37.10,.556,15.5),
         Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
     part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Side hall ceiling",Vector3.new(18,.4,20),CFrame.new(45.5,13,15.5),Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
-    -- Both z ends were entirely open: real iPhone video at 5-7 seconds
-    -- revealed blue sky beside the classroom door and a dangling chair rail.
-    -- Cap only the OUTER corridor ends, not the entrance through x=37.
-    for _,endZ in ipairs({5.65,25.35}) do
+    -- The original side ceiling stopped at the SAME z=25.5 seam and
+    -- exposed sky above the new turning route. Extend it to z=27.30,
+    -- overlapping the ivory photo hall roof (begins z=26.75).
+    -- Its underside is .02 stud below the main ceiling, preventing
+    -- exactly coplanar surfaces while preserving visual enclosure.
+    part(root,"Side hall ceiling",Vector3.new(18,.36,21.8),
+        CFrame.new(45.5,13.18,16.4),
+        Color3.fromRGB(224,226,223),Enum.Material.SmoothPlastic,false)
+    -- Leave the NORTH end open into the main 108-stud corridor: previously
+    -- the cap at z=25.35 completely blocked the screenshot's LEFT doorway
+    -- from reaching the photographed hall behind the classroom.
+    -- The south z=5.65 end stays a solid, finished boundary.
+    for _,endZ in ipairs({5.65}) do
         local interior = endZ < 15.5 and .53 or -.53
         part(root,"Side corridor end wall",Vector3.new(18,13,.80),
             CFrame.new(45.5,6.5,endZ),P.blueSoft,Enum.Material.SmoothPlastic,true)
@@ -1744,6 +2347,10 @@ local function buildTeacherEntry(root: Instance)
             CFrame.new(45.5,4.30,endZ+interior*1.12),
             P.blue,Enum.Material.Wood,false)
     end
+    -- Bridge the small exterior-wall seam where staff hall meets the
+    -- photo hallway, without narrowing the turning passage.
+    part(root,"Left hallway outside corner return",Vector3.new(.88,13,2.20),
+        CFrame.new(54.12,6.5,26.26),P.blueSoft,Enum.Material.SmoothPlastic,true)
     -- Facing-wall school notices break up the blank corridor without
     -- claiming a photographed or navigable room beyond the capped hall.
     part(root,"Staff hall framed announcement board",Vector3.new(.16,3.35,5.90),
@@ -1963,10 +2570,7 @@ function World.build()
     -- Keep it separate from gameplay, board content and curriculum systems.
     ArtPass.decorate(root)
 
-    -- Lived-in details. The original left reading-corner plant's broad
-    -- leaves grazed the A-Z activity rug by .02 stud in the source render.
-    -- A smaller instance of the SAME 6-Part plant clears the rug and
-    -- keeps its original spot; no extra parts or new geometry architecture.
+    -- Lived-in details.
     plant(root,-31,.1,20,.65)
     plant(root,-30,8.2,-29,.55)
     -- Actual classroom photo: the analog white clock hangs on the broad
@@ -2034,30 +2638,32 @@ function World.build()
         CFrame.new(-36.03,11.77,-6.72)*CFrame.Angles(math.rad(48),0,0),
         Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
-    -- The classroom photos show a portable silver fan by the teaching wall.
-    -- A PHOTO-BASED equipment candidate, not proof of its normal-day resting
-    -- location. Exactly fifteen original noncolliding Roblox solids.
+    -- IMG_2910: a low off-white BOX FAN with circular grille, not the
+    -- previously guessed pedestal fan. Keep the same teaching-wall corner;
+    -- thirteen original noncolliding Parts replace the former fifteen.
+    -- Fine concentric grille detail is native UI, not dozens of colliders.
     local fanX,fanZ=31.0,-31.40
-    local silver=Color3.fromRGB(161,168,172)
-    local foot=cylinder(root,"Photo portable fan weighted foot",
-        Vector3.new(.16,1.65,1.65),
-        CFrame.new(fanX,.62,fanZ)*CFrame.Angles(0,0,math.pi/2),
-        Color3.fromRGB(112,117,121),Enum.Material.SmoothPlastic,false)
-    foot.CastShadow=false
-    part(root,"Photo portable fan upright",
-        Vector3.new(.22,2.10,.22),CFrame.new(fanX,1.69,fanZ),
-        Color3.fromRGB(122,127,130),Enum.Material.Metal,false)
-    cylinder(root,"Photo portable fan neck collar",
-        Vector3.new(.36,.42,.42),
-        CFrame.new(fanX,2.67,fanZ)*CFrame.Angles(0,0,math.pi/2),
-        silver,Enum.Material.Metal,false)
-    -- A Cylinder's local-X normal faces -worldZ into the open room.
-    local faceCF=CFrame.new(fanX,3.10,fanZ)*
-        CFrame.Angles(0,math.pi/2,0)
+    local fanIvory=Color3.fromRGB(219,218,205)
+    for _,side in ipairs({-1,1}) do
+        part(root,"Photo box fan housing side",Vector3.new(.23,3.34,.64),
+            CFrame.new(fanX+side*1.555,2.38,fanZ),
+            fanIvory,Enum.Material.SmoothPlastic,false)
+        part(root,"Photo box fan housing rail",Vector3.new(2.88,.23,.64),
+            CFrame.new(fanX,2.38+side*1.555,fanZ),
+            fanIvory,Enum.Material.SmoothPlastic,false)
+        part(root,"Photo box fan floor foot",Vector3.new(.62,.20,.93),
+            CFrame.new(fanX+side*1.14,.60,fanZ),
+            Color3.fromRGB(193,193,181),Enum.Material.SmoothPlastic,false)
+    end
+    part(root,"Photo box fan carry handle",Vector3.new(.90,.13,.22),
+        CFrame.new(fanX,4.11,fanZ),fanIvory,Enum.Material.SmoothPlastic,false)
+    -- Positive local X faces +world Z, toward the classroom rather than
+    -- into the teaching wall. Blades and grille layer in that same direction.
+    local faceCF=CFrame.new(fanX,2.38,fanZ+.20)*
+        CFrame.Angles(0,-math.pi/2,0)
     local back=cylinder(root,"Photo portable fan back guard",
-        Vector3.new(.08,2.70,2.70),faceCF*CFrame.new(-.08,0,0),
-        Color3.fromRGB(193,198,198),Enum.Material.SmoothPlastic,false)
-    back.Transparency=.78
+        Vector3.new(.08,2.94,2.94),faceCF,
+        Color3.fromRGB(120,126,122),Enum.Material.SmoothPlastic,false)
     back.CastShadow=false
     for i=0,2 do
         local blade=part(root,"Photo portable fan blade",
@@ -2070,20 +2676,34 @@ function World.build()
     end
     cylinder(root,"Photo portable fan center hub",
         Vector3.new(.15,.48,.48),faceCF*CFrame.new(.20,0,0),
-        Color3.fromRGB(115,123,125),Enum.Material.Metal,false)
-    for i=0,5 do
-        local spoke=part(root,"Photo portable fan safety grille spoke",
-            Vector3.new(.046,2.58,.052),
-            faceCF*CFrame.new(.30,0,0)*
-                CFrame.Angles(math.rad(i*30),0,0),
-            silver,Enum.Material.Metal,false)
-        spoke.CastShadow=false
-    end
+        fanIvory,Enum.Material.SmoothPlastic,false)
     local front=cylinder(root,"Photo portable fan translucent face",
-        Vector3.new(.025,2.80,2.80),faceCF*CFrame.new(.29,0,0),
-        Color3.fromRGB(213,215,213),Enum.Material.SmoothPlastic,false)
+        Vector3.new(.025,2.98,2.98),faceCF*CFrame.new(.29,0,0),
+        fanIvory,Enum.Material.SmoothPlastic,false)
     front.Transparency=.96
     front.CastShadow=false
+    local grille=Instance.new("SurfaceGui")
+    grille.Name="PhotoBoxFanGrille";grille.Face=Enum.NormalId.Right
+    grille.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    grille.CanvasSize=Vector2.new(384,384);grille.LightInfluence=.4
+    grille.Parent=front
+    for i=0,15 do
+        local spoke=Instance.new("Frame");spoke.Name="FanGrilleSpoke"
+        spoke.Position=UDim2.fromScale(.497,.045)
+        spoke.Size=UDim2.fromScale(.006,.91);spoke.Rotation=i*11.25
+        spoke.BorderSizePixel=0;spoke.BackgroundColor3=fanIvory
+        spoke.Parent=grille
+    end
+    for _,radius in ipairs({.29,.57,.85,.97}) do
+        local ring=Instance.new("Frame");ring.Name="FanGrilleRing"
+        ring.Position=UDim2.fromScale((1-radius)/2,(1-radius)/2)
+        ring.Size=UDim2.fromScale(radius,radius)
+        ring.BackgroundTransparency=1;ring.BorderSizePixel=0;ring.Parent=grille
+        local circle=Instance.new("UICorner")
+        circle.CornerRadius=UDim.new(.5,0);circle.Parent=ring
+        local stroke=Instance.new("UIStroke")
+        stroke.Color=fanIvory;stroke.Thickness=2;stroke.Parent=ring
+    end
 
     -- Warm fluorescent lighting.
     for _,x in ipairs({-18,18}) do
@@ -2101,3 +2721,4 @@ end
 
 -- No teachers, questions, quiz remotes, saved scores, or runtime UI in the replica build.
 return World
+

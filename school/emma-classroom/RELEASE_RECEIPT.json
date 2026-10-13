@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
-  "purpose": "Historical publication receipt only; does not assert the newest branch head is live or approve future publication",
+  "purpose": "Historical verified Roblox publication receipt. Only the recorded exact source SHA is confirmed live; later code edits require another verified publish.",
   "lastConfirmedPublication": {
-    "versionNumber": 77,
-    "sourceCommit": "04d8e318b5ab1bd4ba28aa1f6e8a35ce6cc280db",
-    "workflowRunId": 38013672747,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38013672747",
+    "versionNumber": 83,
+    "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+    "workflowRunId": 38275628548,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38275628548",
     "placeId": "114603280760042",
     "universeId": "10769455759",
-    "mode": "classroom-progress-preview-only",
-    "visualAcceptance": "pending-real-device-review"
+    "mode": "classroom-and-hallway-preview-only",
+    "visualAcceptance": "pending-real-device-review",
+    "binarySha256": "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3"
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "PR #339 head is an unpublished candidate unless a separate verified successful publish receipt establishes otherwise"
+  "nextCandidatePolicy": "This v83 Roblox binary is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
 }

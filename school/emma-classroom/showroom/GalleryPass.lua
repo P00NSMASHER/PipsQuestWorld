@@ -54,7 +54,8 @@ local function printFace(target:BasePart,face:Enum.NormalId,title:string,small:s
     return gui
 end
 
--- Native SurfaceGui gingham, drawn as alternating original colored Frames.
+-- Native SurfaceGui gingham: crossing translucent woven stripes, not a
+-- two-color checkerboard. IMG_2905/2908 show small red/rose/ivory checks.
 -- This uses no photographs, uploaded texture IDs, or hundreds of physical
 -- voxel checks. The independently rendered static preview cannot display
 -- SurfaceGui pixels; visual sign-off requires an actual Roblox phone capture.
@@ -75,18 +76,25 @@ local function gingham(face:BasePart,side:Enum.NormalId,columns:number,rows:numb
     backing.BackgroundColor3=Color3.fromRGB(249,242,229)
     backing.BorderSizePixel=0
     backing.Parent=gui
-    for r=0,rows-1 do
-        for c=0,columns-1 do
-            if (r+c)%2==0 then
-                local check=Instance.new("Frame")
-                check.Name="GinghamRed"
-                check.Size=UDim2.fromScale(1/columns,1/rows)
-                check.Position=UDim2.fromScale(c/columns,r/rows)
-                check.BackgroundColor3=Color3.fromRGB(173,58,60)
-                check.BorderSizePixel=0
-                check.Parent=backing
-            end
-        end
+    -- O(columns+rows) Frames rather than one object per square. Two .42
+    -- transparent strips overlap to produce the darker woven intersections.
+    for c=0,columns-1,2 do
+        local stripe=Instance.new("Frame")
+        stripe.Name="GinghamWarp"
+        stripe.Size=UDim2.fromScale(1/columns,1)
+        stripe.Position=UDim2.fromScale(c/columns,0)
+        stripe.BackgroundColor3=Color3.fromRGB(173,58,60)
+        stripe.BackgroundTransparency=.42
+        stripe.BorderSizePixel=0;stripe.Parent=backing
+    end
+    for r=0,rows-1,2 do
+        local stripe=Instance.new("Frame")
+        stripe.Name="GinghamWeft"
+        stripe.Size=UDim2.fromScale(1,1/rows)
+        stripe.Position=UDim2.fromScale(0,r/rows)
+        stripe.BackgroundColor3=Color3.fromRGB(173,58,60)
+        stripe.BackgroundTransparency=.42
+        stripe.BorderSizePixel=0;stripe.Parent=backing
     end
 end
 
@@ -223,7 +231,7 @@ local function showcaseBoards(root:Instance,group:Instance)
     local top=piece(group,"Photo gingham word wall table top",
         Vector3.new(4.2,.22,7.6),CFrame.new(center),
         ivory,Enum.Material.SmoothPlastic,true)
-    gingham(top,Enum.NormalId.Top,6,10)
+    gingham(top,Enum.NormalId.Top,12,22)
     for _,dx in ipairs({-1.71,1.71}) do
         for _,dz in ipairs({-3.32,3.32}) do
             piece(group,"Photo gingham table steel leg",
@@ -236,22 +244,22 @@ local function showcaseBoards(root:Instance,group:Instance)
         Vector3.new(.07,1.24,7.54),
         CFrame.new(center.X-2.065,2.21,center.Z),
         ivory,Enum.Material.Fabric,false)
-    gingham(left,Enum.NormalId.Left,10,3)
+    gingham(left,Enum.NormalId.Left,22,4)
     local right=piece(group,"Photo gingham table wall apron",
         Vector3.new(.07,1.24,7.54),
         CFrame.new(center.X+2.065,2.21,center.Z),
         ivory,Enum.Material.Fabric,false)
-    gingham(right,Enum.NormalId.Right,10,3)
+    gingham(right,Enum.NormalId.Right,22,4)
     local near=piece(group,"Photo gingham table near apron",
         Vector3.new(4.10,1.24,.07),
         CFrame.new(center.X,2.21,center.Z-3.745),
         ivory,Enum.Material.Fabric,false)
-    gingham(near,Enum.NormalId.Front,6,3)
+    gingham(near,Enum.NormalId.Front,12,4)
     local far=piece(group,"Photo gingham table far apron",
         Vector3.new(4.10,1.24,.07),
         CFrame.new(center.X,2.21,center.Z+3.745),
         ivory,Enum.Material.Fabric,false)
-    gingham(far,Enum.NormalId.Back,6,3)
+    gingham(far,Enum.NormalId.Back,12,4)
 
     local smart=root:FindFirstChild("Interactive smartboard")
     if smart and smart:IsA("BasePart") then
@@ -427,6 +435,83 @@ local function physicalDetails(root:Instance,group:Instance)
     end
 end
 
+-- IMG_2903/2905/2908/2909 show THREE separate classroom carpets: the
+-- round alphabet sun, black spots, and a rectangular blue alphabet sun.
+-- Restore the missing third carpet as one low-profile noncolliding Part.
+-- Original vector motifs only: never turn an uploaded photo into a texture.
+-- Its exact permanent position is not measurable from cheer-day photos;
+-- use the clear teaching-floor area, preserving desk/doorway footprints.
+local function rectangularPhotoRug(group:Instance)
+    local rug=piece(group,"Photo rectangular alphabet sun rug",
+        Vector3.new(14,.08,9),CFrame.new(-8,.545,-24),
+        Color3.fromRGB(57,103,159),Enum.Material.Fabric,false)
+    rug.CastShadow=false
+    local gui=Instance.new("SurfaceGui")
+    gui.Name="OriginalRectangularRugArt";gui.Face=Enum.NormalId.Top
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(1120,720)
+    gui.LightInfluence=.30;gui.Parent=rug
+    local function shape(name:string,x:number,y:number,w:number,h:number,
+        color:Color3,round:boolean?):Frame
+        local f=Instance.new("Frame");f.Name=name
+        f.Position=UDim2.fromScale(x,y);f.Size=UDim2.fromScale(w,h)
+        f.BackgroundColor3=color;f.BorderSizePixel=0;f.Parent=gui
+        if round then
+            local corner=Instance.new("UICorner")
+            corner.CornerRadius=UDim.new(.5,0);corner.Parent=f
+        end
+        return f
+    end
+    local function label(parent:Instance,name:string,words:string,size:number)
+        local t=Instance.new("TextLabel");t.Name=name;t.Text=words
+        t.Size=UDim2.fromScale(1,1);t.BackgroundTransparency=1
+        t.TextColor3=Color3.fromRGB(21,37,54);t.Font=Enum.Font.GothamBold
+        t.TextScaled=false;t.TextSize=size;t.TextWrapped=false;t.Parent=parent
+    end
+    shape("RugBoundEdge",0,0,1,1,Color3.fromRGB(32,37,44))
+    shape("RugBlueField",.018,.028,.964,.944,Color3.fromRGB(55,109,170))
+    local colors={Color3.fromRGB(215,97,71),Color3.fromRGB(237,184,74),
+        Color3.fromRGB(141,183,142),Color3.fromRGB(107,153,193),
+        Color3.fromRGB(173,135,167),Color3.fromRGB(225,199,124)}
+    local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    -- Clockwise perimeter: 9 upper, 4 right, 9 lower, 4 left; no duplicate
+    -- corners, full A-Z once, with all text upright from the room approach.
+    for i=1,26 do
+        local x,y,w,h
+        if i<=9 then x=.026+(i-1)*.1053;y=.040;w=.103;h=.120
+        elseif i<=13 then x=.895;y=.171+(i-10)*.165;w=.077;h=.157
+        elseif i<=22 then x=.026+(22-i)*.1053;y=.840;w=.103;h=.120
+        else x=.026;y=.171+(26-i)*.165;w=.077;h=.157 end
+        local cell=shape("RectRugAlphabetCell",x,y,w,h,colors[(i-1)%6+1])
+        label(cell,"RectRugLetter",string.sub(alphabet,i,i),60)
+    end
+    -- Aspect-correct circles on a 1120x720 rectangular canvas.
+    for i=0,15 do
+        local a=i*math.pi/8
+        local ray=shape("RectRugSunRay",
+            .5+math.cos(a)*.089-.020,
+            .5+math.sin(a)*.1385-.046,.040,.092,
+            i%2==0 and Color3.fromRGB(248,190,59)
+                or Color3.fromRGB(234,142,44),true)
+        ray.Rotation=i*22.5-90
+    end
+    shape("RectRugSun",.436,.4005,.128,.199,Color3.fromRGB(245,181,42),true)
+    for i=1,10 do
+        local a=-math.pi/2+(i-1)*math.pi/5
+        local cx=.5+math.cos(a)*.269
+        local cy=.5+math.sin(a)*.264
+        local cloud=shape("RectRugCloud",cx-.045,cy-.034,.09,.068,
+            Color3.fromRGB(245,242,225),true)
+        shape("RectRugCloudLobe",cx-.033,cy-.055,.048,.0747,
+            Color3.fromRGB(245,242,225),true)
+        shape("RectRugCloudLobe",cx+.002,cy-.051,.041,.0638,
+            Color3.fromRGB(245,242,225),true)
+        -- Label created after the lobes and raised in UI order, not geometry.
+        label(cloud,"RectRugNumber",tostring(i),38)
+        cloud:FindFirstChild("RectRugNumber").ZIndex=3
+    end
+end
+
 function GalleryPass.decorate(root:Instance)
     local group=Instance.new("Folder")
     group.Name="Architectural finishing and classroom storytelling"
@@ -434,6 +519,7 @@ function GalleryPass.decorate(root:Instance)
     showcaseBoards(root,group)
     pupilWork(group)
     physicalDetails(root,group)
+    rectangularPhotoRug(group)
 
     -- Lighting is authored exactly once by Room.applyLighting().
     -- This architectural art pass changes physical details only.
@@ -443,3 +529,4 @@ function GalleryPass.decorate(root:Instance)
 end
 
 return GalleryPass
+
