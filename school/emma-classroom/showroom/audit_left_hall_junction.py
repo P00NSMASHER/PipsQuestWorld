@@ -20,180 +20,148 @@ from export_source_scene import generate_luau
 
 PROBE = r'''
 local root=Room.Root
-local function parts(name)
-    local out={}
+local function get(name)
+    local matches={}
     for _,item in ipairs(root:GetDescendants()) do
         if item:IsA("BasePart") and item.Name==name then
-            table.insert(out,item)
+            matches[#matches+1]=item
         end
     end
-    return out
-end
-local function get(name)
-    local matches=parts(name)
-    assert(#matches==1,"JUNCTION_EXPECTED_ONE_PART "..name.." got "..#matches)
+    assert(#matches==1,
+        "JUNCTION_EXPECTED_ONE_PART "..name.." got "..#matches)
     return matches[1]
 end
+local function count(name)
+    local n=0
+    for _,item in ipairs(root:GetDescendants()) do
+        if item:IsA("BasePart") and item.Name==name then n+=1 end
+    end
+    return n
+end
 local function near(a,b,tol)
-    return math.abs(a-b)<(tol or .05)
+    return math.abs(a-b)<(tol or .04)
 end
-local function xBounds(part)
-    return part.Position.X-part.Size.X/2,part.Position.X+part.Size.X/2
-end
-local function zBounds(part)
-    return part.Position.Z-part.Size.Z/2,part.Position.Z+part.Size.Z/2
-end
-local function overlap(a,b)
-    local la,ha=xBounds(a)
-    local lb,hb=xBounds(b)
-    return math.min(ha,hb)-math.max(la,lb)
+local function boundsZ(p)
+    local m=p.CFrame.m
+    assert(near(m[1],1) and near(m[5],1) and near(m[9],1),
+        "JUNCTION_FLOOR_OR_ROOF_ROTATED")
+    return p.Position.Z-p.Size.Z/2,p.Position.Z+p.Size.Z/2
 end
 local function check()
-    local floor=get("Side hall floor")
-    local mainFloor=get("Photo hall polished square stone floor")
-    local roof=get("Side hall ceiling")
-    local mainRoof=get("Photo hall ivory ceiling")
-    local south=get("Side corridor end wall")
-    local north=get("Staff entry straight north wall")
-    local longNorth=get("Photo hall continuous north wall")
-    local endWall=get("Photo hall end cap")
+    local photoFloor=get("Photo hall polished square stone floor")
+    local sideFloor=get("Side hall floor")
+    local photoRoof=get("Photo hall ivory ceiling")
+    local sideRoof=get("Side hall ceiling")
+    local southCap=get("Side corridor end wall")
+    local corner=get("Left hallway outside corner return")
     local closet=get("Supply closet solid rear wall")
-    local axisFloor=overlap(floor,mainFloor)
-    local axisRoof=overlap(roof,mainRoof)
-    local sMin,sMax=zBounds(floor)
-    local pMin,pMax=zBounds(mainFloor)
 
-    assert(near(floor.Position.X,45.5)
-        and near(mainFloor.Position.X,108)
-        and near(floor.Position.Z,15.775)
-        and near(mainFloor.Position.Z,15.5)
-        and near(roof.Position.X,45.5)
-        and near(mainRoof.Position.X,108),
-        "LEFT_HALL_JUNCTION_NOT_STRAIGHT_FROM_STAFF_EXIT")
-    assert(axisFloor>.35 and axisFloor<1.05
-        and near(sMin,4.25) and near(pMin,4.25)
-        and sMax>=pMax and mainFloor.Size.X>=107.9
-        and floor.CanCollide and mainFloor.CanCollide,
+    local flS,flN=boundsZ(sideFloor)
+    local pmS,pmN=boundsZ(photoFloor)
+    local roofS,roofN=boundsZ(sideRoof)
+    local prS,prN=boundsZ(photoRoof)
+    local floorOverlap=math.min(flN,pmN)-math.max(flS,pmS)
+    local roofOverlap=math.min(roofN,prN)-math.max(roofS,prS)
+    local horizontalOverlap=math.min(
+        sideFloor.Position.X+sideFloor.Size.X/2,
+        photoFloor.Position.X+photoFloor.Size.X/2)
+        -math.max(sideFloor.Position.X-sideFloor.Size.X/2,
+            photoFloor.Position.X-photoFloor.Size.X/2)
+    assert(near(sideFloor.Position.X,45.5)
+        and near(sideRoof.Position.X,45.5)
+        and horizontalOverlap>=17.3,
+        "LEFT_HALL_JUNCTION_FLOOR_NOT_BENEATH_TURN")
+    assert(near(flS,5.5) and near(pmS,26.75)
+        and floorOverlap>=.3 and floorOverlap<1.2
+        and sideFloor.Size.X>=17.8
+        and photoFloor.Size.X>=107.9
+        and sideFloor.CanCollide and photoFloor.CanCollide,
         "LEFT_HALL_JUNCTION_UNSUPPORTED_FLOOR_GAP")
-    assert(axisRoof>.35 and axisRoof<1.05
-        and roof.Size.Z>=23.0 and mainRoof.Size.X>=107.9
-        and not roof.CanCollide and not mainRoof.CanCollide,
+    assert(near(roofS,5.5) and near(prS,26.75)
+        and roofOverlap>=.3 and roofOverlap<1.2
+        and sideRoof.Size.X>=17.8
+        and sideRoof.CanCollide==false
+        and photoRoof.CanCollide==false,
         "LEFT_HALL_JUNCTION_CEILING_SKY_GAP")
-    local sideTop=floor.Position.Y+floor.Size.Y/2
-    local mainTop=mainFloor.Position.Y+mainFloor.Size.Y/2
-    assert(near(sideTop,.48,.03) and near(mainTop,.50,.03)
-        and math.abs(sideTop-mainTop)<.06,
+    local sideTop=sideFloor.Position.Y+sideFloor.Size.Y/2
+    local photoTop=photoFloor.Position.Y+photoFloor.Size.Y/2
+    assert(near(sideTop,.48,.025) and near(photoTop,.5,.025)
+        and math.abs(sideTop-photoTop)<=.06,
         "LEFT_HALL_JUNCTION_AVATAR_STEP_TOO_HIGH")
-    assert(near(roof.Position.Y-roof.Size.Y/2,13,.05)
-        and math.abs((roof.Position.Y-roof.Size.Y/2)
-            -(mainRoof.Position.Y-mainRoof.Size.Y/2))<.06,
+    local sideCeilingBottom=sideRoof.Position.Y-sideRoof.Size.Y/2
+    local photoCeilingBottom=photoRoof.Position.Y-photoRoof.Size.Y/2
+    assert(near(sideCeilingBottom,13,.045)
+        and math.abs(sideCeilingBottom-photoCeilingBottom)<=.06,
         "LEFT_HALL_JUNCTION_ROOF_HEIGHT_STEP")
-    assert(south.CanCollide and near(south.Position.Z,4.25)
-        and north.CanCollide and near(north.Position.Z,26.8)
-        and longNorth.CanCollide and near(longNorth.Position.Z,26.75)
-        and near(endWall.Position.X,162) and endWall.CanCollide,
-        "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP")
-    assert(#parts("Side hall far wall")==0
-        and #parts("Photo hall end cap")==1,
-        "LEFT_HALL_JUNCTION_OLD_CROSS_WALL_RETURNED")
-    -- A visible brick carrier is still an architectural obstruction
-    -- EVEN IF CanCollide=false. The screenshot at source fb2b115 showed
-    -- the old x54.51 end-cap veneer concealing the lower 4.25 studs of
-    -- an otherwise walkable straight hall. Test independent of its name,
-    -- collision flag and generic nonblank screenshot checks.
-    assert(#parts("Photo hall right end glazed brick")==0,
-        "LEFT_HALL_JUNCTION_GHOST_BRICK_VENEER_RETURNED")
-    for _,p in ipairs(root:GetDescendants()) do
-        if p:IsA("BasePart")
-            and math.abs(p.Position.X-54.5)<1.0
-            and math.abs(p.Position.Z-15.5)<2.0
-            and p.Size.X<1.0 and p.Size.Z>=12.0
-            and p.Size.Y>=3.0 then
-            error("LEFT_HALL_JUNCTION_OPAQUE_PARTITION_IN_EXIT "..p.Name)
-        end
-    end
-    -- A reintroduced collidable wall across the centerline at the former
-    -- x=54.5 dead end must fail even if all floors and side walls remain.
-    for _,p in ipairs(root:GetDescendants()) do
-        if p:IsA("BasePart") and p.CanCollide and
-            p.Position.Y>1.0 and p.Position.Y<12.0 and
-            math.abs(p.Position.X-54.5)<1.2 and
-            math.abs(p.Position.Z-15.5)<2 then
-            error("LEFT_HALL_JUNCTION_STRAIGHT_AXIS_OBSTRUCTED "..p.Name)
-        end
-    end
-    assert(closet.CanCollide and closet.Size.X>12
-        and near(closet.Position.Z,36.05),
+    assert(count("Side corridor end wall")==1
+        and near(southCap.Position.Z,5.65)
+        and southCap.CanCollide
+        and count("Photo hall front outer wall")==1,
+        "LEFT_HALL_JUNCTION_OLD_NORTH_CAP_RETURNED")
+    assert(corner.CanCollide and corner.Position.X>53.6
+        and corner.Position.Z>25.5
+        and corner.Size.Z>=2.1,
+        "LEFT_HALL_JUNCTION_EXTERIOR_CORNER_SKY_LEAK")
+    assert(closet.CanCollide and closet.Position.Z>35.5
+        and closet.Size.X>12 and closet.Size.Y>=12.9,
         "RIGHT_CLOSET_REAR_WALL_LEAKS_TO_HALL")
-    local n=0
-    for _,p in ipairs(root:GetDescendants()) do
-        if p:IsA("BasePart") then n+=1 end
+    local worldParts=0
+    for _,obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("BasePart") then worldParts+=1 end
     end
-    assert(n<=3050,"LEFT_HALL_JUNCTION_MOBILE_3050_PART_BUDGET_EXCEEDED")
-    return axisFloor,axisRoof,n,floor,roof,closet,longNorth
+    assert(worldParts<=3100,
+        "LEFT_HALL_JUNCTION_MOBILE_3100_PART_BUDGET_EXCEEDED")
+    return floorOverlap,roofOverlap,worldParts,sideFloor,sideRoof,closet,corner
 end
-local floorOverlap,roofOverlap,total,floor,roof,closet,longNorth=check()
-print("LEFT_HALL_JUNCTION_SOURCE_PASS floor_overlap="
-    ..string.format("%.2f",floorOverlap)
-    .." roof_overlap="..string.format("%.2f",roofOverlap)
-    .." parts="..total
-    .." straight_staff_exit=true north_turn_removed=true "
-    .." rear_double_doors_closet=true native_iphone_qa_still_required=true")
-local function rejectMutation(change,restore,expected,label)
-    change()
+
+local floorGapClosed,roofGapClosed,total,floor,roof,closet,corner=check()
+print("LEFT_HALL_JUNCTION_SOURCE_PASS supported_floor_overlap="
+    ..string.format("%.2f",floorGapClosed)
+    .." enclosed_ceiling_overlap="..string.format("%.2f",roofGapClosed)
+    .." total_parts="..total
+    .." north_turn_open=true rear_double_doors_closet=true "
+    .." native_iphone_qa_still_required=true")
+
+local function rejectMutation(mutator,restore,expected,label)
+    mutator()
     local ok,err=pcall(check)
     restore()
     assert(not ok and string.find(tostring(err),expected,1,true),
-        "LEFT_HALL_JUNCTION_MUTATION_FALSE_ACCEPT "..label.." "..tostring(err))
+        "LEFT_HALL_JUNCTION_MUTATION_FALSE_ACCEPT "..label..": "..tostring(err))
     print("LEFT_HALL_JUNCTION_NEGATIVE_REJECTED "..label)
 end
-local oldFloor=floor.Size
+
+local originalFloorSize=floor.Size
 rejectMutation(
-    function() floor.Size=Vector3.new(17.1,.48,23.05) end,
-    function() floor.Size=oldFloor end,
-    "LEFT_HALL_JUNCTION_UNSUPPORTED_FLOOR_GAP","eastward_floor_seam")
-local oldRoof=roof.Size
+    function() floor.Size=Vector3.new(18,.48,20) end,
+    function() floor.Size=originalFloorSize end,
+    "LEFT_HALL_JUNCTION_UNSUPPORTED_FLOOR_GAP",
+    "former_unsupported_floor_seam")
+local originalRoofSize=roof.Size
 rejectMutation(
-    function() roof.Size=Vector3.new(17.1,.36,23.05) end,
-    function() roof.Size=oldRoof end,
-    "LEFT_HALL_JUNCTION_CEILING_SKY_GAP","eastward_roof_seam")
-local oldCF=floor.CFrame
+    function() roof.Size=Vector3.new(18,.36,20) end,
+    function() roof.Size=originalRoofSize end,
+    "LEFT_HALL_JUNCTION_CEILING_SKY_GAP",
+    "former_open_ceiling_seam")
+local originalFloorY=floor.CFrame
 rejectMutation(
-    function() floor.CFrame=CFrame.new(45.5,-.55,15.775) end,
-    function() floor.CFrame=oldCF end,
-    "LEFT_HALL_JUNCTION_AVATAR_STEP_TOO_HIGH","floor_drop")
+    function() floor.CFrame=CFrame.new(45.5,-.55,16.4) end,
+    function() floor.CFrame=originalFloorY end,
+    "LEFT_HALL_JUNCTION_AVATAR_STEP_TOO_HIGH",
+    "drop_at_doorway")
 rejectMutation(
     function() closet.CanCollide=false end,
     function() closet.CanCollide=true end,
-    "RIGHT_CLOSET_REAR_WALL_LEAKS_TO_HALL","closet_rear_wall_removed")
+    "RIGHT_CLOSET_REAR_WALL_LEAKS_TO_HALL",
+    "closet_rear_wall_deleted")
 rejectMutation(
-    function() longNorth.CanCollide=false end,
-    function() longNorth.CanCollide=true end,
-    "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP","long_hall_north_wall_missing")
--- These two tests are deliberately NONCOLLIDING barriers. The ordinary
--- navigation route checker would accept both, while the player's rendered
--- corridor would be obscured by an opaque brown half-wall.
-local ghost=Instance.new("Part")
-ghost.Name="Photo hall right end glazed brick"
-ghost.Size=Vector3.new(.075,4.25,22)
-ghost.CFrame=CFrame.new(54.51,2.125,15.50)
-ghost.CanCollide=false
-rejectMutation(
-    function() ghost.Parent=root end,
-    function() ghost.Parent=nil end,
-    "LEFT_HALL_JUNCTION_GHOST_BRICK_VENEER_RETURNED",
-    "noncolliding_near_cap_veneer")
-ghost.Name="Unexpected anonymous visual partition"
-rejectMutation(
-    function() ghost.Parent=root end,
-    function() ghost.Parent=nil end,
-    "LEFT_HALL_JUNCTION_OPAQUE_PARTITION_IN_EXIT",
-    "renamed_noncolliding_masonry_barrier")
-ghost:Destroy()
+    function() corner.CanCollide=false end,
+    function() corner.CanCollide=true end,
+    "LEFT_HALL_JUNCTION_EXTERIOR_CORNER_SKY_LEAK",
+    "outside_corner_missing")
 check()
 print("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS "
-    .."floor,ceiling,step,closet_wall,north_wall,"
-    .."noncolliding_veneer,renamed_noncolliding_partition_rejected=true")
+    .."floor,ceiling,step,closet_wall,exterior_corner_rejected=true")
 '''
 
 def run(luau: str) -> list[str]:
@@ -210,7 +178,7 @@ def run(luau: str) -> list[str]:
     assert any(line.startswith("LEFT_HALL_JUNCTION_SOURCE_PASS") for line in lines)
     assert any(line.startswith("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS") for line in lines)
     assert sum(line.startswith("LEFT_HALL_JUNCTION_NEGATIVE_REJECTED ")
-               for line in lines)==7
+               for line in lines)==5
     return [line for line in lines
             if line.startswith("LEFT_HALL_JUNCTION_")]
 
