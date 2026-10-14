@@ -592,6 +592,8 @@ local function buildClassroomTexture(root: Instance)
     for _,x in ipairs({-31,-25}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
     local cloth=part(root,"Prayer table cloth",Vector3.new(7.4,.12,3.1),CFrame.new(-28,3.48,-27),Color3.fromRGB(64,104,77),Enum.Material.Fabric,false)
     cloth.Transparency=.03
+    part(root,"Prayer cross vertical",Vector3.new(.45,3,.28),CFrame.new(-28,5.2,-27),Color3.fromRGB(112,77,48),Enum.Material.Wood,false)
+    part(root,"Prayer cross horizontal",Vector3.new(1.8,.45,.28),CFrame.new(-28,5.7,-27),Color3.fromRGB(112,77,48),Enum.Material.Wood,false)
     book(root,-30,3.72,-27,Color3.fromRGB(92,61,42),0)
 
 
@@ -1300,57 +1302,52 @@ local function buildFrontWall(root: Instance)
     part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-6.6,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
     -- IMG_2909/2910: the modern white-framed touch display stands on a
     -- wheeled steel support in front of the permanent teaching wall.
-    -- Match the compact white Ricoh-style display in the supplied reference:
-    -- narrower than the chalkboard, slightly shorter, with a central pedestal
-    -- and four small casters.
+    -- Keep its screen proportions but mount it visibly in front of the wall on
+    -- a compact, self-supporting rolling cart.
     -- Every newly authored cart element is noncolliding and contains no script.
     -- Real IMG_2909/2910 display has a substantial off-white molded frame;
     -- the previous navy 0.25-stud edge read as a generic dark rectangle.
     -- Reuse the existing noncolliding backing Part, no new geometry.
-    part(root,"Smartboard white composite bezel",Vector3.new(11.80,6.45,.24),
-        CFrame.new(5.2,8.0,-30.55),
+    part(root,"Smartboard white composite bezel",Vector3.new(19.85,7.27,.24),
+        CFrame.new(5.2,8.2,-30.55),
         Color3.fromRGB(242,244,240),Enum.Material.SmoothPlastic,false)
-    for _,x in ipairs({-.68,11.08}) do
-        part(root,"Smartboard molded side depth",Vector3.new(.22,6.26,.62),
-            CFrame.new(x,8.0,-30.82),Color3.fromRGB(213,218,216),
+    for _,x in ipairs({-4.68,15.08}) do
+        part(root,"Smartboard molded side depth",Vector3.new(.22,7.08,.62),
+            CFrame.new(x,8.2,-30.82),Color3.fromRGB(213,218,216),
             Enum.Material.SmoothPlastic,false)
     end
-    part(root,"Smartboard pen tray",Vector3.new(5.8,.22,.65),
-        CFrame.new(5.2,4.70,-29.88),Color3.fromRGB(208,211,209),
+    part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),
+        CFrame.new(5.2,4.61,-29.88),Color3.fromRGB(208,211,209),
         Enum.Material.Metal,false)
-    local smart=part(root,"Interactive smartboard",Vector3.new(11.10,5.75,.35),
-        CFrame.new(5.2,8.0,-30.25),Color3.fromRGB(225,235,237),
+    local smart=part(root,"Interactive smartboard",Vector3.new(18.85,6.35,.35),
+        CFrame.new(5.2,8.2,-30.25),Color3.fromRGB(238,243,241),
         Enum.Material.Glass,false);smart.Transparency=.02
-    for _,dx in ipairs({-3.0,3.0}) do
+    for _,dx in ipairs({-5.1,5.1}) do
         local supportX=5.2+dx
-        part(root,"Mobile smartboard support post",Vector3.new(.22,3.75,.24),
-            CFrame.new(supportX,2.75,-30.75),
+        part(root,"Mobile smartboard support post",Vector3.new(.25,4.35,.26),
+            CFrame.new(supportX,2.85,-30.75),
             Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
         part(root,"Mobile smartboard mounting collar",Vector3.new(.72,.36,.35),
-            CFrame.new(supportX,4.55,-30.72),
+            CFrame.new(supportX,5.0,-30.72),
             Color3.fromRGB(172,180,181),Enum.Material.Metal,false)
-        part(root,"Mobile smartboard rolling foot",Vector3.new(.30,.18,2.45),
+        part(root,"Mobile smartboard rolling foot",Vector3.new(.30,.18,2.70),
             CFrame.new(supportX,.79,-30.72),
             Color3.fromRGB(106,113,117),Enum.Material.Metal,false)
-        for _,casterZ in ipairs({-31.68,-29.76}) do
+        for _,casterZ in ipairs({-31.77,-29.67}) do
             cylinder(root,"Mobile smartboard caster",Vector3.new(.22,.48,.48),
                 CFrame.new(supportX,.73,casterZ),
                 Color3.fromRGB(57,61,65),Enum.Material.SmoothPlastic,false)
         end
     end
-    part(root,"Mobile smartboard pedestal",Vector3.new(3.15,3.15,.34),
-        CFrame.new(5.2,2.72,-30.87),Color3.fromRGB(151,158,160),Enum.Material.Metal,false)
-    part(root,"Mobile smartboard equipment shelf",Vector3.new(6.40,.65,1.15),
-        CFrame.new(5.2,1.18,-30.57),Color3.fromRGB(145,151,153),Enum.Material.Metal,false)
-    part(root,"Mobile smartboard cross brace",Vector3.new(6.5,.20,.22),
-        CFrame.new(5.2,1.02,-30.82),
+    part(root,"Mobile smartboard cross brace",Vector3.new(10.5,.20,.22),
+        CFrame.new(5.2,2.8,-30.82),
         Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
     -- Static architectural smartboard. GalleryPass supplies a non-interactive display.
 
 
-    -- The room has one modest cross, centered above the chalkboard alphabet.
-    part(root,"Center chalkboard cross vertical",Vector3.new(.42,1.65,.28),CFrame.new(5.2,16.10,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
-    part(root,"Center chalkboard cross horizontal",Vector3.new(1.25,.38,.28),CFrame.new(5.2,16.35,-33.54),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    -- Cross, motto, alphabet strip and classroom values from the target concept.
+    part(root,"Classroom cross vertical",Vector3.new(1,4.8,.45),CFrame.new(32,10,-33.9),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    part(root,"Classroom cross horizontal",Vector3.new(3.5,1,.45),CFrame.new(32,10.7,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
     -- Keep the detailed illustrated phonics cards. The generic navy alphabet
     -- strip that duplicated them has been removed.
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -1611,13 +1608,13 @@ local function buildTeacherDesk(root: Instance)
 
 end
 
--- Teacher's annotated weekly board, clear of the chalkboard frame.
+-- Teacher's annotated weekly board, placed between the Smartboard and cross.
 -- All small paper layers are noncolliding and sit on the room-facing cork side.
 -- The lesson print is atmospheric, not connected to any study authority.
 local function buildTeacherPlanningWall(root: Instance)
     -- Pull the complete planner forward of the chalkboard stile so the wood
     -- frame cannot visually cut through the paper sheets.
-    local x,y,z=25.20,8.90,-33.35
+    local x,y,z=22.65,8.90,-33.35
     part(root,"Teacher planning board shallow oak back",
         Vector3.new(9.4,6.4,.16),CFrame.new(x,y,z-.17),
         Color3.fromRGB(120,84,57),Enum.Material.Wood,false)
@@ -2733,9 +2730,7 @@ function World.build()
 
     -- Lived-in details.
     plant(root,-31,.1,20,.65)
-    -- Supported on the rear corner of the activity table, clear of the book
-    -- and the nearby rolling flipchart.
-    plant(root,-30.65,3.55,-25.75,.55)
+    plant(root,-30,8.2,-29,.55)
     -- Actual classroom photo: the analog white clock hangs on the broad
     -- yellow WALL PIER between the two navy-curtained windows, not over
     -- the front chalkboard. Reuse the existing FIVE Parts with no new clock

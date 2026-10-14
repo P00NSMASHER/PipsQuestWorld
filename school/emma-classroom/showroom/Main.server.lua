@@ -16,19 +16,7 @@ assert(benulis,"Mrs. Benulis showroom profile is required")
 local teacher=StaffModel.create(benulis)
 teacher.Name="Mrs. Benulis - Board"
 teacher:SetAttribute("ShowroomStationaryTeacher",true)
--- This single showroom teacher should read as the adult in the supplied
--- portrait, not at the smaller shared staff-preview scale.
-teacher:ScaleTo(1.06)
 teacher:PivotTo(CFrame.new(-11,3.15,-29)*CFrame.Angles(0,math.pi,0))
-local lowest=math.huge
-for _,item in ipairs(teacher:GetDescendants()) do
-    if item:IsA("BasePart") then
-        lowest=math.min(lowest,item.Position.Y-item.Size.Y/2)
-    end
-end
-if lowest<math.huge then
-    teacher:PivotTo(teacher:GetPivot()+Vector3.new(0,.52-lowest,0))
-end
 teacher.Parent=Room.Root
 -- Owner-created GLB models replace primitive visuals ONLY after authorized
 -- Roblox model IDs load successfully. Otherwise the complete room is intact.
