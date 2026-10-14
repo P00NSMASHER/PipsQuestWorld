@@ -22,6 +22,7 @@ HEX64 = re.compile(r"[0-9a-f]{64}")
 IMMUTABLE_PUBLISH_FIELDS = (
     "sourceCommit", "workflowRunId", "workflowUrl", "placeId",
     "universeId", "mode", "visualAcceptance", "binarySha256",
+    "publicationAuthorityEvidence", "releaseAcceptance",
 )
 # One independently verified historical typo correction. This is deliberately
 # exact and non-general: it cannot authorize another version, run, binary, or
@@ -57,12 +58,27 @@ def validate_receipt(data: dict) -> dict:
         "Unknown classroom publication mode"
     )
     assert latest.get("visualAcceptance") == "pending-real-device-review"
+    assert latest.get("publicationAuthorityEvidence") == (
+        "not-established-in-repository"
+    ), "Repository evidence must not invent publication authority"
+    assert latest.get("releaseAcceptance") == "HOLD", (
+        "Unaccepted v94 preview must remain HOLD"
+    )
     assert latest.get("workflowUrl") == (
         "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
         + str(latest["workflowRunId"])
     ), "Unrelated or unaudited workflow URL"
     assert data.get("productionFurnitureMeshesEnabled") is False
     assert data.get("nativeIphoneAcceptanceVerified") is False
+    accepted = data.get("lastAcceptedPreview")
+    assert accepted == {
+        "versionNumber": 83,
+        "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+        "productParentCommit": "a9c8ec16180c881cc8b13d60c3ece06162b32957",
+        "workflowRunId": 38275628548,
+        "binarySha256":
+            "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
+    }, "Last accepted preview evidence changed"
     assert "unpublished candidate" in data.get("nextCandidatePolicy", "").lower(), (
         "Historical preview cannot attest that new PR source has been published"
     )
@@ -181,6 +197,10 @@ def audit(compare_base: Path | None = None) -> None:
     assert assets["universeId"] == latest["universeId"]
     assert assets["rootPlaceId"] == latest["placeId"]
 
+    unsafe_publisher = ROOT / ".github/workflows/publish-emma-current.yml"
+    assert not unsafe_publisher.exists(), (
+        "Unguarded release-branch push publisher is still active"
+    )
     workflow = (ROOT / ".github/workflows/publish-emma-classroom.yml").read_text(
         encoding="utf-8"
     )
@@ -237,6 +257,8 @@ def self_test() -> None:
         ("binarySha256", "not-a-real-256-bit-digest"),
         ("workflowRunId", -1),
         ("visualAcceptance", "approved"),
+        ("publicationAuthorityEvidence", "owner-approved-without-evidence"),
+        ("releaseAcceptance", "ACCEPTED"),
         ("mode", "legacy-neighborhood-game"),
     )
     for field, broken in cases:
@@ -247,6 +269,14 @@ def self_test() -> None:
         except AssertionError:
             continue
         raise AssertionError("Tampered release receipt accepted: " + field)
+    accepted_tamper = copy.deepcopy(original)
+    accepted_tamper["lastAcceptedPreview"]["versionNumber"] = 94
+    try:
+        validate_receipt(accepted_tamper)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Accepted-preview history substitution was accepted")
     for field in ("productionFurnitureMeshesEnabled", "nativeIphoneAcceptanceVerified"):
         tampered = copy.deepcopy(original)
         tampered[field] = True
@@ -334,8 +364,9 @@ def self_test() -> None:
         pass
     else:
         raise AssertionError("False native iPhone approval accepted")
-    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, activation, "
-          "v81_rollback, same_version_source_run_hash_swap, native_approval_rejected")
+    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, authority, hold, "
+          "accepted_preview, activation, v81_rollback, "
+          "same_version_source_run_hash_swap, native_approval_rejected")
 
 
 if __name__ == "__main__":
