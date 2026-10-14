@@ -39,7 +39,7 @@ KNOWN_RECEIPT_CORRECTIONS = {
 }
 
 
-def validate_receipt(data: dict) -> dict:
+def validate_receipt(data: dict, *, require_incident_fields: bool = True) -> dict:
     assert data.get("schemaVersion") == 1, "Unknown release receipt schema"
     latest = data.get("lastConfirmedPublication")
     assert isinstance(latest, dict), "Missing recorded publication"
@@ -58,27 +58,29 @@ def validate_receipt(data: dict) -> dict:
         "Unknown classroom publication mode"
     )
     assert latest.get("visualAcceptance") == "pending-real-device-review"
-    assert latest.get("publicationAuthorityEvidence") == (
-        "not-established-in-repository"
-    ), "Repository evidence must not invent publication authority"
-    assert latest.get("releaseAcceptance") == "HOLD", (
-        "Unaccepted v94 preview must remain HOLD"
-    )
+    if require_incident_fields:
+        assert latest.get("publicationAuthorityEvidence") == (
+            "not-established-in-repository"
+        ), "Repository evidence must not invent publication authority"
+        assert latest.get("releaseAcceptance") == "HOLD", (
+            "Unaccepted v94 preview must remain HOLD"
+        )
     assert latest.get("workflowUrl") == (
         "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
         + str(latest["workflowRunId"])
     ), "Unrelated or unaudited workflow URL"
     assert data.get("productionFurnitureMeshesEnabled") is False
     assert data.get("nativeIphoneAcceptanceVerified") is False
-    accepted = data.get("lastAcceptedPreview")
-    assert accepted == {
-        "versionNumber": 83,
-        "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
-        "productParentCommit": "a9c8ec16180c881cc8b13d60c3ece06162b32957",
-        "workflowRunId": 38275628548,
-        "binarySha256":
-            "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
-    }, "Last accepted preview evidence changed"
+    if require_incident_fields:
+        accepted = data.get("lastAcceptedPreview")
+        assert accepted == {
+            "versionNumber": 83,
+            "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+            "productParentCommit": "a9c8ec16180c881cc8b13d60c3ece06162b32957",
+            "workflowRunId": 38275628548,
+            "binarySha256":
+                "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
+        }, "Last accepted preview evidence changed"
     assert "unpublished candidate" in data.get("nextCandidatePolicy", "").lower(), (
         "Historical preview cannot attest that new PR source has been published"
     )
@@ -94,7 +96,7 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
     untrusted filename or self-declared candidate publication.
     """
     current=validate_receipt(candidate)
-    previous=validate_receipt(base)
+    previous=validate_receipt(base, require_incident_fields=False)
     now,then=current["versionNumber"],previous["versionNumber"]
     assert now>=then, (
         f"RELEASE_RECEIPT_VERSION_ROLLBACK candidate_v={now} base_v={then}"
@@ -102,7 +104,7 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
     if now==then:
         mismatches=[
             field for field in IMMUTABLE_PUBLISH_FIELDS
-            if current[field]!=previous[field]
+            if current.get(field)!=previous.get(field)
         ]
         if mismatches:
             correction=candidate.get("receiptCorrection")
@@ -110,7 +112,11 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
                 (now,current["workflowRunId"])
             )
             verified_correction=(
-                mismatches==["sourceCommit"]
+                mismatches==[
+                    "sourceCommit",
+                    "publicationAuthorityEvidence",
+                    "releaseAcceptance",
+                ]
                 and isinstance(correction,dict)
                 and known is not None
                 and previous["sourceCommit"]==known[
@@ -332,6 +338,11 @@ def self_test() -> None:
         ]
     )
     prior_typo.pop("receiptCorrection",None)
+    prior_typo.pop("lastAcceptedPreview",None)
+    prior_typo["lastConfirmedPublication"].pop(
+        "publicationAuthorityEvidence",None
+    )
+    prior_typo["lastConfirmedPublication"].pop("releaseAcceptance",None)
     assert compare_publication_receipts(original,prior_typo)==(
         "same_publication_source_receipt_correction"
     )
