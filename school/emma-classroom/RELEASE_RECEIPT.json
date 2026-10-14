@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "purpose": "Historical verified Roblox publication receipt. Only the recorded exact source SHA is confirmed live; later code edits require another verified publish.",
   "lastConfirmedPublication": {
-    "versionNumber": 88,
-    "sourceCommit": "b3dc879eba17e1da0d8253bdafb5dfb96c0adc59",
-    "workflowRunId": 38499237730,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38499237730",
+    "versionNumber": 89,
+    "sourceCommit": "07a0f8f257104f64f4bb4ecd1cc24cd0921397e0",
+    "workflowRunId": 38500100167,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38500100167",
     "placeId": "114603280760042",
     "universeId": "10769455759",
     "mode": "classroom-and-hallway-preview-only",
     "visualAcceptance": "pending-real-device-review",
-    "binarySha256": "034dd187b435850fddad97da2a4f8cc94501b228e8b2199e2ffa42f6b823a814"
+    "binarySha256": "f79c42484554b132bda488840cac9b4657fe8b5e4596ad63626b8aa4333d2b2a"
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "This v88 Roblox binary is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
+  "nextCandidatePolicy": "This v89 rollback republishes the exact known-working v87 Roblox binary and is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
 }
