@@ -6,7 +6,7 @@ Data.PlayerName = "Emma"
 
 Data.Teachers = {
     -- Names/roles transcribed from the supplied labeled directory screenshots.
-    {name="Mrs. Benulis", fullName="Mrs. Aimee Benulis", role="Second Grade", shirt={27,40,62}, weight=5, skin={229,194,163}, hair={118,71,44}, hairStyle="shoulder", glasses=false, clothing="cardigan", beard=nil, accent={235,230,213}},
+    {name="Mrs. Benulis", fullName="Mrs. Aimee Benulis", role="Second Grade", shirt={25,35,63}, pants={61,61,64}, weight=5, skin={232,190,157}, hair={121,73,43}, hairStyle="shoulder", glasses=false, clothing="vneck_sweater", appearanceId="benulis_2026_portrait", eyeColor={78,137,177}, jewelry="gold_hoops_pendant", beard=nil, accent={235,230,213}},
     {name="Mrs. Russek", fullName="Mrs. Karla Russek", role="First Grade", shirt={37,40,46}, weight=2, skin={229,194,163}, hair={182,154,110}, hairStyle="long", glasses=false, clothing="cardigan", beard=nil, accent={235,230,213}},
     {name="Mrs. Kochol", fullName="Mrs. Lucilla Kochol", role="Art / After School", shirt={33,29,35}, weight=2, skin={229,194,163}, hair={170,130,90}, hairStyle="short", glasses=true, clothing="floral", beard=nil, accent={235,230,213}},
     {name="Mr. Bolich", fullName="Mr. David Bolich", role="Technology / PE", shirt={66,91,125}, pants={180,157,122}, weight=2, skin={229,194,163}, hair={181,181,177}, hairStyle="balding", glasses=true, clothing="polo", beard={176,177,177}, accent={235,230,213}},

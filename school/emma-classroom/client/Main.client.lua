@@ -74,7 +74,7 @@ corner(viewToggle,12);stroke(viewToggle,P.green,.42,1)
 local entering=Instance.new("Frame")
 entering.AnchorPoint=Vector2.new(.5,.5);entering.BackgroundColor3=P.green;entering.BackgroundTransparency=.05;entering.BorderSizePixel=0;entering.Visible=false;entering.ZIndex=20;entering.Parent=root
 corner(entering,999);stroke(entering,P.gold,.20,1.2)
-local enteringText=text(entering,"A teacher is coming in…",14,P.cream,Enum.Font.GothamBold);enteringText.Size=UDim2.fromScale(1,1);enteringText.ZIndex=21
+local enteringText=text(entering,"Mrs. Benulis is ready at the board",14,P.cream,Enum.Font.GothamBold);enteringText.Size=UDim2.fromScale(1,1);enteringText.ZIndex=21
 
 local answerBar=Instance.new("Frame")
 answerBar.Name="AnswerBar";answerBar.AnchorPoint=Vector2.new(1,1);answerBar.BackgroundColor3=Color3.fromRGB(250,248,239);answerBar.BackgroundTransparency=.035;answerBar.BorderSizePixel=0;answerBar.Visible=false;answerBar.ZIndex=30;answerBar.Parent=root
@@ -303,7 +303,7 @@ local function showPayload(payload)
         setProgress(payload.progress)
         currentToken=nil;clearAnswers();hasStudyCard=false;answerBar.Visible=false
         teacherChip.Visible=root.AbsoluteSize.X>620;teacherText.Text=(payload.teacher or "Teacher")
-        enteringText.Text=(payload.teacher or "Teacher").." is coming in…";entering.Visible=true
+        enteringText.Text=(payload.teacher or "Mrs. Benulis").." is ready at the board";entering.Visible=true
         layout()
     elseif payload.kind=="question" then
         setBoard({subject=(payload.subject or "Schoolwork").."  •  "..(payload.teacher or "Teacher"),prompt=payload.prompt or "",choices=payload.choices or {},footer="Choose an answer below. Take your time."})
@@ -316,7 +316,7 @@ local function showPayload(payload)
         setProgress(payload.progress)
         hasStudyCard=true;layout();answerBar.Visible=studyView
     elseif payload.kind=="correct" then
-        setBoard({subject="✓ CORRECT!  NICE WORK, EMMA!",prompt=payload.explanation or "Nice work, Emma!",choices={},footer="Another teacher is on the way…"})
+        setBoard({subject="✓ CORRECT!  NICE WORK, EMMA!",prompt=payload.explanation or "Nice work, Emma!",choices={},footer="Mrs. Benulis has the next question ready…"})
         currentToken=nil;clearAnswers();feedbackHint="";feedback.Text="+1 star"
         promptText:SetAttribute("Prompt",payload.explanation or "Nice work, Emma!")
         subjectLine.Text="Correct!";hasStudyCard=true;layout();answerBar.Visible=studyView;skip.Visible=false

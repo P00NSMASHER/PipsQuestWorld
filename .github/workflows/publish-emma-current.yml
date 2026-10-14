@@ -1,4 +1,4 @@
-name: Publish Current Emma Classroom Replica
+name: Publish Current Emma Classroom Game
 
 on:
   push:
@@ -40,31 +40,30 @@ jobs:
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau luau/luau-compile rojo/rojo
 
-      - name: Verify current replica source
+      - name: Verify current classroom game source
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/showroom/*.lua; do
+          for file in school/emma-classroom/server/*.lua school/emma-classroom/client/*.lua school/emma-classroom/shared/*.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
-          python3 school/emma-classroom/showroom/verify_build.py
-          python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_photo_landmarks.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_hallway_photo.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_flat_rug_source.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/walkability_audit.py --self-test
-          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
-          ! grep -q 'buildFoldingMat(' school/emma-classroom/showroom/Room.lua
+          python3 school/emma-classroom/tests/server_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/client_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          grep -q 'local teacher=MRS_BENULIS' school/emma-classroom/server/Main.server.lua
+          grep -q 'model:PivotTo(World.TeacherFront)' school/emma-classroom/server/Main.server.lua
+          ! grep -q 'World.walkTeacher(model,true)' school/emma-classroom/server/Main.server.lua
+          grep -q 'appearanceId="benulis_2026_portrait"' school/emma-classroom/shared/Data.lua
 
-      - name: Build exact classroom replica
+      - name: Build exact classroom game
         shell: bash
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxl"
-          test -s "$RUNNER_TEMP/emma-replica.rbxl"
-          sha256sum "$RUNNER_TEMP/emma-replica.rbxl" | tee "$RUNNER_TEMP/place.sha256"
+          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-classroom.project.json -o "$RUNNER_TEMP/emma-classroom.rbxl"
+          test -s "$RUNNER_TEMP/emma-classroom.rbxl"
+          sha256sum "$RUNNER_TEMP/emma-classroom.rbxl" | tee "$RUNNER_TEMP/place.sha256"
 
-      - name: Publish exact classroom replica
+      - name: Publish exact classroom game
         id: publish
         shell: bash
         env:
@@ -73,7 +72,7 @@ jobs:
           set -euo pipefail
           test -n "$ROBLOX_API_KEY"
           response="$RUNNER_TEMP/publish-response.json"
-          code="$(curl --silent --show-error --location --output "$response" --write-out '%{http_code}' --request POST "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" --header "x-api-key: $ROBLOX_API_KEY" --header 'Content-Type: application/octet-stream' --data-binary @"$RUNNER_TEMP/emma-replica.rbxl")"
+          code="$(curl --silent --show-error --location --output "$response" --write-out '%{http_code}' --request POST "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" --header "x-api-key: $ROBLOX_API_KEY" --header 'Content-Type: application/octet-stream' --data-binary @"$RUNNER_TEMP/emma-classroom.rbxl")"
           cat "$response"
           test "$code" -ge 200 -a "$code" -lt 300
           version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["versionNumber"])' "$response")"

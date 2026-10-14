@@ -10,6 +10,10 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(not names[teacher.fullName]);names[teacher.fullName]=true
     assert(teacher.role~="" and teacher.clothing~="")
 end
+local benulis
+for _,teacher in ipairs(Data.Teachers) do if teacher.name=="Mrs. Benulis" then benulis=teacher end end
+assert(benulis and benulis.appearanceId=="benulis_2026_portrait","Mrs. Benulis must use the supplied portrait profile")
+assert(benulis.clothing=="vneck_sweater" and benulis.jewelry=="gold_hoops_pendant","Mrs. Benulis portrait outfit and jewelry must stay personalized")
 for _,q in ipairs(Questions) do
     assert(not ids[q.id]);ids[q.id]=true
     assert(q.prompt~="" and #q.choices>=2 and table.find(q.choices,q.answer))

@@ -14,7 +14,8 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",7)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",8)
+    model:SetAttribute("AppearanceProfile",teacher.appearanceId or "standard_staff")
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
@@ -98,7 +99,24 @@ function StaffModel.create(teacher)
         end
         local dark=Color3.fromRGB(29,52,69)
         local warm=Color3.fromRGB(235,223,200)
-        if teacher.clothing=="suit" then
+        if teacher.clothing=="vneck_sweater" then
+            -- Mrs. Benulis' supplied portrait: fitted navy V-neck knit over
+            -- charcoal trousers. The crossed trim leaves a clean skin-toned V
+            -- instead of reading as the generic buttoned staff cardigan.
+            local navy=rgb(teacher.shirt)
+            stitch("V-neck left rib",Vector3.new(.12,.72,.055),CFrame.new(-.22,.34,-.585)*CFrame.Angles(0,0,math.rad(-34)),navy:Lerp(Color3.new(1,1,1),.10))
+            stitch("V-neck right rib",Vector3.new(.12,.72,.055),CFrame.new(.22,.34,-.585)*CFrame.Angles(0,0,math.rad(34)),navy:Lerp(Color3.new(1,1,1),.10))
+            stitch("Sweater lower rib",Vector3.new(1.62,.16,.055),CFrame.new(0,-.79,-.57),navy:Lerp(Color3.new(0,0,0),.12))
+
+            -- Fine necklace and open teardrop pendant from the portrait.
+            local gold=Color3.fromRGB(218,174,91)
+            stitch("Necklace left",Vector3.new(.035,.72,.035),CFrame.new(-.18,.29,-.645)*CFrame.Angles(0,0,math.rad(-25)),gold)
+            stitch("Necklace right",Vector3.new(.035,.72,.035),CFrame.new(.18,.29,-.645)*CFrame.Angles(0,0,math.rad(25)),gold)
+            local pendant=stitch("Teardrop pendant",Vector3.new(.17,.23,.055),CFrame.new(0,-.05,-.68)*CFrame.Angles(0,0,math.rad(45)),gold)
+            local inset=Instance.new("Part");inset.Name="Pendant inset";inset.Shape=Enum.PartType.Ball
+            inset.Size=Vector3.new(.095,.095,.035);inset.CFrame=pendant.CFrame*CFrame.new(0,0,-.035)
+            inset.Color=skin;inset.Material=Enum.Material.SmoothPlastic;inset.Parent=model
+        elseif teacher.clothing=="suit" then
             -- Principal: jacket lapels, tie and knot at ordinary avatar scale.
             stitch("Jacket lapel left",Vector3.new(.17,.70,.045),CFrame.new(-.38,.12,-.54)*CFrame.Angles(0,0,math.rad(-17)),warm)
             stitch("Jacket lapel right",Vector3.new(.17,.70,.045),CFrame.new(.38,.12,-.54)*CFrame.Angles(0,0,math.rad(17)),warm)
@@ -112,6 +130,23 @@ function StaffModel.create(teacher)
         elseif teacher.clothing=="polo" then
             stitch("Polo collar left",Vector3.new(.32,.14,.05),CFrame.new(-.23,.57,-.52)*CFrame.Angles(0,0,math.rad(14)),warm)
             stitch("Polo collar right",Vector3.new(.32,.14,.05),CFrame.new(.23,.57,-.52)*CFrame.Angles(0,0,math.rad(-14)),warm)
+        end
+    end
+    if teacher.jewelry=="gold_hoops_pendant" then
+        -- Small segmented hoops are readable from the study camera without
+        -- becoming oversized costume jewelry. They follow the head idle pose.
+        local gold=Color3.fromRGB(221,177,88)
+        for _,side in ipairs({-1,1}) do
+            for segment=0,7 do
+                local angle=(segment/8)*math.pi*2
+                local earring=Instance.new("Part")
+                earring.Name="Gold hoop earring"
+                earring.Shape=Enum.PartType.Ball
+                earring.Size=Vector3.new(.055,.055,.055)
+                earring.CFrame=head.CFrame*CFrame.new(side*.64,-.18+math.sin(angle)*.15,-.02+math.cos(angle)*.15)
+                earring.Color=gold;earring.Material=Enum.Material.Metal
+                earring:SetAttribute("PoseGroup","head");earring.Parent=model
+            end
         end
     end
     -- Staff badge remains a small world-space name, never a screen-sized banner.

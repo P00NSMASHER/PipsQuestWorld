@@ -109,21 +109,11 @@ local function saveProgress(player,s,awaitCompletion:boolean?)
     if awaitCompletion then writeSnapshot() else task.spawn(writeSnapshot) end
 end
 
-local function chooseTeacher(subject,previous)
-    local matching={}
-    for _,t in ipairs(Data.Teachers) do
-        local weight=t.weight or 1
-        if t.name=="Mrs. Benulis" then weight+=3 end
-        if subject=="Religion" and t.name=="Mrs. Boyer" then weight+=4 end
-        if subject=="Spelling / Handwriting" and t.name=="Mrs. Kochol" then weight+=3 end
-        if subject=="Reading / ELA" and t.name=="Mrs. Russek" then weight+=2 end
-        if subject=="Math" and t.name=="Mrs. Benulis" then weight+=4 end
-        if t.name~=previous then
-            for _=1,weight do matching[#matching+1]=t end
-        end
-    end
-    return matching[math.random(1,#matching)]
+local MRS_BENULIS
+for _,teacher in ipairs(Data.Teachers) do
+    if teacher.name=="Mrs. Benulis" then MRS_BENULIS=teacher;break end
 end
+assert(MRS_BENULIS,"Mrs. Benulis is required for the classroom")
 
 local tierRank={current=1,archive=2,["star-fallback"]=3}
 local function testCatalog()
@@ -182,35 +172,37 @@ startRound=function(player)
     end
     s.busy=true
     local q=chooseQuestion(s);s.seen[q.id]=true
-    local teacher=chooseTeacher(q.subject,s.previousTeacher)
+    local teacher=MRS_BENULIS
     s.previousTeacher=teacher.name
-    dismissTeacher(s)
     -- The 3D classroom is shared across players; individual questions are
     -- rendered locally on each student's smartboard, never on the server.
     -- Appearance must never prevent Emma from answering. Native visual assets
     -- are bundled; if a constructor fails, the question still starts normally.
-    local visualOK,model=pcall(World.teacherModel,teacher)
-    if visualOK and model then
+    local model=s.teacherModel
+    local created=false
+    if not model or not model.Parent then
+        local visualOK,newModel=pcall(World.teacherModel,teacher)
+        model=visualOK and newModel or nil
+        if not visualOK then
+            warn("Emma staff appearance failed for "..tostring(teacher.name)..": "..tostring(newModel))
+        end
+    end
+    if model and not model.Parent then
         model:SetAttribute("OwnerUserId",player.UserId)
-        model:SetAttribute("StaffEntranceAnimation",true)
-        model:PivotTo(World.TeacherDoor)
+        model:SetAttribute("StandingAtBoard",true)
+        model:PivotTo(World.TeacherFront)
         model.Parent=World.Root
         s.teacherModel=model
-    else
-        -- Never hide constructor failures behind a generic warning. Real
-        -- Roblox runtime errors must be reviewable before visual acceptance.
-        warn("Emma staff appearance failed for "..tostring(teacher.name)..": "..tostring(model))
-        model=nil
+        created=true
     end
     local choices=shuffle(q.choices)
     local token=HttpService:GenerateGUID(false)
     s.pending={token=token,q=q,choices=choices,teacher=teacher};s.busy=false
     event:FireClient(player,{kind="question",teacher=teacher.fullName or teacher.name,role=teacher.role,subject=q.subject,prompt=q.prompt,tier=q.tier,choices=choices,token=token,progress=publicProgress(s),focus=s.modeLabel or "Current ABVM lessons"})
-    if model then
+    if model and created then
         task.spawn(function()
-            World.walkTeacher(model,true)
-            -- Once the teacher reaches the board, use a restrained head turn
-            -- and breathing idle on the *same* native hair/face/head frame.
+            -- Mrs. Benulis remains at the board for the full session, with only
+            -- a restrained head turn and breathing idle.
             -- Throttle anchored-pose replication and disconnect at replacement.
             local heartbeat=game:GetService("RunService").Heartbeat
             if not heartbeat or not model.Parent then return end
@@ -259,7 +251,6 @@ local function answer(player,args)
     task.delay(1.9,function()
         local current=sessions[player.UserId]
         if current==s and (current.generation or 0)==completedGeneration then
-            dismissTeacher(s)
             startRound(player)
         end
     end)
@@ -279,14 +270,14 @@ request.OnServerInvoke=function(player,command,args)
             allowed={};for _,id in ipairs(selected.questionIds) do allowed[id]=true end
             label=selected.label
         end
-        dismissTeacher(s);s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
+        s.pending=nil;s.seen={};s.allowed=allowed;s.modeId=args.id;s.modeLabel=label
         s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.sessionCompleteSent=false;s.generation=(s.generation or 0)+1
         local selectedGeneration=s.generation
         task.defer(function() if sessions[player.UserId]==s and s.generation==selectedGeneration then startRound(player) end end)
         return {ok=true,modeId=args.id,modeLabel=label or "Mix"}
     end
     if command=="restart" and s and not s.busy and s.correctThisSession>=SESSION_GOAL then
-        dismissTeacher(s);s.pending=nil;s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.sessionCompleteSent=false
+        s.pending=nil;s.stars=0;s.correctThisSession=0;s.sessionCompleteReported=false;s.sessionCompleteSent=false
         s.generation=(s.generation or 0)+1
         local restartGeneration=s.generation
         task.delay(.35,function()
@@ -295,7 +286,7 @@ request.OnServerInvoke=function(player,command,args)
         return {ok=true}
     end
     if command=="skip" and s and s.pending then
-        s.pending=nil;dismissTeacher(s)
+        s.pending=nil
         s.generation=(s.generation or 0)+1
         local skipGeneration=s.generation
         task.defer(function() if sessions[player.UserId]==s and s.generation==skipGeneration then startRound(player) end end)

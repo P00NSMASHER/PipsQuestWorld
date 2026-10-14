@@ -696,7 +696,7 @@ end
 function World.setBoardCorrect(explanation: string)
     if World.BoardSubject then World.BoardSubject.Text="✓ CORRECT!  NICE WORK, EMMA!" end
     if World.BoardQuestion then World.BoardQuestion.Text=explanation end
-    if World.BoardFooter then World.BoardFooter.Text="Another teacher is on the way…" end
+    if World.BoardFooter then World.BoardFooter.Text="Mrs. Benulis has the next question ready…" end
 end
 
 function World.resetBoard()

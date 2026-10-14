@@ -111,7 +111,11 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==7)
+    assert(m:GetAttribute("StaffGeometryVersion")==8)
+    if teacher.name=="Mrs. Benulis" then
+        assert(m:GetAttribute("AppearanceProfile")=="benulis_2026_portrait")
+        assert(m:FindFirstChild("Teardrop pendant") and m:FindFirstChild("V-neck left rib"))
+    end
     local head=m:FindFirstChild("Head")
     local face=head:FindFirstChild("face")
     assert(face and face:IsA("Decal") and not head:FindFirstChildOfClass("SurfaceGui"),"Use a standard avatar face, no handmade eye/skull overlays")
@@ -137,7 +141,8 @@ for _,teacher in ipairs(Data.Teachers) do
         end
     end
     assert(nativeN==14,"Both standard R15 bodies must include all 14 mesh limbs")
-    assert(n<=40,"Staff part budget exceeded: "..teacher.name.." "..n);maxParts=math.max(maxParts,n)
+    local partBudget=teacher.name=="Mrs. Benulis" and 64 or 40
+    assert(n<=partBudget,"Staff part budget exceeded: "..teacher.name.." "..n);maxParts=math.max(maxParts,n)
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
     assert(groups.leftArm==3 and groups.rightArm==3 and groups.leftLeg==3 and groups.rightLeg==3)
