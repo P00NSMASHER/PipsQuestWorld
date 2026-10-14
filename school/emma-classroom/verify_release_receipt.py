@@ -22,10 +22,24 @@ HEX64 = re.compile(r"[0-9a-f]{64}")
 IMMUTABLE_PUBLISH_FIELDS = (
     "sourceCommit", "workflowRunId", "workflowUrl", "placeId",
     "universeId", "mode", "visualAcceptance", "binarySha256",
+    "publicationAuthorityEvidence", "releaseAcceptance",
 )
+# One independently verified historical typo correction. This is deliberately
+# exact and non-general: it cannot authorize another version, run, binary, or
+# source substitution.
+KNOWN_RECEIPT_CORRECTIONS = {
+    (94, 38506548233): {
+        "incorrectRecordedSourceCommit":
+            "e090f1b4326c69aa09f9e89f936065fc97b3f1ee",
+        "verifiedWorkflowHead":
+            "e090f1b01f311880fbf23bb1ff635c8d17e1fedd",
+        "binarySha256":
+            "c5c2c47d9014edc24da5740a2f0ec782073130f9dd3847361c1d0472df90087a",
+    },
+}
 
 
-def validate_receipt(data: dict) -> dict:
+def validate_receipt(data: dict, *, require_incident_fields: bool = True) -> dict:
     assert data.get("schemaVersion") == 1, "Unknown release receipt schema"
     latest = data.get("lastConfirmedPublication")
     assert isinstance(latest, dict), "Missing recorded publication"
@@ -44,12 +58,29 @@ def validate_receipt(data: dict) -> dict:
         "Unknown classroom publication mode"
     )
     assert latest.get("visualAcceptance") == "pending-real-device-review"
+    if require_incident_fields:
+        assert latest.get("publicationAuthorityEvidence") == (
+            "not-established-in-repository"
+        ), "Repository evidence must not invent publication authority"
+        assert latest.get("releaseAcceptance") == "HOLD", (
+            "Unaccepted v94 preview must remain HOLD"
+        )
     assert latest.get("workflowUrl") == (
         "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/"
         + str(latest["workflowRunId"])
     ), "Unrelated or unaudited workflow URL"
     assert data.get("productionFurnitureMeshesEnabled") is False
     assert data.get("nativeIphoneAcceptanceVerified") is False
+    if require_incident_fields:
+        accepted = data.get("lastAcceptedPreview")
+        assert accepted == {
+            "versionNumber": 83,
+            "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+            "productParentCommit": "a9c8ec16180c881cc8b13d60c3ece06162b32957",
+            "workflowRunId": 38275628548,
+            "binarySha256":
+                "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
+        }, "Last accepted preview evidence changed"
     assert "unpublished candidate" in data.get("nextCandidatePolicy", "").lower(), (
         "Historical preview cannot attest that new PR source has been published"
     )
@@ -65,15 +96,49 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
     untrusted filename or self-declared candidate publication.
     """
     current=validate_receipt(candidate)
-    previous=validate_receipt(base)
+    previous=validate_receipt(base, require_incident_fields=False)
     now,then=current["versionNumber"],previous["versionNumber"]
     assert now>=then, (
         f"RELEASE_RECEIPT_VERSION_ROLLBACK candidate_v={now} base_v={then}"
     )
     if now==then:
-        for field in IMMUTABLE_PUBLISH_FIELDS:
-            assert current[field]==previous[field], (
-                f"RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH {field}"
+        mismatches=[
+            field for field in IMMUTABLE_PUBLISH_FIELDS
+            if current.get(field)!=previous.get(field)
+        ]
+        if mismatches:
+            correction=candidate.get("receiptCorrection")
+            known=KNOWN_RECEIPT_CORRECTIONS.get(
+                (now,current["workflowRunId"])
+            )
+            verified_correction=(
+                mismatches==[
+                    "sourceCommit",
+                    "publicationAuthorityEvidence",
+                    "releaseAcceptance",
+                ]
+                and isinstance(correction,dict)
+                and known is not None
+                and previous["sourceCommit"]==known[
+                    "incorrectRecordedSourceCommit"
+                ]
+                and current["sourceCommit"]==known["verifiedWorkflowHead"]
+                and current["binarySha256"]==known["binarySha256"]
+                and correction.get("incorrectRecordedSourceCommit")==previous[
+                    "sourceCommit"
+                ]
+                and correction.get("verifiedWorkflowHead")==current[
+                    "sourceCommit"
+                ]
+                and correction.get("verifiedFromWorkflowRunId")==current[
+                    "workflowRunId"
+                ]
+            )
+            if verified_correction:
+                return "same_publication_source_receipt_correction"
+            raise AssertionError(
+                "RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH "
+                + ",".join(mismatches)
             )
         return "same_verified_publication_as_base"
     # A later version must not reuse the previous version's source SHA,
@@ -138,6 +203,10 @@ def audit(compare_base: Path | None = None) -> None:
     assert assets["universeId"] == latest["universeId"]
     assert assets["rootPlaceId"] == latest["placeId"]
 
+    unsafe_publisher = ROOT / ".github/workflows/publish-emma-current.yml"
+    assert not unsafe_publisher.exists(), (
+        "Unguarded release-branch push publisher is still active"
+    )
     workflow = (ROOT / ".github/workflows/publish-emma-classroom.yml").read_text(
         encoding="utf-8"
     )
@@ -194,6 +263,8 @@ def self_test() -> None:
         ("binarySha256", "not-a-real-256-bit-digest"),
         ("workflowRunId", -1),
         ("visualAcceptance", "approved"),
+        ("publicationAuthorityEvidence", "owner-approved-without-evidence"),
+        ("releaseAcceptance", "ACCEPTED"),
         ("mode", "legacy-neighborhood-game"),
     )
     for field, broken in cases:
@@ -204,6 +275,14 @@ def self_test() -> None:
         except AssertionError:
             continue
         raise AssertionError("Tampered release receipt accepted: " + field)
+    accepted_tamper = copy.deepcopy(original)
+    accepted_tamper["lastAcceptedPreview"]["versionNumber"] = 94
+    try:
+        validate_receipt(accepted_tamper)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Accepted-preview history substitution was accepted")
     for field in ("productionFurnitureMeshesEnabled", "nativeIphoneAcceptanceVerified"):
         tampered = copy.deepcopy(original)
         tampered[field] = True
@@ -250,6 +329,33 @@ def self_test() -> None:
             assert "SAME_VERSION_EVIDENCE_MISMATCH" in str(exc), (name,exc)
         else:
             raise AssertionError("Equal-version forged publisher accepted: "+name)
+    # The only permitted equal-version correction is the independently
+    # verified v94 source typo. Preserve all other immutable evidence.
+    prior_typo=copy.deepcopy(original)
+    prior_typo["lastConfirmedPublication"]["sourceCommit"]=(
+        KNOWN_RECEIPT_CORRECTIONS[(94,38506548233)][
+            "incorrectRecordedSourceCommit"
+        ]
+    )
+    prior_typo.pop("receiptCorrection",None)
+    prior_typo.pop("lastAcceptedPreview",None)
+    prior_typo["lastConfirmedPublication"].pop(
+        "publicationAuthorityEvidence",None
+    )
+    prior_typo["lastConfirmedPublication"].pop("releaseAcceptance",None)
+    assert compare_publication_receipts(original,prior_typo)==(
+        "same_publication_source_receipt_correction"
+    )
+    bad_correction=copy.deepcopy(original)
+    bad_correction["lastConfirmedPublication"]["sourceCommit"]="e"*40
+    bad_correction["receiptCorrection"]["verifiedWorkflowHead"]="e"*40
+    try:
+        compare_publication_receipts(bad_correction,prior_typo)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Unrecognized source correction was accepted")
+
     forward=copy.deepcopy(original)
     fw=forward["lastConfirmedPublication"]
     fw["versionNumber"]+=1
@@ -269,8 +375,9 @@ def self_test() -> None:
         pass
     else:
         raise AssertionError("False native iPhone approval accepted")
-    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, activation, "
-          "v81_rollback, same_version_source_run_hash_swap, native_approval_rejected")
+    print("RELEASE_PROVENANCE_SELF_TEST_PASS forged status, authority, hold, "
+          "accepted_preview, activation, v81_rollback, "
+          "same_version_source_run_hash_swap, native_approval_rejected")
 
 
 if __name__ == "__main__":
