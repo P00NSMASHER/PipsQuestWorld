@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 1,
   "purpose": "Historical Roblox publication receipt. This records what the publisher actually made live and the associated release-gate incident; it does not grant acceptance or authorize another publication.",
   "lastConfirmedPublication": {
     "versionNumber": 94,
