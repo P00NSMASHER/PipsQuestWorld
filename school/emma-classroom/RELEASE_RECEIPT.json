@@ -1,18 +1,33 @@
 {
-  "schemaVersion": 1,
-  "purpose": "Historical verified Roblox publication receipt. Only the recorded exact source SHA is confirmed live; later code edits require another verified publish.",
+  "schemaVersion": 2,
+  "purpose": "Historical Roblox publication receipt. This records what the publisher actually made live and the associated release-gate incident; it does not grant acceptance or authorize another publication.",
   "lastConfirmedPublication": {
     "versionNumber": 94,
-    "sourceCommit": "e090f1b4326c69aa09f9e89f936065fc97b3f1ee",
+    "sourceCommit": "e090f1b01f311880fbf23bb1ff635c8d17e1fedd",
     "workflowRunId": 38506548233,
     "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38506548233",
     "placeId": "114603280760042",
     "universeId": "10769455759",
     "mode": "classroom-and-hallway-preview-only",
     "visualAcceptance": "pending-real-device-review",
-    "binarySha256": "c5c2c47d9014edc24da5740a2f0ec782073130f9dd3847361c1d0472df90087a"
+    "binarySha256": "c5c2c47d9014edc24da5740a2f0ec782073130f9dd3847361c1d0472df90087a",
+    "publicationAuthorityEvidence": "not-established-in-repository",
+    "releaseAcceptance": "HOLD"
+  },
+  "lastAcceptedPreview": {
+    "versionNumber": 83,
+    "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+    "productParentCommit": "a9c8ec16180c881cc8b13d60c3ece06162b32957",
+    "workflowRunId": 38275628548,
+    "binarySha256": "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3"
+  },
+  "receiptCorrection": {
+    "incorrectRecordedSourceCommit": "e090f1b4326c69aa09f9e89f936065fc97b3f1ee",
+    "verifiedWorkflowHead": "e090f1b01f311880fbf23bb1ff635c8d17e1fedd",
+    "verifiedFromWorkflowRunId": 38506548233,
+    "reason": "The prior receipt named a nonexistent source SHA. GitHub Actions records the exact checkout and published source as the workflow head above."
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "This v94 Roblox binary is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
+  "nextCandidatePolicy": "Version 94 is confirmed live but remains HOLD. Further source changes are unpublished candidates until separately authorized, exact-head gated, independently reviewed, and proven by a new guarded publication receipt."
 }
