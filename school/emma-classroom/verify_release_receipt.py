@@ -23,6 +23,19 @@ IMMUTABLE_PUBLISH_FIELDS = (
     "sourceCommit", "workflowRunId", "workflowUrl", "placeId",
     "universeId", "mode", "visualAcceptance", "binarySha256",
 )
+# One independently verified historical typo correction. This is deliberately
+# exact and non-general: it cannot authorize another version, run, binary, or
+# source substitution.
+KNOWN_RECEIPT_CORRECTIONS = {
+    (94, 38506548233): {
+        "incorrectRecordedSourceCommit":
+            "e090f1b4326c69aa09f9e89f936065fc97b3f1ee",
+        "verifiedWorkflowHead":
+            "e090f1b01f311880fbf23bb1ff635c8d17e1fedd",
+        "binarySha256":
+            "c5c2c47d9014edc24da5740a2f0ec782073130f9dd3847361c1d0472df90087a",
+    },
+}
 
 
 def validate_receipt(data: dict) -> dict:
@@ -71,10 +84,37 @@ def compare_publication_receipts(candidate: dict, base: dict) -> str:
         f"RELEASE_RECEIPT_VERSION_ROLLBACK candidate_v={now} base_v={then}"
     )
     if now==then:
-        for field in IMMUTABLE_PUBLISH_FIELDS:
-            assert current[field]==previous[field], (
-                f"RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH {field}"
+        mismatches=[
+            field for field in IMMUTABLE_PUBLISH_FIELDS
+            if current[field]!=previous[field]
+        ]
+        if mismatches:
+            correction=candidate.get("receiptCorrection")
+            known=KNOWN_RECEIPT_CORRECTIONS.get(
+                (now,current["workflowRunId"])
             )
+            assert mismatches==["sourceCommit"] and isinstance(correction,dict), (
+                "RELEASE_RECEIPT_SAME_VERSION_EVIDENCE_MISMATCH "
+                + ",".join(mismatches)
+            )
+            assert known is not None, (
+                "RELEASE_RECEIPT_UNRECOGNIZED_SOURCE_CORRECTION"
+            )
+            assert previous["sourceCommit"]==known[
+                "incorrectRecordedSourceCommit"
+            ]
+            assert current["sourceCommit"]==known["verifiedWorkflowHead"]
+            assert current["binarySha256"]==known["binarySha256"]
+            assert correction.get("incorrectRecordedSourceCommit")==previous[
+                "sourceCommit"
+            ]
+            assert correction.get("verifiedWorkflowHead")==current[
+                "sourceCommit"
+            ]
+            assert correction.get("verifiedFromWorkflowRunId")==current[
+                "workflowRunId"
+            ]
+            return "same_publication_source_receipt_correction"
         return "same_verified_publication_as_base"
     # A later version must not reuse the previous version's source SHA,
     # workflow run ID or published binary. CI cannot independently attest
@@ -250,6 +290,28 @@ def self_test() -> None:
             assert "SAME_VERSION_EVIDENCE_MISMATCH" in str(exc), (name,exc)
         else:
             raise AssertionError("Equal-version forged publisher accepted: "+name)
+    # The only permitted equal-version correction is the independently
+    # verified v94 source typo. Preserve all other immutable evidence.
+    prior_typo=copy.deepcopy(original)
+    prior_typo["lastConfirmedPublication"]["sourceCommit"]=(
+        KNOWN_RECEIPT_CORRECTIONS[(94,38506548233)][
+            "incorrectRecordedSourceCommit"
+        ]
+    )
+    prior_typo.pop("receiptCorrection",None)
+    assert compare_publication_receipts(original,prior_typo)==(
+        "same_publication_source_receipt_correction"
+    )
+    bad_correction=copy.deepcopy(original)
+    bad_correction["lastConfirmedPublication"]["sourceCommit"]="e"*40
+    bad_correction["receiptCorrection"]["verifiedWorkflowHead"]="e"*40
+    try:
+        compare_publication_receipts(bad_correction,prior_typo)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Unrecognized source correction was accepted")
+
     forward=copy.deepcopy(original)
     fw=forward["lastConfirmedPublication"]
     fw["versionNumber"]+=1
