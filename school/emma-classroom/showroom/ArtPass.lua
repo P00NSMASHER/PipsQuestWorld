@@ -356,17 +356,20 @@ local function learningWall(root:Instance)
     -- Remove ONLY that extra Part so the photo-backed pale number frieze and
     -- colored shape cards remain distinct against the actual yellow wall.
     -- No grade/curriculum value is inferred from historic photo signage.
+    -- Center the complete board in the clear right-wall bay between the
+    -- front corner and the values poster instead of crowding the corner.
+    local jobsZ=-28.20
     piece(group,"Daily jobs cork backing",Vector3.new(.18,6.6,9.8),
-        CFrame.new(36.28,9.6,-31),C.wood,Enum.Material.Wood,false)
+        CFrame.new(36.28,9.6,jobsZ),C.wood,Enum.Material.Wood,false)
     piece(group,"Jobs board frame",Vector3.new(.23,7.05,10.25),
-        CFrame.new(36.25,9.6,-31),C.woodEdge,Enum.Material.Wood,false)
+        CFrame.new(36.25,9.6,jobsZ),C.woodEdge,Enum.Material.Wood,false)
     for i,job in ipairs({"HELPER","READER","ARTIST","LEADER"}) do
         local color=({C.mint,C.golden,C.coral,C.blue})[i]
         local card=piece(group,"Daily helper job card",Vector3.new(.05,1.24,7.7),
-            CFrame.new(36.10,12.1-(i-1)*1.56,-31),color,Enum.Material.SmoothPlastic,false)
+            CFrame.new(36.10,12.1-(i-1)*1.56,jobsZ),color,Enum.Material.SmoothPlastic,false)
         printed(card,job,Enum.NormalId.Left,C.ink,color)
         orb(group,"Jobs board pushpin",Vector3.new(.13,.13,.13),
-            CFrame.new(36.04,12.1-(i-1)*1.56,-34.2),C.brass,Enum.Material.Metal)
+            CFrame.new(36.04,12.1-(i-1)*1.56,jobsZ-3.2),C.brass,Enum.Material.Metal)
     end
     -- The supplied school photos show framed *shape flashcards* and a
     -- long 0-120 counting strip above substantial dark-wood cabinets.
@@ -537,51 +540,8 @@ local function focalTeachingArea(root:Instance)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
             CFrame.new(x+.39,4.68,-29.32),C.navy,Enum.Material.SmoothPlastic,false)
     end
-    -- The photo references show a white dry-erase teaching flipchart on a
-    -- blue wheeled frame, not a large invented wooden achievement poster.
-    -- Retain this provisional corner position and original board dimensions;
-    -- the cheer event does not establish its usual daily furniture location.
-    local easelX=-29.6
-    local easelZ=-30.8
-    local white=Color3.fromRGB(222,227,225)
-    local cartBlue=Color3.fromRGB(58,102,145)
-    local housing=piece(group,"Photo flipchart white housing",
-        Vector3.new(4.2,3.6,.22),CFrame.new(easelX,6.15,easelZ),
-        white,Enum.Material.SmoothPlastic,false)
-    local face=piece(group,"Photo flipchart dry erase face",
-        Vector3.new(3.66,3.05,.055),
-        housing.CFrame*CFrame.new(0,0,.15),
-        Color3.fromRGB(246,247,239),Enum.Material.SmoothPlastic,false)
-    -- Neutral, nearly empty magnetic surface: no personal schoolwork
-    -- or event-only cheer instructions are reproduced in the game.
-    printed(face,"",Enum.NormalId.Back,C.navy,face.Color)
-    for _,dx in ipairs({-1.46,1.46}) do
-        piece(group,"Photo flipchart blue cart support",
-            Vector3.new(.27,4.60,.29),
-            CFrame.new(easelX+dx,2.42,easelZ-.12),
-            cartBlue,Enum.Material.Metal,false)
-        orb(group,"Photo flipchart rubber wheel",
-            Vector3.new(.44,.44,.44),
-            CFrame.new(easelX+dx,.49,easelZ-.12),
-            Color3.fromRGB(47,51,54),Enum.Material.SmoothPlastic)
-    end
-    piece(group,"Photo flipchart marker tray",Vector3.new(4.48,.17,.56),
-        CFrame.new(easelX,4.36,easelZ+.34),
-        Color3.fromRGB(176,185,189),Enum.Material.Metal,false)
-    piece(group,"Photo flipchart lower blue shelf",Vector3.new(3.30,.16,1.02),
-        CFrame.new(easelX,1.14,easelZ-.12),
-        cartBlue,Enum.Material.Metal,false)
-    local magnetColors={
-        Color3.fromRGB(79,141,98),
-        Color3.fromRGB(78,137,172),
-        Color3.fromRGB(227,184,82),
-    }
-    for i,dx in ipairs({-1.55,0,1.55}) do
-        piece(group,"Photo flipchart colored magnet",
-            Vector3.new(.30,.30,.07),
-            CFrame.new(easelX+dx,6.95,easelZ+.23),
-            magnetColors[i],Enum.Material.SmoothPlastic,false)
-    end
+    -- The redundant corner flipchart was removed at the owner's request.
+    -- The main wheeled smartboard remains the room's teaching display.
 end
 
 function ArtPass.decorate(root:Instance)

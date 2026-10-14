@@ -200,8 +200,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert not actual_parts("Side hall far wall"), (
         "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"
     )
-    exterior_seam=actual_parts("Left hallway outside corner return")
-    assert len(exterior_seam)==1 and abs(float(exterior_seam[0][9])-54.12)<.05
+    assert not actual_parts("Left hallway outside corner return"), (
+        "OBSOLETE_FLOATING_HALL_SEAM_RETURNED"
+    )
     front_sealed=actual_parts("Photo hall front outer wall")
     assert len(front_sealed)==1 and abs(float(front_sealed[0][11])-126.25)<.05
     rails=actual_parts("Blue chair rail right")
@@ -311,10 +312,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     closet_walls=actual_parts("Supply closet side wall")
     closet_back=actual_parts("Supply closet solid rear wall")
-    closet_shelves=actual_parts("Supply closet oak shelf")
-    closet_tubs=actual_parts("Supply closet labeled storage tub")
-    assert (len(closet_walls),len(closet_back),len(closet_shelves),
-            len(closet_tubs))==(2,1,3,3), (
+    coat_rails=actual_parts("Supply closet child coat rail")
+    coat_bodies=actual_parts("Children coat body")
+    coat_sleeves=actual_parts("Children coat sleeve")
+    assert (len(closet_walls),len(closet_back),len(coat_rails),
+            len(coat_bodies),len(coat_sleeves))==(2,1,1,5,10), (
         "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_REAL_STORAGE_CLOSET"
     )
     assert abs(float(closet_back[0][11])-36.05)<.05 and (
@@ -322,7 +324,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), "RIGHT_CLOSET_REAR_MUST_BE_SEALED_AWAY_FROM_HALL"
     assert sorted(round(float(p[9]),2) for p in closet_walls)==[-5.95,5.95]
     print("DOORWAY_ROUTING_SOURCE_PASS left=staff_hall right=closed_supply_closet "
-          "shelves=3 bins=3 rear_wall=true",flush=True)
+          "coat_rail=true child_coats=5 rear_wall=true",flush=True)
     print("PHOTO_HALL_ADJACENT_NATIVE_FACADE_SCENE_PASS two_glazed_doors=true "
           "native_new_parts=18 perpendicular_hall_open=true right_closet_sealed=true "
           "visual_renderer_must_inspect_actual_panes=true",flush=True)
@@ -370,15 +372,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # The physical paper diamonds and yellow end-window are true 3D Parts;
     # only native Roblox can verify the final Glass and UI visual treatment.
 
-    staff_frame=actual_parts("Staff hall framed announcement board")
-    staff_cork=actual_parts("Staff hall inset cork noticeboard")
-    staff_papers=actual_parts("Staff hall anonymous paper notice")
-    assert (len(staff_frame),len(staff_cork),len(staff_papers))==(1,1,2), (
-        "Existing independent staff-side corridor decoration lost"
-    )
-    assert (abs(float(staff_frame[0][9])-45.5)<.03 and
-            abs(float(staff_cork[0][9])-45.5)<.03)
-    assert sorted(round(float(p[9]),2) for p in staff_papers)==[44.0,47.0]
+    assert not actual_parts("Staff hall framed announcement board")
+    assert not actual_parts("Staff hall inset cork noticeboard")
+    assert not actual_parts("Staff hall anonymous paper notice")
     staff_lamp=actual_parts("Side hall fluorescent")
     staff_surround=actual_parts("Side hall fluorescent metal surround")
     assert len(staff_lamp)==1 and len(staff_surround)==1
@@ -806,7 +802,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert abs(float(gray[9])+34.05)<.03 and (
         abs(float(gray[11])+30.50)<.03
     ), "Photo gray cupboard lost the window-wall storage position"
-    assert abs(float(files[9])+34.10)<.03 and (
+    assert abs(float(files[9])+33.75)<.03 and (
         abs(float(files[11])+26.25)<.03
         and by_name["Photo filing drawer face"]==3
     ), "Photo black filing drawers missing or misplaced"
@@ -1164,60 +1160,14 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         abs(float(p[15])-1)<.001 and abs(float(p[19])-1)<.001 and
         abs(float(p[23])-1)<.001 for p in closet_doors
     ), "Classroom closet leaves are angled, open, or out of plane"
-    # Repositioned art easel must NOT occlude the actual chalkboard from the
-    # front-facing player camera. Validate exported world geometry after Luau.
-    easel=only("Photo flipchart white housing")
-    easel_x=float(easel[9]); easel_width=float(easel[6]); easel_z=float(easel[11])
-    chalk_left=chalk_x-chalk_width/2
-    easel_right=easel_x+easel_width/2
-    easel_clearance=chalk_left-easel_right
-    assert 18.0 <= easel_clearance <= 21.0, (
-        f"The photo-guided larger chalkboard intersects the art easel: {easel_clearance:.2f}"
+    assert not actual_parts("Photo flipchart white housing"), (
+        "Redundant corner flipchart returned"
     )
-    assert abs(easel_x+29.6)<.02, "The flipchart moved back into the gray cabinet"
-    assert 4.0 <= easel_width <= 4.4, "Easel must have a compact school-scale silhouette"
-    assert 3.4 <= float(easel[7]) <= 3.8, "Oversized brown display returned"
-    assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
-    assert -32.0 < easel_z < -29.0, "Easel no longer belongs in the front-left art corner"
     filing=only("Photo black filing cabinet")
-    gray_cabinet=only("Photo gray corner storage cabinet")
     prayer_table=only("Prayer table")
     assert (float(prayer_table[9])-float(prayer_table[6])/2) - (
         float(filing[9])+float(filing[6])/2
     ) > 2.0, "Corner table still intersects the black filing cabinet"
-    assert (easel_x-easel_width/2) - (
-        float(gray_cabinet[9])+float(gray_cabinet[6])/2
-    ) > .9, "Rolling flipchart still intersects the gray cabinet"
-    easel_poster=only("Photo flipchart dry erase face")
-    easel_ledge=only("Photo flipchart marker tray")
-    easel_legs=[row for row in lines if row[1]=="Photo flipchart blue cart support"]
-    easel_stars=[row for row in lines if row[1]=="Photo flipchart colored magnet"]
-    assert abs(float(easel_poster[9])-easel_x)<.02 and abs(float(easel_ledge[9])-easel_x)<.02
-    assert len(easel_legs)==2 and sorted(round(float(row[9])-easel_x,2) for row in easel_legs)==[-1.46,1.46], (
-        "Photo flipchart blue cart supports detached from board"
-    )
-    assert len(easel_stars)==3 and sorted(round(float(row[9])-easel_x,2) for row in easel_stars)==[-1.55,0.0,1.55], (
-        "Photo flipchart colored magnets detached from board"
-    )
-    assert easel[4].endswith("SmoothPlastic") and easel_poster[4].endswith("SmoothPlastic"), (
-        "Photographed white dry-erase board regressed to a wooden poster"
-    )
-    assert min(float(easel[i]) for i in (12,13,14))>.85 and (
-        min(float(easel_poster[i]) for i in (12,13,14))>.93
-    ), "Photo flipchart white surfaces became dark colored"
-    wheels=[row for row in lines if row[1]=="Photo flipchart rubber wheel"]
-    shelf=only("Photo flipchart lower blue shelf")
-    assert len(wheels)==2 and all(.25<float(w[10])<.8 for w in wheels), (
-        "The photo flipchart cart lost floor-contact wheels"
-    )
-    assert abs(float(shelf[9])-easel_x)<.02 and 1.0<float(shelf[10])<1.3, (
-        "The photo flipchart cart shelf is disconnected"
-    )
-    assert all(float(s[7])<.5 for s in easel_stars), (
-        "The photo flipchart regained oversized star decorations"
-    )
-    print(f"EASEL_CHALKBOARD_CLEARANCE_PASS gap={easel_clearance:.2f} x={easel_x:.2f} "
-          "photo_flipchart_white=true wheels=2")
     # The brown rectangle in the last player-eye render was a physical
     # bulletin-board defect: cork was behind a full-size wooden front plate.
     # Assert the actual constructed front-facing depth and human-scale sheets.
@@ -1651,12 +1601,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # surfaces are measured from generated geometry, not string snippets.
     # The 12.5 x 5.2 stud desktop at y=3.1 with .38 thickness has its
     # usable surface at y=3.29. RoundedPanel has its thin vertical dimension
-    # in local Z, while ordinary Parts use local Y. The pencil cup is a
-    # cylinder rotated onto the world Y axis (local X is its height).
+    # in local Z, while ordinary Parts use local Y.
     teacher_desk_surface=3.29
     supported={
         "Teacher laptop base":8,
-        "Pencil cup":6,
         "Tissue box":7,
         "Teacher desk wooden stationery tray":7,
         "Teacher note paper":7,
@@ -1671,7 +1619,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert 18.75<=float(item[9])<=31.25 and -27.6<=float(item[11])<=-22.4, (
             f"Teacher object {label} exceeds desktop footprint"
         )
-    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true tray=true paper=true")
+    print("TEACHER_DESK_SUPPORT_PASS laptop=true tissues=true tray=true paper=true duplicate_cup=false")
 
     # Verify that the optional fallback silhouette update stays lightweight:
     # two slim molded edge returns per chair, with the existing collidable

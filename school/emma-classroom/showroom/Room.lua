@@ -549,10 +549,10 @@ local function buildClassroomTexture(root: Instance)
         local a=i*math.pi/8
         cylinder(root,"Trash can rib",Vector3.new(2.85,.055,.055),CFrame.new(32.8+math.cos(a)*1.55,1.75,-24+math.sin(a)*1.55)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(137,142,141),Enum.Material.Metal,false)
     end
-    local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(22.5,3.89,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
+    local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(20.0,3.89,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
     part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
-    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(22.5,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
+    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(20.0,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
     -- The real classroom pictures show the alphabet/sun rug as open
     -- activity space. Source-rendered geometry revealed that the original
     -- rolling cart top at (-29,22) crossed the carpet by ~0.58 studs,
@@ -1248,14 +1248,14 @@ local function buildPhotoWindowWorkstation(root: Instance)
             Color3.fromRGB(64,72,78),Enum.Material.Metal,false)
     end
     part(root,"Photo black filing cabinet",
-        Vector3.new(2.45,5.40,2.10),CFrame.new(-34.10,3.12,-26.25),
+        Vector3.new(2.45,5.40,2.10),CFrame.new(-33.75,3.12,-26.25),
         dark,Enum.Material.Metal,true)
     for _,y in ipairs({1.65,3.30,4.95}) do
         part(root,"Photo filing drawer face",
-            Vector3.new(.075,1.35,1.90),CFrame.new(-32.83,y,-26.25),
+            Vector3.new(.075,1.35,1.90),CFrame.new(-32.48,y,-26.25),
             Color3.fromRGB(57,60,63),Enum.Material.Metal,false)
         part(root,"Photo filing drawer pull",
-            Vector3.new(.12,.14,.68),CFrame.new(-32.73,y,-26.25),
+            Vector3.new(.12,.14,.68),CFrame.new(-32.38,y,-26.25),
             Color3.fromRGB(166,174,179),Enum.Material.Metal,false)
     end
     -- Surface stands between the purple chair and the student workstations,
@@ -1573,7 +1573,8 @@ local function buildTeacherDesk(root: Instance)
     part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.52,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
     roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.52,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
     cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.53,-26.12),P.metal,Enum.Material.Metal,false)
-    pencilCup(root,23.2,4.08,-23.6)
+    -- The wooden tray already supplies pencils; omitting the duplicate metal
+    -- cup keeps the compact desk layout free of overlapping props.
     book(root,29.5,3.38,-24.2,Color3.fromRGB(61,110,78),math.rad(8))
     book(root,29.5,3.64,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
     -- Detailed tilted globe, sized and placed so no desk supplies intersect it.
@@ -1829,31 +1830,31 @@ local function buildBackDoorAndHall(root: Instance)
     cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,9.05),
         CFrame.new(0,.529,31.175),Color3.fromRGB(166,133,103),
         Enum.Material.Wood,true)
-    -- Three realistic shelves and a few colored classroom supply tubs.
-    -- Thin loose props are noncolliding; the rear wall is a true barrier.
-    for i,y in ipairs({3.05,5.50,7.95}) do
-        cp("Supply closet oak shelf",Vector3.new(9.9,.24,1.18),
-            CFrame.new(0,y,34.91),closetOak,Enum.Material.Wood,false)
-        local tub=cp("Supply closet labeled storage tub",
-            Vector3.new(2.28,1.02,.88),
-            CFrame.new((i-2)*2.72,y+.65,34.85),
-            ({Color3.fromRGB(91,134,147),Color3.fromRGB(169,125,113),
-              Color3.fromRGB(117,143,106)})[i],
-            Enum.Material.SmoothPlastic,false)
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="Anonymous classroom supply category"
-        gui.Face=Enum.NormalId.Front
-        gui.CanvasSize=Vector2.new(240,100)
-        gui.Parent=tub
-        local label=Instance.new("TextLabel")
-        label.Name="Supply tub category"
-        label.Size=UDim2.fromScale(1,1)
-        label.BackgroundTransparency=1
-        label.Font=Enum.Font.GothamBold
-        label.TextScaled=true
-        label.TextColor3=Color3.fromRGB(255,251,232)
-        label.Text=({"ART","PAPER","GAMES"})[i]
-        label.Parent=gui
+    -- Child-height coat storage: a continuous timber rail, sturdy hooks, and
+    -- small anonymous coats. Sleeves hang naturally and all pieces stay clear
+    -- of the floor and door swing.
+    cp("Supply closet child coat rail",Vector3.new(10.2,.48,.42),
+        CFrame.new(0,8.25,35.23),closetOak,Enum.Material.Wood,false)
+    local coatColors={
+        Color3.fromRGB(74,111,153),Color3.fromRGB(184,87,76),
+        Color3.fromRGB(91,137,101),Color3.fromRGB(222,157,72),
+        Color3.fromRGB(126,96,148),
+    }
+    for i,x in ipairs({-4.0,-2.0,0,2.0,4.0}) do
+        cylinder(closet,"Supply closet coat hook",Vector3.new(.48,.15,.15),
+            CFrame.new(x,7.95,34.92)*CFrame.Angles(math.pi/2,0,0),
+            Color3.fromRGB(101,106,106),Enum.Material.Metal,false)
+        local color=coatColors[i]
+        cp("Children coat body",Vector3.new(1.42,3.25,.42),
+            CFrame.new(x,6.18,34.86),color,Enum.Material.Fabric,false)
+        for _,dx in ipairs({-.89,.89}) do
+            cp("Children coat sleeve",Vector3.new(.48,2.55,.38),
+                CFrame.new(x+dx,6.33,34.86)*CFrame.Angles(0,0,math.rad(dx<0 and -12 or 12)),
+                color:Lerp(Color3.new(1,1,1),.04),Enum.Material.Fabric,false)
+        end
+        cp("Children coat collar",Vector3.new(.72,.34,.46),
+            CFrame.new(x,7.83,34.84),color:Lerp(Color3.new(0,0,0),.12),
+            Enum.Material.Fabric,false)
     end
     -- OWNER-SUPPLIED SIX PHOTOS: corridor architecture, not event-day people.
     -- Long corridor scales and X direction are explicitly PROVISIONAL.
@@ -2391,23 +2392,8 @@ local function buildTeacherEntry(root: Instance)
             CFrame.new(45.5,4.30,endZ+interior*1.12),
             P.blue,Enum.Material.Wood,false)
     end
-    -- Bridge the small exterior-wall seam where staff hall meets the
-    -- photo hallway, without narrowing the turning passage.
-    part(root,"Left hallway outside corner return",Vector3.new(.88,13,2.20),
-        CFrame.new(54.12,6.5,26.26),P.blueSoft,Enum.Material.SmoothPlastic,true)
-    -- Facing-wall school notices break up the blank corridor without
-    -- claiming a photographed or navigable room beyond the capped hall.
-    part(root,"Staff hall framed announcement board",Vector3.new(.16,3.35,5.90),
-        CFrame.new(53.80,7.74,15.50),Color3.fromRGB(109,79,55),
-        Enum.Material.Wood,false)
-    part(root,"Staff hall inset cork noticeboard",Vector3.new(.07,2.99,5.52),
-        CFrame.new(53.68,7.74,15.50),Color3.fromRGB(165,134,103),
-        Enum.Material.Fabric,false)
-    for _,pz in ipairs({13.85,17.15}) do
-        part(root,"Staff hall anonymous paper notice",Vector3.new(.025,1.73,1.75),
-            CFrame.new(53.61,7.70,pz),
-            Color3.fromRGB(243,239,218),Enum.Material.SmoothPlastic,false)
-    end
+    -- Obsolete seam return and freestanding noticeboard removed. After the
+    -- corridor's ninety-degree turn they appeared as floating geometry.
     part(root,"Side hall fluorescent metal surround",Vector3.new(6.45,.16,2.55),
         CFrame.new(47,12.80,15.5),Color3.fromRGB(193,200,200),
         Enum.Material.Metal,false)
@@ -2508,29 +2494,6 @@ local function alignHallwayWithStaffExit(root: Instance)
             object.CFrame=CFrame.new(0,0,-1.40)*object.CFrame
         end
     end
-
-    -- Mount the existing announcement board on that same north side.
-    -- None of the noticeboard or anonymous papers becomes a collider.
-    local notices={
-        {name="Staff hall framed announcement board",size=Vector3.new(5.90,3.35,.16),cf=CFrame.new(45.5,7.74,26.10)},
-        {name="Staff hall inset cork noticeboard",size=Vector3.new(5.52,2.99,.07),cf=CFrame.new(45.5,7.74,26.00)}
-    }
-    for _,v in ipairs(notices) do
-        local p=root:FindFirstChild(v.name)
-        assert(p and not p.CanCollide,v.name.." missing")
-        p.Size=v.size
-        p.CFrame=v.cf
-    end
-    local sheet=0
-    for _,object in ipairs(root:GetChildren()) do
-        if object:IsA("BasePart")
-            and object.Name=="Staff hall anonymous paper notice" then
-            sheet+=1
-            object.Size=Vector3.new(1.75,1.73,.025)
-            object.CFrame=CFrame.new(sheet==1 and 44 or 47,7.70,25.94)
-        end
-    end
-    assert(sheet==2,"Staff corridor anonymous notices missing")
 
     -- Turn the already-complete 108-stud hall ninety degrees around its open
     -- end. The near opening lands at (48.5, 26.75); the corridor then runs

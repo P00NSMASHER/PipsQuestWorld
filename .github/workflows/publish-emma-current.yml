@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: centered planning board, refined teacher avatar, clean furniture, closed closet, and perpendicular hall.
+# Release refresh: clear desk, centered jobs board, coat closet, and cleaned perpendicular hall.
 
 on:
   push:

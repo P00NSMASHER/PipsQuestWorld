@@ -68,9 +68,8 @@ assert(caps[1].CanCollide and near(caps[1].Position.Z,134.75),
 local south=expect("Side corridor end wall",1)[1]
 assert(near(south.Position.Z,4.25) and south.CanCollide,
     "LEFT_STAFF_CORRIDOR_SOUTH_CAP_LOST")
-local returnWall=one("Left hallway outside corner return")
-assert(returnWall.CanCollide and returnWall.Position.X>53.8
-    and returnWall.Position.Z>25.5,"LEFT_HALL_CORNER_EXTERIOR_GAP")
+assert(#pieces("Left hallway outside corner return")==0,
+    "OBSOLETE_FLOATING_HALL_SEAM_RETURNED")
 assert(#pieces("Photo hall front outer wall")==1
     and near(one("Photo hall front outer wall").Position.Z,126.25),
     "LEFT_HALL_PASSAGE_HAS_BLOCKING_REAR_WALL")
@@ -169,12 +168,14 @@ local function checkCloset()
     assert(back.CanCollide and near(back.Position.Z,36.05)
         and back.Size.X>12.40 and back.Size.Y>=12.9,
         "RIGHT_CLOSET_REAR_WALL_NOT_SEALED")
-    expect("Supply closet oak shelf",3)
-    local tubs=expect("Supply closet labeled storage tub",3)
-    for _,tub in ipairs(tubs) do
-        assert(not tub.CanCollide and
-            tub:FindFirstChild("Anonymous classroom supply category"),
-            "RIGHT_CLOSET_STORAGE_PROPS_MISSING_OR_BLOCKING")
+    expect("Supply closet child coat rail",1)
+    local coats=expect("Children coat body",5)
+    expect("Children coat sleeve",10)
+    expect("Children coat collar",5)
+    expect("Supply closet coat hook",5)
+    for _,coat in ipairs(coats) do
+        assert(not coat.CanCollide and coat.Material==Enum.Material.Fabric,
+            "RIGHT_CLOSET_COATS_MISSING_OR_BLOCKING")
     end
     local closetFloor=one("Supply closet warm laminate floor")
     assert(closetFloor.CanCollide and

@@ -244,21 +244,10 @@ local function verify()
                 "PHOTO_WOOD_NEW_DETAIL_COLLIDES "..name)
         end
     end
-    local chart=one("Photo flipchart white housing")
-    local board=one("Photo flipchart dry erase face")
-    assert(chart.Material==Enum.Material.SmoothPlastic
-        and board.Material==Enum.Material.SmoothPlastic
-        and chart.Color.R>.85 and board.Color.R>.93,
-        "PHOTO_FLIPCHART_WHITE_FINISH_INVALID")
-    assert(#parts("Photo flipchart blue cart support")==2
-        and #parts("Photo flipchart rubber wheel")==2
-        and #parts("Photo flipchart lower blue shelf")==1
-        and #parts("Photo flipchart colored magnet")==3,
-        "PHOTO_FLIPCHART_ASSEMBLY_INCOMPLETE")
-    assert(math.abs(chart.Position.X+29.6)<.03
-        and math.abs(chart.Position.Z+30.8)<.03
-        and not chart.CanCollide and not board.CanCollide,
-        "PHOTO_FLIPCHART_COLLISION_OR_POSITION_INVALID")
+    assert(#parts("Photo flipchart white housing")==0
+        and #parts("Photo flipchart dry erase face")==0
+        and #parts("Photo flipchart blue cart support")==0,
+        "REDUNDANT_CORNER_FLIPCHART_RETURNED")
     -- The teacher laptop formerly replicated 40 microscopic keyboard
     -- Parts for minimal visual return. Retain the same supported deck with
     -- a native noninteractive SurfaceGui 4x10 manufactured key pattern.
@@ -485,17 +474,8 @@ grille.Face=oldGrilleFace
 assert(not ok and string.find(tostring(err),"PHOTO_BOX_FAN_GRILLE_MISSING",1,true),
     "PHOTO_BOX_FAN_BACKWARD_GRILLE_FALSE_ACCEPT")
 print("PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward")
-local chart=one("Photo flipchart white housing")
-local oldMaterial=chart.Material
-chart.Material=Enum.Material.Wood
-ok,err=pcall(verify)
-chart.Material=oldMaterial
-assert(not ok and string.find(tostring(err),
-    "PHOTO_FLIPCHART_WHITE_FINISH_INVALID",1,true),
-    "PHOTO_FLIPCHART_WOOD_REGRESSION_NOT_REJECTED")
 verify()
-print("PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel")
-print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location right_shapes number_order number_units panel_depth grade_banner red_chart pocket_slips flipchart laptop fan")
+print("PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS collider location right_shapes number_order number_units panel_depth grade_banner red_chart pocket_slips laptop fan")
 '''
 def main() -> None:
     p=argparse.ArgumentParser()
@@ -522,7 +502,6 @@ def main() -> None:
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
         "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
-        "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
         assert any(line.startswith(marker) for line in r.stdout.splitlines()),marker

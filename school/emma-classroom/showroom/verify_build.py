@@ -85,16 +85,17 @@ assert 'Prayer cross vertical' not in room and 'Classroom cross vertical' not in
 assert room.count('chalkboard cross vertical') == 1 and room.count('chalkboard cross horizontal') == 1, "The single centered chalkboard cross is missing"
 assert 'local banner=part(root,"Handwriting alphabet strip"' not in room, "Duplicate navy alphabet strip returned"
 art=(base / "emma-classroom/showroom/ArtPass.lua").read_text()
-assert 'local easelX=-29.6' in art, "Rolling flipchart still intersects the gray cabinet"
+assert 'Photo flipchart white housing' not in art, "Redundant corner flipchart returned"
+assert 'local jobsZ=-28.20' in art, "Right-wall jobs board is not centered in its bay"
 assert "Chair back accent" not in art, "Fake colored stripes returned to the 16 molded school chairs"
 assert "for row,z in ipairs({-12,4,19}) do" in art, "Desk prop art no longer follows classroom rows"
 assert "for col,x in ipairs({-24,-16,-8,0,12,20}) do" in art, "Desk prop art no longer follows classroom columns"
 assert "CFrame.new(x,3.179,z+1.33)" in art, "Laminate hardware no longer aligns with actual desk tops"
 assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on desktop"
-assert "pencilCup(root,23.2,4.08,-23.6)" in room, "Teacher pencil cup intersects the globe or leaves the desktop"
+assert "pencilCup(root,23.2,4.08,-23.6)" not in room, "Duplicate teacher pencil cup returned"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
 gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
-assert "CFrame.new(22,3.365,-22.6)" in gallery, "Stationery tray no longer touches teacher desk"
+assert "CFrame.new(22.3,3.365,-22.75)" in gallery, "Stationery tray no longer touches teacher desk"
 assert "CFrame.new(30.5,3.315,-24.0)" in gallery, "Teacher papers no longer rest on desk"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main

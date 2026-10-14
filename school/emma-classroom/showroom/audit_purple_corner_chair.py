@@ -78,7 +78,7 @@ local function check()
     local tableTop=one("Photo window worktable")
     assert(math.abs(gray.Position.X+34.05)<.03
         and math.abs(gray.Position.Z+30.50)<.03
-        and math.abs(files.Position.X+34.10)<.03
+        and math.abs(files.Position.X+33.75)<.03
         and math.abs(files.Position.Z+26.25)<.03
         and #parts("Photo filing drawer face")==3,
         "PURPLE_CHAIR_PHOTO_STORAGE_MISSING_OR_MISPLACED")
