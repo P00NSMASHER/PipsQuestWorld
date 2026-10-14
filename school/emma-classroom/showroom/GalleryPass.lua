@@ -291,26 +291,26 @@ local function showcaseBoards(root:Instance,group:Instance)
         for _,child in ipairs(smart:GetChildren()) do
             if child:IsA("SurfaceGui") then child:Destroy() end
         end
-        -- Real classroom photo evidence shows a large WHITE wheeled
-        -- Smartboard with a dark inactive screen. The older fabricated
+        -- The supplied reference shows a compact WHITE wheeled Smartboard
+        -- with a pale idle display. The older fabricated
         -- "WELCOME TO GRADE 2" slide was not present in the classroom
         -- reference and created a false permanent grade/lesson claim.
         -- Keep the exact photographed screen, chassis, orientation and
         -- original matte finish, but show its screen blank BY DEFAULT.
         -- No image, lesson UI, quiz controls or changed physical Parts.
         smart.Material=Enum.Material.SmoothPlastic
-        smart.Color=Color3.fromRGB(27,34,36)
-        smart.Reflectance=.035
+        smart.Color=Color3.fromRGB(222,233,235)
+        smart.Reflectance=.02
         smart.Transparency=0
         -- Never add a fake permanent grade splash to this blank panel.
         -- Future authenticated schoolwork/lesson UI is a separate,
         -- explicitly governed feature, not static photo-fidelity art.
         -- Hardware, not a giant question-card UI.
         piece(group,"Interactive board camera",Vector3.new(.28,.28,.23),
-            CFrame.new(5.2,11.58,-31.32),C.slate,Enum.Material.Metal,false)
-        for _,x in ipairs({2.6,3.3,4.0}) do
+            CFrame.new(5.2,11.08,-31.32),C.slate,Enum.Material.Metal,false)
+        for _,x in ipairs({3.6,4.3,5.0}) do
             piece(group,"Interactive board stylus",Vector3.new(.12,.12,1.05),
-                CFrame.new(x,4.79,-30.99)*CFrame.Angles(0,math.rad(90),0),
+                CFrame.new(x,4.89,-30.99)*CFrame.Angles(0,math.rad(90),0),
                 x<2 and C.slate or C.metal,Enum.Material.SmoothPlastic,false)
         end
     end

@@ -1063,25 +1063,25 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # The photographed mobile screen sits ahead of a wider chalkboard, not
     # beside one. Check x alignment and visible blackboard perimeter.
     chalk_margin=(chalk_width-smart_width)/2
-    assert 18.5 <= smart_width <= 19.2, "Digital display changed width"
+    assert 10.9 <= smart_width <= 11.3, "Compact digital display changed width"
     assert 28.5 <= chalk_width <= 29.5, "Wide chalkboard backing missing"
     assert abs(smart_x-5.2)<.02 and abs(chalk_x-smart_x)<.05, (
         "Wheeled screen no longer aligns with chalkboard backdrop"
     )
-    assert abs(frame_x-smart_x)<.02 and .94<frame_width-smart_width<1.10, (
+    assert abs(frame_x-smart_x)<.02 and .64<frame_width-smart_width<.76, (
         "Photo-accurate white housing must remain centered with a wide visible border"
     )
-    assert 7.20 <= float(bezel[7]) <= 7.35 and (
+    assert 6.35 <= float(bezel[7]) <= 6.55 and (
         bezel[4].endswith("SmoothPlastic")
     ), "Photo-guided molded display frame has lost its full-height smooth housing"
     frame_rgb=[float(x) for x in bezel[12:15]]
     assert min(frame_rgb)>.92 and max(frame_rgb)-min(frame_rgb)<.035, (
         "The chalkboard's white-framed interactive screen reverted to a dark bezel"
     )
-    assert abs((frame_width-smart_width)/2-.50)<.06 and (
-        abs((float(bezel[7])-float(smart[7]))/2-.46)<.06
+    assert abs((frame_width-smart_width)/2-.35)<.06 and (
+        abs((float(bezel[7])-float(smart[7]))/2-.35)<.06
     ), "White interactive screen housing edge is too thin at child eye height"
-    assert 4.5 <= chalk_margin <= 5.8, (
+    assert 8.5 <= chalk_margin <= 9.5, (
         "Blackboard perimeter is obscured by the wheeled screen"
     )
     assert float(smart[11])-float(chalk[11])>1.5, (
@@ -1090,20 +1090,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert abs(float(smart[10])-float(chalk[10]))<1, "Display heights diverged"
     trim=[row for row in lines if row[1]=="Smartboard satin aluminum trim"]
     assert len(trim)==2 and all(abs(float(row[9])-smart_x)<.02
-                                and abs(float(row[6])-19.77)<.05
+                                and abs(float(row[6])-11.72)<.05
                                 for row in trim), "Decorative trim no longer follows white board geometry"
-    assert sorted(round(float(row[10]),2) for row in trim)==[4.62,11.78], (
+    assert sorted(round(float(row[10]),2) for row in trim)==[4.79,11.21], (
         "White Smartboard top and bottom hardware detached from molded surround"
     )
     side_rails=[row for row in lines if row[1]=="Smartboard protective edge"]
-    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-4.68,15.08], (
+    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-.68,11.08], (
         "The two white Smartboard side rails detached from the larger composite housing"
     )
-    assert all(abs(float(row[7])-7.15)<.03 for row in side_rails), (
+    assert all(abs(float(row[7])-6.33)<.03 for row in side_rails), (
         "White side rails reverted to stubby colored props"
     )
-    print("PHOTO_WHITE_SMARTBOARD_HOUSING_PASS border_x=.50 border_y=.46 "
-          "white_composite=true chrome_rails=4 same_support_geometry=true")
+    print("PHOTO_WHITE_SMARTBOARD_HOUSING_PASS border_x=.35 border_y=.35 "
+          "white_composite=true chrome_rails=4 compact_ricoh_style=true")
     # Permanent chalkboard and manufactured mobile board remain separate.
     # Read actual executed Luau physical transforms (not code-string guesses).
     # This does NOT simulate native Roblox shadowing or phone camera FOV.
@@ -1126,13 +1126,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     assert len(braces)==1, "Mobile stand is missing its transverse support"
     for items in (supports,collars,feet):
-        assert sorted(round(float(p[9]),2) for p in items)==[.10,10.30], (
+        assert sorted(round(float(p[9]),2) for p in items)==[2.20,8.20], (
             "Rolling Smartboard support disconnected from the two screen pylons"
         )
     assert sorted(round(float(p[11]),2) for p in wheels)==(
-        [-31.77,-31.77,-29.67,-29.67]
+        [-31.68,-31.68,-29.76,-29.76]
     ), "Rolling Smartboard has misplaced casters"
-    assert all(.49 < float(p[10])-float(p[7])/2 < .70 for p in supports), (
+    assert all(.84 < float(p[10])-float(p[7])/2 < .90 for p in supports), (
         "Rolling Smartboard support collides with visual ground plane"
     )
     assert all(abs(float(p[10])-.73)<.01 for p in wheels), (
@@ -1348,11 +1348,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), "Child-scale molded chair seat edge returned to a blunt slab"
     smart=only("Interactive smartboard")
     assert smart[4].endswith("SmoothPlastic") and (
-        max(float(v) for v in smart[12:15])<.16
-    ), "Photo-grounded dark matte school smartboard became gray glass"
+        min(float(v) for v in smart[12:15])>.84
+    ), "Reference-matched pale smartboard display became dark or glassy"
     print("PHOTO_MAJOR_CARPENTRY_PASS dark_oak_joinery=44 "
           "cabinet_bays=12 library_shelves=3 "
-          "photo_molded_chair_noses=16 matte_smartboard=true "
+          "photo_molded_chair_noses=16 pale_smartboard=true "
           "room_footprints_unchanged=true")
     bags=sorted([row for row in lines if row[1]=="Hanging school bag"],
                 key=lambda row:float(row[9]))

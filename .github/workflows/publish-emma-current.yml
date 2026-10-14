@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: owner-reviewed rug, globe, plant, planner, and mobile smartboard corrections.
+# Release refresh: single centered cross, supported corner props, compact white smartboard, and adult teacher scale.
 
 on:
   push:
