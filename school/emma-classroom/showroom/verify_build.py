@@ -1,4 +1,4 @@
-"""Fail closed if the publishable replica accidentally packages study gameplay.
+"""Fail closed if the publishable showroom accidentally packages study gameplay.
 
 This checks the actual Rojo project and (when supplied) the assembled RBXLX.
 It does NOT certify Roblox rendering or actual iPhone visual quality.
@@ -22,10 +22,13 @@ expected = {
     "ArtPass": "emma-classroom/showroom/ArtPass.lua",
     "FurnitureMeshAdapter": "emma-classroom/showroom/FurnitureMeshAdapter.lua",
     "FurnitureMeshConfig": "emma-classroom/showroom/FurnitureMeshConfig.lua",
+    "StaffModel": "emma-classroom/server/StaffModel.lua",
+    "StaffAssets": "emma-classroom/server/StaffAssets",
+    "StaffData": "emma-classroom/shared/Data.lua",
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
-    assert (base / path).is_file()
+    assert (base / path).exists()
 assert client["ClassroomView"]["$path"] == "emma-classroom/showroom/View.client.lua"
 assert set(server) == {"$className", *expected}
 assert set(client) == {"$className", "ClassroomView"}
@@ -40,6 +43,8 @@ assert "Instance.new(\"RemoteFunction\")" not in main
 assert "Instance.new(\"RemoteEvent\")" not in main
 assert "DataStoreService" not in main
 assert "StaffModel" not in room and "teacherModel" not in room
+assert 'teacher:SetAttribute("ShowroomStationaryTeacher",true)' in main
+assert 'CFrame.new(-11,3.15,-29)' in main
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
