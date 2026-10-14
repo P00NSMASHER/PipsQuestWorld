@@ -435,8 +435,8 @@ local function physicalDetails(root:Instance,group:Instance)
             plate.CFrame*CFrame.new(-.09,0,0),C.metal,Enum.Material.SmoothPlastic,false)
     end
     for _,door in ipairs(root:GetChildren()) do
-        if door.Name=="Open classroom door" or door.Name=="Open staff classroom door" then
-            local nearEdge=door.Name=="Open classroom door" and door.Size.X/2-.65 or 0
+        if door.Name=="Closed classroom closet door" or door.Name=="Open staff classroom door" then
+            local nearEdge=door.Name=="Closed classroom closet door" and door.Size.X/2-.65 or 0
             local plate=piece(group,"Classroom door handle plate",Vector3.new(.56,1.0,.06),
                 door.CFrame*CFrame.new(nearEdge,-.7,-.32),C.metal,Enum.Material.Metal,false)
             sphere(group,"Classroom brass door knob",Vector3.new(.42,.42,.42),

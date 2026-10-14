@@ -133,8 +133,8 @@ CUTAWAY_OCCLUDERS={
     "Photo hall rear glazed brick","Photo hall classroom exterior glazed brick",
     "Photo hall front outer glazed brick","Photo hall left end glazed brick",
     "Photo hall right end glazed brick",
-    "Side hall ceiling","Staff entry straight north wall",
-    "Staff entry north wall glazed brick","Photo hall continuous north wall",
+    "Side hall ceiling","Staff entry outer east wall",
+    "Staff entry east wall glazed brick","Photo hall continuous north wall",
     "Supply closet side wall","Supply closet solid rear wall",
     # Keep the constructed forest visible in aerial snapshots so it can be
     # reviewed. Player-eye screenshots always use the full, uncut room.
@@ -160,52 +160,50 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # before removing anything for the cutaway visualization.
     def actual_parts(name):
         return [row for row in lines if row[1] == name]
-    # October 12 owner correction: exit the LEFT staff door and continue
-    # due east along the SAME axial line. No north turn and no closet route.
-    # The yellow sunburst window must be at the far (east) sealed end.
-    def actual_parts(name):
-        return [row for row in lines if row[1] == name]
+    # Owner correction: the staff doorway opens into a short vestibule and
+    # the long school corridor turns ninety degrees north. The hall must not
+    # present a false straight tunnel through the classroom wall.
     floor_parts=actual_parts("Photo hall polished square stone floor")
     north=actual_parts("Photo hall continuous north wall")
     rear=actual_parts("Photo hall rear blue-gray wall")
     ends=actual_parts("Photo hall end cap")
     side_caps=actual_parts("Side corridor end wall")
-    staff_north=actual_parts("Staff entry straight north wall")
+    staff_east=actual_parts("Staff entry outer east wall")
     assert (len(floor_parts),len(rear),len(north),len(ends),
-            len(side_caps),len(staff_north))==(1,1,1,1,1,1), (
-        "STRAIGHT_CORRIDOR_STRUCTURE_MISSING"
+            len(side_caps),len(staff_east))==(1,1,1,1,1,1), (
+        "PERPENDICULAR_CORRIDOR_STRUCTURE_MISSING"
     )
-    assert (abs(float(floor_parts[0][9])-108)<.03
-            and abs(float(floor_parts[0][11])-15.5)<.03
+    assert (abs(float(floor_parts[0][9])-48.5)<.03
+            and abs(float(floor_parts[0][11])-80.75)<.03
             and float(floor_parts[0][6])>=107.9
             and float(floor_parts[0][8])>=22.4), (
-        "STRAIGHT_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
+        "PERPENDICULAR_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
     )
-    assert (abs(float(rear[0][11])-4.25)<.05
-            and abs(float(north[0][11])-26.75)<.05
+    assert (abs(float(rear[0][9])-59.75)<.05
+            and abs(float(north[0][9])-37.25)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
             ), (
-        "STRAIGHT_CORRIDOR_OUTER_WALL_GAP"
+        "PERPENDICULAR_CORRIDOR_OUTER_WALL_GAP"
     )
-    assert (abs(float(ends[0][9])-162)<.05
+    assert (abs(float(ends[0][11])-134.75)<.05
             and float(ends[0][8])>=22.4
             ), (
-        "STRAIGHT_CORRIDOR_FAR_END_NOT_SEALED"
+        "PERPENDICULAR_CORRIDOR_FAR_END_NOT_SEALED"
     )
     assert (abs(float(side_caps[0][11])-4.25)<.05
-            and abs(float(staff_north[0][11])-26.8)<.05
-            and float(staff_north[0][6])>=17.9
+            and abs(float(staff_east[0][9])-59.6)<.05
+            and float(staff_east[0][8])>=22.9
             ), (
-        "STRAIGHT_CORRIDOR_VESTIBULE_SKY_GAP"
+        "PERPENDICULAR_CORRIDOR_VESTIBULE_SKY_GAP"
     )
     assert not actual_parts("Side hall far wall"), (
-        "STRAIGHT_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"
+        "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"
     )
     exterior_seam=actual_parts("Left hallway outside corner return")
     assert len(exterior_seam)==1 and abs(float(exterior_seam[0][9])-54.12)<.05
     front_sealed=actual_parts("Photo hall front outer wall")
-    assert len(front_sealed)==1 and abs(float(front_sealed[0][9])-153.5)<.05
+    assert len(front_sealed)==1 and abs(float(front_sealed[0][11])-126.25)<.05
     rails=actual_parts("Blue chair rail right")
     assert len(rails)==2, "VIDEO_REGRESSION: right wall uses a doorway-spanning rail"
     for rail in rails:
@@ -217,19 +215,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "VIDEO_REGRESSION: continuous baseboard spans the staff doorway"
     )
     print("IPHONE_PORTAL_GEOMETRY_PASS span=108 far_cap=1 "
-          "staff_exit_straight=true right_rear_closet_only=true "
-          "no_x54_blocker=true actual_luau_parts=true",flush=True)
+          "staff_exit_perpendicular=true right_rear_closet_only=true "
+          "false_arch_removed=true actual_luau_parts=true",flush=True)
 
     # New photographic hallway landmarks replace exact named placeholders.
     floor=actual_parts("Photo hall polished square stone floor")
     rear_brick=actual_parts("Photo hall rear glazed brick")
     classroom_brick=actual_parts("Photo hall classroom exterior glazed brick")
     outside_brick=actual_parts("Photo hall front outer glazed brick")
-    # Only the enclosed far-end brick veneer survives the straight axis
+    # Only the enclosed far-end brick veneer survives the turned axis
     # rebuild. Old x54 near-cap facing obscured the player camera without
     # ever being a collision blocker.
     assert not actual_parts("Photo hall right end glazed brick"), (
-        "STRAIGHT_HALL_OPAQUE_NONCOLLIDING_STAFF_EXIT_FACE_RETURNED")
+        "PERPENDICULAR_HALL_OPAQUE_ENTRY_FACE_RETURNED")
     end_brick=actual_parts("Photo hall left end glazed brick")
     ceiling=actual_parts("Photo hall ivory ceiling")
     oak=actual_parts("Photo hall adjacent oak door")
@@ -255,7 +253,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(diamonds)==23 and all(
         p[4].endswith("SmoothPlastic") and
         abs(float(p[10])-9.05)<.03 and
-        abs(float(p[11])-4.98)<.03
+        abs(float(p[9])-59.02)<.03
         for p in diamonds
     ), "Physical 23-paper hallway display missing or floating"
     assert len(actual_parts("Notebook ruled line"))==0 and (
@@ -265,7 +263,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert len(actual_parts("Photo hall rear dado cap"))==1
     assert len(actual_parts("Photo hall front dado cap"))==2
     assert len(actual_parts("Classroom doorway brass threshold"))==1
-    assert len(actual_parts("Door glass"))==2, (
+    assert len(actual_parts("Door glass"))==2 and (
+        len(actual_parts("Closed classroom closet door"))==2
+    ), (
         "Original walkable classroom entrance glazing was removed"
     )
     assert all(p[4].endswith("Wood") for p in oak), (
@@ -299,15 +299,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PHOTO_HALL_ADJACENT_OLD_OPAQUE_TEN_STUD_WOOD_SLAB_RETURNED"
     )
     assert all(7.60<float(p[10])<7.67
-               and abs(float(p[11])-25.58)<.03 for p in facade_frosted), (
+               and abs(float(p[9])-38.42)<.03 for p in facade_frosted), (
         "PHOTO_HALL_ADJACENT_FROSTED_PANE_OFFSET_OR_HIDDEN"
     )
-    assert sorted(round(float(p[9]),2) for p in facade_frosted)==[85.0,153.5]
+    assert sorted(round(float(p[11]),2) for p in facade_frosted)==[57.75,126.25]
     assert len(actual_parts("Photo hall front outer wall"))==1 and (
-        abs(float(actual_parts("Photo hall front outer wall")[0][9])-153.5)<.05
+        abs(float(actual_parts("Photo hall front outer wall")[0][11])-126.25)<.05
     ), "PHOTO_HALL_LEFT_ONLY_SEALED_WALL_REQUIRED"
-    assert sorted(round(float(p[9]),2) for p in oak)==[85.0,153.5], (
-        "STRAIGHT_STAFF_HALL_FACADES_MOVED_OFF_REAL_WALL"
+    assert sorted(round(float(p[11]),2) for p in oak)==[57.75,126.25], (
+        "PERPENDICULAR_STAFF_HALL_FACADES_MOVED_OFF_REAL_WALL"
     )
     closet_walls=actual_parts("Supply closet side wall")
     closet_back=actual_parts("Supply closet solid rear wall")
@@ -324,12 +324,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("DOORWAY_ROUTING_SOURCE_PASS left=staff_hall right=closed_supply_closet "
           "shelves=3 bins=3 rear_wall=true",flush=True)
     print("PHOTO_HALL_ADJACENT_NATIVE_FACADE_SCENE_PASS two_glazed_doors=true "
-          "native_new_parts=18 straight_hall_open=true right_closet_sealed=true "
+          "native_new_parts=18 perpendicular_hall_open=true right_closet_sealed=true "
           "visual_renderer_must_inspect_actual_panes=true",flush=True)
 
     for lamp in lamps:
         assert (lamp[4].endswith("Glass") and
-                abs(float(lamp[11])-15.5)<.025 and
+                abs(float(lamp[9])-48.5)<.025 and
                 abs(float(lamp[10])-12.85)<.025), (
             "Hall fluorescent diffuser off continuous ceiling"
         )
@@ -348,13 +348,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), "PHOTO_END_WINDOW_NOT_17_NATIVE_3D_PARTS"
     pane=end_glass[0]
     assert pane[4].endswith("Glass") and (
-        abs(float(pane[9])-161.38)<.03
+        abs(float(pane[9])-48.5)<.03
         and abs(float(pane[10])-7.35)<.03
-        and abs(float(pane[11])-15.5)<.03
+        and abs(float(pane[11])-134.13)<.03
         and float(pane[7])>=8.3 and float(pane[8])>=14.6
     ), "PHOTO_END_WINDOW_GLAZING_NOT_INSIDE_SEALED_END_CAP"
     assert all(p[4].endswith("Wood") for p in end_h+end_v+end_m+end_t)
-    assert all(160.8<float(p[9])<161.5 for p in (
+    assert all(133.7<float(p[11])<134.6 for p in (
         end_glass+end_h+end_v+end_m+end_t+end_sun+end_rays
     )), "PHOTO_END_WINDOW_3D_PROPS_INSIDE_SOLID_CAP"
     assert all(abs(float(p[10])-9.55)<=1.05 for p in end_rays), (
@@ -386,7 +386,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         staff_surround[0][4].endswith("Metal")
     ), "Side hall recess replaced with overexposed fixture"
     print("SCHOOL_CORRIDOR_FINISH_PASS long_hall=108_studs "
-          "glazed_brick_facings=6 main_diffusers=5 staff_left_entry_straight=true "
+          "glazed_brick_facings=6 main_diffusers=5 staff_left_entry_turns=true "
           "photo_schoolwork_papers=23 physical=true notebook_parts_saved=64 "
           "native_iphone_pending",flush=True)
 
@@ -1150,6 +1150,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print(f"TEACHING_WALL_GEOMETRY_PASS smartboard={smart_width:.2f} "
           f"chalkboard={chalk_width:.2f} exposed_margin={chalk_margin:.2f} "
           f"frame={frame_width:.2f}")
+    planner=only("Teacher planning board shallow oak back")
+    planner_left=float(planner[9])-float(planner[6])/2
+    planner_right=float(planner[9])+float(planner[6])/2
+    chalk_right=chalk_x+chalk_width/2
+    right_wall=36.5
+    assert abs((planner_left-chalk_right)-(right_wall-planner_right))<.55, (
+        "Teacher planning board is not centered in the clear wall bay"
+    )
+    closet_doors=actual_parts("Closed classroom closet door")
+    assert len(closet_doors)==2 and all(
+        abs(float(p[11])-26.36)<.03 and
+        abs(float(p[15])-1)<.001 and abs(float(p[19])-1)<.001 and
+        abs(float(p[23])-1)<.001 for p in closet_doors
+    ), "Classroom closet leaves are angled, open, or out of plane"
     # Repositioned art easel must NOT occlude the actual chalkboard from the
     # front-facing player camera. Validate exported world geometry after Luau.
     easel=only("Photo flipchart white housing")
@@ -1160,11 +1174,20 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert 18.0 <= easel_clearance <= 21.0, (
         f"The photo-guided larger chalkboard intersects the art easel: {easel_clearance:.2f}"
     )
-    assert abs(easel_x+31.0)<.02, "The visually dominant prior easel returned"
+    assert abs(easel_x+29.6)<.02, "The flipchart moved back into the gray cabinet"
     assert 4.0 <= easel_width <= 4.4, "Easel must have a compact school-scale silhouette"
     assert 3.4 <= float(easel[7]) <= 3.8, "Oversized brown display returned"
     assert easel_x-easel_width/2 > -36.5, "Easel crosses the interior left wall"
     assert -32.0 < easel_z < -29.0, "Easel no longer belongs in the front-left art corner"
+    filing=only("Photo black filing cabinet")
+    gray_cabinet=only("Photo gray corner storage cabinet")
+    prayer_table=only("Prayer table")
+    assert (float(prayer_table[9])-float(prayer_table[6])/2) - (
+        float(filing[9])+float(filing[6])/2
+    ) > 2.0, "Corner table still intersects the black filing cabinet"
+    assert (easel_x-easel_width/2) - (
+        float(gray_cabinet[9])+float(gray_cabinet[6])/2
+    ) > .9, "Rolling flipchart still intersects the gray cabinet"
     easel_poster=only("Photo flipchart dry erase face")
     easel_ledge=only("Photo flipchart marker tray")
     easel_legs=[row for row in lines if row[1]=="Photo flipchart blue cart support"]

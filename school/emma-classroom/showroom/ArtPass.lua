@@ -541,7 +541,7 @@ local function focalTeachingArea(root:Instance)
     -- blue wheeled frame, not a large invented wooden achievement poster.
     -- Retain this provisional corner position and original board dimensions;
     -- the cheer event does not establish its usual daily furniture location.
-    local easelX=-31.0
+    local easelX=-29.6
     local easelZ=-30.8
     local white=Color3.fromRGB(222,227,225)
     local cartBlue=Color3.fromRGB(58,102,145)

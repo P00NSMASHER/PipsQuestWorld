@@ -255,7 +255,7 @@ local function verify()
         and #parts("Photo flipchart lower blue shelf")==1
         and #parts("Photo flipchart colored magnet")==3,
         "PHOTO_FLIPCHART_ASSEMBLY_INCOMPLETE")
-    assert(math.abs(chart.Position.X+31)<.03
+    assert(math.abs(chart.Position.X+29.6)<.03
         and math.abs(chart.Position.Z+30.8)<.03
         and not chart.CanCollide and not board.CanCollide,
         "PHOTO_FLIPCHART_COLLISION_OR_POSITION_INVALID")

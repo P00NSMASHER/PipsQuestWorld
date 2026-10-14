@@ -20,19 +20,35 @@ function StaffModel.create(teacher,scaleOverride:number?)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
     local head=Instance.new("Part");head.Name="Head";head.Size=Vector3.new(2,1,1);head.CFrame=CFrame.new(0,1.5,0);head.Color=rgb(teacher.skin);head.Parent=model
-    local shape=Instance.new("SpecialMesh");shape.Name="Standard Roblox head";shape.MeshType=Enum.MeshType.Head;shape.Scale=Vector3.new(1.25,1.25,1.25);shape.Parent=head
+    local shape=Instance.new("SpecialMesh");shape.Name="Standard Roblox head";shape.MeshType=Enum.MeshType.Head
+    shape.Scale=(teacher.appearanceId=="benulis_2026_portrait") and Vector3.new(1.10,1.12,1.10) or Vector3.new(1.25,1.25,1.25)
+    shape.Parent=head
     for name,cf in pairs({NeckRigAttachment=CFrame.new(0,-.5,0),HairAttachment=CFrame.new(0,.6,0),HatAttachment=CFrame.new(0,.6,0)}) do
         local a=Instance.new("Attachment");a.Name=name;a.CFrame=cf;a.Parent=head
     end
     local face
     if male then
         face=Instance.new("Decal");face.Name="face";face.Face=Enum.NormalId.Front;face.Texture="rbxasset://textures/face.png"
-    else face=assets:WaitForChild("WomanFace"):Clone();face.Name="face" end
+    else
+        face=assets:WaitForChild("WomanFace"):Clone();face.Name="face"
+        if teacher.appearanceId=="benulis_2026_portrait" then
+            -- A cleaner brow/eye treatment and restrained head proportions
+            -- replace the oversized doll-like face used by the generic staff.
+            face.Texture="rbxassetid://155213174"
+            model:SetAttribute("PortraitAvatarRefinement","natural_face_scaled_hair_navy_sweater")
+        end
+    end
     face.Parent=head
 
     local hum=Instance.new("Humanoid");hum.Name="Humanoid";hum.RigType=Enum.HumanoidRigType.R15
     hum.DisplayDistanceType=Enum.HumanoidDisplayDistanceType.None;hum.BreakJointsOnDeath=false;hum.AutomaticScalingEnabled=false;hum.AutoRotate=false;hum.RequiresNeck=false;hum.EvaluateStateMachine=false;hum.Parent=model
-    local shirt=assets:WaitForChild((teacher.name=="Mrs. Thompson" and "DenimJacket") or ((teacher.clothing=="pattern" or teacher.clothing=="floral" or teacher.clothing=="striped") and "PatternShirt" or "Jacket")):Clone();shirt.Parent=model
+    local shirt=assets:WaitForChild((teacher.name=="Mrs. Thompson" and "DenimJacket") or ((teacher.clothing=="pattern" or teacher.clothing=="floral" or teacher.clothing=="striped") and "PatternShirt" or "Jacket")):Clone()
+    if teacher.appearanceId=="benulis_2026_portrait" and shirt:IsA("Shirt") then
+        -- Let the fitted navy R15 body and authored V-neck trim show instead
+        -- of layering the generic black staff jacket over the portrait outfit.
+        shirt.ShirtTemplate=""
+    end
+    shirt.Parent=model
     local pants=assets:WaitForChild("Jeans"):Clone();pants.Parent=model
     local skin=rgb(teacher.skin)
     for _,part in ipairs(model:GetChildren()) do
@@ -70,6 +86,10 @@ function StaffModel.create(teacher,scaleOverride:number?)
                 -- SpecialMesh.VertexColor is Vector3, NOT Color3. Passing
                 -- Color3 throws at runtime and silently drops the whole NPC.
                 mesh.VertexColor=Vector3.new(tint.R,tint.G,tint.B)
+                if teacher.appearanceId=="benulis_2026_portrait" then
+                    mesh.Scale=mesh.Scale*.88
+                    mesh.Offset=mesh.Offset+Vector3.new(0,.04,.03)
+                end
             end
         end
     end

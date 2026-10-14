@@ -588,11 +588,12 @@ local function buildClassroomTexture(root: Instance)
         CFrame.new(cartX+.4,2.35,cartZ+.8),
         P.cream,Enum.Material.SmoothPlastic,false)
     -- A small prayer table / classroom faith corner.
-    part(root,"Prayer table",Vector3.new(8,.5,3.5),CFrame.new(-28,3.2,-27),Color3.fromRGB(139,98,64),Enum.Material.Wood)
-    for _,x in ipairs({-31,-25}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
-    local cloth=part(root,"Prayer table cloth",Vector3.new(7.4,.12,3.1),CFrame.new(-28,3.48,-27),Color3.fromRGB(64,104,77),Enum.Material.Fabric,false)
+    local cornerTableX=-26.5
+    part(root,"Prayer table",Vector3.new(8,.5,3.5),CFrame.new(cornerTableX,3.2,-27),Color3.fromRGB(139,98,64),Enum.Material.Wood)
+    for _,x in ipairs({cornerTableX-3,cornerTableX+3}) do part(root,"Prayer table leg",Vector3.new(.35,3,.35),CFrame.new(x,1.55,-27),Color3.fromRGB(104,72,50),Enum.Material.Wood) end
+    local cloth=part(root,"Prayer table cloth",Vector3.new(7.4,.12,3.1),CFrame.new(cornerTableX,3.48,-27),Color3.fromRGB(64,104,77),Enum.Material.Fabric,false)
     cloth.Transparency=.03
-    book(root,-30,3.72,-27,Color3.fromRGB(92,61,42),0)
+    book(root,-26.3,3.72,-27.35,Color3.fromRGB(92,61,42),0)
 
 
     -- Separate photographed black activity rug with staggered colored spots.
@@ -1617,7 +1618,9 @@ end
 local function buildTeacherPlanningWall(root: Instance)
     -- Pull the complete planner forward of the chalkboard stile so the wood
     -- frame cannot visually cut through the paper sheets.
-    local x,y,z=25.20,8.90,-33.35
+    -- Center the complete frame in the clear wall bay between the chalkboard
+    -- right edge (x=20.1) and the room's right wall (x=36.5).
+    local x,y,z=28.30,8.90,-33.35
     part(root,"Teacher planning board shallow oak back",
         Vector3.new(9.4,6.4,.16),CFrame.new(x,y,z-.17),
         Color3.fromRGB(120,84,57),Enum.Material.Wood,false)
@@ -1695,15 +1698,14 @@ local function buildBackDoorAndHall(root: Instance)
     -- the one original door Part becomes the lower solid panel; reuse the
     -- existing two oak rails and two side stiles as the upper timber frame.
     -- Only two slim middle crossbars and two brass pulls add physical Parts.
-    -- Keep the same open-leaf rotation, threshold and NO-COLLISION policy.
+    -- Both closet leaves are closed, coplanar and tidy in the jamb.
     for _,x in ipairs({-2.75,2.75}) do
-        local leafCF=CFrame.new(x,5.28,25.96)*
-            CFrame.Angles(0,math.rad(x<0 and -48 or 48),0)
+        local leafCF=CFrame.new(x,5.28,26.36)
         -- Relative bottom -5 and top -.74 of the original ten-stud door.
-        local door=part(root,"Open classroom door",Vector3.new(4.65,4.26,.36),
+        local door=part(root,"Closed classroom closet door",Vector3.new(4.65,4.26,.36),
             leafCF*CFrame.new(0,-2.87,0),
             Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
-        door:SetAttribute("OpenLeaf","Lower solid panel; glass aperture above")
+        door:SetAttribute("ClosedLeaf","Lower solid panel; glass aperture above")
         local glass=part(root,"Door glass",Vector3.new(2.54,4.38,.10),
             leafCF*CFrame.new(0,1.42,-.06),
             Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
@@ -2419,20 +2421,17 @@ local function buildTeacherEntry(root: Instance)
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
--- Owner correction, October 12: the school corridor continues STRAIGHT out
--- through the LEFT staff doorway (+X). No northward turn, rear-door shortcut
--- or free-standing closet blocking the corridor. Reuse the complete existing
--- photo hallway and all its authored/anonymous details; relocate it once as a
--- rigid assembly instead of building a second expensive hallway on iPhone.
+-- The school corridor runs perpendicular to the staff doorway. Reuse the
+-- complete photographed hall as one rigid assembly and turn it north at the
+-- exterior vestibule, so looking through the classroom door no longer reveals
+-- a fake straight tunnel through the wall.
 local function alignHallwayWithStaffExit(root: Instance)
     local hall=root:FindFirstChild("PhotographedHallway")
     assert(hall, "Missing original photo corridor")
-    hall:SetAttribute("Route","Straight +X from left staff door; no turns")
+    hall:SetAttribute("Route","Perpendicular north turn outside staff door")
     hall:SetAttribute("Source","October 10 anonymous photographed architecture")
 
-    -- Yaw 180 so the PHOTO YELLOW WINDOW remains at the far end, while
-    -- the photo-hall noticeboard faces into the corridor. Old world origin
-    -- (0,38) becomes (108,15.5): west end x=54, far end x=162.
+    -- First establish the authored hall with its open end at the vestibule.
     local transform=CFrame.new(108,0,53.5)*CFrame.Angles(0,math.pi,0)
     for _,object in ipairs(hall:GetDescendants()) do
         if object:IsA("BasePart") then
@@ -2476,28 +2475,28 @@ local function alignHallwayWithStaffExit(root: Instance)
         CFrame.new(108,6.5,26.75),Color3.fromRGB(107,117,125),
         Enum.Material.SmoothPlastic,true)
 
-    -- Reuse, rather than duplicate, the old 18-stud staff vestibule. Extend
-    -- its single floor and roof in the north/south directions so the 0.5-
-    -- stud overlap at x=54 is supported/roofed across the full hallway width.
+    -- Widen the short vestibule just enough to meet the turned hall's full
+    -- floor and ceiling at z=26.75, with no unsupported corner.
     local sideFloor=root:FindFirstChild("Side hall floor")
     local sideRoof=root:FindFirstChild("Side hall ceiling")
     assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
-    sideFloor.Size=Vector3.new(18,.48,23.05)
-    sideFloor.CFrame=CFrame.new(45.5,.24,15.775)
-    sideRoof.Size=Vector3.new(18,.36,23.05)
-    sideRoof.CFrame=CFrame.new(45.5,13.18,15.775)
+    sideFloor.Size=Vector3.new(23.1,.48,23.05)
+    sideFloor.CFrame=CFrame.new(48.05,.24,15.775)
+    sideRoof.Size=Vector3.new(23.1,.36,23.05)
+    sideRoof.CFrame=CFrame.new(48.05,13.18,15.775)
 
-    -- The old x=54.5 far wall was a hard stop directly across the path.
-    -- Rotate/reuse its wall and glazed dado onto the NORTH side instead.
+    -- Move the old facing wall to the outside edge of the widened vestibule.
+    -- This removes the whitish-gray false arch seen above/inside the timber
+    -- doorway while keeping the exterior turn fully enclosed.
     local oldBlock=root:FindFirstChild("Side hall far wall")
     local oldBrick=root:FindFirstChild("Side hall far brick")
     assert(oldBlock and oldBrick,"Old staff hall return missing")
-    oldBlock.Name="Staff entry straight north wall"
-    oldBlock.Size=Vector3.new(18,13,1)
-    oldBlock.CFrame=CFrame.new(45.5,6.5,26.80)
-    oldBrick.Name="Staff entry north wall glazed brick"
-    oldBrick.Size=Vector3.new(17.7,4.3,.12)
-    oldBrick.CFrame=CFrame.new(45.5,2.15,26.20)
+    oldBlock.Name="Staff entry outer east wall"
+    oldBlock.Size=Vector3.new(1,13,23.05)
+    oldBlock.CFrame=CFrame.new(59.60,6.5,15.775)
+    oldBrick.Name="Staff entry east wall glazed brick"
+    oldBrick.Size=Vector3.new(.12,4.3,22.75)
+    oldBrick.CFrame=CFrame.new(59.02,2.15,15.775)
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
@@ -2532,6 +2531,18 @@ local function alignHallwayWithStaffExit(root: Instance)
         end
     end
     assert(sheet==2,"Staff corridor anonymous notices missing")
+
+    -- Turn the already-complete 108-stud hall ninety degrees around its open
+    -- end. The near opening lands at (48.5, 26.75); the corridor then runs
+    -- north (+Z), perpendicular to the classroom doorway's +X exit axis.
+    local turn=CFrame.new(48.5,0,26.75)*
+        CFrame.Angles(0,-math.pi/2,0)*CFrame.new(-54,0,-15.5)
+    for _,object in ipairs(hall:GetDescendants()) do
+        if object:IsA("BasePart") then
+            object.CFrame=turn*object.CFrame
+        end
+    end
+    hall:SetAttribute("FalseEntryArchRemoved",true)
 end
 
 -- The owner's October 12 photo-match scope explicitly excludes the gym/tumbling mat.
@@ -2735,7 +2746,7 @@ function World.build()
     plant(root,-31,.1,20,.65)
     -- Supported on the rear corner of the activity table, clear of the book
     -- and the nearby rolling flipchart.
-    plant(root,-30.65,3.55,-25.75,.55)
+    plant(root,-29.25,3.55,-25.75,.55)
     -- Actual classroom photo: the analog white clock hangs on the broad
     -- yellow WALL PIER between the two navy-curtained windows, not over
     -- the front chalkboard. Reuse the existing FIVE Parts with no new clock

@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: single centered cross, supported corner props, compact white smartboard, and adult teacher scale.
+# Release refresh: centered planning board, refined teacher avatar, clean furniture, closed closet, and perpendicular hall.
 
 on:
   push:

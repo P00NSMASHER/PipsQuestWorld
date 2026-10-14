@@ -114,13 +114,20 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(m:GetAttribute("StaffGeometryVersion")==8)
     if teacher.name=="Mrs. Benulis" then
         assert(m:GetAttribute("AppearanceProfile")=="benulis_2026_portrait")
+        assert(m:GetAttribute("PortraitAvatarRefinement")=="natural_face_scaled_hair_navy_sweater")
         assert(m:FindFirstChild("Teardrop pendant") and m:FindFirstChild("V-neck left rib"))
     end
     local head=m:FindFirstChild("Head")
     local face=head:FindFirstChild("face")
     assert(face and face:IsA("Decal") and not head:FindFirstChildOfClass("SurfaceGui"),"Use a standard avatar face, no handmade eye/skull overlays")
     local shape=head:FindFirstChildOfClass("SpecialMesh")
-    assert(shape and shape.MeshType==Enum.MeshType.Head and shape.Scale.Y==1.25)
+    assert(shape and shape.MeshType==Enum.MeshType.Head)
+    if teacher.name=="Mrs. Benulis" then
+        assert(math.abs(shape.Scale.Y-1.12)<.001)
+        assert(face.Texture=="rbxassetid://155213174")
+    else
+        assert(shape.Scale.Y==1.25)
+    end
     assert(m:FindFirstChildOfClass("Humanoid").RigType==Enum.HumanoidRigType.R15)
     assert(m:FindFirstChildOfClass("Shirt") and m:FindFirstChildOfClass("Pants"))
     local hum=m:FindFirstChildOfClass("Humanoid")

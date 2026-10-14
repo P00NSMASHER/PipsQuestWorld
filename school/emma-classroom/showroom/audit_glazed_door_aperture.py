@@ -27,7 +27,7 @@ local function all(name)
     end
     return found
 end
-local doors=all("Open classroom door")
+local doors=all("Closed classroom closet door")
 local panes=all("Door glass")
 local rails=all("Glazed door solid oak rail")
 local stiles=all("Glazed door oak side stile")
