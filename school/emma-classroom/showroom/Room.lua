@@ -2464,12 +2464,10 @@ local function alignHallwayWithStaffExit(root: Instance)
     local sideFloor=root:FindFirstChild("Side hall floor")
     local sideRoof=root:FindFirstChild("Side hall ceiling")
     assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
-    -- Give the staff doorway a deep T-shaped vestibule. The former east wall
-    -- was only 23 studs away and filled the entire doorway like an obstruction.
-    sideFloor.Size=Vector3.new(41.5,.48,23.05)
-    sideFloor.CFrame=CFrame.new(57.25,.24,15.775)
-    sideRoof.Size=Vector3.new(41.5,.36,23.05)
-    sideRoof.CFrame=CFrame.new(57.25,13.18,15.775)
+    sideFloor.Size=Vector3.new(23.1,.48,23.05)
+    sideFloor.CFrame=CFrame.new(48.05,.24,15.775)
+    sideRoof.Size=Vector3.new(23.1,.36,23.05)
+    sideRoof.CFrame=CFrame.new(48.05,13.18,15.775)
 
     -- Move the old facing wall to the outside edge of the widened vestibule.
     -- This removes the whitish-gray false arch seen above/inside the timber
@@ -2479,19 +2477,10 @@ local function alignHallwayWithStaffExit(root: Instance)
     assert(oldBlock and oldBrick,"Old staff hall return missing")
     oldBlock.Name="Staff entry outer east wall"
     oldBlock.Size=Vector3.new(1,13,23.05)
-    oldBlock.CFrame=CFrame.new(78.00,6.5,15.775)
+    oldBlock.CFrame=CFrame.new(59.60,6.5,15.775)
     oldBrick.Name="Staff entry east wall glazed brick"
     oldBrick.Size=Vector3.new(.12,4.3,22.75)
-    oldBrick.CFrame=CFrame.new(77.42,2.15,15.775)
-
-    -- Close the new eastward extension along its north edge while leaving the
-    -- original opening into the perpendicular photographed corridor intact.
-    part(root,"Staff vestibule north extension wall",Vector3.new(17.8,13,.90),
-        CFrame.new(68.85,6.5,26.30),P.blueSoft,Enum.Material.SmoothPlastic,true)
-    part(root,"Staff vestibule north extension brick",Vector3.new(17.5,4.25,.13),
-        CFrame.new(68.85,2.125,25.78),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-    part(root,"Staff vestibule north extension cap rail",Vector3.new(17.5,.16,.12),
-        CFrame.new(68.85,4.30,25.70),P.blue,Enum.Material.Wood,false)
+    oldBrick.CFrame=CFrame.new(59.02,2.15,15.775)
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
@@ -2500,9 +2489,7 @@ local function alignHallwayWithStaffExit(root: Instance)
             (object.Name=="Side corridor end wall"
             or object.Name=="Side corridor brick dado"
             or object.Name=="Side corridor navy cap rail") then
-            local isWall=object.Name=="Side corridor end wall"
-            object.Size=Vector3.new(isWall and 41.5 or 41.2,object.Size.Y,object.Size.Z)
-            object.CFrame=CFrame.new(57.25,object.Position.Y,4.25)
+            object.CFrame=CFrame.new(0,0,-1.40)*object.CFrame
         end
     end
 
@@ -2516,6 +2503,12 @@ local function alignHallwayWithStaffExit(root: Instance)
             object.CFrame=turn*object.CFrame
         end
     end
+    -- Nudge only the corridor wall adjoining the classroom outward by a
+    -- quarter stud so its thickness no longer protrudes through the room wall.
+    local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
+    assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
+        "Staff hallway adjoining wall missing")
+    adjoiningWall.CFrame=CFrame.new(.25,0,0)*adjoiningWall.CFrame
     hall:SetAttribute("FalseEntryArchRemoved",true)
 end
 

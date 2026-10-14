@@ -180,7 +180,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PERPENDICULAR_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
     )
     assert (abs(float(rear[0][9])-59.75)<.05
-            and abs(float(north[0][9])-37.25)<.05
+            and abs(float(north[0][9])-37.50)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
             ), (
@@ -192,14 +192,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PERPENDICULAR_CORRIDOR_FAR_END_NOT_SEALED"
     )
     assert (abs(float(side_caps[0][11])-4.25)<.05
-            and abs(float(staff_east[0][9])-78.0)<.05
+            and abs(float(staff_east[0][9])-59.6)<.05
             and float(staff_east[0][8])>=22.9
             ), (
         "PERPENDICULAR_CORRIDOR_VESTIBULE_SKY_GAP"
-    )
-    north_extension=actual_parts("Staff vestibule north extension wall")
-    assert len(north_extension)==1 and abs(float(north_extension[0][9])-68.85)<.05, (
-        "EXTENDED_STAFF_VESTIBULE_NORTH_WALL_MISSING"
     )
     assert not actual_parts("Side hall far wall"), (
         "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"

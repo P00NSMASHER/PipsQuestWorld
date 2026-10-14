@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: remove loose floor plants and deepen the unobstructed staff vestibule.
+# Release refresh: restore the original hall and offset its adjoining wall slightly outward.
 
 on:
   push:
