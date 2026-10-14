@@ -71,16 +71,8 @@ local function verify()
                 "PHOTO_LITERACY_UNAPPROVED_IMAGE_ASSET")
         end
     end
-    local banners=collect("Handwriting alphabet strip")
-    assert(#banners==1 and banners[1].Size.X==29
-        and math.abs(banners[1].Position.Y-15)<.02,
-        "PHOTO_HANDWRITING_GEOMETRY")
-    local surface=banners[1]:FindFirstChildOfClass("SurfaceGui")
-    local lettering=surface and surface:FindFirstChild("HandwritingSequence")
-    assert(lettering and lettering.Text==
-        "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-        and lettering.Font==Enum.Font.Garamond,
-        "PHOTO_HANDWRITING_CONTENT")
+    assert(#collect("Handwriting alphabet strip")==0,
+        "PHOTO_DUPLICATE_NAVY_ALPHABET_RETURNED")
     -- Photograph-backed teaching surfaces should default to an inactive
     -- dark Smartboard and quiet chalkboard. Generic grade/slogan splash
     -- text is not a permanent physical room landmark.
@@ -106,10 +98,10 @@ local function verify()
         and #collect("Student desk top")==16
         and #collect("Purple corner chair seat")==1,
         "PHOTO_LITERACY_DESKS_REGRESSION")
-    return tiles[1],banners[1]
+    return tiles[1]
 end
-local tile,banner=verify()
-print("PHOTO_LITERACY_RUNTIME_PASS phonics=26 handwriting=1 "
+local tile=verify()
+print("PHOTO_LITERACY_RUNTIME_PASS phonics=26 duplicate_handwriting=0 "
     .."smartboard=blank chalkboard=blank source_only=true "
     .."curriculum_authority=false")
 local smart=collect("Interactive smartboard")[1]
@@ -142,12 +134,6 @@ label.Text=old
 assert(not ok and string.find(tostring(err),"PHOTO_LITERACY_CONTENT",1,true),
     "PHOTO_LITERACY_BAD_WORD_NOT_REJECTED")
 print("PHOTO_LITERACY_ADVERSARIAL_REJECTED example")
-local before=banner.CFrame
-banner.CFrame=CFrame.new(0,3,-33.85)
-ok,err=pcall(verify)
-banner.CFrame=before
-assert(not ok and string.find(tostring(err),"PHOTO_HANDWRITING_GEOMETRY",1,true),
-    "PHOTO_LITERACY_BAD_BANNER_NOT_REJECTED")
 local icon=tile:FindFirstChildOfClass("SurfaceGui")
     :FindFirstChild("PhonicsIllustrationField")
 local body=icon:FindFirstChild("PhonicsIllustrationBody")
@@ -178,7 +164,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_LITERACY_OVERSIZED_LETTER_PADDING_NOT_REJECTED")
 print("PHOTO_LITERACY_ADVERSARIAL_REJECTED oversized_letter_padding")
 verify()
-print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example banner hidden_icon icon_covers_word letter_padding invented_splash invented_chalk")
+print("PHOTO_LITERACY_NEGATIVE_TESTS_PASS example duplicate_banner_absent hidden_icon icon_covers_word letter_padding invented_splash invented_chalk")
 '''
 def main():
     parser=argparse.ArgumentParser()

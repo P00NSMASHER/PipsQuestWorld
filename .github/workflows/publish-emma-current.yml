@@ -1,5 +1,7 @@
 name: Publish Current Emma Classroom Showroom
 
+# Release refresh: owner-reviewed rug, globe, plant, planner, and mobile smartboard corrections.
+
 on:
   push:
     branches:

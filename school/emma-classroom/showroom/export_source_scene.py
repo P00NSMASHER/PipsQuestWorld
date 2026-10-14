@@ -1107,10 +1107,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # Permanent chalkboard and manufactured mobile board remain separate.
     # Read actual executed Luau physical transforms (not code-string guesses).
     # This does NOT simulate native Roblox shadowing or phone camera FOV.
-    assert -31.75 <= float(smart[11]) <= -31.59, (
+    assert -30.35 <= float(smart[11]) <= -30.15, (
         "Mobile interactive display returned flush against the back wall"
     )
-    assert 1.5 <= float(smart[11])-float(chalk[11]) <= 3.0, (
+    assert 3.5 <= float(smart[11])-float(chalk[11]) <= 4.2, (
         "Mobile display should stand forward of the teaching wall"
     )
     assert abs(float(bezel[11])-float(smart[11])+.28)<.04, (
@@ -1130,7 +1130,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             "Rolling Smartboard support disconnected from the two screen pylons"
         )
     assert sorted(round(float(p[11]),2) for p in wheels)==(
-        [-33.25,-33.25,-31.15,-31.15]
+        [-31.77,-31.77,-29.67,-29.67]
     ), "Rolling Smartboard has misplaced casters"
     assert all(.49 < float(p[10])-float(p[7])/2 < .70 for p in supports), (
         "Rolling Smartboard support collides with visual ground plane"

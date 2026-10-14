@@ -468,28 +468,11 @@ local function checkRectangularPhotoRug()
     end
     return mat,letterNodes,gui
 end
-local rect,rectLetters,rectGui=checkRectangularPhotoRug()
-print("RUG_RECTANGULAR_PHOTO_PASS original_art=true letters=26 numbers=10 rays=16 flat_noncolliding=true source_only=true")
-local oldLetter=rectLetters[1].Text
-rectLetters[1].Text=rectLetters[2].Text
-local rectOK,rectErr=pcall(checkRectangularPhotoRug)
-rectLetters[1].Text=oldLetter
-assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_ALPHABET_INVALID",1,true))
-rect.CanCollide=true
-rectOK,rectErr=pcall(checkRectangularPhotoRug)
-rect.CanCollide=false
-assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_PHYSICS_INVALID",1,true))
-local oldRect=rect.CFrame
-rect.CFrame=CFrame.new(-24,.545,-12)
-rectOK,rectErr=pcall(checkRectangularPhotoRug)
-rect.CFrame=oldRect
-assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_FURNITURE_OR_RUG_OVERLAP",1,true))
-rectGui.Face=Enum.NormalId.Bottom
-rectOK,rectErr=pcall(checkRectangularPhotoRug)
-rectGui.Face=Enum.NormalId.Top
-assert(not rectOK and string.find(tostring(rectErr),"RECT_RUG_ART_FACE_INVALID",1,true))
-checkRectangularPhotoRug()
-print("RUG_RECTANGULAR_ADVERSARIAL_REJECTED duplicate_letter collider overlap wrong_face")
+for _,object in ipairs(Room.Root:GetDescendants()) do
+    assert(object.Name~="Photo rectangular alphabet sun rug",
+        "FAILED_RECTANGULAR_RUG_RETURNED")
+end
+print("RUG_FAILED_RECTANGULAR_DUPLICATE_ABSENT circular_photo_rug_retained=true")
 
 local rays,lobes=check()
 print("RUG_NATIVE_PRIMITIVES_PASS rays=16 caps=16 "
@@ -643,8 +626,7 @@ def main():
     if result.returncode:
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
-    markers=("RUG_RECTANGULAR_PHOTO_PASS",
-             "RUG_RECTANGULAR_ADVERSARIAL_REJECTED",
+    markers=("RUG_FAILED_RECTANGULAR_DUPLICATE_ABSENT",
              "RUG_READING_PLANT_CLEAR_PASS",
              "RUG_READING_ADVERSARIAL_REJECTED oversized_plant",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book",
@@ -666,7 +648,7 @@ def main():
     for marker in markers:
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
-        if line.startswith(("RUG_RECTANGULAR_",
+        if line.startswith(("RUG_FAILED_RECTANGULAR_",
                             "RUG_READING_PLANT_CLEAR_PASS",
                             "RUG_READING_ADVERSARIAL_REJECTED",
                             "RUG_STORAGE_CART_CLEAR_PASS",
@@ -680,4 +662,3 @@ def main():
             print(line,flush=True)
 if __name__=="__main__":
     main()
-

@@ -597,9 +597,7 @@ local function buildClassroomTexture(root: Instance)
     book(root,-30,3.72,-27,Color3.fromRGB(92,61,42),0)
 
 
-    -- Photo-grounded IMG_2904/2905/2908/2910: black polka dots and round
-    -- alphabet/sun/cloud carpet. Preserve both established center positions:
-    -- the event photos cannot establish daily desk and carpet locations.
+    -- Separate photographed black activity rug with staggered colored spots.
     part(root,"Front teaching rug",Vector3.new(16,.10,9),CFrame.new(-25,.56,-20),
         Color3.fromRGB(35,38,43),Enum.Material.Fabric,false)
     local dotTints={
@@ -607,8 +605,6 @@ local function buildClassroomTexture(root: Instance)
         Color3.fromRGB(238,204,89),Color3.fromRGB(157,139,187),
         Color3.fromRGB(148,199,168),Color3.fromRGB(231,164,95),
     }
-    -- Real class photo: staggered multicolored dots, not a rigid 5x5 grid.
-    -- Reuse all 25 noncolliding Cylinder Parts on the unchanged 16x9 rug.
     local rowOffsetsX={.30,-.36,.43,-.26,.15}
     for row=0,4 do
         for col=0,4 do
@@ -622,8 +618,7 @@ local function buildClassroomTexture(root: Instance)
                 CFrame.new(x,.632,z)*CFrame.Angles(0,0,math.pi/2),
                 dotTints[(row*7+col*11+row*col*3)%#dotTints+1],
                 Enum.Material.Fabric,false)
-            dot.CanQuery=false
-            dot.CastShadow=false
+            dot.CanQuery=false;dot.CastShadow=false
         end
     end
     local flat=CFrame.Angles(0,0,math.pi/2)
@@ -1307,40 +1302,45 @@ local function buildFrontWall(root: Instance)
     part(root,"Chalkboard eraser",Vector3.new(1.20,.28,.51),CFrame.new(-6.6,4.2,-33.38),P.ink,Enum.Material.Fabric,false)
     -- IMG_2909/2910: the modern white-framed touch display stands on a
     -- wheeled steel support in front of the permanent teaching wall.
-    -- Keep its established x/y and screen proportions but move it two studs
-    -- into the room so its depth, support posts and casters are visible.
+    -- Keep its screen proportions but mount it visibly in front of the wall on
+    -- a compact, self-supporting rolling cart.
     -- Every newly authored cart element is noncolliding and contains no script.
     -- Real IMG_2909/2910 display has a substantial off-white molded frame;
     -- the previous navy 0.25-stud edge read as a generic dark rectangle.
     -- Reuse the existing noncolliding backing Part, no new geometry.
     part(root,"Smartboard white composite bezel",Vector3.new(19.85,7.27,.24),
-        CFrame.new(5.2,8.2,-31.95),
+        CFrame.new(5.2,8.2,-30.55),
         Color3.fromRGB(242,244,240),Enum.Material.SmoothPlastic,false)
+    for _,x in ipairs({-4.68,15.08}) do
+        part(root,"Smartboard molded side depth",Vector3.new(.22,7.08,.62),
+            CFrame.new(x,8.2,-30.82),Color3.fromRGB(213,218,216),
+            Enum.Material.SmoothPlastic,false)
+    end
     part(root,"Smartboard pen tray",Vector3.new(10.5,.22,.65),
-        CFrame.new(5.2,4.61,-31.18),Color3.fromRGB(208,211,209),
+        CFrame.new(5.2,4.61,-29.88),Color3.fromRGB(208,211,209),
         Enum.Material.Metal,false)
     local smart=part(root,"Interactive smartboard",Vector3.new(18.85,6.35,.35),
-        CFrame.new(5.2,8.2,-31.67),Color3.fromRGB(238,243,241),
+        CFrame.new(5.2,8.2,-30.25),Color3.fromRGB(238,243,241),
         Enum.Material.Glass,false);smart.Transparency=.02
     for _,dx in ipairs({-5.1,5.1}) do
         local supportX=5.2+dx
         part(root,"Mobile smartboard support post",Vector3.new(.25,4.35,.26),
-            CFrame.new(supportX,2.85,-32.25),
+            CFrame.new(supportX,2.85,-30.75),
             Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
         part(root,"Mobile smartboard mounting collar",Vector3.new(.72,.36,.35),
-            CFrame.new(supportX,5.0,-32.22),
+            CFrame.new(supportX,5.0,-30.72),
             Color3.fromRGB(172,180,181),Enum.Material.Metal,false)
         part(root,"Mobile smartboard rolling foot",Vector3.new(.30,.18,2.70),
-            CFrame.new(supportX,.79,-32.21),
+            CFrame.new(supportX,.79,-30.72),
             Color3.fromRGB(106,113,117),Enum.Material.Metal,false)
-        for _,casterZ in ipairs({-33.25,-31.15}) do
-            ball(root,"Mobile smartboard caster",Vector3.new(.44,.44,.44),
+        for _,casterZ in ipairs({-31.77,-29.67}) do
+            cylinder(root,"Mobile smartboard caster",Vector3.new(.22,.48,.48),
                 CFrame.new(supportX,.73,casterZ),
                 Color3.fromRGB(57,61,65),Enum.Material.SmoothPlastic,false)
         end
     end
     part(root,"Mobile smartboard cross brace",Vector3.new(10.5,.20,.22),
-        CFrame.new(5.2,2.8,-32.32),
+        CFrame.new(5.2,2.8,-30.82),
         Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
     -- Static architectural smartboard. GalleryPass supplies a non-interactive display.
 
@@ -1348,19 +1348,8 @@ local function buildFrontWall(root: Instance)
     -- Cross, motto, alphabet strip and classroom values from the target concept.
     part(root,"Classroom cross vertical",Vector3.new(1,4.8,.45),CFrame.new(32,10,-33.9),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
     part(root,"Classroom cross horizontal",Vector3.new(3.5,1,.45),CFrame.new(32,10.7,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
-    -- Photographed chalkboard: a dark-blue handwritten alphabet frieze
-    -- and 26 small phonics cards, not a generic giant slogan.
-    -- Reuse EXACTLY 27 existing physical Parts. These original example words
-    -- are purely scenery, NOT a teacher's curriculum or children's work.
-    local banner=part(root,"Handwriting alphabet strip",
-        Vector3.new(29,1.45,.2),CFrame.new(-6,15.0,-33.85),
-        Color3.fromRGB(43,75,111),Enum.Material.SmoothPlastic,false)
-    local writing=surfaceText(banner,
-        "a b c d e f g h i j k l m n o p q r s t u v w x y z",
-        Enum.NormalId.Back,P.cream,banner.Color,Enum.Font.Garamond)
-    writing.Name="HandwritingSequence"
-    writing.TextWrapped=false
-    writing.TextScaled=true
+    -- Keep the detailed illustrated phonics cards. The generic navy alphabet
+    -- strip that duplicated them has been removed.
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local examples={
         "apple","ball","cat","dog","egg","fish","goat","hat","igloo",
@@ -1518,7 +1507,8 @@ local function buildRightWall(root: Instance)
     sign(root,"All loved sign","ALL ARE LOVED AT ABVM  ♥",Vector3.new(15,4.2,.2),CFrame.new(36.45,13.8,4)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,239,214),Color3.fromRGB(52,71,104))
     buildCubbies(root)
     plant(root,32.5,.1,18,.95)
-    plant(root,31.5,8.2,-29,.62)
+    -- Floor plant: the earlier wall-height placement read as unsupported.
+    plant(root,33.4,.1,-30.5,.62)
 end
 
 local function buildTeacherDesk(root: Instance)
@@ -1579,18 +1569,17 @@ local function buildTeacherDesk(root: Instance)
     part(root,"Laptop space bar",Vector3.new(1.7,.04,.23),CFrame.new(26,3.52,-24.32),P.ink,Enum.Material.SmoothPlastic,false)
     roundedPanel(root,"Laptop trackpad",Vector3.new(1.48,.016,.68),CFrame.new(26,3.52,-23.87),Color3.fromRGB(119,126,136),.06,true,false)
     cylinder(root,"Laptop hinge",Vector3.new(4.30,.16,.16),CFrame.new(26,3.53,-26.12),P.metal,Enum.Material.Metal,false)
-    pencilCup(root,21.5,4.08,-24.2)
+    pencilCup(root,23.2,4.08,-23.6)
     book(root,29.5,3.38,-24.2,Color3.fromRGB(61,110,78),math.rad(8))
     book(root,29.5,3.64,-24.2,Color3.fromRGB(44,75,110),math.rad(8))
-    -- Tilted globe: continents follow the sphere, with a meridian cradle and
-    -- latitude lines. No rectangular land plate sticking off the sphere.
-    local center=CFrame.new(20.55,5.87,-26.4)*CFrame.Angles(0,0,math.rad(-23))
-    local radius=1.90
+    -- Detailed tilted globe, sized and placed so no desk supplies intersect it.
+    local center=CFrame.new(20.55,5.55,-26.15)*CFrame.Angles(0,0,math.rad(-23))
+    local radius=1.55
     ball(root,"Classroom globe",Vector3.new(radius*2,radius*2,radius*2),center,Color3.fromRGB(100,167,191),Enum.Material.SmoothPlastic,false)
     local function arc(name,r,tilt,color,thickness)
         local frame=center*CFrame.Angles(tilt,0,0)
-        for i=0,23 do
-            local a,b=i*math.pi/12,(i+1)*math.pi/12
+        for i=0,15 do
+            local a,b=i*math.pi/8,(i+1)*math.pi/8
             local u=(frame*CFrame.new(math.cos(a)*r,math.sin(a)*r,0)).Position
             local v=(frame*CFrame.new(math.cos(b)*r,math.sin(b)*r,0)).Position
             local midpoint=(u+v)*.5
@@ -1598,18 +1587,24 @@ local function buildTeacherDesk(root: Instance)
             cylinder(root,name,Vector3.new((v-u).Magnitude+.015,thickness,thickness),cf,color,Enum.Material.Metal,false)
         end
     end
-    arc("Globe meridian cradle",2.07,0,Color3.fromRGB(177,155,94),.065)
-    arc("Globe equator",1.91,math.pi/2,Color3.fromRGB(208,219,191),.018)
-    -- Small low-relief land patches: positions are latitude / longitude.
-    for _,patch in ipairs({{48,-110,.83,.61},{28,-100,.60,.75},{-12,-62,.64,1.04},{-38,-67,.37,.65},{45,12,.61,.46},{9,22,.78,1.08},{51,76,1.18,.65},{20,109,.60,.66},{-25,135,.62,.45},{65,-40,.30,.47}}) do
+    arc("Globe meridian cradle",1.72,0,Color3.fromRGB(177,155,94),.055)
+    arc("Globe longitude line",1.56,0,Color3.fromRGB(198,214,190),.014)
+    arc("Globe longitude line",1.56,math.pi/3,Color3.fromRGB(198,214,190),.014)
+    arc("Globe longitude line",1.56,-math.pi/3,Color3.fromRGB(198,214,190),.014)
+    arc("Globe latitude line",1.56,math.pi/2,Color3.fromRGB(207,220,197),.014)
+    -- Thin tangent land plates retain readable continental silhouettes on a
+    -- real Roblox sphere; flattened Ball parts collapse into dots in-engine.
+    for _,patch in ipairs({{48,-110,.60,.46},{30,-104,.48,.58},{12,-88,.28,.42},{-12,-62,.48,.78},{-38,-67,.28,.48},{55,-42,.23,.34},{52,5,.42,.35},{34,15,.42,.30},{9,22,.58,.82},{-25,25,.40,.52},{53,62,.72,.42},{34,86,.65,.43},{18,108,.46,.49},{-25,135,.48,.34},{-42,147,.26,.20},{38,140,.20,.28}}) do
         local lat,lon=math.rad(patch[1]),math.rad(patch[2])
         local normal=Vector3.new(math.cos(lat)*math.sin(lon),math.sin(lat),math.cos(lat)*math.cos(lon))
-        local point=(center*CFrame.new(normal*1.83)).Position
+        local point=(center*CFrame.new(normal*1.53)).Position
         local cf=CFrame.lookAt(point,center.Position)
-        ball(root,"Globe continent",Vector3.new(patch[3],patch[4],.24),cf,Color3.fromRGB(158,174,111),Enum.Material.SmoothPlastic,false)
+        local land=part(root,"Globe continent",Vector3.new(patch[3],patch[4],.075),cf,
+            Color3.fromRGB(151,174,104),Enum.Material.SmoothPlastic,false)
+        land.CastShadow=false
     end
-    cylinder(root,"Globe stand",Vector3.new(.73,.20,.20),CFrame.new(20.55,3.63,-26.4)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
-    cylinder(root,"Globe base",Vector3.new(.18,2.7,2.7),CFrame.new(20.55,3.34,-26.4)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(69,74,73),Enum.Material.Metal,false)
+    cylinder(root,"Globe stand",Vector3.new(.55,.18,.18),CFrame.new(20.55,3.65,-26.15)*CFrame.Angles(0,0,math.pi/2),P.metal,Enum.Material.Metal,false)
+    cylinder(root,"Globe base",Vector3.new(.18,2.25,2.25),CFrame.new(20.55,3.34,-26.15)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(69,74,73),Enum.Material.Metal,false)
 
 end
 
@@ -1617,7 +1612,9 @@ end
 -- All small paper layers are noncolliding and sit on the room-facing cork side.
 -- The lesson print is atmospheric, not connected to any study authority.
 local function buildTeacherPlanningWall(root: Instance)
-    local x,y,z=22.65,8.90,-33.95
+    -- Pull the complete planner forward of the chalkboard stile so the wood
+    -- frame cannot visually cut through the paper sheets.
+    local x,y,z=22.65,8.90,-33.35
     part(root,"Teacher planning board shallow oak back",
         Vector3.new(9.4,6.4,.16),CFrame.new(x,y,z-.17),
         Color3.fromRGB(120,84,57),Enum.Material.Wood,false)
@@ -2903,4 +2900,3 @@ end
 
 -- No teachers, questions, quiz remotes, saved scores, or runtime UI in the replica build.
 return World
-

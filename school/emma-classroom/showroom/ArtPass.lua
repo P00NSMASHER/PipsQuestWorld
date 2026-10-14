@@ -518,25 +518,24 @@ end
 local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
     local metal=Color3.fromRGB(219,226,226)
-    -- Match every existing metal highlight to the larger white housing.
-    -- Borders remain slightly inset so they do not read as floating rails.
+    -- Match the trim to the freestanding board's room-facing surface.
     for _,y in ipairs({4.62,11.78}) do
         piece(group,"Smartboard satin aluminum trim",Vector3.new(19.77,.11,.12),
-            CFrame.new(5.2,y,-31.29),metal,Enum.Material.Metal,false)
+            CFrame.new(5.2,y,-29.98),metal,Enum.Material.Metal,false)
     end
     for _,x in ipairs({-4.68,15.08}) do
         piece(group,"Smartboard protective edge",Vector3.new(.14,7.15,.13),
-            CFrame.new(x,8.2,-31.29),metal,Enum.Material.Metal,false)
+            CFrame.new(x,8.2,-29.98),metal,Enum.Material.Metal,false)
     end
     piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
-        CFrame.new(5.2,4.44,-30.99),C.cream,Enum.Material.SmoothPlastic,false)
+        CFrame.new(5.2,4.44,-29.58),C.cream,Enum.Material.SmoothPlastic,false)
     local markerColors={C.coral,C.blue,C.mint,C.golden}
     for i,c in ipairs(markerColors) do
         local x=2.95+(i-1)*1.20
         piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
-            CFrame.new(x,4.58,-30.74),c,Enum.Material.SmoothPlastic,false)
+            CFrame.new(x,4.58,-29.32),c,Enum.Material.SmoothPlastic,false)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),
-            CFrame.new(x+.39,4.58,-30.74),C.navy,Enum.Material.SmoothPlastic,false)
+            CFrame.new(x+.39,4.58,-29.32),C.navy,Enum.Material.SmoothPlastic,false)
     end
     -- The photo references show a white dry-erase teaching flipchart on a
     -- blue wheeled frame, not a large invented wooden achievement poster.

@@ -546,7 +546,8 @@ function GalleryPass.decorate(root:Instance)
     showcaseBoards(root,group)
     pupilWork(group)
     physicalDetails(root,group)
-    rectangularPhotoRug(group)
+    -- The rectangular alphabet/sun rug was a failed duplicate. The single
+    -- photographed circular alphabet rug is constructed by Room.lua.
 
     -- Lighting is authored exactly once by Room.applyLighting().
     -- This architectural art pass changes physical details only.
@@ -556,4 +557,3 @@ function GalleryPass.decorate(root:Instance)
 end
 
 return GalleryPass
-

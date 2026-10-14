@@ -339,7 +339,8 @@ local function verify()
         and #parts("Purple corner chair seat")==1
         and #parts("Window glass")==2
         and #parts("Alphabet rug")==1
-        and #parts("Front teaching rug")==1,
+        and #parts("Front teaching rug")==1
+        and #parts("Photo rectangular alphabet sun rug")==0,
         "PHOTO_WOOD_ORIGINAL_LAYOUT_REGRESSION")
     return inset,left
 end
@@ -535,4 +536,3 @@ def main() -> None:
             print(line,flush=True)
 if __name__=="__main__":
     main()
-
