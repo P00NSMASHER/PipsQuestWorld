@@ -11,7 +11,7 @@ local GOLD=Color3.fromRGB(244,207,102)
 local function rgb(c) return Color3.fromRGB(c[1],c[2],c[3]) end
 local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or string.sub(teacher.name,1,3)=="Dr." end
 
-function StaffModel.create(teacher)
+function StaffModel.create(teacher,scaleOverride:number?)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
     model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",8)
@@ -158,7 +158,10 @@ function StaffModel.create(teacher)
     local speech=Instance.new("BillboardGui");speech.Name="Speech";speech.Enabled=false;speech.Parent=root
     local speechText=Instance.new("TextLabel");speechText.Name="Text";speechText.Parent=speech
 
-    model:ScaleTo(SCALE)
+    -- Apply any showroom-only adult scale before floor alignment and before
+    -- immutable pose frames are captured. Scaling a finished posed model at
+    -- server startup can leave its cached transforms inconsistent.
+    model:ScaleTo(scaleOverride or SCALE)
     local lowest=math.huge
     for _,p in ipairs(model:GetChildren()) do if p:IsA("BasePart") and string.find(p.Name,"Foot") then lowest=math.min(lowest,p.Position.Y-p.Size.Y/2) end end
     local shift=FLOOR_RELATIVE-lowest

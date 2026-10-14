@@ -79,6 +79,9 @@ assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returne
 assert 'local center=CFrame.new(20.55,5.55,-26.15)' in room, "Teacher globe moved off its desk"
 assert 'part(root,"Globe continent"' in room and 'arc("Globe longitude line"' in room, "Detailed globe geometry missing"
 assert 'plant(root,33.4,.1,-30.5,.62)' in room, "Teacher-area plant is not floor-supported"
+assert 'plant(root,-30.65,3.55,-25.75,.55)' in room, "Corner plant is not supported by the activity table"
+assert 'Prayer cross vertical' not in room and 'Classroom cross vertical' not in room, "Extra classroom crosses returned"
+assert room.count('chalkboard cross vertical') == 1 and room.count('chalkboard cross horizontal') == 1, "The single centered chalkboard cross is missing"
 assert 'local banner=part(root,"Handwriting alphabet strip"' not in room, "Duplicate navy alphabet strip returned"
 art=(base / "emma-classroom/showroom/ArtPass.lua").read_text()
 assert "Chair back accent" not in art, "Fake colored stripes returned to the 16 molded school chairs"

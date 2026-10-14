@@ -13,7 +13,9 @@ for _,teacher in ipairs(StaffData.Teachers) do
     if teacher.name=="Mrs. Benulis" then benulis=teacher;break end
 end
 assert(benulis,"Mrs. Benulis showroom profile is required")
-local teacher=StaffModel.create(benulis)
+-- Build Mrs. Benulis at adult scale inside the constructor so its floor and
+-- pose geometry are finalized once, before it enters Workspace.
+local teacher=StaffModel.create(benulis,1.06)
 teacher.Name="Mrs. Benulis - Board"
 teacher:SetAttribute("ShowroomStationaryTeacher",true)
 teacher:PivotTo(CFrame.new(-11,3.15,-29)*CFrame.Angles(0,math.pi,0))
