@@ -1,31 +1,41 @@
-# ABVM Grade 2 — teacher portrait staging handoff (2026-10-14)
+# ABVM Grade 2 — Mrs. Benulis portrait NPC handoff
 
 ## Implemented
-- Isolated optional static portrait-Model adapter and disabled-by-default config.
-- Showroom Rojo mapping and one teacher-only call site, without adding gameplay.
-- Fail-closed loaded-model allowlist, scale limits, anchored/noncolliding parts,
-  inherited orientation/floor alignment, and original R15 teacher fallback.
-- Verify-build expectations updated to include new modules and the disabled gate.
-- Prototype GLB was created from the user-supplied three-view portrait OUTSIDE
-  GitHub; its photographic texture is not committed to this public repository.
-- All changes are on branch `feat/abvm-grade2-portrait-npc-staging-20261014`,
-  based on the verified classroom release branch, not merged.
+- Isolated optional static Roblox portrait replacement adapter and Rojo mapping.
+- Existing stationary Mrs. Benulis R15 display is preserved by default.
+- Four fail-closed permissions/review gates: creator ownership, native Studio,
+  actual iPhone, and public likeness permission. All are disabled, as is the
+  asset ID (zero) and feature flag.
+- Asset class/scale budget allowlist; texture preload; exact original fallback
+  retained unless the verified Model has loaded and is placed.
+- Private standalone 3D structural GLB quality gate and five synthetic
+  regression tests. Public GitHub contains no teacher photos, skin textures,
+  or GLB binary.
+- Structural quality CI workflow for the isolated teacher integration.
+- Private professional sculpt handoff/turnaround package created locally,
+  not published to this public repo.
 
 ## Actually tested
-- The offline prototype GLB round-tripped with finite geometry, 24,342
-  triangles, 45 mesh nodes, 1.92 × 5.86 × 1.406 studs, and <20 MB payload.
-- Actual GLB rendered with VTK in front, three-quarter, and rear views.
+- New five-case synthetic geometry acceptance regression suite: passed.
+- Dedicated GitHub Actions workflow, head a8d7b7c36ead512d99d011be5d542b3b8813d446,
+  run 38684066818: success.
+- Actual private V2 GLB fails the acceptance checker (no separate arm
+  solids/3D eyes; per-mesh face triangle budget).
+- Private V3 sculpting candidate improved component breakdown but remains
+  visibly unacceptable; rejected, 140 > 95 mesh budget. Never import.
+- Existing non-portrait failures continue: old Emma tiny-game CI contract and
+  hallway left-turn floor/sky audit. They are not relaxed.
 
-## Not tested
-- Roblox upload/moderation, native Studio rendering, Roblox-sourced MeshPart
-  material fidelity, floor alignment on-device, mobile FPS, CI on current head,
-  or game publication.
+## Not tested / blocked
+- No artist-quality accepted likeness or Blender project yet.
+- No successful verified Roblox Model import/moderation for this portrait.
+- No native Studio preview or iPhone performance/close-up acceptance.
+- No permission to publish a recognizable real teacher is established.
+- No merged PR and no live Roblox place publication.
 
-## Known blockers
-- Need a verified creator-owned Roblox asset ID for the PRIVATE textured model
-  and permission for publishing this recognizable teacher likeness.
-- Keep portrait configuration disabled until native visual/iPhone QA passes.
-
-No gameplay, questions, other Roblox experiences, scheduled tasks, or live
-release versions changed. Full acceptance plan is in
-`school/emma-classroom/TEACHER_PORTRAIT_STAGING_20261014.md`.
+## Next
+A genuinely high-fidelity human-crafted or professionally generated 3D sculpt
+must match the user-supplied three-view image and approved polished turnaround.
+Keep portrait images private, inspect real 3D front/quarter/profile/rear,
+run the offline geometry checker, then only after full owner/likeness/native
+acceptance activate the adapter in a review-only build. No premature merges.
