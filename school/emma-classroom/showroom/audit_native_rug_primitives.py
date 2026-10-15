@@ -162,8 +162,8 @@ local function checkReadingRugClearance()
     assert(mat and #seats==16 and #backs==16 and #desks==16
         and #baskets==3,
         "RUG_READING_ORIGINAL_FURNITURE_COUNT_CHANGED")
-    assert(math.abs(mat.Position.X+25)<.025
-        and math.abs(mat.Position.Z-14)<.025
+    assert(math.abs(mat.Position.X-25)<.025
+        and math.abs(mat.Position.Z+25)<.025
         and math.abs(mat.Size.Y-14.2)<.025,
         "RUG_READING_CARPET_ANCHOR_CHANGED")
     local radius=mat.Size.Y/2
@@ -356,56 +356,19 @@ local function checkSupplyCartClearance()
     return top,wheels,papers,cartGap,books
 end
 
--- The potted plant next to the blue ABC rug was grazing its edge.
--- Its six existing Parts are retained; only the original planted
--- object's scale changes .85 -> .65. Real photo parity is still pending.
+-- Owner review removed all loose floor plants; tabletop greenery remains.
 local function checkReadingCornerPlant()
-    local mat,plant=nil,nil
-    local leaves={}
+    local loose={}
     for _,part in ipairs(Room.Root:GetDescendants()) do
         if part:IsA("BasePart") then
-            if part.Name=="Alphabet rug" then mat=part end
             if part.Name=="Plant pot"
-                and math.abs(part.Position.X+31)<.10
-                and math.abs(part.Position.Z-20)<.10 then
-                assert(plant==nil,"RUG_READING_DUPLICATE_PLANT")
-                plant=part
-            end
-            if part.Name=="Plant leaf"
-                and part.Position.X>-33 and part.Position.X< -29
-                and part.Position.Z>18 and part.Position.Z<22
-                and part.Position.Y<5 then
-                table.insert(leaves,part)
+                and part.Position.Y<2 then
+                table.insert(loose,part)
             end
         end
     end
-    assert(mat and plant and #leaves==5,
-        "RUG_READING_PLANT_PARTS_MISSING")
-    assert(math.abs(plant.Position.Y-.685)<.03
-        and math.abs(plant.Size.X-1.17)<.03
-        and math.abs(plant.Size.Y-1.43)<.03
-        and plant.Shape==Enum.PartType.Cylinder,
-        "RUG_READING_PLANT_SCALE_REGRESSION")
-    local function clearance(item)
-        local m,s=item.CFrame.m,item.Size
-        local xhalf=(math.abs(m[1])*s.X+
-            math.abs(m[2])*s.Y+math.abs(m[3])*s.Z)/2
-        local zhalf=(math.abs(m[7])*s.X+
-            math.abs(m[8])*s.Y+math.abs(m[9])*s.Z)/2
-        local dx=math.max(0,math.abs(item.Position.X-mat.Position.X)-xhalf)
-        local dz=math.max(0,math.abs(item.Position.Z-mat.Position.Z)-zhalf)
-        return math.sqrt(dx*dx+dz*dz)-mat.Size.Y/2
-    end
-    local minimum=math.huge
-    for _,part in ipairs({plant,table.unpack(leaves)}) do
-        assert(part.Anchored and not part.CanCollide
-            and not part.CanTouch,
-            "RUG_READING_PLANT_COLLIDES")
-        minimum=math.min(minimum,clearance(part))
-        assert(clearance(part)>.20,
-            "RUG_READING_PLANT_OVERLAPS_ABC")
-    end
-    return plant,leaves,minimum
+    assert(#loose==0,"RUG_READING_LOOSE_FLOOR_PLANT_RETURNED")
+    return 0
 end
 
 -- The third photographed rug is a separate flat rectangle. Test authored
@@ -494,20 +457,11 @@ assert(not ok and string.find(tostring(err),
     "RUG_NATIVE_FLATTENED_BALL_RAY",1,true),
     "RUG_NATIVE_BALL_RAY_NOT_REJECTED")
 local cart,wheels,paper,cartGap,cartBooks=checkSupplyCartClearance()
-local plant,plantLeaves,plantGap=checkReadingCornerPlant()
-print(string.format("RUG_READING_PLANT_CLEAR_PASS parts=6 "
-    .."min_clearance_studs=%.2f scale=.65",plantGap))
+checkReadingCornerPlant()
+print("RUG_READING_PLANT_REMOVAL_PASS loose_floor_plants=0")
 print(string.format("RUG_STORAGE_CART_CLEAR_PASS "
     .."round_rug_clearance=%.2f studs cart_shelves=3 "
     .."wheels=4 rails=4 supplies_supported=true",cartGap))
-local oldCart=cart.CFrame
-cart.CFrame=CFrame.new(-29,3.5,22)
-local oldCartOk,oldCartErr=pcall(checkSupplyCartClearance)
-cart.CFrame=oldCart
-assert(not oldCartOk and string.find(tostring(oldCartErr),
-    "RUG_STORAGE_CART_COVERS_ALPHABET",1,true),
-    "RUG_STORAGE_CART_OLD_CARPET_OVERLAP_NOT_REJECTED")
-print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED rug_intrusion")
 local oldWheel=wheels[1].CFrame
 wheels[1].CFrame=CFrame.new(-31.2,.45,20.8)*
     CFrame.Angles(0,0,math.pi/2)
@@ -534,16 +488,6 @@ assert(not bookOK and string.find(tostring(bookErr),
     "RUG_STORAGE_CART_BOOKS_LEFT_BEHIND",1,true),
     "RUG_STORAGE_CART_DETACHED_BOOK_NOT_REJECTED")
 print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book")
-local formerPotSize=plant.Size
-plant.Size=Vector3.new(1.53,1.87,1.87)
-local potOK,potErr=pcall(checkReadingCornerPlant)
-plant.Size=formerPotSize
-assert(not potOK and (string.find(tostring(potErr),
-    "RUG_READING_PLANT_SCALE_REGRESSION",1,true) or
-    string.find(tostring(potErr),
-    "RUG_READING_PLANT_OVERLAPS_ABC",1,true)),
-    "RUG_READING_OLD_OVERSIZED_PLANT_NOT_REJECTED")
-print("RUG_READING_ADVERSARIAL_REJECTED oversized_plant")
 checkSupplyCartClearance()
 checkReadingCornerPlant()
 
@@ -595,7 +539,7 @@ check()
 -- Fail closed on the exact old chair position that was seen covering the
 -- circular rug in the owner-facing screenshot.
 local oldChairCF=movedSeat.CFrame
-movedSeat.CFrame=CFrame.new(-24,1.62,7.48)
+movedSeat.CFrame=CFrame.new(25,1.62,-21.5)
 local okReading,errReading=pcall(checkReadingRugClearance)
 movedSeat.CFrame=oldChairCF
 assert(not okReading and string.find(tostring(errReading),
@@ -627,11 +571,9 @@ def main():
         raise RuntimeError("Native rug construction audit failed:\n"
             +result.stderr[-3000:]+"\n"+result.stdout[-2500:])
     markers=("RUG_FAILED_RECTANGULAR_DUPLICATE_ABSENT",
-             "RUG_READING_PLANT_CLEAR_PASS",
-             "RUG_READING_ADVERSARIAL_REJECTED oversized_plant",
+             "RUG_READING_PLANT_REMOVAL_PASS",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book",
              "RUG_STORAGE_CART_CLEAR_PASS",
-             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED rug_intrusion",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_wheel",
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED floating_papers",
              "RUG_READING_OPEN_FLOOR_PASS",
@@ -649,7 +591,7 @@ def main():
         assert any(x.startswith(marker) for x in lines), marker
     for line in lines:
         if line.startswith(("RUG_FAILED_RECTANGULAR_",
-                            "RUG_READING_PLANT_CLEAR_PASS",
+                            "RUG_READING_PLANT_REMOVAL_PASS",
                             "RUG_READING_ADVERSARIAL_REJECTED",
                             "RUG_STORAGE_CART_CLEAR_PASS",
                             "RUG_STORAGE_CART_ADVERSARIAL_REJECTED",

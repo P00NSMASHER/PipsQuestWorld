@@ -97,8 +97,8 @@ assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on 
 assert "pencilCup(root,23.2,4.08,-23.6)" not in room, "Duplicate teacher pencil cup returned"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
 gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
-assert "CFrame.new(22.3,3.365,-22.75)" in gallery, "Stationery tray no longer touches teacher desk"
-assert "CFrame.new(30.5,3.315,-24.0)" in gallery, "Teacher papers no longer rest on desk"
+assert "CFrame.new(-27.7,3.365,16.25)" in gallery, "Stationery tray no longer touches relocated teacher desk"
+assert "CFrame.new(-19.5,3.315,15.0)" in gallery, "Teacher papers no longer rest on relocated desk"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main
 mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()

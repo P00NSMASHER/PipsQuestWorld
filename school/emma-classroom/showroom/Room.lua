@@ -503,16 +503,19 @@ local function buildClassroomTexture(root: Instance)
     -- values board and keeps this wall clear of overlapping flat panels.
 
     -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
-    part(root,"Tall storage cabinet",Vector3.new(7,12,3.2),CFrame.new(31,6,22.7),Color3.fromRGB(96,65,45),Enum.Material.Wood)
-    part(root,"Cabinet center seam",Vector3.new(.065,11.1,.06),CFrame.new(31,6,21.03),Color3.fromRGB(61,48,36),Enum.Material.Wood,false)
+    -- Low classroom cupboard: the former 12-stud wardrobe towered over the
+    -- doorway and shelving. Keep the same footprint and traditional panels,
+    -- but stop it below the display frieze.
+    part(root,"Tall storage cabinet",Vector3.new(7,8,3.2),CFrame.new(31,4,22.7),Color3.fromRGB(96,65,45),Enum.Material.Wood)
+    part(root,"Cabinet center seam",Vector3.new(.065,7.2,.06),CFrame.new(31,4,21.03),Color3.fromRGB(61,48,36),Enum.Material.Wood,false)
     for _,x in ipairs({29.3,32.7}) do
-        part(root,"Cabinet door panel",Vector3.new(3.08,10.9,.10),CFrame.new(x,6,21.03),Color3.fromRGB(119,81,55),Enum.Material.Wood,false)
-        for _,y in ipairs({3.2,8.4}) do
-            part(root,"Cabinet inset panel",Vector3.new(2.60,4.4,.06),CFrame.new(x,y,20.94),Color3.fromRGB(135,105,74),Enum.Material.Wood,false)
-            for _,dx in ipairs({-1.31,1.31}) do part(root,"Cabinet panel stile",Vector3.new(.055,4.55,.045),CFrame.new(x+dx,y,20.90),Color3.fromRGB(178,142,98),Enum.Material.Wood,false) end
+        part(root,"Cabinet door panel",Vector3.new(3.08,7.05,.10),CFrame.new(x,4,21.03),Color3.fromRGB(119,81,55),Enum.Material.Wood,false)
+        for _,y in ipairs({2.25,5.75}) do
+            part(root,"Cabinet inset panel",Vector3.new(2.60,2.80,.06),CFrame.new(x,y,20.94),Color3.fromRGB(135,105,74),Enum.Material.Wood,false)
+            for _,dx in ipairs({-1.31,1.31}) do part(root,"Cabinet panel stile",Vector3.new(.055,2.95,.045),CFrame.new(x+dx,y,20.90),Color3.fromRGB(178,142,98),Enum.Material.Wood,false) end
         end
-        part(root,"Cabinet door pull",Vector3.new(.13,1.15,.18),CFrame.new(x+(x<31 and .91 or -.91),6.2,20.79),Color3.fromRGB(180,176,158),Enum.Material.Metal,false)
-        for _,y in ipairs({1.8,10.2}) do part(root,"Cabinet brass hinge",Vector3.new(.14,.42,.15),CFrame.new(x+(x<31 and -1.50 or 1.50),y,20.88),Color3.fromRGB(167,149,101),Enum.Material.Metal,false) end
+        part(root,"Cabinet door pull",Vector3.new(.13,.92,.18),CFrame.new(x+(x<31 and .91 or -.91),4.15,20.79),Color3.fromRGB(180,176,158),Enum.Material.Metal,false)
+        for _,y in ipairs({1.25,6.75}) do part(root,"Cabinet brass hinge",Vector3.new(.14,.42,.15),CFrame.new(x+(x<31 and -1.50 or 1.50),y,20.88),Color3.fromRGB(167,149,101),Enum.Material.Metal,false) end
     end
     -- The photographed cabinetry is older school carpentry: deep walnut
     -- framed, raised doors, not one large flat brown box. Build routed panel
@@ -520,8 +523,8 @@ local function buildClassroomTexture(root: Instance)
     local cabinetRim=Color3.fromRGB(94,62,40)
     local cabinetWarmEdge=Color3.fromRGB(153,111,75)
     for _,doorX in ipairs({29.3,32.7}) do
-        for _,centerY in ipairs({3.2,8.4}) do
-            for _,dy in ipairs({-2.08,2.08}) do
+        for _,centerY in ipairs({2.25,5.75}) do
+            for _,dy in ipairs({-1.28,1.28}) do
                 part(root,"Tall cabinet recessed panel cross rail",
                     Vector3.new(2.76,.17,.075),
                     CFrame.new(doorX,centerY+dy,20.853),
@@ -530,14 +533,14 @@ local function buildClassroomTexture(root: Instance)
         end
         part(root,"Tall cabinet antiqued keyhole",
             Vector3.new(.085,.23,.045),
-            CFrame.new(doorX+(doorX<31 and .90 or -.90),5.38,20.692),
+            CFrame.new(doorX+(doorX<31 and .90 or -.90),3.50,20.692),
             Color3.fromRGB(97,76,48),Enum.Material.Metal,false)
     end
     part(root,"Tall cabinet hardwood cornice",
-        Vector3.new(7.35,.41,.50),CFrame.new(31,12.25,20.96),
+        Vector3.new(7.35,.41,.50),CFrame.new(31,8.25,20.96),
         cabinetRim,Enum.Material.Wood,false)
     part(root,"Tall cabinet cornice routed lip",
-        Vector3.new(7.54,.11,.44),CFrame.new(31,12.50,20.77),
+        Vector3.new(7.54,.11,.44),CFrame.new(31,8.50,20.77),
         cabinetWarmEdge,Enum.Material.Wood,false)
     part(root,"Tall cabinet recessed toe kick",
         Vector3.new(6.78,.42,.18),CFrame.new(31,.51,20.91),
@@ -551,7 +554,7 @@ local function buildClassroomTexture(root: Instance)
     end
     local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(20.0,3.89,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
-    part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(22.5,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
+    part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(20.0,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
     part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(20.0,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
     -- The real classroom pictures show the alphabet/sun rug as open
     -- activity space. Source-rendered geometry revealed that the original
@@ -1611,6 +1614,44 @@ local function buildTeacherDesk(root: Instance)
 
 end
 
+local function swapTeacherDeskAndAlphabetRug(root:Instance,deskAssembly:Folder)
+    local deskDelta=Vector3.new(-50,0,39)
+    local rugDelta=Vector3.new(50,0,-39)
+    for _,object in ipairs(deskAssembly:GetDescendants()) do
+        if object:IsA("BasePart") then
+            object.CFrame=CFrame.new(deskDelta)*object.CFrame
+        end
+    end
+    local rugNames={
+        ["Alphabet rug"]=true,
+        ["Reading rug alphabet border"]=true,
+        ["Photo rug sun center"]=true,
+        ["Photo rug sun ray"]=true,
+        ["Photo rug sun ray rounded tip"]=true,
+        ["Photo rug number cloud body"]=true,
+        ["Photo rug number cloud lobe"]=true,
+        ["Photo rug number cloud numeral"]=true,
+    }
+    local looseDeskNames={
+        ["Tissue box"]=true,
+        ["Tissue box slot"]=true,
+        ["Folded tissue"]=true,
+        ["Classroom trash can"]=true,
+        ["Trash can opening"]=true,
+        ["Trash can rib"]=true,
+    }
+    for _,object in ipairs(root:GetDescendants()) do
+        if object:IsA("BasePart") then
+            if rugNames[object.Name] then
+                object.CFrame=CFrame.new(rugDelta)*object.CFrame
+            elseif looseDeskNames[object.Name] then
+                object.CFrame=CFrame.new(deskDelta)*object.CFrame
+            end
+        end
+    end
+    deskAssembly:SetAttribute("SwappedWithAlphabetRug",true)
+end
+
 -- Teacher's annotated weekly board, clear of the chalkboard frame.
 -- All small paper layers are noncolliding and sit on the room-facing cork side.
 -- The lesson print is atmospheric, not connected to any study authority.
@@ -2303,10 +2344,15 @@ local function buildBackDoorAndHall(root: Instance)
 end
 
 local function buildTeacherEntry(root: Instance)
-    -- Side staff door and a tiny continuation of the real blue-gray/tan-brick hallway.
-    part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,8.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,22.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Staff door header",Vector3.new(1.3,1.0,15.4),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    -- One conventional single-leaf staff entrance. Fill the unused portions
+    -- of the former double-width opening with the classroom's yellow wall.
+    part(root,"Staff doorway front infill",Vector3.new(1,18,3.45),
+        CFrame.new(37,9,9.725),P.wall,Enum.Material.SmoothPlastic,true)
+    part(root,"Staff doorway back infill",Vector3.new(1,18,3.45),
+        CFrame.new(37,9,21.275),P.wall,Enum.Material.SmoothPlastic,true)
+    part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,11.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,19.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
+    part(root,"Staff door header",Vector3.new(1.3,1.0,8.6),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     -- The sole route from Emma's classroom into the long photo hallway
     -- uses this left/staff entrance. The old transparent glass was overlaid
     -- on a FULL-HEIGHT OPAQUE WOOD slab, so no light could pass through it.
@@ -2314,7 +2360,7 @@ local function buildTeacherEntry(root: Instance)
     -- repurpose the existing door Part into the lower solid panel. Construct
     -- a real open aperture ABOVE it with just six additional noncolliding
     -- wood/metal pieces, staying below the 3,100-Part mobile ceiling.
-    local leafCF=CFrame.new(35.9,5.3,20.2)*
+    local leafCF=CFrame.new(35.9,5.3,17.0)*
         CFrame.Angles(0,math.rad(58),0)
     local frameOak=Color3.fromRGB(115,80,52)
     local door=part(root,"Open staff classroom door",
@@ -2503,12 +2549,12 @@ local function alignHallwayWithStaffExit(root: Instance)
             object.CFrame=turn*object.CFrame
         end
     end
-    -- Nudge only the corridor wall adjoining the classroom outward by a
-    -- quarter stud so its thickness no longer protrudes through the room wall.
+    -- Set the corridor wall fully behind the classroom wall. A quarter-stud
+    -- nudge still left a visible blue edge in the doorway-side photograph.
     local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
     assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
         "Staff hallway adjoining wall missing")
-    adjoiningWall.CFrame=CFrame.new(.25,0,0)*adjoiningWall.CFrame
+    adjoiningWall.CFrame=CFrame.new(1.00,0,0)*adjoiningWall.CFrame
     hall:SetAttribute("FalseEntryArchRemoved",true)
 end
 
@@ -2651,7 +2697,10 @@ function World.build()
     end
     buildFrontWall(root)
     buildRightWall(root)
-    buildTeacherDesk(root)
+    local teacherDeskAssembly=Instance.new("Folder")
+    teacherDeskAssembly.Name="Teacher desk complete assembly"
+    teacherDeskAssembly.Parent=root
+    buildTeacherDesk(teacherDeskAssembly)
     buildTeacherPlanningWall(root)
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
@@ -2708,6 +2757,7 @@ function World.build()
     -- Original room kit decorates the real Rojo place. No AI render or preview.
     -- Keep it separate from gameplay, board content and curriculum systems.
     ArtPass.decorate(root)
+    swapTeacherDeskAndAlphabetRug(root,teacherDeskAssembly)
 
     -- Lived-in details.
     -- The loose floor plant beside the rear cabinets was removed; the room's

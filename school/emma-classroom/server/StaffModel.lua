@@ -21,7 +21,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
     local head=Instance.new("Part");head.Name="Head";head.Size=Vector3.new(2,1,1);head.CFrame=CFrame.new(0,1.5,0);head.Color=rgb(teacher.skin);head.Parent=model
     local shape=Instance.new("SpecialMesh");shape.Name="Standard Roblox head";shape.MeshType=Enum.MeshType.Head
-    shape.Scale=(teacher.appearanceId=="benulis_2026_portrait") and Vector3.new(1.10,1.12,1.10) or Vector3.new(1.25,1.25,1.25)
+    shape.Scale=(teacher.appearanceId=="benulis_2026_portrait") and Vector3.new(1.06,1.06,1.06) or Vector3.new(1.25,1.25,1.25)
     shape.Parent=head
     for name,cf in pairs({NeckRigAttachment=CFrame.new(0,-.5,0),HairAttachment=CFrame.new(0,.6,0),HatAttachment=CFrame.new(0,.6,0)}) do
         local a=Instance.new("Attachment");a.Name=name;a.CFrame=cf;a.Parent=head
@@ -32,10 +32,10 @@ function StaffModel.create(teacher,scaleOverride:number?)
     else
         face=assets:WaitForChild("WomanFace"):Clone();face.Name="face"
         if teacher.appearanceId=="benulis_2026_portrait" then
-            -- A cleaner brow/eye treatment and restrained head proportions
-            -- replace the oversized doll-like face used by the generic staff.
-            face.Texture="rbxassetid://155213174"
-            model:SetAttribute("PortraitAvatarRefinement","natural_face_scaled_hair_navy_sweater")
+            -- Use Roblox's familiar friendly default expression. The prior
+            -- catalog face stretched badly on this bundled head mesh.
+            face.Texture="rbxasset://textures/face.png"
+            model:SetAttribute("PortraitAvatarRefinement","standard_friendly_face_scaled_hair_navy_sweater")
         end
     end
     face.Parent=head

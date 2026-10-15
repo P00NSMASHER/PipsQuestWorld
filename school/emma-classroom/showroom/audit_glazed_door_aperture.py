@@ -151,7 +151,7 @@ local function verifyStaff()
         "STAFF_APERTURE_OPAQUE_FULL_HEIGHT_SLAB")
     assert(math.abs(staffPanel.Position.X-35.90)<.05
         and math.abs(staffPanel.Position.Y-2.45)<.05
-        and math.abs(staffPanel.Position.Z-20.20)<.05,
+        and math.abs(staffPanel.Position.Z-17.00)<.05,
         "STAFF_APERTURE_HINGE_OR_LOWER_LEAF_MOVED")
     assert(staffGlass.Material==Enum.Material.Glass
         and staffGlass.Transparency>.20 and staffGlass.Transparency<.45

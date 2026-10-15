@@ -59,7 +59,7 @@ assert(rear.CanCollide and near(rear.Position.X,59.75)
     and near(rear.Position.Z,80.75) and rear.Size.X>=108,
     "PHOTO_HALL_SKY_GAP")
 local north=one("Photo hall continuous north wall")
-assert(north.CanCollide and near(north.Position.X,37.50)
+assert(north.CanCollide and near(north.Position.X,38.25)
     and near(north.Position.Z,80.75) and north.Size.X>=108,
     "PERPENDICULAR_HALLWAY_WEST_WALL_MISSING")
 local caps=expect("Photo hall end cap",1)

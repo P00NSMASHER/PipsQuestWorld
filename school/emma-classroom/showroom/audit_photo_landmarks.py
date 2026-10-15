@@ -253,9 +253,9 @@ local function verify()
     -- a native noninteractive SurfaceGui 4x10 manufactured key pattern.
     local keyboard=one("Laptop native keyboard panel")
     assert(#parts("Laptop keyboard key")==0
-        and math.abs(keyboard.Position.X-26)<.02
+        and math.abs(keyboard.Position.X+24)<.02
         and math.abs(keyboard.Position.Y-3.51)<.02
-        and math.abs(keyboard.Position.Z+25.20)<.02
+        and math.abs(keyboard.Position.Z-13.80)<.02
         and not keyboard.CanCollide and keyboard.Anchored,
         "PHOTO_LAPTOP_KEYBOARD_PHYSICAL_REGRESSION")
     local keyboardGui=keyboard:FindFirstChild("LaptopKeyboardDetail")

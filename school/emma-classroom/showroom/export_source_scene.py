@@ -180,7 +180,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PERPENDICULAR_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
     )
     assert (abs(float(rear[0][9])-59.75)<.05
-            and abs(float(north[0][9])-37.50)<.05
+            and abs(float(north[0][9])-38.25)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
             ), (
@@ -783,7 +783,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
             blue>red>green
         ), "Purple corner chair reverted to blue or another classroom color"
-    rug_dist=math.hypot(cx+25.0,cz-14.0)
+    rug_dist=math.hypot(cx-25.0,cz+25.0)
     assert rug_dist>10.5, (
         "Purple chair overlaps the real circular sun/ABC carpet"
     )
@@ -922,8 +922,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     long_sides=[]
     orbit_angles=[]
     for tile in tiles:
-        tx=float(tile[9])+25
-        tz=float(tile[11])-14
+        tx=float(tile[9])-25
+        tz=float(tile[11])+25
         radius=math.hypot(tx,tz)
         assert abs(radius-orbit_radius)<.03, (
             "Alphabet border patch drifted away from original carpet"
@@ -1471,8 +1471,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "rug_unobstructed_by_display_rack=true")
     carpet=only("Alphabet rug")
     assert carpet[3].endswith("Cylinder") and carpet[4].endswith("Fabric") and (
-        abs(float(carpet[9])+25)<.03 and abs(float(carpet[11])-14)<.03
-    ), "Photo-grounded blue circular rug moved or changed physical silhouette"
+        abs(float(carpet[9])-25)<.03 and abs(float(carpet[11])+25)<.03
+    ), "Photo-grounded blue circular rug lost its swapped teacher-area position"
     print("PHOTO_SUBTRACTIVE_READING_PASS speculative_seats=0 "
           "alphabet_carpet_unchanged=true books_and_shelves_preserved=true")
     # Photo-fidelity: the center sun must remain legible, not physically
@@ -1616,7 +1616,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             f"Unsupported teacher workstation object {label}: "
             f"bottom={bottom:.3f}, desktop={teacher_desk_surface:.3f}"
         )
-        assert 18.75<=float(item[9])<=31.25 and -27.6<=float(item[11])<=-22.4, (
+        assert -31.25<=float(item[9])<=-18.75 and 11.4<=float(item[11])<=16.6, (
             f"Teacher object {label} exceeds desktop footprint"
         )
     print("TEACHER_DESK_SUPPORT_PASS laptop=true tissues=true tray=true paper=true duplicate_cup=false")
