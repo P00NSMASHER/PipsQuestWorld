@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Require provenance for both arms of the staff-door cross-corridor.
+"""Reject obsolete child-height cameras from the former through-hallway layout.
 
 After the owner's October 11 topology correction, the rear double doors are
 a sealed supply closet. The main 108-stud paper gallery is reached through
@@ -30,7 +30,7 @@ FAST = (
     "06-hall-paper-rail",
     "07-hall-yellow-end-window",
     "08-hall-adjacent-oak-door",
-    "09-hall-left-floor-roof-junction",
+    "09-hall-straight-entry-seam",
 )
 FULL = (
     "15-eye-closet-shelves",
@@ -44,7 +44,7 @@ def triple(raw: str) -> tuple[float,float,float]:
     parts=raw.split(",")
     assert len(parts)==3, "HALL_CAMERA_INVALID_TRIPLE "+raw
     result=tuple(float(v) for v in parts)
-    assert all(-120<=v<=120 for v in result), "HALL_CAMERA_OUT_OF_BOUNDS"
+    assert all(-180<=v<=180 for v in result), "HALL_CAMERA_OUT_OF_BOUNDS"
     return result
 
 def read_cameras(text: str) -> dict[str,Camera]:
@@ -77,42 +77,47 @@ def check_role(name: str, cam: Camera) -> None:
     assert sum((a-b)**2 for a,b in zip(cam.eye,cam.aim))>5, (
         "HALL_CAMERA_ZERO_DIRECTION "+name)
 
-    # Actual constructed cross-hall spans x37.25..59.75,
-    # z-38.5..69.5. A doorway runs WEST toward the classroom.
-    main=(40.5,56.5,-36.5,67.5)
+    # Source-constructed floor/roof bounds; native Roblox FPS and camera
+    # behavior remain a separate device gate.
+    main=(55.0,160.0,5.5,25.5)
     closet=(-4.6,4.6,28.3,34.3)
-    entry=(37.75,49.5,8.0,23.0)
-    def inside(rect):
-        xmin,xmax,zmin,zmax=rect
+    side=(38.0,53.0,6.0,25.5)
+    def inside(bounds):
+        xmin,xmax,zmin,zmax=bounds
         return xmin<=x<=xmax and zmin<=z<=zmax
     if name in ("05-closet-double-doors","15-eye-closet-shelves"):
         assert inside(closet), "HALL_CAMERA_CLOSET_EYE_OUTSIDE_CLOSET "+name
         if name=="05-closet-double-doors":
-            assert tz<27.5,"HALL_CAMERA_CLOSET_DOOR_AIM_WRONG "+name
+            assert tz<27.5, "HALL_CAMERA_CLOSET_DOOR_AIM_WRONG "+name
         else:
-            assert tz>34,"HALL_CAMERA_CLOSET_SHELVES_AIM_WRONG "+name
-    elif name=="09-hall-left-floor-roof-junction":
-        assert inside(entry) and 57<=tx<=61 and 13<=tz<=18, (
-            "HALL_CAMERA_MISSES_OPPOSITE_WALL "+name)
+            assert tz>34, "HALL_CAMERA_CLOSET_SHELVES_AIM_WRONG "+name
+    elif name=="09-hall-straight-entry-seam":
+        assert inside(side) and tx>=65 and 9<=tz<=23, (
+            "HALL_CAMERA_STRAIGHT_JUNCTION_WRONG_SIDE "+name)
     else:
         assert inside(main) and not inside(closet), (
-            "HALL_CAMERA_NOT_INSIDE_CROSS_CORRIDOR "+name)
+            "HALL_CAMERA_INSIDE_SUPPLY_CLOSET_NOT_GALLERY "+name)
         if name=="06-hall-paper-rail":
-            assert 46<=x<=51 and 5<=z<=11 and 53<=tx<=58
-            assert tz>=30,"HALL_CAMERA_PAPER_AIM_MISSES_REAR_RAIL"
+            # On-source rendered evidence: the initial close-up showed 4
+            # papers, and the first corrected look-along-wall shot showed 7.
+            # The second must exceed the seven-paper independent overview.
+            # Reject overly short, head-on, or wrong-room fallback cameras.
+            assert 90<=x<=110 and 12<=z<=17.5 and 128<=tx<=152 and (
+                7<=tz<=11 and 28<=tx-x<=53
+            ), "HALL_CAMERA_PAPER_AIM_TOO_SHORT_OR_OFF_GALLERY"
         elif name=="07-hall-yellow-end-window":
-            assert 47<=x<=50 and 12<=z<=19 and tz>=68, (
-                "HALL_CAMERA_YELLOW_WINDOW_AIM_MISSES_END")
+            assert tx>=150 and 12<=tz<=19, (
+                "HALL_CAMERA_YELLOW_WINDOW_AIM_MISSES_FAR_END")
         elif name=="08-hall-adjacent-oak-door":
-            assert 55<=z<=62 and 37<=tx<=40 and tz>=59, (
-                "HALL_CAMERA_OAK_DOOR_AIM_MISSES_FACADE")
+            assert tx>=150 and 23<=tz<=27, (
+                "HALL_CAMERA_OAK_DOOR_AIM_MISSES_NORTH_FACADE")
         elif name=="22-hall-look-left":
-            assert tz>=51, "HALL_CAMERA_WRONG_NORTH_DIRECTION"
+            assert tx<=90, "HALL_CAMERA_WRONG_LEFT_DIRECTION"
         elif name=="23-hall-look-right":
-            assert tz<=-30, "HALL_CAMERA_WRONG_SOUTH_DIRECTION"
+            assert tx>=140, "HALL_CAMERA_WRONG_RIGHT_DIRECTION"
         elif name=="24-hall-entry-from-gallery":
-            assert tx<37.5 and 8<=tz<=23, (
-                "HALL_CAMERA_MISSES_ONLY_CONNECTED_STAFF_EXIT")
+            assert tx<=42 and 10<=tz<=22, (
+                "HALL_CAMERA_MISSES_ONLY_CONNECTED_EXIT")
 
 def inspect(cameras: dict[str,Camera], blockers=None) -> None:
     assert set(cameras)==set(REGISTERED), "HALL_CAMERA_INVENTORY_REGRESSION"
@@ -126,27 +131,31 @@ def self_test() -> None:
     # Synthetic, publicly safe camera location mutation fixtures.
     example={
         "05-closet-double-doors":Camera((0,5.5,31),(0,6.9,26.8)),
-        "06-hall-paper-rail":Camera((48,5.5,7.5),(55,8,37.5)),
-        "07-hall-yellow-end-window":Camera((48.5,5.7,15.5),(48.5,7.35,69.5)),
-        "08-hall-adjacent-oak-door":Camera((49.5,5.6,57.3),(38.35,6.8,61)),
-        "09-hall-left-floor-roof-junction":Camera((39,5.5,15.5),(59.2,6,15.5)),
+        "06-hall-paper-rail":Camera((100,5.5,16),(130,8,9)),
+        "07-hall-yellow-end-window":Camera((100,5.7,21),(155,7.35,15.5)),
+        "08-hall-adjacent-oak-door":Camera((145,5.6,16),(153.5,6.8,25.7)),
+        "09-hall-straight-entry-seam":Camera((44,5.5,15.5),(78,6,15.5)),
         "15-eye-closet-shelves":Camera((0,5.5,30),(0,7.5,35.15)),
-        "22-hall-look-left":Camera((48.5,5.5,-2.5),(48.5,7,57.5)),
-        "23-hall-look-right":Camera((48.5,5.5,-2.5),(48.5,7,-34.5)),
-        "24-hall-entry-from-gallery":Camera((48.5,5.5,18.5),(34.5,6.9,15.5)),
+        "22-hall-look-left":Camera((111,5.5,15.5),(76,7,15.5)),
+        "23-hall-look-right":Camera((111,5.5,15.5),(150,7,15.5)),
+        "24-hall-entry-from-gallery":Camera((75,5.5,15.5),(39,6.9,15.5)),
     }
     inspect(example)
     mutation_specs={
         "obsolete_paper_eye_in_closet":
-            ("06-hall-paper-rail",Camera((0,5.5,34),(55,8,37.5))),
+            ("06-hall-paper-rail",Camera((0,5.5,34),(125,9,4.98))),
         "obsolete_closet_exit_camera_outside":
             ("05-closet-double-doors",Camera((4,5.5,40),(0,6.9,26.8))),
         "old_full_camera_inside_closet":
-            ("22-hall-look-left",Camera((0,5.5,32),(48.5,7,57.5))),
-        "wrong_straight_ahead_aim":
-            ("24-hall-entry-from-gallery",Camera((48.5,5.5,18.5),(65,7,18.5))),
+            ("22-hall-look-left",Camera((0,5.5,32),(76,7,15.5))),
+        "wrong_turn_aim":
+            ("24-hall-entry-from-gallery",Camera((75,5.5,15.5),(75,7,38))),
         "not_child_eye":
-            ("06-hall-paper-rail",Camera((48,17.5,7.5),(55,8,37.5))),
+            ("06-hall-paper-rail",Camera((100,17.5,16),(130,8,9))),
+        "old_four_sheets_false_accept":
+            ("06-hall-paper-rail",Camera((112,5.5,17),(125,9,4.98))),
+        "camera_crosses_gallery_centerline":
+            ("06-hall-paper-rail",Camera((100,5.5,20),(151,8,8))),
     }
     for reason,(name,incorrect) in mutation_specs.items():
         changed=dict(example)
@@ -158,7 +167,8 @@ def self_test() -> None:
         else:
             raise AssertionError("HALL_CAMERA_NEGATIVE_TEST_ACCEPTED "+reason)
     print("HALL_CAMERA_LAYOUT_SELF_TEST_PASS "
-          "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true")
+          "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true "
+          "old_four_sheets_view_and_wrong_distance_rejected=true")
 
 def main() -> None:
     ap=argparse.ArgumentParser()
