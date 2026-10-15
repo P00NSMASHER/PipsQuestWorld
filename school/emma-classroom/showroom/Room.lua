@@ -2423,122 +2423,114 @@ end
 -- onto a LEFT/RIGHT cross-corridor, not into a straight eastbound hall or a
 -- 20-stud dead-end passage requiring a further turn. Reuse original authored
 -- corridor, native materials and facades; never create a duplicate hall.
-local function orientCrossHallAtStaffDoor(root: Instance)
+local function alignHallwayWithStaffExit(root: Instance)
     local hall=root:FindFirstChild("PhotographedHallway")
-    assert(hall,"CROSS_HALL_PHOTO_ASSEMBLY_MISSING")
-    hall:SetAttribute("Route","Left/right cross-corridor at ABVM STAFF threshold")
-    local yaw=CFrame.Angles(0,math.pi/2,0)
-    local transform=CFrame.new(10.5,0,15.5)*yaw
-    -- Original center (0,38) -> (48.5,15.5).
-    -- Hall axis +/-Z; structural floor x=37.25..59.75,z=-38.5..69.5.
-    for _,p in ipairs(hall:GetDescendants()) do
-        if p:IsA("BasePart") then p.CFrame=transform*p.CFrame end
-    end
-    local floor=hall:FindFirstChild("Photo hall polished square stone floor")
-    local roof=hall:FindFirstChild("Photo hall ivory ceiling")
-    assert(floor and roof and floor.CanCollide and not roof.CanCollide
-        and math.abs(floor.Position.X-48.5)<.05
-        and math.abs(floor.Position.Z-15.5)<.05,
-        "CROSS_HALL_SOURCE_FLOOR_MISALIGNED")
+    assert(hall, "Missing original photo corridor")
+    hall:SetAttribute("Route","Straight +X from left staff door; no turns")
+    hall:SetAttribute("Source","October 10 anonymous photographed architecture")
 
-    -- The original full-length rear wall now sits at x=59.75 opposite
-    -- the staff doorway. Reuse existing wall pieces for the near side,
-    -- leaving a genuine 15-stud opening through z=8..23.
-    local north=hall:FindFirstChild("Photo hall front outer wall")
-    local south=root:FindFirstChild("Side hall far wall")
-    local southBrick=root:FindFirstChild("Side hall far brick")
-    assert(north and south and southBrick,"CROSS_HALL_WALL_PARTS_MISSING")
-    north.Size=Vector3.new(46.5,13,.90)
-    north.CFrame=CFrame.new(37.45,6.5,46.25)*yaw
-    south.Name="Cross hall staff-side south wall"
-    south.Size=Vector3.new(.9,13,46.5)
-    south.CFrame=CFrame.new(37.45,6.5,-15.25)
-    southBrick.Name="Cross hall south glazed-brick facing"
-    southBrick.Size=Vector3.new(.10,4.3,46.3)
-    southBrick.CFrame=CFrame.new(38.01,2.15,-15.25)
-    local northBrick=hall:FindFirstChild("Photo hall front outer glazed brick")
-    assert(northBrick,"CROSS_HALL_NORTH_DADO_MISSING")
-    northBrick.Size=Vector3.new(46.25,4.25,.075)
-    northBrick.CFrame=CFrame.new(38.00,2.125,46.25)*yaw
-    -- Existing anonymous rails and exterior finishes follow the true
-    -- classroom wall but cannot span the staff doorway.
-    local caps,paint,brick={},{},{}
+    -- Yaw 180 so the PHOTO YELLOW WINDOW remains at the far end, while
+    -- the photo-hall noticeboard faces into the corridor. Old world origin
+    -- (0,38) becomes (108,15.5): west end x=54, far end x=162.
+    local transform=CFrame.new(108,0,53.5)*CFrame.Angles(0,math.pi,0)
+    for _,object in ipairs(hall:GetDescendants()) do
+        if object:IsA("BasePart") then
+            object.CFrame=transform*object.CFrame
+        end
+    end
+
+    local nearCap,farCap
     for _,p in ipairs(hall:GetChildren()) do
-        if p:IsA("BasePart") then
-            if p.Name=="Photo hall front dado cap" then table.insert(caps,p)
-            elseif p.Name=="Photo hall classroom exterior blue-gray paint" then table.insert(paint,p)
-            elseif p.Name=="Photo hall classroom exterior glazed brick" then table.insert(brick,p)
-            end
+        if p:IsA("BasePart") and p.Name=="Photo hall end cap" then
+            if p.Position.X<100 then nearCap=p else farCap=p end
         end
     end
-    assert(#caps==2 and #paint==2 and #brick==2,"CROSS_HALL_FINISH_COUNT")
-    for i,p in ipairs(caps) do
-        p.Size=Vector3.new(46.45,.16,.14)
-        p.CFrame=CFrame.new(38.03,4.34,i==1 and -15.25 or 46.25)*yaw
+    assert(nearCap and farCap,"Corridor endpoints missing")
+    -- Relocate this already-authored school notice to the sealed far cap,
+    -- then physically remove the west end wall blocking the staff doorway.
+    local board=nearCap:FindFirstChild("Original school noticeboard")
+    if board then
+        board.Parent=farCap
+        board.Face=Enum.NormalId.Left
     end
-    for i,span in ipairs({{-13.5,43},{25,4}}) do
-        paint[i].Size=Vector3.new(span[2],13.75,.09)
-        paint[i].CFrame=CFrame.new(37.99,11.125,span[1])*yaw
-        brick[i].Size=Vector3.new(span[2]-.15,4.25,.075)
-        brick[i].CFrame=CFrame.new(38.04,2.125,span[1])*yaw
-    end
-    local header=hall:FindFirstChild("Photo hall rear doorway header exterior blue-gray paint")
-    assert(header,"CROSS_HALL_HEADER_FINISH_MISSING")
-    header.Size=Vector3.new(15,5,.09)
-    header.CFrame=CFrame.new(38.02,15.5,15.5)*yaw
-    -- Three obsolete noncolliding old wall skins would otherwise
-    -- reappear INSIDE the classroom after rotation.
-    for _,name in ipairs({
-        "Photo hall staff return blue-gray plaster",
-        "Photo hall staff return glazed brick",
-        "Photo hall staff return oak cap",
-    }) do
-        local p=hall:FindFirstChild(name)
-        assert(p and not p.CanCollide,"CROSS_HALL_STALE_FINISH "..name)
-        p:Destroy()
-    end
+    nearCap:Destroy()
+    -- October 12 native-baseline and exact-source screenshot regression:
+    -- Removing the collision end cap DID NOT remove its separate SurfaceGui
+    -- brick-dado carrier. That noncolliding 22-stud-wide, 4.25-stud-tall
+    -- opaque veneer was left at x=54.51 ACROSS the player's straight
+    -- exit and visibly hid the lower half of the new corridor. Remove
+    -- ONLY that obsolete NEAR-cap facing. The opposite named glazed-brick
+    -- carrier stays on the sealed far wall. No new physical Parts.
+    local obsoleteNearBrick=hall:FindFirstChild("Photo hall right end glazed brick")
+    assert(obsoleteNearBrick and obsoleteNearBrick:IsA("BasePart")
+        and obsoleteNearBrick.Position.X<56
+        and obsoleteNearBrick.Size.Z>=21.9,
+        "STRAIGHT_HALL_OLD_END_DADO_NOT_AT_EXPECTED_ENTRY")
+    obsoleteNearBrick:Destroy()
 
-    -- The only staff threshold runs from room x=37 into hall x=37.25.
-    -- Overlap the existing REAL collidable floor at x=36.25..39.05;
-    -- preserve level surfaces and continuous 13-stud ceiling.
-    local bridge=root:FindFirstChild("Side hall floor")
-    local ceiling=root:FindFirstChild("Side hall ceiling")
-    assert(bridge and ceiling,"CROSS_HALL_STAFF_BRIDGE_MISSING")
-    bridge.Size=Vector3.new(2.8,.48,15.8)
-    bridge.CFrame=CFrame.new(37.65,.24,15.5)
-    ceiling.Size=Vector3.new(2.8,.36,15.8)
-    ceiling.CFrame=CFrame.new(37.65,13.18,15.5)
-    -- The original short corridor's south cap now cuts across the
-    -- extended perpendicular hall. Remove its three original Parts.
-    for _,name in ipairs({
-        "Side corridor end wall","Side corridor brick dado",
-        "Side corridor navy cap rail",
-    }) do
-        local p=root:FindFirstChild(name)
-        assert(p,"CROSS_HALL_STALE_CAP "..name)
-        p:Destroy()
-    end
-    local corner=root:FindFirstChild("Left hallway outside corner return")
-    assert(corner,"CROSS_HALL_STAFF_REVEAL_MISSING")
-    corner.Name="Cross hall staff doorway exterior reveal"
-    corner.Size=Vector3.new(.72,13,1)
-    corner.CFrame=CFrame.new(37.5,6.5,23.32)
+    -- The earlier corridor borrowed the classroom's rear wall. After moving
+    -- it outside the staff door, close the missing north wall with ONE large
+    -- collision solid (not dozens of tiny mobile Parts).
+    part(hall,"Photo hall continuous north wall",Vector3.new(108,13,.90),
+        CFrame.new(108,6.5,26.75),Color3.fromRGB(107,117,125),
+        Enum.Material.SmoothPlastic,true)
 
-    -- Hang the original anonymous papers on the solid opposite wall
-    -- instead of leaving a floating freestanding noticeboard in the aisle.
-    local frame=root:FindFirstChild("Staff hall framed announcement board")
-    local cork=root:FindFirstChild("Staff hall inset cork noticeboard")
-    assert(frame and cork,"CROSS_HALL_NOTICEBOARD_MISSING")
-    frame.CFrame=CFrame.new(59.12,7.74,-13.5)
-    cork.CFrame=CFrame.new(59.02,7.74,-13.5)
-    local count=0
-    for _,p in ipairs(root:GetChildren()) do
-        if p:IsA("BasePart") and p.Name=="Staff hall anonymous paper notice" then
-            count+=1
-            p.CFrame=CFrame.new(58.95,7.70,count==1 and -15.15 or -11.85)
+    -- Reuse, rather than duplicate, the old 18-stud staff vestibule. Extend
+    -- its single floor and roof in the north/south directions so the 0.5-
+    -- stud overlap at x=54 is supported/roofed across the full hallway width.
+    local sideFloor=root:FindFirstChild("Side hall floor")
+    local sideRoof=root:FindFirstChild("Side hall ceiling")
+    assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
+    sideFloor.Size=Vector3.new(18,.48,23.05)
+    sideFloor.CFrame=CFrame.new(45.5,.24,15.775)
+    sideRoof.Size=Vector3.new(18,.36,23.05)
+    sideRoof.CFrame=CFrame.new(45.5,13.18,15.775)
+
+    -- The old x=54.5 far wall was a hard stop directly across the path.
+    -- Rotate/reuse its wall and glazed dado onto the NORTH side instead.
+    local oldBlock=root:FindFirstChild("Side hall far wall")
+    local oldBrick=root:FindFirstChild("Side hall far brick")
+    assert(oldBlock and oldBrick,"Old staff hall return missing")
+    oldBlock.Name="Staff entry straight north wall"
+    oldBlock.Size=Vector3.new(18,13,1)
+    oldBlock.CFrame=CFrame.new(45.5,6.5,26.80)
+    oldBrick.Name="Staff entry north wall glazed brick"
+    oldBrick.Size=Vector3.new(17.7,4.3,.12)
+    oldBrick.CFrame=CFrame.new(45.5,2.15,26.20)
+
+    -- Move the three preexisting south-end finish layers into alignment
+    -- with the main corridor's south wall; keep the end solid.
+    for _,object in ipairs(root:GetChildren()) do
+        if object:IsA("BasePart") and
+            (object.Name=="Side corridor end wall"
+            or object.Name=="Side corridor brick dado"
+            or object.Name=="Side corridor navy cap rail") then
+            object.CFrame=CFrame.new(0,0,-1.40)*object.CFrame
         end
     end
-    assert(count==2,"CROSS_HALL_ANONYMOUS_PAPERS_MISSING")
+
+    -- Mount the existing announcement board on that same north side.
+    -- None of the noticeboard or anonymous papers becomes a collider.
+    local notices={
+        {name="Staff hall framed announcement board",size=Vector3.new(5.90,3.35,.16),cf=CFrame.new(45.5,7.74,26.10)},
+        {name="Staff hall inset cork noticeboard",size=Vector3.new(5.52,2.99,.07),cf=CFrame.new(45.5,7.74,26.00)}
+    }
+    for _,v in ipairs(notices) do
+        local p=root:FindFirstChild(v.name)
+        assert(p and not p.CanCollide,v.name.." missing")
+        p.Size=v.size
+        p.CFrame=v.cf
+    end
+    local sheet=0
+    for _,object in ipairs(root:GetChildren()) do
+        if object:IsA("BasePart")
+            and object.Name=="Staff hall anonymous paper notice" then
+            sheet+=1
+            object.Size=Vector3.new(1.75,1.73,.025)
+            object.CFrame=CFrame.new(sheet==1 and 44 or 47,7.70,25.94)
+        end
+    end
+    assert(sheet==2,"Staff corridor anonymous notices missing")
 end
 
 -- The owner's October 12 photo-match scope explicitly excludes the gym/tumbling mat.
@@ -2684,7 +2676,7 @@ function World.build()
     buildTeacherPlanningWall(root)
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
-    orientCrossHallAtStaffDoor(root)
+    alignHallwayWithStaffExit(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
     buildPhotoWindowWorkstation(root)
