@@ -14,7 +14,7 @@ import sys
 import tempfile
 
 HERE = Path(__file__).resolve().parent
-TRUSTED_ROOT = HERE.parents[1]
+TRUSTED_ROOT = HERE.parent
 
 OLD_UNIVERSE = "10768955678"
 OLD_PLACE = "87245440673982"
