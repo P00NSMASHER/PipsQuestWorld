@@ -20,6 +20,10 @@ teacher.Name="Mrs. Benulis - Board"
 teacher:SetAttribute("ShowroomStationaryTeacher",true)
 teacher:PivotTo(CFrame.new(-11,3.15,-29)*CFrame.Angles(0,math.pi,0))
 teacher.Parent=Room.Root
+-- The optional creator-owned portrait GLB replaces only the static teacher.
+-- With no verified portrait asset, the original R15 teacher stays visible.
+local TeacherPortraitAdapter=require(script.Parent:WaitForChild("TeacherPortraitAdapter"))
+TeacherPortraitAdapter.apply(Room.Root,teacher)
 -- Owner-created GLB models replace primitive visuals ONLY after authorized
 -- Roblox model IDs load successfully. Otherwise the complete room is intact.
 local FurnitureMeshAdapter=require(script.Parent:WaitForChild("FurnitureMeshAdapter"))
