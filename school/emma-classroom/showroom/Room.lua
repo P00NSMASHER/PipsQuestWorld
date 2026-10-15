@@ -2248,9 +2248,17 @@ local function buildBackDoorAndHall(root: Instance)
 
     local yellow=Color3.fromRGB(214,166,63)
     local yellowHighlight=Color3.fromRGB(227,187,86)
-    for _,y in ipairs({3.12,11.58}) do
+    -- Keep the lower sash slim, but give the distant top sash a deeper
+    -- manufactured header. The exact rendered hallway camera proved the old
+    -- .30-stud top rail disappeared completely at this distance. Anchor the
+    -- thicker rail at the same lower edge so it extends upward without
+    -- shrinking the photographed glazing or changing any collision route.
+    for _,sash in ipairs({
+        {y=3.12,height=.30},
+        {y=11.69,height=.52},
+    }) do
         hp("Photo hall yellow sash horizontal",
-            Vector3.new(.28,.30,15.24),CFrame.new(-53.19,y,38),
+            Vector3.new(.28,sash.height,15.24),CFrame.new(-53.19,sash.y,38),
             yellow,Enum.Material.Wood,false)
     end
     for _,z in ipairs({30.38,45.62}) do
