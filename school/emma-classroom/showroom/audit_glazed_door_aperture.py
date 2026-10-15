@@ -34,9 +34,11 @@ local stiles=all("Glazed door oak side stile")
 local dividers=all("Glazed door glass divider")
 local pulls=all("Glazed door brass pull")
 local thresholds=all("Classroom doorway brass threshold")
+local headers=all("Closet doorway plaster header infill")
 assert(#doors==2 and #panes==2 and #rails==4
     and #stiles==4 and #dividers==2 and #pulls==2
-    and #thresholds==1,"PHOTO_APERTURE_PIECE_COUNT")
+    and #thresholds==1 and #headers==1
+    and #all("Door transom glass")==0,"PHOTO_APERTURE_PIECE_COUNT")
 local function verify()
     local topRails=0
     local sillRails=0
@@ -46,7 +48,8 @@ local function verify()
             "PHOTO_APERTURE_FRAME_RAIL_INVALID")
         if r:GetAttribute("DoorRailType")=="Top" then
             topRails+=1
-            assert(math.abs(r.Size.Y-1.30)<.04)
+            assert(math.abs(r.Size.Y-1.40)<.04
+                and r.Position.Y+r.Size.Y/2>10.6)
         elseif r:GetAttribute("DoorRailType")=="Sill" then
             sillRails+=1
             assert(math.abs(r.Size.Y-.32)<.04)
@@ -56,6 +59,10 @@ local function verify()
     end
     assert(topRails==2 and sillRails==2,
         "PHOTO_APERTURE_MISSING_TOP_OR_SILL")
+    local header=headers[1]
+    assert(header.CanCollide and header.Size.Y>2.3
+        and header.Position.Y-header.Size.Y/2>11.2,
+        "PHOTO_APERTURE_UNFINISHED_TRANSOM_VOID")
     for _,side in ipairs(stiles) do
         assert(side.Size.X>1.07 and side.Size.X<1.13
             and side.Size.Y>4.3 and not side.CanCollide,

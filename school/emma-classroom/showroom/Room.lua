@@ -1712,8 +1712,11 @@ local function buildBackDoorAndHall(root: Instance)
     end
     part(root,"Door wood header",Vector3.new(11.55,.62,1.12),
         CFrame.new(0,10.94,26.90),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Door transom glass",Vector3.new(10.22,1.55,.20),
-        CFrame.new(0,12.05,26.70),Color3.fromRGB(207,221,218),Enum.Material.Glass,false).Transparency=.30
+    -- Close the oversized pale-blue void above the doors with the same warm
+    -- plaster as the classroom wall. The closet already has a real ceiling;
+    -- this header makes that enclosure visually complete from child height.
+    part(root,"Closet doorway plaster header infill",Vector3.new(10.72,2.35,1.0),
+        CFrame.new(0,12.45,27.0),P.wall,Enum.Material.SmoothPlastic,true)
     -- Source-derived October 10 hallway screenshots proved that a single
     -- opaque ten-stud Wood slab sat BEHIND each translucent "Door glass".
     -- Transparency could never reveal the classroom. Form a REAL aperture:
@@ -1739,7 +1742,7 @@ local function buildBackDoorAndHall(root: Instance)
         -- upper timber lintel, both matching the original leaf outline.
         for _,rail in ipairs({
             {name="Sill",y=-.88,height=.32},
-            {name="Top",y=4.35,height=1.30},
+            {name="Top",y=4.70,height=1.40},
         }) do
             local p=part(root,"Glazed door solid oak rail",
                 Vector3.new(4.95,rail.height,.36),
@@ -1894,7 +1897,6 @@ local function buildBackDoorAndHall(root: Instance)
     local blueGray=Color3.fromRGB(107,117,125)
     local darkOak=Color3.fromRGB(112,77,50)
     local paperColor=Color3.fromRGB(243,241,232)
-    local mortar=Color3.fromRGB(106,74,49)
     local function hp(name:string,size:Vector3,cf:CFrame,color:Color3,
         material:Enum.Material?,solid:boolean?):Part
         local p=part(hall,name,size,cf,color,material,solid)
@@ -1977,67 +1979,33 @@ local function buildBackDoorAndHall(root: Instance)
     -- is rotated later; the old facades landed inside the yellow classroom
     -- wall and appeared as the gray spike behind the word-wall bulletin board.
 
-    -- A true 6-course staggered bond and subtle ochre tone differences.
-    -- The graphic lives on seven noncolliding flat dado carriers, and is
-    -- fully independent of marketplace image uploads / texture IDs.
-    local bricks={
-        Color3.fromRGB(188,123,54),Color3.fromRGB(196,134,61),
-        Color3.fromRGB(211,148,68),Color3.fromRGB(174,111,48),
-        Color3.fromRGB(201,141,72),Color3.fromRGB(181,121,60),
-    }
-    local function dado(name:string,size:Vector3,cf:CFrame,face:Enum.NormalId)
-        -- Warm ochre glazed-brick BASE is visible even where third-party
-        -- renderers or low-detail clients omit the staggered SurfaceGui.
-        -- Dark mortar and color variation are still drawn by the GUI on top.
+    -- One consistent native brick finish across every noncolliding carrier.
+    -- It is independent of marketplace image uploads / texture IDs.
+    local function dado(name:string,size:Vector3,cf:CFrame)
+        -- Use one native Brick material on every corridor wall. Mixing the
+        -- native material with oversized SurfaceGui courses produced the two
+        -- visibly different brick scales in the player's hallway screenshot.
         local p=hp(name,size,cf,Color3.fromRGB(192,132,63),
-            Enum.Material.SmoothPlastic,false)
-        p.Reflectance=.055
-        local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
-            and size.Z or size.X
-        local pixels=math.max(50,math.floor(w*22))
-        local pixelsY=math.max(100,math.floor(size.Y*23.5))
-        local gui=imageSurface(p,"Photo glazed offset brick bond",face,pixels,pixelsY)
-        local field=paintedRectangle(gui,"Warm mortar field",
-            UDim2.fromScale(1,1),UDim2.fromScale(0,0),mortar)
-        field.ClipsDescendants=true
-        local brickW=78
-        -- Six consistent courses keep both long walls visually identical
-        -- while staying below the established mobile draw-frame budget.
-        local rowCount=6
-        local brickH=math.max(14,math.floor(pixelsY/rowCount)-3)
-        for row=0,rowCount-1 do
-            local offset=(row%2==0) and 0 or -brickW/2
-            for col=0,math.ceil(pixels/brickW)+1 do
-                local px=math.floor(offset+col*brickW+2)
-                if px<pixels and px+brickW>0 then
-                    paintedRectangle(field,"Photo glazed brick",
-                        UDim2.fromOffset(brickW-3,brickH),
-                        UDim2.fromOffset(px,math.floor(row*pixelsY/rowCount+1)),
-                        bricks[((row*7+col*3)%#bricks)+1])
-                end
-            end
-        end
+            Enum.Material.Brick,false)
+        p.Reflectance=.035
     end
     dado("Photo hall rear glazed brick",Vector3.new(107,12.70,.075),
-        CFrame.new(0,6.35,48.735),Enum.NormalId.Front)
+        CFrame.new(0,6.35,48.735))
     -- Extend these existing two glazed dados over the same exposed
     -- yellow infill, without crossing the double-door opening.
     for _,side in ipairs({-1,1}) do
         dado("Photo hall classroom exterior glazed brick",
             Vector3.new(31.35,12.70,.075),
-            CFrame.new(side*21.25,6.35,27.66),Enum.NormalId.Back)
+            CFrame.new(side*21.25,6.35,27.66))
     end
     -- Don't draw glazed brick across the new hallway entry from the left
     -- ABVM staff doorway. Only the sealed negative-X wall gets a facing.
     dado("Photo hall front outer glazed brick",
-        Vector3.new(16.75,12.70,.075),CFrame.new(-45.5,6.35,27.66),
-        Enum.NormalId.Back)
+        Vector3.new(16.75,12.70,.075),CFrame.new(-45.5,6.35,27.66))
     dado("Photo hall left end glazed brick",
-        Vector3.new(.075,12.70,22),CFrame.new(-53.49,6.35,38),
-        Enum.NormalId.Right)
+        Vector3.new(.075,12.70,22),CFrame.new(-53.49,6.35,38))
     dado("Photo hall right end glazed brick",
-        Vector3.new(.075,12.70,22),CFrame.new(53.49,6.35,38),
-        Enum.NormalId.Left)
+        Vector3.new(.075,12.70,22),CFrame.new(53.49,6.35,38))
 
     -- Both faces of the ACTUAL existing glass leaves receive tiny, anonymous
     -- green shamrock artwork. Four circular UI lobes and one stem each.
@@ -2506,9 +2474,9 @@ local function alignHallwayWithStaffExit(root: Instance)
             or object.Name=="Side corridor full-height glazed brick") then
             local moved=CFrame.new(0,0,-1.40)*object.CFrame
             local isWall=object.Name=="Side corridor end wall"
-            object.Size=Vector3.new(isWall and 23.10 or 22.80,
+            object.Size=Vector3.new(isWall and 21.85 or 21.58,
                 object.Size.Y,object.Size.Z)
-            object.CFrame=CFrame.new(2.55,0,0)*moved
+            object.CFrame=CFrame.new(isWall and 3.175 or 3.16,0,0)*moved
             if object.Name=="Side corridor full-height glazed brick" then
                 object.Color=Color3.fromRGB(192,132,63)
             elseif object.Name=="Side corridor end wall" then
@@ -2541,56 +2509,22 @@ local function alignHallwayWithStaffExit(root: Instance)
         "Staff hallway adjoining wall missing")
     adjoiningWall.CFrame=CFrame.new(.80,0,0)*adjoiningWall.CFrame
     adjoiningWall.Color=Color3.fromRGB(192,132,63)
-    local brickColors={
-        Color3.fromRGB(188,123,54),Color3.fromRGB(196,134,61),
-        Color3.fromRGB(211,148,68),Color3.fromRGB(174,111,48),
-        Color3.fromRGB(201,141,72),Color3.fromRGB(181,121,60),
-    }
     local function westBrickPanel(name:string,length:number,centerZ:number,
-        height:number,centerY:number,rows:number)
+        height:number,centerY:number)
         local facing=part(hall,name,Vector3.new(length,height,.075),
             adjoiningWall.CFrame*CFrame.new(centerZ-80.75,centerY-6.5,-.49),
-            Color3.fromRGB(192,132,63),Enum.Material.SmoothPlastic,false)
-        facing.Reflectance=.055
-        local pixels=math.max(50,math.floor(length*22))
-        local pixelsY=math.max(50,math.floor(height*23.5))
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="Photo glazed offset brick bond"
-        gui.Face=Enum.NormalId.Front;gui.LightInfluence=.34
-        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-        gui.CanvasSize=Vector2.new(pixels,pixelsY);gui.Parent=facing
-        local field=Instance.new("Frame")
-        field.Name="Warm mortar field";field.Size=UDim2.fromScale(1,1)
-        field.BorderSizePixel=0;field.ClipsDescendants=true
-        field.BackgroundColor3=Color3.fromRGB(106,74,49);field.Parent=gui
-        local brickW=78
-        local brickH=math.max(14,math.floor(pixelsY/rows)-3)
-        for row=0,rows-1 do
-            local offset=(row%2==0) and 0 or -brickW/2
-            for col=0,math.ceil(pixels/brickW)+1 do
-                local px=math.floor(offset+col*brickW+2)
-                if px<pixels and px+brickW>0 then
-                    local tile=Instance.new("Frame")
-                    tile.Name="Photo glazed brick"
-                    tile.Size=UDim2.fromOffset(brickW-3,brickH)
-                    tile.Position=UDim2.fromOffset(px,
-                        math.floor(row*pixelsY/rows+1))
-                    tile.BorderSizePixel=0
-                    tile.BackgroundColor3=brickColors[((row*7+col*3)%#brickColors)+1]
-                    tile.Parent=field
-                end
-            end
-        end
+            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+        facing.Reflectance=.035
         return facing
     end
     -- Split the west brick skin around both oak-and-glass classroom doors.
     -- The previous single slab sat in front of every door component, leaving
     -- empty wood rectangles filled with brick.
-    westBrickPanel("Photo hall continuous north full-height brick",27.20,40.75,12.70,6.35,6)
-    westBrickPanel("Photo hall continuous north full-height brick",61.80,92.05,12.70,6.35,6)
-    westBrickPanel("Photo hall continuous north full-height brick",4.80,131.95,12.70,6.35,6)
+    westBrickPanel("Photo hall continuous north full-height brick",27.20,40.75,12.70,6.35)
+    westBrickPanel("Photo hall continuous north full-height brick",61.80,92.05,12.70,6.35)
+    westBrickPanel("Photo hall continuous north full-height brick",4.80,131.95,12.70,6.35)
     for _,doorZ in ipairs({57.75,126.25}) do
-        westBrickPanel("Photo hall continuous north door header brick",6.80,doorZ,2.05,11.68,2)
+        westBrickPanel("Photo hall continuous north door header brick",6.80,doorZ,2.05,11.68)
     end
     hall:SetAttribute("FalseEntryArchRemoved",true)
     hall:SetAttribute("ReferenceFinish","full-height orange brick and dark square tile")

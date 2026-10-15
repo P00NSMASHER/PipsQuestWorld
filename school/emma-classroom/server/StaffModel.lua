@@ -14,8 +14,46 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher,scaleOverride:number?)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",11)
+    local isBenulis=teacher.appearanceId=="benulis_2026_portrait"
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",12)
     model:SetAttribute("AppearanceProfile",teacher.appearanceId or "standard_staff")
+    if isBenulis then
+        -- Use one clean, familiar block-NPC silhouette. The bundled Woman
+        -- package has extremely tapered limbs, and its disconnected static
+        -- R15 rest transforms produced the bent/missing-arm look on device.
+        -- This body has one torso, one sleeve per arm, one hand per arm, and
+        -- one trouser/shoe section per leg: no layered or repeated segments.
+        for _,bodyName in ipairs({
+            "UpperTorso","LowerTorso",
+            "LeftUpperArm","LeftLowerArm","LeftHand",
+            "RightUpperArm","RightLowerArm","RightHand",
+            "LeftUpperLeg","LeftLowerLeg","LeftFoot",
+            "RightUpperLeg","RightLowerLeg","RightFoot",
+        }) do
+            local old=model:FindFirstChild(bodyName)
+            if old then old:Destroy() end
+        end
+        local function block(name,size,cf)
+            local p=Instance.new("Part")
+            p.Name=name;p.Size=size;p.CFrame=cf
+            p.Material=Enum.Material.SmoothPlastic;p.Parent=model
+            return p
+        end
+        block("UpperTorso",Vector3.new(2.0,2.0,1.0),CFrame.new(0,0,0))
+        block("LowerTorso",Vector3.new(1.82,.76,.92),CFrame.new(0,-1.35,0))
+        for _,side in ipairs({-1,1}) do
+            local prefix=side<0 and "Left" or "Right"
+            block(prefix.."UpperArm",Vector3.new(.72,1.55,.72),
+                CFrame.new(side*1.36,.20,0))
+            block(prefix.."Hand",Vector3.new(.74,.46,.74),
+                CFrame.new(side*1.36,-.80,0))
+            block(prefix.."UpperLeg",Vector3.new(.86,1.55,.86),
+                CFrame.new(side*.48,-2.48,0))
+            block(prefix.."Foot",Vector3.new(.88,.48,1.06),
+                CFrame.new(side*.48,-3.48,-.10))
+        end
+        model:SetAttribute("BodySilhouette","standard_block_npc")
+    end
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
@@ -31,11 +69,11 @@ function StaffModel.create(teacher,scaleOverride:number?)
         face=Instance.new("Decal");face.Name="face";face.Face=Enum.NormalId.Front;face.Texture="rbxasset://textures/face.png"
     else
         face=assets:WaitForChild("WomanFace"):Clone();face.Name="face"
-        if teacher.appearanceId=="benulis_2026_portrait" then
+        if isBenulis then
             -- Use Roblox's familiar friendly default expression. The prior
             -- catalog face stretched badly on this bundled head mesh.
             face.Texture="rbxasset://textures/face.png"
-            model:SetAttribute("PortraitAvatarRefinement","v11_standard_r15_clean_palette_friendly_face")
+            model:SetAttribute("PortraitAvatarRefinement","v12_standard_block_npc_coherent_limbs")
         end
     end
     face.Parent=head
@@ -43,14 +81,14 @@ function StaffModel.create(teacher,scaleOverride:number?)
     local hum=Instance.new("Humanoid");hum.Name="Humanoid";hum.RigType=Enum.HumanoidRigType.R15
     hum.DisplayDistanceType=Enum.HumanoidDisplayDistanceType.None;hum.BreakJointsOnDeath=false;hum.AutomaticScalingEnabled=false;hum.AutoRotate=false;hum.RequiresNeck=false;hum.EvaluateStateMachine=false;hum.Parent=model
     local shirt=assets:WaitForChild((teacher.name=="Mrs. Thompson" and "DenimJacket") or ((teacher.clothing=="pattern" or teacher.clothing=="floral" or teacher.clothing=="striped") and "PatternShirt" or "Jacket")):Clone()
-    if teacher.appearanceId=="benulis_2026_portrait" and shirt:IsA("Shirt") then
+    if isBenulis and shirt:IsA("Shirt") then
         -- Let the fitted navy R15 body and authored V-neck trim show instead
         -- of layering the generic black staff jacket over the portrait outfit.
         shirt.ShirtTemplate=""
     end
     shirt.Parent=model
     local pants=assets:WaitForChild("Jeans"):Clone()
-    if teacher.appearanceId=="benulis_2026_portrait" and pants:IsA("Pants") then
+    if isBenulis and pants:IsA("Pants") then
         -- Classic clothing textures were being projected separately across
         -- every R15 limb, creating the striped/cut-apart body seen on device.
         -- Use the ordinary native R15 Woman body with explicit solid colors.
@@ -68,7 +106,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
     end
     local bodyColors=Instance.new("BodyColors");bodyColors.HeadColor3=skin;bodyColors.LeftArmColor3=skin;bodyColors.RightArmColor3=skin
     bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin
-    if teacher.appearanceId=="benulis_2026_portrait" then
+    if isBenulis then
         -- BodyColors paints an entire arm one color, including its hand. Her
         -- block body uses the explicit sleeve/skin palette below instead.
         bodyColors:Destroy()
@@ -79,7 +117,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
     -- Benulis's authored navy sweater with the skin tone. Reassert the final
     -- per-part palette after parenting: long navy sleeves, skin hands/face,
     -- charcoal trousers and dark shoes.
-    if teacher.appearanceId=="benulis_2026_portrait" then
+    if isBenulis then
         for _,bodyPart in ipairs(model:GetChildren()) do
             if bodyPart:IsA("BasePart") then
                 if bodyPart.Name=="UpperTorso"
@@ -121,7 +159,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
                 -- SpecialMesh.VertexColor is Vector3, NOT Color3. Passing
                 -- Color3 throws at runtime and silently drops the whole NPC.
                 mesh.VertexColor=Vector3.new(tint.R,tint.G,tint.B)
-                if teacher.appearanceId=="benulis_2026_portrait" then
+                if isBenulis then
                     mesh.Scale=mesh.Scale*.84
                     mesh.Offset=mesh.Offset+Vector3.new(0,.04,.03)
                     -- Preserve strand shading while making the old blond

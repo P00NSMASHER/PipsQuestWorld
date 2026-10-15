@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: normal R15 teacher, artifact-free classroom wall, uniform brick hall and open doors.
+# Release refresh: standard block NPC, recessed vestibule cap, finished closet header, one brick scale.
 
 on:
   push:

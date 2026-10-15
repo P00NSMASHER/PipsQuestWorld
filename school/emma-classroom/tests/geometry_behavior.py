@@ -111,11 +111,11 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==11)
+    assert(m:GetAttribute("StaffGeometryVersion")==12)
     if teacher.name=="Mrs. Benulis" then
         assert(m:GetAttribute("AppearanceProfile")=="benulis_2026_portrait")
-        assert(m:GetAttribute("PortraitAvatarRefinement")=="v11_standard_r15_clean_palette_friendly_face")
-        assert(m:GetAttribute("BodySilhouette")==nil)
+        assert(m:GetAttribute("PortraitAvatarRefinement")=="v12_standard_block_npc_coherent_limbs")
+        assert(m:GetAttribute("BodySilhouette")=="standard_block_npc")
         assert(m:FindFirstChild("Teardrop pendant") and m:FindFirstChild("V-neck left rib"))
         local torso=m:FindFirstChild("UpperTorso")
         local sleeve=m:FindFirstChild("LeftUpperArm")
@@ -155,17 +155,21 @@ for _,teacher in ipairs(Data.Teachers) do
             local g=d:GetAttribute("PoseGroup");if g then groups[g]=(groups[g] or 0)+1 end
         end
     end
-    assert(nativeN==14,"Every standard R15 staff body must include all 14 mesh limbs")
     if teacher.name=="Mrs. Benulis" then
+        assert(nativeN==0,"Mrs. Benulis must use the coherent standard block NPC body")
         assert(m:FindFirstChildOfClass("Shirt").ShirtTemplate==""
             and m:FindFirstChildOfClass("Pants").PantsTemplate=="",
             "Mrs. Benulis must not project classic clothing across R15 limbs")
+    else
+        assert(nativeN==14,"Every other standard R15 staff body must include all 14 mesh limbs")
     end
     local partBudget=teacher.name=="Mrs. Benulis" and 64 or 40
     assert(n<=partBudget,"Staff part budget exceeded: "..teacher.name.." "..n);maxParts=math.max(maxParts,n)
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")
     assert(maxY+3.15<7.6,"Staff must fit the classroom doorway")
-    assert(groups.leftArm==3 and groups.rightArm==3 and groups.leftLeg==3 and groups.rightLeg==3)
+    local expectedGroup=teacher.name=="Mrs. Benulis" and 2 or 3
+    assert(groups.leftArm==expectedGroup and groups.rightArm==expectedGroup
+        and groups.leftLeg==expectedGroup and groups.rightLeg==expectedGroup)
     assert(groups.head and groups.head>=1,"Head must share a synchronized pose frame with hair/glasses")
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
     assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.2)

@@ -66,8 +66,11 @@ local caps=expect("Photo hall end cap",1)
 assert(caps[1].CanCollide and near(caps[1].Position.Z,134.75),
     "PHOTO_HALL_FAR_END_SKY_GAP")
 local south=expect("Side corridor end wall",1)[1]
-assert(near(south.Position.X,48.05) and near(south.Position.Z,4.25)
-    and south.Size.X>=23 and south.CanCollide,
+local southBrick=expect("Side corridor full-height glazed brick",1)[1]
+assert(near(south.Position.X,48.675) and near(south.Position.Z,4.25)
+    and south.Size.X>=21.8 and south.CanCollide
+    and south.Position.X-south.Size.X/2>=37.74
+    and southBrick.Position.X-southBrick.Size.X/2>=37.85,
     "LEFT_STAFF_CORRIDOR_SOUTH_CAP_GAPPED_OR_LOST")
 local transition=expect("Staff hallway floor transition strip",1)[1]
 assert(near(transition.Position.X,48.48)
@@ -90,7 +93,9 @@ assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.66)
     "STAFF_HALLWAY_ROOF_PROTRUDES_THROUGH_CLASSROOM_WALL")
 local function assertExteriorShellClearance()
     assert(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2>=37.64
-        and north.Position.X-north.Size.Z/2>=37.59,
+        and north.Position.X-north.Size.Z/2>=37.59
+        and south.Position.X-south.Size.X/2>=37.74
+        and southBrick.Position.X-southBrick.Size.X/2>=37.85,
         "STAFF_HALLWAY_EXTERIOR_SHELL_CROSSES_YELLOW_WALL")
 end
 assertExteriorShellClearance()
@@ -111,6 +116,9 @@ assert(#pieces("Rear corridor end wall")==0 and
        #pieces("Hall left wall")==0,
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Closed classroom closet door",2)
+expect("Closet doorway plaster header infill",1)
+assert(#pieces("Door transom glass")==0,
+    "RIGHT_CLOSET_PALE_OPEN_TRANSOM_RETURNED")
 expect("Photo hall classroom exterior blue-gray paint",2)
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
@@ -224,6 +232,11 @@ local function checkCloset()
         and closetCeiling.Size.Z>=9.0
         and closetCeiling.Position.Y-closetCeiling.Size.Y/2>=12.9,
         "RIGHT_CLOSET_FINISHED_CEILING_MISSING")
+    local header=one("Closet doorway plaster header infill")
+    assert(header.CanCollide and header.Material==Enum.Material.SmoothPlastic
+        and header.Size.X>10.6 and header.Size.Y>2.3
+        and near(header.Position.Y,12.45),
+        "RIGHT_CLOSET_DOORWAY_HEADER_NOT_FINISHED")
     local sign=one("Welcome over door")
     local label=sign:FindFirstChild("Surface")
     assert(label and label:FindFirstChildOfClass("TextLabel")
@@ -322,7 +335,7 @@ assert(#pieces("Photo hall right end glazed brick")==0,
 local count=0
 for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
-        assert(not wall.CanCollide and wall.Material==Enum.Material.SmoothPlastic,
+        assert(not wall.CanCollide and wall.Material==Enum.Material.Brick,
             "PHOTO_HALL_BRICK_BECAME_PHYSICAL_COLLIDER")
         if wall.Name=="Photo hall continuous north door header brick" then
             assert(wall.Size.Y>=2 and near(wall.Position.Y,11.68),
@@ -331,29 +344,17 @@ for _,s in ipairs(segments) do
             assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35),
                 "PHOTO_HALL_FULL_HEIGHT_BRICK_FINISH_LOST")
         end
-        -- If SurfaceGuis are hidden by an independent renderer or device
-        -- LOD, the shell should be warm gold, NOT dark-brown mortar.
+        -- Every wall now uses the same native mobile-stable brick material.
         assert(wall.Color.R>.70 and wall.Color.G>.45 and
             wall.Color.B>.18 and wall.Color.B<.34
-            and wall.Reflectance>.04,
+            and wall.Reflectance>.03,
             "PHOTO_HALL_GOLDEN_BRICK_FALLBACK_LOST")
-        local g=wall:FindFirstChild("Photo glazed offset brick bond")
-        assert(g and g:IsA("SurfaceGui"),
-            "PHOTO_HALL_BRICK_GUI_MISSING")
-        local field=g:FindFirstChild("Warm mortar field")
-        assert(field and field.ClipsDescendants,
-            "PHOTO_HALL_MORTAR_MISSING")
-        local tiles=0
-        for _,c in ipairs(field:GetChildren()) do
-            if c.Name=="Photo glazed brick" then tiles+=1 end
-        end
-        local minimum=(wall.Name=="Photo hall continuous north door header brick")
-            and 4 or ((wall.Size.X<5) and 12 or 18)
-        assert(tiles>=minimum,"PHOTO_HALL_BRICK_PATTERN_INCOMPLETE")
-        count+=tiles
+        assert(not wall:FindFirstChild("Photo glazed offset brick bond"),
+            "PHOTO_HALL_MIXED_SCALE_SURFACE_BRICKS_RETURNED")
+        count+=1
     end
 end
-assert(count>=500,"PHOTO_HALL_BRICK_DETAIL_TOO_SPARSE "..count)
+assert(count==10,"PHOTO_HALL_UNIFORM_BRICK_PANEL_COUNT "..count)
 assert(#pieces("Photo hall rear dado cap")==0
     and #pieces("Photo hall front dado cap")==0
     and #pieces("Staff entry east wall oak cap rail")==0,
@@ -592,7 +593,7 @@ for _,cap in ipairs(caps) do
 end
 assert(notices==1,"PHOTO_HALL_FAR_ANNOUNCEMENT_LOST")
 print("HALLWAY_SOURCE_PROBE_PASS perpendicular_corridor=108_studs "
-    .."tile_grid=25x6 bond_tiles="..count
+    .."tile_grid=25x6 uniform_native_brick_panels="..count
     .." physical_paper_diamonds=23 frosted_oak_doors=2 "
     .."in_game_children_identifiable=none native_iPhone_review_pending=true")
 '''

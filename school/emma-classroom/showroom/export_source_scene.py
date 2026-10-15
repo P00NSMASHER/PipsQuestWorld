@@ -198,9 +198,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             ), (
         "PERPENDICULAR_CORRIDOR_FAR_END_NOT_SEALED"
     )
-    assert (abs(float(side_caps[0][9])-48.05)<.05
+    assert (abs(float(side_caps[0][9])-48.675)<.05
             and abs(float(side_caps[0][11])-4.25)<.05
-            and float(side_caps[0][6])>=23.0
+            and float(side_caps[0][6])>=21.8
+            and float(side_caps[0][9])-float(side_caps[0][6])/2>=37.74
             and abs(float(staff_east[0][9])-59.6)<.05
             and float(staff_east[0][8])>=22.9
             ), (
@@ -284,10 +285,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert floor[0][4].endswith("Slate") and (
         float(floor[0][6])==108
     ), "Polished square-tile corridor floor lost its continuous structure"
-    assert all(p[4].endswith("SmoothPlastic") and
+    uniform_brick=(rear_brick+classroom_brick+outside_brick+end_brick+
+                   west_brick+west_headers+east_brick)
+    assert all(p[4].endswith("Brick") and
                abs(float(p[10])-6.35)<.03 and float(p[7])>=12.6
                for p in rear_brick+classroom_brick+outside_brick+end_brick), (
         "Full-height warm glazed brick finish lost"
+    )
+    assert all(p[4].endswith("Brick") for p in uniform_brick), (
+        "HALLWAY_MIXED_BRICK_RENDER_PATHS_RETURNED"
     )
     assert float(ceiling[0][10])>13.1 and float(ceiling[0][6])>107, (
         "HALLWAY_CEILING_LOST"
@@ -313,6 +319,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), (
         "Original walkable classroom entrance glazing was removed"
     )
+    assert len(actual_parts("Closet doorway plaster header infill"))==1 and (
+        len(actual_parts("Door transom glass"))==0
+    ), "Classroom closet doorway still has an unfinished pale transom void"
     assert all(p[4].endswith("Wood") for p in oak), (
         "Real-school wood doors were replaced by a generic surface"
     )
@@ -1192,6 +1201,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         abs(float(p[15])-1)<.001 and abs(float(p[19])-1)<.001 and
         abs(float(p[23])-1)<.001 for p in closet_doors
     ), "Classroom closet leaves are angled, open, or out of plane"
+    closet_header=actual_parts("Closet doorway plaster header infill")
+    assert len(closet_header)==1 and float(closet_header[0][7])>2.3 and (
+        float(closet_header[0][10])>12.4
+    ), "Classroom closet opening is not finished above the closed leaves"
     assert not actual_parts("Photo flipchart white housing"), (
         "Redundant corner flipchart returned"
     )

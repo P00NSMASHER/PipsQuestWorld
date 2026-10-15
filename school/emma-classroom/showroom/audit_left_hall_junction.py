@@ -94,6 +94,8 @@ local function check()
             -(mainRoof.Position.Y-mainRoof.Size.Y/2))<.06,
         "LEFT_HALL_JUNCTION_ROOF_HEIGHT_STEP")
     assert(south.CanCollide and near(south.Position.Z,4.25)
+        and near(south.Position.X,48.675)
+        and south.Position.X-south.Size.X/2>=37.74
         and longNorth.CanCollide and near(longNorth.Position.X,38.05)
         and near(longNorth.Position.Z,80.75)
         and longNorth.Position.X-longNorth.Size.Z/2>=37.59
@@ -136,9 +138,9 @@ local function check()
         if p:IsA("BasePart") then n+=1 end
     end
     assert(n<=3050,"LEFT_HALL_JUNCTION_MOBILE_3050_PART_BUDGET_EXCEEDED")
-    return axisFloor,axisRoof,n,floor,roof,closet,longNorth
+    return axisFloor,axisRoof,n,floor,roof,closet,longNorth,south
 end
-local floorOverlap,roofOverlap,total,floor,roof,closet,longNorth=check()
+local floorOverlap,roofOverlap,total,floor,roof,closet,longNorth,south=check()
 print("LEFT_HALL_JUNCTION_SOURCE_PASS floor_overlap="
     ..string.format("%.2f",floorOverlap)
     .." roof_overlap="..string.format("%.2f",roofOverlap)
@@ -181,6 +183,11 @@ rejectMutation(
     function() longNorth.CFrame=CFrame.new(-.30,0,0)*oldNorthCF end,
     function() longNorth.CFrame=oldNorthCF end,
     "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP","hall_wall_intrudes_classroom")
+local oldSouthCF=south.CFrame
+rejectMutation(
+    function() south.CFrame=CFrame.new(-.75,0,0)*oldSouthCF end,
+    function() south.CFrame=oldSouthCF end,
+    "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP","south_cap_intrudes_word_wall")
 -- These two tests are deliberately NONCOLLIDING barriers. The ordinary
 -- navigation route checker would accept both, while the player's rendered
 -- corridor would be obscured by an opaque brown half-wall.
@@ -203,7 +210,7 @@ rejectMutation(
 ghost:Destroy()
 check()
 print("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS "
-    .."floor,ceiling,step,closet_wall,north_wall,wall_intrusion,"
+    .."floor,ceiling,step,closet_wall,north_wall,wall_intrusion,south_cap,"
     .."noncolliding_veneer,renamed_noncolliding_partition_rejected=true")
 '''
 
@@ -221,7 +228,7 @@ def run(luau: str) -> list[str]:
     assert any(line.startswith("LEFT_HALL_JUNCTION_SOURCE_PASS") for line in lines)
     assert any(line.startswith("LEFT_HALL_JUNCTION_ADVERSARIAL_PASS") for line in lines)
     assert sum(line.startswith("LEFT_HALL_JUNCTION_NEGATIVE_REJECTED ")
-               for line in lines)==8
+               for line in lines)==9
     return [line for line in lines
             if line.startswith("LEFT_HALL_JUNCTION_")]
 
