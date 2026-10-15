@@ -1,9 +1,13 @@
 --!strict
--- The photo-grounded Mrs. Benulis GLB is a private REVIEW CANDIDATE.
--- Activation requires the owner-approved Roblox Model asset ID and actual
--- Roblox/iPhone visual acceptance. Keep the existing R15 teacher until then.
+-- Mrs. Benulis portrait model can replace the original stationary teacher ONLY
+-- after approved creator-owned import, privacy permission, Studio and iPhone QA.
+-- Never fill these flags from an unreviewed automated GLB or generated preview.
 return {
     Enabled = false,
     ModelAssetId = 0,
-    MaximumMeshParts = 100,
+    CreatorOwnershipVerified = false,
+    NativeStudioVisualReviewed = false,
+    IPhoneVisualReviewed = false,
+    PublicLikenessPermissionConfirmed = false,
+    MaximumMeshParts = 95,
 }
