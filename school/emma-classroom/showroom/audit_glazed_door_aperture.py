@@ -42,7 +42,7 @@ local function verify()
     local sillRails=0
     for _,r in ipairs(rails) do
         assert(not r.CanCollide and r.Material==Enum.Material.Wood
-            and math.abs(r.Size.X-4.65)<.04,
+            and math.abs(r.Size.X-4.95)<.04,
             "PHOTO_APERTURE_FRAME_RAIL_INVALID")
         if r:GetAttribute("DoorRailType")=="Top" then
             topRails+=1
@@ -57,7 +57,7 @@ local function verify()
     assert(topRails==2 and sillRails==2,
         "PHOTO_APERTURE_MISSING_TOP_OR_SILL")
     for _,side in ipairs(stiles) do
-        assert(side.Size.X>1 and side.Size.X<1.1
+        assert(side.Size.X>1.07 and side.Size.X<1.13
             and side.Size.Y>4.3 and not side.CanCollide,
             "PHOTO_APERTURE_MARGINAL_OAK_MISSING")
     end
@@ -101,11 +101,16 @@ local function verify()
         assert(not p.CanCollide and p.Material==Enum.Material.Metal,
             "PHOTO_APERTURE_DOOR_PULL_BLOCKS_AVATAR")
     end
+    table.sort(doors,function(a,b)return a.Position.X<b.Position.X end)
+    local centerGap=(doors[2].Position.X-doors[2].Size.X/2)
+        -(doors[1].Position.X+doors[1].Size.X/2)
+    assert(centerGap>=0 and centerGap<.20,
+        "PHOTO_APERTURE_CLOSET_DOOR_CENTER_GAP")
 end
 
 verify()
 local prior=doors[1].Size
-doors[1].Size=Vector3.new(4.65,10,.36)
+doors[1].Size=Vector3.new(4.95,10,.36)
 local ok,err=pcall(verify)
 doors[1].Size=prior
 assert(not ok and string.find(tostring(err),

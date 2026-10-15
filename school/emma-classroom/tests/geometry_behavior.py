@@ -111,11 +111,18 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==8)
+    assert(m:GetAttribute("StaffGeometryVersion")==9)
     if teacher.name=="Mrs. Benulis" then
         assert(m:GetAttribute("AppearanceProfile")=="benulis_2026_portrait")
-        assert(m:GetAttribute("PortraitAvatarRefinement")=="standard_friendly_face_scaled_hair_navy_sweater")
+        assert(m:GetAttribute("PortraitAvatarRefinement")=="v9_friendly_face_brown_hair_navy_sweater")
         assert(m:FindFirstChild("Teardrop pendant") and m:FindFirstChild("V-neck left rib"))
+        local torso=m:FindFirstChild("UpperTorso")
+        local sleeve=m:FindFirstChild("LeftUpperArm")
+        local hand=m:FindFirstChild("LeftHand")
+        assert(torso.Color.B>torso.Color.R and sleeve.Color.B>sleeve.Color.R,
+            "Mrs. Benulis navy sweater was overwritten by skin BodyColors")
+        assert(hand.Color.R>hand.Color.B,
+            "Mrs. Benulis hands must retain the portrait skin tone")
     end
     local head=m:FindFirstChild("Head")
     local face=head:FindFirstChild("face")

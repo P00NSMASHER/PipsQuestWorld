@@ -68,11 +68,10 @@ local function printed(target:BasePart,words:string,face:Enum.NormalId,ink:Color
     local pad=Instance.new("UIPadding");pad.PaddingLeft=UDim.new(0,22);pad.PaddingRight=UDim.new(0,22)
     pad.PaddingTop=UDim.new(0,13);pad.PaddingBottom=UDim.new(0,13);pad.Parent=t
 end
--- Photo-grounded cabinetry frieze: actual photographs show consecutive
--- classroom counting numbers rather than 10-only callouts. Add original,
--- static SurfaceGui letters to the EXISTING two wall-mounted panels; these
--- are not schoolwork or quiz authority, and add ZERO physical Parts.
-local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
+-- Keep the long classroom number line readable from the floor. Rendering all
+-- 121 integers in less than 45 studs produced a dense, broken-looking smear
+-- on phones; the decade anchors retain the useful sequence at a legible size.
+local function decadeNumberStrip(panel:BasePart,first:number,last:number)
     local gui=panel:FindFirstChildOfClass("SurfaceGui")
     assert(gui~=nil and gui.Face==Enum.NormalId.Front,
         "PHOTO_COUNTING_FRIEZE_SURFACE_MISSING")
@@ -81,27 +80,59 @@ local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
     gui.LightInfluence=.08
     local old=gui:FindFirstChild("Printed text")
     if old and old:IsA("TextLabel") then
-        -- Keep historic 10-step keywords as metadata for older audit callers,
-        -- but render the photographed complete consecutive sequence instead.
+        -- The clean decade cells below become the only visible labels.
         old.TextTransparency=1
         old.BackgroundTransparency=1
     end
-    local count=last-first+1
-    for n=first,last do
+    local count=math.floor((last-first)/10)+1
+    local index=0
+    for n=first,last,10 do
         local cell=Instance.new("TextLabel")
         cell.Name="NumberStripUnit"
         cell.Text=tostring(n)
-        cell.Position=UDim2.fromScale((n-first)/count,.16)
-        cell.Size=UDim2.fromScale(1/count,.68)
-        cell.Font=Enum.Font.GothamMedium
+        cell.Position=UDim2.fromScale(index/count+.012,.10)
+        cell.Size=UDim2.fromScale(1/count-.024,.80)
+        cell.Font=Enum.Font.GothamBold
         cell.TextColor3=C.navy
         cell.TextWrapped=false
         cell.TextScaled=true
         cell.BorderSizePixel=0
         cell.BackgroundColor3=Color3.fromRGB(214,226,203)
-        cell.BackgroundTransparency=(n%10==0) and .16 or 1
+        cell.BackgroundTransparency=.16
         cell.Parent=gui
+        index+=1
     end
+end
+
+-- One clean icon area and one caption area per shape card. This replaces the
+-- old centered 3D icon laid directly over centered text.
+local function cleanShapeCard(card:BasePart,name:string,tone:Color3,guiName:string)
+    local glyphs={
+        CIRCLE=utf8.char(9679),OVAL=utf8.char(9679),
+        TRIANGLE=utf8.char(9650),SQUARE=utf8.char(9632),
+        RECTANGLE=utf8.char(9644),DIAMOND=utf8.char(9670),
+        PENTAGON=utf8.char(11039),HEXAGON=utf8.char(11042),
+        STAR=utf8.char(9733),CROSS=utf8.char(10010),
+        CAPSULE=utf8.char(9644),ARCH=utf8.char(8745),
+    }
+    local gui=Instance.new("SurfaceGui")
+    gui.Name=guiName;gui.Face=Enum.NormalId.Front
+    gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    gui.CanvasSize=Vector2.new(360,200);gui.LightInfluence=.12;gui.Parent=card
+    local ground=Instance.new("Frame")
+    ground.Name="ShapeCardGround";ground.Size=UDim2.fromScale(1,1)
+    ground.BackgroundColor3=tone;ground.BorderSizePixel=0;ground.Parent=gui
+    local picture=Instance.new("TextLabel")
+    picture.Name="ShapePicture";picture.Size=UDim2.fromScale(.72,.60)
+    picture.Position=UDim2.fromScale(.14,.015);picture.BackgroundTransparency=1
+    picture.Text=glyphs[name] or "■";picture.TextColor3=C.cream
+    picture.TextScaled=true;picture.TextWrapped=false
+    picture.Font=Enum.Font.GothamBold;picture.Parent=ground
+    local caption=Instance.new("TextLabel")
+    caption.Name="ShapeCaption";caption.Size=UDim2.fromScale(.94,.25)
+    caption.Position=UDim2.fromScale(.03,.70);caption.Font=Enum.Font.GothamBold
+    caption.Text=name;caption.TextColor3=C.ink;caption.BackgroundTransparency=1
+    caption.TextWrapped=false;caption.TextScaled=true;caption.Parent=ground
 end
 
 local function makeGroup(parent:Instance,name:string):Folder
@@ -386,23 +417,7 @@ local function learningWall(root:Instance)
         local card=piece(group,"Photo-guided wall shape card",
             Vector3.new(2.2,1.3,.08),CFrame.new(x,16.5,26.32),
             tint,Enum.Material.SmoothPlastic,false)
-        printed(card,name,Enum.NormalId.Front,C.ink,tint)
-        local iconSize=({Vector3.new(.73,.73,.10),Vector3.new(.93,.60,.10),
-            Vector3.new(.72,.80,.08),Vector3.new(.73,.73,.08),
-            Vector3.new(.96,.51,.08),Vector3.new(.75,.75,.08),
-            Vector3.new(.70,.72,.08),Vector3.new(.70,.70,.08),
-            Vector3.new(.69,.75,.08)})[i]
-        -- One low-relief icon per card keeps the geometric reference visible
-        -- to independent renders, which do not reproduce SurfaceGui labels.
-        local cf=CFrame.new(x,16.65,26.22)
-        if i==1 or i==2 then
-            orb(group,"Photo-guided shape icon",iconSize,cf,C.cream,
-                Enum.Material.SmoothPlastic)
-        else
-            piece(group,"Photo-guided shape icon",iconSize,
-                cf*CFrame.Angles(0,0,i==6 and math.rad(45) or 0),
-                C.cream,Enum.Material.SmoothPlastic,false)
-        end
+        cleanShapeCard(card,name,tint,"WallShapeArt")
     end
 
     -- Authentic photos place a band of bright geometry teaching cards over
@@ -421,71 +436,7 @@ local function learningWall(root:Instance)
         local card=piece(group,"Photo-guided right cabinet shape card",
             Vector3.new(2.35,1.27,.08),CFrame.new(x,16.48,26.32),
             tone,Enum.Material.SmoothPlastic,false)
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="RightCabinetShapeArt"
-        gui.Face=Enum.NormalId.Front
-        gui.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
-        gui.CanvasSize=Vector2.new(360,200)
-        gui.LightInfluence=.12
-        gui.Parent=card
-        local ground=Instance.new("Frame")
-        ground.Name="ShapeCardGround"
-        ground.Size=UDim2.fromScale(1,1)
-        ground.BackgroundColor3=tone
-        ground.BackgroundTransparency=0
-        ground.BorderSizePixel=0
-        ground.Parent=gui
-        local picture=Instance.new("Frame")
-        picture.Name="ShapePicture"
-        picture.Size=UDim2.fromScale(.36,.56)
-        picture.Position=UDim2.fromScale(.32,.08)
-        picture.BackgroundColor3=C.cream
-        picture.BackgroundTransparency=0
-        picture.BorderSizePixel=0
-        if name=="OVAL" or name=="RECTANGLE" or name=="CAPSULE" then
-            picture.Size=UDim2.fromScale(.51,.37)
-            picture.Position=UDim2.fromScale(.245,.18)
-        elseif name=="DIAMOND" then
-            picture.Size=UDim2.fromScale(.29,.50)
-            picture.Position=UDim2.fromScale(.355,.10)
-            picture.Rotation=45
-        elseif name=="CROSS" then
-            picture.Size=UDim2.fromScale(.18,.52)
-            picture.Position=UDim2.fromScale(.41,.09)
-        elseif name=="ARCH" then
-            picture.Size=UDim2.fromScale(.47,.52)
-            picture.Position=UDim2.fromScale(.265,.09)
-        end
-        picture.Parent=ground
-        local corner=Instance.new("UICorner")
-        corner.CornerRadius=UDim.new(0,
-            (name=="SQUARE" or name=="RECTANGLE" or name=="CROSS") and 3 or 22)
-        if name=="CIRCLE" or name=="OVAL" or name=="CAPSULE" or name=="ARCH" then
-            corner.CornerRadius=UDim.new(1,0);corner.Parent=picture
-        else
-            corner.Parent=picture
-        end
-        if name=="CROSS" then
-            local bar=Instance.new("Frame")
-            bar.Name="ShapeCrossbar"
-            bar.Size=UDim2.fromScale(.55,.11)
-            bar.Position=UDim2.fromScale(.225,.30)
-            bar.BackgroundColor3=C.cream
-            bar.BackgroundTransparency=0
-            bar.BorderSizePixel=0
-            bar.Parent=ground
-        end
-        local caption=Instance.new("TextLabel")
-        caption.Name="ShapeCaption"
-        caption.Size=UDim2.fromScale(.94,.23)
-        caption.Position=UDim2.fromScale(.03,.73)
-        caption.Font=Enum.Font.GothamBold
-        caption.Text=name
-        caption.TextColor3=C.ink
-        caption.BackgroundTransparency=1
-        caption.TextWrapped=false
-        caption.TextScaled=true
-        caption.Parent=ground
+        cleanShapeCard(card,name,tone,"RightCabinetShapeArt")
     end
     -- Match the real long cabinet-side numbered teaching frieze without
     -- spanning the central door. The older right cabinet strip remains in
@@ -495,7 +446,7 @@ local function learningWall(root:Instance)
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(leftNumbers,"0  10  20  30  40  50  60",
         Enum.NormalId.Front,C.navy,leftNumbers.Color)
-    consecutiveNumberStrip(leftNumbers,0,60)
+    decadeNumberStrip(leftNumbers,0,60)
     piece(group,"Library counting strip top rail",
         Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
         C.blue,Enum.Material.Wood,false)
@@ -507,7 +458,7 @@ local function learningWall(root:Instance)
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(numberLine,"70  80  90  100  110  120",
         Enum.NormalId.Front,C.navy,numberLine.Color)
-    consecutiveNumberStrip(numberLine,61,120)
+    decadeNumberStrip(numberLine,70,120)
     piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
         CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
     piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),

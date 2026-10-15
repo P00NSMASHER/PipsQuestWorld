@@ -15,7 +15,7 @@ end
 assert(benulis,"Mrs. Benulis showroom profile is required")
 -- Build Mrs. Benulis at adult scale inside the constructor so its floor and
 -- pose geometry are finalized once, before it enters Workspace.
-local teacher=StaffModel.create(benulis,1.06)
+local teacher=StaffModel.create(benulis,1.10)
 teacher.Name="Mrs. Benulis - Board"
 teacher:SetAttribute("ShowroomStationaryTeacher",true)
 teacher:PivotTo(CFrame.new(-11,3.15,-29)*CFrame.Angles(0,math.pi,0))

@@ -183,7 +183,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PERPENDICULAR_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
     )
     assert (abs(float(rear[0][9])-59.75)<.05
-            and abs(float(north[0][9])-38.25)<.05
+            and abs(float(north[0][9])-37.95)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
             ), (
@@ -325,16 +325,23 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     closet_walls=actual_parts("Supply closet side wall")
     closet_back=actual_parts("Supply closet solid rear wall")
+    closet_ceiling=actual_parts("Supply closet finished ceiling")
     coat_rails=actual_parts("Supply closet child coat rail")
     coat_bodies=actual_parts("Children coat body")
     coat_sleeves=actual_parts("Children coat sleeve")
-    assert (len(closet_walls),len(closet_back),len(coat_rails),
-            len(coat_bodies),len(coat_sleeves))==(2,1,1,5,10), (
+    assert (len(closet_walls),len(closet_back),len(closet_ceiling),
+            len(coat_rails),len(coat_bodies),len(coat_sleeves))==(
+                2,1,1,1,5,10), (
         "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_REAL_STORAGE_CLOSET"
     )
     assert abs(float(closet_back[0][11])-36.05)<.05 and (
         float(closet_back[0][6])>=12.4
     ), "RIGHT_CLOSET_REAR_MUST_BE_SEALED_AWAY_FROM_HALL"
+    assert (float(closet_ceiling[0][6])>=12.4
+            and float(closet_ceiling[0][8])>=9.0
+            and float(closet_ceiling[0][10])>=13.0), (
+        "RIGHT_CLOSET_CEILING_MUST_BE_FULLY_ENCLOSED"
+    )
     assert sorted(round(float(p[9]),2) for p in closet_walls)==[-5.95,5.95]
     print("DOORWAY_ROUTING_SOURCE_PASS left=staff_hall right=closed_supply_closet "
           "coat_rail=true child_coats=5 rear_wall=true",flush=True)
@@ -721,7 +728,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading lamp top finial":1,
         "Photo-guided wall shape card":9,
         "Photo-guided right cabinet shape card":8,
-        "Photo-guided shape icon":9,
         "Photo-guided cabinet counting strip":1,
         "Counting strip blue top trim":1,
         "Counting strip green bottom trim":1,
@@ -776,21 +782,19 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), ("Photo word wall regressed to the small isolated board: " +
         "observed sy={0} sz={1} y={2} z={3}".format(
             word_wall[7],word_wall[8],word_wall[10],word_wall[11]))
-    # Emma identified the purple chair BESIDE the photographed seated adult,
-    # gray supply cabinet, dark filing cabinet and lower-left window AC. The
-    # earlier rear-reading-corner coordinate was a guessed placement, not a
-    # photo-backed final decision. Chair TYPE is still occluded/provisional.
+    # The owner removed the provisional silver table and placed the unique
+    # purple chair behind the relocated teacher desk.
     corner_seat=only("Purple corner chair seat")
     corner_back=only("Purple corner chair school back shell")
     cx,cz=float(corner_seat[9]),float(corner_seat[11])
-    assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
-        "Emma's purple chair left the photo-identified AC window corner"
+    assert abs(cx+25.0)<.025 and abs(cz-18.35)<.025, (
+        "Purple chair left its position behind the teacher desk"
     )
-    # The singular photo-corner seat is rotated to face +X toward the
-    # workstation; the back remains against the window (-X).
-    assert abs(float(corner_back[9])-(cx-.93))<.05 and (
-        abs(float(corner_back[11])-cz)<.04
-    ), "Purple chair backrest no longer faces the A/C wall"
+    # Standard school-chair orientation faces -Z toward the desk; its back is
+    # on the +Z side, clear of the desktop and drawer pedestals.
+    assert abs(float(corner_back[9])-cx)<.04 and (
+        abs(float(corner_back[11])-(cz+.93))<.05
+    ), "Purple chair no longer faces the teacher desk"
     for component in (corner_seat,corner_back):
         red,green,blue=(float(component[i]) for i in (12,13,14))
         assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
@@ -800,18 +804,8 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert rug_dist>10.5, (
         "Purple chair overlaps the real circular sun/ABC carpet"
     )
-    ac=only("Photo window air conditioner housing")
-    assert abs(cz-float(ac[11]))<1.2, (
-        "Purple chair is no longer adjacent to the photographed window AC"
-    )
-    radiator=[row for row in lines if row[1]=="Radiator body"
-              and abs(float(row[11])-float(ac[11]))<.1]
-    assert len(radiator)==1 and (
-        cx-1.25>float(radiator[0][9])+float(radiator[0][6])/2+.5
-    ), "Purple chair clips the metal radiator below the school AC"
     gray=only("Photo gray corner storage cabinet")
     files=only("Photo black filing cabinet")
-    worktable=only("Photo window worktable")
     assert abs(float(gray[9])+34.05)<.03 and (
         abs(float(gray[11])+30.50)<.03
     ), "Photo gray cupboard lost the window-wall storage position"
@@ -819,36 +813,30 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         abs(float(files[11])+26.25)<.03
         and by_name["Photo filing drawer face"]==3
     ), "Photo black filing drawers missing or misplaced"
-    tx,tz=float(worktable[9]),float(worktable[11])
-    assert abs(tx+27.50)<.03 and abs(tz+19.60)<.03 and (
-        by_name["Photo worktable metal leg"]==4
-    ), "Photo worktable no longer beside the purple chair"
-    assert cx+1.25<tx-float(worktable[6])/2, (
-        "Photo worktable intersects the purple chair seat"
-    )
+    assert by_name["Photo window worktable"]==0 and (
+        by_name["Photo worktable metal leg"]==0
+        and by_name["Photo worktable paper stack"]==0
+        and by_name["Photo worktable book"]==0
+    ), "Removed silver worktable returned"
     front=only("Purple corner chair molded front seat roll")
-    assert float(front[9])>cx+.90 and (
-        abs(float(front[11])-cz)<.04
-    ), "Photo corner purple chair points away from the actual workstation"
-    assert float(front[9])+float(front[8])/2<(
-        tx-float(worktable[6])/2-.30
-    ), "Purple chair front roll clips the workstation"
-    for desk in (row for row in lines if row[1]=="Student desk edge"):
-        x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
-        assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
-                or z_gap>(float(desk[8])+float(worktable[8]))/2+.25), (
-            "Photo worktable intersects a preexisting student desk"
-        )
-    assert cx-1.25>-34.4 and -26<cz<-16, (
-        "Purple chair intersects exterior classroom walls"
+    assert abs(float(front[9])-cx)<.04 and (
+        float(front[11])<cz-.90
+    ), "Purple chair points away from the teacher desk"
+    teacher_top=only("Teacher desk top")
+    assert abs(float(teacher_top[9])+25)<.04 and (
+        abs(float(teacher_top[11])-14)<.04
+        and cz-float(teacher_top[11])>4.0
+    ), "Purple chair is not behind the relocated teacher desk"
+    assert -30<cx<-20 and 16<cz<22, (
+        "Purple chair intersects exterior classroom walls or aisle"
     )
     assert by_name["Student chair seat"]==16, (
         "Emma's separate purple corner chair replaced a student seat"
     )
     print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
           "original_student_chairs=16 child_scale=true "
-          "rug_clear=true ac_adjacent=true faces_worktable=true "
-          "workstation_clear=true position_provisional=true")
+          "rug_clear=true behind_teacher_desk=true silver_table_removed=true "
+          "faces_teacher_desk=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
         abs(float(window_banner[10])-15.22)<.025

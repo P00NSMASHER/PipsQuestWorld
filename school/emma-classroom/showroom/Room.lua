@@ -1232,10 +1232,9 @@ local function buildWindows(root: Instance)
     local sun=Instance.new("PointLight");sun.Color=Color3.fromRGB(255,246,225);sun.Brightness=.50;sun.Range=48;sun.Shadows=true;sun.Parent=sunAnchor
 end
 
--- Photo-specific grouping from the newly supplied cheer classroom image:
--- a gray tall cabinet and narrow black files left of the AC window, with a
--- worktable in front of the seated adult. No people, game UI, or new gameplay.
--- Photo perspective is incomplete; coordinates remain owner-review candidates.
+-- Photo-specific storage grouping from the cheer-classroom image: a gray
+-- cabinet and narrow black files left of the AC window. The later walkthrough
+-- removed the provisional silver table from this corner.
 local function buildPhotoWindowWorkstation(root: Instance)
     local gray=Color3.fromRGB(126,135,140)
     local dark=Color3.fromRGB(46,49,52)
@@ -1261,26 +1260,9 @@ local function buildPhotoWindowWorkstation(root: Instance)
             Vector3.new(.12,.14,.68),CFrame.new(-32.38,y,-26.25),
             Color3.fromRGB(166,174,179),Enum.Material.Metal,false)
     end
-    -- Surface stands between the purple chair and the student workstations,
-    -- without covering the school rug or the existing front-row desks.
-    part(root,"Photo window worktable",
-        Vector3.new(6.20,.28,4.00),CFrame.new(-27.50,3.16,-19.60),
-        Color3.fromRGB(150,170,178),Enum.Material.SmoothPlastic,true)
-    for _,x in ipairs({-30.04,-24.96}) do
-        for _,z in ipairs({-21.12,-18.08}) do
-            part(root,"Photo worktable metal leg",
-                Vector3.new(.18,2.92,.18),CFrame.new(x,1.49,z),
-                Color3.fromRGB(88,93,95),Enum.Material.Metal,true)
-        end
-    end
-    -- Only a few anonymous school papers: avoid turning a real corner into a
-    -- decorative exhibition or implying a specific pupil's work.
-    part(root,"Photo worktable paper stack",
-        Vector3.new(1.75,.10,1.08),CFrame.new(-26.65,3.38,-20.45),
-        Color3.fromRGB(243,241,235),Enum.Material.SmoothPlastic,false)
-    part(root,"Photo worktable book",
-        Vector3.new(1.10,.22,1.48),CFrame.new(-29.15,3.42,-18.85),
-        Color3.fromRGB(52,73,108),Enum.Material.SmoothPlastic,false)
+    -- The provisional silver worktable was not present in the owner's latest
+    -- walkthrough and occupied the entire rug corner. Keep the photographed
+    -- storage cabinets, but leave this floor area open.
 end
 
 local function buildFrontWall(root: Instance)
@@ -1739,14 +1721,14 @@ local function buildBackDoorAndHall(root: Instance)
     -- existing two oak rails and two side stiles as the upper timber frame.
     -- Only two slim middle crossbars and two brass pulls add physical Parts.
     -- Both closet leaves are closed, coplanar and tidy in the jamb.
-    for _,x in ipairs({-2.75,2.75}) do
+    for _,x in ipairs({-2.55,2.55}) do
         local leafCF=CFrame.new(x,5.28,26.36)
         -- Relative bottom -5 and top -.74 of the original ten-stud door.
-        local door=part(root,"Closed classroom closet door",Vector3.new(4.65,4.26,.36),
+        local door=part(root,"Closed classroom closet door",Vector3.new(4.95,4.26,.36),
             leafCF*CFrame.new(0,-2.87,0),
             Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
         door:SetAttribute("ClosedLeaf","Lower solid panel; glass aperture above")
-        local glass=part(root,"Door glass",Vector3.new(2.54,4.38,.10),
+        local glass=part(root,"Door glass",Vector3.new(2.75,4.38,.10),
             leafCF*CFrame.new(0,1.42,-.06),
             Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
         glass.Transparency=.29
@@ -1760,30 +1742,30 @@ local function buildBackDoorAndHall(root: Instance)
             {name="Top",y=4.35,height=1.30},
         }) do
             local p=part(root,"Glazed door solid oak rail",
-                Vector3.new(4.65,rail.height,.36),
+                Vector3.new(4.95,rail.height,.36),
                 leafCF*CFrame.new(0,rail.y,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
             p:SetAttribute("DoorRailType",rail.name)
         end
         -- Widen ONLY the existing pair of very thin side stiles. This fills
         -- the margins outside the true glass cut-out without obscuring it.
-        for _,dx in ipairs({-1.80,1.80}) do
+        for _,dx in ipairs({-1.93,1.93}) do
             part(root,"Glazed door oak side stile",
-                Vector3.new(1.05,4.38,.36),
+                Vector3.new(1.10,4.38,.36),
                 leafCF*CFrame.new(dx,1.42,0),
                 Color3.fromRGB(112,76,50),Enum.Material.Wood,false)
         end
-        part(root,"Door lower raised panel",Vector3.new(3.7,2.85,.10),
+        part(root,"Door lower raised panel",Vector3.new(4.0,2.85,.10),
             leafCF*CFrame.new(0,-2.72,-.24),
             Color3.fromRGB(142,105,73),Enum.Material.Wood,false)
         -- Photo: wood crossbar visually separates the two glazed lights.
         -- The clear glazing remains a full pane with thin frame in front.
-        part(root,"Glazed door glass divider",Vector3.new(2.54,.18,.14),
+        part(root,"Glazed door glass divider",Vector3.new(2.75,.18,.14),
             leafCF*CFrame.new(0,1.42,-.17),
             Color3.fromRGB(121,84,54),Enum.Material.Wood,false)
         -- Near-leaf narrow vintage pull, photo-guided but not door physics.
         part(root,"Glazed door brass pull",Vector3.new(.14,.70,.16),
-            leafCF*CFrame.new(x<0 and 2.06 or -2.06,-.60,-.27),
+            leafCF*CFrame.new(x<0 and 2.20 or -2.20,-.60,-.27),
             Color3.fromRGB(181,153,103),Enum.Material.Metal,false)
     end
     sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
@@ -1869,6 +1851,11 @@ local function buildBackDoorAndHall(root: Instance)
     cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,9.05),
         CFrame.new(0,.529,31.175),Color3.fromRGB(166,133,103),
         Enum.Material.Wood,true)
+    -- Complete the closet as a real enclosed room. Its former open top showed
+    -- sky/ceiling voids through the glazed doors from normal child height.
+    cp("Supply closet finished ceiling",Vector3.new(12.48,.34,9.05),
+        CFrame.new(0,13.08,31.55),Color3.fromRGB(238,237,226),
+        Enum.Material.SmoothPlastic,true)
     -- Child-height coat storage: a continuous timber rail, sturdy hooks, and
     -- small anonymous coats. Sleeves hang naturally and all pieces stay clear
     -- of the floor and door swing.
@@ -2409,8 +2396,29 @@ local function buildTeacherEntry(root: Instance)
     -- without adding a physical Part. Keep its south edge at z=5.50.
     -- Its top lies .02 stud below the main polished tile to avoid
     -- coplanar overlapping surfaces flickering in native Roblox.
-    part(root,"Side hall floor",Vector3.new(18,.48,21.8),
-        CFrame.new(45.5,.24,16.4),Color3.fromRGB(67,68,66),Enum.Material.Slate)
+    local sideFloor=part(root,"Side hall floor",Vector3.new(18,.48,21.8),
+        CFrame.new(45.5,.24,16.4),Color3.fromRGB(118,124,126),Enum.Material.Concrete)
+    local vestibuleGrid=Instance.new("SurfaceGui")
+    vestibuleGrid.Name="StaffVestibuleStoneGrid"
+    vestibuleGrid.Face=Enum.NormalId.Top
+    vestibuleGrid.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    vestibuleGrid.CanvasSize=Vector2.new(720,720)
+    vestibuleGrid.LightInfluence=.35
+    vestibuleGrid.Parent=sideFloor
+    for i=1,5 do
+        local vertical=Instance.new("Frame")
+        vertical.Name="Vestibule tile joint"
+        vertical.Position=UDim2.fromScale(i/6-.002,0)
+        vertical.Size=UDim2.fromScale(.004,1)
+        vertical.BackgroundColor3=Color3.fromRGB(88,94,96)
+        vertical.BackgroundTransparency=.30
+        vertical.BorderSizePixel=0
+        vertical.Parent=vestibuleGrid
+        local horizontal=vertical:Clone()
+        horizontal.Position=UDim2.fromScale(0,i/6-.002)
+        horizontal.Size=UDim2.fromScale(1,.004)
+        horizontal.Parent=vestibuleGrid
+    end
     part(root,"Staff doorway brass threshold",
         Vector3.new(.24,.045,13.35),CFrame.new(37.10,.556,15.5),
         Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
@@ -2513,10 +2521,13 @@ local function alignHallwayWithStaffExit(root: Instance)
     local sideFloor=root:FindFirstChild("Side hall floor")
     local sideRoof=root:FindFirstChild("Side hall ceiling")
     assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
-    sideFloor.Size=Vector3.new(23.1,.48,23.05)
-    sideFloor.CFrame=CFrame.new(48.05,.24,15.775)
-    sideRoof.Size=Vector3.new(23.1,.36,23.05)
-    sideRoof.CFrame=CFrame.new(48.05,13.18,15.775)
+    -- Floor bridges to the brass threshold, while the roof begins exactly at
+    -- the exterior face of the yellow classroom wall (x=37.5). This prevents
+    -- either hallway slab from protruding through the room-side paint.
+    sideFloor.Size=Vector3.new(22.50,.48,23.05)
+    sideFloor.CFrame=CFrame.new(48.35,.24,15.775)
+    sideRoof.Size=Vector3.new(22.10,.36,23.05)
+    sideRoof.CFrame=CFrame.new(48.55,13.18,15.775)
 
     -- Move the old facing wall to the outside edge of the widened vestibule.
     -- This removes the whitish-gray false arch seen above/inside the timber
@@ -2530,6 +2541,7 @@ local function alignHallwayWithStaffExit(root: Instance)
     oldBrick.Name="Staff entry east wall glazed brick"
     oldBrick.Size=Vector3.new(.12,4.3,22.75)
     oldBrick.CFrame=CFrame.new(59.02,2.15,15.775)
+    oldBrick.Color=Color3.fromRGB(192,132,63)
     part(root,"Staff entry east wall oak cap rail",Vector3.new(.13,.15,22.75),
         CFrame.new(58.95,4.35,15.775),Color3.fromRGB(112,77,50),
         Enum.Material.Wood,false)
@@ -2546,6 +2558,11 @@ local function alignHallwayWithStaffExit(root: Instance)
             object.Size=Vector3.new(isWall and 23.10 or 22.80,
                 object.Size.Y,object.Size.Z)
             object.CFrame=CFrame.new(2.55,0,0)*moved
+            if object.Name=="Side corridor brick dado" then
+                object.Color=Color3.fromRGB(192,132,63)
+            elseif object.Name=="Side corridor end wall" then
+                object.Color=Color3.fromRGB(107,117,125)
+            end
         end
     end
 
@@ -2570,7 +2587,7 @@ local function alignHallwayWithStaffExit(root: Instance)
     local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
     assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
         "Staff hallway adjoining wall missing")
-    adjoiningWall.CFrame=CFrame.new(1.00,0,0)*adjoiningWall.CFrame
+    adjoiningWall.CFrame=CFrame.new(.70,0,0)*adjoiningWall.CFrame
     hall:SetAttribute("FalseEntryArchRemoved",true)
 end
 
@@ -2725,30 +2742,11 @@ function World.build()
     buildReadingCorner(root)
     buildPhotoWindowWorkstation(root)
 
-    -- Emma identified the purple chair where an adult is sitting beside the
-    -- visible window AC and cabinets in her cheer photo. The prior candidate
-    -- at z=+23 was the opposite reading corner, not this photographed corner.
-    -- Move ONLY the unique chair to the AC-side workstation; its silhouette
-    -- remains provisional because the occupied chair is hidden in the photo.
-    -- Do not alter the 16 matching student desk chairs or the alphabet rug.
-    schoolChair(root,"Purple corner chair",-32.45,-19.60,
+    -- The latest owner walkthrough removes the provisional silver worktable
+    -- and places the unique purple chair behind the relocated teacher desk.
+    -- The standard orientation faces the desk/teaching wall (-Z).
+    schoolChair(root,"Purple corner chair",-25.0,18.35,
         Color3.fromRGB(117,73,163))
-    -- The conventional student chairs face the teaching wall (-Z). This
-    -- unique chair belongs beside a window-side worktable at greater X.
-    -- Rotate ONLY its already-constructed physical family around its own
-    -- floor pivot so the seat faces the tabletop (+X) while its back rests
-    -- toward the A/C wall. Do not rotate any student seat or cabinet.
-    -- This orientation is a photo-guided owner-review candidate: the person
-    -- in the original photo obscures the precise molded chair silhouette.
-    local purplePivot=CFrame.new(-32.45,0,-19.60)
-    local purpleTurn=purplePivot*CFrame.Angles(0,-math.pi/2,0)*
-        CFrame.new(32.45,0,19.60)
-    for _,object in ipairs(root:GetDescendants()) do
-        if object:IsA("BasePart") and
-            string.sub(object.Name,1,#"Purple corner chair")=="Purple corner chair" then
-            object.CFrame=purpleTurn*object.CFrame
-        end
-    end
 
     -- Paired laminate desks from IMG_2913, with an open back-left reading zone.
     -- Emma remains at x=0 so the existing spawn/seat and study camera stay aligned.

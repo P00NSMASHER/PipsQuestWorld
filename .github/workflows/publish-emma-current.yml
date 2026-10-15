@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: polished staff hallway seam, trim, transition, and inward-parked door.
+# Release refresh: enclosed closet, refined teacher, clear wall frieze, and uniform hallway.
 
 on:
   push:
@@ -53,7 +53,10 @@ jobs:
           python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_photo_landmarks.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_hallway_photo.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_purple_corner_chair.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/audit_flat_rug_source.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
           grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
           ! grep -q 'buildFoldingMat(' school/emma-classroom/showroom/Room.lua

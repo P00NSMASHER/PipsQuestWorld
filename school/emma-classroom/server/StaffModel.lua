@@ -14,7 +14,7 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher,scaleOverride:number?)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",8)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",9)
     model:SetAttribute("AppearanceProfile",teacher.appearanceId or "standard_staff")
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
@@ -35,7 +35,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
             -- Use Roblox's familiar friendly default expression. The prior
             -- catalog face stretched badly on this bundled head mesh.
             face.Texture="rbxasset://textures/face.png"
-            model:SetAttribute("PortraitAvatarRefinement","standard_friendly_face_scaled_hair_navy_sweater")
+            model:SetAttribute("PortraitAvatarRefinement","v9_friendly_face_brown_hair_navy_sweater")
         end
     end
     face.Parent=head
@@ -61,6 +61,27 @@ function StaffModel.create(teacher,scaleOverride:number?)
     end
     local bodyColors=Instance.new("BodyColors");bodyColors.HeadColor3=skin;bodyColors.LeftArmColor3=skin;bodyColors.RightArmColor3=skin
     bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin;bodyColors.Parent=model
+    -- BodyColors applies again when parented and was overwriting Mrs.
+    -- Benulis's authored navy sweater with the skin tone. Reassert the final
+    -- per-part palette after parenting: long navy sleeves, skin hands/face,
+    -- charcoal trousers and dark shoes.
+    if teacher.appearanceId=="benulis_2026_portrait" then
+        for _,bodyPart in ipairs(model:GetChildren()) do
+            if bodyPart:IsA("BasePart") then
+                if bodyPart.Name=="UpperTorso"
+                    or string.find(bodyPart.Name,"UpperArm")
+                    or string.find(bodyPart.Name,"LowerArm") then
+                    bodyPart.Color=rgb(teacher.shirt)
+                elseif bodyPart.Name=="Head" or string.find(bodyPart.Name,"Hand") then
+                    bodyPart.Color=skin
+                elseif bodyPart.Name=="LowerTorso" or string.find(bodyPart.Name,"Leg") then
+                    bodyPart.Color=rgb(teacher.pants)
+                elseif string.find(bodyPart.Name,"Foot") then
+                    bodyPart.Color=Color3.fromRGB(38,39,44)
+                end
+            end
+        end
+    end
     -- Bundled limbs already have an aligned rest pose. Do not create Motor6D
     -- or AnimationConstraint joints on an anchored display avatar: those engine
     -- transforms would compete with PivotTo/rest transforms and detach the head.
@@ -87,8 +108,13 @@ function StaffModel.create(teacher,scaleOverride:number?)
                 -- Color3 throws at runtime and silently drops the whole NPC.
                 mesh.VertexColor=Vector3.new(tint.R,tint.G,tint.B)
                 if teacher.appearanceId=="benulis_2026_portrait" then
-                    mesh.Scale=mesh.Scale*.88
+                    mesh.Scale=mesh.Scale*.84
                     mesh.Offset=mesh.Offset+Vector3.new(0,.04,.03)
+                    -- Preserve strand shading while making the old blond
+                    -- catalog texture read as the portrait's warm brown.
+                    handle.Color=rgb(teacher.hair)
+                    local brown=rgb(teacher.hair):Lerp(Color3.new(1,1,1),.08)
+                    mesh.VertexColor=Vector3.new(brown.R,brown.G,brown.B)
                 end
             end
         end

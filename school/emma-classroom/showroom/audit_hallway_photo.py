@@ -59,7 +59,7 @@ assert(rear.CanCollide and near(rear.Position.X,59.75)
     and near(rear.Position.Z,80.75) and rear.Size.X>=108,
     "PHOTO_HALL_SKY_GAP")
 local north=one("Photo hall continuous north wall")
-assert(north.CanCollide and near(north.Position.X,38.25)
+assert(north.CanCollide and near(north.Position.X,37.95)
     and near(north.Position.Z,80.75) and north.Size.X>=108,
     "PERPENDICULAR_HALLWAY_WEST_WALL_MISSING")
 local caps=expect("Photo hall end cap",1)
@@ -77,6 +77,16 @@ assert(near(transition.Position.X,48.48)
 local eastCap=expect("Staff entry east wall oak cap rail",1)[1]
 assert(near(eastCap.Position.X,58.95) and eastCap.Size.Z>=22.7,
     "STAFF_HALLWAY_EAST_WALL_CAP_MISSING")
+local vestibuleFloor=one("Side hall floor")
+local vestibuleRoof=one("Side hall ceiling")
+assert(vestibuleFloor.Material==Enum.Material.Concrete
+    and near(vestibuleFloor.Position.X,48.35)
+    and vestibuleFloor.Size.X>=22.45
+    and vestibuleFloor:FindFirstChild("StaffVestibuleStoneGrid"),
+    "STAFF_HALLWAY_FLOOR_FINISH_NOT_UNIFORM")
+assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.50)
+    and vestibuleRoof.Position.X-vestibuleRoof.Size.X/2>=37.49,
+    "STAFF_HALLWAY_ROOF_PROTRUDES_THROUGH_CLASSROOM_WALL")
 assert(#pieces("Left hallway outside corner return")==0,
     "OBSOLETE_FLOATING_HALL_SEAM_RETURNED")
 assert(#pieces("Photo hall front outer wall")==1
@@ -194,6 +204,11 @@ local function checkCloset()
         and closetFloor.Position.Z-closetFloor.Size.Z/2<=26.85
         and closetFloor.Position.Z+closetFloor.Size.Z/2>=35.6,
         "RIGHT_CLOSET_PHYSICAL_FLOOR_SUPPORT_MISSING")
+    local closetCeiling=one("Supply closet finished ceiling")
+    assert(closetCeiling.CanCollide and closetCeiling.Size.X>=12.4
+        and closetCeiling.Size.Z>=9.0
+        and closetCeiling.Position.Y-closetCeiling.Size.Y/2>=12.9,
+        "RIGHT_CLOSET_FINISHED_CEILING_MISSING")
     local sign=one("Welcome over door")
     local label=sign:FindFirstChild("Surface")
     assert(label and label:FindFirstChildOfClass("TextLabel")
