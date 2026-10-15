@@ -66,6 +66,102 @@ local function numberedStrip(target,first,last)
     end
     return units
 end
+-- Inspect the actual SurfaceGui raster created by ArtPass on the nine
+-- photographed shape cards. Generic nonblank headless screenshots cannot
+-- detect the old false TRIANGLE/PENTAGON/HEXAGON/STAR rectangles.
+local function verifyPhotoPolygons()
+    local icons=parts("Photo-guided shape icon")
+    assert(#icons==9,"PHOTO_SHAPE_ICON_PART_BUDGET_CHANGED")
+    local expected={
+        TRIANGLE=-27.30, PENTAGON=-17.90,
+        HEXAGON=-15.55, STAR=-13.20,
+    }
+    local seen={}
+    for _,icon in ipairs(icons) do
+        local name=icon:GetAttribute("PhotoPolygonName")
+        local gui=icon:FindFirstChild("PhotoPolygonSilhouette")
+        if name~=nil or gui~=nil then
+            assert(expected[name] and not seen[name]
+                and math.abs(icon.Position.X-expected[name])<.04,
+                "PHOTO_SHAPE_WRONG_CARD_OR_DUPLICATE_RASTER")
+            seen[name]=true
+            assert(icon.Anchored and not icon.CanCollide
+                and not icon.CanTouch and not icon.CanQuery,
+                "PHOTO_SHAPE_RASTER_COLLISION")
+            assert(gui and gui:IsA("SurfaceGui")
+                and gui.Face==Enum.NormalId.Front
+                and gui.SizingMode==Enum.SurfaceGuiSizingMode.FixedSize
+                and gui.CanvasSize[1]==192 and gui.CanvasSize[2]==192
+                and gui.AlwaysOnTop~=true,
+                "PHOTO_SHAPE_SURFACE_NOT_NATIVE_SAFE")
+            assert(icon:GetAttribute("PhotoPolygonResolution")==32,
+                "PHOTO_SHAPE_SCANLINE_RESOLUTION_LOST")
+            local field=gui:FindFirstChild("PhotoPolygonField")
+            assert(field and field:IsA("Frame")
+                and field.BackgroundTransparency==0
+                and field.ClipsDescendants==true,
+                "PHOTO_SHAPE_BACKGROUND_NOT_MASKED")
+            local stripes=field:GetChildren()
+            local count=0
+            local widths,spans={},{}
+            for _,band in ipairs(stripes) do
+                assert(band.Name=="PhotoPolygonBand"
+                    and band:IsA("Frame") and band.BackgroundTransparency==0
+                    and band.BorderSizePixel==0,
+                    "PHOTO_SHAPE_RASTER_HIDDEN_OR_DUPLICATED")
+                local left=band.Position[1]
+                local y=band.Position[2]
+                local width=band.Size[1]
+                local height=band.Size[2]
+                local row=math.floor(y*32+.01)
+                assert(row>=0 and row<32
+                    and math.abs(y-row/32)<.002
+                    and width>.004 and width<1
+                    and left>=0 and left+width<=1.001
+                    and math.abs(height-(1/32+.001))<.002,
+                    "PHOTO_SHAPE_RASTER_BANDS_INVALID")
+                widths[row]=(widths[row] or 0)+width
+                spans[row]=(spans[row] or 0)+1
+                count+=1
+            end
+            assert(count>=24 and count<=52
+                and count==icon:GetAttribute("PhotoPolygonSegments"),
+                "PHOTO_SHAPE_TOO_FEW_OR_TOO_MANY_BANDS")
+            if name=="TRIANGLE" then
+                assert(widths[3] and widths[15] and widths[28]
+                    and widths[3]<widths[15] and widths[15]<widths[28],
+                    "PHOTO_SHAPE_TRIANGLE_STILL_RECTANGULAR")
+            elseif name=="PENTAGON" then
+                assert(widths[3] and widths[15] and widths[28]
+                    and widths[3]<widths[15] and widths[28]<widths[15],
+                    "PHOTO_SHAPE_PENTAGON_STILL_RECTANGULAR")
+            elseif name=="HEXAGON" then
+                assert(widths[3] and widths[15] and widths[28]
+                    and widths[3]<widths[15] and widths[28]<widths[15],
+                    "PHOTO_SHAPE_HEXAGON_STILL_RECTANGULAR")
+            elseif name=="STAR" then
+                local bifurcated=false
+                for _,n in pairs(spans) do
+                    if n>=2 then bifurcated=true end
+                end
+                assert(bifurcated,
+                    "PHOTO_SHAPE_STAR_LOST_CONCAVE_ARMS")
+            end
+            for _,child in ipairs(gui:GetDescendants()) do
+                assert(not child:IsA("ImageLabel")
+                    and not child:IsA("ImageButton"),
+                    "PHOTO_SHAPE_EXTERNAL_ASSET_FORBIDDEN")
+            end
+        end
+    end
+    local found=0
+    for _,name in ipairs({"TRIANGLE","PENTAGON","HEXAGON","STAR"}) do
+        assert(seen[name],"PHOTO_SHAPE_MISSING_POLYGON "..name)
+        found+=1
+    end
+    return found
+end
+
 local function verify()
     -- The photo shows counting labels directly on the yellow wall below
     -- the colored shape cards, not a giant extra navy grade-wide poster.
@@ -191,6 +287,7 @@ local function verify()
         "PHOTO_WOOD_COUNTING_STRIP_HIDES_DOOR_OPENING")
     assert(#parts("Photo-guided wall shape card")==9,
         "PHOTO_WOOD_SHAPES_MISSING")
+    assert(verifyPhotoPolygons()==4,"PHOTO_SHAPE_VECTOR_COUNT_CHANGED")
     for _,p in ipairs(parts("Photo-guided wall shape card")) do
         assert(p.Position.X+p.Size.X/2 < -9.0 and p.Position.X-p.Size.X/2>-37,
             "PHOTO_WOOD_SHAPES_OVER_REAR_DOORWAY")
@@ -344,6 +441,36 @@ local function verify()
     return inset,left
 end
 local inset,left=verify()
+print("PHOTO_SHAPE_POLYGON_SOURCE_PASS silhouettes=4 native_gui=true "
+    .."added_physical_parts=0 external_asset_ids=0 native_phone_pending=true")
+local triangle
+local star
+for _,icon in ipairs(parts("Photo-guided shape icon")) do
+    if icon:GetAttribute("PhotoPolygonName")=="TRIANGLE" then triangle=icon end
+    if icon:GetAttribute("PhotoPolygonName")=="STAR" then star=icon end
+end
+assert(triangle and star,"PHOTO_SHAPE_MUTATION_SETUP")
+local shapeGui=triangle:FindFirstChild("PhotoPolygonSilhouette")
+local field=shapeGui:FindFirstChild("PhotoPolygonField")
+local stripe=field:GetChildren()[1]
+assert(stripe and stripe.Name=="PhotoPolygonBand","PHOTO_SHAPE_STRIPE_MUTATION_SETUP")
+local savedOpacity=stripe.BackgroundTransparency
+stripe.BackgroundTransparency=1
+local polygonOk,polygonErr=pcall(verifyPhotoPolygons)
+stripe.BackgroundTransparency=savedOpacity
+assert(not polygonOk and string.find(tostring(polygonErr),
+    "PHOTO_SHAPE_RASTER_HIDDEN_OR_DUPLICATED",1,true),
+    "PHOTO_SHAPE_INVISIBLE_RASTER_MUTATION_FALSE_ACCEPT")
+print("PHOTO_SHAPE_ADVERSARIAL_REJECTED transparent_polygon")
+local savedShape=star:GetAttribute("PhotoPolygonName")
+star:SetAttribute("PhotoPolygonName","RECTANGLE")
+polygonOk,polygonErr=pcall(verifyPhotoPolygons)
+star:SetAttribute("PhotoPolygonName",savedShape)
+assert(not polygonOk and string.find(tostring(polygonErr),
+    "PHOTO_SHAPE_WRONG_CARD_OR_DUPLICATE_RASTER",1,true),
+    "PHOTO_SHAPE_WRONG_LABEL_MUTATION_FALSE_ACCEPT")
+print("PHOTO_SHAPE_ADVERSARIAL_REJECTED mismatched_shape")
+verifyPhotoPolygons()
 print("PHOTO_WOOD_LANDMARK_RUNTIME_PASS builtins=2 inset=1 "
     .."paper=3 red_pocket_slips=6 pinboard_cards=8 distinct_number_ranges=true cards=17 "
     .."doorway_clear=true original_desks=16")
@@ -508,7 +635,10 @@ def main() -> None:
     if r.returncode:
         raise RuntimeError("Constructed photo landmarks failed:\n"
             +r.stderr[-3300:]+"\n"+r.stdout[-1900:])
-    markers=("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
+    markers=("PHOTO_SHAPE_POLYGON_SOURCE_PASS",
+        "PHOTO_SHAPE_ADVERSARIAL_REJECTED transparent_polygon",
+        "PHOTO_SHAPE_ADVERSARIAL_REJECTED mismatched_shape",
+        "PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED display_collider",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved",
         "PHOTO_WOOD_ADVERSARIAL_REJECTED offset_backing",
@@ -526,7 +656,9 @@ def main() -> None:
     for marker in markers:
         assert any(line.startswith(marker) for line in r.stdout.splitlines()),marker
     for line in r.stdout.splitlines():
-        if line.startswith(("PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
+        if line.startswith(("PHOTO_SHAPE_POLYGON_SOURCE_PASS",
+            "PHOTO_SHAPE_ADVERSARIAL_REJECTED",
+            "PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
             "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED",

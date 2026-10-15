@@ -26,10 +26,26 @@ local P={
     metal=Color3.fromRGB(120,126,129),
 }
 
+local varnishedJoinery={
+    ["Cabinet inset panel"]=true,["Cabinet panel stile"]=true,
+    ["Tall cabinet recessed panel cross rail"]=true,["Tall cabinet hardwood cornice"]=true,
+    ["Tall cabinet cornice routed lip"]=true,["Built-in walnut cubby face stile"]=true,
+    ["Built-in walnut stile routed edge"]=true,["Built-in horizontal walnut face rail"]=true,
+    ["Built-in horizontal fine molding"]=true,["Built-in deep hardwood cornice"]=true,
+    ["Built-in stepped cornice edge"]=true,
+}
+
 local function part(parent: Instance,name: string,size: Vector3,cf: CFrame,color: Color3,material: Enum.Material?,collide: boolean?): Part
     local p=Instance.new("Part")
     p.Name=name;p.Size=size;p.CFrame=cf;p.Anchored=true
     p.Color=color;p.Material=material or Enum.Material.SmoothPlastic
+    -- Existing geometry only: brushed school-chair steel and worn cabinet varnish.
+    if p.Material==Enum.Material.Metal and (string.sub(name,1,13)=="Student chair"
+        or name=="Desk tubular leg" or name=="Desk contoured base runner") then
+        p.Color=Color3.fromRGB(181,185,185);p.Reflectance=.13
+    elseif varnishedJoinery[name] and p.Material==Enum.Material.Wood then
+        p.Reflectance=.055
+    end
     p.CanCollide=collide~=false;p.CanTouch=collide~=false
     p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
     p.Parent=parent
@@ -119,6 +135,22 @@ local function ceilingLight(parent: Instance,x: number,z: number)
         CFrame.new(x,17.59,z),Color3.fromRGB(249,246,238),
         Enum.Material.Glass,false)
     lens.Transparency=.075;lens.Reflectance=.005
+    -- An illuminated frosted lens, not the grey unlit slab seen in native QA.
+    -- Surface art stays on the physical bottom face, respects occlusion, and
+    -- does not add another light, physics Part, texture dependency or HUD.
+    local frost=Instance.new("SurfaceGui")
+    frost.Name="FrostedPanelFace";frost.Face=Enum.NormalId.Bottom
+    frost.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    frost.CanvasSize=Vector2.new(312,154)
+    frost.LightInfluence=0;frost.Brightness=1.1;frost.AlwaysOnTop=false
+    frost.MaxDistance=100;frost.Parent=lens
+    local face=Instance.new("Frame")
+    face.Name="PrismaticFrost";face.Size=UDim2.fromScale(1,1)
+    face.BackgroundColor3=Color3.fromRGB(250,249,242)
+    face.BorderSizePixel=0;face.Parent=frost
+    local seal=Instance.new("UIStroke")
+    seal.Name="DiffuserGasket";seal.Thickness=1.5
+    seal.Color=Color3.fromRGB(202,205,200);seal.Parent=face
     local light=Instance.new("SurfaceLight")
     light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(250,246,237)
     -- Light from the actual broad frosted panels, rather than a dim slab.
@@ -644,6 +676,8 @@ local function buildClassroomTexture(root: Instance)
     -- Use real horizontal Block/Cylinder solids with normal Y thickness.
     -- The existing Fabric rug, its 26 SurfaceGui letters, radial design and
     -- every student desk remain unchanged. All relief is noncolliding.
+    -- Printed carpet, not foam: keep art within .06 studs of the textile.
+    -- The prior .12-stud clouds and floating numerals read as raised toys.
     for i=0,15 do
         local angle=i*math.pi/8
         local broad=i%2==0
@@ -657,8 +691,8 @@ local function buildClassroomTexture(root: Instance)
         -- Elongated stable ray with a true round cap at its outer end:
         -- 1 Block + 1 flat Cylinder; avoids non-uniform Ball primitives.
         local ray=part(root,"Photo rug sun ray",
-            Vector3.new(length,.10,width),
-            CFrame.new(x,.685,z)*CFrame.Angles(0,-angle,0),
+            Vector3.new(length,.022,width),
+            CFrame.new(x,.638,z)*CFrame.Angles(0,-angle,0),
             tint,Enum.Material.SmoothPlastic,false)
         -- Explicit native Block shape also makes the constructed-Luau
         -- fixture test the same shape the Roblox engine will actually use.
@@ -666,8 +700,8 @@ local function buildClassroomTexture(root: Instance)
         ray.CastShadow=false
         local tipRadius=radius+length/2-.04
         local tip=cylinder(root,"Photo rug sun ray rounded tip",
-            Vector3.new(.10,width,width),
-            CFrame.new(-25+math.cos(angle)*tipRadius,.685,
+            Vector3.new(.022,width,width),
+            CFrame.new(-25+math.cos(angle)*tipRadius,.638,
                 14+math.sin(angle)*tipRadius)*flat,
             tint,Enum.Material.SmoothPlastic,false)
         tip.CastShadow=false
@@ -680,21 +714,21 @@ local function buildClassroomTexture(root: Instance)
         -- Center block joins two truly ROUND, horizontal cylinders.
         -- 3 original Parts per cloud, no paper-thin Ball dimensions.
         local body=part(root,"Photo rug number cloud body",
-            Vector3.new(1.14,.12,.65),CFrame.new(x,.690,z),
+            Vector3.new(1.14,.022,.65),CFrame.new(x,.635,z),
             cloudTint,Enum.Material.SmoothPlastic,false)
         body.Shape=Enum.PartType.Block
         body.CastShadow=false
         for _,side in ipairs({-1,1}) do
             local lobe=cylinder(root,"Photo rug number cloud lobe",
-                Vector3.new(.12,.94,.94),
-                CFrame.new(x+side*.39,.690,z+side*.055)*flat,
+                Vector3.new(.022,.94,.94),
+                CFrame.new(x+side*.39,.635,z+side*.055)*flat,
                 cloudTint,Enum.Material.SmoothPlastic,false)
             lobe.CastShadow=false
         end
         -- A transparent, noncolliding number anchor stays CLEAR of the
         -- actual cylinder faces, not an opaque white rectangular sticker.
         local numeralAnchor=part(root,"Photo rug number cloud numeral",
-            Vector3.new(.80,.016,.58),CFrame.new(x,.820,z),
+            Vector3.new(.80,.016,.58),CFrame.new(x,.656,z),
             Color3.fromRGB(250,248,237),Enum.Material.SmoothPlastic,false)
         numeralAnchor.Shape=Enum.PartType.Block
         numeralAnchor.Transparency=1
@@ -1326,6 +1360,7 @@ local function buildFrontWall(root: Instance)
         Enum.NormalId.Back,P.cream,banner.Color,Enum.Font.Garamond)
     writing.Name="HandwritingSequence"
     writing.TextWrapped=false
+    writing.TextScaled=true
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local examples={
         "apple","ball","cat","dog","egg","fish","goat","hat","igloo",
@@ -1389,6 +1424,7 @@ local function buildFrontWall(root: Instance)
         big.Position=UDim2.fromScale(.025,.065)
         big.BackgroundTransparency=1
         big.TextWrapped=false
+        big.TextScaled=true
         -- Generic full-width signage uses 32-pixel horizontal insets.
         -- On a 41%-width phonics-letter cell that would hide most of Aa.
         for _,child in ipairs(big:GetChildren()) do
@@ -1471,8 +1507,8 @@ local function buildFrontWall(root: Instance)
         word.BackgroundTransparency=1
         word.Position=UDim2.fromScale(.035,.665)
         word.Size=UDim2.fromScale(.93,.28)
-        word.TextScaled=true
         word.TextWrapped=false
+        word.TextScaled=true
         word.Parent=surface
     end
 end
@@ -1782,9 +1818,15 @@ local function buildBackDoorAndHall(root: Instance)
     finish("Supply closet exterior oak cap rail",
         Vector3.new(12.40,.15,.13),CFrame.new(0,4.35,36.48),
         Color3.fromRGB(112,77,50),Enum.Material.Wood)
-    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,8.33),
-        CFrame.new(0,.529,31.54),Color3.fromRGB(166,133,103),
-        Enum.Material.Wood,false)
+    -- The earlier photo hall floor happened to underpin this closet.
+    -- Moving that hall to the staff exit exposes an unsupported void unless
+    -- the already-authored closet floor becomes REAL walkable structure.
+    -- It overlaps the classroom's oak-floor edge by .325 stud, so no
+    -- hidden gap exists under the threshold. Its top (.5515) is just
+    -- .0515 above the original classroom floor (.50).
+    cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,9.05),
+        CFrame.new(0,.529,31.175),Color3.fromRGB(166,133,103),
+        Enum.Material.Wood,true)
     -- Three realistic shelves and a few colored classroom supply tubs.
     -- Thin loose props are noncolliding; the rear wall is a true barrier.
     for i,y in ipairs({3.05,5.50,7.95}) do
@@ -2206,9 +2248,17 @@ local function buildBackDoorAndHall(root: Instance)
 
     local yellow=Color3.fromRGB(214,166,63)
     local yellowHighlight=Color3.fromRGB(227,187,86)
-    for _,y in ipairs({3.12,11.58}) do
+    -- Keep the lower sash slim, but give the distant top sash a deeper
+    -- manufactured header. The exact rendered hallway camera proved the old
+    -- .30-stud top rail disappeared completely at this distance. Anchor the
+    -- thicker rail at the same lower edge so it extends upward without
+    -- shrinking the photographed glazing or changing any collision route.
+    for _,sash in ipairs({
+        {y=3.09,height=.36},
+        {y=11.83,height=.80},
+    }) do
         hp("Photo hall yellow sash horizontal",
-            Vector3.new(.28,.30,15.24),CFrame.new(-53.19,y,38),
+            Vector3.new(.28,sash.height,15.24),CFrame.new(-53.19,sash.y,38),
             yellow,Enum.Material.Wood,false)
     end
     for _,z in ipairs({30.38,45.62}) do
@@ -2377,6 +2427,123 @@ local function buildTeacherEntry(root: Instance)
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
+-- Owner's latest screenshot correction: the staff exit opens directly
+-- onto a LEFT/RIGHT cross-corridor, not into a straight eastbound hall or a
+-- 20-stud dead-end passage requiring a further turn. Reuse original authored
+-- corridor, native materials and facades; never create a duplicate hall.
+local function alignHallwayWithStaffExit(root: Instance)
+    local hall=root:FindFirstChild("PhotographedHallway")
+    assert(hall, "Missing original photo corridor")
+    hall:SetAttribute("Route","Straight +X from left staff door; no turns")
+    hall:SetAttribute("Source","October 10 anonymous photographed architecture")
+
+    -- Yaw 180 so the PHOTO YELLOW WINDOW remains at the far end, while
+    -- the photo-hall noticeboard faces into the corridor. Old world origin
+    -- (0,38) becomes (108,15.5): west end x=54, far end x=162.
+    local transform=CFrame.new(108,0,53.5)*CFrame.Angles(0,math.pi,0)
+    for _,object in ipairs(hall:GetDescendants()) do
+        if object:IsA("BasePart") then
+            object.CFrame=transform*object.CFrame
+        end
+    end
+
+    local nearCap,farCap
+    for _,p in ipairs(hall:GetChildren()) do
+        if p:IsA("BasePart") and p.Name=="Photo hall end cap" then
+            if p.Position.X<100 then nearCap=p else farCap=p end
+        end
+    end
+    assert(nearCap and farCap,"Corridor endpoints missing")
+    -- Relocate this already-authored school notice to the sealed far cap,
+    -- then physically remove the west end wall blocking the staff doorway.
+    local board=nearCap:FindFirstChild("Original school noticeboard")
+    if board then
+        board.Parent=farCap
+        board.Face=Enum.NormalId.Left
+    end
+    nearCap:Destroy()
+    -- October 12 native-baseline and exact-source screenshot regression:
+    -- Removing the collision end cap DID NOT remove its separate SurfaceGui
+    -- brick-dado carrier. That noncolliding 22-stud-wide, 4.25-stud-tall
+    -- opaque veneer was left at x=54.51 ACROSS the player's straight
+    -- exit and visibly hid the lower half of the new corridor. Remove
+    -- ONLY that obsolete NEAR-cap facing. The opposite named glazed-brick
+    -- carrier stays on the sealed far wall. No new physical Parts.
+    local obsoleteNearBrick=hall:FindFirstChild("Photo hall right end glazed brick")
+    assert(obsoleteNearBrick and obsoleteNearBrick:IsA("BasePart")
+        and obsoleteNearBrick.Position.X<56
+        and obsoleteNearBrick.Size.Z>=21.9,
+        "STRAIGHT_HALL_OLD_END_DADO_NOT_AT_EXPECTED_ENTRY")
+    obsoleteNearBrick:Destroy()
+
+    -- The earlier corridor borrowed the classroom's rear wall. After moving
+    -- it outside the staff door, close the missing north wall with ONE large
+    -- collision solid (not dozens of tiny mobile Parts).
+    part(hall,"Photo hall continuous north wall",Vector3.new(108,13,.90),
+        CFrame.new(108,6.5,26.75),Color3.fromRGB(107,117,125),
+        Enum.Material.SmoothPlastic,true)
+
+    -- Reuse, rather than duplicate, the old 18-stud staff vestibule. Extend
+    -- its single floor and roof in the north/south directions so the 0.5-
+    -- stud overlap at x=54 is supported/roofed across the full hallway width.
+    local sideFloor=root:FindFirstChild("Side hall floor")
+    local sideRoof=root:FindFirstChild("Side hall ceiling")
+    assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
+    sideFloor.Size=Vector3.new(18,.48,23.05)
+    sideFloor.CFrame=CFrame.new(45.5,.24,15.775)
+    sideRoof.Size=Vector3.new(18,.36,23.05)
+    sideRoof.CFrame=CFrame.new(45.5,13.18,15.775)
+
+    -- The old x=54.5 far wall was a hard stop directly across the path.
+    -- Rotate/reuse its wall and glazed dado onto the NORTH side instead.
+    local oldBlock=root:FindFirstChild("Side hall far wall")
+    local oldBrick=root:FindFirstChild("Side hall far brick")
+    assert(oldBlock and oldBrick,"Old staff hall return missing")
+    oldBlock.Name="Staff entry straight north wall"
+    oldBlock.Size=Vector3.new(18,13,1)
+    oldBlock.CFrame=CFrame.new(45.5,6.5,26.80)
+    oldBrick.Name="Staff entry north wall glazed brick"
+    oldBrick.Size=Vector3.new(17.7,4.3,.12)
+    oldBrick.CFrame=CFrame.new(45.5,2.15,26.20)
+
+    -- Move the three preexisting south-end finish layers into alignment
+    -- with the main corridor's south wall; keep the end solid.
+    for _,object in ipairs(root:GetChildren()) do
+        if object:IsA("BasePart") and
+            (object.Name=="Side corridor end wall"
+            or object.Name=="Side corridor brick dado"
+            or object.Name=="Side corridor navy cap rail") then
+            object.CFrame=CFrame.new(0,0,-1.40)*object.CFrame
+        end
+    end
+
+    -- Mount the existing announcement board on that same north side.
+    -- None of the noticeboard or anonymous papers becomes a collider.
+    local notices={
+        {name="Staff hall framed announcement board",size=Vector3.new(5.90,3.35,.16),cf=CFrame.new(45.5,7.74,26.10)},
+        {name="Staff hall inset cork noticeboard",size=Vector3.new(5.52,2.99,.07),cf=CFrame.new(45.5,7.74,26.00)}
+    }
+    for _,v in ipairs(notices) do
+        local p=root:FindFirstChild(v.name)
+        assert(p and not p.CanCollide,v.name.." missing")
+        p.Size=v.size
+        p.CFrame=v.cf
+    end
+    local sheet=0
+    for _,object in ipairs(root:GetChildren()) do
+        if object:IsA("BasePart")
+            and object.Name=="Staff hall anonymous paper notice" then
+            sheet+=1
+            object.Size=Vector3.new(1.75,1.73,.025)
+            object.CFrame=CFrame.new(sheet==1 and 44 or 47,7.70,25.94)
+        end
+    end
+    assert(sheet==2,"Staff corridor anonymous notices missing")
+end
+
+-- The owner's October 12 photo-match scope explicitly excludes the gym/tumbling mat.
+-- Keep the photographed architectural room, rugs and furniture, but do not construct
+-- or package any folding practice-mat geometry.
 local function applyLighting(root: Instance)
     -- Centralized daytime profile. IMG_2903–2910 show a well-lit yellow
     -- elementary classroom, not a cool, underexposed exhibition space.
@@ -2438,9 +2605,9 @@ function World.build()
     part(root,"Acoustic ceiling",Vector3.new(74,.48,62),CFrame.new(0,18,-4),Color3.fromRGB(241,241,235),Enum.Material.SmoothPlastic,false)
     -- The real ceiling has thin, PALE white-painted T-bars, not the dark
     -- high-contrast exposed-metal rails seen in iPhone v78. All ten grid
-    -- strips retain their positions and are fully noncolliding.
+    -- strips remain noncolliding. Cross-rails now align to tile edges.
     for _,x in ipairs({-24,-12,0,12,24}) do part(root,"Ceiling grid line",Vector3.new(.07,.07,61),CFrame.new(x,17.7,-4),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
-    for _,z in ipairs({-28,-16,-4,8,20}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.7,z),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
+    for _,z in ipairs({-22,-10,2,14,26}) do part(root,"Ceiling grid cross",Vector3.new(73,.07,.07),CFrame.new(0,17.685,z),Color3.fromRGB(226,226,218),Enum.Material.SmoothPlastic,false) end
     -- Photo-grounded smooth white acoustic tiles: the prior Fabric shader
     -- rendered as a DARK heavily grooved ceiling in real iPhone footage,
     -- despite bright RGB constants and green headless render checks.
@@ -2517,6 +2684,7 @@ function World.build()
     buildTeacherPlanningWall(root)
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
+    alignHallwayWithStaffExit(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
     buildPhotoWindowWorkstation(root)
@@ -2611,8 +2779,8 @@ function World.build()
         digit.Text=tostring(n)
         digit.Font=Enum.Font.GothamBold
         digit.TextColor3=Color3.fromRGB(51,55,57)
-        digit.TextScaled=true
         digit.TextWrapped=false
+        digit.TextScaled=true
         digit.BackgroundTransparency=1
         digit.Position=UDim2.fromScale(nx-.073,ny-.064)
         digit.Size=UDim2.fromScale(.146,.128)
@@ -2717,6 +2885,27 @@ function World.build()
     World.Root=root
     World.Spawn=spawn.CFrame
     return World
+end
+
+-- Original oak maps enhance only the existing floor; keep native Wood if unavailable.
+function World.applyPhotoFloorFinish(root:Instance):boolean
+    local floor=root:FindFirstChild("Warm oak classroom floor")
+    if not (floor and floor:IsA("BasePart")) then return false end
+    floor.MaterialVariant=""
+    floor.Material=Enum.Material.Wood
+    floor.Color=Color3.fromRGB(83,59,45)
+    root:SetAttribute("FloorFinishStatus","NativeWoodFallback")
+    local variant=game:GetService("MaterialService"):FindFirstChild("EmmaClassroomOak")
+    if not (variant and variant:IsA("MaterialVariant")) then return false end
+    -- Texture map properties are Plugin-only. Runtime scripts assign the
+    -- authored variant by name; maps are validated in the built project.
+    -- Never read ColorMap/NormalMap here: doing so stops server startup.
+    if not root.Parent then return false end
+    floor.MaterialVariant=variant.Name
+    -- Neutralize the original texture's orange cast to match worn dark oak.
+    floor.Color=Color3.fromRGB(160,177,187)
+    root:SetAttribute("FloorFinishStatus","ConfiguredForTextureStreaming")
+    return true
 end
 
 -- No teachers, questions, quiz remotes, saved scores, or runtime UI in the replica build.

@@ -95,8 +95,8 @@ local function consecutiveNumberStrip(panel:BasePart,first:number,last:number)
         cell.Size=UDim2.fromScale(1/count,.68)
         cell.Font=Enum.Font.GothamMedium
         cell.TextColor3=C.navy
-        cell.TextScaled=true
         cell.TextWrapped=false
+        cell.TextScaled=true
         cell.BorderSizePixel=0
         cell.BackgroundColor3=Color3.fromRGB(214,226,203)
         cell.BackgroundTransparency=(n%10==0) and .16 or 1
@@ -348,6 +348,88 @@ local function studentDeskDetails(root:Instance)
     end
 end
 
+-- The owner-provided classroom photo has real silhouette flashcards,
+-- not cream rectangles merely labelled TRIANGLE/PENTAGON/HEXAGON/STAR.
+-- Draw ORIGINAL polygon bands on the FOUR EXISTING icon Parts. SurfaceGui
+-- shapes are sharp on native phones and cost ZERO new physical colliders,
+-- marketplace IDs, textures, files or student-identifying data. The small
+-- 32-band raster is intentionally source-testable, with a 192px canvas.
+local function paintPhotoShapeSilhouette(icon:BasePart,
+    name:string,tint:Color3)
+    local polygons={
+        TRIANGLE={{.50,.04},{.96,.95},{.04,.95}},
+        PENTAGON={{.50,.04},{.96,.35},{.77,.95},{.23,.95},{.04,.35}},
+        HEXAGON={{.25,.04},{.75,.04},{.97,.50},{.75,.96},
+            {.25,.96},{.03,.50}},
+    }
+    local vertices=polygons[name]
+    if name=="STAR" then
+        vertices={}
+        for i=0,9 do
+            local a=i*math.pi/5
+            local radius=(i%2==0) and .47 or .21
+            table.insert(vertices,{
+                .5+math.sin(a)*radius,
+                .5-math.cos(a)*radius,
+            })
+        end
+    end
+    assert(vertices~=nil,"PHOTO_SHAPE_UNAUTHORIZED_POLYGON")
+    local surface=Instance.new("SurfaceGui")
+    surface.Name="PhotoPolygonSilhouette"
+    surface.Face=Enum.NormalId.Front
+    surface.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    surface.CanvasSize=Vector2.new(192,192)
+    surface.LightInfluence=.12
+    surface.Parent=icon
+
+    local field=Instance.new("Frame")
+    field.Name="PhotoPolygonField"
+    field.Size=UDim2.fromScale(1,1)
+    field.BackgroundColor3=tint
+    field.BackgroundTransparency=0
+    field.BorderSizePixel=0
+    field.ClipsDescendants=true
+    field.Parent=surface
+
+    local bands=32
+    local segments=0
+    for row=0,bands-1 do
+        local y=(row+.5)/bands
+        local crossings={}
+        for edge=1,#vertices do
+            local a=vertices[edge]
+            local b=vertices[edge%#vertices+1]
+            if (a[2]<=y and y<b[2]) or (b[2]<=y and y<a[2]) then
+                table.insert(crossings,
+                    a[1]+(y-a[2])*(b[1]-a[1])/(b[2]-a[2]))
+            end
+        end
+        table.sort(crossings)
+        assert(#crossings%2==0,"PHOTO_SHAPE_INVALID_POLYGON_SCANLINE")
+        for cut=1,#crossings,2 do
+            local left=math.max(0,crossings[cut])
+            local right=math.min(1,crossings[cut+1])
+            if right-left>.004 then
+                local band=Instance.new("Frame")
+                band.Name="PhotoPolygonBand"
+                band.Size=UDim2.fromScale(right-left,1/bands+.001)
+                band.Position=UDim2.fromScale(left,row/bands)
+                band.BackgroundColor3=C.cream
+                band.BackgroundTransparency=0
+                band.BorderSizePixel=0
+                band.Parent=field
+                segments+=1
+            end
+        end
+    end
+    assert(segments>=24 and segments<=52,
+        "PHOTO_SHAPE_BAND_BUDGET_OR_SILHOUETTE_INVALID")
+    icon:SetAttribute("PhotoPolygonName",name)
+    icon:SetAttribute("PhotoPolygonResolution",bands)
+    icon:SetAttribute("PhotoPolygonSegments",segments)
+end
+
 local function learningWall(root:Instance)
     local group=makeGroup(root,"Morning routines and learning wall")
     -- The original 18x2.5 navy GRADE 2 banner was an invented showroom
@@ -396,9 +478,12 @@ local function learningWall(root:Instance)
             orb(group,"Photo-guided shape icon",iconSize,cf,C.cream,
                 Enum.Material.SmoothPlastic)
         else
-            piece(group,"Photo-guided shape icon",iconSize,
+            local icon=piece(group,"Photo-guided shape icon",iconSize,
                 cf*CFrame.Angles(0,0,i==6 and math.rad(45) or 0),
                 C.cream,Enum.Material.SmoothPlastic,false)
+            if i==3 or i==7 or i==8 or i==9 then
+                paintPhotoShapeSilhouette(icon,name,tint)
+            end
         end
     end
 
@@ -458,9 +543,10 @@ local function learningWall(root:Instance)
         corner.CornerRadius=UDim.new(0,
             (name=="SQUARE" or name=="RECTANGLE" or name=="CROSS") and 3 or 22)
         if name=="CIRCLE" or name=="OVAL" or name=="CAPSULE" or name=="ARCH" then
-            corner.CornerRadius=UDim.new(1,0)
+            corner.CornerRadius=UDim.new(1,0);corner.Parent=picture
+        else
+            corner.Parent=picture
         end
-        corner.Parent=picture
         if name=="CROSS" then
             local bar=Instance.new("Frame")
             bar.Name="ShapeCrossbar"
@@ -479,8 +565,8 @@ local function learningWall(root:Instance)
         caption.Text=name
         caption.TextColor3=C.ink
         caption.BackgroundTransparency=1
-        caption.TextScaled=true
         caption.TextWrapped=false
+        caption.TextScaled=true
         caption.Parent=ground
     end
     -- Match the real long cabinet-side numbered teaching frieze without
@@ -554,7 +640,7 @@ local function focalTeachingArea(root:Instance)
         Color3.fromRGB(246,247,239),Enum.Material.SmoothPlastic,false)
     -- Neutral, nearly empty magnetic surface: no personal schoolwork
     -- or event-only cheer instructions are reproduced in the game.
-    printed(face,"","",Enum.NormalId.Back,C.navy,face.Color)
+    printed(face,"",Enum.NormalId.Back,C.navy,face.Color)
     for _,dx in ipairs({-1.46,1.46}) do
         piece(group,"Photo flipchart blue cart support",
             Vector3.new(.27,4.60,.29),
@@ -565,11 +651,11 @@ local function focalTeachingArea(root:Instance)
             CFrame.new(easelX+dx,.49,easelZ-.12),
             Color3.fromRGB(47,51,54),Enum.Material.SmoothPlastic)
     end
-    piece(group,"Photo flipchart marker tray",
-        Vector3.new(4.48,.17,.56),CFrame.new(easelX,4.36,easelZ+.34),
+    piece(group,"Photo flipchart marker tray",Vector3.new(4.48,.17,.56),
+        CFrame.new(easelX,4.36,easelZ+.34),
         Color3.fromRGB(176,185,189),Enum.Material.Metal,false)
-    piece(group,"Photo flipchart lower blue shelf",
-        Vector3.new(3.30,.16,1.02),CFrame.new(easelX,1.14,easelZ-.12),
+    piece(group,"Photo flipchart lower blue shelf",Vector3.new(3.30,.16,1.02),
+        CFrame.new(easelX,1.14,easelZ-.12),
         cartBlue,Enum.Material.Metal,false)
     local magnetColors={
         Color3.fromRGB(79,141,98),

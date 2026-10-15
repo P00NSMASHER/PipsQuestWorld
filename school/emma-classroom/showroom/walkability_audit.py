@@ -30,15 +30,15 @@ STEP = 0.75
 AVATAR_RADIUS = 1.0  # Conservative nominal Roblox character footprint.
 BODY_BOTTOM = 0.85
 BODY_TOP = 5.75
-X_MIN, X_MAX = -55.0, 55.0
+X_MIN, X_MAX = -55.0, 165.0
 Z_MIN, Z_MAX = -32.0, 48.0
 START = (5.0, 24.0)
 GOALS = {
     "front_teaching_wall": (5.0, -24.0),
     "right_supply_closet_interior": (0.0, 31.0),
-    "left_staff_hall_turn": (45.5, 29.0),
-    "photo_hallway_left": (-43.0, 38.0),
-    "photo_hallway_right": (43.0, 38.0),
+    "straight_staff_hall_entry": (56.0, 15.5),
+    "photo_hallway_midpoint": (103.0, 15.5),
+    "photo_hallway_far_end": (148.0, 15.5),
     "window_wall": (-32.0, 1.0),
     "reading_corner_approach": (-29.0, -23.0),
     "right_side_aisle": (28.0, -11.0),
@@ -85,11 +85,13 @@ class Blocker:
         return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
 
 
-# Only these three structural, collidable floors support movement in the
-# assembled classroom-only place. Decorative closet laminate and area rugs
-# cannot substitute for an actual load-bearing floor.
+# Four genuine collidable floors support the classroom, closet, staff
+# vestibule and long gallery. The preexisting closet laminate is now
+# walkable: the relocated photo-gallery slab no longer sits beneath it.
+# Decorative area rugs and noncolliding scenery never grant support.
 SUPPORT_FLOOR_NAMES = frozenset({
     "Warm oak classroom floor",
+    "Supply closet warm laminate floor",
     "Side hall floor",
     "Photo hall polished square stone floor",
 })
@@ -165,6 +167,60 @@ def assert_continuous_floor_segment(
     )
 
 
+def assert_straight_staff_corridor(
+    blockers: list[Blocker],
+    floors: list[FloorSupport],
+    *,
+    start_x: float = 39.0,
+    far_x: float = 150.0,
+    center_z: float = 15.5,
+) -> None:
+    """Prove an actual uninterrupted eastbound walking tube, not a BFS detour.
+
+    Ordinary reachability can pass a corridor containing a central divider
+    because its route can weave around the wall. Here the player's nominal
+    2-stud diameter must fit a SINGLE +X centerline from just outside the
+    staff threshold to the distant photo gallery. Blocks are already inflated
+    by AVATAR_RADIUS. Analytically union the source-constructed floor edges,
+    also at the lateral edges of the standing footprint, to detect subgrid
+    unsupported strips which a sample-only check could overlook.
+
+    This is conservative source geometry, NOT native Roblox physics.
+    """
+    assert start_x >= 38 and far_x <= 160 and far_x > start_x + 90, (
+        "STRAIGHT_HALL_INVALID_PROOF_SPAN")
+    assert floors, "STRAIGHT_HALL_FLOOR_EVIDENCE_MISSING"
+    for obstacle in blockers:
+        if (obstacle.xmax >= start_x and obstacle.xmin <= far_x
+                and obstacle.zmin <= center_z <= obstacle.zmax):
+            raise AssertionError(
+                f"STRAIGHT_HALL_CENTERLINE_BLOCKED {obstacle.name} "
+                f"x={obstacle.xmin:.2f}..{obstacle.xmax:.2f}")
+
+    # Support both edges and the center of the full avatar foot patch,
+    # across the entire 111-stud route. No 0.75-stud grid hiding gaps.
+    for z in (center_z - AVATAR_RADIUS, center_z,
+              center_z + AVATAR_RADIUS):
+        intervals = sorted((max(start_x, floor.xmin),
+                            min(far_x, floor.xmax))
+                           for floor in floors
+                           if floor.zmin <= z <= floor.zmax
+                           and floor.xmax >= start_x
+                           and floor.xmin <= far_x)
+        edge = start_x
+        for lo, hi in intervals:
+            if hi <= edge + 1e-6:
+                continue
+            if lo > edge + 1e-6:
+                break
+            edge = max(edge, hi)
+            if edge >= far_x - 1e-6:
+                break
+        assert edge >= far_x - 1e-6, (
+            f"STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT z={z:.2f} "
+            f"supported_until_x={edge:.5f}")
+
+
 def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
     """Read the real Luau-generated collidable floor parts, never source guesses."""
     floors = {}
@@ -178,8 +234,16 @@ def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
         assert all(math.isfinite(v) for v in (sx, sy, sz, px, py, pz, *matrix)), (
             "SUPPORT_FLOOR_NONFINITE " + name)
         assert sx > 0 and sy > 0 and sz > 0, "SUPPORT_FLOOR_ZERO_DIMENSION " + name
-        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
-        assert all(abs(a-b) < 0.001 for a, b in zip(matrix, identity)), (
+        # The corridor is translated/rotated 180 degrees as a rigid scene
+        # assembly. A floor with yaw 180 stays horizontal and has identical
+        # AABB support; the old identity-only test incorrectly rejected it.
+        # Continue rejecting ANY floor pitch, roll or 90-degree axis swap.
+        assert (abs(abs(matrix[0])-1) < .001 and
+                abs(matrix[4]-1) < .001 and
+                abs(abs(matrix[8])-1) < .001 and
+                matrix[0]*matrix[8] > 0 and
+                all(abs(matrix[i]) < .001
+                    for i in (1,2,3,5,6,7))), (
             "SUPPORT_FLOOR_TILTED_UNMODELED " + name)
         top = py + sy / 2
         assert abs(top-0.5) <= 0.08, "SUPPORT_FLOOR_BAD_ELEVATION " + name
@@ -328,22 +392,22 @@ def inspect(blockers: list[Blocker],
                         f"UNSUPPORTED_ROUTE_CONTINUITY route={name} {exc}"
                     ) from exc
                 segment_count += 1
-    # Floor support and the existing door-collision routing MUST both hold.
-    # A scenic surface/decorative rug is not an acceptable bridge.
-    # A merely reachable hallway is not enough: two doors used to connect
-    # to it. Now BOTH long photo-hall routes MUST enter via the left-side
-    # staff doorway, visit its physical corridor and turn north.
-    for name in ("photo_hallway_left","photo_hallway_right"):
+    # The user explicitly requires a straight route out the staff doorway:
+    # all exterior route waypoints remain inside the same east-west corridor.
+    # No northward swing around the supply closet and no rear-door shortcut.
+    for name in ("photo_hallway_midpoint","photo_hallway_far_end"):
         points=routes[name]["waypoints"]
-        # At child-width clearance the shortest crossing hugs the near
-        # x=37 wall rather than reaching x=40 inside the side passage.
-        # Measure the *actual* portal transition (world x>=37.5) rather
-        # than arbitrarily requiring a three-stud excursion into the hall.
         assert any(x>=37.5 and 10<=z<=24 for x,z in points), (
             "LEFT_STAFF_HALL_MISSING_FROM_ROUTE: "+name
         )
-        assert any(x>=37.5 and 27<=z<=34 for x,z in points), (
-            "LEFT_STAFF_TURN_INTO_LONG_HALL_BLOCKED: "+name
+        assert any(x>=65 and 10<=z<=23 for x,z in points), (
+            "STRAIGHT_HALL_AXIS_NOT_REACHED: "+name
+        )
+        assert all(5.5<=z<=26.0 for x,z in points if x>=38.0), (
+            "STRAIGHT_HALL_UNWANTED_NORTH_TURN: "+name
+        )
+        assert all(x<=162 for x,z in points), (
+            "STRAIGHT_HALL_FAR_END_WALL_LEAK: "+name
         )
     assert all(x<37.5 for x,z in routes["right_supply_closet_interior"]["waypoints"]), (
         "RIGHT_CLOSET_MUST_BE_REACHED_FROM_CLASSROOM_NOT_HALL"
@@ -503,7 +567,20 @@ def self_test():
     # Floor evidence must be complete and from actual collidable geometry.
     fixture_names = sorted(SUPPORT_FLOOR_NAMES)
     fixtures = [[*flat[:1], name, *flat[2:]] for name in fixture_names]
-    assert len(as_floor_supports(fixtures)) == 3
+    assert len(as_floor_supports(fixtures)) == 4
+    # Same horizontal slab turned exactly 180 degrees is still physical
+    # support. Reject a slight tip instead of silently granting air routes.
+    rotated = list(fixtures[0])
+    rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
+    assert len(as_floor_supports([rotated,*fixtures[1:]]))==4
+    tipped = list(fixtures[0])
+    tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
+    try:
+        as_floor_supports([tipped,*fixtures[1:]])
+    except AssertionError as exc:
+        assert "SUPPORT_FLOOR_TILTED_UNMODELED" in str(exc)
+    else:
+        raise AssertionError("TILTED_REAL_FLOOR_FALSELY_SUPPORTED")
     try:
         as_floor_supports(fixtures[:2])
     except AssertionError as exc:
@@ -605,6 +682,44 @@ def self_test():
           "sub_grid_x_and_z_gaps,missing_floor,diagonal,zero_step,"
           "skipped_step,unsupported_end_rejected=true")
 
+    # Four adversarial source-equivalent fixtures prove that a reachable
+    # corridor cannot conceal a turn, missing floor strip or side-foot void.
+    tube_floors = [
+        FloorSupport("staff", 36.5, 54.5, 4.25, 27.3, .48),
+        FloorSupport("gallery", 54.0, 162.0, 4.25, 26.75, .50),
+    ]
+    assert_straight_staff_corridor([], tube_floors)
+    straight_mutations = [
+        ("mid_gallery_divider",
+         [Blocker("synthetic cross-wall", 87.0, 89.0, 14.5, 16.5)],
+         tube_floors,
+         "STRAIGHT_HALL_CENTERLINE_BLOCKED"),
+        ("staff_to_gallery_subgrid_gap",
+         [],
+         [FloorSupport("staff", 36.5, 53.8, 4.25, 27.3, .48),
+          tube_floors[1]],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+        ("unsupported_outer_foot",
+         [],
+         [FloorSupport("staff", 36.5, 54.5, 15.0, 16.0, .48),
+          FloorSupport("gallery", 54.0, 162.0, 15.0, 16.0, .50)],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+        ("gallery_offset_out_of_line",
+         [],
+         [tube_floors[0],
+          FloorSupport("gallery", 54.0, 162.0, 27.5, 48.0, .50)],
+         "STRAIGHT_HALL_UNSUPPORTED_FOOTPRINT"),
+    ]
+    for label, synthetic_blockers, synthetic_floors, expected in straight_mutations:
+        try:
+            assert_straight_staff_corridor(synthetic_blockers, synthetic_floors)
+        except AssertionError as exc:
+            assert expected in str(exc), (label, str(exc))
+        else:
+            raise AssertionError("STRAIGHT_HALL_NEGATIVE_TEST_ACCEPTED " + label)
+    print("STRAIGHT_HALL_CENTERLINE_SELF_TEST_PASS "
+          "wall,gap,footprint,offset_gallery_rejected=true")
+
     print("STATIC_NAV_SELF_TEST_PASS structural_floor_support_enforced=true "
           "unsupported_void_and_missing_floor_rejected=true "
           "colliders_and_decorative_obstructions_checked=true")
@@ -623,11 +738,15 @@ def main():
         p.error("--luau required unless --self-test")
     blockers,floors=get_source_geometry(args.luau)
     result=inspect(blockers,floors)
-    # Use the ACTUAL source geometry to reject the former 1.25-stud seam.
-    # A clear 2D aisle is not safe if no physical floor supports its turn.
-    former=[FloorSupport(f.name,f.xmin,f.xmax,f.zmin,
-                         25.5 if f.name=="Side hall floor" else f.zmax,
-                         f.top) for f in floors]
+    assert_straight_staff_corridor(blockers,floors)
+    print("STRAIGHT_HALL_CENTERLINE_SOURCE_PASS no_turns=true "
+          "source_colliders_clear=true avatar_footprint_fully_supported=true "
+          "native_roblox_device_qa_still_required=true",flush=True)
+    # Deliberately reopen a physical x-axis gap at the old eastbound seam.
+    # This catches "air routes" on the nominal 0.75-stud navigation grid.
+    former=[FloorSupport(f.name,f.xmin,
+                         53.5 if f.name=="Side hall floor" else f.xmax,
+                         f.zmin,f.zmax,f.top) for f in floors]
     try:
         inspect(blockers,former)
     except AssertionError as exc:
@@ -635,19 +754,19 @@ def main():
             "FLOOR_GAP_NEGATIVE_UNEXPECTED " + str(exc))
     else:
         raise AssertionError("FORMER_UNSUPPORTED_JUNCTION_FALSELY_ACCEPTED")
-    print("SUPPORTED_ROUTE_ADVERSARIAL_PASS former_1.25_stud_gap_rejected=true",
+    print("SUPPORTED_ROUTE_ADVERSARIAL_PASS former_eastbound_seam_rejected=true",
           flush=True)
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
               "end="+str(route["endpoint"]),flush=True)
-    print("SUPPORTED_ROUTE_SOURCE_PASS three_constructed_collidable_floors=true "
+    print("SUPPORTED_ROUTE_SOURCE_PASS four_constructed_collidable_floors=true "
           "all_nine_routes_floor_supported=true",flush=True)
     print("CONTINUOUS_FLOOR_ROUTE_PASS "
           "routes=" + str(len(result["routes"])) +
           " cardinal_segments=" + str(result["validated_route_segments"]) +
           " all_route_centerlines_source_supported=true "
           "native_roblox_device_qa_still_required=true", flush=True)
-    print("DOORWAY_ROUTING_NAV_PASS left_staff_to_long_hall=true "
+    print("DOORWAY_ROUTING_NAV_PASS straight_left_staff_exit=true "
           "right_rear_supply_closet_sealed=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
           "source_colliders="+str(result["blockers"]),

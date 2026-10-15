@@ -173,6 +173,17 @@ jobs:
             --out "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
           test -s "$RUNNER_TEMP/emma-room-ci-source.rbxmx"
 
+      - name: Reject excluded gym or tumbling mat from the constructed candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fq 'Blue folding tumbling mat panel' "$RUNNER_TEMP/emma-room-ci-source.rbxmx" \
+             || grep -Fq 'VinylStitchedBinding' "$RUNNER_TEMP/emma-room-ci-source.rbxmx"; then
+            echo 'GYM_TUMBLING_MAT_SCOPE_VIOLATION' >&2
+            exit 1
+          fi
+          echo 'NO_GYM_TUMBLING_MAT_CI_PASS owner_scope_preserved=true'
+
       - name: Inspect constructed carpet SurfaceGuis and reject known iPhone regressions
         shell: bash
         run: |
@@ -199,6 +210,8 @@ jobs:
         run: |
           set -euo pipefail
           python3 school/emma-classroom/showroom/audit_native_rug_primitives.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_flat_rug_source.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
       - name: Reject native flattened-Ball foliage and collidable tree artwork
