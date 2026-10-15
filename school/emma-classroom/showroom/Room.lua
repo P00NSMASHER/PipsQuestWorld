@@ -1997,7 +1997,10 @@ local function buildBackDoorAndHall(root: Instance)
         -- renderers or low-detail clients omit the staggered SurfaceGui.
         -- Dark mortar and color variation are still drawn by the GUI on top.
         local p=hp(name,size,cf,Color3.fromRGB(192,132,63),
-            Enum.Material.SmoothPlastic,false)
+            Enum.Material.Brick,false)
+        -- Preserve an actual brick material fallback for renderer/device
+        -- paths that omit SurfaceGui detail. The native opaque GUI still
+        -- supplies the photographed glazed, offset bond on the visible face.
         p.Reflectance=.055
         local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
             and size.Z or size.X
