@@ -2255,7 +2255,7 @@ local function buildBackDoorAndHall(root: Instance)
     -- shrinking the photographed glazing or changing any collision route.
     for _,sash in ipairs({
         {y=3.12,height=.30},
-        {y=11.69,height=.52},
+        {y=11.83,height=.80},
     }) do
         hp("Photo hall yellow sash horizontal",
             Vector3.new(.28,sash.height,15.24),CFrame.new(-53.19,sash.y,38),
