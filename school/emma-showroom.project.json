@@ -57,6 +57,12 @@
         },
         "StaffData": {
           "$path": "emma-classroom/shared/Data.lua"
+        },
+        "TeacherPortraitConfig": {
+          "$path": "emma-classroom/showroom/TeacherPortraitConfig.lua"
+        },
+        "TeacherPortraitAdapter": {
+          "$path": "emma-classroom/showroom/TeacherPortraitAdapter.lua"
         }
       }
     },
