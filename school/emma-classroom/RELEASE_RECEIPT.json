@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "purpose": "Historical verified Roblox publication receipt. Only the recorded exact source SHA is confirmed live; later code edits require another verified publish.",
   "lastConfirmedPublication": {
-    "versionNumber": 106,
-    "sourceCommit": "490bc054df8c1dd9fee0eadfe300856a3d043246",
-    "workflowRunId": 38776565211,
-    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38776565211",
+    "versionNumber": 107,
+    "sourceCommit": "f682881fb4cdf905485613e787098c591e6a5896",
+    "workflowRunId": 38791178948,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/38791178948",
     "placeId": "114603280760042",
     "universeId": "10769455759",
     "mode": "classroom-and-hallway-preview-only",
     "visualAcceptance": "pending-real-device-review",
-    "binarySha256": "a21199decf3a874fa68932059f5797d6b566df96f723cd3c6c969e8ac480612d"
+    "binarySha256": "976f5322d9b0ba0c6648f2beb5f1c31e61c4d229fbe0271cc316e2d4ad9dad1b"
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "This v106 Roblox binary is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
+  "nextCandidatePolicy": "This v107 Roblox binary is confirmed live from its successful pinned publication run; all further source changes are an unpublished candidate until another independently verified Roblox publication proves otherwise."
 }
