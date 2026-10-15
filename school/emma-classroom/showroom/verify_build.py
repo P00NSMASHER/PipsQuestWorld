@@ -25,6 +25,8 @@ expected = {
     "StaffModel": "emma-classroom/server/StaffModel.lua",
     "StaffAssets": "emma-classroom/server/StaffAssets",
     "StaffData": "emma-classroom/shared/Data.lua",
+    "TeacherPortraitConfig": "emma-classroom/showroom/TeacherPortraitConfig.lua",
+    "TeacherPortraitAdapter": "emma-classroom/showroom/TeacherPortraitAdapter.lua",
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
@@ -44,6 +46,16 @@ assert "Instance.new(\"RemoteEvent\")" not in main
 assert "DataStoreService" not in main
 assert "StaffModel" not in room and "teacherModel" not in room
 assert 'teacher:SetAttribute("ShowroomStationaryTeacher",true)' in main
+assert 'TeacherPortraitAdapter.apply(Room.Root,teacher)' in main
+portrait_config=(base/"emma-classroom/showroom/TeacherPortraitConfig.lua").read_text()
+portrait_adapter=(base/"emma-classroom/showroom/TeacherPortraitAdapter.lua").read_text()
+assert "Enabled = false" in portrait_config and "ModelAssetId = 0" in portrait_config, (
+    "Unapproved teacher portrait asset was enabled in the production showroom"
+)
+assert "task.defer(function()" in portrait_adapter and "InsertService:LoadAsset(id)" in portrait_adapter
+assert "fallback:Destroy()" in portrait_adapter and "if not ok then" in portrait_adapter
+assert '"no_verified_asset"' in portrait_adapter and '"unexpected_asset_class_"' in portrait_adapter
+assert 'node:IsA("MeshPart")' in portrait_adapter
 assert 'CFrame.new(-11,3.15,-29)' in main
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
