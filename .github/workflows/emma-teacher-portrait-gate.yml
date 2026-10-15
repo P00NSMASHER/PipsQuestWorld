@@ -1,0 +1,57 @@
+name: Emma Teacher Portrait Structural Gate
+
+on:
+  pull_request:
+    paths:
+      - "school/emma-classroom/mesh/validate_teacher_portrait.py"
+      - "school/emma-classroom/mesh/test_teacher_portrait_gate.py"
+      - "school/emma-classroom/showroom/TeacherPortraitAdapter.lua"
+      - "school/emma-classroom/showroom/TeacherPortraitConfig.lua"
+      - ".github/workflows/emma-teacher-portrait-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structural-fixtures:
+    name: Offline 3D model rejection fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install offline mesh-audit dependencies
+        run: python -m pip install "numpy>=1.26,<3" "trimesh>=4,<5" "Pillow>=10,<13"
+      - name: Exercise geometry, anatomy, and 3D face requirements
+        run: python -m unittest discover -s school/emma-classroom/mesh -p test_teacher_portrait_gate.py -v
+      - name: Ensure the private portrait is disabled until acceptance
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path("school/emma-classroom/showroom")
+          config=(root/"TeacherPortraitConfig.lua").read_text()
+          adapter=(root/"TeacherPortraitAdapter.lua").read_text()
+          for flag in ("Enabled", "CreatorOwnershipVerified",
+                       "NativeStudioVisualReviewed", "IPhoneVisualReviewed",
+                       "PublicLikenessPermissionConfirmed"):
+              assert f"{flag} = false" in config
+          assert "ModelAssetId = 0" in config
+          assert "fallback.Parent ~= root" in adapter
+          assert "fallback:Destroy()" in adapter
+          assert "ContentProvider:PreloadAsync" in adapter
+          print("PRIVATE_TEACHER_HELD_FOR_NATIVE_ACCEPTANCE")
+          PY
+      - name: Block identifiable portrait binary uploads to this public source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path("school/emma-classroom")
+          bad=[str(p) for p in root.rglob("*")
+               if p.suffix.lower() in {".glb",".fbx",".png",".jpg",".jpeg",".webp",".blend"}
+               and ("portrait" in p.name.lower() or "benulis" in p.name.lower())]
+          assert not bad, f"Private teacher portrait media must not be committed: {bad}"
+          print("NO_PRIVATE_PORTRAIT_MEDIA_IN_PUBLIC_GITHUB")
+          PY
