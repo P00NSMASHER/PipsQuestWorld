@@ -310,6 +310,8 @@ local segments={
     {"Photo hall front outer glazed brick",1},
     {"Photo hall left end glazed brick",1},
     {"Photo hall right end glazed brick",0},
+    {"Photo hall continuous north full-height brick",3},
+    {"Photo hall continuous north door header brick",2},
 }
 -- A previous version removed the old x=54 west end-cap collider but left
 -- its separate 4.25-stud-tall opaque brick SurfaceGui carrier in the open
@@ -322,8 +324,13 @@ for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
         assert(not wall.CanCollide and wall.Material==Enum.Material.SmoothPlastic,
             "PHOTO_HALL_BRICK_BECAME_PHYSICAL_COLLIDER")
-        assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35),
-            "PHOTO_HALL_FULL_HEIGHT_BRICK_FINISH_LOST")
+        if wall.Name=="Photo hall continuous north door header brick" then
+            assert(wall.Size.Y>=2 and near(wall.Position.Y,11.68),
+                "PHOTO_HALL_DOOR_HEADER_BRICK_FINISH_LOST")
+        else
+            assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35),
+                "PHOTO_HALL_FULL_HEIGHT_BRICK_FINISH_LOST")
+        end
         -- If SurfaceGuis are hidden by an independent renderer or device
         -- LOD, the shell should be warm gold, NOT dark-brown mortar.
         assert(wall.Color.R>.70 and wall.Color.G>.45 and
@@ -340,7 +347,9 @@ for _,s in ipairs(segments) do
         for _,c in ipairs(field:GetChildren()) do
             if c.Name=="Photo glazed brick" then tiles+=1 end
         end
-        assert(tiles>=18,"PHOTO_HALL_BRICK_PATTERN_INCOMPLETE")
+        local minimum=(wall.Name=="Photo hall continuous north door header brick")
+            and 4 or ((wall.Size.X<5) and 12 or 18)
+        assert(tiles>=minimum,"PHOTO_HALL_BRICK_PATTERN_INCOMPLETE")
         count+=tiles
     end
 end
@@ -349,10 +358,30 @@ assert(#pieces("Photo hall rear dado cap")==0
     and #pieces("Photo hall front dado cap")==0
     and #pieces("Staff entry east wall oak cap rail")==0,
     "PHOTO_HALL_OLD_HALF_WALL_CAP_RETURNED")
-local westBrick=expect("Photo hall continuous north full-height brick",1)[1]
-assert(westBrick.Size.Y>=12.6 and near(westBrick.Position.Y,6.35)
-    and not westBrick.CanCollide,
-    "PHOTO_HALL_WEST_FULL_BRICK_FINISH_MISSING")
+local westBrick=expect("Photo hall continuous north full-height brick",3)
+local headers=expect("Photo hall continuous north door header brick",2)
+local function overlaps(a0,a1,b0,b1)
+    return a0<b1 and a1>b0
+end
+for _,wall in ipairs(westBrick) do
+    local z0=wall.Position.Z-wall.Size.X/2
+    local z1=wall.Position.Z+wall.Size.X/2
+    assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35)
+        and not wall.CanCollide,
+        "PHOTO_HALL_WEST_FULL_BRICK_FINISH_MISSING")
+    assert(not overlaps(z0,z1,54.525,60.975)
+        and not overlaps(z0,z1,123.025,129.475),
+        "PHOTO_HALL_WEST_BRICK_SKIN_COVERS_DOOR_OPENING")
+end
+for _,header in ipairs(headers) do
+    assert(header.Size.Y<2.1 and header.Position.Y-header.Size.Y/2>10.6,
+        "PHOTO_HALL_DOOR_HEADER_DESCENDS_INTO_OPENING")
+end
+assert(#pieces("Photo hall staff return blue-gray plaster")==0
+    and #pieces("Photo hall staff return glazed brick")==0
+    and #pieces("Photo hall doorway inner wall end plaster")==0
+    and #pieces("Photo hall doorway inner wall end brick")==0,
+    "PHOTO_HALL_OBSOLETE_CLASSROOM_WALL_ARTIFACT_RETURNED")
 expect("Photo hall student work hanging rail",1)
 -- The six photographs show real white paper hanging as diagonals.
 -- Previous UI-only paper rendered as a completely bare wall in the

@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: photo-matched brick hallway, corrected number line, and classic teacher body.
+# Release refresh: normal R15 teacher, artifact-free classroom wall, uniform brick hall and open doors.
 
 on:
   push:

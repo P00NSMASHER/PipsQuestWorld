@@ -173,10 +173,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     transitions=actual_parts("Staff hallway floor transition strip")
     east_brick=actual_parts("Staff entry east wall glazed brick")
     west_brick=actual_parts("Photo hall continuous north full-height brick")
+    west_headers=actual_parts("Photo hall continuous north door header brick")
     assert (len(floor_parts),len(rear),len(north),len(ends),
             len(side_caps),len(staff_east),len(transitions),len(east_brick),
-            len(west_brick))==(
-                1,1,1,1,1,1,1,1,1), (
+            len(west_brick),len(west_headers))==(
+                1,1,1,1,1,1,1,1,3,2), (
         "PERPENDICULAR_CORRIDOR_STRUCTURE_MISSING"
     )
     assert (abs(float(floor_parts[0][9])-48.5)<.03
@@ -211,10 +212,34 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             and abs(float(east_brick[0][9])-59.02)<.05
             and float(east_brick[0][8])>=22.7
             and float(east_brick[0][7])>=12.6
-            and float(west_brick[0][7])>=12.6
+            and all(float(panel[7])>=12.6 for panel in west_brick)
+            and all(float(panel[7])>=2.0 for panel in west_headers)
             ), (
         "PERPENDICULAR_CORRIDOR_FULL_BRICK_FINISH_MISSING"
     )
+    def z_bounds(panel):
+        return (float(panel[11])-float(panel[6])/2,
+                float(panel[11])+float(panel[6])/2)
+    def overlaps(a, b):
+        return a[0] < b[1] and a[1] > b[0]
+    door_openings=((54.525,60.975),(123.025,129.475))
+    assert all(not overlaps(z_bounds(panel),opening)
+               for panel in west_brick for opening in door_openings), (
+        "PHOTO_HALL_WEST_BRICK_SKIN_COVERS_DOOR_OPENING"
+    )
+    assert all(float(panel[10])-float(panel[7])/2>10.6
+               for panel in west_headers), (
+        "PHOTO_HALL_DOOR_HEADER_DESCENDS_INTO_OPENING"
+    )
+    for obsolete in (
+        "Photo hall staff return blue-gray plaster",
+        "Photo hall staff return glazed brick",
+        "Photo hall doorway inner wall end plaster",
+        "Photo hall doorway inner wall end brick",
+    ):
+        assert not actual_parts(obsolete), (
+            "PHOTO_HALL_OBSOLETE_CLASSROOM_WALL_ARTIFACT_RETURNED "+obsolete
+        )
     assert not actual_parts("Side hall far wall"), (
         "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"
     )
