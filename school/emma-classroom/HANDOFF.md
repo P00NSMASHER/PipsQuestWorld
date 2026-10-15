@@ -49,10 +49,10 @@ Remaining review gates:
   lighting and frame time. Source/headless geometry previews cannot display this
   SurfaceGui artwork or certify native controls/camera. Prior v83 footage is not
   acceptance of these changed details.
-- The October 13 owner correction restores a perpendicular cross-corridor outside
-  the left staff doorway. The right rear double doors remain the sealed supply
-  closet. Exact-head source and visual gates, plus native device traversal, still
-  govern acceptance.
+- The October 15 owner correction restores a straight eastbound corridor outside
+  the left staff doorway with no hallway turn or closet obstruction. The right rear
+  double doors remain the sealed supply closet. Exact-head source and visual gates,
+  plus native device traversal, still govern acceptance.
 - Keep PR draft and v83 publication untouched until owner-controlled acceptance.
 
 ---
@@ -256,7 +256,7 @@ and remaining source/check work continued without bringing it forward.
 
 
 ## October 13 native finish iteration
-- Preserved the existing sixteen desk pairs; the later October 13 owner correction supersedes this iteration's straight staff hallway.
+- Preserved the existing sixteen desk pairs and the current straight staff hallway.
 - Restored native scaling on counting/phonics labels and enlarged word-wall lettering.
 - Applied the original oak material via runtime-safe variant assignment; no Plugin-only map reads during server startup.
 - Restored a three-panel blue practice mat beside the front activity rugs (latest owner brief).
