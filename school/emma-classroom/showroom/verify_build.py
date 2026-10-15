@@ -53,9 +53,15 @@ assert "Enabled = false" in portrait_config and "ModelAssetId = 0" in portrait_c
     "Unapproved teacher portrait asset was enabled in the production showroom"
 )
 assert "task.defer(function()" in portrait_adapter and "InsertService:LoadAsset(id)" in portrait_adapter
-assert "fallback:Destroy()" in portrait_adapter and "if not ok then" in portrait_adapter
-assert '"no_verified_asset"' in portrait_adapter and '"unexpected_asset_class_"' in portrait_adapter
-assert 'node:IsA("MeshPart")' in portrait_adapter
+assert "fallback:Destroy()" in portrait_adapter and "if not success then" in portrait_adapter
+assert '"no_verified_asset"' in portrait_adapter and '"unsupported_"' in portrait_adapter
+assert 'item:IsA("MeshPart")' in portrait_adapter
+assert "fallback.Parent ~= root" in portrait_adapter
+assert "ContentProvider:PreloadAsync" in portrait_adapter
+for gate in ("CreatorOwnershipVerified", "NativeStudioVisualReviewed",
+             "IPhoneVisualReviewed", "PublicLikenessPermissionConfirmed"):
+    assert f"{gate} = false" in portrait_config, f"Unreviewed teacher approval: {gate}"
+    assert f"Config.{gate} == true" in portrait_adapter
 assert 'CFrame.new(-11,3.15,-29)' in main
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
