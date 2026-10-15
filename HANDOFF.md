@@ -39,3 +39,26 @@ must match the user-supplied three-view image and approved polished turnaround.
 Keep portrait images private, inspect real 3D front/quarter/profile/rear,
 run the offline geometry checker, then only after full owner/likeness/native
 acceptance activate the adapter in a review-only build. No premature merges.
+
+## 2026-10-15 follow-up: Private v6 3D sculpt study
+
+- Built a **real**, private standalone static GLB with colored 3D surfaces,
+  rather than another concept illustration. Source generator, five actual
+  camera renders, an editable-Blender import script and structural QA report
+  are retained outside this public repository.
+- Reconstructed and independently re-imported **53 closed component meshes**,
+  **59,294 triangles**, **6.21-stud height**, GLB **1,024,696 bytes**.
+  The previously added structural checker accepted the **exact v6 GLB**
+  with zero reported violations. SHA256:
+  `02db13fd44218d6f7be7df78a50825f2935f4e429ccd4f1f98ccc08e38239e53`.
+- Actual geometry rendered offline in five views using VTK. **Visual review
+  rejected v6**: the portrait lacks the required human likeness, hair still
+  resembles a helmet, and shoulders/face require professional sculpting.
+- Blender is absent from the build environment. The new staging script was
+  syntax checked but NOT executed in Blender; no editable .blend delivered.
+- Private photographs, derived facial vertex colors, and GLB are deliberately
+  excluded from GitHub. No Roblox upload, game publish, or Studio/iPhone test
+  performed. All four release approvals remain false.
+- Next: use the local GLB as a modest shape-blockout for an actual Blender
+  sculpt, or an appropriately private high-quality 3D reconstruction tool,
+  then repeat native device QA and verify publication permission.
