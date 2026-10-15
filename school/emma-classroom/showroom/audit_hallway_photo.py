@@ -245,45 +245,31 @@ local segments={
     {"Photo hall right end glazed brick",1},
 }
 local count=0
-local function checkBrickFallback(wall)
-    assert(not wall.CanCollide and wall.Material==Enum.Material.Brick,
-        "PHOTO_HALL_NATIVE_BRICK_FALLBACK_LOST")
-    -- If SurfaceGuis are hidden by an independent renderer or device
-    -- LOD, the shell must remain warm gold AND visibly masonry rather
-    -- than collapse into the flat ochre band seen in the prior render.
-    assert(wall.Color.R>.70 and wall.Color.G>.45 and
-        wall.Color.B>.18 and wall.Color.B<.34
-        and wall.Reflectance>.04,
-        "PHOTO_HALL_GOLDEN_BRICK_FALLBACK_LOST")
-    local g=wall:FindFirstChild("Photo glazed offset brick bond")
-    assert(g and g:IsA("SurfaceGui"),
-        "PHOTO_HALL_BRICK_GUI_MISSING")
-    local field=g:FindFirstChild("Warm mortar field")
-    assert(field and field.ClipsDescendants,
-        "PHOTO_HALL_MORTAR_MISSING")
-    local tiles=0
-    for _,c in ipairs(field:GetChildren()) do
-        if c.Name=="Photo glazed brick" then tiles+=1 end
-    end
-    assert(tiles>=18,"PHOTO_HALL_BRICK_PATTERN_INCOMPLETE")
-    return tiles
-end
 for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
-        count+=checkBrickFallback(wall)
+        assert(not wall.CanCollide and wall.Material==Enum.Material.SmoothPlastic,
+            "PHOTO_HALL_BRICK_BECAME_PHYSICAL_COLLIDER")
+        -- If SurfaceGuis are hidden by an independent renderer or device
+        -- LOD, the shell should be warm gold, NOT dark-brown mortar.
+        assert(wall.Color.R>.70 and wall.Color.G>.45 and
+            wall.Color.B>.18 and wall.Color.B<.34
+            and wall.Reflectance>.04,
+            "PHOTO_HALL_GOLDEN_BRICK_FALLBACK_LOST")
+        local g=wall:FindFirstChild("Photo glazed offset brick bond")
+        assert(g and g:IsA("SurfaceGui"),
+            "PHOTO_HALL_BRICK_GUI_MISSING")
+        local field=g:FindFirstChild("Warm mortar field")
+        assert(field and field.ClipsDescendants,
+            "PHOTO_HALL_MORTAR_MISSING")
+        local tiles=0
+        for _,c in ipairs(field:GetChildren()) do
+            if c.Name=="Photo glazed brick" then tiles+=1 end
+        end
+        assert(tiles>=18,"PHOTO_HALL_BRICK_PATTERN_INCOMPLETE")
+        count+=tiles
     end
 end
 assert(count>=300,"PHOTO_HALL_BRICK_DETAIL_TOO_SPARSE "..count)
-local fallbackProbe=one("Photo hall rear glazed brick")
-local originalFallbackMaterial=fallbackProbe.Material
-fallbackProbe.Material=Enum.Material.SmoothPlastic
-local brickOk,brickErr=pcall(checkBrickFallback,fallbackProbe)
-fallbackProbe.Material=originalFallbackMaterial
-assert(not brickOk and string.find(tostring(brickErr),
-    "PHOTO_HALL_NATIVE_BRICK_FALLBACK_LOST",1,true),
-    "PHOTO_HALL_FLAT_DADO_MUTATION_ACCEPTED")
-checkBrickFallback(fallbackProbe)
-print("PHOTO_HALL_BRICK_FALLBACK_PASS material=Brick flat_mutation_rejected=true")
 expect("Photo hall rear dado cap",1)
 expect("Photo hall front dado cap",2)
 expect("Photo hall student work hanging rail",1)
