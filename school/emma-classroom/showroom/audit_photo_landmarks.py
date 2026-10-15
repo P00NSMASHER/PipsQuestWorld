@@ -181,11 +181,11 @@ local function verify()
         and math.abs(right.Position.X-20.2)<.03
         and math.abs(left.Position.Y-right.Position.Y)<.03,
         "PHOTO_WOOD_TWO_STRIPS_MISALIGNED")
-    assert(signText(left)=="0  10  20  30  40  50  60"
-        and signText(right)=="70  80  90  100  110  120",
+    assert(signText(left)=="70  80  90  100  110  120"
+        and signText(right)=="0  10  20  30  40  50  60",
         "PHOTO_WOOD_COUNTING_SEQUENCE_INVALID")
-    numberedStrip(left,0,60)
-    numberedStrip(right,70,120)
+    numberedStrip(left,70,120)
+    numberedStrip(right,0,60)
     assert(left.Position.X+left.Size.X/2 < -9.4
         and right.Position.X-right.Size.X/2 > 7.0,
         "PHOTO_WOOD_COUNTING_STRIP_HIDES_DOOR_OPENING")
@@ -351,7 +351,7 @@ left.CFrame=before
 assert(not ok and string.find(tostring(err),"PHOTO_WOOD_TWO_STRIPS_MISALIGNED",1,true),
     "PHOTO_WOOD_WRONG_LOCATION_NOT_REJECTED")
 print("PHOTO_WOOD_ADVERSARIAL_REJECTED counting_strip_moved")
-local units=numberedStrip(left,0,60)
+local units=numberedStrip(left,70,120)
 local oldNumber=units[2].Text
 units[2].Text="WRONG"
 ok,err=pcall(verify)
@@ -392,7 +392,7 @@ assert(not ok and string.find(tostring(err),
 print("PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED collidable_card")
 local label=left:FindFirstChildOfClass("SurfaceGui"):FindFirstChildOfClass("TextLabel")
 local textBefore=label.Text
-label.Text="0  20  10"
+label.Text="70  90  80"
 ok,err=pcall(verify)
 label.Text=textBefore
 assert(not ok and string.find(tostring(err),"PHOTO_WOOD_COUNTING_SEQUENCE_INVALID",1,true),

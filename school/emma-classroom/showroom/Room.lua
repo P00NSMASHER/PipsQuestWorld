@@ -1917,25 +1917,26 @@ local function buildBackDoorAndHall(root: Instance)
         return f
     end
 
-    -- One safe physical floor: the native Top SurfaceGui draws narrow
-    -- square-tile grout at ~4.5-stud centers without 28 extra Parts.
+    -- One safe physical floor: the real ABVM reference is a continuous dark
+    -- charcoal square-tile floor. The native Top SurfaceGui draws its grout
+    -- without adding dozens of collision parts.
     local floor=hp("Photo hall polished square stone floor",
         Vector3.new(108,.50,22.5),CFrame.new(0,.25,38),
-        Color3.fromRGB(75,73,70),Enum.Material.SmoothPlastic,true)
-    floor.Reflectance=.085
+        Color3.fromRGB(61,59,56),Enum.Material.Slate,true)
+    floor.Reflectance=.045
     local floorGui=imageSurface(floor,"Photo square-stone tile grout",
         Enum.NormalId.Top,2160,450)
     for x=0,24 do
         local line=paintedRectangle(floorGui,"Stone long tile joint",
             UDim2.fromOffset(1,450),UDim2.fromOffset(x*90,0),
-            Color3.fromRGB(38,37,36))
-        line.BackgroundTransparency=.44
+            Color3.fromRGB(31,30,29))
+        line.BackgroundTransparency=.32
     end
     for z=0,5 do
         local line=paintedRectangle(floorGui,"Stone cross tile joint",
             UDim2.fromOffset(2160,1),UDim2.fromOffset(0,z*90),
-            Color3.fromRGB(38,37,36))
-        line.BackgroundTransparency=.44
+            Color3.fromRGB(31,30,29))
+        line.BackgroundTransparency=.32
     end
     -- Existing real wood-and-glass entrance and open double leaf retain
     -- their exact shapes, free walking clearance and level brass threshold.
@@ -1981,12 +1982,9 @@ local function buildBackDoorAndHall(root: Instance)
         Vector3.new(.09,18,4),CFrame.new(37.56,9,25),
         blueGray,Enum.Material.SmoothPlastic,false)
     local returnBrick=hp("Photo hall staff return glazed brick",
-        Vector3.new(.095,4.25,3.90),CFrame.new(37.65,2.125,25),
+        Vector3.new(.095,12.70,3.90),CFrame.new(37.65,6.35,25),
         Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
     returnBrick.Reflectance=.035
-    hp("Photo hall staff return oak cap",
-        Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,25),
-        Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
 
     -- The x=+/-9 INNER ENDS of the two original classroom rear walls
     -- are one-stud exposed return faces at the former double-door entry.
@@ -2003,14 +2001,10 @@ local function buildBackDoorAndHall(root: Instance)
             Vector3.new(.10,18,1.12),CFrame.new(edgeX,9,27.0),
             blueGray,Enum.Material.SmoothPlastic,false)
         local edgeBrick=hp("Photo hall doorway inner wall end brick",
-            Vector3.new(.115,4.25,1.12),
-            CFrame.new(edgeX-side*.04,2.125,27.0),
+            Vector3.new(.115,12.70,1.12),
+            CFrame.new(edgeX-side*.04,6.35,27.0),
             Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
         edgeBrick.Reflectance=.035
-        hp("Photo hall doorway inner wall end oak cap",
-            Vector3.new(.135,.16,1.15),
-            CFrame.new(edgeX-side*.06,4.34,27.0),
-            Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
     end
 
     -- A true 6-course staggered bond and subtle ochre tone differences.
@@ -2031,57 +2025,50 @@ local function buildBackDoorAndHall(root: Instance)
         local w=(face==Enum.NormalId.Left or face==Enum.NormalId.Right)
             and size.Z or size.X
         local pixels=math.max(50,math.floor(w*22))
-        local gui=imageSurface(p,"Photo glazed offset brick bond",face,pixels,100)
+        local pixelsY=math.max(100,math.floor(size.Y*23.5))
+        local gui=imageSurface(p,"Photo glazed offset brick bond",face,pixels,pixelsY)
         local field=paintedRectangle(gui,"Warm mortar field",
             UDim2.fromScale(1,1),UDim2.fromScale(0,0),mortar)
         field.ClipsDescendants=true
         local brickW=78
-        for row=0,5 do
+        -- Eight broad courses over a full wall preserve a readable brick
+        -- rhythm on phones while staying below the established SurfaceGui
+        -- draw-frame budget. Built-in Brick material supplies the fine grain.
+        local rowCount=math.max(6,math.floor(size.Y*.64))
+        local brickH=math.max(14,math.floor(pixelsY/rowCount)-3)
+        for row=0,rowCount-1 do
             local offset=(row%2==0) and 0 or -brickW/2
             for col=0,math.ceil(pixels/brickW)+1 do
                 local px=math.floor(offset+col*brickW+2)
                 if px<pixels and px+brickW>0 then
                     paintedRectangle(field,"Photo glazed brick",
-                        UDim2.fromOffset(brickW-3,14),
-                        UDim2.fromOffset(px,math.floor(row*100/6+1)),
+                        UDim2.fromOffset(brickW-3,brickH),
+                        UDim2.fromOffset(px,math.floor(row*pixelsY/rowCount+1)),
                         bricks[((row*7+col*3)%#bricks)+1])
                 end
             end
         end
     end
-    dado("Photo hall rear glazed brick",Vector3.new(107,4.25,.075),
-        CFrame.new(0,2.125,48.735),Enum.NormalId.Front)
+    dado("Photo hall rear glazed brick",Vector3.new(107,12.70,.075),
+        CFrame.new(0,6.35,48.735),Enum.NormalId.Front)
     -- Extend these existing two glazed dados over the same exposed
     -- yellow infill, without crossing the double-door opening.
     for _,side in ipairs({-1,1}) do
         dado("Photo hall classroom exterior glazed brick",
-            Vector3.new(31.35,4.25,.075),
-            CFrame.new(side*21.25,2.125,27.66),Enum.NormalId.Back)
+            Vector3.new(31.35,12.70,.075),
+            CFrame.new(side*21.25,6.35,27.66),Enum.NormalId.Back)
     end
     -- Don't draw glazed brick across the new hallway entry from the left
     -- ABVM staff doorway. Only the sealed negative-X wall gets a facing.
     dado("Photo hall front outer glazed brick",
-        Vector3.new(16.75,4.25,.075),CFrame.new(-45.5,2.125,27.66),
+        Vector3.new(16.75,12.70,.075),CFrame.new(-45.5,6.35,27.66),
         Enum.NormalId.Back)
     dado("Photo hall left end glazed brick",
-        Vector3.new(.075,4.25,22),CFrame.new(-53.49,2.125,38),
+        Vector3.new(.075,12.70,22),CFrame.new(-53.49,6.35,38),
         Enum.NormalId.Right)
     dado("Photo hall right end glazed brick",
-        Vector3.new(.075,4.25,22),CFrame.new(53.49,2.125,38),
+        Vector3.new(.075,12.70,22),CFrame.new(53.49,6.35,38),
         Enum.NormalId.Left)
-    hp("Photo hall rear dado cap",Vector3.new(107.2,.16,.16),
-        CFrame.new(0,4.34,48.66),Color3.fromRGB(162,124,79),
-        Enum.Material.Wood,false)
-    -- No decorative cap or handrail may float across the 17-stud LEFT
-    -- hallway entry (x=37..54) where the staff corridor bends north.
-    -- Reuse both oak rails: now each finishes at the matching plaster/
-    -- brick edge, outside x=+/-5.5. No rail crosses a doorway.
-    hp("Photo hall front dado cap",Vector3.new(48.20,.16,.14),
-        CFrame.new(-29.65,4.34,27.73),Color3.fromRGB(162,124,79),
-        Enum.Material.Wood,false)
-    hp("Photo hall front dado cap",Vector3.new(30.90,.16,.14),
-        CFrame.new(21.05,4.34,27.73),Color3.fromRGB(162,124,79),
-        Enum.Material.Wood,false)
 
     -- Both faces of the ACTUAL existing glass leaves receive tiny, anonymous
     -- green shamrock artwork. Four circular UI lobes and one stem each.
@@ -2397,7 +2384,8 @@ local function buildTeacherEntry(root: Instance)
     -- Its top lies .02 stud below the main polished tile to avoid
     -- coplanar overlapping surfaces flickering in native Roblox.
     local sideFloor=part(root,"Side hall floor",Vector3.new(18,.48,21.8),
-        CFrame.new(45.5,.24,16.4),Color3.fromRGB(118,124,126),Enum.Material.Concrete)
+        CFrame.new(45.5,.24,16.4),Color3.fromRGB(61,59,56),Enum.Material.Slate)
+    sideFloor.Reflectance=.045
     local vestibuleGrid=Instance.new("SurfaceGui")
     vestibuleGrid.Name="StaffVestibuleStoneGrid"
     vestibuleGrid.Face=Enum.NormalId.Top
@@ -2410,8 +2398,8 @@ local function buildTeacherEntry(root: Instance)
         vertical.Name="Vestibule tile joint"
         vertical.Position=UDim2.fromScale(i/6-.002,0)
         vertical.Size=UDim2.fromScale(.004,1)
-        vertical.BackgroundColor3=Color3.fromRGB(88,94,96)
-        vertical.BackgroundTransparency=.30
+        vertical.BackgroundColor3=Color3.fromRGB(31,30,29)
+        vertical.BackgroundTransparency=.32
         vertical.BorderSizePixel=0
         vertical.Parent=vestibuleGrid
         local horizontal=vertical:Clone()
@@ -2423,7 +2411,7 @@ local function buildTeacherEntry(root: Instance)
         Vector3.new(.24,.045,13.35),CFrame.new(37.10,.556,15.5),
         Color3.fromRGB(169,145,88),Enum.Material.Metal,false)
     part(root,"Side hall far wall",Vector3.new(1,13,20),CFrame.new(54.5,6.5,15.5),P.blueSoft)
-    part(root,"Side hall far brick",Vector3.new(1.1,4.3,20),CFrame.new(54.0,2.15,15.5),Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
+    part(root,"Side hall far brick",Vector3.new(1.1,12.7,20),CFrame.new(54.0,6.35,15.5),Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
     -- The original side ceiling stopped at the SAME z=25.5 seam and
     -- exposed sky above the new turning route. Extend it to z=27.30,
     -- overlapping the ivory photo hall roof (begins z=26.75).
@@ -2440,12 +2428,9 @@ local function buildTeacherEntry(root: Instance)
         local interior = endZ < 15.5 and .53 or -.53
         part(root,"Side corridor end wall",Vector3.new(18,13,.80),
             CFrame.new(45.5,6.5,endZ),P.blueSoft,Enum.Material.SmoothPlastic,true)
-        part(root,"Side corridor brick dado",Vector3.new(17.7,4.25,.13),
-            CFrame.new(45.5,2.125,endZ+interior),
-            Color3.fromRGB(177,122,63),Enum.Material.Brick,false)
-        part(root,"Side corridor navy cap rail",Vector3.new(17.7,.16,.12),
-            CFrame.new(45.5,4.30,endZ+interior*1.12),
-            P.blue,Enum.Material.Wood,false)
+        part(root,"Side corridor full-height glazed brick",Vector3.new(17.7,12.7,.13),
+            CFrame.new(45.5,6.35,endZ+interior),
+            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
     end
     -- Obsolete seam return and freestanding noticeboard removed. After the
     -- corridor's ninety-degree turn they appeared as floating geometry.
@@ -2511,7 +2496,8 @@ local function alignHallwayWithStaffExit(root: Instance)
 
     -- The earlier corridor borrowed the classroom's rear wall. After moving
     -- it outside the staff door, close the missing north wall with ONE large
-    -- collision solid (not dozens of tiny mobile Parts).
+    -- collision solid (not dozens of tiny mobile Parts). Its visible inner
+    -- face is a separate full-height brick skin added after the turn.
     part(hall,"Photo hall continuous north wall",Vector3.new(108,13,.90),
         CFrame.new(108,6.5,26.75),Color3.fromRGB(107,117,125),
         Enum.Material.SmoothPlastic,true)
@@ -2521,13 +2507,13 @@ local function alignHallwayWithStaffExit(root: Instance)
     local sideFloor=root:FindFirstChild("Side hall floor")
     local sideRoof=root:FindFirstChild("Side hall ceiling")
     assert(sideFloor and sideRoof,"Staff exit floor/roof missing")
-    -- Floor bridges to the brass threshold, while the roof begins exactly at
-    -- the exterior face of the yellow classroom wall (x=37.5). This prevents
-    -- either hallway slab from protruding through the room-side paint.
+    -- Floor bridges to the brass threshold. The roof begins a deliberate
+    -- .16 stud beyond the exterior face of the yellow classroom wall, so no
+    -- coplanar exterior slab can flash through the room-side paint.
     sideFloor.Size=Vector3.new(22.50,.48,23.05)
     sideFloor.CFrame=CFrame.new(48.35,.24,15.775)
-    sideRoof.Size=Vector3.new(22.10,.36,23.05)
-    sideRoof.CFrame=CFrame.new(48.55,13.18,15.775)
+    sideRoof.Size=Vector3.new(21.94,.36,23.05)
+    sideRoof.CFrame=CFrame.new(48.63,13.18,15.775)
 
     -- Move the old facing wall to the outside edge of the widened vestibule.
     -- This removes the whitish-gray false arch seen above/inside the timber
@@ -2539,26 +2525,22 @@ local function alignHallwayWithStaffExit(root: Instance)
     oldBlock.Size=Vector3.new(1,13,23.05)
     oldBlock.CFrame=CFrame.new(59.60,6.5,15.775)
     oldBrick.Name="Staff entry east wall glazed brick"
-    oldBrick.Size=Vector3.new(.12,4.3,22.75)
-    oldBrick.CFrame=CFrame.new(59.02,2.15,15.775)
+    oldBrick.Size=Vector3.new(.12,12.7,22.75)
+    oldBrick.CFrame=CFrame.new(59.02,6.35,15.775)
     oldBrick.Color=Color3.fromRGB(192,132,63)
-    part(root,"Staff entry east wall oak cap rail",Vector3.new(.13,.15,22.75),
-        CFrame.new(58.95,4.35,15.775),Color3.fromRGB(112,77,50),
-        Enum.Material.Wood,false)
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
     for _,object in ipairs(root:GetChildren()) do
         if object:IsA("BasePart") and
             (object.Name=="Side corridor end wall"
-            or object.Name=="Side corridor brick dado"
-            or object.Name=="Side corridor navy cap rail") then
+            or object.Name=="Side corridor full-height glazed brick") then
             local moved=CFrame.new(0,0,-1.40)*object.CFrame
             local isWall=object.Name=="Side corridor end wall"
             object.Size=Vector3.new(isWall and 23.10 or 22.80,
                 object.Size.Y,object.Size.Z)
             object.CFrame=CFrame.new(2.55,0,0)*moved
-            if object.Name=="Side corridor brick dado" then
+            if object.Name=="Side corridor full-height glazed brick" then
                 object.Color=Color3.fromRGB(192,132,63)
             elseif object.Name=="Side corridor end wall" then
                 object.Color=Color3.fromRGB(107,117,125)
@@ -2582,13 +2564,20 @@ local function alignHallwayWithStaffExit(root: Instance)
             object.CFrame=turn*object.CFrame
         end
     end
-    -- Set the corridor wall fully behind the classroom wall. A quarter-stud
-    -- nudge still left a visible blue edge in the doorway-side photograph.
+    -- Set the corridor wall fully behind the classroom wall. The complete
+    -- exterior shell now starts beyond x=37.60 rather than sharing the room's
+    -- x=37.50 paint plane; this removes the intermittent wall intrusion.
     local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
     assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
         "Staff hallway adjoining wall missing")
-    adjoiningWall.CFrame=CFrame.new(.70,0,0)*adjoiningWall.CFrame
+    adjoiningWall.CFrame=CFrame.new(.80,0,0)*adjoiningWall.CFrame
+    local brickFacing=part(hall,"Photo hall continuous north full-height brick",
+        Vector3.new(107.2,12.70,.075),
+        adjoiningWall.CFrame*CFrame.new(0,-.15,-.49),
+        Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+    brickFacing.Reflectance=.035
     hall:SetAttribute("FalseEntryArchRemoved",true)
+    hall:SetAttribute("ReferenceFinish","full-height orange brick and dark square tile")
 end
 
 -- The owner's October 12 photo-match scope explicitly excludes the gym/tumbling mat.

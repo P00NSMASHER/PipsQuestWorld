@@ -135,6 +135,7 @@ CUTAWAY_OCCLUDERS={
     "Photo hall right end glazed brick",
     "Side hall ceiling","Staff entry outer east wall",
     "Staff entry east wall glazed brick","Photo hall continuous north wall",
+    "Photo hall continuous north full-height brick",
     "Supply closet side wall","Supply closet solid rear wall",
     # Keep the constructed forest visible in aerial snapshots so it can be
     # reviewed. Player-eye screenshots always use the full, uncut room.
@@ -170,10 +171,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     side_caps=actual_parts("Side corridor end wall")
     staff_east=actual_parts("Staff entry outer east wall")
     transitions=actual_parts("Staff hallway floor transition strip")
-    east_caps=actual_parts("Staff entry east wall oak cap rail")
+    east_brick=actual_parts("Staff entry east wall glazed brick")
+    west_brick=actual_parts("Photo hall continuous north full-height brick")
     assert (len(floor_parts),len(rear),len(north),len(ends),
-            len(side_caps),len(staff_east),len(transitions),len(east_caps))==(
-                1,1,1,1,1,1,1,1), (
+            len(side_caps),len(staff_east),len(transitions),len(east_brick),
+            len(west_brick))==(
+                1,1,1,1,1,1,1,1,1), (
         "PERPENDICULAR_CORRIDOR_STRUCTURE_MISSING"
     )
     assert (abs(float(floor_parts[0][9])-48.5)<.03
@@ -183,7 +186,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "PERPENDICULAR_CORRIDOR_FLOOR_OFFSET_OR_SPAN"
     )
     assert (abs(float(rear[0][9])-59.75)<.05
-            and abs(float(north[0][9])-37.95)<.05
+            and abs(float(north[0][9])-38.05)<.05
             and float(rear[0][6])>=107.9
             and float(north[0][6])>=107.9
             ), (
@@ -205,10 +208,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert (abs(float(transitions[0][9])-48.48)<.05
             and abs(float(transitions[0][11])-26.72)<.05
             and float(transitions[0][6])>=22.3
-            and abs(float(east_caps[0][9])-58.95)<.05
-            and float(east_caps[0][8])>=22.7
+            and abs(float(east_brick[0][9])-59.02)<.05
+            and float(east_brick[0][8])>=22.7
+            and float(east_brick[0][7])>=12.6
+            and float(west_brick[0][7])>=12.6
             ), (
-        "PERPENDICULAR_CORRIDOR_FINISH_TRIM_MISSING"
+        "PERPENDICULAR_CORRIDOR_FULL_BRICK_FINISH_MISSING"
     )
     assert not actual_parts("Side hall far wall"), (
         "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"
@@ -251,13 +256,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             len(oak),len(lamps))==(1,1,2,1,1,1,2,5), (
                 "HALLWAY_PHOTO_STRUCTURE_MISSING"
             )
-    assert floor[0][4].endswith("SmoothPlastic") and (
+    assert floor[0][4].endswith("Slate") and (
         float(floor[0][6])==108
     ), "Polished square-tile corridor floor lost its continuous structure"
     assert all(p[4].endswith("SmoothPlastic") and
-               abs(float(p[10])-2.125)<.03
+               abs(float(p[10])-6.35)<.03 and float(p[7])>=12.6
                for p in rear_brick+classroom_brick+outside_brick+end_brick), (
-        "Warm glazed brick dado lifted or roughened"
+        "Full-height warm glazed brick finish lost"
     )
     assert float(ceiling[0][10])>13.1 and float(ceiling[0][6])>107, (
         "HALLWAY_CEILING_LOST"
@@ -274,8 +279,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         len(actual_parts("Notebook red margin"))==0
     ), "64 microscopic notebook Parts unexpectedly restored"
     assert len(actual_parts("Photo hall vertical welcome plaque"))==1
-    assert len(actual_parts("Photo hall rear dado cap"))==1
-    assert len(actual_parts("Photo hall front dado cap"))==2
+    assert len(actual_parts("Photo hall rear dado cap"))==0
+    assert len(actual_parts("Photo hall front dado cap"))==0
+    assert len(actual_parts("Staff entry east wall oak cap rail"))==0
     assert len(actual_parts("Classroom doorway brass threshold"))==1
     assert len(actual_parts("Door glass"))==2 and (
         len(actual_parts("Closed classroom closet door"))==2

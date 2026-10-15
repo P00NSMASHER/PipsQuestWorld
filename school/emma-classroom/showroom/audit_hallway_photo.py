@@ -40,7 +40,7 @@ local hall=Room.Root:FindFirstChild("PhotographedHallway")
 assert(hall and hall:GetAttribute("ScaleConfidence")=="provisional",
     "PHOTO_HALL_SURVEY_FIDELITY_MISLABELED")
 local floor=one("Photo hall polished square stone floor")
-assert(floor.CanCollide and floor.Material==Enum.Material.SmoothPlastic
+assert(floor.CanCollide and floor.Material==Enum.Material.Slate
     and near(floor.Size.X,108) and near(floor.Size.Z,22.5),
     "PHOTO_HALL_FLOOR_GEOMETRY")
 local grid=gui(floor,"Photo square-stone tile grout",Enum.NormalId.Top)
@@ -59,7 +59,7 @@ assert(rear.CanCollide and near(rear.Position.X,59.75)
     and near(rear.Position.Z,80.75) and rear.Size.X>=108,
     "PHOTO_HALL_SKY_GAP")
 local north=one("Photo hall continuous north wall")
-assert(north.CanCollide and near(north.Position.X,37.95)
+assert(north.CanCollide and near(north.Position.X,38.05)
     and near(north.Position.Z,80.75) and north.Size.X>=108,
     "PERPENDICULAR_HALLWAY_WEST_WALL_MISSING")
 local caps=expect("Photo hall end cap",1)
@@ -74,19 +74,34 @@ assert(near(transition.Position.X,48.48)
     and near(transition.Position.Z,26.72)
     and transition.Size.X>=22.3 and not transition.CanCollide,
     "STAFF_HALLWAY_FLOOR_TRANSITION_MISSING")
-local eastCap=expect("Staff entry east wall oak cap rail",1)[1]
-assert(near(eastCap.Position.X,58.95) and eastCap.Size.Z>=22.7,
-    "STAFF_HALLWAY_EAST_WALL_CAP_MISSING")
+local eastBrick=expect("Staff entry east wall glazed brick",1)[1]
+assert(near(eastBrick.Position.X,59.02) and eastBrick.Size.Z>=22.7
+    and eastBrick.Size.Y>=12.6,
+    "STAFF_HALLWAY_EAST_FULL_BRICK_FINISH_MISSING")
 local vestibuleFloor=one("Side hall floor")
 local vestibuleRoof=one("Side hall ceiling")
-assert(vestibuleFloor.Material==Enum.Material.Concrete
+assert(vestibuleFloor.Material==Enum.Material.Slate
     and near(vestibuleFloor.Position.X,48.35)
     and vestibuleFloor.Size.X>=22.45
     and vestibuleFloor:FindFirstChild("StaffVestibuleStoneGrid"),
     "STAFF_HALLWAY_FLOOR_FINISH_NOT_UNIFORM")
-assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.50)
-    and vestibuleRoof.Position.X-vestibuleRoof.Size.X/2>=37.49,
+assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.66)
+    and vestibuleRoof.Position.X-vestibuleRoof.Size.X/2>=37.64,
     "STAFF_HALLWAY_ROOF_PROTRUDES_THROUGH_CLASSROOM_WALL")
+local function assertExteriorShellClearance()
+    assert(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2>=37.64
+        and north.Position.X-north.Size.Z/2>=37.59,
+        "STAFF_HALLWAY_EXTERIOR_SHELL_CROSSES_YELLOW_WALL")
+end
+assertExteriorShellClearance()
+local roofCF=vestibuleRoof.CFrame
+vestibuleRoof.CFrame=CFrame.new(-.25,0,0)*roofCF
+local shellOk,shellErr=pcall(assertExteriorShellClearance)
+vestibuleRoof.CFrame=roofCF
+assert(not shellOk and string.find(tostring(shellErr),
+    "STAFF_HALLWAY_EXTERIOR_SHELL_CROSSES_YELLOW_WALL",1,true),
+    "STAFF_HALLWAY_INTRUSION_MUTATION_NOT_REJECTED")
+print("STAFF_HALLWAY_INTRUSION_NEGATIVE_REJECTED exterior_roof_shift")
 assert(#pieces("Left hallway outside corner return")==0,
     "OBSOLETE_FLOATING_HALL_SEAM_RETURNED")
 assert(#pieces("Photo hall front outer wall")==1
@@ -307,6 +322,8 @@ for _,s in ipairs(segments) do
     for _,wall in ipairs(expect(s[1],s[2])) do
         assert(not wall.CanCollide and wall.Material==Enum.Material.SmoothPlastic,
             "PHOTO_HALL_BRICK_BECAME_PHYSICAL_COLLIDER")
+        assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35),
+            "PHOTO_HALL_FULL_HEIGHT_BRICK_FINISH_LOST")
         -- If SurfaceGuis are hidden by an independent renderer or device
         -- LOD, the shell should be warm gold, NOT dark-brown mortar.
         assert(wall.Color.R>.70 and wall.Color.G>.45 and
@@ -327,9 +344,15 @@ for _,s in ipairs(segments) do
         count+=tiles
     end
 end
-assert(count>=300,"PHOTO_HALL_BRICK_DETAIL_TOO_SPARSE "..count)
-expect("Photo hall rear dado cap",1)
-expect("Photo hall front dado cap",2)
+assert(count>=500,"PHOTO_HALL_BRICK_DETAIL_TOO_SPARSE "..count)
+assert(#pieces("Photo hall rear dado cap")==0
+    and #pieces("Photo hall front dado cap")==0
+    and #pieces("Staff entry east wall oak cap rail")==0,
+    "PHOTO_HALL_OLD_HALF_WALL_CAP_RETURNED")
+local westBrick=expect("Photo hall continuous north full-height brick",1)[1]
+assert(westBrick.Size.Y>=12.6 and near(westBrick.Position.Y,6.35)
+    and not westBrick.CanCollide,
+    "PHOTO_HALL_WEST_FULL_BRICK_FINISH_MISSING")
 expect("Photo hall student work hanging rail",1)
 -- The six photographs show real white paper hanging as diagonals.
 -- Previous UI-only paper rendered as a completely bare wall in the

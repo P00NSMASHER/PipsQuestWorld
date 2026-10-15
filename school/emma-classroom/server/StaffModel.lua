@@ -14,8 +14,43 @@ local function isMale(teacher) return string.sub(teacher.name,1,3)=="Mr." or str
 function StaffModel.create(teacher,scaleOverride:number?)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",9)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",10)
     model:SetAttribute("AppearanceProfile",teacher.appearanceId or "standard_staff")
+    if teacher.appearanceId=="benulis_2026_portrait" then
+        -- The bundled Woman body is a narrow stylized R15 package. At the
+        -- classroom's mobile camera distance its tapered arms read as sticks
+        -- and its tiny hands can inherit the sleeve tint. Replace only Mrs.
+        -- Benulis's body pieces with a conventional, friendly Roblox block
+        -- silhouette. The avatar stays a lightweight static Humanoid model.
+        local classicParts={
+            {"UpperTorso",Vector3.new(1.80,1.50,.85),CFrame.new(0,.25,0)},
+            {"LowerTorso",Vector3.new(1.55,.60,.80),CFrame.new(0,-.72,0)},
+            {"LeftUpperArm",Vector3.new(.58,1.15,.58),CFrame.new(-1.18,.15,0)},
+            {"LeftLowerArm",Vector3.new(.55,1.00,.55),CFrame.new(-1.18,-.90,0)},
+            {"LeftHand",Vector3.new(.58,.45,.58),CFrame.new(-1.18,-1.60,0)},
+            {"RightUpperArm",Vector3.new(.58,1.15,.58),CFrame.new(1.18,.15,0)},
+            {"RightLowerArm",Vector3.new(.55,1.00,.55),CFrame.new(1.18,-.90,0)},
+            {"RightHand",Vector3.new(.58,.45,.58),CFrame.new(1.18,-1.60,0)},
+            {"LeftUpperLeg",Vector3.new(.72,1.25,.72),CFrame.new(-.42,-1.60,0)},
+            {"LeftLowerLeg",Vector3.new(.66,1.20,.66),CFrame.new(-.42,-2.62,0)},
+            {"LeftFoot",Vector3.new(.72,.45,1.00),CFrame.new(-.42,-3.35,-.12)},
+            {"RightUpperLeg",Vector3.new(.72,1.25,.72),CFrame.new(.42,-1.60,0)},
+            {"RightLowerLeg",Vector3.new(.66,1.20,.66),CFrame.new(.42,-2.62,0)},
+            {"RightFoot",Vector3.new(.72,.45,1.00),CFrame.new(.42,-3.35,-.12)},
+        }
+        for _,spec in ipairs(classicParts) do
+            local old=model:FindFirstChild(spec[1])
+            assert(old and old:IsA("BasePart"),"Missing bundled body part "..spec[1])
+            old:Destroy()
+            local block=Instance.new("Part")
+            block.Name=spec[1];block.Size=spec[2];block.CFrame=spec[3]
+            block.Material=Enum.Material.SmoothPlastic
+            block.TopSurface=Enum.SurfaceType.Smooth
+            block.BottomSurface=Enum.SurfaceType.Smooth
+            block.Parent=model
+        end
+        model:SetAttribute("BodySilhouette","classic_block_avatar")
+    end
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
     local rootAttachment=Instance.new("Attachment");rootAttachment.Name="RootRigAttachment";rootAttachment.CFrame=CFrame.new(0,-1,0);rootAttachment.Parent=root
@@ -35,7 +70,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
             -- Use Roblox's familiar friendly default expression. The prior
             -- catalog face stretched badly on this bundled head mesh.
             face.Texture="rbxasset://textures/face.png"
-            model:SetAttribute("PortraitAvatarRefinement","v9_friendly_face_brown_hair_navy_sweater")
+            model:SetAttribute("PortraitAvatarRefinement","v10_classic_block_body_friendly_face_navy_sweater")
         end
     end
     face.Parent=head
@@ -60,7 +95,14 @@ function StaffModel.create(teacher,scaleOverride:number?)
         end
     end
     local bodyColors=Instance.new("BodyColors");bodyColors.HeadColor3=skin;bodyColors.LeftArmColor3=skin;bodyColors.RightArmColor3=skin
-    bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin;bodyColors.Parent=model
+    bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin
+    if teacher.appearanceId=="benulis_2026_portrait" then
+        -- BodyColors paints an entire arm one color, including its hand. Her
+        -- block body uses the explicit sleeve/skin palette below instead.
+        bodyColors:Destroy()
+    else
+        bodyColors.Parent=model
+    end
     -- BodyColors applies again when parented and was overwriting Mrs.
     -- Benulis's authored navy sweater with the skin tone. Reassert the final
     -- per-part palette after parenting: long navy sleeves, skin hands/face,
@@ -241,7 +283,19 @@ function StaffModel.pose(model,phase,walking)
     local function joint(group)
         local shoulder=(group=="leftArm" or group=="rightArm")
         local side=(group=="leftArm" or group=="leftLeg") and -1 or 1
-        local anchor=shoulder and Vector3.new(side*.85,.78,0) or Vector3.new(side*.48,-1.0,0)
+        local classic=model:GetAttribute("BodySilhouette")=="classic_block_avatar"
+        local anchor
+        if classic then
+            -- The block avatar is floor-aligned farther above its root than
+            -- the bundled narrow Woman mesh. Pivot at its visible shoulders
+            -- and hips so arms swing as one normal limb instead of twisting
+            -- around the waist.
+            anchor=shoulder and Vector3.new(side*1.00,1.20,0)
+                or Vector3.new(side*.42,-.20,0)
+        else
+            anchor=shoulder and Vector3.new(side*.85,.78,0)
+                or Vector3.new(side*.48,-1.0,0)
+        end
         local angle=shoulder and -side*swing or side*swing
         local tilt=shoulder and side*armRoll or 0
         return CFrame.new(anchor)*CFrame.Angles(angle,0,tilt)*CFrame.new(anchor*-1)

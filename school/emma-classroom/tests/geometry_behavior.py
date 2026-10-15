@@ -111,10 +111,11 @@ local maxParts=0
 for _,teacher in ipairs(Data.Teachers) do
     local m=StaffModel.create(teacher)
     assert(m.Name==teacher.name and m.PrimaryPart.Name=="HumanoidRootPart")
-    assert(m:GetAttribute("StaffGeometryVersion")==9)
+    assert(m:GetAttribute("StaffGeometryVersion")==10)
     if teacher.name=="Mrs. Benulis" then
         assert(m:GetAttribute("AppearanceProfile")=="benulis_2026_portrait")
-        assert(m:GetAttribute("PortraitAvatarRefinement")=="v9_friendly_face_brown_hair_navy_sweater")
+        assert(m:GetAttribute("PortraitAvatarRefinement")=="v10_classic_block_body_friendly_face_navy_sweater")
+        assert(m:GetAttribute("BodySilhouette")=="classic_block_avatar")
         assert(m:FindFirstChild("Teardrop pendant") and m:FindFirstChild("V-neck left rib"))
         local torso=m:FindFirstChild("UpperTorso")
         local sleeve=m:FindFirstChild("LeftUpperArm")
@@ -154,7 +155,11 @@ for _,teacher in ipairs(Data.Teachers) do
             local g=d:GetAttribute("PoseGroup");if g then groups[g]=(groups[g] or 0)+1 end
         end
     end
-    assert(nativeN==14,"Both standard R15 bodies must include all 14 mesh limbs")
+    if teacher.name=="Mrs. Benulis" then
+        assert(nativeN==0,"Mrs. Benulis must use the conventional block-avatar body")
+    else
+        assert(nativeN==14,"Standard R15 staff must include all 14 mesh limbs")
+    end
     local partBudget=teacher.name=="Mrs. Benulis" and 64 or 40
     assert(n<=partBudget,"Staff part budget exceeded: "..teacher.name.." "..n);maxParts=math.max(maxParts,n)
     assert(minY+3.15>.44 and minY+3.15<.60,"Feet must meet the classroom floor")

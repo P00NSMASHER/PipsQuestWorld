@@ -441,24 +441,27 @@ local function learningWall(root:Instance)
     -- Match the real long cabinet-side numbered teaching frieze without
     -- spanning the central door. The older right cabinet strip remains in
     -- its existing approved location, and the two ranges are not duplicated.
-    local leftNumbers=piece(group,"Library counting strip backing",
+    -- Players face +Z at this wall, so +X is their screen-left. Keep the
+    -- ascending sequence visual-left-to-right: 0 begins on the +X strip and
+    -- the continuation 70 begins on the -X strip.
+    local screenRightNumbers=piece(group,"Library counting strip backing",
         Vector3.new(18.8,.86,.10),CFrame.new(-22,14.55,26.24),
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
-    printed(leftNumbers,"0  10  20  30  40  50  60",
-        Enum.NormalId.Front,C.navy,leftNumbers.Color)
-    decadeNumberStrip(leftNumbers,0,60)
+    printed(screenRightNumbers,"70  80  90  100  110  120",
+        Enum.NormalId.Front,C.navy,screenRightNumbers.Color)
+    decadeNumberStrip(screenRightNumbers,70,120)
     piece(group,"Library counting strip top rail",
         Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
         C.blue,Enum.Material.Wood,false)
     piece(group,"Library counting strip bottom rail",
         Vector3.new(19.05,.085,.11),CFrame.new(-22,14.08,26.23),
         C.leaf,Enum.Material.Wood,false)
-    local numberLine=piece(group,"Photo-guided cabinet counting strip",
+    local screenLeftNumbers=piece(group,"Photo-guided cabinet counting strip",
         Vector3.new(25.6,.86,.10),CFrame.new(20.2,14.55,26.24),
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
-    printed(numberLine,"70  80  90  100  110  120",
-        Enum.NormalId.Front,C.navy,numberLine.Color)
-    decadeNumberStrip(numberLine,70,120)
+    printed(screenLeftNumbers,"0  10  20  30  40  50  60",
+        Enum.NormalId.Front,C.navy,screenLeftNumbers.Color)
+    decadeNumberStrip(screenLeftNumbers,0,60)
     piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
         CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
     piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),

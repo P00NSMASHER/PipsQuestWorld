@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: enclosed closet, refined teacher, clear wall frieze, and uniform hallway.
+# Release refresh: photo-matched brick hallway, corrected number line, and classic teacher body.
 
 on:
   push:
