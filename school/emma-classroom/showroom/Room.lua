@@ -2254,7 +2254,7 @@ local function buildBackDoorAndHall(root: Instance)
     -- thicker rail at the same lower edge so it extends upward without
     -- shrinking the photographed glazing or changing any collision route.
     for _,sash in ipairs({
-        {y=3.12,height=.30},
+        {y=3.09,height=.36},
         {y=11.83,height=.80},
     }) do
         hp("Photo hall yellow sash horizontal",
