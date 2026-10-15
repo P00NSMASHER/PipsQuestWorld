@@ -66,8 +66,17 @@ local caps=expect("Photo hall end cap",1)
 assert(caps[1].CanCollide and near(caps[1].Position.Z,134.75),
     "PHOTO_HALL_FAR_END_SKY_GAP")
 local south=expect("Side corridor end wall",1)[1]
-assert(near(south.Position.Z,4.25) and south.CanCollide,
-    "LEFT_STAFF_CORRIDOR_SOUTH_CAP_LOST")
+assert(near(south.Position.X,48.05) and near(south.Position.Z,4.25)
+    and south.Size.X>=23 and south.CanCollide,
+    "LEFT_STAFF_CORRIDOR_SOUTH_CAP_GAPPED_OR_LOST")
+local transition=expect("Staff hallway floor transition strip",1)[1]
+assert(near(transition.Position.X,48.48)
+    and near(transition.Position.Z,26.72)
+    and transition.Size.X>=22.3 and not transition.CanCollide,
+    "STAFF_HALLWAY_FLOOR_TRANSITION_MISSING")
+local eastCap=expect("Staff entry east wall oak cap rail",1)[1]
+assert(near(eastCap.Position.X,58.95) and eastCap.Size.Z>=22.7,
+    "STAFF_HALLWAY_EAST_WALL_CAP_MISSING")
 assert(#pieces("Left hallway outside corner return")==0,
     "OBSOLETE_FLOATING_HALL_SEAM_RETURNED")
 assert(#pieces("Photo hall front outer wall")==1

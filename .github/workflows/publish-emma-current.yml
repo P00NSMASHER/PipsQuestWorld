@@ -1,6 +1,6 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: single staff door, lower cabinet, swapped desk/rug, and friendly teacher face.
+# Release refresh: polished staff hallway seam, trim, transition, and inward-parked door.
 
 on:
   push:

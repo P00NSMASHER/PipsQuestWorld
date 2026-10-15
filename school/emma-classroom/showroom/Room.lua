@@ -2360,8 +2360,11 @@ local function buildTeacherEntry(root: Instance)
     -- repurpose the existing door Part into the lower solid panel. Construct
     -- a real open aperture ABOVE it with just six additional noncolliding
     -- wood/metal pieces, staying below the 3,100-Part mobile ceiling.
-    local leafCF=CFrame.new(35.9,5.3,17.0)*
-        CFrame.Angles(0,math.rad(58),0)
+    -- Swing the single leaf fully inward against the classroom wall. The
+    -- earlier diagonal leaf projected into the hallway and dominated the
+    -- corridor view even though the walking route remained technically open.
+    local leafCF=CFrame.new(33.70,5.3,19.30)*
+        CFrame.Angles(0,math.pi/2,0)
     local frameOak=Color3.fromRGB(115,80,52)
     local door=part(root,"Open staff classroom door",
         Vector3.new(.55,4.30,6.6),leafCF*CFrame.new(0,-2.85,0),
@@ -2527,6 +2530,9 @@ local function alignHallwayWithStaffExit(root: Instance)
     oldBrick.Name="Staff entry east wall glazed brick"
     oldBrick.Size=Vector3.new(.12,4.3,22.75)
     oldBrick.CFrame=CFrame.new(59.02,2.15,15.775)
+    part(root,"Staff entry east wall oak cap rail",Vector3.new(.13,.15,22.75),
+        CFrame.new(58.95,4.35,15.775),Color3.fromRGB(112,77,50),
+        Enum.Material.Wood,false)
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
@@ -2535,9 +2541,19 @@ local function alignHallwayWithStaffExit(root: Instance)
             (object.Name=="Side corridor end wall"
             or object.Name=="Side corridor brick dado"
             or object.Name=="Side corridor navy cap rail") then
-            object.CFrame=CFrame.new(0,0,-1.40)*object.CFrame
+            local moved=CFrame.new(0,0,-1.40)*object.CFrame
+            local isWall=object.Name=="Side corridor end wall"
+            object.Size=Vector3.new(isWall and 23.10 or 22.80,
+                object.Size.Y,object.Size.Z)
+            object.CFrame=CFrame.new(2.55,0,0)*moved
         end
     end
+
+    -- A narrow brass transition masks the material/height seam between the
+    -- dark staff vestibule and the long photographed square-tile corridor.
+    part(root,"Staff hallway floor transition strip",Vector3.new(22.35,.035,.34),
+        CFrame.new(48.48,.515,26.72),Color3.fromRGB(151,130,82),
+        Enum.Material.Metal,false)
 
     -- Turn the already-complete 108-stud hall ninety degrees around its open
     -- end. The near opening lands at (48.5, 26.75); the corridor then runs

@@ -169,8 +169,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ends=actual_parts("Photo hall end cap")
     side_caps=actual_parts("Side corridor end wall")
     staff_east=actual_parts("Staff entry outer east wall")
+    transitions=actual_parts("Staff hallway floor transition strip")
+    east_caps=actual_parts("Staff entry east wall oak cap rail")
     assert (len(floor_parts),len(rear),len(north),len(ends),
-            len(side_caps),len(staff_east))==(1,1,1,1,1,1), (
+            len(side_caps),len(staff_east),len(transitions),len(east_caps))==(
+                1,1,1,1,1,1,1,1), (
         "PERPENDICULAR_CORRIDOR_STRUCTURE_MISSING"
     )
     assert (abs(float(floor_parts[0][9])-48.5)<.03
@@ -191,11 +194,21 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             ), (
         "PERPENDICULAR_CORRIDOR_FAR_END_NOT_SEALED"
     )
-    assert (abs(float(side_caps[0][11])-4.25)<.05
+    assert (abs(float(side_caps[0][9])-48.05)<.05
+            and abs(float(side_caps[0][11])-4.25)<.05
+            and float(side_caps[0][6])>=23.0
             and abs(float(staff_east[0][9])-59.6)<.05
             and float(staff_east[0][8])>=22.9
             ), (
         "PERPENDICULAR_CORRIDOR_VESTIBULE_SKY_GAP"
+    )
+    assert (abs(float(transitions[0][9])-48.48)<.05
+            and abs(float(transitions[0][11])-26.72)<.05
+            and float(transitions[0][6])>=22.3
+            and abs(float(east_caps[0][9])-58.95)<.05
+            and float(east_caps[0][8])>=22.7
+            ), (
+        "PERPENDICULAR_CORRIDOR_FINISH_TRIM_MISSING"
     )
     assert not actual_parts("Side hall far wall"), (
         "PERPENDICULAR_CORRIDOR_OLD_X54_CROSS_WALL_RETURNED"

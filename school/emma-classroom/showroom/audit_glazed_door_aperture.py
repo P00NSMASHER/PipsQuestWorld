@@ -149,10 +149,10 @@ local function verifyStaff()
         and not staffPanel.CanCollide and not staffPanel.CanTouch
         and staffPanel:GetAttribute("StaffDoorPanel")~=nil,
         "STAFF_APERTURE_OPAQUE_FULL_HEIGHT_SLAB")
-    assert(math.abs(staffPanel.Position.X-35.90)<.05
+    assert(math.abs(staffPanel.Position.X-33.70)<.05
         and math.abs(staffPanel.Position.Y-2.45)<.05
-        and math.abs(staffPanel.Position.Z-17.00)<.05,
-        "STAFF_APERTURE_HINGE_OR_LOWER_LEAF_MOVED")
+        and math.abs(staffPanel.Position.Z-19.30)<.05,
+        "STAFF_APERTURE_INWARD_PARK_POSITION_MOVED")
     assert(staffGlass.Material==Enum.Material.Glass
         and staffGlass.Transparency>.20 and staffGlass.Transparency<.45
         and staffGlass.Reflectance<.06
