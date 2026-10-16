@@ -53,7 +53,7 @@ local function verify()
     for _,p in ipairs(purpleLegs) do allLegs[#allLegs+1]=p end
     for _,p in ipairs(allLegs) do
         assert(p.Material==Enum.Material.Metal
-            and p.CanCollide and p.CanTouch
+            and p.CanCollide and p.CanQuery and not p.CanTouch
             and math.abs(p.Size.X-1.43)<.02
             and math.abs(p.Size.Y-.14)<.02
             and math.abs(p.Size.Z-.14)<.02,
@@ -125,6 +125,12 @@ reject(function() legs[1].CanCollide=false end,
        "CHAIR_METAL_LEG_SHAPE_OR_COLLISION_CHANGED",
        "chair_leg_collision_removed")
 
+local oldCanTouch=legs[1].CanTouch
+reject(function() legs[1].CanTouch=true end,
+       function() legs[1].CanTouch=oldCanTouch end,
+       "CHAIR_METAL_LEG_SHAPE_OR_COLLISION_CHANGED",
+       "chair_leg_unused_touch_restored")
+
 local oldSeatName=seats[1].Name
 reject(function() seats[1].Name="Test removed seat" end,
        function() seats[1].Name=oldSeatName end,
@@ -132,7 +138,7 @@ reject(function() seats[1].Name="Test removed seat" end,
 
 verify()
 print("CHAIR_BURIED_GEOMETRY_ADVERSARIAL_PASS "
-    .."student_foot,purple_foot,leg_height,leg_collision,seat_count_rejected=true")
+    .."student_foot,purple_foot,leg_height,leg_collision,leg_touch,seat_count_rejected=true")
 '''
 
 
@@ -157,7 +163,7 @@ def main() -> None:
     for marker in required:
         assert any(line.startswith(marker) for line in lines), marker
     assert sum(line.startswith("CHAIR_BURIED_GEOMETRY_NEGATIVE_REJECTED")
-               for line in lines)==5, "Missing adverse chair-mutation detection"
+               for line in lines)==6, "Missing adverse chair-mutation detection"
     for line in lines:
         if line.startswith("CHAIR_BURIED_GEOMETRY_"):
             print(line,flush=True)
