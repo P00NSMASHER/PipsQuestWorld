@@ -31,6 +31,24 @@ local function near(a,b,tolerance)
     return math.abs(a-b)<(tolerance or .035)
 end
 local function check()
+    -- Round 3: move, do not duplicate, the reading banner; match the pair.
+    assert(#parts("Cubbies label")==0,"READING_BANNER_OLD_LOCATION_REMAINED")
+    local reading=one("Reading window banner")
+    local faith=one("Classroom faith window banner")
+    assert(near(reading.Position.Z,-19) and near(faith.Position.Z,6)
+        and near(reading.Position.Y,faith.Position.Y)
+        and near(reading.Size.X,faith.Size.X) and near(reading.Size.Y,faith.Size.Y)
+        and near(reading.Size.Z,faith.Size.Z)
+        and near(reading.Color.R,faith.Color.R) and near(reading.Color.G,faith.Color.G)
+        and near(reading.Color.B,faith.Color.B),
+        "WINDOW_BANNERS_NOT_MATCHED")
+    local infill=one("Staff door upper gap infill")
+    local header=one("Staff door header")
+    assert(near(infill.Position.Y-infill.Size.Y/2,header.Position.Y+header.Size.Y/2)
+        and near(infill.Position.Y+infill.Size.Y/2,13),"STAFF_HEADER_GAP")
+    assert(#parts("Staff doorway exterior brick")==2
+        and one("Staff doorway exterior brick header").Material==Enum.Material.Brick,
+        "STAFF_EXTERIOR_FINISH_MISSING")
     -- Photo 1: no freestanding cabinet may obstruct the staff-door corner.
     assert(#parts("Tall storage cabinet")==0 and #parts("Cabinet door panel")==0,
         "OWNER_POLISH_OBSTRUCTING_CABINET_RETURNED")

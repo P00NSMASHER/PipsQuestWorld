@@ -33,6 +33,43 @@ function StaffModel.create(teacher,scaleOverride:number?)
     for name,cf in pairs({NeckRigAttachment=CFrame.new(0,-.5,0),HairAttachment=CFrame.new(0,.6,0),HatAttachment=CFrame.new(0,.6,0)}) do
         local a=Instance.new("Attachment");a.Name=name;a.CFrame=cf;a.Parent=head
     end
+    if isBenulis then
+        -- Fit the native mesh limbs using their actual joint attachments,
+        -- not the catalog export's separated display transforms. Widen the
+        -- slender limbs without stretching their length or replacing meshes.
+        for _,p in ipairs(model:GetChildren()) do
+            if p:IsA("MeshPart") then
+                local limb=string.find(p.Name,"Arm") or string.find(p.Name,"Leg")
+                local factor=limb and Vector3.new(1.28,1,1.18) or Vector3.new(1,1,1)
+                p.Size=p.Size*factor
+                p.TextureID=""
+                for _,a in ipairs(p:GetChildren()) do
+                    if a:IsA("Attachment") then
+                        a.CFrame=CFrame.new(a.Position*factor)*a.CFrame.Rotation
+                    end
+                end
+            end
+        end
+        local function connect(parentName,childName,attachmentName)
+            local parent=model:FindFirstChild(parentName)
+            local child=model:FindFirstChild(childName)
+            local a=parent and parent:FindFirstChild(attachmentName)
+            local b=child and child:FindFirstChild(attachmentName)
+            assert(a and b,"Missing staff rig attachment: "..attachmentName)
+            child.CFrame=parent.CFrame*a.CFrame*b.CFrame:Inverse()
+        end
+        connect("UpperTorso","LowerTorso","WaistRigAttachment")
+        connect("UpperTorso","Head","NeckRigAttachment")
+        for _,side in ipairs({"Left","Right"}) do
+            connect("UpperTorso",side.."UpperArm",side.."ShoulderRigAttachment")
+            connect(side.."UpperArm",side.."LowerArm",side.."ElbowRigAttachment")
+            connect(side.."LowerArm",side.."Hand",side.."WristRigAttachment")
+            connect("LowerTorso",side.."UpperLeg",side.."HipRigAttachment")
+            connect(side.."UpperLeg",side.."LowerLeg",side.."KneeRigAttachment")
+            connect(side.."LowerLeg",side.."Foot",side.."AnkleRigAttachment")
+        end
+        model:SetAttribute("LimbFit","attachment_aligned_widened_native_r15")
+    end
     local face
     if male then
         face=Instance.new("Decal");face.Name="face";face.Face=Enum.NormalId.Front;face.Texture="rbxasset://textures/face.png"
