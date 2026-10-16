@@ -81,7 +81,8 @@ assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on 
 assert "pencilCup(root,21.5,4.08,-24.2)" in room, "Teacher pencil cup hovers above desktop"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
 gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
-assert "CFrame.new(22,3.365,-22.6)" in gallery, "Stationery tray no longer touches teacher desk"
+assert '"Teacher desk wooden stationery tray"' not in gallery, "Overlapping teacher stationery tray returned"
+assert '"Teacher wooden colored pencil"' not in gallery, "Overlapping colored pencil board returned"
 assert "CFrame.new(30.5,3.315,-24.0)" in gallery, "Teacher papers no longer rest on desk"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main

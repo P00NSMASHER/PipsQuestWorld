@@ -73,8 +73,8 @@ local function verifyPhotoPolygons()
     local icons=parts("Photo-guided shape icon")
     assert(#icons==9,"PHOTO_SHAPE_ICON_PART_BUDGET_CHANGED")
     local expected={
-        TRIANGLE=-27.30, PENTAGON=-17.90,
-        HEXAGON=-15.55, STAR=-13.20,
+        TRIANGLE=-26.50, PENTAGON=-16.50,
+        HEXAGON=-14.00, STAR=-11.50,
     }
     local seen={}
     for _,icon in ipairs(icons) do
@@ -273,8 +273,9 @@ local function verify()
         end
     end
 
-    assert(math.abs(left.Position.X+22)<.03
-        and math.abs(right.Position.X-20.2)<.03
+    assert(math.abs(left.Position.X+21.5)<.03
+        and math.abs(right.Position.X-21.5)<.03
+        and math.abs(left.Size.X-right.Size.X)<.03
         and math.abs(left.Position.Y-right.Position.Y)<.03,
         "PHOTO_WOOD_TWO_STRIPS_MISALIGNED")
     assert(signText(left)=="0  10  20  30  40  50  60"
@@ -297,11 +298,11 @@ local function verify()
     -- RIGHT cabinet while the source's real central door remains open.
     local rightCards=parts("Photo-guided right cabinet shape card")
     local rightNames={"CIRCLE","OVAL","SQUARE","DIAMOND",
-        "RECTANGLE","CROSS","CAPSULE","ARCH"}
-    assert(#rightCards==8,"PHOTO_RIGHT_SHAPE_COUNT_INVALID")
+        "RECTANGLE","CROSS","CAPSULE","ARCH","STAR"}
+    assert(#rightCards==9,"PHOTO_RIGHT_SHAPE_COUNT_INVALID")
     table.sort(rightCards,function(a,b) return a.Position.X<b.Position.X end)
     for i,card in ipairs(rightCards) do
-        assert(math.abs(card.Position.X-(9.8+(i-1)*3.0))<.03
+        assert(math.abs(card.Position.X-(11.5+(i-1)*2.5))<.03
             and math.abs(card.Position.Y-16.48)<.03
             and math.abs(card.Position.Z-26.32)<.03
             and card.Position.X-card.Size.X/2>7.2

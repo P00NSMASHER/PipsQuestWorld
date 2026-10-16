@@ -432,6 +432,7 @@ end
 
 local function learningWall(root:Instance)
     local group=makeGroup(root,"Morning routines and learning wall")
+    local jobsZ=-27.4
     -- The original 18x2.5 navy GRADE 2 banner was an invented showroom
     -- graphic, not photographed architecture. It lay directly behind the
     -- 0-120 teaching strip and intruded into the nine shape cards above it.
@@ -439,16 +440,16 @@ local function learningWall(root:Instance)
     -- colored shape cards remain distinct against the actual yellow wall.
     -- No grade/curriculum value is inferred from historic photo signage.
     piece(group,"Daily jobs cork backing",Vector3.new(.18,6.6,9.8),
-        CFrame.new(36.28,9.6,-31),C.wood,Enum.Material.Wood,false)
+        CFrame.new(36.28,9.6,jobsZ),C.wood,Enum.Material.Wood,false)
     piece(group,"Jobs board frame",Vector3.new(.23,7.05,10.25),
-        CFrame.new(36.25,9.6,-31),C.woodEdge,Enum.Material.Wood,false)
+        CFrame.new(36.25,9.6,jobsZ),C.woodEdge,Enum.Material.Wood,false)
     for i,job in ipairs({"HELPER","READER","ARTIST","LEADER"}) do
         local color=({C.mint,C.golden,C.coral,C.blue})[i]
         local card=piece(group,"Daily helper job card",Vector3.new(.05,1.24,7.7),
-            CFrame.new(36.10,12.1-(i-1)*1.56,-31),color,Enum.Material.SmoothPlastic,false)
+            CFrame.new(36.10,12.1-(i-1)*1.56,jobsZ),color,Enum.Material.SmoothPlastic,false)
         printed(card,job,Enum.NormalId.Left,C.ink,color)
         orb(group,"Jobs board pushpin",Vector3.new(.13,.13,.13),
-            CFrame.new(36.04,12.1-(i-1)*1.56,-34.2),C.brass,Enum.Material.Metal)
+            CFrame.new(36.04,12.1-(i-1)*1.56,jobsZ-3.2),C.brass,Enum.Material.Metal)
     end
     -- The supplied school photos show framed *shape flashcards* and a
     -- long 0-120 counting strip above substantial dark-wood cabinets.
@@ -460,7 +461,7 @@ local function learningWall(root:Instance)
     for i,name in ipairs(shapes) do
         -- Keep all nine cards over SOLID back-wall carpentry. The former
         -- 3.2-stud spacing drifted the final cards over the rear doorway.
-        local x=-32+(i-1)*2.35
+        local x=-31.5+(i-1)*2.5
         local tint=cardColors[(i-1)%#cardColors+1]
         local card=piece(group,"Photo-guided wall shape card",
             Vector3.new(2.2,1.3,.08),CFrame.new(x,16.5,26.32),
@@ -492,13 +493,13 @@ local function learningWall(root:Instance)
     -- cover only the left bookcase; this lightweight continuation covers the
     -- right, with a real center-door gap. Wording is generic illustrative
     -- decoration rather than verified teacher lesson content.
-    -- Exactly 8 noncolliding physical card panels; the shape silhouettes
+    -- Nine mirrored noncolliding physical card panels; the shape silhouettes
     -- use only native SurfaceGui Frames, not texture assets or child photos.
     local rightShapes={"CIRCLE","OVAL","SQUARE","DIAMOND",
-        "RECTANGLE","CROSS","CAPSULE","ARCH"}
+        "RECTANGLE","CROSS","CAPSULE","ARCH","STAR"}
     local rightColors={C.coral,C.golden,C.blue,C.mint,C.lilac}
     for i,name in ipairs(rightShapes) do
-        local x=9.8+(i-1)*3.0
+        local x=11.5+(i-1)*2.5
         local tone=rightColors[(i+1)%#rightColors+1]
         local card=piece(group,"Photo-guided right cabinet shape card",
             Vector3.new(2.35,1.27,.08),CFrame.new(x,16.48,26.32),
@@ -573,27 +574,27 @@ local function learningWall(root:Instance)
     -- spanning the central door. The older right cabinet strip remains in
     -- its existing approved location, and the two ranges are not duplicated.
     local leftNumbers=piece(group,"Library counting strip backing",
-        Vector3.new(18.8,.86,.10),CFrame.new(-22,14.55,26.24),
+        Vector3.new(21,.86,.10),CFrame.new(-21.5,14.55,26.24),
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(leftNumbers,"0  10  20  30  40  50  60",
         Enum.NormalId.Front,C.navy,leftNumbers.Color)
     consecutiveNumberStrip(leftNumbers,0,60)
     piece(group,"Library counting strip top rail",
-        Vector3.new(19.05,.075,.11),CFrame.new(-22,15.015,26.23),
+        Vector3.new(21.25,.075,.11),CFrame.new(-21.5,15.015,26.23),
         C.blue,Enum.Material.Wood,false)
     piece(group,"Library counting strip bottom rail",
-        Vector3.new(19.05,.085,.11),CFrame.new(-22,14.08,26.23),
+        Vector3.new(21.25,.085,.11),CFrame.new(-21.5,14.08,26.23),
         C.leaf,Enum.Material.Wood,false)
     local numberLine=piece(group,"Photo-guided cabinet counting strip",
-        Vector3.new(25.6,.86,.10),CFrame.new(20.2,14.55,26.24),
+        Vector3.new(21,.86,.10),CFrame.new(21.5,14.55,26.24),
         Color3.fromRGB(232,235,210),Enum.Material.SmoothPlastic,false)
     printed(numberLine,"70  80  90  100  110  120",
         Enum.NormalId.Front,C.navy,numberLine.Color)
     consecutiveNumberStrip(numberLine,61,120)
-    piece(group,"Counting strip blue top trim",Vector3.new(26,.075,.11),
-        CFrame.new(20.2,15.015,26.23),C.blue,Enum.Material.Wood,false)
-    piece(group,"Counting strip green bottom trim",Vector3.new(26,.085,.11),
-        CFrame.new(20.2,14.08,26.23),C.leaf,Enum.Material.Wood,false)
+    piece(group,"Counting strip blue top trim",Vector3.new(21.25,.075,.11),
+        CFrame.new(21.5,15.015,26.23),C.blue,Enum.Material.Wood,false)
+    piece(group,"Counting strip green bottom trim",Vector3.new(21.25,.085,.11),
+        CFrame.new(21.5,14.08,26.23),C.leaf,Enum.Material.Wood,false)
     -- Do not fake sunlit plank highlights with paper-thin overlays. Natural
     -- window lighting supplies the floor response without z-fighting strips.
 end
@@ -602,22 +603,23 @@ end
 -- This lives in the world and leaves the question SurfaceGui untouched.
 local function focalTeachingArea(root:Instance)
     local group=makeGroup(root,"Smartboard and teacher's art corner")
+    local teachingCenter=0
     local metal=Color3.fromRGB(219,226,226)
     -- Match every existing metal highlight to the larger white housing.
     -- Borders remain slightly inset so they do not read as floating rails.
     for _,y in ipairs({4.62,11.78}) do
         piece(group,"Smartboard satin aluminum trim",Vector3.new(19.77,.11,.12),
-            CFrame.new(5.2,y,-31.29),metal,Enum.Material.Metal,false)
+            CFrame.new(teachingCenter,y,-31.29),metal,Enum.Material.Metal,false)
     end
-    for _,x in ipairs({-4.68,15.08}) do
+    for _,x in ipairs({-9.88,9.88}) do
         piece(group,"Smartboard protective edge",Vector3.new(.14,7.15,.13),
             CFrame.new(x,8.2,-31.29),metal,Enum.Material.Metal,false)
     end
     piece(group,"Writable marker shelf",Vector3.new(7.3,.15,.75),
-        CFrame.new(5.2,4.44,-30.99),C.cream,Enum.Material.SmoothPlastic,false)
+        CFrame.new(teachingCenter,4.44,-30.99),C.cream,Enum.Material.SmoothPlastic,false)
     local markerColors={C.coral,C.blue,C.mint,C.golden}
     for i,c in ipairs(markerColors) do
-        local x=2.95+(i-1)*1.20
+        local x=-2.25+(i-1)*1.20
         piece(group,"Smartboard marker body",Vector3.new(.72,.13,.13),
             CFrame.new(x,4.58,-30.74),c,Enum.Material.SmoothPlastic,false)
         piece(group,"Smartboard marker cap",Vector3.new(.14,.15,.15),

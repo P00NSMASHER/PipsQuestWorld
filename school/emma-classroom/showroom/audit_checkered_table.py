@@ -86,7 +86,7 @@ local function verify()
     -- still entirely under that photographed board, without shifting any
     -- desk, doorway or teacher circulation.
     assert(top.Position.X+top.Size.X/2<36.0
-        and math.abs(top.Position.Z-wall.Position.Z-3.5)<.03
+        and math.abs(top.Position.Z-wall.Position.Z-3.375)<.03
         and math.abs(top.Position.X-wall.Position.X)<3.4
         and top.Position.Z-top.Size.Z/2>wall.Position.Z-wall.Size.Z/2
         and top.Position.Z+top.Size.Z/2<wall.Position.Z+wall.Size.Z/2,

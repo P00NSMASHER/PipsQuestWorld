@@ -115,7 +115,8 @@ function StaffModel.create(teacher)
         end
     end
     -- Staff badge remains a small world-space name, never a screen-sized banner.
-    local label=Instance.new("BillboardGui");label.Name="TeacherName";label.Size=UDim2.fromScale(4.2,.5);label.StudsOffset=Vector3.new(0,3.25,0)
+    local label=Instance.new("BillboardGui");label.Name="TeacherName";label.Size=UDim2.fromScale(4.2,.5);label.StudsOffset=Vector3.new(0,4.65,0)
+    label:SetAttribute("PlacementContract","Above hairline with clear visual gap")
     label.AlwaysOnTop=false;label.MaxDistance=28;label.Parent=root
     local name=Instance.new("TextLabel");name.Name="Staff badge";name.Size=UDim2.fromScale(1,1);name.BackgroundColor3=GREEN;name.BackgroundTransparency=.08
     name.Text=teacher.name;name.TextColor3=GOLD;name.TextScaled=true;name.Font=Enum.Font.GothamBold;name.Parent=label

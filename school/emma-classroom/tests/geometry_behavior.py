@@ -143,7 +143,11 @@ for _,teacher in ipairs(Data.Teachers) do
     assert(groups.leftArm==3 and groups.rightArm==3 and groups.leftLeg==3 and groups.rightLeg==3)
     assert(groups.head and groups.head>=1,"Head must share a synchronized pose frame with hair/glasses")
     assert(m.PrimaryPart:FindFirstChild("Speech").Enabled==false)
-    assert(m.PrimaryPart:FindFirstChild("TeacherName").Size[1]==4.2)
+    local teacherName=m.PrimaryPart:FindFirstChild("TeacherName")
+    assert(teacherName.Size[1]==4.2
+        and math.abs(teacherName.StudsOffset.Y-4.65)<.01
+        and teacherName:GetAttribute("PlacementContract")=="Above hairline with clear visual gap",
+        "Teacher nameplate must sit above the avatar's hairline")
     assert(not m:FindFirstChild("Ear") and not m:FindFirstChild("Connected hair cap") and not m:FindFirstChild("Smooth beard chin"),"Never reuse rejected procedural head/hair shapes")
     local accessory=m:FindFirstChildOfClass("Accessory")
     if teacher.hairStyle=="balding" then assert(not accessory) else

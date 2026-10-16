@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'school/emma-classroom/showroom/**'
+      - 'school/emma-classroom/server/StaffModel.lua'
       - 'school/emma-showroom.project.json'
       - 'school/emma-classroom/tests/furniture_adapter_runtime.py'
       - 'school/emma-classroom/RELEASE_RECEIPT.json'
@@ -124,10 +125,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
+          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/server/StaffModel.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" > /dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
+
+      - name: Verify owner-requested classroom polish and teacher nameplate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_owner_polish.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
 
       - name: Check original anonymous hallway art and mobile UI draw budget
         shell: bash

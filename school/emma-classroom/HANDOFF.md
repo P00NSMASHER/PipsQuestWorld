@@ -1,3 +1,30 @@
+## October 16, 2026 — owner nine-photo classroom alignment pass
+
+**Branch:** existing isolated draft PR #355. No merge, promotion or Roblox
+publication was performed.
+
+**Implemented:** removed the freestanding cabinet behind the staff doorway;
+closed and polished the centered supply-closet doors; corrected the tissue to
+clean white; removed the striped wooden stationery tray; separated notebook,
+pencil and name-strip zones on all sixteen desks; centered the chalkboard,
+Smartboard, alphabet, handwriting strip and cross; aligned and evenly spaced
+the jobs, BE KIND and word-wall displays; rebuilt BE KIND with four crisp
+native value rows; mirrored the rear counting/shape decorations around the
+closet; made the two window decoration spans equal around the centered clock;
+and raised the teacher nameplate above the avatar hairline.
+
+**Actually tested:** all changed Luau compiles; constructed scene export passes
+at 2,997 physical Parts; owner-polish audit passes all nine views, all sixteen
+desks and its moved-Smartboard negative mutation; updated word-wall, window,
+photo-landmark, glazed-door, literacy-wall and notebook audits pass, including
+their adversarial mutations. Native Roblox/iPhone visual acceptance remains
+unverified.
+
+**Release hold:** keep PR #355 draft. Source checks do not authorize merge or
+publication; retain the existing native-device and release-security gates.
+
+---
+
 ## October 15, 2026 — second classroom polish / maintenance pass
 
 **Branch:** existing isolated PR #355, stacked on straight-hallway draft

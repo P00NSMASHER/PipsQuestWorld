@@ -133,7 +133,7 @@ local function framedPoster(group:Instance,name:string,x:number,y:number,z:numbe
         CFrame.new(x+(side and -.20 or 0),y,z+(side and 0 or -.18)),
         paperTone,Enum.Material.SmoothPlastic,false)
     printFace(front,face,title,caption,paperTone,C.navy)
-    return frame
+    return frame,front
 end
 
 local function showcaseBoards(root:Instance,group:Instance)
@@ -144,14 +144,54 @@ local function showcaseBoards(root:Instance,group:Instance)
             object:Destroy()
         end
     end
-    framedPoster(group,"ABVM classroom values",36.27,10.1,-18.0,7.5,5.0,
-        "BE KIND","Be respectful  •  Be your best",Enum.NormalId.Left)
+    local _,valuesArt=framedPoster(group,"ABVM classroom values",36.27,9.6,-16.925,7.5,6.70,
+        "BE KIND","",Enum.NormalId.Left)
+    -- A crisp native poster replaces the low-detail two-line placeholder.
+    -- Its outer height now exactly matches both neighboring bulletin boards.
+    local valuesGui=valuesArt:FindFirstChild("InWorldSignage")
+    if valuesGui and valuesGui:IsA("SurfaceGui") then
+        local backdrop=valuesGui:FindFirstChildOfClass("Frame")
+        if backdrop then
+            local heading=backdrop:FindFirstChild("DecorativeHeading")
+            if heading and heading:IsA("TextLabel") then
+                heading.Size=UDim2.fromScale(.86,.21)
+                heading.Position=UDim2.fromScale(.07,.05)
+                heading.TextColor3=C.navy
+            end
+            local labels={"HELP OTHERS","USE KIND WORDS","LISTEN","INCLUDE EVERYONE"}
+            local tones={
+                Color3.fromRGB(184,218,205),Color3.fromRGB(245,214,139),
+                Color3.fromRGB(231,160,151),Color3.fromRGB(153,190,213),
+            }
+            for i,labelText in ipairs(labels) do
+                local row=Instance.new("Frame")
+                row.Name="KindnessValueRow"
+                row.Size=UDim2.fromScale(.76,.13)
+                row.Position=UDim2.fromScale(.12,.29+(i-1)*.155)
+                row.BackgroundColor3=tones[i]
+                row.BorderSizePixel=0
+                row.Parent=backdrop
+                local corner=Instance.new("UICorner")
+                corner.CornerRadius=UDim.new(0,12)
+                corner.Parent=row
+                local label=Instance.new("TextLabel")
+                label.Name="KindnessValueLabel"
+                label.Size=UDim2.fromScale(1,1)
+                label.BackgroundTransparency=1
+                label.Font=Enum.Font.GothamBold
+                label.Text=labelText
+                label.TextColor3=C.navy
+                label.TextScaled=true
+                label.Parent=row
+            end
+        end
+    end
     -- Photo evidence: small pale-green FIRST GRADE WORD WALL card directly
     -- above the apple board; the prior 9.4x3 giant generic slogan was
     -- visually unrelated to this photographed corner. Reuse its existing
     -- TWO physical Parts, but make the title child-sized and correctly green.
     -- This historic grade label is room scenery, NOT lesson/test authority.
-    framedPoster(group,"Photo word wall title",36.27,11.48,-2.5,5.4,1.20,
+    framedPoster(group,"Photo word wall title",36.27,14.0,-2.375,5.4,1.20,
         "FIRST GRADE\nWORD WALL","",Enum.NormalId.Left,
         Color3.fromRGB(158,201,140))
 
@@ -165,17 +205,17 @@ local function showcaseBoards(root:Instance,group:Instance)
     -- (ending near -14) and the real staff-door jamb (starting at +8.3).
     -- Lower edge descends toward the photographed checkered table; top stays
     -- below the title. Keep ALL existing 1+4 frame/board Parts.
-    local board=piece(group,"Class notice board",Vector3.new(.30,6.2,18.0),
-        CFrame.new(36.22,7.4,-2.5),Color3.fromRGB(120,174,207),
+    local board=piece(group,"Class notice board",Vector3.new(.30,6.65,18.0),
+        CFrame.new(36.22,9.6,-2.375),Color3.fromRGB(120,174,207),
         Enum.Material.SmoothPlastic,false)
     board.Reflectance=0
-    for _,z in ipairs({-11.4,6.4}) do
-        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,6.6,.25),
-            CFrame.new(36.03,7.4,z),C.oak,Enum.Material.Wood,false)
+    for _,z in ipairs({-11.575,6.825}) do
+        piece(group,"Noticeboard vertical oak frame",Vector3.new(.40,7.05,.25),
+            CFrame.new(36.03,9.6,z),C.oak,Enum.Material.Wood,false)
     end
-    for _,y in ipairs({4.16,10.64}) do
+    for _,y in ipairs({6.15,13.05}) do
         piece(group,"Noticeboard horizontal oak frame",Vector3.new(.40,.25,18.4),
-            CFrame.new(36.03,y,-2.5),C.oak,Enum.Material.Wood,false)
+            CFrame.new(36.03,y,-2.375),C.oak,Enum.Material.Wood,false)
     end
     -- The real photo has dense evergreen foliage across the full width.
     -- Resize the same structural band and reuse the same thirteen native
@@ -185,7 +225,7 @@ local function showcaseBoards(root:Instance,group:Instance)
     -- overlaps the apple-letter row at y=10.13 or the paper title above.
     -- No mesh assets, school images, scripts or gameplay are introduced.
     piece(group,"Word wall green garland",Vector3.new(.10,.15,17.6),
-        CFrame.new(35.96,10.41,-2.5),Color3.fromRGB(50,95,62),
+        CFrame.new(35.96,12.61,-2.375),Color3.fromRGB(50,95,62),
         Enum.Material.SmoothPlastic,false)
     local evergreen={
         Color3.fromRGB(39,81,53),Color3.fromRGB(54,102,62),
@@ -193,8 +233,8 @@ local function showcaseBoards(root:Instance,group:Instance)
     }
     for i=0,12 do
         local offset=((i*7)%5-2)*.037
-        local y=10.65+((i*3)%4)*.003
-        local z=-10.75+i*1.37+offset
+        local y=12.85+((i*3)%4)*.003
+        local z=-10.625+i*1.37+offset
         local sizeY=.29+((i*5)%4)*.013
         local sizeZ=1.25+((i*3)%4)*.07
         local leaf=piece(group,"Word wall evergreen garland tuft",
@@ -212,8 +252,8 @@ local function showcaseBoards(root:Instance,group:Instance)
         "school","said","with","write","you"}
     for row=0,2 do
         for col=0,4 do
-            local z=-10.20+col*3.65
-            local y=9.10-row*1.53
+            local z=-10.075+col*3.65
+            local y=11.30-row*1.53
             local sheet=piece(group,"Word wall word card",Vector3.new(.055,.73,2.20),
                 CFrame.new(35.95,y,z),C.paper,Enum.Material.SmoothPlastic,false)
             printFace(sheet,Enum.NormalId.Left,words[row*5+col+1],"",C.paper,C.navy)
@@ -228,8 +268,8 @@ local function showcaseBoards(root:Instance,group:Instance)
     for row=0,1 do
         for col=0,12 do
             local i=row*13+col+1
-            local z=-10.48+col*1.30
-            local y=(row==0) and 10.13 or 4.82
+            local z=-10.355+col*1.30
+            local y=(row==0) and 12.33 or 7.02
             local apple=piece(group,"Word wall apple",
                 Vector3.new(.085,.43,.43),CFrame.new(35.91,y,z),
                 Color3.fromRGB(189,61,55),Enum.Material.SmoothPlastic,false)
@@ -329,8 +369,8 @@ local function showcaseBoards(root:Instance,group:Instance)
         -- explicitly governed feature, not static photo-fidelity art.
         -- Hardware, not a giant question-card UI.
         piece(group,"Interactive board camera",Vector3.new(.28,.28,.23),
-            CFrame.new(5.2,11.58,-31.32),C.slate,Enum.Material.Metal,false)
-        for _,x in ipairs({2.6,3.3,4.0}) do
+            CFrame.new(0,11.58,-31.32),C.slate,Enum.Material.Metal,false)
+        for _,x in ipairs({-2.6,-1.9,-1.2}) do
             piece(group,"Interactive board stylus",Vector3.new(.12,.12,1.05),
                 CFrame.new(x,4.79,-30.99)*CFrame.Angles(0,math.rad(90),0),
                 x<2 and C.slate or C.metal,Enum.Material.SmoothPlastic,false)
@@ -479,7 +519,11 @@ local function physicalDetails(root:Instance,group:Instance)
     end
     for _,door in ipairs(root:GetChildren()) do
         if door.Name=="Open classroom door" or door.Name=="Open staff classroom door" then
-            local nearEdge=door.Name=="Open classroom door" and door.Size.X/2-.65 or 0
+            local nearEdge=0
+            if door.Name=="Open classroom door" then
+                local inset=door.Size.X/2-.65
+                nearEdge=door.Position.X<0 and inset or -inset
+            end
             local plate=piece(group,"Classroom door handle plate",Vector3.new(.56,1.0,.06),
                 door.CFrame*CFrame.new(nearEdge,-.7,-.32),C.metal,Enum.Material.Metal,false)
             sphere(group,"Classroom brass door knob",Vector3.new(.42,.42,.42),
@@ -487,16 +531,6 @@ local function physicalDetails(root:Instance,group:Instance)
         end
     end
 
-    -- Desk top y=3.29: keep the underside of trays and paper in physical contact
-    -- with it, while small pencils sit on the tray, not suspended in midair.
-    -- Small physical supplies on the teaching desk rather than more HUD labels.
-    piece(group,"Teacher desk wooden stationery tray",Vector3.new(2.5,.15,1.6),
-        CFrame.new(22,3.365,-22.6),C.oak,Enum.Material.Wood,false)
-    for i=1,6 do
-        piece(group,"Teacher wooden colored pencil",Vector3.new(.10,.09,1.18),
-            CFrame.new(21.2+i*.23,3.49,-22.5),
-            ({C.pencil,C.blue,C.green})[(i-1)%3+1],Enum.Material.Wood,false)
-    end
     -- Single ruled-paper SurfaceGui replaces four sub-centimeter Part lines.
     -- Native UI keeps readable desk stationery while reducing raycast/render
     -- objects; the static source renderer cannot reproduce SurfaceGui ink.
