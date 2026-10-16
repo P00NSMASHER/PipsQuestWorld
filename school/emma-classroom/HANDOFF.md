@@ -1,35 +1,48 @@
-## October 15, 2026 — isolated classroom polish / code maintenance candidate
+## October 15, 2026 — isolated classroom polish / code maintenance
 
-**Scope:** Stacked on the current straight-staff-hall draft #351, not on the
-obsolete game root or a Roblox production release. No merge/publication marker,
-portrait NPC, schoolwork pipeline, old build or workflow permissions changed.
+**Scope:** Stacked on straight-staff-hall draft PR #351 via new draft PR #355.
+No merge, publication, release marker, portrait NPC, teacher-data pipeline,
+old build, platform credentials, or workflow permissions changed.
 
 **Implemented:**
-- Add eight restrained, entirely noncolliding red fabric pipings/hems to the
-  photo-matched gingham teaching table. Retain the existing woven SurfaceGui,
-  layout, 16 student desks, word wall, two windows, and separate sealed closet.
-- Keep structural room solids queryable while excluding Room.lua's static
-  decorative details from raycast and touch work; physical collisions are unchanged.
-- Recalibrate the strict hallway yellow-window image gate to the current fixed
-  straight-axis 1920x1080 camera. No pixel thresholds, ray sectors or negative
-  mutation requirements relaxed. Remove a duplicate snapshot helper.
-- Extend the genuine constructed-Luau gingham QA with physical trim, raycast
-  invariants, and independently mutated failures.
+- Six static noncolliding original-red Fabric stitched piping/hem details
+  on the existing gingham teaching table; retains same weaving, room
+  coordinates, 16 desk/chair pairs, word wall, windows, and sealed closet.
+- Consolidated four very small physical teacher note rules into four native
+  SurfaceGui Frames on the existing note Part, saving four physical Parts.
+  Combined scene change is +2 physical Parts over the 3,047-Part base.
+- Room.lua's shared Part constructor preserves floor/chair-leg/desk/wall
+  collision and touch semantics. Noncolliding decorations are now excluded
+  from raycast and touch event work; no collision geometry is changed.
+- Kept the far hallway yellow-window semantic image thresholds unchanged
+  while recalibrating its old camera-specific ROIs against directly inspected
+  real rendered imagery from #351. All eight sun-ray checks preserved.
+- Removed a repeated actual-scene helper; expanded genuine constructed
+  Luau stationery/fabric, collider, raycast and synthetic mutation tests.
 
-**Evidence obtained before code change:** The last exact-head #351 build and
-classroom CI succeeded; the photo-geometry check failed falsely on the old
-jamb ROI. I inspected its real run #38727983742 image 07: both window jambs,
-panes and radial sun are visible. Measured new ROI candidate on that exact
-PNG: gold jambs 531/489 pixels vs 170 each; mullions 269/251 vs 120 each;
-dark upper panes 1551/1353 vs 450 each; all eight ray sectors exceed 3.
+**Actually tested at source commit c0fd7c76a19835dbfb8534cce69cfcafbbc4cad0:**
+- Exact-head Emma Classroom Replica CI: **PASS** #38829948890.
+- Source scene count **3,049**, strict 3,050-part and broad 3,100-part
+  limits pass; hallway/closet, photo landmark, native chair and geometry
+  regression and mutation controls pass; Luau and Rojo build pass.
+- Emma Classroom CI, school foundation, education and progression checks PASS.
+- Reproduced earlier failure (3,055 Parts above cap) and repaired without
+  increasing the existing threshold. Restored chair-leg touch contract after
+  a separate exact-Luau negative test caught its regression.
+- Previous source-rendered far window frame visibly existed but old test
+  ROI was stale. The corrected exact-image ROIs were independently measured
+  at 531/489 gold pixels left/right (>170) and 269/251 mullions (>120);
+  8/8 sun-ray sectors visible in the source-derived 1920x1080 screenshot.
 
-**Testing still required:** exact-head Luau/Rojo scene, collision/geometry,
-source-derived snapshot and adversarial CI, plus native Roblox Studio/iPhone
-walkthrough, lighting, image fidelity, mobile FPS and release authorization.
-Source-derived images do not equal native Roblox playback or visual acceptance.
+**Not tested / known limits:** Current source-derived visual run
+#38829948899 still requires its exact-head conclusion; native Roblox Studio
+and iPhone/iPad render, controls, real collision, performance and photo
+comparison cannot be certified by these source tests. Remote Studio device
+was offline. Source-built preview images are not native game captures.
 
-**Release boundary:** No live Roblox publication or merge. Keep a draft PR;
-release guard, teacher portrait approvals and source-owner review remain intact.
+**Release:** Keep PR #355 a draft. Do not merge, promote, publish or
+claim live photo fidelity from passing static/source validations. Apply
+existing release-security and native device approval gates.
 
 ---
 
