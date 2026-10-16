@@ -848,14 +848,16 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     assert .95<=float(window_banner[7])<=1.20 and (
         float(window_banner[10])+float(window_banner[7])/2 < 17
     ), "Classroom motto obstructs acoustic ceiling or window"
-    smore=only("Smore classroom main title")
+    assert by_name["Smore classroom main title"]==0, (
+        "Obsolete overlapping S'more title returned above the right window"
+    )
     smore_headline=only("Smore faith headline")
-    assert abs(float(smore[11])+19)<.025 and (
-        abs(float(smore_headline[11])+19)<.025
-    ), "S'more photo wall lost its original LEFT-window location"
-    assert float(smore[10])<float(smore_headline[10]) and (
-        14.75<float(smore[10])<15.55 and 15.40<float(smore_headline[10])<16.00
-    ), "S'more mural phrase moved below the school window or into ceiling"
+    assert abs(float(smore_headline[11])+19)<.025, (
+        "Faith photo wall lost its original LEFT-window location"
+    )
+    assert 15.40<float(smore_headline[10])<16.00, (
+        "Faith mural phrase moved below the school window or into ceiling"
+    )
     assert by_name["Smore mural pine trunk"]==2 and (
         by_name["Smore mural green canopy"]==4
     ), "Distinct two-pine S'more decoration disappeared"
