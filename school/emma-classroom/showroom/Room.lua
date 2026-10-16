@@ -2631,11 +2631,8 @@ function World.build()
         Color3.fromRGB(247,233,184),Enum.Material.SmoothPlastic,false)
     surfaceText(smoreTop,"JESUS LOVES YOU",Enum.NormalId.Right,
         Color3.fromRGB(120,60,50),smoreTop.Color,Enum.Font.GothamBold)
-    local smoreTitle=part(root,"Smore classroom main title",
-        Vector3.new(.14,.66,15.5),CFrame.new(-36.28,15.14,-19),
-        Color3.fromRGB(227,190,115),Enum.Material.Wood,false)
-    surfaceText(smoreTitle,"S'MORE",Enum.NormalId.Right,
-        Color3.fromRGB(65,45,34),smoreTitle.Color,Enum.Font.GothamBold)
+    -- Owner-requested overlap fix: retain the separate JESUS LOVES YOU
+    -- headline but remove the lower S'MORE title layer that crowded it.
     -- Two understated camping trees, not generic holiday decorations.
     -- Tiny original wood/foliage shapes echo the photo's S'more sign.
     for _,z in ipairs({-25.75,-12.25}) do
