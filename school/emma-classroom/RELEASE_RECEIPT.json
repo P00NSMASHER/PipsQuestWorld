@@ -26,5 +26,5 @@
   },
   "productionFurnitureMeshesEnabled": false,
   "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "Version 109 is the newest artifact-verified live binary. Its published source reports a perpendicular north-turn hallway, while the current straight outside-parallel hallway candidate is unpublished. Keep every newer PR source unpublished until independent native Studio/iPhone navigation, appearance and performance review, separate portrait acceptance, and a fresh guarded publication authorization. Never reuse the recorded one-time authorization."
+  "nextCandidatePolicy": "Version 109 is the newest artifact-verified live binary. Its published source reports a perpendicular north-turn hallway, while the current straight outside-parallel hallway is an unpublished candidate. Keep every newer PR source unpublished until independent native Studio/iPhone navigation, appearance and performance review, separate portrait acceptance, and a fresh guarded publication authorization. Never reuse the recorded one-time authorization."
 }
