@@ -2436,6 +2436,7 @@ local function alignHallwayWithStaffExit(root: Instance)
     oldBrick.Size=Vector3.new(22.20,12.7,.12)
     oldBrick.CFrame=CFrame.new(48.35,6.35,26.20)
     oldBrick.Color=Color3.fromRGB(192,132,63)
+    oldBrick.Reflectance=.035
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
