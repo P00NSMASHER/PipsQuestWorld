@@ -37,23 +37,20 @@ local function signText(p)
     return text
 end
 local function check()
-    local left=one("Smore classroom main title")
+    assert(#parts("Smore classroom main title")==0,
+        "WINDOW_CUE_OVERLAPPING_SMORE_BANNER_RETURNED")
     local headline=one("Smore faith headline")
     local faith=one("Classroom faith window banner")
-    assert(signText(left).Text=="S'MORE" and
-        signText(headline).Text=="JESUS LOVES YOU" and
+    assert(signText(headline).Text=="JESUS LOVES YOU" and
         signText(faith).Text=="I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         "WINDOW_CUE_WORDING_INVALID")
-    assert(math.abs(left.Position.Z+19)<.03 and
-        math.abs(headline.Position.Z+19)<.03 and
+    assert(math.abs(headline.Position.Z+19)<.03 and
         math.abs(faith.Position.Z-6)<.03,
         "WINDOW_CUE_BAY_POSITION_INVALID")
-    assert(left.Position.Y>14.90 and headline.Position.Y>15.40
-        and faith.Position.Y>14.90,
+    assert(headline.Position.Y>15.40 and faith.Position.Y>14.90,
         "WINDOW_CUE_SIGN_HEIGHT_INVALID")
-    assert(math.abs(left.Size.Z-faith.Size.Z)<.03
-        and math.abs(headline.Size.Z-faith.Size.Z)<.03
-        and math.abs((left.Position.Z+faith.Position.Z)/2+6.5)<.03,
+    assert(math.abs(headline.Size.Z-faith.Size.Z)<.03
+        and math.abs((headline.Position.Z+faith.Position.Z)/2+6.5)<.03,
         "WINDOW_CUE_DECOR_NOT_SYMMETRIC")
     assert(#parts("Smore mural pine trunk")==2 and
         #parts("Smore mural green canopy")==4,
@@ -154,7 +151,7 @@ local function check()
             "PHOTO_WINDOW_CLOCK_DECOR_COLLIDES")
     end
     local seen={"Classroom faith window banner","Smore faith headline",
-        "Smore classroom main title","Smore mural pine trunk",
+        "Smore mural pine trunk",
         "Smore mural green canopy","Photo window air conditioner housing",
         "Photo AC inset front grille","Photo AC horizontal vent louver",
         "Photo AC control fascia","Photo AC control dial"}
