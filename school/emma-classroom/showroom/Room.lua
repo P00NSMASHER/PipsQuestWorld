@@ -302,17 +302,11 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
         laminates[(index-1)%#laminates+1],.23,true,false)
     for _,dx in ipairs({-2.22,2.22}) do
         cylinder(parent,"Desk tubular leg",Vector3.new(2.75,.23,.23),CFrame.new(x+dx,1.5,z)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(133,139,143),Enum.Material.Metal,true)
-        -- The original T-foot Part remains the EXACT collidable physical
-        -- footprint for all sixteen student desks. At y=.18 it is buried
-        -- under the finished floor (top y=.5), so it was not a believable
-        -- visible base. Replace only its artwork with a rounded steel tube
-        -- resting ON the finished floor. No navigation/collision change.
-        local physicalFoot=part(parent,"Desk foot",
-            Vector3.new(.52,.16,3.10),CFrame.new(x+dx,.18,z),
-            Color3.fromRGB(76,82,86),Enum.Material.Metal)
-        physicalFoot.Transparency=1
-        physicalFoot.CanQuery=false
-        physicalFoot.CastShadow=false
+        -- The old T-foot was centered at y=.18 with a .16-stud height:
+        -- its top (.26) sat completely below the finished floor top (.50).
+        -- It could never be seen or reached through the collidable floor, so
+        -- retain the visible rounded runner and existing tubular-leg collision
+        -- while omitting 32 buried replicated Parts across the sixteen desks.
         local runner=cylinder(parent,"Desk contoured base runner",
             Vector3.new(3.10,.20,.20),
             CFrame.new(x+dx,.60,z)*CFrame.Angles(0,math.pi/2,0),
