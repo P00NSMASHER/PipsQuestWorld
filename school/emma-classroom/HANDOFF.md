@@ -1,3 +1,38 @@
+## October 15, 2026 — isolated classroom polish / code maintenance candidate
+
+**Scope:** Stacked on the current straight-staff-hall draft #351, not on the
+obsolete game root or a Roblox production release. No merge/publication marker,
+portrait NPC, schoolwork pipeline, old build or workflow permissions changed.
+
+**Implemented:**
+- Add eight restrained, entirely noncolliding red fabric pipings/hems to the
+  photo-matched gingham teaching table. Retain the existing woven SurfaceGui,
+  layout, 16 student desks, word wall, two windows, and separate sealed closet.
+- Keep structural room solids queryable while excluding Room.lua's static
+  decorative details from raycast and touch work; physical collisions are unchanged.
+- Recalibrate the strict hallway yellow-window image gate to the current fixed
+  straight-axis 1920x1080 camera. No pixel thresholds, ray sectors or negative
+  mutation requirements relaxed. Remove a duplicate snapshot helper.
+- Extend the genuine constructed-Luau gingham QA with physical trim, raycast
+  invariants, and independently mutated failures.
+
+**Evidence obtained before code change:** The last exact-head #351 build and
+classroom CI succeeded; the photo-geometry check failed falsely on the old
+jamb ROI. I inspected its real run #38727983742 image 07: both window jambs,
+panes and radial sun are visible. Measured new ROI candidate on that exact
+PNG: gold jambs 531/489 pixels vs 170 each; mullions 269/251 vs 120 each;
+dark upper panes 1551/1353 vs 450 each; all eight ray sectors exceed 3.
+
+**Testing still required:** exact-head Luau/Rojo scene, collision/geometry,
+source-derived snapshot and adversarial CI, plus native Roblox Studio/iPhone
+walkthrough, lighting, image fidelity, mobile FPS and release authorization.
+Source-derived images do not equal native Roblox playback or visual acceptance.
+
+**Release boundary:** No live Roblox publication or merge. Keep a draft PR;
+release guard, teacher portrait approvals and source-owner review remain intact.
+
+---
+
 ## October 12, 2026 â€” owner-requested classroom photo detail candidate
 
 Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.
