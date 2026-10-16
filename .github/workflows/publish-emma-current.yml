@@ -1,13 +1,14 @@
 name: Publish Current Emma Classroom Showroom
 
-# Release refresh: standard block NPC, recessed vestibule cap, finished closet header, one brick scale.
-
+# Production publication is permitted only by a dedicated one-file request
+# commit on the recorded Grade 2 release branch. Editing this workflow cannot
+# publish the place.
 on:
   push:
     branches:
       - release/emma-classroom-61e9b56
     paths:
-      - '.github/workflows/publish-emma-current.yml'
+      - 'school/emma-classroom/PUBLISH_REQUEST'
 
 permissions:
   contents: read
@@ -23,10 +24,34 @@ jobs:
     env:
       UNIVERSE_ID: '10769455759'
       PLACE_ID: '114603280760042'
+      SOURCE_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
           persist-credentials: false
+
+      - name: Require exact one-time Grade 2 publication request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = 'push'
+          test "$GITHUB_REF_NAME" = 'release/emma-classroom-61e9b56'
+          test "$GITHUB_ACTOR" = 'P00NSMASHER'
+          request=school/emma-classroom/PUBLISH_REQUEST
+          test -f "$request"
+          grep -qx 'requested-mode: grade2-classroom-owner-fixes' "$request"
+          grep -qx 'authorization: user-approved-2026-10-16-publish-on-finish' "$request"
+          grep -qx 'target-universe: 10769455759' "$request"
+          grep -qx 'target-place: 114603280760042' "$request"
+          grep -qx 'build-project: school/emma-showroom.project.json' "$request"
+          grep -qx 'source-branch: release/emma-classroom-61e9b56' "$request"
+          changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          test "$changed" = "$request"
+          source_parent="$(git rev-parse HEAD^)"
+          grep -qx "source-parent-sha: $source_parent" "$request"
+          echo "EXACT_GRADE2_PUBLICATION_REQUEST_PASS source=$SOURCE_SHA parent=$source_parent"
 
       - name: Install pinned Luau and Rojo
         shell: bash
@@ -34,42 +59,59 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/tools/luau" "$RUNNER_TEMP/tools/rojo"
           cd "$RUNNER_TEMP/tools"
-          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/luau-lang/luau/releases/download/0.741/luau-ubuntu.zip -o luau.zip
           echo '134dc762ad26232af83e43f98dec03ff6030dd3a4452f9408b9d50ccea025503  luau.zip' | sha256sum -c -
-          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip -o rojo.zip
+          curl -fsSL --retry 2 --connect-timeout 15 --max-time 120 \
+            https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip -o rojo.zip
           echo '00feb4fa0829a1dd72b49df2639da519a352bfe13cadcd83969e2ba2bb5693c4  rojo.zip' | sha256sum -c -
           unzip -q luau.zip -d luau
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau luau/luau-compile rojo/rojo
 
-      - name: Verify current showroom source
+      - name: Verify exact teacher-containing showroom source
         shell: bash
         run: |
           set -euo pipefail
-          for file in school/emma-classroom/showroom/*.lua school/emma-classroom/server/StaffModel.lua school/emma-classroom/shared/Data.lua; do
-            "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
+          LUAU="$RUNNER_TEMP/tools/luau/luau"
+          LUAUC="$RUNNER_TEMP/tools/luau/luau-compile"
+          for file in school/emma-classroom/showroom/*.lua \
+                      school/emma-classroom/server/StaffModel.lua \
+                      school/emma-classroom/shared/Data.lua; do
+            "$LUAUC" "$file" >/dev/null
           done
           python3 school/emma-classroom/showroom/verify_build.py
-          python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_photo_landmarks.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_hallway_photo.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_purple_corner_chair.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/showroom/audit_flat_rug_source.py --luau "$RUNNER_TEMP/tools/luau/luau"
-          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$RUNNER_TEMP/tools/luau/luau"
+          python3 school/emma-classroom/showroom/audit_owner_polish.py --luau "$LUAU"
+          python3 school/emma-classroom/tests/geometry_behavior.py --luau "$LUAU"
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --self-test
+          python3 school/emma-classroom/showroom/audit_hallway_camera_layout.py --luau "$LUAU"
+          python3 school/emma-classroom/showroom/audit_hallway_mobile_complexity.py --luau "$LUAU"
+          python3 school/emma-classroom/showroom/audit_hallway_photo.py --luau "$LUAU"
+          python3 school/emma-classroom/showroom/audit_left_hall_junction.py --luau "$LUAU"
+          python3 school/emma-classroom/showroom/audit_glazed_door_aperture.py --luau "$LUAU"
           python3 school/emma-classroom/showroom/walkability_audit.py --self-test
-          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
-          ! grep -q 'buildFoldingMat(' school/emma-classroom/showroom/Room.lua
+          python3 school/emma-classroom/showroom/walkability_audit.py \
+            --luau "$LUAU" --out "$RUNNER_TEMP/navigation.json"
           grep -q 'ShowroomStationaryTeacher' school/emma-classroom/showroom/Main.server.lua
           grep -q 'CFrame.new(-11,3.15,-29)' school/emma-classroom/showroom/Main.server.lua
+          grep -q 'PlacementContract.*Above hairline' school/emma-classroom/server/StaffModel.lua
+          grep -q 'Enabled = false' school/emma-classroom/showroom/FurnitureMeshConfig.lua
+          ! grep -q 'buildFoldingMat(' school/emma-classroom/showroom/Room.lua
 
       - name: Build exact classroom showroom
         shell: bash
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-showroom.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build \
+            school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-showroom.rbxl"
+          "$RUNNER_TEMP/tools/rojo/rojo" build \
+            school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-showroom.rbxlx"
           test -s "$RUNNER_TEMP/emma-showroom.rbxl"
+          python3 school/emma-classroom/showroom/verify_build.py \
+            "$RUNNER_TEMP/emma-showroom.rbxlx"
           sha256sum "$RUNNER_TEMP/emma-showroom.rbxl" | tee "$RUNNER_TEMP/place.sha256"
+          printf '%s\n' "$SOURCE_SHA" > "$RUNNER_TEMP/source-sha.txt"
+          cp school/emma-classroom/PUBLISH_REQUEST "$RUNNER_TEMP/PUBLISH_REQUEST"
 
       - name: Publish exact classroom showroom
         id: publish
@@ -80,11 +122,18 @@ jobs:
           set -euo pipefail
           test -n "$ROBLOX_API_KEY"
           response="$RUNNER_TEMP/publish-response.json"
-          code="$(curl --silent --show-error --location --output "$response" --write-out '%{http_code}' --request POST "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" --header "x-api-key: $ROBLOX_API_KEY" --header 'Content-Type: application/octet-stream' --data-binary @"$RUNNER_TEMP/emma-showroom.rbxl")"
+          code="$(curl --silent --show-error --location \
+            --output "$response" --write-out '%{http_code}' --request POST \
+            "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" \
+            --header "x-api-key: $ROBLOX_API_KEY" \
+            --header 'Content-Type: application/octet-stream' \
+            --data-binary @"$RUNNER_TEMP/emma-showroom.rbxl")"
           cat "$response"
           test "$code" -ge 200 -a "$code" -lt 300
           version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["versionNumber"])' "$response")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
+          echo "Published exact GitHub source $SOURCE_SHA to place $PLACE_ID" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Save publication receipt
         if: ${{ always() }}
@@ -93,6 +142,9 @@ jobs:
           name: emma-classroom-publish-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/place.sha256
+            ${{ runner.temp }}/source-sha.txt
+            ${{ runner.temp }}/PUBLISH_REQUEST
+            ${{ runner.temp }}/navigation.json
             ${{ runner.temp }}/version.txt
             ${{ runner.temp }}/publish-response.json
           retention-days: 14

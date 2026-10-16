@@ -12,22 +12,24 @@ and floor alignment, with a world-space vertical offset so camera tilt cannot
 pull the plate through her head. No portrait assets, curriculum or saves change.
 
 Actually tested: owner-polish runtime and negative control; all 18 staff
-constructors and pose/floor/nameplate bounds; 3,014-part room export; Rojo XML
+constructors and pose/floor/nameplate bounds; 3,009-part room export; Rojo XML
 assembly and absence of educational runtime; 21 constructed showroom audits
-including all requested wall/desk/closet changes; navigation self-tests.
+including all requested wall/desk/closet changes; navigation self-tests and
+all nine source-built routes through the full straight hallway.
 Corrected the floor parser's rejection of cardinal 90-degree yaw with swapped
 world extents and a regression test; preserved pitch/roll/diagonal rejection.
 Corrected the literacy guard's stale dark-screen expectation to the release's
 existing exact pale idle-screen palette; all its mutation controls still pass.
 
-Known release blocker: the release source physically turns the hallway +Z,
-but the existing navigation contract explicitly requires the owner's straight
-+X exit. The full navigation check fails reaching the middle/far end of that
-required route. Do not change goals or weaken the straight-route assertion.
-The correct source also retains the unguarded publish-emma-current.yml lane
-identified by release-security PR #352. Do not touch that file to trigger an
-upload or claim this candidate is live. A guarded publication and independent
-review remain required; native Roblox/iPhone appearance is unverified.
+Resolved release blockers: the staff exit and photographed corridor now stay
+on the required straight +X axis, with the complete avatar footprint supported
+across the threshold. The unrelated interactive-study CI no longer evaluates
+showroom release bases. The inherited publisher identified by release-security
+PR #352 now listens only for a dedicated PUBLISH_REQUEST commit, verifies its
+exact parent/target/authorization and reruns the teacher, owner-polish, hallway,
+navigation and assembled-place gates before upload. Editing the workflow cannot
+publish. Independent review and native Roblox/iPhone appearance remain separate
+release evidence; no successful publication is claimed here.
 
 ---
 

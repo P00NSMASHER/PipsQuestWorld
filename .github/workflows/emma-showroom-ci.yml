@@ -15,6 +15,7 @@ on:
       - 'school/emma-classroom/showroom/ArtPass.lua'
       - '.github/workflows/emma-showroom-ci.yml'
       - '.github/workflows/publish-emma-classroom.yml'
+      - '.github/workflows/publish-emma-current.yml'
   workflow_dispatch:
 
 permissions:
