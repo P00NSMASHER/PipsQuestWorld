@@ -113,6 +113,37 @@ local function verify()
             "GINGHAM_APRON_COLLISION_INVALID")
         pattern(apron,spec[2],spec[3],spec[4])
     end
+    -- All the authored red edging stays on the table, not in the aisle.
+    -- Decorative geometry is explicitly excluded from touch/raycast work.
+    local piping=parts("Photo gingham stitched piping")
+    local hems=parts("Photo gingham sewn apron hem")
+    assert(#piping==4 and #hems==4,
+        "GINGHAM_STITCHED_EDGE_COUNT_INVALID")
+    for _,detail in ipairs(piping) do
+        assert(detail.Anchored and not detail.CanCollide
+            and not detail.CanTouch and not detail.CanQuery
+            and detail.Material==Enum.Material.Fabric
+            and math.abs(detail.Position.Y-top.Position.Y)<.01
+            and math.abs(detail.Position.X-top.Position.X)<2.15
+            and math.abs(detail.Position.Z-top.Position.Z)<3.85,
+            "GINGHAM_STITCHED_PIPING_INVALID")
+    end
+    for _,detail in ipairs(hems) do
+        assert(detail.Anchored and not detail.CanCollide
+            and not detail.CanTouch and not detail.CanQuery
+            and detail.Material==Enum.Material.Fabric
+            and math.abs(detail.Position.Y-1.61)<.01,
+            "GINGHAM_APRON_HEM_INVALID")
+    end
+    local floor=only("Warm oak classroom floor")
+    assert(floor.CanCollide and floor.CanQuery,
+        "ROOM_ARCHITECTURAL_COLLIDER_NOT_QUERYABLE")
+    local grid=parts("Ceiling grid line")
+    assert(#grid==5,"ROOM_CEILING_GRID_REGRESSION")
+    for _,detail in ipairs(grid) do
+        assert(not detail.CanCollide and not detail.CanTouch
+            and not detail.CanQuery,"ROOM_DECORATIVE_QUERY_INVALID")
+    end
     for _,desk in ipairs(parts("Student desk edge")) do
         local dx=math.abs(desk.Position.X-top.Position.X)
         local dz=math.abs(desk.Position.Z-top.Position.Z)
@@ -139,6 +170,21 @@ assert(not ok and string.find(tostring(err),
     "GINGHAM_TABLE_SUPPORT_INVALID",1,true),
     "GINGHAM_MISSING_TABLE_COLLISION_NOT_REJECTED")
 print("GINGHAM_TABLE_ADVERSARIAL_REJECTED missing_table_collider")
+local piping=parts("Photo gingham stitched piping")[1]
+piping.CanQuery=true
+local rejected,why=pcall(verify)
+piping.CanQuery=false
+assert(not rejected and string.find(tostring(why),
+    "GINGHAM_STITCHED_PIPING_INVALID",1,true),
+    "GINGHAM_STITCHED_PIPING_RAYCAST_MUTATION_FALSE_ACCEPT")
+local grid=parts("Ceiling grid line")[1]
+grid.CanQuery=true
+rejected,why=pcall(verify)
+grid.CanQuery=false
+assert(not rejected and string.find(tostring(why),
+    "ROOM_DECORATIVE_QUERY_INVALID",1,true),
+    "ROOM_DECORATIVE_RAYCAST_MUTATION_FALSE_ACCEPT")
+print("GINGHAM_TABLE_ADVERSARIAL_REJECTED decorative_raycast_queries")
 local apron=only("Photo gingham table aisle apron")
 local oldFace=apron:FindFirstChild("PhotoGingham").Face
 apron:FindFirstChild("PhotoGingham").Face=Enum.NormalId.Top
@@ -184,6 +230,7 @@ def main():
             +r.stderr[-2600:]+"\n"+r.stdout[-1200:])
     markers=("GINGHAM_TABLE_RUNTIME_PASS",
         "GINGHAM_TABLE_ADVERSARIAL_REJECTED missing_table_collider",
+        "GINGHAM_TABLE_ADVERSARIAL_REJECTED decorative_raycast_queries",
         "GINGHAM_TABLE_ADVERSARIAL_REJECTED wrong_facing_apron",
         "GINGHAM_TABLE_NEGATIVE_TESTS_PASS")
     for marker in markers:
