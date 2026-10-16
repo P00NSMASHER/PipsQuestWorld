@@ -1714,8 +1714,11 @@ local function buildBackDoorAndHall(root: Instance)
     end
     part(root,"Closet door center astragal",Vector3.new(.18,10.05,.18),
         CFrame.new(0,5.28,26.07),Color3.fromRGB(91,61,41),Enum.Material.Wood,false)
-    sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
-        CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
+    local closetSign=sign(root,"Welcome over door","CLASSROOM CLOSET",
+        Vector3.new(10.7,1.20,.16),
+        CFrame.new(0,15.38,26.40),Color3.fromRGB(247,237,207),P.blue)
+    closetSign:SetAttribute("PlacementContract",
+        "Centered horizontally and vertically between closet frame and ceiling")
     -- Owner's October 11 iPhone screenshot fixes the doorway topology:
     -- classroom rear DOUBLE DOORS lead only into a self-contained SUPPLY CLOSET.
     -- The LEFT doorway (the ABVM staff entrance at x=37) is the ONLY
@@ -1802,9 +1805,51 @@ local function buildBackDoorAndHall(root: Instance)
     cp("Supply closet finished ceiling",Vector3.new(12.48,.34,9.05),
         CFrame.new(0,13.08,31.55),Color3.fromRGB(238,237,226),
         Enum.Material.SmoothPlastic,true)
-    -- Child-height coat storage: a continuous timber rail, sturdy hooks, and
-    -- small anonymous coats. Sleeves hang naturally and all pieces stay clear
-    -- of the floor and door swing.
+    -- Add a real supply shelf above the coats. All boxes and labels are
+    -- separated from one another, the shelf and the garments; no object is
+    -- buried inside a second object to fake a detailed closet.
+    cp("Supply closet upper shelf",Vector3.new(10.25,.22,.70),
+        CFrame.new(0,10.14,35.13),Color3.fromRGB(135,96,62),
+        Enum.Material.Wood,false)
+    for _,x in ipairs({-4.65,4.65}) do
+        cp("Supply closet shelf support",Vector3.new(.16,.46,.46),
+            CFrame.new(x,9.78,35.15),Color3.fromRGB(112,77,50),
+            Enum.Material.Wood,false)
+    end
+    local supplyBins={
+        {x=-3.72,label="PAPER",color=Color3.fromRGB(91,129,151)},
+        {x=-1.24,label="BOOKS",color=Color3.fromRGB(120,145,101)},
+        {x=1.24,label="ART",color=Color3.fromRGB(184,126,84)},
+        {x=3.72,label="SUPPLIES",color=Color3.fromRGB(133,105,151)},
+    }
+    for _,entry in ipairs(supplyBins) do
+        local bin=cp("Labeled classroom supply bin",
+            Vector3.new(1.95,1.0,.55),CFrame.new(entry.x,10.78,34.94),
+            entry.color,Enum.Material.SmoothPlastic,false)
+        bin:SetAttribute("StorageLabel",entry.label)
+        local face=Instance.new("SurfaceGui")
+        face.Name="Supply bin label"
+        face.Face=Enum.NormalId.Front
+        face.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        face.CanvasSize=Vector2.new(300,150)
+        face.LightInfluence=.20
+        face.Parent=bin
+        local tag=Instance.new("TextLabel")
+        tag.Name="Readable storage label"
+        tag.Size=UDim2.fromScale(.88,.62)
+        tag.Position=UDim2.fromScale(.06,.19)
+        tag.BackgroundColor3=Color3.fromRGB(246,240,219)
+        tag.TextColor3=Color3.fromRGB(50,62,67)
+        tag.Text=entry.label
+        tag.Font=Enum.Font.GothamBold
+        tag.TextScaled=true
+        tag.Parent=face
+        local corner=Instance.new("UICorner")
+        corner.CornerRadius=UDim.new(0,10)
+        corner.Parent=tag
+    end
+    -- Child-height coat storage: a continuous timber rail, five separate
+    -- hooks, and cleanly joined one-piece sleeves/body/collar silhouettes.
     cp("Supply closet child coat rail",Vector3.new(10.2,.48,.42),
         CFrame.new(0,8.25,35.23),closetOak,Enum.Material.Wood,false)
     local coatColors={
@@ -1814,18 +1859,18 @@ local function buildBackDoorAndHall(root: Instance)
     }
     for i,x in ipairs({-4.0,-2.0,0,2.0,4.0}) do
         cylinder(closet,"Supply closet coat hook",Vector3.new(.48,.15,.15),
-            CFrame.new(x,7.95,34.92)*CFrame.Angles(math.pi/2,0,0),
+            CFrame.new(x,7.96,34.92)*CFrame.Angles(math.pi/2,0,0),
             Color3.fromRGB(101,106,106),Enum.Material.Metal,false)
         local color=coatColors[i]
-        cp("Children coat body",Vector3.new(1.42,3.25,.42),
-            CFrame.new(x,6.18,34.86),color,Enum.Material.Fabric,false)
-        for _,dx in ipairs({-.89,.89}) do
-            cp("Children coat sleeve",Vector3.new(.48,2.55,.38),
-                CFrame.new(x+dx,6.33,34.86)*CFrame.Angles(0,0,math.rad(dx<0 and -12 or 12)),
+        cp("Children coat body",Vector3.new(1.36,3.10,.42),
+            CFrame.new(x,6.08,34.86),color,Enum.Material.Fabric,false)
+        for _,side in ipairs({-1,1}) do
+            cp("Children coat sleeve",Vector3.new(.46,2.42,.38),
+                CFrame.new(x+side*.92,6.42,34.86),
                 color:Lerp(Color3.new(1,1,1),.04),Enum.Material.Fabric,false)
         end
-        cp("Children coat collar",Vector3.new(.72,.34,.46),
-            CFrame.new(x,7.83,34.84),color:Lerp(Color3.new(0,0,0),.12),
+        cp("Children coat collar",Vector3.new(.62,.24,.44),
+            CFrame.new(x,7.78,34.84),color:Lerp(Color3.new(0,0,0),.12),
             Enum.Material.Fabric,false)
     end
     -- OWNER-SUPPLIED SIX PHOTOS: corridor architecture, not event-day people.
@@ -2495,6 +2540,16 @@ local function alignHallwayWithStaffExit(root: Instance)
     for _,doorZ in ipairs({57.75,126.25}) do
         westBrickPanel("Photo hall continuous north door header brick",6.80,doorZ,2.05,11.68)
     end
+
+    -- Close the formerly open east edge of the long hallway. The full-height
+    -- brick wall meets the short vestibule wall and far end cap without a sky
+    -- slit. Existing oak doors remain in their original west-wall openings.
+    -- Its west face exactly meets the existing vestibule brick face at X=59.02.
+    local eastWallX=59.47
+    part(hall,"Photo hall continuous east brick wall",
+        Vector3.new(.90,13,108),CFrame.new(eastWallX,6.5,80.75),
+        Color3.fromRGB(192,132,63),Enum.Material.Brick,true)
+    hall:SetAttribute("EastWallContinuous",true)
     hall:SetAttribute("FalseEntryArchRemoved",true)
     hall:SetAttribute("ReferenceFinish","full-height orange brick and dark square tile")
 end

@@ -15,13 +15,44 @@ function StaffModel.create(teacher,scaleOverride:number?)
     local male=isMale(teacher)
     local model=assets:WaitForChild(male and "Man" or "Woman"):Clone()
     local isBenulis=teacher.appearanceId=="benulis_2026_portrait"
-    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",13)
+    model.Name=teacher.name;model:SetAttribute("StaffGeometryVersion",12)
     model:SetAttribute("AppearanceProfile",teacher.appearanceId or "standard_staff")
     if isBenulis then
-        -- Retain the bundled native Roblox Woman R15 body instead of replacing
-        -- it with square procedural Parts. Its 14 fitted MeshParts are stored
-        -- in the place, so this modern silhouette requires no catalog request.
-        model:SetAttribute("BodySilhouette","modern_r15_woman")
+        -- Use one clean, familiar block-NPC silhouette. The bundled Woman
+        -- package has extremely tapered limbs, and its disconnected static
+        -- R15 rest transforms produced the bent/missing-arm look on device.
+        -- This body has one torso, one sleeve per arm, one hand per arm, and
+        -- one trouser/shoe section per leg: no layered or repeated segments.
+        for _,bodyName in ipairs({
+            "UpperTorso","LowerTorso",
+            "LeftUpperArm","LeftLowerArm","LeftHand",
+            "RightUpperArm","RightLowerArm","RightHand",
+            "LeftUpperLeg","LeftLowerLeg","LeftFoot",
+            "RightUpperLeg","RightLowerLeg","RightFoot",
+        }) do
+            local old=model:FindFirstChild(bodyName)
+            if old then old:Destroy() end
+        end
+        local function block(name,size,cf)
+            local p=Instance.new("Part")
+            p.Name=name;p.Size=size;p.CFrame=cf
+            p.Material=Enum.Material.SmoothPlastic;p.Parent=model
+            return p
+        end
+        block("UpperTorso",Vector3.new(2.0,2.0,1.0),CFrame.new(0,0,0))
+        block("LowerTorso",Vector3.new(1.82,.76,.92),CFrame.new(0,-1.35,0))
+        for _,side in ipairs({-1,1}) do
+            local prefix=side<0 and "Left" or "Right"
+            block(prefix.."UpperArm",Vector3.new(.72,1.55,.72),
+                CFrame.new(side*1.36,.20,0))
+            block(prefix.."Hand",Vector3.new(.74,.46,.74),
+                CFrame.new(side*1.36,-.80,0))
+            block(prefix.."UpperLeg",Vector3.new(.86,1.55,.86),
+                CFrame.new(side*.48,-2.48,0))
+            block(prefix.."Foot",Vector3.new(.88,.48,1.06),
+                CFrame.new(side*.48,-3.48,-.10))
+        end
+        model:SetAttribute("BodySilhouette","standard_block_npc")
     end
     local root=Instance.new("Part");root.Name="HumanoidRootPart";root.Size=Vector3.new(2,2,1)
     root.Transparency=1;root.CFrame=CFrame.new();root.Parent=model;model.PrimaryPart=root
@@ -33,46 +64,6 @@ function StaffModel.create(teacher,scaleOverride:number?)
     for name,cf in pairs({NeckRigAttachment=CFrame.new(0,-.5,0),HairAttachment=CFrame.new(0,.6,0),HatAttachment=CFrame.new(0,.6,0)}) do
         local a=Instance.new("Attachment");a.Name=name;a.CFrame=cf;a.Parent=head
     end
-    if isBenulis then
-        -- Fit the native mesh limbs using their actual joint attachments,
-        -- not the catalog export's separated display transforms. Widen the
-        -- slender limbs without stretching their length or replacing meshes.
-        for _,p in ipairs(model:GetChildren()) do
-            if p:IsA("MeshPart") then
-                local limb=string.find(p.Name,"Arm") or string.find(p.Name,"Leg")
-                local factor=limb and Vector3.new(1.28,1,1.18) or Vector3.new(1,1,1)
-                p.Size=Vector3.new(p.Size.X*factor.X,p.Size.Y*factor.Y,
-                    p.Size.Z*factor.Z)
-                p.TextureID=""
-                for _,a in ipairs(p:GetChildren()) do
-                    if a:IsA("Attachment") then
-                        local position=a.Position
-                        a.CFrame=CFrame.new(position.X*factor.X,
-                            position.Y*factor.Y,position.Z*factor.Z)*a.CFrame.Rotation
-                    end
-                end
-            end
-        end
-        local function connect(parentName,childName,attachmentName)
-            local parent=model:FindFirstChild(parentName)
-            local child=model:FindFirstChild(childName)
-            local a=parent and parent:FindFirstChild(attachmentName)
-            local b=child and child:FindFirstChild(attachmentName)
-            assert(a and b,"Missing staff rig attachment: "..attachmentName)
-            child.CFrame=parent.CFrame*a.CFrame*b.CFrame:Inverse()
-        end
-        connect("UpperTorso","LowerTorso","WaistRigAttachment")
-        connect("UpperTorso","Head","NeckRigAttachment")
-        for _,side in ipairs({"Left","Right"}) do
-            connect("UpperTorso",side.."UpperArm",side.."ShoulderRigAttachment")
-            connect(side.."UpperArm",side.."LowerArm",side.."ElbowRigAttachment")
-            connect(side.."LowerArm",side.."Hand",side.."WristRigAttachment")
-            connect("LowerTorso",side.."UpperLeg",side.."HipRigAttachment")
-            connect(side.."UpperLeg",side.."LowerLeg",side.."KneeRigAttachment")
-            connect(side.."LowerLeg",side.."Foot",side.."AnkleRigAttachment")
-        end
-        model:SetAttribute("LimbFit","attachment_aligned_widened_native_r15")
-    end
     local face
     if male then
         face=Instance.new("Decal");face.Name="face";face.Face=Enum.NormalId.Front;face.Texture="rbxasset://textures/face.png"
@@ -82,7 +73,7 @@ function StaffModel.create(teacher,scaleOverride:number?)
             -- Use Roblox's familiar friendly default expression. The prior
             -- catalog face stretched badly on this bundled head mesh.
             face.Texture="rbxasset://textures/face.png"
-            model:SetAttribute("PortraitAvatarRefinement","v13_modern_r15_woman")
+            model:SetAttribute("PortraitAvatarRefinement","v12_standard_block_npc_coherent_limbs")
         end
     end
     face.Parent=head
@@ -116,8 +107,8 @@ function StaffModel.create(teacher,scaleOverride:number?)
     local bodyColors=Instance.new("BodyColors");bodyColors.HeadColor3=skin;bodyColors.LeftArmColor3=skin;bodyColors.RightArmColor3=skin
     bodyColors.TorsoColor3=skin;bodyColors.LeftLegColor3=skin;bodyColors.RightLegColor3=skin
     if isBenulis then
-        -- BodyColors paints an entire R15 arm one color, including its hand.
-        -- Her fitted body uses the explicit sleeve/skin palette below instead.
+        -- BodyColors paints an entire arm one color, including its hand. Her
+        -- block body uses the explicit sleeve/skin palette below instead.
         bodyColors:Destroy()
     else
         bodyColors.Parent=model

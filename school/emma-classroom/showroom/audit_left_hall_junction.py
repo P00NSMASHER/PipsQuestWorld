@@ -101,6 +101,29 @@ local function check()
         and longNorth.Position.X-longNorth.Size.Z/2>=37.59
         and near(endWall.Position.Z,134.75) and endWall.CanCollide,
         "LEFT_HALL_JUNCTION_EXTERIOR_WALL_GAP")
+    -- The long corridor has a continuous second brick wall. It meets
+    -- the vestibule return and far cap without exposing sky at either seam.
+    local eastWalls=parts("Photo hall continuous east brick wall")
+    assert(#eastWalls==1,"LEFT_HALL_EAST_WALL_SEGMENT_MISSING")
+    local eastWall=eastWalls[1]
+    local eastLo,eastHi=zBounds(eastWall)
+    assert(eastWall.Material==Enum.Material.Brick and eastWall.CanCollide
+        and near(eastWall.Position.X,59.47) and near(eastWall.Size.X,.90)
+        and near(eastWall.Size.Y,13) and near(eastLo,26.75,.03)
+        and near(eastHi,134.75,.03),
+        "LEFT_HALL_EAST_WALL_HAS_A_SKY_GAP_OR_WRONG_FINISH")
+    local outerEast=get("Staff entry outer east wall")
+    local outerLo,outerHi=zBounds(outerEast)
+    local runLo,runHi=zBounds(eastWall)
+    local overlap=math.min(outerHi,runHi)-math.max(outerLo,runLo)
+    assert(near(overlap,.55,.05),
+        "LEFT_HALL_EAST_WALL_DOES_NOT_OVERLAP_VESTIBULE_RETURN")
+    local oakDoors=parts("Photo hall adjacent oak door")
+    assert(#oakDoors==2,"LEFT_HALL_WEST_DOOR_DETAILS_MISSING")
+    for _,door in ipairs(oakDoors) do
+        assert(near(door.Position.X,38.29,.02),
+            "LEFT_HALL_WEST_DOOR_MOVED_FROM_ORIGINAL_OPENING")
+    end
     assert(#parts("Side hall far wall")==0
         and #parts("Photo hall end cap")==1,
         "LEFT_HALL_JUNCTION_OLD_CROSS_WALL_RETURNED")
@@ -133,6 +156,38 @@ local function check()
     assert(closet.CanCollide and closet.Size.X>12
         and near(closet.Position.Z,36.05),
         "RIGHT_CLOSET_REAR_WALL_LEAKS_TO_HALL")
+    local closetSign=get("Welcome over door")
+    local doorHeader=get("Closet doorway plaster header infill")
+    local classroomRoof=get("Acoustic ceiling")
+    local signBottom=closetSign.Position.Y-closetSign.Size.Y/2
+    local signTop=closetSign.Position.Y+closetSign.Size.Y/2
+    local frameTop=doorHeader.Position.Y+doorHeader.Size.Y/2
+    local roofBottom=classroomRoof.Position.Y-classroomRoof.Size.Y/2
+    assert(near(closetSign.Position.X,0) and near(closetSign.Position.Y,15.38)
+        and near(signBottom-frameTop,roofBottom-signTop,.02)
+        and closetSign:GetAttribute("PlacementContract")
+            =="Centered horizontally and vertically between closet frame and ceiling",
+        "RIGHT_CLOSET_SIGN_NOT_CENTERED_IN_FRAME_TO_ROOF_GAP")
+    local shelf=get("Supply closet upper shelf")
+    local bins=parts("Labeled classroom supply bin")
+    local supports=parts("Supply closet shelf support")
+    assert(#bins==4 and #supports==2,
+        "RIGHT_CLOSET_ORGANIZED_SUPPLY_STORAGE_MISSING")
+    local shelfTop=shelf.Position.Y+shelf.Size.Y/2
+    local closetBodyTop=6.08+3.10/2
+    for _,bin in ipairs(bins) do
+        assert(bin:GetAttribute("StorageLabel")
+            and near(bin.Position.Y-bin.Size.Y/2-shelfTop,.03,.02)
+            and bin.Position.Y-bin.Size.Y/2>closetBodyTop+2,
+            "RIGHT_CLOSET_BIN_INTERSECTS_SHELF_OR_COATS")
+    end
+    table.sort(bins,function(a,b) return a.Position.X<b.Position.X end)
+    for i=1,#bins-1 do
+        local edge=bins[i].Position.X+bins[i].Size.X/2
+        local nextEdge=bins[i+1].Position.X-bins[i+1].Size.X/2
+        assert(nextEdge-edge>.50,
+            "RIGHT_CLOSET_STORAGE_BINS_OVERLAP")
+    end
     local n=0
     for _,p in ipairs(root:GetDescendants()) do
         if p:IsA("BasePart") then n+=1 end
