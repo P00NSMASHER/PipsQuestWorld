@@ -167,12 +167,22 @@ local function checkCloset()
     assert(back.CanCollide and near(back.Position.Z,36.05)
         and back.Size.X>12.40 and back.Size.Y>=12.9,
         "RIGHT_CLOSET_REAR_WALL_NOT_SEALED")
-    expect("Supply closet oak shelf",3)
-    local tubs=expect("Supply closet labeled storage tub",3)
-    for _,tub in ipairs(tubs) do
-        assert(not tub.CanCollide and
-            tub:FindFirstChild("Anonymous classroom supply category"),
+    local ceiling=one("Supply closet finished ceiling")
+    assert(ceiling.CanCollide and ceiling.Size.X>12 and ceiling.Size.Z>9,
+        "RIGHT_CLOSET_FINISHED_CEILING_MISSING")
+    local shelf=one("Supply closet upper shelf")
+    local bins=expect("Labeled classroom supply bin",4)
+    expect("Supply closet shelf support",2)
+    expect("Children coat body",5)
+    expect("Children coat sleeve",10)
+    expect("Children coat collar",5)
+    expect("Supply closet coat hook",5)
+    for _,bin in ipairs(bins) do
+        assert(not bin.CanCollide and bin:GetAttribute("StorageLabel")
+            and bin:FindFirstChild("Supply bin label"),
             "RIGHT_CLOSET_STORAGE_PROPS_MISSING_OR_BLOCKING")
+        assert(bin.Position.Y-bin.Size.Y/2>shelf.Position.Y+shelf.Size.Y/2,
+            "RIGHT_CLOSET_BIN_INTERSECTS_SHELF")
     end
     local closetFloor=one("Supply closet warm laminate floor")
     assert(closetFloor.CanCollide and
@@ -215,7 +225,8 @@ assert(not seamSafe and string.find(tostring(seamReason),
 checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
-    .."closet_walls=3 shelves=3 rear_wall_and_floor_mutations_rejected=true")
+    .."closet_walls=3 ceiling=1 shelf=1 bins=4 coats=5 "
+    .."rear_wall_and_floor_mutations_rejected=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)
