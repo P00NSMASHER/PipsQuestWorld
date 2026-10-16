@@ -41,11 +41,14 @@ function StaffModel.create(teacher,scaleOverride:number?)
             if p:IsA("MeshPart") then
                 local limb=string.find(p.Name,"Arm") or string.find(p.Name,"Leg")
                 local factor=limb and Vector3.new(1.28,1,1.18) or Vector3.new(1,1,1)
-                p.Size=p.Size*factor
+                p.Size=Vector3.new(p.Size.X*factor.X,p.Size.Y*factor.Y,
+                    p.Size.Z*factor.Z)
                 p.TextureID=""
                 for _,a in ipairs(p:GetChildren()) do
                     if a:IsA("Attachment") then
-                        a.CFrame=CFrame.new(a.Position*factor)*a.CFrame.Rotation
+                        local position=a.Position
+                        a.CFrame=CFrame.new(position.X*factor.X,
+                            position.Y*factor.Y,position.Z*factor.Z)*a.CFrame.Rotation
                     end
                 end
             end
