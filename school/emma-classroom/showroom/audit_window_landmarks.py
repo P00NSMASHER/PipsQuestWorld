@@ -225,7 +225,7 @@ local function check()
         #parts("Purple corner chair seat")==1 and
         #parts("Student desk top")==16,
         "WINDOW_CUE_ORIGINAL_ROOM_REGRESSION")
-    return left,ac,clock
+    return headline,ac,clock
 end
 local left,ac,clock=check()
 print("WINDOW_CUE_RUNTIME_PASS draped_windows=2 panels=4 folds=8 "..
