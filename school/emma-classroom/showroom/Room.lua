@@ -46,11 +46,12 @@ local function part(parent: Instance,name: string,size: Vector3,cf: CFrame,color
     elseif varnishedJoinery[name] and p.Material==Enum.Material.Wood then
         p.Reflectance=.055
     end
-    -- Preserve the existing collision and touch contract for structural
-    -- solids (including chair legs). Noncolliding decorative trim should
-    -- never intercept raycasts or emit touch events. No collision changes.
+    -- Preserve the existing collision and raycast contract for structural
+    -- solids (including chair legs). This architectural walkthrough has no
+    -- Touched listeners: disabling CanTouch on every anchored part avoids
+    -- needless touch-pair bookkeeping without changing collision or queries.
     local solid=collide~=false
-    p.CanCollide=solid;p.CanTouch=solid;p.CanQuery=solid
+    p.CanCollide=solid;p.CanTouch=false;p.CanQuery=solid
     p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
     p.Parent=parent
     return p
