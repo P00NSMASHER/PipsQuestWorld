@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Verify lightweight printed notebook ruling in the actual classroom Luau.
+"""Verify lightweight printed ruled paper in the actual classroom Luau.
 
-The 16 notebooks retain their original paper geometry, while 64 invisible
-micro Parts (three blue rules + red margin on each notebook) become normal
-Top SurfaceGui Frames. This frees mobile geometry for real hallway displays.
+The 16 desks retain a compact loose-paper sheet, while 64 invisible micro
+Parts (three blue rules + red margin on each sheet) become normal Top
+SurfaceGui Frames. This frees mobile geometry for real hallway displays and
+keeps the paper separate from each desk's closed book.
 The probe checks real assembly and mutation rejections, not a source grep.
 """
 from __future__ import annotations
@@ -33,8 +34,8 @@ assert(#disallowed==0,"NOTEBOOK_MICRO_PARTS_NOT_REMOVED")
 local function verify()
     for _,page in ipairs(pages) do
         assert(page.Material==Enum.Material.SmoothPlastic
-            and not page.CanCollide and page.Size.X>1.8
-            and page.Size.Z>2.4,
+            and not page.CanCollide and page.Size.X>1.2
+            and page.Size.Z>1.0,
             "NOTEBOOK_PAPER_GEOMETRY_LOST")
         local gui=page:FindFirstChild("OriginalNotebookPaperRules")
         assert(gui and gui:IsA("SurfaceGui")
@@ -83,7 +84,7 @@ print("NOTEBOOK_PRINTED_NEGATIVE_REJECTED collision")
 verify()
 print("NOTEBOOK_PRINTED_RUNTIME_PASS pages=16 rules=48 "
     .."red_margins=16 physical_marking_parts=0 "
-    .."parts_saved=64 authentic_desks_preserved=true")
+    .."parts_saved=64 compact_loose_paper=true")
 '''
 
 
