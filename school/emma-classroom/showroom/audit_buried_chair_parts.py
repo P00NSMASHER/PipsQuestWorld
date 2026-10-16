@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""Verify reclaimed mobile geometry contains no buried student-chair rubber feet.
+"""Verify reclaimed mobile geometry contains no buried chair or desk feet.
 
 The previous sixteen student chairs and one purple corner chair each spawned
 four 0.19-stud rubber-foot cylinders at y=.13, entirely below the existing
-hardwood floor top y=.50. Removing them recovers 68 replicated physical Parts
-without removing a visible foot,
-moving a chair, affecting metal chair-leg collisions, or activating meshes.
-The audit executes the actual constructed showroom Luau plus adversarial
-mutations. It is not a Roblox physics/FPS or iPhone visual acceptance test.
+hardwood floor top y=.50. The sixteen student desks also retained two invisible
+T-foot Parts each at y=.18, entirely below the same floor, even though their
+visible steel runners already rest on the finished surface. Removing those
+objects recovers 100 replicated physical Parts without removing visible
+furniture, moving a desk or chair, changing the metal-leg collision contract,
+or activating meshes. The audit executes the actual constructed showroom Luau
+plus adversarial mutations. It is not a Roblox physics/FPS or iPhone visual
+acceptance test.
 """
 from __future__ import annotations
 
@@ -42,12 +45,35 @@ local function verify()
     local purpleSeats=find("Purple corner chair seat")
     local purpleLegs=find("Purple corner chair tubular leg")
     local purpleFeet=find("Purple corner chair rubber foot")
+    local deskTops=find("Student desk top")
+    local deskLegs=find("Desk tubular leg")
+    local deskRunners=find("Desk contoured base runner")
+    local buriedDeskFeet=find("Desk foot")
     assert(#seats==16,"CHAIR_VISIBLE_SEAT_COUNT_CHANGED")
     assert(#legs==64,"CHAIR_COLLIDABLE_METAL_LEG_COUNT_CHANGED")
     assert(#hiddenFeet==0,"CHAIR_BURIED_RUBBER_FEET_RECREATED")
     assert(#purpleSeats==1,"PURPLE_VISIBLE_CORNER_SEAT_COUNT_CHANGED")
     assert(#purpleLegs==4,"PURPLE_COLLIDABLE_METAL_LEG_COUNT_CHANGED")
     assert(#purpleFeet==0,"PURPLE_BURIED_RUBBER_FEET_RECREATED")
+    assert(#deskTops==16,"DESK_VISIBLE_TOP_COUNT_CHANGED")
+    assert(#deskLegs==32,"DESK_COLLIDABLE_METAL_LEG_COUNT_CHANGED")
+    assert(#deskRunners==32,"DESK_VISIBLE_RUNNER_COUNT_CHANGED")
+    assert(#buriedDeskFeet==0,"DESK_BURIED_T_FEET_RECREATED")
+    for _,p in ipairs(deskLegs) do
+        assert(p.Material==Enum.Material.Metal
+            and p.CanCollide and p.CanQuery and not p.CanTouch,
+            "DESK_METAL_LEG_COLLISION_CHANGED")
+        local m=p.CFrame.m
+        local lowest=p.Position.Y-p.Size.X/2*math.abs(m[4])
+        assert(lowest<=floorTop+.02,
+            "DESK_METAL_LEG_FLOATS_ABOVE_FLOOR")
+    end
+    for _,p in ipairs(deskRunners) do
+        assert(p.Material==Enum.Material.Metal and not p.CanCollide
+            and not p.CanQuery and not p.CanTouch
+            and math.abs((p.Position.Y-p.Size.Y/2)-floorTop)<.02,
+            "DESK_VISIBLE_RUNNER_SURFACE_OR_QUERY_CHANGED")
+    end
     local allLegs={}
     for _,p in ipairs(legs) do allLegs[#allLegs+1]=p end
     for _,p in ipairs(purpleLegs) do allLegs[#allLegs+1]=p end
@@ -79,13 +105,14 @@ local function verify()
         if p:IsA("BasePart") then total+=1 end
     end
     assert(total<=3050,"CHAIR_HIDDEN_PART_OPTIMIZATION_LOST_HEADROOM")
-    return total,seats,legs
+    return total,seats,legs,deskTops,deskLegs,deskRunners
 end
 
-local total,seats,legs=verify()
+local total,seats,legs,deskTops,deskLegs,deskRunners=verify()
 print("CHAIR_BURIED_GEOMETRY_SOURCE_PASS chairs=17 student_seats=16 "
-    .."metal_legs=68 buried_foot_parts_removed=68 "
-    .."rubber_foot_parts=0 part_count="..total
+    .."metal_legs=68 buried_chair_feet_removed=68 "
+    .."desks=16 desk_legs=32 visible_desk_runners=32 "
+    .."buried_desk_feet_removed=32 hidden_foot_parts=0 part_count="..total
     .." headroom_to_3100="..(3100-total)
     .." full_chair_collision_preserved=true native_iphone_pending=true")
 
@@ -110,6 +137,21 @@ reject(function() recreated.Parent=root end,
        function() recreated.Parent=nil end,
        "PURPLE_BURIED_RUBBER_FEET_RECREATED",
        "purple_chair_buried_foot_restored")
+
+recreated.Name="Desk foot"
+reject(function() recreated.Parent=root end,
+       function() recreated.Parent=nil end,
+       "DESK_BURIED_T_FEET_RECREATED","desk_buried_t_foot_restored")
+
+local oldDeskRunnerName=deskRunners[1].Name
+reject(function() deskRunners[1].Name="Test removed desk runner" end,
+       function() deskRunners[1].Name=oldDeskRunnerName end,
+       "DESK_VISIBLE_RUNNER_COUNT_CHANGED","visible_desk_runner_removed")
+
+local oldDeskCollision=deskLegs[1].CanCollide
+reject(function() deskLegs[1].CanCollide=false end,
+       function() deskLegs[1].CanCollide=oldDeskCollision end,
+       "DESK_METAL_LEG_COLLISION_CHANGED","desk_leg_collision_removed")
 
 local oldPosition=legs[1].CFrame
 reject(function()
@@ -163,7 +205,7 @@ def main() -> None:
     for marker in required:
         assert any(line.startswith(marker) for line in lines), marker
     assert sum(line.startswith("CHAIR_BURIED_GEOMETRY_NEGATIVE_REJECTED")
-               for line in lines)==6, "Missing adverse chair-mutation detection"
+               for line in lines)==9, "Missing adverse furniture-mutation detection"
     for line in lines:
         if line.startswith("CHAIR_BURIED_GEOMETRY_"):
             print(line,flush=True)
