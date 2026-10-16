@@ -46,11 +46,11 @@ local function part(parent: Instance,name: string,size: Vector3,cf: CFrame,color
     elseif varnishedJoinery[name] and p.Material==Enum.Material.Wood then
         p.Reflectance=.055
     end
-    -- Query only architectural solids. Decorative static trim must not block
-    -- camera/raycast selection or generate unnecessary touch notifications.
-    -- This does not change the collision geometry of floors, walls or desks.
+    -- Preserve the existing collision and touch contract for structural
+    -- solids (including chair legs). Noncolliding decorative trim should
+    -- never intercept raycasts or emit touch events. No collision changes.
     local solid=collide~=false
-    p.CanCollide=solid;p.CanTouch=false;p.CanQuery=solid
+    p.CanCollide=solid;p.CanTouch=solid;p.CanQuery=solid
     p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth
     p.Parent=parent
     return p
