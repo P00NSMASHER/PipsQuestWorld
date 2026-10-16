@@ -767,7 +767,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading shade recessed warm diffuser":1,
         "Reading lamp top finial":1,
         "Photo-guided wall shape card":9,
-        "Photo-guided right cabinet shape card":8,
+        "Photo-guided right cabinet shape card":9,
         "Photo-guided cabinet counting strip":1,
         "Counting strip blue top trim":1,
         "Counting strip green bottom trim":1,
@@ -815,10 +815,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
-    assert abs(float(word_wall[7])-6.2)<.03 and (
+    assert abs(float(word_wall[7])-6.65)<.03 and (
         abs(float(word_wall[8])-18.0)<.03
-        and abs(float(word_wall[10])-7.4)<.03
-        and abs(float(word_wall[11])+2.5)<.03
+        and abs(float(word_wall[10])-9.6)<.03
+        and abs(float(word_wall[11])+2.375)<.03
     ), ("Photo word wall regressed to the small isolated board: " +
         "observed sy={0} sz={1} y={2} z={3}".format(
             word_wall[7],word_wall[8],word_wall[10],word_wall[11]))
@@ -879,10 +879,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "faces_teacher_desk=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
-        abs(float(window_banner[10])-15.22)<.025
+        abs(float(window_banner[10])-15.30)<.025
     ), "Right-window faith motto no longer follows the photographed wall"
     assert abs(float(window_banner[11])-6)<.05 and (
-        17.40<=float(window_banner[8])<=17.60
+        15.40<=float(window_banner[8])<=15.60
     ), "Right-window faith banner reverted to a single 38-stud generic strip"
     assert .95<=float(window_banner[7])<=1.20 and (
         float(window_banner[10])+float(window_banner[7])/2 < 17
@@ -893,7 +893,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         abs(float(smore_headline[11])+19)<.025
     ), "S'more photo wall lost its original LEFT-window location"
     assert float(smore[10])<float(smore_headline[10]) and (
-        14.90<float(smore[10])<15.55 and 15.90<float(smore_headline[10])<16.50
+        14.75<float(smore[10])<15.55 and 15.40<float(smore_headline[10])<16.00
     ), "S'more mural phrase moved below the school window or into ceiling"
     assert by_name["Smore mural pine trunk"]==2 and (
         by_name["Smore mural green canopy"]==4
@@ -1102,7 +1102,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     chalk_margin=(chalk_width-smart_width)/2
     assert 10.9 <= smart_width <= 11.3, "Compact digital display changed width"
     assert 28.5 <= chalk_width <= 29.5, "Wide chalkboard backing missing"
-    assert abs(smart_x-5.2)<.02 and abs(chalk_x-smart_x)<.05, (
+    assert abs(smart_x)<.02 and abs(chalk_x-smart_x)<.05, (
         "Wheeled screen no longer aligns with chalkboard backdrop"
     )
     assert abs(frame_x-smart_x)<.02 and .64<frame_width-smart_width<.76, (
@@ -1133,7 +1133,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "White Smartboard top and bottom hardware detached from molded surround"
     )
     side_rails=[row for row in lines if row[1]=="Smartboard protective edge"]
-    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-.68,11.08], (
+    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-5.88,5.88], (
         "The two white Smartboard side rails detached from the larger composite housing"
     )
     assert all(abs(float(row[7])-6.33)<.03 for row in side_rails), (
@@ -1163,7 +1163,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     assert len(braces)==1, "Mobile stand is missing its transverse support"
     for items in (supports,collars,feet):
-        assert sorted(round(float(p[9]),2) for p in items)==[2.20,8.20], (
+        assert sorted(round(float(p[9]),2) for p in items)==[-3.00,3.00], (
             "Rolling Smartboard support disconnected from the two screen pylons"
         )
     assert sorted(round(float(p[11]),2) for p in wheels)==(
@@ -1316,11 +1316,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Built-in recessed dark toe kick":1,
         "Built-in deep hardwood cornice":1,
         "Built-in stepped cornice edge":1,
-        "Tall cabinet recessed panel cross rail":8,
-        "Tall cabinet antiqued keyhole":2,
-        "Tall cabinet hardwood cornice":1,
-        "Tall cabinet cornice routed lip":1,
-        "Tall cabinet recessed toe kick":1,
         "Library hardwood front pilaster":3,
         "Library shelf front fascia":3,
         "Library upper molded cornice":1,
@@ -1331,6 +1326,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert by_name[name]==count, (
             f"Architectural carpentry detail missing or duplicated: {name}"
         )
+    assert by_name["Tall storage cabinet"]==0 and by_name["Cabinet door panel"]==0, (
+        "Removed freestanding cabinet returned behind the staff doorway"
+    )
     cubby_stiles=actual_parts("Built-in walnut cubby face stile")
     assert sorted(round(float(s[9]),2) for s in cubby_stiles)==[
         7.50,12.0,16.50,21.0,25.50,30.0,34.50
@@ -1651,7 +1649,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     supported={
         "Teacher laptop base":8,
         "Tissue box":7,
-        "Teacher desk wooden stationery tray":7,
         "Teacher note paper":7,
     }
     for label,height_axis in supported.items():
@@ -1664,7 +1661,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert -31.25<=float(item[9])<=-18.75 and 11.4<=float(item[11])<=16.6, (
             f"Teacher object {label} exceeds desktop footprint"
         )
-    print("TEACHER_DESK_SUPPORT_PASS laptop=true tissues=true tray=true paper=true duplicate_cup=false")
+    assert by_name["Teacher desk wooden stationery tray"]==0 and (
+        by_name["Teacher wooden colored pencil"]==0
+    ), "Removed overlapping teacher stationery returned"
+    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true paper=true overlapping_tray_removed=true")
 
     # Verify that the optional fallback silhouette update stays lightweight:
     # two slim molded edge returns per chair, with the existing collidable

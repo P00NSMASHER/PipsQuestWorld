@@ -1,3 +1,36 @@
+## October 16 — correct Grade 2 release source, teacher retained
+
+The owner identified the ABVM Grade 2 game with Mrs. Benulis at the front
+and authorized publishing the requested fixes once finished. The earlier
+PR #355 targeted a different, teacher-free source lineage. This candidate
+instead starts at release/emma-classroom-61e9b56@dffe6178 (recorded v107).
+
+Implemented all nine photo corrections on that source, preserving its
+stationary Mrs. Benulis, compact white Smartboard and existing furniture.
+The nameplate now resolves above constructed hair/head bounds after scaling
+and floor alignment, with a world-space vertical offset so camera tilt cannot
+pull the plate through her head. No portrait assets, curriculum or saves change.
+
+Actually tested: owner-polish runtime and negative control; all 18 staff
+constructors and pose/floor/nameplate bounds; 3,014-part room export; Rojo XML
+assembly and absence of educational runtime; 21 constructed showroom audits
+including all requested wall/desk/closet changes; navigation self-tests.
+Corrected the floor parser's rejection of cardinal 90-degree yaw with swapped
+world extents and a regression test; preserved pitch/roll/diagonal rejection.
+Corrected the literacy guard's stale dark-screen expectation to the release's
+existing exact pale idle-screen palette; all its mutation controls still pass.
+
+Known release blocker: the release source physically turns the hallway +Z,
+but the existing navigation contract explicitly requires the owner's straight
++X exit. The full navigation check fails reaching the middle/far end of that
+required route. Do not change goals or weaken the straight-route assertion.
+The correct source also retains the unguarded publish-emma-current.yml lane
+identified by release-security PR #352. Do not touch that file to trigger an
+upload or claim this candidate is live. A guarded publication and independent
+review remain required; native Roblox/iPhone appearance is unverified.
+
+---
+
 ## October 12, 2026 â€” owner-requested classroom photo detail candidate
 
 Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.

@@ -88,7 +88,7 @@ assert room.count('chalkboard cross vertical') == 1 and room.count('chalkboard c
 assert 'local banner=part(root,"Handwriting alphabet strip"' not in room, "Duplicate navy alphabet strip returned"
 art=(base / "emma-classroom/showroom/ArtPass.lua").read_text()
 assert 'Photo flipchart white housing' not in art, "Redundant corner flipchart returned"
-assert 'local jobsZ=-28.20' in art, "Right-wall jobs board is not centered in its bay"
+assert 'local jobsZ=-27.4' in art, "Right-wall jobs board lost evenly spaced layout"
 assert "Chair back accent" not in art, "Fake colored stripes returned to the 16 molded school chairs"
 assert "for row,z in ipairs({-12,4,19}) do" in art, "Desk prop art no longer follows classroom rows"
 assert "for col,x in ipairs({-24,-16,-8,0,12,20}) do" in art, "Desk prop art no longer follows classroom columns"
@@ -97,8 +97,9 @@ assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on 
 assert "pencilCup(root,23.2,4.08,-23.6)" not in room, "Duplicate teacher pencil cup returned"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
 gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
-assert "CFrame.new(-27.7,3.365,16.25)" in gallery, "Stationery tray no longer touches relocated teacher desk"
-assert "CFrame.new(-19.5,3.315,15.0)" in gallery, "Teacher papers no longer rest on relocated desk"
+assert '"Teacher desk wooden stationery tray"' not in gallery, "Overlapping teacher stationery tray returned"
+assert '"Teacher wooden colored pencil"' not in gallery, "Overlapping colored pencil board returned"
+assert "CFrame.new(-19.5,3.315,15.0)" in gallery, "Teacher papers no longer rest on desk"
 assert "GalleryPass.decorate(Room.Root)" in main
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main
 mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()
