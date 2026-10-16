@@ -54,6 +54,14 @@ local function verify()
             and surface.CanvasSize[1]==288
             and surface.CanvasSize[2]==384,
             "RADIATOR_NATIVE_FACE_OR_CANVAS_INVALID")
+        assert(near(surface.LightInfluence,.25),
+            "RADIATOR_LIGHT_INFLUENCE_CHANGED")
+        -- These vents are authored geometric ink, never asset downloads,
+        -- externally-sourced images, scripts or additional controls.
+        for _,node in ipairs(surface:GetDescendants()) do
+            assert(node:IsA("Frame") and node.Name=="Radiator vent slat",
+                "RADIATOR_NONSLAT_UI_OR_EXTERNAL_ASSET_REJECTED")
+        end
         local slats={}
         for _,item in ipairs(surface:GetChildren()) do
             if item.Name=="Radiator vent slat" then
@@ -112,6 +120,16 @@ reject(function() panel.CanCollide=true end,
     function() panel.CanCollide=false end,
     "RADIATOR_BODY_GEOMETRY_OR_COLLISION_CHANGED","blocking_vent")
 
+reject(function() gui.LightInfluence=1 end,
+    function() gui.LightInfluence=.25 end,
+    "RADIATOR_LIGHT_INFLUENCE_CHANGED","unreadable_lighting")
+
+local unapproved=Instance.new("ImageLabel")
+unapproved.Name="UnapprovedAsset"
+reject(function() unapproved.Parent=gui end,
+    function() unapproved.Parent=nil end,
+    "RADIATOR_NONSLAT_UI_OR_EXTERNAL_ASSET_REJECTED","external_image_asset")
+
 reject(function() ink.Parent=nil end,
     function() ink.Parent=gui end,
     "RADIATOR_FIVE_VENTS_MISSING","lost_vent")
@@ -140,6 +158,8 @@ def main() -> None:
               "RADIATOR_ADVERSARIAL_REJECTED wrong_sided_graphic",
               "RADIATOR_ADVERSARIAL_REJECTED floating_overlay",
               "RADIATOR_ADVERSARIAL_REJECTED blocking_vent",
+              "RADIATOR_ADVERSARIAL_REJECTED unreadable_lighting",
+              "RADIATOR_ADVERSARIAL_REJECTED external_image_asset",
               "RADIATOR_ADVERSARIAL_REJECTED lost_vent",
               "RADIATOR_ADVERSARIAL_REJECTED invisible_vent",
               "RADIATOR_NATIVE_GUI_NEGATIVE_TESTS_PASS")
