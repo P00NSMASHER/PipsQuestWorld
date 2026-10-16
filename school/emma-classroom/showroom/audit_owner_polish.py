@@ -48,6 +48,44 @@ local function check()
         and #parts("Closet door raised panel rail")==4,
         "OWNER_POLISH_CLOSET_DOORS_NOT_FLUSH_OR_MIRRORED")
 
+    -- Owner closet finish: sign centered in the wall band, complete ceiling,
+    -- labeled storage and separate coat silhouettes with real air gaps.
+    local closetSign=one("Welcome over door")
+    assert(near(closetSign.Position.X,0) and near(closetSign.Position.Y,15.38)
+        and closetSign:GetAttribute("PlacementContract")==
+            "Centered horizontally and vertically between closet frame and ceiling",
+        "OWNER_POLISH_CLOSET_SIGN_NOT_CENTERED")
+    local ceiling=one("Supply closet finished ceiling")
+    local shelf=one("Supply closet upper shelf")
+    local supports=parts("Supply closet shelf support")
+    local bins=parts("Labeled classroom supply bin")
+    local coats=parts("Children coat body")
+    local sleeves=parts("Children coat sleeve")
+    local collars=parts("Children coat collar")
+    assert(ceiling.Size.X>12 and ceiling.Size.Z>9
+        and #supports==2 and #bins==4 and #coats==5
+        and #sleeves==10 and #collars==5
+        and #parts("Supply closet coat hook")==5,
+        "OWNER_POLISH_CLOSET_DETAIL_INCOMPLETE")
+    local function overlaps(a,b)
+        return math.abs(a.Position.X-b.Position.X)<(a.Size.X+b.Size.X)/2-.01
+            and math.abs(a.Position.Y-b.Position.Y)<(a.Size.Y+b.Size.Y)/2-.01
+            and math.abs(a.Position.Z-b.Position.Z)<(a.Size.Z+b.Size.Z)/2-.01
+    end
+    for _,bin in ipairs(bins) do
+        assert(not overlaps(bin,shelf),"OWNER_POLISH_CLOSET_BIN_INTERSECTS_SHELF")
+        for _,coat in ipairs(coats) do
+            assert(not overlaps(bin,coat),"OWNER_POLISH_CLOSET_BIN_INTERSECTS_COAT")
+        end
+    end
+    for i,left in ipairs(coats) do
+        for j,right in ipairs(coats) do
+            if i<j then
+                assert(not overlaps(left,right),"OWNER_POLISH_CLOSET_COATS_INTERSECT")
+            end
+        end
+    end
+
     -- Photo 3: clean white tissue and no striped wooden stationery board.
     local tissue=one("Folded tissue")
     assert(tissue.Color.R>.98 and tissue.Color.G>.98 and tissue.Color.B>.97,
@@ -154,9 +192,9 @@ local function check()
         and near(faith.Position.Z,glass[2].Position.Z)
         and near(headline.Size.Z,faith.Size.Z),
         "OWNER_POLISH_WINDOW_WALL_NOT_SYMMETRIC")
-    return one("Interactive smartboard")
+    return one("Interactive smartboard"),closetSign,shelf,bins
 end
-local smart=check()
+local smart,closetSign,shelf,bins=check()
 print("OWNER_POLISH_RUNTIME_PASS photos=9 desks=16 centered_walls=3 teacher_badge_source_separate=true")
 local old=smart.CFrame
 smart.CFrame=CFrame.new(1,smart.Position.Y,smart.Position.Z)
@@ -164,8 +202,14 @@ local ok,err=pcall(check)
 smart.CFrame=old
 assert(not ok and string.find(tostring(err),"OWNER_POLISH_FRONT_WALL_NOT_CENTERED",1,true),
     "OWNER_POLISH_CENTERLINE_MUTATION_NOT_REJECTED")
+local oldSign=closetSign.CFrame
+closetSign.CFrame=CFrame.new(0,15.82,closetSign.Position.Z)
+local signOk,signErr=pcall(check)
+closetSign.CFrame=oldSign
+assert(not signOk and string.find(tostring(signErr),"OWNER_POLISH_CLOSET_SIGN_NOT_CENTERED",1,true),
+    "OWNER_POLISH_CLOSET_SIGN_MUTATION_NOT_REJECTED")
 check()
-print("OWNER_POLISH_NEGATIVE_PASS moved_smartboard_rejected=true")
+print("OWNER_POLISH_NEGATIVE_PASS moved_smartboard_rejected=true moved_closet_sign_rejected=true")
 '''
 
 
