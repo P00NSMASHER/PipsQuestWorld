@@ -39,6 +39,8 @@ end
 local hall=Room.Root:FindFirstChild("PhotographedHallway")
 assert(hall and hall:GetAttribute("ScaleConfidence")=="provisional",
     "PHOTO_HALL_SURVEY_FIDELITY_MISLABELED")
+assert(hall:GetAttribute("Route")=="Straight +X from left staff door; no turns",
+    "PHOTO_HALL_ROUTE_ATTRIBUTE_MUST_MATCH_STRAIGHT_SOURCE")
 local floor=one("Photo hall polished square stone floor")
 assert(floor.CanCollide and floor.Material==Enum.Material.Slate
     and near(floor.Size.X,108) and near(floor.Size.Z,22.5),
