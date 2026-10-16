@@ -1375,13 +1375,22 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             assert str(row[4]).endswith("Fabric"), (
                 f"Backpack panel {label} is plastic, not textile fabric"
             )
-    assert not any(row[1]=="Cubbies label" for row in lines), "Old banner location returned"
-    label=only("Reading window banner")
-    assert abs(float(label[9])+36.33)<.03 and abs(float(label[11])+19)<.03
-    assert abs(float(label[10])-15.30)<.03 and abs(float(label[8])-15.5)<.03
-    assert abs(float(label[7])-1.18)<.03, "Reading banner must match faith banner height"
+    label=only("Cubbies label")
+    lower_edge=float(label[10])-float(label[7])/2
+    artwork_top=9.6+4.8/2
+    bag_top=9.62+2.10/2
+    assert float(label[6])<=19.1 and float(label[7])<=1.0, (
+        "Oversized front-floating cubby sign returned"
+    )
+    assert 12.45 <= lower_edge < 13.0, (
+        f"Storage sign obscures lower backpacks or conflicts with wall: {lower_edge:.2f}"
+    )
+    assert lower_edge > max(artwork_top,bag_top)+.25, (
+        "Storage motto overlaps student art, coat hooks or backpacks"
+    )
+    assert float(label[11])>26.0, "Cubbie sign protrudes into the classroom"
     print("BACKPACK_STORAGE_GEOMETRY_PASS count=8 cubby_bins=12 hooks=8 "
-          "material=Fabric handle_mount_gap=.07 motto_relocated_to_right_window=true")
+          f"material=Fabric handle_mount_gap=.07 sign_lower_edge={lower_edge:.2f}")
     # Reading-corner clearance comes from ACTUAL Luau-created geometry.
     # Cylinder Parts are modeled along their local X axis and then rotated:
     # blindly reading Size.X as a world-space width underestimates a rotated

@@ -1025,6 +1025,8 @@ local function buildCubbies(root: Instance)
     end
     -- Wall-mounted above the backpack hooks, not floating in front of and
     -- obscuring the shaped bags. Artwork below ends at approximately y=12.
+    sign(root,"Cubbies label","READ • CREATE • GROW",Vector3.new(19,.90,.2),
+        CFrame.new(21,13.0,26.28),P.blue,P.cream)
 end
 
 local function buildWindows(root: Instance)
@@ -2213,17 +2215,6 @@ local function buildTeacherEntry(root: Instance)
     part(root,"Staff door jamb front",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,11.7),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door jamb back",Vector3.new(1.3,11.5,1.0),CFrame.new(36.9,5.75,19.3),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
     part(root,"Staff door header",Vector3.new(1.3,1.0,8.6),CFrame.new(36.9,11.25,15.5),Color3.fromRGB(113,78,50),Enum.Material.Wood,false)
-    part(root,"Staff door upper gap infill",Vector3.new(1,1.25,8.1),
-        CFrame.new(37,12.375,15.5),P.wall,Enum.Material.SmoothPlastic,true)
-    -- Independent exterior finish preserves the yellow room and never spans
-    -- the walk-through opening. Match the corridor's native brick material.
-    for _,span in ipairs({{7.7,7.9},{22.7,7.1}}) do
-        local facing=part(root,"Staff doorway exterior brick",Vector3.new(.12,13,span[2]),
-            CFrame.new(37.57,6.5,span[1]),Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
-        facing.Reflectance=.035
-    end
-    part(root,"Staff doorway exterior brick header",Vector3.new(.12,1.25,8.1),
-        CFrame.new(37.57,12.375,15.5),Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
     -- The sole route from Emma's classroom into the long photo hallway
     -- uses this left/staff entrance. The old transparent glass was overlaid
     -- on a FULL-HEIGHT OPAQUE WOOD slab, so no light could pass through it.
@@ -2608,11 +2599,6 @@ function World.build()
         Color3.fromRGB(247,236,216),Enum.Material.SmoothPlastic,false)
     surfaceText(faithBanner,"I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         Enum.NormalId.Right,P.blue,faithBanner.Color,Enum.Font.GothamMedium)
-    local readingBanner=part(root,"Reading window banner",
-        Vector3.new(.12,1.18,15.5),CFrame.new(-36.33,15.30,-19),
-        faithBanner.Color,Enum.Material.SmoothPlastic,false)
-    surfaceText(readingBanner,"READ • CREATE • GROW",Enum.NormalId.Right,
-        P.blue,faithBanner.Color,Enum.Font.GothamMedium)
     buildFrontWall(root)
     buildRightWall(root)
     local teacherDeskAssembly=Instance.new("Folder")
