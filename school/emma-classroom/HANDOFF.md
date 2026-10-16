@@ -1,3 +1,48 @@
+## October 15, 2026 — second classroom polish / maintenance pass
+
+**Branch:** existing isolated PR #355, stacked on straight-hallway draft
+#351. No protected-main merge, new Roblox publication, promotion or
+teacher-portrait/educational-gameplay changes.
+
+**Implemented:**
+- Retained all four original radiator front panels, their dimensions and
+  placement. Replaced twenty shallow decorative metal micro-Parts with
+  five original-style native SurfaceGui vent lines per panel.
+- Preserved the same visible slot dimensions, light metallic palette and
+  physical colliders; grille surface faces into the room. Independent
+  headless rendering cannot show native SurfaceGui artwork.
+- Added actual-constructed-Luau regression for original radiator location,
+  per-slat size/spacing/opacity, correct face, nonblocking fixtures, and
+  five deliberate adversarial defects. Integrated into replica CI.
+- Added a fail-fast two-camera contract for fixed hallway-window and
+  neighboring-oak-door screenshots. Camera drift that could invalidate
+  strict pixel ROIs now fails before expensive render execution.
+
+**Actually tested:**
+- Source commit e45b57cb7bef1f1cc6d00fadb44ccfba12a1be40:
+  exact-head Emma Classroom Replica CI run #38833571097 **PASS**.
+  Real constructed 3D scene = **3,029 physical Parts**, 20 fewer than
+  prior pass; stricter 3,050 and general 3,100 ceilings pass.
+  New radiator QA, five negative mutations, geometry, corridor, closet,
+  Rojo/Luau and release-boundary tests all pass.
+- Updated camera-lock code added in commit
+  a5abaad50fe90628e3e861311ee78fa63307dbb7;
+  exact-head Replica CI run #38833727538 **PASS** (including the
+  camera-provenance fixture and source geometry).
+- Existing previous-head run #38830876019 had both fast 9-view
+  and full 24-view image work **PASS**. Latest 3029-part render
+  workflow has been requested and must be checked independently.
+
+**Not tested / still blocked:** Actual Roblox Studio and mobile device
+lighting, touch movement, frame rate, grilles' native SurfaceGui appearance,
+teacher portrait quality, photo-side-by-side parity, and live build release.
+The connected laptop was offline. Do not infer native quality from the
+headless visual tool or green source-only regression checks.
+
+**Acceptance:** Remain a draft PR. Never bypass signed publish guards,
+protected integration branches, asset ownership or independent native review.
+
+---
 ## October 15, 2026 — isolated classroom polish / code maintenance
 
 **Scope:** Stacked on straight-staff-hall draft PR #351 via new draft PR #355.
