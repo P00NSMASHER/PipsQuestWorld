@@ -14,7 +14,10 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 VIEWPORT = (1920, 1080)
-SUN_CENTER = (960, 506)
+# Actual pixel origin of the nine physical sun details in the PINNED 07 camera.
+# The older (960,506) center was 7px left / 8px above the visible disc;
+# moderate rendered exposure changes then falsely erased two ray octants.
+SUN_CENTER = (967, 514)
 # Strict ROIs for the *straight-axis* 07 camera (100,5.7,21 -> 155,7.35,15.5).
 # In reviewed b6d0f2b0 pixels the left jamb occupies x=872..875 and the first
 # mullion x=935..936. Earlier pre-rotation x=845 and x=923 ROIs falsely
@@ -33,8 +36,10 @@ GLASS_AREAS = {
     "left_upper": (878, 493, 925, 526),
     "right_upper": (1012, 493, 1053, 526),
 }
-SUN_REGION = (920, 484, 1001, 532)
-SUN_CENTER_REGION = (948, 496, 975, 519)
+# Tight around the radial rays. Exclude distant yellow mullions and the
+# horizontal window sash, which must never substitute for a missing ray.
+SUN_REGION = (946, 491, 995, 540)
+SUN_CENTER_REGION = (957, 507, 978, 522)
 
 
 def golden_sash(rgb: tuple[int, int, int]) -> bool:
@@ -44,7 +49,12 @@ def golden_sash(rgb: tuple[int, int, int]) -> bool:
 
 def bright_sun(rgb: tuple[int, int, int]) -> bool:
     r, g, b = rgb
-    return r >= 97 and g >= 91 and r <= g+16 and g-b >= 40 and b <= 85
+    # Same gold/yellow paint can shade from (106,90,35) to (95,76,28)
+    # in two real source-rendered runs of the unchanged hallway geometry.
+    # Use hue/chroma in a TIGHT ray-only ROI rather than an overly high
+    # absolute green threshold. All eight independently missing rays must
+    # still be rejected in both bright and dim synthetic exposures.
+    return r >= 90 and g >= 68 and 7 <= r-g <= 29 and g-b >= 35 and b <= 70
 
 
 def dark_glazing(rgb: tuple[int, int, int]) -> bool:
@@ -95,7 +105,7 @@ def inspect(image: Image.Image) -> dict:
                 continue
             dx, dy = x-cx, y-cy
             distance = math.hypot(dx, dy)
-            if 14 <= distance <= 45:
+            if 11 <= distance <= 23:
                 angle = (math.atan2(dy, dx) + math.pi/8) % (2 * math.pi)
                 sector = int(angle * 4 / math.pi)
                 sector_counts[sector] += 1
@@ -115,17 +125,24 @@ def inspect(image: Image.Image) -> dict:
 
 def synthetic_window(missing_ray: int | None = None,
                      pane_color=(55, 72, 80),
-                     sash_color=(106, 90, 35)) -> Image.Image:
+                     sash_color=(106, 90, 35),
+                     ray_color=(128, 118, 39)) -> Image.Image:
     image = Image.new("RGB", VIEWPORT, (53, 66, 79))
     draw = ImageDraw.Draw(image)
     draw.rectangle((872, 483, 1065, 597), fill=pane_color)
     # The synthetic source-of-truth uses the same calibrated jambs as the
     # actual camera gate; mutations still independently remove each element.
-    for rect, _minimum in FRAME_BANDS.values():
+    for label, (rect, _minimum) in FRAME_BANDS.items():
         x0, y0, x1, y1 = rect
-        draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=sash_color)
-    draw.ellipse((953, 499, 967, 513), fill=(128, 118, 39))
+        # The source's transverse sash is at y≈541, not a solid 18px
+        # yellow flood across the entire SUN_REGION. Preserve the actual
+        # frame gate but never let synthetic sash ink stand in for a ray.
+        if label == "crossbar":
+            draw.rectangle((x0, 540, x1 - 1, 543), fill=sash_color)
+        else:
+            draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=sash_color)
     cx, cy = SUN_CENTER
+    draw.ellipse((cx - 7, cy - 7, cx + 7, cy + 7), fill=ray_color)
     for i in range(8):
         if i == missing_ray:
             continue
@@ -134,7 +151,7 @@ def synthetic_window(missing_ray: int | None = None,
                    round(cy+15*math.sin(angle)),
                    round(cx+24*math.cos(angle)),
                    round(cy+24*math.sin(angle))),
-                  fill=(128, 118, 39), width=3)
+                  fill=ray_color, width=3)
     return image
 
 
@@ -162,6 +179,13 @@ def self_test() -> None:
     for i in range(8):
         expect_rejected(synthetic_window(missing_ray=i),
                         "SUNBURST_RAY_SECTORS_MISSING")
+        expect_rejected(synthetic_window(missing_ray=i,
+                                         ray_color=(95, 76, 28)),
+                        "SUNBURST_RAY_SECTORS_MISSING")
+    # The real October 16 source renderer darkened the rays by ~10–16
+    # channels after unrelated static Part reduction; the 8-ray graphic
+    # remained fully legible in pixels. This exposure must still pass.
+    inspect(synthetic_window(ray_color=(95, 76, 28)))
     erased_sun = good.copy()
     ImageDraw.Draw(erased_sun).rectangle((934, 484, 986, 532),
                                           fill=(55, 72, 80))
@@ -170,6 +194,7 @@ def self_test() -> None:
         inspect(ImageEnhance.Brightness(good).enhance(factor))
     print("PHOTO_END_WINDOW_SEMANTIC_SELF_TEST_PASS "
           "blank brown_fake floodfill shifted 8_missing_rays erased_sun "
+          "dim_golden_rays_and_8_missing_dim_mutants_checked=true "
           "exposure_variants_rejected_or_accepted_as_expected=true")
 
 
