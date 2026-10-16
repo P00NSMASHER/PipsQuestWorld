@@ -2,8 +2,8 @@
 """Verify photo-specific school window details using constructed Luau.
 
 No uploaded photos, student data, or publishing operations are involved.
-One negative test deliberately collides the AC; a second moves the S'more
-banner to the wrong window, and a third deletes its classroom wording.
+One negative test deliberately collides the AC; another moves the remaining
+faith banner to the removed S'more position and a third changes its wording.
 """
 from __future__ import annotations
 
@@ -37,27 +37,18 @@ local function signText(p)
     return text
 end
 local function check()
-    local left=one("Smore classroom main title")
-    local headline=one("Smore faith headline")
     local faith=one("Classroom faith window banner")
-    assert(signText(left).Text=="S'MORE" and
-        signText(headline).Text=="JESUS LOVES YOU" and
-        signText(faith).Text=="I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
+    assert(signText(faith).Text=="I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         "WINDOW_CUE_WORDING_INVALID")
-    assert(math.abs(left.Position.Z+19)<.03 and
-        math.abs(headline.Position.Z+19)<.03 and
-        math.abs(faith.Position.Z-6)<.03,
+    assert(math.abs(faith.Position.Z-6)<.03,
         "WINDOW_CUE_BAY_POSITION_INVALID")
-    assert(left.Position.Y>14.90 and headline.Position.Y>15.40
-        and faith.Position.Y>14.90,
+    assert(faith.Position.Y>14.90,
         "WINDOW_CUE_SIGN_HEIGHT_INVALID")
-    assert(math.abs(left.Size.Z-faith.Size.Z)<.03
-        and math.abs(headline.Size.Z-faith.Size.Z)<.03
-        and math.abs((left.Position.Z+faith.Position.Z)/2+6.5)<.03,
-        "WINDOW_CUE_DECOR_NOT_SYMMETRIC")
-    assert(#parts("Smore mural pine trunk")==2 and
-        #parts("Smore mural green canopy")==4,
-        "WINDOW_CUE_MURAL_TREES_MISSING")
+    assert(#parts("Smore classroom main title")==0
+        and #parts("Smore faith headline")==0
+        and #parts("Smore mural pine trunk")==0
+        and #parts("Smore mural green canopy")==0,
+        "WINDOW_CUE_REMOVED_SMORE_RETURNED")
     local ac=one("Photo window air conditioner housing")
     assert(math.abs(ac.Position.Z+19)<.03
         and math.abs(ac.Position.X+35.55)<.03
@@ -93,7 +84,7 @@ local function check()
         and math.abs(clock.Position.Y-11.60)<.03
         and math.abs(clock.Position.Z+6.50)<.03,
         "PHOTO_WINDOW_CLOCK_LOCATION_INVALID")
-    assert(clock.Position.Z>left.Position.Z+8
+    assert(clock.Position.Z>-19+8
         and clock.Position.Z<faith.Position.Z-7
         and clock.Position.X<-35.8,
         "PHOTO_WINDOW_CLOCK_NOT_BETWEEN_WINDOWS")
@@ -153,9 +144,7 @@ local function check()
         assert(p.Anchored and not p.CanCollide and not p.CanTouch,
             "PHOTO_WINDOW_CLOCK_DECOR_COLLIDES")
     end
-    local seen={"Classroom faith window banner","Smore faith headline",
-        "Smore classroom main title","Smore mural pine trunk",
-        "Smore mural green canopy","Photo window air conditioner housing",
+    local seen={"Classroom faith window banner","Photo window air conditioner housing",
         "Photo AC inset front grille","Photo AC horizontal vent louver",
         "Photo AC control fascia","Photo AC control dial"}
     for _,name in ipairs(seen) do
@@ -228,11 +217,11 @@ local function check()
         #parts("Purple corner chair seat")==1 and
         #parts("Student desk top")==16,
         "WINDOW_CUE_ORIGINAL_ROOM_REGRESSION")
-    return left,ac,clock
+    return faith,ac,clock
 end
-local left,ac,clock=check()
+local faith,ac,clock=check()
 print("WINDOW_CUE_RUNTIME_PASS draped_windows=2 panels=4 folds=8 "..
-    "banners=2 pines=2 "
+    "banners=1 smore_removed=true "
     .."photo_ac=1 louvers=5 controls=2 collision_free=true "
     .."windows=2 purple_chair=1 desk_pairs=16")
 local old=ac.CanCollide
@@ -243,15 +232,15 @@ assert(not ok and string.find(tostring(err),
     "WINDOW_CUE_DECOR_COLLIDES",1,true),
     "WINDOW_CUE_COLLIDING_AC_NOT_REJECTED")
 print("WINDOW_CUE_ADVERSARIAL_REJECTED collidable_ac")
-local before=left.CFrame
-left.CFrame=CFrame.new(-36.28,15.39,6)
+local before=faith.CFrame
+faith.CFrame=CFrame.new(-36.28,15.39,-19)
 ok,err=pcall(check)
-left.CFrame=before
+faith.CFrame=before
 assert(not ok and string.find(tostring(err),
     "WINDOW_CUE_BAY_POSITION_INVALID",1,true),
     "WINDOW_CUE_WRONG_WINDOW_NOT_REJECTED")
 print("WINDOW_CUE_ADVERSARIAL_REJECTED wrong_window")
-local label=signText(left)
+local label=signText(faith)
 local saved=label.Text
 label.Text="WELCOME"
 ok,err=pcall(check)

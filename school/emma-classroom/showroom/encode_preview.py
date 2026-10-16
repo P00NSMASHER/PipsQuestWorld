@@ -21,7 +21,7 @@ names=("01-isometric","02-front","03-top","04-exterior-control",
        "16-rug-overlook","17-library-cover-fronts",
        "18-window-foliage-close","19-iphone-landscape-rug",
        "20-window-chair-workstation","21-back-builtins",
-       "22-hall-look-left","23-hall-look-right",
+       "22-hall-look-south","23-hall-look-north",
        "24-hall-entry-from-gallery")
 assert len(names)==24 and len(set(names))==24
 print("VISUAL_EVIDENCE_INVENTORY_PASS frames="+str(len(names)),flush=True)

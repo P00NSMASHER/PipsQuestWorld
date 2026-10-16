@@ -70,9 +70,8 @@ assert 'numeralAnchor.Transparency=1' in room, (
     "White rectangular cloud-label backing returned"
 )
 assert 'emphasizeRugText(numeral,true)' in room and 'emphasizeRugText(letter,false)' in room
-assert 'Vector3.new(.82,.51,.51)' in room, "Child-size desk water bottle shape regressed"
-assert 'Water bottle tapered shoulder' in room, "Bottle lacks supported neck detail"
-assert 'CFrame.new(bottleX,4.19,bottleZ)' in room, "Bottle cap offset from corrected geometry"
+assert 'Emma pink water bottle' not in room, "Removed desktop water bottle returned"
+assert 'Water bottle tapered shoulder' not in room, "Removed desktop bottle shoulder returned"
 assert 'Vector3.new(1.10,.55,.55)' not in room, "Oversized original water bottle returned"
 assert 'Frosted fluorescent diffuser' in room, "Glaring neon ceiling fixture returned"
 assert 'for _,x in ipairs({-18,18}) do' in room, "Nine-fixture neon grid returned"
@@ -144,7 +143,7 @@ assert 'SwapFailed_PreservingOriginalFurniture' in mesh_adapter
 assert 'local originals = {}' in mesh_adapter and 'p.Transparency = previous[i]' in mesh_adapter, "A partial furniture swap must restore original visibility"
 assert 'instances ~= 16' in mesh_adapter, "Must stage all 16 chair/desk sets"
 assert 'sign(root,"Rule card "' not in room, "Old oversized classroom cards returned"
-assert 'for i,x in ipairs({-24,-8,12}) do' in room, "Unsupported basket placement returned"
+assert 'for i,x in ipairs({-24,-8,12}) do' not in room, "Removed desktop supply bins returned"
 assert '"Number learning card"' not in (base / "emma-classroom/showroom/ArtPass.lua").read_text(), "Rear wall gallery would overlap number cards"
 
 if len(sys.argv) > 1:

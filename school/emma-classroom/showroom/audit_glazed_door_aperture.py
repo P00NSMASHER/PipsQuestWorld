@@ -60,8 +60,8 @@ local function verify()
     assert(topRails==2 and sillRails==2,
         "PHOTO_APERTURE_MISSING_TOP_OR_SILL")
     local header=headers[1]
-    assert(header.CanCollide and header.Size.Y>2.3
-        and header.Position.Y-header.Size.Y/2>11.2,
+    assert(header.CanCollide and math.abs(header.Size.Y-1.75)<.03
+        and math.abs(header.Position.Y-header.Size.Y/2-11.25)<.03,
         "PHOTO_APERTURE_UNFINISHED_TRANSOM_VOID")
     for _,side in ipairs(stiles) do
         assert(side.Size.X>1.07 and side.Size.X<1.13
