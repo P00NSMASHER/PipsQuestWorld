@@ -90,7 +90,7 @@ local function check()
         and math.abs(clock.Position.Y-11.60)<.03
         and math.abs(clock.Position.Z+6.50)<.03,
         "PHOTO_WINDOW_CLOCK_LOCATION_INVALID")
-    assert(clock.Position.Z>left.Position.Z+8
+    assert(clock.Position.Z>headline.Position.Z+8
         and clock.Position.Z<faith.Position.Z-7
         and clock.Position.X<-35.8,
         "PHOTO_WINDOW_CLOCK_NOT_BETWEEN_WINDOWS")
