@@ -420,7 +420,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         staff_surround[0][4].endswith("Metal")
     ), "Side hall recess replaced with overexposed fixture"
     print("SCHOOL_CORRIDOR_FINISH_PASS long_hall=108_studs "
-          "glazed_brick_facings=5 main_diffusers=5 staff_left_entry_straight=true "
+          "glazed_brick_facings=6 main_diffusers=5 staff_left_entry_straight=true "
           "photo_schoolwork_papers=23 physical=true notebook_parts_saved=64 "
           "native_iphone_pending",flush=True)
 
