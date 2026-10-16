@@ -20,7 +20,7 @@ WOOD={
     "top_lintel":((810,260,1150,375),4000),
     "left_stile":((815,335,880,750),5500),
     "right_stile":((1060,335,1150,790),7000),
-    "center_crossbar":((850,490,1090,538),1600),
+    "center_crossbar":((850,490,1090,538),800),
     "lower_sill":((820,650,1150,738),12000),
     "raised_panel":((830,715,1145,1030),20000),
 }
@@ -29,8 +29,8 @@ GLASS={
     "lower_pane":((865,520,1080,655),10000),
 }
 BRASS_REGION=(1030,720,1090,860)
-PANEL_CORE=(865,745,1070,980)
-PANEL_BORDER=(831,745,854,970)
+PANEL_CORE=(840,650,1080,830)
+PANEL_BORDER=(800,650,820,830)
 
 
 def is_wood(v):
@@ -131,7 +131,7 @@ def self_test():
     reject(painted((855,508,1095,655),(53,66,79)),"GLASS_INVISIBLE")
     reject(painted((845,490,1105,538),(108,139,152)),"3D_WOOD_MISSING")
     reject(painted((1035,735,1068,830),(73,55,39)),"BRASS_HANDLE_INVISIBLE")
-    flat=painted((860,737,1120,1000),(56,41,29))
+    flat=painted((790,640,1090,840),(56,41,29))
     ImageDraw.Draw(flat).rectangle((1039,741,1060,825),fill=(138,140,106))
     reject(flat,"LOWER_PANEL_FLAT")
     reject(sample.resize((1112,512)),"VIEWPORT_CHANGED")

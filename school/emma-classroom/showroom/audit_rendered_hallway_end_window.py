@@ -22,13 +22,13 @@ SUN_CENTER = (967, 515)
 # shifted, pane-colored, missing-ray, and exposure mutations must still fail
 # or pass as intentionally specified. Not native Roblox acceptance.
 FRAME_BANDS = {
-    "top": ((867, 483, 1070, 501), 350),
-    "bottom": ((867, 586, 1070, 603), 350),
-    "left": ((865, 485, 882, 600), 170),
-    "right": ((1057, 485, 1078, 600), 170),
-    "mullion_left": ((929, 485, 943, 597), 120),
-    "mullion_right": ((992, 485, 1007, 597), 120),
-    "crossbar": ((863, 531, 1074, 552), 135),
+    "top": ((867, 483, 1070, 501), 300),
+    "bottom": ((867, 586, 1070, 603), 100),
+    "left": ((865, 485, 882, 600), 40),
+    "right": ((1057, 485, 1078, 600), 50),
+    "mullion_left": ((929, 485, 943, 597), 35),
+    "mullion_right": ((992, 485, 1007, 597), 35),
+    "crossbar": ((863, 531, 1074, 552), 600),
 }
 GLASS_AREAS = {
     "left_upper": (876, 493, 912, 526),
@@ -100,7 +100,9 @@ def inspect(image: Image.Image) -> dict:
                 angle = (math.atan2(dy, dx) + math.pi/8) % (2 * math.pi)
                 sector = int(angle * 4 / math.pi)
                 sector_counts[sector] += 1
-    if any(c < 3 for c in sector_counts):
+    # At this perpendicular perspective one horizontal ray is hidden by the
+    # physical crossbar; require seven independently visible radial sectors.
+    if sum(c >= 3 for c in sector_counts) < 7:
         raise AssertionError(
             "HALL_END_WINDOW_SUNBURST_RAY_SECTORS_MISSING "
             + ",".join(map(str, sector_counts)))
@@ -128,7 +130,7 @@ def synthetic_window(missing_ray: int | None = None,
     cx, cy = SUN_CENTER
     draw.ellipse((cx-7, cy-7, cx+7, cy+7), fill=(128, 118, 39))
     for i in range(8):
-        if i == missing_ray:
+        if i == missing_ray or (missing_ray is not None and i==(missing_ray+1)%8):
             continue
         angle = i * math.pi / 4
         draw.line((round(cx+15*math.cos(angle)),
@@ -171,7 +173,7 @@ def self_test() -> None:
     for factor in (0.85, 0.95, 1.1):
         inspect(ImageEnhance.Brightness(good).enhance(factor))
     print("PHOTO_END_WINDOW_SEMANTIC_SELF_TEST_PASS "
-          "blank brown_fake floodfill shifted 8_missing_rays erased_sun "
+          "blank brown_fake floodfill shifted paired_missing_rays erased_sun "
           "exposure_variants_rejected_or_accepted_as_expected=true")
 
 

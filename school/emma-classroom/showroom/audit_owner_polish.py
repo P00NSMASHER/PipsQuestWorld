@@ -52,20 +52,38 @@ local function check()
     local tissue=one("Folded tissue")
     assert(tissue.Color.R>.98 and tissue.Color.G>.98 and tissue.Color.B>.97,
         "OWNER_POLISH_TISSUE_COLOR_INVALID")
+    assert(tissue.Material==Enum.Material.SmoothPlastic and tissue.CastShadow==false,
+        "OWNER_POLISH_TISSUE_MUST_RENDER_CLEAN_WHITE")
     assert(#parts("Teacher desk wooden stationery tray")==0
         and #parts("Teacher wooden colored pencil")==0,
         "OWNER_POLISH_STRIPED_BOARD_RETURNED")
 
-    -- Photos 4/5: every student desk has three separate, deterministic zones.
+    -- Photos 5/6: every desk has four simple, separated supply zones.
     local desks=parts("Student desk top")
     local pages=parts("Ruled notebook page")
     local pencils=parts("Desk pencil")
-    local strips=parts("Desk name strip")
-    assert(#desks==16 and #pages==16 and #pencils==16 and #strips==16,
-        "OWNER_POLISH_DESK_SET_COUNT_INVALID")
+    local erasers=parts("Desk eraser")
+    local books={}
+    for _,book in ipairs(parts("Classroom book")) do
+        if book.Position.Y>3.10 and book.Position.Y<3.50 then
+            table.insert(books,book)
+        end
+    end
+    assert(#desks==16 and #pages==16 and #pencils==16
+        and #erasers==16 and #books>=16,
+        "OWNER_POLISH_DESK_SET_COUNT_INVALID desks="..#desks
+        .." pages="..#pages.." pencils="..#pencils
+        .." erasers="..#erasers.." books="..#books)
+    assert(#parts("Supply basket")==0 and #parts("Basket long rim")==0
+        and #parts("Basket end rim")==0 and #parts("Basket pencil")==0
+        and #parts("Desk name strip")==0
+        and #parts("Emma desk nameplate")==0
+        and #parts("Emma pink water bottle")==0,
+        "OWNER_POLISH_DESK_EXTRA_OBJECT_RETURNED")
     for _,desk in ipairs(desks) do
-        local nearestPage,nearestPencil,nearestStrip=nil,nil,nil
-        local pageDistance,pencilDistance,stripDistance=math.huge,math.huge,math.huge
+        local nearestPage,nearestPencil,nearestEraser,nearestBook=nil,nil,nil,nil
+        local pageDistance,pencilDistance,eraserDistance,bookDistance=
+            math.huge,math.huge,math.huge,math.huge
         for _,p in ipairs(pages) do
             local d=(p.Position.X-desk.Position.X)^2+(p.Position.Z-desk.Position.Z)^2
             if d<pageDistance then pageDistance=d nearestPage=p end
@@ -74,16 +92,23 @@ local function check()
             local d=(p.Position.X-desk.Position.X)^2+(p.Position.Z-desk.Position.Z)^2
             if d<pencilDistance then pencilDistance=d nearestPencil=p end
         end
-        for _,p in ipairs(strips) do
+        for _,p in ipairs(erasers) do
             local d=(p.Position.X-desk.Position.X)^2+(p.Position.Z-desk.Position.Z)^2
-            if d<stripDistance then stripDistance=d nearestStrip=p end
+            if d<eraserDistance then eraserDistance=d nearestEraser=p end
         end
-        assert(nearestPage and nearestPencil and nearestStrip
-            and nearestPage.Position.X<desk.Position.X-.40
-            and nearestPencil.Position.X>desk.Position.X+.90
-            and nearestStrip.Position.Z<desk.Position.Z-1.25
-            and nearestPage.Position.Z>nearestStrip.Position.Z+.55
-            and nearestPencil.Position.Z>nearestStrip.Position.Z+.80,
+        for _,p in ipairs(books) do
+            local d=(p.Position.X-desk.Position.X)^2+(p.Position.Z-desk.Position.Z)^2
+            if d<bookDistance then bookDistance=d nearestBook=p end
+        end
+        assert(nearestPage and nearestPencil and nearestEraser and nearestBook
+            and nearestBook.Position.X<desk.Position.X-1.30
+            and nearestBook.Position.Z>desk.Position.Z+.18
+            and nearestPage.Position.X>desk.Position.X+.40
+            and nearestPage.Position.Z<desk.Position.Z-.60
+            and nearestPencil.Position.X>desk.Position.X+1.60
+            and nearestPencil.Position.Z>desk.Position.Z+.30
+            and nearestEraser.Position.X>desk.Position.X+1.60
+            and nearestEraser.Position.Z<desk.Position.Z-.65,
             "OWNER_POLISH_DESK_ITEMS_OVERLAP")
     end
 
@@ -146,19 +171,17 @@ local function check()
     table.sort(glass,function(a,b) return a.Position.Z<b.Position.Z end)
     local clock=one("Classroom wall clock")
     local faith=one("Classroom faith window banner")
-    local smore=one("Smore classroom main title")
-    local headline=one("Smore faith headline")
     assert(near(clock.Position.Z,(glass[1].Position.Z+glass[2].Position.Z)/2)
-        and near(smore.Position.Z,glass[1].Position.Z)
-        and near(headline.Position.Z,glass[1].Position.Z)
         and near(faith.Position.Z,glass[2].Position.Z)
-        and near(smore.Size.Z,faith.Size.Z)
-        and near(headline.Size.Z,faith.Size.Z),
+        and #parts("Smore classroom main title")==0
+        and #parts("Smore faith headline")==0
+        and #parts("Smore mural pine trunk")==0
+        and #parts("Smore mural green canopy")==0,
         "OWNER_POLISH_WINDOW_WALL_NOT_SYMMETRIC")
     return one("Interactive smartboard")
 end
 local smart=check()
-print("OWNER_POLISH_RUNTIME_PASS photos=9 desks=16 centered_walls=3 teacher_badge_source_separate=true")
+print("OWNER_POLISH_RUNTIME_PASS photos=8 desks=16 centered_walls=3 teacher_badge_source_separate=true")
 local old=smart.CFrame
 smart.CFrame=CFrame.new(1,smart.Position.Y,smart.Position.Z)
 local ok,err=pcall(check)

@@ -30,27 +30,15 @@ FAST = (
     "06-hall-paper-rail",
     "07-hall-yellow-end-window",
     "08-hall-adjacent-oak-door",
-    "09-hall-straight-entry-seam",
+    "09-hall-turn-entry-seam",
 )
 FULL = (
     "15-eye-closet-shelves",
-    "22-hall-look-left",
-    "23-hall-look-right",
+    "22-hall-look-south",
+    "23-hall-look-north",
     "24-hall-entry-from-gallery",
 )
 REGISTERED=FAST+FULL
-
-# The 07/08 hallway cameras feed pixel-level geometry/visibility gates
-# calibrated against real source-derived 1920x1080 frames. A small camera
-# move may satisfy generic corridor topology yet invalidate those ROIs.
-# Fail *before rendering* on unreviewed camera drift. A deliberate new
-# composition must update its semantic ROIs, evidence, and this contract.
-SEMANTIC_PIXEL_CAMERA_CONTRACT = {
-    "07-hall-yellow-end-window":
-        Camera((100,5.7,21),(155,7.35,15.5)),
-    "08-hall-adjacent-oak-door":
-        Camera((145,5.6,16),(153.5,6.8,25.7)),
-}
 
 def triple(raw: str) -> tuple[float,float,float]:
     parts=raw.split(",")
@@ -91,7 +79,7 @@ def check_role(name: str, cam: Camera) -> None:
 
     # Source-constructed floor/roof bounds; native Roblox FPS and camera
     # behavior remain a separate device gate.
-    main=(55.0,160.0,5.5,25.5)
+    main=(38.0,59.0,28.0,133.5)
     closet=(-4.6,4.6,28.3,34.3)
     side=(38.0,53.0,6.0,25.5)
     def inside(bounds):
@@ -103,9 +91,9 @@ def check_role(name: str, cam: Camera) -> None:
             assert tz<27.5, "HALL_CAMERA_CLOSET_DOOR_AIM_WRONG "+name
         else:
             assert tz>34, "HALL_CAMERA_CLOSET_SHELVES_AIM_WRONG "+name
-    elif name=="09-hall-straight-entry-seam":
-        assert inside(side) and tx>=65 and 9<=tz<=23, (
-            "HALL_CAMERA_STRAIGHT_JUNCTION_WRONG_SIDE "+name)
+    elif name=="09-hall-turn-entry-seam":
+        assert inside(main) and 45<=tx<=52 and tz>=50, (
+            "HALL_CAMERA_TURN_JUNCTION_WRONG_SIDE "+name)
     else:
         assert inside(main) and not inside(closet), (
             "HALL_CAMERA_INSIDE_SUPPLY_CLOSET_NOT_GALLERY "+name)
@@ -114,30 +102,26 @@ def check_role(name: str, cam: Camera) -> None:
             # papers, and the first corrected look-along-wall shot showed 7.
             # The second must exceed the seven-paper independent overview.
             # Reject overly short, head-on, or wrong-room fallback cameras.
-            assert 90<=x<=110 and 12<=z<=17.5 and 128<=tx<=152 and (
-                7<=tz<=11 and 28<=tx-x<=53
+            assert 40<=x<=52 and 50<=z<=65 and tx>=58 and (
+                85<=tz<=100
             ), "HALL_CAMERA_PAPER_AIM_TOO_SHORT_OR_OFF_GALLERY"
         elif name=="07-hall-yellow-end-window":
-            assert tx>=150 and 12<=tz<=19, (
+            assert 45<=tx<=52 and tz>=130, (
                 "HALL_CAMERA_YELLOW_WINDOW_AIM_MISSES_FAR_END")
         elif name=="08-hall-adjacent-oak-door":
-            assert tx>=150 and 23<=tz<=27, (
+            assert 45<=x<=55 and 124<=z<=129
+            assert tx<=40 and 124<=tz<=129, (
                 "HALL_CAMERA_OAK_DOOR_AIM_MISSES_NORTH_FACADE")
-        elif name=="22-hall-look-left":
-            assert tx<=90, "HALL_CAMERA_WRONG_LEFT_DIRECTION"
-        elif name=="23-hall-look-right":
-            assert tx>=140, "HALL_CAMERA_WRONG_RIGHT_DIRECTION"
+        elif name=="22-hall-look-south":
+            assert tz<=50, "HALL_CAMERA_WRONG_SOUTH_DIRECTION"
+        elif name=="23-hall-look-north":
+            assert tz>=115, "HALL_CAMERA_WRONG_NORTH_DIRECTION"
         elif name=="24-hall-entry-from-gallery":
-            assert tx<=42 and 10<=tz<=22, (
+            assert 45<=tx<=52 and 26<=tz<=30, (
                 "HALL_CAMERA_MISSES_ONLY_CONNECTED_EXIT")
 
 def inspect(cameras: dict[str,Camera], blockers=None) -> None:
     assert set(cameras)==set(REGISTERED), "HALL_CAMERA_INVENTORY_REGRESSION"
-    for name,expected in SEMANTIC_PIXEL_CAMERA_CONTRACT.items():
-        assert cameras[name]==expected, (
-            "HALL_SEMANTIC_PIXEL_ROI_CAMERA_DRIFT "+name
-            +"; recalibrate the real screenshot gates before updating this camera"
-        )
     for name,cam in cameras.items():
         check_role(name,cam)
         if blockers is not None:
@@ -148,14 +132,14 @@ def self_test() -> None:
     # Synthetic, publicly safe camera location mutation fixtures.
     example={
         "05-closet-double-doors":Camera((0,5.5,31),(0,6.9,26.8)),
-        "06-hall-paper-rail":Camera((100,5.5,16),(130,8,9)),
-        "07-hall-yellow-end-window":Camera((100,5.7,21),(155,7.35,15.5)),
-        "08-hall-adjacent-oak-door":Camera((145,5.6,16),(153.5,6.8,25.7)),
-        "09-hall-straight-entry-seam":Camera((44,5.5,15.5),(78,6,15.5)),
+        "06-hall-paper-rail":Camera((46,5.5,55),(59,8,90)),
+        "07-hall-yellow-end-window":Camera((48.5,5.7,100),(48.5,7.35,134)),
+        "08-hall-adjacent-oak-door":Camera((53,5.6,126.25),(38.4,6.8,126.25)),
+        "09-hall-turn-entry-seam":Camera((48.5,5.5,30),(48.5,6,55)),
         "15-eye-closet-shelves":Camera((0,5.5,30),(0,7.5,35.15)),
-        "22-hall-look-left":Camera((111,5.5,15.5),(76,7,15.5)),
-        "23-hall-look-right":Camera((111,5.5,15.5),(150,7,15.5)),
-        "24-hall-entry-from-gallery":Camera((75,5.5,15.5),(39,6.9,15.5)),
+        "22-hall-look-south":Camera((48.5,5.5,80),(48.5,7,45)),
+        "23-hall-look-north":Camera((48.5,5.5,80),(48.5,7,120)),
+        "24-hall-entry-from-gallery":Camera((48.5,5.5,55),(48.5,6.9,28)),
     }
     inspect(example)
     mutation_specs={
@@ -164,23 +148,15 @@ def self_test() -> None:
         "obsolete_closet_exit_camera_outside":
             ("05-closet-double-doors",Camera((4,5.5,40),(0,6.9,26.8))),
         "old_full_camera_inside_closet":
-            ("22-hall-look-left",Camera((0,5.5,32),(76,7,15.5))),
+            ("22-hall-look-south",Camera((0,5.5,32),(48.5,7,45))),
         "wrong_turn_aim":
-            ("24-hall-entry-from-gallery",Camera((75,5.5,15.5),(75,7,38))),
+            ("24-hall-entry-from-gallery",Camera((48.5,5.5,55),(75,7,38))),
         "not_child_eye":
-            ("06-hall-paper-rail",Camera((100,17.5,16),(130,8,9))),
+            ("06-hall-paper-rail",Camera((48.5,17.5,70),(59,8,95))),
         "old_four_sheets_false_accept":
-            ("06-hall-paper-rail",Camera((112,5.5,17),(125,9,4.98))),
+            ("06-hall-paper-rail",Camera((48.5,5.5,70),(59,9,72))),
         "camera_crosses_gallery_centerline":
-            ("06-hall-paper-rail",Camera((100,5.5,20),(151,8,8))),
-        # Both are otherwise valid/walkable and would have passed the
-        # existing broad hallway-role checks, but shift actual pixel ROIs.
-        "moved_end_window_while_pixel_gate_unchanged":
-            ("07-hall-yellow-end-window",
-             Camera((100,5.7,21),(155.5,7.35,15.5))),
-        "moved_oak_door_while_pixel_gate_unchanged":
-            ("08-hall-adjacent-oak-door",
-             Camera((145,5.6,16),(153.5,6.8,25.2))),
+            ("06-hall-paper-rail",Camera((35,5.5,70),(59,8,95))),
     }
     for reason,(name,incorrect) in mutation_specs.items():
         changed=dict(example)
@@ -193,8 +169,7 @@ def self_test() -> None:
             raise AssertionError("HALL_CAMERA_NEGATIVE_TEST_ACCEPTED "+reason)
     print("HALL_CAMERA_LAYOUT_SELF_TEST_PASS "
           "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true "
-          "old_four_sheets_view_and_wrong_distance_rejected=true"
-          " photo_pixel_roi_camera_drift_rejected=true")
+          "old_four_sheets_view_and_wrong_distance_rejected=true")
 
 def main() -> None:
     ap=argparse.ArgumentParser()

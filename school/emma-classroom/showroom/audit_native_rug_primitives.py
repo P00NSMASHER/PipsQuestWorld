@@ -142,7 +142,8 @@ end
 -- keep all original rug coordinates and other fifteen student pairs.
 local function checkReadingRugClearance()
     local mat=nil
-    local seats,backs,desks,baskets={},{},{},{}
+    local seats,backs,desks={},{},{}
+    local basketN=0
     for _,p in ipairs(Room.Root:GetDescendants()) do
         if p:IsA("BasePart") then
             if p.Name=="Alphabet rug" then
@@ -155,12 +156,12 @@ local function checkReadingRugClearance()
             elseif p.Name=="Student desk top" then
                 table.insert(desks,p)
             elseif p.Name=="Supply basket" then
-                table.insert(baskets,p)
+                basketN+=1
             end
         end
     end
     assert(mat and #seats==16 and #backs==16 and #desks==16
-        and #baskets==3,
+        and basketN==0,
         "RUG_READING_ORIGINAL_FURNITURE_COUNT_CHANGED")
     assert(math.abs(mat.Position.X-25)<.025
         and math.abs(mat.Position.Z+25)<.025
@@ -185,7 +186,7 @@ local function checkReadingRugClearance()
             assert(gap>.12,"RUG_READING_FURNITURE_OCCLUDES_CLOUDS")
         end
     end
-    local movedSeat,movedDesk,movedBack,movedBasket
+    local movedSeat,movedDesk,movedBack
     for _,seat in ipairs(seats) do
         if math.abs(seat.Position.X+24)<.03
             and seat.Position.Z>0 and seat.Position.Z<10 then
@@ -204,20 +205,13 @@ local function checkReadingRugClearance()
             movedBack=back
         end
     end
-    for _,basket in ipairs(baskets) do
-        if math.abs(basket.Position.X+24)<.03 then
-            movedBasket=basket
-        end
-    end
-    assert(movedSeat and movedDesk and movedBack and movedBasket,
-        "RUG_READING_ADJUSTED_PAIR_OR_BASKET_MISSING")
+    assert(movedSeat and movedDesk and movedBack,
+        "RUG_READING_ADJUSTED_PAIR_MISSING")
     assert(math.abs(movedDesk.Position.Z-1.60)<.03
         and math.abs(movedSeat.Position.Z-5.08)<.03
-        and math.abs(movedBack.Position.Z-6.01)<.04
-        and math.abs(movedBasket.Position.Z-2.40)<.03
-        and math.abs(movedBasket.Position.Y-3.24)<.03,
-        "RUG_READING_BASKET_OR_PAIR_DISCONNECTED")
-    return movedSeat,movedBasket,nearest
+        and math.abs(movedBack.Position.Z-6.01)<.04,
+        "RUG_READING_PAIR_DISCONNECTED")
+    return movedSeat,nearest
 end
 -- A different obstruction remained after the blue chair was cleared:
 -- the *rolling supply cart* overlapped the round sun/cloud rug. Test
@@ -491,10 +485,10 @@ print("RUG_STORAGE_CART_ADVERSARIAL_REJECTED detached_book")
 checkSupplyCartClearance()
 checkReadingCornerPlant()
 
-local movedSeat,movedBasket,clearance=checkReadingRugClearance()
+local movedSeat,clearance=checkReadingRugClearance()
 print(string.format("RUG_READING_OPEN_FLOOR_PASS student_pairs=16 "
     .."round_rug_unchanged=true nearest_clearance_studs=%.2f "
-    .."one_supported_basket=true",clearance))
+    .."desktop_baskets_removed=true",clearance))
 local spots=dotcheck()
 print("RUG_PHOTO_POLKADOT_PASS dots=25 unique_spots=true "
     .."diameters=5 palette>=5 minimum_gap>.10 grid=false")
@@ -546,14 +540,6 @@ assert(not okReading and string.find(tostring(errReading),
     "RUG_READING_FURNITURE_OCCLUDES_CLOUDS",1,true),
     "RUG_READING_OLD_CLOUD_BLOCKING_CHAIR_NOT_REJECTED")
 print("RUG_READING_ADVERSARIAL_REJECTED chair_over_clouds")
-local oldBasketCF=movedBasket.CFrame
-movedBasket.CFrame=CFrame.new(-24,3.24,4.8)
-okReading,errReading=pcall(checkReadingRugClearance)
-movedBasket.CFrame=oldBasketCF
-assert(not okReading and string.find(tostring(errReading),
-    "RUG_READING_BASKET_OR_PAIR_DISCONNECTED",1,true),
-    "RUG_READING_UNSUPPORTED_BASKET_NOT_REJECTED")
-print("RUG_READING_ADVERSARIAL_REJECTED basket_left_behind")
 checkReadingRugClearance()
 print("RUG_NATIVE_NEGATIVE_TESTS_PASS cloud_ball ray_ball dots_overlap edge grid reading_access")
 '''
@@ -578,7 +564,6 @@ def main():
              "RUG_STORAGE_CART_ADVERSARIAL_REJECTED floating_papers",
              "RUG_READING_OPEN_FLOOR_PASS",
              "RUG_READING_ADVERSARIAL_REJECTED chair_over_clouds",
-             "RUG_READING_ADVERSARIAL_REJECTED basket_left_behind",
              "RUG_NATIVE_PRIMITIVES_PASS",
              "RUG_NATIVE_ADVERSARIAL_REJECTED flattened_cloud_ball",
              "RUG_PHOTO_POLKADOT_PASS",
