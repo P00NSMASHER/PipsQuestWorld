@@ -331,7 +331,7 @@ jobs:
             school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py --self-test
           echo "HALL_DUAL_CAMERA_FIXTURE_FAST_PASS"
 
-      - name: Capture three fixed full-geometry viewpoints
+      - name: Capture fixed full-geometry viewpoints
         shell: bash
         env:
           RHR_CACHE_DIR: ${{ runner.temp }}/rhr-fast-cache
@@ -410,7 +410,12 @@ jobs:
           # old floor/roof stopped 1.25 studs before the photo hallway.
           render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
             09-hall-turn-entry-seam 48.5,5.5,30 48.5,6,55
-          echo "FAST_PHOTO_NONBLANK_PASS 9 source-derived views"
+          # Render the second hallway-paper exposure in this same job. Files
+          # under RUNNER_TEMP are job-local and cannot be borrowed from the
+          # parallel full-preview job.
+          render_checked "$RUNNER_TEMP/actual-room.rbxmx" \
+            10-hall-look-north 48.5,5.5,80 48.5,7.0,120
+          echo "FAST_PHOTO_NONBLANK_PASS 10 source-derived views"
       - name: Reject noncolliding visual half-wall blocking the perpendicular staff exit
         shell: bash
         run: |
@@ -436,12 +441,12 @@ jobs:
           "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
             "$FAST/06-hall-paper-rail.png"
           "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers.py \
-            "$RUNNER_TEMP/visual/23-hall-look-north.png"
+            "$FAST/10-hall-look-north.png"
           # The two exposures must not be duplicate PNGs, swapped views,
           # a single fake paper panel, or a weak/occluded gallery closeup.
           "$PY" school/emma-classroom/showroom/audit_rendered_hallway_papers_dual.py \
             --gallery "$FAST/06-hall-paper-rail.png" \
-            --overview "$RUNNER_TEMP/visual/23-hall-look-north.png"
+            --overview "$FAST/10-hall-look-north.png"
           echo "HALL_PAPER_TWO_INDEPENDENT_CAMERAS_PASS native_iphone_pending=true"
 
       - name: Prove gold window frame, dark panes, and eight radial sunburst rays are visible
