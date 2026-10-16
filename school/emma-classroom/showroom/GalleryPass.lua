@@ -463,6 +463,7 @@ local function physicalDetails(root:Instance,group:Instance)
             slot.Name="Radiator vent slat"
             slot.BorderSizePixel=0
             slot.BackgroundColor3=C.metal
+            slot.BackgroundTransparency=0
             slot.Size=UDim2.fromScale(.65,.075)
             slot.Position=UDim2.fromScale(.175,.4625+i*.15)
             slot.Parent=grille
