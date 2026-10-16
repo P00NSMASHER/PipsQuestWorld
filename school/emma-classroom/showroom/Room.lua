@@ -2356,14 +2356,13 @@ local function buildTeacherEntry(root: Instance)
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
--- The school corridor runs perpendicular to the staff doorway. Reuse the
--- complete photographed hall as one rigid assembly and turn it north at the
--- exterior vestibule, so looking through the classroom door no longer reveals
--- a fake straight tunnel through the wall.
+-- Owner correction: the staff doorway opens directly into the long school
+-- corridor on the same east/west axis. Reuse the photographed hall as one
+-- rigid assembly; do not add a north turn or route through the supply closet.
 local function alignHallwayWithStaffExit(root: Instance)
     local hall=root:FindFirstChild("PhotographedHallway")
     assert(hall, "Missing original photo corridor")
-    hall:SetAttribute("Route","Perpendicular north turn outside staff door")
+    hall:SetAttribute("Route","Straight +X from left staff door; no turns")
     hall:SetAttribute("Source","October 10 anonymous photographed architecture")
 
     -- First establish the authored hall with its open end at the vestibule.
@@ -2424,18 +2423,18 @@ local function alignHallwayWithStaffExit(root: Instance)
     sideRoof.Size=Vector3.new(21.94,.36,23.05)
     sideRoof.CFrame=CFrame.new(48.63,13.18,15.775)
 
-    -- Move the old facing wall to the outside edge of the widened vestibule.
-    -- This removes the whitish-gray false arch seen above/inside the timber
-    -- doorway while keeping the exterior turn fully enclosed.
+    -- The old east wall was a hard stop across the required straight route.
+    -- Reuse it as the vestibule's north enclosure, overlapping the long hall
+    -- wall so the doorway remains roofed, supported and open along +X.
     local oldBlock=root:FindFirstChild("Side hall far wall")
     local oldBrick=root:FindFirstChild("Side hall far brick")
     assert(oldBlock and oldBrick,"Old staff hall return missing")
-    oldBlock.Name="Staff entry outer east wall"
-    oldBlock.Size=Vector3.new(1,13,23.05)
-    oldBlock.CFrame=CFrame.new(59.60,6.5,15.775)
-    oldBrick.Name="Staff entry east wall glazed brick"
-    oldBrick.Size=Vector3.new(.12,12.7,22.75)
-    oldBrick.CFrame=CFrame.new(59.02,6.35,15.775)
+    oldBlock.Name="Staff entry straight north wall"
+    oldBlock.Size=Vector3.new(22.50,13,1)
+    oldBlock.CFrame=CFrame.new(48.35,6.5,26.80)
+    oldBrick.Name="Staff entry north wall glazed brick"
+    oldBrick.Size=Vector3.new(22.20,12.7,.12)
+    oldBrick.CFrame=CFrame.new(48.35,6.35,26.20)
     oldBrick.Color=Color3.fromRGB(192,132,63)
 
     -- Move the three preexisting south-end finish layers into alignment
@@ -2463,41 +2462,8 @@ local function alignHallwayWithStaffExit(root: Instance)
         CFrame.new(48.48,.515,26.72),Color3.fromRGB(151,130,82),
         Enum.Material.Metal,false)
 
-    -- Turn the already-complete 108-stud hall ninety degrees around its open
-    -- end. The near opening lands at (48.5, 26.75); the corridor then runs
-    -- north (+Z), perpendicular to the classroom doorway's +X exit axis.
-    local turn=CFrame.new(48.5,0,26.75)*
-        CFrame.Angles(0,-math.pi/2,0)*CFrame.new(-54,0,-15.5)
-    for _,object in ipairs(hall:GetDescendants()) do
-        if object:IsA("BasePart") then
-            object.CFrame=turn*object.CFrame
-        end
-    end
-    -- Set the corridor wall fully behind the classroom wall. The complete
-    -- exterior shell now starts beyond x=37.60 rather than sharing the room's
-    -- x=37.50 paint plane; this removes the intermittent wall intrusion.
-    local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
-    assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
-        "Staff hallway adjoining wall missing")
-    adjoiningWall.CFrame=CFrame.new(.80,0,0)*adjoiningWall.CFrame
-    adjoiningWall.Color=Color3.fromRGB(192,132,63)
-    local function westBrickPanel(name:string,length:number,centerZ:number,
-        height:number,centerY:number)
-        local facing=part(hall,name,Vector3.new(length,height,.075),
-            adjoiningWall.CFrame*CFrame.new(centerZ-80.75,centerY-6.5,-.49),
-            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
-        facing.Reflectance=.035
-        return facing
-    end
-    -- Split the west brick skin around both oak-and-glass classroom doors.
-    -- The previous single slab sat in front of every door component, leaving
-    -- empty wood rectangles filled with brick.
-    westBrickPanel("Photo hall continuous north full-height brick",27.20,40.75,12.70,6.35)
-    westBrickPanel("Photo hall continuous north full-height brick",61.80,92.05,12.70,6.35)
-    westBrickPanel("Photo hall continuous north full-height brick",4.80,131.95,12.70,6.35)
-    for _,doorZ in ipairs({57.75,126.25}) do
-        westBrickPanel("Photo hall continuous north door header brick",6.80,doorZ,2.05,11.68)
-    end
+    -- The original transform already places the 108-stud hall parallel to
+    -- the staff doorway, from x=54 to x=162 at z=15.5. Do not rotate it again.
     hall:SetAttribute("FalseEntryArchRemoved",true)
     hall:SetAttribute("ReferenceFinish","full-height orange brick and dark square tile")
 end
