@@ -510,9 +510,11 @@ local function assertDimensionalEndWindow()
         and glazing.Material==Enum.Material.Glass
         and near(glazing.Size.Y,8.32) and near(glazing.Size.Z,14.68)
         and glazing.Transparency>0 and glazing.Transparency<.35
+        and glazing.Color.G-glazing.Color.R>.10
+        and glazing.Color.B-glazing.Color.G>.07
         and glazing.Position.X<leftCap.Position.X-.45
         and glazing:GetAttribute("ArchitecturalFacade")=="Enclosed end-cap glazing",
-        "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST")
+        "PHOTO_HALL_END_WINDOW_DARK_BLUE_GLAZING_OR_SEALED_FACADE_LOST")
 
     local horizontal=expect("Photo hall yellow sash horizontal",2)
     local vertical=expect("Photo hall yellow sash vertical",2)
@@ -560,7 +562,7 @@ endWindow.CanCollide=true
 local okWindow,errWindow=pcall(assertDimensionalEndWindow)
 endWindow.CanCollide=false
 assert(not okWindow and string.find(tostring(errWindow),
-    "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST",1,true),
+    "PHOTO_HALL_END_WINDOW_DARK_BLUE_GLAZING_OR_SEALED_FACADE_LOST",1,true),
     "PHOTO_HALL_END_WINDOW_COLLIDER_MUTATION_UNDETECTED")
 local testRay=expect("Photo hall dimensional sunburst ray",8)[1]
 testRay.Name="Temporarily missing sunray in test"

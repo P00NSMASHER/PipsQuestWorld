@@ -2166,7 +2166,9 @@ local function buildBackDoorAndHall(root: Instance)
     -- Every frame, pane and sun ray is noncolliding and nonquerying.
     local endWindowGlass=hp("Photo hall yellow window glazing",
         Vector3.new(.12,8.32,14.68),CFrame.new(-53.38,7.35,38),
-        Color3.fromRGB(55,69,68),Enum.Material.Glass,false)
+        -- Keep the panes visibly blue-gray after Roblox Glass blends them
+        -- with the warm brick end cap behind this sealed facade.
+        Color3.fromRGB(18,92,118),Enum.Material.Glass,false)
     endWindowGlass.Transparency=.14
     endWindowGlass.Reflectance=.045
     endWindowGlass:SetAttribute("ArchitecturalFacade","Enclosed end-cap glazing")
@@ -2205,7 +2207,9 @@ local function buildBackDoorAndHall(root: Instance)
             Vector3.new(.11,.13,.54),
             CFrame.new(-53.02,9.55+math.sin(angle)*1.01,
                 38+math.cos(angle)*1.01)*CFrame.Angles(-angle,0,0),
-            Color3.fromRGB(242,204,65),Enum.Material.SmoothPlastic,false)
+            -- Yellow-green balance keeps every radial direction legible;
+            -- directional shading otherwise turns the lower rays brown.
+            Color3.fromRGB(245,235,55),Enum.Material.SmoothPlastic,false)
     end
     -- Window assembly adds 17 static Parts: low-cost enough to remain
     -- within the source-built 3,100 mobile Part cap. 3D source renders

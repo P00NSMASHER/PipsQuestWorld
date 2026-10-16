@@ -14,10 +14,10 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 VIEWPORT = (1920, 1080)
-SUN_CENTER = (960, 506)
+SUN_CENTER = (967, 515)
 # Fixed ROI remeasured on exact 1920x1080 direct-corridor 07 evidence from
-# PR #351 commit fb2b115. The straight-hall transform moves the original
-# yellow window by approximately +25 px to the right inside this camera.
+# PR #356's exact straight-corridor camera. The straight-hall transform and
+# full source scene place the dimensional sun center at (967, 515).
 # Every structural band retains its original minimum pixel count; blank,
 # shifted, pane-colored, missing-ray, and exposure mutations must still fail
 # or pass as intentionally specified. Not native Roblox acceptance.
@@ -34,8 +34,8 @@ GLASS_AREAS = {
     "left_upper": (876, 493, 912, 526),
     "right_upper": (1012, 493, 1046, 526),
 }
-SUN_REGION = (920, 484, 1001, 532)
-SUN_CENTER_REGION = (948, 496, 975, 519)
+SUN_REGION = (920, 480, 1015, 555)
+SUN_CENTER_REGION = (955, 503, 980, 528)
 
 
 def golden_sash(rgb: tuple[int, int, int]) -> bool:
@@ -125,8 +125,8 @@ def synthetic_window(missing_ray: int | None = None,
                  (934, 486, 941, 598), (999, 486, 1006, 598),
                  (871, 537, 1067, 543)):
         draw.rectangle(rect, fill=sash_color)
-    draw.ellipse((953, 499, 967, 513), fill=(128, 118, 39))
     cx, cy = SUN_CENTER
+    draw.ellipse((cx-7, cy-7, cx+7, cy+7), fill=(128, 118, 39))
     for i in range(8):
         if i == missing_ray:
             continue
@@ -164,7 +164,8 @@ def self_test() -> None:
         expect_rejected(synthetic_window(missing_ray=i),
                         "SUNBURST_RAY_SECTORS_MISSING")
     erased_sun = good.copy()
-    ImageDraw.Draw(erased_sun).rectangle((934, 484, 986, 532),
+    cx, cy = SUN_CENTER
+    ImageDraw.Draw(erased_sun).rectangle((cx-26, cy-26, cx+26, cy+26),
                                           fill=(55, 72, 80))
     expect_rejected(erased_sun, "SUNBURST_CENTER_MISSING")
     for factor in (0.85, 0.95, 1.1):
