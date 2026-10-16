@@ -158,8 +158,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # rail visually passed through the center of the open staff doorway.
     # Inspect ACTUAL constructed physical parts, including full-room walls,
     # before removing anything for the cutaway visualization.
-    def actual_parts(name):
-        return [row for row in lines if row[1] == name]
     # October 12 owner correction: exit the LEFT staff door and continue
     # due east along the SAME axial line. No north turn and no closet route.
     # The yellow sunburst window must be at the far (east) sealed end.
