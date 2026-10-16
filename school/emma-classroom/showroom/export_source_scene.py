@@ -1702,18 +1702,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "native_block_insets=true photo_guided_not_real_holes=true "
           "collision_unchanged=true mobile_parts_saved=80 native_iphone_pending")
 
-    # Visible manufactured school-desk legs must meet a finish at y=.5.
-    # The old broad foot remains an invisible collider of identical size;
-    # two open rounded steel runners and four glides now sit at floor height.
+    # Visible manufactured school-desk legs meet the finish at y=.5.
+    # Two rounded steel runners and four glides per desk remain at floor height;
+    # the old T-feet were entirely below the collidable floor and must not return.
     runners=[r for r in lines if r[1]=="Desk contoured base runner"]
     feet=[r for r in lines if r[1]=="Desk foot"]
     glides=[r for r in lines if r[1]=="Desk rubber glide"]
-    assert len(runners)==len(feet)==32 and len(glides)==64, (
-        "Sixteen desk bases lost their two runner/glide assemblies"
-    )
-    assert all(float(r[5])>=.99 and
-               abs(float(r[10])-.18)<.015 for r in feet), (
-        "Original collision footprint became visible or moved off geometry"
+    assert len(runners)==32 and len(feet)==0 and len(glides)==64, (
+        "Sixteen desk bases lost visible runner/glide geometry or restored "
+        "buried T-feet"
     )
     assert all(r[3].endswith("Cylinder") and
                r[4].endswith("Metal") and
@@ -1729,9 +1726,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Rubber desk runner glides are no longer supported on finished floor"
     )
     print("PHOTO_MANUFACTURED_DESK_BASE_PASS desks=16 "
-          "invisible_original_foot_colliders=32 "
+          "buried_t_foot_parts=0 removed_buried_parts=32 "
           "rounded_visible_runners=32 floor_supported_glides=64 "
-          "original_navigation_preserved=true")
+          "tubular_leg_collision_preserved=true")
     tray_rails=[r for r in lines if r[1]=="Book tray side"]
     assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"
     for r in tray_rails:
