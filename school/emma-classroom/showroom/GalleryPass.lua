@@ -286,6 +286,32 @@ local function showcaseBoards(root:Instance,group:Instance)
         ivory,Enum.Material.Fabric,false)
     gingham(far,Enum.NormalId.Back,12,4)
 
+    -- A narrow stitched red welt finishes the real cloth edges. Four top
+    -- seams and four hanging hems improve the fabric silhouette without
+    -- obscuring the woven SurfaceGui or adding walkable/collidable geometry.
+    -- All eight are static, nonquerying Fabric Parts (8 of 3,100 budget).
+    local thread=Color3.fromRGB(166,70,71)
+    for _,dx in ipairs({-2.105,2.105}) do
+        piece(group,"Photo gingham stitched piping",
+            Vector3.new(.045,.09,7.54),
+            CFrame.new(center.X+dx,center.Y,center.Z),
+            thread,Enum.Material.Fabric,false)
+        piece(group,"Photo gingham sewn apron hem",
+            Vector3.new(.045,.085,7.54),
+            CFrame.new(center.X+dx,1.61,center.Z),
+            thread,Enum.Material.Fabric,false)
+    end
+    for _,dz in ipairs({-3.805,3.805}) do
+        piece(group,"Photo gingham stitched piping",
+            Vector3.new(4.10,.09,.045),
+            CFrame.new(center.X,center.Y,center.Z+dz),
+            thread,Enum.Material.Fabric,false)
+        piece(group,"Photo gingham sewn apron hem",
+            Vector3.new(4.10,.085,.045),
+            CFrame.new(center.X,1.61,center.Z+dz),
+            thread,Enum.Material.Fabric,false)
+    end
+
     local smart=root:FindFirstChild("Interactive smartboard")
     if smart and smart:IsA("BasePart") then
         for _,child in ipairs(smart:GetChildren()) do
