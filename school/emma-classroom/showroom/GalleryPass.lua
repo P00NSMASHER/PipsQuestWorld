@@ -287,9 +287,9 @@ local function showcaseBoards(root:Instance,group:Instance)
     gingham(far,Enum.NormalId.Back,12,4)
 
     -- A narrow stitched red welt finishes the real cloth edges. Four top
-    -- seams and four hanging hems improve the fabric silhouette without
+    -- seams and two aisle/wall hems improve the fabric silhouette without
     -- obscuring the woven SurfaceGui or adding walkable/collidable geometry.
-    -- All eight are static, nonquerying Fabric Parts (8 of 3,100 budget).
+    -- Six static nonquerying Fabric Parts fit within the stricter 3,050 budget.
     local thread=Color3.fromRGB(166,70,71)
     for _,dx in ipairs({-2.105,2.105}) do
         piece(group,"Photo gingham stitched piping",
@@ -305,10 +305,6 @@ local function showcaseBoards(root:Instance,group:Instance)
         piece(group,"Photo gingham stitched piping",
             Vector3.new(4.10,.09,.045),
             CFrame.new(center.X,center.Y,center.Z+dz),
-            thread,Enum.Material.Fabric,false)
-        piece(group,"Photo gingham sewn apron hem",
-            Vector3.new(4.10,.085,.045),
-            CFrame.new(center.X,1.61,center.Z+dz),
             thread,Enum.Material.Fabric,false)
     end
 
@@ -480,11 +476,23 @@ local function physicalDetails(root:Instance,group:Instance)
             CFrame.new(21.2+i*.23,3.49,-22.5),
             ({C.pencil,C.blue,C.green})[(i-1)%3+1],Enum.Material.Wood,false)
     end
-    piece(group,"Teacher note paper",Vector3.new(1.75,.04,1.43),
+    -- Single ruled-paper SurfaceGui replaces four sub-centimeter Part lines.
+    -- Native UI keeps readable desk stationery while reducing raycast/render
+    -- objects; the static source renderer cannot reproduce SurfaceGui ink.
+    local note=piece(group,"Teacher note paper",Vector3.new(1.75,.04,1.43),
         CFrame.new(30.5,3.315,-24.0),C.paper,Enum.Material.SmoothPlastic,false)
+    local rules=Instance.new("SurfaceGui")
+    rules.Name="TeacherNoteRules";rules.Face=Enum.NormalId.Top
+    rules.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+    rules.CanvasSize=Vector2.new(350,286);rules.LightInfluence=.23
+    rules.Parent=note
     for i=1,4 do
-        piece(group,"Teacher note ruled line",Vector3.new(1.46,.009,.025),
-            CFrame.new(30.5,3.345,-24.42+i*.25),C.blue,Enum.Material.SmoothPlastic,false)
+        local ink=Instance.new("Frame")
+        ink.Name="TeacherNoteRule";ink.BorderSizePixel=0
+        ink.BackgroundColor3=C.blue
+        ink.Size=UDim2.fromScale(.84,.008)
+        ink.Position=UDim2.fromScale(.08,.13+(i-1)*.22)
+        ink.Parent=rules
     end
 end
 
