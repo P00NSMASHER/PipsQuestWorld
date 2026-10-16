@@ -309,18 +309,26 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     closet_walls=actual_parts("Supply closet side wall")
     closet_back=actual_parts("Supply closet solid rear wall")
-    closet_shelves=actual_parts("Supply closet oak shelf")
-    closet_tubs=actual_parts("Supply closet labeled storage tub")
-    assert (len(closet_walls),len(closet_back),len(closet_shelves),
-            len(closet_tubs))==(2,1,3,3), (
-        "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_REAL_STORAGE_CLOSET"
+    closet_ceiling=actual_parts("Supply closet finished ceiling")
+    closet_shelf=actual_parts("Supply closet upper shelf")
+    closet_supports=actual_parts("Supply closet shelf support")
+    closet_bins=actual_parts("Labeled classroom supply bin")
+    closet_coats=actual_parts("Children coat body")
+    closet_sleeves=actual_parts("Children coat sleeve")
+    closet_collars=actual_parts("Children coat collar")
+    assert (len(closet_walls),len(closet_back),len(closet_ceiling),
+            len(closet_shelf),len(closet_supports),len(closet_bins),
+            len(closet_coats),len(closet_sleeves),len(closet_collars))==(
+                2,1,1,1,2,4,5,10,5), (
+        "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_FINISHED_STORAGE_CLOSET"
     )
     assert abs(float(closet_back[0][11])-36.05)<.05 and (
         float(closet_back[0][6])>=12.4
     ), "RIGHT_CLOSET_REAR_MUST_BE_SEALED_AWAY_FROM_HALL"
     assert sorted(round(float(p[9]),2) for p in closet_walls)==[-5.95,5.95]
+    assert float(closet_ceiling[0][6])>12 and float(closet_ceiling[0][8])>9
     print("DOORWAY_ROUTING_SOURCE_PASS left=staff_hall right=closed_supply_closet "
-          "shelves=3 bins=3 rear_wall=true",flush=True)
+          "ceiling=1 shelf=1 supports=2 bins=4 coats=5 rear_wall=true",flush=True)
     print("PHOTO_HALL_ADJACENT_NATIVE_FACADE_SCENE_PASS two_glazed_doors=true "
           "native_new_parts=18 straight_hall_open=true right_closet_sealed=true "
           "visual_renderer_must_inspect_actual_panes=true",flush=True)
