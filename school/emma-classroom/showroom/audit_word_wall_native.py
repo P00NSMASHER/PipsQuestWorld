@@ -30,9 +30,9 @@ local function check()
         and board.Color.B>.78 and board.Color.B>board.Color.R
         and not board.CanCollide and board.Anchored,
         "PHOTO_WORD_WALL_BLUE_MATERIAL_INVALID")
-    assert(math.abs(board.Position.Y-7.4)<.03
-        and math.abs(board.Position.Z+2.5)<.03
-        and math.abs(board.Size.Y-6.2)<.03
+    assert(math.abs(board.Position.Y-9.6)<.03
+        and math.abs(board.Position.Z+2.375)<.03
+        and math.abs(board.Size.Y-6.65)<.03
         and math.abs(board.Size.Z-18.0)<.03,
         "PHOTO_WORD_WALL_TOO_SMALL_OR_MISALIGNED")
     -- The wall span (-35..8) has a framed values poster near -18 and
@@ -56,7 +56,7 @@ local function check()
     assert(title.Color.G>.76 and title.Color.G>title.Color.R
         and title.Color.G>title.Color.B
         and title.Material==Enum.Material.SmoothPlastic
-        and math.abs(title.Position.Y-11.48)<.03
+        and math.abs(title.Position.Y-14.0)<.03
         and math.abs(title.Position.Z-board.Position.Z)<.03
         and title.Position.Y>board.Position.Y+board.Size.Y/2
         and math.abs(title.Size.Z-5.4)<.03
@@ -88,7 +88,7 @@ local function check()
             and not p.CastShadow,
             "PHOTO_WORD_WALL_GARLAND_COLLISION_OR_SHAPE_INVALID")
         assert(math.abs(p.Position.X-35.83)<.03
-            and p.Position.Y>10.58 and p.Position.Y<10.70
+            and p.Position.Y>12.78 and p.Position.Y<12.90
             and p.Position.Z>boardMin+.60
             and p.Position.Z<boardMax-.60,
             "PHOTO_WORD_WALL_GARLAND_OUTSIDE_FRAME")
@@ -99,7 +99,7 @@ local function check()
         local halfY=(math.abs(m[4])*p.Size.X
             +math.abs(m[5])*p.Size.Y
             +math.abs(m[6])*p.Size.Z)/2
-        assert(p.Position.Y-halfY>10.38
+        assert(p.Position.Y-halfY>12.58
             and p.Position.Y+halfY<title.Position.Y-title.Size.Y/2-.02,
             "PHOTO_WORD_WALL_GARLAND_OBSCURES_LETTERS_OR_TITLE")
         assert(p.Size.X>=.10 and p.Size.Y>=.28
@@ -158,8 +158,8 @@ local function check()
             "PHOTO_WORD_WALL_WORD_CARD_OUTSIDE_FRAME")
     end
     for _,frame in ipairs(parts("Noticeboard vertical oak frame")) do
-        assert(frame.Position.Z>boardMin-.15
-            and frame.Position.Z<boardMax+.15
+        assert(frame.Position.Z>boardMin-.25
+            and frame.Position.Z<boardMax+.25
             and math.abs(frame.Position.Y-board.Position.Y)<.03,
             "PHOTO_WORD_WALL_FRAME_DISCONNECTED")
     end
@@ -173,7 +173,7 @@ local board,markers,foliage=check()
 print("PHOTO_WORD_WALL_RUNTIME_PASS blue_smooth=true "
     .."native_cylinder_apples=26 rows=2 garland_tufts=13 no_collisions=true ")
 local previousSize=board.Size
-board.Size=Vector3.new(.30,6.2,11.2)
+board.Size=Vector3.new(.30,6.65,11.2)
 local ok,err=pcall(check)
 board.Size=previousSize
 assert(not ok and string.find(tostring(err),

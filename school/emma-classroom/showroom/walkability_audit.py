@@ -234,21 +234,21 @@ def as_floor_supports(rows: list[list[str]]) -> list[FloorSupport]:
         assert all(math.isfinite(v) for v in (sx, sy, sz, px, py, pz, *matrix)), (
             "SUPPORT_FLOOR_NONFINITE " + name)
         assert sx > 0 and sy > 0 and sz > 0, "SUPPORT_FLOOR_ZERO_DIMENSION " + name
-        # The corridor is translated/rotated 180 degrees as a rigid scene
-        # assembly. A floor with yaw 180 stays horizontal and has identical
-        # AABB support; the old identity-only test incorrectly rejected it.
-        # Continue rejecting ANY floor pitch, roll or 90-degree axis swap.
-        assert (abs(abs(matrix[0])-1) < .001 and
-                abs(matrix[4]-1) < .001 and
-                abs(abs(matrix[8])-1) < .001 and
-                matrix[0]*matrix[8] > 0 and
-                all(abs(matrix[i]) < .001
-                    for i in (1,2,3,5,6,7))), (
+        # Cardinal yaw keeps a rectangular floor axis-aligned. A quarter
+        # turn swaps its world X/Z extents; pitch, roll and diagonal slabs
+        # still fail rather than granting support over empty space.
+        assert (abs(matrix[4]-1) < .001 and
+                all(abs(matrix[i]) < .001 for i in (1,3,5,7)) and
+                all(min(abs(v),abs(abs(v)-1)) < .001
+                    for v in (matrix[0],matrix[2],matrix[6],matrix[8])) and
+                abs(matrix[0]*matrix[8]-matrix[2]*matrix[6]-1)<.001), (
             "SUPPORT_FLOOR_TILTED_UNMODELED " + name)
         top = py + sy / 2
         assert abs(top-0.5) <= 0.08, "SUPPORT_FLOOR_BAD_ELEVATION " + name
-        floors[name] = FloorSupport(name, px-sx/2, px+sx/2,
-                                    pz-sz/2, pz+sz/2, top)
+        world_x = abs(matrix[0])*sx + abs(matrix[2])*sz
+        world_z = abs(matrix[6])*sx + abs(matrix[8])*sz
+        floors[name] = FloorSupport(name, px-world_x/2, px+world_x/2,
+                                    pz-world_z/2, pz+world_z/2, top)
     assert set(floors) == SUPPORT_FLOOR_NAMES, (
         "SUPPORT_FLOOR_MISSING " + str(sorted(SUPPORT_FLOOR_NAMES-set(floors))))
     return [floors[name] for name in sorted(floors)]
@@ -573,6 +573,13 @@ def self_test():
     rotated = list(fixtures[0])
     rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
     assert len(as_floor_supports([rotated,*fixtures[1:]]))==4
+    quarter = list(fixtures[0])
+    quarter[2:5] = ["8","1","20"]
+    quarter[-9:] = ["0","0","1","0","1","0","-1","0","0"]
+    turned = next(f for f in as_floor_supports([quarter,*fixtures[1:]])
+                  if f.name==fixture_names[0])
+    assert abs(turned.xmax-turned.xmin-20)<.001
+    assert abs(turned.zmax-turned.zmin-8)<.001
     tipped = list(fixtures[0])
     tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
     try:

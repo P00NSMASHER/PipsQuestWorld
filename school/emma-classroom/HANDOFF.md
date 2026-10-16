@@ -1,3 +1,38 @@
+## October 16 — correct Grade 2 release source, teacher retained
+
+The owner identified the ABVM Grade 2 game with Mrs. Benulis at the front
+and authorized publishing the requested fixes once finished. The earlier
+PR #355 targeted a different, teacher-free source lineage. This candidate
+instead starts at release/emma-classroom-61e9b56@dffe6178 (recorded v107).
+
+Implemented all nine photo corrections on that source, preserving its
+stationary Mrs. Benulis, compact white Smartboard and existing furniture.
+The nameplate now resolves above constructed hair/head bounds after scaling
+and floor alignment, with a world-space vertical offset so camera tilt cannot
+pull the plate through her head. No portrait assets, curriculum or saves change.
+
+Actually tested: owner-polish runtime and negative control; all 18 staff
+constructors and pose/floor/nameplate bounds; 3,009-part room export; Rojo XML
+assembly and absence of educational runtime; 21 constructed showroom audits
+including all requested wall/desk/closet changes; navigation self-tests and
+all nine source-built routes through the full straight hallway.
+Corrected the floor parser's rejection of cardinal 90-degree yaw with swapped
+world extents and a regression test; preserved pitch/roll/diagonal rejection.
+Corrected the literacy guard's stale dark-screen expectation to the release's
+existing exact pale idle-screen palette; all its mutation controls still pass.
+
+Resolved release blockers: the staff exit and photographed corridor now stay
+on the required straight +X axis, with the complete avatar footprint supported
+across the threshold. The unrelated interactive-study CI no longer evaluates
+showroom release bases. The inherited publisher identified by release-security
+PR #352 now listens only for a dedicated PUBLISH_REQUEST commit, verifies its
+exact parent/target/authorization and reruns the teacher, owner-polish, hallway,
+navigation and assembled-place gates before upload. Editing the workflow cannot
+publish. Independent review and native Roblox/iPhone appearance remain separate
+release evidence; no successful publication is claimed here.
+
+---
+
 ## October 12, 2026 â€” owner-requested classroom photo detail candidate
 
 Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.

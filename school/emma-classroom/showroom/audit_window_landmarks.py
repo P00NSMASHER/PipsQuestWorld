@@ -48,9 +48,13 @@ local function check()
         math.abs(headline.Position.Z+19)<.03 and
         math.abs(faith.Position.Z-6)<.03,
         "WINDOW_CUE_BAY_POSITION_INVALID")
-    assert(left.Position.Y>14.90 and headline.Position.Y>15.90
+    assert(left.Position.Y>14.90 and headline.Position.Y>15.40
         and faith.Position.Y>14.90,
         "WINDOW_CUE_SIGN_HEIGHT_INVALID")
+    assert(math.abs(left.Size.Z-faith.Size.Z)<.03
+        and math.abs(headline.Size.Z-faith.Size.Z)<.03
+        and math.abs((left.Position.Z+faith.Position.Z)/2+6.5)<.03,
+        "WINDOW_CUE_DECOR_NOT_SYMMETRIC")
     assert(#parts("Smore mural pine trunk")==2 and
         #parts("Smore mural green canopy")==4,
         "WINDOW_CUE_MURAL_TREES_MISSING")

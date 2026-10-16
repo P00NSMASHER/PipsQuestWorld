@@ -74,15 +74,16 @@ local function verify()
     assert(#collect("Handwriting alphabet strip")==0,
         "PHOTO_DUPLICATE_NAVY_ALPHABET_RETURNED")
     -- Photograph-backed teaching surfaces should default to an inactive
-    -- dark Smartboard and quiet chalkboard. Generic grade/slogan splash
+    -- pale idle Smartboard and quiet chalkboard. Generic grade/slogan splash
     -- text is not a permanent physical room landmark.
     local smart=collect("Interactive smartboard")
     local chalk=collect("Chalk handwriting panel")
     assert(#smart==1 and #chalk==1,
         "PHOTO_TEACHING_SURFACES_MISSING")
     assert(smart[1].Material==Enum.Material.SmoothPlastic
-        and smart[1].Color.R<.13 and smart[1].Color.G<.17
-        and smart[1].Color.B<.18
+        and math.abs(smart[1].Color.R-222/255)<.01
+        and math.abs(smart[1].Color.G-233/255)<.01
+        and math.abs(smart[1].Color.B-235/255)<.01
         and not smart[1].CanCollide,
         "PHOTO_TEACHING_SMARTBOARD_MATTE_REGRESSION")
     assert(chalk[1].Material==Enum.Material.SmoothPlastic

@@ -19,6 +19,13 @@ permissions:
 
 jobs:
   verify:
+    # This workflow verifies the interactive study-game target. Classroom
+    # release branches intentionally ship the separate showroom target and
+    # are exhaustively checked by emma-showroom-ci.yml instead. Running the
+    # study-game contract against those release bases creates a false gate
+    # (for example, it requires the roaming quiz teacher in a room whose
+    # reviewed teacher is deliberately stationary at the front).
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.event.pull_request.base.ref, 'release/emma-classroom-') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

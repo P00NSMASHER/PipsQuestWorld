@@ -248,7 +248,8 @@ function StaffModel.create(teacher,scaleOverride:number?)
         end
     end
     -- Staff badge remains a small world-space name, never a screen-sized banner.
-    local label=Instance.new("BillboardGui");label.Name="TeacherName";label.Size=UDim2.fromScale(4.2,.5);label.StudsOffset=Vector3.new(0,3.25,0)
+    local label=Instance.new("BillboardGui");label.Name="TeacherName";label.Size=UDim2.fromScale(4.2,.5);label.StudsOffset=Vector3.new(0,4.65,0)
+    label:SetAttribute("PlacementContract","Above hairline with clear visual gap")
     label.AlwaysOnTop=false;label.MaxDistance=28;label.Parent=root
     local name=Instance.new("TextLabel");name.Name="Staff badge";name.Size=UDim2.fromScale(1,1);name.BackgroundColor3=GREEN;name.BackgroundTransparency=.08
     name.Text=teacher.name;name.TextColor3=GOLD;name.TextScaled=true;name.Font=Enum.Font.GothamBold;name.Parent=label
@@ -274,6 +275,18 @@ function StaffModel.create(teacher,scaleOverride:number?)
             if side and (string.find(p.Name,"Leg") or string.find(p.Name,"Foot")) then p:SetAttribute("PoseGroup",side.."Leg") end
         end
     end
+    -- Resolve the badge only after adult scaling and floor alignment. A
+    -- camera-relative offset can sweep back through the face when looking
+    -- up/down; anchor in world Y above the constructed head/hair bounds.
+    local hairline=root.Position.Y
+    for _,p in ipairs(model:GetDescendants()) do
+        if p:IsA("BasePart") and p:GetAttribute("PoseGroup")=="head" then
+            hairline=math.max(hairline,p.Position.Y+p.Size.Magnitude/2)
+        end
+    end
+    label.StudsOffset=Vector3.new(0,0,0)
+    label.StudsOffsetWorldSpace=Vector3.new(0,
+        math.max(4.65,hairline-root.Position.Y+.65),0)
     model:SetAttribute("PoseShift",shift)
     return model
 end

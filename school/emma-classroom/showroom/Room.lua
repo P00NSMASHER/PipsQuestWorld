@@ -27,9 +27,7 @@ local P={
 }
 
 local varnishedJoinery={
-    ["Cabinet inset panel"]=true,["Cabinet panel stile"]=true,
-    ["Tall cabinet recessed panel cross rail"]=true,["Tall cabinet hardwood cornice"]=true,
-    ["Tall cabinet cornice routed lip"]=true,["Built-in walnut cubby face stile"]=true,
+    ["Built-in walnut cubby face stile"]=true,
     ["Built-in walnut stile routed edge"]=true,["Built-in horizontal walnut face rail"]=true,
     ["Built-in horizontal fine molding"]=true,["Built-in deep hardwood cornice"]=true,
     ["Built-in stepped cornice edge"]=true,
@@ -363,19 +361,21 @@ local function desk(parent: Instance,x: number,z: number,index: number,emma: boo
     local notebookColor=({Color3.fromRGB(217,91,104),Color3.fromRGB(63,130,181),Color3.fromRGB(98,150,101),Color3.fromRGB(220,173,66)})[(index-1)%4+1]
     -- Not every child leaves precisely the same notebook in precisely the
     -- same position; preserve the stationery count without uniform patterns.
-    local shift=(index%3-1)*.24
-    book(parent,x-1.2+shift,3.28,z-.2,notebookColor,math.rad(index%2==0 and 7 or -6))
-    cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(108),0),Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
+    local notebookX=x-1.42
+    local notebookZ=z+.38
+    local notebookAngle=math.rad(index%2==0 and 4 or -4)
+    book(parent,notebookX,3.28,notebookZ,notebookColor,notebookAngle)
+    local pencilCF=CFrame.new(x+1.42,3.225,z+.34)*CFrame.Angles(0,math.rad(90),0)
+    cylinder(parent,"Desk pencil",Vector3.new(1.75,.10,.10),pencilCF,Color3.fromRGB(239,190,56),Enum.Material.Wood,false)
     -- The original ferrule and eraser were rotated 90 degrees away from
     -- the pencil's local-X cylinder shaft and floated beside the desk.
     -- One aligned cap keeps the visible silhouette and saves 16 mobile Parts.
-    local pencilCF=CFrame.new(x+1.4,3.225,z-.6)*CFrame.Angles(0,math.rad(108),0)
     part(parent,"Desk pencil eraser cap",Vector3.new(.15,.13,.13),
         pencilCF*CFrame.new(.82,0,0),
         Color3.fromRGB(223,139,156),Enum.Material.SmoothPlastic,false)
-    local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.40),P.cream,Enum.Material.SmoothPlastic,false)
+    local nameStrip=part(parent,"Desk name strip",Vector3.new(2.7,.014,.43),CFrame.new(x+.35,3.183,z-1.55),P.cream,Enum.Material.SmoothPlastic,false)
     surfaceText(nameStrip,emma and "Emma" or "Grade 2",Enum.NormalId.Top,P.blue,P.cream)
-    local notebookCF=CFrame.new(x-1.2+shift,3.28,z-.2)*CFrame.Angles(0,math.rad(index%2==0 and 7 or -6),0)
+    local notebookCF=CFrame.new(notebookX,3.28,notebookZ)*CFrame.Angles(0,notebookAngle,0)
     local paper=part(parent,"Ruled notebook page",Vector3.new(1.86,.012,2.48),notebookCF*CFrame.new(.055,.165,0),Color3.fromRGB(253,250,237),Enum.Material.SmoothPlastic,false)
     -- The 48 ultra-thin metal-free pencil rules and 16 red margins were
     -- expensive replicated Parts that contribute virtually nothing to
@@ -502,49 +502,9 @@ local function buildClassroomTexture(root: Instance)
     -- No oversized individual rules: GalleryPass owns a restrained framed
     -- values board and keeps this wall clear of overlapping flat panels.
 
-    -- Pencil sharpener, trash bin, tissue box, storage cabinet, rolling cart.
-    -- Low classroom cupboard: the former 12-stud wardrobe towered over the
-    -- doorway and shelving. Keep the same footprint and traditional panels,
-    -- but stop it below the display frieze.
-    part(root,"Tall storage cabinet",Vector3.new(7,8,3.2),CFrame.new(31,4,22.7),Color3.fromRGB(96,65,45),Enum.Material.Wood)
-    part(root,"Cabinet center seam",Vector3.new(.065,7.2,.06),CFrame.new(31,4,21.03),Color3.fromRGB(61,48,36),Enum.Material.Wood,false)
-    for _,x in ipairs({29.3,32.7}) do
-        part(root,"Cabinet door panel",Vector3.new(3.08,7.05,.10),CFrame.new(x,4,21.03),Color3.fromRGB(119,81,55),Enum.Material.Wood,false)
-        for _,y in ipairs({2.25,5.75}) do
-            part(root,"Cabinet inset panel",Vector3.new(2.60,2.80,.06),CFrame.new(x,y,20.94),Color3.fromRGB(135,105,74),Enum.Material.Wood,false)
-            for _,dx in ipairs({-1.31,1.31}) do part(root,"Cabinet panel stile",Vector3.new(.055,2.95,.045),CFrame.new(x+dx,y,20.90),Color3.fromRGB(178,142,98),Enum.Material.Wood,false) end
-        end
-        part(root,"Cabinet door pull",Vector3.new(.13,.92,.18),CFrame.new(x+(x<31 and .91 or -.91),4.15,20.79),Color3.fromRGB(180,176,158),Enum.Material.Metal,false)
-        for _,y in ipairs({1.25,6.75}) do part(root,"Cabinet brass hinge",Vector3.new(.14,.42,.15),CFrame.new(x+(x<31 and -1.50 or 1.50),y,20.88),Color3.fromRGB(167,149,101),Enum.Material.Metal,false) end
-    end
-    -- The photographed cabinetry is older school carpentry: deep walnut
-    -- framed, raised doors, not one large flat brown box. Build routed panel
-    -- rails against the EXISTING two doors without moving their footprints.
-    local cabinetRim=Color3.fromRGB(94,62,40)
-    local cabinetWarmEdge=Color3.fromRGB(153,111,75)
-    for _,doorX in ipairs({29.3,32.7}) do
-        for _,centerY in ipairs({2.25,5.75}) do
-            for _,dy in ipairs({-1.28,1.28}) do
-                part(root,"Tall cabinet recessed panel cross rail",
-                    Vector3.new(2.76,.17,.075),
-                    CFrame.new(doorX,centerY+dy,20.853),
-                    cabinetRim,Enum.Material.Wood,false)
-            end
-        end
-        part(root,"Tall cabinet antiqued keyhole",
-            Vector3.new(.085,.23,.045),
-            CFrame.new(doorX+(doorX<31 and .90 or -.90),3.50,20.692),
-            Color3.fromRGB(97,76,48),Enum.Material.Metal,false)
-    end
-    part(root,"Tall cabinet hardwood cornice",
-        Vector3.new(7.35,.41,.50),CFrame.new(31,8.25,20.96),
-        cabinetRim,Enum.Material.Wood,false)
-    part(root,"Tall cabinet cornice routed lip",
-        Vector3.new(7.54,.11,.44),CFrame.new(31,8.50,20.77),
-        cabinetWarmEdge,Enum.Material.Wood,false)
-    part(root,"Tall cabinet recessed toe kick",
-        Vector3.new(6.78,.42,.18),CFrame.new(31,.51,20.91),
-        Color3.fromRGB(72,50,37),Enum.Material.Wood,false)
+    -- Pencil sharpener, trash bin, tissue box and rolling cart. The freestanding
+    -- cabinet that blocked the closet door was removed; the built-in storage
+    -- wall already provides the photographed classroom cabinetry.
     local trash=cylinder(root,"Classroom trash can",Vector3.new(3.4,3.1,3.1),CFrame.new(32.8,1.7,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(95,100,101),Enum.Material.Metal,false)
     trash.Transparency=0
     cylinder(root,"Trash can opening",Vector3.new(.035,2.76,2.76),CFrame.new(32.8,3.42,-24)*CFrame.Angles(0,0,math.pi/2),Color3.fromRGB(32,36,38),Enum.Material.SmoothPlastic,false)
@@ -555,7 +515,7 @@ local function buildClassroomTexture(root: Instance)
     local tissues=part(root,"Tissue box",Vector3.new(2.3,1.2,1.7),CFrame.new(20.0,3.89,-23.6),Color3.fromRGB(116,177,193),Enum.Material.SmoothPlastic,false)
     surfaceText(tissues,"TISSUES",Enum.NormalId.Front,Color3.fromRGB(245,248,244),tissues.Color,Enum.Font.GothamBold)
     part(root,"Tissue box slot",Vector3.new(1.25,.015,.24),CFrame.new(20.0,4.50,-23.6),P.ink,Enum.Material.SmoothPlastic,false)
-    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(20.0,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),P.cream,Enum.Material.Fabric,false)
+    part(root,"Folded tissue",Vector3.new(.80,.77,.018),CFrame.new(20.0,4.78,-23.6)*CFrame.Angles(math.rad(12),0,math.rad(-8)),Color3.fromRGB(252,252,249),Enum.Material.Fabric,false)
     -- The real classroom pictures show the alphabet/sun rug as open
     -- activity space. Source-rendered geometry revealed that the original
     -- rolling cart top at (-29,22) crossed the carpet by ~0.58 studs,
@@ -1266,19 +1226,20 @@ local function buildPhotoWindowWorkstation(root: Instance)
 end
 
 local function buildFrontWall(root: Instance)
+    local teachingCenter=0
     -- IMG_2909/2910 show the freestanding display in front of a much wider
     -- blackboard. Preserve the structural wall, the photograph's layering,
     -- and all original student furniture positions; location is provisional.
-    part(root,"Main chalkboard",Vector3.new(29.0,7.55,.30),CFrame.new(5.2,8.1,-34.14),Color3.fromRGB(43,54,50),Enum.Material.SmoothPlastic,false)
+    part(root,"Main chalkboard",Vector3.new(29.0,7.55,.30),CFrame.new(teachingCenter,8.1,-34.14),Color3.fromRGB(43,54,50),Enum.Material.SmoothPlastic,false)
     for _,y in ipairs({4.20,12.0}) do
-        part(root,"Chalkboard hardwood horizontal",Vector3.new(29.8,.48,.60),CFrame.new(5.2,y,-34.0),
+        part(root,"Chalkboard hardwood horizontal",Vector3.new(29.8,.48,.60),CFrame.new(teachingCenter,y,-34.0),
             Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
     end
-    for _,x in ipairs({-9.7,20.1}) do
+    for _,x in ipairs({-14.9,14.9}) do
         part(root,"Chalkboard hardwood stile",Vector3.new(.42,7.85,.58),CFrame.new(x,8.1,-34.0),
             Color3.fromRGB(119,83,53),Enum.Material.Wood,false)
     end
-    part(root,"Chalk tray",Vector3.new(29.0,.18,.80),CFrame.new(5.2,4.02,-33.63),Color3.fromRGB(129,92,57),Enum.Material.Wood,false)
+    part(root,"Chalk tray",Vector3.new(29.0,.18,.80),CFrame.new(teachingCenter,4.02,-33.63),Color3.fromRGB(129,92,57),Enum.Material.Wood,false)
     for i=0,3 do
         part(root,"Chalk stick",Vector3.new(.58,.095,.095),CFrame.new(-8.6+i*.64,4.16,-33.37),
             P.cream,Enum.Material.SmoothPlastic,false)
@@ -1294,21 +1255,21 @@ local function buildFrontWall(root: Instance)
     -- the previous navy 0.25-stud edge read as a generic dark rectangle.
     -- Reuse the existing noncolliding backing Part, no new geometry.
     part(root,"Smartboard white composite bezel",Vector3.new(11.80,6.45,.24),
-        CFrame.new(5.2,8.0,-30.55),
+        CFrame.new(teachingCenter,8.0,-30.55),
         Color3.fromRGB(242,244,240),Enum.Material.SmoothPlastic,false)
-    for _,x in ipairs({-.68,11.08}) do
+    for _,x in ipairs({-5.88,5.88}) do
         part(root,"Smartboard molded side depth",Vector3.new(.22,6.26,.62),
             CFrame.new(x,8.0,-30.82),Color3.fromRGB(213,218,216),
             Enum.Material.SmoothPlastic,false)
     end
     part(root,"Smartboard pen tray",Vector3.new(5.8,.22,.65),
-        CFrame.new(5.2,4.70,-29.88),Color3.fromRGB(208,211,209),
+        CFrame.new(teachingCenter,4.70,-29.88),Color3.fromRGB(208,211,209),
         Enum.Material.Metal,false)
     local smart=part(root,"Interactive smartboard",Vector3.new(11.10,5.75,.35),
-        CFrame.new(5.2,8.0,-30.25),Color3.fromRGB(225,235,237),
+        CFrame.new(teachingCenter,8.0,-30.25),Color3.fromRGB(225,235,237),
         Enum.Material.Glass,false);smart.Transparency=.02
     for _,dx in ipairs({-3.0,3.0}) do
-        local supportX=5.2+dx
+        local supportX=teachingCenter+dx
         part(root,"Mobile smartboard support post",Vector3.new(.22,3.75,.24),
             CFrame.new(supportX,2.75,-30.75),
             Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
@@ -1325,18 +1286,18 @@ local function buildFrontWall(root: Instance)
         end
     end
     part(root,"Mobile smartboard pedestal",Vector3.new(3.15,3.15,.34),
-        CFrame.new(5.2,2.72,-30.87),Color3.fromRGB(151,158,160),Enum.Material.Metal,false)
+        CFrame.new(teachingCenter,2.72,-30.87),Color3.fromRGB(151,158,160),Enum.Material.Metal,false)
     part(root,"Mobile smartboard equipment shelf",Vector3.new(6.40,.65,1.15),
-        CFrame.new(5.2,1.18,-30.57),Color3.fromRGB(145,151,153),Enum.Material.Metal,false)
+        CFrame.new(teachingCenter,1.18,-30.57),Color3.fromRGB(145,151,153),Enum.Material.Metal,false)
     part(root,"Mobile smartboard cross brace",Vector3.new(6.5,.20,.22),
-        CFrame.new(5.2,1.02,-30.82),
+        CFrame.new(teachingCenter,1.02,-30.82),
         Color3.fromRGB(118,125,128),Enum.Material.Metal,false)
     -- Static architectural smartboard. GalleryPass supplies a non-interactive display.
 
 
     -- The room has one modest cross, centered above the chalkboard alphabet.
-    part(root,"Center chalkboard cross vertical",Vector3.new(.42,1.65,.28),CFrame.new(5.2,16.10,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
-    part(root,"Center chalkboard cross horizontal",Vector3.new(1.25,.38,.28),CFrame.new(5.2,16.35,-33.54),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    part(root,"Center chalkboard cross vertical",Vector3.new(.42,1.65,.28),CFrame.new(teachingCenter,16.10,-33.72),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
+    part(root,"Center chalkboard cross horizontal",Vector3.new(1.25,.38,.28),CFrame.new(teachingCenter,16.35,-33.54),Color3.fromRGB(104,72,46),Enum.Material.Wood,false)
     -- Keep the detailed illustrated phonics cards. The generic navy alphabet
     -- strip that duplicated them has been removed.
     local alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -1389,7 +1350,7 @@ local function buildFrontWall(root: Instance)
         "fish","square","round","stripes",
     }
     for i=1,26 do
-        local x=-31.2+(i-1)*2.38
+        local x=-30+(i-1)*2.4
         local tint=palettes[(i-1)%#palettes+1]
         local tile=part(root,"Alphabet tile",
             Vector3.new(2.15,1.4,.18),CFrame.new(x,13.4,-33.78),
@@ -1641,8 +1602,8 @@ local function buildTeacherPlanningWall(root: Instance)
     -- Pull the complete planner forward of the chalkboard stile so the wood
     -- frame cannot visually cut through the paper sheets.
     -- Center the complete frame in the clear wall bay between the chalkboard
-    -- right edge (x=20.1) and the room's right wall (x=36.5).
-    local x,y,z=28.30,8.90,-33.35
+    -- right edge (x=14.9) and the room's right wall (x=36.5).
+    local x,y,z=25.70,8.90,-33.35
     part(root,"Teacher planning board shallow oak back",
         Vector3.new(9.4,6.4,.16),CFrame.new(x,y,z-.17),
         Color3.fromRGB(120,84,57),Enum.Material.Wood,false)
@@ -1731,6 +1692,7 @@ local function buildBackDoorAndHall(root: Instance)
             leafCF*CFrame.new(0,-2.87,0),
             Color3.fromRGB(128,91,60),Enum.Material.Wood,false)
         door:SetAttribute("ClosedLeaf","Lower solid panel; glass aperture above")
+        door:SetAttribute("ClosedSupplyClosetLeaf",true)
         local glass=part(root,"Door glass",Vector3.new(2.75,4.38,.10),
             leafCF*CFrame.new(0,1.42,-.06),
             Color3.fromRGB(198,217,217),Enum.Material.Glass,false)
@@ -1761,6 +1723,14 @@ local function buildBackDoorAndHall(root: Instance)
         part(root,"Door lower raised panel",Vector3.new(4.0,2.85,.10),
             leafCF*CFrame.new(0,-2.72,-.24),
             Color3.fromRGB(142,105,73),Enum.Material.Wood,false)
+        for _,dx in ipairs({-1.66,1.66}) do
+            part(root,"Closet door raised panel stile",Vector3.new(.12,2.92,.08),
+                leafCF*CFrame.new(dx,-2.72,-.30),Color3.fromRGB(99,67,44),Enum.Material.Wood,false)
+        end
+        for _,dy in ipairs({-1.38,1.38}) do
+            part(root,"Closet door raised panel rail",Vector3.new(3.44,.12,.08),
+                leafCF*CFrame.new(0,-2.72+dy,-.30),Color3.fromRGB(99,67,44),Enum.Material.Wood,false)
+        end
         -- Photo: wood crossbar visually separates the two glazed lights.
         -- The clear glazing remains a full pane with thin frame in front.
         part(root,"Glazed door glass divider",Vector3.new(2.75,.18,.14),
@@ -1771,6 +1741,8 @@ local function buildBackDoorAndHall(root: Instance)
             leafCF*CFrame.new(x<0 and 2.20 or -2.20,-.60,-.27),
             Color3.fromRGB(181,153,103),Enum.Material.Metal,false)
     end
+    part(root,"Closet door center astragal",Vector3.new(.18,10.05,.18),
+        CFrame.new(0,5.28,26.07),Color3.fromRGB(91,61,41),Enum.Material.Wood,false)
     sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
         CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
     -- Owner's October 11 iPhone screenshot fixes the doorway topology:
@@ -2052,7 +2024,9 @@ local function buildBackDoorAndHall(root: Instance)
 
         local pane=hp("Photo hall adjacent frosted door glass",
             Vector3.new(4.96,4.88,.11),CFrame.new(x,7.635,27.92),
-            Color3.fromRGB(187,205,201),Enum.Material.Glass,false)
+            -- Cool-blue frosted glass stays distinct from the warm brick
+            -- visible through this sealed architectural facade.
+            Color3.fromRGB(177,205,225),Enum.Material.Glass,false)
         pane.Transparency=.30
         pane.Reflectance=.018
         pane:SetAttribute("GlassAperture","Upper opening has no solid wood backing")
@@ -2082,10 +2056,10 @@ local function buildBackDoorAndHall(root: Instance)
         local gripX=x+(x<0 and 2.02 or -2.02)
         hp("Photo hall adjacent brass push plate",
             Vector3.new(.25,.90,.085),CFrame.new(gripX,3.45,28.025),
-            Color3.fromRGB(177,151,100),Enum.Material.Metal,false)
+            Color3.fromRGB(255,245,150),Enum.Material.Metal,false)
         hp("Photo hall adjacent brass pull",
             Vector3.new(.13,.58,.11),CFrame.new(gripX,3.46,28.115),
-            Color3.fromRGB(201,178,122),Enum.Material.Metal,false)
+            Color3.fromRGB(255,245,150),Enum.Material.Metal,false)
     end
     local welcome=hp("Photo hall vertical welcome plaque",
         Vector3.new(1.15,7.5,.09),CFrame.new(-10.5,8,27.8),
@@ -2194,7 +2168,9 @@ local function buildBackDoorAndHall(root: Instance)
     -- Every frame, pane and sun ray is noncolliding and nonquerying.
     local endWindowGlass=hp("Photo hall yellow window glazing",
         Vector3.new(.12,8.32,14.68),CFrame.new(-53.38,7.35,38),
-        Color3.fromRGB(55,69,68),Enum.Material.Glass,false)
+        -- Keep the panes visibly blue-gray after Roblox Glass blends them
+        -- with the warm brick end cap behind this sealed facade.
+        Color3.fromRGB(18,92,118),Enum.Material.Glass,false)
     endWindowGlass.Transparency=.14
     endWindowGlass.Reflectance=.045
     endWindowGlass:SetAttribute("ArchitecturalFacade","Enclosed end-cap glazing")
@@ -2233,7 +2209,9 @@ local function buildBackDoorAndHall(root: Instance)
             Vector3.new(.11,.13,.54),
             CFrame.new(-53.02,9.55+math.sin(angle)*1.01,
                 38+math.cos(angle)*1.01)*CFrame.Angles(-angle,0,0),
-            Color3.fromRGB(242,204,65),Enum.Material.SmoothPlastic,false)
+            -- Yellow-green balance keeps every radial direction legible;
+            -- directional shading otherwise turns the lower rays brown.
+            Color3.fromRGB(245,235,55),Enum.Material.SmoothPlastic,false)
     end
     -- Window assembly adds 17 static Parts: low-cost enough to remain
     -- within the source-built 3,100 mobile Part cap. 3D source renders
@@ -2384,14 +2362,13 @@ local function buildTeacherEntry(root: Instance)
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
--- The school corridor runs perpendicular to the staff doorway. Reuse the
--- complete photographed hall as one rigid assembly and turn it north at the
--- exterior vestibule, so looking through the classroom door no longer reveals
--- a fake straight tunnel through the wall.
+-- Owner correction: the staff doorway opens directly into the long school
+-- corridor on the same east/west axis. Reuse the photographed hall as one
+-- rigid assembly; do not add a north turn or route through the supply closet.
 local function alignHallwayWithStaffExit(root: Instance)
     local hall=root:FindFirstChild("PhotographedHallway")
     assert(hall, "Missing original photo corridor")
-    hall:SetAttribute("Route","Perpendicular north turn outside staff door")
+    hall:SetAttribute("Route","Straight +X from left staff door; no turns")
     hall:SetAttribute("Source","October 10 anonymous photographed architecture")
 
     -- First establish the authored hall with its open end at the vestibule.
@@ -2447,24 +2424,27 @@ local function alignHallwayWithStaffExit(root: Instance)
     -- Floor bridges to the brass threshold. The roof begins a deliberate
     -- .16 stud beyond the exterior face of the yellow classroom wall, so no
     -- coplanar exterior slab can flash through the room-side paint.
-    sideFloor.Size=Vector3.new(22.50,.48,23.05)
-    sideFloor.CFrame=CFrame.new(48.35,.24,15.775)
+    -- Extend ten hundredths past the classroom-floor edge so the avatar's
+    -- entire footprint stays supported across the brass doorway threshold.
+    sideFloor.Size=Vector3.new(22.70,.48,23.05)
+    sideFloor.CFrame=CFrame.new(48.25,.24,15.775)
     sideRoof.Size=Vector3.new(21.94,.36,23.05)
     sideRoof.CFrame=CFrame.new(48.63,13.18,15.775)
 
-    -- Move the old facing wall to the outside edge of the widened vestibule.
-    -- This removes the whitish-gray false arch seen above/inside the timber
-    -- doorway while keeping the exterior turn fully enclosed.
+    -- The old east wall was a hard stop across the required straight route.
+    -- Reuse it as the vestibule's north enclosure, overlapping the long hall
+    -- wall so the doorway remains roofed, supported and open along +X.
     local oldBlock=root:FindFirstChild("Side hall far wall")
     local oldBrick=root:FindFirstChild("Side hall far brick")
     assert(oldBlock and oldBrick,"Old staff hall return missing")
-    oldBlock.Name="Staff entry outer east wall"
-    oldBlock.Size=Vector3.new(1,13,23.05)
-    oldBlock.CFrame=CFrame.new(59.60,6.5,15.775)
-    oldBrick.Name="Staff entry east wall glazed brick"
-    oldBrick.Size=Vector3.new(.12,12.7,22.75)
-    oldBrick.CFrame=CFrame.new(59.02,6.35,15.775)
+    oldBlock.Name="Staff entry straight north wall"
+    oldBlock.Size=Vector3.new(22.50,13,1)
+    oldBlock.CFrame=CFrame.new(48.35,6.5,26.80)
+    oldBrick.Name="Staff entry north wall glazed brick"
+    oldBrick.Size=Vector3.new(22.20,12.7,.12)
+    oldBrick.CFrame=CFrame.new(48.35,6.35,26.20)
     oldBrick.Color=Color3.fromRGB(192,132,63)
+    oldBrick.Reflectance=.035
 
     -- Move the three preexisting south-end finish layers into alignment
     -- with the main corridor's south wall; keep the end solid.
@@ -2491,41 +2471,8 @@ local function alignHallwayWithStaffExit(root: Instance)
         CFrame.new(48.48,.515,26.72),Color3.fromRGB(151,130,82),
         Enum.Material.Metal,false)
 
-    -- Turn the already-complete 108-stud hall ninety degrees around its open
-    -- end. The near opening lands at (48.5, 26.75); the corridor then runs
-    -- north (+Z), perpendicular to the classroom doorway's +X exit axis.
-    local turn=CFrame.new(48.5,0,26.75)*
-        CFrame.Angles(0,-math.pi/2,0)*CFrame.new(-54,0,-15.5)
-    for _,object in ipairs(hall:GetDescendants()) do
-        if object:IsA("BasePart") then
-            object.CFrame=turn*object.CFrame
-        end
-    end
-    -- Set the corridor wall fully behind the classroom wall. The complete
-    -- exterior shell now starts beyond x=37.60 rather than sharing the room's
-    -- x=37.50 paint plane; this removes the intermittent wall intrusion.
-    local adjoiningWall=hall:FindFirstChild("Photo hall continuous north wall")
-    assert(adjoiningWall and adjoiningWall:IsA("BasePart"),
-        "Staff hallway adjoining wall missing")
-    adjoiningWall.CFrame=CFrame.new(.80,0,0)*adjoiningWall.CFrame
-    adjoiningWall.Color=Color3.fromRGB(192,132,63)
-    local function westBrickPanel(name:string,length:number,centerZ:number,
-        height:number,centerY:number)
-        local facing=part(hall,name,Vector3.new(length,height,.075),
-            adjoiningWall.CFrame*CFrame.new(centerZ-80.75,centerY-6.5,-.49),
-            Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
-        facing.Reflectance=.035
-        return facing
-    end
-    -- Split the west brick skin around both oak-and-glass classroom doors.
-    -- The previous single slab sat in front of every door component, leaving
-    -- empty wood rectangles filled with brick.
-    westBrickPanel("Photo hall continuous north full-height brick",27.20,40.75,12.70,6.35)
-    westBrickPanel("Photo hall continuous north full-height brick",61.80,92.05,12.70,6.35)
-    westBrickPanel("Photo hall continuous north full-height brick",4.80,131.95,12.70,6.35)
-    for _,doorZ in ipairs({57.75,126.25}) do
-        westBrickPanel("Photo hall continuous north door header brick",6.80,doorZ,2.05,11.68)
-    end
+    -- The original transform already places the 108-stud hall parallel to
+    -- the staff doorway, from x=54 to x=162 at z=15.5. Do not rotate it again.
     hall:SetAttribute("FalseEntryArchRemoved",true)
     hall:SetAttribute("ReferenceFinish","full-height orange brick and dark square tile")
 end
@@ -2638,17 +2585,17 @@ function World.build()
     -- other window. Preserve both photograph-backed phrases as distinct
     -- low-relief indoor signs; no child's likeness, name or photo asset.
     local faithBanner=part(root,"Classroom faith window banner",
-        Vector3.new(.12,1.08,17.5),CFrame.new(-36.33,15.22,6),
+        Vector3.new(.12,1.18,15.5),CFrame.new(-36.33,15.30,6),
         Color3.fromRGB(247,236,216),Enum.Material.SmoothPlastic,false)
     surfaceText(faithBanner,"I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         Enum.NormalId.Right,P.blue,faithBanner.Color,Enum.Font.GothamMedium)
     local smoreTop=part(root,"Smore faith headline",
-        Vector3.new(.12,.48,11.1),CFrame.new(-36.30,16.21,-19),
+        Vector3.new(.12,.40,15.5),CFrame.new(-36.30,15.63,-19),
         Color3.fromRGB(247,233,184),Enum.Material.SmoothPlastic,false)
     surfaceText(smoreTop,"JESUS LOVES YOU",Enum.NormalId.Right,
         Color3.fromRGB(120,60,50),smoreTop.Color,Enum.Font.GothamBold)
     local smoreTitle=part(root,"Smore classroom main title",
-        Vector3.new(.14,.84,7.9),CFrame.new(-36.28,15.39,-19),
+        Vector3.new(.14,.66,15.5),CFrame.new(-36.28,15.14,-19),
         Color3.fromRGB(227,190,115),Enum.Material.Wood,false)
     surfaceText(smoreTitle,"S'MORE",Enum.NormalId.Right,
         Color3.fromRGB(65,45,34),smoreTitle.Color,Enum.Font.GothamBold)

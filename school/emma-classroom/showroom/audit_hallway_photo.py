@@ -39,6 +39,8 @@ end
 local hall=Room.Root:FindFirstChild("PhotographedHallway")
 assert(hall and hall:GetAttribute("ScaleConfidence")=="provisional",
     "PHOTO_HALL_SURVEY_FIDELITY_MISLABELED")
+assert(hall:GetAttribute("Route")=="Straight +X from left staff door; no turns",
+    "PHOTO_HALL_ROUTE_ATTRIBUTE_MUST_MATCH_STRAIGHT_SOURCE")
 local floor=one("Photo hall polished square stone floor")
 assert(floor.CanCollide and floor.Material==Enum.Material.Slate
     and near(floor.Size.X,108) and near(floor.Size.Z,22.5),
@@ -55,15 +57,15 @@ assert(#pieces("Photo hall stone tile joint")==0,
     "PHOTO_HALL_TILE_JOINTS_REGRESSED_TO_PHYSICAL_PARTS")
 assert(near(one("Classroom doorway brass threshold").Position.Y,.556))
 local rear=one("Photo hall rear blue-gray wall")
-assert(rear.CanCollide and near(rear.Position.X,59.75)
-    and near(rear.Position.Z,80.75) and rear.Size.X>=108,
+assert(rear.CanCollide and near(rear.Position.X,108)
+    and near(rear.Position.Z,4.25) and rear.Size.X>=108,
     "PHOTO_HALL_SKY_GAP")
 local north=one("Photo hall continuous north wall")
-assert(north.CanCollide and near(north.Position.X,38.05)
-    and near(north.Position.Z,80.75) and north.Size.X>=108,
-    "PERPENDICULAR_HALLWAY_WEST_WALL_MISSING")
+assert(north.CanCollide and near(north.Position.X,108)
+    and near(north.Position.Z,26.75) and north.Size.X>=108,
+    "STRAIGHT_HALLWAY_NORTH_WALL_MISSING")
 local caps=expect("Photo hall end cap",1)
-assert(caps[1].CanCollide and near(caps[1].Position.Z,134.75),
+assert(caps[1].CanCollide and near(caps[1].Position.X,162),
     "PHOTO_HALL_FAR_END_SKY_GAP")
 local south=expect("Side corridor end wall",1)[1]
 local southBrick=expect("Side corridor full-height glazed brick",1)[1]
@@ -77,15 +79,16 @@ assert(near(transition.Position.X,48.48)
     and near(transition.Position.Z,26.72)
     and transition.Size.X>=22.3 and not transition.CanCollide,
     "STAFF_HALLWAY_FLOOR_TRANSITION_MISSING")
-local eastBrick=expect("Staff entry east wall glazed brick",1)[1]
-assert(near(eastBrick.Position.X,59.02) and eastBrick.Size.Z>=22.7
-    and eastBrick.Size.Y>=12.6,
-    "STAFF_HALLWAY_EAST_FULL_BRICK_FINISH_MISSING")
+local northBrick=expect("Staff entry north wall glazed brick",1)[1]
+assert(near(northBrick.Position.X,48.35)
+    and near(northBrick.Position.Z,26.20)
+    and northBrick.Size.X>=22.1 and northBrick.Size.Y>=12.6,
+    "STAFF_HALLWAY_NORTH_FULL_BRICK_FINISH_MISSING")
 local vestibuleFloor=one("Side hall floor")
 local vestibuleRoof=one("Side hall ceiling")
 assert(vestibuleFloor.Material==Enum.Material.Slate
-    and near(vestibuleFloor.Position.X,48.35)
-    and vestibuleFloor.Size.X>=22.45
+    and near(vestibuleFloor.Position.X,48.25)
+    and vestibuleFloor.Size.X>=22.65
     and vestibuleFloor:FindFirstChild("StaffVestibuleStoneGrid"),
     "STAFF_HALLWAY_FLOOR_FINISH_NOT_UNIFORM")
 assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.66)
@@ -110,7 +113,7 @@ print("STAFF_HALLWAY_INTRUSION_NEGATIVE_REJECTED exterior_roof_shift")
 assert(#pieces("Left hallway outside corner return")==0,
     "OBSOLETE_FLOATING_HALL_SEAM_RETURNED")
 assert(#pieces("Photo hall front outer wall")==1
-    and near(one("Photo hall front outer wall").Position.Z,126.25),
+    and near(one("Photo hall front outer wall").Position.X,153.5),
     "LEFT_HALL_PASSAGE_HAS_BLOCKING_REAR_WALL")
 assert(#pieces("Rear corridor end wall")==0 and
        #pieces("Hall left wall")==0,
@@ -151,9 +154,11 @@ local function checkClosedOakDoors()
             "PHOTO_HALL_ADJACENT_OPAQUE_BACKING_RETURNED")
         assert(glass.Material==Enum.Material.Glass
             and glass.Transparency>.13 and glass.Transparency<.49
+            and glass.Color.G-glass.Color.R>.09
+            and glass.Color.B-glass.Color.G>.07
             and near(glass.Size.Y,4.88)
-            and math.abs(glass.Position.Z-lower.Position.Z)<.05
-            and glass.Position.X-lower.Position.X>.08
+            and math.abs(glass.Position.X-lower.Position.X)<.05
+            and glass.Position.Z<lower.Position.Z
             and glass.Position.Y-glass.Size.Y/2
                 >lower.Position.Y+lower.Size.Y/2
             and glass:GetAttribute("GlassAperture")
@@ -162,7 +167,7 @@ local function checkClosedOakDoors()
         local wall=north
         assert(wall.CanCollide and wall.Size.Y>=12.9
             and wall.Size.X>107
-            and wall.Position.X<lower.Position.X,
+            and wall.Position.Z>lower.Position.Z,
             "PHOTO_HALL_ADJACENT_SEALED_WALL_LOST")
         assert(not glass.CanCollide and not glass.CanQuery
             and not lower.CanCollide and not lower.CanQuery,
@@ -183,12 +188,20 @@ local function checkClosedOakDoors()
         assert(near(s.Size.X,.72) and s.Size.Y>4.8,
             "PHOTO_HALL_ADJACENT_STILE_SHAPE_MISSING")
     end
+    for _,item in ipairs(plates) do
+        assert(item.Color.R>.95 and item.Color.G>.90 and item.Color.B>.50,
+            "PHOTO_HALL_ADJACENT_BRASS_TOO_DARK")
+    end
+    for _,item in ipairs(pulls) do
+        assert(item.Color.R>.95 and item.Color.G>.90 and item.Color.B>.50,
+            "PHOTO_HALL_ADJACENT_BRASS_TOO_DARK")
+    end
 end
 checkClosedOakDoors()
-table.sort(facades,function(a,b)return a.Position.Z<b.Position.Z end)
-table.sort(panels,function(a,b)return a.Position.Z<b.Position.Z end)
-assert(near(facades[1].Position.Z,57.75)
-    and near(facades[2].Position.Z,126.25),
+table.sort(facades,function(a,b)return a.Position.X<b.Position.X end)
+table.sort(panels,function(a,b)return a.Position.X<b.Position.X end)
+assert(near(facades[1].Position.X,85)
+    and near(facades[2].Position.X,153.5),
     "LEFT_HALL_OPENING_OBSTRUCTED_BY_OLD_FAKE_DOOR")
 -- Back double oak leaves must open into an actual ENCLOSED supply closet,
 -- not the main corridor. The original staff-side LEFT opening is the
@@ -323,8 +336,7 @@ local segments={
     {"Photo hall front outer glazed brick",1},
     {"Photo hall left end glazed brick",1},
     {"Photo hall right end glazed brick",0},
-    {"Photo hall continuous north full-height brick",3},
-    {"Photo hall continuous north door header brick",2},
+    {"Staff entry north wall glazed brick",1},
 }
 -- A previous version removed the old x=54 west end-cap collider but left
 -- its separate 4.25-stud-tall opaque brick SurfaceGui carrier in the open
@@ -354,30 +366,13 @@ for _,s in ipairs(segments) do
         count+=1
     end
 end
-assert(count==10,"PHOTO_HALL_UNIFORM_BRICK_PANEL_COUNT "..count)
+assert(count==6,"PHOTO_HALL_UNIFORM_BRICK_PANEL_COUNT "..count)
 assert(#pieces("Photo hall rear dado cap")==0
     and #pieces("Photo hall front dado cap")==0
-    and #pieces("Staff entry east wall oak cap rail")==0,
-    "PHOTO_HALL_OLD_HALF_WALL_CAP_RETURNED")
-local westBrick=expect("Photo hall continuous north full-height brick",3)
-local headers=expect("Photo hall continuous north door header brick",2)
-local function overlaps(a0,a1,b0,b1)
-    return a0<b1 and a1>b0
-end
-for _,wall in ipairs(westBrick) do
-    local z0=wall.Position.Z-wall.Size.X/2
-    local z1=wall.Position.Z+wall.Size.X/2
-    assert(wall.Size.Y>=12.6 and near(wall.Position.Y,6.35)
-        and not wall.CanCollide,
-        "PHOTO_HALL_WEST_FULL_BRICK_FINISH_MISSING")
-    assert(not overlaps(z0,z1,54.525,60.975)
-        and not overlaps(z0,z1,123.025,129.475),
-        "PHOTO_HALL_WEST_BRICK_SKIN_COVERS_DOOR_OPENING")
-end
-for _,header in ipairs(headers) do
-    assert(header.Size.Y<2.1 and header.Position.Y-header.Size.Y/2>10.6,
-        "PHOTO_HALL_DOOR_HEADER_DESCENDS_INTO_OPENING")
-end
+    and #pieces("Staff entry east wall oak cap rail")==0
+    and #pieces("Photo hall continuous north full-height brick")==0
+    and #pieces("Photo hall continuous north door header brick")==0,
+    "PHOTO_HALL_OLD_HALF_WALL_OR_TURN_FINISH_RETURNED")
 assert(#pieces("Photo hall staff return blue-gray plaster")==0
     and #pieces("Photo hall staff return glazed brick")==0
     and #pieces("Photo hall doorway inner wall end plaster")==0
@@ -388,16 +383,16 @@ expect("Photo hall student work hanging rail",1)
 -- Previous UI-only paper rendered as a completely bare wall in the
 -- original camera captures. Require 23 dimensional NONCOLLIDING Parts.
 local sheets=expect("Photo hall anonymous diamond student display",23)
-table.sort(sheets,function(a,b)return a.Position.Z<b.Position.Z end)
+table.sort(sheets,function(a,b)return a.Position.X<b.Position.X end)
 local function checkSheets()
     for i,p in ipairs(sheets) do
         local m=p.CFrame.m
-        assert(math.abs(p.Position.Z-(80.75+(i-12)*3.55))<.045
-            and near(p.Position.Y,9.05) and near(p.Position.X,59.02),
+        assert(math.abs(p.Position.X-(108+(i-12)*3.55))<.045
+            and near(p.Position.Y,9.05) and near(p.Position.Z,4.98),
             "PHOTO_HALL_PAPER_POSITION_OR_SPACING_INVALID")
-        assert(math.abs(math.abs(m[4])-.7071068)<.04
-            and math.abs(math.abs(m[5])-.7071068)<.04
-            and math.abs(math.abs(m[7])-.7071068)<.04
+        assert(math.abs(math.abs(m[1])-.7071068)<.04
+            and math.abs(math.abs(m[2])-.7071068)<.04
+            and math.abs(math.abs(m[4])-.7071068)<.04
             and p.Size.X>1.8 and p.Size.Y>2.1,
             "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY")
         assert(not p.CanCollide and p.CanQuery==false
@@ -451,7 +446,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_HALL_COLLIDABLE_SHEET_REGRESSION_NOT_REJECTED")
 print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED collider")
 local oldCF=bad.CFrame
-bad.CFrame=CFrame.new(bad.Position)
+bad.CFrame=CFrame.new(68.95,9.05,4.98)
 ok,err=pcall(checkSheets)
 bad.CFrame=oldCF
 assert(not ok and string.find(tostring(err),
@@ -518,16 +513,18 @@ end
 -- CLOSED structural end wall. UI-only faux windows were never visible
 -- in independent source-derived screenshots.
 local leftCap=caps[1]
-assert(leftCap and leftCap.Position.Z>134.7,"PHOTO_HALL_FAR_ENDCAP_NOT_FOUND")
+assert(leftCap and leftCap.Position.X>161.9,"PHOTO_HALL_FAR_ENDCAP_NOT_FOUND")
 local function assertDimensionalEndWindow()
     local glazing=one("Photo hall yellow window glazing")
     assert(not glazing.CanCollide and not glazing.CanQuery
         and glazing.Material==Enum.Material.Glass
         and near(glazing.Size.Y,8.32) and near(glazing.Size.Z,14.68)
         and glazing.Transparency>0 and glazing.Transparency<.35
-        and glazing.Position.Z<leftCap.Position.Z-.45
+        and glazing.Color.G-glazing.Color.R>.10
+        and glazing.Color.B-glazing.Color.G>.07
+        and glazing.Position.X<leftCap.Position.X-.45
         and glazing:GetAttribute("ArchitecturalFacade")=="Enclosed end-cap glazing",
-        "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST")
+        "PHOTO_HALL_END_WINDOW_DARK_BLUE_GLAZING_OR_SEALED_FACADE_LOST")
 
     local horizontal=expect("Photo hall yellow sash horizontal",2)
     local vertical=expect("Photo hall yellow sash vertical",2)
@@ -560,8 +557,8 @@ local function assertDimensionalEndWindow()
         assert(not ray.CanCollide and not ray.CanQuery
             and ray.Material==Enum.Material.SmoothPlastic
             and math.abs(ray.Position.Y-9.55)<=1.05
-            and math.abs(ray.Position.X-48.5)<=1.05
-            and ray.Position.Z<leftCap.Position.Z-.45,
+            and math.abs(ray.Position.Z-15.5)<=1.05
+            and ray.Position.X<leftCap.Position.X-.45,
             "PHOTO_HALL_3D_SUN_RAY_MISSING_OR_BLOCKING")
     end
     assert(not leftCap:FindFirstChild("Photo hallway yellow end-window motif"),
@@ -575,7 +572,7 @@ endWindow.CanCollide=true
 local okWindow,errWindow=pcall(assertDimensionalEndWindow)
 endWindow.CanCollide=false
 assert(not okWindow and string.find(tostring(errWindow),
-    "PHOTO_HALL_END_WINDOW_3D_GLAZING_OR_SEALED_FACADE_LOST",1,true),
+    "PHOTO_HALL_END_WINDOW_DARK_BLUE_GLAZING_OR_SEALED_FACADE_LOST",1,true),
     "PHOTO_HALL_END_WINDOW_COLLIDER_MUTATION_UNDETECTED")
 local testRay=expect("Photo hall dimensional sunburst ray",8)[1]
 testRay.Name="Temporarily missing sunray in test"
@@ -592,7 +589,7 @@ for _,cap in ipairs(caps) do
     if cap:FindFirstChild("Original school noticeboard") then notices+=1 end
 end
 assert(notices==1,"PHOTO_HALL_FAR_ANNOUNCEMENT_LOST")
-print("HALLWAY_SOURCE_PROBE_PASS perpendicular_corridor=108_studs "
+print("HALLWAY_SOURCE_PROBE_PASS straight_corridor=108_studs "
     .."tile_grid=25x6 uniform_native_brick_panels="..count
     .." physical_paper_diamonds=23 frosted_oak_doors=2 "
     .."in_game_children_identifiable=none native_iPhone_review_pending=true")

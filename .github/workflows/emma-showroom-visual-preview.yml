@@ -158,10 +158,11 @@ jobs:
           # Additional diagnostic: photograph-verified sun, ten numbered clouds,
           # and 26 surrounding letters are difficult to inspect from the fixed
           # 12-reading-rug child-eye camera because a chair occludes the view.
-          # Keep camera 12 unchanged for before/after comparisons; this
-          # downward view is QA-only, never a Roblox gameplay camera.
-          # Slight horizontal offset avoids a perfectly vertical view matrix.
-          render_eye_checked 16-rug-overlook -24.5,13.6,12.6 -25,0.62,14
+          # The owner-approved desk/rug swap moved the complete rug from
+          # (-25,14) to (25,-25); keep this QA camera attached to that authored
+          # center. It is never a Roblox gameplay camera. A slight horizontal
+          # offset avoids a perfectly vertical view matrix.
+          render_eye_checked 16-rug-overlook 25.5,13.6,-26.4 25,0.62,-25
           # v71's 12-reading-rug angle revealed WHITE book backs, while the
           # next commit moved the five covers into the real built-in shelf.
           # Observe that shelf HEAD-ON at a standing/child-eye perspective.
