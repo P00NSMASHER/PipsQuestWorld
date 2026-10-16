@@ -15,21 +15,23 @@ from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 VIEWPORT = (1920, 1080)
 SUN_CENTER = (960, 506)
-# ROI/calibration: actual 07-hall-yellow-end-window.png from commit
-# 633bbccb19e2160ca548622c0435b17be50f7838. Permit modest light
-# variation; do not claim validity for an unrelated camera/FOV.
+# Strict ROIs for the *straight-axis* 07 camera (100,5.7,21 -> 155,7.35,15.5).
+# In reviewed b6d0f2b0 pixels the left jamb occupies x=872..875 and the first
+# mullion x=935..936. Earlier pre-rotation x=845 and x=923 ROIs falsely
+# reported a missing window despite the actual gold frame being visible.
+# Preserve all original minimum pixel counts, sun rays and negative controls.
 FRAME_BANDS = {
-    "top": ((850, 476, 1070, 486), 350),
-    "bottom": ((850, 596, 1070, 605), 350),
-    "left": ((845, 484, 862, 597), 170),
-    "right": ((1059, 484, 1078, 597), 170),
-    "mullion_left": ((918, 487, 935, 590), 120),
-    "mullion_right": ((989, 487, 1008, 590), 120),
-    "crossbar": ((852, 528, 1068, 546), 135),
+    "top": ((867, 479, 1070, 491), 350),
+    "bottom": ((867, 590, 1070, 603), 350),
+    "left": ((868, 486, 881, 599), 170),
+    "right": ((1059, 486, 1072, 599), 170),
+    "mullion_left": ((932, 487, 945, 590), 120),
+    "mullion_right": ((996, 487, 1008, 590), 120),
+    "crossbar": ((870, 530, 1068, 548), 135),
 }
 GLASS_AREAS = {
-    "left_upper": (876, 493, 912, 526),
-    "right_upper": (1012, 493, 1046, 526),
+    "left_upper": (878, 493, 925, 526),
+    "right_upper": (1012, 493, 1053, 526),
 }
 SUN_REGION = (920, 484, 1001, 532)
 SUN_CENTER_REGION = (948, 496, 975, 519)
@@ -116,12 +118,12 @@ def synthetic_window(missing_ray: int | None = None,
                      sash_color=(106, 90, 35)) -> Image.Image:
     image = Image.new("RGB", VIEWPORT, (53, 66, 79))
     draw = ImageDraw.Draw(image)
-    draw.rectangle((852, 482, 1068, 599), fill=pane_color)
-    for rect in ((846, 476, 1073, 483), (846, 597, 1073, 603),
-                 (846, 477, 853, 600), (1066, 477, 1073, 600),
-                 (923, 481, 929, 599), (993, 481, 999, 599),
-                 (852, 535, 1068, 541)):
-        draw.rectangle(rect, fill=sash_color)
+    draw.rectangle((872, 483, 1065, 597), fill=pane_color)
+    # The synthetic source-of-truth uses the same calibrated jambs as the
+    # actual camera gate; mutations still independently remove each element.
+    for rect, _minimum in FRAME_BANDS.values():
+        x0, y0, x1, y1 = rect
+        draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=sash_color)
     draw.ellipse((953, 499, 967, 513), fill=(128, 118, 39))
     cx, cy = SUN_CENTER
     for i in range(8):
