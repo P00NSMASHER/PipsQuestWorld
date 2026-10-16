@@ -154,6 +154,8 @@ local function checkClosedOakDoors()
             "PHOTO_HALL_ADJACENT_OPAQUE_BACKING_RETURNED")
         assert(glass.Material==Enum.Material.Glass
             and glass.Transparency>.13 and glass.Transparency<.49
+            and glass.Color.G-glass.Color.R>.09
+            and glass.Color.B-glass.Color.G>.07
             and near(glass.Size.Y,4.88)
             and math.abs(glass.Position.X-lower.Position.X)<.05
             and glass.Position.Z<lower.Position.Z
@@ -185,6 +187,14 @@ local function checkClosedOakDoors()
     for _,s in ipairs(stiles) do
         assert(near(s.Size.X,.72) and s.Size.Y>4.8,
             "PHOTO_HALL_ADJACENT_STILE_SHAPE_MISSING")
+    end
+    for _,item in ipairs(plates) do
+        assert(item.Color.R>.95 and item.Color.G>.90 and item.Color.B>.50,
+            "PHOTO_HALL_ADJACENT_BRASS_TOO_DARK")
+    end
+    for _,item in ipairs(pulls) do
+        assert(item.Color.R>.95 and item.Color.G>.90 and item.Color.B>.50,
+            "PHOTO_HALL_ADJACENT_BRASS_TOO_DARK")
     end
 end
 checkClosedOakDoors()

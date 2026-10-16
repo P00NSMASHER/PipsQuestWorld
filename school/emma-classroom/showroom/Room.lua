@@ -2024,7 +2024,9 @@ local function buildBackDoorAndHall(root: Instance)
 
         local pane=hp("Photo hall adjacent frosted door glass",
             Vector3.new(4.96,4.88,.11),CFrame.new(x,7.635,27.92),
-            Color3.fromRGB(187,205,201),Enum.Material.Glass,false)
+            -- Cool-blue frosted glass stays distinct from the warm brick
+            -- visible through this sealed architectural facade.
+            Color3.fromRGB(177,205,225),Enum.Material.Glass,false)
         pane.Transparency=.30
         pane.Reflectance=.018
         pane:SetAttribute("GlassAperture","Upper opening has no solid wood backing")
@@ -2054,10 +2056,10 @@ local function buildBackDoorAndHall(root: Instance)
         local gripX=x+(x<0 and 2.02 or -2.02)
         hp("Photo hall adjacent brass push plate",
             Vector3.new(.25,.90,.085),CFrame.new(gripX,3.45,28.025),
-            Color3.fromRGB(177,151,100),Enum.Material.Metal,false)
+            Color3.fromRGB(255,245,150),Enum.Material.Metal,false)
         hp("Photo hall adjacent brass pull",
             Vector3.new(.13,.58,.11),CFrame.new(gripX,3.46,28.115),
-            Color3.fromRGB(201,178,122),Enum.Material.Metal,false)
+            Color3.fromRGB(255,245,150),Enum.Material.Metal,false)
     end
     local welcome=hp("Photo hall vertical welcome plaque",
         Vector3.new(1.15,7.5,.09),CFrame.new(-10.5,8,27.8),
