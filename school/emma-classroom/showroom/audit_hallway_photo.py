@@ -87,8 +87,8 @@ assert(near(northBrick.Position.X,48.35)
 local vestibuleFloor=one("Side hall floor")
 local vestibuleRoof=one("Side hall ceiling")
 assert(vestibuleFloor.Material==Enum.Material.Slate
-    and near(vestibuleFloor.Position.X,48.35)
-    and vestibuleFloor.Size.X>=22.45
+    and near(vestibuleFloor.Position.X,48.25)
+    and vestibuleFloor.Size.X>=22.65
     and vestibuleFloor:FindFirstChild("StaffVestibuleStoneGrid"),
     "STAFF_HALLWAY_FLOOR_FINISH_NOT_UNIFORM")
 assert(near(vestibuleRoof.Position.X-vestibuleRoof.Size.X/2,37.66)
@@ -380,9 +380,9 @@ local function checkSheets()
         assert(math.abs(p.Position.X-(108+(i-12)*3.55))<.045
             and near(p.Position.Y,9.05) and near(p.Position.Z,4.98),
             "PHOTO_HALL_PAPER_POSITION_OR_SPACING_INVALID")
-        assert(math.abs(math.abs(m[4])-.7071068)<.04
-            and math.abs(math.abs(m[5])-.7071068)<.04
-            and math.abs(math.abs(m[7])-.7071068)<.04
+        assert(math.abs(math.abs(m[1])-.7071068)<.04
+            and math.abs(math.abs(m[2])-.7071068)<.04
+            and math.abs(math.abs(m[4])-.7071068)<.04
             and p.Size.X>1.8 and p.Size.Y>2.1,
             "PHOTO_HALL_PAPER_NOT_DIAMOND_GEOMETRY")
         assert(not p.CanCollide and p.CanQuery==false
@@ -436,7 +436,7 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_HALL_COLLIDABLE_SHEET_REGRESSION_NOT_REJECTED")
 print("PHOTO_HALL_PAPER_NEGATIVE_REJECTED collider")
 local oldCF=bad.CFrame
-bad.CFrame=CFrame.new(bad.Position)
+bad.CFrame=CFrame.new(68.95,9.05,4.98)
 ok,err=pcall(checkSheets)
 bad.CFrame=oldCF
 assert(not ok and string.find(tostring(err),

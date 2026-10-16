@@ -2418,8 +2418,10 @@ local function alignHallwayWithStaffExit(root: Instance)
     -- Floor bridges to the brass threshold. The roof begins a deliberate
     -- .16 stud beyond the exterior face of the yellow classroom wall, so no
     -- coplanar exterior slab can flash through the room-side paint.
-    sideFloor.Size=Vector3.new(22.50,.48,23.05)
-    sideFloor.CFrame=CFrame.new(48.35,.24,15.775)
+    -- Extend ten hundredths past the classroom-floor edge so the avatar's
+    -- entire footprint stays supported across the brass doorway threshold.
+    sideFloor.Size=Vector3.new(22.70,.48,23.05)
+    sideFloor.CFrame=CFrame.new(48.25,.24,15.775)
     sideRoof.Size=Vector3.new(21.94,.36,23.05)
     sideRoof.CFrame=CFrame.new(48.63,13.18,15.775)
 

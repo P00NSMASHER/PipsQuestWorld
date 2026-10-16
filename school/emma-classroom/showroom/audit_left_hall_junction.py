@@ -63,7 +63,7 @@ local function check()
     local sMin,sMax=zBounds(floor)
     local pMin,pMax=zBounds(mainFloor)
 
-    assert(near(floor.Position.X,48.35)
+    assert(near(floor.Position.X,48.25)
         and near(mainFloor.Position.X,108)
         and near(floor.Position.Z,15.775)
         and near(mainFloor.Position.Z,15.5)
@@ -159,7 +159,7 @@ rejectMutation(
     "LEFT_HALL_JUNCTION_CEILING_SKY_GAP","eastward_roof_seam")
 local oldCF=floor.CFrame
 rejectMutation(
-    function() floor.CFrame=CFrame.new(48.35,-.55,15.775) end,
+    function() floor.CFrame=CFrame.new(48.25,-.55,15.775) end,
     function() floor.CFrame=oldCF end,
     "LEFT_HALL_JUNCTION_AVATAR_STEP_TOO_HIGH","floor_drop")
 rejectMutation(
