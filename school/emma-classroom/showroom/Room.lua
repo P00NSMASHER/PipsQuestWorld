@@ -1717,8 +1717,11 @@ local function buildBackDoorAndHall(root: Instance)
     end
     part(root,"Closet door center astragal",Vector3.new(.18,10.05,.18),
         CFrame.new(0,5.28,26.07),Color3.fromRGB(91,61,41),Enum.Material.Wood,false)
-    sign(root,"Welcome over door","CLASSROOM CLOSET",Vector3.new(10.7,1.20,.16),
-        CFrame.new(0,15.6,26.40),Color3.fromRGB(247,237,207),P.blue)
+    local closetSign=sign(root,"Welcome over door","CLASSROOM CLOSET",
+        Vector3.new(10.7,1.20,.16),
+        CFrame.new(0,15.38,26.40),Color3.fromRGB(247,237,207),P.blue)
+    closetSign:SetAttribute("PlacementContract",
+        "Centered horizontally and vertically between closet frame and ceiling")
     -- Owner's October 11 iPhone screenshot fixes the doorway topology:
     -- classroom rear DOUBLE DOORS lead only into a self-contained SUPPLY CLOSET.
     -- The LEFT doorway (the ABVM staff entrance at x=37) is the ONLY
@@ -1800,31 +1803,80 @@ local function buildBackDoorAndHall(root: Instance)
     cp("Supply closet warm laminate floor",Vector3.new(11.30,.045,9.05),
         CFrame.new(0,.529,31.175),Color3.fromRGB(166,133,103),
         Enum.Material.Wood,true)
-    -- Three realistic shelves and a few colored classroom supply tubs.
-    -- Thin loose props are noncolliding; the rear wall is a true barrier.
-    for i,y in ipairs({3.05,5.50,7.95}) do
-        cp("Supply closet oak shelf",Vector3.new(9.9,.24,1.18),
-            CFrame.new(0,y,34.91),closetOak,Enum.Material.Wood,false)
-        local tub=cp("Supply closet labeled storage tub",
-            Vector3.new(2.28,1.02,.88),
-            CFrame.new((i-2)*2.72,y+.65,34.85),
-            ({Color3.fromRGB(91,134,147),Color3.fromRGB(169,125,113),
-              Color3.fromRGB(117,143,106)})[i],
-            Enum.Material.SmoothPlastic,false)
-        local gui=Instance.new("SurfaceGui")
-        gui.Name="Anonymous classroom supply category"
-        gui.Face=Enum.NormalId.Front
-        gui.CanvasSize=Vector2.new(240,100)
-        gui.Parent=tub
-        local label=Instance.new("TextLabel")
-        label.Name="Supply tub category"
-        label.Size=UDim2.fromScale(1,1)
-        label.BackgroundTransparency=1
-        label.Font=Enum.Font.GothamBold
-        label.TextScaled=true
-        label.TextColor3=Color3.fromRGB(255,251,232)
-        label.Text=({"ART","PAPER","GAMES"})[i]
-        label.Parent=gui
+    -- Finish the closet as an enclosed room: the prior open top exposed sky
+    -- through the glazed doors from normal child height.
+    cp("Supply closet finished ceiling",Vector3.new(12.48,.34,9.05),
+        CFrame.new(0,13.08,31.55),Color3.fromRGB(238,237,226),
+        Enum.Material.SmoothPlastic,true)
+    -- A single upper shelf and four labeled bins keep the small closet useful
+    -- without the old sparse staircase of shelves. Every bin has a visible air
+    -- gap above the shelf and between neighboring containers.
+    cp("Supply closet upper shelf",Vector3.new(10.25,.22,.70),
+        CFrame.new(0,10.14,35.13),closetOak,Enum.Material.Wood,false)
+    for _,x in ipairs({-4.65,4.65}) do
+        cp("Supply closet shelf support",Vector3.new(.16,.46,.46),
+            CFrame.new(x,9.78,35.15),Color3.fromRGB(112,77,50),
+            Enum.Material.Wood,false)
+    end
+    local supplyBins={
+        {x=-3.72,label="PAPER",color=Color3.fromRGB(91,129,151)},
+        {x=-1.24,label="BOOKS",color=Color3.fromRGB(120,145,101)},
+        {x=1.24,label="ART",color=Color3.fromRGB(176,122,100)},
+        {x=3.72,label="SUPPLIES",color=Color3.fromRGB(133,105,151)},
+    }
+    for _,entry in ipairs(supplyBins) do
+        local bin=cp("Labeled classroom supply bin",
+            Vector3.new(1.95,1.0,.55),CFrame.new(entry.x,10.78,34.94),
+            entry.color,Enum.Material.SmoothPlastic,false)
+        bin:SetAttribute("StorageLabel",entry.label)
+        local face=Instance.new("SurfaceGui")
+        face.Name="Supply bin label"
+        face.Face=Enum.NormalId.Front
+        face.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        face.CanvasSize=Vector2.new(300,150)
+        face.LightInfluence=.20
+        face.Parent=bin
+        local tag=Instance.new("TextLabel")
+        tag.Name="Readable storage label"
+        tag.Size=UDim2.fromScale(.82,.55)
+        tag.Position=UDim2.fromScale(.09,.23)
+        tag.BackgroundColor3=Color3.fromRGB(248,244,226)
+        tag.BackgroundTransparency=.06
+        tag.BorderSizePixel=0
+        tag.Font=Enum.Font.GothamBold
+        tag.Text=entry.label
+        tag.TextColor3=Color3.fromRGB(45,54,68)
+        tag.TextScaled=true
+        tag.Parent=face
+        local corner=Instance.new("UICorner")
+        corner.CornerRadius=UDim.new(.14,0)
+        corner.Parent=tag
+    end
+    -- Child-height coat storage: one timber rail, five separate hooks and
+    -- deliberately spaced garment silhouettes. Connected sleeves/collars form
+    -- each coat; different coats and the shelf/bins never overlap.
+    cp("Supply closet child coat rail",Vector3.new(10.2,.48,.42),
+        CFrame.new(0,8.25,35.23),closetOak,Enum.Material.Wood,false)
+    local coatColors={
+        Color3.fromRGB(74,111,153),Color3.fromRGB(184,87,76),
+        Color3.fromRGB(91,137,101),Color3.fromRGB(222,157,72),
+        Color3.fromRGB(116,92,145),
+    }
+    for i,x in ipairs({-4.0,-2.0,0,2.0,4.0}) do
+        cylinder(closet,"Supply closet coat hook",Vector3.new(.48,.15,.15),
+            CFrame.new(x,7.96,34.92)*CFrame.Angles(math.pi/2,0,0),
+            Color3.fromRGB(101,106,106),Enum.Material.Metal,false)
+        local color=coatColors[i]
+        cp("Children coat body",Vector3.new(1.36,3.10,.42),
+            CFrame.new(x,6.08,34.86),color,Enum.Material.Fabric,false)
+        for _,side in ipairs({-1,1}) do
+            cp("Children coat sleeve",Vector3.new(.46,2.42,.38),
+                CFrame.new(x+side*.92,6.42,34.86),
+                color:Lerp(Color3.new(1,1,1),.04),Enum.Material.Fabric,false)
+        end
+        cp("Children coat collar",Vector3.new(.62,.24,.44),
+            CFrame.new(x,7.78,34.84),color:Lerp(Color3.new(0,0,0),.12),
+            Enum.Material.Fabric,false)
     end
     -- OWNER-SUPPLIED SIX PHOTOS: corridor architecture, not event-day people.
     -- Long corridor scales and X direction are explicitly PROVISIONAL.
