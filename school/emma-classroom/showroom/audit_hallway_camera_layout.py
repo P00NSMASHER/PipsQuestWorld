@@ -40,6 +40,18 @@ FULL = (
 )
 REGISTERED=FAST+FULL
 
+# The 07/08 hallway cameras feed pixel-level geometry/visibility gates
+# calibrated against real source-derived 1920x1080 frames. A small camera
+# move may satisfy generic corridor topology yet invalidate those ROIs.
+# Fail *before rendering* on unreviewed camera drift. A deliberate new
+# composition must update its semantic ROIs, evidence, and this contract.
+SEMANTIC_PIXEL_CAMERA_CONTRACT = {
+    "07-hall-yellow-end-window":
+        Camera((100,5.7,21),(155,7.35,15.5)),
+    "08-hall-adjacent-oak-door":
+        Camera((145,5.6,16),(153.5,6.8,25.7)),
+}
+
 def triple(raw: str) -> tuple[float,float,float]:
     parts=raw.split(",")
     assert len(parts)==3, "HALL_CAMERA_INVALID_TRIPLE "+raw
@@ -121,6 +133,11 @@ def check_role(name: str, cam: Camera) -> None:
 
 def inspect(cameras: dict[str,Camera], blockers=None) -> None:
     assert set(cameras)==set(REGISTERED), "HALL_CAMERA_INVENTORY_REGRESSION"
+    for name,expected in SEMANTIC_PIXEL_CAMERA_CONTRACT.items():
+        assert cameras[name]==expected, (
+            "HALL_SEMANTIC_PIXEL_ROI_CAMERA_DRIFT "+name
+            +"; recalibrate the real screenshot gates before updating this camera"
+        )
     for name,cam in cameras.items():
         check_role(name,cam)
         if blockers is not None:
@@ -156,6 +173,14 @@ def self_test() -> None:
             ("06-hall-paper-rail",Camera((112,5.5,17),(125,9,4.98))),
         "camera_crosses_gallery_centerline":
             ("06-hall-paper-rail",Camera((100,5.5,20),(151,8,8))),
+        # Both are otherwise valid/walkable and would have passed the
+        # existing broad hallway-role checks, but shift actual pixel ROIs.
+        "moved_end_window_while_pixel_gate_unchanged":
+            ("07-hall-yellow-end-window",
+             Camera((100,5.7,21),(155.5,7.35,15.5))),
+        "moved_oak_door_while_pixel_gate_unchanged":
+            ("08-hall-adjacent-oak-door",
+             Camera((145,5.6,16),(153.5,6.8,25.2))),
     }
     for reason,(name,incorrect) in mutation_specs.items():
         changed=dict(example)
@@ -168,7 +193,8 @@ def self_test() -> None:
             raise AssertionError("HALL_CAMERA_NEGATIVE_TEST_ACCEPTED "+reason)
     print("HALL_CAMERA_LAYOUT_SELF_TEST_PASS "
           "obsolete_closet_camera,wrong_hall,wrong_aim,height_rejected=true "
-          "old_four_sheets_view_and_wrong_distance_rejected=true")
+          "old_four_sheets_view_and_wrong_distance_rejected=true"
+          " photo_pixel_roi_camera_drift_rejected=true")
 
 def main() -> None:
     ap=argparse.ArgumentParser()
