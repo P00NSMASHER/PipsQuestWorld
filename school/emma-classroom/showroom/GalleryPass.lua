@@ -439,13 +439,33 @@ local function physicalDetails(root:Instance,group:Instance)
             CFrame.new(0,17.45,z),C.cream,Enum.Material.Wood,false)
     end
 
+    -- These four tiny grille fronts used to cost 20 extra physical Parts for
+    -- shallow metallic strips that never participate in movement or physics.
+    -- Print the same five native, noninteractive slots on each original grille
+    -- panel instead; the 1.2 x 1.6-stud body and its world position stay put.
+    -- The RIGHT face looks toward the classroom (+X from the window wall).
+    -- Independent headless previews omit SurfaceGui pixels: judge the slots
+    -- in Roblox Studio/iPhone before authorizing a public publish.
     for _,z in ipairs({-23,-13,1,14}) do
         local panel=piece(group,"Radiator grilles under classroom windows",
             Vector3.new(.07,1.6,1.2),CFrame.new(-34.35,1.7,z),
             Color3.fromRGB(212,213,206),Enum.Material.Metal,false)
+        local grille=Instance.new("SurfaceGui")
+        grille.Name="RadiatorSlots"
+        grille.Face=Enum.NormalId.Right
+        grille.SizingMode=Enum.SurfaceGuiSizingMode.FixedSize
+        grille.CanvasSize=Vector2.new(288,384)
+        grille.LightInfluence=.25
+        grille.AlwaysOnTop=false
+        grille.Parent=panel
         for i=-2,2 do
-            piece(group,"Radiator grille slot",Vector3.new(.09,.12,.78),
-                panel.CFrame*CFrame.new(-.03,i*.24,0),C.metal,Enum.Material.Metal,false)
+            local slot=Instance.new("Frame")
+            slot.Name="Radiator vent slat"
+            slot.BorderSizePixel=0
+            slot.BackgroundColor3=C.metal
+            slot.Size=UDim2.fromScale(.65,.075)
+            slot.Position=UDim2.fromScale(.175,.4625+i*.15)
+            slot.Parent=grille
         end
     end
 
