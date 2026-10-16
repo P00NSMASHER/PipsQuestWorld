@@ -117,7 +117,7 @@ local function verify()
     -- Decorative geometry is explicitly excluded from touch/raycast work.
     local piping=parts("Photo gingham stitched piping")
     local hems=parts("Photo gingham sewn apron hem")
-    assert(#piping==4 and #hems==4,
+    assert(#piping==4 and #hems==2,
         "GINGHAM_STITCHED_EDGE_COUNT_INVALID")
     for _,detail in ipairs(piping) do
         assert(detail.Anchored and not detail.CanCollide
@@ -135,6 +135,21 @@ local function verify()
             and math.abs(detail.Position.Y-1.61)<.01,
             "GINGHAM_APRON_HEM_INVALID")
     end
+    local note=only("Teacher note paper")
+    local notesGui=note:FindFirstChild("TeacherNoteRules")
+    assert(notesGui and notesGui:IsA("SurfaceGui")
+        and notesGui.Face==Enum.NormalId.Top
+        and #parts("Teacher note ruled line")==0,
+        "TEACHER_NOTE_MICROPARTS_RETURNED")
+    local lines=0
+    for _,child in ipairs(notesGui:GetChildren()) do
+        if child.Name=="TeacherNoteRule" and child:IsA("Frame") then
+            lines+=1
+            assert(child.BackgroundColor3.B>.48,
+                "TEACHER_NOTE_INK_COLOR_INVALID")
+        end
+    end
+    assert(lines==4,"TEACHER_NOTE_VISIBLE_RULE_COUNT_INVALID")
     local floor=only("Warm oak classroom floor")
     assert(floor.CanCollide and floor.CanQuery,
         "ROOM_ARCHITECTURAL_COLLIDER_NOT_QUERYABLE")
