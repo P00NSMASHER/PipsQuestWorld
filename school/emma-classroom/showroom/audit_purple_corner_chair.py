@@ -158,7 +158,9 @@ local function verifyStorytime()
     assert(math.abs(seat.Position.Y-2.17)<.03
         and math.abs(seat.Position.X-(base.Position.X+base.CFrame.m[3]*.44))<.05
         and math.abs(seat.Position.Z-(base.Position.Z+base.CFrame.m[9]*.44))<.05
-        and seat.Size.X>3.45 and seat.Size.Z>2.55
+        -- roundedPanel's collidable core excludes its rounded X edges;
+        -- horizontal core axes are X=width, Y=depth, Z=thickness.
+        and seat.Size.X>2.70 and seat.Size.Y>2.55 and seat.Size.Z>.55
         and back.Size.Y>3.40 and back.Position.Y>3.25
         and pillow.Material==Enum.Material.Fabric,
         "STORYTIME_ARMCHAIR_SEAT_NOT_PADDED_OR_CENTERED")
