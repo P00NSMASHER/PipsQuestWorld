@@ -1984,6 +1984,24 @@ local function buildBackDoorAndHall(root: Instance)
         Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,25),
         Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
 
+    -- Complete the corridor-facing finish around the OTHER staff-door jamb
+    -- and over its header. The original classroom-yellow shell remains on
+    -- the room-facing side, while these four thin, noncolliding layers make
+    -- the hallway side continuously blue-gray with the existing brick dado.
+    hp("Photo hall staff front blue-gray plaster",
+        Vector3.new(.09,18,4),CFrame.new(37.56,9,6),
+        blueGray,Enum.Material.SmoothPlastic,false)
+    local frontBrick=hp("Photo hall staff front glazed brick",
+        Vector3.new(.095,4.25,3.90),CFrame.new(37.65,2.125,6),
+        Color3.fromRGB(192,132,63),Enum.Material.Brick,false)
+    frontBrick.Reflectance=.035
+    hp("Photo hall staff front oak cap",
+        Vector3.new(.12,.16,3.90),CFrame.new(37.70,4.34,6),
+        Color3.fromRGB(162,124,79),Enum.Material.Wood,false)
+    hp("Photo hall staff header blue-gray plaster",
+        Vector3.new(.09,5,15),CFrame.new(37.56,15.5,15.5),
+        blueGray,Enum.Material.SmoothPlastic,false)
+
     -- The x=+/-9 INNER ENDS of the two original classroom rear walls
     -- are one-stud exposed return faces at the former double-door entry.
     -- The photo-hall renderer still shows one of these original yellow
