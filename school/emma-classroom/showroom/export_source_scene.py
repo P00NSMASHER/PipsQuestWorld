@@ -691,11 +691,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     geometry_contract={
         "Student desk top":16,
         "Student chair contoured back collision":16,
-        "Purple corner chair seat":1,
-        "Purple corner chair school back shell":1,
-        "Purple corner chair contoured back collision":1,
-        "Purple corner chair ventilation inset":3,
-        "Purple corner chair tubular leg":4,
+        "Purple comfy chair base collision":1,
+        "Purple comfy chair upholstered base":1,
+        "Purple comfy chair seat cushion":1,
+        "Purple comfy chair back collision":1,
+        "Purple comfy chair back cushion":1,
+        "Purple comfy chair padded arm":2,
+        "Purple comfy chair back tuft":3,
         "Student chair school back shell":16,
         "Student chair school back shell center":16,
         "Student chair school back shell rounded corner":64,
@@ -798,39 +800,49 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     ), ("Photo word wall regressed to the small isolated board: " +
         "observed sy={0} sz={1} y={2} z={3}".format(
             word_wall[7],word_wall[8],word_wall[10],word_wall[11]))
-    # Emma identified the purple chair BESIDE the photographed seated adult,
-    # gray supply cabinet, dark filing cabinet and lower-left window AC. The
-    # earlier rear-reading-corner coordinate was a guessed placement, not a
-    # photo-backed final decision. Chair TYPE is still occluded/provisional.
-    corner_seat=only("Purple corner chair seat")
-    corner_back=only("Purple corner chair school back shell")
+    # Emma identified the large purple comfy chair beside the photographed
+    # seated adult, gray storage and window AC. The prior source reused a
+    # small molded student chair; verify the new adult-scale upholstered
+    # silhouette from the actual Luau-built geometry.
+    corner_seat=only("Purple comfy chair seat cushion")
+    corner_back=only("Purple comfy chair back cushion")
+    corner_base=only("Purple comfy chair base collision")
+    back_collider=only("Purple comfy chair back collision")
     cx,cz=float(corner_seat[9]),float(corner_seat[11])
-    assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
-        "Emma's purple chair left the photo-identified AC window corner"
+    assert abs(cx+32.43)<.04 and abs(cz+19.60)<.04, (
+        "Emma's purple comfy chair left the photo-identified AC window corner"
     )
-    # The singular photo-corner seat is rotated to face +X toward the
-    # workstation; the back remains against the window (-X).
-    assert abs(float(corner_back[9])-(cx-.93))<.05 and (
-        abs(float(corner_back[11])-cz)<.04
-    ), "Purple chair backrest no longer faces the A/C wall"
+    assert float(corner_back[9])<cx-1.20 and (
+        abs(float(corner_back[11])-cz)<.08
+    ), "Purple comfy chair backrest no longer faces the A/C wall"
+    assert corner_seat[4].endswith("Fabric") and (
+        corner_back[4].endswith("Fabric")
+    ), "Purple comfy chair lost its upholstered finish"
     for component in (corner_seat,corner_back):
         red,green,blue=(float(component[i]) for i in (12,13,14))
-        assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
+        assert .40<red<.65 and .20<green<.50 and .57<blue<.82 and (
             blue>red>green
-        ), "Purple corner chair reverted to blue or another classroom color"
+        ), "Purple comfy chair reverted to blue or another classroom color"
+    assert float(corner_seat[6])>2.8 and float(corner_seat[7])>3.0 and (
+        float(corner_back[6])>3.0 and float(corner_back[7])>3.1
+        and by_name["Purple comfy chair padded arm"]==2
+        and by_name["Purple comfy chair back tuft"]==3
+    ), "Purple comfy chair lost its broad padded silhouette"
+    rug=only("Alphabet rug")
     rug_dist=math.hypot(cx+25.0,cz-14.0)
-    assert rug_dist>10.5, (
-        "Purple chair overlaps the real circular sun/ABC carpet"
-    )
+    assert rug_dist>10.5, "Purple comfy chair overlaps the circular sun/ABC carpet"
     ac=only("Photo window air conditioner housing")
     assert abs(cz-float(ac[11]))<1.2, (
-        "Purple chair is no longer adjacent to the photographed window AC"
+        "Purple comfy chair is no longer adjacent to the photographed window AC"
     )
     radiator=[row for row in lines if row[1]=="Radiator body"
               and abs(float(row[11])-float(ac[11]))<.1]
+    base_x,base_z=float(corner_base[9]),float(corner_base[11])
+    base_world_x_half=float(corner_base[8])/2
     assert len(radiator)==1 and (
-        cx-1.25>float(radiator[0][9])+float(radiator[0][6])/2+.5
-    ), "Purple chair clips the metal radiator below the school AC"
+        base_x-base_world_x_half>
+        float(radiator[0][9])+float(radiator[0][6])/2+.35
+    ), "Purple comfy chair clips the metal radiator below the school AC"
     gray=only("Photo gray corner storage cabinet")
     files=only("Photo black filing cabinet")
     worktable=only("Photo window worktable")
@@ -844,31 +856,24 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     tx,tz=float(worktable[9]),float(worktable[11])
     assert abs(tx+27.50)<.03 and abs(tz+19.60)<.03 and (
         by_name["Photo worktable metal leg"]==4
-    ), "Photo worktable no longer beside the purple chair"
-    assert cx+1.25<tx-float(worktable[6])/2, (
-        "Photo worktable intersects the purple chair seat"
+    ), "Photo worktable no longer beside the purple comfy chair"
+    assert base_x+base_world_x_half<tx-float(worktable[6])/2-.20, (
+        "Photo worktable intersects the purple comfy chair collision base"
     )
-    front=only("Purple corner chair molded front seat roll")
-    assert float(front[9])>cx+.90 and (
-        abs(float(front[11])-cz)<.04
-    ), "Photo corner purple chair points away from the actual workstation"
-    assert float(front[9])+float(front[8])/2<(
-        tx-float(worktable[6])/2-.30
-    ), "Purple chair front roll clips the workstation"
     for desk in (row for row in lines if row[1]=="Student desk edge"):
         x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
         assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
                 or z_gap>(float(desk[8])+float(worktable[8]))/2+.25), (
             "Photo worktable intersects a preexisting student desk"
         )
-    assert cx-1.25>-34.4 and -26<cz<-16, (
-        "Purple chair intersects exterior classroom walls"
+    assert base_x-base_world_x_half>-34.4 and -26<base_z<-16, (
+        "Purple comfy chair intersects exterior classroom walls"
     )
-    assert by_name["Student chair seat"]==16, (
-        "Emma's separate purple corner chair replaced a student seat"
-    )
-    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
-          "original_student_chairs=16 child_scale=true "
+    assert by_name["Student chair seat"]==16 and (
+        by_name["Purple corner chair seat"]==0
+    ), "Purple comfy chair replaced a student seat or old molded copy returned"
+    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS comfy_seats=1 "
+          "original_student_chairs=16 adult_scale=true upholstered=true "
           "rug_clear=true ac_adjacent=true faces_worktable=true "
           "workstation_clear=true position_provisional=true")
     window_banner=only("Classroom faith window banner")
