@@ -2847,10 +2847,12 @@ function World.build()
         Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
     -- IMG_2910: a low off-white BOX FAN with circular grille, not the
-    -- previously guessed pedestal fan. Keep the same teaching-wall corner;
-    -- thirteen original noncolliding Parts replace the former fifteen.
+    -- previously guessed pedestal fan. Keep the same teaching-wall corner,
+    -- but honor the October 17 owner correction by shifting the complete
+    -- thirteen-Part noncolliding assembly three studs left. It remains low,
+    -- clear of the teacher desk, wall display, and student navigation.
     -- Fine concentric grille detail is native UI, not dozens of colliders.
-    local fanX,fanZ=31.0,-31.40
+    local fanX,fanZ=28.0,-31.40
     local fanIvory=Color3.fromRGB(219,218,205)
     for _,side in ipairs({-1,1}) do
         part(root,"Photo box fan housing side",Vector3.new(.23,3.34,.64),
