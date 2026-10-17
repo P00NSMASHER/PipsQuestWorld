@@ -276,10 +276,12 @@ local function verify()
     end
     assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
     -- IMG_2910 shows a LOW BOX FAN, not a tall round pedestal fan.
-    -- Preserve noncollision and desk clearance while checking that silhouette.
+    -- The owner moved the original low box fan LEFT of the ABC/sun rug to
+    -- leave the teaching-wall corner open for a plush storytime armchair.
+    -- Preserve the photographed fan itself, its direction and desk clearance.
     local fan=one("Photo portable fan back guard")
     local face=one("Photo portable fan translucent face")
-    assert(math.abs(fan.Position.X-31)<.03
+    assert(math.abs(fan.Position.X-18)<.03
         and math.abs(fan.Position.Y-2.38)<.03
         and math.abs(fan.Position.Z+31.20)<.03,
         "PHOTO_PORTABLE_FAN_POSITION_INVALID")
@@ -321,6 +323,12 @@ local function verify()
                 "PHOTO_PORTABLE_FAN_BLOCKS_AISLE")
         end
     end
+    local readingRug=one("Alphabet rug")
+    local storySeat=one("Storytime purple armchair base")
+    assert(fan.Position.X<readingRug.Position.X-6.5
+        and storySeat.Position.X>readingRug.Position.X+7.5
+        and storySeat.Position.X-fan.Position.X>14.0,
+        "PHOTO_FAN_AND_ARMCHAIR_MUST_FLANK_RUG")
     local teacherDesk=one("Teacher desk top")
     assert(math.abs(teacherDesk.Position.Z-fan.Position.Z)>5.0,
         "PHOTO_PORTABLE_FAN_OVERLAPS_TEACHER_DESK")
@@ -460,6 +468,14 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_PORTABLE_FAN_BLOCKS_AISLE",1,true),
     "PHOTO_PORTABLE_FAN_COLLISION_NOT_REJECTED")
 print("PHOTO_FAN_ADVERSARIAL_REJECTED collider")
+local oldCF=portable.CFrame
+portable.CFrame=CFrame.new(13,0,0)*oldCF
+ok,err=pcall(verify)
+portable.CFrame=oldCF
+assert(not ok and string.find(tostring(err),
+    "PHOTO_PORTABLE_FAN_POSITION_INVALID",1,true),
+    "PHOTO_FAN_OLD_LOCATION_NOT_REJECTED")
+print("PHOTO_FAN_ADVERSARIAL_REJECTED old_location")
 local foot=parts("Photo box fan floor foot")[1]
 local oldFoot=foot.CFrame
 foot.CFrame=oldFoot*CFrame.new(0,1,0)
@@ -502,6 +518,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
+        "PHOTO_FAN_ADVERSARIAL_REJECTED old_location",
         "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
