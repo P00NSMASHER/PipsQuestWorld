@@ -385,9 +385,10 @@ local function verify()
     assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
     -- IMG_2910 shows a LOW BOX FAN, not a tall round pedestal fan.
     -- Preserve noncollision and desk clearance while checking that silhouette.
+    -- The owner-requested correction shifts the complete low assembly left.
     local fan=one("Photo portable fan back guard")
     local face=one("Photo portable fan translucent face")
-    assert(math.abs(fan.Position.X-31)<.03
+    assert(math.abs(fan.Position.X-28)<.03
         and math.abs(fan.Position.Y-2.38)<.03
         and math.abs(fan.Position.Z+31.20)<.03,
         "PHOTO_PORTABLE_FAN_POSITION_INVALID")
@@ -597,6 +598,15 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_PORTABLE_FAN_BLOCKS_AISLE",1,true),
     "PHOTO_PORTABLE_FAN_COLLISION_NOT_REJECTED")
 print("PHOTO_FAN_ADVERSARIAL_REJECTED collider")
+local oldFanFrame=portable.CFrame
+portable.CFrame=CFrame.new(31,portable.Position.Y,portable.Position.Z)
+    *CFrame.Angles(0,math.rad(90),0)
+ok,err=pcall(verify)
+portable.CFrame=oldFanFrame
+assert(not ok and string.find(tostring(err),
+    "PHOTO_PORTABLE_FAN_POSITION_INVALID",1,true),
+    "PHOTO_PORTABLE_FAN_RIGHTWARD_REGRESSION_NOT_REJECTED")
+print("PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED rightward")
 local foot=parts("Photo box fan floor foot")[1]
 local oldFoot=foot.CFrame
 foot.CFrame=oldFoot*CFrame.new(0,1,0)
@@ -651,6 +661,7 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
+        "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED rightward",
         "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
@@ -662,6 +673,7 @@ def main() -> None:
             "PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
+            "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED",
             "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED",
             "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
