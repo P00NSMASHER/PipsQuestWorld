@@ -104,7 +104,7 @@ local function verify()
     end
     assert(#collect("Student chair seat")==16
         and #collect("Student desk top")==16
-        and #collect("Purple corner chair seat")==1,
+        and #collect("Purple comfy chair seat cushion")==1,
         "PHOTO_LITERACY_DESKS_REGRESSION")
     return tiles[1],banners[1]
 end
