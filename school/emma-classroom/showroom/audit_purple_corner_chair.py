@@ -119,6 +119,103 @@ assert(not ok and string.find(tostring(err),
     "PURPLE_CHAIR_MISSING_COLLIDER_NOT_REJECTED")
 check()
 print("EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS color position collision")
+
+-- A separate BIG upholstered chair was requested at the rug's right corner.
+-- The preexisting molded "Purple corner chair" remains in its old location.
+local function verifyStorytime()
+    local base=one("Storytime purple armchair base")
+    local seat=one("Storytime purple armchair seat cushion")
+    local back=one("Storytime purple armchair tall padded back")
+    local pillow=one("Storytime purple armchair lumbar pillow")
+    assert(#parts("Storytime purple armchair rolled arm")==2
+        and #parts("Storytime purple armchair arm piping")==2
+        and #parts("Storytime purple armchair tufted button")==2
+        and #parts("Storytime purple armchair front cushion piping")==1
+        and #parts("Storytime purple armchair seat cushion rounded corner")==4
+        and #parts("Storytime purple armchair tall padded back rounded corner")==4
+        and #parts("Storytime purple armchair lumbar pillow rounded corner")==4
+        and #parts("Storytime purple armchair rolled arm rounded corner")==8,
+        "STORYTIME_ARMCHAIR_PLUSH_DETAILS_MISSING")
+    assert(math.abs(base.Position.X-33.10)<.03
+        and math.abs(base.Position.Z+31.80)<.03
+        and math.abs(base.Position.Y-1.22)<.03
+        and base.Size.X>4.1 and base.Size.Z>3.5,
+        "STORYTIME_ARMCHAIR_CORNER_POSITION_INVALID")
+    assert(base.CFrame.m[1]>.93 and base.CFrame.m[1]<.96
+        and base.CFrame.m[3]<-.30 and base.CFrame.m[3]>-.38,
+        "STORYTIME_ARMCHAIR_NOT_ANGLED_TO_RUG")
+    local baseColor=base.Color
+    local seatColor=seat.Color
+    assert(baseColor.R>.29 and baseColor.R<.40
+        and baseColor.G<.28 and baseColor.B>.47 and baseColor.B<.57
+        and seatColor.B>.73 and seatColor.R>.55
+        and seatColor.B>seatColor.R and seatColor.R>seatColor.G,
+        "STORYTIME_ARMCHAIR_PURPLE_UPHOLSTERY_INVALID")
+    assert(base.Material==Enum.Material.Fabric and base.CanCollide
+        and base.Anchored and base.Position.Y-base.Size.Y/2>=.50
+        and base.Position.Y-base.Size.Y/2<.57,
+        "STORYTIME_ARMCHAIR_COLLISION_OR_FLOOR_INVALID")
+    assert(math.abs(seat.Position.Y-2.17)<.03
+        and math.abs(seat.Position.X-(base.Position.X+base.CFrame.m[3]*.44))<.05
+        and math.abs(seat.Position.Z-(base.Position.Z+base.CFrame.m[9]*.44))<.05
+        and seat.Size.X>3.45 and seat.Size.Z>2.55
+        and back.Size.Y>3.40 and back.Position.Y>3.25
+        and pillow.Material==Enum.Material.Fabric,
+        "STORYTIME_ARMCHAIR_SEAT_NOT_PADDED_OR_CENTERED")
+    local count=0
+    local prefix="Storytime purple armchair "
+    for _,p in ipairs(Room.Root:GetDescendants()) do
+        if p:IsA("BasePart") and string.sub(p.Name,1,#prefix)==prefix then
+            count+=1
+            assert(p.Anchored,"STORYTIME_ARMCHAIR_UNANCHORED")
+            if p~=base then
+                assert(not p.CanCollide and not p.CanTouch,
+                    "STORYTIME_ARMCHAIR_DECOR_BLOCKS_PLAYERS")
+            end
+        end
+    end
+    assert(count>=34 and count<=42,"STORYTIME_ARMCHAIR_MOBILE_PART_BUDGET")
+    local rug=one("Alphabet rug")
+    for _,lx in ipairs({-2.25,2.25}) do
+        for _,lz in ipairs({-2.0,2.0}) do
+            local px=base.Position.X+base.CFrame.m[1]*lx+base.CFrame.m[3]*lz
+            local pz=base.Position.Z+base.CFrame.m[7]*lx+base.CFrame.m[9]*lz
+            assert(px<36.50 and px>-36.50 and pz>-34.50 and pz<26.50,
+                "STORYTIME_ARMCHAIR_INTERSECTS_CLASSROOM_WALL")
+            assert(math.sqrt((px-rug.Position.X)^2+(pz-rug.Position.Z)^2)>7.35,
+                "STORYTIME_ARMCHAIR_COVERS_ALPHABET_RUG")
+        end
+    end
+    return base,seat
+end
+local storyBase,storyCushion=verifyStorytime()
+print("EMMA_STORYTIME_ARMCHAIR_RUNTIME_PASS adult_comfy=true purple_fabric=true "
+    .."rolled_arms=2 cushions=3 buttons=2 clear_of_rug=true")
+local originalPurple=storyBase.Color
+storyBase.Color=Color3.fromRGB(57,108,172)
+local good,errorText=pcall(verifyStorytime)
+storyBase.Color=originalPurple
+assert(not good and string.find(tostring(errorText),
+    "STORYTIME_ARMCHAIR_PURPLE_UPHOLSTERY_INVALID",1,true),
+    "STORYTIME_ARMCHAIR_REPAINT_NOT_REJECTED")
+print("EMMA_STORYTIME_ARMCHAIR_ADVERSARIAL_REJECTED blue_repaint")
+local cushionCF=storyCushion.CFrame
+storyCushion.CFrame=CFrame.new(25,2.17,-25)
+good,errorText=pcall(verifyStorytime)
+storyCushion.CFrame=cushionCF
+assert(not good and string.find(tostring(errorText),
+    "STORYTIME_ARMCHAIR_SEAT_NOT_PADDED_OR_CENTERED",1,true),
+    "STORYTIME_ARMCHAIR_RUG_COLLISION_NOT_REJECTED")
+print("EMMA_STORYTIME_ARMCHAIR_ADVERSARIAL_REJECTED cushion_into_rug")
+local originalCollision=storyBase.CanCollide
+storyBase.CanCollide=false
+good,errorText=pcall(verifyStorytime)
+storyBase.CanCollide=originalCollision
+assert(not good and string.find(tostring(errorText),
+    "STORYTIME_ARMCHAIR_COLLISION_OR_FLOOR_INVALID",1,true),
+    "STORYTIME_ARMCHAIR_MISSING_COLLIDER_NOT_REJECTED")
+verifyStorytime()
+print("EMMA_STORYTIME_ARMCHAIR_NEGATIVE_TESTS_PASS color position collision")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -136,14 +233,21 @@ def main():
     required=("EMMA_PURPLE_CHAIR_RUNTIME_PASS",
               "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED blue_repaint",
               "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED moved_into_rug",
-              "EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS")
+              "EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS",
+              "EMMA_STORYTIME_ARMCHAIR_RUNTIME_PASS",
+              "EMMA_STORYTIME_ARMCHAIR_ADVERSARIAL_REJECTED blue_repaint",
+              "EMMA_STORYTIME_ARMCHAIR_ADVERSARIAL_REJECTED cushion_into_rug",
+              "EMMA_STORYTIME_ARMCHAIR_NEGATIVE_TESTS_PASS")
     lines=result.stdout.splitlines()
     for marker in required:
         assert any(s.startswith(marker) for s in lines), marker
     for line in lines:
         if line.startswith(("EMMA_PURPLE_CHAIR_RUNTIME_PASS",
                             "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED",
-                            "EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS")):
+                            "EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS",
+                            "EMMA_STORYTIME_ARMCHAIR_RUNTIME_PASS",
+                            "EMMA_STORYTIME_ARMCHAIR_ADVERSARIAL_REJECTED",
+                            "EMMA_STORYTIME_ARMCHAIR_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
 if __name__=="__main__":
     main()
