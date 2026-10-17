@@ -433,9 +433,34 @@ local function verify()
     local teacherDesk=one("Teacher desk top")
     assert(math.abs(teacherDesk.Position.Z-fan.Position.Z)>5.0,
         "PHOTO_PORTABLE_FAN_OVERLAPS_TEACHER_DESK")
+    -- The unique photographed corner seat is owner-described as a large
+    -- purple comfy chair, not a seventeenth molded student chair. Check the
+    -- constructed upholstery, simple collision silhouette, and table gap.
+    local comfyBase=one("Purple comfy chair base collision")
+    local comfySeat=one("Purple comfy chair seat cushion")
+    local comfyBack=one("Purple comfy chair back cushion")
+    local comfyArms=parts("Purple comfy chair padded arm")
+    local worktable=one("Photo window worktable")
+    assert(#parts("Purple corner chair seat")==0
+        and #comfyArms==2
+        and comfySeat.Material==Enum.Material.Fabric
+        and comfyBack.Material==Enum.Material.Fabric
+        and comfySeat.Size.X>2.8 and comfySeat.Size.Z>3.0
+        and comfyBack.Size.X>3.0 and comfyBack.Size.Y>3.1,
+        "PHOTO_COMFY_CHAIR_SILHOUETTE_INVALID")
+    assert(comfyBase.Anchored and comfyBase.CanCollide
+        and not comfyBase.CanTouch and not comfyBase.CanQuery,
+        "PHOTO_COMFY_CHAIR_COLLISION_INVALID")
+    for _,p in ipairs({comfySeat,comfyBack,comfyArms[1],comfyArms[2]}) do
+        assert(p.Anchored and not p.CanCollide and not p.CanTouch,
+            "PHOTO_COMFY_CHAIR_DECORATION_COLLIDES")
+    end
+    local chairFront=comfyBase.Position.X+comfyBase.Size.Z/2
+    local tableNear=worktable.Position.X-worktable.Size.X/2
+    assert(chairFront<tableNear-.20,
+        "PHOTO_COMFY_CHAIR_OVERLAPS_WORKTABLE")
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
-        and #parts("Purple corner chair seat")==1
         and #parts("Window glass")==2
         and #parts("Alphabet rug")==1
         and #parts("Front teaching rug")==1,
@@ -622,6 +647,16 @@ grille.Face=oldGrilleFace
 assert(not ok and string.find(tostring(err),"PHOTO_BOX_FAN_GRILLE_MISSING",1,true),
     "PHOTO_BOX_FAN_BACKWARD_GRILLE_FALSE_ACCEPT")
 print("PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward")
+local comfy=one("Purple comfy chair base collision")
+local oldComfyFrame=comfy.CFrame
+comfy.CFrame=CFrame.new(-30.35,comfy.Position.Y,comfy.Position.Z)
+    *CFrame.Angles(0,-math.pi/2,0)
+ok,err=pcall(verify)
+comfy.CFrame=oldComfyFrame
+assert(not ok and string.find(tostring(err),
+    "PHOTO_COMFY_CHAIR_OVERLAPS_WORKTABLE",1,true),
+    "PHOTO_COMFY_CHAIR_OVERLAP_FALSE_ACCEPT")
+print("PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED worktable_overlap")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -663,6 +698,7 @@ def main() -> None:
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
         "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED rightward",
         "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
+        "PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED worktable_overlap",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
@@ -675,6 +711,7 @@ def main() -> None:
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
             "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED",
             "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED",
+            "PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED",
             "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)
