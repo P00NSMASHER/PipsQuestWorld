@@ -79,6 +79,42 @@ assert(#pieces("Rear corridor end wall")==0 and
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Open classroom door",2)
 expect("Photo hall classroom exterior blue-gray paint",2)
+-- The player-facing staff entry must use the same blue-gray/brick hallway
+-- finish on both jamb returns and above the opening. Classroom-yellow shell
+-- may remain on the room-facing side only.
+local function checkStaffDoorExteriorFinish()
+    local front=one("Photo hall staff front blue-gray plaster")
+    local header=one("Photo hall staff header blue-gray plaster")
+    local brick=one("Photo hall staff front glazed brick")
+    local cap=one("Photo hall staff front oak cap")
+    for _,surface in ipairs({front,header,brick,cap}) do
+        assert(not surface.CanCollide and not surface.CanQuery,
+            "PHOTO_HALL_STAFF_ENTRY_FINISH_BECAME_COLLIDER")
+    end
+    for _,plaster in ipairs({front,header}) do
+        assert(plaster.Material==Enum.Material.SmoothPlastic
+            and plaster.Color.B>plaster.Color.R
+            and plaster.Color.G>plaster.Color.R,
+            "PHOTO_HALL_STAFF_ENTRY_PAINT_MISMATCH")
+    end
+    assert(front.Size.Y>=17.9 and front.Size.Z>=3.9
+        and header.Size.Y>=4.9 and header.Size.Z>=14.9,
+        "PHOTO_HALL_STAFF_ENTRY_YELLOW_SHELL_EXPOSED")
+    assert(brick.Material==Enum.Material.Brick
+        and cap.Material==Enum.Material.Wood
+        and brick.Size.Y>=4.2 and cap.Size.Z>=3.8,
+        "PHOTO_HALL_STAFF_ENTRY_DADO_INCOMPLETE")
+    return front
+end
+local staffFront=checkStaffDoorExteriorFinish()
+local staffColor=staffFront.Color
+staffFront.Color=Color3.fromRGB(246,232,165)
+local okStaff,errStaff=pcall(checkStaffDoorExteriorFinish)
+staffFront.Color=staffColor
+assert(not okStaff and string.find(tostring(errStaff),
+    "PHOTO_HALL_STAFF_ENTRY_PAINT_MISMATCH",1,true),
+    "PHOTO_HALL_STAFF_ENTRY_YELLOW_MUTATION_NOT_REJECTED")
+checkStaffDoorExteriorFinish()
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
