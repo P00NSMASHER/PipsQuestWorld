@@ -681,6 +681,59 @@ local function buildClassroomTexture(root: Instance)
     -- Every desk now uses only the four separated items authored in desk().
 end
 
+-- A teacher-size, high-backed upholstered STORY TIME chair. This is a separate
+-- adult reading seat, not the small molded "Purple corner chair" behind the desk.
+-- Its footprint is fully inside the front-right corner, beyond the sun/ABC rug.
+-- Single base collider; all plush profiles, welt and buttons are decoration.
+local function buildStorytimeArmchair(root: Instance)
+    local pose=CFrame.new(33.10,0,-31.80)*CFrame.Angles(0,math.rad(-20),0)
+    local plum=Color3.fromRGB(85,43,130)
+    local violet=Color3.fromRGB(121,66,170)
+    local lilac=Color3.fromRGB(164,111,203)
+    local welt=Color3.fromRGB(198,158,218)
+    -- Floor at Y=.50; the low 4.22-stud-wide body touches it at Y=.54.
+    -- No decorative feet are buried below the floor or scattered in aisles.
+    local base=part(root,"Storytime purple armchair base",
+        Vector3.new(4.22,1.36,3.70),pose*CFrame.new(0,1.22,-.03),
+        plum,Enum.Material.Fabric,true)
+    base:SetAttribute("StorytimeSeat",true)
+    roundedPanel(root,"Storytime purple armchair seat cushion",
+        Vector3.new(3.58,.64,2.68),pose*CFrame.new(0,2.17,.44),
+        lilac,.38,true,false,Enum.Material.Fabric)
+    roundedPanel(root,"Storytime purple armchair tall padded back",
+        Vector3.new(4.04,3.52,.78),
+        pose*CFrame.new(0,3.32,-1.37)*CFrame.Angles(math.rad(-7),0,0),
+        violet,.52,false,false,Enum.Material.Fabric)
+    -- A small, contrasting lumbar bolster gives the front of the backrest
+    -- actual depth, rather than a thin, flat wall-colored chair silhouette.
+    roundedPanel(root,"Storytime purple armchair lumbar pillow",
+        Vector3.new(3.10,1.26,.36),
+        pose*CFrame.new(0,3.21,-.95)*CFrame.Angles(math.rad(-7),0,0),
+        lilac,.29,false,false,Enum.Material.Fabric)
+    for _,side in ipairs({-1,1}) do
+        roundedPanel(root,"Storytime purple armchair rolled arm",
+            Vector3.new(.88,.92,3.47),
+            pose*CFrame.new(side*1.72,2.89,.18),
+            violet,.28,true,false,Enum.Material.Fabric)
+        local piping=part(root,"Storytime purple armchair arm piping",
+            Vector3.new(.065,.065,2.46),
+            pose*CFrame.new(side*2.16,3.34,.22),
+            welt,Enum.Material.SmoothPlastic,false)
+        piping.CastShadow=false
+    end
+    local frontWelt=part(root,"Storytime purple armchair front cushion piping",
+        Vector3.new(3.05,.065,.08),pose*CFrame.new(0,2.05,1.80),
+        welt,Enum.Material.SmoothPlastic,false)
+    frontWelt.CastShadow=false
+    for _,dx in ipairs({-.73,.73}) do
+        local button=cylinder(root,"Storytime purple armchair tufted button",
+            Vector3.new(.075,.16,.16),
+            pose*CFrame.new(dx,3.53,-.70)*CFrame.Angles(0,-math.pi/2,0),
+            Color3.fromRGB(204,173,221),Enum.Material.SmoothPlastic,false)
+        button.CastShadow=false
+    end
+end
+
 local function buildReadingCorner(root:Instance)
     part(root,"Reading shelf back",Vector3.new(18,6,.3),CFrame.new(-22,3,24.4),P.wood,Enum.Material.Wood)
     for _,y in ipairs({.65,3.2,6.1}) do
@@ -2688,6 +2741,10 @@ function World.build()
     schoolChair(root,"Purple corner chair",-25.0,18.35,
         Color3.fromRGB(117,73,163))
 
+    -- Storytime teacher armchair in the other, teaching-wall corner.
+    -- Angled toward the alphabet/sun rug, without sitting on its letters.
+    buildStorytimeArmchair(root)
+
     -- Paired laminate desks from IMG_2913, with an open back-left reading zone.
     -- Emma remains at x=0 so the existing spawn/seat and study camera stay aligned.
     local index=0
@@ -2784,11 +2841,11 @@ function World.build()
         CFrame.new(-36.03,11.77,-6.72)*CFrame.Angles(math.rad(48),0,0),
         Color3.fromRGB(48,49,49),Enum.Material.Metal,false)
 
-    -- IMG_2910: a low off-white BOX FAN with circular grille, not the
-    -- previously guessed pedestal fan. Keep the same teaching-wall corner;
-    -- thirteen original noncolliding Parts replace the former fifteen.
-    -- Fine concentric grille detail is native UI, not dozens of colliders.
-    local fanX,fanZ=31.0,-31.40
+    -- Keep the original low box fan and circular grille, but move the
+    -- complete 13-Part assembly LEFT of the alphabet/sun rug so the newly
+    -- furnished right corner stays open for the adult storytime chair.
+    -- Its left-wall-facing relocation never changes the fan's orientation.
+    local fanX,fanZ=18.0,-31.40
     local fanIvory=Color3.fromRGB(219,218,205)
     for _,side in ipairs({-1,1}) do
         part(root,"Photo box fan housing side",Vector3.new(.23,3.34,.64),
