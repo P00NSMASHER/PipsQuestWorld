@@ -222,7 +222,7 @@ local function check()
     end
     assert(#parts("Window glass")==2 and
         #parts("Navy curtain fabric panel")==4 and
-        #parts("Purple corner chair seat")==1 and
+        #parts("Purple comfy chair seat cushion")==1 and
         #parts("Student desk top")==16,
         "WINDOW_CUE_ORIGINAL_ROOM_REGRESSION")
     return headline,ac,clock

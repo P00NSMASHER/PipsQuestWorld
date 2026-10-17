@@ -289,6 +289,47 @@ local function schoolChair(parent: Instance,name: string,x: number,z: number,tin
             P.metal,Enum.Material.Metal,false)
     end
 end
+
+-- The photographed window corner has one adult-scale purple comfy chair,
+-- distinct from the sixteen molded student chairs. Use a broad upholstered
+-- silhouette with two simple invisible collision volumes; every visible
+-- cushion/arm detail stays noncolliding so the adjacent worktable remains
+-- usable and mobile physics cost does not scale with decorative seams.
+local function comfyChair(parent: Instance,name: string,x: number,z: number,tint: Color3)
+    local baseCollision=part(parent,name.." base collision",
+        Vector3.new(3.55,.90,3.15),CFrame.new(x,.95,z),
+        tint,Enum.Material.SmoothPlastic,true)
+    baseCollision.Transparency=1;baseCollision.CanQuery=false
+    roundedPanel(parent,name.." upholstered base",
+        Vector3.new(3.65,.90,3.15),CFrame.new(x,.95,z),
+        tint:Lerp(P.ink,.07),.30,false,false,Enum.Material.Fabric)
+    roundedPanel(parent,name.." seat cushion",
+        Vector3.new(3.55,.58,3.15),CFrame.new(x,1.58,z-.02),
+        tint:Lerp(P.cream,.055),.28,true,false,Enum.Material.Fabric)
+
+    local backCF=CFrame.new(x,3.30,z+1.36)*CFrame.Angles(math.rad(-8),0,0)
+    local backCollision=part(parent,name.." back collision",
+        Vector3.new(3.60,3.30,.46),backCF,
+        tint,Enum.Material.SmoothPlastic,true)
+    backCollision.Transparency=1;backCollision.CanQuery=false
+    roundedPanel(parent,name.." back cushion",
+        Vector3.new(3.85,3.35,.68),backCF*CFrame.new(0,.04,-.02),
+        tint:Lerp(P.cream,.035),.36,false,false,Enum.Material.Fabric)
+
+    for _,dx in ipairs({-1.48,1.48}) do
+        roundedPanel(parent,name.." padded arm",
+            Vector3.new(.66,1.42,2.68),CFrame.new(x+dx,1.94,z-.08),
+            tint:Lerp(P.cream,.025),.18,false,false,Enum.Material.Fabric)
+    end
+    -- Three shallow fabric-covered buttons break up the broad back without
+    -- adding textures, external assets, query targets or collision.
+    for _,dx in ipairs({-.82,0,.82}) do
+        local tuft=ball(parent,name.." back tuft",Vector3.new(.18,.18,.18),
+            backCF*CFrame.new(dx,.28,-.35),
+            tint:Lerp(P.ink,.18),Enum.Material.Fabric,false)
+        tuft.CanQuery=false;tuft.CastShadow=false
+    end
+end
 local function desk(parent: Instance,x: number,z: number,index: number,emma: boolean)
     -- Subtle laminate variation prevents an identical 16-copy furniture grid.
     -- Keep the collision silhouette unchanged for every student.
@@ -2729,27 +2770,22 @@ function World.build()
     buildReadingCorner(root)
     buildPhotoWindowWorkstation(root)
 
-    -- Emma identified the purple chair where an adult is sitting beside the
-    -- visible window AC and cabinets in her cheer photo. The prior candidate
-    -- at z=+23 was the opposite reading corner, not this photographed corner.
-    -- Move ONLY the unique chair to the AC-side workstation; its silhouette
-    -- remains provisional because the occupied chair is hidden in the photo.
-    -- Do not alter the 16 matching student desk chairs or the alphabet rug.
-    schoolChair(root,"Purple corner chair",-32.45,-19.60,
+    -- Emma identified the large purple comfy chair where an adult is
+    -- sitting beside the visible window AC and cabinets. The earlier source
+    -- reused a small molded student chair, which the exact-head render made
+    -- visibly inconsistent with that owner description. Replace ONLY this
+    -- unique seat; keep all sixteen student chairs, rugs and routes unchanged.
+    comfyChair(root,"Purple comfy chair",-32.45,-19.60,
         Color3.fromRGB(117,73,163))
-    -- The conventional student chairs face the teaching wall (-Z). This
-    -- unique chair belongs beside a window-side worktable at greater X.
-    -- Rotate ONLY its already-constructed physical family around its own
-    -- floor pivot so the seat faces the tabletop (+X) while its back rests
-    -- toward the A/C wall. Do not rotate any student seat or cabinet.
-    -- This orientation is a photo-guided owner-review candidate: the person
-    -- in the original photo obscures the precise molded chair silhouette.
+    -- Face the broad seat toward the worktable (+X), with its padded back
+    -- against the window side. The base retains more than .20 stud of
+    -- separation from the table's collision box.
     local purplePivot=CFrame.new(-32.45,0,-19.60)
     local purpleTurn=purplePivot*CFrame.Angles(0,-math.pi/2,0)*
         CFrame.new(32.45,0,19.60)
     for _,object in ipairs(root:GetDescendants()) do
         if object:IsA("BasePart") and
-            string.sub(object.Name,1,#"Purple corner chair")=="Purple corner chair" then
+            string.sub(object.Name,1,#"Purple comfy chair")=="Purple comfy chair" then
             object.CFrame=purpleTurn*object.CFrame
         end
     end

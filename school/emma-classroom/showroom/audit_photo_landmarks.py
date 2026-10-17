@@ -445,7 +445,7 @@ local function verify()
         and #comfyArms==2
         and comfySeat.Material==Enum.Material.Fabric
         and comfyBack.Material==Enum.Material.Fabric
-        and comfySeat.Size.X>2.8 and comfySeat.Size.Z>3.0
+        and comfySeat.Size.X>2.8 and comfySeat.Size.Y>3.0
         and comfyBack.Size.X>3.0 and comfyBack.Size.Y>3.1,
         "PHOTO_COMFY_CHAIR_SILHOUETTE_INVALID")
     assert(comfyBase.Anchored and comfyBase.CanCollide
