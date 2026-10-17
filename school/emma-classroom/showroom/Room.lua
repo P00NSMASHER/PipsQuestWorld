@@ -2850,7 +2850,7 @@ function World.build()
     -- previously guessed pedestal fan. Keep the same teaching-wall corner,
     -- but honor the October 17 owner correction by shifting the complete
     -- thirteen-Part noncolliding assembly three studs left. It remains low,
-    -- clear of the teacher desk, wall display, and student navigation.
+    -- clear of the teacher desk, wall display, and student navigation aisle.
     -- Fine concentric grille detail is native UI, not dozens of colliders.
     local fanX,fanZ=28.0,-31.40
     local fanIvory=Color3.fromRGB(219,218,205)
