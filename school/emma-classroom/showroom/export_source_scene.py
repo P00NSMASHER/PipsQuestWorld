@@ -716,6 +716,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading shade sewn binding":2,
         "Reading shade recessed warm diffuser":1,
         "Reading lamp top finial":1,
+        "Photo box fan housing side":2,
+        "Photo box fan housing rail":2,
+        "Photo box fan floor foot":2,
+        "Photo portable fan translucent face":1,
         "Photo-guided wall shape card":9,
         "Photo-guided right cabinet shape card":9,
         "Photo-guided shape icon":9,
@@ -756,6 +760,27 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         matches=[row for row in lines if row[1]==name]
         assert len(matches)==1, f"Expected one {name} physical part; got {len(matches)}"
         return matches[0]
+
+    # October 17 owner correction: keep the photographed low box-fan form,
+    # but move its entire physical family three studs left from the far-right
+    # edge. This constructed-scene check rejects a text-only or partial move.
+    fan_face=only("Photo portable fan translucent face")
+    fan_sides=sorted((row for row in lines
+                      if row[1]=="Photo box fan housing side"),
+                     key=lambda row:float(row[9]))
+    fan_x,fan_z=float(fan_face[9]),float(fan_face[11])
+    assert abs(fan_x-28.0)<.025 and abs(fan_z+30.91)<.04, (
+        "Owner-requested box fan was not moved left as one assembly: "
+        f"face=({fan_x:.3f},{fan_z:.3f})"
+    )
+    assert [round(float(row[9]),3) for row in fan_sides]==[26.445,29.555], (
+        "Box fan housing split or failed to follow the leftward move"
+    )
+    assert max(float(row[10])+float(row[7])/2 for row in fan_sides)<4.1, (
+        "Low classroom box fan became an oversized standing obstruction"
+    )
+    print("OWNER_FAN_LEFT_POSITION_PASS center_x=28.0 "
+          "assembly_parts=13 low_profile=true")
 
     # Low-risk indoor features independently visible in the activity photos.
     # Existing rug centers remain unchanged; activity photos do not prove
