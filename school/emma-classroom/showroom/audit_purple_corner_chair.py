@@ -34,6 +34,7 @@ local function check()
     local backCollider=one("Purple comfy chair back collision")
     local arms=parts("Purple comfy chair padded arm")
     local armRolls=parts("Purple comfy chair rounded arm roll")
+    local seatFrontRoll=one("Purple comfy chair rounded seat front roll")
     local apron=one("Purple comfy chair upholstered front apron")
     local crown=one("Purple comfy chair rounded back crown")
     local backBolsters=parts("Purple comfy chair back side bolster")
@@ -41,6 +42,13 @@ local function check()
         and #parts("Purple comfy chair back tuft")==3
         and #parts("Purple corner chair seat")==0,
         "PURPLE_CHAIR_COMFY_SILHOUETTE_INVALID")
+    assert(seatFrontRoll.Material==Enum.Material.Fabric
+        and not seatFrontRoll.CanCollide and not seatFrontRoll.CanTouch
+        and not seatFrontRoll.CanQuery
+        and math.abs(seatFrontRoll.Size.X-3.24)<.03
+        and seatFrontRoll.Position.Z<seat.Position.Z-1.40
+        and math.abs(seatFrontRoll.Position.Y-seat.Position.Y)<.16,
+        "PURPLE_CHAIR_SEAT_FRONT_ROLL_INVALID")
     assert(apron.Material==Enum.Material.Fabric
         and not apron.CanCollide and not apron.CanTouch and not apron.CanQuery,
         "PURPLE_CHAIR_APRON_COLLISION_INVALID")
@@ -132,9 +140,9 @@ local function check()
     end
     assert(center.X-base.Size.Z/2>-34.40 and center.Z-2.0>-26.0,
         "PURPLE_CHAIR_INTERSECTS_CLASSROOM_WALLS")
-    return seat,base,armRolls[1],crown,backBolsters[1]
+    return seat,base,armRolls[1],crown,backBolsters[1],seatFrontRoll
 end
-local seat,collider,armRoll,crown,backBolster=check()
+local seat,collider,armRoll,crown,backBolster,seatFrontRoll=check()
 print("EMMA_PURPLE_CHAIR_RUNTIME_PASS purple_chairs=1 "
     .."original_student_seats=16 chair_style=upholstered_comfy "
     .."color=violet window_storage_corner=true "
