@@ -315,6 +315,13 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
     roundedPanel(parent,name.." back cushion",
         Vector3.new(3.85,3.35,.68),backCF*CFrame.new(0,.04,-.02),
         tint:Lerp(P.cream,.035),.36,false,false,Enum.Material.Fabric)
+    -- A horizontal upholstered crown replaces the back's hard rectangular
+    -- top silhouette. It follows the back rake, stays inside the chair width,
+    -- and is visual-only so aisle/collision behavior remains unchanged.
+    local crown=cylinder(parent,name.." rounded back crown",
+        Vector3.new(3.55,.56,.56),backCF*CFrame.new(0,1.58,-.01),
+        tint:Lerp(P.cream,.075),Enum.Material.Fabric,false)
+    crown.CanQuery=false;crown.CastShadow=true
 
     for _,dx in ipairs({-1.48,1.48}) do
         roundedPanel(parent,name.." padded arm",
