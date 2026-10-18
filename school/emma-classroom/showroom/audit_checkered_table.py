@@ -168,7 +168,8 @@ local function verify()
     end
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
-        and #parts("Purple corner chair seat")==1
+        and #parts("Purple comfy chair seat cushion")==1
+        and #parts("Purple corner chair seat")==0
         and #parts("Window glass")==2,
         "GINGHAM_CLASSROOM_REGRESSION")
     return top
