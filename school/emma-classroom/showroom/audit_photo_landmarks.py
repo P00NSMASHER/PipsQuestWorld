@@ -73,8 +73,8 @@ local function verifyPhotoPolygons()
     local icons=parts("Photo-guided shape icon")
     assert(#icons==9,"PHOTO_SHAPE_ICON_PART_BUDGET_CHANGED")
     local expected={
-        TRIANGLE=-27.30, PENTAGON=-17.90,
-        HEXAGON=-15.55, STAR=-13.20,
+        TRIANGLE=-26.50, PENTAGON=-16.50,
+        HEXAGON=-14.00, STAR=-11.50,
     }
     local seen={}
     for _,icon in ipairs(icons) do
@@ -273,8 +273,9 @@ local function verify()
         end
     end
 
-    assert(math.abs(left.Position.X+22)<.03
-        and math.abs(right.Position.X-20.2)<.03
+    assert(math.abs(left.Position.X+21.5)<.03
+        and math.abs(right.Position.X-21.5)<.03
+        and math.abs(left.Size.X-right.Size.X)<.03
         and math.abs(left.Position.Y-right.Position.Y)<.03,
         "PHOTO_WOOD_TWO_STRIPS_MISALIGNED")
     assert(signText(left)=="0  10  20  30  40  50  60"
@@ -297,11 +298,11 @@ local function verify()
     -- RIGHT cabinet while the source's real central door remains open.
     local rightCards=parts("Photo-guided right cabinet shape card")
     local rightNames={"CIRCLE","OVAL","SQUARE","DIAMOND",
-        "RECTANGLE","CROSS","CAPSULE","ARCH"}
-    assert(#rightCards==8,"PHOTO_RIGHT_SHAPE_COUNT_INVALID")
+        "RECTANGLE","CROSS","CAPSULE","ARCH","STAR"}
+    assert(#rightCards==9,"PHOTO_RIGHT_SHAPE_COUNT_INVALID")
     table.sort(rightCards,function(a,b) return a.Position.X<b.Position.X end)
     for i,card in ipairs(rightCards) do
-        assert(math.abs(card.Position.X-(9.8+(i-1)*3.0))<.03
+        assert(math.abs(card.Position.X-(11.5+(i-1)*2.5))<.03
             and math.abs(card.Position.Y-16.48)<.03
             and math.abs(card.Position.Z-26.32)<.03
             and card.Position.X-card.Size.X/2>7.2
@@ -384,9 +385,10 @@ local function verify()
     assert(keyCount==40,"PHOTO_LAPTOP_KEYCAP_COUNT_INVALID")
     -- IMG_2910 shows a LOW BOX FAN, not a tall round pedestal fan.
     -- Preserve noncollision and desk clearance while checking that silhouette.
+    -- The owner-requested correction shifts the complete low assembly left.
     local fan=one("Photo portable fan back guard")
     local face=one("Photo portable fan translucent face")
-    assert(math.abs(fan.Position.X-31)<.03
+    assert(math.abs(fan.Position.X-28)<.03
         and math.abs(fan.Position.Y-2.38)<.03
         and math.abs(fan.Position.Z+31.20)<.03,
         "PHOTO_PORTABLE_FAN_POSITION_INVALID")
@@ -431,9 +433,34 @@ local function verify()
     local teacherDesk=one("Teacher desk top")
     assert(math.abs(teacherDesk.Position.Z-fan.Position.Z)>5.0,
         "PHOTO_PORTABLE_FAN_OVERLAPS_TEACHER_DESK")
+    -- The unique photographed corner seat is owner-described as a large
+    -- purple comfy chair, not a seventeenth molded student chair. Check the
+    -- constructed upholstery, simple collision silhouette, and table gap.
+    local comfyBase=one("Purple comfy chair base collision")
+    local comfySeat=one("Purple comfy chair seat cushion")
+    local comfyBack=one("Purple comfy chair back cushion")
+    local comfyArms=parts("Purple comfy chair padded arm")
+    local worktable=one("Photo window worktable")
+    assert(#parts("Purple corner chair seat")==0
+        and #comfyArms==2
+        and comfySeat.Material==Enum.Material.Fabric
+        and comfyBack.Material==Enum.Material.Fabric
+        and comfySeat.Size.X>2.8 and comfySeat.Size.Y>3.0
+        and comfyBack.Size.X>3.0 and comfyBack.Size.Y>3.1,
+        "PHOTO_COMFY_CHAIR_SILHOUETTE_INVALID")
+    assert(comfyBase.Anchored and comfyBase.CanCollide
+        and not comfyBase.CanTouch and not comfyBase.CanQuery,
+        "PHOTO_COMFY_CHAIR_COLLISION_INVALID")
+    for _,p in ipairs({comfySeat,comfyBack,comfyArms[1],comfyArms[2]}) do
+        assert(p.Anchored and not p.CanCollide and not p.CanTouch,
+            "PHOTO_COMFY_CHAIR_DECORATION_COLLIDES")
+    end
+    local chairFront=comfyBase.Position.X+comfyBase.Size.Z/2
+    local tableNear=worktable.Position.X-worktable.Size.X/2
+    assert(chairFront<tableNear-.20,
+        "PHOTO_COMFY_CHAIR_OVERLAPS_WORKTABLE")
     assert(#parts("Student desk top")==16
         and #parts("Student chair seat")==16
-        and #parts("Purple corner chair seat")==1
         and #parts("Window glass")==2
         and #parts("Alphabet rug")==1
         and #parts("Front teaching rug")==1,
@@ -596,6 +623,15 @@ assert(not ok and string.find(tostring(err),
     "PHOTO_PORTABLE_FAN_BLOCKS_AISLE",1,true),
     "PHOTO_PORTABLE_FAN_COLLISION_NOT_REJECTED")
 print("PHOTO_FAN_ADVERSARIAL_REJECTED collider")
+local oldFanFrame=portable.CFrame
+portable.CFrame=CFrame.new(31,portable.Position.Y,portable.Position.Z)
+    *CFrame.Angles(0,math.rad(90),0)
+ok,err=pcall(verify)
+portable.CFrame=oldFanFrame
+assert(not ok and string.find(tostring(err),
+    "PHOTO_PORTABLE_FAN_POSITION_INVALID",1,true),
+    "PHOTO_PORTABLE_FAN_RIGHTWARD_REGRESSION_NOT_REJECTED")
+print("PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED rightward")
 local foot=parts("Photo box fan floor foot")[1]
 local oldFoot=foot.CFrame
 foot.CFrame=oldFoot*CFrame.new(0,1,0)
@@ -611,6 +647,16 @@ grille.Face=oldGrilleFace
 assert(not ok and string.find(tostring(err),"PHOTO_BOX_FAN_GRILLE_MISSING",1,true),
     "PHOTO_BOX_FAN_BACKWARD_GRILLE_FALSE_ACCEPT")
 print("PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward")
+local comfy=one("Purple comfy chair base collision")
+local oldComfyFrame=comfy.CFrame
+comfy.CFrame=CFrame.new(-30.35,comfy.Position.Y,comfy.Position.Z)
+    *CFrame.Angles(0,-math.pi/2,0)
+ok,err=pcall(verify)
+comfy.CFrame=oldComfyFrame
+assert(not ok and string.find(tostring(err),
+    "PHOTO_COMFY_CHAIR_OVERLAPS_WORKTABLE",1,true),
+    "PHOTO_COMFY_CHAIR_OVERLAP_FALSE_ACCEPT")
+print("PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED worktable_overlap")
 local chart=one("Photo flipchart white housing")
 local oldMaterial=chart.Material
 chart.Material=Enum.Material.Wood
@@ -650,7 +696,9 @@ def main() -> None:
         "PHOTO_WOOD_ADVERSARIAL_REJECTED generic_grade_banner",
         "PHOTO_LAPTOP_ADVERSARIAL_REJECTED missing_keycap",
         "PHOTO_FAN_ADVERSARIAL_REJECTED collider",
+        "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED rightward",
         "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED floating_or_backward",
+        "PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED worktable_overlap",
         "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED wood_easel",
         "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")
     for marker in markers:
@@ -661,7 +709,9 @@ def main() -> None:
             "PHOTO_WOOD_LANDMARK_RUNTIME_PASS",
             "PHOTO_WOOD_ADVERSARIAL_REJECTED",
             "PHOTO_FLIPCHART_ADVERSARIAL_REJECTED",
+            "PHOTO_FAN_POSITION_ADVERSARIAL_REJECTED",
             "PHOTO_BOX_FAN_ADVERSARIAL_REJECTED",
+            "PHOTO_COMFY_CHAIR_ADVERSARIAL_REJECTED",
             "PHOTO_RIGHT_SHAPES_ADVERSARIAL_REJECTED",
             "PHOTO_WOOD_LANDMARK_NEGATIVE_TESTS_PASS")):
             print(line,flush=True)

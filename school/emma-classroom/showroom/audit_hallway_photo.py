@@ -79,6 +79,42 @@ assert(#pieces("Rear corridor end wall")==0 and
        "OLD_DEAD_END_HALLWAY_RETURNED")
 expect("Open classroom door",2)
 expect("Photo hall classroom exterior blue-gray paint",2)
+-- The player-facing staff entry must use the same blue-gray/brick hallway
+-- finish on both jamb returns and above the opening. Classroom-yellow shell
+-- may remain on the room-facing side only.
+local function checkStaffDoorExteriorFinish()
+    local front=one("Photo hall staff front blue-gray plaster")
+    local header=one("Photo hall staff header blue-gray plaster")
+    local brick=one("Photo hall staff front glazed brick")
+    local cap=one("Photo hall staff front oak cap")
+    for _,surface in ipairs({front,header,brick,cap}) do
+        assert(not surface.CanCollide and not surface.CanQuery,
+            "PHOTO_HALL_STAFF_ENTRY_FINISH_BECAME_COLLIDER")
+    end
+    for _,plaster in ipairs({front,header}) do
+        assert(plaster.Material==Enum.Material.SmoothPlastic
+            and plaster.Color.B>plaster.Color.R
+            and plaster.Color.G>plaster.Color.R,
+            "PHOTO_HALL_STAFF_ENTRY_PAINT_MISMATCH")
+    end
+    assert(front.Size.Y>=17.9 and front.Size.Z>=3.9
+        and header.Size.Y>=4.9 and header.Size.Z>=14.9,
+        "PHOTO_HALL_STAFF_ENTRY_YELLOW_SHELL_EXPOSED")
+    assert(brick.Material==Enum.Material.Brick
+        and cap.Material==Enum.Material.Wood
+        and brick.Size.Y>=4.2 and cap.Size.Z>=3.8,
+        "PHOTO_HALL_STAFF_ENTRY_DADO_INCOMPLETE")
+    return front
+end
+local staffFront=checkStaffDoorExteriorFinish()
+local staffColor=staffFront.Color
+staffFront.Color=Color3.fromRGB(246,232,165)
+local okStaff,errStaff=pcall(checkStaffDoorExteriorFinish)
+staffFront.Color=staffColor
+assert(not okStaff and string.find(tostring(errStaff),
+    "PHOTO_HALL_STAFF_ENTRY_PAINT_MISMATCH",1,true),
+    "PHOTO_HALL_STAFF_ENTRY_YELLOW_MUTATION_NOT_REJECTED")
+checkStaffDoorExteriorFinish()
 -- Closed neighboring doors must be physical oak-and-frosted-glass
 -- facades rather than UI pictures that render as opaque dark rectangles.
 local facades=expect("Photo hall adjacent oak door",2)
@@ -167,12 +203,22 @@ local function checkCloset()
     assert(back.CanCollide and near(back.Position.Z,36.05)
         and back.Size.X>12.40 and back.Size.Y>=12.9,
         "RIGHT_CLOSET_REAR_WALL_NOT_SEALED")
-    expect("Supply closet oak shelf",3)
-    local tubs=expect("Supply closet labeled storage tub",3)
-    for _,tub in ipairs(tubs) do
-        assert(not tub.CanCollide and
-            tub:FindFirstChild("Anonymous classroom supply category"),
+    local ceiling=one("Supply closet finished ceiling")
+    assert(ceiling.CanCollide and ceiling.Size.X>12 and ceiling.Size.Z>9,
+        "RIGHT_CLOSET_FINISHED_CEILING_MISSING")
+    local shelf=one("Supply closet upper shelf")
+    local bins=expect("Labeled classroom supply bin",4)
+    expect("Supply closet shelf support",2)
+    expect("Children coat body",5)
+    expect("Children coat sleeve",10)
+    expect("Children coat collar",5)
+    expect("Supply closet coat hook",5)
+    for _,bin in ipairs(bins) do
+        assert(not bin.CanCollide and bin:GetAttribute("StorageLabel")
+            and bin:FindFirstChild("Supply bin label"),
             "RIGHT_CLOSET_STORAGE_PROPS_MISSING_OR_BLOCKING")
+        assert(bin.Position.Y-bin.Size.Y/2>shelf.Position.Y+shelf.Size.Y/2,
+            "RIGHT_CLOSET_BIN_INTERSECTS_SHELF")
     end
     local closetFloor=one("Supply closet warm laminate floor")
     assert(closetFloor.CanCollide and
@@ -215,7 +261,8 @@ assert(not seamSafe and string.find(tostring(seamReason),
 checkCloset()
 print("LEFT_HALL_RIGHT_CLOSET_PHYSICAL_PASS staff_left_open=true "
     .."school_hall_connected=true back_double_doors_are_supply_closet=true "
-    .."closet_walls=3 shelves=3 rear_wall_and_floor_mutations_rejected=true")
+    .."closet_walls=3 ceiling=1 shelf=1 bins=4 coats=5 "
+    .."rear_wall_and_floor_mutations_rejected=true")
 -- Verify intentional counterexamples fail against constructed Luau parts.
 local originalSize=facades[1].Size
 facades[1].Size=Vector3.new(6.45,10,.14)

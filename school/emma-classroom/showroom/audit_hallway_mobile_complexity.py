@@ -33,6 +33,7 @@ local function summarize()
     end
     local totalParts=0
     local collidable=0
+    local touchable=0
     local guis=0
     local frames=0
     local lights=0
@@ -45,6 +46,7 @@ local function summarize()
         if obj:IsA("BasePart") then
             totalParts+=1
             if obj.CanCollide then collidable+=1 end
+            if obj.CanTouch then touchable+=1 end
             if obj.Name=="Photo hall anonymous diamond student display" then
                 decoratedSheets+=1
                 if firstPaper==nil then firstPaper=obj end
@@ -80,6 +82,8 @@ local function summarize()
         "HALL_MOBILE_TOO_MANY_CORRIDOR_PARTS")
     assert(collidable<=12,
         "HALL_MOBILE_EXCESSIVE_CORRIDOR_COLLIDERS")
+    assert(touchable==0,
+        "HALL_MOBILE_UNUSED_STATIC_TOUCH_EVENTS")
     assert(guis<=LIMIT_HALL_GUI,
         "HALL_MOBILE_TOO_MANY_INDEPENDENT_SURFACES")
     assert(frames<=LIMIT_HALL_FRAMES,
@@ -96,6 +100,7 @@ local function summarize()
         allParts=allParts,
         parts=totalParts,
         colliders=collidable,
+        touchable=touchable,
         surfaces=guis,
         frames=frames,
         lights=lights,
@@ -112,6 +117,7 @@ assert(baseline.gui and baseline.paper,
 print("HALL_MOBILE_COMPLEXITY_PASS parts="..baseline.allParts
     .." hall_parts="..baseline.parts
     .." hall_colliders="..baseline.colliders
+    .." hall_touchable="..baseline.touchable
     .." surface_guis="..baseline.surfaces
     .." gui_frames="..baseline.frames
     .." total_canvas_pixels="..baseline.canvasPixels
@@ -145,6 +151,28 @@ baseline.paper.CanCollide=oldCollision
 assert(blockedPaperCount==1,
     "HALL_MOBILE_COLLIDABLE_PAPER_MUTATION_NOT_DETECTED")
 print("HALL_MOBILE_NEGATIVE_REJECTED collidable_student_art")
+
+-- Static architecture has no Touched listeners. CanTouch must remain disabled
+-- independently of CanCollide/CanQuery so navigation and raycasts are preserved
+-- without unnecessary touch-pair bookkeeping on mobile.
+local floor=nil
+for _,obj in ipairs(hall:GetDescendants()) do
+    if obj.Name=="Photo hall polished square stone floor" then
+        floor=obj
+        break
+    end
+end
+assert(floor and floor.CanCollide and floor.CanQuery and not floor.CanTouch,
+    "HALL_MOBILE_STATIC_FLOOR_PHYSICS_CONTRACT")
+floor.CanTouch=true
+ok,err=pcall(summarize)
+floor.CanTouch=false
+assert(not ok and string.find(tostring(err),
+    "HALL_MOBILE_UNUSED_STATIC_TOUCH_EVENTS",1,true),
+    "HALL_MOBILE_TOUCHABLE_STATIC_GEOMETRY_FALSE_ACCEPT")
+assert(summarize().touchable==0,
+    "HALL_MOBILE_TOUCH_STATE_DID_NOT_RECOVER")
+print("HALL_MOBILE_NEGATIVE_REJECTED touchable_static_geometry")
 
 local added={}
 for i=1,(LIMIT_HALL_FRAMES-baseline.frames+1) do
@@ -184,6 +212,7 @@ def main() -> None:
         "HALL_MOBILE_COMPLEXITY_PASS",
         "HALL_MOBILE_NEGATIVE_REJECTED oversized_surface",
         "HALL_MOBILE_NEGATIVE_REJECTED collidable_student_art",
+        "HALL_MOBILE_NEGATIVE_REJECTED touchable_static_geometry",
         "HALL_MOBILE_NEGATIVE_REJECTED excessive_draw_frames",
         "HALL_MOBILE_NEGATIVE_TESTS_PASS",
     )

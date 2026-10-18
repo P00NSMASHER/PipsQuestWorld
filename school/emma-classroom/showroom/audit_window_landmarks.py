@@ -37,20 +37,21 @@ local function signText(p)
     return text
 end
 local function check()
-    local left=one("Smore classroom main title")
+    assert(#parts("Smore classroom main title")==0,
+        "WINDOW_CUE_OVERLAPPING_SMORE_BANNER_RETURNED")
     local headline=one("Smore faith headline")
     local faith=one("Classroom faith window banner")
-    assert(signText(left).Text=="S'MORE" and
-        signText(headline).Text=="JESUS LOVES YOU" and
+    assert(signText(headline).Text=="JESUS LOVES YOU" and
         signText(faith).Text=="I AM A CHILD OF GOD. I MAKE A DIFFERENCE!",
         "WINDOW_CUE_WORDING_INVALID")
-    assert(math.abs(left.Position.Z+19)<.03 and
-        math.abs(headline.Position.Z+19)<.03 and
+    assert(math.abs(headline.Position.Z+19)<.03 and
         math.abs(faith.Position.Z-6)<.03,
         "WINDOW_CUE_BAY_POSITION_INVALID")
-    assert(left.Position.Y>14.90 and headline.Position.Y>15.90
-        and faith.Position.Y>14.90,
+    assert(headline.Position.Y>15.40 and faith.Position.Y>14.90,
         "WINDOW_CUE_SIGN_HEIGHT_INVALID")
+    assert(math.abs(headline.Size.Z-faith.Size.Z)<.03
+        and math.abs((headline.Position.Z+faith.Position.Z)/2+6.5)<.03,
+        "WINDOW_CUE_DECOR_NOT_SYMMETRIC")
     assert(#parts("Smore mural pine trunk")==2 and
         #parts("Smore mural green canopy")==4,
         "WINDOW_CUE_MURAL_TREES_MISSING")
@@ -89,7 +90,7 @@ local function check()
         and math.abs(clock.Position.Y-11.60)<.03
         and math.abs(clock.Position.Z+6.50)<.03,
         "PHOTO_WINDOW_CLOCK_LOCATION_INVALID")
-    assert(clock.Position.Z>left.Position.Z+8
+    assert(clock.Position.Z>headline.Position.Z+8
         and clock.Position.Z<faith.Position.Z-7
         and clock.Position.X<-35.8,
         "PHOTO_WINDOW_CLOCK_NOT_BETWEEN_WINDOWS")
@@ -150,7 +151,7 @@ local function check()
             "PHOTO_WINDOW_CLOCK_DECOR_COLLIDES")
     end
     local seen={"Classroom faith window banner","Smore faith headline",
-        "Smore classroom main title","Smore mural pine trunk",
+        "Smore mural pine trunk",
         "Smore mural green canopy","Photo window air conditioner housing",
         "Photo AC inset front grille","Photo AC horizontal vent louver",
         "Photo AC control fascia","Photo AC control dial"}
@@ -221,10 +222,10 @@ local function check()
     end
     assert(#parts("Window glass")==2 and
         #parts("Navy curtain fabric panel")==4 and
-        #parts("Purple corner chair seat")==1 and
+        #parts("Purple comfy chair seat cushion")==1 and
         #parts("Student desk top")==16,
         "WINDOW_CUE_ORIGINAL_ROOM_REGRESSION")
-    return left,ac,clock
+    return headline,ac,clock
 end
 local left,ac,clock=check()
 print("WINDOW_CUE_RUNTIME_PASS draped_windows=2 panels=4 folds=8 "..
