@@ -161,7 +161,8 @@ local previousSeatFrontRollCF=seatFrontRoll.CFrame
 local relocation=CFrame.new(-25,1.58,14)*CFrame.Angles(-math.pi/2,-math.pi/2,0)
 local relocationDelta=relocation.Position-seat.Position
 seat.CFrame=relocation
-seatFrontRoll.CFrame=seatFrontRoll.CFrame+relocationDelta
+seatFrontRoll.CFrame=CFrame.new(relocationDelta.X,relocationDelta.Y,relocationDelta.Z)
+    *seatFrontRoll.CFrame
 ok,err=pcall(check)
 seat.CFrame=previousCF
 seatFrontRoll.CFrame=previousSeatFrontRollCF
