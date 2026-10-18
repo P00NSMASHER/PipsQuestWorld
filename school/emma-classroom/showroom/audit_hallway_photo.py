@@ -474,13 +474,41 @@ end
 local ceiling=one("Photo hall ivory ceiling")
 assert(not ceiling.CanCollide and ceiling.Size.X>=108,
     "PHOTO_HALL_CEILING_NOT_ENCLOSED")
-for _,lamp in ipairs(expect("Photo hall fluorescent diffuser",5)) do
-    assert(not lamp.CanCollide and lamp.Material==Enum.Material.Glass
-        and near(lamp.Position.Y,12.85)
-        and lamp:FindFirstChildOfClass("SurfaceLight"),
-        "PHOTO_HALL_ILLUMINATION_REGRESSION")
-    gui(lamp,"Inset silver fluorescent rim",Enum.NormalId.Bottom)
+local hallLamps=expect("Photo hall fluorescent diffuser",5)
+local function luminance(color)
+    return .2126*color.R+.7152*color.G+.0722*color.B
 end
+local function checkHallReadability()
+    assert(luminance(rear.Color)>=.49
+        and luminance(north.Color)>=.49
+        and luminance(caps[1].Color)>=.49,
+        "PHOTO_HALL_BLUE_GRAY_TOO_DIM")
+    for _,lamp in ipairs(hallLamps) do
+        local light=lamp:FindFirstChildOfClass("SurfaceLight")
+        assert(not lamp.CanCollide and lamp.Material==Enum.Material.Glass
+            and near(lamp.Position.Y,12.85) and light
+            and light.Brightness>=.58 and light.Range>=21,
+            "PHOTO_HALL_ILLUMINATION_TOO_DIM")
+        gui(lamp,"Inset silver fluorescent rim",Enum.NormalId.Bottom)
+    end
+end
+checkHallReadability()
+local originalHallColor=rear.Color
+rear.Color=Color3.fromRGB(70,80,88)
+local readable,readabilityReason=pcall(checkHallReadability)
+rear.Color=originalHallColor
+assert(not readable and string.find(tostring(readabilityReason),
+    "PHOTO_HALL_BLUE_GRAY_TOO_DIM",1,true),
+    "PHOTO_HALL_DARK_WALL_MUTATION_NOT_CAUGHT")
+local firstHallLight=hallLamps[1]:FindFirstChildOfClass("SurfaceLight")
+local originalHallBrightness=firstHallLight.Brightness
+firstHallLight.Brightness=.15
+local bright,brightnessReason=pcall(checkHallReadability)
+firstHallLight.Brightness=originalHallBrightness
+assert(not bright and string.find(tostring(brightnessReason),
+    "PHOTO_HALL_ILLUMINATION_TOO_DIM",1,true),
+    "PHOTO_HALL_DIM_LIGHT_MUTATION_NOT_CAUGHT")
+checkHallReadability()
 -- The far-end landmark must be actual 3D geometry on the existing
 -- CLOSED structural end wall. UI-only faux windows were never visible
 -- in independent source-derived screenshots.
