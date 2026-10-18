@@ -38,6 +38,7 @@ local function check()
     local apron=one("Purple comfy chair upholstered front apron")
     local crown=one("Purple comfy chair rounded back crown")
     local backBolsters=parts("Purple comfy chair back side bolster")
+    local lumbar=one("Purple comfy chair center lumbar roll")
     assert(#arms==2 and #armRolls==2 and #backBolsters==2
         and #parts("Purple comfy chair back tuft")==3
         and #parts("Purple corner chair seat")==0,
@@ -59,6 +60,13 @@ local function check()
         and crown.Position.Y>back.Position.Y+1.30
         and math.abs(crown.Position.Z-back.Position.Z)<.08,
         "PURPLE_CHAIR_BACK_CROWN_INVALID")
+    assert(lumbar.Material==Enum.Material.Fabric
+        and not lumbar.CanCollide and not lumbar.CanTouch and not lumbar.CanQuery
+        and math.abs(lumbar.Size.X-3.12)<.03
+        and math.abs(lumbar.Size.Y-.48)<.03
+        and lumbar.Position.Y<back.Position.Y-.25
+        and math.abs(lumbar.Position.Z-back.Position.Z)<.12,
+        "PURPLE_CHAIR_LUMBAR_ROLL_INVALID")
     for _,roll in ipairs(armRolls) do
         assert(roll.Material==Enum.Material.Fabric
             and not roll.CanCollide and not roll.CanTouch and not roll.CanQuery
@@ -141,9 +149,9 @@ local function check()
     end
     assert(center.X-base.Size.Z/2>-34.40 and center.Z-2.0>-26.0,
         "PURPLE_CHAIR_INTERSECTS_CLASSROOM_WALLS")
-    return seat,base,armRolls[1],crown,backBolsters[1],seatFrontRoll
+    return seat,base,armRolls[1],crown,backBolsters[1],seatFrontRoll,lumbar
 end
-local seat,collider,armRoll,crown,backBolster,seatFrontRoll=check()
+local seat,collider,armRoll,crown,backBolster,seatFrontRoll,lumbar=check()
 print("EMMA_PURPLE_CHAIR_RUNTIME_PASS purple_chairs=1 "
     .."original_student_seats=16 chair_style=upholstered_comfy "
     .."color=violet window_storage_corner=true "
@@ -200,7 +208,15 @@ assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_BACK_BOLSTER_INVALID",
     "PURPLE_CHAIR_COLLIDING_BACK_BOLSTER_NOT_REJECTED")
 check()
 print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED colliding_back_bolster")
-print("EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS color position collision arm_roll back_crown back_bolster")
+local oldLumbarCollision=lumbar.CanCollide
+lumbar.CanCollide=true
+ok,err=pcall(check)
+lumbar.CanCollide=oldLumbarCollision
+assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_LUMBAR_ROLL_INVALID",1,true),
+    "PURPLE_CHAIR_COLLIDING_LUMBAR_ROLL_NOT_REJECTED")
+check()
+print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED colliding_lumbar_roll")
+print("EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS color position collision arm_roll back_crown back_bolster lumbar_roll")
 '''
 def main():
     parser=argparse.ArgumentParser()
@@ -218,6 +234,7 @@ def main():
     required=("EMMA_PURPLE_CHAIR_RUNTIME_PASS",
               "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED blue_repaint",
               "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED moved_into_rug",
+              "EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED colliding_lumbar_roll",
               "EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS")
     lines=result.stdout.splitlines()
     for marker in required:
