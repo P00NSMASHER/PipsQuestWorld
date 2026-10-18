@@ -35,6 +35,7 @@ local function check()
     local arms=parts("Purple comfy chair padded arm")
     local armRolls=parts("Purple comfy chair rounded arm roll")
     local apron=one("Purple comfy chair upholstered front apron")
+    local crown=one("Purple comfy chair rounded back crown")
     assert(#arms==2 and #armRolls==2
         and #parts("Purple comfy chair back tuft")==3
         and #parts("Purple corner chair seat")==0,
@@ -42,6 +43,12 @@ local function check()
     assert(apron.Material==Enum.Material.Fabric
         and not apron.CanCollide and not apron.CanTouch and not apron.CanQuery,
         "PURPLE_CHAIR_APRON_COLLISION_INVALID")
+    assert(crown.Material==Enum.Material.Fabric
+        and not crown.CanCollide and not crown.CanTouch and not crown.CanQuery
+        and math.abs(crown.Size.X-3.55)<.03
+        and crown.Position.Y>back.Position.Y+1.30
+        and math.abs(crown.Position.Z-back.Position.Z)<.08,
+        "PURPLE_CHAIR_BACK_CROWN_INVALID")
     for _,roll in ipairs(armRolls) do
         assert(roll.Material==Enum.Material.Fabric
             and not roll.CanCollide and not roll.CanTouch and not roll.CanQuery
@@ -117,9 +124,9 @@ local function check()
     end
     assert(center.X-base.Size.Z/2>-34.40 and center.Z-2.0>-26.0,
         "PURPLE_CHAIR_INTERSECTS_CLASSROOM_WALLS")
-    return seat,base,armRolls[1]
+    return seat,base,armRolls[1],crown
 end
-local seat,collider,armRoll=check()
+local seat,collider,armRoll,crown=check()
 print("EMMA_PURPLE_CHAIR_RUNTIME_PASS purple_chairs=1 "
     .."original_student_seats=16 chair_style=upholstered_comfy "
     .."color=violet window_storage_corner=true "
@@ -154,7 +161,15 @@ assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_ARM_ROLL_INVALID",1,tr
     "PURPLE_CHAIR_COLLIDING_ARM_ROLL_NOT_REJECTED")
 check()
 print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED colliding_arm_roll")
-print("EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS color position collision arm_roll")
+local oldCrownCollision=crown.CanCollide
+crown.CanCollide=true
+ok,err=pcall(check)
+crown.CanCollide=oldCrownCollision
+assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_BACK_CROWN_INVALID",1,true),
+    "PURPLE_CHAIR_COLLIDING_BACK_CROWN_NOT_REJECTED")
+check()
+print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED colliding_back_crown")
+print("EMMA_PURPLE_CHAIR_NEGATIVE_TESTS_PASS color position collision arm_roll back_crown")
 '''
 def main():
     parser=argparse.ArgumentParser()
