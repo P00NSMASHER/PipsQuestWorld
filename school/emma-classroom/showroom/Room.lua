@@ -306,6 +306,14 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
     roundedPanel(parent,name.." seat cushion",
         Vector3.new(3.55,.58,3.15),CFrame.new(x,1.58,z-.02),
         tint:Lerp(P.cream,.055),.28,true,false,Enum.Material.Fabric)
+    -- The source render still showed a hard, square leading edge after the
+    -- arm and back refinements. One crosswise upholstered roll gives the
+    -- removable cushion a soft front profile without changing its footprint,
+    -- collision volumes, query behavior, or the adjacent worktable clearance.
+    local seatFrontRoll=cylinder(parent,name.." rounded seat front roll",
+        Vector3.new(3.24,.46,.46),CFrame.new(x,1.55,z-1.49),
+        tint:Lerp(P.cream,.072),Enum.Material.Fabric,false)
+    seatFrontRoll.CanQuery=false;seatFrontRoll.CastShadow=true
 
     local backCF=CFrame.new(x,3.30,z+1.36)*CFrame.Angles(math.rad(-8),0,0)
     local backCollision=part(parent,name.." back collision",
