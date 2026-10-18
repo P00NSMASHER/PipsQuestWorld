@@ -320,7 +320,24 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
         roundedPanel(parent,name.." padded arm",
             Vector3.new(.66,1.42,2.68),CFrame.new(x+dx,1.94,z-.08),
             tint:Lerp(P.cream,.025),.18,false,false,Enum.Material.Fabric)
+        -- The blocky arm slab was the largest visible finish gap in the
+        -- source-rendered chair. A single lengthwise upholstered roll gives
+        -- each arm a soft manufactured top without widening its footprint.
+        -- These are visual only; the two established invisible volumes remain
+        -- the chair's complete collision silhouette.
+        local roll=cylinder(parent,name.." rounded arm roll",
+            Vector3.new(2.55,.72,.72),
+            CFrame.new(x+dx,2.63,z-.08)*CFrame.Angles(0,math.pi/2,0),
+            tint:Lerp(P.cream,.07),Enum.Material.Fabric,false)
+        roll.CanQuery=false;roll.CastShadow=true
     end
+    -- A shallow upholstered apron hides the hard seam between the cushion and
+    -- base at child eye level. It stays above the finished floor and carries
+    -- no collision, touch, or query behavior.
+    local apron=roundedPanel(parent,name.." upholstered front apron",
+        Vector3.new(3.30,.58,.26),CFrame.new(x,1.15,z-1.54),
+        tint:Lerp(P.ink,.045),.12,false,false,Enum.Material.Fabric)
+    apron.CanQuery=false
     -- Three shallow fabric-covered buttons break up the broad back without
     -- adding textures, external assets, query targets or collision.
     for _,dx in ipairs({-.82,0,.82}) do
