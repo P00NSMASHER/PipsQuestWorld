@@ -2615,7 +2615,7 @@ local function alignHallwayWithStaffExit(root: Instance)
     -- it outside the staff door, close the missing north wall with ONE large
     -- collision solid (not dozens of tiny mobile Parts).
     part(hall,"Photo hall continuous north wall",Vector3.new(108,13,.90),
-        CFrame.new(108,6.5,26.75),Color3.fromRGB(107,117,125),
+        CFrame.new(108,6.5,26.75),Color3.fromRGB(124,134,142),
         Enum.Material.SmoothPlastic,true)
 
     -- Reuse, rather than duplicate, the old 18-stud staff vestibule. Extend
