@@ -322,6 +322,17 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
         Vector3.new(3.55,.56,.56),backCF*CFrame.new(0,1.58,-.01),
         tint:Lerp(P.cream,.075),Enum.Material.Fabric,false)
     crown.CanQuery=false;crown.CastShadow=true
+    -- Two slim vertical bolsters soften the remaining slab-backed silhouette
+    -- without widening the established chair footprint or changing either
+    -- invisible collision volume. They follow the same back rake and stay
+    -- visual-only, preserving the workstation and aisle clearances.
+    for _,dx in ipairs({-1.64,1.64}) do
+        local bolster=cylinder(parent,name.." back side bolster",
+            Vector3.new(2.72,.52,.52),
+            backCF*CFrame.new(dx,0,-.15)*CFrame.Angles(0,0,math.pi/2),
+            tint:Lerp(P.cream,.065),Enum.Material.Fabric,false)
+        bolster.CanQuery=false;bolster.CastShadow=true
+    end
 
     for _,dx in ipairs({-1.48,1.48}) do
         roundedPanel(parent,name.." padded arm",
