@@ -1979,7 +1979,7 @@ local function buildBackDoorAndHall(root: Instance)
     hall:SetAttribute("Reference","2026-10-10 anonymous hallway architecture")
     hall:SetAttribute("ScaleConfidence","provisional")
     hall.Parent=root
-    local blueGray=Color3.fromRGB(107,117,125)
+    local blueGray=Color3.fromRGB(124,134,142)
     local darkOak=Color3.fromRGB(112,77,50)
     local paperColor=Color3.fromRGB(243,241,232)
     local mortar=Color3.fromRGB(106,74,49)
@@ -2363,7 +2363,7 @@ local function buildBackDoorAndHall(root: Instance)
         local light=Instance.new("SurfaceLight")
         light.Face=Enum.NormalId.Bottom
         light.Color=Color3.fromRGB(252,246,235)
-        light.Brightness=.42;light.Range=19;light.Shadows=false
+        light.Brightness=.62;light.Range=22;light.Shadows=false
         light.Parent=lens
     end
 
@@ -2558,7 +2558,7 @@ local function buildTeacherEntry(root: Instance)
     hallLight.Transparency=.065
     local light=Instance.new("SurfaceLight")
     light.Face=Enum.NormalId.Bottom;light.Color=Color3.fromRGB(251,243,227)
-    light.Brightness=.42;light.Range=15;light.Shadows=false;light.Parent=hallLight
+    light.Brightness=.58;light.Range=18;light.Shadows=false;light.Parent=hallLight
     sign(root,"Staff entry sign","WELCOME  •  ABVM STAFF",Vector3.new(10,2.0,.20),CFrame.new(36.3,13.3,15.5)*CFrame.Angles(0,-math.pi/2,0),Color3.fromRGB(247,237,207),P.blue)
 end
 
