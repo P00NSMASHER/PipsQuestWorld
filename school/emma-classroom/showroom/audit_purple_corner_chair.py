@@ -46,7 +46,8 @@ local function check()
         and not seatFrontRoll.CanCollide and not seatFrontRoll.CanTouch
         and not seatFrontRoll.CanQuery
         and math.abs(seatFrontRoll.Size.X-3.24)<.03
-        and seatFrontRoll.Position.Z<seat.Position.Z-1.40
+        and seatFrontRoll.Position.X>seat.Position.X+1.40
+        and math.abs(seatFrontRoll.Position.Z-seat.Position.Z)<.08
         and math.abs(seatFrontRoll.Position.Y-seat.Position.Y)<.16,
         "PURPLE_CHAIR_SEAT_FRONT_ROLL_INVALID")
     assert(apron.Material==Enum.Material.Fabric
