@@ -157,9 +157,14 @@ assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_COLOR_INVALID",1,true)
     "PURPLE_CHAIR_WRONG_COLOR_NOT_REJECTED")
 print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED blue_repaint")
 local previousCF=seat.CFrame
-seat.CFrame=CFrame.new(-25,1.58,14)*CFrame.Angles(-math.pi/2,-math.pi/2,0)
+local previousSeatFrontRollCF=seatFrontRoll.CFrame
+local relocation=CFrame.new(-25,1.58,14)*CFrame.Angles(-math.pi/2,-math.pi/2,0)
+local relocationDelta=relocation.Position-seat.Position
+seat.CFrame=relocation
+seatFrontRoll.CFrame=seatFrontRoll.CFrame+relocationDelta
 ok,err=pcall(check)
 seat.CFrame=previousCF
+seatFrontRoll.CFrame=previousSeatFrontRollCF
 assert(not ok and string.find(tostring(err),"PURPLE_CHAIR_CORNER_POSITION_INVALID",1,true),
     "PURPLE_CHAIR_RUG_RELOCATION_NOT_REJECTED")
 print("EMMA_PURPLE_CHAIR_ADVERSARIAL_REJECTED moved_into_rug")
