@@ -341,6 +341,14 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
             tint:Lerp(P.cream,.065),Enum.Material.Fabric,false)
         bolster.CanQuery=false;bolster.CastShadow=true
     end
+    -- The source-derived window view still reads as one broad flat back panel
+    -- between the crown and seat. A single shallow lumbar roll adds upholstered
+    -- depth at the adult back position without widening the chair, changing
+    -- either invisible collider, or consuming touch/query work on mobile.
+    local lumbar=cylinder(parent,name.." center lumbar roll",
+        Vector3.new(3.12,.48,.48),backCF*CFrame.new(0,-.58,-.34),
+        tint:Lerp(P.cream,.09),Enum.Material.Fabric,false)
+    lumbar.CanQuery=false;lumbar.CastShadow=true
 
     for _,dx in ipairs({-1.48,1.48}) do
         roundedPanel(parent,name.." padded arm",
