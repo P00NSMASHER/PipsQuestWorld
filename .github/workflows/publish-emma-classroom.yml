@@ -1,12 +1,12 @@
 name: Publish Emma Classroom and Photo Hallway Preview
 
-# Only this explicitly requested, one-commit preview lane can publish the
-# current Emma Roblox place. Historic study/neighborhood/replica lanes are
-# separately guarded against overwriting this preview.
+# October 20 one-use review preview: pinned verified classroom product source.
+# THIS IS NOT native-device/teacher-likeness acceptance or a reusable release approval.
+# The exact source is locked to the existing six-check-green PR #355 head.
 on:
   push:
     branches:
-      - visual/emma-hallway-photo-faithful-20261010
+      - release/emma-review-as-is-20261020-c6aea756
     paths:
       - 'school/emma-classroom/PREVIEW_REQUEST'
 
@@ -25,11 +25,12 @@ jobs:
       UNIVERSE_ID: '10769455759'
       PLACE_ID: '114603280760042'
       SOURCE_SHA: ${{ github.sha }}
+      PRODUCT_SHA: 'c6aea7568659186b9eea73a855a7abe7b8d9e13e'
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 2
+          fetch-depth: 3
           persist-credentials: false
 
       - name: Install pinned Luau and Rojo
@@ -46,7 +47,7 @@ jobs:
           unzip -q rojo.zip -d rojo
           chmod +x luau/luau luau/luau-compile rojo/rojo
 
-      - name: Require one-time approved photo-classroom and hallway preview request
+      - name: Require one-use source-locked review-only classroom preview
         shell: bash
         run: |
           set -euo pipefail
@@ -54,24 +55,30 @@ jobs:
           # reviewed photo-guided classroom+hallway source, never the
           # quiz game or the old classroom-only parent PR.
           test "$GITHUB_EVENT_NAME" = 'push'
-          test "$GITHUB_REF_NAME" = 'visual/emma-hallway-photo-faithful-20261010'
+          test "$GITHUB_REF_NAME" = 'release/emma-review-as-is-20261020-c6aea756'
+          test "$GITHUB_ACTOR" = 'P00NSMASHER'
           request=school/emma-classroom/PREVIEW_REQUEST
           test -f "$request"
           grep -qx 'requested-mode: classroom-and-hallway-preview-only' "$request"
-          grep -qx 'authorization: user-approved-2026-10-11-hallway-preview' "$request"
+          grep -qx 'authorization: user-approved-2026-10-20-review-as-is-preview' "$request"
           grep -qx 'visual-acceptance: pending-real-device-review' "$request"
           grep -qx 'target-universe: 10769455759' "$request"
           grep -qx 'target-place: 114603280760042' "$request"
           grep -qx 'build-project: school/emma-showroom.project.json' "$request"
-          grep -qx 'source-branch: visual/emma-hallway-photo-faithful-20261010' "$request"
+          grep -qx 'source-branch: release/emma-review-as-is-20261020-c6aea756' "$request"
+          grep -qx "product-source-sha: $PRODUCT_SHA" "$request"
+          test "$(wc -l < "$request" | tr -d ' ')" = '9'
           changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
           test "$changed" = "$request"
           source_parent="$(git rev-parse HEAD^)"
           grep -qx "source-parent-sha: $source_parent" "$request"
+          test "$(git rev-parse HEAD^^)" = "$PRODUCT_SHA"
+          test "$(git rev-list --count "$PRODUCT_SHA"..HEAD)" = '2'
+          test "$(git diff --name-only "$PRODUCT_SHA" "$source_parent")" = '.github/workflows/publish-emma-classroom.yml'
           test -f school/emma-classroom/showroom/audit_hallway_photo.py
           test -f school/emma-classroom/showroom/audit_glazed_door_aperture.py
-          echo "EXPLICIT_CLASSROOM_HALLWAY_PREVIEW_GUARD_PASS source_parent=$source_parent"
-          echo "This is a live-device preview, not final Roblox visual acceptance."
+          echo "REVIEW_PREVIEW_ONE_USE_SOURCE_LOCK_PASS product=$PRODUCT_SHA marker=$SOURCE_SHA"
+          echo "Review-only preview; device/portrait acceptance and production release gates remain HOLD."
           for file in school/emma-classroom/showroom/*.lua school/emma-classroom/showroom/ArtPass.lua; do
             "$RUNNER_TEMP/tools/luau/luau-compile" "$file" >/dev/null
           done
@@ -136,6 +143,9 @@ jobs:
           "$RUNNER_TEMP/tools/rojo/rojo" build school/emma-showroom.project.json -o "$RUNNER_TEMP/emma-replica.rbxlx"
           python3 school/emma-classroom/showroom/verify_build.py "$RUNNER_TEMP/emma-replica.rbxlx"
           sha256sum "$RUNNER_TEMP/emma-replica.rbxl" | tee "$RUNNER_TEMP/place.sha256"
+          printf '%s\n' "$PRODUCT_SHA" > "$RUNNER_TEMP/product-source-sha.txt"
+          printf '%s\n' "$SOURCE_SHA" > "$RUNNER_TEMP/marker-source-sha.txt"
+          cp school/emma-classroom/PREVIEW_REQUEST "$RUNNER_TEMP/approved-preview-request.txt"
 
       - name: Publish exact classroom binary
         id: publish
@@ -153,7 +163,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Roblox place version: $version" | tee "$RUNNER_TEMP/version.txt"
           echo "Published exact GitHub source $SOURCE_SHA to known Roblox place $PLACE_ID" >> "$GITHUB_STEP_SUMMARY"
-          echo "CLASSROOM + OCTOBER 10 HALLWAY PREVIEW ONLY" >> "$GITHUB_STEP_SUMMARY"
+          echo "REVIEW-ONLY classroom + straight staff hallway preview; teacher portrait and device acceptance NOT approved." >> "$GITHUB_STEP_SUMMARY"
           echo "Mobile engine, collisions, legibility and frame rate must be reviewed in Roblox on iPhone." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Receipt
@@ -166,5 +176,8 @@ jobs:
             ${{ runner.temp }}/version.txt
             ${{ runner.temp }}/publish-response.json
             ${{ runner.temp }}/navigation.json
+            ${{ runner.temp }}/product-source-sha.txt
+            ${{ runner.temp }}/marker-source-sha.txt
+            ${{ runner.temp }}/approved-preview-request.txt
           retention-days: 14
           if-no-files-found: warn
