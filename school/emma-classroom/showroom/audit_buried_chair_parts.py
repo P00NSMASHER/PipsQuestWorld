@@ -5,8 +5,9 @@ The previous seventeen molded chairs each spawned
 four 0.19-stud rubber-foot cylinders at y=.13, entirely below the existing
 hardwood floor top y=.50. The sixteen student desks also retained two invisible
 T-foot Parts each at y=.18, entirely below the same floor, even though their
-visible steel runners already rest on the finished surface. Removing those
-objects recovers 100 replicated physical Parts without removing visible
+visible steel runners already rest on the finished surface. A 27x3-stud cubby
+shelf ended at y=.39, also entirely below the finished floor. Removing those
+objects recovers 101 replicated physical Parts without removing visible
 furniture, moving a desk or chair, changing the metal-leg collision contract,
 or activating meshes. The audit executes the actual constructed showroom Luau
 plus adversarial mutations. It is not a Roblox physics/FPS or iPhone visual
@@ -48,6 +49,7 @@ local function verify()
     local deskLegs=find("Desk tubular leg")
     local deskRunners=find("Desk contoured base runner")
     local buriedDeskFeet=find("Desk foot")
+    local cubbyShelves=find("Cubbie open shelf")
     assert(#seats==16,"CHAIR_VISIBLE_SEAT_COUNT_CHANGED")
     assert(#legs==64,"CHAIR_COLLIDABLE_METAL_LEG_COUNT_CHANGED")
     assert(#hiddenFeet==0,"CHAIR_BURIED_RUBBER_FEET_RECREATED")
@@ -57,6 +59,11 @@ local function verify()
         and not comfyBases[1].CanQuery,
         "PURPLE_COMFY_COLLISION_BASE_CHANGED")
     assert(#purpleFeet==0,"PURPLE_BURIED_RUBBER_FEET_RECREATED")
+    assert(#cubbyShelves==2,"CUBBIE_VISIBLE_SHELF_COUNT_CHANGED")
+    for _,p in ipairs(cubbyShelves) do
+        assert(p.Position.Y-p.Size.Y/2>floorTop,
+            "CUBBIE_BURIED_SHELF_RECREATED")
+    end
     assert(#deskTops==16,"DESK_VISIBLE_TOP_COUNT_CHANGED")
     assert(#deskLegs==32,"DESK_COLLIDABLE_METAL_LEG_COUNT_CHANGED")
     assert(#deskRunners==32,"DESK_VISIBLE_RUNNER_COUNT_CHANGED")
@@ -111,7 +118,8 @@ local total,seats,legs,deskTops,deskLegs,deskRunners=verify()
 print("CHAIR_BURIED_GEOMETRY_SOURCE_PASS student_chairs=16 comfy_chairs=1 student_seats=16 "
     .."metal_legs=64 buried_chair_feet_removed=68 "
     .."desks=16 desk_legs=32 visible_desk_runners=32 "
-    .."buried_desk_feet_removed=32 hidden_foot_parts=0 part_count="..total
+    .."buried_desk_feet_removed=32 buried_cubby_shelves_removed=1 "
+    .."hidden_foot_parts=0 part_count="..total
     .." headroom_to_3100="..(3100-total)
     .." student_leg_collision_preserved=true comfy_base_collision=true native_iphone_pending=true")
 
@@ -141,6 +149,13 @@ recreated.Name="Desk foot"
 reject(function() recreated.Parent=root end,
        function() recreated.Parent=nil end,
        "DESK_BURIED_T_FEET_RECREATED","desk_buried_t_foot_restored")
+
+recreated.Name="Cubbie open shelf"
+recreated.Size=Vector3.new(27,.22,3)
+recreated.CFrame=CFrame.new(21,.28,25.2)
+reject(function() recreated.Parent=root end,
+       function() recreated.Parent=nil end,
+       "CUBBIE_VISIBLE_SHELF_COUNT_CHANGED","buried_cubby_shelf_restored")
 
 local oldDeskRunnerName=deskRunners[1].Name
 reject(function() deskRunners[1].Name="Test removed desk runner" end,
@@ -204,7 +219,7 @@ def main() -> None:
     for marker in required:
         assert any(line.startswith(marker) for line in lines), marker
     assert sum(line.startswith("CHAIR_BURIED_GEOMETRY_NEGATIVE_REJECTED")
-               for line in lines)==9, "Missing adverse furniture-mutation detection"
+               for line in lines)==10, "Missing adverse furniture-mutation detection"
     for line in lines:
         if line.startswith("CHAIR_BURIED_GEOMETRY_"):
             print(line,flush=True)

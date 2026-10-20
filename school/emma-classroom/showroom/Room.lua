@@ -1029,7 +1029,9 @@ local function buildCubbies(root: Instance)
     local cabinetWood=Color3.fromRGB(109,76,52)
     part(root,"Cubbies wood surround",Vector3.new(27,8,.24),
         CFrame.new(21,4.2,26.5),cabinetWood,Enum.Material.Wood)
-    for _,y in ipairs({.28,4.2,8.2}) do
+    -- The former y=.28 shelf ended at y=.39, fully below the finished
+    -- oak floor top at y=.50. Keep the two visible shelves only.
+    for _,y in ipairs({4.2,8.2}) do
         part(root,"Cubbie open shelf",Vector3.new(27,.22,3),
             CFrame.new(21,y,25.2),cabinetWood,Enum.Material.Wood,false)
     end
