@@ -2,6 +2,33 @@
   "schemaVersion": 1,
   "purpose": "Historical verified Roblox publication receipt. This records what the publisher actually made live, including release-gate incidents; it does not grant acceptance or authorize another publication.",
   "lastConfirmedPublication": {
+    "versionNumber": 113,
+    "sourceCommit": "933b1cf8decd28d0ce2c3afeda31b4fddc597f7e",
+    "productSourceCommit": "c6aea7568659186b9eea73a855a7abe7b8d9e13e",
+    "workflowRunId": 39472055217,
+    "workflowUrl": "https://github.com/P00NSMASHER/PipsQuestWorld/actions/runs/39472055217",
+    "publishArtifactId": 12287187655,
+    "publishArtifactSha256": "0e170e16b5fcd9a9d4008a915cd3f8f7b206b8199b58ea269196edf9f78c70e8",
+    "binarySha256": "9903675bb609883a8729d494ba767081a89598fcf93ecd12fc49c141d43a1d79",
+    "placeId": "114603280760042",
+    "universeId": "10769455759",
+    "mode": "classroom-and-hallway-review-preview-only",
+    "visualAcceptance": "pending-real-device-review",
+    "teacherPortraitAcceptance": "not-approved-not-included",
+    "publicationAuthorityEvidence": "2026-10-20 user instruction to publish as-is for review; consumed by exact one-use marker 933b1cf8decd28d0ce2c3afeda31b4fddc597f7e; not reusable",
+    "releaseAcceptance": "HOLD"
+  },
+  "lastAcceptedPreview": {
+    "versionNumber": 83,
+    "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
+    "workflowRunId": 38275628548,
+    "binarySha256": "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
+    "acceptanceScope": "source-gated preview only; native iPhone/iPad acceptance remained pending"
+  },
+  "productionFurnitureMeshesEnabled": false,
+  "nativeIphoneAcceptanceVerified": false,
+  "nextCandidatePolicy": "Version 113 was actually published from exact six-CI-green product SHA c6aea7568659186b9eea73a855a7abe7b8d9e13e via its one-use guarded review marker. It is live only for user evaluation: native Studio/iPhone/iPad appearance, touch navigation, FPS and reconnect are not accepted; Mrs. Benulis portrait remains unapproved and excluded. Do not interpret this review preview as final acceptance, reuse its marker, publish again or merge protected branches without separate authority and fresh source-specific gates. PR #355 remains draft and independently owned.",
+  "previousConfirmedPublication": {
     "versionNumber": 109,
     "sourceCommit": "442b9c6f09a782d635c4b4c5a51dbbc8cb8ba67f",
     "productSourceCommit": "d88ec24bdb51b3f4fba658e8bfd7a513009df433",
@@ -16,15 +43,5 @@
     "binarySha256": "6c6fee07f572d76ec9b171a889467524841feeac5786ebc4f0ea72983fdd1829",
     "publicationAuthorityEvidence": "user-approved-2026-10-16-publish-on-finish consumed by the recorded run; not reusable",
     "releaseAcceptance": "HOLD"
-  },
-  "lastAcceptedPreview": {
-    "versionNumber": 83,
-    "sourceCommit": "b3fbabe73ccfda096c99611e575ab99cc88fe097",
-    "workflowRunId": 38275628548,
-    "binarySha256": "d5d269808c367166170a60023f83c26230dd6d66ff2672512dfaea09dc8a35d3",
-    "acceptanceScope": "source-gated preview only; native iPhone/iPad acceptance remained pending"
-  },
-  "productionFurnitureMeshesEnabled": false,
-  "nativeIphoneAcceptanceVerified": false,
-  "nextCandidatePolicy": "Version 109 is the newest artifact-verified live binary. Its published source reports a perpendicular north-turn hallway, while the current straight outside-parallel hallway is an unpublished candidate. Keep every newer PR source unpublished until independent native Studio/iPhone navigation, appearance and performance review, separate portrait acceptance, and a fresh guarded publication authorization. Never reuse the recorded one-time authorization."
+  }
 }
