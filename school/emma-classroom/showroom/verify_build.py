@@ -28,7 +28,11 @@ expected = {
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
-    assert (base / path).is_file()
+    target = base / path
+    if key == "StaffAssets":
+        assert target.is_dir(), "Bundled teacher asset directory is missing"
+    else:
+        assert target.is_file(), f"Mapped classroom source is missing: {path}"
 assert client["ClassroomView"]["$path"] == "emma-classroom/showroom/View.client.lua"
 assert set(server) == {"$className", *expected}
 assert set(client) == {"$className", "ClassroomView"}
