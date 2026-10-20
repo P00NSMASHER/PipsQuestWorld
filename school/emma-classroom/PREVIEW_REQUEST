@@ -1,16 +1,9 @@
 requested-mode: classroom-and-hallway-preview-only
-authorization: user-approved-2026-10-11-hallway-preview
-reaffirmed-authorization: user-approved-2026-10-12-newest-classroom-hallway-qa-preview
+authorization: user-approved-2026-10-20-review-as-is-preview
 visual-acceptance: pending-real-device-review
 target-universe: 10769455759
 target-place: 114603280760042
 build-project: school/emma-showroom.project.json
-source-branch: visual/emma-hallway-photo-faithful-20261010
-source-parent-sha: a9c8ec16180c881cc8b13d60c3ece06162b32957
-scope: Existing Emma classroom; LEFT Welcome-ABVM-staff door opens into connected photographed school hallway; RIGHT wood-glass double doorway leads solely into enclosed classroom supply closet with three shelves and three labeled storage tubs
-routing-proof: left doorway to side hallway and long corridor is unobstructed; old right rear hallway connection removed and closed with solid closet rear wall
-source-validation: exact-source showroom compile, constructed closet sealing plus negative tests, left staff portal traversal, conservatively computed navigation, true glass, privacy, <=3100 parts and corrected native iPhone regressions
-excluded-runtime: no old quiz, answer overlay, study bank, learner score writes, or remote grading
-privacy: photo-inspired anonymous architecture and school decorations; no children's identities, homework photos, or teacher likenesses
-furniture-meshes: disabled pending actual Roblox iPhone visual acceptance
-release-status: user-authorized exact-source QA-only preview replacing prior v82, pending native iPhone and iPad acceptance
+source-branch: release/emma-review-as-is-20261020-c6aea756
+source-parent-sha: eb44eeb52108e0c17c469acda6d9367363168fe6
+product-source-sha: c6aea7568659186b9eea73a855a7abe7b8d9e13e
