@@ -1293,9 +1293,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     tote_faces=[v for v in lines if v[1]=="Bin front and back"]
     tote_sides=[v for v in lines if v[1]=="Bin side"]
     files=[v for v in lines if v[1]=="Stored classroom file folder"]
-    assert len(shelves)==3 and len(dividers)==7 and (
+    assert len(shelves)==2 and len(dividers)==7 and (
         len(tote_faces)==24 and len(tote_sides)==24
     ), "Original open school cabinetry geometry was replaced or duplicated"
+    assert all(float(v[10])-float(v[7])/2>.50 for v in shelves), (
+        "Cubbie shelf is buried below the finished oak floor"
+    )
     assert len(files)==6, "Six restrained classroom document folders are missing"
     wood_items=[cabinet]+shelves+dividers
     assert all(v[4].endswith("Wood") and
