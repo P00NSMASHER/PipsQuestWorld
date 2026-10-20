@@ -1,0 +1,11 @@
+requested-mode: classroom-review-preview-only
+authorization: user-approved-2026-10-20-publish-what-we-have-for-review
+source-branch: preview/emma-grade2-source-locked-20261020-c6aea756
+product-source-sha: c6aea7568659186b9eea73a855a7abe7b8d9e13e
+source-parent-sha: f22976b36c88bc45fbd1e15a2f909ed1e3728b18
+target-universe: 10769455759
+target-place: 114603280760042
+build-project: school/emma-showroom.project.json
+native-device-acceptance: pending
+teacher-portrait-acceptance: pending
+final-release-acceptance: HOLD
