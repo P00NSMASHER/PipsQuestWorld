@@ -364,6 +364,15 @@ local function comfyChair(parent: Instance,name: string,x: number,z: number,tint
             CFrame.new(x+dx,2.63,z-.08)*CFrame.Angles(0,math.pi/2,0),
             tint:Lerp(P.cream,.07),Enum.Material.Fabric,false)
         roll.CanQuery=false;roll.CastShadow=true
+        -- Round the two flat-cut cylinder ends without extending beyond the
+        -- established padded-arm footprint. These upholstered caps are visual
+        -- only and preserve the chair's two simple collision volumes.
+        for _,dz in ipairs({-1.06,.90}) do
+            local cap=ball(parent,name.." rounded arm end cap",
+                Vector3.new(.72,.72,.72),CFrame.new(x+dx,2.63,z+dz),
+                tint:Lerp(P.cream,.07),Enum.Material.Fabric,false)
+            cap.CanQuery=false;cap.CastShadow=true
+        end
     end
     -- A shallow upholstered apron hides the hard seam between the cushion and
     -- base at child eye level. It stays above the finished floor and carries
