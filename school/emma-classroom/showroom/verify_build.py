@@ -22,10 +22,17 @@ expected = {
     "ArtPass": "emma-classroom/showroom/ArtPass.lua",
     "FurnitureMeshAdapter": "emma-classroom/showroom/FurnitureMeshAdapter.lua",
     "FurnitureMeshConfig": "emma-classroom/showroom/FurnitureMeshConfig.lua",
+    "StaffModel": "emma-classroom/server/StaffModel.lua",
+    "StaffAssets": "emma-classroom/server/StaffAssets",
+    "StaffData": "emma-classroom/shared/Data.lua",
 }
 for key, path in expected.items():
     assert server[key]["$path"] == path, f"Unexpected mapping for {key}"
-    assert (base / path).is_file()
+    target = base / path
+    if key == "StaffAssets":
+        assert target.is_dir(), "Bundled teacher asset directory is missing"
+    else:
+        assert target.is_file(), f"Mapped classroom source is missing: {path}"
 assert client["ClassroomView"]["$path"] == "emma-classroom/showroom/View.client.lua"
 assert set(server) == {"$className", *expected}
 assert set(client) == {"$className", "ClassroomView"}
@@ -81,9 +88,16 @@ assert "CFrame.new(26,3.39,-24.85)" in room, "Teacher laptop no longer rests on 
 assert "pencilCup(root,21.5,4.08,-24.2)" in room, "Teacher pencil cup hovers above desktop"
 assert '"Reading book cover"' in room and '"Reading shelf metal bookend"' in room, "Reading-shelf physical book faces removed"
 gallery=(base / "emma-classroom/showroom/GalleryPass.lua").read_text()
-assert "CFrame.new(22,3.365,-22.6)" in gallery, "Stationery tray no longer touches teacher desk"
+assert '"Teacher desk wooden stationery tray"' not in gallery, "Overlapping teacher stationery tray returned"
+assert '"Teacher wooden colored pencil"' not in gallery, "Overlapping colored pencil board returned"
 assert "CFrame.new(30.5,3.315,-24.0)" in gallery, "Teacher papers no longer rest on desk"
 assert "GalleryPass.decorate(Room.Root)" in main
+assert 'require(script.Parent:WaitForChild("StaffModel"))' in main, "Teacher model module is not required"
+assert 'require(script.Parent:WaitForChild("StaffData"))' in main, "Teacher data module is not required"
+assert 'teacher.name=="Mrs. Benulis"' in main, "Mrs. Benulis lookup is missing"
+assert 'ShowroomStationaryTeacher' in main and 'teacher.Parent=Room.Root' in main, (
+    "Stationary Mrs. Benulis display is not attached to the classroom"
+)
 assert "FurnitureMeshAdapter.apply(Room.Root)" in main
 mesh_config=(base/"emma-classroom/showroom/FurnitureMeshConfig.lua").read_text()
 mesh_adapter=(base/"emma-classroom/showroom/FurnitureMeshAdapter.lua").read_text()
@@ -152,7 +166,8 @@ if len(sys.argv) > 1:
     for forbidden in ("ScreenGui", "RemoteFunction", "RemoteEvent"):
         assert forbidden not in all_names, f"{forbidden} object in gallery place"
     for component in ("ClassroomReplica", "Main", "World", "ArtPass",
-                      "GalleryPass", "ClassroomView"):
+                      "GalleryPass", "StaffModel", "StaffAssets", "StaffData",
+                      "ClassroomView"):
         assert component in all_names, f"Missing replica component {component}"
     for path, src in sources:
         assert 'Instance.new("ScreenGui")' not in src, f"Custom HUD code at {path}"
@@ -160,4 +175,4 @@ if len(sys.argv) > 1:
         assert 'require(script.Parent:WaitForChild("QuestionBank"))' not in src
     print("PASS: assembled classroom-only place excludes all study UI, question bank, quiz remotes and saved-score runtime")
 else:
-    print("PASS: classroom-only project maps 4 architectural scripts + 1 camera script, no study system")
+    print("PASS: classroom-only project includes the stationary Mrs. Benulis display and excludes the study system")

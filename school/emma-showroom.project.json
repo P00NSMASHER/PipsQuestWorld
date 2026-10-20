@@ -48,6 +48,15 @@
         },
         "FurnitureMeshConfig": {
           "$path": "emma-classroom/showroom/FurnitureMeshConfig.lua"
+        },
+        "StaffModel": {
+          "$path": "emma-classroom/server/StaffModel.lua"
+        },
+        "StaffAssets": {
+          "$path": "emma-classroom/server/StaffAssets"
+        },
+        "StaffData": {
+          "$path": "emma-classroom/shared/Data.lua"
         }
       }
     },

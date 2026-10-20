@@ -158,8 +158,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     # rail visually passed through the center of the open staff doorway.
     # Inspect ACTUAL constructed physical parts, including full-room walls,
     # before removing anything for the cutaway visualization.
-    def actual_parts(name):
-        return [row for row in lines if row[1] == name]
     # October 12 owner correction: exit the LEFT staff door and continue
     # due east along the SAME axial line. No north turn and no closet route.
     # The yellow sunburst window must be at the far (east) sealed end.
@@ -311,18 +309,26 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     closet_walls=actual_parts("Supply closet side wall")
     closet_back=actual_parts("Supply closet solid rear wall")
-    closet_shelves=actual_parts("Supply closet oak shelf")
-    closet_tubs=actual_parts("Supply closet labeled storage tub")
-    assert (len(closet_walls),len(closet_back),len(closet_shelves),
-            len(closet_tubs))==(2,1,3,3), (
-        "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_REAL_STORAGE_CLOSET"
+    closet_ceiling=actual_parts("Supply closet finished ceiling")
+    closet_shelf=actual_parts("Supply closet upper shelf")
+    closet_supports=actual_parts("Supply closet shelf support")
+    closet_bins=actual_parts("Labeled classroom supply bin")
+    closet_coats=actual_parts("Children coat body")
+    closet_sleeves=actual_parts("Children coat sleeve")
+    closet_collars=actual_parts("Children coat collar")
+    assert (len(closet_walls),len(closet_back),len(closet_ceiling),
+            len(closet_shelf),len(closet_supports),len(closet_bins),
+            len(closet_coats),len(closet_sleeves),len(closet_collars))==(
+                2,1,1,1,2,4,5,10,5), (
+        "RIGHT_REAR_DOUBLE_DOOR_MUST_LEAD_TO_A_FINISHED_STORAGE_CLOSET"
     )
     assert abs(float(closet_back[0][11])-36.05)<.05 and (
         float(closet_back[0][6])>=12.4
     ), "RIGHT_CLOSET_REAR_MUST_BE_SEALED_AWAY_FROM_HALL"
     assert sorted(round(float(p[9]),2) for p in closet_walls)==[-5.95,5.95]
+    assert float(closet_ceiling[0][6])>12 and float(closet_ceiling[0][8])>9
     print("DOORWAY_ROUTING_SOURCE_PASS left=staff_hall right=closed_supply_closet "
-          "shelves=3 bins=3 rear_wall=true",flush=True)
+          "ceiling=1 shelf=1 supports=2 bins=4 coats=5 rear_wall=true",flush=True)
     print("PHOTO_HALL_ADJACENT_NATIVE_FACADE_SCENE_PASS two_glazed_doors=true "
           "native_new_parts=18 straight_hall_open=true right_closet_sealed=true "
           "visual_renderer_must_inspect_actual_panes=true",flush=True)
@@ -685,11 +691,13 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     geometry_contract={
         "Student desk top":16,
         "Student chair contoured back collision":16,
-        "Purple corner chair seat":1,
-        "Purple corner chair school back shell":1,
-        "Purple corner chair contoured back collision":1,
-        "Purple corner chair ventilation inset":3,
-        "Purple corner chair tubular leg":4,
+        "Purple comfy chair base collision":1,
+        "Purple comfy chair upholstered base":1,
+        "Purple comfy chair seat cushion":1,
+        "Purple comfy chair back collision":1,
+        "Purple comfy chair back cushion":1,
+        "Purple comfy chair padded arm":2,
+        "Purple comfy chair back tuft":3,
         "Student chair school back shell":16,
         "Student chair school back shell center":16,
         "Student chair school back shell rounded corner":64,
@@ -710,8 +718,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Reading shade sewn binding":2,
         "Reading shade recessed warm diffuser":1,
         "Reading lamp top finial":1,
+        "Photo box fan housing side":2,
+        "Photo box fan housing rail":2,
+        "Photo box fan floor foot":2,
+        "Photo portable fan translucent face":1,
         "Photo-guided wall shape card":9,
-        "Photo-guided right cabinet shape card":8,
+        "Photo-guided right cabinet shape card":9,
         "Photo-guided shape icon":9,
         "Photo-guided cabinet counting strip":1,
         "Counting strip blue top trim":1,
@@ -751,6 +763,27 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert len(matches)==1, f"Expected one {name} physical part; got {len(matches)}"
         return matches[0]
 
+    # October 17 owner correction: keep the photographed low box-fan form,
+    # but move its entire physical family three studs left from the far-right
+    # edge. This constructed-scene check rejects a text-only or partial move.
+    fan_face=only("Photo portable fan translucent face")
+    fan_sides=sorted((row for row in lines
+                      if row[1]=="Photo box fan housing side"),
+                     key=lambda row:float(row[9]))
+    fan_x,fan_z=float(fan_face[9]),float(fan_face[11])
+    assert abs(fan_x-28.0)<.025 and abs(fan_z+30.91)<.04, (
+        "Owner-requested box fan was not moved left as one assembly: "
+        f"face=({fan_x:.3f},{fan_z:.3f})"
+    )
+    assert [round(float(row[9]),3) for row in fan_sides]==[26.445,29.555], (
+        "Box fan housing split or failed to follow the leftward move"
+    )
+    assert max(float(row[10])+float(row[7])/2 for row in fan_sides)<4.1, (
+        "Low classroom box fan became an oversized standing obstruction"
+    )
+    print("OWNER_FAN_LEFT_POSITION_PASS center_x=28.0 "
+          "assembly_parts=13 low_profile=true")
+
     # Low-risk indoor features independently visible in the activity photos.
     # Existing rug centers remain unchanged; activity photos do not prove
     # which furnishings were moved for the cheer class.
@@ -760,46 +793,56 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     word_wall=only("Class notice board")
     assert float(word_wall[13])>.62, "Blue vocabulary wall changed palette"
-    assert abs(float(word_wall[7])-6.2)<.03 and (
+    assert abs(float(word_wall[7])-6.65)<.03 and (
         abs(float(word_wall[8])-18.0)<.03
-        and abs(float(word_wall[10])-7.4)<.03
-        and abs(float(word_wall[11])+2.5)<.03
+        and abs(float(word_wall[10])-9.6)<.03
+        and abs(float(word_wall[11])+2.375)<.03
     ), ("Photo word wall regressed to the small isolated board: " +
         "observed sy={0} sz={1} y={2} z={3}".format(
             word_wall[7],word_wall[8],word_wall[10],word_wall[11]))
-    # Emma identified the purple chair BESIDE the photographed seated adult,
-    # gray supply cabinet, dark filing cabinet and lower-left window AC. The
-    # earlier rear-reading-corner coordinate was a guessed placement, not a
-    # photo-backed final decision. Chair TYPE is still occluded/provisional.
-    corner_seat=only("Purple corner chair seat")
-    corner_back=only("Purple corner chair school back shell")
+    # Emma identified the large purple comfy chair beside the photographed
+    # seated adult, gray storage and window AC. The prior source reused a
+    # small molded student chair; verify the new adult-scale upholstered
+    # silhouette from the actual Luau-built geometry.
+    corner_seat=only("Purple comfy chair seat cushion")
+    corner_back=only("Purple comfy chair back cushion")
+    corner_base=only("Purple comfy chair base collision")
+    back_collider=only("Purple comfy chair back collision")
     cx,cz=float(corner_seat[9]),float(corner_seat[11])
-    assert abs(cx+32.45)<.025 and abs(cz+19.60)<.025, (
-        "Emma's purple chair left the photo-identified AC window corner"
+    assert abs(cx+32.43)<.04 and abs(cz+19.60)<.04, (
+        "Emma's purple comfy chair left the photo-identified AC window corner"
     )
-    # The singular photo-corner seat is rotated to face +X toward the
-    # workstation; the back remains against the window (-X).
-    assert abs(float(corner_back[9])-(cx-.93))<.05 and (
-        abs(float(corner_back[11])-cz)<.04
-    ), "Purple chair backrest no longer faces the A/C wall"
+    assert float(corner_back[9])<cx-1.20 and (
+        abs(float(corner_back[11])-cz)<.08
+    ), "Purple comfy chair backrest no longer faces the A/C wall"
+    assert corner_seat[4].endswith("Fabric") and (
+        corner_back[4].endswith("Fabric")
+    ), "Purple comfy chair lost its upholstered finish"
     for component in (corner_seat,corner_back):
         red,green,blue=(float(component[i]) for i in (12,13,14))
-        assert .40<red<.60 and .20<green<.43 and .57<blue<.78 and (
+        assert .40<red<.65 and .20<green<.50 and .57<blue<.82 and (
             blue>red>green
-        ), "Purple corner chair reverted to blue or another classroom color"
+        ), "Purple comfy chair reverted to blue or another classroom color"
+    assert float(corner_seat[6])>2.8 and float(corner_seat[7])>3.0 and (
+        float(corner_back[6])>3.0 and float(corner_back[7])>3.1
+        and by_name["Purple comfy chair padded arm"]==2
+        and by_name["Purple comfy chair back tuft"]==3
+    ), "Purple comfy chair lost its broad padded silhouette"
+    rug=only("Alphabet rug")
     rug_dist=math.hypot(cx+25.0,cz-14.0)
-    assert rug_dist>10.5, (
-        "Purple chair overlaps the real circular sun/ABC carpet"
-    )
+    assert rug_dist>10.5, "Purple comfy chair overlaps the circular sun/ABC carpet"
     ac=only("Photo window air conditioner housing")
     assert abs(cz-float(ac[11]))<1.2, (
-        "Purple chair is no longer adjacent to the photographed window AC"
+        "Purple comfy chair is no longer adjacent to the photographed window AC"
     )
     radiator=[row for row in lines if row[1]=="Radiator body"
               and abs(float(row[11])-float(ac[11]))<.1]
+    base_x,base_z=float(corner_base[9]),float(corner_base[11])
+    base_world_x_half=float(corner_base[8])/2
     assert len(radiator)==1 and (
-        cx-1.25>float(radiator[0][9])+float(radiator[0][6])/2+.5
-    ), "Purple chair clips the metal radiator below the school AC"
+        base_x-base_world_x_half>
+        float(radiator[0][9])+float(radiator[0][6])/2+.35
+    ), "Purple comfy chair clips the metal radiator below the school AC"
     gray=only("Photo gray corner storage cabinet")
     files=only("Photo black filing cabinet")
     worktable=only("Photo window worktable")
@@ -813,51 +856,46 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     tx,tz=float(worktable[9]),float(worktable[11])
     assert abs(tx+27.50)<.03 and abs(tz+19.60)<.03 and (
         by_name["Photo worktable metal leg"]==4
-    ), "Photo worktable no longer beside the purple chair"
-    assert cx+1.25<tx-float(worktable[6])/2, (
-        "Photo worktable intersects the purple chair seat"
+    ), "Photo worktable no longer beside the purple comfy chair"
+    assert base_x+base_world_x_half<tx-float(worktable[6])/2-.20, (
+        "Photo worktable intersects the purple comfy chair collision base"
     )
-    front=only("Purple corner chair molded front seat roll")
-    assert float(front[9])>cx+.90 and (
-        abs(float(front[11])-cz)<.04
-    ), "Photo corner purple chair points away from the actual workstation"
-    assert float(front[9])+float(front[8])/2<(
-        tx-float(worktable[6])/2-.30
-    ), "Purple chair front roll clips the workstation"
     for desk in (row for row in lines if row[1]=="Student desk edge"):
         x_gap,z_gap=abs(float(desk[9])-tx),abs(float(desk[11])-tz)
         assert (x_gap>(float(desk[6])+float(worktable[6]))/2+.25
                 or z_gap>(float(desk[8])+float(worktable[8]))/2+.25), (
             "Photo worktable intersects a preexisting student desk"
         )
-    assert cx-1.25>-34.4 and -26<cz<-16, (
-        "Purple chair intersects exterior classroom walls"
+    assert base_x-base_world_x_half>-34.4 and -26<base_z<-16, (
+        "Purple comfy chair intersects exterior classroom walls"
     )
-    assert by_name["Student chair seat"]==16, (
-        "Emma's separate purple corner chair replaced a student seat"
-    )
-    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS purple_seats=1 "
-          "original_student_chairs=16 child_scale=true "
+    assert by_name["Student chair seat"]==16 and (
+        by_name["Purple corner chair seat"]==0
+    ), "Purple comfy chair replaced a student seat or old molded copy returned"
+    print("EMMA_PURPLE_CHAIR_GEOMETRY_PASS comfy_seats=1 "
+          "original_student_chairs=16 adult_scale=true upholstered=true "
           "rug_clear=true ac_adjacent=true faces_worktable=true "
           "workstation_clear=true position_provisional=true")
     window_banner=only("Classroom faith window banner")
     assert abs(float(window_banner[9])+36.33)<.025 and (
-        abs(float(window_banner[10])-15.22)<.025
+        abs(float(window_banner[10])-15.30)<.025
     ), "Right-window faith motto no longer follows the photographed wall"
     assert abs(float(window_banner[11])-6)<.05 and (
-        17.40<=float(window_banner[8])<=17.60
+        15.40<=float(window_banner[8])<=15.60
     ), "Right-window faith banner reverted to a single 38-stud generic strip"
     assert .95<=float(window_banner[7])<=1.20 and (
         float(window_banner[10])+float(window_banner[7])/2 < 17
     ), "Classroom motto obstructs acoustic ceiling or window"
-    smore=only("Smore classroom main title")
+    assert by_name["Smore classroom main title"]==0, (
+        "Obsolete overlapping S'more title returned above the right window"
+    )
     smore_headline=only("Smore faith headline")
-    assert abs(float(smore[11])+19)<.025 and (
-        abs(float(smore_headline[11])+19)<.025
-    ), "S'more photo wall lost its original LEFT-window location"
-    assert float(smore[10])<float(smore_headline[10]) and (
-        14.90<float(smore[10])<15.55 and 15.90<float(smore_headline[10])<16.50
-    ), "S'more mural phrase moved below the school window or into ceiling"
+    assert abs(float(smore_headline[11])+19)<.025, (
+        "Faith photo wall lost its original LEFT-window location"
+    )
+    assert 15.40<float(smore_headline[10])<16.00, (
+        "Faith mural phrase moved below the school window or into ceiling"
+    )
     assert by_name["Smore mural pine trunk"]==2 and (
         by_name["Smore mural green canopy"]==4
     ), "Distinct two-pine S'more decoration disappeared"
@@ -1065,7 +1103,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     chalk_margin=(chalk_width-smart_width)/2
     assert 18.5 <= smart_width <= 19.2, "Digital display changed width"
     assert 28.5 <= chalk_width <= 29.5, "Wide chalkboard backing missing"
-    assert abs(smart_x-5.2)<.02 and abs(chalk_x-smart_x)<.05, (
+    assert abs(smart_x)<.02 and abs(chalk_x-smart_x)<.05, (
         "Wheeled screen no longer aligns with chalkboard backdrop"
     )
     assert abs(frame_x-smart_x)<.02 and .94<frame_width-smart_width<1.10, (
@@ -1096,7 +1134,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "White Smartboard top and bottom hardware detached from molded surround"
     )
     side_rails=[row for row in lines if row[1]=="Smartboard protective edge"]
-    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-4.68,15.08], (
+    assert len(side_rails)==2 and sorted(round(float(row[9]),2) for row in side_rails)==[-9.88,9.88], (
         "The two white Smartboard side rails detached from the larger composite housing"
     )
     assert all(abs(float(row[7])-7.15)<.03 for row in side_rails), (
@@ -1126,7 +1164,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     )
     assert len(braces)==1, "Mobile stand is missing its transverse support"
     for items in (supports,collars,feet):
-        assert sorted(round(float(p[9]),2) for p in items)==[.10,10.30], (
+        assert sorted(round(float(p[9]),2) for p in items)==[-5.10,5.10], (
             "Rolling Smartboard support disconnected from the two screen pylons"
         )
     assert sorted(round(float(p[11]),2) for p in wheels)==(
@@ -1157,7 +1195,7 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     chalk_left=chalk_x-chalk_width/2
     easel_right=easel_x+easel_width/2
     easel_clearance=chalk_left-easel_right
-    assert 18.0 <= easel_clearance <= 21.0, (
+    assert 13.5 <= easel_clearance <= 16.0, (
         f"The photo-guided larger chalkboard intersects the art easel: {easel_clearance:.2f}"
     )
     assert abs(easel_x+31.0)<.02, "The visually dominant prior easel returned"
@@ -1255,9 +1293,12 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     tote_faces=[v for v in lines if v[1]=="Bin front and back"]
     tote_sides=[v for v in lines if v[1]=="Bin side"]
     files=[v for v in lines if v[1]=="Stored classroom file folder"]
-    assert len(shelves)==3 and len(dividers)==7 and (
+    assert len(shelves)==2 and len(dividers)==7 and (
         len(tote_faces)==24 and len(tote_sides)==24
     ), "Original open school cabinetry geometry was replaced or duplicated"
+    assert all(float(v[10])-float(v[7])/2>.50 for v in shelves), (
+        "Cubbie shelf is buried below the finished oak floor"
+    )
     assert len(files)==6, "Six restrained classroom document folders are missing"
     wood_items=[cabinet]+shelves+dividers
     assert all(v[4].endswith("Wood") and
@@ -1298,11 +1339,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Built-in recessed dark toe kick":1,
         "Built-in deep hardwood cornice":1,
         "Built-in stepped cornice edge":1,
-        "Tall cabinet recessed panel cross rail":8,
-        "Tall cabinet antiqued keyhole":2,
-        "Tall cabinet hardwood cornice":1,
-        "Tall cabinet cornice routed lip":1,
-        "Tall cabinet recessed toe kick":1,
         "Library hardwood front pilaster":3,
         "Library shelf front fascia":3,
         "Library upper molded cornice":1,
@@ -1313,6 +1349,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert by_name[name]==count, (
             f"Architectural carpentry detail missing or duplicated: {name}"
         )
+    assert by_name["Tall storage cabinet"]==0 and by_name["Cabinet door panel"]==0, (
+        "Removed freestanding cabinet returned behind the staff doorway"
+    )
     cubby_stiles=actual_parts("Built-in walnut cubby face stile")
     assert sorted(round(float(s[9]),2) for s in cubby_stiles)==[
         7.50,12.0,16.50,21.0,25.50,30.0,34.50
@@ -1635,7 +1674,6 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Teacher laptop base":8,
         "Pencil cup":6,
         "Tissue box":7,
-        "Teacher desk wooden stationery tray":7,
         "Teacher note paper":7,
     }
     for label,height_axis in supported.items():
@@ -1648,7 +1686,10 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         assert 18.75<=float(item[9])<=31.25 and -27.6<=float(item[11])<=-22.4, (
             f"Teacher object {label} exceeds desktop footprint"
         )
-    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true tray=true paper=true")
+    assert by_name["Teacher desk wooden stationery tray"]==0 and (
+        by_name["Teacher wooden colored pencil"]==0
+    ), "Removed overlapping teacher stationery returned"
+    print("TEACHER_DESK_SUPPORT_PASS laptop=true cup=true tissues=true paper=true overlapping_tray_removed=true")
 
     # Verify that the optional fallback silhouette update stays lightweight:
     # two slim molded edge returns per chair, with the existing collidable
@@ -1704,18 +1745,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
           "native_block_insets=true photo_guided_not_real_holes=true "
           "collision_unchanged=true mobile_parts_saved=80 native_iphone_pending")
 
-    # Visible manufactured school-desk legs must meet a finish at y=.5.
-    # The old broad foot remains an invisible collider of identical size;
-    # two open rounded steel runners and four glides now sit at floor height.
+    # Visible manufactured school-desk legs meet the finish at y=.5.
+    # Two rounded steel runners and four glides per desk remain at floor height;
+    # the old T-feet were entirely below the collidable floor and must not return.
     runners=[r for r in lines if r[1]=="Desk contoured base runner"]
     feet=[r for r in lines if r[1]=="Desk foot"]
     glides=[r for r in lines if r[1]=="Desk rubber glide"]
-    assert len(runners)==len(feet)==32 and len(glides)==64, (
-        "Sixteen desk bases lost their two runner/glide assemblies"
-    )
-    assert all(float(r[5])>=.99 and
-               abs(float(r[10])-.18)<.015 for r in feet), (
-        "Original collision footprint became visible or moved off geometry"
+    assert len(runners)==32 and len(feet)==0 and len(glides)==64, (
+        "Sixteen desk bases lost visible runner/glide geometry or restored "
+        "buried T-feet"
     )
     assert all(r[3].endswith("Cylinder") and
                r[4].endswith("Metal") and
@@ -1731,9 +1769,9 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
         "Rubber desk runner glides are no longer supported on finished floor"
     )
     print("PHOTO_MANUFACTURED_DESK_BASE_PASS desks=16 "
-          "invisible_original_foot_colliders=32 "
+          "buried_t_foot_parts=0 removed_buried_parts=32 "
           "rounded_visible_runners=32 floor_supported_glides=64 "
-          "original_navigation_preserved=true")
+          "tubular_leg_collision_preserved=true")
     tray_rails=[r for r in lines if r[1]=="Book tray side"]
     assert len(tray_rails)==32, "Underdesk side lips must stay paired for all desks"
     for r in tray_rails:

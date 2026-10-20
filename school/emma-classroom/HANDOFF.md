@@ -1,3 +1,123 @@
+## October 16, 2026 — owner nine-photo classroom alignment pass
+
+**Branch:** existing isolated draft PR #355. No merge, promotion or Roblox
+publication was performed.
+
+**Implemented:** removed the freestanding cabinet behind the staff doorway;
+closed and polished the centered supply-closet doors; corrected the tissue to
+clean white; removed the striped wooden stationery tray; separated notebook,
+pencil and name-strip zones on all sixteen desks; centered the chalkboard,
+Smartboard, alphabet, handwriting strip and cross; aligned and evenly spaced
+the jobs, BE KIND and word-wall displays; rebuilt BE KIND with four crisp
+native value rows; mirrored the rear counting/shape decorations around the
+closet; made the two window decoration spans equal around the centered clock;
+and raised the teacher nameplate above the avatar hairline.
+
+**Actually tested:** all changed Luau compiles; constructed scene export passes
+at 2,997 physical Parts; owner-polish audit passes all nine views, all sixteen
+desks and its moved-Smartboard negative mutation; updated word-wall, window,
+photo-landmark, glazed-door, literacy-wall and notebook audits pass, including
+their adversarial mutations. Native Roblox/iPhone visual acceptance remains
+unverified.
+
+**Release hold:** keep PR #355 draft. Source checks do not authorize merge or
+publication; retain the existing native-device and release-security gates.
+
+---
+
+## October 15, 2026 — second classroom polish / maintenance pass
+
+**Branch:** existing isolated PR #355, stacked on straight-hallway draft
+#351. No protected-main merge, new Roblox publication, promotion or
+teacher-portrait/educational-gameplay changes.
+
+**Implemented:**
+- Retained all four original radiator front panels, their dimensions and
+  placement. Replaced twenty shallow decorative metal micro-Parts with
+  five original-style native SurfaceGui vent lines per panel.
+- Preserved the same visible slot dimensions, light metallic palette and
+  physical colliders; grille surface faces into the room. Independent
+  headless rendering cannot show native SurfaceGui artwork.
+- Added actual-constructed-Luau regression for original radiator location,
+  per-slat size/spacing/opacity, correct face, nonblocking fixtures, and
+  five deliberate adversarial defects. Integrated into replica CI.
+- Added a fail-fast two-camera contract for fixed hallway-window and
+  neighboring-oak-door screenshots. Camera drift that could invalidate
+  strict pixel ROIs now fails before expensive render execution.
+
+**Actually tested:**
+- Source commit e45b57cb7bef1f1cc6d00fadb44ccfba12a1be40:
+  exact-head Emma Classroom Replica CI run #38833571097 **PASS**.
+  Real constructed 3D scene = **3,029 physical Parts**, 20 fewer than
+  prior pass; stricter 3,050 and general 3,100 ceilings pass.
+  New radiator QA, five negative mutations, geometry, corridor, closet,
+  Rojo/Luau and release-boundary tests all pass.
+- Updated camera-lock code added in commit
+  a5abaad50fe90628e3e861311ee78fa63307dbb7;
+  exact-head Replica CI run #38833727538 **PASS** (including the
+  camera-provenance fixture and source geometry).
+- Existing previous-head run #38830876019 had both fast 9-view
+  and full 24-view image work **PASS**. Latest 3029-part render
+  workflow has been requested and must be checked independently.
+
+**Not tested / still blocked:** Actual Roblox Studio and mobile device
+lighting, touch movement, frame rate, grilles' native SurfaceGui appearance,
+teacher portrait quality, photo-side-by-side parity, and live build release.
+The connected laptop was offline. Do not infer native quality from the
+headless visual tool or green source-only regression checks.
+
+**Acceptance:** Remain a draft PR. Never bypass signed publish guards,
+protected integration branches, asset ownership or independent native review.
+
+---
+## October 15, 2026 — isolated classroom polish / code maintenance
+
+**Scope:** Stacked on straight-staff-hall draft PR #351 via new draft PR #355.
+No merge, publication, release marker, portrait NPC, teacher-data pipeline,
+old build, platform credentials, or workflow permissions changed.
+
+**Implemented:**
+- Six static noncolliding original-red Fabric stitched piping/hem details
+  on the existing gingham teaching table; retains same weaving, room
+  coordinates, 16 desk/chair pairs, word wall, windows, and sealed closet.
+- Consolidated four very small physical teacher note rules into four native
+  SurfaceGui Frames on the existing note Part, saving four physical Parts.
+  Combined scene change is +2 physical Parts over the 3,047-Part base.
+- Room.lua's shared Part constructor preserves floor/chair-leg/desk/wall
+  collision and touch semantics. Noncolliding decorations are now excluded
+  from raycast and touch event work; no collision geometry is changed.
+- Kept the far hallway yellow-window semantic image thresholds unchanged
+  while recalibrating its old camera-specific ROIs against directly inspected
+  real rendered imagery from #351. All eight sun-ray checks preserved.
+- Removed a repeated actual-scene helper; expanded genuine constructed
+  Luau stationery/fabric, collider, raycast and synthetic mutation tests.
+
+**Actually tested at source commit c0fd7c76a19835dbfb8534cce69cfcafbbc4cad0:**
+- Exact-head Emma Classroom Replica CI: **PASS** #38829948890.
+- Source scene count **3,049**, strict 3,050-part and broad 3,100-part
+  limits pass; hallway/closet, photo landmark, native chair and geometry
+  regression and mutation controls pass; Luau and Rojo build pass.
+- Emma Classroom CI, school foundation, education and progression checks PASS.
+- Reproduced earlier failure (3,055 Parts above cap) and repaired without
+  increasing the existing threshold. Restored chair-leg touch contract after
+  a separate exact-Luau negative test caught its regression.
+- Previous source-rendered far window frame visibly existed but old test
+  ROI was stale. The corrected exact-image ROIs were independently measured
+  at 531/489 gold pixels left/right (>170) and 269/251 mullions (>120);
+  8/8 sun-ray sectors visible in the source-derived 1920x1080 screenshot.
+
+**Not tested / known limits:** Current source-derived visual run
+#38829948899 still requires its exact-head conclusion; native Roblox Studio
+and iPhone/iPad render, controls, real collision, performance and photo
+comparison cannot be certified by these source tests. Remote Studio device
+was offline. Source-built preview images are not native game captures.
+
+**Release:** Keep PR #355 a draft. Do not merge, promote, publish or
+claim live photo fidelity from passing static/source validations. Apply
+existing release-security and native device approval gates.
+
+---
+
 ## October 12, 2026 â€” owner-requested classroom photo detail candidate
 
 Base: `4dd2547386ff4b1c6e42f0a10ab86de6c91f6233`, existing draft PR #343.
