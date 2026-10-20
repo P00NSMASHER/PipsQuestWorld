@@ -1,0 +1,13 @@
+requested-mode: restore-last-confirmed-classroom-v109-binary
+authorization: user-approved-2026-10-20-revert-to-last-version
+previous-published-version: 109
+rejected-review-version: 113
+product-source-sha: d88ec24bdb51b3f4fba658e8bfd7a513009df433
+expected-rbxl-sha256: 6c6fee07f572d76ec9b171a889467524841feeac5786ebc4f0ea72983fdd1829
+source-branch: rollback/emma-restore-v109-20261020-d88ec24
+source-parent-sha: 88b8e4232ff08e09e34af0f07dec7ec676a4e8d1
+target-universe: 10769455759
+target-place: 114603280760042
+build-project: school/emma-showroom.project.json
+native-acceptance: remains-pending
+release-acceptance: HOLD
