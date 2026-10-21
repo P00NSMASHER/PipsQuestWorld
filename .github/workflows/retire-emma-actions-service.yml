@@ -38,11 +38,15 @@ jobs:
           base="repos/$GITHUB_REPOSITORY/actions/workflows"
           test "$(gh api "$base/377994065" --jq .path)" = '.github/workflows/emma-curriculum-refresh.yml'
           test "$(gh api "$base/378018343" --jq .path)" = '.github/workflows/emma-curriculum-infra-ci.yml'
-          gh api -X PUT "$base/377994065/disable"
-          gh api -X PUT "$base/378018343/disable"
           for id in 377994065 378018343; do
             state="$(gh api "$base/$id" --jq .state)"
-            test "$state" = disabled_manually
+            if [[ "$state" == active ]]; then
+              gh api -X PUT "$base/$id/disable"
+            elif [[ "$state" != disabled_manually ]]; then
+              echo "::error::Unexpected legacy workflow state for $id: $state"
+              exit 1
+            fi
+            test "$(gh api "$base/$id" --jq .state)" = disabled_manually
             echo "RETIRED_WORKFLOW_DISABLED: $id"
           done
       - name: Disable this temporary one-time workflow registration
