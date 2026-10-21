@@ -45,3 +45,14 @@ jobs:
             test "$state" = disabled_manually
             echo "RETIRED_WORKFLOW_DISABLED: $id"
           done
+      - name: Disable this temporary one-time workflow registration
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="repos/$GITHUB_REPOSITORY/actions/workflows"
+          test "$(gh api "$base/391847649" --jq .path)" = '.github/workflows/retire-emma-actions-service.yml'
+          gh api -X PUT "$base/391847649/disable"
+          test "$(gh api "$base/391847649" --jq .state)" = disabled_manually
+          echo 'ONE_SHOT_WORKFLOW_DISABLED: 391847649'
