@@ -1,0 +1,47 @@
+name: One-time cleanup of retired Emma curriculum workflow registrations
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/retire-emma-actions-service.yml'
+
+permissions: {}
+
+jobs:
+  disable_retired_registrations:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == 'P00NSMASHER/PipsQuestWorld' && github.event.pull_request.head.ref == 'cleanup/disable-emma-actions-service-20261021' && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Check repo identity and exact source retirement
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = 'P00NSMASHER/PipsQuestWorld'
+          test ! -e .github/workflows/emma-curriculum-refresh.yml
+          test ! -e .github/workflows/emma-curriculum-infra-ci.yml
+      - name: Disable the two obsolete registered workflows
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="repos/$GITHUB_REPOSITORY/actions/workflows"
+          test "$(gh api "$base/377994065" --jq .path)" = '.github/workflows/emma-curriculum-refresh.yml'
+          test "$(gh api "$base/378018343" --jq .path)" = '.github/workflows/emma-curriculum-infra-ci.yml'
+          gh api -X PUT "$base/377994065/disable"
+          gh api -X PUT "$base/378018343/disable"
+          for id in 377994065 378018343; do
+            state="$(gh api "$base/$id" --jq .state)"
+            test "$state" = disabled_manually
+            echo "RETIRED_WORKFLOW_DISABLED: $id"
+          done
