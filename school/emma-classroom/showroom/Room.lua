@@ -5,6 +5,7 @@ local Workspace=game:GetService("Workspace")
 local Lighting=game:GetService("Lighting")
 
 local ArtPass=require(script.Parent:WaitForChild("ArtPass"))
+local SecondGradeRoom=require(script.Parent:WaitForChild("SecondGradeRoom"))
 local World={}
 
 local P={
@@ -2641,6 +2642,8 @@ function World.build()
     local old=Workspace:FindFirstChild("ABVMClassroomReplica");if old then old:Destroy() end
     local root=Instance.new("Folder");root.Name="ABVMClassroomReplica";root.Parent=Workspace
     root:SetAttribute("ArtDirection","EmmaRoomOriginalArtV9")
+    root:SetAttribute("ExistingClassroomGrade",1)
+    root:SetAttribute("AcrossHallClassroomGrade",2)
     applyLighting(root)
 
     -- Architectural shell.
@@ -2731,6 +2734,7 @@ function World.build()
     buildBackDoorAndHall(root)
     buildTeacherEntry(root)
     alignHallwayWithStaffExit(root)
+    SecondGradeRoom.build(root)
     buildClassroomTexture(root)
     buildReadingCorner(root)
     buildPhotoWindowWorkstation(root)

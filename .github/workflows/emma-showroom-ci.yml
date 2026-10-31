@@ -138,6 +138,13 @@ jobs:
           python3 school/emma-classroom/showroom/audit_owner_polish.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
+      - name: Verify second-grade photo landmarks and across-hall entry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 school/emma-classroom/showroom/audit_second_grade_room.py \
+            --luau "$RUNNER_TEMP/tools/luau/luau"
+
       - name: Check original anonymous hallway art and mobile UI draw budget
         shell: bash
         run: |
@@ -175,8 +182,8 @@ jobs:
           set -euo pipefail
           # Evaluate the actual classroom Luau constructors before the costly
           # independent screenshot job. The exporter checks physical layout,
-          # all 16 desk/chair pairs, object support, and the existing <=3100
-          # part budget. Keep the same thresholds used by visual CI.
+          # all first-grade and second-grade desk/chair pairs, object support,
+          # and the explicit <=3650 two-room physical-part budget.
           python3 school/emma-classroom/showroom/export_source_scene.py \
             --luau "$RUNNER_TEMP/tools/luau/luau" \
             --out "$RUNNER_TEMP/emma-room-ci-source.rbxmx"

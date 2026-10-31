@@ -37,6 +37,9 @@
         "World": {
           "$path": "emma-classroom/showroom/Room.lua"
         },
+        "SecondGradeRoom": {
+          "$path": "emma-classroom/showroom/SecondGradeRoom.lua"
+        },
         "ArtPass": {
           "$path": "emma-classroom/showroom/ArtPass.lua"
         },

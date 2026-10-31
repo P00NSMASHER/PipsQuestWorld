@@ -1,3 +1,15 @@
+# ABVM first/second-grade across-hall candidate (2026-10-31)
+
+Implemented on `feat/second-grade-classroom-replica-20261031`: retained the existing first-grade room, opened a true doorway directly across its vestibule, and added the photo-matched second-grade room with 20 burgundy-chair desks, dual windows/radiators, blackboard/Smartboard wall, polka-dot rug, coat storage, activity/teacher areas, and private-reference-safe decor.
+
+Actually tested: all showroom Luau compilation; Rojo assembly; 3,571-Part complete source construction; dedicated second-grade positive/negative audit; all original room/hallway audits; five supported floors and 11 continuous routes including the new room; source-derived 1920x1080 visual review from the hall, entry, board, windows, teacher area and cutaway.
+
+Not tested: native Roblox Studio Play rendering/physics, physical iPhone performance, or device visual acceptance. Not published or pushed. Source-derived screenshots do not render every SurfaceGui label and are not native acceptance.
+
+Private source photos remain outside this repository under the October 31 task folder. Do not add them to Git or embed them in Roblox.
+
+---
+
 # ABVM Grade 2 Storytime Corner Handoff (2026-10-16)
 
 **Scope:** Owner screenshot request only; large purple upholstered armchair in the front-right corner of the ABC/sun reading rug, and move the original box fan left along the teaching wall. The existing 16 student seats, the smaller purple molded chair behind the teacher desk, all schoolwork, walls, rugs, hallway, and Roblox IDs are unchanged.

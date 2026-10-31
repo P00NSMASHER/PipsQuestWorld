@@ -1,3 +1,13 @@
+## October 31 — first/second-grade across-hall replica
+
+The owner clarified the existing blue-chair/round-rug room is first grade. The visually consistent burgundy-chair/polka-rug references now drive a separate second-grade classroom directly across the vestibule. Raw reference images remain private and are not packaged.
+
+Implemented: true split-wall oak-and-glass entrance; warm yellow/dark-oak shell; drop ceiling; two window/radiator banks; long chalkboard plus Smartboard/alphabet/cross; 20 desk/chair stations; coat wall; polka rug; reading/activity corner; teacher workstation and classroom clutter.
+
+Verified: Luau/Rojo build, exact constructed geometry (3,571 Parts), second-grade negative controls, original-room regression suite, and 11 continuously floor-supported routes. Source-derived visual renders were inspected. Native Studio/iPhone rendering, device FPS/collision, and publication remain pending.
+
+---
+
 ## October 16 — correct Grade 2 release source, teacher retained
 
 The owner identified the ABVM Grade 2 game with Mrs. Benulis at the front

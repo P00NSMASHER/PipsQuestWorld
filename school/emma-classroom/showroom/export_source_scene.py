@@ -27,6 +27,7 @@ def generate_luau() -> str:
     fixture = fixture.split("local assets=Instance.new", 1)[0]
     # Load the actual same Luau modules as the classroom-only Rojo project.
     art = (SHOWROOM / "ArtPass.lua").read_text(encoding="utf-8")
+    second_grade = (SHOWROOM / "SecondGradeRoom.lua").read_text(encoding="utf-8")
     room = (SHOWROOM / "Room.lua").read_text(encoding="utf-8")
     gallery = (SHOWROOM / "GalleryPass.lua").read_text(encoding="utf-8")
     script = fixture + "\n" + """
@@ -34,13 +35,19 @@ local function loadArtPass()
 """ + art + """
 end
 local ArtPass=loadArtPass()
+local function loadSecondGradeRoom()
+""" + second_grade + """
+end
+local SecondGradeRoom=loadSecondGradeRoom()
 local script={Parent={WaitForChild=function(_,name)
-    assert(name=="ArtPass","Only real showroom art is permitted")
-    return ArtPass
+    if name=="ArtPass" then return ArtPass end
+    if name=="SecondGradeRoom" then return SecondGradeRoom end
+    error("Only real showroom architecture is permitted: "..tostring(name))
 end}}
 local nativeRequire=require
 local require=function(module)
     if module==ArtPass then return ArtPass end
+    if module==SecondGradeRoom then return SecondGradeRoom end
     return nativeRequire(module)
 end
 local function loadRoom()
@@ -136,6 +143,11 @@ CUTAWAY_OCCLUDERS={
     "Side hall ceiling","Staff entry outer east wall",
     "Staff entry east wall glazed brick","Photo hall continuous north wall",
     "Photo hall continuous north full-height brick",
+    "Second grade acoustic ceiling","Second grade ceiling grid line",
+    "Second grade ceiling grid cross","Second grade front wall",
+    "Second grade coat wall structure","Second grade west wall south",
+    "Second grade west wall north","Second grade window wall lower",
+    "Second grade window wall upper","Second grade window wall pier",
     "Supply closet side wall","Supply closet solid rear wall",
     # Keep the constructed forest visible in aerial snapshots so it can be
     # reviewed. Player-eye screenshots always use the full, uncut room.
@@ -168,14 +180,15 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     rear=actual_parts("Photo hall rear blue-gray wall")
     ends=actual_parts("Photo hall end cap")
     side_caps=actual_parts("Side corridor end wall")
-    staff_east=actual_parts("Staff entry outer east wall")
+    staff_east=actual_parts("Second grade hall-facing entry wall")
     transitions=actual_parts("Staff hallway floor transition strip")
-    east_brick=actual_parts("Staff entry east wall glazed brick")
+    east_brick=actual_parts("Second grade hall-facing glazed brick")
+    east_header=actual_parts("Second grade hall-facing door header glazed brick")
     west_brick=actual_parts("Photo hall continuous north full-height brick")
     west_headers=actual_parts("Photo hall continuous north door header brick")
     assert (len(floor_parts),len(rear),len(north),len(ends),len(side_caps),
-            len(staff_east),len(transitions),len(east_brick),len(west_brick),
-            len(west_headers))==(1,1,1,1,1,1,1,1,3,2), (
+            len(staff_east),len(transitions),len(east_brick),len(east_header),
+            len(west_brick),len(west_headers))==(1,1,1,1,1,2,1,2,1,3,2), (
         "PERPENDICULAR_CORRIDOR_STRUCTURE_MISSING"
     )
     assert (abs(float(floor_parts[0][9])-48.5)<.03
@@ -198,16 +211,18 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
             and abs(float(side_caps[0][11])-4.25)<.05
             and float(side_caps[0][6])>=21.8
             and float(side_caps[0][9])-float(side_caps[0][6])/2>=37.74
-            and abs(float(staff_east[0][9])-59.6)<.05
-            and float(staff_east[0][8])>=22.9), (
+            and all(abs(float(panel[9])-59.6)<.05 for panel in staff_east)
+            and all(float(panel[7])>=12.9 for panel in staff_east)
+            and min(float(panel[11])-float(panel[8])/2 for panel in staff_east)<=4.26
+            and max(float(panel[11])+float(panel[8])/2 for panel in staff_east)>=27.29), (
         "PERPENDICULAR_CORRIDOR_VESTIBULE_SKY_GAP"
     )
     assert (abs(float(transitions[0][9])-48.48)<.05
             and abs(float(transitions[0][11])-26.72)<.05
             and float(transitions[0][6])>=22.3
-            and abs(float(east_brick[0][9])-59.02)<.05
-            and float(east_brick[0][8])>=22.7
-            and float(east_brick[0][7])>=12.6
+            and all(abs(float(panel[9])-59.02)<.05 for panel in east_brick+east_header)
+            and all(float(panel[7])>=12.6 for panel in east_brick)
+            and float(east_header[0][10])-float(east_header[0][7])/2>10.9
             and all(float(panel[7])>=12.6 for panel in west_brick)
             and all(float(panel[7])>=2.0 for panel in west_headers)), (
         "PERPENDICULAR_CORRIDOR_FULL_BRICK_FINISH_MISSING"
@@ -1764,7 +1779,11 @@ def export_scene(luau: str, output: Path, cutaway: bool=False):
     print("STUDENT_FURNITURE_SUPPORT_PASS books=16 pencils=16")
 
     # Avoid converting one cheap school chair into hundreds of parts.
-    assert len(lines)<=3100, f"Excessive mobile classroom geometry: {len(lines)}"
+    # The first-grade room remains under its established 3,100-Part ceiling.
+    # A second independently furnished room necessarily expands the place;
+    # cap the combined two-room school at 3,650 physical Parts and separately
+    # audit the new room's complete twenty-station inventory.
+    assert len(lines)<=3650, f"Excessive mobile two-classroom geometry: {len(lines)}"
     for required in ("Student desk top", "Interactive smartboard", "ClassroomReplicaSpawn", "Front teaching rug"):
         assert required in names, "Missing room object "+required
     # Use an RBXMX scene with exactly the constructed physical parts.
