@@ -2,7 +2,7 @@
 
 Implemented on `feat/second-grade-classroom-replica-20261031`: retained the existing first-grade room, opened a true doorway directly across its vestibule, and added the photo-matched second-grade room with 20 burgundy-chair desks, dual windows/radiators, blackboard/Smartboard wall, polka-dot rug, coat storage, activity/teacher areas, and private-reference-safe decor.
 
-Actually tested: all showroom Luau compilation; Rojo assembly; 3,571-Part complete source construction; dedicated second-grade positive/negative audit; all original room/hallway audits; five supported floors and 11 continuous routes including the new room; source-derived 1920x1080 visual review from the hall, entry, board, windows, teacher area and cutaway.
+Actually tested: all showroom Luau compilation; Rojo assembly; 3,637-Part complete source construction; dedicated second-grade positive/negative audit; all original room/hallway audits; five supported floors and 11 continuous routes including the new room; source-derived 1920x1080 visual review from the hall, entry, board, windows, teacher area and cutaway. The fidelity pass added physical student-work sheets, anchor charts, lesson cards, clipped window work, and ceiling leaves while staying below the 3,650-Part cap.
 
 Not tested: native Roblox Studio Play rendering/physics, physical iPhone performance, or device visual acceptance. Not published or pushed. Source-derived screenshots do not render every SurfaceGui label and are not native acceptance.
 

@@ -4,7 +4,7 @@ The owner clarified the existing blue-chair/round-rug room is first grade. The v
 
 Implemented: true split-wall oak-and-glass entrance; warm yellow/dark-oak shell; drop ceiling; two window/radiator banks; long chalkboard plus Smartboard/alphabet/cross; 20 desk/chair stations; coat wall; polka rug; reading/activity corner; teacher workstation and classroom clutter.
 
-Verified: Luau/Rojo build, exact constructed geometry (3,571 Parts), second-grade negative controls, original-room regression suite, and 11 continuously floor-supported routes. Source-derived visual renders were inspected. Native Studio/iPhone rendering, device FPS/collision, and publication remain pending.
+Verified: Luau/Rojo build, exact constructed geometry (3,637 Parts), second-grade negative controls, original-room regression suite, and 11 continuously floor-supported routes. A physical decor-density pass added student work, anchor charts, board cards, window worksheets, and ceiling leaves. Source-derived visual renders were inspected. Native Studio/iPhone rendering, device FPS/collision, and publication remain pending.
 
 ---
 

@@ -403,6 +403,84 @@ local function buildActivityCorner(room:Folder)
     end
 end
 
+local function buildReferenceDecor(room:Folder)
+    -- The photographed room is visually dense. These physical layers remain
+    -- visible even when a renderer cannot display SurfaceGui lettering.
+    local paperColors={
+        Color3.fromRGB(240,231,204),Color3.fromRGB(226,235,226),
+        Color3.fromRGB(235,222,205),Color3.fromRGB(220,230,238),
+    }
+    local accentColors={
+        Color3.fromRGB(169,72,82),Color3.fromRGB(55,119,154),
+        Color3.fromRGB(205,145,55),Color3.fromRGB(72,136,91),
+    }
+
+    -- Student work clipped across the long oak coat wall.
+    for i=0,11 do
+        local x=66.5+i*5.05
+        local paper=makePart(room,"coat wall student paper",Vector3.new(4.15,3.0,.08),
+            CFrame.new(x,10.25,48.24),paperColors[i%4+1],
+            Enum.Material.SmoothPlastic,false)
+        paper.CanQuery=false
+        local heading=makePart(room,"coat wall student paper heading",Vector3.new(3.35,.28,.07),
+            CFrame.new(x,11.22,48.18),accentColors[i%4+1],
+            Enum.Material.SmoothPlastic,false)
+        heading.CanQuery=false
+    end
+
+    -- Layered anchor charts beside the doorway and teacher station.
+    for i=0,3 do
+        local z=3.0+i*7.5
+        local chart=makePart(room,"west wall anchor chart",Vector3.new(.08,5.6,6.15),
+            CFrame.new(60.16,10.2,z),paperColors[(i+1)%4+1],
+            Enum.Material.SmoothPlastic,false)
+        chart.CanQuery=false
+        for line=0,2 do
+            local strip=makePart(room,"west wall anchor chart strip",Vector3.new(.07,.34,4.7),
+                CFrame.new(60.10,11.55-line*1.25,z),accentColors[(i+line)%4+1],
+                Enum.Material.SmoothPlastic,false)
+            strip.CanQuery=false
+        end
+    end
+
+    -- Lesson cards pinned to both exposed sides of the slate board.
+    for i=0,7 do
+        local z=(i<4) and (-7.0+i*3.8) or (27.0+(i-4)*3.8)
+        local card=makePart(room,"chalkboard lesson card",Vector3.new(.08,1.25,3.05),
+            CFrame.new(127.16,10.45,z),paperColors[i%4+1],
+            Enum.Material.SmoothPlastic,false)
+        card.CanQuery=false
+    end
+
+    -- Clipped worksheets beneath the two window banks.
+    for i=0,5 do
+        local x=73.0+i*8.4
+        local sheet=makePart(room,"window clipped worksheet",Vector3.new(3.7,1.45,.06),
+            CFrame.new(x,4.0,-17.66),paperColors[(i+2)%4+1],
+            Enum.Material.SmoothPlastic,false)
+        sheet.CanQuery=false
+        local clip=makePart(room,"window worksheet clip",Vector3.new(.42,.22,.10),
+            CFrame.new(x,4.78,-17.58),Color3.fromRGB(152,94,77),
+            Enum.Material.Metal,false)
+        clip.CanQuery=false
+    end
+
+    -- Small autumn leaves suspended from the drop ceiling, as photographed.
+    for i,position in ipairs({
+        Vector3.new(77,15.9,4),Vector3.new(96,16.2,21),Vector3.new(114,15.8,36),
+    }) do
+        makePart(room,"ceiling leaf thread",Vector3.new(.04,1.9,.04),
+            CFrame.new(position.X,position.Y+1.0,position.Z),
+            Color3.fromRGB(113,98,75),Enum.Material.SmoothPlastic,false)
+        local leaf=makePart(room,"hanging autumn leaf",Vector3.new(.07,.65,1.0),
+            CFrame.new(position)*CFrame.Angles(math.rad(7*i),math.rad(18*i),math.rad(18-8*i)),
+            (i==2) and Color3.fromRGB(151,71,40) or Color3.fromRGB(190,103,38),
+            Enum.Material.Fabric,false)
+        leaf.Shape=Enum.PartType.Cylinder
+        leaf.CanQuery=false
+    end
+end
+
 local function buildHallDoor(root:Instance,room:Folder)
     local oldWall=root:FindFirstChild("Staff entry outer east wall")
     local oldBrick=root:FindFirstChild("Staff entry east wall glazed brick")
@@ -520,6 +598,7 @@ function SecondGradeRoom.build(root:Instance):Folder
     buildCoatWall(room)
     buildTeacherArea(room)
     buildActivityCorner(room)
+    buildReferenceDecor(room)
 
     local rug=makePart(room,"black multicolor polka-dot rug",Vector3.new(15.5,.10,13.0),
         CFrame.new(112.0,.56,-11.1),Color3.fromRGB(28,29,31),Enum.Material.Fabric,false)

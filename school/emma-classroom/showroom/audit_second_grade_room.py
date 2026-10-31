@@ -113,7 +113,7 @@ local function verify()
             externalImages+=1
         end
     end
-    assert(roomParts>=500 and roomParts<=600,
+    assert(roomParts>=620 and roomParts<=650,
         "SECOND_GRADE_MOBILE_PART_BUDGET_CHANGED "..roomParts)
     assert(externalImages==0,
         "SECOND_GRADE_PRIVATE_PHOTO_OR_EXTERNAL_IMAGE_EMBEDDED")

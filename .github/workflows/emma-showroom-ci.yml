@@ -244,7 +244,7 @@ jobs:
           python3 school/emma-classroom/showroom/audit_native_chair_vents.py \
             --luau "$RUNNER_TEMP/tools/luau/luau"
 
-      - name: Audit submerged chair geometry and reserve 70 mobile Parts of headroom
+      - name: Audit submerged chair geometry and the two-room mobile Part ceiling
         shell: bash
         run: |
           set -euo pipefail
