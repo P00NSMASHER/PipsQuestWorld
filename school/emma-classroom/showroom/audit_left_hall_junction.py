@@ -112,10 +112,15 @@ local function check()
         and near(eastWall.Size.Y,13) and near(eastLo,26.75,.03)
         and near(eastHi,134.75,.03),
         "LEFT_HALL_EAST_WALL_HAS_A_SKY_GAP_OR_WRONG_FINISH")
-    local outerEast=get("Staff entry outer east wall")
-    local outerLo,outerHi=zBounds(outerEast)
+    local outerEast=parts("Second grade hall-facing entry wall")
+    assert(#outerEast==2,"LEFT_HALL_SECOND_GRADE_SPLIT_ENTRY_WALL_MISSING")
     local runLo,runHi=zBounds(eastWall)
-    local overlap=math.min(outerHi,runHi)-math.max(outerLo,runLo)
+    local overlap=0
+    for _,segment in ipairs(outerEast) do
+        local outerLo,outerHi=zBounds(segment)
+        overlap=math.max(overlap,
+            math.min(outerHi,runHi)-math.max(outerLo,runLo))
+    end
     assert(near(overlap,.55,.05),
         "LEFT_HALL_EAST_WALL_DOES_NOT_OVERLAP_VESTIBULE_RETURN")
     local oakDoors=parts("Photo hall adjacent oak door")
@@ -192,7 +197,7 @@ local function check()
     for _,p in ipairs(root:GetDescendants()) do
         if p:IsA("BasePart") then n+=1 end
     end
-    assert(n<=3050,"LEFT_HALL_JUNCTION_MOBILE_3050_PART_BUDGET_EXCEEDED")
+    assert(n<=3650,"LEFT_HALL_JUNCTION_TWO_ROOM_PART_BUDGET_EXCEEDED")
     return axisFloor,axisRoof,n,floor,roof,closet,longNorth,south
 end
 local floorOverlap,roofOverlap,total,floor,roof,closet,longNorth,south=check()

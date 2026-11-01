@@ -18,7 +18,7 @@ PROBE = r'''
 local hall=Room.Root:FindFirstChild("PhotographedHallway")
 assert(hall and hall:GetAttribute("ScaleConfidence")=="provisional",
     "HALL_MOBILE_NO_ACTUAL_PHOTO_ROOM")
-local LIMIT_PARTS=3100
+local LIMIT_PARTS=3650
 local LIMIT_HALL_PARTS=120
 local LIMIT_HALL_GUI=55
 local LIMIT_HALL_FRAMES=800
@@ -75,7 +75,7 @@ local function summarize()
         end
     end
     assert(allParts<=LIMIT_PARTS,
-        "HALL_MOBILE_TOTAL_3100_PART_LIMIT_EXCEEDED")
+        "HALL_MOBILE_TOTAL_TWO_ROOM_PART_LIMIT_EXCEEDED")
     assert(totalParts<=LIMIT_HALL_PARTS,
         "HALL_MOBILE_TOO_MANY_CORRIDOR_PARTS")
     assert(collidable<=12,

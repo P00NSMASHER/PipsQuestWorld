@@ -78,7 +78,7 @@ local function verify()
     for _,p in ipairs(root:GetDescendants()) do
         if p:IsA("BasePart") then total+=1 end
     end
-    assert(total<=3050,"CHAIR_HIDDEN_PART_OPTIMIZATION_LOST_HEADROOM")
+    assert(total<=3650,"CHAIR_HIDDEN_PART_OPTIMIZATION_LOST_TWO_ROOM_HEADROOM")
     return total,seats,legs
 end
 
@@ -86,7 +86,7 @@ local total,seats,legs=verify()
 print("CHAIR_BURIED_GEOMETRY_SOURCE_PASS chairs=17 student_seats=16 "
     .."metal_legs=68 buried_foot_parts_removed=68 "
     .."rubber_foot_parts=0 part_count="..total
-    .." headroom_to_3100="..(3100-total)
+    .." headroom_to_3650="..(3650-total)
     .." full_chair_collision_preserved=true native_iphone_pending=true")
 
 local function reject(mutator,restorer,expected,label)

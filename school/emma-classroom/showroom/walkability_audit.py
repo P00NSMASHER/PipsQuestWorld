@@ -43,6 +43,8 @@ GOALS = {
     "reading_corner_approach": (-29.0, -23.0),
     "right_side_aisle": (28.0, -11.0),
     "side_staff_hallway": (44.0, 15.5),
+    "second_grade_classroom_entry": (70.0, 15.5),
+    "second_grade_center_aisle": (109.0, 13.5),
 }
 
 # Extra Luau probe is appended to the *actual* constructor snapshot. The
@@ -85,7 +87,7 @@ class Blocker:
         return self.xmin <= x <= self.xmax and self.zmin <= z <= self.zmax
 
 
-# Four genuine collidable floors support the classroom, closet, staff
+# Five genuine collidable floors support both classrooms, the closet, staff
 # vestibule and long gallery. The preexisting closet laminate is now
 # walkable: the relocated photo-gallery slab no longer sits beneath it.
 # Decorative area rugs and noncolliding scenery never grant support.
@@ -94,6 +96,7 @@ SUPPORT_FLOOR_NAMES = frozenset({
     "Supply closet warm laminate floor",
     "Side hall floor",
     "Photo hall polished square stone floor",
+    "Second grade dark varnished hardwood floor",
 })
 
 @dataclass(frozen=True)
@@ -414,6 +417,14 @@ def inspect(blockers: list[Blocker],
     assert all(x<37.5 for x,z in routes["right_supply_closet_interior"]["waypoints"]), (
         "RIGHT_CLOSET_MUST_BE_REACHED_FROM_CLASSROOM_NOT_HALL"
     )
+    for name in ("second_grade_classroom_entry","second_grade_center_aisle"):
+        points=routes[name]["waypoints"]
+        assert any(58.5<=x<=61.0 and 12.0<=z<=19.0 for x,z in points), (
+            "SECOND_GRADE_ROUTE_DID_NOT_CROSS_TRUE_HALL_DOOR: "+name
+        )
+        assert points[-1][0]>60.0, (
+            "SECOND_GRADE_ROUTE_NEVER_ENTERED_CLASSROOM: "+name
+        )
     assert any(b.name=="Supply closet solid rear wall" and b.covers(0.0,36.05)
                for b in blockers), (
         "REAR_CLOSET_WALL_MISSING_RIGHT_DOUBLE_DOOR_LEAKS_TO_HALL"
@@ -569,12 +580,12 @@ def self_test():
     # Floor evidence must be complete and from actual collidable geometry.
     fixture_names = sorted(SUPPORT_FLOOR_NAMES)
     fixtures = [[*flat[:1], name, *flat[2:]] for name in fixture_names]
-    assert len(as_floor_supports(fixtures)) == 4
+    assert len(as_floor_supports(fixtures)) == len(SUPPORT_FLOOR_NAMES)
     # Same horizontal slab turned exactly 180 degrees is still physical
     # support. Reject a slight tip instead of silently granting air routes.
     rotated = list(fixtures[0])
     rotated[-9:] = ["-1","0","0","0","1","0","0","0","-1"]
-    assert len(as_floor_supports([rotated,*fixtures[1:]]))==4
+    assert len(as_floor_supports([rotated,*fixtures[1:]]))==len(SUPPORT_FLOOR_NAMES)
     tipped = list(fixtures[0])
     tipped[-9:] = ["0.99","0.14","0","-0.14","0.99","0","0","0","1"]
     try:
@@ -751,15 +762,15 @@ def main():
     for name,route in result["routes"].items():
         print("STATIC_NAV_ROUTE_PASS",name,"length_studs="+str(route["length_studs"]),
               "end="+str(route["endpoint"]),flush=True)
-    print("SUPPORTED_ROUTE_SOURCE_PASS four_constructed_collidable_floors=true "
-          "all_nine_routes_floor_supported=true",flush=True)
+    print("SUPPORTED_ROUTE_SOURCE_PASS five_constructed_collidable_floors=true "
+          "all_eleven_routes_floor_supported=true",flush=True)
     print("CONTINUOUS_FLOOR_ROUTE_PASS "
           "routes=" + str(len(result["routes"])) +
           " cardinal_segments=" + str(result["validated_route_segments"]) +
           " all_route_centerlines_source_supported=true "
           "native_roblox_device_qa_still_required=true", flush=True)
     print("DOORWAY_ROUTING_NAV_PASS perpendicular_left_staff_exit=true "
-          "right_rear_supply_closet_sealed=true",flush=True)
+          "right_rear_supply_closet_sealed=true second_grade_across_hall=true",flush=True)
     print("STATIC_NAV_ACCEPTED reachable_cells="+str(result["reachable_cells"]),
           "source_colliders="+str(result["blockers"]),
           "NATIVE_ROBLOX_DEVICE_QA_STILL_REQUIRED",flush=True)

@@ -1,3 +1,25 @@
+# Second-grade overlap repair (2026-11-01)
+
+Implemented: separated the window radiators, open-shell bookcases, rug, west-wall decor, entry, teaching-wall carriers, activity mats, teacher desk/chair/papers/pencils/flowers, student-work layers, blinds/worksheets, and the duplicated classroom/hall wall return. Added exact constructed-scene overlap guards plus ten overlap mutation controls.
+
+Actually tested: pinned Luau 0.741 compilation; all 23 showroom/runtime audits; 13 dedicated second-grade negative controls; 3,649-Part exact source export under the 3,650 cap; all 11 continuously supported routes; release-provenance and synthetic visual self-tests; Rojo 7.7.1 RBXL/RBXLX assembly. Candidate RBXL SHA-256: `44bc7f280f450c3654692d9b6fd8b0b7f49e285e5f4353de557dbaabce3e593b`.
+
+Not tested: native Roblox Studio rendering/physics, physical-iPhone performance, or device visual acceptance. This evidence does not itself prove publication.
+
+---
+
+# ABVM first/second-grade across-hall candidate (2026-10-31)
+
+Implemented on `feat/second-grade-classroom-replica-20261031`: retained the existing first-grade room, opened a true doorway directly across its vestibule, and added the photo-matched second-grade room with 20 burgundy-chair desks, dual windows/radiators, blackboard/Smartboard wall, polka-dot rug, coat storage, activity/teacher areas, and private-reference-safe decor.
+
+Actually tested: all showroom Luau compilation; Rojo assembly; 3,637-Part complete source construction; dedicated second-grade positive/negative audit; all original room/hallway audits; five supported floors and 11 continuous routes including the new room; source-derived 1920x1080 visual review from the hall, entry, board, windows, teacher area and cutaway. The fidelity pass added physical student-work sheets, anchor charts, lesson cards, clipped window work, and ceiling leaves while staying below the 3,650-Part cap.
+
+Not tested: native Roblox Studio Play rendering/physics, physical iPhone performance, or device visual acceptance. Not published or pushed. Source-derived screenshots do not render every SurfaceGui label and are not native acceptance.
+
+Private source photos remain outside this repository under the October 31 task folder. Do not add them to Git or embed them in Roblox.
+
+---
+
 # ABVM Grade 2 Storytime Corner Handoff (2026-10-16)
 
 **Scope:** Owner screenshot request only; large purple upholstered armchair in the front-right corner of the ABC/sun reading rug, and move the original box fan left along the teaching wall. The existing 16 student seats, the smaller purple molded chair behind the teacher desk, all schoolwork, walls, rugs, hallway, and Roblox IDs are unchanged.

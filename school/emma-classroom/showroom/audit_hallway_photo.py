@@ -77,9 +77,13 @@ assert(near(transition.Position.X,48.48)
     and near(transition.Position.Z,26.72)
     and transition.Size.X>=22.3 and not transition.CanCollide,
     "STAFF_HALLWAY_FLOOR_TRANSITION_MISSING")
-local eastBrick=expect("Staff entry east wall glazed brick",1)[1]
-assert(near(eastBrick.Position.X,59.02) and eastBrick.Size.Z>=22.7
-    and eastBrick.Size.Y>=12.6,
+local eastBrick=expect("Second grade hall-facing glazed brick",2)
+local eastHeader=expect("Second grade hall-facing door header glazed brick",1)[1]
+assert(near(eastBrick[1].Position.X,59.02)
+    and near(eastBrick[2].Position.X,59.02)
+    and eastBrick[1].Size.Y>=12.6 and eastBrick[2].Size.Y>=12.6
+    and near(eastHeader.Position.X,59.02)
+    and eastHeader.Position.Y-eastHeader.Size.Y/2>11.0,
     "STAFF_HALLWAY_EAST_FULL_BRICK_FINISH_MISSING")
 local vestibuleFloor=one("Side hall floor")
 local vestibuleRoof=one("Side hall ceiling")

@@ -222,7 +222,7 @@ local function verifyStaff()
     for _,v in ipairs(Room.Root:GetDescendants()) do
         if v:IsA("BasePart") then parts+=1 end
     end
-    assert(parts<=3100,"STAFF_APERTURE_EXCEEDED_MOBILE_PART_CAP")
+    assert(parts<=3650,"STAFF_APERTURE_EXCEEDED_TWO_ROOM_PART_CAP")
     return parts
 end
 local sourceParts=verifyStaff()

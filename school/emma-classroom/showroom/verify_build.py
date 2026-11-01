@@ -18,6 +18,7 @@ client = tree["StarterPlayer"]["StarterPlayerScripts"]
 expected = {
     "Main": "emma-classroom/showroom/Main.server.lua",
     "World": "emma-classroom/showroom/Room.lua",
+    "SecondGradeRoom": "emma-classroom/showroom/SecondGradeRoom.lua",
     "GalleryPass": "emma-classroom/showroom/GalleryPass.lua",
     "ArtPass": "emma-classroom/showroom/ArtPass.lua",
     "FurnitureMeshAdapter": "emma-classroom/showroom/FurnitureMeshAdapter.lua",
@@ -37,6 +38,7 @@ assert "QuestionBank" not in project.read_text()
 view = (base / "emma-classroom/showroom/View.client.lua").read_text()
 main = (base / "emma-classroom/showroom/Main.server.lua").read_text()
 room = (base / "emma-classroom/showroom/Room.lua").read_text()
+second_grade = (base / "emma-classroom/showroom/SecondGradeRoom.lua").read_text()
 assert "LockFirstPerson" in view and "Enum.CameraType.Custom" in view
 assert "Instance.new(\"ScreenGui\")" not in view
 assert "Instance.new(\"RemoteFunction\")" not in main
@@ -48,6 +50,11 @@ assert 'CFrame.new(-11,3.15,-29)' in main
 assert "QuestionBoard" not in room and "World.setBoardQuestion" not in room
 assert "ClassroomReplicaSpawn" in room
 assert "ArtPass.decorate(root)" in room
+assert 'SecondGradeRoom.build(root)' in room
+assert 'room.Name="SecondGradeClassroom"' in second_grade
+assert 'set:SetAttribute("StudentSeatIndex",index)' in second_grade
+assert 'assert(index==20' in second_grade
+assert 'room:SetAttribute("HasAcrossHallWalkableEntry",true)' in second_grade
 assert "Vector3.new(5.78,.16,3.86)" in room, "Desk rim returned to bulky dark prototype"
 assert "Color3.fromRGB(126,121,109)" in room, "Thin laminate desk surround unexpectedly changed"
 assert "Vector3.new(2.38,1.90,.22)" in room, "Missing single contoured-back chair collider"
@@ -167,13 +174,13 @@ if len(sys.argv) > 1:
         assert name not in all_names, f"Educational runtime leaked into built place: {name}"
     for forbidden in ("ScreenGui", "RemoteFunction", "RemoteEvent"):
         assert forbidden not in all_names, f"{forbidden} object in gallery place"
-    for component in ("ClassroomReplica", "Main", "World", "ArtPass",
+    for component in ("ClassroomReplica", "Main", "World", "SecondGradeRoom", "ArtPass",
                       "GalleryPass", "ClassroomView"):
         assert component in all_names, f"Missing replica component {component}"
     for path, src in sources:
         assert 'Instance.new("ScreenGui")' not in src, f"Custom HUD code at {path}"
         assert 'GetDataStore(' not in src, f"Study persistence linked at {path}"
         assert 'require(script.Parent:WaitForChild("QuestionBank"))' not in src
-    print("PASS: assembled classroom-only place excludes all study UI, question bank, quiz remotes and saved-score runtime")
+    print("PASS: assembled two-classroom place excludes all study UI, question bank, quiz remotes and saved-score runtime")
 else:
-    print("PASS: classroom-only project maps 4 architectural scripts + 1 camera script, no study system")
+    print("PASS: two-classroom project maps 5 architectural scripts + 1 camera script, no study system")
