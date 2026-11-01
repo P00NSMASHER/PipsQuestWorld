@@ -206,17 +206,17 @@ local function buildWindows(room:Folder)
         for blind=0,5 do
             local bx=centerX-9.75+blind*3.9
             local slat=makePart(room,"cream vertical blind",Vector3.new(3.25,10.05,.045),
-                CFrame.new(bx,9.25,-17.68)*CFrame.Angles(0,math.rad((blind%2==0) and 4 or -4),0),
+                CFrame.new(bx,9.25,-17.58)*CFrame.Angles(0,math.rad((blind%2==0) and 4 or -4),0),
                 Color3.fromRGB(222,216,193),Enum.Material.Fabric,false)
             slat.Transparency=.12
             slat.CastShadow=false
         end
         makePart(room,"window radiator body",Vector3.new(18.5,2.15,.65),
-            CFrame.new(centerX,1.65,-16.85),Color3.fromRGB(93,103,105),
+            CFrame.new(centerX,1.75,-16.85),Color3.fromRGB(93,103,105),
             Enum.Material.Metal,false)
         for fin=-7,7,2 do
             makePart(room,"window radiator fin",Vector3.new(.24,2.40,.82),
-                CFrame.new(centerX+fin,1.72,-16.65),Color3.fromRGB(109,117,118),
+                CFrame.new(centerX+fin,1.88,-16.65),Color3.fromRGB(109,117,118),
                 Enum.Material.Metal,false)
         end
     end
@@ -245,19 +245,19 @@ local function buildTeachingWall(room:Folder)
     local alphabet=makePart(room,"alphabet strip carrier",Vector3.new(.16,1.48,55.5),
         CFrame.new(127.42,14.55,15.5),CREAM,Enum.Material.SmoothPlastic,false)
     addAlphabetStrip(alphabet)
-    local scriptStrip=makePart(room,"cursive alphabet banner",Vector3.new(.15,1.05,44),
-        CFrame.new(127.40,16.08,15.5),Color3.fromRGB(43,74,87),
+    local scriptStrip=makePart(room,"cursive alphabet banner",Vector3.new(.15,.90,44),
+        CFrame.new(127.40,15.80,15.5),Color3.fromRGB(43,74,87),
         Enum.Material.SmoothPlastic,false)
     addText(scriptStrip,"Aa  Bb  Cc  Dd  Ee  Ff  Gg  Hh  Ii  Jj  Kk  Ll  Mm  Nn  Oo  Pp  Qq  Rr  Ss  Tt  Uu  Vv  Ww  Xx  Yy  Zz",
         Enum.NormalId.Left,Color3.fromRGB(242,238,210),scriptStrip.Color,Enum.Font.Arial)
-    local amazing=makePart(room,"amazing things lettering carrier",Vector3.new(.14,1.35,18),
-        CFrame.new(127.40,16.72,-3.5),WALL,Enum.Material.SmoothPlastic,false)
+    local amazing=makePart(room,"amazing things lettering carrier",Vector3.new(.14,1.0,18),
+        CFrame.new(127.40,16.90,-3.5),WALL,Enum.Material.SmoothPlastic,false)
     addText(amazing,"AMAZING THINGS HAPPEN HERE",Enum.NormalId.Left,
         Color3.fromRGB(231,231,218),WALL,Enum.Font.GothamBold)
-    makePart(room,"front crucifix vertical",Vector3.new(.35,3.05,.35),
-        CFrame.new(127.25,16.30,15.5),DARK_OAK,Enum.Material.Wood,false)
+    makePart(room,"front crucifix vertical",Vector3.new(.35,2.85,.35),
+        CFrame.new(127.05,16.28,15.5),DARK_OAK,Enum.Material.Wood,false)
     makePart(room,"front crucifix horizontal",Vector3.new(.35,.35,2.05),
-        CFrame.new(127.20,16.72,15.5),DARK_OAK,Enum.Material.Wood,false)
+        CFrame.new(127.05,16.72,15.5),DARK_OAK,Enum.Material.Wood,false)
 end
 
 local function buildCoatWall(room:Folder)
@@ -276,7 +276,7 @@ local function buildCoatWall(room:Folder)
             CFrame.new(94.1,y,48.36),DARK_OAK,Enum.Material.Wood,false)
     end
     local work=makePart(room,"coat wall student work carrier",Vector3.new(38,3.0,.12),
-        CFrame.new(96,10.15,48.30),Color3.fromRGB(228,222,198),
+        CFrame.new(96,10.15,48.36),Color3.fromRGB(228,222,198),
         Enum.Material.SmoothPlastic,false)
     local label=addText(work,"OUR SECOND GRADE WORK  •  READ  •  WRITE  •  GROW",
         Enum.NormalId.Back,Color3.fromRGB(85,52,39),work.Color,Enum.Font.GothamBold)
@@ -305,9 +305,10 @@ local function buildTeacherArea(room:Folder)
     makePart(room,"teacher monitor stand",Vector3.new(1.4,.25,1.4),
         CFrame.new(70.7,3.55,-9.2),Color3.fromRGB(48,50,51),Enum.Material.Metal,false)
     for i=0,5 do
-        local paper=makePart(room,"teacher paper stack",Vector3.new(1.55,.10,2.15),
-            CFrame.new(67.2+i*.72,3.50+i*.025,-11.0+i*.22)*
-                CFrame.Angles(0,math.rad((i%3-1)*5),0),
+        local column=i%3
+        local row=math.floor(i/3)
+        local paper=makePart(room,"teacher paper stack",Vector3.new(1.10,.10,1.10),
+            CFrame.new(66.1+column*1.4,3.50,-11.5+row*1.5),
             (i%2==0) and Color3.fromRGB(241,236,217) or Color3.fromRGB(225,102,112),
             Enum.Material.SmoothPlastic,false)
         paper.CanQuery=false
@@ -316,8 +317,9 @@ local function buildTeacherArea(room:Folder)
         CFrame.new(73.5,4.0,-7.8),Color3.fromRGB(160,68,77),
         Enum.Material.SmoothPlastic,false)
     for i=0,5 do
+        local angle=i*math.pi/3
         makePart(room,"teacher colored pencil",Vector3.new(.08,1.65,.08),
-            cup.CFrame*CFrame.new(0,.78,0)*CFrame.Angles(math.rad((i-2)*4),0,math.rad((i%3-1)*6)),
+            cup.CFrame*CFrame.new(math.cos(angle)*.24,.78,math.sin(angle)*.24),
             ({Color3.fromRGB(231,86,71),Color3.fromRGB(75,137,191),Color3.fromRGB(242,180,62)})[i%3+1],
             Enum.Material.SmoothPlastic,false)
     end
@@ -330,7 +332,7 @@ local function buildTeacherArea(room:Folder)
     tissue.CanQuery=false
     for i=0,4 do
         local book=makePart(room,"teacher planning book",Vector3.new(1.55,.18,2.65),
-            CFrame.new(66.4,3.52+i*.19,-10.7),
+            CFrame.new(66.2,3.52+i*.19,-8.0),
             ({Color3.fromRGB(55,123,95),Color3.fromRGB(205,83,83),
                 Color3.fromRGB(65,108,164)})[i%3+1],Enum.Material.SmoothPlastic,false)
         book.CanQuery=false
@@ -339,34 +341,40 @@ local function buildTeacherArea(room:Folder)
         CFrame.new(73.3,4.00,-11.1),Color3.fromRGB(230,224,196),
         Enum.Material.SmoothPlastic,false)
     for i=0,4 do
-        makePart(room,"teacher flower stem",Vector3.new(.07,1.55,.07),
-            vase.CFrame*CFrame.new(0,1.15,0)*
-                CFrame.Angles(math.rad((i-2)*6),0,math.rad((i%3-1)*8)),
+        local angle=i*math.pi*2/5
+        local stemX=73.3+math.cos(angle)*.325
+        local stemZ=-11.1+math.sin(angle)*.325
+        local bloomY=(i==4) and 6.35 or 5.35+(i%2)*.50
+        local stemBottom=4.45
+        local stemHeight=bloomY-stemBottom
+        makePart(room,"teacher flower stem",Vector3.new(.07,stemHeight,.07),
+            CFrame.new(stemX,stemBottom+stemHeight/2,stemZ),
             Color3.fromRGB(71,119,67),Enum.Material.SmoothPlastic,false)
         local bloom=makePart(room,"teacher sunflower",Vector3.new(.45,.45,.20),
-            CFrame.new(73.3+(i-2)*.18,5.35+(i%2)*.20,-11.1),
+            CFrame.new(stemX,bloomY,stemZ),
             Color3.fromRGB(232,176,44),Enum.Material.SmoothPlastic,false)
         bloom.Shape=Enum.PartType.Ball
     end
     -- Purple wood chair visible beside the teacher station.
+    local teacherChairZ=-13.95
     makePart(room,"teacher purple chair seat",Vector3.new(3.7,.42,3.9),
-        CFrame.new(66.5,2.05,-13.6),Color3.fromRGB(105,64,141),Enum.Material.Wood,true)
+        CFrame.new(66.5,2.05,teacherChairZ),Color3.fromRGB(105,64,141),Enum.Material.Wood,true)
     makePart(room,"teacher purple chair back",Vector3.new(.38,4.7,3.9),
-        CFrame.new(65.0,4.0,-13.6),Color3.fromRGB(105,64,141),Enum.Material.Wood,false)
+        CFrame.new(65.0,4.0,teacherChairZ),Color3.fromRGB(105,64,141),Enum.Material.Wood,false)
     for _,dz in ipairs({-1.55,1.55}) do
         makePart(room,"teacher purple chair leg",Vector3.new(.32,3.3,.32),
-            CFrame.new(65.3,1.65,-13.6+dz),Color3.fromRGB(82,45,111),Enum.Material.Wood,false)
+            CFrame.new(65.3,1.65,teacherChairZ+dz),Color3.fromRGB(82,45,111),Enum.Material.Wood,false)
     end
 end
 
 local function buildActivityCorner(room:Folder)
     local banner=makePart(room,"reading wave banner",Vector3.new(.16,7.3,22),
-        CFrame.new(60.18,10.15,37.0),Color3.fromRGB(227,235,221),
+        CFrame.new(60.30,10.15,38.0),Color3.fromRGB(227,235,221),
         Enum.Material.SmoothPlastic,false)
     addText(banner,"CATCH THE\nREADING WAVE",Enum.NormalId.Right,
         Color3.fromRGB(45,117,142),banner.Color,Enum.Font.GothamBold)
     local halloween=makePart(room,"seasonal classroom banner",Vector3.new(.16,1.4,18),
-        CFrame.new(60.16,15.7,34.5),WALL,Enum.Material.SmoothPlastic,false)
+        CFrame.new(60.30,15.7,34.5),WALL,Enum.Material.SmoothPlastic,false)
     addText(halloween,"HAPPY HALLOWEEN",Enum.NormalId.Right,
         Color3.fromRGB(92,61,47),WALL,Enum.Font.GothamBold)
     local top=makePart(room,"round activity table",Vector3.new(.42,8.0,8.0),
@@ -384,9 +392,9 @@ local function buildActivityCorner(room:Folder)
         local cz=38.8+math.sin(angle)*5.6
         makePart(room,"activity chair seat",Vector3.new(2.5,.32,2.7),
             CFrame.new(cx,1.75,cz),BURGUNDY,Enum.Material.SmoothPlastic,true)
-        makePart(room,"activity table color mat",Vector3.new(.06,3.0,3.0),
+        makePart(room,"activity table color mat",Vector3.new(.06,2.2,2.2),
             CFrame.new(68.5,3.29,38.8)*CFrame.Angles(0,0,math.pi/2)*
-                CFrame.Angles(angle,0,0)*CFrame.new(0,2.0,0),
+                CFrame.Angles(angle,0,0)*CFrame.new(0,2.35,0),
             color,Enum.Material.SmoothPlastic,false)
     end
     -- Rolling whiteboard between the two window banks.
@@ -423,21 +431,20 @@ local function buildReferenceDecor(room:Folder)
             Enum.Material.SmoothPlastic,false)
         paper.CanQuery=false
         local heading=makePart(room,"coat wall student paper heading",Vector3.new(3.35,.28,.07),
-            CFrame.new(x,11.22,48.18),accentColors[i%4+1],
+            CFrame.new(x,11.22,48.15),accentColors[i%4+1],
             Enum.Material.SmoothPlastic,false)
         heading.CanQuery=false
     end
 
     -- Layered anchor charts beside the doorway and teacher station.
-    for i=0,3 do
-        local z=3.0+i*7.5
+    for i,z in ipairs({-6.5,.5,7.5,23.5}) do
         local chart=makePart(room,"west wall anchor chart",Vector3.new(.08,5.6,6.15),
             CFrame.new(60.16,10.2,z),paperColors[(i+1)%4+1],
             Enum.Material.SmoothPlastic,false)
         chart.CanQuery=false
         for line=0,2 do
             local strip=makePart(room,"west wall anchor chart strip",Vector3.new(.07,.34,4.7),
-                CFrame.new(60.10,11.55-line*1.25,z),accentColors[(i+line)%4+1],
+                CFrame.new(60.24,11.55-line*1.25,z),accentColors[(i+line)%4+1],
                 Enum.Material.SmoothPlastic,false)
             strip.CanQuery=false
         end
@@ -456,11 +463,11 @@ local function buildReferenceDecor(room:Folder)
     for i=0,5 do
         local x=73.0+i*8.4
         local sheet=makePart(room,"window clipped worksheet",Vector3.new(3.7,1.45,.06),
-            CFrame.new(x,4.0,-17.66),paperColors[(i+2)%4+1],
+            CFrame.new(x,3.25,-17.66),paperColors[(i+2)%4+1],
             Enum.Material.SmoothPlastic,false)
         sheet.CanQuery=false
         local clip=makePart(room,"window worksheet clip",Vector3.new(.42,.22,.10),
-            CFrame.new(x,4.78,-17.58),Color3.fromRGB(152,94,77),
+            CFrame.new(x,4.08,-17.58),Color3.fromRGB(152,94,77),
             Enum.Material.Metal,false)
         clip.CanQuery=false
     end
@@ -552,7 +559,11 @@ function SecondGradeRoom.build(root:Instance):Folder
     -- West wall continues beyond the photographed vestibule; the middle is
     -- provided by buildHallDoor's split brick opening.
     makePart(room,"west wall south",Vector3.new(1,18,22.75),CFrame.new(59.6,9,-7.125),WALL_SHADOW,Enum.Material.SmoothPlastic,true)
-    makePart(room,"west wall north",Vector3.new(1,18,22.20),CFrame.new(59.6,9,38.40),WALL_SHADOW,Enum.Material.SmoothPlastic,true)
+    -- The photographed hallway already supplies the lower north wall here.
+    -- Retain only the upper classroom return above its ceiling so the two
+    -- independently built wall slabs do not occupy the same volume.
+    makePart(room,"west wall north",Vector3.new(1,4.39,22.20),
+        CFrame.new(59.6,15.575,38.40),WALL_SHADOW,Enum.Material.SmoothPlastic,true)
     -- South/window wall split into low/high bands and three structural piers.
     makePart(room,"window wall lower",Vector3.new(69,4,1),CFrame.new(94.1,2,-18.5),WALL,Enum.Material.SmoothPlastic,true)
     makePart(room,"window wall upper",Vector3.new(69,4,1),CFrame.new(94.1,16,-18.5),WALL,Enum.Material.SmoothPlastic,true)
@@ -621,15 +632,27 @@ function SecondGradeRoom.build(root:Instance):Folder
             CFrame.new(65.84,y,44.8),Color3.fromRGB(178,126,78),Enum.Material.Metal,false)
     end
     for _,x in ipairs({78,86,102,110}) do
-        makePart(room,"window bookcase",Vector3.new(7.0,4.0,2.6),
-            CFrame.new(x,2.5,-15.9),Color3.fromRGB(93,68,50),Enum.Material.Wood,true)
-        for shelf=0,2 do
-            makePart(room,"window bookcase shelf",Vector3.new(6.5,.16,2.45),
-                CFrame.new(x,1.0+shelf*1.25,-15.7),Color3.fromRGB(72,49,37),Enum.Material.Wood,false)
+        local centerZ=-14.85
+        -- Open shell construction keeps the radiator, rug, shelves and bins
+        -- as genuinely separate geometry instead of burying them in one
+        -- solid decorative block.
+        for _,dx in ipairs({-3.41,3.41}) do
+            makePart(room,"window bookcase side",Vector3.new(.18,3.82,2.60),
+                CFrame.new(x+dx,2.53,centerZ),Color3.fromRGB(93,68,50),Enum.Material.Wood,false)
+        end
+        makePart(room,"window bookcase back",Vector3.new(6.64,3.82,.16),
+            CFrame.new(x,2.53,centerZ-1.22),Color3.fromRGB(93,68,50),Enum.Material.Wood,false)
+        for _,panel in ipairs({{.71,"bottom"},{4.35,"top"}}) do
+            makePart(room,"window bookcase "..panel[2],Vector3.new(6.64,.18,2.42),
+                CFrame.new(x,panel[1],centerZ+.08),Color3.fromRGB(93,68,50),Enum.Material.Wood,false)
+        end
+        for _,y in ipairs({1.80,3.00}) do
+            makePart(room,"window bookcase shelf",Vector3.new(6.58,.14,2.38),
+                CFrame.new(x,y,centerZ+.08),Color3.fromRGB(72,49,37),Enum.Material.Wood,false)
         end
         for bin=0,1 do
             makePart(room,"window bookcase bright bin",Vector3.new(2.55,1.05,2.10),
-                CFrame.new(x+(bin==0 and -1.65 or 1.65),3.55,-15.55),
+                CFrame.new(x+(bin==0 and -1.65 or 1.65),3.66,centerZ+.05),
                 (bin==0) and Color3.fromRGB(79,145,169)
                     or Color3.fromRGB(166,88,134),
                 Enum.Material.SmoothPlastic,false)

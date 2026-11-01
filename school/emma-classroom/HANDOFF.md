@@ -1,3 +1,11 @@
+## November 1 - second-grade overlap repair
+
+Separated the radiator/bookcase/rug geometry, entry and teaching-wall decor, teacher-area clutter, student-work layers, window worksheets, activity mats, and duplicated classroom/hall wall return. The constructed audit now rejects ten targeted overlap mutations in addition to its original three safety mutations.
+
+Verified with pinned Luau 0.741 and Rojo 7.7.1: all 23 showroom/runtime audits, 3,649 physical Parts under the 3,650 cap, all 11 floor-supported routes, release provenance, synthetic visual mutations, and RBXL/RBXLX assembly. Candidate RBXL SHA-256: `44bc7f280f450c3654692d9b6fd8b0b7f49e285e5f4353de557dbaabce3e593b`. Native Studio/iPhone rendering and physical-device acceptance remain unverified.
+
+---
+
 ## October 31 — first/second-grade across-hall replica
 
 The owner clarified the existing blue-chair/round-rug room is first grade. The visually consistent burgundy-chair/polka-rug references now drive a separate second-grade classroom directly across the vestibule. Raw reference images remain private and are not packaged.
