@@ -1,7 +1,8 @@
 name: Verify Retired Roblox Publishers
 
 on:
-  pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - '.github/workflows/**'
       - 'scripts/verify_legacy_roblox_publishers.py'
@@ -14,10 +15,35 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: retired-roblox-publishers-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - run: python3 scripts/verify_legacy_roblox_publishers.py
+      - name: Check out trusted verifier from the exact base SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.base.sha || github.sha }}
+          path: trusted-control
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Check out the untrusted candidate as data only
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+          path: candidate
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Run trusted verifier against candidate tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 trusted-control/scripts/verify_legacy_roblox_publishers.py \
+            --candidate-root "$GITHUB_WORKSPACE/candidate"

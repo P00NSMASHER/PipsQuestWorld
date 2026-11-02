@@ -1,0 +1,53 @@
+name: Retired Publisher Guard Repair CI
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/guard-retired-roblox-publishers.yml'
+      - '.github/workflows/retired-publisher-guard-repair-ci.yml'
+      - 'scripts/verify_legacy_roblox_publishers.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/guard-retired-roblox-publishers.yml'
+      - '.github/workflows/retired-publisher-guard-repair-ci.yml'
+      - 'scripts/verify_legacy_roblox_publishers.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retired-publisher-guard-repair-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-head-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact candidate SHA without credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Assert trusted-control workflow structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/guard-retired-roblox-publishers.yml
+          grep -Fq 'pull_request_target:' "$workflow"
+          grep -Fq 'github.event.pull_request.base.sha' "$workflow"
+          grep -Fq 'github.event.pull_request.head.sha' "$workflow"
+          grep -Fq 'path: trusted-control' "$workflow"
+          grep -Fq 'path: candidate' "$workflow"
+          grep -Fq 'persist-credentials: false' "$workflow"
+          grep -Fq 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' "$workflow"
+
+      - name: Run exact-head adversarial regression and source audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_legacy_roblox_publishers.py \
+            --candidate-root "$GITHUB_WORKSPACE"
