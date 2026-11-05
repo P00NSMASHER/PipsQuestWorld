@@ -230,34 +230,37 @@ local function buildTeachingWall(room:Folder)
         CFrame.new(127.62,13.50,15.5),OAK,Enum.Material.Wood,false)
     makePart(room,"chalkboard chalk tray",Vector3.new(.65,.32,55.4),
         CFrame.new(127.48,5.05,15.5),OAK,Enum.Material.Wood,false)
-    local smart=makePart(room,"interactive Smartboard",Vector3.new(.48,7.65,15.2),
-        CFrame.new(127.25,9.15,15.5),Color3.fromRGB(22,26,28),
+    -- Match the first-grade room's clean framed mobile board instead of a
+    -- black placeholder panel pasted over the chalkboard.
+    local smart=makePart(room,"interactive Smartboard",Vector3.new(.28,6.45,11.80),
+        CFrame.new(127.22,9.20,15.5),Color3.fromRGB(235,234,225),
         Enum.Material.SmoothPlastic,false)
-    smart.Reflectance=.09
-    addText(smart,"SECOND GRADE\nREADY TO LEARN",Enum.NormalId.Left,
-        Color3.fromRGB(228,233,225),smart.Color,Enum.Font.GothamBold)
+    smart.Reflectance=.03
+    local display=makePart(room,"Smartboard glass display",Vector3.new(.18,5.72,11.05),
+        CFrame.new(127.03,9.22,15.5),Color3.fromRGB(206,225,226),
+        Enum.Material.Glass,false)
+    display.Transparency=.08
+    display.Reflectance=.04
+    addText(display,"WELCOME TO SECOND GRADE",Enum.NormalId.Left,
+        Color3.fromRGB(55,89,96),display.Color,Enum.Font.GothamMedium)
+    makePart(room,"Smartboard pen tray",Vector3.new(.72,.24,11.40),
+        CFrame.new(126.86,5.87,15.5),Color3.fromRGB(211,210,201),
+        Enum.Material.SmoothPlastic,false)
     for _,z in ipairs({9.25,21.75}) do
-        makePart(room,"Smartboard rolling stand",Vector3.new(.62,5.6,.34),
-            CFrame.new(126.55,3.02,z),Color3.fromRGB(43,46,47),Enum.Material.Metal,false)
-        makePart(room,"Smartboard rolling foot",Vector3.new(2.15,.24,.48),
-            CFrame.new(125.95,.72,z),Color3.fromRGB(43,46,47),Enum.Material.Metal,false)
+        makePart(room,"Smartboard rolling stand",Vector3.new(.34,5.1,.34),
+            CFrame.new(126.65,3.25,z),Color3.fromRGB(77,82,83),Enum.Material.Metal,false)
+        makePart(room,"Smartboard rolling foot",Vector3.new(2.35,.22,.58),
+            CFrame.new(126.05,.72,z),Color3.fromRGB(77,82,83),Enum.Material.Metal,false)
     end
+    makePart(room,"Smartboard lower brace",Vector3.new(.34,.30,12.8),
+        CFrame.new(126.65,1.62,15.5),Color3.fromRGB(77,82,83),Enum.Material.Metal,false)
     local alphabet=makePart(room,"alphabet strip carrier",Vector3.new(.16,1.48,55.5),
         CFrame.new(127.42,14.55,15.5),CREAM,Enum.Material.SmoothPlastic,false)
     addAlphabetStrip(alphabet)
-    local scriptStrip=makePart(room,"cursive alphabet banner",Vector3.new(.15,.90,44),
-        CFrame.new(127.40,15.80,15.5),Color3.fromRGB(43,74,87),
-        Enum.Material.SmoothPlastic,false)
-    addText(scriptStrip,"Aa  Bb  Cc  Dd  Ee  Ff  Gg  Hh  Ii  Jj  Kk  Ll  Mm  Nn  Oo  Pp  Qq  Rr  Ss  Tt  Uu  Vv  Ww  Xx  Yy  Zz",
-        Enum.NormalId.Left,Color3.fromRGB(242,238,210),scriptStrip.Color,Enum.Font.Arial)
-    local amazing=makePart(room,"amazing things lettering carrier",Vector3.new(.14,1.0,18),
-        CFrame.new(127.40,16.90,-3.5),WALL,Enum.Material.SmoothPlastic,false)
-    addText(amazing,"AMAZING THINGS HAPPEN HERE",Enum.NormalId.Left,
-        Color3.fromRGB(231,231,218),WALL,Enum.Font.GothamBold)
     makePart(room,"front crucifix vertical",Vector3.new(.35,2.85,.35),
-        CFrame.new(127.05,16.28,15.5),DARK_OAK,Enum.Material.Wood,false)
+        CFrame.new(127.05,16.20,15.5),DARK_OAK,Enum.Material.Wood,false)
     makePart(room,"front crucifix horizontal",Vector3.new(.35,.35,2.05),
-        CFrame.new(127.05,16.72,15.5),DARK_OAK,Enum.Material.Wood,false)
+        CFrame.new(127.05,16.55,15.5),DARK_OAK,Enum.Material.Wood,false)
 end
 
 local function buildCoatWall(room:Folder)
@@ -297,10 +300,10 @@ local function buildTeacherArea(room:Folder)
         makePart(room,"teacher desk pedestal",Vector3.new(1.8,3.0,4.6),
             CFrame.new(x,1.70,-9.6),Color3.fromRGB(86,83,77),Enum.Material.Metal,true)
     end
-    local monitor=makePart(room,"teacher computer monitor",Vector3.new(.35,3.2,5.4),
-        CFrame.new(71.3,5.20,-9.2)*CFrame.Angles(0,math.rad(8),0),
-        Color3.fromRGB(35,40,43),Enum.Material.SmoothPlastic,false)
-    addText(monitor,"CLASSROOM DESKTOP",Enum.NormalId.Right,
+    local monitor=makePart(room,"teacher computer monitor",Vector3.new(.28,2.25,3.75),
+        CFrame.new(71.3,4.75,-9.2)*CFrame.Angles(0,math.rad(8),0),
+        Color3.fromRGB(50,57,59),Enum.Material.SmoothPlastic,false)
+    addText(monitor,"CLASSROOM",Enum.NormalId.Right,
         Color3.fromRGB(173,205,215),monitor.Color,Enum.Font.GothamMedium)
     makePart(room,"teacher monitor stand",Vector3.new(1.4,.25,1.4),
         CFrame.new(70.7,3.55,-9.2),Color3.fromRGB(48,50,51),Enum.Material.Metal,false)
@@ -330,7 +333,7 @@ local function buildTeacherArea(room:Folder)
         CFrame.new(68.3,4.55,-7.7)*CFrame.Angles(math.rad(8),0,math.rad(-12)),
         Color3.fromRGB(245,242,225),Enum.Material.Fabric,false)
     tissue.CanQuery=false
-    for i=0,4 do
+    for i=0,3 do
         local book=makePart(room,"teacher planning book",Vector3.new(1.55,.18,2.65),
             CFrame.new(66.2,3.52+i*.19,-8.0),
             ({Color3.fromRGB(55,123,95),Color3.fromRGB(205,83,83),
@@ -368,15 +371,11 @@ local function buildTeacherArea(room:Folder)
 end
 
 local function buildActivityCorner(room:Folder)
-    local banner=makePart(room,"reading wave banner",Vector3.new(.16,7.3,22),
-        CFrame.new(60.30,10.15,38.0),Color3.fromRGB(227,235,221),
+    local banner=makePart(room,"reading wave banner",Vector3.new(.16,4.6,13.5),
+        CFrame.new(60.30,10.30,40.6),Color3.fromRGB(227,235,221),
         Enum.Material.SmoothPlastic,false)
-    addText(banner,"CATCH THE\nREADING WAVE",Enum.NormalId.Right,
+    addText(banner,"READING WAVE",Enum.NormalId.Right,
         Color3.fromRGB(45,117,142),banner.Color,Enum.Font.GothamBold)
-    local halloween=makePart(room,"seasonal classroom banner",Vector3.new(.16,1.4,18),
-        CFrame.new(60.30,15.7,34.5),WALL,Enum.Material.SmoothPlastic,false)
-    addText(halloween,"HAPPY HALLOWEEN",Enum.NormalId.Right,
-        Color3.fromRGB(92,61,47),WALL,Enum.Font.GothamBold)
     local top=makePart(room,"round activity table",Vector3.new(.42,8.0,8.0),
         CFrame.new(68.5,3.05,38.8)*CFrame.Angles(0,0,math.pi/2),
         Color3.fromRGB(232,227,204),Enum.Material.SmoothPlastic,true)
@@ -512,6 +511,12 @@ local function buildHallDoor(root:Instance,room:Folder)
     local headerSkin=makePart(room,"hall-facing door header glazed brick",Vector3.new(.12,1.9,8.15),
         CFrame.new(59.02,12.0,15.5),BRICK,Enum.Material.Brick,false)
     headerSkin.Reflectance=.035
+    -- Close the photographed blue-sky gap above the entire entry assembly.
+    makePart(room,"hall-facing upper wall closure",Vector3.new(1,5,23.05),
+        CFrame.new(59.60,15.5,15.775),BRICK,Enum.Material.Brick,true)
+    local upperSkin=makePart(room,"hall-facing upper glazed brick",Vector3.new(.12,4.9,22.90),
+        CFrame.new(59.02,15.5,15.775),BRICK,Enum.Material.Brick,false)
+    upperSkin.Reflectance=.035
     for _,z in ipairs({11.25,19.75}) do
         makePart(room,"entry oak jamb",Vector3.new(1.25,11.1,.65),
             CFrame.new(59.58,5.55,z),OAK,Enum.Material.Wood,false)
