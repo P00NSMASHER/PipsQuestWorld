@@ -102,9 +102,23 @@ local function verify()
     assert(#parts("Second grade dark varnished hardwood floor")==1
         and #parts("Second grade full chalkboard wall")==1
         and #parts("Second grade interactive Smartboard")==1
+        and #parts("Second grade Smartboard glass display")==1
+        and #parts("Second grade Smartboard pen tray")==1
+        and #parts("Second grade Smartboard lower brace")==1
         and #parts("Second grade alphabet strip carrier")==1
         and #parts("Second grade black multicolor polka-dot rug")==1,
         "SECOND_GRADE_DEFINING_LANDMARK_MISSING")
+    local smartboard=one("Second grade interactive Smartboard")
+    local smartDisplay=one("Second grade Smartboard glass display")
+    assert(smartboard.Color.R>.80 and smartboard.Color.G>.80
+        and smartboard.Size.Y>=6.4 and smartboard.Size.Z>=11.7
+        and smartDisplay.Color.B>.75 and smartDisplay.Size.Y<smartboard.Size.Y
+        and smartDisplay.Size.Z<smartboard.Size.Z,
+        "SECOND_GRADE_SMARTBOARD_VISUAL_REGRESSION")
+    assert(#parts("Second grade cursive alphabet banner")==0
+        and #parts("Second grade amazing things lettering carrier")==0
+        and #parts("Second grade seasonal classroom banner")==0,
+        "SECOND_GRADE_TEACHING_WALL_CLUTTER_RETURNED")
     assert(#parts("Second grade window glass")==2
         and #parts("Second grade cream vertical blind")==12
         and #parts("Second grade window radiator body")==2
@@ -125,6 +139,8 @@ local function verify()
     local brickSegments=parts("Second grade hall-facing glazed brick")
     assert(#wallSegments==2 and #brickSegments==2
         and #parts("Second grade hall-facing door header wall")==1
+        and #parts("Second grade hall-facing upper wall closure")==1
+        and #parts("Second grade hall-facing upper glazed brick")==1
         and #parts("Second grade entry oak jamb")==2
         and #parts("Second grade entry oak lintel")==1
         and #parts("Second grade entry brass threshold")==1,
@@ -133,6 +149,10 @@ local function verify()
         and #parts("Staff entry east wall glazed brick")==0,
         "SECOND_GRADE_ENTRY_STILL_BEHIND_SOLID_OLD_WALL")
     doorwayIsClear()
+    local upperClosure=one("Second grade hall-facing upper wall closure")
+    assert(upperClosure.CanCollide and upperClosure.Position.Y==15.5
+        and upperClosure.Size.Y>=5 and upperClosure.Size.Z>=23,
+        "SECOND_GRADE_ENTRY_UPPER_WALL_GAP_RETURNED")
 
     local floor=one("Second grade dark varnished hardwood floor")
     assert(floor.CanCollide and floor.Material==Enum.Material.Wood
@@ -208,8 +228,12 @@ local function verify()
     assert(northReturn.Position.Y-northReturn.Size.Y/2>=13.379,
         "SECOND_GRADE_NORTH_RETURN_DUPLICATES_HALL_WALL")
     local waveBanner=one("Second grade reading wave banner")
-    assert(waveBanner.Position.X-waveBanner.Size.X/2>=60.219,
+    assert(waveBanner.Position.X-waveBanner.Size.X/2>=60.219
+        and waveBanner.Size.Y<=4.7 and waveBanner.Size.Z<=13.6,
         "SECOND_GRADE_WEST_DECOR_EMBEDDED_IN_HALL_WALL")
+    local teacherMonitor=one("Second grade teacher computer monitor")
+    assert(teacherMonitor.Size.Y<=2.3 and teacherMonitor.Size.Z<=3.8,
+        "SECOND_GRADE_TEACHER_MONITOR_OVERSIZED")
 
     local roomParts=0
     local externalImages=0
@@ -245,6 +269,12 @@ local oldRugName=rug.Name
 reject(function() rug.Name="Test missing rug" end,
     function() rug.Name=oldRugName end,
     "SECOND_GRADE_DEFINING_LANDMARK_MISSING","polka_rug_removed")
+
+local smartboard=one("Second grade interactive Smartboard")
+local oldSmartColor=smartboard.Color
+reject(function() smartboard.Color=Color3.fromRGB(22,26,28) end,
+    function() smartboard.Color=oldSmartColor end,
+    "SECOND_GRADE_SMARTBOARD_VISUAL_REGRESSION","black_smartboard_placeholder")
 
 local barrier=Instance.new("Part")
 barrier.Name="Test entry barrier"
@@ -319,6 +349,24 @@ reject(function() waveBanner.CFrame=CFrame.new(60.18,10.15,38.0) end,
     "SECOND_GRADE_WEST_DECOR_EMBEDDED_IN_HALL_WALL",
     "hall_wall_decor_overlap")
 
+local oldWaveSize=waveBanner.Size
+reject(function() waveBanner.Size=Vector3.new(.16,7.3,22) end,
+    function() waveBanner.Size=oldWaveSize end,
+    "SECOND_GRADE_WEST_DECOR_EMBEDDED_IN_HALL_WALL",
+    "oversized_reading_banner")
+
+local upperClosure=one("Second grade hall-facing upper wall closure")
+local oldUpperSize=upperClosure.Size
+reject(function() upperClosure.Size=Vector3.new(1,1,23.05) end,
+    function() upperClosure.Size=oldUpperSize end,
+    "SECOND_GRADE_ENTRY_UPPER_WALL_GAP_RETURNED","entry_upper_gap")
+
+local teacherMonitor=one("Second grade teacher computer monitor")
+local oldMonitorSize=teacherMonitor.Size
+reject(function() teacherMonitor.Size=Vector3.new(.35,3.2,5.4) end,
+    function() teacherMonitor.Size=oldMonitorSize end,
+    "SECOND_GRADE_TEACHER_MONITOR_OVERSIZED","oversized_teacher_monitor")
+
 local pencils=parts("Second grade teacher colored pencil")
 local oldPencilCF=pencils[2].CFrame
 reject(function() pencils[2].CFrame=pencils[1].CFrame end,
@@ -365,7 +413,7 @@ def main() -> None:
     output=result.stdout.splitlines()
     assert any(line.startswith("SECOND_GRADE_ROOM_SOURCE_PASS") for line in output)
     assert any(line.startswith("SECOND_GRADE_ROOM_ADVERSARIAL_PASS") for line in output)
-    assert sum(line.startswith("SECOND_GRADE_NEGATIVE_REJECTED") for line in output)==13
+    assert sum(line.startswith("SECOND_GRADE_NEGATIVE_REJECTED") for line in output)==17
     for line in output:
         if line.startswith("SECOND_GRADE_"):
             print(line,flush=True)
